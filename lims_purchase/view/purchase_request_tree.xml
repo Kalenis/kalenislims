@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/tree/field[@name='product']"
+        position="before">
+        <field name="create_date2" widget="date"/>
+    </xpath>
+    <xpath
+        expr="/tree/field[@name='company']"
+        position="after">
+        <field name="department"/>
+    </xpath>
+    <xpath
+        expr="/tree/field[@name='state']"
+        position="after">
+        <field name="purchase"/>
+        <field name="note"/>
+    </xpath>
+</data>

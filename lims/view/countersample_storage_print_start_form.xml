@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<form>
+    <label name="report_date_from"/>
+    <field name="report_date_from"/>
+    <label name="report_date_to"/>
+    <field name="report_date_to"/>
+    <label name="date_from"/>
+    <field name="date_from"/>
+    <label name="date_to"/>
+    <field name="date_to"/>
+</form>

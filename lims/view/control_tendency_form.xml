@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<form>
+    <label name="fraction_type"/>
+    <field name="fraction_type" colspan="3"/>
+    <label name="product_type"/>
+    <field name="product_type"/>
+    <label name="matrix"/>
+    <field name="matrix"/>
+    <label name="analysis"/>
+    <field name="analysis"/>
+    <label name="concentration_level"/>
+    <field name="concentration_level"/>
+    <label name="mean"/>
+    <field name="mean"/>
+    <label name="deviation"/>
+    <field name="deviation"/>
+</form>

@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<form>
+    <label name="number"/>
+    <field name="number"/>
+    <group col="4" colspan="2" id="entry">
+        <label name="entry"/>
+        <field name="entry"/>
+        <label name="entry_view"/>
+        <field name="entry_view"/>
+    </group>
+    <label name="party"/>
+    <field name="party" colspan="3"/>
+    <notebook>
+        <page string="General" id="general">
+            <label name="date"/>
+            <field name="date"/>
+            <label name="producer"/>
+            <field name="producer"/>
+            <label name="label"/>
+            <field name="label"/>
+            <label name="sample_client_description"/>
+            <field name="sample_client_description"/>
+            <label name="product_type"/>
+            <field name="product_type"/>
+            <label name="matrix"/>
+            <field name="matrix"/>
+            <label name="package_state"/>
+            <field name="package_state"/>
+            <label name="package_type"/>
+            <field name="package_type"/>
+            <label name="packages_quantity"/>
+            <field name="packages_quantity"/>
+            <label name="size"/>
+            <field name="size"/>
+            <label name="size_uom"/>
+            <field name="size_uom"/>
+            <label name="restricted_entry"/>
+            <field name="restricted_entry"/>
+            <label name="zone"/>
+            <field name="zone"/>
+            <label name="trace_report"/>
+            <field name="trace_report"/>
+            <label name="variety"/>
+            <field name="variety"/>
+            <field name="fractions" colspan="4"/>
+        </page>
+        <page string="Comments" id="comments">
+            <separator string="Report comments" colspan="4" id="report_comments"/>
+            <field name="report_comments" colspan="4"/>
+            <separator string="Comments" colspan="4" id="comments"/>
+            <field name="comments" colspan="4"/>
+        </page>
+    </notebook>
+</form>

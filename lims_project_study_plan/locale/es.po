@@ -1,0 +1,3926 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:lims.project.stp_professional.position:"
+msgid "Position code must be unique"
+msgstr "El código de la posición debe ser único"
+
+msgctxt "error:lims.project.stp_professional:"
+msgid "There is already a Facility director for this project"
+msgstr "Ya existe un Director de Instalación para este proyecto"
+
+msgctxt "error:lims.project.stp_professional:"
+msgid "There is already a Quality unit for this project"
+msgstr "Ya existe una Unidad de Calidad para este proyecto"
+
+msgctxt "error:lims.project.stp_professional:"
+msgid "There is already a Study director for this project"
+msgstr "Ya existe un Directorio de estudio para este proyecto"
+
+msgctxt "error:lims.project:"
+msgid "Please, select a \"Study plan\" Project to print this report"
+msgstr ""
+"Por favor, seleccione un Proyecto Plan de estudio para imprimir este informe"
+
+msgctxt "error:lims.project:"
+msgid "There is no sequence for Study plan Projects for the work year \"%s\"."
+msgstr ""
+"No hay una secuencia para Proyectos Plan de estudio para el año laboral «%s»"
+
+msgctxt "field:lims.configuration,sample_in_custody_sequence:"
+msgid "Sample in Custody Sequence"
+msgstr "Secuencia de muestras en custodia"
+
+msgctxt "field:lims.create_sample.start,after_application_days:"
+msgid "After application days"
+msgstr "Días después de aplicado"
+
+msgctxt "field:lims.create_sample.start,application_date:"
+msgid "Application date"
+msgstr "Fecha de aplicación"
+
+msgctxt "field:lims.create_sample.start,balance:"
+msgid "Balance"
+msgstr "Balanza"
+
+msgctxt "field:lims.create_sample.start,cultivation_zone:"
+msgid "Cultivation zone"
+msgstr "Zona de cultivo"
+
+msgctxt "field:lims.create_sample.start,dosis:"
+msgid "Dosis"
+msgstr "Dosis"
+
+msgctxt "field:lims.create_sample.start,glp_repetitions:"
+msgid "GLP repetitions"
+msgstr "Repeticiones según BPL"
+
+msgctxt "field:lims.create_sample.start,reception_date:"
+msgid "Reception date"
+msgstr "Fecha de recepción"
+
+msgctxt "field:lims.create_sample.start,sample_weight:"
+msgid "Sample weight"
+msgstr "Peso de la muestra"
+
+msgctxt "field:lims.create_sample.start,sampling_date:"
+msgid "Sampling date"
+msgstr "Fecha del muestreo"
+
+msgctxt "field:lims.create_sample.start,treatment:"
+msgid "Treatment"
+msgstr "Tratamiento"
+
+msgctxt "field:lims.lab.workyear,project_study_plan_sequence:"
+msgid "Study plan Projects Sequence"
+msgstr "Secuencia de Proyectos Plan de estudio"
+
+msgctxt "field:lims.project,dev_amnd_prof_domain:"
+msgid "Professional domain"
+msgstr "Dominio para Profesional"
+
+msgctxt "field:lims.project,min_qty_sample:"
+msgid "Minimum quantity of sample"
+msgstr "Cantidad mínima de muestra"
+
+msgctxt "field:lims.project,min_qty_sample_compliance:"
+msgid "Compliance with Minimum quantity of sample"
+msgstr "Conformidad con cantidad mínima de muestra"
+
+msgctxt "field:lims.project,stp_changelog:"
+msgid "Changelog"
+msgstr "Registro de cambios"
+
+msgctxt "field:lims.project,stp_date:"
+msgid "Ingress date"
+msgstr "Fecha de creación"
+
+msgctxt "field:lims.project,stp_description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:lims.project,stp_deviation_and_amendment:"
+msgid "Deviations and Amendments"
+msgstr "Desvíos y Enmiendas"
+
+msgctxt "field:lims.project,stp_effective_start_date:"
+msgid "Effective start date"
+msgstr "Fecha efectiva de inicio etapa experimental"
+
+msgctxt "field:lims.project,stp_end_date:"
+msgid "End date"
+msgstr "Fecha de finalización del informe final"
+
+msgctxt "field:lims.project,stp_facility_director:"
+msgid "Facility director"
+msgstr "Director de la Instalación"
+
+msgctxt "field:lims.project,stp_glp:"
+msgid "Good laboratory practices"
+msgstr "Buenas prácticas de laboratorio"
+
+msgctxt "field:lims.project,stp_implementation_validation:"
+msgid "Implementation - Validation"
+msgstr "Implementación - Validación"
+
+msgctxt "field:lims.project,stp_laboratory_professionals:"
+msgid "Laboratory professionals"
+msgstr "Profesionales de laboratorio"
+
+msgctxt "field:lims.project,stp_matrix_client_description:"
+msgid "Matrix client description"
+msgstr "Descripción del cliente de la matriz"
+
+msgctxt "field:lims.project,stp_notebook_lines:"
+msgid "Tests performed"
+msgstr "Ensayos realizados"
+
+msgctxt "field:lims.project,stp_number:"
+msgid "SP Id"
+msgstr "Id PE"
+
+msgctxt "field:lims.project,stp_pattern_availability:"
+msgid "Pattern availability"
+msgstr "Patrón disponible"
+
+msgctxt "field:lims.project,stp_phase:"
+msgid "Study plan phase"
+msgstr "Fase del plan de estudio"
+
+msgctxt "field:lims.project,stp_product_brand:"
+msgid "Product brand"
+msgstr "Producto comercial"
+
+msgctxt "field:lims.project,stp_proposal_end_date:"
+msgid "Proposal end date"
+msgstr "Fecha de finalización propuesta"
+
+msgctxt "field:lims.project,stp_proposal_start_date:"
+msgid "Proposal start date"
+msgstr "Fecha de inicio propuesta"
+
+msgctxt "field:lims.project,stp_quality_unit:"
+msgid "Quality unit"
+msgstr "Unidad de Calidad"
+
+msgctxt "field:lims.project,stp_records:"
+msgid "Records"
+msgstr "Registros"
+
+msgctxt "field:lims.project,stp_rector_scheme_comments:"
+msgid "Rector scheme comments"
+msgstr "Observaciones esquema rector"
+
+msgctxt "field:lims.project,stp_reference_elements:"
+msgid "Reference/Test elements in GLP"
+msgstr "Elementos de referencia/prueba en BPL"
+
+msgctxt "field:lims.project,stp_samples:"
+msgid "Samples"
+msgstr "Muestras"
+
+msgctxt "field:lims.project,stp_samples_in_custody:"
+msgid "Samples in custody"
+msgstr "Muestras en custodia"
+
+msgctxt "field:lims.project,stp_solvents_and_reagents:"
+msgid "Solvents and Reagents"
+msgstr "Solventes y Reactivos"
+
+msgctxt "field:lims.project,stp_sponsor:"
+msgid "Sponsor"
+msgstr "Patrocinador"
+
+msgctxt "field:lims.project,stp_start_date:"
+msgid "Start date"
+msgstr "Fecha de inicio del plan"
+
+msgctxt "field:lims.project,stp_state:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:lims.project,stp_study_director:"
+msgid "Study director"
+msgstr "Director del estudio"
+
+msgctxt "field:lims.project,stp_suspension_date:"
+msgid "Discard date"
+msgstr "Fecha de baja"
+
+msgctxt "field:lims.project,stp_suspension_reason:"
+msgid "Discard reason"
+msgstr "Razón de la baja"
+
+msgctxt "field:lims.project,stp_target:"
+msgid "Target"
+msgstr "Objetivo"
+
+msgctxt "field:lims.project,stp_test_method:"
+msgid "Test method"
+msgstr "Método de pruebas"
+
+msgctxt "field:lims.project,stp_test_system:"
+msgid "Test system"
+msgstr "Sistema de ensayos"
+
+msgctxt "field:lims.project,stp_title:"
+msgid "Title"
+msgstr "Título"
+
+msgctxt "field:lims.project,unit:"
+msgid "Unit"
+msgstr "Unidad"
+
+msgctxt "field:lims.project.deviation_amendment,anomaly_number:"
+msgid "Anomaly number"
+msgstr "Número de anomalía"
+
+msgctxt "field:lims.project.deviation_amendment,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.project.deviation_amendment,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.project.deviation_amendment,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:lims.project.deviation_amendment,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:lims.project.deviation_amendment,document_type:"
+msgid "Document Type"
+msgstr "Tipo de documento"
+
+msgctxt "field:lims.project.deviation_amendment,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.project.deviation_amendment,number:"
+msgid "Number"
+msgstr "Número"
+
+msgctxt "field:lims.project.deviation_amendment,professionals:"
+msgid "Staff involved"
+msgstr "Personal involucrado"
+
+msgctxt "field:lims.project.deviation_amendment,project:"
+msgid "Project"
+msgstr "Proyecto"
+
+msgctxt "field:lims.project.deviation_amendment,reason:"
+msgid "Reason"
+msgstr "Motivo"
+
+msgctxt "field:lims.project.deviation_amendment,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.project.deviation_amendment,sponsor_communication:"
+msgid "Sponsor communication"
+msgstr "Comunicación con el patrocinador"
+
+msgctxt "field:lims.project.deviation_amendment,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.project.deviation_amendment,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.project.deviation_amendment,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.project.deviation_amendment.professional,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.project.deviation_amendment.professional,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.project.deviation_amendment.professional,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt ""
+"field:lims.project.deviation_amendment.professional,deviation_amendment:"
+msgid "Deviation/Amendment"
+msgstr "Desvío/Enmienda"
+
+msgctxt "field:lims.project.deviation_amendment.professional,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.project.deviation_amendment.professional,professional:"
+msgid "Laboratory professional"
+msgstr "Profesional de laboratorio"
+
+msgctxt "field:lims.project.deviation_amendment.professional,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.project.deviation_amendment.professional,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.project.deviation_amendment.professional,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.project.glp_report.03.print.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.project.glp_report.03.print.start,project:"
+msgid "Project"
+msgstr "Proyecto"
+
+msgctxt "field:lims.project.glp_report.03.print.start,report_date_from:"
+msgid "Report date from"
+msgstr "Fecha de contramuestra desde"
+
+msgctxt "field:lims.project.glp_report.03.print.start,report_date_to:"
+msgid "to"
+msgstr "hasta"
+
+msgctxt "field:lims.project.glp_report.05.print.start,expiry_date_from:"
+msgid "Expiry date from"
+msgstr "Vencimiento desde"
+
+msgctxt "field:lims.project.glp_report.05.print.start,expiry_date_to:"
+msgid "to"
+msgstr "hasta"
+
+msgctxt "field:lims.project.glp_report.05.print.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.project.glp_report.05.print.start,project:"
+msgid "Project"
+msgstr "Proyecto"
+
+msgctxt "field:lims.project.glp_report.10.print.start,date_from:"
+msgid "Ingress date from"
+msgstr "Ingreso desde"
+
+msgctxt "field:lims.project.glp_report.10.print.start,date_to:"
+msgid "to"
+msgstr "hasta"
+
+msgctxt "field:lims.project.glp_report.10.print.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.project.glp_report.12.print.start,date_from:"
+msgid "Date from"
+msgstr "Fecha desde"
+
+msgctxt "field:lims.project.glp_report.12.print.start,date_to:"
+msgid "to"
+msgstr "hasta"
+
+msgctxt "field:lims.project.glp_report.12.print.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.project.re_open.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.project.re_open.start,reason:"
+msgid "Reason"
+msgstr "Motivo"
+
+msgctxt "field:lims.project.reference_element,cas_number:"
+msgid "CAS number"
+msgstr "Número CAS"
+
+msgctxt "field:lims.project.reference_element,chemical_name:"
+msgid "Chemical name"
+msgstr "Nombre químico"
+
+msgctxt "field:lims.project.reference_element,common_name:"
+msgid "Common name"
+msgstr "Nombre común"
+
+msgctxt "field:lims.project.reference_element,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.project.reference_element,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.project.reference_element,expiration_date:"
+msgid "Expiration date"
+msgstr "Fecha de vencimiento"
+
+msgctxt "field:lims.project.reference_element,formula:"
+msgid "Formula"
+msgstr "Fórmula"
+
+msgctxt "field:lims.project.reference_element,homogeneity:"
+msgid "Homogeneity"
+msgstr "Homogeneidad"
+
+msgctxt "field:lims.project.reference_element,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.project.reference_element,input_product:"
+msgid "Input"
+msgstr "Insumo"
+
+msgctxt "field:lims.project.reference_element,location:"
+msgid "Location"
+msgstr "Ubicación"
+
+msgctxt "field:lims.project.reference_element,lot:"
+msgid "Lot"
+msgstr "Lote"
+
+msgctxt "field:lims.project.reference_element,molecular_weight:"
+msgid "Molecular weight"
+msgstr "Peso molecular"
+
+msgctxt "field:lims.project.reference_element,project:"
+msgid "Project"
+msgstr "Proyecto"
+
+msgctxt "field:lims.project.reference_element,purity_degree:"
+msgid "Purity Degree"
+msgstr "Grado de pureza"
+
+msgctxt "field:lims.project.reference_element,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.project.reference_element,reception_date:"
+msgid "Reception date"
+msgstr "Fecha de recepción"
+
+msgctxt "field:lims.project.reference_element,stability:"
+msgid "Stability"
+msgstr "Estabilidad"
+
+msgctxt "field:lims.project.reference_element,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.project.reference_element,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.project.reference_element,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.project.sample_in_custody,carrier:"
+msgid "Carrier"
+msgstr "Transportista"
+
+msgctxt "field:lims.project.sample_in_custody,comments:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "field:lims.project.sample_in_custody,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.project.sample_in_custody,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.project.sample_in_custody,entry_date:"
+msgid "Entry date"
+msgstr "Fecha de recepción"
+
+msgctxt "field:lims.project.sample_in_custody,entry_responsible:"
+msgid "Entry responsible"
+msgstr "Responsable de ingreso"
+
+msgctxt "field:lims.project.sample_in_custody,file_operator_responsible:"
+msgid "File operator responsible"
+msgstr "Responsable operario archivo"
+
+msgctxt "field:lims.project.sample_in_custody,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.project.sample_in_custody,location:"
+msgid "Location"
+msgstr "Ubicación"
+
+msgctxt "field:lims.project.sample_in_custody,package_type:"
+msgid "Package type"
+msgstr "Tipo de envase"
+
+msgctxt "field:lims.project.sample_in_custody,packages_quantity:"
+msgid "Packages quantity"
+msgstr "Cantidad de envases"
+
+msgctxt "field:lims.project.sample_in_custody,processing_state:"
+msgid "State of samples processing"
+msgstr "Estado del procesamiento de las muestras"
+
+msgctxt "field:lims.project.sample_in_custody,processing_state_other:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:lims.project.sample_in_custody,project:"
+msgid "Project"
+msgstr "Proyecto"
+
+msgctxt "field:lims.project.sample_in_custody,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.project.sample_in_custody,sample:"
+msgid "Sample"
+msgstr "Muestra"
+
+msgctxt "field:lims.project.sample_in_custody,temperature:"
+msgid "Temperature condition of the samples"
+msgstr "Condición de temperatura de las muestras"
+
+msgctxt "field:lims.project.sample_in_custody,temperature_other:"
+msgid "Temperature"
+msgstr "Temperatura"
+
+msgctxt "field:lims.project.sample_in_custody,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.project.sample_in_custody,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.project.solvent_reagent,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.project.solvent_reagent,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.project.solvent_reagent,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.project.solvent_reagent,lot:"
+msgid "Lot"
+msgstr "Lote"
+
+msgctxt "field:lims.project.solvent_reagent,product:"
+msgid "Solvent/Reagent"
+msgstr "Solvente/Reactivo"
+
+msgctxt "field:lims.project.solvent_reagent,project:"
+msgid "Project"
+msgstr "Proyecto"
+
+msgctxt "field:lims.project.solvent_reagent,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.project.solvent_reagent,solvent_reagent_domain:"
+msgid "Solvent/Reagent domain"
+msgstr "Dominio para Solvente/Reactivo"
+
+msgctxt "field:lims.project.solvent_reagent,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.project.solvent_reagent,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.project.stp_changelog,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.project.stp_changelog,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.project.stp_changelog,date2:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:lims.project.stp_changelog,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:lims.project.stp_changelog,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.project.stp_changelog,project:"
+msgid "Study plan project"
+msgstr "Proyecto plan de estudio"
+
+msgctxt "field:lims.project.stp_changelog,reason:"
+msgid "Reason"
+msgstr "Motivo"
+
+msgctxt "field:lims.project.stp_changelog,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.project.stp_changelog,user:"
+msgid "User"
+msgstr "Usuario"
+
+msgctxt "field:lims.project.stp_changelog,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.project.stp_changelog,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.project.stp_professional,approval_date:"
+msgid "Approval date"
+msgstr "Fecha de aprobación"
+
+msgctxt "field:lims.project.stp_professional,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.project.stp_professional,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.project.stp_professional,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.project.stp_professional,position:"
+msgid "Position"
+msgstr "Posición"
+
+msgctxt "field:lims.project.stp_professional,professional:"
+msgid "Laboratory professional"
+msgstr "Profesional de laboratorio"
+
+msgctxt "field:lims.project.stp_professional,project:"
+msgid "Study plan project"
+msgstr "Proyecto plan de estudio"
+
+msgctxt "field:lims.project.stp_professional,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.project.stp_professional,role_facility_director:"
+msgid "Facility director"
+msgstr "Director de la Instalación"
+
+msgctxt "field:lims.project.stp_professional,role_other:"
+msgid "Other"
+msgstr "Otro"
+
+msgctxt "field:lims.project.stp_professional,role_quality_unit:"
+msgid "Quality unit"
+msgstr "Unidad de Calidad"
+
+msgctxt "field:lims.project.stp_professional,role_study_director:"
+msgid "Study director"
+msgstr "Director del estudio"
+
+msgctxt "field:lims.project.stp_professional,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.project.stp_professional,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.project.stp_professional.position,code:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "field:lims.project.stp_professional.position,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.project.stp_professional.position,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.project.stp_professional.position,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:lims.project.stp_professional.position,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.project.stp_professional.position,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.project.stp_professional.position,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.project.stp_professional.position,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.sample,after_application_days:"
+msgid "After application days"
+msgstr "Días después de aplicado"
+
+msgctxt "field:lims.sample,application_date:"
+msgid "Application date"
+msgstr "Fecha de aplicación"
+
+msgctxt "field:lims.sample,balance:"
+msgid "Balance"
+msgstr "Balanza"
+
+msgctxt "field:lims.sample,cultivation_zone:"
+msgid "Cultivation zone"
+msgstr "Zona de cultivo"
+
+msgctxt "field:lims.sample,dosis:"
+msgid "Dosis"
+msgstr "Dosis"
+
+msgctxt "field:lims.sample,glp_repetitions:"
+msgid "GLP repetitions"
+msgstr "Repeticiones según BPL"
+
+msgctxt "field:lims.sample,reception_date:"
+msgid "Reception date"
+msgstr "Fecha de recepción"
+
+msgctxt "field:lims.sample,sample_weight:"
+msgid "Sample weight"
+msgstr "Peso de la muestra"
+
+msgctxt "field:lims.sample,sampling_date:"
+msgid "Sampling date"
+msgstr "Fecha del muestreo"
+
+msgctxt "field:lims.sample,treatment:"
+msgid "Treatment"
+msgstr "Tratamiento"
+
+msgctxt "field:stock.lot,formula:"
+msgid "Formula"
+msgstr "Fórmula"
+
+msgctxt "field:stock.lot,molecular_weight:"
+msgid "Molecular weight"
+msgstr "Peso molecular"
+
+msgctxt "model:ir.action,name:act_lims_project_stp_professional_position_list"
+msgid "Professional Positions"
+msgstr "Posiciones de profesional"
+
+msgctxt "model:ir.action,name:report_glp_01"
+msgid ""
+"GLP 01. GLP-005- Annex 3 Temporary input and output of samples to the file"
+msgstr ""
+"BPL 01. BPL-005- Anexo 3 Ingreso y egreso provisorio de muestras al archivo"
+
+msgctxt "model:ir.action,name:report_glp_02"
+msgid ""
+"GLP 02. GLP-005- Annex 4 Definitive input and output of samples to analyze"
+msgstr ""
+"BPL 02. BPL-005- Anexo 4 Ingreso y egreso definitivo de muestras para "
+"analizar"
+
+msgctxt "model:ir.action,name:report_glp_03"
+msgid "GLP 03. GLP-005- Annex 5 Storage of samples"
+msgstr ""
+"BPL 03. BPL-005- Anexo 5 Almacenamiento de muestras de planes de estudio"
+
+msgctxt "model:ir.action,name:report_glp_04"
+msgid "GLP 04. GLP-005- Annex 6 Movements of countersamples"
+msgstr ""
+"BPL 04. BPL-005- Anexo 6 Movimiento de contramuestras de planes de estudio"
+
+msgctxt "model:ir.action,name:report_glp_05"
+msgid "GLP 05. GLP-005- Annex 7 Discharge of samples"
+msgstr "BPL 05. BPL-005- Anexo 7 Descarte de muestras de planes de estudio"
+
+msgctxt "model:ir.action,name:report_glp_06"
+msgid "GLP 06. GLP-001- Annex 3 Deviations and amendments of Study plan"
+msgstr "BPL 06. BPL-001- Anexo 3 Desviaciones/Enmiendas del plan de estudio"
+
+msgctxt "model:ir.action,name:report_glp_07"
+msgid "GLP 07. Table 1- Study plan"
+msgstr "BPL 07. Tabla 1- Plan de estudio"
+
+msgctxt "model:ir.action,name:report_glp_08"
+msgid "GLP 08. Table 2- Test elements for Final report (RP)"
+msgstr "BPL 08. Tabla 2- Elementos de prueba para informe final (RP)"
+
+msgctxt "model:ir.action,name:report_glp_09"
+msgid "GLP 09. Table 3- Result of Final report"
+msgstr "BPL 09. Tabla 3- Resultado de informe final"
+
+msgctxt "model:ir.action,name:report_glp_10"
+msgid "GLP 10. Rector scheme"
+msgstr "BPL 10. Esquema rector"
+
+msgctxt "model:ir.action,name:report_glp_11"
+msgid "GLP 11. Reference/Test elements (FOR)"
+msgstr "BPL 11. Elementos de referencia/prueba (FOR)"
+
+msgctxt "model:ir.action,name:report_glp_12"
+msgid "GLP 12. Changelog"
+msgstr "BPL 12. Registro de cambios"
+
+msgctxt "model:ir.action,name:report_glp_final_for"
+msgid "GLP Final Report (FOR)"
+msgstr "BPL Informe final (FOR)"
+
+msgctxt "model:ir.action,name:report_glp_final_rp"
+msgid "GLP Final Report (RP)"
+msgstr "BPL Informe final (RP)"
+
+msgctxt "model:ir.action,name:report_glp_study_plan"
+msgid "GLP Study plan"
+msgstr "BPL Plan de estudio"
+
+msgctxt "model:ir.action,name:wiz_re_open_project"
+msgid "Open Project"
+msgstr "Abrir proyecto"
+
+msgctxt "model:ir.action,name:wiz_report_glp_03_print"
+msgid "GLP 03. GLP-005- Annex 5 Storage of samples"
+msgstr ""
+"BPL 03. BPL-005- Anexo 5 Almacenamiento de muestras de planes de estudio"
+
+msgctxt "model:ir.action,name:wiz_report_glp_05_print"
+msgid "GLP 05. GLP-005- Annex 7 Discharge of samples"
+msgstr "BPL 05. BPL-005- Anexo 7 Descarte de muestras de planes de estudio"
+
+msgctxt "model:ir.action,name:wiz_report_glp_10_print"
+msgid "GLP 10. Rector scheme"
+msgstr "BPL 10. Esquema rector"
+
+msgctxt "model:ir.action,name:wiz_report_glp_12_print"
+msgid "GLP 12. Changelog"
+msgstr "BPL 12. Registro de cambios"
+
+msgctxt "model:ir.sequence,name:seq_sample_in_custody"
+msgid "Sample in Custody"
+msgstr "Muestra en custodia"
+
+msgctxt "model:ir.sequence.type,name:seq_type_sample_in_custody"
+msgid "Sample in Custody"
+msgstr "Muestra en custodia"
+
+msgctxt "model:ir.sequence.type,name:seq_type_stp_project"
+msgid "Project"
+msgstr "Proyecto"
+
+msgctxt "model:ir.ui.menu,name:lims_project_stp_professional_position_menu"
+msgid "Professional Positions"
+msgstr "Posiciones de profesional"
+
+msgctxt "model:lims.project.deviation_amendment,name:"
+msgid "Deviation and Amendment"
+msgstr "Desvío y Enmienda"
+
+msgctxt "model:lims.project.deviation_amendment.professional,name:"
+msgid "Deviation/Amendment Professional"
+msgstr "Profesional Desvío/Enmienda"
+
+msgctxt "model:lims.project.glp_report.03.print.start,name:"
+msgid "GLP-005- Annex 5 Storage of samples"
+msgstr "BPL-005- Anexo 5 Almacenamiento de muestras de planes de estudio"
+
+msgctxt "model:lims.project.glp_report.05.print.start,name:"
+msgid "GLP-005- Annex 7 Discharge of samples"
+msgstr "BPL-005- Anexo 7 Descarte de muestras de planes de estudio"
+
+msgctxt "model:lims.project.glp_report.10.print.start,name:"
+msgid "Rector scheme"
+msgstr "Esquema rector"
+
+msgctxt "model:lims.project.glp_report.12.print.start,name:"
+msgid "Changelog"
+msgstr "Registro de cambios"
+
+msgctxt "model:lims.project.re_open.start,name:"
+msgid "Open Project"
+msgstr "Abrir proyecto"
+
+msgctxt "model:lims.project.reference_element,name:"
+msgid "Reference/Test Element in GLP"
+msgstr "Elemento de referencia/prueba en BPL"
+
+msgctxt "model:lims.project.sample_in_custody,name:"
+msgid "Sample in Custody"
+msgstr "Muestra en custodia"
+
+msgctxt "model:lims.project.solvent_reagent,name:"
+msgid "Solvent and Reagent"
+msgstr "Solvente y Reactivo"
+
+msgctxt "model:lims.project.stp_changelog,name:"
+msgid "Project Changelog"
+msgstr "Registro de cambios en proyecto"
+
+msgctxt "model:lims.project.stp_professional,name:"
+msgid "Project Professional"
+msgstr "Profesional de laboratorio"
+
+msgctxt "model:lims.project.stp_professional.position,name:"
+msgid "Professional Position"
+msgstr "Posición de profesional"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Entry responsible /"
+msgstr "Resp. de recepción / Firma"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "File operator responsible /"
+msgstr "Resp. oper. archivo / Firma"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Retire responsible/"
+msgstr "Resp. que retira / Firma"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Entry responsible Signature"
+msgstr "Firma Responsable de ingreso"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Entry responsible or Laboratory"
+msgstr "Responsable de ingreso o Laboratorio"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "File operator responsible"
+msgstr "Responsable operario archivo"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "File responsible Signature"
+msgstr "Firma Responsable archivo"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "GLP 005 - Annex 3"
+msgstr "BPL 005 - Anexo 3 - Rev. 5"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "STUDY PLAN:"
+msgstr "PLAN DE ESTUDIO:"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Input"
+msgstr "Ingreso"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Reception date"
+msgstr "Fecha de recepción"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Matrix:"
+msgstr "Matriz:"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Output"
+msgstr "Egreso"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Output date"
+msgstr "Fecha de egreso"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Packages quantity and type"
+msgstr "Cantidad de envases y tipo"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Page:"
+msgstr "Página:"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Product brand:"
+msgstr "Producto comercial:"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Sponsor:"
+msgstr "Patrocinador:"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Storage Location:"
+msgstr "Ubicación de almacenamiento"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Temporary input and output of samples to the file"
+msgstr "Ingreso y Egreso PROVISORIO de Muestras al Archivo"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid "Sample reception"
+msgstr "Recepción de muestras"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Definitive input and output of samples to analyze"
+msgstr "Ingreso y Egreso DEFINITIVO de Muestras para analizar"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "File operator responsible"
+msgstr "Responsable operario archivo"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "File responsible Signature"
+msgstr "Firma Responsable archivo"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "GLP 005 - Annex 4"
+msgstr "BPL 005 - Anexo 4"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Input"
+msgstr "Ingreso"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Input date"
+msgstr "Fecha de ingreso"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Laboratory responsible"
+msgstr "Responsable de Laboratorio"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Laboratory responsible Signature"
+msgstr "Firma Responsable de Laboratorio"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Matrix:"
+msgstr "Matriz:"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Output"
+msgstr "Egreso"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Output date"
+msgstr "Fecha de egreso"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Packages quantity and type"
+msgstr "Cantidad de envases y tipo"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Page:"
+msgstr "Página:"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Print date:"
+msgstr "Fecha de Impresión:"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Product brand:"
+msgstr "Producto comercial:"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Sponsor:"
+msgstr "Patrocinador:"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Storage Location:"
+msgstr "Ubicación de almacenamiento"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "-"
+msgstr "-"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Countersample"
+msgstr "Contramuestra"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Countersample date"
+msgstr "Fecha de contramuestra"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "File operator responsible Signature"
+msgstr "Firma Responsable Operaciones Archivo"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "GLP 005 - Annex 5"
+msgstr "BPL 005 - Anexo 5"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Input date"
+msgstr "Fecha de ingreso"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Location"
+msgstr "Ubicación"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Packages quantity and type"
+msgstr "Cantidad de envases y tipo"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Page:"
+msgstr "Página:"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Print date:"
+msgstr "Fecha de Impresión:"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Report date range:"
+msgstr "Rango de fechas de almacenamiento:"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Sample"
+msgstr "Muestra"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Storage"
+msgstr "Almacenamiento"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Storage of Countersamples"
+msgstr "Almacenamiento de contramuestras"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Study director Signature"
+msgstr "Firma Director de Estudio"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "From Location"
+msgstr "Desde ubicación"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "GLP 005 - Annex 6"
+msgstr "BPL 005 - Anexo 6"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "Internal Shipment"
+msgstr "Remito interno"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "Matrix:"
+msgstr "Matriz:"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "Movements of countersamples"
+msgstr "Movimientos de contramuestras"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "Page:"
+msgstr "Página:"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "Print date:"
+msgstr "Fecha de Impresión:"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "Product brand:"
+msgstr "Producto comercial:"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "Responsible"
+msgstr "Responsable"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "Responsible Signature"
+msgstr "Firma Responsable"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "Sponsor:"
+msgstr "Patrocinador:"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "Storage Location:"
+msgstr "Ubicación de almacenamiento"
+
+msgctxt "report:lims.project.glp_report.04:"
+msgid "To Location"
+msgstr "A ubicación"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "-"
+msgstr "-"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Countersample"
+msgstr "Contramuestra"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Countersample date"
+msgstr "Fecha de contramuestra"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Discharge date"
+msgstr "Fecha de descarte"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Discharge of Countersamples"
+msgstr "Descarte de contramuestras"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Expiry date range:"
+msgstr "Rango de fechas de Vencimiento de muestras:"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "File operator responsible Signature"
+msgstr "Firma Responsable operario archivo"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "GLP 005 - Annex 7"
+msgstr "BPL 005 - Anexo 7"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Input date"
+msgstr "Fecha de ingreso"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Location"
+msgstr "Ubicación"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Packages quantity and type"
+msgstr "Cantidad de envases y tipo"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Page:"
+msgstr "Página:"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Print date:"
+msgstr "Fecha de Impresión:"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Sample"
+msgstr "Muestra"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Storage"
+msgstr "Almacenamiento"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Study director Signature"
+msgstr "Firma Director de estudio"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "report:lims.project.glp_report.06:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.project.glp_report.06:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "report:lims.project.glp_report.06:"
+msgid "Date:"
+msgstr "Fecha:"
+
+msgctxt "report:lims.project.glp_report.06:"
+msgid "Description:"
+msgstr "Descripción:"
+
+msgctxt "report:lims.project.glp_report.06:"
+msgid "Facility director Signature:"
+msgstr "Firma Director de Instalación"
+
+msgctxt "report:lims.project.glp_report.06:"
+msgid "GLP 001 - Annex 3"
+msgstr "BPL 001 - Anexo 3"
+
+msgctxt "report:lims.project.glp_report.06:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "report:lims.project.glp_report.06:"
+msgid "Page:"
+msgstr "Página:"
+
+msgctxt "report:lims.project.glp_report.06:"
+msgid "Quality Assurance Signature:"
+msgstr "Firma Aseguramiento de Calidad"
+
+msgctxt "report:lims.project.glp_report.06:"
+msgid "Reason:"
+msgstr "Motivo:"
+
+msgctxt "report:lims.project.glp_report.06:"
+msgid "Signature"
+msgstr "Firma"
+
+msgctxt "report:lims.project.glp_report.06:"
+msgid "Staff involved:"
+msgstr "Personal involucrado:"
+
+msgctxt "report:lims.project.glp_report.06:"
+msgid "Study director Signature:"
+msgstr "Firma Director de estudio:"
+
+msgctxt "report:lims.project.glp_report.06:"
+msgid "Study plan ID:"
+msgstr "ID Plan de estudio:"
+
+msgctxt "report:lims.project.glp_report.06:"
+msgid "Title:"
+msgstr "Título:"
+
+msgctxt "report:lims.project.glp_report.06:"
+msgid "to the"
+msgstr "al"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "AAD"
+msgstr "DDA"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Application date"
+msgstr "Fecha de aplicación"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Dosis"
+msgstr "Dosis"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Entries:"
+msgstr "Partidas:"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Matrix:"
+msgstr "Matriz:"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Packages quantity"
+msgstr "Cantidad de envases"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Page:"
+msgstr "Página:"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Reception date"
+msgstr "Fecha de recepción"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Repetitions"
+msgstr "Repeticiones"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "SENASA Protocol"
+msgstr "Protocolo SENASA"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Sampling date"
+msgstr "Fecha del muestreo"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Storage Location"
+msgstr "Ubicación"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Table 1"
+msgstr "Tabla 1"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Test elements received"
+msgstr "Elementos de prueba recibidos"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Treatment"
+msgstr "Tratamiento"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Variety"
+msgstr "Variedad"
+
+msgctxt "report:lims.project.glp_report.07:"
+msgid "Zone"
+msgstr "Zona"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "Rep."
+msgstr "Rep."
+
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "AAD"
+msgstr "DDA"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "Application date"
+msgstr "Fecha de aplicación"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "Dosis"
+msgstr "Dosis"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "Entries:"
+msgstr "Partidas:"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "Page:"
+msgstr "Página:"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "Reception date"
+msgstr "Fecha de recepción"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "Repetitions"
+msgstr "Repeticiones"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "Sample weight (g)"
+msgstr "Peso de la muestra (g)"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "Sampling date"
+msgstr "Fecha del muestreo"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "Table 2"
+msgstr "Tabla 2"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "Test elements received"
+msgstr "Elementos de prueba recibidos"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "Treatment"
+msgstr "Tratamiento"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "Variety"
+msgstr "Variedad"
+
+msgctxt "report:lims.project.glp_report.08:"
+msgid "Zone"
+msgstr "Zona"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "AAD"
+msgstr "DDA"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "Dosis"
+msgstr "Dosis"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "Final Volume"
+msgstr "Volumen final"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "Page:"
+msgstr "Página:"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "Repetitions"
+msgstr "Repeticiones"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "Result"
+msgstr "Resultado"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "Results report:"
+msgstr "Informe de resultados:"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "Sample Area"
+msgstr "Área de la muestra"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "Table 3"
+msgstr "Tabla 3"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "Treatment"
+msgstr "Tratamiento"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "mg/kg (ppm)"
+msgstr "mg/kg (ppm)"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "ml (diluc.)"
+msgstr "ml (diluc.)"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "variety"
+msgstr "variedad"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "-"
+msgstr "-"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "End date:"
+msgstr "Fecha de finalización:"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Implementation - Validation:"
+msgstr "Implementación - Validación:"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Ingress date range:"
+msgstr "Rango de fechas de ingreso:"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Input date"
+msgstr "Fecha de ingreso"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Matrix:"
+msgstr "Matriz:"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Packages quantity"
+msgstr "Cantidad de envases"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Page:"
+msgstr "Página:"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Pattern availability:"
+msgstr "Patrón disponible:"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Print date:"
+msgstr "Fecha de Impresión:"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Product brand:"
+msgstr "Producto comercial:"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Proposal end date:"
+msgstr "Fecha de finalización propuesta:"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Proposal start date:"
+msgstr "Fecha de inicio propuesta:"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Rector scheme of requested studies"
+msgstr "Esquema rector de estudios solicitados"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Sponsor:"
+msgstr "Patrocinador:"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Start date:"
+msgstr "Fecha de inicio:"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "State:"
+msgstr "Estado:"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Study N°"
+msgstr "Estudio N°"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Study director:"
+msgstr "Director del estudio / Investigador Principal:"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Under GLP"
+msgstr "Bajo BPL"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Yes"
+msgstr "Sí"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "CAS number:"
+msgstr "Número CAS:"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Catalog:"
+msgstr "Catálogo:"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Chemical name:"
+msgstr "Nombre químico:"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Common name:"
+msgstr "Nombre común:"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Expiration date:"
+msgstr "Fecha de vencimiento:"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Formula:"
+msgstr "Fórmula:"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Homogeneity:"
+msgstr "Homogeneidad:"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Location:"
+msgstr "Ubicación:"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Lot:"
+msgstr "Lote:"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Molecular weight:"
+msgstr "Peso molecular:"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Page:"
+msgstr "Página:"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Print date:"
+msgstr "Fecha de Impresión:"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Purity Degree:"
+msgstr "Grado de pureza."
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Reception date:"
+msgstr "Fecha de recepción:"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Reference elements:"
+msgstr "Elementos de referencia:"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Reference/Test elements"
+msgstr "Elementos de referencia/prueba"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Stability:"
+msgstr "Estabilidad:"
+
+msgctxt "report:lims.project.glp_report.11:"
+msgid "Test elements:"
+msgstr "Elementos de prueba:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "-"
+msgstr "-"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Changelog"
+msgstr "Registro de cambios"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Client:"
+msgstr "Cliente:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Date range:"
+msgstr "Rango de fechas:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Description:"
+msgstr "Descripción:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "End date:"
+msgstr "Fecha de finalización:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Implementation - Validation:"
+msgstr "Implementación - Validación:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Matrix:"
+msgstr "Matriz:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Page:"
+msgstr "Página:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Pattern availability:"
+msgstr "Patrón disponible:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Print date:"
+msgstr "Fecha de Impresión:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Product brand:"
+msgstr "Producto comercial:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Proposal end date:"
+msgstr "Fecha de finalización propuesta:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Proposal start date:"
+msgstr "Fecha de inicio propuesta:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Reason:"
+msgstr "Motivo:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Records:"
+msgstr "Registros:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Staff involved:"
+msgstr "Personal involucrado:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Start date:"
+msgstr "Fecha de inicio:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "State:"
+msgstr "Estado:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Study N°"
+msgstr "Estudio N°"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Target:"
+msgstr "Objetivo:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Test method:"
+msgstr "Método de pruebas:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Title:"
+msgstr "Título:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Under GLP"
+msgstr "Bajo BPL"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Update date:"
+msgstr "Fecha de actualización:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "User:"
+msgstr "Usuario:"
+
+msgctxt "report:lims.project.glp_report.12:"
+msgid "Yes"
+msgstr "Sí"
+
+msgctxt "selection:lims.entry,project_type:"
+msgid "Study plan"
+msgstr "Plan de estudio"
+
+msgctxt "selection:lims.project,min_qty_sample_compliance:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:lims.project,min_qty_sample_compliance:"
+msgid "Conforming"
+msgstr "Conforme"
+
+msgctxt "selection:lims.project,min_qty_sample_compliance:"
+msgid "Non Conforming"
+msgstr "No Conforme"
+
+msgctxt "selection:lims.project,min_qty_sample_compliance:"
+msgid "Not apply"
+msgstr "No Aplica"
+
+msgctxt "selection:lims.project,stp_implementation_validation:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:lims.project,stp_implementation_validation:"
+msgid "Implementation and validation"
+msgstr "Implementación y validación"
+
+msgctxt "selection:lims.project,stp_implementation_validation:"
+msgid "Validation only"
+msgstr "Sólo validación"
+
+msgctxt "selection:lims.project,stp_phase:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:lims.project,stp_phase:"
+msgid "Analytical phase plan"
+msgstr "Plan de Fase Analítica"
+
+msgctxt "selection:lims.project,stp_phase:"
+msgid "Study plan"
+msgstr "Plan de Estudio"
+
+msgctxt "selection:lims.project,stp_state:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:lims.project,stp_state:"
+msgid "Canceled"
+msgstr "Cancelado"
+
+msgctxt "selection:lims.project,stp_state:"
+msgid "Finalized"
+msgstr "Finalizado"
+
+msgctxt "selection:lims.project,stp_state:"
+msgid "Initiated"
+msgstr "Iniciado"
+
+msgctxt "selection:lims.project,stp_state:"
+msgid "Pending"
+msgstr "Pendiente"
+
+msgctxt "selection:lims.project,stp_state:"
+msgid "Requested"
+msgstr "Solicitado"
+
+msgctxt "selection:lims.project,type:"
+msgid "Study plan"
+msgstr "Plan de estudio"
+
+msgctxt "selection:lims.project.deviation_amendment,document_type:"
+msgid "Final Report"
+msgstr "Informe final"
+
+msgctxt "selection:lims.project.deviation_amendment,document_type:"
+msgid "Study Plan"
+msgstr "Plan de estudio"
+
+msgctxt "selection:lims.project.deviation_amendment,type:"
+msgid "Amendment"
+msgstr "Enmienda"
+
+msgctxt "selection:lims.project.deviation_amendment,type:"
+msgid "Deviation"
+msgstr "Desvío"
+
+msgctxt "selection:lims.project.reference_element,type:"
+msgid "Reference element"
+msgstr "Elemento de referencia"
+
+msgctxt "selection:lims.project.reference_element,type:"
+msgid "Test element"
+msgstr "Elemento de prueba"
+
+msgctxt "selection:lims.project.sample_in_custody,processing_state:"
+msgid "Others (specify)"
+msgstr "Otros (Aclarar)"
+
+msgctxt "selection:lims.project.sample_in_custody,processing_state:"
+msgid "Prepared/Homogenized"
+msgstr "Preparada/Homogeneizada"
+
+msgctxt "selection:lims.project.sample_in_custody,processing_state:"
+msgid "Processed"
+msgstr "Procesada"
+
+msgctxt "selection:lims.project.sample_in_custody,processing_state:"
+msgid "Row"
+msgstr "Bruta"
+
+msgctxt "selection:lims.project.sample_in_custody,temperature:"
+msgid "Ambient"
+msgstr "Ambiente"
+
+msgctxt "selection:lims.project.sample_in_custody,temperature:"
+msgid "Frozen"
+msgstr "Congelada"
+
+msgctxt "selection:lims.project.sample_in_custody,temperature:"
+msgid "Others (specify)"
+msgstr "Otros (Aclarar)"
+
+msgctxt "selection:lims.project.sample_in_custody,temperature:"
+msgid "Refrigerated"
+msgstr "Refrigerada"
+
+msgctxt "view:lims.create_sample.start:"
+msgid "Study plan"
+msgstr "Plan de Estudio"
+
+msgctxt "view:lims.notebook.line:"
+msgid "Notebook lines"
+msgstr "Líneas de cuaderno"
+
+msgctxt "view:lims.project.deviation_amendment.professional:"
+msgid "Deviation/Amendment Professional"
+msgstr "Profesional Desvío/Enmienda"
+
+msgctxt "view:lims.project.deviation_amendment.professional:"
+msgid "Deviation/Amendment Professionals"
+msgstr "Profesionales Desvío/Enmienda"
+
+msgctxt "view:lims.project.deviation_amendment:"
+msgid "Deviation and Amendment"
+msgstr "Desvío y Enmienda"
+
+msgctxt "view:lims.project.deviation_amendment:"
+msgid "Deviations and Amendments"
+msgstr "Desvíos y Enmiendas"
+
+msgctxt "view:lims.project.glp_report.03.print.start:"
+msgid "GLP-005- Annex 5 Storage of samples"
+msgstr "BPL-005- Anexo 5 Almacenamiento de muestras de planes de estudio"
+
+msgctxt "view:lims.project.glp_report.05.print.start:"
+msgid "GLP-005- Annex 7 Discharge of samples"
+msgstr "BPL-005- Anexo 7 Descarte de muestras de planes de estudio"
+
+msgctxt "view:lims.project.glp_report.10.print.start:"
+msgid "Rector scheme"
+msgstr "Esquema rector"
+
+msgctxt "view:lims.project.glp_report.12.print.start:"
+msgid "Changelog"
+msgstr "Registro de cambios"
+
+msgctxt "view:lims.project.re_open.start:"
+msgid "Open Project"
+msgstr "Abrir proyecto"
+
+msgctxt "view:lims.project.re_open.start:"
+msgid "Reason"
+msgstr "Motivo"
+
+msgctxt "view:lims.project.reference_element:"
+msgid "Reference Element in GLP"
+msgstr "Elemento de referencia en BPL"
+
+msgctxt "view:lims.project.reference_element:"
+msgid "Reference Elements in GLP"
+msgstr "Elementos de referencia en BPL"
+
+msgctxt "view:lims.project.sample_in_custody:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "view:lims.project.sample_in_custody:"
+msgid "Sample in Custody"
+msgstr "Muestra en custodia"
+
+msgctxt "view:lims.project.sample_in_custody:"
+msgid "Samples in Custody"
+msgstr "Muestras en custodia"
+
+msgctxt "view:lims.project.solvent_reagent:"
+msgid "Solvent and Reagent"
+msgstr "Solvente y Reactivo"
+
+msgctxt "view:lims.project.solvent_reagent:"
+msgid "Solvents and Reagents"
+msgstr "Solventes y Reactivos"
+
+msgctxt "view:lims.project.stp_professional.position:"
+msgid "Professional Position"
+msgstr "Posición de profesional"
+
+msgctxt "view:lims.project.stp_professional.position:"
+msgid "Professional Positions"
+msgstr "Posiciones de profesional"
+
+msgctxt "view:lims.project.stp_professional:"
+msgid "Project Professional"
+msgstr "Profesional de proyecto"
+
+msgctxt "view:lims.project.stp_professional:"
+msgid "Project Professionals"
+msgstr "Profesionales de proyecto"
+
+msgctxt "view:lims.project.stp_professional:"
+msgid "Roles:"
+msgstr "Roles:"
+
+msgctxt "view:lims.project:"
+msgid "Dates"
+msgstr "Fechas"
+
+msgctxt "view:lims.project:"
+msgid "Deviations and Amendments"
+msgstr "Desvíos y Enmiendas"
+
+msgctxt "view:lims.project:"
+msgid "General"
+msgstr "General"
+
+msgctxt "view:lims.project:"
+msgid "Laboratory professionals"
+msgstr "Profesionales de laboratorio"
+
+msgctxt "view:lims.project:"
+msgid "Open"
+msgstr "Abrir"
+
+msgctxt "view:lims.project:"
+msgid "Rector scheme comments"
+msgstr "Observaciones esquema rector"
+
+msgctxt "view:lims.project:"
+msgid "Reference/Test elements"
+msgstr "Elementos de referencia/prueba"
+
+msgctxt "view:lims.project:"
+msgid "Samples"
+msgstr "Muestras"
+
+msgctxt "view:lims.project:"
+msgid "Samples in custody"
+msgstr "Muestras en custodia"
+
+msgctxt "view:lims.project:"
+msgid "Solvents and Reagents"
+msgstr "Solventes y Reactivos"
+
+msgctxt "view:lims.project:"
+msgid "Target"
+msgstr "Objetivo"
+
+msgctxt "view:lims.project:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "view:lims.project:"
+msgid "Test method"
+msgstr "Método de pruebas"
+
+msgctxt "view:lims.project:"
+msgid "Test system"
+msgstr "Sistema de ensayos"
+
+msgctxt "view:lims.project:"
+msgid "Tests performed"
+msgstr "Ensayos realizados"
+
+msgctxt "view:lims.project:"
+msgid "Update"
+msgstr "Actualizar"
+
+msgctxt "view:lims.sample:"
+msgid "Samples"
+msgstr "Muestras"
+
+msgctxt "view:lims.sample:"
+msgid "Study plan"
+msgstr "Plan de estudio"
+
+msgctxt "wizard_button:lims.project.glp_report.03.print,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.project.glp_report.03.print,start,print_:"
+msgid "Print"
+msgstr "Imprimir"
+
+msgctxt "wizard_button:lims.project.glp_report.05.print,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.project.glp_report.05.print,start,print_:"
+msgid "Print"
+msgstr "Imprimir"
+
+msgctxt "wizard_button:lims.project.glp_report.10.print,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.project.glp_report.10.print,start,print_:"
+msgid "Print"
+msgstr "Imprimir"
+
+msgctxt "wizard_button:lims.project.glp_report.12.print,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.project.glp_report.12.print,start,print_:"
+msgid "Print"
+msgstr "Imprimir"
+
+msgctxt "wizard_button:lims.project.re_open,start,re_open:"
+msgid "Open"
+msgstr "Abrir"
+
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Study plan"
+msgstr "Plan de Estudio"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "FINAL REPORT"
+msgstr "INFORME FINAL"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Date of issuance:"
+msgstr "Fecha de emisión:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Study ID:"
+msgstr "ID del Estudio:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Sponsor:"
+msgstr "Patrocinador:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Test facility:"
+msgstr "Instalación de pruebas:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Index"
+msgstr "Índice"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "A) GOOD LABORATORY PRACTICE - STATEMENT OF COMPLIANCE"
+msgstr "A) DECLARACIÓN DE CONFORMIDAD CON LAS BUENAS PRÁCTICAS DE LABORATORIO"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "STUDY TITLE:"
+msgstr "TÍTULO DEL ESTUDIO:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "SAMPLES ID:"
+msgstr "CÓDIGOS DE LAS MUESTRAS:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "TEST SUBSTANCE:"
+msgstr "SUSTANCIA DE ENSAYO:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "TEST SYSTEM:"
+msgstr "MATRIZ DE ENSAYO:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid ""
+"This study was conducted in accordance to the Good Laboratory Practice GLP "
+"(ENV/MC/CHEM (98) 17 OECD and SENASA Resolution 230/2000), following the "
+"study plan, authorized by the Sponsor and approved by Technical direction of"
+
+msgstr ""
+"Este estudio fue realizado de conformidad con los principios de las Buenas "
+"Prácticas de Laboratorio (ENV/MC/CHEM (98) 17 OECD, Resolución SENASA "
+"230/2000) y de acuerdo al plan de estudio escrito, autorizado por el "
+"Patrocinador y aprobado por el Director de Estudio designado por la Entidad "
+"de Ensayo"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid ""
+"according to Standard Operating Procedures (SOPs) established in the "
+"Procedures Manual of"
+msgstr ""
+" siguiendo los procedimientos normalizados de trabajo establecidos en el "
+"Manual de Procedimientos de este laboratorio. "
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid ""
+"This report is based on the obtained row data during the study. There were "
+"no circumstances that may have affected the quality and integrity of them."
+msgstr ""
+"El presente informe fue elaborado en base a los datos obtenidos durante el "
+"estudio y no se evidenciaron circunstancias que pudieran haber afectado la "
+"calidad e integridad de los mismos. "
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid ""
+"All documents related to this study, study plan, results obtained, "
+"electronic records, final report, shall be kept in the corresponding"
+msgstr ""
+"Tanto los resultados obtenidos como todo medio electrónico de registro de "
+"los mismos, toda documentación relacionada, plan de estudio e informe final "
+"serán conservados en los correspondientes archivos de"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "archives."
+msgstr "."
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Impact of deviations."
+msgstr "Impacto de desvíos."
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Date:"
+msgstr "Fecha:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Study director"
+msgstr "Director del estudio"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Agrochemical Residues"
+msgstr "Residuos de Agroquímicos"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "B) OBJETIVE"
+msgstr "B) OBJETIVO"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "C) STUDY AND TEST ELEMENTS DESCRIPTION"
+msgstr "C) DESCRIPCIÓN DEL ESTUDIO Y DE LOS ELEMENTOS DE PRUEBAS"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "1- Description of study"
+msgstr "1- Descripción del estudio"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "2- Test elements received for the study execution"
+msgstr "2- Elementos de prueba recibidos para la ejecución del estudio"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "D) SPONSOR AND TEST FACILITY INFORMATION"
+msgstr "D) INFORMACIÓN RELATIVA AL PATROCINADOR Y A LA INSTALACIÓN DE PRUEBAS"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "1- Data of Sponsor:"
+msgstr "1- Datos del Patrocinador:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "2- Data of the test facility:"
+msgstr "2- Datos de la instalación de pruebas:"
+
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "3- Staff of the test facility:"
+msgstr "3- Personal involucrado en el estudio:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Staff"
+msgstr "Personal"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "E) DATES"
+msgstr "E) FECHAS"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Samples reception:"
+msgstr "Recepción de muestras:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "LIMS sample input:"
+msgstr "Ingreso de muestras al LIMS:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Start of study:"
+msgstr "Inicio del estudio:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Start of experimental phase:"
+msgstr "Inicio de la etapa experimental:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "End of experimental phase:"
+msgstr "Fin de la etapa experimental:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Final report:"
+msgstr "Informe final:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "F) WORK METHODOLOGY"
+msgstr "F) METODOLOGÍA DE TRABAJO"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "1- TEST METHODS"
+msgstr "1- MÉTODOS DE PRUEBA"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "2- CONDITIONING OF TEST ELEMENTS"
+msgstr "2- ACONDICIONAMIENTO DE LOS ELEMENTOS DE PRUEBA"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "3- EXTRACTION PROCESS"
+msgstr "3- PROCESO DE EXTRACCIÓN"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "4- EQUIPMENTS AND MATERIALS"
+msgstr "4- EQUIPOS Y MATERIALES"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "5- DETECTOR OPERATING CONDITIONS"
+msgstr "5- CONDICIONES DE OPERACIÓN DEL DETECTOR"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "6- CHROMATOGRAPHIC CONDITIONS"
+msgstr "6- CONDICIONES CROMATOGRÁFICAS"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "7- REFERENCE SUBSTANCES"
+msgstr "7- SUSTANCIAS DE REFERENCIA"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Chemical name:"
+msgstr "Nombre químico:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Common name:"
+msgstr "Nombre común:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "CAS number:"
+msgstr "Número CAS:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Catalog number and brand:"
+msgstr "Número de catálogo y marca:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Lot:"
+msgstr "Lote:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Purity:"
+msgstr "Pureza:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Expiration date:"
+msgstr "Fecha de vencimiento:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Storage Location:"
+msgstr "Ubicación de almacenamiento:"
+
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "8- SOLVENTS, REAGENTS AND SUPPLIES"
+msgstr "8- SOLVENTES, REACTIVOS E INSUMOS"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "9- STANDARD SOLUTIONS FOR CALIBRATION AND SPIKED SAMPLES"
+msgstr ""
+"9- PREPARACIÓN DE SOLUCIONES ESTÁNDARES PARA CURVAS DE CALIBRADO Y "
+"FORTIFICACIONES"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "G) TEST EXECUTION"
+msgstr "G) EJECUCIÓN DEL ENSAYO"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "METHOD VALIDATION"
+msgstr "VALIDACION DEL MÉTODO"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "SAMPLE ANALYSIS"
+msgstr "ANÁLISIS DE LAS MUESTRAS"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "H) SAMPLE RESULTS"
+msgstr "H) RESULTADOS DE LAS MUESTRAS"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Results report Nº"
+msgstr "Informe de Resultado Nº"
+
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "I) SAFETY PRECAUTIONS"
+msgstr "I) PRECAUCIONES DE SEGURIDAD"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid ""
+"The instructions related to safety elements were followed at all time, "
+"according to HYS 001 procedure."
+msgstr ""
+"En todo momento se siguieron las instrucciones presentes en los puestos de "
+"trabajo en cuanto al uso de elementos de seguridad, según el procedimiento "
+"HYS 001 vigente."
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "J) GOOD LABORATORY PRACTICES COMPLIANCE ASSESSMENT"
+msgstr "J) EVALUACIÓN DE CONFORMIDAD CON LAS BUENAS PRACTICAS DE LABORATORIO"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid ""
+"This study was conducted in accordance to OECD Principles of Good Laboratory"
+" Practice, (1998) and SENASA resolution N° 230/2000, ensuring compliance "
+"with standard operating procedures."
+msgstr ""
+"Este estudio fue realizado de acuerdo con los Principios OECD de Buenas "
+"Prácticas de Laboratorio (1998), dispuestos por la resolución SENASA N° "
+"230/2000, garantizando el cumplimiento de los procedimientos normalizados "
+"de trabajo. "
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid ""
+"The different stages involved in the execution of this study were audited by"
+" the Quality Assurance Unit, according to the inspections program in the "
+"dates indicated in Quality Assurance Statement (Annex III of this report)."
+msgstr ""
+"Las distintas etapas involucradas en la ejecución del estudio fueron "
+"auditadas por la Unidad de Aseguramiento de la Calidad, de acuerdo al "
+"programa de inspecciones y en las fechas indicadas en la correspondiente "
+"Declaración incluida en Anexo III de este informe."
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "K) AMENDMENTS AND DEVIATIONS PROCEDURE"
+msgstr "K) PROCEDIMIENTO DE ENMIENDAS Y DESVÍOS"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid ""
+"This final report may be amended by the Study Director. All amendments with "
+"their descriptions will be signed by the Study Director and they shall take "
+"effect from that moment."
+msgstr ""
+"Este reporte final puede ser enmendado por el Director del Estudio. Todas "
+"las enmiendas, con sus descripciones, serán firmadas por el Director del "
+"estudio y tendrán efecto a partir de dicho momento."
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid ""
+"Study plan deviations will be recorded in the raw data and their impact will"
+" be evaluated by the Study Director, according to BPL 001 procedure."
+msgstr ""
+"Los desvíos al Plan de Estudio, cuando se presenten, se registrarán en los "
+"datos crudos y su impacto será evaluado por el Director del Estudio, de "
+"acuerdo al procedimiento BPL 001 vigente."
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "L) AMENDMENTS AND DEVIATIONS RECORDED"
+msgstr "L) ENMIENDAS Y DESVÍOS REGISTRADOS"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "M) ARCHIVES"
+msgstr "M) ARCHIVOS"
+
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid ""
+"The laboratory will keep the counter-samples of the test for at least six "
+"months or the time requested by the Sponsor. The study plan, final report "
+"and original data will be stored in the archives assigned in"
+msgstr ""
+"El laboratorio conservará las contra-muestras del ensayo hasta seis meses "
+"desde finalizado el análisis y luego acordará  con el Patrocinador la disposición "
+"final de loas mismas. El plan de estudio, los datos originales y una copia fiel del "
+"Informe serán conservados en los archivos asignados en "
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid ", according to BPL 005 procedure."
+msgstr ", según el procedimiento BPL 005 vigente. "
+
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "N) CONFIDENTIALITY COMMITMENT"
+msgstr "N) COMPROMISO DE CONFIDENCIALIDAD"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid ""
+"The signatories of this study commit to safeguard the confidentiality of all"
+" information involved in it, both provided by the sponsor as generated by "
+"this laboratory."
+msgstr ""
+"Los firmantes de este estudio se comprometen a resguardar la "
+"confidencialidad de toda la información involucrada en el mismo, tanto la "
+"entregada por el Patrocinador como la generada por este laboratorio."
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "ANNEX I – Chromatograms / Degradation Curves"
+msgstr "ANEXO I - Cromatogramas / Curvas de degradación"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "ANNEX II – Certificate of Analysis and Results Report"
+msgstr "ANEXO II - Certificado de Análisis e Informes de Resultados"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "ANNEX III - Quality Assurance Statement"
+msgstr "ANEXO III - Declaración de Aseguramiento de Calidad"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "ANNEX IV - Validation Results"
+msgstr "ANEXO IV - Resultados de Validación"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Page:"
+msgstr "Página:"
+
+msgctxt "report:lims.project.glp_report.final_rp:"
+msgid "Execution area: Agrochemical Residues"
+msgstr "Area de ejecución: Residuos de Agroquímicos"
+
+###
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Study plan"
+msgstr "Plan de Estudio"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "FINAL REPORT"
+msgstr "INFORME FINAL"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Date of issuance:"
+msgstr "Fecha de emisión:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Study ID:"
+msgstr "ID del Estudio:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Sponsor:"
+msgstr "Patrocinador:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Test facility:"
+msgstr "Instalación de pruebas:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Index"
+msgstr "Índice"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "A) GOOD LABORATORY PRACTICE - STATEMENT OF COMPLIANCE"
+msgstr "A) DECLARACIÓN DE CONFORMIDAD CON LAS BUENAS PRÁCTICAS DE LABORATORIO"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "STUDY TITLE:"
+msgstr "TÍTULO DEL ESTUDIO:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "SAMPLES ID:"
+msgstr "CÓDIGOS DE LAS MUESTRAS:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "FORMULATION TYPE:"
+msgstr "PRODUCTO Y MATRIZ DE ENSAYO:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "ACTIVE INGREDIENT:"
+msgstr "PRINCIPIO ACTIVO:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "TEST:"
+msgstr "ENSAYOS:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid ""
+"This study was conducted in accordance to the Good Laboratory Practice GLP "
+"(ENV/MC/CHEM (98) 17 OECD and SENASA Resolution 230/2000), following the "
+"study plan, authorized by the Sponsor and approved by Technical direction of"
+
+msgstr ""
+"Este estudio fue realizado de conformidad con los principios de las Buenas "
+"Prácticas de Laboratorio (ENV/MC/CHEM (98) 17 OECD, Resolución SENASA "
+"230/2000) y de acuerdo al plan de estudio escrito, autorizado por el "
+"Patrocinador y aprobado por el Director de Estudio designado por la Entidad "
+"de Ensayo"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid ""
+"according to Standard Operating Procedures (SOPs) established in the "
+"Procedures Manual of"
+msgstr ""
+" siguiendo los procedimientos normalizados de trabajo establecidos en el "
+"Manual de Procedimientos de este laboratorio. "
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid ""
+"This report is based on the obtained row data during the study. There were "
+"no circumstances that may have affected the quality and integrity of them."
+msgstr ""
+"El presente informe fue elaborado en base a los datos obtenidos durante el "
+"estudio y no se evidenciaron circunstancias que pudieran haber afectado la "
+"calidad e integridad de los mismos. "
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid ""
+"All documents related to this study, study plan, results obtained, "
+"electronic records, final report, shall be kept in the corresponding"
+msgstr ""
+"Tanto los resultados obtenidos como todo medio electrónico de registro de "
+"los mismos, toda documentación relacionada, plan de estudio e informe final "
+"serán conservados en los correspondientes archivos de"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "archives."
+msgstr "."
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Impact of deviations."
+msgstr "Impacto de desvíos."
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Date:"
+msgstr "Fecha:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Study director"
+msgstr "Director del estudio"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Agrochemical Formulations"
+msgstr "Formulados de Agroquímicos"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "B) OBJETIVE"
+msgstr "B) OBJETIVO"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "C) STUDY AND TEST ELEMENTS DESCRIPTION"
+msgstr "C) DESCRIPCIÓN DEL ESTUDIO Y DE LOS ELEMENTOS DE PRUEBAS"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "1- Description of study"
+msgstr "1- Descripción del estudio"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "2- Test elements received for the study execution"
+msgstr "2- Elementos de prueba recibidos para la ejecución del estudio"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "D) SPONSOR AND TEST FACILITY INFORMATION"
+msgstr "D) INFORMACIÓN RELATIVA AL PATROCINADOR Y A LA INSTALACIÓN DE PRUEBAS"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "1- Data of Sponsor:"
+msgstr "1- Datos del Patrocinador:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "2- Data of the test facility:"
+msgstr "2- Datos de la instalación de pruebas:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Execution area: Agrochemicals Formulators"
+msgstr "Area de ejecución: Formulados de Agroquímicos"
+
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "3- Staff of the test facility:"
+msgstr "3- Personal involucrado en el estudio:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Staff"
+msgstr "Personal"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "E) DATES"
+msgstr "E) FECHAS"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Samples reception:"
+msgstr "Recepción de muestras:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "LIMS sample input:"
+msgstr "Ingreso de muestras al LIMS:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Start of study:"
+msgstr "Inicio del estudio:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Start of experimental phase:"
+msgstr "Inicio de la etapa experimental:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "End of experimental phase:"
+msgstr "Fin de la etapa experimental:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Final report:"
+msgstr "Informe final:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "F) WORK METHODOLOGY"
+msgstr "F) METODOLOGÍA DE TRABAJO"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "1- TEST METHODS"
+msgstr "1- MÉTODOS DE PRUEBA"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "2- CONDITIONING OF TEST ELEMENTS"
+msgstr "2- ACONDICIONAMIENTO DE LOS ELEMENTOS DE PRUEBA"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "3- EQUIPMENTS AND MATERIALS"
+msgstr "3- EQUIPOS Y MATERIALES"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "4- DETECTOR OPERATING CONDITIONS"
+msgstr "4- CONDICIONES DE OPERACIÓN DEL DETECTOR"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "5- CHROMATOGRAPHIC CONDITIONS"
+msgstr "5- CONDICIONES CROMATOGRÁFICAS"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "6- REFERENCE SUBSTANCES"
+msgstr "6- SUSTANCIAS DE REFERENCIA"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Chemical name:"
+msgstr "Nombre químico:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Common name:"
+msgstr "Nombre común:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "CAS number:"
+msgstr "Número CAS:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Catalog number and brand:"
+msgstr "Número de catálogo y marca:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Lot:"
+msgstr "Lote:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Purity:"
+msgstr "Pureza:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Expiration date:"
+msgstr "Fecha de vencimiento:"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Storage Location:"
+msgstr "Ubicación de almacenamiento:"
+
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "7- SOLVENTS, REAGENTS AND SUPPLIES"
+msgstr "7- SOLVENTES, REACTIVOS E INSUMOS"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "8- STANDARD SOLUTIONS FOR CALIBRATION AND SPIKED SAMPLES"
+msgstr ""
+"8- PREPARACIÓN DE SOLUCIONES ESTÁNDARES PARA CURVAS DE CALIBRADO Y "
+"FORTIFICACIONES"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "G) TEST EXECUTION"
+msgstr "G) EJECUCIÓN DEL ENSAYO"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "METHOD VALIDATION"
+msgstr "VALIDACION DEL MÉTODO"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "SAMPLE ANALYSIS"
+msgstr "ANÁLISIS DE LAS MUESTRAS"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "H) SAMPLE RESULTS"
+msgstr "H) RESULTADOS DE LAS MUESTRAS"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Results report Nº"
+msgstr "Informe de Resultado Nº"
+
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "I) SAFETY PRECAUTIONS"
+msgstr "I) PRECAUCIONES DE SEGURIDAD"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid ""
+"The instructions related to safety elements were followed at all time, "
+"according to HYS 001 procedure."
+msgstr ""
+"En todo momento se siguieron las instrucciones presentes en los puestos de "
+"trabajo en cuanto al uso de elementos de seguridad, según el procedimiento "
+"HYS 001 vigente."
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "J) GOOD LABORATORY PRACTICES COMPLIANCE ASSESSMENT"
+msgstr "J) EVALUACIÓN DE CONFORMIDAD CON LAS BUENAS PRACTICAS DE LABORATORIO"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid ""
+"This study was conducted in accordance to OECD Principles of Good Laboratory"
+" Practice, (1998) and SENASA resolution N° 230/2000, ensuring compliance "
+"with standard operating procedures."
+msgstr ""
+"Este estudio fue realizado de acuerdo con los Principios OECD de Buenas "
+"Prácticas de Laboratorio (1998), dispuestos por la resolución SENASA N° "
+"230/2000, garantizando el cumplimiento de los procedimientos normalizados "
+"de trabajo. "
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid ""
+"The different stages involved in the execution of this study were audited by"
+" the Quality Assurance Unit, according to the inspections program in the "
+"dates indicated in Quality Assurance Statement (Annex III of this report)."
+msgstr ""
+"Las distintas etapas involucradas en la ejecución del estudio fueron "
+"auditadas por la Unidad de Aseguramiento de la Calidad, de acuerdo al "
+"programa de inspecciones y en las fechas indicadas en la correspondiente "
+"Declaración incluida en Anexo III de este informe."
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "K) AMENDMENTS AND DEVIATIONS PROCEDURE"
+msgstr "K) PROCEDIMIENTO DE ENMIENDAS Y DESVÍOS"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid ""
+"This final report may be amended by the Study Director. All amendments with "
+"their descriptions will be signed by the Study Director and they shall take "
+"effect from that moment."
+msgstr ""
+"Este reporte final puede ser enmendado por el Director del Estudio. Todas "
+"las enmiendas, con sus descripciones, serán firmadas por el Director del "
+"estudio y tendrán efecto a partir de dicho momento."
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid ""
+"Study plan deviations will be recorded in the raw data and their impact will"
+" be evaluated by the Study Director, according to BPL 001 procedure."
+msgstr ""
+"Los desvíos al Plan de Estudio, cuando se presenten, se registrarán en los "
+"datos crudos y su impacto será evaluado por el Director del Estudio, de "
+"acuerdo al procedimiento BPL 001 vigente."
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "L) AMENDMENTS AND DEVIATIONS RECORDED"
+msgstr "L) ENMIENDAS Y DESVÍOS REGISTRADOS"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "M) ARCHIVES"
+msgstr "M) ARCHIVOS"
+
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid ""
+"The laboratory will keep the counter-samples of the test for at least six "
+"months or the time requested by the Sponsor. The study plan, final report "
+"and original data will be stored in the archives assigned in"
+msgstr ""
+"El laboratorio conservará las contra-muestras del ensayo hasta seis meses "
+"desde finalizado el análisis y luego acordará  con el Patrocinador la disposición "
+"final de loas mismas. El plan de estudio, los datos originales y una copia fiel del "
+"Informe serán conservados en los archivos asignados en "
+
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid ", according to BPL 005 procedure."
+msgstr ", según el procedimiento BPL 005 vigente. "
+
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "N) CONFIDENTIALITY COMMITMENT"
+msgstr "N) COMPROMISO DE CONFIDENCIALIDAD"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid ""
+"The signatories of this study commit to safeguard the confidentiality of all"
+" information involved in it, both provided by the sponsor as generated by "
+"this laboratory."
+msgstr ""
+"Los firmantes de este estudio se comprometen a resguardar la "
+"confidencialidad de toda la información involucrada en el mismo, tanto la "
+"entregada por el Patrocinador como la generada por este laboratorio."
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "ANNEX I – Chromatograms"
+msgstr "ANEXO I - Cromatogramas"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "ANNEX II – Certificate of Analysis and Results Report"
+msgstr "ANEXO II - Certificado de Análisis e Informes de Resultados"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "ANNEX III - Quality Assurance Statement"
+msgstr "ANEXO III - Declaración de Aseguramiento de Calidad"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "ANNEX IV - Validation Results"
+msgstr "ANEXO IV - Resultados de Validación"
+
+msgctxt "report:lims.project.glp_report.final_for:"
+msgid "Page:"
+msgstr "Página:"
+
+###
+
+msgctxt "model:ir.action,name:report_glp_analytical_phase"
+msgid "GLP Analytical Phase Report "
+msgstr "BPL Informe analítico de la fase experimental"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Study plan"
+msgstr "Plan de Estudio"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "ANALYTICAL EXPERIMENTAL PHASE REPORT"
+msgstr "INFORME ANALÍTICO DE LA FASE EXPERIMENTAL"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Date of issuance:"
+msgstr "Fecha de emisión:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Study ID:"
+msgstr "ID del Estudio:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Test site:"
+msgstr "Entidad de Laboratorio:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Test facility:"
+msgstr "Instalación de pruebas:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Index"
+msgstr "Índice"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "A) GOOD LABORATORY PRACTICE - STATEMENT OF COMPLIANCE"
+msgstr "A) DECLARACIÓN DE CONFORMIDAD CON LAS BUENAS PRÁCTICAS DE LABORATORIO"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "STUDY TITLE:"
+msgstr "TÍTULO DEL ESTUDIO:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "SAMPLES ID:"
+msgstr "CÓDIGOS DE LAS MUESTRAS:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "TEST SUBSTANCE:"
+msgstr "SUSTANCIA DE ENSAYO:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "TEST SYSTEM:"
+msgstr "MATRIZ DE ENSAYO:"
+
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid ""
+"This Analytical Experimental Phase was conducted in accordance to the Good "
+"Laboratory Practice GLP (ENV/MC/CHEM (98) 17 OECD and SENASA Resolution "
+"230/2000), following the study plan, authorized by the Sponsor and approved "
+"by the Study Director designed by the Test Facility"
+msgstr ""
+"Esta fase del estudio fue realizada de conformidad con los principios de las"
+" Buenas Prácticas de Laboratorio (ENV/MC/CHEM (98) 17 OECD, Resolución "
+"SENASA 230/2000) y de acuerdo al plan de estudio escrito, autorizado por el "
+"Patrocinador y aprobado por el Director de Estudio designado por la Entidad "
+"de Ensayo"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid ""
+"according to Standard Operating Procedures (SOPs) established in the "
+"Procedures Manual of"
+msgstr ""
+" siguiendo los procedimientos normalizados de trabajo establecidos en el "
+"Manual de Procedimientos de "
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid ""
+"This report is based on the obtained row data during the study. There were "
+"no circumstances that may have affected the quality and integrity of them."
+msgstr ""
+"El presente informe fue elaborado en base a los datos obtenidos durante el "
+"estudio y no se evidenciaron circunstancias que pudieran haber afectado la "
+"calidad e integridad de los mismos. "
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid ""
+"All documents related to this study, study plan, results obtained, "
+"electronic records, final report, shall be kept in the corresponding"
+msgstr ""
+"Tanto los resultados obtenidos como todo medio electrónico de registro de "
+"los mismos, toda documentación relacionada, plan de estudio e informe final "
+"serán conservados en los correspondientes archivos de"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "archives."
+msgstr "."
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Impact of deviations."
+msgstr "Impacto de desvíos."
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Date:"
+msgstr "Fecha:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Principal Investigator"
+msgstr "Investigador Principal"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Agrochemical Residues"
+msgstr "Residuos de Agroquímicos"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "B) OBJETIVE"
+msgstr "B) OBJETIVO"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "C) STUDY AND TEST ELEMENTS DESCRIPTION"
+msgstr "C) DESCRIPCIÓN DEL ESTUDIO Y DE LOS ELEMENTOS DE PRUEBAS"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "1- Description of study"
+msgstr "1- Descripción del estudio"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "2- Test elements received for the Analytical Experimental Phase of the study"
+msgstr "2- Elementos de prueba recibidos para la ejecución la Fase "
+"Experimental Analítica del estudio"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "D) SPONSOR, TEST FACILITY AND TEST SITE INFORMATION"
+msgstr "D) INFORMACIÓN RELATIVA AL PATROCINADOR, A LA ENTIDAD DE ENSAYO "
+" Y A LA ENTIDAD DE LABORATORIO"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "1- Data of Sponsor:"
+msgstr "1- Datos del Patrocinador:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "2- Data of the test facility and Study Director:"
+msgstr "2- Datos de la instalación de pruebas y del Director de Estudio:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "3- Data of the test site:"
+msgstr "3- Datos de la entidad de ensayo:"
+
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "4- Staff of the test site:"
+msgstr "4- Personal involucrado de la entidad de ensayo:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Staff"
+msgstr "Personal"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "E) DATES"
+msgstr "E) FECHAS"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Samples reception:"
+msgstr "Recepción de muestras:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "LIMS samples input:"
+msgstr "Ingreso de muestras al LIMS:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Start of study:"
+msgstr "Inicio del estudio:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Start of Analytical Experimental Phase:"
+msgstr "Inicio de la Fase Experimental Analítica:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "End of Analytical Experimental Phase:"
+msgstr "Fin de la Fase Experimental Analítica:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Analytical Experimenal Phase report:"
+msgstr "Informe de la Fase Experimental Analítica:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "F) WORK METHODOLOGY"
+msgstr "F) METODOLOGÍA DE TRABAJO"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "1- TEST METHODS"
+msgstr "1- MÉTODOS DE PRUEBA"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "2- CONDITIONING OF TEST ELEMENTS"
+msgstr "2- ACONDICIONAMIENTO DE LOS ELEMENTOS DE PRUEBA"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "3- EXTRACTION PROCESS"
+msgstr "3- PROCESO DE EXTRACTION"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "4- EQUIPMENTS AND MATERIALS"
+msgstr "4- EQUIPOS Y MATERIALES"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "5- DETECTOR OPERATING CONDITIONS"
+msgstr "5- CONDICIONES DE OPERACIÓN DEL DETECTOR"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "6- CHROMATOGRAPHIC CONDITIONS"
+msgstr "6- CONDICIONES CROMATOGRÁFICAS"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "7- REFERENCE SUBSTANCES"
+msgstr "7- SUSTANCIAS DE REFERENCIA"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Chemical name:"
+msgstr "Nombre químico:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Common name:"
+msgstr "Nombre común:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "CAS number:"
+msgstr "Número CAS:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Catalog number and brand:"
+msgstr "Número de catálogo y marca:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Lot:"
+msgstr "Lote:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Purity:"
+msgstr "Pureza:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Expiration date:"
+msgstr "Fecha de vencimiento:"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Storage Location:"
+msgstr "Ubicación de almacenamiento:"
+
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "8- SOLVENTS, REAGENTS AND SUPPLIES"
+msgstr "8- SOLVENTES, REACTIVOS E INSUMOS"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "9- STANDARD SOLUTIONS FOR CALIBRATION AND SPIKED SAMPLES"
+msgstr ""
+"9- PREPARACIÓN DE SOLUCIONES ESTÁNDARES PARA CURVAS DE CALIBRADO Y "
+"FORTIFICACIONES"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "G) TEST EXECUTION"
+msgstr "G) EJECUCIÓN DEL ENSAYO"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "METHOD VALIDATION"
+msgstr "VALIDACION DEL MÉTODO"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "SAMPLE ANALYSIS"
+msgstr "ANÁLISIS DE LAS MUESTRAS"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "H) SAMPLE RESULTS"
+msgstr "H) RESULTADOS DE LAS MUESTRAS"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Results report Nº"
+msgstr "Informe de Resultado Nº"
+
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "I) SAFETY PRECAUTIONS"
+msgstr "I) PRECAUCIONES DE SEGURIDAD"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid ""
+"The instructions related to safety elements were followed at all time, "
+"according to HYS 001 procedure."
+msgstr ""
+"En todo momento se siguieron las instrucciones presentes en los puestos de "
+"trabajo en cuanto al uso de elementos de seguridad, según el procedimiento "
+"HYS 001 vigente."
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "J) GOOD LABORATORY PRACTICES COMPLIANCE ASSESSMENT"
+msgstr "J) EVALUACIÓN DE CONFORMIDAD CON LAS BUENAS PRACTICAS DE LABORATORIO"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid ""
+"This Analytical Experimenal Phase was conducted in accordance to OECD "
+"Principles of Good Laboratory Practice, (1998) and SENASA resolution "
+"N° 230/2000, ensuring compliance with standard operating procedures."
+msgstr ""
+"Esta fase analítica del estudio fue realizada de acuerdo con los Principios "
+"OECD de Buenas Prácticas de Laboratorio (1998), dispuestos por la "
+"resolución SENASA N° 230/2000, garantizando el cumplimiento de los "
+"procedimientos normalizados de trabajo. "
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid ""
+"The different stages involved in the execution of this phase were "
+"audited by the Quality Assurance Unit, according to the inspections "
+"program in the dates indicated in Quality Assurance Statement "
+"(Annex III of this report)."
+msgstr ""
+"Las distintas etapas involucradas en la ejecución de la fase analítica "
+"del estudio fueron auditadas por la Unidad de Aseguramiento de la "
+"Calidad, de acuerdo al programa de inspecciones y en las fechas "
+"indicadas en la correspondiente Declaración incluida en Anexo III de "
+"este informe."
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "K) AMENDMENTS AND DEVIATIONS PROCEDURE"
+msgstr "K) PROCEDIMIENTO DE ENMIENDAS Y DESVÍOS"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid ""
+"This Analytical Experimenal Phase report may be amended by the Principal "
+"Investigator in contact with Study Director. All amendments with their "
+"descriptions will be signed by the Principal Investigator and shall "
+"take effect from that time."
+msgstr ""
+"Este reporte de fase analítica puede ser enmendado por el Investigador "
+"Principal, previa comunicación con el Director del Estudio. "
+"Todas las enmiendas, con sus descripciones, serán firmadas por el "
+"Investigador Principal y tendrán efecto a partir de dicho momento."
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid ""
+"Study plan deviations will be recorded in the raw data and its impact "
+"will be evaluated by the Study Director, according to BPL 001 procedure"
+" in force."
+msgstr ""
+"Los desvíos al Plan de Estudio, cuando se presenten, se registrarán en "
+"los datos crudos y su impacto será evaluado por el Director del Estudio, "
+"de acuerdo al procedimiento BPL 001 vigente."
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "L) AMENDMENTS AND DEVIATIONS RECORDED"
+msgstr "L) ENMIENDAS Y DESVÍOS REGISTRADOS"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "M) ARCHIVES"
+msgstr "M) ARCHIVOS"
+
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid ""
+"The laboratory will keep the counter-samples of the test for at least "
+"six months or the time requested by the Test Facility. The study plan, "
+"Analytical Experimenal Phase report and original data will be stored"
+" in the archives assigned in"
+msgstr ""
+"El laboratorio conservará las contra-muestras del ensayo hasta seis meses "
+"desde finalizado el análisis y luego acordará con la Entidad de Ensayo "
+"la disposición final de las mismas. Los datos originales, una copia fiel del "
+"plan de estudio con sus enmiendas y del informe de fase analítica, serán "
+"conservados en los archivos asignados en "
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid ", according to BPL 005 procedure."
+msgstr ", según el procedimiento BPL 005 vigente. "
+
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "N) CONFIDENTIALITY COMMITMENT"
+msgstr "N) COMPROMISO DE CONFIDENCIALIDAD"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid ""
+"The signatories of this study commit to safeguard the confidentiality "
+"of all information involved in it, both provided by the Test Facility "
+"as generated by this laboratory."
+msgstr ""
+"Los firmantes de este estudio se comprometen a resguardar la "
+"confidencialidad de toda la información involucrada en el mismo, "
+"tanto la entregada por la Entidad de Ensayo como la generada por "
+"este laboratorio."
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "ANNEX I – Chromatograms / Degradation Curves"
+msgstr "ANEXO I - Cromatogramas / Curvas de degradación"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "ANNEX II – Certificate of Analysis and Results Report"
+msgstr "ANEXO II - Certificado de Análisis e Informes de Resultados"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "ANNEX III - Quality Assurance Statement"
+msgstr "ANEXO III - Declaración de Aseguramiento de Calidad"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "ANNEX IV - Validation Results"
+msgstr "ANEXO IV - Resultados de Validación"
+
+msgctxt "report:lims.project.glp_report.analytical_phase:"
+msgid "Page:"
+msgstr "Página:"
+
+#######
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "1. Target:"
+msgstr "1. Objetivo:"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "10. Records and Reports"
+msgstr "10. Registros e Informes"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "11. Signatures and dates"
+msgstr "11. Firmas y Fechas"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "2. Description:"
+msgstr "2. Descripción:"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "3. Test elements received for the execution of the study"
+msgstr "3. Elementos de prueba recibidos para la ejecución del estudio"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "4. Identification of the reference element (Pattern)"
+msgstr "4. Identificación del Elemento de Referencia (Patrón)"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "5. Data of Sponsor/Client"
+msgstr "5. Datos del Patrocinador/Cliente"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "6. Data of Testing facility"
+msgstr "6. Datos de la instalación de pruebas"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "7. Staff involved in the study"
+msgstr "7. Personal involucrado en el estudio"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "8. Dates relating to the study"
+msgstr "8. Fechas relativas al estudio"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "9. Test method"
+msgstr "9. Método de Prueba"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Address"
+msgstr "Dirección"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid ""
+"All data and records, both manual and electronic, generated since the "
+"request of the study by the sponsor up to the delivery of the final report, "
+"in the corresponding files will be kept according to BPL005 procedures."
+msgstr ""
+"Se conservarán todos los datos y registros, tanto manuales y electrónicos, "
+"originados desde la solicitud del estudio por parte del patrocinador hasta "
+"la entrega del informe final, en los archivos correspondientes según "
+"procedimientos BPL 005."
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Approval date:"
+msgstr "Fecha de aprobación:"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Date:"
+msgstr "Fecha:"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Execution area:"
+msgstr "Área de ejecución:"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Facility director"
+msgstr "Director de la Instalación"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "ID:"
+msgstr "Identificación:"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Page:"
+msgstr "Página:"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Proposal end date of the experimental stage:"
+msgstr "Propuesta de fecha de finalización de la etapa experimental:"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Proposal start date of the experimental stage:"
+msgstr "Propuesta de fecha de inicio de la etapa experimental:"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Quality Assurance"
+msgstr "Aseguramiento de Calidad"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Samples ingress:"
+msgstr "Ingreso de las muestras:"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Study director"
+msgstr "Director del estudio"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Study plan"
+msgstr "Plan de Estudio"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Study start:"
+msgstr "Inicio del estudio:"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Test system:"
+msgstr "Sistema de Ensayos:"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid ""
+"The results of the samples will be entered into the LIMS according to "
+"internal procedures and reports will be generated. A final report containing"
+" all the information and results of the study will be done."
+msgstr ""
+"Los resultados de las muestras se ingresarán en el LIMS según procedimientos"
+" internos y se generarán los correspondientes informes. Se realizará un "
+"Informe Final conteniendo toda la información y resultados del estudio "
+"realizado."
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Title:"
+msgstr "Título:"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Verification date:"
+msgstr "Fecha de verificación:"
+
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Entry:"
+msgstr "Partida:"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Name:"
+msgstr "Nombre"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Objetive"
+msgstr "Objetivo"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid ""
+"Other Auxiliaries and / or Laboratory Analysts may be affected to the Study "
+"plan as needed."
+msgstr ""
+"Se podrá afectar al Plan de estudio otros Auxiliares y/o Analistas de "
+"laboratorio según necesidad."
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Samples reception:"
+msgstr "Recepción de muestras:"
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid ""
+"The Study plan will be kept together with manual and electronic records, "
+"originated from the request of the study by the sponsor up to the delivery "
+"of the final report, in the corresponding files will be kept according to "
+"BPL005 procedures."
+msgstr ""
+"Se conservará el Plan de estudio junto con registros manuales y "
+"electrónicos, originados desde la solicitud del estudio por parte del "
+"patricinador hasta la entrega del informe final, en los archivos "
+"correspondientes según procedimientos BPL 005."
+
+msgctxt "report:lims.project.glp_report.study_plan:"
+msgid "Work address:"
+msgstr "Dirección laboral:"
+
+##
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "(DE/IP, Strike out what does not apply)"
+msgstr "(DE/IP, tachar lo que no corresponda)"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "(Operator)"
+msgstr "(Operador)"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid ""
+"1: RM: method recovery - BZM: blank sample - MCL: client sample - LC: limit "
+"of quantification - LD limit of detection - Vol: volume - STD: standard – 2:"
+" Indicate dilution date"
+msgstr ""
+"1: RM: recuperación de método - BMZ: blanco muestra - MCL: muestra cliente -"
+" LC: límite de cuantificación - LD: límite de detección - Vol: volumen - "
+"STD: estándar– 2: indicar fecha de dilución -"
+
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "3: initials operator performing sample dilution"
+msgstr "3: iniciales del operador que realiza dilución de muestras."
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid ""
+": (See weight records on back). If sampling and / or purification are not "
+"carried out on the same day of weighing, indicate storage place at * 1."
+msgstr ""
+": (Ver registros de pesos al dorso). Si la extracción de las muestras y/o "
+"purificación no se realizan el mismo día de pesado, indicar lugar de "
+"almacenamiento en  * 1."
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid ""
+": Indicate place of storage if the date of injection differs from the date "
+"of purification and / or cleaning."
+msgstr ""
+": Indica lugar de almacenamiento si la fecha de inyección difiere de la "
+"fecha de purificación y/o limpieza."
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid ": Initials operator that performs sequence and injection arming."
+msgstr ": Iniciales de operador que realiza armado de secuencia e inyección."
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid ""
+": Place the initials of the operator, if more than one, indicate the "
+"initials separated by /."
+msgstr ""
+": Colocar las iniciales del operador,en case de ser mas de uno, indicar las "
+"iniciales separadas por /."
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "AFS or control used:"
+msgstr "SLA o testigo utilizado:"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "BPL 007 – Annex 3"
+msgstr "BPL 007 – Anexo 3 - Vigente"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "code"
+msgstr "Código"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Chromatographic column:"
+msgstr "Columna cromatogáfica:"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Date of Weighing / Removal"
+msgstr "Fecha de Pesado/Extracción"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Date of purification and / or cleaning"
+msgstr "Fecha de purificación y/o limpieza"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Date preparation std"
+msgstr "Fecha preparación std"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Date/Sign: _____/_____/201___"
+msgstr "Fecha/Firma: _____/_____/201___"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Dilution Factor"
+msgstr "Factor de dilución (muestra)"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Dilution date"
+msgstr "Fecha de dilución"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Equipment (corresponding batch number):"
+msgstr "Equipo (número de legajo correspondiente):"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Factor or aliquot:"
+msgstr "Factor o alicuota:"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Final volume:"
+msgstr "Volumen final:"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Fortification (mg/kg)"
+msgstr "Fortificación (mg/kg)"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "GC-MS-MS N°:"
+msgstr "GC-MS-MS N°:"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Injection date:"
+msgstr "Fecha de inyección:"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "LC-MS-MS N°:"
+msgstr "LC-MS-MS N°:"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Label (described by customer)"
+msgstr "Rótulo (descripto por el cliente)"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Location:"
+msgstr "Ubicación:"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "OP"
+msgstr "OP"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "OP."
+msgstr "OP."
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Observations and / or comments"
+msgstr "Observaciones y/o comentarios"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Procedure and / or method:"
+msgstr "Procedimiento y/o método:"
+
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Página"
+msgstr "Página"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Reference substances:"
+msgstr "Sustancia/s de referencia/s:"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Sample Weight (g)"
+msgstr "Peso de la muestra (g)"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Sample preparation registration GLP"
+msgstr "Registro de preparación de muestras BPL"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Scales N°"
+msgstr "Balanza N°"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Std added"
+msgstr "Estándar agregado"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Storage of extract"
+msgstr "Almacenamiento de extracto"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Study plan"
+msgstr "Plan de Estudio"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Testing System (Culture):"
+msgstr "Sistema de Pruebas(Cultivo):"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "T°:"
+msgstr "T°:"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "Volume of added std (ml)"
+msgstr "Volumen adicionado de std (ml)"
+
+msgctxt "report:lims.project.glp_report.13:"
+msgid "_____/_____/201___"
+msgstr "_____/_____/201___"
+
+
+msgctxt "model:ir.action,name:report_glp_13"
+msgid "GLP 13. GLP-007- Annex 3 Sample preparation registration GLP"
+msgstr "BPL 13. BPL 007 - Anexo 3 Registro de preparación de muestras BPL"
+
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "Matrix:"
+msgstr "Matriz:"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "Record of weight (g)"
+msgstr "Registro de peso (g)"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "Zone:"
+msgstr "Zona:"
+
+msgctxt "report:lims.project.glp_report.09:"
+msgid "Label"
+msgstr "Rótulo"
+
+##
+msgctxt "selection:lims.project.glp_report.10.print.start,stp_state:"
+msgid "Unfinished"
+msgstr "No finalizado"
+
+msgctxt "selection:lims.project.glp_report.10.print.start,stp_state:"
+msgid "Canceled"
+msgstr "Cancelado"
+
+msgctxt "selection:lims.project.glp_report.10.print.start,stp_state:"
+msgid "Finalized"
+msgstr "Finalizado"
+
+msgctxt "selection:lims.project.glp_report.10.print.start,stp_state:"
+msgid "Initiated"
+msgstr "Iniciado"
+
+msgctxt "selection:lims.project.glp_report.10.print.start,stp_state:"
+msgid "Pending"
+msgstr "Pendiente"
+
+msgctxt "selection:lims.project.glp_report.10.print.start,stp_state:"
+msgid "Requested"
+msgstr "Solicitado"
+
+msgctxt "selection:lims.project.glp_report.10.print.start,stp_state:"
+msgid "No status"
+msgstr "Sin estado"
+
+msgctxt "selection:lims.project.glp_report.10.print.start,stp_state:"
+msgid "All"
+msgstr "Todos"
+
+msgctxt "field:lims.project.glp_report.10.print.start,stp_state:"
+msgid "State"
+msgstr "Estado"
+
+##
+msgctxt "report:lims.project.glp_report.03:"
+msgid "DE/IP Signature (Strike out what does not apply):"
+msgstr "Firma DE/IP (Tachar lo que no corresponda):"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "General comments:"
+msgstr "Observaciones generales:"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Date:"
+msgstr "Fecha:"
+
+msgctxt "report:lims.project.glp_report.03:"
+msgid "Sample input to file"
+msgstr "Ingreso de muestras al archivo"
+
+msgctxt "report:lims.project.glp_report.02:"
+msgid "Date of definitive entry to the file:"
+msgstr "Fecha de ingreso definitivo al archivo:"
+
+msgctxt "report:lims.project.glp_report.01:"
+msgid ""
+"*: It will only be completed when the date of final entry to the file is "
+"later than the date of reception."
+msgstr ""
+"*: Sólo se completará cuando la fecha de Ingreso Definitivo al Archivo sea "
+"posterior a la fecha de recepción."
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Sample input to file"
+msgstr "Ingreso de muestras al archivo"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "Date:"
+msgstr "Fecha:"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "DE/IP Signature (Strike out what does not apply):"
+msgstr "Firma DE/IP (Tachar lo que no corresponda):"
+
+msgctxt "report:lims.project.glp_report.05:"
+msgid "File operations responsible Signature:"
+msgstr "Firma Responsable Operaciones del archivo:"
+
+msgctxt "error:lims.project:"
+msgid "Please, select a \"Analytical Phase Project\" to print this report"
+msgstr ""
+"Por favor, seleccione un proyecto de 'Plan de Fase Analítica' para "
+"imprimir este informe"
+
+msgctxt "error:lims.project:"
+msgid "Please, select a \"Study Plan Phase Project\" to print this report"
+msgstr ""
+"Por favor, seleccione un proyecto de fase 'Plan de Estudio' para "
+"imprimir este informe"

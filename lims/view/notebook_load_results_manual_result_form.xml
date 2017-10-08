@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<form>
+    <label name="method"/>
+    <field name="method"/>
+    <label name="start_date"/>
+    <field name="start_date"/>
+    <label name="professional"/>
+    <field name="professional" colspan="3"/>
+    <field name="lines" colspan="4"/>
+</form>

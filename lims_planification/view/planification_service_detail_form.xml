@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<form>
+    <label name="notebook_line"/>
+    <field name="notebook_line"/>
+    <label name="repetition"/>
+    <field name="repetition"/>
+    <field name="staff_responsible" colspan="4"/>
+</form>

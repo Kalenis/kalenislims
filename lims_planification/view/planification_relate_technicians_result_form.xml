@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<form>
+    <field name="technicians" colspan="4"/>
+    <label name="grouping"/>
+    <field name="grouping"/>
+    <newline/>
+    <field name="details1" colspan="4"/>
+    <field name="details2" colspan="4"/>
+    <field name="details3" colspan="4"/>
+</form>

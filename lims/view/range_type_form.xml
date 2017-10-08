@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<form>
+    <label name="code"/>
+    <field name="code"/>
+    <label name="name"/>
+    <field name="name"/>
+    <label name="use"/>
+    <field name="use"/>
+    <label name="by_default"/>
+    <field name="by_default"/>
+    <label name="resultrange_title"/>
+    <field name="resultrange_title"/>
+    <label name="resultrange_comments"/>
+    <field name="resultrange_comments"/>
+</form>

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/tree/field[@name='name']" position="after">
+        <field name="lims_only_available"/>
+    </xpath>
+</data>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="entry"/>
+    <field name="sample"/>
+    <field name="fraction"/>
+    <field name="service"/>
+    <field name="analysis"/>
+    <field name="repetition"/>
+    <field name="date"/>
+    <field name="original_sample"/>
+    <field name="original_fraction"/>
+    <field name="original_repetition"/>
+    <field name="min_value"/>
+    <field name="max_value"/>
+</tree>

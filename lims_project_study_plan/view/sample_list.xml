@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="entry"/>
+    <field name="number"/>
+    <field name="product_type_view"/>
+    <field name="matrix_view"/>
+    <field name="label"/>
+    <field name="package_type"/>
+    <field name="packages_quantity"/>
+    <field name="size"/>
+    <field name="size_uom"/>
+    <field name="application_date"/>
+    <field name="sampling_date"/>
+    <field name="treatment"/>
+    <field name="zone"/>
+    <field name="dosis"/>
+    <field name="after_application_days"/>
+    <field name="glp_repetitions"/>
+    <field name="z_senasa_protocol"/>
+    <field name="variety"/>
+    <field name="reception_date"/>
+    <field name="cultivation_zone"/>
+    <field name="sample_weight"/>
+    <field name="balance"/>
+    <field name="confirmed" tree_invisible="1" />
+</tree>

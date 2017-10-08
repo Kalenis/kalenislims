@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="code"/>
+    <field name="date"/>
+    <field name="laboratory"/>
+    <field name="start_date"/>
+    <field name="date_from"/>
+    <field name="date_to"/>
+    <field name="state"/>
+    <field name="comments"/>
+</tree>

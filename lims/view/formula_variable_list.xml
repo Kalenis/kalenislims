@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="number"/>
+    <field name="description"/>
+    <field name="fraction_type"/>
+    <field name="constant"/>
+</tree>

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<form>
+    <label name="product_type"/>
+    <field name="product_type"/>
+    <label name="matrix"/>
+    <field name="matrix"/>
+    <label name="analysis"/>
+    <field name="analysis"/>
+    <label name="method"/>
+    <field name="method"/>
+    <label name="default_repetitions"/>
+    <field name="default_repetitions"/>
+    <label name="limit_digits"/>
+    <field name="limit_digits"/>
+    <label name="detection_limit"/>
+    <field name="detection_limit"/>
+    <label name="quantification_limit"/>
+    <field name="quantification_limit"/>
+    <label name="initial_concentration"/>
+    <field name="initial_concentration"/>
+    <label name="start_uom"/>
+    <field name="start_uom"/>
+    <label name="final_concentration"/>
+    <field name="final_concentration"/>
+    <label name="end_uom"/>
+    <field name="end_uom"/>
+    <label name="calc_decimals"/>
+    <field name="calc_decimals"/>
+    <notebook>
+        <page string="Additional analysis" id="additionals" >
+            <label name="additional"/>
+            <field name="additional"/>
+            <field name="additionals" colspan="4"/>
+        </page>
+        <page string="Technical scope versions" id="technical_scope_versions">
+            <field name="technical_scope_versions" colspan="4"/>
+        </page>
+        <page string="Comments" id="comments" >
+            <field name="comments" colspan="4"/>
+        </page>
+    </notebook>
+    <group col="8" colspan="4" id="checkboxes">
+        <label name="report"/>
+        <field name="report"/>
+        <label name="check_result_limits"/>
+        <field name="check_result_limits"/>
+        <label name="by_default"/>
+        <field name="by_default"/>
+        <label name="valid"/>
+        <field name="valid"/>
+    </group>
+    <label name="report_type"/>
+    <field name="report_type"/>
+    <label name="report_result_type"/>
+    <field name="report_result_type"/>
+</form>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Wizard Open Project -->
+
+        <record model="ir.ui.view" id="lims_project_re_open_start_view_form">
+            <field name="model">lims.project.re_open.start</field>
+            <field name="type">form</field>
+            <field name="name">project_re_open_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_re_open_project">
+            <field name="name">Open Project</field>
+            <field name="wiz_name">lims.project.re_open</field>
+        </record>
+
+    </data>
+</tryton>

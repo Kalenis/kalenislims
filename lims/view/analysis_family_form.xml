@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<form>
+    <label name="code"/>
+    <field name="code"/>
+    <label name="description"/>
+    <field name="description"/>
+    <label name="party"/>
+    <field name="party" colspan="3"/>
+    <field name="certificants" colspan="4"/>
+</form>

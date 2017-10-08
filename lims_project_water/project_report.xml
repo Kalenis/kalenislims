@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+<!-- WTR 01. AGUA-001-Informe de muestreo de agua  -->
+
+        <record model="ir.action.report" id="report_wtr_01">
+            <field name="name">WTR - Water sampling report</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.water_sampling_report</field>
+            <field name="report">lims_project_water/report/wtr_01.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_wtr_01_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="report_wtr_01"/>
+        </record>
+    </data>
+</tryton>

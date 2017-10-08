@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<form>
+    <label name="invoice_party"/>
+    <field name="invoice_party"/>
+    <field name="invoice_party_domain" colspan="4" invisible="1"/>
+</form>

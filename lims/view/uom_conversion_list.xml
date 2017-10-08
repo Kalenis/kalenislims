@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="initial_uom"/>
+    <field name="final_uom"/>
+    <field name="initial_uom_volume"/>
+    <field name="final_uom_volume"/>
+    <field name="conversion_formula"/>
+</tree>

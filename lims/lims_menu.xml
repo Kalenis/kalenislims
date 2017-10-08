@@ -1,0 +1,248 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Create the Lims icons -->
+
+        <record model="ir.ui.icon" id="lab_icon">
+            <field name="name">lims-lab</field>
+            <field name="path">icons/lab_icon.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="configuration_icon">
+            <field name="name">lims-configuration</field>
+            <field name="path">icons/configuration.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="entry_board_icon">
+            <field name="name">lims-entry_board</field>
+            <field name="path">icons/entry_board.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="laboratory_icon">
+            <field name="name">lims-laboratory</field>
+            <field name="path">icons/laboratory.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="notebook_icon">
+            <field name="name">lims-notebook</field>
+            <field name="path">icons/notebook.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="notebook_line_all_menu_icon">
+            <field name="name">lims-notebook_line_all_menu</field>
+            <field name="path">icons/notebook_line_all_menu.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="laboratory_results_icon">
+            <field name="name">lims-laboratory_results</field>
+            <field name="path">icons/laboratory_results.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="notebook_load_results_manual_icon">
+            <field name="name">lims-notebook_load_results_manual</field>
+            <field name="path">icons/notebook_load_results_manual.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="notebook_load_results_formula_icon">
+            <field name="name">lims-notebook_load_results_formula</field>
+            <field name="path">icons/notebook_load_results_formula.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="laboratory_reports_icon">
+            <field name="name">lims-laboratory_reports</field>
+            <field name="path">icons/laboratory_reports.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="generate_results_report_icon">
+            <field name="name">lims-generate_results_report</field>
+            <field name="path">icons/generate_results_report.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="results_report_version_detail_icon">
+            <field name="name">lims-results_report_version_detail</field>
+            <field name="path">icons/results_report_version_detail.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="laboratory_control_icon">
+            <field name="name">lims-laboratory_control</field>
+            <field name="path">icons/laboratory_control.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="tendencies_icon">
+            <field name="name">lims-tendencies</field>
+            <field name="path">icons/tendencies.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="concentration_level_icon">
+            <field name="name">lims-concentration_level</field>
+            <field name="path">icons/concentration_level.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="control_means_deviations_calc_icon">
+            <field name="name">lims-control_means_deviations_calc</field>
+            <field name="path">icons/control_means_deviations_calc.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="tendencies_analysis_icon">
+            <field name="name">lims-tendencies_analysis</field>
+            <field name="path">icons/tendencies_analysis.svg</field>
+        </record>
+
+<!-- Menu -->
+
+        <menuitem name="LIMS"
+            id="lims_menu" icon="lims-lab"/>
+
+        <!-- Configuration -->
+        <menuitem name="Configuration" parent="lims_menu"
+            id="lims_config" sequence="10" icon="lims-configuration"/>
+
+        <!-- Configuration / Base -->
+        <menuitem name="Base" parent="lims_config"
+            id="lims_config_base" sequence="10"/>
+        <menuitem parent="lims_config_base" action="act_lims_configuration"
+            id="lims_configuration_menu" sequence="10"/>
+        <menuitem parent="lims_config_base" action="act_lims_workyear_list"
+            id="lims_workyear_menu" sequence="20"/>
+        <menuitem parent="lims_config_base" action="act_printer_list"
+            id="lims_printer_menu" sequence="30"/>
+
+        <!-- Configuration / Certification -->
+        <menuitem name="Certification" parent="lims_config"
+            id="lims_config_certification" sequence="20"/>
+        <menuitem parent="lims_config_certification" action="act_lims_certification_type_list"
+            id="lims_certification_type_list_menu" sequence="10"/>
+        <menuitem parent="lims_config_certification" action="act_lims_analysis_family_list"
+            id="lims_analysis_family_menu" sequence="20"/>
+        <menuitem parent="lims_config_certification" action="act_lims_technical_scope_list"
+            id="lims_technical_scope_menu" sequence="30"/>
+        <menuitem parent="lims_technical_scope_menu" action="act_lims_technical_scope_version_list"
+            id="lims_technical_scope_version_menu" sequence="10"/>
+
+        <!-- Configuration / Entry -->
+        <menuitem name="Entry" parent="lims_config"
+            id="lims_config_entry" sequence="30"/>
+        <menuitem parent="lims_config_entry" action="act_lims_packaging_type_list"
+            id="lims_packaging_type_menu" sequence="10"/>
+        <menuitem parent="lims_config_entry" action="act_lims_packaging_integrity_list"
+            id="lims_packaging_integrity_menu" sequence="20"/>
+        <menuitem parent="lims_config_entry" action="act_lims_variety_list"
+            id="lims_variety_menu" sequence="30"/>
+        <menuitem parent="lims_config_entry" action="act_lims_zone_list"
+            id="lims_zone_menu" sequence="40"/>
+        <menuitem parent="lims_config_entry" action="act_lims_entry_suspension_reason_list"
+            id="lims_entry_suspension_reason_menu" sequence="50"/>
+
+        <!-- Configuration / Laboratory -->
+        <menuitem name="Laboratory" parent="lims_config"
+            id="lims_config_laboratory" sequence="40"/>
+        <menuitem parent="lims_config_laboratory" action="act_lims_laboratory_list"
+            id="lims_laboratory_menu" sequence="10"/>
+        <menuitem parent="lims_config_laboratory" action="act_lims_laboratory_professional_list"
+            id="lims_laboratory_professional_menu" sequence="20"/>
+        <menuitem parent="lims_config_laboratory" action="act_lims_notebook_views_list"
+            id="lims_notebook_views_menu" sequence="30"/>
+        <menuitem parent="lims_config_laboratory" action="act_lims_lab_device_type_list"
+            id="lims_lab_device_type_menu" sequence="40"/>
+        <menuitem parent="lims_config_laboratory" action="act_lims_lab_device_list"
+            id="lims_lab_device_menu" sequence="50"/>
+
+        <!-- Configuration / Base Tables -->
+        <menuitem name="Base Tables" parent="lims_config"
+            id="lims_config_base_tables" sequence="70"/>
+        <menuitem parent="lims_config_base_tables" action="act_lims_product_type_list"
+            id="lims_product_type_menu" sequence="10"/>
+        <menuitem parent="lims_config_base_tables" action="act_lims_matrix_list"
+            id="lims_matrix_menu" sequence="20"/>
+        <menuitem parent="lims_config_base_tables" action="act_lims_lab_method_list"
+            id="lims_lab_method_menu" sequence="30"/>
+        <menuitem parent="lims_config_base_tables" action="act_lims_formula_list"
+            id="lims_formula_list_menu" sequence="40"/>
+        <menuitem parent="lims_config_base_tables" action="act_lims_analysis_list"
+            id="lims_analysis_menu" sequence="50"/>
+        <menuitem parent="lims_config_base_tables" action="act_lims_typification_list"
+            id="lims_typification_menu" sequence="60"/>
+        <menuitem parent="lims_typification_menu" action="act_lims_typification_calculated_readonly_list"
+            id="lims_typification_calculated_menu" sequence="10"/>
+        <menuitem parent="lims_config_base_tables" action="act_lims_fraction_type_list"
+            id="lims_fraction_type_menu" sequence="70"/>
+        <menuitem parent="lims_config_base_tables" action="act_lims_range_type_list"
+            id="lims_range_type_list_menu" sequence="80"/>
+        <menuitem parent="lims_config_base_tables" action="act_lims_range_list"
+            id="lims_range_list_menu" sequence="90"/>
+        <menuitem parent="lims_config_base_tables" action="act_lims_volume_conversion_list"
+            id="lims_volume_conversion_list_menu" sequence="100"/>
+        <menuitem parent="lims_config_base_tables" action="act_lims_uom_conversion_list"
+            id="lims_uom_conversion_list_menu" sequence="110"/>
+
+        <!-- Entries Board -->
+        <menuitem parent="lims_menu" name="Entries Board"
+            id="lims_entry_board_menu" sequence="30" icon="lims-entry_board"/>
+<!--        <menuitem parent="lims_entry_board_menu" action="wiz_lims_create_entry"
+            id="lims_create_entry_menu" sequence="5"/>-->
+        <menuitem parent="lims_entry_board_menu" action="act_lims_entry_form"
+            id="lims_entry_form_menu" sequence="10"  icon="tryton-new"/>
+        <menuitem parent="lims_entry_board_menu" action="act_lims_entry_list"
+            id="lims_entry_menu" sequence="20"  icon="tryton-list"/>
+        <menuitem parent="lims_entry_board_menu" action="act_lims_sample_list"
+            id="lims_sample_menu" sequence="30"/>
+        <menuitem parent="lims_entry_board_menu" action="act_lims_fraction_list"
+            id="lims_fraction_menu" sequence="40"/>
+        <menuitem parent="lims_fraction_menu" action="wizard_fractions_by_locations"
+            id="lims_fractions_by_locations_menu" sequence="10"/>
+        <menuitem parent="lims_entry_board_menu" action="act_lims_service_list"
+            id="lims_service_menu" sequence="50"/>
+        <menuitem parent="lims_entry_board_menu" action="act_lims_entry_detail_analysis_list"
+            id="lims_entry_detail_analysis_menu" sequence="60"/>
+
+        <!-- Laboratory -->
+        <menuitem name="Laboratory" parent="lims_menu"
+            id="lims_laboratory" sequence="50"
+            icon="lims-laboratory"/>
+        <menuitem parent="lims_laboratory" action="act_lims_notebook_list"
+            id="lims_notebook_menu" sequence="15"
+            icon="lims-notebook"/>
+        <menuitem parent="lims_notebook_menu" action="act_lims_notebook_line_all_fields_list"
+            id="lims_notebook_line_all_menu" sequence="10"
+            icon="lims-notebook_line_all_menu"/>
+        <menuitem parent="lims_notebook_line_all_menu" action="wiz_print_analysis_pending_inform"
+            id="menu_print_analysis_pending_inform" sequence="100"
+            icon="tryton-print"/>
+        <menuitem parent="lims_notebook_line_all_menu" action="wiz_print_analysis_checked_pending_inform"
+            id="menu_print_analysis_checked_pending_inform" sequence="100"
+            icon="tryton-print"/>
+
+        <!-- Laboratory / Results entry -->
+        <menuitem name="Results entry" parent="lims_laboratory"
+            id="lims_laboratory_results" sequence="20"
+            icon="lims-laboratory_results"/>
+        <menuitem parent="lims_laboratory_results" action="wiz_lims_notebook_load_results_manual"
+            id="lims_notebook_load_results_manual_menu" sequence="10"
+            icon="lims-notebook_load_results_manual"/>
+        <menuitem parent="lims_laboratory_results" action="wiz_lims_notebook_load_results_formula"
+            id="lims_notebook_load_results_formula_menu" sequence="20"
+            icon="lims-notebook_load_results_formula"/>
+
+        <!-- Laboratory / Results reports -->
+        <menuitem name="Results reports" parent="lims_laboratory"
+            id="lims_laboratory_reports" sequence="30"
+            icon="lims-laboratory_reports"/>
+        <menuitem parent="lims_laboratory_reports" action="act_lims_results_report"
+            id="lims_results_report_menu" sequence="10"
+            icon="lims-laboratory_reports"/>
+        <menuitem parent="lims_laboratory_reports" action="wiz_lims_generate_results_report"
+            id="lims_generate_results_report_menu" sequence="20"
+            icon="lims-generate_results_report"/>
+        <menuitem parent="lims_laboratory_reports" action="act_lims_results_report_version_detail"
+            id="lims_results_report_version_detail_menu" sequence="30"
+            icon="lims-results_report_version_detail"/>
+
+        <!-- Laboratory / Control Charts -->
+        <menuitem name="Control Charts" parent="lims_laboratory"
+            id="lims_laboratory_control" sequence="40"
+            icon="lims-laboratory_control"/>
+        <menuitem parent="lims_laboratory_control" action="act_lims_control_tendency"
+            id="lims_control_tendency_menu" sequence="10"
+            icon="lims-tendencies"/>
+        <menuitem parent="lims_laboratory_control" action="act_lims_concentration_level"
+            id="lims_concentration_level_menu" sequence="20"
+            icon="lims-concentration_level"/>
+        <menuitem parent="lims_laboratory_control" action="wiz_lims_control_means_deviations_calc"
+            id="lims_control_means_deviations_calc_menu" sequence="30"
+            icon="lims-control_means_deviations_calc"/>
+        <menuitem parent="lims_laboratory_control" action="wiz_lims_control_tendencies_analysis"
+            id="lims_control_tendencies_analysis_menu" sequence="40"
+            icon="lims-tendencies_analysis"/>
+
+<!-- Other menu items -->
+
+        <menuitem parent="res.menu_res" action="act_lims_user_role_list"
+            id="lims_user_role_menu" sequence="5"/>
+
+    </data>
+</tryton>

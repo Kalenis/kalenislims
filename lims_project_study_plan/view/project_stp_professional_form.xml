@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<form>
+    <label name="professional"/>
+    <field name="professional" colspan="3"/>
+    <label name="position"/>
+    <field name="position"/>
+    <label name="approval_date"/>
+    <field name="approval_date"/>
+    <separator string="Roles:" colspan="4" id="roles"/>
+    <group col="8" colspan="4" id="roles">
+        <label name="role_study_director"/>
+        <field name="role_study_director"/>
+        <label name="role_facility_director"/>
+        <field name="role_facility_director"/>
+        <label name="role_quality_unit"/>
+        <field name="role_quality_unit"/>
+        <label name="role_other"/>
+        <field name="role_other"/>
+    </group>
+</form>

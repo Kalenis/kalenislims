@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="type"/>
+    <field name="document_type"/>
+    <field name="number"/>
+    <field name="date"/>
+    <field name="description"/>
+    <field name="reason"/>
+    <field name="anomaly_number"/>
+    <field name="sponsor_communication"/>
+    <field name="professionals"/>
+</tree>

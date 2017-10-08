@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form>
+    <label name="department"/>
+    <field name="department"/>
+    <label name="default"/>
+    <field name="default"/>
+</form>

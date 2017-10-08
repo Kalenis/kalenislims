@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<form>
+    <group col="4" colspan="2" id="service">
+        <label name="service"/>
+        <field name="service"/>
+        <label name="service_view"/>
+        <field name="service_view"/>
+    </group>
+    <label name="fraction"/>
+    <field name="fraction"/>
+    <label name="sample"/>
+    <field name="sample"/>
+    <label name="entry"/>
+    <field name="entry"/>
+    <label name="party"/>
+    <field name="party" colspan="3"/>
+    <separator colspan="4" id="separator"/>
+    <label name="analysis"/>
+    <field name="analysis"/>
+    <label name="analysis_type"/>
+    <field name="analysis_type"/>
+    <label name="laboratory"/>
+    <field name="laboratory"/>
+    <label name="method"/>
+    <field name="method"/>
+    <label name="device"/>
+    <field name="device"/>
+    <label name="analysis_origin"/>
+    <field name="analysis_origin"/>
+    <label name="report_grouper"/>
+    <field name="report_grouper"/>
+    <label name="confirmation_date"/>
+    <field name="confirmation_date"/>
+    <label name="report"/>
+    <field name="report"/>
+    <label name="results_report"/>
+    <field name="results_report"/>
+</form>

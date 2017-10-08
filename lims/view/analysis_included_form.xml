@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form>
+    <label name="included_analysis"/>
+    <field name="included_analysis"/>
+    <label name="analysis_type"/>
+    <field name="analysis_type"/>
+    <label name="laboratory"/>
+    <field name="laboratory"/>
+</form>

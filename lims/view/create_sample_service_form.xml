@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<form>
+    <label name="analysis"/>
+    <field name="analysis"/>
+    <label name="laboratory"/>
+    <field name="laboratory"/>
+    <label name="method"/>
+    <field name="method"/>
+    <label name="device"/>
+    <field name="device"/>
+    <label name="urgent"/>
+    <field name="urgent"/>
+    <label name="priority"/>
+    <field name="priority"/>
+    <label name="report_date"/>
+    <field name="report_date"/>
+    <label name="divide"/>
+    <field name="divide"/>
+</form>

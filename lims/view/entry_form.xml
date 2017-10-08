@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<form>
+    <label name="number"/>
+    <field name="number"/>
+    <label name="date"/>
+    <field name="date"/>
+    <notebook>
+        <page string="General" id="general">
+            <label name="party"/>
+            <field name="party"/>
+            <label name="invoice_party"/>
+            <field name="invoice_party"/>
+            <label name="carrier"/>
+            <field name="carrier"/>
+            <label name="package_type"/>
+            <field name="package_type"/>
+            <label name="package_state"/>
+            <field name="package_state"/>
+            <label name="packages_quantity"/>
+            <field name="packages_quantity"/>
+            <group col="8" colspan="4" id="options_holder">
+                <label name="email_report"/>
+                <field name="email_report"/>
+                <label name="single_sending_report"/>
+                <field name="single_sending_report"/>
+                <label name="english_report"/>
+                <field name="english_report"/>
+                <label name="no_acknowledgment_of_receipt"/>
+                <field name="no_acknowledgment_of_receipt"/>
+            </group>
+            <button name="create_sample" string="Create Samples" colspan="4"/>
+            <field name="samples" colspan="4"/>
+        </page>
+        <page string="Contacts" id="contacts">
+            <field name="invoice_contacts" colspan="4"/>
+            <field name="report_contacts" colspan="4"/>
+            <field name="acknowledgment_contacts" colspan="4"/>
+        </page>
+        <page string="Comments" id="comments">
+            <separator string="Invoice comments" colspan="2" id="invoice_comments"/>
+            <separator string="Report comments" colspan="2" id="report_comments"/>
+            <field name="invoice_comments" colspan="2"/>
+            <field name="report_comments" colspan="2"/>
+            <separator string="Transfer comments" colspan="2" id="transfer_comments"/>
+            <separator string="Comments" colspan="2" id="comments"/>
+            <field name="transfer_comments" colspan="2"/>
+            <field name="comments" colspan="2"/>
+        </page>
+    </notebook>
+    <label name="pending_reason"/>
+    <field name="pending_reason"/>
+    <group colspan="4" id="buttons">
+        <label name="state"/>
+        <field name="state"/>
+        <button name="confirm" string="Confirm"/>
+        <button name="on_hold" string="Administration pending"/>
+    </group>
+</form>

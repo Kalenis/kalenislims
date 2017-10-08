@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<data>
+    <xpath expr="/form/notebook/page[@id='sale']/field[@name='currency']"
+        position="after">
+        <label name="lims_price_list"/>
+        <field name="lims_price_list"/>
+    </xpath>
+
+    <xpath
+        expr="/form/notebook/page[@id='other']/field[@name='shipment_method']"
+        position="after">
+        <label name="currency_rate"/>
+        <field name="currency_rate"/>
+    </xpath>
+</data>

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tree editable="top">
+    <field name="number"/>
+    <field name="description"/>
+    <field name="value"/>
+</tree>

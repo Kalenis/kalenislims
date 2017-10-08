@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="fraction"/>
+    <field name="repetition"/>
+    <field name="analysis"/>
+    <field name="result_modifier"/>
+    <field name="result"/>
+    <field name="initial_unit"/>
+    <field name="method"/>
+    <field name="start_date"/>
+    <field name="end_date"/>
+    <field name="professionals"/>
+    <field name="results_report"/>
+    <field name="device"/>
+    <field name="chromatogram"/>
+    <field name="detection_limit"/>
+    <field name="literal_result"/>
+    <field name="controls"/>
+</tree>

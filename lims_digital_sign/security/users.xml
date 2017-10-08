@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton. The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+
+<!-- Groups -->
+
+        <record model="res.group" id="group_lims_digital_sign">
+            <field name="name">Lims Digital Sign</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_digital_sign">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_digital_sign"/>
+        </record>
+
+<!-- Users -->
+
+        <record model="res.user" id="user_digital_sign">
+            <field name="login">user_cron_digital_sign</field>
+            <field name="name">Cron Lims Digital Sign</field>
+            <field name="signature"></field>
+            <field name="active" eval="False"/>
+        </record>
+        <record model="res.user-res.group" id="user_digital_sign_group_digital_sign">
+            <field name="user" ref="user_digital_sign"/>
+            <field name="group" ref="group_lims_digital_sign"/>
+        </record>
+
+    </data>
+</tryton>

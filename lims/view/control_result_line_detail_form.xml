@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<form>
+    <label name="date"/>
+    <field name="date"/>
+    <label name="fraction"/>
+    <field name="fraction"/>
+    <label name="device"/>
+    <field name="device"/>
+    <label name="result"/>
+    <field name="result"/>
+</form>

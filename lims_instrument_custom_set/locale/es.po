@@ -1,0 +1,11 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "selection:lims.resultsimport,name:"
+msgid "Custom Set - CSV"
+msgstr "Planilla personalizada - CSV"
+
+msgctxt "selection:lims.resultsimport,name:"
+msgid "Custom Set - XLS"
+msgstr "Planilla personalizada - XLS"

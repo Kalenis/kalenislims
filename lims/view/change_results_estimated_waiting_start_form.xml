@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<form>
+    <label name="results_estimated_waiting"/>
+    <field name="results_estimated_waiting"/>
+    <newline/>
+    <label name="date_from"/>
+    <field name="date_from"/>
+    <label name="date_to"/>
+    <field name="date_to"/>
+    <field name="methods" colspan="4"/>
+</form>

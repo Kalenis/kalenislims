@@ -1,0 +1,344 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Menu items in lims_menu.xml -->
+
+<!-- Planification -->
+
+        <record model="ir.ui.view" id="lims_planification_view_form">
+            <field name="model">lims.planification</field>
+            <field name="type">form</field>
+            <field name="name">planification_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_planification_view_list">
+            <field name="model">lims.planification</field>
+            <field name="type">tree</field>
+            <field name="name">planification_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_planification_list">
+            <field name="name">Planifications</field>
+            <field name="res_model">lims.planification</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_planification_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_planification_view_list"/>
+            <field name="act_window" ref="act_lims_planification_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_planification_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_planification_view_form"/>
+            <field name="act_window" ref="act_lims_planification_list"/>
+        </record>
+
+        <record model="ir.action.act_window.domain"
+            id="act_lims_planification_list_domain_draft">
+            <field name="name">Draft</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain"
+                eval="[('state', '=', 'draft')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_planification_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_lims_planification_list_domain_preplanned">
+            <field name="name">Pre-Planned</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain"
+                eval="[('state', '=', 'preplanned')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_planification_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_lims_planification_list_domain_confirmed">
+            <field name="name">Confirmed</field>
+            <field name="sequence" eval="30"/>
+            <field name="domain"
+                eval="[('state', '=', 'confirmed')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_planification_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_lims_planification_list_domain_not_executed">
+            <field name="name">Not executed</field>
+            <field name="sequence" eval="40"/>
+            <field name="domain"
+                eval="[('state', '=', 'not_executed')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_planification_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_lims_planification_list_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="9999"/>
+            <field name="domain"></field>
+            <field name="act_window" ref="act_lims_planification_list"/>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_planification">
+            <field name="model" search="[('model', '=', 'lims.planification')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_planification">
+            <field name="domain"
+                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_planification"/>
+        </record>
+
+<!-- Technician -->
+
+        <record model="ir.ui.view" id="lims_planification_technician_view_form">
+            <field name="model">lims.planification.technician</field>
+            <field name="type">form</field>
+            <field name="name">planification_technician_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_planification_technician_view_list">
+            <field name="model">lims.planification.technician</field>
+            <field name="type">tree</field>
+            <field name="name">planification_technician_list</field>
+        </record>
+
+<!-- Technician Detail -->
+
+        <record model="ir.ui.view" id="lims_planification_technician_detail_view_form">
+            <field name="model">lims.planification.technician.detail</field>
+            <field name="type">form</field>
+            <field name="name">planification_technician_detail_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_planification_technician_detail_view_list">
+            <field name="model">lims.planification.technician.detail</field>
+            <field name="type">tree</field>
+            <field name="name">planification_technician_detail_list</field>
+        </record>
+
+<!-- Fraction to Plan -->
+
+        <record model="ir.ui.view" id="lims_planification_detail_view_form">
+            <field name="model">lims.planification.detail</field>
+            <field name="type">form</field>
+            <field name="name">planification_detail_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_planification_detail_view_list">
+            <field name="model">lims.planification.detail</field>
+            <field name="type">tree</field>
+            <field name="name">planification_detail_list</field>
+        </record>
+
+<!-- Planification Detail -->
+
+        <record model="ir.ui.view" id="lims_planification_service_detail_view_form">
+            <field name="model">lims.planification.service_detail</field>
+            <field name="type">form</field>
+            <field name="name">planification_service_detail_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_planification_service_detail_view_list">
+            <field name="model">lims.planification.service_detail</field>
+            <field name="type">tree</field>
+            <field name="name">planification_service_detail_list</field>
+        </record>
+
+<!-- Notebook Line -->
+
+        <record model="ir.ui.view" id="lims_notebook_line_view_form">
+            <field name="model">lims.notebook.line</field>
+            <field name="inherit" ref="lims.lims_notebook_line_view_form"/>
+            <field name="name">notebook_line_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_notebook_line_view_list">
+            <field name="model">lims.notebook.line</field>
+            <field name="inherit" ref="lims.lims_notebook_line_view_list"/>
+            <field name="name">notebook_line_list</field>
+        </record>
+
+<!-- Entry Detail Analysis -->
+
+        <record model="ir.ui.view" id="lims_entry_detail_analysis_view_form">
+            <field name="model">lims.entry.detail.analysis</field>
+            <field name="inherit" ref="lims.lims_entry_detail_analysis_view_form"/>
+            <field name="name">entry_detail_analysis_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_entry_detail_analysis_view_list">
+            <field name="model">lims.entry.detail.analysis</field>
+            <field name="inherit" ref="lims.lims_entry_detail_analysis_view_list"/>
+            <field name="name">entry_detail_analysis_list</field>
+        </record>
+
+<!-- Fraction -->
+
+        <record model="ir.ui.view" id="lims_fraction_view_form">
+            <field name="model">lims.fraction</field>
+            <field name="inherit" ref="lims.lims_fraction_view_form"/>
+            <field name="name">fraction_form</field>
+        </record>
+
+<!-- Fraction Reagent -->
+
+        <record model="ir.ui.view" id="lims_fraction_reagent_view_form">
+            <field name="model">lims.fraction.reagent</field>
+            <field name="type">form</field>
+            <field name="name">fraction_reagent_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_fraction_reagent_view_list">
+            <field name="model">lims.fraction.reagent</field>
+            <field name="type">tree</field>
+            <field name="name">fraction_reagent_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_fraction_reagent_list">
+            <field name="name">Fraction Reagents</field>
+            <field name="res_model">lims.fraction.reagent</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_fraction_reagent_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_fraction_reagent_view_list"/>
+            <field name="act_window" ref="act_lims_fraction_reagent_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_fraction_reagent_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_fraction_reagent_view_form"/>
+            <field name="act_window" ref="act_lims_fraction_reagent_list"/>
+        </record>
+
+<!-- Fraction Type -->
+
+        <record model="ir.ui.view" id="lims_fraction_type_view_form">
+            <field name="model">lims.fraction.type</field>
+            <field name="inherit" ref="lims.lims_fraction_type_view_form"/>
+            <field name="name">fraction_type_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_fraction_type_view_list">
+            <field name="model">lims.fraction.type</field>
+            <field name="inherit" ref="lims.lims_fraction_type_view_list"/>
+            <field name="name">fraction_type_list</field>
+        </record>
+
+<!-- Laboratory Professional -->
+
+        <record model="ir.ui.view" id="lims_laboratory_professional_view_form">
+            <field name="model">lims.laboratory.professional</field>
+            <field name="inherit" ref="lims.lims_laboratory_professional_view_form"/>
+            <field name="name">laboratory_professional_form</field>
+        </record>
+
+<!-- Laboratory Professional Method -->
+
+        <record model="ir.ui.view" id="lims_lab_professional_method_view_form">
+            <field name="model">lims.lab.professional.method</field>
+            <field name="type">form</field>
+            <field name="name">lab_professional_method_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_lab_professional_method_view_list">
+            <field name="model">lims.lab.professional.method</field>
+            <field name="type">tree</field>
+            <field name="name">lab_professional_method_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_lab_professional_method_list">
+            <field name="name">Professionals Methods</field>
+            <field name="res_model">lims.lab.professional.method</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_lab_professional_method_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_lab_professional_method_view_list"/>
+            <field name="act_window" ref="act_lims_lab_professional_method_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_lab_professional_method_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_lab_professional_method_view_form"/>
+            <field name="act_window" ref="act_lims_lab_professional_method_list"/>
+        </record>
+
+<!-- Laboratory Professional Method Requalification -->
+
+        <record model="ir.ui.view" id="lims_lab_professional_method_requalification_view_form">
+            <field name="model">lims.lab.professional.method.requalification</field>
+            <field name="type">form</field>
+            <field name="name">lab_professional_method_requalification_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_lab_professional_method_requalification_view_list">
+            <field name="model">lims.lab.professional.method.requalification</field>
+            <field name="type">tree</field>
+            <field name="name">lab_professional_method_requalification_list</field>
+        </record>
+
+<!-- Laboratory Professional Method Requalification Supervisor -->
+
+        <record model="ir.ui.view" id="lims_lab_professional_method_requalification_supervisor_view_form">
+            <field name="model">lims.lab.professional.method.requalification.supervisor</field>
+            <field name="type">form</field>
+            <field name="name">lab_professional_method_requalification_supervisor_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_lab_professional_method_requalification_supervisor_view_list">
+            <field name="model">lims.lab.professional.method.requalification.supervisor</field>
+            <field name="type">tree</field>
+            <field name="name">lab_professional_method_requalification_supervisor_list</field>
+        </record>
+
+<!-- Laboratory Professional Method Requalification Control -->
+
+        <record model="ir.ui.view" id="lims_lab_professional_method_requalification_control_view_form">
+            <field name="model">lims.lab.professional.method.requalification.control</field>
+            <field name="type">form</field>
+            <field name="name">lab_professional_method_requalification_control_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_lab_professional_method_requalification_control_view_list">
+            <field name="model">lims.lab.professional.method.requalification.control</field>
+            <field name="type">tree</field>
+            <field name="name">lab_professional_method_requalification_control_list</field>
+        </record>
+
+<!-- Analysis/Set/Group -->
+
+        <record model="ir.ui.view" id="lims_analysis_pending_view_list">
+            <field name="model">lims.analysis</field>
+            <field name="type">tree</field>
+            <field name="name">analysis_pending_list</field>
+        </record>
+
+<!-- Blind Sample -->
+
+        <record model="ir.ui.view" id="lims_blind_sample_view_form">
+            <field name="model">lims.blind_sample</field>
+            <field name="type">form</field>
+            <field name="name">blind_sample_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_blind_sample_view_list">
+            <field name="model">lims.blind_sample</field>
+            <field name="type">tree</field>
+            <field name="name">blind_sample_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_blind_sample_list">
+            <field name="name">Blind Samples</field>
+            <field name="res_model">lims.blind_sample</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_blind_sample_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_blind_sample_view_list"/>
+            <field name="act_window" ref="act_lims_blind_sample_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_blind_sample_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_blind_sample_view_form"/>
+            <field name="act_window" ref="act_lims_blind_sample_list"/>
+        </record>
+
+<!-- Cron -->
+
+        <record model="ir.cron" id="cron_lims_process_waiting_planifications">
+            <field name="name">Lims Process Waiting Planifications</field>
+            <field name="request_user" ref="res.user_admin"/>
+            <field name="user" ref="user_planification_process"/>
+            <field name="active" eval="True"/>
+            <field name="interval_number" eval="1"/>
+            <field name="interval_type">minutes</field>
+            <field name="number_calls" eval="-1"/>
+            <field name="repeat_missed" eval="False"/>
+            <field name="model">lims.planification</field>
+            <field name="function">process_waiting_planifications</field>
+        </record>
+
+    </data>
+</tryton>

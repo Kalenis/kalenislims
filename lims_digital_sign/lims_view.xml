@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton. The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+
+<!-- Lims -->
+
+        <record model="ir.ui.view" id="lims_results_report_view_list">
+            <field name="model">lims.results_report</field>
+            <field name="inherit" ref="lims.lims_results_report_view_list"/>
+            <field name="name">results_report_list</field>
+        </record>
+
+    </data>
+</tryton>

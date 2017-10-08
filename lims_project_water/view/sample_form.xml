@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='general']"
+        position="after">
+        <page string="Water sampling" id="water_sampling">
+            <label name="sampling_point"/>
+            <field name="sampling_point"/>
+            <label name="gps_coordinates"/>
+            <field name="gps_coordinates"/>
+            <label name="sampling_datetime"/>
+            <field name="sampling_datetime"/>
+            <label name="sampling_responsible"/>
+            <field name="sampling_responsible"/>
+        </page>
+    </xpath>
+</data>

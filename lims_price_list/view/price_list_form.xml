@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<form>
+    <label name="code"/>
+    <field name="code"/>
+    <label name="name"/>
+    <field name="name"/>
+    <group colspan="2" id="calculation_method">
+        <label name="calc_method"/>
+        <field name="calc_method"/>
+    </group>
+    <label name="base_list"/>
+    <field name="base_list"/>
+    <newline/>
+    <label name="currency"/>
+    <field name="currency"/>
+    <label name="percentage"/>
+    <field name="percentage"/>
+    <notebook colspan="4">
+        <page name="lines">
+            <field name="lines" colspan="4"
+                view_ids="lims_price_list.price_list_line_view_tree_sequence"/>
+        </page>
+    </notebook>
+</form>

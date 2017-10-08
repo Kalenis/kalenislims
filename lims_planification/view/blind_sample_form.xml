@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<form>
+    <label name="entry"/>
+    <field name="entry"/>
+    <label name="sample"/>
+    <field name="sample"/>
+    <label name="fraction"/>
+    <field name="fraction"/>
+    <label name="service"/>
+    <field name="service"/>
+    <label name="analysis"/>
+    <field name="analysis"/>
+    <label name="repetition"/>
+    <field name="repetition"/>
+    <label name="date"/>
+    <field name="date"/>
+    <separator colspan="4" id="original_fraction"/>
+    <label name="original_sample"/>
+    <field name="original_sample"/>
+    <label name="original_fraction"/>
+    <field name="original_fraction"/>
+    <label name="original_repetition"/>
+    <field name="original_repetition"/>
+    <separator colspan="4" id="values"/>
+    <label name="min_value"/>
+    <field name="min_value"/>
+    <label name="max_value"/>
+    <field name="max_value"/>
+</form>

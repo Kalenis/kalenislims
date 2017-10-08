@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/form/notebook/page[@id='general']/field[@name='taxes']" position="before">
+        <group colspan="4" id="origin_group">
+            <label name="origin"/>
+            <field name="origin"/>
+            <newline/>
+            <label name="lims_service_entry"/>
+            <field name="lims_service_entry"/>
+            <label name="lims_service_sample"/>
+            <field name="lims_service_sample"/>
+            <label name="lims_service_party"/>
+            <field name="lims_service_party"/>
+            <label name="lims_service_results_reports"/>
+            <field name="lims_service_results_reports"/>
+        </group>
+    </xpath>
+</data>

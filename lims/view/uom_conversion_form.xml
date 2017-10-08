@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<form>
+    <label name="initial_uom"/>
+    <field name="initial_uom"/>
+    <label name="final_uom"/>
+    <field name="final_uom"/>
+    <label name="initial_uom_volume"/>
+    <field name="initial_uom_volume"/>
+    <label name="final_uom_volume"/>
+    <field name="final_uom_volume"/>
+    <label name="conversion_formula"/>
+    <field name="conversion_formula"/>
+</form>

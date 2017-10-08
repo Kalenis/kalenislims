@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="code"/>
+    <field name="description"/>
+    <field name="type"/>
+    <field name="behavior"/>
+    <field name="pending_fractions"/>
+</tree>

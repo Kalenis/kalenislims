@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/field[@name='type']"
+        position="after">
+        <group col="2" colspan="2" id="storage_time">
+            <label name="storage_time"/>
+            <field name="storage_time"/>
+        </group>
+    </xpath>
+</data>

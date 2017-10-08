@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Product UoM -->
+
+        <record model="ir.ui.view" id="lims_uom_view_list">
+            <field name="model">product.uom</field>
+            <field name="inherit" ref="product.uom_view_tree"/>
+            <field name="name">product_uom_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_uom_view_form">
+            <field name="model">product.uom</field>
+            <field name="inherit" ref="product.uom_view_form"/>
+            <field name="name">product_uom_form</field>
+        </record>
+
+<!-- UoM Categories -->
+
+        <record model="ir.ui.view" id="lims_uom_category_view_list">
+            <field name="model">product.uom.category</field>
+            <field name="inherit" ref="product.uom_category_view_tree"/>
+            <field name="name">product_uom_category_list</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_uom_category_view_form">
+            <field name="model">product.uom.category</field>
+            <field name="inherit" ref="product.uom_category_view_form"/>
+            <field name="name">product_uom_category_form</field>
+        </record>
+
+    </data>
+</tryton>

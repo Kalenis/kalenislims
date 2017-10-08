@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<form>
+    <separator string="Origin:" colspan="4" id="origin"/>
+    <label name="origin_product_type"/>
+    <field name="origin_product_type"/>
+    <label name="origin_matrix"/>
+    <field name="origin_matrix"/>
+    <label name="origin_analysis"/>
+    <field name="origin_analysis"/>
+    <separator string="Destination:" colspan="4" id="destination"/>
+    <label name="destination_product_type"/>
+    <field name="destination_product_type"/>
+    <label name="destination_matrix"/>
+    <field name="destination_matrix"/>
+</form>

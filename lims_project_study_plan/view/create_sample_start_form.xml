@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='general']"
+        position="after">
+        <page string="Study plan" id="study_plan">
+            <label name="application_date"/>
+            <field name="application_date"/>
+            <label name="sampling_date"/>
+            <field name="sampling_date"/>
+            <label name="reception_date"/>
+            <field name="reception_date"/>
+            <label name="treatment"/>
+            <field name="treatment"/>
+            <label name="dosis"/>
+            <field name="dosis"/>
+            <label name="after_application_days"/>
+            <field name="after_application_days"/>
+            <label name="glp_repetitions"/>
+            <field name="glp_repetitions"/>
+            <label name="sample_weight"/>
+            <field name="sample_weight"/>
+            <label name="balance"/>
+            <field name="balance"/>
+            <label name="cultivation_zone"/>
+            <field name="cultivation_zone"/>
+        </page>
+    </xpath>
+</data>

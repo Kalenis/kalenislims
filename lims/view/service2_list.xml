@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="number"/>
+    <field name="fraction"/>
+    <field name="sample"/>
+    <field name="entry"/>
+    <field name="party"/>
+    <field name="analysis_view"/>
+    <field name="analysis_type"/>
+    <field name="urgent"/>
+    <field name="priority"/>
+    <field name="report_date"/>
+    <field name="divide"/>
+    <field name="method_view"/>
+    <field name="device_view"/>
+    <field name="comments"/>
+    <field name="confirmed" tree_invisible="1" />
+    <field name="has_results_report" tree_invisible="1" />
+</tree>

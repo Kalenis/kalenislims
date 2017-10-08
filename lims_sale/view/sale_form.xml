@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/form/notebook/page[@id='sale']/field[@name='currency']"
+        position="after">
+        <button name="load_services" string="Load Services from Entry"/>
+    </xpath>
+</data>

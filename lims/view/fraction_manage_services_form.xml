@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form>
+    <group colspan="4" id="buttons">
+        <field name="duplicated_analysis_message" colspan="4"
+            yexpand="0"/>
+    </group>
+    <field name="services" colspan="4" mode="tree,form"
+        view_ids="lims.lims_service2_view_list,lims.lims_service_view_form"/>
+</form>

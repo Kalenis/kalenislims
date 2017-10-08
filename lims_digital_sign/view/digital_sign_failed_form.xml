@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<form>
+    <image name="tryton-dialog-warning" xexpand="0" xfill="0"/>
+    <label string="Digital Sign Failed! Solve the problem and try again."
+        id="failed" yalign="0.0" xalign="0.0" xexpand="1"/>
+    <field name="unsigned_reports" colspan="4"/>
+    <field name="unsent_reports" colspan="4"/>
+</form>

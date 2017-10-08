@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<tree editable="bottom">
+    <field name="update"/>
+    <field name="product_type"/>
+    <field name="matrix"/>
+    <field name="fraction_type"/>
+    <field name="analysis"/>
+    <field name="concentration_level"/>
+    <field name="mean"/>
+    <field name="prev_mean"/>
+    <field name="deviation" tree_invisible="1"/>
+    <field name="one_sd"/>
+    <field name="prev_one_sd"/>
+    <field name="two_sd"/>
+    <field name="prev_two_sd"/>
+    <field name="three_sd"/>
+    <field name="prev_three_sd"/>
+    <field name="cv"/>
+    <field name="prev_cv"/>
+    <field name="details"/>
+</tree>

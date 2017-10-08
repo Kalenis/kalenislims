@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="professional"/>
+    <field name="position"/>
+    <field name="role_study_director"/>
+    <field name="role_facility_director"/>
+    <field name="role_quality_unit"/>
+    <field name="role_other"/>
+    <field name="approval_date"/>
+</tree>

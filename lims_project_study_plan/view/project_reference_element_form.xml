@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<form>
+    <label name="type"/>
+    <field name="type"/>
+    <label name="input_product"/>
+    <field name="input_product"/>
+    <label name="lot"/>
+    <field name="lot"/>
+    <label name="common_name"/>
+    <field name="common_name"/>
+    <label name="chemical_name"/>
+    <field name="chemical_name"/>
+    <label name="cas_number"/>
+    <field name="cas_number"/>
+    <label name="purity_degree"/>
+    <field name="purity_degree"/>
+    <label name="stability"/>
+    <field name="stability"/>
+    <label name="homogeneity"/>
+    <field name="homogeneity"/>
+    <label name="expiration_date"/>
+    <field name="expiration_date"/>
+    <label name="reception_date"/>
+    <field name="reception_date"/>
+    <label name="formula"/>
+    <field name="formula"/>
+    <label name="molecular_weight"/>
+    <field name="molecular_weight"/>
+    <label name="location"/>
+    <field name="location"/>
+</form>

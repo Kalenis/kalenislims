@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<form>
+    <label name="fraction"/>
+    <field name="fraction"/>
+    <label name="service"/>
+    <field name="service"/>
+    <label name="analysis"/>
+    <field name="analysis" colspan="3"/>
+    <field name="analysis_detail" colspan="4"/>
+</form>

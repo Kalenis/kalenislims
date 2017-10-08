@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='general']/field[@name='default_notebook_view']"
+        position="after">
+        <label name="planification_sequence"/>
+        <field name="planification_sequence"/>
+    </xpath>
+    <xpath
+        expr="/form/notebook/page[@id='general']/field[@name='entry_confirm_background']"
+        position="after">
+        <label name="planification_process_background"/>
+        <field name="planification_process_background"/>
+    </xpath>
+    <xpath
+        expr="/form/notebook/page[@id='general']"
+        position="after">
+        <page string="Fraction Types" id="fraction_type">
+            <label name="mcl_fraction_type"/>
+            <field name="mcl_fraction_type"/>
+            <label name="con_fraction_type"/>
+            <field name="con_fraction_type"/>
+            <label name="bmz_fraction_type"/>
+            <field name="bmz_fraction_type"/>
+            <label name="rm_fraction_type"/>
+            <field name="rm_fraction_type"/>
+            <label name="bre_fraction_type"/>
+            <field name="bre_fraction_type"/>
+            <label name="mrt_fraction_type"/>
+            <field name="mrt_fraction_type"/>
+            <label name="coi_fraction_type"/>
+            <field name="coi_fraction_type"/>
+            <label name="mrc_fraction_type"/>
+            <field name="mrc_fraction_type"/>
+            <label name="sla_fraction_type"/>
+            <field name="sla_fraction_type"/>
+            <label name="itc_fraction_type"/>
+            <field name="itc_fraction_type"/>
+            <label name="itl_fraction_type"/>
+            <field name="itl_fraction_type"/>
+        </page>
+        <page string="Reagents" id="reagents">
+            <field name="reagents" colspan="4"/>
+        </page>
+    </xpath>
+</data>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/tree/field[@name='product']"
+        position="after">
+        <field name="category"/>
+        <field name="stability"/>
+        <field name="homogeneity"/>
+        <field name="concentration"/>
+        <field name="expiration_date"/>
+        <field name="reception_date"/>
+        <field name="preparation_date"/>
+        <field name="common_name"/>
+        <field name="chemical_name"/>
+        <field name="commercial_name"/>
+        <field name="cas_number"/>
+        <field name="commercial_brand"/>
+        <field name="catalog"/>
+        <field name="purity_degree"/>
+        <field name="solvent"/>
+        <field name="technician"/>
+    </xpath>
+</data>

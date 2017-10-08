@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="fraction"/>
+    <field name="service_analysis"/>
+    <field name="fraction_type"/>
+    <field name="label"/>
+</tree>

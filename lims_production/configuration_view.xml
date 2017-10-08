@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Production Configuration -->
+
+        <record model="ir.ui.view" id="lims_production_configuration_view">
+            <field name="model">production.configuration</field>
+            <field name="inherit" ref="production.production_configuration_view_form"/>
+            <field name="name">production_configuration_form</field>
+        </record>
+
+<!-- Lims Configuration -->
+
+        <record model="ir.ui.view" id="lims_configuration_view">
+            <field name="model">lims.configuration</field>
+            <field name="inherit" ref="lims.lims_configuration_view"/>
+            <field name="name">configuration_form</field>
+        </record>
+
+    </data>
+</tryton>

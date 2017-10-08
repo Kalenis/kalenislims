@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="code"/>
+    <field name="description"/>
+    <field name="max_storage_time"/>
+    <field name="requalify"/>
+    <field name="control_charts"/>
+    <field name="report"/>
+</tree>

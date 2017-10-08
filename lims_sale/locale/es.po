@@ -1,0 +1,39 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:sale.load_services.start,entry:"
+msgid "Entry"
+msgstr "Partida"
+
+msgctxt "field:sale.load_services.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:sale.load_services.start,party:"
+msgid "Party"
+msgstr "Entidad"
+
+msgctxt "model:ir.action,name:wiz_sale_load_services"
+msgid "Load Services from Entry"
+msgstr "Cargar servicios desde partida"
+
+msgctxt "model:sale.load_services.start,name:"
+msgid "Load Services from Entry"
+msgstr "Cargar servicios desde partida"
+
+msgctxt "view:sale.load_services.start:"
+msgid "Load Services from Entry"
+msgstr "Cargar servicios desde partida"
+
+msgctxt "view:sale.sale:"
+msgid "Load Services from Entry"
+msgstr "Cargar servicios desde partida"
+
+msgctxt "wizard_button:sale.load_services,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:sale.load_services,start,load:"
+msgid "Load"
+msgstr "Cargar"

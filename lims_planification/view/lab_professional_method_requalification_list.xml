@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="type"/>
+    <field name="date"/>
+    <field name="last_execution_date"/>
+</tree>

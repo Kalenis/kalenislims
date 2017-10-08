@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Menu items in lims_menu.xml -->
+
+<!-- Purity Degree -->
+
+        <record model="ir.ui.view" id="lims_purity_degree_view_form">
+            <field name="model">lims.purity.degree</field>
+            <field name="type">form</field>
+            <field name="name">purity_degree_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_purity_degree_view_list">
+            <field name="model">lims.purity.degree</field>
+            <field name="type">tree</field>
+            <field name="name">purity_degree_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_purity_degree_list">
+            <field name="name">Purity Degrees</field>
+            <field name="res_model">lims.purity.degree</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_purity_degree_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_purity_degree_view_list"/>
+            <field name="act_window" ref="act_lims_purity_degree_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_purity_degree_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_purity_degree_view_form"/>
+            <field name="act_window" ref="act_lims_purity_degree_list"/>
+        </record>
+
+<!-- Brand -->
+
+        <record model="ir.ui.view" id="lims_brand_view_form">
+            <field name="model">lims.brand</field>
+            <field name="type">form</field>
+            <field name="name">brand_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_brand_view_list">
+            <field name="model">lims.brand</field>
+            <field name="type">tree</field>
+            <field name="name">brand_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_brand_list">
+            <field name="name">Brands</field>
+            <field name="res_model">lims.brand</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_brand_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_brand_view_list"/>
+            <field name="act_window" ref="act_lims_brand_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_brand_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_brand_view_form"/>
+            <field name="act_window" ref="act_lims_brand_list"/>
+        </record>
+
+<!-- Family/Equivalents -->
+
+        <record model="ir.ui.view" id="lims_family_equivalent_view_form">
+            <field name="model">lims.family.equivalent</field>
+            <field name="type">form</field>
+            <field name="name">family_equivalent_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_family_equivalent_view_list">
+            <field name="model">lims.family.equivalent</field>
+            <field name="type">tree</field>
+            <field name="name">family_equivalent_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_family_equivalent_list">
+            <field name="name">Family/Equivalents</field>
+            <field name="res_model">lims.family.equivalent</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_family_equivalent_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_family_equivalent_view_list"/>
+            <field name="act_window" ref="act_lims_family_equivalent_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_family_equivalent_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_family_equivalent_view_form"/>
+            <field name="act_window" ref="act_lims_family_equivalent_list"/>
+        </record>
+
+<!-- Template -->
+
+        <record model="ir.ui.view" id="lims_template_view_form">
+            <field name="model">product.template</field>
+            <field name="inherit" ref="product.template_view_form"/>
+            <field name="name">product_template_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_template_view_list">
+            <field name="model">product.template</field>
+            <field name="inherit" ref="product.template_view_tree"/>
+            <field name="name">product_template_list</field>
+        </record>
+
+<!-- Product -->
+
+        <record model="ir.ui.view" id="lims_product_view_form">
+            <field name="model">product.product</field>
+            <field name="inherit" ref="product.product_view_form"/>
+            <field name="name">product_product_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_product_view_form_simple">
+            <field name="model">product.product</field>
+            <field name="inherit" ref="product.product_view_form_simple"/>
+            <field name="name">product_product_form_simple</field>
+        </record>
+        <record model="ir.ui.view" id="lims_product_view_list">
+            <field name="model">product.product</field>
+            <field name="inherit" ref="product.product_view_tree"/>
+            <field name="name">product_product_list</field>
+        </record>
+
+<!-- -->
+
+        <record model="ir.action.wizard" id="stock.wizard_recompute_cost_price">
+            <field name="active" eval="False"/>
+        </record>
+
+<!-- Lot Category -->
+
+        <record model="ir.ui.view" id="lims_lot_category_view_form">
+            <field name="model">stock.lot.category</field>
+            <field name="type">form</field>
+            <field name="name">stock_lot_category_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_lot_category_view_list">
+            <field name="model">stock.lot.category</field>
+            <field name="type">tree</field>
+            <field name="name">stock_lot_category_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_lot_category_list">
+            <field name="name">Lot Categories</field>
+            <field name="res_model">stock.lot.category</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_lot_category_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_lot_category_view_list"/>
+            <field name="act_window" ref="act_lims_lot_category_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_lot_category_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_lot_category_view_form"/>
+            <field name="act_window" ref="act_lims_lot_category_list"/>
+        </record>
+
+<!-- Lot -->
+
+        <record model="ir.ui.view" id="lims_lot_view_form">
+            <field name="model">stock.lot</field>
+            <field name="inherit" ref="stock_lot.lot_view_form"/>
+            <field name="name">stock_lot_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_lot_view_list">
+            <field name="model">stock.lot</field>
+            <field name="inherit" ref="stock_lot.lot_view_tree"/>
+            <field name="name">stock_lot_list</field>
+        </record>
+
+<!-- Move -->
+
+        <record model="ir.ui.view" id="stock_move_in_shipment_view_list">
+            <field name="model">stock.move</field>
+            <field name="type">tree</field>
+            <field name="name">stock_move_in_shipment_list</field>
+        </record>
+
+<!-- Shipment -->
+
+        <record model="ir.ui.view" id="lims_shipment_in_view_form">
+            <field name="model">stock.shipment.in</field>
+            <field name="inherit" ref="stock.shipment_in_view_form"/>
+            <field name="name">stock_shipment_in_form</field>
+        </record>
+
+<!-- Shipment In Labels -->
+
+        <record model="ir.action.wizard" id="wiz_report_shipment_in_labels">
+            <field name="name">Shipment In Labels</field>
+            <field name="wiz_name">stock.shipment.in.labels.report</field>
+            <field name="model">stock.shipment.in</field>
+        </record>
+        <record model="ir.action.keyword"
+                id="wiz_report_shipment_in_labels_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">stock.shipment.in,-1</field>
+            <field name="action" ref="wiz_report_shipment_in_labels"/>
+        </record>
+
+    </data>
+</tryton>

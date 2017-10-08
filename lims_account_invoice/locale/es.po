@@ -1,0 +1,217 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:account.invoice.line:"
+msgid "You can not delete an invoice line related to a service (\"%s\")"
+msgstr "No puede eliminar una línea de factura relacionada a un servicio (\"%s\")"
+
+msgctxt "error:account.invoice:"
+msgid "Invoice Contacts field must have a value"
+msgstr "El campo Contactos de factura debe tener un valor"
+
+msgctxt "error:lims.service:"
+msgid ""
+"Analysis product \"%(product)s\" in Service \"%(service)s\" misses an "
+"\"account revenue\"."
+msgstr ""
+"Al producto \"%(product)s\" del análisis del servicio \"%(service)s\" le "
+"falta una \"cuenta de ingresos\"."
+
+msgctxt "error:lims.service:"
+msgid "You can not delete a service related to an invoice"
+msgstr "No puede eliminar un servicio relacionado a una factura"
+
+msgctxt "field:account.invoice,currency_rate:"
+msgid "Currency rate"
+msgstr "Cotización"
+
+msgctxt "field:account.invoice,entries_comments:"
+msgid "Entries comments"
+msgstr "Observaciones partidas"
+
+msgctxt "field:account.invoice,invoice_contacts:"
+msgid "Invoice contacts"
+msgstr "Contactos de factura"
+
+msgctxt "field:account.invoice,lims_project:"
+msgid "TAS Project"
+msgstr "Proyecto SAT"
+
+msgctxt "field:account.invoice,no_send_invoice:"
+msgid "No send invoice"
+msgstr "No envía factura"
+
+msgctxt "field:account.invoice,sent:"
+msgid "Sent"
+msgstr "Enviado"
+
+msgctxt "field:account.invoice,sent_date:"
+msgid "Sent date"
+msgstr "Fecha de enviado"
+
+msgctxt "field:account.invoice.invoice_contacts,contact:"
+msgid "Contact"
+msgstr "Contacto"
+
+msgctxt "field:account.invoice.invoice_contacts,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:account.invoice.invoice_contacts,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:account.invoice.invoice_contacts,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:account.invoice.invoice_contacts,invoice:"
+msgid "Invoice"
+msgstr "Factura"
+
+msgctxt "field:account.invoice.invoice_contacts,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:account.invoice.invoice_contacts,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:account.invoice.invoice_contacts,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:account.invoice.line,lims_service_entry:"
+msgid "Entry"
+msgstr "Partida"
+
+msgctxt "field:account.invoice.line,lims_service_party:"
+msgid "Party"
+msgstr "Cliente"
+
+msgctxt "field:account.invoice.line,lims_service_results_reports:"
+msgid "Results Reports"
+msgstr "Informes de resultados"
+
+msgctxt "field:account.invoice.line,lims_service_sample:"
+msgid "Sample"
+msgstr "Muestra"
+
+msgctxt "field:account.invoice.populate_invoice_contacts.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.configuration,mail_send_invoice_body:"
+msgid "Email body of Invoice report"
+msgstr "Cuerpo del correo de Informe de factura"
+
+msgctxt "field:lims.configuration,mail_send_invoice_subject:"
+msgid "Email subject of Invoice report"
+msgstr "Asunto del correo de Informe de factura"
+
+msgctxt "field:lims.fraction.type,invoiceable:"
+msgid "Invoiceable"
+msgstr "Facturable"
+
+msgctxt "field:party.party,no_send_invoice:"
+msgid "No send invoice"
+msgstr "No envía factura"
+
+msgctxt "help:account.invoice,no_send_invoice:"
+msgid "If checked, then the invoice will not be mailed to contacts."
+msgstr ""
+"Si está marcado, la factura no será enviada por correo a los contactos."
+
+msgctxt "help:account.invoice,sent:"
+msgid "If checked, then the invoice was mailed to contacts."
+msgstr "Si está marcado, la factura se envió por correo a los contactos."
+
+msgctxt "help:lims.configuration,mail_send_invoice_subject:"
+msgid "In the text will be added suffix with the invoice report number"
+msgstr "En el texto se añadirá sufijo con el número de factura del informe"
+
+msgctxt "help:party.party,no_send_invoice:"
+msgid ""
+"If checked, customer invoices will not be set by default to be mailed to "
+"contacts."
+msgstr ""
+"Si está marcado, la factura del cliente no será establecida por defecto para"
+" ser enviada a los contactos."
+
+msgctxt "model:account.invoice.invoice_contacts,name:"
+msgid "Invoice Contact"
+msgstr "Contacto de factura"
+
+msgctxt "model:account.invoice.populate_invoice_contacts.start,name:"
+msgid "Populate Invoice Contacts Start"
+msgstr "Completar contactos de factura - Inicio"
+
+msgctxt "model:ir.action,name:wiz_account_invoice_populate_invoice_contacts"
+msgid "Populate Invoice Contacts"
+msgstr "Completar contactos de factura"
+
+msgctxt "model:ir.action,name:wiz_send_invoice"
+msgid "Send Invoice"
+msgstr "Enviar factura"
+
+msgctxt "model:ir.cron,name:cron_account_invoice_send_invoice"
+msgid "Send Invoice"
+msgstr "Enviar factura"
+
+msgctxt "model:res.group,name:group_lims_account_invoice"
+msgid "Lims Account Invoice"
+msgstr "Lims Facturación"
+
+msgctxt "model:res.user,name:user_send_invoice"
+msgid "Cron Send Of Invoice"
+msgstr "Programador de Envío de factura"
+
+msgctxt "view:account.invoice.invoice_contacts:"
+msgid "Invoice Contact"
+msgstr "Contacto de factura"
+
+msgctxt "view:account.invoice.invoice_contacts:"
+msgid "Invoice Contacts"
+msgstr "Contactos de factura"
+
+msgctxt "view:account.invoice.populate_invoice_contacts.start:"
+msgid "Populate Invoice Contacts"
+msgstr "Completar contactos de factura"
+
+msgctxt "view:account.invoice.populate_invoice_contacts.start:"
+msgid "Populate Invoice Contacts?"
+msgstr "¿Completar contactos de factura?"
+
+msgctxt "view:account.invoice:"
+msgid "Contacts"
+msgstr "Contactos"
+
+msgctxt "view:lims.configuration:"
+msgid "Email body of Invoice report"
+msgstr "Cuerpo del correo de Informe de factura"
+
+msgctxt "view:lims.configuration:"
+msgid "Email subject of Invoice report"
+msgstr "Asunto del correo de Informe de factura"
+
+msgctxt "view:lims.configuration:"
+msgid "Mail Invoice Report"
+msgstr "Email Informe de Factura"
+
+msgctxt "wizard_button:account.invoice.populate_invoice_contacts,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt ""
+"wizard_button:account.invoice.populate_invoice_contacts,start,populate:"
+msgid "Populate"
+msgstr "Completar"
+
+msgctxt "field:party.party,commercial_item:"
+msgid "Commercial Item"
+msgstr "Rubro comercial"
+
+msgctxt "field:party.party,commercial_zone:"
+msgid "Commercial Zone"
+msgstr "Región comercial"

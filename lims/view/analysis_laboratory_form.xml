@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form>
+    <label name="laboratory"/>
+    <field name="laboratory"/>
+    <label name="department"/>
+    <field name="department"/>
+</form>

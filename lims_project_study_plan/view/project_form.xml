@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='general']/separator[@id='project_type_separator']"
+        position="after">
+        <group col="4" colspan="4" yexpand="1" yfill="1" id="study_plan">
+            <notebook>
+                <page string="General" id="general">
+                    <label name="stp_title"/>
+                    <field name="stp_title"/>
+                    <label name="stp_number"/>
+                    <field name="stp_number"/>
+                    <label name="stp_phase"/>
+                    <field name="stp_phase"/>
+                    <newline/>
+                    <separator string="Description" colspan="4" id="stp_description"/>
+                    <field name="stp_description" colspan="4"/>
+                    <separator string="Target" colspan="4" id="stp_target"/>
+                    <field name="stp_target" colspan="4"/>
+                    <label name="stp_sponsor"/>
+                    <field name="stp_sponsor"/>
+                    <label name="stp_matrix_client_description"/>
+                    <field name="stp_matrix_client_description"/>
+                    <label name="stp_product_brand"/>
+                    <field name="stp_product_brand"/>
+                    <newline/>
+                    <separator string="Test system" colspan="2" id="stp_test_system"/>
+                    <separator string="Test method" colspan="2" id="stp_test_method"/>
+                    <field name="stp_test_system" colspan="2"/>
+                    <field name="stp_test_method" colspan="2"/>
+                    <button colspan="2" name="get_stp_test_system" string="Update"/>
+                    <button colspan="2" name="get_stp_test_method" string="Update"/>
+                    <label name="stp_records"/>
+                    <field name="stp_records" colspan="3"/>
+                    <label name="stp_pattern_availability"/>
+                    <field name="stp_pattern_availability"/>
+                    <label name="stp_implementation_validation"/>
+                    <field name="stp_implementation_validation"/>
+                    <group col="2" colspan="2" id="stp_glp">
+                        <label name="stp_glp"/>
+                        <field name="stp_glp"/>
+                    </group>
+                    <label name="min_qty_sample"/>
+                    <field name="min_qty_sample"/>
+                    <label name="unit"/>
+                    <field name="unit"/>
+                    <group col="2" colspan="2" id="min_qty_sample_compliance">
+                        <label name="min_qty_sample_compliance"/>
+                        <field name="min_qty_sample_compliance"/>
+                    </group>
+                    <label name="stp_state"/>
+                    <field name="stp_state"/>
+                    <button colspan="2" name="re_open" string="Open"/>
+                </page>
+                <page string="Dates" id="dates">
+                    <label name="stp_date"/>
+                    <field name="stp_date"/>
+                    <label name="stp_effective_start_date"/>
+                    <field name="stp_effective_start_date"/>
+                    <label name="stp_proposal_start_date"/>
+                    <field name="stp_proposal_start_date"/>
+                    <label name="stp_proposal_end_date"/>
+                    <field name="stp_proposal_end_date"/>
+                    <label name="stp_start_date"/>
+                    <field name="stp_start_date"/>
+                    <label name="stp_end_date"/>
+                    <field name="stp_end_date"/>
+                    <label name="stp_suspension_date"/>
+                    <field name="stp_suspension_date"/>
+                    <label name="stp_suspension_reason"/>
+                    <field name="stp_suspension_reason"/>
+                </page>
+                <page string="Laboratory professionals" id="stp_laboratory_professionals">
+                    <field name="stp_laboratory_professionals" colspan="4"/>
+                </page>
+                <page string="Reference/Test elements" id="stp_reference_elements">
+                    <field name="stp_reference_elements" colspan="4"/>
+                </page>
+                <page string="Solvents and Reagents" id="stp_solvents_and_reagents">
+                    <field name="stp_solvents_and_reagents" colspan="4"/>
+                </page>
+                <page string="Samples in custody" id="stp_samples_in_custody">
+                    <field name="stp_samples_in_custody" colspan="4"/>
+                </page>
+                <page string="Deviations and Amendments" id="stp_deviation_and_amendment">
+                    <field name="stp_deviation_and_amendment" colspan="4"/>
+                </page>
+                <page string="Samples" id="stp_samples">
+                    <field name="stp_samples" colspan="4" mode="tree,form"
+                        view_ids="lims_project_study_plan.lims_sample_view_list,lims_project_study_plan.lims_sample_view_form"/>
+                </page>
+                <page string="Tests performed" id="stp_notebook_lines">
+                    <field name="stp_notebook_lines" colspan="4" mode="tree,form"
+                        view_ids="lims_project_study_plan.lims_notebook_line_view_list,lims.lims_notebook_line_view_form"/>
+                </page>
+                <page string="Rector scheme comments" id="stp_rector_scheme_comments">
+                    <separator string="Rector scheme comments" colspan="4" id="stp_rector_scheme_comments"/>
+                    <field name="stp_rector_scheme_comments" colspan="4"/>
+                </page>
+            </notebook>
+        </group>
+    </xpath>
+</data>

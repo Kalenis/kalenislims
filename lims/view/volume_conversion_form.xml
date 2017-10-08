@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form col="6">
+    <label name="brix"/>
+    <field name="brix"/>
+    <label name="density"/>
+    <field name="density"/>
+    <label name="soluble_solids"/>
+    <field name="soluble_solids"/>
+</form>

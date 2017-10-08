@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Menu items in lims_menu.xml -->
+
+        <!-- Wizard Load Results from File -->
+
+        <record model="ir.ui.view" id="lims_load_results_file_start_view_form">
+            <field name="model">lims.notebook.load_results_file.start</field>
+            <field name="type">form</field>
+            <field name="name">notebook_load_results_file_start_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_load_results_file_start_line_view_list">
+            <field name="model">lims.notebook.load_results_file.start.line</field>
+            <field name="type">tree</field>
+            <field name="name">notebook_load_results_file_start_line_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_load_results_file_empty_view_form">
+            <field name="model">lims.notebook.load_results_file.empty</field>
+            <field name="type">form</field>
+            <field name="name">notebook_load_results_file_empty_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_load_results_file_result_view_form">
+            <field name="model">lims.notebook.load_results_file.result</field>
+            <field name="type">form</field>
+            <field name="name">notebook_load_results_file_result_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_load_results_file_result_lines_view_list">
+            <field name="model">lims.notebook.line</field>
+            <field name="type">tree</field>
+            <field name="name">notebook_load_results_file_result_lines_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_load_results_file_warning_view_form">
+            <field name="model">lims.notebook.load_results_file.warning</field>
+            <field name="type">form</field>
+            <field name="name">notebook_load_results_file_warning_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_load_results_file_export_view_form">
+            <field name="model">lims.notebook.load_results_file.export</field>
+            <field name="type">form</field>
+            <field name="name">notebook_load_results_file_export_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_notebook_load_results_file">
+            <field name="name">Load Results from File</field>
+            <field name="wiz_name">lims.notebook.load_results_file</field>
+        </record>
+
+    </data>
+</tryton>

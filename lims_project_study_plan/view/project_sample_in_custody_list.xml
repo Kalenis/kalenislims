@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="sample"/>
+    <field name="entry_date"/>
+    <field name="packages_quantity"/>
+    <field name="package_type"/>
+    <field name="carrier"/>
+    <field name="location"/>
+    <field name="entry_responsible"/>
+    <field name="file_operator_responsible"/>
+    <field name="temperature"/>
+    <field name="processing_state"/>
+    <field name="comments"/>
+</tree>

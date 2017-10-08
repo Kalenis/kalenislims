@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<form>
+    <group colspan="4" id="method">
+        <label name="professional"/>
+        <field name="professional"/>
+        <label name="method"/>
+        <field name="method"/>
+    </group>
+    <label name="state"/>
+    <field name="state"/>
+    <label name="type"/>
+    <field name="type"/>
+    <field name="requalification_history" colspan="4"/>
+</form>

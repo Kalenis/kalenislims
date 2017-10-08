@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<form>
+    <label name="analysis_origin"/>
+    <field name="analysis_origin"/>
+    <label name="analysis"/>
+    <field name="analysis"/>
+    <label name="laboratory"/>
+    <field name="laboratory"/>
+    <label name="report_grouper"/>
+    <field name="report_grouper"/>
+</form>

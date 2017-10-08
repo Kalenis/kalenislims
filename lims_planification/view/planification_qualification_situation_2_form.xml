@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<form col="2">
+    <image name="tryton-dialog-warning" xexpand="0" xfill="0"/>
+    <group col="1" id="labels">
+        <label string="Do you want to qualify the technician or enter a new training?"
+            yalign="0.0" xalign="0.0" xexpand="1" id="question"/>
+    </group>
+    <group col="2" colspan="4" id="data">
+        <label name="professional"/>
+        <field name="professional"/>
+        <label name="method"/>
+        <field name="method"/>
+    </group>
+</form>

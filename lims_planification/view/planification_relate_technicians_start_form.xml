@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form>
+    <label name="exclude_relateds"/>
+    <field name="exclude_relateds"/>
+    <label name="grouping"/>
+    <field name="grouping"/>
+</form>

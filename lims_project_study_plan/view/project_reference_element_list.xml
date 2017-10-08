@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="type"/>
+    <field name="input_product"/>
+    <field name="lot"/>
+    <field name="common_name"/>
+    <field name="chemical_name"/>
+    <field name="cas_number"/>
+    <field name="purity_degree"/>
+    <field name="stability"/>
+    <field name="homogeneity"/>
+    <field name="expiration_date"/>
+    <field name="reception_date"/>
+    <field name="formula"/>
+    <field name="molecular_weight"/>
+    <field name="location"/>
+</tree>

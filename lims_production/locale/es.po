@@ -1,0 +1,587 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:lims.family.equivalent:"
+msgid ""
+"The UoM's Category of each Product should be the same as the UoM's Category "
+"of Family/Equivalent."
+msgstr ""
+"La Categoría de UdM de cada Producto debe ser la misma que la Categoría de "
+"UdM de la Familia/Equivalente."
+
+msgctxt "error:production:"
+msgid "Quantity multiple of output bom required."
+msgstr "La cantidad no es múltiplo de la cantidad de salida de la LdM"
+
+msgctxt "field:lims.brand,code:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "field:lims.brand,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.brand,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.brand,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.brand,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.brand,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.brand,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.brand,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.configuration,lot_category_input_prod:"
+msgid "Input for production"
+msgstr "Insumos para producción"
+
+msgctxt "field:lims.configuration,lot_category_prod_domestic_use:"
+msgid "Production for domestic use"
+msgstr "Producción para uso interno"
+
+msgctxt "field:lims.configuration,lot_category_prod_sale:"
+msgid "Production for sale"
+msgstr "Producción para venta"
+
+msgctxt "field:lims.configuration,solvents:"
+msgid "Solvents"
+msgstr "Solventes"
+
+msgctxt "field:lims.configuration.solvents,category:"
+msgid "Category"
+msgstr "Categoría"
+
+msgctxt "field:lims.configuration.solvents,configuration:"
+msgid "Configuration"
+msgstr "Configuración"
+
+msgctxt "field:lims.configuration.solvents,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.configuration.solvents,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.configuration.solvents,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.configuration.solvents,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.configuration.solvents,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.configuration.solvents,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.family.equivalent,code:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "field:lims.family.equivalent,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.family.equivalent,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.family.equivalent,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.family.equivalent,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.family.equivalent,products:"
+msgid "Products"
+msgstr "Productos"
+
+msgctxt "field:lims.family.equivalent,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.family.equivalent,uom:"
+msgid "UoM"
+msgstr "UdM"
+
+msgctxt "field:lims.family.equivalent,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.family.equivalent,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.purity.degree,code:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "field:lims.purity.degree,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.purity.degree,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.purity.degree,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.purity.degree,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.purity.degree,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.purity.degree,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.purity.degree,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:product.product,barcode:"
+msgid "Bar Code"
+msgstr "Código de barras"
+
+msgctxt "field:product.product,cas_number:"
+msgid "CAS number"
+msgstr "Número CAS"
+
+msgctxt "field:product.product,catalog:"
+msgid "Catalog"
+msgstr "Catálogo"
+
+msgctxt "field:product.product,certified:"
+msgid "Certified"
+msgstr "Certificado"
+
+msgctxt "field:product.product,chemical_name:"
+msgid "Chemical name"
+msgstr "Nombre químico"
+
+msgctxt "field:product.product,commercial_brand:"
+msgid "Commercial Brand"
+msgstr "Marca comercial"
+
+msgctxt "field:product.product,commercial_name:"
+msgid "Commercial name"
+msgstr "Nombre comercial"
+
+msgctxt "field:product.product,common_name:"
+msgid "Common name"
+msgstr "Nombre común"
+
+msgctxt "field:product.product,controlled:"
+msgid "Controlled"
+msgstr "Controlado"
+
+msgctxt "field:product.product,family_equivalent:"
+msgid "Family/Equivalent"
+msgstr "Familia/Equivalente"
+
+msgctxt "field:product.product,purity_degree:"
+msgid "Purity Degree"
+msgstr "Grado de pureza"
+
+msgctxt "field:product.product,reference_material:"
+msgid "Reference Material"
+msgstr "Material de referencia"
+
+msgctxt "field:product.template,cas_number:"
+msgid "CAS number"
+msgstr "Número CAS"
+
+msgctxt "field:product.template,certified:"
+msgid "Certified"
+msgstr "Certificado"
+
+msgctxt "field:product.template,chemical_name:"
+msgid "Chemical name"
+msgstr "Nombre químico"
+
+msgctxt "field:product.template,commercial_brand:"
+msgid "Commercial Brand"
+msgstr "Marca comercial"
+
+msgctxt "field:product.template,commercial_name:"
+msgid "Commercial name"
+msgstr "Nombre comercial"
+
+msgctxt "field:product.template,common_name:"
+msgid "Common name"
+msgstr "Nombre común"
+
+msgctxt "field:product.template,controlled:"
+msgid "Controlled"
+msgstr "Controlado"
+
+msgctxt "field:product.template,family_equivalent:"
+msgid "Family/Equivalent"
+msgstr "Familia/Equivalente"
+
+msgctxt "field:product.template,purity_degree:"
+msgid "Purity Degree"
+msgstr "Grado de pureza"
+
+msgctxt "field:product.template,reference_material:"
+msgid "Reference Material"
+msgstr "Material de referencia"
+
+msgctxt "field:production,comments:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "field:production,concentration:"
+msgid "Concentration"
+msgstr "Concentración"
+
+msgctxt "field:production,expiration_date:"
+msgid "Expiration date"
+msgstr "Fecha de vencimiento"
+
+msgctxt "field:production,preparation_date:"
+msgid "Preparation date"
+msgstr "Fecha de preparación"
+
+msgctxt "field:production,salable_product:"
+msgid "Salable"
+msgstr "Vendible"
+
+msgctxt "field:production,solvent:"
+msgid "Solvent"
+msgstr "Solvente"
+
+msgctxt "field:production,technician:"
+msgid "Technician"
+msgstr "Técnico"
+
+msgctxt "field:production.bom,divide_lots:"
+msgid "Divide lots"
+msgstr "Divide lotes"
+
+msgctxt "field:production.configuration,lot_sequence:"
+msgid "Lot Sequence"
+msgstr "Secuencia de lotes"
+
+msgctxt "field:stock.lot,cas_number:"
+msgid "CAS number"
+msgstr "Número CAS"
+
+msgctxt "field:stock.lot,catalog:"
+msgid "Catalog"
+msgstr "Catálogo"
+
+msgctxt "field:stock.lot,category:"
+msgid "Category"
+msgstr "Categoría"
+
+msgctxt "field:stock.lot,chemical_name:"
+msgid "Chemical name"
+msgstr "Nombre químico"
+
+msgctxt "field:stock.lot,commercial_brand:"
+msgid "Commercial Brand"
+msgstr "Marca comercial"
+
+msgctxt "field:stock.lot,commercial_name:"
+msgid "Commercial name"
+msgstr "Nombre comercial"
+
+msgctxt "field:stock.lot,common_name:"
+msgid "Common name"
+msgstr "Nombre común"
+
+msgctxt "field:stock.lot,concentration:"
+msgid "Concentration"
+msgstr "Concentración"
+
+msgctxt "field:stock.lot,expiration_date:"
+msgid "Expiration date"
+msgstr "Fecha de vencimiento"
+
+msgctxt "field:stock.lot,homogeneity:"
+msgid "Homogeneity"
+msgstr "Homogeneidad"
+
+msgctxt "field:stock.lot,preparation_date:"
+msgid "Preparation date"
+msgstr "Fecha de preparación"
+
+msgctxt "field:stock.lot,purity_degree:"
+msgid "Purity Degree"
+msgstr "Grado de pureza"
+
+msgctxt "field:stock.lot,reception_date:"
+msgid "Reception date"
+msgstr "Fecha de recepción"
+
+msgctxt "field:stock.lot,solvent:"
+msgid "Solvent"
+msgstr "Solvente"
+
+msgctxt "field:stock.lot,special_category:"
+msgid "Category"
+msgstr "Categoría"
+
+msgctxt "field:stock.lot,stability:"
+msgid "Stability"
+msgstr "Estabilidad"
+
+msgctxt "field:stock.lot,technician:"
+msgid "Technician"
+msgstr "Técnico"
+
+msgctxt "field:stock.lot.category,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:stock.lot.category,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:stock.lot.category,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:stock.lot.category,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:stock.lot.category,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:stock.lot.category,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:stock.lot.category,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:stock.move,label_quantity:"
+msgid "Label Quantity"
+msgstr "Etiquetas"
+
+msgctxt "help:lims.family.equivalent,uom:"
+msgid ""
+"The UoM's Category selected here will determine the set of Products that can"
+" be related to this Family/Equivalent."
+msgstr ""
+"La Categoría de UdM seleccionada aquí determinará el conjunto de Productos "
+"relacionables a esta Familia/Equivalente."
+
+msgctxt "help:product.template,family_equivalent:"
+msgid ""
+"The UoM's Category of Family/Equivalent which you can select here will match"
+" the UoM's Category of this Product."
+msgstr ""
+"La Categoría de UdM de la Familia/Equivalente que puede seleccionar aquí "
+"coincidirá con la Categoría de UdM de este Producto."
+
+msgctxt "model:ir.action,name:act_lims_brand_list"
+msgid "Brands"
+msgstr "Marcas"
+
+msgctxt "model:ir.action,name:act_lims_family_equivalent_list"
+msgid "Family/Equivalents"
+msgstr "Familia/Equivalentes"
+
+msgctxt "model:ir.action,name:act_lims_lot_category_list"
+msgid "Lot Categories"
+msgstr "Categorías de Lote"
+
+msgctxt "model:ir.action,name:act_lims_purity_degree_list"
+msgid "Purity Degrees"
+msgstr "Grados de pureza"
+
+msgctxt "model:ir.action,name:act_production_related"
+msgid "Related Productions"
+msgstr "Producciones relacionadas"
+
+msgctxt "model:ir.action,name:report_family_equivalent"
+msgid "Family/Equivalents"
+msgstr "Familias/Equivalentes"
+
+msgctxt "model:ir.action,name:wiz_report_shipment_in_labels"
+msgid "Shipment In Labels"
+msgstr "Etiquetas"
+
+msgctxt "model:ir.action,name:wizard_move_production_related"
+msgid "Related Productions"
+msgstr "Producciones relacionadas"
+
+msgctxt "model:ir.sequence,name:seq_lot"
+msgid "Lot"
+msgstr "Lote"
+
+msgctxt "model:ir.sequence.type,name:seq_type_lot"
+msgid "Lot"
+msgstr "Lote"
+
+msgctxt "model:ir.ui.menu,name:lims_brand_menu"
+msgid "Brands"
+msgstr "Marcas"
+
+msgctxt "model:ir.ui.menu,name:lims_config_material"
+msgid "Material"
+msgstr "Material"
+
+msgctxt "model:ir.ui.menu,name:lims_family_equivalent_menu"
+msgid "Family/Equivalents"
+msgstr "Familia/Equivalentes"
+
+msgctxt "model:ir.ui.menu,name:lims_lot_category_menu"
+msgid "Lot Categories"
+msgstr "Categorías de Lote"
+
+msgctxt "model:ir.ui.menu,name:lims_purity_degree_menu"
+msgid "Purity Degrees"
+msgstr "Grados de pureza"
+
+msgctxt "model:lims.brand,name:"
+msgid "Brand"
+msgstr "Marca"
+
+msgctxt "model:lims.configuration.solvents,name:"
+msgid "Configuration - Solvents"
+msgstr "Configuración - Solventes"
+
+msgctxt "model:lims.family.equivalent,name:"
+msgid "Family/Equivalent"
+msgstr "Familia/Equivalente"
+
+msgctxt "model:lims.purity.degree,name:"
+msgid "Purity Degree"
+msgstr "Grado de pureza"
+
+msgctxt "model:res.group,name:group_lims_conf_material_admin"
+msgid "Lims Configuration Material Admin"
+msgstr "Lims Configuración Material Admin"
+
+msgctxt "model:res.group,name:group_lims_conf_material_readonly"
+msgid "Lims Configuration Material Read Only"
+msgstr "Lims Configuración Material Sólo lectura"
+
+msgctxt "model:res.group,name:group_lims_lot_domestic_use"
+msgid "Lims Lot Production for domestic use"
+msgstr "Lims Lotes de Producción para uso interno"
+
+msgctxt "model:res.group,name:group_lims_lot_input_prod"
+msgid "Lims Lot Input for production"
+msgstr "Lims Lotes de Insumos para producción"
+
+msgctxt "model:res.group,name:group_lims_lot_prod_sale"
+msgid "Lims Lot Production for sale"
+msgstr "Lims Lotes de Producción para venta"
+
+msgctxt "model:stock.lot.category,name:"
+msgid "Lot Category"
+msgstr "Categoría de Lote"
+
+msgctxt "report:lims.family.equivalent.report:"
+msgid "List of Families/Equivalents"
+msgstr "Listado de Familias/Equivalentes"
+
+msgctxt "report:lims.family.equivalent.report:"
+msgid "Page"
+msgstr "Página"
+
+msgctxt "report:lims.family.equivalent.report:"
+msgid "Print Date:"
+msgstr "Fecha de impresión:"
+
+msgctxt "report:lims.family.equivalent.report:"
+msgid "of"
+msgstr "de"
+
+msgctxt "view:lims.brand:"
+msgid "Brand"
+msgstr "Marca"
+
+msgctxt "view:lims.brand:"
+msgid "Brands"
+msgstr "Marcas"
+
+msgctxt "view:lims.configuration:"
+msgid "Default Lot Categories"
+msgstr "Categorías de lote por defecto"
+
+msgctxt "view:lims.configuration:"
+msgid "Solvents"
+msgstr "Solventes"
+
+msgctxt "view:lims.family.equivalent:"
+msgid "Family/Equivalent"
+msgstr "Familia/Equivalente"
+
+msgctxt "view:lims.family.equivalent:"
+msgid "Family/Equivalents"
+msgstr "Familia/Equivalentes"
+
+msgctxt "view:lims.purity.degree:"
+msgid "Purity Degree"
+msgstr "Grado de pureza"
+
+msgctxt "view:lims.purity.degree:"
+msgid "Purity Degrees"
+msgstr "Grados de pureza"
+
+msgctxt "view:product.template:"
+msgid "Lims"
+msgstr "Lims"
+
+msgctxt "view:production:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "view:production:"
+msgid "Lims"
+msgstr "Lims"
+
+msgctxt "view:stock.lot.category:"
+msgid "Lot Categories"
+msgstr "Categorías de Lote"
+
+msgctxt "view:stock.lot.category:"
+msgid "Lot Category"
+msgstr "Categoría de Lote"
+
+msgctxt "view:stock.move:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "view:stock.move:"
+msgid "Moves"
+msgstr "Movimientos"
+
+msgctxt "view:stock.move:"
+msgid "Reset to Draft"
+msgstr "Restablecer a borrador"

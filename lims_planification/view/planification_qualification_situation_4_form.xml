@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<form col="2">
+    <image name="tryton-dialog-warning" xexpand="0" xfill="0"/>
+    <group col="1" id="labels">
+        <label string="The following methods have no qualified technician"
+            yalign="0.0" xalign="0.0" xexpand="1" id="warning"/>
+    </group>
+    <group col="2" colspan="4" id="data">
+        <label name="methods"/>
+        <field name="methods"/>
+    </group>
+</form>

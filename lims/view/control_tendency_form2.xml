@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<form>
+    <label name="fraction_type"/>
+    <field name="fraction_type" colspan="3"/>
+    <label name="product_type"/>
+    <field name="product_type"/>
+    <label name="matrix"/>
+    <field name="matrix"/>
+    <label name="analysis"/>
+    <field name="analysis"/>
+    <label name="concentration_level"/>
+    <field name="concentration_level"/>
+    <label name="mean"/>
+    <field name="mean"/>
+    <label name="cv"/>
+    <field name="cv"/>
+    <label name="one_sd"/>
+    <field name="one_sd"/>
+    <label name="one_sd_adj"/>
+    <field name="one_sd_adj"/>
+    <label name="two_sd"/>
+    <field name="two_sd"/>
+    <label name="two_sd_adj"/>
+    <field name="two_sd_adj"/>
+    <label name="three_sd"/>
+    <field name="three_sd"/>
+    <label name="three_sd_adj"/>
+    <field name="three_sd_adj"/>
+    <group col="6" colspan="4" id="limits">
+        <separator string="Limits" colspan="6" id="limits"/>
+        <label name="ucl"/>
+        <field name="ucl"/>
+        <label name="uwl"/>
+        <field name="uwl"/>
+        <label name="upl"/>
+        <field name="upl"/>
+        <label name="lcl"/>
+        <field name="lcl"/>
+        <label name="lwl"/>
+        <field name="lwl"/>
+        <label name="lpl"/>
+        <field name="lpl"/>
+    </group>
+</form>

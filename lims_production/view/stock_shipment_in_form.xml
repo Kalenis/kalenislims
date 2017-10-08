@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='inventory_moves']/field[@name='inventory_moves']"
+        position="replace_attributes">
+        <field name="inventory_moves" colspan="4" mode="tree,form"
+            view_ids="lims_production.stock_move_in_shipment_view_list,stock.move_view_form"/>
+    </xpath>
+</data>

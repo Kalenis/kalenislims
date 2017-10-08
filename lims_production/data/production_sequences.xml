@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data noupdate="1">
+
+<!-- Sequences for Lot -->
+
+        <record model="ir.sequence.type" id="seq_type_lot">
+            <field name="name">Lot</field>
+            <field name="code">stock.lot</field>
+        </record>
+        <record model="ir.sequence.type-res.group"
+            id="seq_type_lot_group_admin">
+            <field name="sequence_type" ref="seq_type_lot"/>
+            <field name="group" ref="res.group_admin"/>
+        </record>
+        <record model="ir.sequence" id="seq_lot">
+            <field name="name">Lot</field>
+            <field name="code">stock.lot</field>
+        </record>
+
+    </data>
+</tryton>

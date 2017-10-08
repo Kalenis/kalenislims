@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form>
+    <label name="price_list"/>
+    <field name="price_list"/>
+    <label name="default_list"/>
+    <field name="default_list"/>
+</form>

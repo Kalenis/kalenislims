@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+      <!-- Fraction Type -->
+
+      <record model="ir.ui.view" id="lims_fraction_type_view_form">
+          <field name="model">lims.fraction.type</field>
+          <field name="inherit" ref="lims.lims_fraction_type_view_form"/>
+          <field name="name">fraction_type_form</field>
+      </record>
+      <record model="ir.ui.view" id="lims_fraction_type_view_list">
+          <field name="model">lims.fraction.type</field>
+          <field name="inherit" ref="lims.lims_fraction_type_view_list"/>
+          <field name="name">fraction_type_list</field>
+      </record>
+
+    </data>
+</tryton>

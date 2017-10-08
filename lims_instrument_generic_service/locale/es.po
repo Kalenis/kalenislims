@@ -1,0 +1,7 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "selection:lims.resultsimport,name:"
+msgid "Generic Service Form - XLS"
+msgstr "Formulario genérico de servicio - XLS"

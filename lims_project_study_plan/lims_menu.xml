@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Menu -->
+
+        <!-- Configuration / Projects / Professional Positions -->
+        <menuitem parent="lims_project.lims_config_projects"
+            action="act_lims_project_stp_professional_position_list"
+            id="lims_project_stp_professional_position_menu" sequence="20"/>
+
+    </data>
+</tryton>

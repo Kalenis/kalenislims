@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<form>
+    <label name="fraction"/>
+    <field name="fraction"/>
+    <label name="party_code"/>
+    <field name="party_code"/>
+    <label name="product_type"/>
+    <field name="product_type"/>
+    <label name="matrix"/>
+    <field name="matrix"/>
+    <label name="label"/>
+    <field name="label"/>
+    <label name="fraction_type"/>
+    <field name="fraction_type"/>
+    <label name="date"/>
+    <group col="3" colspan="1" id="shared">
+        <field name="date"/>
+        <label name="shared"/>
+        <field name="shared"/>
+    </group>
+    <label name="current_location"/>
+    <field name="current_location"/>
+    <notebook>
+        <page id="lines" string="Lines">
+            <field name="lines" colspan="4"/>
+        </page>
+        <page id="comments" string="Fraction Comments">
+            <field name="fraction_comments"/>
+        </page>
+    </notebook>
+</form>

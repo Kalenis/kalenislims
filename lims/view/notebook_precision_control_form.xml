@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<form>
+    <label name="range_type"/>
+    <field name="range_type" colspan="3"/>
+    <label name="product_type"/>
+    <field name="product_type"/>
+    <label name="matrix"/>
+    <field name="matrix"/>
+    <label name="factor"/>
+    <field name="factor"/>
+</form>

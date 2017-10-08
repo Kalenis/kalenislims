@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="fraction"/>
+    <field name="analysis_origin"/>
+    <field name="method"/>
+</tree>

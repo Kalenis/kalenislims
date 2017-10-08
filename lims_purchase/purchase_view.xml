@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Purchase Line -->
+
+        <record model="ir.ui.view" id="purchase_line_view_form">
+            <field name="model">purchase.line</field>
+            <field name="inherit" ref="purchase.purchase_line_view_form"/>
+            <field name="name">purchase_line_form</field>
+        </record>
+        <record model="ir.ui.view" id="purchase_line_view_tree">
+            <field name="model">purchase.line</field>
+            <field name="inherit" ref="purchase.purchase_line_view_tree"/>
+            <field name="name">purchase_line_tree</field>
+        </record>
+        <record model="ir.ui.view" id="purchase_line_view_tree_sequence">
+            <field name="model">purchase.line</field>
+            <field name="inherit" ref="purchase.purchase_line_view_tree_sequence"/>
+            <field name="name">purchase_line_tree_sequence</field>
+        </record>
+
+<!-- Return Purchase -->
+
+        <record model="ir.ui.view" id="return_purchase_start_view_form">
+            <field name="model">purchase.return_purchase.start</field>
+            <field name="type">form</field>
+            <field name="name">return_purchase_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wizard_return_purchase">
+            <field name="name">Return Purchase</field>
+            <field name="wiz_name">purchase.return_purchase</field>
+            <field name="model">purchase.purchase</field>
+        </record>
+        <record model="ir.action.keyword" id="act_wizard_return_purchase_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">purchase.purchase,-1</field>
+            <field name="action" ref="wizard_return_purchase"/>
+        </record>
+
+        <!-- User Role -->
+
+        <record model="ir.ui.view" id="lims_user_role_view_form">
+            <field name="model">lims.user.role</field>
+            <field name="inherit" ref="lims.lims_user_role_view_form"/>
+            <field name="name">user_role_form</field>
+        </record>
+
+    </data>
+</tryton>

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form>
+    <label name="location_destination"/>
+    <field name="location_destination"/>
+    <field name="fractions" colspan="4"/>
+    <field name="fraction_domain" colspan="4" invisible="1"/>
+</form>

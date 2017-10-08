@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<form>
+    <label name="report"/>
+    <field name="report"/>
+    <label name="report_type_forced"/>
+    <field name="report_type_forced"/>
+    <field name="notebook_lines" colspan="4" mode="tree,form"
+        view_ids="lims.lims_notebook_line_generate_results_view_list,lims.lims_notebook_line_view_form"/>
+    <field name="party" colspan="4" invisible="1"/>
+    <field name="notebook" colspan="4" invisible="1"/>
+    <field name="report_grouper" colspan="4" invisible="1"/>
+    <field name="report_type" colspan="4" invisible="1"/>
+    <field name="cie_fraction_type" colspan="4" invisible="1"/>
+    <field name="laboratory" colspan="4" invisible="1"/>
+</form>

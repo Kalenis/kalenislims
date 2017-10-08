@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<form>
+    <label name="fraction"/>
+    <field name="fraction"/>
+    <label name="professional"/>
+    <field name="professional"/>
+    <label name="line"/>
+    <field name="line"/>
+    <label name="repetition"/>
+    <field name="repetition"/>
+    <label name="product_type"/>
+    <field name="product_type"/>
+    <label name="matrix"/>
+    <field name="matrix"/>
+    <label name="formula"/>
+    <field name="formula"/>
+    <field name="formula_formula" colspan="2"/>
+    <label name="result"/>
+    <field name="result"/>
+    <label name="result_modifier"/>
+    <field name="result_modifier"/>
+    <label name="end_date"/>
+    <field name="end_date"/>
+    <label name="end_date_copy"/>
+    <field name="end_date_copy"/>
+    <label name="chromatogram"/>
+    <field name="chromatogram"/>
+    <label name="chromatogram_copy"/>
+    <field name="chromatogram_copy"/>
+    <label name="initial_concentration"/>
+    <field name="initial_concentration"/>
+    <label name="initial_concentration_copy"/>
+    <field name="initial_concentration_copy"/>
+    <notebook>
+        <page string="Variables" id="variables">
+            <field name="variables" colspan="4"/>
+        </page>
+        <page string="Comments" id="comments">
+            <field name="comments" colspan="4"/>
+            <label name="comments_copy"/>
+            <field name="comments_copy"/>
+        </page>
+    </notebook>
+</form>

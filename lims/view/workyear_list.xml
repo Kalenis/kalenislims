@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="code"/>
+    <field name="start_date"/>
+    <field name="end_date"/>
+    <field name="entry_sequence"/>
+    <field name="sample_sequence"/>
+    <field name="service_sequence"/>
+    <field name="results_report_sequence"/>
+</tree>
