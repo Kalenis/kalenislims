@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="brix"/>
+    <field name="density"/>
+    <field name="soluble_solids"/>
+</tree>

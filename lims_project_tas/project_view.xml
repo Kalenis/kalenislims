@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Menu items in lims_menu.xml -->
+
+<!-- Project -->
+
+        <record model="ir.ui.view" id="lims_project_view_form">
+            <field name="model">lims.project</field>
+            <field name="inherit" ref="lims_project.lims_project_view_form"/>
+            <field name="name">project_form</field>
+        </record>
+
+<!-- TAS Type -->
+
+        <record model="ir.ui.view" id="lims_tas_type_view_form">
+            <field name="model">lims.tas.type</field>
+            <field name="type">form</field>
+            <field name="name">tas_type_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_tas_type_view_list">
+            <field name="model">lims.tas.type</field>
+            <field name="type">tree</field>
+            <field name="name">tas_type_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_tas_type_list">
+            <field name="name">TAS Types</field>
+            <field name="res_model">lims.tas.type</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_tas_type_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_tas_type_view_list"/>
+            <field name="act_window" ref="act_lims_tas_type_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_tas_type_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_tas_type_view_form"/>
+            <field name="act_window" ref="act_lims_tas_type_list"/>
+        </record>
+
+    </data>
+</tryton>

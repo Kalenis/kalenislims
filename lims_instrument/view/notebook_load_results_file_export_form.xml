@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form>
+    <image name="tryton-dialog-information" xexpand="0" xfill="0"/>
+    <label string="Save the results in file" id="message"
+        yalign="0.0" xalign="0.0" xexpand="1"/>
+    <newline/>
+    <label name="file"/>
+    <field name="file"/>
+</form>

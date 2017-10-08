@@ -1,0 +1,255 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:lims.resultsimport:"
+msgid "No module for importer type \"%s\""
+msgstr "No se ha definido un módulo para el importador \"%s\""
+
+msgctxt "error:lims.resultsimport:"
+msgid "The function \"%s\" is not implemented for this importer"
+msgstr "La función \"%s\" no está implementada para este importador"
+
+msgctxt "error:lims.resultsimport:"
+msgid "The results importer name must be unique"
+msgstr "El importador de resultados debe ser único"
+
+msgctxt "field:lims.notebook.line,imported_chromatogram:"
+msgid "Chromatogram"
+msgstr "Cromatograma"
+
+msgctxt "field:lims.notebook.line,imported_device:"
+msgid "Device"
+msgstr "Equipo"
+
+msgctxt "field:lims.notebook.line,imported_dilution_factor:"
+msgid "Dilution factor"
+msgstr "Factor de dilución"
+
+msgctxt "field:lims.notebook.line,imported_end_date:"
+msgid "End date"
+msgstr "Fecha de finalización"
+
+msgctxt "field:lims.notebook.line,imported_literal_result:"
+msgid "Literal result"
+msgstr "Resultado textual"
+
+msgctxt "field:lims.notebook.line,imported_professionals:"
+msgid "Professionals"
+msgstr "Profesionales"
+
+msgctxt "field:lims.notebook.line,imported_result:"
+msgid "Result"
+msgstr "Resultado"
+
+msgctxt "field:lims.notebook.line,imported_rm_correction_formula:"
+msgid "RM Correction Formula"
+msgstr "Fórmula Corrección RM"
+
+msgctxt "field:lims.notebook.load_results_file.empty,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.notebook.load_results_file.export,file:"
+msgid "File"
+msgstr "Archivo"
+
+msgctxt "field:lims.notebook.load_results_file.export,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.notebook.load_results_file.result,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.notebook.load_results_file.result,result_lines:"
+msgid "Lines"
+msgstr "Líneas"
+
+msgctxt "field:lims.notebook.load_results_file.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.notebook.load_results_file.start,lines:"
+msgid "Files"
+msgstr "Archivos"
+
+msgctxt "field:lims.notebook.load_results_file.start,results_importer:"
+msgid "Results importer"
+msgstr "Importador de resultados"
+
+msgctxt "field:lims.notebook.load_results_file.start.line,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.notebook.load_results_file.start.line,infile:"
+msgid "File"
+msgstr "Archivo"
+
+msgctxt "field:lims.notebook.load_results_file.start.line,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.notebook.load_results_file.warning,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.notebook.load_results_file.warning,msg:"
+msgid "Message"
+msgstr "Mensaje"
+
+msgctxt "field:lims.resultsimport,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.resultsimport,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.resultsimport,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:lims.resultsimport,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.resultsimport,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.resultsimport,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.resultsimport,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.resultsimport,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "model:ir.action,name:act_lims_resultsimport_list"
+msgid "Results Importers"
+msgstr "Importadores de resultados"
+
+msgctxt "model:ir.action,name:wiz_lims_notebook_load_results_file"
+msgid "Load Results from File"
+msgstr "Carga de resultados desde archivo"
+
+msgctxt "model:ir.ui.menu,name:lims_notebook_load_results_file_menu"
+msgid "Load Results from File"
+msgstr "Carga de resultados desde archivo"
+
+msgctxt "model:ir.ui.menu,name:lims_resultsimport_menu"
+msgid "Results Importers"
+msgstr "Importadores de resultados"
+
+msgctxt "model:lims.notebook.load_results_file.empty,name:"
+msgid "Load Results from File Empty"
+msgstr "Cargar Resultados desde Archivo - Vacío"
+
+msgctxt "model:lims.notebook.load_results_file.export,name:"
+msgid "Export Results from File"
+msgstr "Exportar Resultados desde Archivo"
+
+msgctxt "model:lims.notebook.load_results_file.result,name:"
+msgid "Process Results from File"
+msgstr "Procesar resultados desde archivo"
+
+msgctxt "model:lims.notebook.load_results_file.start,name:"
+msgid "Load Results from File"
+msgstr "Carga de resultados desde archivo"
+
+msgctxt "model:lims.notebook.load_results_file.start.line,name:"
+msgid "Load Results from File"
+msgstr "Carga de resultados desde archivo"
+
+msgctxt "model:lims.notebook.load_results_file.warning,name:"
+msgid "Load Results from File Warning"
+msgstr "Carga de resultados desde archivo - Advertencia"
+
+msgctxt "model:lims.resultsimport,name:"
+msgid "Results Import"
+msgstr "Importador de resultados"
+
+msgctxt "view:lims.notebook.line:"
+msgid "Notebook lines"
+msgstr "Líneas de cuaderno"
+
+msgctxt "view:lims.notebook.load_results_file.empty:"
+msgid "Load Results from File"
+msgstr "Carga de resultados desde archivo"
+
+msgctxt "view:lims.notebook.load_results_file.empty:"
+msgid "No data could be collected from files"
+msgstr "No fue posible obtener resultados desde los archivos"
+
+msgctxt "view:lims.notebook.load_results_file.export:"
+msgid "Export Results"
+msgstr "Exportar resultados"
+
+msgctxt "view:lims.notebook.load_results_file.export:"
+msgid "Save the results in file"
+msgstr "Guarde los resultados en un archivo"
+
+msgctxt "view:lims.notebook.load_results_file.result:"
+msgid "Load Results from File"
+msgstr "Carga de resultados desde archivo"
+
+msgctxt "view:lims.notebook.load_results_file.start.line:"
+msgid "Files"
+msgstr "Archivos"
+
+msgctxt "view:lims.notebook.load_results_file.start:"
+msgid "Load Results from File"
+msgstr "Carga de resultados desde archivo"
+
+msgctxt "view:lims.notebook.load_results_file.warning:"
+msgid "Load Results from File"
+msgstr "Carga de resultados desde archivo"
+
+msgctxt "view:lims.notebook.load_results_file.warning:"
+msgid "There are some issues with the imported data"
+msgstr "Se han detectado problemas en la información importada"
+
+msgctxt "view:lims.resultsimport:"
+msgid "Results Importer"
+msgstr "Importador de resultados"
+
+msgctxt "view:lims.resultsimport:"
+msgid "Results Importers"
+msgstr "Importadores de resultados"
+
+msgctxt "wizard_button:lims.notebook.load_results_file,empty,end:"
+msgid "Close"
+msgstr "Cerrar"
+
+msgctxt "wizard_button:lims.notebook.load_results_file,empty,start:"
+msgid "Try again"
+msgstr "Probar de nuevo"
+
+msgctxt "wizard_button:lims.notebook.load_results_file,export,end:"
+msgid "Done"
+msgstr "Listo"
+
+msgctxt "wizard_button:lims.notebook.load_results_file,result,cancel:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.notebook.load_results_file,result,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.notebook.load_results_file,start,collect:"
+msgid "Collect"
+msgstr "Obtener datos"
+
+msgctxt "wizard_button:lims.notebook.load_results_file,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.notebook.load_results_file,warning,close:"
+msgid "Ok"
+msgstr "Aceptar"

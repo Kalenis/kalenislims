@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="product_type"/>
+    <field name="matrix"/>
+    <field name="fraction_type"/>
+    <field name="analysis"/>
+    <field name="concentration_level"/>
+    <field name="mean"/>
+    <field name="deviation" tree_invisible="1" />
+    <field name="one_sd"/>
+    <field name="two_sd"/>
+    <field name="three_sd"/>
+    <field name="cv"/>
+    <field name="one_sd_adj"/>
+    <field name="two_sd_adj"/>
+    <field name="three_sd_adj"/>
+    <field name="ucl"/>
+    <field name="uwl"/>
+    <field name="upl"/>
+    <field name="lcl"/>
+    <field name="lwl"/>
+    <field name="lpl"/>
+    <field name="cl"/>
+    <field name="rule_1_count"/>
+    <field name="rule_2_count"/>
+    <field name="rule_3_count"/>
+    <field name="rule_4_count"/>
+</tree>

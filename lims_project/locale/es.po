@@ -1,0 +1,147 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:lims.project:"
+msgid "Project code must be unique"
+msgstr "El código del proyecto debe ser único"
+
+msgctxt "field:lims.create_sample.start,project_type:"
+msgid "Type"
+msgstr "Tipo de Proyecto"
+
+msgctxt "field:lims.entry,project:"
+msgid "Project"
+msgstr "Proyecto"
+
+msgctxt "field:lims.entry,project_type:"
+msgid "Type"
+msgstr "Tipo de Proyecto"
+
+msgctxt "field:lims.project,client:"
+msgid "Client"
+msgstr "Cliente"
+
+msgctxt "field:lims.project,code:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "field:lims.project,comments:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "field:lims.project,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.project,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.project,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:lims.project,end_date:"
+msgid "End date"
+msgstr "Fecha de finalización"
+
+msgctxt "field:lims.project,external_quality_control:"
+msgid "External quality control"
+msgstr "Control externo de calidad"
+
+msgctxt "field:lims.project,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.project,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.project,start_date:"
+msgid "Start date"
+msgstr "Fecha de inicio"
+
+msgctxt "field:lims.project,storage_time:"
+msgid "Storage time (in months)"
+msgstr "Tiempo de almacenamiento (en meses)"
+
+msgctxt "field:lims.project,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.project,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.project,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.sample,project_type:"
+msgid "Type"
+msgstr "Tipo de Proyecto"
+
+msgctxt "model:ir.action,name:act_lims_project_list"
+msgid "Projects"
+msgstr "Proyectos"
+
+msgctxt "model:ir.ui.menu,name:lims_config_projects"
+msgid "Projects"
+msgstr "Proyectos"
+
+msgctxt "model:ir.ui.menu,name:lims_project_menu"
+msgid "Projects"
+msgstr "Proyectos"
+
+msgctxt "model:lims.project,name:"
+msgid "Project"
+msgstr "Proyecto"
+
+msgctxt "model:res.group,name:group_lims_conf_project_admin"
+msgid "Lims Configuration Projects Admin"
+msgstr "Lims Configuración Proyectos Admin"
+
+msgctxt "model:res.group,name:group_lims_conf_project_readonly"
+msgid "Lims Configuration Projects Read Only"
+msgstr "Lims Configuración Proyectos Sólo lectura"
+
+msgctxt "model:res.group,name:group_lims_project"
+msgid "Lims Projects"
+msgstr "Lims Proyectos"
+
+msgctxt "model:res.group,name:group_lims_project_readonly"
+msgid "Lims Projects Read Only"
+msgstr "Lims Proyectos Sólo lectura"
+
+msgctxt "selection:lims.project,type:"
+msgid "Interlaboratory"
+msgstr "Interlaboratorio"
+
+msgctxt "selection:lims.project,type:"
+msgid "Study plan"
+msgstr "Plan de estudio"
+
+msgctxt "selection:lims.project,type:"
+msgid "TAS"
+msgstr "SAT"
+
+msgctxt "selection:lims.project,type:"
+msgid "Water sampling"
+msgstr "Muestreo"
+
+msgctxt "view:lims.project:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "view:lims.project:"
+msgid "General"
+msgstr "General"
+
+msgctxt "view:lims.project:"
+msgid "Project"
+msgstr "Proyecto"
+
+msgctxt "view:lims.project:"
+msgid "Projects"
+msgstr "Proyectos"

@@ -1,0 +1,1619 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Menu items in lims_menu.xml -->
+
+<!-- Laboratory -->
+
+        <record model="ir.ui.view" id="lims_laboratory_view_form">
+            <field name="model">lims.laboratory</field>
+            <field name="type">form</field>
+            <field name="name">laboratory_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_laboratory_view_list">
+            <field name="model">lims.laboratory</field>
+            <field name="type">tree</field>
+            <field name="name">laboratory_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_laboratory_list">
+            <field name="name">Laboratories</field>
+            <field name="res_model">lims.laboratory</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_laboratory_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_laboratory_view_list"/>
+            <field name="act_window" ref="act_lims_laboratory_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_laboratory_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_laboratory_view_form"/>
+            <field name="act_window" ref="act_lims_laboratory_list"/>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_laboratory">
+            <field name="model" search="[('model', '=', 'lims.laboratory')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_laboratory">
+            <field name="domain"
+                eval="[If(Bool(Eval('user', {}).get('laboratories', False)), ('id', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_laboratory"/>
+        </record>
+
+<!-- Laboratory CV Correction -->
+
+        <record model="ir.ui.view" id="lims_laboratory_cv_correction_view_form">
+            <field name="model">lims.laboratory.cv_correction</field>
+            <field name="type">form</field>
+            <field name="name">laboratory_cv_correction_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_laboratory_cv_correction_view_list">
+            <field name="model">lims.laboratory.cv_correction</field>
+            <field name="type">tree</field>
+            <field name="name">laboratory_cv_correction_list</field>
+        </record>
+
+<!-- Laboratory Professional -->
+
+        <record model="ir.ui.view" id="lims_laboratory_professional_view_form">
+            <field name="model">lims.laboratory.professional</field>
+            <field name="type">form</field>
+            <field name="name">laboratory_professional_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_laboratory_professional_view_list">
+            <field name="model">lims.laboratory.professional</field>
+            <field name="type">tree</field>
+            <field name="name">laboratory_professional_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_laboratory_professional_list">
+            <field name="name">Laboratory Professionals</field>
+            <field name="res_model">lims.laboratory.professional</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_laboratory_professional_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_laboratory_professional_view_list"/>
+            <field name="act_window" ref="act_lims_laboratory_professional_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_laboratory_professional_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_laboratory_professional_view_form"/>
+            <field name="act_window" ref="act_lims_laboratory_professional_list"/>
+        </record>
+
+<!-- Laboratory Method -->
+
+        <record model="ir.ui.view" id="lims_lab_method_view_form">
+            <field name="model">lims.lab.method</field>
+            <field name="type">form</field>
+            <field name="name">lab_method_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_lab_method_view_list">
+            <field name="model">lims.lab.method</field>
+            <field name="type">tree</field>
+            <field name="name">lab_method_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_lab_method_list">
+            <field name="name">Methods</field>
+            <field name="res_model">lims.lab.method</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_lab_method_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_lab_method_view_list"/>
+            <field name="act_window" ref="act_lims_lab_method_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_lab_method_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_lab_method_view_form"/>
+            <field name="act_window" ref="act_lims_lab_method_list"/>
+        </record>
+
+<!-- Laboratory Device -->
+
+        <record model="ir.ui.view" id="lims_lab_device_view_form">
+            <field name="model">lims.lab.device</field>
+            <field name="type">form</field>
+            <field name="name">lab_device_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_lab_device_view_list">
+            <field name="model">lims.lab.device</field>
+            <field name="type">tree</field>
+            <field name="name">lab_device_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_lab_device_list">
+            <field name="name">Devices</field>
+            <field name="res_model">lims.lab.device</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_lab_device_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_lab_device_view_list"/>
+            <field name="act_window" ref="act_lims_lab_device_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_lab_device_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_lab_device_view_form"/>
+            <field name="act_window" ref="act_lims_lab_device_list"/>
+        </record>
+
+<!-- Laboratory Device Type -->
+
+        <record model="ir.ui.view" id="lims_lab_device_type_view_form">
+            <field name="model">lims.lab.device.type</field>
+            <field name="type">form</field>
+            <field name="name">lab_device_type_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_lab_device_type_view_list">
+            <field name="model">lims.lab.device.type</field>
+            <field name="type">tree</field>
+            <field name="name">lab_device_type_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_lab_device_type_list">
+            <field name="name">Device types</field>
+            <field name="res_model">lims.lab.device.type</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_lab_device_type_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_lab_device_type_view_list"/>
+            <field name="act_window" ref="act_lims_lab_device_type_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_lab_device_type_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_lab_device_type_view_form"/>
+            <field name="act_window" ref="act_lims_lab_device_type_list"/>
+        </record>
+
+<!-- Laboratory Device Laboratory -->
+
+        <record model="ir.ui.view" id="lims_lab_device_laboratory_view_form">
+            <field name="model">lims.lab.device.laboratory</field>
+            <field name="type">form</field>
+            <field name="name">lab_device_laboratory_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_lab_device_laboratory_view_list">
+            <field name="model">lims.lab.device.laboratory</field>
+            <field name="type">tree</field>
+            <field name="name">lab_device_laboratory_list</field>
+        </record>
+
+<!-- Typification -->
+
+        <record model="ir.ui.view" id="lims_typification_view_form">
+            <field name="model">lims.typification</field>
+            <field name="type">form</field>
+            <field name="name">typification_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_typification_view_list">
+            <field name="model">lims.typification</field>
+            <field name="type">tree</field>
+            <field name="name">typification_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_typification_list">
+            <field name="name">Typifications</field>
+            <field name="res_model">lims.typification</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_typification_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_typification_view_list"/>
+            <field name="act_window" ref="act_lims_typification_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_typification_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_typification_view_form"/>
+            <field name="act_window" ref="act_lims_typification_list"/>
+        </record>
+
+<!-- Typification Read Only -->
+
+        <record model="ir.ui.view" id="lims_typification_readonly_view_list">
+            <field name="model">lims.typification.readonly</field>
+            <field name="type">tree</field>
+            <field name="name">typification_readonly_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_typification_readonly_list">
+            <field name="name">Typifications</field>
+            <field name="res_model">lims.typification.readonly</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_typification_readonly_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_typification_readonly_view_list"/>
+            <field name="act_window" ref="act_lims_typification_readonly_list"/>
+        </record>
+
+<!-- Calculated Typification Read Only -->
+
+        <record model="ir.ui.view" id="lims_typification_calculated_readonly_view_list">
+            <field name="model">lims.typification.calculated.readonly</field>
+            <field name="type">tree</field>
+            <field name="name">typification_calculated_readonly_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_typification_calculated_readonly_list">
+            <field name="name">Sets/Groups Typifications</field>
+            <field name="res_model">lims.typification.calculated.readonly</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_typification_calculated_readonly_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_typification_calculated_readonly_view_list"/>
+            <field name="act_window" ref="act_lims_typification_calculated_readonly_list"/>
+        </record>
+
+<!-- Product type -->
+
+        <record model="ir.ui.view" id="lims_product_type_view_form">
+            <field name="model">lims.product.type</field>
+            <field name="type">form</field>
+            <field name="name">product_type_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_product_type_view_list">
+            <field name="model">lims.product.type</field>
+            <field name="type">tree</field>
+            <field name="name">product_type_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_product_type_list">
+            <field name="name">Product types</field>
+            <field name="res_model">lims.product.type</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_product_type_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_product_type_view_list"/>
+            <field name="act_window" ref="act_lims_product_type_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_product_type_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_product_type_view_form"/>
+            <field name="act_window" ref="act_lims_product_type_list"/>
+        </record>
+
+<!-- Matrix -->
+
+        <record model="ir.ui.view" id="lims_matrix_view_form">
+            <field name="model">lims.matrix</field>
+            <field name="type">form</field>
+            <field name="name">matrix_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_matrix_view_list">
+            <field name="model">lims.matrix</field>
+            <field name="type">tree</field>
+            <field name="name">matrix_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_matrix_list">
+            <field name="name">Matrix</field>
+            <field name="res_model">lims.matrix</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_matrix_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_matrix_view_list"/>
+            <field name="act_window" ref="act_lims_matrix_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_matrix_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_matrix_view_form"/>
+            <field name="act_window" ref="act_lims_matrix_list"/>
+        </record>
+
+<!-- Packaging Type -->
+
+        <record model="ir.ui.view" id="lims_packaging_type_view_form">
+            <field name="model">lims.packaging.type</field>
+            <field name="type">form</field>
+            <field name="name">packaging_type_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_packaging_type_view_list">
+            <field name="model">lims.packaging.type</field>
+            <field name="type">tree</field>
+            <field name="name">packaging_type_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_packaging_type_list">
+            <field name="name">Packaging Types</field>
+            <field name="res_model">lims.packaging.type</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_packaging_type_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_packaging_type_view_list"/>
+            <field name="act_window" ref="act_lims_packaging_type_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_packaging_type_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_packaging_type_view_form"/>
+            <field name="act_window" ref="act_lims_packaging_type_list"/>
+        </record>
+
+<!-- Formula -->
+
+        <record model="ir.ui.view" id="lims_formula_view_form">
+            <field name="model">lims.formula</field>
+            <field name="type">form</field>
+            <field name="name">formula_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_formula_view_list">
+            <field name="model">lims.formula</field>
+            <field name="type">tree</field>
+            <field name="name">formula_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_formula_list">
+            <field name="name">Formulas</field>
+            <field name="res_model">lims.formula</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_formula_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_formula_view_list"/>
+            <field name="act_window" ref="act_lims_formula_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_formula_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_formula_view_form"/>
+            <field name="act_window" ref="act_lims_formula_list"/>
+        </record>
+
+<!-- Formula Variable -->
+
+        <record model="ir.ui.view" id="lims_formula_variable_view_form">
+            <field name="model">lims.formula.variable</field>
+            <field name="type">form</field>
+            <field name="name">formula_variable_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_formula_variable_view_list">
+            <field name="model">lims.formula.variable</field>
+            <field name="type">tree</field>
+            <field name="name">formula_variable_list</field>
+        </record>
+
+<!-- Analysis/Set/Group -->
+
+        <record model="ir.ui.view" id="lims_analysis_view_form">
+            <field name="model">lims.analysis</field>
+            <field name="type">form</field>
+            <field name="name">analysis_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_analysis_view_list">
+            <field name="model">lims.analysis</field>
+            <field name="type">tree</field>
+            <field name="name">analysis_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_analysis_list">
+            <field name="name">Analysis/Sets/Groups</field>
+            <field name="res_model">lims.analysis</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_analysis_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_analysis_view_list"/>
+            <field name="act_window" ref="act_lims_analysis_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_analysis_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_analysis_view_form"/>
+            <field name="act_window" ref="act_lims_analysis_list"/>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_analysis_laboratory">
+            <field name="model" search="[('model', '=', 'lims.analysis-laboratory')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_analysis_laboratory">
+            <field name="domain"
+                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_analysis_laboratory"/>
+        </record>
+
+<!-- Included Analysis -->
+
+        <record model="ir.ui.view" id="lims_analysis_included_view_form">
+            <field name="model">lims.analysis.included</field>
+            <field name="type">form</field>
+            <field name="name">analysis_included_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_analysis_included_view_list">
+            <field name="model">lims.analysis.included</field>
+            <field name="type">tree</field>
+            <field name="name">analysis_included_list</field>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_analysis_included">
+            <field name="model" search="[('model', '=', 'lims.analysis.included')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_analysis_included">
+            <field name="domain"
+                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_analysis_included"/>
+        </record>
+
+<!-- Analysis Device -->
+
+        <record model="ir.ui.view" id="lims_analysis_device_view_form">
+            <field name="model">lims.analysis.device</field>
+            <field name="type">form</field>
+            <field name="name">analysis_device_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_analysis_device_view_list">
+            <field name="model">lims.analysis.device</field>
+            <field name="type">tree</field>
+            <field name="name">analysis_device_list</field>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_analysis_device">
+            <field name="model" search="[('model', '=', 'lims.analysis.device')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_analysis_device">
+            <field name="domain"
+                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_analysis_device"/>
+        </record>
+
+<!-- Analysis Laboratory -->
+
+        <record model="ir.ui.view" id="lims_analysis_laboratory_view_form">
+            <field name="model">lims.analysis-laboratory</field>
+            <field name="type">form</field>
+            <field name="name">analysis_laboratory_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_analysis_laboratory_view_list">
+            <field name="model">lims.analysis-laboratory</field>
+            <field name="type">tree</field>
+            <field name="name">analysis_laboratory_list</field>
+        </record>
+
+<!-- Fraction Type -->
+
+        <record model="ir.ui.view" id="lims_fraction_type_view_form">
+            <field name="model">lims.fraction.type</field>
+            <field name="type">form</field>
+            <field name="name">fraction_type_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_fraction_type_view_list">
+            <field name="model">lims.fraction.type</field>
+            <field name="type">tree</field>
+            <field name="name">fraction_type_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_fraction_type_list">
+            <field name="name">Fraction Types</field>
+            <field name="res_model">lims.fraction.type</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_fraction_type_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_fraction_type_view_list"/>
+            <field name="act_window" ref="act_lims_fraction_type_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_fraction_type_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_fraction_type_view_form"/>
+            <field name="act_window" ref="act_lims_fraction_type_list"/>
+        </record>
+
+<!-- Certification Type -->
+
+        <record model="ir.ui.view" id="lims_certification_type_view_form">
+            <field name="model">lims.certification.type</field>
+            <field name="type">form</field>
+            <field name="name">certification_type_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_certification_type_view_list">
+            <field name="model">lims.certification.type</field>
+            <field name="type">tree</field>
+            <field name="name">certification_type_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_certification_type_list">
+            <field name="name">Certification Type</field>
+            <field name="res_model">lims.certification.type</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_certification_type_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_certification_type_view_list"/>
+            <field name="act_window" ref="act_lims_certification_type_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_certification_type_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_certification_type_view_form"/>
+            <field name="act_window" ref="act_lims_certification_type_list"/>
+        </record>
+
+<!-- Technical Scope -->
+
+        <record model="ir.ui.view" id="lims_technical_scope_view_form">
+            <field name="model">lims.technical.scope</field>
+            <field name="type">form</field>
+            <field name="name">technical_scope_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_technical_scope_view_list">
+            <field name="model">lims.technical.scope</field>
+            <field name="type">tree</field>
+            <field name="name">technical_scope_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_technical_scope_list">
+            <field name="name">Technical Scopes</field>
+            <field name="res_model">lims.technical.scope</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_technical_scope_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_technical_scope_view_list"/>
+            <field name="act_window" ref="act_lims_technical_scope_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_technical_scope_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_technical_scope_view_form"/>
+            <field name="act_window" ref="act_lims_technical_scope_list"/>
+        </record>
+
+<!-- Technical Scope Version -->
+
+        <record model="ir.ui.view" id="lims_technical_scope_version_view_form">
+            <field name="model">lims.technical.scope.version</field>
+            <field name="type">form</field>
+            <field name="name">technical_scope_version_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_technical_scope_version_view_list">
+            <field name="model">lims.technical.scope.version</field>
+            <field name="type">tree</field>
+            <field name="name">technical_scope_version_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_technical_scope_version_list">
+            <field name="name">Technical Scope Versions</field>
+            <field name="res_model">lims.technical.scope.version</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_technical_scope_version_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_technical_scope_version_view_list"/>
+            <field name="act_window" ref="act_lims_technical_scope_version_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_technical_scope_version_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_technical_scope_version_view_form"/>
+            <field name="act_window" ref="act_lims_technical_scope_version_list"/>
+        </record>
+
+<!-- Service -->
+
+        <record model="ir.ui.view" id="lims_service_view_form">
+            <field name="model">lims.service</field>
+            <field name="type">form</field>
+            <field name="name">service_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_service_view_list">
+            <field name="model">lims.service</field>
+            <field name="type">tree</field>
+            <field name="name">service_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_service2_view_list">
+            <field name="model">lims.service</field>
+            <field name="type">tree</field>
+            <field name="name">service2_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_service_list">
+            <field name="name">Services</field>
+            <field name="res_model">lims.service</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_service_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_service_view_list"/>
+            <field name="act_window" ref="act_lims_service_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_service_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_service_view_form"/>
+            <field name="act_window" ref="act_lims_service_list"/>
+        </record>
+
+        <record model="ir.model.field.access" id="access_lims_service_analysis_detail">
+            <field name="field"
+                search="[('name', '=', 'analysis_detail'), ('model.model', '=', 'lims.service')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+<!-- Fraction -->
+
+        <record model="ir.ui.view" id="lims_fraction_view_form">
+            <field name="model">lims.fraction</field>
+            <field name="type">form</field>
+            <field name="name">fraction_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_fraction_view_list">
+            <field name="model">lims.fraction</field>
+            <field name="type">tree</field>
+            <field name="name">fraction_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_fraction_list">
+            <field name="name">Fractions</field>
+            <field name="res_model">lims.fraction</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_fraction_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_fraction_view_list"/>
+            <field name="act_window" ref="act_lims_fraction_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_fraction_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_fraction_view_form"/>
+            <field name="act_window" ref="act_lims_fraction_list"/>
+        </record>
+
+<!-- Sample -->
+
+        <record model="ir.ui.view" id="lims_sample_view_form">
+            <field name="model">lims.sample</field>
+            <field name="type">form</field>
+            <field name="name">sample_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_sample_view_list">
+            <field name="model">lims.sample</field>
+            <field name="type">tree</field>
+            <field name="name">sample_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_sample_list">
+            <field name="name">Samples</field>
+            <field name="res_model">lims.sample</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_sample_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_sample_view_list"/>
+            <field name="act_window" ref="act_lims_sample_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_sample_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_sample_view_form"/>
+            <field name="act_window" ref="act_lims_sample_list"/>
+        </record>
+
+<!-- Notebook -->
+
+        <record model="ir.ui.view" id="lims_notebook_view_form">
+            <field name="model">lims.notebook</field>
+            <field name="type">form</field>
+            <field name="name">notebook_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_notebook_view_list">
+            <field name="model">lims.notebook</field>
+            <field name="type">tree</field>
+            <field name="name">notebook_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_notebook_list">
+            <field name="name">Laboratory Notebooks</field>
+            <field name="res_model">lims.notebook</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_notebook_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_notebook_view_list"/>
+            <field name="act_window" ref="act_lims_notebook_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_notebook_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_notebook_view_form"/>
+            <field name="act_window" ref="act_lims_notebook_list"/>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_notebook">
+            <field name="model" search="[('model', '=', 'lims.notebook')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_notebook">
+            <field name="domain"
+                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('lines.laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('lines.laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_notebook"/>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_notebook_line_related1">
+            <field name="name">Notebook Lines</field>
+            <field name="res_model">lims.notebook.line</field>
+        </record>
+
+        <record model="ir.action.wizard" id="act_open_notebook_lines">
+            <field name="name">Notebook Lines</field>
+            <field name="wiz_name">lims.open_notebook_lines</field>
+            <field name="model">lims.notebook</field>
+        </record>
+        <record model="ir.action.keyword" id="act_open_notebook_line_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.notebook,-1</field>
+            <field name="action" ref="act_open_notebook_lines"/>
+        </record>
+
+<!-- Notebook Line -->
+
+        <record model="ir.ui.view" id="lims_notebook_line_view_form">
+            <field name="model">lims.notebook.line</field>
+            <field name="type">form</field>
+            <field name="name">notebook_line_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_notebook_line_view_list">
+            <field name="model">lims.notebook.line</field>
+            <field name="type">tree</field>
+            <field name="name">notebook_line_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_notebook_line_list">
+            <field name="name">Notebook Lines</field>
+            <field name="res_model">lims.notebook.line</field>
+            <field name="domain"
+                eval="[('notebook', '=', Get(Eval('lims.act_lims_notebook_list', {}), 'id', None))]"
+                pyson="1"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_notebook_line_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_notebook_line_view_list"/>
+            <field name="act_window" ref="act_lims_notebook_line_list"/>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_notebook_line">
+            <field name="model" search="[('model', '=', 'lims.notebook.line')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_notebook_line">
+            <field name="domain"
+                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_notebook_line"/>
+        </record>
+
+<!-- Notebook Line Professional -->
+
+        <record model="ir.ui.view" id="lims_notebook_line_professional_view_form">
+            <field name="model">lims.notebook.line.professional</field>
+            <field name="type">form</field>
+            <field name="name">notebook_line_professional_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_notebook_line_professional_view_list">
+            <field name="model">lims.notebook.line.professional</field>
+            <field name="type">tree</field>
+            <field name="name">notebook_line_professional_list</field>
+        </record>
+
+<!-- Notebook Line All Fields -->
+
+        <record model="ir.ui.view" id="lims_notebook_line_all_fields_view_form">
+            <field name="model">lims.notebook.line.all_fields</field>
+            <field name="type">form</field>
+            <field name="name">notebook_line_all_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_notebook_line_all_fields_view_list">
+            <field name="model">lims.notebook.line.all_fields</field>
+            <field name="type">tree</field>
+            <field name="name">notebook_line_all_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_notebook_line_all_fields_list">
+            <field name="name">All Notebook Lines</field>
+            <field name="res_model">lims.notebook.line.all_fields</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_notebook_line_all_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_notebook_line_all_fields_view_list"/>
+            <field name="act_window" ref="act_lims_notebook_line_all_fields_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_notebook_line_all_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_notebook_line_all_fields_view_form"/>
+            <field name="act_window" ref="act_lims_notebook_line_all_fields_list"/>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_notebook_line_all_fields">
+            <field name="model" search="[('model', '=', 'lims.notebook.line.all_fields')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_notebook_line_all_fields">
+            <field name="domain"
+                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_notebook_line_all_fields"/>
+        </record>
+
+<!-- Entry -->
+
+        <record model="ir.ui.view" id="lims_entry_view_form">
+            <field name="model">lims.entry</field>
+            <field name="type">form</field>
+            <field name="name">entry_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_entry_view_list">
+            <field name="model">lims.entry</field>
+            <field name="type">tree</field>
+            <field name="name">entry_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_entry_list">
+            <field name="name">Entries</field>
+            <field name="res_model">lims.entry</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_list_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_entry_view_list"/>
+            <field name="act_window" ref="act_lims_entry_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_list_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_entry_view_form"/>
+            <field name="act_window" ref="act_lims_entry_list"/>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_entry_form">
+            <field name="name">New Entry</field>
+            <field name="res_model">lims.entry</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_form_view_form">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_entry_view_form"/>
+            <field name="act_window" ref="act_lims_entry_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_form_view_list">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_entry_view_list"/>
+            <field name="act_window" ref="act_lims_entry_form"/>
+        </record>
+
+        <record model="ir.action.act_window.domain" id="act_lims_entry_list_domain_draft">
+            <field name="name">Draft</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain"
+                eval="[('state', '=', 'draft')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_entry_list"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_lims_entry_list_domain_ongoing">
+            <field name="name">Ongoing</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain"
+                eval="[('state', '=', 'ongoing')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_entry_list"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_lims_entry_list_domain_pending">
+            <field name="name">Administration pending</field>
+            <field name="sequence" eval="30"/>
+            <field name="domain"
+                eval="[('state', '=', 'pending')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_entry_list"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_lims_entry_list_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="9999"/>
+            <field name="domain"></field>
+            <field name="act_window" ref="act_lims_entry_list"/>
+        </record>
+
+<!-- Entry Invoice Contact -->
+
+        <record model="ir.ui.view" id="lims_entry_invoice_contacts_view_form">
+            <field name="model">lims.entry.invoice_contacts</field>
+            <field name="type">form</field>
+            <field name="name">entry_invoice_contacts_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_entry_invoice_contacts_view_list">
+            <field name="model">lims.entry.invoice_contacts</field>
+            <field name="type">tree</field>
+            <field name="name">entry_invoice_contacts_list</field>
+        </record>
+
+<!-- Entry Report Contact -->
+
+        <record model="ir.ui.view" id="lims_entry_report_contacts_view_form">
+            <field name="model">lims.entry.report_contacts</field>
+            <field name="type">form</field>
+            <field name="name">entry_report_contacts_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_entry_report_contacts_view_list">
+            <field name="model">lims.entry.report_contacts</field>
+            <field name="type">tree</field>
+            <field name="name">entry_report_contacts_list</field>
+        </record>
+
+<!-- Entry Acknowledgment Contact -->
+
+        <record model="ir.ui.view" id="lims_entry_acknowledgment_contacts_view_form">
+            <field name="model">lims.entry.acknowledgment_contacts</field>
+            <field name="type">form</field>
+            <field name="name">entry_acknowledgment_contacts_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_entry_acknowledgment_contacts_view_list">
+            <field name="model">lims.entry.acknowledgment_contacts</field>
+            <field name="type">tree</field>
+            <field name="name">entry_acknowledgment_contacts_list</field>
+        </record>
+
+<!-- Analysis Family -->
+
+        <record model="ir.ui.view" id="lims_analysis_family_view_form">
+            <field name="model">lims.analysis.family</field>
+            <field name="type">form</field>
+            <field name="name">analysis_family_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_analysis_family_view_list">
+            <field name="model">lims.analysis.family</field>
+            <field name="type">tree</field>
+            <field name="name">analysis_family_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_analysis_family_list">
+            <field name="name">Analysis Families</field>
+            <field name="res_model">lims.analysis.family</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_analysis_family_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_analysis_family_view_list"/>
+            <field name="act_window" ref="act_lims_analysis_family_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_analysis_family_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_analysis_family_view_form"/>
+            <field name="act_window" ref="act_lims_analysis_family_list"/>
+        </record>
+
+<!-- Analysis Family Certificant -->
+
+        <record model="ir.ui.view" id="lims_analysis_family_certificant_view_form">
+            <field name="model">lims.analysis.family.certificant</field>
+            <field name="type">form</field>
+            <field name="name">analysis_family_certificant_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_analysis_family_certificant_view_list">
+            <field name="model">lims.analysis.family.certificant</field>
+            <field name="type">tree</field>
+            <field name="name">analysis_family_certificant_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_analysis_family_certificant_list">
+            <field name="name">Certificant Party - Product Type - Matrix</field>
+            <field name="res_model">lims.analysis.family.certificant</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_analysis_family_certificant_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_analysis_family_certificant_view_list"/>
+            <field name="act_window" ref="act_lims_analysis_family_certificant_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_analysis_family_certificant_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_analysis_family_certificant_view_form"/>
+            <field name="act_window" ref="act_lims_analysis_family_certificant_list"/>
+        </record>
+
+<!-- Zone -->
+
+        <record model="ir.ui.view" id="lims_zone_view_form">
+            <field name="model">lims.zone</field>
+            <field name="type">form</field>
+            <field name="name">zone_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_zone_view_list">
+            <field name="model">lims.zone</field>
+            <field name="type">tree</field>
+            <field name="name">zone_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_zone_list">
+            <field name="name">Zones/Regions</field>
+            <field name="res_model">lims.zone</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_zone_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_zone_view_list"/>
+            <field name="act_window" ref="act_lims_zone_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_zone_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_zone_view_form"/>
+            <field name="act_window" ref="act_lims_zone_list"/>
+        </record>
+
+<!-- Variety -->
+
+        <record model="ir.ui.view" id="lims_variety_view_form">
+            <field name="model">lims.variety</field>
+            <field name="type">form</field>
+            <field name="name">variety_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_variety_view_list">
+            <field name="model">lims.variety</field>
+            <field name="type">tree</field>
+            <field name="name">variety_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_variety_list">
+            <field name="name">Varieties</field>
+            <field name="res_model">lims.variety</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_variety_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_variety_view_list"/>
+            <field name="act_window" ref="act_lims_variety_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_variety_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_variety_view_form"/>
+            <field name="act_window" ref="act_lims_variety_list"/>
+        </record>
+
+<!-- Matrix Variety -->
+
+        <record model="ir.ui.view" id="lims_matrix_variety_view_form">
+            <field name="model">lims.matrix.variety</field>
+            <field name="type">form</field>
+            <field name="name">matrix_variety_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_matrix_variety_view_list">
+            <field name="model">lims.matrix.variety</field>
+            <field name="type">tree</field>
+            <field name="name">matrix_variety_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_matrix_variety_list">
+            <field name="name">Product Type - Matrix - Variety</field>
+            <field name="res_model">lims.matrix.variety</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_matrix_variety_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_matrix_variety_view_list"/>
+            <field name="act_window" ref="act_lims_matrix_variety_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_matrix_variety_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_matrix_variety_view_form"/>
+            <field name="act_window" ref="act_lims_matrix_variety_list"/>
+        </record>
+
+<!-- Packaging Integrity -->
+
+        <record model="ir.ui.view" id="lims_packaging_integrity_view_form">
+            <field name="model">lims.packaging.integrity</field>
+            <field name="type">form</field>
+            <field name="name">packaging_integrity_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_packaging_integrity_view_list">
+            <field name="model">lims.packaging.integrity</field>
+            <field name="type">tree</field>
+            <field name="name">packaging_integrity_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_packaging_integrity_list">
+            <field name="name">Packaging Integrities</field>
+            <field name="res_model">lims.packaging.integrity</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_packaging_integrity_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_packaging_integrity_view_list"/>
+            <field name="act_window" ref="act_lims_packaging_integrity_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_packaging_integrity_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_packaging_integrity_view_form"/>
+            <field name="act_window" ref="act_lims_packaging_integrity_list"/>
+        </record>
+
+<!-- Entry Suspension Reason -->
+
+        <record model="ir.ui.view" id="lims_entry_suspension_reason_view_form">
+            <field name="model">lims.entry.suspension.reason</field>
+            <field name="type">form</field>
+            <field name="name">entry_suspension_reason_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_entry_suspension_reason_view_list">
+            <field name="model">lims.entry.suspension.reason</field>
+            <field name="type">tree</field>
+            <field name="name">entry_suspension_reason_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_entry_suspension_reason_list">
+            <field name="name">Entry Suspension Reasons</field>
+            <field name="res_model">lims.entry.suspension.reason</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_suspension_reason_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_entry_suspension_reason_view_list"/>
+            <field name="act_window" ref="act_lims_entry_suspension_reason_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_suspension_reason_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_entry_suspension_reason_view_form"/>
+            <field name="act_window" ref="act_lims_entry_suspension_reason_list"/>
+        </record>
+
+<!-- Entry Detail Analysis -->
+
+        <record model="ir.ui.view" id="lims_entry_detail_analysis_view_form">
+            <field name="model">lims.entry.detail.analysis</field>
+            <field name="type">form</field>
+            <field name="name">entry_detail_analysis_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_entry_detail_analysis_view_list">
+            <field name="model">lims.entry.detail.analysis</field>
+            <field name="type">tree</field>
+            <field name="name">entry_detail_analysis_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_entry_detail_analysis_list">
+            <field name="name">Entry Detail Analysis</field>
+            <field name="res_model">lims.entry.detail.analysis</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_detail_analysis_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_entry_detail_analysis_view_list"/>
+            <field name="act_window" ref="act_lims_entry_detail_analysis_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_detail_analysis_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_entry_detail_analysis_view_form"/>
+            <field name="act_window" ref="act_lims_entry_detail_analysis_list"/>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_entry_detail_analysis">
+            <field name="model" search="[('model', '=', 'lims.entry.detail.analysis')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_entry_detail_analysis">
+            <field name="domain"
+                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_entry_detail_analysis"/>
+        </record>
+
+<!-- Volume Conversion -->
+
+        <record model="ir.ui.view" id="lims_volume_conversion_view_form">
+            <field name="model">lims.volume.conversion</field>
+            <field name="type">form</field>
+            <field name="name">volume_conversion_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_volume_conversion_view_list">
+            <field name="model">lims.volume.conversion</field>
+            <field name="type">tree</field>
+            <field name="name">volume_conversion_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_volume_conversion_list">
+            <field name="name">Volume Conversions</field>
+            <field name="res_model">lims.volume.conversion</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_volume_conversion_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_volume_conversion_view_list"/>
+            <field name="act_window" ref="act_lims_volume_conversion_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_volume_conversion_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_volume_conversion_view_form"/>
+            <field name="act_window" ref="act_lims_volume_conversion_list"/>
+        </record>
+
+<!-- Uom Conversion -->
+
+        <record model="ir.ui.view" id="lims_uom_conversion_view_form">
+            <field name="model">lims.uom.conversion</field>
+            <field name="type">form</field>
+            <field name="name">uom_conversion_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_uom_conversion_view_list">
+            <field name="model">lims.uom.conversion</field>
+            <field name="type">tree</field>
+            <field name="name">uom_conversion_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_uom_conversion_list">
+            <field name="name">Uom Conversions</field>
+            <field name="res_model">lims.uom.conversion</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_uom_conversion_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_uom_conversion_view_list"/>
+            <field name="act_window" ref="act_lims_uom_conversion_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_uom_conversion_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_uom_conversion_view_form"/>
+            <field name="act_window" ref="act_lims_uom_conversion_list"/>
+        </record>
+
+<!-- Origins -->
+
+        <record model="ir.ui.view" id="lims_range_type_view_form">
+            <field name="model">lims.range.type</field>
+            <field name="type">form</field>
+            <field name="name">range_type_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_range_type_view_list">
+            <field name="model">lims.range.type</field>
+            <field name="type">tree</field>
+            <field name="name">range_type_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_range_type_list">
+            <field name="name">Origins</field>
+            <field name="res_model">lims.range.type</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_range_type_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_range_type_view_list"/>
+            <field name="act_window" ref="act_lims_range_type_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_range_type_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_range_type_view_form"/>
+            <field name="act_window" ref="act_lims_range_type_list"/>
+        </record>
+
+<!-- Range -->
+
+        <record model="ir.ui.view" id="lims_range_view_form">
+            <field name="model">lims.range</field>
+            <field name="type">form</field>
+            <field name="name">range_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_range_view_list">
+            <field name="model">lims.range</field>
+            <field name="type">tree</field>
+            <field name="name">range_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_range_list">
+            <field name="name">Ranges</field>
+            <field name="res_model">lims.range</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_range_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_range_view_list"/>
+            <field name="act_window" ref="act_lims_range_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_range_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_range_view_form"/>
+            <field name="act_window" ref="act_lims_range_list"/>
+        </record>
+
+<!-- Tendency -->
+
+        <record model="ir.ui.view" id="lims_control_tendency_view_list">
+            <field name="model">lims.control.tendency</field>
+            <field name="type">tree</field>
+            <field name="name">control_tendency_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_control_tendency_view_form">
+            <field name="model">lims.control.tendency</field>
+            <field name="type">form</field>
+            <field name="name">control_tendency_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_control_tendency">
+            <field name="name">Tendencies</field>
+            <field name="res_model">lims.control.tendency</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_control_tendency_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_control_tendency_view_list"/>
+            <field name="act_window" ref="act_lims_control_tendency"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_control_tendency_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_control_tendency_view_form"/>
+            <field name="act_window" ref="act_lims_control_tendency"/>
+        </record>
+
+<!-- Concentration Level -->
+
+        <record model="ir.ui.view" id="lims_concentration_level_view_list">
+            <field name="model">lims.concentration.level</field>
+            <field name="type">tree</field>
+            <field name="name">concentration_level_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_concentration_level_view_form">
+            <field name="model">lims.concentration.level</field>
+            <field name="type">form</field>
+            <field name="name">concentration_level_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_concentration_level">
+            <field name="name">Concentration Levels</field>
+            <field name="res_model">lims.concentration.level</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_concentration_level_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_concentration_level_view_list"/>
+            <field name="act_window" ref="act_lims_concentration_level"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_concentration_level_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_concentration_level_view_form"/>
+            <field name="act_window" ref="act_lims_concentration_level"/>
+        </record>
+
+<!-- Results Report -->
+
+        <record model="ir.ui.view" id="lims_results_report_view_list">
+            <field name="model">lims.results_report</field>
+            <field name="type">tree</field>
+            <field name="name">results_report_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_results_report_view_form">
+            <field name="model">lims.results_report</field>
+            <field name="type">form</field>
+            <field name="name">results_report_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_results_report">
+            <field name="name">Results Reports</field>
+            <field name="res_model">lims.results_report</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_results_report_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_results_report_view_list"/>
+            <field name="act_window" ref="act_lims_results_report"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_results_report_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_results_report_view_form"/>
+            <field name="act_window" ref="act_lims_results_report"/>
+        </record>
+
+<!-- Results Report Version -->
+
+        <record model="ir.ui.view" id="lims_results_report_version_view_list">
+            <field name="model">lims.results_report.version</field>
+            <field name="type">tree</field>
+            <field name="name">results_report_version_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_results_report_version_view_form">
+            <field name="model">lims.results_report.version</field>
+            <field name="type">form</field>
+            <field name="name">results_report_version_form</field>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_results_report_version">
+            <field name="model" search="[('model', '=', 'lims.results_report.version')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_results_report_version">
+            <field name="domain"
+                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_results_report_version"/>
+        </record>
+
+<!-- Results Report Version Detail -->
+
+        <record model="ir.ui.view" id="lims_results_report_version_detail_view_list">
+            <field name="model">lims.results_report.version.detail</field>
+            <field name="type">tree</field>
+            <field name="name">results_report_version_detail_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_results_report_version_detail_view_form">
+            <field name="model">lims.results_report.version.detail</field>
+            <field name="type">form</field>
+            <field name="name">results_report_version_detail_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_results_report_version_detail">
+            <field name="name">Approval of Reports</field>
+            <field name="res_model">lims.results_report.version.detail</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_results_report_version_detail_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_results_report_version_detail_view_list"/>
+            <field name="act_window" ref="act_lims_results_report_version_detail"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_results_report_version_detail_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_results_report_version_detail_view_form"/>
+            <field name="act_window" ref="act_lims_results_report_version_detail"/>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_results_report_version_detail">
+            <field name="model" search="[('model', '=', 'lims.results_report.version.detail')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_results_report_version_detail">
+            <field name="domain"
+                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_results_report_version_detail"/>
+        </record>
+
+<!-- Results Report Version Detail Line -->
+
+        <record model="ir.ui.view" id="lims_results_report_version_detail_line_view_list">
+            <field name="model">lims.results_report.version.detail.line</field>
+            <field name="type">tree</field>
+            <field name="name">results_report_version_detail_line_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_results_report_version_detail_line_view_form">
+            <field name="model">lims.results_report.version.detail.line</field>
+            <field name="type">form</field>
+            <field name="name">results_report_version_detail_line_form</field>
+        </record>
+
+
+<!-- Entry actions related -->
+
+        <record model="ir.action.act_window" id="act_lims_sample_related1">
+            <field name="name">1. Samples</field>
+            <field name="res_model">lims.sample</field>
+            <field name="domain" eval="[('entry', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_sample_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="act_lims_sample_related1"/>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_fraction_related1">
+            <field name="name">2. Fractions</field>
+            <field name="res_model">lims.fraction</field>
+            <field name="domain" eval="[('entry', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_fraction_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="act_lims_fraction_related1"/>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_service_related1">
+            <field name="name">3. Services</field>
+            <field name="res_model">lims.service</field>
+            <field name="domain" eval="[('entry', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_service_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="act_lims_service_related1"/>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_entry_detail_analysis_related1">
+            <field name="name">4. Entry Detail Analysis</field>
+            <field name="res_model">lims.entry.detail.analysis</field>
+            <field name="domain" eval="[('entry', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_entry_detail_analysis_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="act_lims_entry_detail_analysis_related1"/>
+        </record>
+
+<!-- Sample actions related -->
+
+        <record model="ir.action.act_window" id="act_lims_fraction_related2">
+            <field name="name">1. Fractions</field>
+            <field name="res_model">lims.fraction</field>
+            <field name="domain" eval="[('sample', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_fraction_keyword2">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.sample,-1</field>
+            <field name="action" ref="act_lims_fraction_related2"/>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_service_related2">
+            <field name="name">2. Services</field>
+            <field name="res_model">lims.service</field>
+            <field name="domain" eval="[('sample', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_service_keyword2">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.sample,-1</field>
+            <field name="action" ref="act_lims_service_related2"/>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_entry_detail_analysis_related2">
+            <field name="name">3. Entry Detail Analysis</field>
+            <field name="res_model">lims.entry.detail.analysis</field>
+            <field name="domain" eval="[('sample', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_entry_detail_analysis_keyword2">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.sample,-1</field>
+            <field name="action" ref="act_lims_entry_detail_analysis_related2"/>
+        </record>
+
+<!-- Fraction actions related -->
+
+        <record model="ir.action.act_window" id="act_lims_service_related3">
+            <field name="name">1. Services</field>
+            <field name="res_model">lims.service</field>
+            <field name="domain" eval="[('fraction', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_service_keyword3">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.fraction,-1</field>
+            <field name="action" ref="act_lims_service_related3"/>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_entry_detail_analysis_related3">
+            <field name="name">2. Entry Detail Analysis</field>
+            <field name="res_model">lims.entry.detail.analysis</field>
+            <field name="domain" eval="[('fraction', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_entry_detail_analysis_keyword3">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.fraction,-1</field>
+            <field name="action" ref="act_lims_entry_detail_analysis_related3"/>
+        </record>
+
+<!-- Service actions related -->
+
+        <record model="ir.action.act_window" id="act_lims_entry_detail_analysis_related4">
+            <field name="name">1. Entry Detail Analysis</field>
+            <field name="res_model">lims.entry.detail.analysis</field>
+            <field name="domain" eval="[('service', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_entry_detail_analysis_keyword4">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.service,-1</field>
+            <field name="action" ref="act_lims_entry_detail_analysis_related4"/>
+        </record>
+
+<!-- Typification actions related -->
+
+        <record model="ir.action.act_window" id="act_lims_technical_scope_version_line_related1">
+            <field name="name">Technical Scope Version Lines</field>
+            <field name="res_model">lims.technical.scope.version.line</field>
+            <field name="domain" eval="[('typification', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_technical_scope_version_line_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.typification,-1</field>
+            <field name="action" ref="act_lims_technical_scope_version_line_related1"/>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_technical_scope_version_related1">
+            <field name="name">Technical Scope Versions</field>
+            <field name="res_model">lims.technical.scope.version</field>
+            <field name="domain" eval="[('version_lines.id', 'in', Eval('active_ids', []))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_technical_scope_version_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.typification,-1</field>
+            <field name="action" ref="act_lims_technical_scope_version_related1"/>
+        </record>
+
+<!-- Cron -->
+
+        <record model="ir.cron" id="cron_lims_acknowledgment_of_receipt">
+            <field name="name">Lims Acknowledgment of Receipt (Samples)</field>
+            <field name="request_user" ref="res.user_admin"/>
+            <field name="user" ref="user_acknowledgment_of_receipt"/>
+            <field name="active" eval="True"/>
+            <field name="interval_number" eval="20"/>
+            <field name="interval_type">minutes</field>
+            <field name="number_calls" eval="-1"/>
+            <field name="repeat_missed" eval="False"/>
+            <field name="model">lims.entry</field>
+            <field name="function">cron_acknowledgment_of_receipt</field>
+        </record>
+
+        <record model="ir.cron" id="cron_lims_confirm_waiting_entries">
+            <field name="name">Lims Confirm Waiting Entries</field>
+            <field name="request_user" ref="res.user_admin"/>
+            <field name="user" ref="user_entry_confirm"/>
+            <field name="active" eval="True"/>
+            <field name="interval_number" eval="1"/>
+            <field name="interval_type">minutes</field>
+            <field name="number_calls" eval="-1"/>
+            <field name="repeat_missed" eval="False"/>
+            <field name="model">lims.fraction</field>
+            <field name="function">confirm_waiting_fractions</field>
+        </record>
+
+    </data>
+</tryton>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Menu items in lims_menu.xml -->
+
+        <!-- Results Import -->
+
+        <record model="ir.ui.view" id="lims_resultsimport_view_form">
+            <field name="model">lims.resultsimport</field>
+            <field name="type">form</field>
+            <field name="name">resultsimport_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_resultsimport_view_list">
+            <field name="model">lims.resultsimport</field>
+            <field name="type">tree</field>
+            <field name="name">resultsimport_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_resultsimport_list">
+            <field name="name">Results Importers</field>
+            <field name="res_model">lims.resultsimport</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_resultsimport_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_resultsimport_view_list"/>
+            <field name="act_window" ref="act_lims_resultsimport_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_resultsimport_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_resultsimport_view_form"/>
+            <field name="act_window" ref="act_lims_resultsimport_list"/>
+        </record>
+
+    </data>
+</tryton>

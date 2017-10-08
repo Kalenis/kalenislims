@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="number"/>
+    <field name="date" widget="date"/>
+    <field name="date" widget="time" string="Time"/>
+    <field name="create_date2" widget="date"/>
+    <field name="create_date2" widget="time" string="Time"/>
+    <field name="entry"/>
+    <field name="party"/>
+    <field name="label"/>
+    <field name="producer"/>
+    <field name="sample_client_description"/>
+    <field name="product_type_view"/>
+    <field name="matrix_view"/>
+    <field name="package_type"/>
+    <field name="package_state"/>
+    <field name="packages_quantity"/>
+    <field name="restricted_entry"/>
+    <field name="zone"/>
+    <field name="trace_report"/>
+    <field name="confirmed" tree_invisible="1" />
+    <field name="has_results_report" tree_invisible="1" />
+</tree>

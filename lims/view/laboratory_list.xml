@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="code"/>
+    <field name="description"/>
+    <field name="default_laboratory_professional"/>
+    <field name="default_signer"/>
+    <field name="related_location"/>
+</tree>

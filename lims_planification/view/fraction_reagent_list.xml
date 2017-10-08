@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="product"/>
+    <field name="lot"/>
+    <field name="quantity"/>
+    <field name="default_uom"/>
+</tree>

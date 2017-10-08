@@ -1,0 +1,151 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:lims.results_report:"
+msgid "Missing tokenclient module"
+msgstr "Falta el módulo tokenclient"
+
+msgctxt "error:lims.results_report:"
+msgid "Polisample"
+msgstr "Polimuestra"
+
+msgctxt "field:lims.configuration,mail_ack_report_body:"
+msgid "Email body of Acknowledgment of results report"
+msgstr "Cuerpo del correo de Acuse de informe de resultados"
+
+msgctxt "field:lims.configuration,mail_ack_report_subject:"
+msgid "Email subject of Acknowledgment of results report"
+msgstr "Asunto del correo de Acuse de informe de resultados"
+
+msgctxt "field:lims.results_report,sent:"
+msgid "Sent"
+msgstr "Enviado"
+
+msgctxt "field:lims.results_report,sent_date:"
+msgid "Sent date"
+msgstr "Fecha de enviado"
+
+msgctxt "field:lims.results_report,signed:"
+msgid "Signed"
+msgstr "Firmado"
+
+msgctxt "field:lims.results_report,signed_date:"
+msgid "Signed date"
+msgstr "Fecha de firmado"
+
+msgctxt "field:lims_digital_sign.digital_sign.failed,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims_digital_sign.digital_sign.failed,unsent_reports:"
+msgid "Unsent reports"
+msgstr "Informes no enviados"
+
+msgctxt "field:lims_digital_sign.digital_sign.failed,unsigned_reports:"
+msgid "Unsigned reports"
+msgstr "Informes no firmados"
+
+msgctxt "field:lims_digital_sign.digital_sign.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims_digital_sign.digital_sign.succeed,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "help:lims.configuration,mail_ack_report_body:"
+msgid "<SAMPLES> will be replaced by the list of sample\'s labels"
+msgstr "<SAMPLES> será reemplazado por la lista de rótulos de las muestras"
+
+msgctxt "help:lims.configuration,mail_ack_report_subject:"
+msgid "In the text will be added suffix with the results report number"
+msgstr "En el texto se añadirá sufijo con el número del informe de resultados"
+
+msgctxt "model:ir.action,name:wizard_digital_sign"
+msgid "Digital Sign"
+msgstr "Firma Digital"
+
+msgctxt "model:ir.cron,name:cron_lims_digital_sign_results_reports"
+msgid "Lims Digital Sign Results Reports"
+msgstr "Firmar digitalmente Informes de resultados"
+
+msgctxt "model:ir.ui.menu,name:menu_digital_sign"
+msgid "Digital Sign"
+msgstr "Firma Digital"
+
+msgctxt "model:lims_digital_sign.digital_sign.failed,name:"
+msgid "Digital Sign Failed"
+msgstr "Firmado Digital fallido"
+
+msgctxt "model:lims_digital_sign.digital_sign.start,name:"
+msgid "Digital Sign Start"
+msgstr "Firmado Digital - Inicio"
+
+msgctxt "model:lims_digital_sign.digital_sign.succeed,name:"
+msgid "Digital Sign Succeed"
+msgstr "Firmado Digital exitoso"
+
+msgctxt "model:res.group,name:group_lims_digital_sign"
+msgid "Lims Digital Sign"
+msgstr "Lims Firma Digital"
+
+msgctxt "model:res.user,name:user_digital_sign"
+msgid "Cron Lims Digital Sign"
+msgstr "Programador de Firmado Digital"
+
+msgctxt "view:lims.configuration:"
+msgid "Email body of Acknowledgment of results report"
+msgstr "Cuerpo del correo de Acuse de informe de resultados"
+
+msgctxt "view:lims.configuration:"
+msgid "Email subject of Acknowledgment of results report"
+msgstr "Asunto del correo de Acuse de informe de resultados"
+
+msgctxt "view:lims.configuration:"
+msgid "Mail Acknowledgment Report"
+msgstr "Email Acuse de Informe"
+
+msgctxt "view:lims.results_report:"
+msgid "Time"
+msgstr "Hora"
+
+msgctxt "view:lims_digital_sign.digital_sign.failed:"
+msgid "Digital Sign Failed! Solve the problem and try again."
+msgstr "¡Firmado digital fallido! Resuelva el problema y vuelva a intentar."
+
+msgctxt "view:lims_digital_sign.digital_sign.failed:"
+msgid "Unable to Digital Sign Results Report"
+msgstr "No se pudo Firmar digitalmente el Informe de resultados"
+
+msgctxt "view:lims_digital_sign.digital_sign.start:"
+msgid "Digital Sign Results Report"
+msgstr "Firma Digital - Informes de resultados"
+
+msgctxt "view:lims_digital_sign.digital_sign.start:"
+msgid "Digital Sign reports?"
+msgstr "¿Desea firmar digitalmente los informes?"
+
+msgctxt "view:lims_digital_sign.digital_sign.succeed:"
+msgid "Digital Sign Results Report"
+msgstr "Firma Digital - Informes de resultados"
+
+msgctxt "view:lims_digital_sign.digital_sign.succeed:"
+msgid "Digital Sign Succeed!"
+msgstr "¡Firmado digital exitoso!"
+
+msgctxt "wizard_button:lims_digital_sign.digital_sign,failed,end:"
+msgid "Ok"
+msgstr "Aceptar"
+
+msgctxt "wizard_button:lims_digital_sign.digital_sign,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims_digital_sign.digital_sign,start,sign:"
+msgid "Sign"
+msgstr "Firmar"
+
+msgctxt "wizard_button:lims_digital_sign.digital_sign,succeed,end:"
+msgid "Ok"
+msgstr "Aceptar"

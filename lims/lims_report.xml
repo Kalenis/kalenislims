@@ -1,0 +1,218 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Acknowledgment of Samples Receipt -->
+
+        <record model="ir.action.wizard" id="print_entry_acknowledgment">
+            <field name="name">Acknowledgment of Samples Receipt</field>
+            <field name="wiz_name">lims.entry.acknowledgment.print</field>
+            <field name="model">lims.entry</field>
+        </record>
+        <record model="ir.action.report" id="report_entry_acknowledgment">
+            <field name="name">Acknowledgment of Samples Receipt</field>
+            <field name="model">lims.entry</field>
+            <field name="report_name">lims.entry.acknowledgment.report</field>
+            <field name="report">lims/report/entry_acknowledgment_report.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_entry_acknowledgment_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="print_entry_acknowledgment"/>
+        </record>
+
+<!-- Entry Detail -->
+
+        <record model="ir.action.report" id="report_entry_detail">
+            <field name="name">Entry Detail</field>
+            <field name="model">lims.entry</field>
+            <field name="report_name">lims.entry.detail.report</field>
+            <field name="report">lims/report/entry_detail_report.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_entry_detail_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="report_entry_detail"/>
+        </record>
+
+<!-- Entry Labels -->
+
+        <record model="ir.action.report" id="report_entry_labels">
+            <field name="name">Entry Labels</field>
+            <field name="model">lims.entry</field>
+            <field name="report_name">lims.entry.labels.report</field>
+            <field name="report">lims/report/entry_labels_report.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_entry_labels_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="report_entry_labels"/>
+        </record>
+
+<!-- Entry Labels Printer -->
+
+        <record model="ir.action.wizard" id="wiz_report_entry_labels_printer">
+            <field name="name">Entry Labels Printer</field>
+            <field name="wiz_name">lims.entry.labels.printer.report</field>
+            <field name="model">lims.entry</field>
+        </record>
+        <record model="ir.action.keyword"
+                id="wiz_report_entry_labels_printer_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="wiz_report_entry_labels_printer"/>
+        </record>
+
+<!-- Sample Labels Printer -->
+
+        <record model="ir.action.wizard" id="wiz_report_sample_labels_printer">
+            <field name="name">Sample Labels Printer</field>
+            <field name="wiz_name">lims.sample.labels.printer.report</field>
+            <field name="model">lims.sample</field>
+        </record>
+        <record model="ir.action.keyword"
+                id="wiz_report_sample_labels_printer_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.sample,-1</field>
+            <field name="action" ref="wiz_report_sample_labels_printer"/>
+        </record>
+
+<!-- Control Charts -->
+
+        <record model="ir.action.wizard" id="wiz_control_chart_print">
+            <field name="name">Control Chart</field>
+            <field name="wiz_name">lims.control_chart.print</field>
+            <field name="model">lims.control.tendency</field>
+        </record>
+        <record model="ir.action.report" id="report_control_chart">
+            <field name="name">Control Chart</field>
+            <field name="model">lims.control.tendency</field>
+            <field name="report_name">lims.control_chart.report</field>
+            <field name="report">lims/report/control_chart_report.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_control_chart_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.control.tendency,-1</field>
+            <field name="action" ref="wiz_control_chart_print"/>
+        </record>
+
+<!-- Results Report -->
+
+        <record model="ir.action.report" id="report_results_report">
+            <field name="name">Results Report</field>
+            <field name="model">lims.results_report.version.detail</field>
+            <field name="report_name">lims.result_report</field>
+            <field name="report">lims/report/results_report.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_results_report_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.results_report.version.detail,-1</field>
+            <field name="action" ref="report_results_report"/>
+        </record>
+
+<!-- Transcription Results Report -->
+
+        <record model="ir.action.report" id="report_results_report_transcription">
+            <field name="name">Transcription Results Report</field>
+            <field name="model">lims.results_report.version.detail</field>
+            <field name="report_name">lims.result_report.transcription</field>
+            <field name="report">lims/report/results_report.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_results_report_transcription_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.results_report.version.detail,-1</field>
+            <field name="action" ref="report_results_report_transcription"/>
+        </record>
+
+<!-- Global Results Report -->
+
+        <record model="ir.action.report" id="report_global_results_report">
+            <field name="name">Global Results Report</field>
+            <field name="model"></field>
+            <field name="report_name">lims.global_result_report</field>
+            <field name="report">lims/report/global_results_report.odt</field>
+        </record>
+
+<!-- Countersamples Storage Report -->
+
+        <record model="ir.ui.view" id="lims_countersample_storage_print_start_view_form">
+            <field name="model">lims.countersample.storage.print.start</field>
+            <field name="type">form</field>
+            <field name="name">countersample_storage_print_start_form</field>
+        </record>
+        <record model="ir.action.wizard" id="wiz_lims_countersample_storage_print">
+            <field name="name">Countersamples Storage Report</field>
+            <field name="wiz_name">lims.countersample.storage.print</field>
+        </record>
+        <record model="ir.action.report" id="report_countersample_storage">
+            <field name="name">Countersamples Storage Report</field>
+<!--             <field name="model">lims.fraction</field> -->
+            <field name="report_name">lims.countersample.storage.report</field>
+            <field name="report">lims/report/countersample_storage_report.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="lims_countersample_storage_print_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.fraction,-1</field>
+            <field name="action" ref="wiz_lims_countersample_storage_print"/>
+        </record>
+
+<!-- Countersamples Discharge Report -->
+
+        <record model="ir.ui.view" id="lims_countersample_discharge_print_start_view_form">
+            <field name="model">lims.countersample.discharge.print.start</field>
+            <field name="type">form</field>
+            <field name="name">countersample_discharge_print_start_form</field>
+        </record>
+        <record model="ir.action.wizard" id="wiz_lims_countersample_discharge_print">
+            <field name="name">Countersamples Discharge Report</field>
+            <field name="wiz_name">lims.countersample.discharge.print</field>
+        </record>
+        <record model="ir.action.report" id="report_countersample_discharge">
+            <field name="name">Countersamples Discharge Report</field>
+<!--             <field name="model">lims.fraction</field> -->
+            <field name="report_name">lims.countersample.discharge.report</field>
+            <field name="report">lims/report/countersample_discharge_report.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="lims_countersample_discharge_print_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.fraction,-1</field>
+            <field name="action" ref="wiz_lims_countersample_discharge_print"/>
+        </record>
+
+<!-- Analysis Pending of Inform -->
+
+        <record model="ir.ui.view" id="print_analysis_pending_inform_start_view_form">
+            <field name="model">lims.print_analysis_pending_inform.start</field>
+            <field name="type">form</field>
+            <field name="name">analysis_pending_inform_start_form</field>
+        </record>
+        <record model="ir.action.wizard" id="wiz_print_analysis_pending_inform">
+            <field name="name">Pending analysis Unchecked</field>
+            <field name="wiz_name">lims.print_analysis_pending_inform</field>
+        </record>
+        <record model="ir.action.report" id="report_analysis_pending_inform">
+            <field name="name">Pending analysis Unchecked</field>
+            <field name="report_name">lims.analysis_pending_inform</field>
+            <field name="report">lims/report/analysis_pending_inform.ods</field>
+        </record>
+
+
+<!-- Analysis Checked pending of inform -->
+
+        <record model="ir.ui.view" id="print_analysis_checked_pending_inform_start_view_form">
+            <field name="model">lims.print_analysis_checked_pending_inform.start</field>
+            <field name="type">form</field>
+            <field name="name">print_analysis_checked_pending_inform_start_view_form</field>
+        </record>
+        <record model="ir.action.wizard" id="wiz_print_analysis_checked_pending_inform">
+            <field name="name">Analysis checked pending of inform</field>
+            <field name="wiz_name">lims.print_analysis_checked_pending_inform</field>
+        </record>
+        <record model="ir.action.report" id="report_analysis_checked_pending_inform">
+            <field name="name">Analysis checked pending of inform</field>
+            <field name="report_name">lims.analysis_checked_pending_inform</field>
+            <field name="report">lims/report/analysis_checked_pending_inform.ods</field>
+        </record>
+        
+    </data>
+</tryton>

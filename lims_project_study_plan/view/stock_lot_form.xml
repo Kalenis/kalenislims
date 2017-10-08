@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/field[@name='purity_degree']"
+        position="after">
+        <label name="formula"/>
+        <field name="formula"/>
+        <label name="molecular_weight"/>
+        <field name="molecular_weight"/>
+    </xpath>
+</data>

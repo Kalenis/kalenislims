@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form>
+    <label name="laboratory"/>
+    <field name="laboratory"/>
+    <label name="device"/>
+    <field name="device"/>
+    <label name="by_default"/>
+    <field name="by_default"/>
+</form>

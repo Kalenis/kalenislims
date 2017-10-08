@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<form>
+    <label name="technician_replaced"/>
+    <field name="technician_replaced"/>
+    <label name="technician_substitute"/>
+    <field name="technician_substitute"/>
+    <field name="planification" colspan="4" invisible="1"/>
+</form>

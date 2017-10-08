@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='invoice']/field[@name='currency']"
+        position="after">
+        <label name="lims_price_list"/>
+        <field name="lims_price_list"/>
+        <group colspan="2" id="update_line_price_button" col="2">
+            <button name="update_line_price" string="Update Lines Price"/>
+        </group>
+    </xpath>
+
+    <xpath
+        expr="/form/notebook/page[@id='info']/field[@name='cancel_move']"
+        position="after">
+        <label name="currency_rate"/>
+        <field name="currency_rate"/>
+    </xpath>
+</data>

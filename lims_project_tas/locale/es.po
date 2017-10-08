@@ -1,0 +1,99 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:lims.project:"
+msgid "There is no sequence for TAS Projects for the work year \"%s\"."
+msgstr "No existe una secuencia para Proyectos SAT para este año laboral \"%s\"."
+
+msgctxt "error:lims.tas.type:"
+msgid "TAS type code must be unique"
+msgstr "El código del tipo de SAT debe ser único"
+
+msgctxt "field:lims.lab.workyear,project_tas_sequence:"
+msgid "TAS Projects Sequence"
+msgstr "Secuencia de Proyectos SAT"
+
+msgctxt "field:lims.project,tas_comments:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "field:lims.project,tas_invoice_party:"
+msgid "Invoice party"
+msgstr "Entidad facturación"
+
+msgctxt "field:lims.project,tas_laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
+msgctxt "field:lims.project,tas_responsible:"
+msgid "Responsible"
+msgstr "Responsable"
+
+msgctxt "field:lims.project,tas_type:"
+msgid "TAS type"
+msgstr "Tipo de SAT"
+
+msgctxt "field:lims.tas.type,code:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "field:lims.tas.type,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.tas.type,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.tas.type,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:lims.tas.type,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.tas.type,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.tas.type,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.tas.type,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "model:ir.action,name:act_lims_tas_type_list"
+msgid "TAS Types"
+msgstr "Tipos de SAT"
+
+msgctxt "model:ir.ui.menu,name:lims_tas_type_menu"
+msgid "TAS Types"
+msgstr "Tipos de SAT"
+
+msgctxt "model:lims.tas.type,name:"
+msgid "TAS Type"
+msgstr "Tipo de SAT"
+
+msgctxt "selection:lims.entry,project_type:"
+msgid "TAS"
+msgstr "SAT"
+
+msgctxt "selection:lims.project,type:"
+msgid "TAS"
+msgstr "SAT"
+
+msgctxt "view:lims.project:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "view:lims.tas.type:"
+msgid "TAS Type"
+msgstr "Tipo de SAT"
+
+msgctxt "view:lims.tas.type:"
+msgid "TAS Types"
+msgstr "Tipos de SAT"

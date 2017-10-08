@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+
+<!-- Other menu items -->
+
+        <menuitem parent="party.menu_configuration"
+            action="act_company_department_list"
+            id="company_department_menu"/>
+
+    </data>
+</tryton>

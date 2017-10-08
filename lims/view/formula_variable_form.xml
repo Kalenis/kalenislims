@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<form>
+    <label name="number"/>
+    <field name="number"/>
+    <label name="description"/>
+    <field name="description"/>
+    <label name="fraction_type"/>
+    <field name="fraction_type"/>
+    <label name="constant"/>
+    <field name="constant"/>
+</form>

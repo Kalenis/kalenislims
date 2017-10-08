@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tree editable="bottom">
+    <field name="professional"/>
+    <field name="method"/>
+    <field name="supervisor"/>
+</tree>

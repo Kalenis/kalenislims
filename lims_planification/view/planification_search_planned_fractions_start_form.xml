@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form>
+    <label name="date_from"/>
+    <field name="date_from"/>
+    <label name="date_to"/>
+    <field name="date_to"/>
+    <field name="analysis" colspan="4"/>
+    <field name="laboratory" invisible="1"/>
+</form>

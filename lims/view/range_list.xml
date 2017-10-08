@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="range_type"/>
+    <field name="analysis"/>
+    <field name="product_type"/>
+    <field name="matrix"/>
+    <field name="uom"/>
+    <field name="concentration"/>
+    <field name="min"/>
+    <field name="min95"/>
+    <field name="max95"/>
+    <field name="max"/>
+    <field name="reference"/>
+    <field name="low_level"/>
+    <field name="middle_level"/>
+    <field name="high_level"/>
+    <field name="low_level_value"/>
+    <field name="middle_level_value"/>
+    <field name="high_level_value"/>
+    <field name="low_level_coefficient_variation"/>
+    <field name="middle_level_coefficient_variation"/>
+    <field name="high_level_coefficient_variation"/>
+    <field name="factor"/>
+</tree>

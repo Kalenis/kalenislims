@@ -1,0 +1,289 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- BPL 01. BPL-005- Anexo 3 Ingreso y egreso provisorio de muestras al archivo -->
+
+        <record model="ir.action.report" id="report_glp_01">
+            <field name="name">GLP 01. GLP-005- Annex 3 Temporary input and output of samples to the file</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.01</field>
+            <field name="report">lims_project_study_plan/report/glp_01.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_01_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="report_glp_01"/>
+        </record>
+
+
+<!-- BPL 02. BPL-005- Anexo 4 Ingreso y egreso definitivo de muestras para analizar -->
+
+        <record model="ir.action.report" id="report_glp_02">
+            <field name="name">GLP 02. GLP-005- Annex 4 Definitive input and output of samples to analyze</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.02</field>
+            <field name="report">lims_project_study_plan/report/glp_02.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_02_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="report_glp_02"/>
+        </record>
+
+<!-- BPL 03. BPL-005- Anexo 5 Almacenamiento de muestras de planes de estudio -->
+
+        <record model="ir.ui.view" id="report_glp_03_print_start_view_form">
+            <field name="model">lims.project.glp_report.03.print.start</field>
+            <field name="type">form</field>
+            <field name="name">report_glp_03_print_start_form</field>
+        </record>
+        <record model="ir.action.wizard" id="wiz_report_glp_03_print">
+            <field name="name">GLP 03. GLP-005- Annex 5 Storage of samples</field>
+            <field name="wiz_name">lims.project.glp_report.03.print</field>
+        </record>
+
+        <record model="ir.action.report" id="report_glp_03">
+            <field name="name">GLP 03. GLP-005- Annex 5 Storage of samples</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.03</field>
+            <field name="report">lims_project_study_plan/report/glp_03.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_03_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="wiz_report_glp_03_print"/>
+        </record>
+
+<!-- BPL 04. BPL-005- Anexo 6 Movimiento de contramuestras de planes de estudio -->
+
+        <record model="ir.action.report" id="report_glp_04">
+            <field name="name">GLP 04. GLP-005- Annex 6 Movements of countersamples</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.04</field>
+            <field name="report">lims_project_study_plan/report/glp_04.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_04_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="report_glp_04"/>
+        </record>
+
+<!-- BPL 05. BPL-005- Anexo 7 Descarte de muestras de planes de estudio -->
+
+        <record model="ir.ui.view" id="report_glp_05_print_start_view_form">
+            <field name="model">lims.project.glp_report.05.print.start</field>
+            <field name="type">form</field>
+            <field name="name">report_glp_05_print_start_form</field>
+        </record>
+        <record model="ir.action.wizard" id="wiz_report_glp_05_print">
+            <field name="name">GLP 05. GLP-005- Annex 7 Discharge of samples</field>
+            <field name="wiz_name">lims.project.glp_report.05.print</field>
+        </record>
+
+        <record model="ir.action.report" id="report_glp_05">
+            <field name="name">GLP 05. GLP-005- Annex 7 Discharge of samples</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.05</field>
+            <field name="report">lims_project_study_plan/report/glp_05.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_05_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="wiz_report_glp_05_print"/>
+        </record>
+
+<!-- BPL 06. BPL-001- Anexo 3 Desviaciones/ Enmiendas del plan de estudio -->
+
+        <record model="ir.action.report" id="report_glp_06">
+            <field name="name">GLP 06. GLP-001- Annex 3 Deviations and amendments of Study plan</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.06</field>
+            <field name="report">lims_project_study_plan/report/glp_06.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_06_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="report_glp_06"/>
+        </record>
+
+<!-- BPL 07. Tabla 1- Plan de estudio -->
+
+        <record model="ir.action.report" id="report_glp_07">
+            <field name="name">GLP 07. Table 1- Study plan</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.07</field>
+            <field name="report">lims_project_study_plan/report/glp_07.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_07_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="report_glp_07"/>
+        </record>
+
+<!-- BPL 08. Tabla 2- Elementos de prueba para informe final (RP) -->
+
+        <record model="ir.action.report" id="report_glp_08">
+            <field name="name">GLP 08. Table 2- Test elements for Final report (RP)</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.08</field>
+            <field name="report">lims_project_study_plan/report/glp_08.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_08_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="report_glp_08"/>
+        </record>
+
+<!-- BPL 09. Tabla 3- Resultado de informe final -->
+
+        <record model="ir.action.report" id="report_glp_09">
+            <field name="name">GLP 09. Table 3- Result of Final report</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.09</field>
+            <field name="report">lims_project_study_plan/report/glp_09.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_09_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="report_glp_09"/>
+        </record>
+
+<!-- BPL 10. Esquema rector -->
+
+        <record model="ir.ui.view" id="report_glp_10_print_start_view_form">
+            <field name="model">lims.project.glp_report.10.print.start</field>
+            <field name="type">form</field>
+            <field name="name">report_glp_10_print_start_form</field>
+        </record>
+        <record model="ir.action.wizard" id="wiz_report_glp_10_print">
+            <field name="name">GLP 10. Rector scheme</field>
+            <field name="wiz_name">lims.project.glp_report.10.print</field>
+        </record>
+
+        <record model="ir.action.report" id="report_glp_10">
+            <field name="name">GLP 10. Rector scheme</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.10</field>
+            <field name="report">lims_project_study_plan/report/glp_10.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_10_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="wiz_report_glp_10_print"/>
+        </record>
+
+<!-- BPL 11. Elementos de prueba/referencia (FOR) -->
+
+        <record model="ir.action.report" id="report_glp_11">
+            <field name="name">GLP 11. Reference/Test elements (FOR)</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.11</field>
+            <field name="report">lims_project_study_plan/report/glp_11.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_11_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="report_glp_11"/>
+        </record>
+
+<!-- BPL 12. Registro de cambios -->
+
+        <record model="ir.ui.view" id="report_glp_12_print_start_view_form">
+            <field name="model">lims.project.glp_report.12.print.start</field>
+            <field name="type">form</field>
+            <field name="name">report_glp_12_print_start_form</field>
+        </record>
+        <record model="ir.action.wizard" id="wiz_report_glp_12_print">
+            <field name="name">GLP 12. Changelog</field>
+            <field name="wiz_name">lims.project.glp_report.12.print</field>
+        </record>
+
+        <record model="ir.action.report" id="report_glp_12">
+            <field name="name">GLP 12. Changelog</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.12</field>
+            <field name="report">lims_project_study_plan/report/glp_12.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_12_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="wiz_report_glp_12_print"/>
+        </record>
+
+
+
+        
+<!-- BPL Study plan -->
+
+        <record model="ir.action.report" id="report_glp_study_plan">
+            <field name="name">GLP Study plan</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.study_plan</field>
+            <field name="report">lims_project_study_plan/report/glp_study_plan.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_study_plan_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="report_glp_study_plan"/>
+        </record>
+
+<!-- BPL Final Report (RP) -->
+
+        <record model="ir.action.report" id="report_glp_final_rp">
+            <field name="name">GLP Final Report (RP)</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.final_rp</field>
+            <field name="report">lims_project_study_plan/report/glp_final_report_rp.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_final_rp_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="report_glp_final_rp"/>
+        </record>
+
+<!-- BPL Final Report (FOR) -->
+
+        <record model="ir.action.report" id="report_glp_final_for">
+            <field name="name">GLP Final Report (FOR)</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.final_for</field>
+            <field name="report">lims_project_study_plan/report/glp_final_report_for.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_final_for_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="report_glp_final_for"/>
+        </record>
+
+<!-- BPL Analytical Phase Report -->
+
+        <record model="ir.action.report" id="report_glp_analytical_phase">
+            <field name="name">GLP Analytical Phase Report </field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.analytical_phase</field>
+            <field name="report">lims_project_study_plan/report/glp_analytical_phase_report.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_analytical_phase_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="report_glp_analytical_phase"/>
+        </record>
+        
+        
+<!-- BPL 13. Registro de preparación de muestras BPL -->
+
+        <record model="ir.action.report" id="report_glp_13">
+            <field name="name">GLP 13. GLP-007- Annex 3 Sample preparation registration GLP</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.glp_report.13</field>
+            <field name="report">lims_project_study_plan/report/glp_13.ods</field>
+        </record>
+        <record model="ir.action.keyword" id="report_glp_13_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="report_glp_13"/>
+        </record>
+
+    </data>
+</tryton>

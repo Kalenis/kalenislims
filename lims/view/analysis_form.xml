@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<form>
+    <label name="code"/>
+    <field name="code"/>
+    <label name="description"/>
+    <field name="description"/>
+    <label name="type"/>
+    <field name="type"/>
+    <label name="behavior"/>
+    <field name="behavior"/>
+    <label name="start_date"/>
+    <field name="start_date"/>
+    <label name="end_date"/>
+    <field name="end_date"/>
+    <label name="result_formula"/>
+    <field name="result_formula"/>
+    <label name="converted_result_formula"/>
+    <field name="converted_result_formula"/>
+    <label name="automatic_acquisition"/>
+    <field name="automatic_acquisition"/>
+    <label name="product"/>
+    <field name="product"/>
+    <label name="order"/>
+    <field name="order"/>
+    <label name="disable_as_individual"/>
+    <field name="disable_as_individual"/>
+    <label name="formula"/>
+    <field name="formula"/>
+    <label name="planning_legend"/>
+    <field name="planning_legend"/>
+    <notebook>
+        <page string="Laboratories" id="laboratories" >
+            <field name="laboratories" colspan="4"/>
+            <field name="laboratory_domain" colspan="4" invisible="1"/>
+        </page>
+        <page string="Methods" id="methods" >
+            <field name="methods" colspan="4"/>
+        </page>
+        <page string="Devices" id="devices" >
+            <field name="devices" colspan="4"/>
+        </page>
+        <page string="Included analysis" id="included_analysis" >
+            <field name="included_analysis" colspan="4"/>
+            <group col="6" colspan="4" id="button_holder">
+                <button name="relate_analysis" string="Relate analysis"/>
+             </group>
+        </page>
+        <page string="Microbiology" id="microbiology" >
+            <label name="gender_species"/>
+            <field name="gender_species" widget="richtext" colspan="3"/>
+            <field name="microbiology" invisible="1"/>
+        </page>
+        <page string="Warnings/Comments" id="comments" >
+            <field name="comments" colspan="4"/>
+        </page>
+    </notebook>
+    <group colspan="3" id="buttons">
+        <label name="state"/>
+        <field name="state"/>
+        <button name="activate" string="Activate"/>
+        <button name="disable" string="Disable"/>
+    </group>
+</form>

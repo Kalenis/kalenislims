@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<form>
+    <label name="laboratory_professional"/>
+    <field name="laboratory_professional"/>
+    <field name="details" colspan="4"/>
+</form>

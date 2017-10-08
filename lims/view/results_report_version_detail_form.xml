@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<form>
+    <label name="report_version"/>
+    <field name="report_version" colspan="3"/>
+    <label name="laboratory"/>
+    <field name="laboratory"/>
+    <label name="number"/>
+    <field name="number"/>
+    <group col="6" colspan="4" id="fields_group">
+        <label name="state"/>
+        <field name="state"/>
+        <label name="valid"/>
+        <field name="valid"/>
+        <label name="english_report"/>
+        <field name="english_report"/>
+    </group>
+    <label name="report_type_forced"/>
+    <field name="report_type_forced"/>
+    <label name="report_result_type_forced"/>
+    <field name="report_result_type_forced"/>
+    <label name="report_type"/>
+    <field name="report_type"/>
+    <label name="report_result_type"/>
+    <field name="report_result_type"/>
+    <label name="resultrange_origin"/>
+    <field name="resultrange_origin" widget="selection"/>
+    <newline/>
+    <label name="signer"/>
+    <field name="signer"/>
+    <label name="party"/>
+    <field name="party"/>
+    <label name="create_date2"/>
+    <field name="create_date2"/>
+    <label name="write_date2"/>
+    <field name="write_date2"/>
+    <notebook>
+        <page string="Comments" id="comments">
+            <field name="comments" colspan="4"/>
+        </page>
+        <page string="Fraction comments" id="fraction_comments">
+            <field name="fraction_comments" colspan="4"/>
+        </page>
+        <page string="Annulation" id="annulation">
+            <label name="annulment_date"/>
+            <field name="annulment_date"/>
+            <newline/>
+            <separator string="Annulment reason" colspan="4" id="annulment_reason"/>
+            <field name="annulment_reason" colspan="4"/>
+        </page>
+    </notebook>
+    <field name="notebook_lines" colspan="4"/>
+    <group colspan="4" id="buttons">
+        <button name="revise" string="Revised"/>
+        <button name="revise_all_lang" string="Revised for all languages"/>
+        <button name="annul" string="Annulled"/>
+    </group>
+    <field name="report_cache" colspan="4" invisible="1"/>
+    <field name="report_cache_eng" colspan="4"  invisible="1"/>
+</form>

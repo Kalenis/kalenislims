@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<form>
+    <label name="fraction_type"/>
+    <field name="fraction_type" colspan="3"/>
+    <label name="min_cv"/>
+    <field name="min_cv"/>
+    <label name="min_cv_corr_fact"/>
+    <field name="min_cv_corr_fact"/>
+    <label name="max_cv"/>
+    <field name="max_cv"/>
+    <label name="max_cv_corr_fact"/>
+    <field name="max_cv_corr_fact"/>
+</form>

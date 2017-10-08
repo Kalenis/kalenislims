@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<form>
+    <label name="number"/>
+    <field name="number"/>
+    <label name="party"/>
+    <field name="party"/>
+    <group col="6" colspan="4" id="fields_group">
+        <label name="english_report"/>
+        <field name="english_report"/>
+        <label name="single_sending_report"/>
+        <field name="single_sending_report"/>
+        <label name="single_sending_report_ready"/>
+        <field name="single_sending_report_ready"/>
+    </group>
+    <group col="6" colspan="4" id="fields_group2">
+        <label name="create_date2"/>
+        <field name="create_date2"/>
+        <label name="write_date2"/>
+        <field name="write_date2"/>
+    </group>
+    <field name="versions" colspan="4"/>
+</form>

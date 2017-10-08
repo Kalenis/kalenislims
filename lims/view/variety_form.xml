@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<form>
+    <label name="code"/>
+    <field name="code"/>
+    <label name="description"/>
+    <field name="description"/>
+    <field name="varieties" colspan="4"/>
+</form>

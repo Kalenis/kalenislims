@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<form>
+    <group col="6" colspan="4" id="requalification">
+        <label name="type"/>
+        <field name="type"/>
+        <label name="date"/>
+        <field name="date"/>
+        <label name="last_execution_date"/>
+        <field name="last_execution_date"/>
+    </group>
+    <field name="supervisors" colspan="4"/>
+    <field name="controls" colspan="4"/>
+</form>

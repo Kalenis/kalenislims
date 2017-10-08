@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<form>
+    <label name="code"/>
+    <field name="code"/>
+    <label name="description"/>
+    <field name="description"/>
+    <group col="2" colspan="2" id="max_storage_time">
+        <label name="max_storage_time"/>
+        <field name="max_storage_time"/>
+    </group>
+    <label name="requalify"/>
+    <field name="requalify"/>
+    <label name="control_charts"/>
+    <field name="control_charts"/>
+    <label name="report"/>
+    <field name="report"/>
+</form>

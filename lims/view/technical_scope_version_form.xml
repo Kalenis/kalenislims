@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<form>
+    <label name="number"/>
+    <field name="number"/>
+    <label name="technical_scope"/>
+    <field name="technical_scope"/>
+    <group col="6" colspan="4" id="group1">
+        <label name="date"/>
+        <field name="date"/>
+        <label name="valid"/>
+        <field name="valid"/>
+        <label name="expiration_date"/>
+        <field name="expiration_date"/>
+    </group>
+    <group colspan="4" id="buttons">
+        <button name="open_typifications" string="Open typifications"/>
+    </group>
+    <group colspan="4" id="buttons2">
+        <button name="add_typifications" string="Add typifications"/>
+        <button name="remove_typifications" string="Remove typifications"/>
+    </group>
+</form>

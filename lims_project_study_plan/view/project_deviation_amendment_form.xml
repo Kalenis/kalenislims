@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<form>
+    <label name="type"/>
+    <field name="type"/>
+    <label name="document_type"/>
+    <field name="document_type"/>
+    <label name="number"/>
+    <field name="number"/>
+    <label name="date"/>
+    <field name="date"/>
+    <label name="description"/>
+    <field name="description"/>
+    <label name="reason"/>
+    <field name="reason"/>
+    <label name="anomaly_number"/>
+    <field name="anomaly_number"/>
+    <label name="sponsor_communication"/>
+    <field name="sponsor_communication"/>
+    <field name="professionals" colspan="4"/>
+</form>

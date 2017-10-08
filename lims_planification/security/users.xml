@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file is part of Tryton. The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+
+<!-- Groups -->
+
+        <record model="res.group" id="group_lims_blind_sample_readonly">
+            <field name="name">Lims Blind Samples Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_blind_sample">
+            <field name="name">Lims Blind Samples</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_blind_sample">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_blind_sample"/>
+        </record>
+
+        <record model="res.group" id="group_lims_planification_readonly">
+            <field name="name">Lims Planification Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_planification">
+            <field name="name">Lims Planification</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_planification">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_planification"/>
+        </record>
+
+<!-- Users -->
+
+        <record model="res.user" id="user_planification_process">
+            <field name="login">user_cron_planification_process</field>
+            <field name="name">Cron Lims Planification Process</field>
+            <field name="signature"></field>
+            <field name="active" eval="False"/>
+        </record>
+        <record model="res.user-res.group" id="user_planification_process_group_planification">
+            <field name="user" ref="user_planification_process"/>
+            <field name="group" ref="group_lims_planification"/>
+        </record>
+
+    </data>
+</tryton>

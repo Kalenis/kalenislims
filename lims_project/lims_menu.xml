@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Icons -->
+
+        <record model="ir.ui.icon" id="project_icon">
+            <field name="name">lims-project</field>
+            <field name="path">icons/project.svg</field>
+        </record>
+
+<!-- Menu -->
+
+        <!-- Configuration / Projects -->
+        <menuitem name="Projects" parent="lims.lims_config"
+            id="lims_config_projects" sequence="60"/>
+
+        <!-- Projects -->
+        <menuitem parent="lims.lims_menu" action="act_lims_project_list"
+            id="lims_project_menu" sequence="20"
+            icon="lims-project"/>
+
+    </data>
+</tryton>

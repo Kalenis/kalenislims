@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="code"/>
+    <field name="name"/>
+    <field name="use"/>
+    <field name="by_default"/>
+</tree>

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<form>
+    <field name="result_lines" colspan="4" mode="tree,form"
+        view_ids="lims_instrument.lims_load_results_file_result_lines_view_list,lims.lims_notebook_line_view_form"/>
+</form>

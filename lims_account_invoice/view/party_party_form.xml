@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='lims']/group[@id='lims_checkboxes']"
+        position="inside">
+        <label name="no_send_invoice"/>
+        <field name="no_send_invoice"/>
+        <label name="commercial_item"/>
+        <field name="commercial_item" colspan="4"/>
+        <label name="commercial_zone"/>
+        <field name="commercial_zone" colspan="4"/>
+    </xpath>
+</data>

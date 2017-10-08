@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="number"/>
+    <field name="create_date2" widget="date"/>
+    <field name="create_date2" widget="time" string="Time"/>
+    <field name="sample"/>
+    <field name="entry"/>
+    <field name="entry_state"/>
+    <field name="party"/>
+    <field name="label"/>
+    <field name="type"/>
+    <field name="product_type"/>
+    <field name="matrix"/>
+    <field name="storage_location"/>
+    <field name="storage_time"/>
+    <field name="expiry_date"/>
+    <field name="discharge_date"/>
+    <field name="countersample_date"/>
+    <field name="countersample_location"/>
+    <field name="fraction_state"/>
+    <field name="package_type"/>
+    <field name="packages_quantity"/>
+    <field name="shared"/>
+    <field name="current_location"/>
+    <field name="has_results_report"/>
+    <field name="confirmed" tree_invisible="1" />
+</tree>

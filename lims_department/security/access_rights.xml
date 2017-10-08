@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file is part of Tryton. The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+
+<!-- Access Rights on Models -->
+
+        <record model="ir.model.access" id="access_department">
+            <field name="model" search="[('model', '=', 'company.department')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_department_group_party_admin">
+            <field name="model" search="[('model', '=', 'company.department')]"/>
+            <field name="group" ref="party.group_party_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+<!-- Access Rights on Menu -->
+
+        <!-- Other menu items -->
+
+        <record model="ir.ui.menu-res.group" id="menu_company_department_group_party_admin">
+            <field name="menu" ref="company_department_menu"/>
+            <field name="group" ref="party.group_party_admin"/>
+        </record>
+
+    </data>
+</tryton>

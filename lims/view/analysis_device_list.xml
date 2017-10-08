@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="laboratory"/>
+    <field name="device"/>
+    <field name="by_default"/>
+</tree>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<form>
+    <label name="code"/>
+    <field name="code"/>
+    <label name="description"/>
+    <field name="description"/>
+    <label name="device_type"/>
+    <field name="device_type"/>
+    <label name="serial_number"/>
+    <field name="serial_number"/>
+    <field name="laboratories" colspan="4"/>
+</form>

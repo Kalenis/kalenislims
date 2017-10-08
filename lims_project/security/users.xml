@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file is part of Tryton. The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+
+<!-- Groups -->
+
+        <record model="res.group" id="group_lims_conf_project_readonly">
+            <field name="name">Lims Configuration Projects Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_conf_project_admin">
+            <field name="name">Lims Configuration Projects Admin</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_conf_project_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_conf_project_admin"/>
+        </record>
+
+        <record model="res.group" id="group_lims_project_readonly">
+            <field name="name">Lims Projects Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_project">
+            <field name="name">Lims Projects</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_project">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_project"/>
+        </record>
+
+    </data>
+</tryton>

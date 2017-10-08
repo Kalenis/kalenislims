@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='general']/field[@name='default_notebook_view']"
+        position="after">
+        <label name="sample_in_custody_sequence"/>
+        <field name="sample_in_custody_sequence"/>
+    </xpath>
+</data>

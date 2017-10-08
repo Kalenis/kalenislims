@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="party"/>
+    <field name="certification_type"/>
+    <field name="versions"/>
+</tree>

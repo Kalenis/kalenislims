@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<form>
+    <label name="price_list"/>
+    <field name="price_list"/>
+    <newline/>
+    <label name="product"/>
+    <field name="product"/>
+    <newline/>
+    <group colspan="2" id="calculation_method">
+        <label name="calc_method"/>
+        <field name="calc_method"/>
+    </group>
+    <label name="base_list"/>
+    <field name="base_list"/>
+    <newline/>
+    <label name="percentage"/>
+    <field name="percentage"/>
+    <label name="price"/>
+    <field name="price"/>
+</form>

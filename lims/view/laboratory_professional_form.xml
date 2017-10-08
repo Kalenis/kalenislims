@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<form>
+    <label name="party"/>
+    <field name="party"/>
+    <label name="code"/>
+    <field name="code"/>
+    <label name="role"/>
+    <field name="role"/>
+    <newline/>
+    <group colspan="4" yfill="1" string="Signature" id="signature">
+        <field xfill="0" xexpand="1" name="signature" height="200" width="200" widget="image"/>
+    </group>
+</form>

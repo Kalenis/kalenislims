@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+      <!-- Invoice -->
+      <record model="ir.ui.view" id="lims_invoice_view_form">
+          <field name="model">account.invoice</field>
+          <field name="inherit" ref="account_invoice.invoice_view_form"/>
+          <field name="name">invoice_form</field>
+      </record>
+
+      <!-- Invoice Contacts -->
+      <record model="ir.ui.view" id="invoice_contacts_view_form">
+          <field name="model">account.invoice.invoice_contacts</field>
+          <field name="type">form</field>
+          <field name="name">invoice_contacts_form</field>
+      </record>
+      <record model="ir.ui.view" id="invoice_contacts_view_list">
+          <field name="model">account.invoice.invoice_contacts</field>
+          <field name="type">tree</field>
+          <field name="name">invoice_contacts_list</field>
+      </record>
+
+      <!-- Invoice Line -->
+      <record model="ir.ui.view" id="lims_invoice_line_view_form">
+          <field name="model">account.invoice.line</field>
+          <field name="inherit" ref="account_invoice.invoice_line_view_form"/>
+          <field name="name">invoice_line_form</field>
+      </record>
+
+      <record model="ir.ui.view" id="lims_invoice_line_view_tree">
+          <field name="model">account.invoice.line</field>
+          <field name="inherit" ref="account_invoice.invoice_line_view_tree"/>
+          <field name="name">invoice_line_tree</field>
+      </record>
+
+      <record model="ir.ui.view" id="lims_invoice_line_view_tree_sequence">
+          <field name="model">account.invoice.line</field>
+          <field name="inherit" ref="account_invoice.invoice_line_view_tree_sequence"/>
+          <field name="name">invoice_line_tree_sequence</field>
+      </record>
+
+<!-- Wizard Populate Invoice Contacts -->
+
+      <record model="ir.ui.view" id="account_invoice_populate_invoice_contacts_start_view_form">
+          <field name="model">account.invoice.populate_invoice_contacts.start</field>
+          <field name="type">form</field>
+          <field name="name">account_invoice_populate_invoice_contacts_start_view_form</field>
+      </record>
+
+      <record model="ir.action.wizard" id="wiz_account_invoice_populate_invoice_contacts">
+          <field name="name">Populate Invoice Contacts</field>
+          <field name="wiz_name">account.invoice.populate_invoice_contacts</field>
+          <field name="model">account.invoice</field>
+      </record>
+      <record model="ir.action.keyword" id="lims_populate_invoice_contacts_keyword">
+          <field name="keyword">form_action</field>
+          <field name="model">account.invoice,-1</field>
+          <field name="action" ref="wiz_account_invoice_populate_invoice_contacts"/>
+      </record>
+
+<!-- Cron Send Of Invoice -->
+
+        <record model="ir.cron" id="cron_account_invoice_send_invoice">
+            <field name="name">Send Invoice</field>
+            <field name="request_user" ref="res.user_admin"/>
+            <field name="user" ref="user_send_invoice"/>
+            <field name="active" eval="True"/>
+            <field name="interval_number" eval="1"/>
+            <field name="interval_type">days</field>
+            <field name="number_calls" eval="-1"/>
+            <field name="repeat_missed" eval="False"/>
+            <field name="model">account.invoice</field>
+            <field name="function">cron_send_invoice</field>
+        </record>
+
+    </data>
+</tryton>

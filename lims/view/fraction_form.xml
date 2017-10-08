@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<form>
+    <label name="number"/>
+    <field name="number"/>
+    <group col="4" colspan="2" id="sample">
+        <label name="sample"/>
+        <field name="sample"/>
+        <label name="sample_view"/>
+        <field name="sample_view"/>
+    </group>
+    <label name="entry"/>
+    <field name="entry"/>
+    <label name="label"/>
+    <field name="label"/>
+    <label name="party"/>
+    <field name="party" colspan="3"/>
+    <notebook>
+        <page string="General" id="general">
+            <label name="type"/>
+            <field name="type"/>
+            <label name="storage_location"/>
+            <field name="storage_location"/>
+            <label name="fraction_state"/>
+            <field name="fraction_state"/>
+            <group col="2" colspan="2" id="storage_time">
+                <label name="storage_time"/>
+                <field name="storage_time"/>
+            </group>
+            <label name="package_type"/>
+            <field name="package_type"/>
+            <label name="packages_quantity"/>
+            <field name="packages_quantity"/>
+            <label name="weight"/>
+            <field name="weight"/>
+            <label name="weight_uom"/>
+            <field name="weight_uom"/>
+            <label name="size"/>
+            <field name="size"/>
+            <label name="size_uom"/>
+            <field name="size_uom"/>
+            <label name="expiry_date"/>
+            <field name="expiry_date"/>
+            <label name="discharge_date"/>
+            <field name="discharge_date"/>
+            <label name="countersample_date"/>
+            <field name="countersample_date"/>
+            <label name="countersample_location"/>
+            <field name="countersample_location"/>
+            <label name="shared"/>
+            <field name="shared"/>
+            <label name="current_location"/>
+            <field name="current_location"/>
+            <label name="entry_state"/>
+            <field name="entry_state"/>
+        </page>
+        <page string="Services" id="services">
+            <group colspan="4" id="buttons">
+                <field name="button_manage_services_available" invisible="1"/>
+                <button name="manage_services" string="Manage services"/>
+                <button name="complete_services" string="Complete services"/>
+                <field name="duplicated_analysis_message" colspan="4"
+                    yexpand="0"/>
+            </group>
+            <field name="services" colspan="4" mode="tree,form"
+                view_ids="lims.lims_service2_view_list,lims.lims_service_view_form"/>
+        </page>
+        <page string="Comments" id="comments">
+            <separator string="Comments" colspan="4" id="comments"/>
+            <field name="comments" colspan="4"/>
+        </page>
+    </notebook>
+    <group colspan="4" id="button_confirm">
+        <field name="button_confirm_available" invisible="1"/>
+        <button name="confirm" string="Confirm"/>
+    </group>
+</form>

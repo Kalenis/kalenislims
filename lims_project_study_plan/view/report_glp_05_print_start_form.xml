@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form>
+    <label name="project"/>
+    <field name="project" colspan="3"/>
+    <label name="expiry_date_from"/>
+    <field name="expiry_date_from"/>
+    <label name="expiry_date_to"/>
+    <field name="expiry_date_to"/>
+</form>

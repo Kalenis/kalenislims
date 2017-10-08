@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="analysis"/>
+    <field name="laboratory"/>
+    <field name="method"/>
+    <field name="device"/>
+    <field name="urgent"/>
+    <field name="priority"/>
+    <field name="report_date"/>
+    <field name="divide"/>
+</tree>

@@ -1,0 +1,366 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Menu items in lims_menu.xml -->
+
+<!-- Wizard Relate Technicians -->
+
+        <record model="ir.ui.view" id="lims_relate_technicians_start_view_form">
+            <field name="model">lims.planification.relate_technicians.start</field>
+            <field name="type">form</field>
+            <field name="name">planification_relate_technicians_start_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_relate_technicians_result_view_form">
+            <field name="model">lims.planification.relate_technicians.result</field>
+            <field name="type">form</field>
+            <field name="name">planification_relate_technicians_result_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_relate_technicians_detail1_view_form">
+            <field name="model">lims.planification.relate_technicians.detail1</field>
+            <field name="type">form</field>
+            <field name="name">planification_relate_technicians_detail1_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_relate_technicians_detail1_view_list">
+            <field name="model">lims.planification.relate_technicians.detail1</field>
+            <field name="type">tree</field>
+            <field name="name">planification_relate_technicians_detail1_list</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_relate_technicians_detail2_view_form">
+            <field name="model">lims.planification.relate_technicians.detail2</field>
+            <field name="type">form</field>
+            <field name="name">planification_relate_technicians_detail2_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_relate_technicians_detail2_view_list">
+            <field name="model">lims.planification.relate_technicians.detail2</field>
+            <field name="type">tree</field>
+            <field name="name">planification_relate_technicians_detail2_list</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_relate_technicians_detail3_view_form">
+            <field name="model">lims.planification.relate_technicians.detail3</field>
+            <field name="type">form</field>
+            <field name="name">planification_relate_technicians_detail3_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_relate_technicians_detail3_view_list">
+            <field name="model">lims.planification.relate_technicians.detail3</field>
+            <field name="type">tree</field>
+            <field name="name">planification_relate_technicians_detail3_list</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_relate_technicians">
+            <field name="name">Relate Technicians</field>
+            <field name="wiz_name">lims.planification.relate_technicians</field>
+        </record>
+
+<!-- Wizard Unlink Technicians -->
+
+        <record model="ir.ui.view" id="lims_unlink_technicians_start_view_form">
+            <field name="model">lims.planification.unlink_technicians.start</field>
+            <field name="type">form</field>
+            <field name="name">planification_unlink_technicians_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_unlink_technicians_detail_view_form">
+            <field name="model">lims.planification.unlink_technicians.detail1</field>
+            <field name="type">form</field>
+            <field name="name">planification_unlink_technicians_detail_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_unlink_technicians_detail_view_list">
+            <field name="model">lims.planification.unlink_technicians.detail1</field>
+            <field name="type">tree</field>
+            <field name="name">planification_unlink_technicians_detail_list</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_unlink_technicians">
+            <field name="name">Unlink Technicians</field>
+            <field name="wiz_name">lims.planification.unlink_technicians</field>
+        </record>
+
+<!-- Wizard Replace Technician -->
+
+        <record model="ir.ui.view" id="lims_replace_technician_start_view_form">
+            <field name="model">lims.planification.replace_technician.start</field>
+            <field name="type">form</field>
+            <field name="name">planification_replace_technician_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_replace_technician">
+            <field name="name">Replace Technician</field>
+            <field name="wiz_name">lims.planification.replace_technician</field>
+        </record>
+
+<!-- Wizard Add Fraction Control -->
+
+        <record model="ir.ui.view" id="lims_add_fraction_con_start_view_form">
+            <field name="model">lims.planification.add_fraction_con.start</field>
+            <field name="type">form</field>
+            <field name="name">planification_add_fraction_con_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_add_fraction_con">
+            <field name="name">Add Fraction Control</field>
+            <field name="wiz_name">lims.planification.add_fraction_con</field>
+        </record>
+
+        <record model="ir.model.field.access" id="access_add_fraction_con_original_fraction">
+            <field name="field"
+                search="[('name', '=', 'original_fraction'), ('model.model', '=', 'lims.planification.add_fraction_con.start')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+<!-- Wizard Add Fraction RM/BMZ -->
+
+        <record model="ir.ui.view" id="lims_add_fraction_rm_bmz_start_view_form">
+            <field name="model">lims.planification.add_fraction_rm_bmz.start</field>
+            <field name="type">form</field>
+            <field name="name">planification_add_fraction_rm_bmz_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_add_fraction_rm_bmz">
+            <field name="name">Add Fraction RM/BMZ</field>
+            <field name="wiz_name">lims.planification.add_fraction_rm_bmz</field>
+        </record>
+
+        <record model="ir.model.field.access" id="access_add_fraction_rm_bmz_reference_fraction">
+            <field name="field"
+                search="[('name', '=', 'reference_fraction'), ('model.model', '=', 'lims.planification.add_fraction_rm_bmz.start')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+<!-- Wizard Add Fraction BRE -->
+
+        <record model="ir.ui.view" id="lims_add_fraction_bre_start_view_form">
+            <field name="model">lims.planification.add_fraction_bre.start</field>
+            <field name="type">form</field>
+            <field name="name">planification_add_fraction_bre_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_add_fraction_bre">
+            <field name="name">Add Fraction BRE</field>
+            <field name="wiz_name">lims.planification.add_fraction_bre</field>
+        </record>
+
+        <record model="ir.model.field.access" id="access_add_fraction_bre_bre_fraction">
+            <field name="field"
+                search="[('name', '=', 'bre_fraction'), ('model.model', '=', 'lims.planification.add_fraction_bre.start')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+<!-- Wizard Add Fraction MRT -->
+
+        <record model="ir.ui.view" id="lims_add_fraction_mrt_start_view_form">
+            <field name="model">lims.planification.add_fraction_mrt.start</field>
+            <field name="type">form</field>
+            <field name="name">planification_add_fraction_mrt_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_add_fraction_mrt">
+            <field name="name">Add Fraction MRT</field>
+            <field name="wiz_name">lims.planification.add_fraction_mrt</field>
+        </record>
+
+        <record model="ir.model.field.access" id="access_add_fraction_mrt_mrt_fraction">
+            <field name="field"
+                search="[('name', '=', 'mrt_fraction'), ('model.model', '=', 'lims.planification.add_fraction_mrt.start')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+<!-- Wizard Remove Control -->
+
+        <record model="ir.ui.view" id="lims_remove_control_start_view_form">
+            <field name="model">lims.planification.remove_control.start</field>
+            <field name="type">form</field>
+            <field name="name">planification_remove_control_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_remove_control">
+            <field name="name">Remove Control</field>
+            <field name="wiz_name">lims.planification.remove_control</field>
+        </record>
+
+<!-- Wizard Add Analysis -->
+
+        <record model="ir.ui.view" id="lims_add_analysis_start_view_form">
+            <field name="model">lims.planification.add_analysis.start</field>
+            <field name="type">form</field>
+            <field name="name">planification_add_analysis_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_add_analysis">
+            <field name="name">Add Analysis</field>
+            <field name="wiz_name">lims.planification.add_analysis</field>
+        </record>
+
+<!-- Wizard Search Fractions -->
+
+        <record model="ir.ui.view" id="lims_search_fractions_next_view_form">
+            <field name="model">lims.planification.search_fractions.next</field>
+            <field name="type">form</field>
+            <field name="name">planification_search_fractions_next_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_search_fractions_detail_view_form">
+            <field name="model">lims.planification.search_fractions.detail</field>
+            <field name="type">form</field>
+            <field name="name">planification_search_fractions_detail_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_search_fractions_detail_view_list">
+            <field name="model">lims.planification.search_fractions.detail</field>
+            <field name="type">tree</field>
+            <field name="name">planification_search_fractions_detail_list</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_search_fractions">
+            <field name="name">Search Fractions</field>
+            <field name="wiz_name">lims.planification.search_fractions</field>
+        </record>
+
+        <record model="ir.model.field.access" id="access_search_fractions_next_details">
+            <field name="field"
+                search="[('name', '=', 'details'), ('model.model', '=', 'lims.planification.search_fractions.next')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+<!-- Wizard Search Planned Fractions -->
+
+        <record model="ir.ui.view" id="lims_search_planned_fractions_start_view_form">
+            <field name="model">lims.planification.search_planned_fractions.start</field>
+            <field name="type">form</field>
+            <field name="name">planification_search_planned_fractions_start_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_search_planned_fractions_next_view_form">
+            <field name="model">lims.planification.search_planned_fractions.next</field>
+            <field name="type">form</field>
+            <field name="name">planification_search_planned_fractions_next_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_search_planned_fractions_detail_view_form">
+            <field name="model">lims.planification.search_planned_fractions.detail</field>
+            <field name="type">form</field>
+            <field name="name">planification_search_planned_fractions_detail_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_search_planned_fractions_detail_view_list">
+            <field name="model">lims.planification.search_planned_fractions.detail</field>
+            <field name="type">tree</field>
+            <field name="name">planification_search_planned_fractions_detail_list</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_search_planned_fractions">
+            <field name="name">Search Planned Fractions</field>
+            <field name="wiz_name">lims.planification.search_planned_fractions</field>
+        </record>
+
+        <record model="ir.model.field.access" id="access_search_planned_fractions_next_details">
+            <field name="field"
+                search="[('name', '=', 'details'), ('model.model', '=', 'lims.planification.search_planned_fractions.next')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+<!-- Wizard Create Fraction Control -->
+
+        <record model="ir.ui.view" id="lims_create_fraction_con_start_view_form">
+            <field name="model">lims.planification.create_fraction_con.start</field>
+            <field name="type">form</field>
+            <field name="name">planification_create_fraction_con_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_create_fraction_con">
+            <field name="name">Create Fraction Control</field>
+            <field name="wiz_name">lims.planification.create_fraction_con</field>
+        </record>
+
+<!-- Wizard Release Fraction -->
+
+        <record model="ir.ui.view" id="lims_planification_release_fraction_start_view_form">
+            <field name="model">lims.planification.release_fraction.start</field>
+            <field name="type">form</field>
+            <field name="name">planification_release_fraction_start_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_planification_release_fraction_empty_view_form">
+            <field name="model">lims.planification.release_fraction.empty</field>
+            <field name="type">form</field>
+            <field name="name">planification_release_fraction_empty_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_planification_release_fraction_result_view_form">
+            <field name="model">lims.planification.release_fraction.result</field>
+            <field name="type">form</field>
+            <field name="name">planification_release_fraction_result_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_release_fraction">
+            <field name="name">Release Fractions</field>
+            <field name="wiz_name">lims.planification.release_fraction</field>
+        </record>
+
+<!-- Wizard Technicians Qualification -->
+
+        <record model="ir.action.wizard" id="wiz_lims_technicians_qualification">
+            <field name="name">Technicians Qualification</field>
+            <field name="wiz_name">lims.planification.technicians_qualification</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_qualification_situation_view_form">
+            <field name="model">lims.planification.qualification.situation</field>
+            <field name="type">form</field>
+            <field name="name">planification_qualification_situation_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_qualification_situation_view_list">
+            <field name="model">lims.planification.qualification.situation</field>
+            <field name="type">tree</field>
+            <field name="name">planification_qualification_situation_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_qualification_situations_view_form">
+            <field name="model">lims.planification.qualification.situations</field>
+            <field name="type">form</field>
+            <field name="name">planification_qualification_situations_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_qualification_situation_2_view_form">
+            <field name="model">lims.planification.qualification.situation.2</field>
+            <field name="type">form</field>
+            <field name="name">planification_qualification_situation_2_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_qualification_situation_3_view_form">
+            <field name="model">lims.planification.qualification.situation.3</field>
+            <field name="type">form</field>
+            <field name="name">planification_qualification_situation_3_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_qualification_situation_4_view_form">
+            <field name="model">lims.planification.qualification.situation.4</field>
+            <field name="type">form</field>
+            <field name="name">planification_qualification_situation_4_form</field>
+        </record>
+
+<!-- Wizard Load Services -->
+
+        <record model="ir.action.wizard" id="wiz_lims_load_services">
+            <field name="name">Load Services</field>
+            <field name="wiz_name">lims.load_services</field>
+        </record>
+
+    </data>
+</tryton>

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<form>
+    <label name="sample"/>
+    <field name="sample"/>
+    <label name="entry_date"/>
+    <field name="entry_date"/>
+    <label name="packages_quantity"/>
+    <field name="packages_quantity"/>
+    <label name="package_type"/>
+    <field name="package_type"/>
+    <label name="carrier"/>
+    <field name="carrier"/>
+    <label name="location"/>
+    <field name="location"/>
+    <label name="entry_responsible"/>
+    <field name="entry_responsible"/>
+    <label name="file_operator_responsible"/>
+    <field name="file_operator_responsible"/>
+    <label name="temperature"/>
+    <field name="temperature"/>
+    <label name="temperature_other"/>
+    <field name="temperature_other"/>
+    <label name="processing_state"/>
+    <field name="processing_state"/>
+    <label name="processing_state_other"/>
+    <field name="processing_state_other"/>
+    <separator string="Comments" colspan="4" id="comments"/>
+    <field name="comments" colspan="4"/>
+</form>

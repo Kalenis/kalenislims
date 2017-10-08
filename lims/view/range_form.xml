@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<form>
+    <label name="range_type"/>
+    <field name="range_type"/>
+    <label name="analysis"/>
+    <field name="analysis"/>
+    <label name="product_type"/>
+    <field name="product_type"/>
+    <label name="matrix"/>
+    <field name="matrix"/>
+    <label name="uom"/>
+    <field name="uom"/>
+    <label name="concentration"/>
+    <field name="concentration"/>
+    <separator colspan="4" id="ranges"/>
+    <group colspan="4" col="10" id="ranges">
+        <label name="min"/>
+        <field name="min"/>
+        <label name="min95"/>
+        <field name="min95"/>
+        <label name="max95"/>
+        <field name="max95"/>
+        <label name="max"/>
+        <field name="max"/>
+        <label name="reference"/>
+        <field name="reference"/>
+    </group>
+    <separator colspan="4" id="levels"/>
+    <group colspan="4" col="6" id="levels">
+        <label name="low_level"/>
+        <field name="low_level"/>
+        <label name="middle_level"/>
+        <field name="middle_level"/>
+        <label name="high_level"/>
+        <field name="high_level"/>
+    </group>
+    <group colspan="4" col="6" id="level_values">
+        <label name="low_level_value"/>
+        <field name="low_level_value"/>
+        <label name="middle_level_value"/>
+        <field name="middle_level_value"/>
+        <label name="high_level_value"/>
+        <field name="high_level_value"/>
+    </group>
+    <group colspan="4" col="6" id="level_coefficient_variations">
+        <label name="low_level_coefficient_variation"/>
+        <field name="low_level_coefficient_variation"/>
+        <label name="middle_level_coefficient_variation"/>
+        <field name="middle_level_coefficient_variation"/>
+        <label name="high_level_coefficient_variation"/>
+        <field name="high_level_coefficient_variation"/>
+    </group>
+    <separator colspan="4" id="level_values"/>
+    <label name="factor"/>
+    <field name="factor"/>
+</form>

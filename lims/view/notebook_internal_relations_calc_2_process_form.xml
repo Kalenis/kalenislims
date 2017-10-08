@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<form>
+    <label name="internal_relation"/>
+    <field name="internal_relation"/>
+    <label name="notebook"/>
+    <field name="notebook"/>
+    <field name="variables" colspan="4"/>
+</form>

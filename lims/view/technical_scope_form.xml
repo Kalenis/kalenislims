@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<form>
+    <label name="party"/>
+    <field name="party"/>
+    <label name="certification_type"/>
+    <field name="certification_type"/>
+    <field name="versions" colspan="4"/>
+</form>

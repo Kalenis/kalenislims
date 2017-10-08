@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<form>
+    <notebook>
+        <page string="General" id="general">
+            <label name="fraction_product"/>
+            <field name="fraction_product"/>
+            <label name="default_notebook_view"/>
+            <field name="default_notebook_view"/>
+            <label name="rm_start_uom"/>
+            <field name="rm_start_uom"/>
+            <label name="invoice_party_relation_type"/>
+            <field name="invoice_party_relation_type"/>
+            <label name="email_qa"/>
+            <field name="email_qa"/>
+            <label name="analysis_product_category"/>
+            <field name="analysis_product_category"/>
+            <label name="entry_confirm_background"/>
+            <field name="entry_confirm_background"/>
+            <field name="microbiology_laboratories" colspan="4"/>
+        </page>
+        <page string="Mail Acknowledgment of Samples Receipt"
+                id="mail_ack_samples" col="6">
+            <separator string="Email body of Acknowledgment of Samples Receipt"
+                colspan="4" id="mail_ack_body"/>
+            <field name="mail_ack_subject" colspan="4"/>
+            <field name="mail_ack_body" colspan="4"/>
+        </page>
+        <page string="Volume Conversion" id="volume_conversion" col="6">
+            <label name="brix_digits"/>
+            <field name="brix_digits"/>
+            <label name="density_digits"/>
+            <field name="density_digits"/>
+            <label name="soluble_solids_digits"/>
+            <field name="soluble_solids_digits"/>
+        </page>
+    </notebook>
+</form>

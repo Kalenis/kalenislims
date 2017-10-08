@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<form>
+    <label name="name"/>
+    <field name="name"/>
+    <label name="formula"/>
+    <field name="formula"/>
+    <field name="variables" colspan="4"/>
+</form>

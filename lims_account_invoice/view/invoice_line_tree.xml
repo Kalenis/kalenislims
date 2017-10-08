@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/tree/field[@name='amount']"
+        position="after">
+        <field name="lims_service_entry"/>
+        <field name="lims_service_sample"/>
+        <field name="lims_service_party"/>
+        <field name="lims_service_results_reports"/>
+    </xpath>
+</data>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<form>
+    <label name="sample"/>
+    <field name="sample"/>
+    <label name="date"/>
+    <field name="date"/>
+    <group id="labels" string="Labels" col="1" colspan="4" yexpand="1" yfill="1">
+        <field name="labels"/>
+    </group>
+</form>

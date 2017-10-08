@@ -1,0 +1,205 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:lims.create_sample.start,location:"
+msgid "Location"
+msgstr "Ubicación"
+
+msgctxt "field:lims.create_sample.start,sampling_datetime:"
+msgid "Sampling date and time"
+msgstr "Fecha y hora del muestreo"
+
+msgctxt "field:lims.create_sample.start,sampling_latitude:"
+msgid "Sampling latitude"
+msgstr "Latitud del muestreo"
+
+msgctxt "field:lims.create_sample.start,sampling_longitude:"
+msgid "Sampling longitude"
+msgstr "Longitud del muestreo"
+
+msgctxt "field:lims.create_sample.start,sampling_point:"
+msgid "Sampling point"
+msgstr "Punto de muestreo"
+
+msgctxt "field:lims.create_sample.start,sampling_responsible:"
+msgid "Sampling responsible"
+msgstr "Responsable del muestreo"
+
+msgctxt "field:lims.project,wtr_comments:"
+msgid "Climatic conditions of the sampling"
+msgstr "Condiciones climáticas del muestreo"
+
+msgctxt "field:lims.sample,location:"
+msgid "Location"
+msgstr "Ubicación"
+
+msgctxt "field:lims.sample,sampling_datetime:"
+msgid "Sampling date and time"
+msgstr "Fecha y hora del muestreo"
+
+msgctxt "field:lims.sample,sampling_latitude:"
+msgid "Sampling latitude"
+msgstr "Latitud del muestreo"
+
+msgctxt "field:lims.sample,sampling_longitude:"
+msgid "Sampling longitude"
+msgstr "Longitud del muestreo"
+
+msgctxt "field:lims.sample,sampling_point:"
+msgid "Sampling point"
+msgstr "Punto de muestreo"
+
+msgctxt "field:lims.sample,sampling_responsible:"
+msgid "Sampling responsible"
+msgstr "Responsable del muestreo"
+
+msgctxt "selection:lims.entry,project_type:"
+msgid "Water sampling"
+msgstr "Muestreo"
+
+msgctxt "selection:lims.project,type:"
+msgid "Water sampling"
+msgstr "Muestreo"
+
+msgctxt "view:lims.create_sample.start:"
+msgid "Water sampling"
+msgstr "Muestreo"
+
+msgctxt "view:lims.project:"
+msgid "Climatic conditions of the sampling"
+msgstr "Condiciones climáticas del muestreo"
+
+msgctxt "view:lims.sample:"
+msgid "Water sampling"
+msgstr "Muestreo"
+
+##
+msgctxt "error:lims.project:"
+msgid "Please, select a \"Water sampling\" Project to print this report"
+msgstr "Por favor, seleccione un proyecto de muestreo para imprimir."
+
+msgctxt "model:ir.action,name:report_wtr_01"
+msgid "WTR 01. WTR-001- Water sampling report"
+msgstr "AGUA 01. AGUA-001- Reporte de muestreo"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Address:"
+msgstr "Dirección:"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Applicant:"
+msgstr "Solicitante:"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Comments:"
+msgstr "Observaciones:"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Contact:"
+msgstr "Contacto:"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Customer:"
+msgstr "Cliente:"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Date:"
+msgstr "Fecha:"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Description of tasks performed at each point:"
+msgstr "Descripción de las tareas realizadas en cada punto:"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Description:"
+msgstr "Descripción:"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Environmental Sampling"
+msgstr "Muestreo ambiental"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Latitude"
+msgstr "Latitud"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Longitude"
+msgstr "Longitud"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Number"
+msgstr "Número"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Numbers of chain of custody:"
+msgstr "Número/s de cadena de custodia:"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "On-site measurements performed:"
+msgstr "Mediciones in situ realizadas:"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Packages"
+msgstr "Envases"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Page:"
+msgstr "Página:"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "People present:"
+msgstr "Personal presente:"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Place and description of sampling points:"
+msgstr "Lugar y descripción de los puntos de toma de muestra:"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Report:"
+msgstr "Informe:"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Results"
+msgstr "Resultados"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Sampling point"
+msgstr "Punto de muestreo"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Technical equipment for sampling:"
+msgstr "Equipo técnico de toma de muestras:"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Type and number of samples taken:"
+msgstr "Tipo y cantidad de muestras tomadas:"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Water Sampling"
+msgstr "Muestreo"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "Weather conditions:"
+msgstr "Condiciones climáticas:"
+
+msgctxt "field:lims.create_sample.start,gps_coordinates:"
+msgid "GPS coordinates"
+msgstr "Coordenadas GPS"
+
+msgctxt "field:lims.sample,gps_coordinates:"
+msgid "GPS coordinates"
+msgstr "Coordenadas GPS"
+
+msgctxt "report:lims.project.water_sampling_report:"
+msgid "GPS Coordinates"
+msgstr "Coordenadas GPS"
+

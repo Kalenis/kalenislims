@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form>
+    <label name="professional"/>
+    <field name="professional"/>
+    <label name="date"/>
+    <field name="date"/>
+</form>

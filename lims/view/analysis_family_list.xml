@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="code"/>
+    <field name="description"/>
+    <field name="party"/>
+    <field name="certificants"/>
+</tree>

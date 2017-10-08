@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="service"/>
+    <field name="create_date2" widget="date"/>
+    <field name="create_date2" widget="time" string="Time"/>
+    <field name="fraction"/>
+    <field name="sample"/>
+    <field name="entry"/>
+    <field name="party"/>
+    <field name="analysis_origin"/>
+    <field name="analysis"/>
+    <field name="laboratory"/>
+    <field name="method"/>
+    <field name="device"/>
+    <field name="report_grouper"/>
+    <field name="confirmation_date"/>
+    <field name="report"/>
+</tree>

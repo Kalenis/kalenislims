@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Sale -->
+
+        <record model="ir.ui.view" id="sale_view_form">
+            <field name="model">sale.sale</field>
+            <field name="inherit" ref="sale.sale_view_form"/>
+            <field name="name">sale_form</field>
+        </record>
+
+<!-- Sale Load Services from Entry Wizard-->
+
+        <record model="ir.ui.view" id="sale_load_services_start_view_form">
+            <field name="model">sale.load_services.start</field>
+            <field name="type">form</field>
+            <field name="name">sale_load_services_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_sale_load_services">
+            <field name="name">Load Services from Entry</field>
+            <field name="wiz_name">sale.load_services</field>
+            <field name="model">sale.sale</field>
+        </record>
+
+    </data>
+</tryton>

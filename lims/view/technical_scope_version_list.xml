@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="technical_scope"/>
+    <field name="number"/>
+    <field name="date"/>
+    <field name="valid"/>
+    <field name="expiration_date"/>
+</tree>

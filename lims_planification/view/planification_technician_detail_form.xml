@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form>
+    <label name="fraction"/>
+    <field name="fraction"/>
+    <label name="analysis_origin"/>
+    <field name="analysis_origin"/>
+    <label name="method"/>
+    <field name="method" colspan="3"/>
+</form>

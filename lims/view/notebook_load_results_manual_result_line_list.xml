@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<tree editable="bottom">
+    <field name="fraction"/>
+    <field name="line"/>
+    <field name="repetition"/>
+    <field name="result_modifier"/>
+    <field name="result"/>
+    <field name="initial_unit"/>
+    <field name="end_date"/>
+    <field name="fraction_type"/>
+    <field name="chromatogram"/>
+    <field name="literal_result"/>
+    <field name="comments"/>
+</tree>

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<form>
+    <separator string="Annulment reason" colspan="4" id="annulment_reason"/>
+    <field name="annulment_reason" colspan="4"/>
+</form>

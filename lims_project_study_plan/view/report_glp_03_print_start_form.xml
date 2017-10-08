@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form>
+    <label name="project"/>
+    <field name="project" colspan="3"/>
+    <label name="report_date_from"/>
+    <field name="report_date_from"/>
+    <label name="report_date_to"/>
+    <field name="report_date_to"/>
+</form>

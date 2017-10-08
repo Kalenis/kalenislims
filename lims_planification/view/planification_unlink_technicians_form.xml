@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<form>
+    <field name="technicians" colspan="4"/>
+    <newline/>
+    <field name="details1" colspan="4"/>
+</form>

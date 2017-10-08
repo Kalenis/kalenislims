@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<form>
+    <label name="code"/>
+    <field name="code"/>
+    <newline/>
+    <label name="start_date"/>
+    <field name="start_date"/>
+    <label name="end_date"/>
+    <field name="end_date"/>
+    <label name="entry_sequence"/>
+    <field name="entry_sequence"/>
+    <label name="sample_sequence"/>
+    <field name="sample_sequence"/>
+    <label name="service_sequence"/>
+    <field name="service_sequence"/>
+    <label name="results_report_sequence"/>
+    <field name="results_report_sequence"/>
+</form>

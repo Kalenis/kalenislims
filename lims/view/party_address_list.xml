@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/tree/field[@name='subdivision']"
+        position="after">
+        <field name="email"/>
+        <field name="invoice_contact"/>
+        <field name="invoice_contact_default"/>
+        <field name="report_contact"/>
+        <field name="report_contact_default"/>
+        <field name="acknowledgment_contact"/>
+        <field name="acknowledgment_contact_default"/>
+    </xpath>
+</data>

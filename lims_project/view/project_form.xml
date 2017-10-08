@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<form>
+    <label name="code"/>
+    <field name="code"/>
+    <label name="description"/>
+    <field name="description"/>
+    <notebook>
+        <page string="General" id="general">
+            <label name="type"/>
+            <field name="type"/>
+            <label name="client"/>
+            <field name="client"/>
+            <label name="start_date"/>
+            <field name="start_date"/>
+            <label name="end_date"/>
+            <field name="end_date"/>
+            <group col="2" colspan="2" id="storage_time">
+                <label name="storage_time"/>
+                <field name="storage_time"/>
+            </group>
+            <label name="external_quality_control"/>
+            <field name="external_quality_control"/>
+            <separator colspan="4" id="project_type_separator"/>
+        </page>
+        <page string="Comments" id="comments">
+            <field name="comments" colspan="4"/>
+        </page>
+    </notebook>
+</form>

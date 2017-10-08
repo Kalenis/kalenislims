@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<form>
+    <label name="code"/>
+    <field name="code"/>
+    <label name="description"/>
+    <field name="description"/>
+    <label name="default_laboratory_professional"/>
+    <field name="default_laboratory_professional"/>
+    <label name="default_signer"/>
+    <field name="default_signer"/>
+    <label name="related_location"/>
+    <field name="related_location"/>
+    <label name="section"/>
+    <field name="section"/>
+    <field name="cv_corrections" colspan="4"/>
+</form>

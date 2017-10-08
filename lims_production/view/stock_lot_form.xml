@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/field[@name='product']"
+        position="after">
+        <label name="category"/>
+        <field name="category" colspan="3"/>
+        <label name="stability"/>
+        <field name="stability"/>
+        <label name="homogeneity"/>
+        <field name="homogeneity"/>
+        <label name="concentration"/>
+        <field name="concentration"/>
+        <newline/>
+        <label name="expiration_date"/>
+        <field name="expiration_date"/>
+        <group colspan="2" id="dates">
+            <label name="reception_date"/>
+            <field name="reception_date"/>
+            <label name="preparation_date"/>
+            <field name="preparation_date"/>
+        </group>
+        <newline/>
+        <label name="common_name"/>
+        <field name="common_name"/>
+        <label name="chemical_name"/>
+        <field name="chemical_name"/>
+        <label name="commercial_name"/>
+        <field name="commercial_name"/>
+        <label name="cas_number"/>
+        <field name="cas_number"/>
+        <label name="commercial_brand"/>
+        <field name="commercial_brand"/>
+        <label name="catalog"/>
+        <field name="catalog"/>
+        <label name="purity_degree"/>
+        <field name="purity_degree"/>
+        <newline/>
+        <label name="technician"/>
+        <field name="technician"/>
+        <label name="solvent"/>
+        <field name="solvent"/>
+    </xpath>
+</data>

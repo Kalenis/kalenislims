@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/tree/field[@name='rounding']"
+        position="after">
+        <field name="maximum_concentration"/>
+        <field name="rsd_horwitz"/>
+    </xpath>
+</data>

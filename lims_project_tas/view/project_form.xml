@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='general']/separator[@id='project_type_separator']"
+        position="after">
+        <group col="4" colspan="4" id="tas">
+            <label name="tas_invoice_party"/>
+            <field name="tas_invoice_party"/>
+            <label name="tas_laboratory"/>
+            <field name="tas_laboratory"/>
+            <label name="tas_type"/>
+            <field name="tas_type"/>
+            <label name="tas_responsible"/>
+            <field name="tas_responsible"/>
+            <separator string="Comments" colspan="4" id="tas_comments"/>
+            <field name="tas_comments" colspan="4"/>
+        </group>
+    </xpath>
+</data>

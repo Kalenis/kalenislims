@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Menu -->
+
+        <!-- Configuration / Projects / TAS Types -->
+        <menuitem parent="lims_project.lims_config_projects"
+            action="act_lims_tas_type_list"
+            id="lims_tas_type_menu" sequence="10"/>
+
+    </data>
+</tryton>

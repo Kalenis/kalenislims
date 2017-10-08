@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<form>
+    <label name="fraction_type"/>
+    <field name="fraction_type" colspan="3"/>
+    <label name="product_type"/>
+    <field name="product_type"/>
+    <label name="matrix"/>
+    <field name="matrix"/>
+    <label name="analysis"/>
+    <field name="analysis"/>
+    <label name="concentration_level"/>
+    <field name="concentration_level"/>
+    <label name="mean"/>
+    <field name="mean"/>
+    <label name="prev_mean"/>
+    <field name="prev_mean"/>
+    <label name="one_sd"/>
+    <field name="one_sd"/>
+    <label name="prev_one_sd"/>
+    <field name="prev_one_sd"/>
+    <label name="two_sd"/>
+    <field name="two_sd"/>
+    <label name="prev_two_sd"/>
+    <field name="prev_two_sd"/>
+    <label name="three_sd"/>
+    <field name="three_sd"/>
+    <label name="prev_three_sd"/>
+    <field name="prev_three_sd"/>
+    <label name="cv"/>
+    <field name="cv"/>
+    <label name="prev_cv"/>
+    <field name="prev_cv"/>
+    <field name="details" colspan="4"/>
+</form>

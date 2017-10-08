@@ -1,0 +1,31 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:lims.project,int_evaluation:"
+msgid "Evaluation"
+msgstr "Evaluación"
+
+msgctxt "field:lims.project,int_itl_party:"
+msgid "ITL Party"
+msgstr "Entidad ITL"
+
+msgctxt "field:lims.project,int_report_reception:"
+msgid "Report reception"
+msgstr "Recepción del informe"
+
+msgctxt "field:lims.project,int_result_date:"
+msgid "Result date"
+msgstr "Fecha del resultado"
+
+msgctxt "selection:lims.entry,project_type:"
+msgid "Interlaboratory"
+msgstr "Interlaboratorio"
+
+msgctxt "selection:lims.project,type:"
+msgid "Interlaboratory"
+msgstr "Interlaboratorio"
+
+msgctxt "view:lims.project:"
+msgid "Evaluation"
+msgstr "Evaluación"

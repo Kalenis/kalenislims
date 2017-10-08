@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="fraction"/>
+    <field name="party_code"/>
+    <field name="product_type"/>
+    <field name="matrix"/>
+    <field name="label"/>
+    <field name="fraction_type"/>
+    <field name="date" widget="date"/>
+    <field name="analysis"/>
+    <field name="repetition"/>
+    <field name="start_date"/>
+    <field name="end_date"/>
+    <field name="laboratory"/>
+    <field name="method"/>
+    <field name="device"/>
+    <field name="service"/>
+    <field name="analysis_origin"/>
+    <field name="urgent"/>
+    <field name="priority"/>
+    <field name="report_date"/>
+    <field name="initial_concentration"/>
+    <field name="final_concentration"/>
+    <field name="initial_unit"/>
+    <field name="final_unit"/>
+    <field name="result_modifier"/>
+    <field name="converted_result_modifier"/>
+    <field name="result"/>
+    <field name="converted_result"/>
+    <field name="detection_limit"/>
+    <field name="quantification_limit"/>
+    <field name="dilution_factor"/>
+    <field name="chromatogram"/>
+    <field name="comments"/>
+    <field name="theoretical_concentration"/>
+    <field name="concentration_level"/>
+    <field name="decimals"/>
+    <field name="backup"/>
+    <field name="reference"/>
+    <field name="literal_result"/>
+    <field name="rm_correction_formula"/>
+    <field name="report"/>
+    <field name="uncertainty"/>
+    <field name="verification"/>
+    <field name="accepted"/>
+    <field name="acceptance_date" widget="date"/>
+    <field name="annulled"/>
+    <field name="annulment_date" widget="date"/>
+    <field name="results_report"/>
+    <field name="planification"/>
+    <field name="confirmation_date"/>
+    <field name="results_estimated_waiting"/>
+    <field name="results_estimated_date"/>
+    <field name="department"/>
+</tree>

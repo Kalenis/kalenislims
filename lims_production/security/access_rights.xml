@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file is part of Tryton. The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+
+<!-- Access Rights on Models -->
+
+        <record model="ir.model.access" id="access_brand">
+            <field name="model" search="[('model', '=', 'lims.brand')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_brand_group_conf_material_admin">
+            <field name="model" search="[('model', '=', 'lims.brand')]"/>
+            <field name="group" ref="group_lims_conf_material_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="access_purity_degree">
+            <field name="model" search="[('model', '=', 'lims.purity.degree')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_purity_degree_group_conf_material_admin">
+            <field name="model" search="[('model', '=', 'lims.purity.degree')]"/>
+            <field name="group" ref="group_lims_conf_material_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="access_family_equivalent">
+            <field name="model" search="[('model', '=', 'lims.family.equivalent')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_family_equivalent_group_conf_material_admin">
+            <field name="model" search="[('model', '=', 'lims.family.equivalent')]"/>
+            <field name="group" ref="group_lims_conf_material_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+<!-- Access Rights on Fields -->
+
+        <record model="ir.model.field.access" id="access_stock_lot_stability_global">
+            <field name="field" search="[('name', '=', 'stability'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access" id="access_stock_lot_stability_group_lims_lot_input_prod">
+            <field name="field" search="[('name', '=', 'stability'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_input_prod"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access" id="access_stock_lot_homogeneity_global">
+            <field name="field" search="[('name', '=', 'homogeneity'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access" id="access_stock_lot_homogeneity_group_lims_lot_input_prod">
+            <field name="field" search="[('name', '=', 'homogeneity'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_input_prod"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access" id="access_stock_lot_concentration_global">
+            <field name="field" search="[('name', '=', 'concentration'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access" id="access_stock_lot_concentration_group_lims_lot_input_prod">
+            <field name="field" search="[('name', '=', 'concentration'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_input_prod"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access" id="access_stock_lot_concentration_group_lims_lot_domestic_use">
+            <field name="field" search="[('name', '=', 'concentration'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_domestic_use"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access" id="access_stock_lot_expiration_date_global">
+            <field name="field" search="[('name', '=', 'expiration_date'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access" id="access_stock_lot_expiration_date_group_lims_lot_input_prod">
+            <field name="field" search="[('name', '=', 'expiration_date'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_input_prod"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access" id="access_stock_lot_expiration_date_group_lims_lot_prod_sale">
+            <field name="field" search="[('name', '=', 'expiration_date'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_prod_sale"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access" id="access_stock_lot_expiration_date_group_lims_lot_domestic_use">
+            <field name="field" search="[('name', '=', 'expiration_date'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_domestic_use"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access" id="access_stock_lot_reception_date_global">
+            <field name="field" search="[('name', '=', 'reception_date'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access" id="access_stock_lot_reception_date_group_lims_lot_input_prod">
+            <field name="field" search="[('name', '=', 'reception_date'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_input_prod"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access" id="access_stock_lot_preparation_date_global">
+            <field name="field" search="[('name', '=', 'preparation_date'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access" id="access_stock_lot_preparation_date_group_lims_lot_domestic_use">
+            <field name="field" search="[('name', '=', 'preparation_date'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_domestic_use"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access" id="access_stock_lot_solvent_global">
+            <field name="field" search="[('name', '=', 'solvent'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access" id="access_stock_lot_solvent_group_lims_lot_domestic_use">
+            <field name="field" search="[('name', '=', 'solvent'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_domestic_use"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access" id="access_stock_lot_technician_global">
+            <field name="field" search="[('name', '=', 'technician'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access" id="access_stock_lot_technician_group_lims_lot_prod_sale">
+            <field name="field" search="[('name', '=', 'technician'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_prod_sale"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access" id="access_stock_lot_technician_group_lims_lot_domestic_use">
+            <field name="field" search="[('name', '=', 'technician'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_domestic_use"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+<!-- Access Rights on Menu -->
+
+        <!-- Configuration / Material -->
+
+        <record model="ir.ui.menu-res.group" id="menu_lims_group_conf_material_readonly">
+            <field name="menu" ref="lims.lims_menu"/>
+            <field name="group" ref="group_lims_conf_material_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_lims_group_conf_material_admin">
+            <field name="menu" ref="lims.lims_menu"/>
+            <field name="group" ref="group_lims_conf_material_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_material_readonly">
+            <field name="menu" ref="lims.lims_config"/>
+            <field name="group" ref="group_lims_conf_material_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_material_admin">
+            <field name="menu" ref="lims.lims_config"/>
+            <field name="group" ref="group_lims_conf_material_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_material_group_conf_material_readonly">
+            <field name="menu" ref="lims_config_material"/>
+            <field name="group" ref="group_lims_conf_material_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_material_group_conf_material_admin">
+            <field name="menu" ref="lims_config_material"/>
+            <field name="group" ref="group_lims_conf_material_admin"/>
+        </record>
+
+    </data>
+</tryton>

@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<form cursor="analysis">
+    <label name="number"/>
+    <field name="number"/>
+    <group col="4" colspan="2" id="fraction">
+        <label name="fraction"/>
+        <field name="fraction"/>
+        <label name="fraction_view"/>
+        <field name="fraction_view"/>
+    </group>
+    <label name="sample"/>
+    <field name="sample"/>
+    <label name="entry"/>
+    <field name="entry"/>
+    <label name="party"/>
+    <field name="party" colspan="3"/>
+    <notebook>
+        <page string="General" id="general">
+            <label name="analysis"/>
+            <field name="analysis"/>
+            <label name="analysis_type"/>
+            <field name="analysis_type"/>
+            <label name="laboratory"/>
+            <field name="laboratory"/>
+            <label name="method"/>
+            <field name="method"/>
+            <label name="device"/>
+            <field name="device"/>
+            <label name="urgent"/>
+            <field name="urgent"/>
+            <label name="priority"/>
+            <field name="priority"/>
+            <label name="report_date"/>
+            <field name="report_date"/>
+            <label name="divide"/>
+            <field name="divide"/>
+            <label name="confirmation_date"/>
+            <field name="confirmation_date"/>
+        </page>
+        <page string="Comments" id="comments">
+            <separator string="Comments" colspan="4" id="comments"/>
+            <field name="comments" colspan="4"/>
+        </page>
+    </notebook>
+    <group colspan="4" id="invisible_fields">
+        <field name="typification_domain"/>
+    </group>
+</form>
