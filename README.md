@@ -13,9 +13,12 @@ You need a working [Tryton](http://www.tryton.org/) system. Follow the [first st
 
 ### Installing
 
-Copy the lims* directories to the trytond/modules directory.
+Execute:
 
-To install a module you can use this command:
+    python setup.py install
+
+
+Once installed you can activate a module with this command:
 
 ```
 trytond-admin -c <config file> -d <database name> -u <module name>
