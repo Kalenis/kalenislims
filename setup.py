@@ -34,7 +34,7 @@ major_version, minor_version, _ = version.split('.', 2)
 major_version = int(major_version)
 minor_version = int(minor_version)
 
-requires = ['pytz']
+requires = ['pytz', 'xlrd', 'xlutils']
 packages = []
 package_dir = {}
 package_data = {}
@@ -59,14 +59,24 @@ for name in os.listdir('.'):
     package = 'trytond.modules.%s' % name
     package_dir[package] = os.path.join('.', name)
     packages.append(package)
-    module_entry_points.append('%s = %s' % (name, package))
     if os.path.isdir(os.path.join(name, 'tests')):
         packages.append(package + '.tests')
-    data = []
-    for data_pattern in (info.get('xml', []) + ['tryton.cfg', 'view/*.xml',
-                'locale/*.po', '*.odt', 'icons/*.svg', 'tests/*.rst']):
-        data.append(data_pattern)
-    package_data[package] = data
+    module_entry_points.append('%s = %s' % (name, package))
+    for suffix in [None, 'report', 'wizard']:
+        data = []
+        if not suffix:
+            for data_pattern in (info.get('xml', []) + ['tryton.cfg']):
+                data.append(data_pattern)
+            subpackage = package
+        elif os.path.isdir(os.path.join(name, suffix)):
+            subpackage = package + '.' + suffix
+            package_dir[subpackage] = os.path.join(name, suffix)
+            packages.append(subpackage)
+        for data_pattern in (info.get('xml', []) + ['view/*.xml',
+                    'locale/*.po', '*.odt', 'icons/*.svg', 'tests/*.rst']):
+            data.append(data_pattern)
+        if data:
+            package_data[subpackage] = data
 requires.append(get_require_version('trytond'))
 
 tests_require = []
