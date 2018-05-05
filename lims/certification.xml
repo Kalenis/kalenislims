@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Certification Type -->
+
+        <record model="ir.ui.view" id="lims_certification_type_view_form">
+            <field name="model">lims.certification.type</field>
+            <field name="type">form</field>
+            <field name="name">certification_type_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_certification_type_view_list">
+            <field name="model">lims.certification.type</field>
+            <field name="type">tree</field>
+            <field name="name">certification_type_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_certification_type_list">
+            <field name="name">Certification Type</field>
+            <field name="res_model">lims.certification.type</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_certification_type_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_certification_type_view_list"/>
+            <field name="act_window" ref="act_lims_certification_type_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_certification_type_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_certification_type_view_form"/>
+            <field name="act_window" ref="act_lims_certification_type_list"/>
+        </record>
+
+<!-- Technical Scope -->
+
+        <record model="ir.ui.view" id="lims_technical_scope_view_form">
+            <field name="model">lims.technical.scope</field>
+            <field name="type">form</field>
+            <field name="name">technical_scope_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_technical_scope_view_list">
+            <field name="model">lims.technical.scope</field>
+            <field name="type">tree</field>
+            <field name="name">technical_scope_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_technical_scope_list">
+            <field name="name">Technical Scopes</field>
+            <field name="res_model">lims.technical.scope</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_technical_scope_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_technical_scope_view_list"/>
+            <field name="act_window" ref="act_lims_technical_scope_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_technical_scope_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_technical_scope_view_form"/>
+            <field name="act_window" ref="act_lims_technical_scope_list"/>
+        </record>
+
+<!-- Technical Scope Version -->
+
+        <record model="ir.ui.view" id="lims_technical_scope_version_view_form">
+            <field name="model">lims.technical.scope.version</field>
+            <field name="type">form</field>
+            <field name="name">technical_scope_version_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_technical_scope_version_view_list">
+            <field name="model">lims.technical.scope.version</field>
+            <field name="type">tree</field>
+            <field name="name">technical_scope_version_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_technical_scope_version_list">
+            <field name="name">Technical Scope Versions</field>
+            <field name="res_model">lims.technical.scope.version</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_technical_scope_version_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_technical_scope_version_view_list"/>
+            <field name="act_window" ref="act_lims_technical_scope_version_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_technical_scope_version_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_technical_scope_version_view_form"/>
+            <field name="act_window" ref="act_lims_technical_scope_version_list"/>
+        </record>
+
+        <record model="ir.model.button" id="technical_scope_version_open_typifications_button">
+            <field name="name">open_typifications</field>
+            <field name="model" search="[('model', '=', 'lims.technical.scope.version')]"/>
+        </record>
+        <record model="ir.model.button-res.group" id="technical_scope_version_open_typifications_button_group_lims_conf_certification_admin">
+            <field name="button" ref="technical_scope_version_open_typifications_button"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+        </record>
+
+        <record model="ir.model.button" id="technical_scope_version_add_typifications_button">
+            <field name="name">add_typifications</field>
+            <field name="model" search="[('model', '=', 'lims.technical.scope.version')]"/>
+        </record>
+        <record model="ir.model.button-res.group" id="technical_scope_version_add_typifications_button_group_lims_conf_certification_admin">
+            <field name="button" ref="technical_scope_version_add_typifications_button"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+        </record>
+
+        <record model="ir.model.button" id="technical_scope_version_remove_typifications_button">
+            <field name="name">remove_typifications</field>
+            <field name="model" search="[('model', '=', 'lims.technical.scope.version')]"/>
+        </record>
+        <record model="ir.model.button-res.group" id="technical_scope_version_remove_typifications_button_group_lims_conf_certification_admin">
+            <field name="button" ref="technical_scope_version_remove_typifications_button"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+        </record>
+
+<!-- Analysis Family -->
+
+        <record model="ir.ui.view" id="lims_analysis_family_view_form">
+            <field name="model">lims.analysis.family</field>
+            <field name="type">form</field>
+            <field name="name">analysis_family_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_analysis_family_view_list">
+            <field name="model">lims.analysis.family</field>
+            <field name="type">tree</field>
+            <field name="name">analysis_family_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_analysis_family_list">
+            <field name="name">Analysis Families</field>
+            <field name="res_model">lims.analysis.family</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_analysis_family_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_analysis_family_view_list"/>
+            <field name="act_window" ref="act_lims_analysis_family_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_analysis_family_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_analysis_family_view_form"/>
+            <field name="act_window" ref="act_lims_analysis_family_list"/>
+        </record>
+
+<!-- Analysis Family Certificant -->
+
+        <record model="ir.ui.view" id="lims_analysis_family_certificant_view_form">
+            <field name="model">lims.analysis.family.certificant</field>
+            <field name="type">form</field>
+            <field name="name">analysis_family_certificant_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_analysis_family_certificant_view_list">
+            <field name="model">lims.analysis.family.certificant</field>
+            <field name="type">tree</field>
+            <field name="name">analysis_family_certificant_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_analysis_family_certificant_list">
+            <field name="name">Certificant Party - Product Type - Matrix</field>
+            <field name="res_model">lims.analysis.family.certificant</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_analysis_family_certificant_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_analysis_family_certificant_view_list"/>
+            <field name="act_window" ref="act_lims_analysis_family_certificant_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_analysis_family_certificant_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_analysis_family_certificant_view_form"/>
+            <field name="act_window" ref="act_lims_analysis_family_certificant_list"/>
+        </record>
+
+<!-- Wizard Duplicate Analysis Family -->
+
+        <record model="ir.ui.view" id="lims_duplicate_analysis_family_start_view_form">
+            <field name="model">lims.analysis.family.duplicate.start</field>
+            <field name="type">form</field>
+            <field name="name">analysis_family_duplicate_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_duplicate_analysis_family">
+            <field name="name">Duplicate Analysis Family</field>
+            <field name="wiz_name">lims.analysis.family.duplicate</field>
+        </record>
+        <record model="ir.action.keyword" id="lims_duplicate_analysis_family_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.analysis.family,-1</field>
+            <field name="action" ref="wiz_lims_duplicate_analysis_family"/>
+        </record>
+
+        <!-- Configuration / Certification -->
+        <menuitem name="Certification" parent="lims_config"
+            id="lims_config_certification" sequence="20"/>
+        <menuitem parent="lims_config_certification" action="act_lims_certification_type_list"
+            id="lims_certification_type_list_menu" sequence="10"/>
+        <menuitem parent="lims_config_certification" action="act_lims_analysis_family_list"
+            id="lims_analysis_family_menu" sequence="20"/>
+        <menuitem parent="lims_config_certification" action="act_lims_technical_scope_list"
+            id="lims_technical_scope_menu" sequence="30"/>
+        <menuitem parent="lims_technical_scope_menu" action="act_lims_technical_scope_version_list"
+            id="lims_technical_scope_version_menu" sequence="10"/>
+
+        <record model="ir.model.access" id="access_certification_type">
+            <field name="model" search="[('model', '=', 'lims.certification.type')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_certification_type_group_conf_certification_admin">
+            <field name="model" search="[('model', '=', 'lims.certification.type')]"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="access_analysis_family">
+            <field name="model" search="[('model', '=', 'lims.analysis.family')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_analysis_family_group_conf_certification_admin">
+            <field name="model" search="[('model', '=', 'lims.analysis.family')]"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="access_technical_scope">
+            <field name="model" search="[('model', '=', 'lims.technical.scope')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_technical_scope_group_conf_certification_admin">
+            <field name="model" search="[('model', '=', 'lims.technical.scope')]"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="access_technical_scope_version">
+            <field name="model" search="[('model', '=', 'lims.technical.scope.version')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_technical_scope_version_group_conf_certification_admin">
+            <field name="model" search="[('model', '=', 'lims.technical.scope.version')]"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_lims_group_conf_certification_readonly">
+            <field name="menu" ref="lims_menu"/>
+            <field name="group" ref="group_lims_conf_certification_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_lims_group_conf_certification_admin">
+            <field name="menu" ref="lims_menu"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_certification_readonly">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_certification_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_certification_admin">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_certification_group_conf_certification_readonly">
+            <field name="menu" ref="lims_config_certification"/>
+            <field name="group" ref="group_lims_conf_certification_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_certification_group_conf_certification_admin">
+            <field name="menu" ref="lims_config_certification"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+        </record>
+
+    </data>
+</tryton>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Location -->
+
+        <record model="ir.ui.view" id="lims_location_view_form">
+            <field name="model">stock.location</field>
+            <field name="inherit" ref="stock.location_view_form"/>
+            <field name="name">stock_location_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_location_view_list">
+            <field name="model">stock.location</field>
+            <field name="inherit" ref="stock.location_view_list"/>
+            <field name="name">stock_location_list</field>
+        </record>
+
+<!-- Move -->
+
+        <record model="ir.ui.view" id="lims_move_view_form">
+            <field name="model">stock.move</field>
+            <field name="inherit" ref="stock.move_view_form"/>
+            <field name="name">stock_move_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_move_view_list">
+            <field name="model">stock.move</field>
+            <field name="inherit" ref="stock.move_view_tree"/>
+            <field name="name">stock_move_list</field>
+        </record>
+
+<!-- Shipment -->
+
+        <record model="ir.ui.view" id="lims_shipment_in_view_form">
+            <field name="model">stock.shipment.in</field>
+            <field name="inherit" ref="stock.shipment_in_view_form"/>
+            <field name="name">stock_shipment_in_form</field>
+        </record>
+
+    </data>
+</tryton>

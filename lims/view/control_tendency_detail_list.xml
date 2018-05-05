@@ -4,6 +4,6 @@
     <field name="fraction"/>
     <field name="device"/>
     <field name="result"/>
-    <field name="rules2"/>
+    <field name="rules2" icon="icon"/>
     <field name="rule" tree_invisible="1"/>
 </tree>

@@ -2,15 +2,9 @@
 # This file is part of lims_project_water module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-import sys
-
 from trytond.report import Report
 from trytond.pool import Pool
 from trytond.transaction import Transaction
-
-reload(sys)
-sys.setdefaultencoding('utf8')
-
 
 __all__ = ['LimsProjectWaterSampling']
 

@@ -7,10 +7,6 @@
         <label name="email"/>
         <field name="email"/>
         <group col="12" colspan="6" id="entry_contacts">
-            <label name="invoice_contact"/>
-            <field name="invoice_contact"/>
-            <label name="invoice_contact_default"/>
-            <field name="invoice_contact_default"/>
             <label name="report_contact"/>
             <field name="report_contact"/>
             <label name="report_contact_default"/>
@@ -19,6 +15,10 @@
             <field name="acknowledgment_contact"/>
             <label name="acknowledgment_contact_default"/>
             <field name="acknowledgment_contact_default"/>
+            <label name="invoice_contact"/>
+            <field name="invoice_contact"/>
+            <label name="invoice_contact_default"/>
+            <field name="invoice_contact_default"/>
         </group>
     </xpath>
 </data>

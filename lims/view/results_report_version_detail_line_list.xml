@@ -2,6 +2,8 @@
 <tree>
     <field name="notebook_line" tree_invisible="1"/>
     <field name="party"/>
+    <field name="product_type"/>
+    <field name="matrix"/>
     <field name="notebook"/>
     <field name="analysis_origin"/>
     <field name="analysis"/>

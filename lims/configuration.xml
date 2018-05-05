@@ -1,0 +1,260 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+        <record model="ir.ui.icon" id="configuration_icon">
+            <field name="name">lims-configuration</field>
+            <field name="path">icons/configuration.svg</field>
+        </record>
+
+<!-- Configuration -->
+
+        <record model="ir.ui.view" id="lims_configuration_view">
+            <field name="model">lims.configuration</field>
+            <field name="type">form</field>
+            <field name="name">configuration_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_configuration">
+            <field name="name">Configuration</field>
+            <field name="res_model">lims.configuration</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_configuration_view">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_configuration_view"/>
+            <field name="act_window" ref="act_lims_configuration"/>
+        </record>
+
+<!-- Work Year -->
+
+        <record model="ir.ui.view" id="lims_workyear_view_form">
+            <field name="model">lims.lab.workyear</field>
+            <field name="type">form</field>
+            <field name="name">workyear_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_workyear_view_list">
+            <field name="model">lims.lab.workyear</field>
+            <field name="type">tree</field>
+            <field name="name">workyear_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_workyear_list">
+            <field name="name">Work Years</field>
+            <field name="res_model">lims.lab.workyear</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_workyear_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_workyear_view_list"/>
+            <field name="act_window" ref="act_lims_workyear_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_workyear_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_workyear_view_form"/>
+            <field name="act_window" ref="act_lims_workyear_list"/>
+        </record>
+
+<!-- Laboratory Notebook View -->
+
+        <record model="ir.ui.view" id="lims_notebook_views_view_form">
+            <field name="model">lims.notebook.view</field>
+            <field name="type">form</field>
+            <field name="name">notebook_view_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_notebook_views_view_list">
+            <field name="model">lims.notebook.view</field>
+            <field name="type">tree</field>
+            <field name="name">notebook_view_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_notebook_views_list">
+            <field name="name">Laboratory Notebook Views</field>
+            <field name="res_model">lims.notebook.view</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_notebook_views_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_notebook_views_view_list"/>
+            <field name="act_window" ref="act_lims_notebook_views_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_notebook_views_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_notebook_views_view_form"/>
+            <field name="act_window" ref="act_lims_notebook_views_list"/>
+        </record>
+
+<!-- Laboratory Notebook View Column -->
+
+        <record model="ir.ui.view" id="lims_notebook_view_column_view_form">
+            <field name="model">lims.notebook.view.column</field>
+            <field name="type">form</field>
+            <field name="name">notebook_view_column_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_notebook_view_column_view_list">
+            <field name="model">lims.notebook.view.column</field>
+            <field name="type">tree</field>
+            <field name="name">notebook_view_column_list</field>
+        </record>
+
+<!-- Printer -->
+
+        <record model="ir.ui.view" id="lims_printer_view_form">
+            <field name="model">lims.printer</field>
+            <field name="type">form</field>
+            <field name="name">printer_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_printer_view_list">
+            <field name="model">lims.printer</field>
+            <field name="type">tree</field>
+            <field name="name">printer_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_printer_list">
+            <field name="name">Printers</field>
+            <field name="res_model">lims.printer</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_printer_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_printer_view_list"/>
+            <field name="act_window" ref="act_printer_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_printer_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_printer_view_form"/>
+            <field name="act_window" ref="act_printer_list"/>
+        </record>
+
+        <!-- Configuration -->
+        <menuitem name="Configuration" parent="lims_menu"
+            id="lims_config" sequence="10" icon="lims-configuration"/>
+
+        <!-- Configuration / Base -->
+        <menuitem name="Base" parent="lims_config"
+            id="lims_config_base" sequence="10"/>
+        <menuitem parent="lims_config_base" action="act_lims_configuration"
+            id="lims_configuration_menu" sequence="10"/>
+        <menuitem parent="lims_config_base" action="act_lims_workyear_list"
+            id="lims_workyear_menu" sequence="20"/>
+        <menuitem parent="lims_config_base" action="act_printer_list"
+            id="lims_printer_menu" sequence="30"/>
+
+        <menuitem name="Base Tables" parent="lims_config"
+            id="lims_config_base_tables" sequence="70"/>
+
+        <menuitem name="Laboratory" parent="lims_config"
+            id="lims_config_laboratory" sequence="40"/>
+        <menuitem parent="lims_config_laboratory" action="act_lims_laboratory_list"
+            id="lims_laboratory_menu" sequence="10"/>
+        <menuitem parent="lims_config_laboratory" action="act_lims_laboratory_professional_list"
+            id="lims_laboratory_professional_menu" sequence="20"/>
+        <menuitem parent="lims_config_laboratory" action="act_lims_notebook_views_list"
+            id="lims_notebook_views_menu" sequence="30"/>
+        <menuitem parent="lims_config_laboratory" action="act_lims_lab_device_type_list"
+            id="lims_lab_device_type_menu" sequence="40"/>
+        <menuitem parent="lims_config_laboratory" action="act_lims_lab_device_list"
+            id="lims_lab_device_menu" sequence="50"/>
+
+        <record model="ir.model.access" id="access_configuration">
+            <field name="model" search="[('model', '=', 'lims.configuration')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_configuration_group_conf_base_admin">
+            <field name="model" search="[('model', '=', 'lims.configuration')]"/>
+            <field name="group" ref="group_lims_conf_base_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="access_workyear">
+            <field name="model" search="[('model', '=', 'lims.lab.workyear')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_workyear_group_conf_base_admin">
+            <field name="model" search="[('model', '=', 'lims.lab.workyear')]"/>
+            <field name="group" ref="group_lims_conf_base_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_lims_group_conf_base_readonly">
+            <field name="menu" ref="lims_menu"/>
+            <field name="group" ref="group_lims_conf_base_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_lims_group_conf_base_admin">
+            <field name="menu" ref="lims_menu"/>
+            <field name="group" ref="group_lims_conf_base_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_base_readonly">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_base_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_base_admin">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_base_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_base_group_conf_base_readonly">
+            <field name="menu" ref="lims_config_base"/>
+            <field name="group" ref="group_lims_conf_base_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_base_group_conf_base_admin">
+            <field name="menu" ref="lims_config_base"/>
+            <field name="group" ref="group_lims_conf_base_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_lims_group_conf_base_tables_readonly">
+            <field name="menu" ref="lims_menu"/>
+            <field name="group" ref="group_lims_conf_base_tables_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_lims_group_conf_base_tables_admin">
+            <field name="menu" ref="lims_menu"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_base_tables_readonly">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_base_tables_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_base_tables_admin">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_base_tables_readonly">
+            <field name="menu" ref="lims_config_base_tables"/>
+            <field name="group" ref="group_lims_conf_base_tables_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_base_tables_admin">
+            <field name="menu" ref="lims_config_base_tables"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_laboratory_readonly">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_laboratory_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_laboratory_admin">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_laboratory_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_laboratory_readonly">
+            <field name="menu" ref="lims_config_laboratory"/>
+            <field name="group" ref="group_lims_conf_laboratory_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_laboratory_admin">
+            <field name="menu" ref="lims_config_laboratory"/>
+            <field name="group" ref="group_lims_conf_laboratory_admin"/>
+        </record>
+
+    </data>
+</tryton>

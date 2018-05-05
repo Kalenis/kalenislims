@@ -6,6 +6,7 @@ from trytond.pool import Pool
 from .configuration import *
 from .party import *
 from .invoice import *
+from .stock import *
 from .lims import *
 from wizard import *
 
@@ -14,9 +15,11 @@ def register():
     Pool.register(
         LimsConfiguration,
         Party,
+        Address,
         InvoiceContact,
         Invoice,
         InvoiceLine,
+        InventoryLine,
         LimsFractionType,
         LimsEntry,
         LimsFraction,

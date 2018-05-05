@@ -116,12 +116,19 @@ class LimsCreateSample:
         samples_defaults = super(LimsCreateSample,
             self)._get_samples_defaults(entry_id)
 
-        sampling_responsible_id = (self.start.sampling_responsible.id if
-            self.start.sampling_responsible else None)
+        sampling_point = (hasattr(self.start, 'sampling_point') and
+            getattr(self.start, 'sampling_point') or None)
+        gps_coordinates = (hasattr(self.start, 'gps_coordinates') and
+            getattr(self.start, 'gps_coordinates') or None)
+        sampling_responsible_id = None
+        if (hasattr(self.start, 'sampling_responsible')
+                and getattr(self.start, 'sampling_responsible')):
+            sampling_responsible_id = getattr(self.start,
+                'sampling_responsible').id
 
         for sample_defaults in samples_defaults:
-            sample_defaults['sampling_point'] = self.start.sampling_point
-            sample_defaults['gps_coordinates'] = self.start.gps_coordinates
+            sample_defaults['sampling_point'] = sampling_point
+            sample_defaults['gps_coordinates'] = gps_coordinates
             sample_defaults['sampling_responsible'] = sampling_responsible_id
 
         return samples_defaults

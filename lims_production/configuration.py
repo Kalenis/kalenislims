@@ -50,26 +50,6 @@ class ProductionConfigurationLotSequence(ModelSQL, CompanyValueMixin):
             ])
 
     @classmethod
-    def __register__(cls, module_name):
-        TableHandler = backend.get('TableHandler')
-        exist = TableHandler.table_exist(cls._table)
-
-        super(ProductionConfigurationLotSequence,
-            cls).__register__(module_name)
-
-        if not exist:
-            cls._migrate_property([], [], [])
-
-    @classmethod
-    def _migrate_property(cls, field_names, value_names, fields):
-        field_names.append('lot_sequence')
-        value_names.append('lot_sequence')
-        fields.append('company')
-        migrate_property(
-            'production.configuration', field_names, cls, value_names,
-            fields=fields)
-
-    @classmethod
     def default_lot_sequence(cls):
         pool = Pool()
         ModelData = pool.get('ir.model.data')

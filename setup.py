@@ -29,12 +29,12 @@ def get_require_version(name):
     return require
 
 
-version = '4.4.0'
+version = '4.8.0'
 major_version, minor_version, _ = version.split('.', 2)
 major_version = int(major_version)
 minor_version = int(minor_version)
 
-requires = ['pytz', 'xlrd', 'xlutils']
+requires = ['pytz', 'xlrd', 'xlutils', 'pycups']
 packages = []
 package_dir = {}
 package_data = {}
@@ -73,7 +73,8 @@ for name in os.listdir('.'):
             package_dir[subpackage] = os.path.join(name, suffix)
             packages.append(subpackage)
         for data_pattern in (info.get('xml', []) + ['view/*.xml',
-                    'locale/*.po', '*.odt', 'icons/*.svg', 'tests/*.rst']):
+                    'locale/*.po', '*.odt', 'icons/*.svg', 'tests/*.rst',
+                    '*.cfg']):
             data.append(data_pattern)
         if data:
             package_data[subpackage] = data
@@ -87,11 +88,11 @@ if minor_version % 2:
 
 setup(name='kalenis_lims',
     version=version,
-    description='Kalensis LIMS & ERP',
+    description='Kalenis LIMS & ERP',
     long_description=read('README.md'),
     author='',
-    author_email='info@kalensis.com',
-    url='http://www.kalensis.com/',
+    author_email='info@kalenislims.com',
+    url='http://www.kalenislims.com/',
     download_url='https://bitbucket.org/kalenis/kalenislims',
     keywords='',
     package_dir=package_dir,

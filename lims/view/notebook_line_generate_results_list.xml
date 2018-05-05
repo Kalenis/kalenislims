@@ -21,4 +21,6 @@
     <field name="final_unit"/>
     <field name="literal_result"/>
     <field name="comments"/>
+    <field name="product_type"/>
+    <field name="matrix"/>
 </tree>

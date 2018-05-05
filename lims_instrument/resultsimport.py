@@ -6,7 +6,6 @@ import traceback
 
 from trytond.model import ModelView, ModelSQL, fields, Unique
 from trytond.pool import PoolMeta
-from trytond.pyson import Eval, Bool, If
 
 __all__ = ['LimsNotebookLine', 'LimsResultsImport']
 
@@ -23,11 +22,6 @@ class LimsNotebookLine:
     imported_device = fields.Many2One('lims.lab.device', 'Device')
     imported_dilution_factor = fields.Float('Dilution factor')
     imported_rm_correction_formula = fields.Char('RM Correction Formula')
-
-    @classmethod
-    def view_attributes(cls):
-        return [('/tree', 'colors',
-                If(Bool(Eval('report_date')), 'red', 'black'))]
 
 
 class LimsResultsImport(ModelSQL, ModelView):

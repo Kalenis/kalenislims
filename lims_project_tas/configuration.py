@@ -40,24 +40,3 @@ class LimsLabWorkYearSequence:
             ('company', 'in', [Eval('company', -1), None]),
             ('code', '=', 'lims.project'),
             ])
-
-    @classmethod
-    def __register__(cls, module_name):
-        TableHandler = backend.get('TableHandler')
-        exist = TableHandler.table_exist(cls._table)
-        if exist:
-            table = TableHandler(cls, module_name)
-            exist &= table.column_exist('project_tas_sequence')
-
-        super(LimsLabWorkYearSequence, cls).__register__(module_name)
-
-        if not exist:
-            # Re-migration
-            cls._migrate_property([], [], [])
-
-    @classmethod
-    def _migrate_property(cls, field_names, value_names, fields):
-        field_names.append('project_tas_sequence')
-        value_names.append('project_tas_sequence')
-        super(LimsLabWorkYearSequence, cls)._migrate_property(
-            field_names, value_names, fields)

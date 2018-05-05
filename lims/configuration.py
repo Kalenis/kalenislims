@@ -3,30 +3,23 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond import backend
 from trytond.model import ModelSingleton, ModelView, ModelSQL, fields
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
-from trytond.tools.multivalue import migrate_property
 from trytond.modules.company.model import (
     CompanyMultiValueMixin, CompanyValueMixin)
 
-__all__ = ['LimsLaboratory2', 'LimsNotebookView', 'LimsNotebookViewColumn',
-    'LimsUserRole', 'LimsUserRoleGroup', 'LimsPrinter', 'User',
-    'LimsUserLaboratory', 'LimsConfiguration', 'LimsConfigurationLaboratory',
-    'LimsLabWorkYear', 'LimsLabWorkYearSequence']
+__all__ = ['NotebookView', 'NotebookViewColumn', 'UserRole', 'UserRoleGroup',
+    'Printer', 'User', 'UserLaboratory', 'Configuration',
+    'ConfigurationLaboratory', 'ConfigurationSequence',
+    'ConfigurationProductCategory', 'LabWorkYear', 'LabWorkYearSequence']
 sequence_names = [
     'entry_sequence', 'sample_sequence', 'service_sequence',
     'results_report_sequence']
 
 
-class LimsLaboratory2(ModelSQL):
-    'Laboratory'
-    __name__ = 'lims.laboratory'
-
-
-class LimsNotebookView(ModelSQL, ModelView):
+class NotebookView(ModelSQL, ModelView):
     'Laboratory Notebook View'
     __name__ = 'lims.notebook.view'
 
@@ -35,7 +28,7 @@ class LimsNotebookView(ModelSQL, ModelView):
         required=True)
 
 
-class LimsNotebookViewColumn(ModelSQL, ModelView):
+class NotebookViewColumn(ModelSQL, ModelView):
     'Laboratory Notebook View Column'
     __name__ = 'lims.notebook.view.column'
 
@@ -47,11 +40,11 @@ class LimsNotebookViewColumn(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(LimsNotebookViewColumn, cls).__setup__()
+        super(NotebookViewColumn, cls).__setup__()
         cls._order.insert(0, ('sequence', 'ASC'))
 
 
-class LimsUserRole(ModelSQL, ModelView):
+class UserRole(ModelSQL, ModelView):
     'User Role'
     __name__ = 'lims.user.role'
 
@@ -60,7 +53,7 @@ class LimsUserRole(ModelSQL, ModelView):
         'role', 'group', 'Groups')
 
 
-class LimsUserRoleGroup(ModelSQL):
+class UserRoleGroup(ModelSQL):
     'User Role - Group'
     __name__ = 'lims.user.role-res.group'
 
@@ -71,7 +64,7 @@ class LimsUserRoleGroup(ModelSQL):
 
     @classmethod
     def create(cls, vlist):
-        role_groups = super(LimsUserRoleGroup, cls).create(vlist)
+        role_groups = super(UserRoleGroup, cls).create(vlist)
         cls._create_user_groups(role_groups)
         return role_groups
 
@@ -98,7 +91,7 @@ class LimsUserRoleGroup(ModelSQL):
     @classmethod
     def delete(cls, role_groups):
         cls._delete_user_groups(role_groups)
-        super(LimsUserRoleGroup, cls).delete(role_groups)
+        super(UserRoleGroup, cls).delete(role_groups)
 
     @classmethod
     def _delete_user_groups(cls, role_groups):
@@ -119,7 +112,7 @@ class LimsUserRoleGroup(ModelSQL):
                     UserGroup.delete(user_groups)
 
 
-class LimsPrinter(ModelSQL, ModelView):
+class Printer(ModelSQL, ModelView):
     'Printer'
     __name__ = 'lims.printer'
 
@@ -137,6 +130,7 @@ class User:
     laboratory = fields.Many2One('lims.laboratory', 'Main Laboratory',
         domain=[('id', 'in', Eval('laboratories'))], depends=['laboratories'])
     printer = fields.Many2One('lims.printer', 'Printer')
+    departments = fields.One2Many('user.department', 'user', 'Departments')
 
     @classmethod
     def __setup__(cls):
@@ -222,7 +216,7 @@ class User:
         return status
 
 
-class LimsUserLaboratory(ModelSQL):
+class UserLaboratory(ModelSQL):
     'User - Laboratory'
     __name__ = 'lims.user-laboratory'
 
@@ -232,7 +226,8 @@ class LimsUserLaboratory(ModelSQL):
         ondelete='CASCADE', select=True, required=True)
 
 
-class LimsConfiguration(ModelSingleton, ModelSQL, ModelView):
+class Configuration(ModelSingleton, ModelSQL, ModelView,
+        CompanyMultiValueMixin):
     'Configuration'
     __name__ = 'lims.configuration'
 
@@ -253,13 +248,46 @@ class LimsConfiguration(ModelSingleton, ModelSQL, ModelView):
     soluble_solids_digits = fields.Integer('Soluble solids digits')
     rm_start_uom = fields.Many2One('product.uom', 'RM Start UoM',
         domain=[('category.lims_only_available', '=', True)])
-    invoice_party_relation_type = fields.Many2One('party.relation.type',
-        'Invoice Party Relation Type')
     email_qa = fields.Char('QA Email')
     analysis_product_category = fields.Many2One('product.category',
         'Analysis Product Category', states={'required': True})
     entry_confirm_background = fields.Boolean(
         'Confirm Entries in Background')
+    planification_sequence = fields.MultiValue(fields.Many2One(
+        'ir.sequence', 'Planification Sequence', required=True,
+        domain=[
+            ('company', 'in',
+                [Eval('context', {}).get('company', -1), None]),
+            ('code', '=', 'lims.planification'),
+            ]))
+    mcl_fraction_type = fields.Many2One('lims.fraction.type',
+        'MCL fraction type')
+    con_fraction_type = fields.Many2One('lims.fraction.type',
+        'Control fraction type')
+    bmz_fraction_type = fields.Many2One('lims.fraction.type',
+        'BMZ fraction type')
+    rm_fraction_type = fields.Many2One('lims.fraction.type',
+        'RM fraction type')
+    bre_fraction_type = fields.Many2One('lims.fraction.type',
+        'BRE fraction type')
+    mrt_fraction_type = fields.Many2One('lims.fraction.type',
+        'MRT fraction type')
+    coi_fraction_type = fields.Many2One('lims.fraction.type',
+        'COI fraction type')
+    mrc_fraction_type = fields.Many2One('lims.fraction.type',
+        'MRC fraction type')
+    sla_fraction_type = fields.Many2One('lims.fraction.type',
+        'SLA fraction type')
+    itc_fraction_type = fields.Many2One('lims.fraction.type',
+        'ITC fraction type')
+    itl_fraction_type = fields.Many2One('lims.fraction.type',
+        'ITL fraction type')
+    reagents = fields.Many2Many('lims.configuration-product.category',
+        'configuration', 'category', 'Reagents')
+    planification_process_background = fields.Boolean(
+        'Process Planifications in Background')
+    invoice_party_relation_type = fields.Many2One('party.relation.type',
+        'Invoice Party Relation Type')
 
     @staticmethod
     def default_brix_digits():
@@ -277,8 +305,45 @@ class LimsConfiguration(ModelSingleton, ModelSQL, ModelView):
     def default_entry_confirm_background():
         return False
 
+    @classmethod
+    def multivalue_model(cls, field):
+        pool = Pool()
+        if field == 'planification_sequence':
+            return pool.get('lims.configuration.sequence')
+        return super(Configuration, cls).multivalue_model(field)
 
-class LimsConfigurationLaboratory(ModelSQL):
+    @classmethod
+    def default_planification_sequence(cls, **pattern):
+        return cls.multivalue_model(
+            'planification_sequence').default_planification_sequence()
+
+    @staticmethod
+    def default_planification_process_background():
+        return False
+
+    def get_reagents(self):
+        res = []
+        if self.reagents:
+            for r in self.reagents:
+                res.append(r.id)
+                res.extend(self.get_reagent_childs(r.id))
+        return res
+
+    def get_reagent_childs(self, reagent_id):
+        Category = Pool().get('product.category')
+
+        res = []
+        categories = Category.search([
+            ('parent', '=', reagent_id),
+            ])
+        if categories:
+            for c in categories:
+                res.append(c.id)
+                res.extend(self.get_reagent_childs(c.id))
+        return res
+
+
+class ConfigurationLaboratory(ModelSQL):
     'Configuration - Laboratory'
     __name__ = 'lims.configuration-laboratory'
 
@@ -288,7 +353,37 @@ class LimsConfigurationLaboratory(ModelSQL):
         ondelete='CASCADE', select=True, required=True)
 
 
-class LimsLabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
+class ConfigurationSequence(ModelSQL, CompanyValueMixin):
+    'Configuration Sequence'
+    __name__ = 'lims.configuration.sequence'
+
+    planification_sequence = fields.Many2One('ir.sequence',
+        'Planification Sequence', depends=['company'], domain=[
+            ('company', 'in', [Eval('company', -1), None]),
+            ('code', '=', 'lims.planification'),
+            ])
+
+    @classmethod
+    def default_planification_sequence(cls):
+        pool = Pool()
+        ModelData = pool.get('ir.model.data')
+        try:
+            return ModelData.get_id('lims.planification', 'seq_planification')
+        except KeyError:
+            return None
+
+
+class ConfigurationProductCategory(ModelSQL):
+    'Configuration - Product Category'
+    __name__ = 'lims.configuration-product.category'
+
+    configuration = fields.Many2One('lims.configuration', 'Configuration',
+        ondelete='CASCADE', select=True, required=True)
+    category = fields.Many2One('product.category', 'Category',
+        ondelete='CASCADE', select=True, required=True)
+
+
+class LabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
     'Work Year'
     __name__ = 'lims.lab.workyear'
     _rec_name = 'code'
@@ -297,7 +392,7 @@ class LimsLabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
     start_date = fields.Date('Start date', required=True)
     end_date = fields.Date('End date', required=True)
     entry_sequence = fields.MultiValue(fields.Many2One(
-        'ir.sequence.strict', 'Entry Sequence', required=True,
+        'ir.sequence', 'Entry Sequence', required=True,
         domain=[
             ('company', 'in',
                 [Eval('context', {}).get('company', -1), None]),
@@ -318,16 +413,20 @@ class LimsLabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
             ('code', '=', 'lims.service'),
             ]))
     results_report_sequence = fields.MultiValue(fields.Many2One(
-        'ir.sequence.strict', 'Results Report Sequence', required=True,
+        'ir.sequence', 'Results Report Sequence', required=True,
         domain=[
             ('company', 'in',
                 [Eval('context', {}).get('company', -1), None]),
             ('code', '=', 'lims.results_report'),
             ]))
+    sequences = fields.One2Many('lims.lab.workyear.sequence',
+        'workyear', 'Sequences')
+    default_entry_control = fields.Many2One('lims.entry',
+        'Default entry control')
 
     @classmethod
     def __setup__(cls):
-        super(LimsLabWorkYear, cls).__setup__()
+        super(LabWorkYear, cls).__setup__()
         cls._order.insert(0, ('start_date', 'ASC'))
         cls._error_messages.update({
                 'workyear_overlaps': ('Work year "%(first)s" and '
@@ -340,7 +439,7 @@ class LimsLabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
         pool = Pool()
         if field in sequence_names:
             return pool.get('lims.lab.workyear.sequence')
-        return super(LimsLabWorkYear, cls).multivalue_model(field)
+        return super(LabWorkYear, cls).multivalue_model(field)
 
     @classmethod
     def default_entry_sequence(cls, **pattern):
@@ -359,7 +458,7 @@ class LimsLabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
 
     @classmethod
     def validate(cls, years):
-        super(LimsLabWorkYear, cls).validate(years)
+        super(LabWorkYear, cls).validate(years)
         for year in years:
             year.check_dates()
 
@@ -367,13 +466,13 @@ class LimsLabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
         cursor = Transaction().connection.cursor()
         table = self.__table__()
         cursor.execute(*table.select(table.id,
-                where=(((table.start_date <= self.start_date)
-                        & (table.end_date >= self.start_date))
-                    | ((table.start_date <= self.end_date)
-                        & (table.end_date >= self.end_date))
-                    | ((table.start_date >= self.start_date)
-                        & (table.end_date <= self.end_date)))
-                & (table.id != self.id)))
+                where=(((table.start_date <= self.start_date) &
+                        (table.end_date >= self.start_date)) |
+                    ((table.start_date <= self.end_date) &
+                        (table.end_date >= self.end_date)) |
+                    ((table.start_date >= self.start_date) &
+                        (table.end_date <= self.end_date))) &
+                (table.id != self.id)))
         second_id = cursor.fetchone()
         if second_id:
             second = self.__class__(second_id[0])
@@ -413,13 +512,13 @@ class LimsLabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
             return sequence
 
 
-class LimsLabWorkYearSequence(ModelSQL, CompanyValueMixin):
+class LabWorkYearSequence(ModelSQL, CompanyValueMixin):
     'Work Year Sequence'
     __name__ = 'lims.lab.workyear.sequence'
 
     workyear = fields.Many2One('lims.lab.workyear', 'Work Year',
         ondelete='CASCADE', select=True)
-    entry_sequence = fields.Many2One('ir.sequence.strict',
+    entry_sequence = fields.Many2One('ir.sequence',
         'Entry Sequence', depends=['company'], domain=[
             ('company', 'in', [Eval('company', -1), None]),
             ('code', '=', 'lims.entry'),
@@ -434,30 +533,11 @@ class LimsLabWorkYearSequence(ModelSQL, CompanyValueMixin):
             ('company', 'in', [Eval('company', -1), None]),
             ('code', '=', 'lims.service'),
             ])
-    results_report_sequence = fields.Many2One('ir.sequence.strict',
+    results_report_sequence = fields.Many2One('ir.sequence',
         'Results Report Sequence', depends=['company'], domain=[
             ('company', 'in', [Eval('company', -1), None]),
             ('code', '=', 'lims.results_report'),
             ])
-
-    @classmethod
-    def __register__(cls, module_name):
-        TableHandler = backend.get('TableHandler')
-        exist = TableHandler.table_exist(cls._table)
-
-        super(LimsLabWorkYearSequence, cls).__register__(module_name)
-
-        if not exist:
-            cls._migrate_property([], [], [])
-
-    @classmethod
-    def _migrate_property(cls, field_names, value_names, fields):
-        field_names.extend(sequence_names)
-        value_names.extend(sequence_names)
-        fields.append('company')
-        migrate_property(
-            'lims.lab.workyear', field_names, cls, value_names,
-            parent='workyear', fields=fields)
 
     @classmethod
     def default_entry_sequence(cls):

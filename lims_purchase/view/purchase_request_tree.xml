@@ -11,6 +11,11 @@
         <field name="department"/>
     </xpath>
     <xpath
+        expr="/tree/field[@name='purchase_date']"
+        position="before">
+        <field name="supply_date" widget="date"/>
+    </xpath>
+    <xpath
         expr="/tree/field[@name='state']"
         position="after">
         <field name="purchase"/>

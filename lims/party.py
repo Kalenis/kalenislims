@@ -65,12 +65,8 @@ class Address:
                 Bool(Eval('report_contact')),
                 Bool(Eval('acknowledgment_contact'))),
             },
-        depends=['invoice_contact', 'report_contact',
-            'acknowledgment_contact'])
-    invoice_contact = fields.Boolean('Invoice contact')
-    invoice_contact_default = fields.Boolean('Invoice contact by default',
-        states={'readonly': ~Bool(Eval('invoice_contact'))},
-        depends=['invoice_contact'])
+        depends=['report_contact', 'acknowledgment_contact',
+            'invoice_contact'])
     report_contact = fields.Boolean('Report contact')
     report_contact_default = fields.Boolean('Report contact by default',
         states={'readonly': ~Bool(Eval('report_contact'))},
@@ -80,6 +76,10 @@ class Address:
         'Acknowledgment contact by default',
         states={'readonly': ~Bool(Eval('acknowledgment_contact'))},
         depends=['acknowledgment_contact'])
+    invoice_contact = fields.Boolean('Invoice contact')
+    invoice_contact_default = fields.Boolean('Invoice contact by default',
+        states={'readonly': ~Bool(Eval('invoice_contact'))},
+        depends=['invoice_contact'])
 
     @classmethod
     def __setup__(cls):
@@ -87,11 +87,6 @@ class Address:
         cls._error_messages.update({
             'invoice_address': 'There is already a address with invoice type',
             })
-
-    @fields.depends('invoice_contact')
-    def on_change_invoice_contact(self):
-        if not self.invoice_contact:
-            self.invoice_contact_default = False
 
     @fields.depends('report_contact')
     def on_change_report_contact(self):
@@ -103,21 +98,10 @@ class Address:
         if not self.acknowledgment_contact:
             self.acknowledgment_contact_default = False
 
-    @classmethod
-    def validate(cls, addresses):
-        super(Address, cls).validate(addresses)
-        for address in addresses:
-            address.check_invoice_type()
-
-    def check_invoice_type(self):
-        if self.invoice:
-            addresses = self.search([
-                ('party', '=', self.party.id),
-                ('invoice', '=', True),
-                ('id', '!=', self.id),
-                ])
-            if addresses:
-                self.raise_user_error('invoice_address')
+    @fields.depends('invoice_contact')
+    def on_change_invoice_contact(self):
+        if not self.invoice_contact:
+            self.invoice_contact_default = False
 
 
 class Company:
@@ -125,7 +109,7 @@ class Company:
     __metaclass__ = PoolMeta
 
     def get_timezone(self):
-        timezone = None
+        timezone = pytz.utc
         if self.timezone:
             timezone = pytz.timezone(self.timezone)
         return timezone

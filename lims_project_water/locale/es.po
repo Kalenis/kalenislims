@@ -92,8 +92,8 @@ msgid "Applicant:"
 msgstr "Solicitante:"
 
 msgctxt "report:lims.project.water_sampling_report:"
-msgid "Code"
-msgstr "Código"
+msgid "CIATI Code"
+msgstr "Código CIATI"
 
 msgctxt "report:lims.project.water_sampling_report:"
 msgid "Comments:"

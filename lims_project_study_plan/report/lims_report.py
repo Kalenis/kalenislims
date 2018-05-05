@@ -1095,8 +1095,8 @@ class LimsProjectGLPReportFinalRP(Report):
         report_context['stp_number'] = project.stp_number
         report_context['code'] = project.code
         report_context['stp_sponsor'] = project.stp_sponsor
-        report_context['stp_samples'] = ', '.join([
-            s.number for s in project.stp_samples])
+        report_context['stp_samples'] = ', '.join(
+            cls.get_fraction(project.id))
         report_context['stp_reference_elements'] = [e for e in
             project.stp_reference_elements if e.type == 'reference']
         report_context['stp_reference_elements_list'] = ', '.join([
@@ -1282,6 +1282,24 @@ class LimsProjectGLPReportFinalRP(Report):
                 line_p = ['%s: %s' % (line[0], line[1])]
                 res.extend(line_p)
         return res
+
+    @staticmethod
+    def get_fraction(project_id):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        LimsFraction = pool.get('lims.fraction')
+        LimsSample = pool.get('lims.sample')
+        LimsEntry = pool.get('lims.entry')
+
+        cursor.execute('SELECT f.number '
+            'FROM "' + LimsEntry._table + '" e '
+                'INNER JOIN "' + LimsSample._table + '" s '
+                'ON e.id = s.entry '
+                'INNER JOIN "' + LimsFraction._table + '" f '
+                'ON s.id = f.sample '
+            'WHERE e.project = %s ',
+            (project_id,))
+        return [x[0] for x in cursor.fetchall()]
 
 
 class LimsProjectGLPReportFinalFOR(Report):
@@ -1565,8 +1583,8 @@ class LimsProjectGLPReportAnalyticalPhase(Report):
         report_context['stp_number'] = project.stp_number
         report_context['code'] = project.code
         report_context['stp_sponsor'] = project.stp_sponsor
-        report_context['stp_samples'] = ', '.join([
-            s.number for s in project.stp_samples])
+        report_context['stp_samples'] = ', '.join(
+            cls.get_fraction(project.id))
         report_context['stp_reference_elements'] = [e for e in
             project.stp_reference_elements if e.type == 'reference']
         report_context['stp_reference_elements_list'] = ', '.join([
@@ -1752,6 +1770,24 @@ class LimsProjectGLPReportAnalyticalPhase(Report):
                 line_p = ['%s: %s' % (line[0], line[1])]
                 res.extend(line_p)
         return res
+
+    @staticmethod
+    def get_fraction(project_id):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        LimsFraction = pool.get('lims.fraction')
+        LimsSample = pool.get('lims.sample')
+        LimsEntry = pool.get('lims.entry')
+
+        cursor.execute('SELECT f.number '
+            'FROM "' + LimsEntry._table + '" e '
+                'INNER JOIN "' + LimsSample._table + '" s '
+                'ON e.id = s.entry '
+                'INNER JOIN "' + LimsFraction._table + '" f '
+                'ON s.id = f.sample '
+            'WHERE e.project = %s ',
+            (project_id,))
+        return [x[0] for x in cursor.fetchall()]
 
 
 class LimsProjectGLPReport13(Report):
