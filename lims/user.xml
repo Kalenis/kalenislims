@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file is part of Tryton. The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+
+<!-- User Role -->
+
+        <record model="ir.ui.view" id="lims_user_role_view_form">
+            <field name="model">lims.user.role</field>
+            <field name="type">form</field>
+            <field name="name">user_role_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_user_role_view_list">
+            <field name="model">lims.user.role</field>
+            <field name="type">tree</field>
+            <field name="name">user_role_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_user_role_list">
+            <field name="name">User Roles</field>
+            <field name="res_model">lims.user.role</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_user_role_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_user_role_view_list"/>
+            <field name="act_window" ref="act_lims_user_role_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_user_role_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_user_role_view_form"/>
+            <field name="act_window" ref="act_lims_user_role_list"/>
+        </record>
+
+<!-- User -->
+
+        <record model="ir.ui.view" id="lims_user_view_form_preferences">
+            <field name="model">res.user</field>
+            <field name="inherit" ref="res.user_view_form_preferences"/>
+            <field name="name">user_form_preferences</field>
+        </record>
+        <record model="ir.ui.view" id="lims_user_view_form">
+            <field name="model">res.user</field>
+            <field name="inherit" ref="res.user_view_form"/>
+            <field name="name">user_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_user_view_list">
+            <field name="model">res.user</field>
+            <field name="inherit" ref="res.user_view_tree"/>
+            <field name="name">user_list</field>
+        </record>
+
+<!-- Groups -->
+
+        <record model="res.group" id="group_lims_conf_base_readonly">
+            <field name="name">Lims Configuration Base Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_conf_base_admin">
+            <field name="name">Lims Configuration Base Admin</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_conf_base_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_conf_base_admin"/>
+        </record>
+
+        <record model="res.group" id="group_lims_conf_certification_readonly">
+            <field name="name">Lims Configuration Certification Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_conf_certification_admin">
+            <field name="name">Lims Configuration Certification Admin</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_conf_certification_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+        </record>
+
+        <record model="res.group" id="group_lims_conf_entry_readonly">
+            <field name="name">Lims Configuration Entry Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_conf_entry_admin">
+            <field name="name">Lims Configuration Entry Admin</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_conf_entry_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_conf_entry_admin"/>
+        </record>
+
+        <record model="res.group" id="group_lims_conf_laboratory_readonly">
+            <field name="name">Lims Configuration Laboratory Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_conf_laboratory_admin">
+            <field name="name">Lims Configuration Laboratory Admin</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_conf_laboratory_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_conf_laboratory_admin"/>
+        </record>
+
+        <record model="res.group" id="group_lims_conf_base_tables_readonly">
+            <field name="name">Lims Configuration Base Tables Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_conf_base_tables_admin">
+            <field name="name">Lims Configuration Base Tables Admin</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_conf_base_tables_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+        </record>
+
+        <record model="res.group" id="group_lims_entry_readonly">
+            <field name="name">Lims Entries Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_entry_update">
+            <field name="name">Lims Entries Update</field>
+        </record>
+        <record model="res.group" id="group_lims_entry">
+            <field name="name">Lims Entries</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_entry">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_entry"/>
+        </record>
+
+        <record model="res.group" id="group_lims_notebook_readonly">
+            <field name="name">Lims Laboratory Notebook Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_notebook">
+            <field name="name">Lims Laboratory Notebook</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_notebook">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_notebook"/>
+        </record>
+
+        <record model="res.group" id="group_lims_laboratory_results">
+            <field name="name">Lims Results entry</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_laboratory_results">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_laboratory_results"/>
+        </record>
+
+        <record model="res.group" id="group_lims_laboratory_results_acceptance">
+            <field name="name">Lims Results acceptance</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_laboratory_results_acceptance">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_laboratory_results_acceptance"/>
+        </record>
+
+        <record model="res.group" id="group_lims_laboratory_reports_readonly">
+            <field name="name">Lims Results reports Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_laboratory_reports">
+            <field name="name">Lims Results reports</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_laboratory_reports">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_laboratory_reports"/>
+        </record>
+
+        <record model="res.group" id="group_lims_control_readonly">
+            <field name="name">Lims Control Charts Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_control">
+            <field name="name">Lims Control Charts</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_control">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_control"/>
+        </record>
+
+<!-- Users -->
+
+        <record model="res.user" id="user_acknowledgment_of_receipt">
+            <field name="login">user_cron_acknowledgment_of_receipt</field>
+            <field name="name">Cron Lims Acknowledgment Of Receipt</field>
+            <field name="signature"></field>
+            <field name="active" eval="False"/>
+        </record>
+        <record model="res.user-res.group" id="user_acknowledgment_of_receipt_group_entry">
+            <field name="user" ref="user_acknowledgment_of_receipt"/>
+            <field name="group" ref="group_lims_entry"/>
+        </record>
+
+        <record model="res.user" id="user_entry_confirm">
+            <field name="login">user_cron_entry_confirm</field>
+            <field name="name">Cron Lims Entry Confirm</field>
+            <field name="signature"></field>
+            <field name="active" eval="False"/>
+        </record>
+        <record model="res.user-res.group" id="user_entry_confirm_group_entry">
+            <field name="user" ref="user_entry_confirm"/>
+            <field name="group" ref="group_lims_entry"/>
+        </record>
+
+<!-- Groups -->
+
+        <record model="res.group" id="group_lims_blind_sample_readonly">
+            <field name="name">Lims Blind Samples Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_blind_sample">
+            <field name="name">Lims Blind Samples</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_blind_sample">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_blind_sample"/>
+        </record>
+
+        <record model="res.group" id="group_lims_planification_readonly">
+            <field name="name">Lims Planification Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_planification">
+            <field name="name">Lims Planification</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_planification">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_planification"/>
+        </record>
+
+<!-- Users -->
+
+        <record model="res.user" id="user_planification_process">
+            <field name="login">user_cron_planification_process</field>
+            <field name="name">Cron Lims Planification Process</field>
+            <field name="signature"></field>
+            <field name="active" eval="False"/>
+        </record>
+        <record model="res.user-res.group" id="user_planification_process_group_planification">
+            <field name="user" ref="user_planification_process"/>
+            <field name="group" ref="group_lims_planification"/>
+        </record>
+
+        <menuitem parent="res.menu_res" action="act_lims_user_role_list"
+            id="lims_user_role_menu" sequence="5"/>
+
+    </data>
+</tryton>

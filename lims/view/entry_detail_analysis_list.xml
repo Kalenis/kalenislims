@@ -8,6 +8,7 @@
     <field name="entry"/>
     <field name="party"/>
     <field name="analysis_origin"/>
+    <field name="state"/>
     <field name="analysis"/>
     <field name="laboratory"/>
     <field name="method"/>

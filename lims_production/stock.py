@@ -4,6 +4,7 @@
 # the full copyright notices and license terms.
 import cups
 from decimal import Decimal
+from collections import defaultdict
 from functools import partial
 
 from trytond.model import ModelView, ModelSQL, fields
@@ -375,6 +376,11 @@ class Lot:
             'invisible': ~Eval('special_category').in_(
                 ['domestic_use', 'prod_sale']),
             })
+    account_category = fields.Function(fields.Many2One('product.category',
+        'Account Category', depends=['special_category'], states={
+            'invisible': Not(Bool(Equal(Eval('special_category'),
+                'input_prod'))),
+            }), 'get_account_category', searcher='search_account_category')
 
     @fields.depends('category', 'product')
     def on_change_with_special_category(self, name=None):
@@ -432,6 +438,11 @@ class Lot:
             return self.product.purity_degree.id
         return None
 
+    def get_account_category(self, name=None):
+        if self.product:
+            return self.product.account_category.id
+        return None
+
     @classmethod
     def create(cls, vlist):
         pool = Pool()
@@ -457,6 +468,10 @@ class Lot:
                 if lot_category_id:
                     values['category'] = lot_category_id
         return super(Lot, cls).create(vlist)
+
+    @classmethod
+    def search_account_category(cls, name, clause):
+        return [('product.' + name,) + tuple(clause[1:])]
 
 
 class Move:

@@ -24,7 +24,8 @@ class PurchaseRequest:
         depends=['department_domain', 'state'])
     department_domain = fields.Function(fields.Many2Many('company.department',
         None, None, 'Department domain'), 'get_department_domain')
-    note = fields.Char('Note')
+    note = fields.Char('Note',
+        states={'readonly': Eval('state').in_(['cancel', 'exception', 'done', 'purchased'])},)
 
     @classmethod
     def __setup__(cls):
@@ -43,6 +44,16 @@ class PurchaseRequest:
             cls.warehouse.depends.append('state')
         cls.warehouse.states['required'] = True
         cls.uom.states['readonly'] = True
+        
+        cls.supply_date.readonly = False
+        cls.supply_date.states['readonly'] = Eval('state').in_(['cancel', 'exception', 'done', 'purchased'])
+        if 'state' not in cls.supply_date.depends:
+            cls.supply_date.depends.append('state')
+            
+        cls.note.readonly = False
+        cls.note.states['readonly'] = Eval('state').in_(['cancel', 'exception', 'done', 'purchased'])
+        if 'state' not in cls.note.depends:
+            cls.note.depends.append('state')
 
     @staticmethod
     def default_state():
@@ -120,6 +131,7 @@ class CreatePurchase:
         keys = list(super(CreatePurchase,
             self)._group_purchase_line_key(request))
         keys.append(('department', request.department))
+        keys.append(('delivery_date', request.supply_date))
         return keys
 
     @classmethod

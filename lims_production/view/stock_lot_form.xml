@@ -5,6 +5,8 @@
         position="after">
         <label name="category"/>
         <field name="category" colspan="3"/>
+        <label name="account_category"/>
+        <field name="account_category" colspan="3"/>
         <label name="stability"/>
         <field name="stability"/>
         <label name="homogeneity"/>

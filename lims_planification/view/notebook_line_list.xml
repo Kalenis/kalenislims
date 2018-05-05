@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<data>
-    <xpath
-        expr="/tree/field[@name='final_concentration']"
-        position="after">
-        <field name="planification"/>
-        <field name="controls"/>
-    </xpath>
-</data>

@@ -4,6 +4,8 @@
     <field name="description"/>
     <field name="max_storage_time"/>
     <field name="requalify"/>
+    <field name="plannable"/>
+    <field name="cie_fraction_type"/>
     <field name="control_charts"/>
     <field name="report"/>
 </tree>

@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Product UoM -->
+
+        <record model="ir.ui.view" id="lims_uom_view_list">
+            <field name="model">product.uom</field>
+            <field name="inherit" ref="product.uom_view_tree"/>
+            <field name="name">product_uom_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_uom_view_form">
+            <field name="model">product.uom</field>
+            <field name="inherit" ref="product.uom_view_form"/>
+            <field name="name">product_uom_form</field>
+        </record>
+
+<!-- UoM Categories -->
+
+        <record model="ir.ui.view" id="lims_uom_category_view_list">
+            <field name="model">product.uom.category</field>
+            <field name="inherit" ref="product.uom_category_view_tree"/>
+            <field name="name">product_uom_category_list</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_uom_category_view_form">
+            <field name="model">product.uom.category</field>
+            <field name="inherit" ref="product.uom_category_view_form"/>
+            <field name="name">product_uom_category_form</field>
+        </record>
+
+<!-- Volume Conversion -->
+
+        <record model="ir.ui.view" id="lims_volume_conversion_view_form">
+            <field name="model">lims.volume.conversion</field>
+            <field name="type">form</field>
+            <field name="name">volume_conversion_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_volume_conversion_view_list">
+            <field name="model">lims.volume.conversion</field>
+            <field name="type">tree</field>
+            <field name="name">volume_conversion_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_volume_conversion_list">
+            <field name="name">Volume Conversions</field>
+            <field name="res_model">lims.volume.conversion</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_volume_conversion_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_volume_conversion_view_list"/>
+            <field name="act_window" ref="act_lims_volume_conversion_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_volume_conversion_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_volume_conversion_view_form"/>
+            <field name="act_window" ref="act_lims_volume_conversion_list"/>
+        </record>
+
+<!-- Uom Conversion -->
+
+        <record model="ir.ui.view" id="lims_uom_conversion_view_form">
+            <field name="model">lims.uom.conversion</field>
+            <field name="type">form</field>
+            <field name="name">uom_conversion_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_uom_conversion_view_list">
+            <field name="model">lims.uom.conversion</field>
+            <field name="type">tree</field>
+            <field name="name">uom_conversion_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_uom_conversion_list">
+            <field name="name">Uom Conversions</field>
+            <field name="res_model">lims.uom.conversion</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_uom_conversion_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_uom_conversion_view_list"/>
+            <field name="act_window" ref="act_lims_uom_conversion_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_uom_conversion_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_uom_conversion_view_form"/>
+            <field name="act_window" ref="act_lims_uom_conversion_list"/>
+        </record>
+
+<!-- Concentration Level -->
+
+        <record model="ir.ui.view" id="lims_concentration_level_view_list">
+            <field name="model">lims.concentration.level</field>
+            <field name="type">tree</field>
+            <field name="name">concentration_level_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_concentration_level_view_form">
+            <field name="model">lims.concentration.level</field>
+            <field name="type">form</field>
+            <field name="name">concentration_level_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_concentration_level">
+            <field name="name">Concentration Levels</field>
+            <field name="res_model">lims.concentration.level</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_concentration_level_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_concentration_level_view_list"/>
+            <field name="act_window" ref="act_lims_concentration_level"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_concentration_level_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_concentration_level_view_form"/>
+            <field name="act_window" ref="act_lims_concentration_level"/>
+        </record>
+
+        <menuitem parent="lims_config_base_tables" action="act_lims_volume_conversion_list"
+            id="lims_volume_conversion_list_menu" sequence="100"/>
+        <menuitem parent="lims_config_base_tables" action="act_lims_uom_conversion_list"
+            id="lims_uom_conversion_list_menu" sequence="110"/>
+
+        <record model="ir.model.access" id="access_volume_conversion">
+            <field name="model" search="[('model', '=', 'lims.volume.conversion')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_volume_conversion_group_conf_base_tables_admin">
+            <field name="model" search="[('model', '=', 'lims.volume.conversion')]"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="access_uom_conversion">
+            <field name="model" search="[('model', '=', 'lims.uom.conversion')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_uom_conversion_group_conf_base_tables_admin">
+            <field name="model" search="[('model', '=', 'lims.uom.conversion')]"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="access_concentration_level">
+            <field name="model" search="[('model', '=', 'lims.concentration.level')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_concentration_level_group_control">
+            <field name="model" search="[('model', '=', 'lims.concentration.level')]"/>
+            <field name="group" ref="group_lims_control"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+    </data>
+</tryton>

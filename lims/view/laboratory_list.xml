@@ -5,4 +5,5 @@
     <field name="default_laboratory_professional"/>
     <field name="default_signer"/>
     <field name="related_location"/>
+    <field name="headquarters"/>
 </tree>

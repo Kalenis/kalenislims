@@ -8,11 +8,12 @@ except ImportError:
     import StringIO
 import xlrd
 from xlutils.copy import copy
+from datetime import datetime
 
 from trytond.model import ModelView, fields
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.pool import Pool
-from datetime import datetime
+from trytond.transaction import Transaction
 
 __all__ = ['LimsNotebookLoadResultsFileStart',
     'LimsNotebookLoadResultsFileStartLine', 'LimsNotebookLoadResultsFileEmpty',
@@ -98,6 +99,7 @@ class LimsNotebookLoadResultsFile(Wizard):
             ])
 
     def transition_collect(self):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
         LimsFraction = pool.get('lims.fraction')
         LimsNotebook = pool.get('lims.notebook')
@@ -110,24 +112,36 @@ class LimsNotebookLoadResultsFile(Wizard):
             self.start.results_importer.parse(fline.infile)
             raw_results = self.start.results_importer.rawresults
             fractions_numbers = list(raw_results.keys())
+            if not fractions_numbers:
+                continue
 
-            fractions = LimsFraction.search([
-                ('number', 'in', fractions_numbers),
-                ], order=[('number', 'ASC')])
-            for f in fractions:
-                notebook = LimsNotebook.search([('fraction', '=', f.id)])
+            numbers = '\', \''.join(str(n) for n in fractions_numbers)
+            cursor.execute('SELECT id, number '
+                'FROM "' + LimsFraction._table + '" '
+                'WHERE number IN (\'' + numbers + '\') '
+                'ORDER BY number ASC')
+
+            for f in cursor.fetchall():
+                cursor.execute('SELECT id '
+                    'FROM "' + LimsNotebook._table + '" '
+                    'WHERE fraction = %s '
+                    'LIMIT 1', (f[0],))
+                notebook = cursor.fetchone()
                 if not notebook:
                     continue
-                for analysis in raw_results[f.number].keys():
-                    auto_acquisition_analysis = LimsAnalysis.search([
-                        ('code', '=', analysis),
-                        ('automatic_acquisition', '=', True),
-                        ])
-                    if not auto_acquisition_analysis:
+
+                for analysis in raw_results[f[1]].keys():
+                    cursor.execute('SELECT id '
+                        'FROM "' + LimsAnalysis._table + '" '
+                        'WHERE code = %s '
+                            'AND automatic_acquisition = TRUE '
+                        'LIMIT 1', (analysis,))
+                    if not cursor.fetchone():
                         continue
-                    for rep in raw_results[f.number][analysis].keys():
+
+                    for rep in raw_results[f[1]][analysis].keys():
                         clause = [
-                            ('notebook', '=', notebook[0].id),
+                            ('notebook', '=', notebook[0]),
                             ('analysis', '=', analysis),
                             ('repetition', '=', rep),
                             ('result', 'in', [None, '']),
@@ -140,7 +154,7 @@ class LimsNotebookLoadResultsFile(Wizard):
                             ]
                         line = LimsNotebookLine.search(clause)
                         if line:
-                            data = raw_results[f.number][analysis][rep]
+                            data = raw_results[f[1]][analysis][rep]
                             res = self.get_results(line[0], data)
                             if res:
                                 LimsNotebookLine.write([line[0]], res)
@@ -152,7 +166,8 @@ class LimsNotebookLoadResultsFile(Wizard):
         return 'empty'
 
     def get_results(self, line, data):
-        LimsDevice = Pool().get('lims.lab.device')
+        pool = Pool()
+        LimsDevice = pool.get('lims.lab.device')
 
         res = {}
         if 'result' in data or 'literal_result' in data:
@@ -189,39 +204,49 @@ class LimsNotebookLoadResultsFile(Wizard):
         separated by commas, like: 'ABC' or 'JLB, ABC'
         It returns the professionals
         '''
-        Professional = Pool().get('lims.laboratory.professional')
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Professional = pool.get('lims.laboratory.professional')
+
         res = []
         professionals = ''.join(professionals_codes.split())
         professionals = professionals.split(',')
         for professional in professionals:
-            prof = Professional.search([('code', '=', professional)])
+            cursor.execute('SELECT id, code '
+                'FROM "' + Professional._table + '" '
+                'WHERE code = %s '
+                'LIMIT 1', (professional,))
+            prof = cursor.fetchone()
             if prof:
-                res.append(prof[0])
+                res.append(prof)
         return res
 
     def check_professionals(self, professionals, method):
-        LimsLabProfessionalMethod = Pool().get('lims.lab.professional.method')
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        LabProfessionalMethod = pool.get('lims.lab.professional.method')
 
         validated = False
         msg = ''
         for professional in professionals:
-            qualifications = LimsLabProfessionalMethod.search([
-                ('professional', '=', professional.id),
-                ('method', '=', method.id),
-                ('type', '=', 'analytical'),
-                ])
-
-            if not qualifications:
+            cursor.execute('SELECT state '
+                'FROM "' + LabProfessionalMethod._table + '" '
+                'WHERE professional = %s '
+                    'AND method = %s '
+                    'AND type = \'analytical\' '
+                'LIMIT 1', (professional[0], method.id))
+            qualification = cursor.fetchone()
+            if not qualification:
                 validated = False
                 msg += '%s not qualified for method: %s' % (
-                    professional.code, method.code)
+                    professional[1], method.code)
                 return validated, msg
-            elif qualifications[0].state == 'training':
+            elif qualification[0] == 'training':
                 if not validated:
                     msg += '%s in training for method: %s. ' \
                         'Add qualified professional' % (
-                            professional.code, method.code)
-            elif (qualifications[0].state in ('qualified', 'requalified')):
+                            professional[1], method.code)
+            elif (qualification[0] in ('qualified', 'requalified')):
                 validated = True
 
         return validated, msg
@@ -230,24 +255,11 @@ class LimsNotebookLoadResultsFile(Wizard):
         pool = Pool()
         LimsNotebookLine = pool.get('lims.notebook.line')
 
+        NOW = datetime.now()
         warnings = False
         messages = ''
         # Write Results to Notebook lines
         for line in self.result.result_lines:
-            original_profs = [{'professional': p.professional}
-                    for p in line.professionals]
-            notebook_line_original_values = {
-                'result': line.result,
-                'literal_result': line.literal_result,
-                'end_date': line.end_date,
-                'professionals': (
-                    [('delete', [p.id for p in line.professionals])]
-                    + [('create', original_profs,)]),
-                'chromatogram': line.chromatogram,
-                'device': line.device,
-                'dilution_factor': line.dilution_factor,
-                'rm_correction_formula': line.rm_correction_formula,
-                }
             notebook_line_write = {
                 'imported_result': None,
                 'imported_literal_result': None,
@@ -269,7 +281,7 @@ class LimsNotebookLoadResultsFile(Wizard):
                     notebook_line_write['result_modifier'] = 'na'
                     notebook_line_write['report'] = False
                     notebook_line_write['annulled'] = True
-                    notebook_line_write['annulment_date'] = datetime.now()
+                    notebook_line_write['annulment_date'] = NOW
             if line.literal_result != line.imported_literal_result:
                 notebook_line_write['literal_result'] = (
                     line.imported_literal_result)
@@ -303,7 +315,8 @@ class LimsNotebookLoadResultsFile(Wizard):
                     validated, msg = self.check_professionals(
                         profs, line.method)
                     if validated:
-                        professionals = [{'professional': p.id} for p in profs]
+                        professionals = [{'professional': p[0]}
+                            for p in profs]
                         notebook_line_write['professionals'] = (
                             [('delete', [p.id for p in line.professionals])]
                             + [('create', professionals)])
@@ -322,22 +335,38 @@ class LimsNotebookLoadResultsFile(Wizard):
                 except Exception as e:
                     prevent_line = True
                     outcome = unicode(e)
+                    original_profs = [{'professional': p.professional}
+                            for p in line.professionals]
+                    notebook_line_original_values = {
+                        'result': line.result,
+                        'literal_result': line.literal_result,
+                        'end_date': line.end_date,
+                        'professionals': (
+                            [('delete', [p.id for p in line.professionals])]
+                            + [('create', original_profs,)]),
+                        'chromatogram': line.chromatogram,
+                        'device': line.device,
+                        'dilution_factor': line.dilution_factor,
+                        'rm_correction_formula': line.rm_correction_formula,
+                        }
                     LimsNotebookLine.write(
                         [line], notebook_line_original_values)
                 else:
                     outcome = 'OK'
 
             # Update rawresults
-            rawresults = self.start.results_importer.rawresults
-            number = line.fraction.number
             row_num = 0
-            if number in rawresults:
-                code = line.analysis.code
-                if code in rawresults[number]:
-                    rep = line.repetition
-                    if rep in rawresults[number][code]:
-                        rawresults[number][code][rep]['outcome'] = outcome
-                        row_num = rawresults[number][code][rep]['row_number']
+            if self.start.results_importer.exportResults() or prevent_line:
+                rawresults = self.start.results_importer.rawresults
+                number = line.fraction.number
+                if number in rawresults:
+                    code = line.analysis.code
+                    if code in rawresults[number]:
+                        rep = line.repetition
+                        if rep in rawresults[number][code]:
+                            rawresults[number][code][rep]['outcome'] = outcome
+                            row_num = rawresults[number][code][rep][
+                                'row_number']
 
             if prevent_line:
                 warnings = True

@@ -6,11 +6,6 @@
 
 These instructions will get you a copy of the project up and running.
 
-### Prerequisites
-
-You need a working [Tryton](http://www.tryton.org/) system. Follow the [first steps](http://doc.tryton.org/4.4/trytond/doc/index.html#first-steps) in order to install Tryton.
-
-
 ### Installing
 
 Execute:

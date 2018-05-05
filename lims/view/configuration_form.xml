@@ -6,6 +6,8 @@
             <field name="fraction_product"/>
             <label name="default_notebook_view"/>
             <field name="default_notebook_view"/>
+            <label name="planification_sequence"/>
+            <field name="planification_sequence"/>
             <label name="rm_start_uom"/>
             <field name="rm_start_uom"/>
             <label name="invoice_party_relation_type"/>
@@ -16,7 +18,36 @@
             <field name="analysis_product_category"/>
             <label name="entry_confirm_background"/>
             <field name="entry_confirm_background"/>
+            <label name="planification_process_background"/>
+            <field name="planification_process_background"/>
             <field name="microbiology_laboratories" colspan="4"/>
+        </page>
+        <page string="Fraction Types" id="fraction_type">
+            <label name="mcl_fraction_type"/>
+            <field name="mcl_fraction_type"/>
+            <label name="con_fraction_type"/>
+            <field name="con_fraction_type"/>
+            <label name="bmz_fraction_type"/>
+            <field name="bmz_fraction_type"/>
+            <label name="rm_fraction_type"/>
+            <field name="rm_fraction_type"/>
+            <label name="bre_fraction_type"/>
+            <field name="bre_fraction_type"/>
+            <label name="mrt_fraction_type"/>
+            <field name="mrt_fraction_type"/>
+            <label name="coi_fraction_type"/>
+            <field name="coi_fraction_type"/>
+            <label name="mrc_fraction_type"/>
+            <field name="mrc_fraction_type"/>
+            <label name="sla_fraction_type"/>
+            <field name="sla_fraction_type"/>
+            <label name="itc_fraction_type"/>
+            <field name="itc_fraction_type"/>
+            <label name="itl_fraction_type"/>
+            <field name="itl_fraction_type"/>
+        </page>
+        <page string="Reagents" id="reagents">
+            <field name="reagents" colspan="4"/>
         </page>
         <page string="Mail Acknowledgment of Samples Receipt"
                 id="mail_ack_samples" col="6">

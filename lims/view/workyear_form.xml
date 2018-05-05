@@ -7,6 +7,8 @@
     <field name="start_date"/>
     <label name="end_date"/>
     <field name="end_date"/>
+    <label name="default_entry_control"/>
+    <field name="default_entry_control"/>
     <label name="entry_sequence"/>
     <field name="entry_sequence"/>
     <label name="sample_sequence"/>

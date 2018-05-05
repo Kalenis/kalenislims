@@ -872,19 +872,41 @@ class LimsCreateSample:
         samples_defaults = super(LimsCreateSample,
             self)._get_samples_defaults(entry_id)
 
+        application_date = (hasattr(self.start, 'application_date') and
+            getattr(self.start, 'application_date') or None)
+        sampling_date = (hasattr(self.start, 'sampling_date') and
+            getattr(self.start, 'sampling_date') or None)
+        reception_date = (hasattr(self.start, 'reception_date') and
+            getattr(self.start, 'reception_date') or None)
+        treatment = (hasattr(self.start, 'treatment') and
+            getattr(self.start, 'treatment') or None)
+        dosis = (hasattr(self.start, 'dosis') and
+            getattr(self.start, 'dosis') or None)
+        after_application_days = (hasattr(self.start,
+            'after_application_days') and getattr(self.start,
+            'after_application_days') or None)
+        glp_repetitions = (hasattr(self.start, 'glp_repetitions') and
+            getattr(self.start, 'glp_repetitions') or None)
+        sample_weight = (hasattr(self.start, 'sample_weight') and
+            getattr(self.start, 'sample_weight') or None)
+        balance_id = None
+        if (hasattr(self.start, 'balance')
+                and getattr(self.start, 'balance')):
+            balance_id = getattr(self.start, 'balance').id
+        cultivation_zone = (hasattr(self.start, 'cultivation_zone') and
+            getattr(self.start, 'cultivation_zone') or None)
+
         for sample_defaults in samples_defaults:
-            sample_defaults['application_date'] = self.start.application_date
-            sample_defaults['sampling_date'] = self.start.sampling_date
-            sample_defaults['reception_date'] = self.start.reception_date
-            sample_defaults['treatment'] = self.start.treatment
-            sample_defaults['dosis'] = self.start.dosis
-            sample_defaults['after_application_days'] = (
-                self.start.after_application_days)
-            sample_defaults['glp_repetitions'] = self.start.glp_repetitions
-            sample_defaults['sample_weight'] = self.start.sample_weight
-            sample_defaults['balance'] = (self.start.balance.id
-                if self.start.balance else None)
-            sample_defaults['cultivation_zone'] = self.start.cultivation_zone
+            sample_defaults['application_date'] = application_date
+            sample_defaults['sampling_date'] = sampling_date
+            sample_defaults['reception_date'] = reception_date
+            sample_defaults['treatment'] = treatment
+            sample_defaults['dosis'] = dosis
+            sample_defaults['after_application_days'] = after_application_days
+            sample_defaults['glp_repetitions'] = glp_repetitions
+            sample_defaults['sample_weight'] = sample_weight
+            sample_defaults['balance'] = balance_id
+            sample_defaults['cultivation_zone'] = cultivation_zone
 
         return samples_defaults
 

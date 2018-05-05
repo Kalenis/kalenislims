@@ -14,6 +14,14 @@
     <field name="entry"/>
     <label name="party"/>
     <field name="party" colspan="3"/>
+    <field name="cie_fraction_type" invisible="1" colspan="4"/>
+    <group col="4" colspan="4" id="cie">
+        <separator colspan="4" id="cie_separator" string="CIE"/>
+        <label name="cie_min_value"/>
+        <field name="cie_min_value"/>
+        <label name="cie_max_value"/>
+        <field name="cie_max_value"/>
+    </group>
     <separator colspan="4" id="separator"/>
     <label name="analysis"/>
     <field name="analysis"/>
@@ -27,6 +35,8 @@
     <field name="device"/>
     <label name="analysis_origin"/>
     <field name="analysis_origin"/>
+    <label name="state"/>
+    <field name="state"/>
     <label name="report_grouper"/>
     <field name="report_grouper"/>
     <label name="confirmation_date"/>

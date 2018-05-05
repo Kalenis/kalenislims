@@ -6,7 +6,7 @@
 from trytond.model import fields
 from trytond.pool import PoolMeta
 
-__all__ = ['Party']
+__all__ = ['Party', 'Address']
 
 
 class Party:
@@ -22,3 +22,24 @@ class Party:
     @staticmethod
     def default_no_send_invoice():
         return False
+
+
+class Address:
+    __name__ = 'party.address'
+    __metaclass__ = PoolMeta
+
+    @classmethod
+    def validate(cls, addresses):
+        super(Address, cls).validate(addresses)
+        for address in addresses:
+            address.check_invoice_type()
+
+    def check_invoice_type(self):
+        if self.invoice:
+            addresses = self.search([
+                ('party', '=', self.party.id),
+                ('invoice', '=', True),
+                ('id', '!=', self.id),
+                ])
+            if addresses:
+                self.raise_user_error('invoice_address')

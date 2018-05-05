@@ -1,0 +1,563 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+        <record model="ir.ui.icon" id="entry_board_icon">
+            <field name="name">lims-entry_board</field>
+            <field name="path">icons/entry_board.svg</field>
+        </record>
+
+<!-- Sequences for Entry -->
+
+        <record model="ir.sequence.type" id="seq_type_entry">
+            <field name="name">Entry</field>
+            <field name="code">lims.entry</field>
+        </record>
+        <record model="ir.sequence.type-res.group"
+            id="seq_type_entry_group_admin">
+            <field name="sequence_type" ref="seq_type_entry"/>
+            <field name="group" ref="res.group_admin"/>
+        </record>
+        <record model="ir.sequence.strict" id="seq_entry">
+            <field name="name">Entry</field>
+            <field name="code">lims.entry</field>
+            <field eval="7" name="padding"/>
+        </record>
+
+<!-- Entry -->
+
+        <record model="ir.ui.view" id="lims_entry_view_form">
+            <field name="model">lims.entry</field>
+            <field name="type">form</field>
+            <field name="name">entry_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_entry_view_list">
+            <field name="model">lims.entry</field>
+            <field name="type">tree</field>
+            <field name="name">entry_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_entry_list">
+            <field name="name">Entries</field>
+            <field name="res_model">lims.entry</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_list_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_entry_view_list"/>
+            <field name="act_window" ref="act_lims_entry_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_list_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_entry_view_form"/>
+            <field name="act_window" ref="act_lims_entry_list"/>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_entry_form">
+            <field name="name">New Entry</field>
+            <field name="res_model">lims.entry</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_form_view_form">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_entry_view_form"/>
+            <field name="act_window" ref="act_lims_entry_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_form_view_list">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_entry_view_list"/>
+            <field name="act_window" ref="act_lims_entry_form"/>
+        </record>
+
+        <record model="ir.action.act_window.domain" id="act_lims_entry_list_domain_draft">
+            <field name="name">Draft</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain"
+                eval="[('state', '=', 'draft')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_entry_list"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_lims_entry_list_domain_ongoing">
+            <field name="name">Ongoing</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain"
+                eval="[('state', '=', 'ongoing')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_entry_list"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_lims_entry_list_domain_pending">
+            <field name="name">Administration pending</field>
+            <field name="sequence" eval="30"/>
+            <field name="domain"
+                eval="[('state', '=', 'pending')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_entry_list"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_lims_entry_list_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="9999"/>
+            <field name="domain"></field>
+            <field name="act_window" ref="act_lims_entry_list"/>
+        </record>
+
+        <record model="ir.model.button" id="entry_create_sample_button">
+            <field name="name">create_sample</field>
+            <field name="model" search="[('model', '=', 'lims.entry')]"/>
+        </record>
+        <record model="ir.model.button-res.group" id="entry_create_sample_button_group_lims_entry">
+            <field name="button" ref="entry_create_sample_button"/>
+            <field name="group" ref="group_lims_entry"/>
+        </record>
+
+        <record model="ir.model.button" id="entry_confirm_button">
+            <field name="name">confirm</field>
+            <field name="model" search="[('model', '=', 'lims.entry')]"/>
+        </record>
+        <record model="ir.model.button-res.group" id="entry_confirm_button_group_lims_entry">
+            <field name="button" ref="entry_confirm_button"/>
+            <field name="group" ref="group_lims_entry"/>
+        </record>
+
+        <record model="ir.model.button" id="entry_on_hold_button">
+            <field name="name">on_hold</field>
+            <field name="model" search="[('model', '=', 'lims.entry')]"/>
+        </record>
+        <record model="ir.model.button-res.group" id="entry_on_hold_button_group_lims_entry">
+            <field name="button" ref="entry_on_hold_button"/>
+            <field name="group" ref="group_lims_entry"/>
+        </record>
+
+<!-- Entry Invoice Contact -->
+
+        <record model="ir.ui.view" id="lims_entry_invoice_contacts_view_form">
+            <field name="model">lims.entry.invoice_contacts</field>
+            <field name="type">form</field>
+            <field name="name">entry_invoice_contacts_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_entry_invoice_contacts_view_list">
+            <field name="model">lims.entry.invoice_contacts</field>
+            <field name="type">tree</field>
+            <field name="name">entry_invoice_contacts_list</field>
+        </record>
+
+<!-- Entry Report Contact -->
+
+        <record model="ir.ui.view" id="lims_entry_report_contacts_view_form">
+            <field name="model">lims.entry.report_contacts</field>
+            <field name="type">form</field>
+            <field name="name">entry_report_contacts_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_entry_report_contacts_view_list">
+            <field name="model">lims.entry.report_contacts</field>
+            <field name="type">tree</field>
+            <field name="name">entry_report_contacts_list</field>
+        </record>
+
+<!-- Entry Acknowledgment Contact -->
+
+        <record model="ir.ui.view" id="lims_entry_acknowledgment_contacts_view_form">
+            <field name="model">lims.entry.acknowledgment_contacts</field>
+            <field name="type">form</field>
+            <field name="name">entry_acknowledgment_contacts_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_entry_acknowledgment_contacts_view_list">
+            <field name="model">lims.entry.acknowledgment_contacts</field>
+            <field name="type">tree</field>
+            <field name="name">entry_acknowledgment_contacts_list</field>
+        </record>
+
+<!-- Entry Suspension Reason -->
+
+        <record model="ir.ui.view" id="lims_entry_suspension_reason_view_form">
+            <field name="model">lims.entry.suspension.reason</field>
+            <field name="type">form</field>
+            <field name="name">entry_suspension_reason_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_entry_suspension_reason_view_list">
+            <field name="model">lims.entry.suspension.reason</field>
+            <field name="type">tree</field>
+            <field name="name">entry_suspension_reason_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_entry_suspension_reason_list">
+            <field name="name">Entry Suspension Reasons</field>
+            <field name="res_model">lims.entry.suspension.reason</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_suspension_reason_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_entry_suspension_reason_view_list"/>
+            <field name="act_window" ref="act_lims_entry_suspension_reason_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_suspension_reason_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_entry_suspension_reason_view_form"/>
+            <field name="act_window" ref="act_lims_entry_suspension_reason_list"/>
+        </record>
+
+<!-- Entry Detail Analysis -->
+
+        <record model="ir.ui.view" id="lims_entry_detail_analysis_view_form">
+            <field name="model">lims.entry.detail.analysis</field>
+            <field name="type">form</field>
+            <field name="name">entry_detail_analysis_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_entry_detail_analysis_view_list">
+            <field name="model">lims.entry.detail.analysis</field>
+            <field name="type">tree</field>
+            <field name="name">entry_detail_analysis_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_entry_detail_analysis_list">
+            <field name="name">Entry Detail Analysis</field>
+            <field name="res_model">lims.entry.detail.analysis</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_detail_analysis_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_entry_detail_analysis_view_list"/>
+            <field name="act_window" ref="act_lims_entry_detail_analysis_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_detail_analysis_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_entry_detail_analysis_view_form"/>
+            <field name="act_window" ref="act_lims_entry_detail_analysis_list"/>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_entry_detail_analysis">
+            <field name="model" search="[('model', '=', 'lims.entry.detail.analysis')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_entry_detail_analysis">
+            <field name="domain"
+                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_entry_detail_analysis"/>
+        </record>
+
+<!-- Entry actions related -->
+
+        <record model="ir.action.act_window" id="act_lims_sample_related1">
+            <field name="name">1. Samples</field>
+            <field name="res_model">lims.sample</field>
+            <field name="domain" eval="[('entry', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_sample_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="act_lims_sample_related1"/>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_fraction_related1">
+            <field name="name">2. Fractions</field>
+            <field name="res_model">lims.fraction</field>
+            <field name="domain" eval="[('entry', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_fraction_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="act_lims_fraction_related1"/>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_service_related1">
+            <field name="name">3. Services</field>
+            <field name="res_model">lims.service</field>
+            <field name="domain" eval="[('entry', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_service_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="act_lims_service_related1"/>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_entry_detail_analysis_related1">
+            <field name="name">4. Entry Detail Analysis</field>
+            <field name="res_model">lims.entry.detail.analysis</field>
+            <field name="domain" eval="[('entry', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_entry_detail_analysis_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="act_lims_entry_detail_analysis_related1"/>
+        </record>
+
+<!-- Cron -->
+
+        <record model="ir.cron" id="cron_lims_acknowledgment_of_receipt">
+            <field name="name">Lims Acknowledgment of Receipt (Samples)</field>
+            <field name="request_user" ref="res.user_admin"/>
+            <field name="user" ref="user_acknowledgment_of_receipt"/>
+            <field name="active" eval="True"/>
+            <field name="interval_number" eval="20"/>
+            <field name="interval_type">minutes</field>
+            <field name="number_calls" eval="-1"/>
+            <field name="repeat_missed" eval="False"/>
+            <field name="model">lims.entry</field>
+            <field name="function">cron_acknowledgment_of_receipt</field>
+        </record>
+
+        <record model="ir.cron" id="cron_lims_confirm_waiting_entries">
+            <field name="name">Lims Confirm Waiting Entries</field>
+            <field name="request_user" ref="res.user_admin"/>
+            <field name="user" ref="user_entry_confirm"/>
+            <field name="active" eval="True"/>
+            <field name="interval_number" eval="1"/>
+            <field name="interval_type">minutes</field>
+            <field name="number_calls" eval="-1"/>
+            <field name="repeat_missed" eval="False"/>
+            <field name="model">lims.fraction</field>
+            <field name="function">confirm_waiting_fractions</field>
+        </record>
+
+<!-- Wizard Forward Acknowledgment of Samples Receipt -->
+
+        <record model="ir.action.wizard" id="wiz_lims_forward_entry_acknowledgment">
+            <field name="name">Forward Acknowledgment of Samples Receipt</field>
+            <field name="wiz_name">lims.entry.acknowledgment.forward</field>
+        </record>
+        <record model="ir.action.keyword" id="lims_forward_entry_acknowledgment_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="wiz_lims_forward_entry_acknowledgment"/>
+        </record>
+
+<!-- Wizard Change Invoice Party -->
+
+        <record model="ir.ui.view" id="lims_change_invoice_party_start_view_form">
+            <field name="model">lims.entry.change_invoice_party.start</field>
+            <field name="type">form</field>
+            <field name="name">entry_change_invoice_party_start_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_change_invoice_party_error_view_form">
+            <field name="model">lims.entry.change_invoice_party.error</field>
+            <field name="type">form</field>
+            <field name="name">entry_change_invoice_party_error_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_change_invoice_party">
+            <field name="name">Change Invoice Party</field>
+            <field name="wiz_name">lims.entry.change_invoice_party</field>
+        </record>
+        <record model="ir.action.keyword" id="lims_change_invoice_party_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="wiz_lims_change_invoice_party"/>
+        </record>
+
+<!-- Acknowledgment of Samples Receipt -->
+
+        <record model="ir.action.wizard" id="print_entry_acknowledgment">
+            <field name="name">Acknowledgment of Samples Receipt</field>
+            <field name="wiz_name">lims.entry.acknowledgment.print</field>
+            <field name="model">lims.entry</field>
+        </record>
+        <record model="ir.action.report" id="report_entry_acknowledgment">
+            <field name="name">Acknowledgment of Samples Receipt</field>
+            <field name="model">lims.entry</field>
+            <field name="report_name">lims.entry.acknowledgment.report</field>
+            <field name="report">lims/report/entry_acknowledgment_report.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_entry_acknowledgment_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="print_entry_acknowledgment"/>
+        </record>
+
+<!-- Entry Detail -->
+
+        <record model="ir.action.report" id="report_entry_detail">
+            <field name="name">Entry Detail</field>
+            <field name="model">lims.entry</field>
+            <field name="report_name">lims.entry.detail.report</field>
+            <field name="report">lims/report/entry_detail_report.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_entry_detail_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="report_entry_detail"/>
+        </record>
+
+<!-- Entry Labels -->
+
+        <record model="ir.action.report" id="report_entry_labels">
+            <field name="name">Entry Labels</field>
+            <field name="model">lims.entry</field>
+            <field name="report_name">lims.entry.labels.report</field>
+            <field name="report">lims/report/entry_labels_report.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_entry_labels_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="report_entry_labels"/>
+        </record>
+
+<!-- Entry Labels Printer -->
+
+        <record model="ir.action.wizard" id="wiz_report_entry_labels_printer">
+            <field name="name">Entry Labels Printer</field>
+            <field name="wiz_name">lims.entry.labels.printer.report</field>
+            <field name="model">lims.entry</field>
+        </record>
+        <record model="ir.action.keyword"
+                id="wiz_report_entry_labels_printer_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="wiz_report_entry_labels_printer"/>
+        </record>
+
+        <!-- Configuration / Entry -->
+        <menuitem name="Entry" parent="lims_config"
+            id="lims_config_entry" sequence="30"/>
+        <menuitem parent="lims_config_entry" action="act_lims_entry_suspension_reason_list"
+            id="lims_entry_suspension_reason_menu" sequence="50"/>
+
+        <menuitem parent="lims_menu" name="Entries Board"
+            id="lims_entry_board_menu" sequence="30" icon="lims-entry_board"/>
+<!--        <menuitem parent="lims_entry_board_menu" action="wiz_lims_create_entry"
+            id="lims_create_entry_menu" sequence="5"/>-->
+        <menuitem parent="lims_entry_board_menu" action="act_lims_entry_form"
+            id="lims_entry_form_menu" sequence="10"  icon="tryton-new"/>
+        <menuitem parent="lims_entry_board_menu" action="act_lims_entry_list"
+            id="lims_entry_menu" sequence="20"  icon="tryton-list"/>
+
+        <record model="ir.model.access" id="access_entry_suspension_reason">
+            <field name="model" search="[('model', '=', 'lims.entry.suspension.reason')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_entry_suspension_reason_group_conf_entry_admin">
+            <field name="model" search="[('model', '=', 'lims.entry.suspension.reason')]"/>
+            <field name="group" ref="group_lims_conf_entry_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="access_entry">
+            <field name="model" search="[('model', '=', 'lims.entry')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_entry_group_entry">
+            <field name="model" search="[('model', '=', 'lims.entry')]"/>
+            <field name="group" ref="group_lims_entry"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="access_entry_detail_analysis">
+            <field name="model" search="[('model', '=', 'lims.entry.detail.analysis')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_entry_detail_analysis_group_entry_update">
+            <field name="model" search="[('model', '=', 'lims.entry.detail.analysis')]"/>
+            <field name="group" ref="group_lims_entry_update"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_entry_detail_analysis_group_entry">
+            <field name="model" search="[('model', '=', 'lims.entry.detail.analysis')]"/>
+            <field name="group" ref="group_lims_entry"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.access" id="access_entry_detail_analysis_group_laboratory_results_acceptance">
+            <field name="model" search="[('model', '=', 'lims.entry.detail.analysis')]"/>
+            <field name="group" ref="group_lims_laboratory_results_acceptance"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_entry_detail_analysis_group_laboratory_reports">
+            <field name="model" search="[('model', '=', 'lims.entry.detail.analysis')]"/>
+            <field name="group" ref="group_lims_laboratory_reports"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_lims_group_conf_entry_readonly">
+            <field name="menu" ref="lims_menu"/>
+            <field name="group" ref="group_lims_conf_entry_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_lims_group_conf_entry_admin">
+            <field name="menu" ref="lims_menu"/>
+            <field name="group" ref="group_lims_conf_entry_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_entry_readonly">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_entry_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_entry_admin">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_entry_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_entry_group_conf_entry_readonly">
+            <field name="menu" ref="lims_config_entry"/>
+            <field name="group" ref="group_lims_conf_entry_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_entry_group_conf_entry_admin">
+            <field name="menu" ref="lims_config_entry"/>
+            <field name="group" ref="group_lims_conf_entry_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_lims_group_entry_readonly">
+            <field name="menu" ref="lims_menu"/>
+            <field name="group" ref="group_lims_entry_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_lims_group_entry_update">
+            <field name="menu" ref="lims_menu"/>
+            <field name="group" ref="group_lims_entry_update"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_lims_group_entry">
+            <field name="menu" ref="lims_menu"/>
+            <field name="group" ref="group_lims_entry"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_entry_board_group_entry_readonly">
+            <field name="menu" ref="lims_entry_board_menu"/>
+            <field name="group" ref="group_lims_entry_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_entry_board_group_entry_update">
+            <field name="menu" ref="lims_entry_board_menu"/>
+            <field name="group" ref="group_lims_entry_update"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_entry_board_group_entry">
+            <field name="menu" ref="lims_entry_board_menu"/>
+            <field name="group" ref="group_lims_entry"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_entry_form_group_entry">
+            <field name="menu" ref="lims_entry_form_menu"/>
+            <field name="group" ref="group_lims_entry"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_entry_group_entry_readonly">
+            <field name="menu" ref="lims_entry_menu"/>
+            <field name="group" ref="group_lims_entry_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_entry_group_entry_update">
+            <field name="menu" ref="lims_entry_menu"/>
+            <field name="group" ref="group_lims_entry_update"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_entry_group_entry">
+            <field name="menu" ref="lims_entry_menu"/>
+            <field name="group" ref="group_lims_entry"/>
+        </record>
+
+    </data>
+</tryton>

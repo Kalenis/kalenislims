@@ -16,7 +16,6 @@
     <field name="dosis"/>
     <field name="after_application_days"/>
     <field name="glp_repetitions"/>
-    <field name="z_senasa_protocol"/>
     <field name="variety"/>
     <field name="reception_date"/>
     <field name="cultivation_zone"/>

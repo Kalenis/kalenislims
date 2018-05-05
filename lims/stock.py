@@ -4,11 +4,11 @@
 # the full copyright notices and license terms.
 
 from trytond.model import fields
-from trytond.pyson import In, Eval, Bool
+from trytond.pyson import In, Eval, Bool, If
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 
-__all__ = ['Location', 'Move', 'ShipmentInternal', 'InventoryLine']
+__all__ = ['Location', 'Move', 'ShipmentInternal']
 
 
 class Location:
@@ -35,11 +35,12 @@ class Move:
 
     fraction = fields.Many2One('lims.fraction', 'Fraction', select=True,
         ondelete='CASCADE', states={
-            'readonly': (In(Eval('state'), ['cancel', 'assigned', 'done'])
-                | Bool(Eval('fraction_readonly')))},
-        domain=['OR',
-            ('current_location', '=', Eval('from_location')),
-            ('id', '=', Eval('fraction')),
+            'readonly': (In(Eval('state'), ['cancel', 'assigned', 'done']) |
+                Bool(Eval('fraction_readonly')))},
+        domain=[
+            If(~Eval('fraction'),
+                ('current_location', '=', Eval('from_location')),
+                ('id', '=', Eval('fraction'))),
             ],
         depends=['state', 'fraction_readonly', 'from_location'])
     fraction_readonly = fields.Function(fields.Boolean('Fraction Read Only'),
@@ -65,9 +66,9 @@ class Move:
             return True
         if not self.product or self.product != config.fraction_product:
             return True
-        if (self.from_location and self.to_location
-                and self.from_location.type == 'storage'
-                and self.to_location.type == 'storage'):
+        if (self.from_location and self.to_location and
+                self.from_location.type == 'storage' and
+                self.to_location.type == 'storage'):
             return False
         return True
 
@@ -88,6 +89,16 @@ class ShipmentInternal:
                 default=default)
 
     @classmethod
+    def _sync_moves(cls, shipments):
+        with Transaction().set_context(check_current_location=False):
+            super(ShipmentInternal, cls)._sync_moves(shipments)
+
+    @classmethod
+    def _set_transit(cls, shipments):
+        with Transaction().set_context(check_current_location=False):
+            super(ShipmentInternal, cls)._set_transit(shipments)
+
+    @classmethod
     def draft(cls, shipments):
         with Transaction().set_context(check_current_location=False):
             super(ShipmentInternal, cls).draft(shipments)
@@ -96,6 +107,11 @@ class ShipmentInternal:
     def wait(cls, shipments):
         with Transaction().set_context(check_current_location=False):
             super(ShipmentInternal, cls).wait(shipments)
+
+    @classmethod
+    def ship(cls, shipments):
+        with Transaction().set_context(check_current_location=False):
+            super(ShipmentInternal, cls).ship(shipments)
 
     @classmethod
     def done(cls, shipments):
@@ -116,30 +132,3 @@ class ShipmentInternal:
     def assign_force(cls, shipments):
         with Transaction().set_context(check_current_location=False):
             super(ShipmentInternal, cls).assign_force(shipments)
-
-
-class InventoryLine:
-    __name__ = 'stock.inventory.line'
-    __metaclass__ = PoolMeta
-
-    account_move = fields.Function(fields.Many2One('account.move',
-        'Account Move'), 'get_account_move')
-
-    def get_account_move_id(self, account_move):
-        if not account_move:
-            return None
-        if not account_move.origin:
-            return None
-        AccountMove = Pool().get('account.move')
-        account_move_origin = '%s,%s' % (account_move.origin.__name__,
-                account_move.origin.id)
-        account_move, = AccountMove.search([
-            'origin', '=', account_move_origin,
-            ])
-        return account_move.id
-
-    def get_account_move(self, name):
-        for move in self.moves:
-            account_move = move._get_account_stock_move()
-            return self.get_account_move_id(account_move)
-        return None

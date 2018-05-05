@@ -7,7 +7,7 @@ import xlrd
 
 from trytond.pool import Pool
 from trytond.transaction import Transaction
-from trytond.modules.lims import FormulaParser
+from trytond.modules.lims.formula_parser import FormulaParser
 
 IGNORE_SHEET = '###'
 ANALYSIS_CODE = 'Analysis Code'

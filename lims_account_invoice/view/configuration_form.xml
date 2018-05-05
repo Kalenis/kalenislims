@@ -12,4 +12,5 @@
             <field name="mail_send_invoice_body" colspan="4"/>
         </page>
     </xpath>
+
 </data>

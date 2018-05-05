@@ -28,9 +28,3 @@ class LimsResultsImport:
             self.controller = generic_form_xls
         else:
             return super(LimsResultsImport, self).loadController()
-
-    def exportResults(self):
-        if self.name == 'generic_form_xls':
-            return True
-        else:
-            return False

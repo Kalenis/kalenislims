@@ -4,6 +4,7 @@
         expr="/tree/field[@name='product']"
         position="after">
         <field name="category"/>
+        <field name="account_category"/>
         <field name="stability"/>
         <field name="homogeneity"/>
         <field name="concentration"/>

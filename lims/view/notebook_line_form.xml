@@ -28,6 +28,9 @@
     <field name="initial_concentration"/>
     <label name="final_concentration"/>
     <field name="final_concentration"/>
+    <label name="planification"/>
+    <field name="planification"/>
+    <field name="controls" colspan="4"/>
     <field name="laboratory_professionals" colspan="4"/>
     <label name="initial_unit"/>
     <field name="initial_unit"/>

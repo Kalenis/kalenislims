@@ -12,5 +12,7 @@
     <field name="related_location"/>
     <label name="section"/>
     <field name="section"/>
+    <label name="headquarters"/>
+    <field name="headquarters"/>
     <field name="cv_corrections" colspan="4"/>
 </form>
