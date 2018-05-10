@@ -11,12 +11,12 @@
             <field name="sent_date"/>
         </page>
     </xpath>
-    <xpath
+    <!-- <xpath
         expr="/form/notebook/page[@id='info']/field[@name='cancel_move']"
         position="after">
         <label name="lims_project"/>
         <field name="lims_project"/>
-    </xpath>
+    </xpath> -->
     <xpath
         expr="/form/notebook/page[@id='info']/field[@name='comment']"
         position="after">

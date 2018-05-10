@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<data>
-    <xpath
-        expr="/tree/field[@name='description']"
-        position="after">
-        <field name="department"/>
-        <field name="delivery_date"/>
-    </xpath>
-</data>

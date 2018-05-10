@@ -407,8 +407,8 @@
         <menuitem parent="lims_config_entry" action="act_lims_entry_suspension_reason_list"
             id="lims_entry_suspension_reason_menu" sequence="50"/>
 
-        <menuitem parent="lims_menu" name="Entries Board"
-            id="lims_entry_board_menu" sequence="30" icon="lims-entry_board"/>
+        <menuitem parent="lims_laboratory" name="Entries Board"
+            id="lims_entry_board_menu" sequence="10" icon="lims-entry_board"/>
 <!--        <menuitem parent="lims_entry_board_menu" action="wiz_lims_create_entry"
             id="lims_create_entry_menu" sequence="5"/>-->
         <menuitem parent="lims_entry_board_menu" action="act_lims_entry_form"
@@ -488,12 +488,12 @@
             <field name="perm_delete" eval="False"/>
         </record>
 
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_conf_entry_readonly">
-            <field name="menu" ref="lims_menu"/>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_entry_readonly">
+            <field name="menu" ref="lims_laboratory"/>
             <field name="group" ref="group_lims_conf_entry_readonly"/>
         </record>
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_conf_entry_admin">
-            <field name="menu" ref="lims_menu"/>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_entry_admin">
+            <field name="menu" ref="lims_laboratory"/>
             <field name="group" ref="group_lims_conf_entry_admin"/>
         </record>
 
@@ -515,16 +515,16 @@
             <field name="group" ref="group_lims_conf_entry_admin"/>
         </record>
 
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_entry_readonly">
-            <field name="menu" ref="lims_menu"/>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_entry_readonly">
+            <field name="menu" ref="lims_laboratory"/>
             <field name="group" ref="group_lims_entry_readonly"/>
         </record>
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_entry_update">
-            <field name="menu" ref="lims_menu"/>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_entry_update">
+            <field name="menu" ref="lims_laboratory"/>
             <field name="group" ref="group_lims_entry_update"/>
         </record>
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_entry">
-            <field name="menu" ref="lims_menu"/>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_entry">
+            <field name="menu" ref="lims_laboratory"/>
             <field name="group" ref="group_lims_entry"/>
         </record>
 

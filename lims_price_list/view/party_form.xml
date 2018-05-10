@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<data>
-    <xpath expr="/form/notebook/page[@id='sale']" position="inside">
-        <field name="lims_price_list" colspan="4"/>
-    </xpath>
-</data>

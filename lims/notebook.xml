@@ -681,7 +681,7 @@
         </record>
 
         <menuitem parent="lims_laboratory" action="act_lims_notebook_list"
-            id="lims_notebook_menu" sequence="15"
+            id="lims_notebook_menu" sequence="30"
             icon="lims-notebook"/>
         <menuitem parent="lims_notebook_menu" action="act_lims_notebook_line_all_fields_list"
             id="lims_notebook_line_all_menu" sequence="10"
@@ -694,7 +694,7 @@
             icon="tryton-print"/>
 
         <menuitem name="Results entry" parent="lims_laboratory"
-            id="lims_laboratory_results" sequence="20"
+            id="lims_laboratory_results" sequence="40"
             icon="lims-laboratory_results"/>
         <menuitem parent="lims_laboratory_results" action="wiz_lims_notebook_load_results_manual"
             id="lims_notebook_load_results_manual_menu" sequence="10"
@@ -767,15 +767,6 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_notebook_readonly">
-            <field name="menu" ref="lims_menu"/>
-            <field name="group" ref="group_lims_notebook_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_notebook">
-            <field name="menu" ref="lims_menu"/>
-            <field name="group" ref="group_lims_notebook"/>
-        </record>
-
         <record model="ir.ui.menu-res.group" id="menu_laboratory_group_notebook_readonly">
             <field name="menu" ref="lims_laboratory"/>
             <field name="group" ref="group_lims_notebook_readonly"/>
@@ -801,11 +792,6 @@
         <record model="ir.ui.menu-res.group" id="menu_notebook_line_all_group_notebook">
             <field name="menu" ref="lims_notebook_line_all_menu"/>
             <field name="group" ref="group_lims_notebook"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_laboratory_results">
-            <field name="menu" ref="lims_menu"/>
-            <field name="group" ref="group_lims_laboratory_results"/>
         </record>
 
         <record model="ir.ui.menu-res.group" id="menu_laboratory_group_laboratory_results">

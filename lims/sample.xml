@@ -626,6 +626,11 @@
             <field name="wiz_name">lims.create_sample</field>
         </record>
 
+        <record model="ir.module.config_wizard.item"
+            id="config_wizard_module">
+            <field name="action" ref="ir.act_module_form"/>
+        </record>
+
 <!-- Sample Labels Printer -->
 
         <record model="ir.action.wizard" id="wiz_report_sample_labels_printer">

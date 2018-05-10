@@ -27,8 +27,8 @@
             <field name="path">icons/green.svg</field>
         </record>
 
-        <menuitem name="LIMS"
-            id="lims_menu" icon="lims-lab"/>
+        <menuitem name="Laboratory"
+            id="lims_laboratory" icon="lims-laboratory"/>
 
 <!-- Laboratory -->
 
@@ -209,10 +209,6 @@
 
         <!-- Configuration / Laboratory -->
 
-        <menuitem name="Laboratory" parent="lims_menu"
-            id="lims_laboratory" sequence="50"
-            icon="lims-laboratory"/>
-
         <record model="ir.model.access" id="access_laboratory">
             <field name="model" search="[('model', '=', 'lims.laboratory')]"/>
             <field name="perm_read" eval="True"/>
@@ -293,12 +289,12 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_conf_laboratory_readonly">
-            <field name="menu" ref="lims_menu"/>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_laboratory_readonly">
+            <field name="menu" ref="lims_laboratory"/>
             <field name="group" ref="group_lims_conf_laboratory_readonly"/>
         </record>
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_conf_laboratory_admin">
-            <field name="menu" ref="lims_menu"/>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_laboratory_admin">
+            <field name="menu" ref="lims_laboratory"/>
             <field name="group" ref="group_lims_conf_laboratory_admin"/>
         </record>
 

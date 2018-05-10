@@ -340,7 +340,7 @@
         </record>
 
         <menuitem name="Results reports" parent="lims_laboratory"
-            id="lims_laboratory_reports" sequence="30"
+            id="lims_laboratory_reports" sequence="50"
             icon="lims-laboratory_reports"/>
         <menuitem parent="lims_laboratory_reports" action="act_lims_results_report"
             id="lims_results_report_menu" sequence="10"
@@ -408,15 +408,6 @@
         </record>
         <record model="ir.model.button-res.group" id="results_report_version_detail_revise_all_lang_button_group_lims_laboratory_reports">
             <field name="button" ref="results_report_version_detail_revise_all_lang_button"/>
-            <field name="group" ref="group_lims_laboratory_reports"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_laboratory_reports_readonly">
-            <field name="menu" ref="lims_menu"/>
-            <field name="group" ref="group_lims_laboratory_reports_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_laboratory_reports">
-            <field name="menu" ref="lims_menu"/>
             <field name="group" ref="group_lims_laboratory_reports"/>
         </record>
 

@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<form>
-    <image name="tryton-dialog-information" xexpand="0" xfill="0"/>
-    <group col="1" id="labels">
-        <label string="Lines price will be updated with the price list."
-            yalign="0.0" xalign="0.0" xexpand="1" id="text-info"/>
-    </group>
-</form>
