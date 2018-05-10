@@ -269,7 +269,7 @@
             id="lims_range_list_menu" sequence="90"/>
 
         <menuitem name="Control Charts" parent="lims_laboratory"
-            id="lims_laboratory_control" sequence="40"
+            id="lims_laboratory_control" sequence="60"
             icon="lims-laboratory_control"/>
         <menuitem parent="lims_laboratory_control" action="act_lims_control_tendency"
             id="lims_control_tendency_menu" sequence="10"
@@ -330,15 +330,6 @@
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_control_readonly">
-            <field name="menu" ref="lims_menu"/>
-            <field name="group" ref="group_lims_control_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_control">
-            <field name="menu" ref="lims_menu"/>
-            <field name="group" ref="group_lims_control"/>
         </record>
 
         <record model="ir.ui.menu-res.group" id="menu_laboratory_group_control_readonly">

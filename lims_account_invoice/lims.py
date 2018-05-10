@@ -8,10 +8,10 @@ from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 
-__all__ = ['LimsFractionType', 'LimsEntry', 'LimsFraction', 'LimsService']
+__all__ = ['FractionType', 'Entry', 'Fraction', 'Service', 'ManageServices']
 
 
-class LimsFractionType:
+class FractionType:
     __name__ = 'lims.fraction.type'
     __metaclass__ = PoolMeta
 
@@ -22,28 +22,28 @@ class LimsFractionType:
         return True
 
 
-class LimsEntry:
+class Entry:
     __name__ = 'lims.entry'
     __metaclass__ = PoolMeta
 
     @classmethod
     def on_hold(cls, entries):
-        super(LimsEntry, cls).on_hold(entries)
+        super(Entry, cls).on_hold(entries)
         cls.create_invoice_lines(entries)
 
     @classmethod
     def create_invoice_lines(cls, entries):
-        LimsService = Pool().get('lims.service')
+        Service = Pool().get('lims.service')
 
         with Transaction().set_context(_check_access=False):
-            services = LimsService.search([
+            services = Service.search([
                 ('entry', 'in', [e.id for e in entries]),
                 ])
         for service in services:
             service.create_invoice_line('out')
 
 
-class LimsFraction:
+class Fraction:
     __name__ = 'lims.fraction'
     __metaclass__ = PoolMeta
 
@@ -51,29 +51,29 @@ class LimsFraction:
     def confirm(cls, fractions):
         fractions_to_invoice = [f for f in fractions if
             f.sample.entry.state != 'pending']
-        super(LimsFraction, cls).confirm(fractions)
+        super(Fraction, cls).confirm(fractions)
         if fractions_to_invoice:
             cls.create_invoice_lines(fractions_to_invoice)
 
     @classmethod
     def create_invoice_lines(cls, fractions):
-        LimsService = Pool().get('lims.service')
+        Service = Pool().get('lims.service')
 
         with Transaction().set_context(_check_access=False):
-            services = LimsService.search([
+            services = Service.search([
                 ('fraction', 'in', [f.id for f in fractions]),
                 ])
         for service in services:
             service.create_invoice_line('out')
 
 
-class LimsService:
+class Service:
     __name__ = 'lims.service'
     __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):
-        super(LimsService, cls).__setup__()
+        super(Service, cls).__setup__()
         cls._error_messages.update({
             'missing_account_revenue': ('Analysis product \"%(product)s\" in '
                 'Service "%(service)s" misses an "account revenue".'),
@@ -83,7 +83,7 @@ class LimsService:
 
     @classmethod
     def create(cls, vlist):
-        services = super(LimsService, cls).create(vlist)
+        services = super(Service, cls).create(vlist)
         services_to_invoice = [s for s in services if
             s.entry.state == 'pending']
         for service in services_to_invoice:
@@ -156,7 +156,7 @@ class LimsService:
     @classmethod
     def delete(cls, services):
         cls.delete_invoice_lines(services)
-        super(LimsService, cls).delete(services)
+        super(Service, cls).delete(services)
 
     @classmethod
     def delete_invoice_lines(cls, services):
@@ -175,3 +175,14 @@ class LimsService:
             with Transaction().set_context(_check_access=False,
                     delete_service=True):
                 InvoiceLine.delete(lines_to_delete)
+
+
+class ManageServices:
+    __name__ = 'lims.manage_services'
+    __metaclass__ = PoolMeta
+
+    def create_service(self, service, fraction):
+        new_service = super(ManageServices, self).create_service(service,
+            fraction)
+        new_service.create_invoice_line('out')
+        return new_service

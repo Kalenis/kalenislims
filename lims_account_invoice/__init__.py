@@ -3,32 +3,31 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import Pool
-from .configuration import *
-from .party import *
-from .invoice import *
-from .stock import *
-from .lims import *
-from wizard import *
+from . import configuration
+from . import party
+from . import invoice
+from . import stock
+from . import lims
 
 
 def register():
     Pool.register(
-        LimsConfiguration,
-        Party,
-        Address,
-        InvoiceContact,
-        Invoice,
-        InvoiceLine,
-        InventoryLine,
-        LimsFractionType,
-        LimsEntry,
-        LimsFraction,
-        LimsService,
-        PopulateInvoiceContactsStart,
+        configuration.Configuration,
+        party.Party,
+        party.Address,
+        invoice.InvoiceContact,
+        invoice.Invoice,
+        invoice.InvoiceLine,
+        stock.InventoryLine,
+        lims.FractionType,
+        lims.Entry,
+        lims.Fraction,
+        lims.Service,
+        invoice.PopulateInvoiceContactsStart,
         module='lims_account_invoice', type_='model')
     Pool.register(
-        CreditInvoice,
-        LimsManageServices,
-        PopulateInvoiceContacts,
-        SendOfInvoice,
+        invoice.CreditInvoice,
+        lims.ManageServices,
+        invoice.PopulateInvoiceContacts,
+        invoice.SendOfInvoice,
         module='lims_account_invoice', type_='wizard')

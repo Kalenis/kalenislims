@@ -36,5 +36,18 @@
             <field name="name">stock_shipment_in_form</field>
         </record>
 
+<!-- Fraction Product -->
+
+        <record model="product.template" id="template_fraction">
+            <field name="name">Fraction</field>
+            <field name="type">goods</field>
+            <field name="default_uom" ref="product.uom_unit"/>
+            <field name="list_price" eval="1.0"/>
+        </record>
+        <record model="product.product" id="product_fraction">
+            <field name="template" ref="template_fraction"/>
+            <field name="cost_price" eval="1.0"/>
+        </record>
+
     </data>
 </tryton>

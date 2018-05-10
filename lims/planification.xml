@@ -780,8 +780,8 @@
             <field name="wiz_name">lims.load_services</field>
         </record>
 
-        <menuitem parent="lims_menu" action="act_lims_planification_list"
-            id="lims_planification_menu" sequence="40"
+        <menuitem parent="lims_laboratory" action="act_lims_planification_list"
+            id="lims_planification_menu" sequence="20"
             icon="lims-planification"/>
         <menuitem parent="lims_planification_menu" action="wiz_lims_create_fraction_con"
             id="lims_create_fraction_con_menu" sequence="10"
@@ -1080,12 +1080,12 @@
             <field name="group" ref="group_lims_planification"/>
         </record>
 
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_blind_sample_readonly">
-            <field name="menu" ref="lims.lims_menu"/>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_blind_sample_readonly">
+            <field name="menu" ref="lims_laboratory"/>
             <field name="group" ref="group_lims_blind_sample_readonly"/>
         </record>
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_blind_sample">
-            <field name="menu" ref="lims.lims_menu"/>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_blind_sample">
+            <field name="menu" ref="lims_laboratory"/>
             <field name="group" ref="group_lims_blind_sample"/>
         </record>
 
@@ -1116,12 +1116,12 @@
             <field name="group" ref="group_lims_blind_sample"/>
         </record>
 
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_planification_readonly">
-            <field name="menu" ref="lims.lims_menu"/>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_planification_readonly">
+            <field name="menu" ref="lims_laboratory"/>
             <field name="group" ref="group_lims_planification_readonly"/>
         </record>
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_planification">
-            <field name="menu" ref="lims.lims_menu"/>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_planification">
+            <field name="menu" ref="lims_laboratory"/>
             <field name="group" ref="group_lims_planification"/>
         </record>
 

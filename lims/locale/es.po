@@ -12581,3 +12581,3708 @@ msgstr "Muestreo"
 msgctxt "field:lims.laboratory,headquarters:"
 msgid "Headquarters"
 msgstr "Sede"
+
+msgctxt "error:lims.lab.professional.method:"
+msgid "The method already exists for this professional"
+msgstr "El método ya existe para este profesional"
+
+msgctxt "error:lims.planification.add_fraction_bre:"
+msgid "Missing concentration level for this control type"
+msgstr "Falta definir el nivel de concentración para este tipo de control"
+
+msgctxt "error:lims.planification.add_fraction_bre:"
+msgid "Missing default configuration for BRE fraction type"
+msgstr "Falta la configuración por defecto para el tipo de fracción BRE"
+
+msgctxt "error:lims.planification.add_fraction_bre:"
+msgid ""
+"The analysis \"%(analysis)s\" is not typified for product type "
+"\"%(product_type)s\" and matrix \"%(matrix)s\""
+msgstr ""
+"El análisis «%(analysis)s» no está tipificado para el tipo de producto "
+"«%(product_type)s» y matriz «%(matrix)s»"
+
+msgctxt "error:lims.planification.add_fraction_bre:"
+msgid "There is no BRE fraction type configured"
+msgstr "No hay configurado ningún tipo de fracción BRE"
+
+msgctxt "error:lims.planification.add_fraction_bre:"
+msgid "There is no default entry control for this work year"
+msgstr "No hay una partida control por defecto para este año laboral"
+
+msgctxt "error:lims.planification.add_fraction_con:"
+msgid "Missing concentration level for this control type"
+msgstr "Falta definir el nivel de concentración para este tipo de control"
+
+msgctxt "error:lims.planification.add_fraction_con:"
+msgid "There is no Control fraction type configured"
+msgstr "No hay configurado ningún tipo de fracción Control"
+
+msgctxt "error:lims.planification.add_fraction_con:"
+msgid "There is no default entry control for this work year"
+msgstr "No hay una partida control por defecto para este año laboral"
+
+msgctxt "error:lims.planification.add_fraction_mrt:"
+msgid "Missing concentration level for this control type"
+msgstr "Falta definir el nivel de concentración para este tipo de control"
+
+msgctxt "error:lims.planification.add_fraction_mrt:"
+msgid "Missing default configuration for MRT fraction type"
+msgstr "Falta la configuración por defecto para el tipo de fracción MRT"
+
+msgctxt "error:lims.planification.add_fraction_mrt:"
+msgid ""
+"The analysis \"%(analysis)s\" is not typified for product type "
+"\"%(product_type)s\" and matrix \"%(matrix)s\""
+msgstr ""
+"El análisis «%(analysis)s» no está tipificado para el tipo de producto "
+"«%(product_type)s» y matriz «%(matrix)s»"
+
+msgctxt "error:lims.planification.add_fraction_mrt:"
+msgid "There is no MRT fraction type configured"
+msgstr "No hay configurado ningún tipo de fracción MRT"
+
+msgctxt "error:lims.planification.add_fraction_mrt:"
+msgid "There is no default entry control for this work year"
+msgstr "No hay una partida control por defecto para este año laboral"
+
+msgctxt "error:lims.planification.add_fraction_rm_bmz:"
+msgid "Missing concentration level for this control type"
+msgstr "Falta definir el nivel de concentración para este tipo de control"
+
+msgctxt "error:lims.planification.add_fraction_rm_bmz:"
+msgid "Missing default configuration for BMZ fraction type"
+msgstr "Falta la configuración por defecto para el tipo de fracción BMZ"
+
+msgctxt "error:lims.planification.add_fraction_rm_bmz:"
+msgid "Missing default configuration for RM fraction type"
+msgstr "Falta la configuración por defecto para el tipo de fracción RM"
+
+msgctxt "error:lims.planification.add_fraction_rm_bmz:"
+msgid ""
+"The analysis \"%(analysis)s\" is not typified for product type "
+"\"%(product_type)s\" and matrix \"%(matrix)s\""
+msgstr ""
+"El análisis «%(analysis)s» no está tipificado para el tipo de producto "
+"«%(product_type)s» y matriz «%(matrix)s»"
+
+msgctxt "error:lims.planification.add_fraction_rm_bmz:"
+msgid "There is no BMZ fraction type configured"
+msgstr "No hay configurado ningún tipo de fracción BMZ"
+
+msgctxt "error:lims.planification.add_fraction_rm_bmz:"
+msgid "There is no RM fraction type configured"
+msgstr "No hay configurado ningún tipo de fracción RM"
+
+msgctxt "error:lims.planification.add_fraction_rm_bmz:"
+msgid "There is no default entry control for this work year"
+msgstr "No hay una partida control por defecto para este año laboral"
+
+msgctxt "error:lims.planification.create_fraction_con:"
+msgid "Missing concentration level for this control type"
+msgstr "Falta definir el nivel de concentración para este tipo de control"
+
+msgctxt "error:lims.planification.create_fraction_con:"
+msgid "Missing default configuration for COI fraction type"
+msgstr "Falta la configuración por defecto para el tipo de fracción COI"
+
+msgctxt "error:lims.planification.create_fraction_con:"
+msgid "Missing default configuration for MRC fraction type"
+msgstr "Falta la configuración por defecto para el tipo de fracción MRC"
+
+msgctxt "error:lims.planification.create_fraction_con:"
+msgid "Missing default configuration for SLA fraction type"
+msgstr "Falta la configuración por defecto para el tipo de fracción SLA"
+
+msgctxt "error:lims.planification.create_fraction_con:"
+msgid "There is no COI fraction type configured"
+msgstr "No hay configurado ningún tipo de fracción COI"
+
+msgctxt "error:lims.planification.create_fraction_con:"
+msgid "There is no MRC fraction type configured"
+msgstr "No hay configurado ningún tipo de fracción MRC"
+
+msgctxt "error:lims.planification.create_fraction_con:"
+msgid "There is no SLA fraction type configured"
+msgstr "No hay configurado ningún tipo de fracción SLA"
+
+msgctxt "error:lims.planification.create_fraction_con:"
+msgid "There is no default entry control for this work year"
+msgstr "No hay una partida control por defecto para este año laboral"
+
+msgctxt "error:lims.planification.technician:"
+msgid "Professionals cannot be repeated"
+msgstr "Los profesionales no pueden repetirse"
+
+msgctxt "error:lims.planification:"
+msgid "Planification \"%s\" is still waiting for processing"
+msgstr "La planificación «%s» aún está en procesamiento"
+
+msgctxt "error:lims.planification:"
+msgid "The following fractions have not a responsible technician:%s"
+msgstr "Las siguientes fracciones no tienen un técnico responsable:%s"
+
+msgctxt "error:lims.planification:"
+msgid "The planification must have a start date"
+msgstr "La planificación debe tener una fecha de inicio"
+
+msgctxt "error:lims.planification:"
+msgid "The start date must be after \"%s\""
+msgstr "La fecha de inicio debe ser posterior a «%s»"
+
+msgctxt "error:lims.planification:"
+msgid "You can not copy planifications"
+msgstr "No puede duplicar la planificación"
+
+msgctxt "error:lims.planification:"
+msgid ""
+"You can not delete planification \"%s\" because it is not in draft or pre-"
+"planned state"
+msgstr ""
+"No puede eliminar la planificación porque no se encuentra en estado borrador"
+" o pre-planificada."
+
+msgctxt "field:lims.analysis,pending_fractions:"
+msgid "Pending fractions"
+msgstr "Fracciones pendientes"
+
+msgctxt "field:lims.blind_sample,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:lims.blind_sample,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.blind_sample,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.blind_sample,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:lims.blind_sample,entry:"
+msgid "Entry"
+msgstr "Partida"
+
+msgctxt "field:lims.blind_sample,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "field:lims.blind_sample,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.blind_sample,line:"
+msgid "Line"
+msgstr "Línea"
+
+msgctxt "field:lims.blind_sample,max_value:"
+msgid "Maximum value"
+msgstr "Valor máximo"
+
+msgctxt "field:lims.blind_sample,min_value:"
+msgid "Minimum value"
+msgstr "Valor mínimo"
+
+msgctxt "field:lims.blind_sample,original_fraction:"
+msgid "Original fraction"
+msgstr "Fracción original"
+
+msgctxt "field:lims.blind_sample,original_line:"
+msgid "Original line"
+msgstr "Línea original"
+
+msgctxt "field:lims.blind_sample,original_repetition:"
+msgid "Repetition"
+msgstr "Repetición"
+
+msgctxt "field:lims.blind_sample,original_sample:"
+msgid "Original sample"
+msgstr "Muestra original"
+
+msgctxt "field:lims.blind_sample,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.blind_sample,repetition:"
+msgid "Repetition"
+msgstr "Repetición"
+
+msgctxt "field:lims.blind_sample,sample:"
+msgid "Sample"
+msgstr "Muestra"
+
+msgctxt "field:lims.blind_sample,service:"
+msgid "Service"
+msgstr "Servicio"
+
+msgctxt "field:lims.blind_sample,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.blind_sample,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.configuration,bmz_fraction_type:"
+msgid "BMZ fraction type"
+msgstr "Tipo de fracción BMZ"
+
+msgctxt "field:lims.configuration,bre_fraction_type:"
+msgid "BRE fraction type"
+msgstr "Tipo de fracción BRE"
+
+msgctxt "field:lims.configuration,coi_fraction_type:"
+msgid "COI fraction type"
+msgstr "Tipo de fracción COI"
+
+msgctxt "field:lims.configuration,con_fraction_type:"
+msgid "Control fraction type"
+msgstr "Tipo de fracción Control"
+
+msgctxt "field:lims.configuration,itc_fraction_type:"
+msgid "ITC fraction type"
+msgstr "Tipo de fracción ITC"
+
+msgctxt "field:lims.configuration,itl_fraction_type:"
+msgid "ITL fraction type"
+msgstr "Tipo de fracción ITL"
+
+msgctxt "field:lims.configuration,mcl_fraction_type:"
+msgid "MCL fraction type"
+msgstr "Tipo de fracción MCL"
+
+msgctxt "field:lims.configuration,mrc_fraction_type:"
+msgid "MRC fraction type"
+msgstr "Tipo de fracción MRC"
+
+msgctxt "field:lims.configuration,mrt_fraction_type:"
+msgid "MRT fraction type"
+msgstr "Tipo de fracción MRT"
+
+msgctxt "field:lims.configuration,planification_process_background:"
+msgid "Process Planifications in Background"
+msgstr "Procesar planificaciones en segundo plano"
+
+msgctxt "field:lims.configuration,planification_sequence:"
+msgid "Planification Sequence"
+msgstr "Secuencia de planificaciones"
+
+msgctxt "field:lims.configuration,reagents:"
+msgid "Reagents"
+msgstr "Reactivos"
+
+msgctxt "field:lims.configuration,rm_fraction_type:"
+msgid "RM fraction type"
+msgstr "Tipo de fracción RM"
+
+msgctxt "field:lims.configuration,sla_fraction_type:"
+msgid "SLA fraction type"
+msgstr "Tipo de fracción SLA"
+
+msgctxt "field:lims.configuration-product.category,category:"
+msgid "Category"
+msgstr "Categoría"
+
+msgctxt "field:lims.configuration-product.category,configuration:"
+msgid "Configuration"
+msgstr "Configuración"
+
+msgctxt "field:lims.configuration-product.category,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.configuration-product.category,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.configuration-product.category,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.configuration-product.category,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.configuration-product.category,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.configuration-product.category,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.entry.detail.analysis,cie_fraction_type:"
+msgid "Blind Sample"
+msgstr "Muestra ciega"
+
+msgctxt "field:lims.entry.detail.analysis,cie_max_value:"
+msgid "Maximum value"
+msgstr "Valor máximo"
+
+msgctxt "field:lims.entry.detail.analysis,cie_min_value:"
+msgid "Minimum value"
+msgstr "Valor mínimo"
+
+msgctxt "field:lims.entry.detail.analysis,state:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:lims.fraction,bmz_matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.fraction,bmz_original_fraction:"
+msgid "Original fraction"
+msgstr "Fracción original"
+
+msgctxt "field:lims.fraction,bmz_product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.fraction,bmz_type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.fraction,bre_matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.fraction,bre_product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.fraction,bre_reagents:"
+msgid "Reagents"
+msgstr "Reactivos"
+
+msgctxt "field:lims.fraction,cie_fraction_type:"
+msgid "Blind Sample"
+msgstr "Muestra ciega"
+
+msgctxt "field:lims.fraction,cie_fraction_type_available:"
+msgid "Available for Blind Sample"
+msgstr "Disponible para Muestra ciega"
+
+msgctxt "field:lims.fraction,cie_original_fraction:"
+msgid "Original fraction"
+msgstr "Fracción original"
+
+msgctxt "field:lims.fraction,con_original_fraction:"
+msgid "Original fraction"
+msgstr "Fracción original"
+
+msgctxt "field:lims.fraction,con_type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.fraction,mrt_matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.fraction,mrt_product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.fraction,rm_matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.fraction,rm_original_fraction:"
+msgid "Original fraction"
+msgstr "Fracción original"
+
+msgctxt "field:lims.fraction,rm_product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.fraction,rm_type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.fraction,special_type:"
+msgid "Fraction type"
+msgstr "Tipo de fracción"
+
+msgctxt "field:lims.fraction.reagent,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.fraction.reagent,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.fraction.reagent,default_uom:"
+msgid "Default UOM"
+msgstr "UdM por defecto"
+
+msgctxt "field:lims.fraction.reagent,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "field:lims.fraction.reagent,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.fraction.reagent,lot:"
+msgid "Lot"
+msgstr "Lote"
+
+msgctxt "field:lims.fraction.reagent,product:"
+msgid "Reagent"
+msgstr "Reactivo"
+
+msgctxt "field:lims.fraction.reagent,quantity:"
+msgid "Current quantity"
+msgstr "Cantidad actual"
+
+msgctxt "field:lims.fraction.reagent,reagent_domain:"
+msgid "Reagent domain"
+msgstr "Dominio para Reactivo"
+
+msgctxt "field:lims.fraction.reagent,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.fraction.reagent,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.fraction.reagent,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.fraction.type,cie_fraction_type:"
+msgid "Available for Blind Samples"
+msgstr "Disponible para Muestras ciegas"
+
+msgctxt "field:lims.fraction.type,default_fraction_state:"
+msgid "Default Fraction state"
+msgstr "Estado de fracción por defecto"
+
+msgctxt "field:lims.fraction.type,default_package_type:"
+msgid "Default Package type"
+msgstr "Tipo de envase por defecto"
+
+msgctxt "field:lims.fraction.type,plannable:"
+msgid "Plannable"
+msgstr "Planificable"
+
+msgctxt "field:lims.lab.professional.method,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.lab.professional.method,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.lab.professional.method,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.lab.professional.method,method:"
+msgid "Method"
+msgstr "Método"
+
+msgctxt "field:lims.lab.professional.method,professional:"
+msgid "Professional"
+msgstr "Profesional"
+
+msgctxt "field:lims.lab.professional.method,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.lab.professional.method,requalification_history:"
+msgid "Trainings/Qualifications/Requalifications"
+msgstr "Entrenamientos/Cualificaciones/Recualificaciones"
+
+msgctxt "field:lims.lab.professional.method,state:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:lims.lab.professional.method,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.lab.professional.method,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.lab.professional.method,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.lab.professional.method.requalification,controls:"
+msgid "Controls"
+msgstr "Controles"
+
+msgctxt "field:lims.lab.professional.method.requalification,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.lab.professional.method.requalification,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.lab.professional.method.requalification,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:lims.lab.professional.method.requalification,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt ""
+"field:lims.lab.professional.method.requalification,last_execution_date:"
+msgid "Last execution Date"
+msgstr "Fecha última ejecución"
+
+msgctxt ""
+"field:lims.lab.professional.method.requalification,professional_method:"
+msgid "Professional Method"
+msgstr "Método de Profesional"
+
+msgctxt "field:lims.lab.professional.method.requalification,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.lab.professional.method.requalification,supervisors:"
+msgid "Supervisors"
+msgstr "Supervisores"
+
+msgctxt "field:lims.lab.professional.method.requalification,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.lab.professional.method.requalification,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.lab.professional.method.requalification,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.lab.professional.method.requalification.control,control:"
+msgid "Control"
+msgstr "Control"
+
+msgctxt ""
+"field:lims.lab.professional.method.requalification.control,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt ""
+"field:lims.lab.professional.method.requalification.control,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.lab.professional.method.requalification.control,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt ""
+"field:lims.lab.professional.method.requalification.control,method_requalification:"
+msgid "Professional method requalification"
+msgstr "Recualificación de Método de Profesional"
+
+msgctxt "field:lims.lab.professional.method.requalification.control,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt ""
+"field:lims.lab.professional.method.requalification.control,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt ""
+"field:lims.lab.professional.method.requalification.control,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt ""
+"field:lims.lab.professional.method.requalification.supervisor,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt ""
+"field:lims.lab.professional.method.requalification.supervisor,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.lab.professional.method.requalification.supervisor,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt ""
+"field:lims.lab.professional.method.requalification.supervisor,method_requalification:"
+msgid "Professional method requalification"
+msgstr "Recualificación de Método de Profesional"
+
+msgctxt ""
+"field:lims.lab.professional.method.requalification.supervisor,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt ""
+"field:lims.lab.professional.method.requalification.supervisor,supervisor:"
+msgid "Supervisor"
+msgstr "Supervisor"
+
+msgctxt ""
+"field:lims.lab.professional.method.requalification.supervisor,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt ""
+"field:lims.lab.professional.method.requalification.supervisor,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.lab.workyear,default_entry_control:"
+msgid "Default entry control"
+msgstr "Partida control por defecto"
+
+msgctxt "field:lims.laboratory.professional,methods:"
+msgid "Methods"
+msgstr "Métodos"
+
+msgctxt "field:lims.notebook.line,controls:"
+msgid "Controls"
+msgstr "Controles"
+
+msgctxt "field:lims.notebook.line,planning_comments:"
+msgid "Planification comments"
+msgstr "Observaciones de la planificación"
+
+msgctxt "field:lims.notebook.line-fraction,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.notebook.line-fraction,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.notebook.line-fraction,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "field:lims.notebook.line-fraction,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.notebook.line-fraction,notebook_line:"
+msgid "Notebook Line"
+msgstr "Línea de cuaderno"
+
+msgctxt "field:lims.notebook.line-fraction,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.notebook.line-fraction,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.notebook.line-fraction,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.pending_services_unplanned.start,end_date:"
+msgid "End Date"
+msgstr "Fecha hasta la confirmación del servicio"
+
+msgctxt "field:lims.pending_services_unplanned.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.pending_services_unplanned.start,party:"
+msgid "Party"
+msgstr "Cliente"
+
+msgctxt "field:lims.pending_services_unplanned.start,start_date:"
+msgid "Start Date"
+msgstr "Fecha desde la confirmación del servicio"
+
+msgctxt "field:lims.planification,analysis:"
+msgid "Analysis/Sets/Groups"
+msgstr "Análisis/Sets/Grupos"
+
+msgctxt "field:lims.planification,analysis_domain:"
+msgid "Analysis domain"
+msgstr "Dominio para Análisis"
+
+msgctxt "field:lims.planification,code:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "field:lims.planification,comments:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "field:lims.planification,controls:"
+msgid "Controls"
+msgstr "Controles"
+
+msgctxt "field:lims.planification,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:lims.planification,date_from:"
+msgid "Date from"
+msgstr "Fecha desde"
+
+msgctxt "field:lims.planification,date_to:"
+msgid "Date to"
+msgstr "Fecha hasta"
+
+msgctxt "field:lims.planification,details:"
+msgid "Fractions to plan"
+msgstr "Fracciones a planificar"
+
+msgctxt "field:lims.planification,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
+msgctxt "field:lims.planification,method_domain:"
+msgid "Method domain"
+msgstr "Dominio para Método"
+
+msgctxt "field:lims.planification,start_date:"
+msgid "Start date"
+msgstr "Fecha de inicio"
+
+msgctxt "field:lims.planification,state:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:lims.planification,technicians:"
+msgid "Technicians"
+msgstr "Técnicos"
+
+msgctxt "field:lims.planification,technicians_domain:"
+msgid "Technicians domain"
+msgstr "Dominio para Técnicos"
+
+msgctxt "field:lims.planification,waiting_process:"
+msgid "Waiting process"
+msgstr "Esperando procesamiento"
+
+msgctxt "field:lims.planification-analysis,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:lims.planification-analysis,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.planification-analysis,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.planification-analysis,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification-analysis,planification:"
+msgid "Planification"
+msgstr "Planificación"
+
+msgctxt "field:lims.planification-analysis,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.planification-analysis,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.planification-analysis,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.planification-fraction,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.planification-fraction,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.planification-fraction,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "field:lims.planification-fraction,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification-fraction,planification:"
+msgid "Planification"
+msgstr "Planificación"
+
+msgctxt "field:lims.planification-fraction,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.planification-fraction,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.planification-fraction,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.planification.add_analysis.start,analysis:"
+msgid "Analysis/Sets/Groups"
+msgstr "Análisis/Sets/Grupos"
+
+msgctxt "field:lims.planification.add_analysis.start,analysis_domain:"
+msgid "Analysis domain"
+msgstr "Dominio para Análisis"
+
+msgctxt "field:lims.planification.add_analysis.start,date_from:"
+msgid "Date from"
+msgstr "Fecha desde"
+
+msgctxt "field:lims.planification.add_analysis.start,date_to:"
+msgid "Date to"
+msgstr "Fecha hasta"
+
+msgctxt "field:lims.planification.add_analysis.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.add_analysis.start,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
+msgctxt "field:lims.planification.add_fraction_bre.start,bre_fraction:"
+msgid "BRE fraction"
+msgstr "Fracción BRE"
+
+msgctxt "field:lims.planification.add_fraction_bre.start,concentration_level:"
+msgid "Concentration level"
+msgstr "Nivel de concentración"
+
+msgctxt ""
+"field:lims.planification.add_fraction_bre.start,concentration_level_invisible:"
+msgid "Concentration level invisible"
+msgstr "Nivel de concentración invisible"
+
+msgctxt "field:lims.planification.add_fraction_bre.start,fraction_domain:"
+msgid "Fraction domain"
+msgstr "Dominio para Fracción"
+
+msgctxt "field:lims.planification.add_fraction_bre.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.add_fraction_bre.start,label:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "field:lims.planification.add_fraction_bre.start,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.planification.add_fraction_bre.start,matrix_domain:"
+msgid "Matrix domain"
+msgstr "Dominio para Matriz"
+
+msgctxt "field:lims.planification.add_fraction_bre.start,planification:"
+msgid "Planification"
+msgstr "Planificación"
+
+msgctxt "field:lims.planification.add_fraction_bre.start,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.planification.add_fraction_bre.start,product_type_domain:"
+msgid "Product type domain"
+msgstr "Dominio para Tipo de producto"
+
+msgctxt "field:lims.planification.add_fraction_bre.start,reagents:"
+msgid "Reagents"
+msgstr "Reactivos"
+
+msgctxt "field:lims.planification.add_fraction_bre.start,type:"
+msgid "BRE Type"
+msgstr "Tipo de BRE"
+
+msgctxt "field:lims.planification.add_fraction_con.start,concentration_level:"
+msgid "Concentration level"
+msgstr "Nivel de concentración"
+
+msgctxt ""
+"field:lims.planification.add_fraction_con.start,concentration_level_invisible:"
+msgid "Concentration level invisible"
+msgstr "Nivel de concentración invisible"
+
+msgctxt "field:lims.planification.add_fraction_con.start,fraction_domain:"
+msgid "Fraction domain"
+msgstr "Dominio para Fracción"
+
+msgctxt "field:lims.planification.add_fraction_con.start,generate_repetition:"
+msgid "Generate repetition"
+msgstr "Generar repetición"
+
+msgctxt "field:lims.planification.add_fraction_con.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.add_fraction_con.start,label:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "field:lims.planification.add_fraction_con.start,original_fraction:"
+msgid "Original fraction"
+msgstr "Fracción original"
+
+msgctxt "field:lims.planification.add_fraction_con.start,planification:"
+msgid "Planification"
+msgstr "Planificación"
+
+msgctxt "field:lims.planification.add_fraction_con.start,type:"
+msgid "Control type"
+msgstr "Tipo de Control"
+
+msgctxt "field:lims.planification.add_fraction_mrt.start,concentration_level:"
+msgid "Concentration level"
+msgstr "Nivel de concentración"
+
+msgctxt ""
+"field:lims.planification.add_fraction_mrt.start,concentration_level_invisible:"
+msgid "Concentration level invisible"
+msgstr "Nivel de concentración invisible"
+
+msgctxt "field:lims.planification.add_fraction_mrt.start,fraction_domain:"
+msgid "Fraction domain"
+msgstr "Dominio para Fracción"
+
+msgctxt "field:lims.planification.add_fraction_mrt.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.add_fraction_mrt.start,label:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "field:lims.planification.add_fraction_mrt.start,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.planification.add_fraction_mrt.start,matrix_domain:"
+msgid "Matrix domain"
+msgstr "Dominio para Matriz"
+
+msgctxt "field:lims.planification.add_fraction_mrt.start,mrt_fraction:"
+msgid "MRT fraction"
+msgstr "Fracción MRT"
+
+msgctxt "field:lims.planification.add_fraction_mrt.start,planification:"
+msgid "Planification"
+msgstr "Planificación"
+
+msgctxt "field:lims.planification.add_fraction_mrt.start,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.planification.add_fraction_mrt.start,product_type_domain:"
+msgid "Product type domain"
+msgstr "Dominio para Tipo de producto"
+
+msgctxt "field:lims.planification.add_fraction_mrt.start,repetitions:"
+msgid "Repetitions"
+msgstr "Repeticiones"
+
+msgctxt "field:lims.planification.add_fraction_mrt.start,type:"
+msgid "MRT Type"
+msgstr "Tipo de MRT"
+
+msgctxt ""
+"field:lims.planification.add_fraction_rm_bmz.start,concentration_level:"
+msgid "Concentration level"
+msgstr "Nivel de concentración"
+
+msgctxt ""
+"field:lims.planification.add_fraction_rm_bmz.start,concentration_level_invisible:"
+msgid "Concentration level invisible"
+msgstr "Nivel de concentración invisible"
+
+msgctxt "field:lims.planification.add_fraction_rm_bmz.start,fraction_domain:"
+msgid "Fraction domain"
+msgstr "Dominio para Fracción"
+
+msgctxt ""
+"field:lims.planification.add_fraction_rm_bmz.start,generate_repetition:"
+msgid "Generate repetition"
+msgstr "Generar repetición"
+
+msgctxt "field:lims.planification.add_fraction_rm_bmz.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.add_fraction_rm_bmz.start,label:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "field:lims.planification.add_fraction_rm_bmz.start,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.planification.add_fraction_rm_bmz.start,matrix_domain:"
+msgid "Matrix domain"
+msgstr "Dominio para Matriz"
+
+msgctxt "field:lims.planification.add_fraction_rm_bmz.start,planification:"
+msgid "Planification"
+msgstr "Planificación"
+
+msgctxt "field:lims.planification.add_fraction_rm_bmz.start,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt ""
+"field:lims.planification.add_fraction_rm_bmz.start,product_type_domain:"
+msgid "Product type domain"
+msgstr "Dominio para Tipo de producto"
+
+msgctxt ""
+"field:lims.planification.add_fraction_rm_bmz.start,reference_fraction:"
+msgid "Reference fraction"
+msgstr "Fracción de referecia"
+
+msgctxt "field:lims.planification.add_fraction_rm_bmz.start,rm_bmz_type:"
+msgid "RM/BMZ type"
+msgstr "Tipo de RM/BMZ"
+
+msgctxt "field:lims.planification.add_fraction_rm_bmz.start,type:"
+msgid "Control type"
+msgstr "Tipo de Control"
+
+msgctxt "field:lims.planification.create_fraction_con.start,analysis:"
+msgid "Analysis/Sets/Groups"
+msgstr "Análisis/Sets/Grupos"
+
+msgctxt "field:lims.planification.create_fraction_con.start,analysis_domain:"
+msgid "Analysis domain"
+msgstr "Dominio para Análisis"
+
+msgctxt ""
+"field:lims.planification.create_fraction_con.start,concentration_level:"
+msgid "Concentration level"
+msgstr "Nivel de concentración"
+
+msgctxt ""
+"field:lims.planification.create_fraction_con.start,concentration_level_invisible:"
+msgid "Concentration level invisible"
+msgstr "Nivel de concentración invisible"
+
+msgctxt "field:lims.planification.create_fraction_con.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.create_fraction_con.start,label:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "field:lims.planification.create_fraction_con.start,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
+msgctxt "field:lims.planification.create_fraction_con.start,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.planification.create_fraction_con.start,matrix_domain:"
+msgid "Matrix domain"
+msgstr "Dominio para Matriz"
+
+msgctxt "field:lims.planification.create_fraction_con.start,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt ""
+"field:lims.planification.create_fraction_con.start,product_type_domain:"
+msgid "Product type domain"
+msgstr "Dominio para Tipo de producto"
+
+msgctxt "field:lims.planification.create_fraction_con.start,sample_created:"
+msgid "Sample created"
+msgstr "Muestra creada"
+
+msgctxt "field:lims.planification.create_fraction_con.start,type:"
+msgid "Control type"
+msgstr "Tipo de Control"
+
+msgctxt "field:lims.planification.detail,comments:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "field:lims.planification.detail,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.planification.detail,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.planification.detail,details:"
+msgid "Planification detail"
+msgstr "Detalle de planificación"
+
+msgctxt "field:lims.planification.detail,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "field:lims.planification.detail,fraction_type:"
+msgid "Fraction type"
+msgstr "Tipo de fracción"
+
+msgctxt "field:lims.planification.detail,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.detail,label:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "field:lims.planification.detail,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.planification.detail,planification:"
+msgid "Planification"
+msgstr "Planificación"
+
+msgctxt "field:lims.planification.detail,priority:"
+msgid "Priority"
+msgstr "Prioridad"
+
+msgctxt "field:lims.planification.detail,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.planification.detail,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.planification.detail,report_date:"
+msgid "Date agreed for result"
+msgstr "Fecha pactada de resultado"
+
+msgctxt "field:lims.planification.detail,service_analysis:"
+msgid "Service"
+msgstr "Servicio"
+
+msgctxt "field:lims.planification.detail,urgent:"
+msgid "Urgent"
+msgstr "Urgente"
+
+msgctxt "field:lims.planification.detail,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.planification.detail,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.planification.qualification.action,action:"
+msgid "Action"
+msgstr "Acción"
+
+msgctxt "field:lims.planification.qualification.action,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.planification.qualification.action,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.planification.qualification.action,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.qualification.action,method:"
+msgid "Method"
+msgstr "Método"
+
+msgctxt "field:lims.planification.qualification.action,professional:"
+msgid "Professional"
+msgstr "Profesional"
+
+msgctxt "field:lims.planification.qualification.action,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.planification.qualification.action,session_id:"
+msgid "Session ID"
+msgstr "ID Sesión"
+
+msgctxt "field:lims.planification.qualification.action,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.planification.qualification.action,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.planification.qualification.situation,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.planification.qualification.situation,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.planification.qualification.situation,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.qualification.situation,method:"
+msgid "Method"
+msgstr "Método"
+
+msgctxt "field:lims.planification.qualification.situation,professional:"
+msgid "Professional"
+msgstr "Profesional"
+
+msgctxt "field:lims.planification.qualification.situation,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.planification.qualification.situation,session_id:"
+msgid "Session ID"
+msgstr "ID Sesión"
+
+msgctxt "field:lims.planification.qualification.situation,situation:"
+msgid "Situation"
+msgstr "Situación"
+
+msgctxt "field:lims.planification.qualification.situation,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.planification.qualification.situation,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.planification.qualification.situation.2,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.qualification.situation.2,method:"
+msgid "Method"
+msgstr "Método"
+
+msgctxt "field:lims.planification.qualification.situation.2,professional:"
+msgid "Professional"
+msgstr "Profesional"
+
+msgctxt "field:lims.planification.qualification.situation.3,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.qualification.situation.3,method:"
+msgid "Method"
+msgstr "Método"
+
+msgctxt "field:lims.planification.qualification.situation.3,professional:"
+msgid "Professional"
+msgstr "Profesional"
+
+msgctxt "field:lims.planification.qualification.situation.4,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.qualification.situation.4,methods:"
+msgid "Methods"
+msgstr "Métodos"
+
+msgctxt "field:lims.planification.qualification.situations,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.qualification.situations,index:"
+msgid "Index"
+msgstr "Índice"
+
+msgctxt "field:lims.planification.qualification.situations,situations:"
+msgid "Situations"
+msgstr "Situaciones"
+
+msgctxt "field:lims.planification.qualification.situations,total:"
+msgid "Total"
+msgstr "Total"
+
+msgctxt "field:lims.planification.relate_technicians.detail1,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.planification.relate_technicians.detail1,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.planification.relate_technicians.detail1,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "field:lims.planification.relate_technicians.detail1,fraction_type:"
+msgid "Fraction type"
+msgstr "Tipo de fracción"
+
+msgctxt "field:lims.planification.relate_technicians.detail1,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.relate_technicians.detail1,label:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "field:lims.planification.relate_technicians.detail1,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt ""
+"field:lims.planification.relate_technicians.detail1,service_analysis:"
+msgid "Service"
+msgstr "Servicio"
+
+msgctxt "field:lims.planification.relate_technicians.detail1,session_id:"
+msgid "Session ID"
+msgstr "ID Sesión"
+
+msgctxt "field:lims.planification.relate_technicians.detail1,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.planification.relate_technicians.detail1,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.planification.relate_technicians.detail2,analysis_origin:"
+msgid "Analysis origin"
+msgstr "Análisis origen"
+
+msgctxt "field:lims.planification.relate_technicians.detail2,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.planification.relate_technicians.detail2,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.planification.relate_technicians.detail2,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "field:lims.planification.relate_technicians.detail2,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.relate_technicians.detail2,method:"
+msgid "Method"
+msgstr "Método"
+
+msgctxt "field:lims.planification.relate_technicians.detail2,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.planification.relate_technicians.detail2,session_id:"
+msgid "Session ID"
+msgstr "ID Sesión"
+
+msgctxt "field:lims.planification.relate_technicians.detail2,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.planification.relate_technicians.detail2,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.planification.relate_technicians.detail3,analysis_origin:"
+msgid "Analysis origin"
+msgstr "Análisis origen"
+
+msgctxt "field:lims.planification.relate_technicians.detail3,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.planification.relate_technicians.detail3,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.planification.relate_technicians.detail3,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "field:lims.planification.relate_technicians.detail3,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.relate_technicians.detail3,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.planification.relate_technicians.detail3,session_id:"
+msgid "Session ID"
+msgstr "ID Sesión"
+
+msgctxt "field:lims.planification.relate_technicians.detail3,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.planification.relate_technicians.detail3,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.planification.relate_technicians.result,details1:"
+msgid "Fractions to plan"
+msgstr "Fracciones a planificar"
+
+msgctxt "field:lims.planification.relate_technicians.result,details1_domain:"
+msgid "Fractions domain"
+msgstr "Dominio para Fracciones"
+
+msgctxt "field:lims.planification.relate_technicians.result,details2:"
+msgid "Fractions to plan"
+msgstr "Fracciones a planificar"
+
+msgctxt "field:lims.planification.relate_technicians.result,details2_domain:"
+msgid "Fractions domain"
+msgstr "Dominio para Fracciones"
+
+msgctxt "field:lims.planification.relate_technicians.result,details3:"
+msgid "Fractions to plan"
+msgstr "Fracciones a planificar"
+
+msgctxt "field:lims.planification.relate_technicians.result,details3_domain:"
+msgid "Fractions domain"
+msgstr "Dominio para Fracciones"
+
+msgctxt "field:lims.planification.relate_technicians.result,grouping:"
+msgid "Grouping"
+msgstr "Agrupación"
+
+msgctxt "field:lims.planification.relate_technicians.result,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.relate_technicians.result,technicians:"
+msgid "Technicians"
+msgstr "Técnicos"
+
+msgctxt ""
+"field:lims.planification.relate_technicians.result,technicians_domain:"
+msgid "Technicians domain"
+msgstr "Dominio para Técnicos"
+
+msgctxt "field:lims.planification.relate_technicians.start,exclude_relateds:"
+msgid "Exclude fractions already related"
+msgstr "Excluir fracciones ya relacionadas"
+
+msgctxt "field:lims.planification.relate_technicians.start,grouping:"
+msgid "Grouping"
+msgstr "Agrupación"
+
+msgctxt "field:lims.planification.relate_technicians.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.release_fraction.empty,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.release_fraction.result,fractions:"
+msgid "Fractions"
+msgstr "Fracciones"
+
+msgctxt "field:lims.planification.release_fraction.result,fractions_domain:"
+msgid "Fractions domain"
+msgstr "Dominio para Fracciones"
+
+msgctxt "field:lims.planification.release_fraction.result,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.release_fraction.start,date_from:"
+msgid "Date from"
+msgstr "Fecha desde"
+
+msgctxt "field:lims.planification.release_fraction.start,date_to:"
+msgid "Date to"
+msgstr "Fecha hasta"
+
+msgctxt "field:lims.planification.release_fraction.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.release_fraction.start,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
+msgctxt "field:lims.planification.remove_control.start,controls:"
+msgid "Controls"
+msgstr "Controles"
+
+msgctxt "field:lims.planification.remove_control.start,controls_domain:"
+msgid "Controls domain"
+msgstr "Dominio para Controles"
+
+msgctxt "field:lims.planification.remove_control.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.replace_technician.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.replace_technician.start,planification:"
+msgid "Planification"
+msgstr "Planificación"
+
+msgctxt "field:lims.planification.replace_technician.start,replaced_domain:"
+msgid "Replaced domain"
+msgstr "Dominio para Reemplazado"
+
+msgctxt "field:lims.planification.replace_technician.start,substitute_domain:"
+msgid "Substitute domain"
+msgstr "Dominio para Sustituto"
+
+msgctxt ""
+"field:lims.planification.replace_technician.start,technician_replaced:"
+msgid "Technician replaced"
+msgstr "Técnico reemplazado"
+
+msgctxt ""
+"field:lims.planification.replace_technician.start,technician_substitute:"
+msgid "Technician substitute"
+msgstr "Técnico sustituto"
+
+msgctxt "field:lims.planification.search_fractions.detail,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.planification.search_fractions.detail,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.planification.search_fractions.detail,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "field:lims.planification.search_fractions.detail,fraction_type:"
+msgid "Fraction type"
+msgstr "Tipo de fracción"
+
+msgctxt "field:lims.planification.search_fractions.detail,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.search_fractions.detail,label:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "field:lims.planification.search_fractions.detail,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.planification.search_fractions.detail,priority:"
+msgid "Priority"
+msgstr "Prioridad"
+
+msgctxt "field:lims.planification.search_fractions.detail,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.planification.search_fractions.detail,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.planification.search_fractions.detail,report_date:"
+msgid "Date agreed for result"
+msgstr "Fecha pactada de resultado"
+
+msgctxt "field:lims.planification.search_fractions.detail,service_analysis:"
+msgid "Service"
+msgstr "Servicio"
+
+msgctxt "field:lims.planification.search_fractions.detail,session_id:"
+msgid "Session ID"
+msgstr "ID Sesión"
+
+msgctxt "field:lims.planification.search_fractions.detail,urgent:"
+msgid "Urgent"
+msgstr "Urgente"
+
+msgctxt "field:lims.planification.search_fractions.detail,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.planification.search_fractions.detail,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.planification.search_fractions.next,details:"
+msgid "Fractions to plan"
+msgstr "Fracciones a planificar"
+
+msgctxt "field:lims.planification.search_fractions.next,details_domain:"
+msgid "Fractions domain"
+msgstr "Dominio para Fracciones"
+
+msgctxt "field:lims.planification.search_fractions.next,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt ""
+"field:lims.planification.search_planned_fractions.detail,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.planification.search_planned_fractions.detail,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.planification.search_planned_fractions.detail,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt ""
+"field:lims.planification.search_planned_fractions.detail,fraction_type:"
+msgid "Fraction type"
+msgstr "Tipo de fracción"
+
+msgctxt "field:lims.planification.search_planned_fractions.detail,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.search_planned_fractions.detail,label:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "field:lims.planification.search_planned_fractions.detail,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.planification.search_planned_fractions.detail,priority:"
+msgid "Priority"
+msgstr "Prioridad"
+
+msgctxt ""
+"field:lims.planification.search_planned_fractions.detail,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.planification.search_planned_fractions.detail,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt ""
+"field:lims.planification.search_planned_fractions.detail,report_date:"
+msgid "Date agreed for result"
+msgstr "Fecha pactada de resultado"
+
+msgctxt ""
+"field:lims.planification.search_planned_fractions.detail,service_analysis:"
+msgid "Service"
+msgstr "Servicio"
+
+msgctxt "field:lims.planification.search_planned_fractions.detail,session_id:"
+msgid "Session ID"
+msgstr "ID Sesión"
+
+msgctxt "field:lims.planification.search_planned_fractions.detail,urgent:"
+msgid "Urgent"
+msgstr "Urgente"
+
+msgctxt "field:lims.planification.search_planned_fractions.detail,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.planification.search_planned_fractions.detail,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.planification.search_planned_fractions.next,details:"
+msgid "Fractions to replan"
+msgstr "Fracciones a replanificar"
+
+msgctxt ""
+"field:lims.planification.search_planned_fractions.next,details_domain:"
+msgid "Fractions domain"
+msgstr "Dominio para Fracciones"
+
+msgctxt "field:lims.planification.search_planned_fractions.next,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.search_planned_fractions.start,analysis:"
+msgid "Analysis/Sets/Groups"
+msgstr "Análisis/Sets/Grupos"
+
+msgctxt ""
+"field:lims.planification.search_planned_fractions.start,analysis_domain:"
+msgid "Analysis domain"
+msgstr "Dominio para Análisis"
+
+msgctxt "field:lims.planification.search_planned_fractions.start,date_from:"
+msgid "Date from"
+msgstr "Fecha desde"
+
+msgctxt "field:lims.planification.search_planned_fractions.start,date_to:"
+msgid "Date to"
+msgstr "Fecha hasta"
+
+msgctxt "field:lims.planification.search_planned_fractions.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.search_planned_fractions.start,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
+msgctxt "field:lims.planification.service_detail,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.planification.service_detail,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.planification.service_detail,detail:"
+msgid "Planification"
+msgstr "Planificación"
+
+msgctxt "field:lims.planification.service_detail,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.service_detail,is_control:"
+msgid "Is Control"
+msgstr "Es Control"
+
+msgctxt "field:lims.planification.service_detail,is_replanned:"
+msgid "Is Replanned"
+msgstr "Es Replanificado"
+
+msgctxt "field:lims.planification.service_detail,notebook_line:"
+msgid "Notebook line"
+msgstr "Línea de cuaderno"
+
+msgctxt "field:lims.planification.service_detail,planification:"
+msgid "Planification"
+msgstr "Planificación"
+
+msgctxt "field:lims.planification.service_detail,planned_service:"
+msgid "Planned service"
+msgstr "Servicio planificado"
+
+msgctxt "field:lims.planification.service_detail,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.planification.service_detail,repetition:"
+msgid "Repetition"
+msgstr "Repetición"
+
+msgctxt "field:lims.planification.service_detail,staff_responsible:"
+msgid "Laboratory professionals"
+msgstr "Profesionales de laboratorio"
+
+msgctxt "field:lims.planification.service_detail,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.planification.service_detail,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt ""
+"field:lims.planification.service_detail-laboratory.professional,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt ""
+"field:lims.planification.service_detail-laboratory.professional,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt ""
+"field:lims.planification.service_detail-laboratory.professional,detail:"
+msgid "Planification detail"
+msgstr "Detalle de planificación"
+
+msgctxt "field:lims.planification.service_detail-laboratory.professional,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt ""
+"field:lims.planification.service_detail-"
+"laboratory.professional,professional:"
+msgid "Laboratory professional"
+msgstr "Profesional de laboratorio"
+
+msgctxt ""
+"field:lims.planification.service_detail-laboratory.professional,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt ""
+"field:lims.planification.service_detail-laboratory.professional,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt ""
+"field:lims.planification.service_detail-laboratory.professional,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.planification.technician,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.planification.technician,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.planification.technician,details:"
+msgid "Fractions to plan"
+msgstr "Fracciones a planificar"
+
+msgctxt "field:lims.planification.technician,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.technician,laboratory_professional:"
+msgid "Laboratory professional"
+msgstr "Profesional de laboratorio"
+
+msgctxt "field:lims.planification.technician,planification:"
+msgid "Planification"
+msgstr "Planificación"
+
+msgctxt "field:lims.planification.technician,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.planification.technician,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.planification.technician,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.planification.technician.detail,analysis_origin:"
+msgid "Analysis origin"
+msgstr "Análisis origen"
+
+msgctxt "field:lims.planification.technician.detail,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "field:lims.planification.technician.detail,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.technician.detail,method:"
+msgid "Method"
+msgstr "Método"
+
+msgctxt "field:lims.planification.unlink_technicians.detail1,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.planification.unlink_technicians.detail1,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.planification.unlink_technicians.detail1,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "field:lims.planification.unlink_technicians.detail1,fraction_type:"
+msgid "Fraction type"
+msgstr "Tipo de fracción"
+
+msgctxt "field:lims.planification.unlink_technicians.detail1,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.unlink_technicians.detail1,label:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "field:lims.planification.unlink_technicians.detail1,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt ""
+"field:lims.planification.unlink_technicians.detail1,service_analysis:"
+msgid "Service"
+msgstr "Servicio"
+
+msgctxt "field:lims.planification.unlink_technicians.detail1,session_id:"
+msgid "Session ID"
+msgstr "ID Sesión"
+
+msgctxt "field:lims.planification.unlink_technicians.detail1,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.planification.unlink_technicians.detail1,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.planification.unlink_technicians.start,details1:"
+msgid "Assigned fractions"
+msgstr "Fracciones asignadas"
+
+msgctxt "field:lims.planification.unlink_technicians.start,details1_domain:"
+msgid "Fractions domain"
+msgstr "Dominio para Fracciones"
+
+msgctxt "field:lims.planification.unlink_technicians.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.unlink_technicians.start,technicians:"
+msgid "Technicians"
+msgstr "Técnicos"
+
+msgctxt ""
+"field:lims.planification.unlink_technicians.start,technicians_domain:"
+msgid "Technicians domain"
+msgstr "Dominio para Técnicos"
+
+msgctxt "field:lims.print_blind_sample_report.start,date_from:"
+msgid "Date from"
+msgstr "Fecha desde"
+
+msgctxt "field:lims.print_blind_sample_report.start,date_to:"
+msgid "Date to"
+msgstr "Fecha hasta"
+
+msgctxt "field:lims.print_blind_sample_report.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.service,planned:"
+msgid "Planned"
+msgstr "Planificado"
+
+msgctxt "model:ir.action,name:act_lims_blind_sample_list"
+msgid "Blind Samples"
+msgstr "Muestras ciegas"
+
+msgctxt "model:ir.action,name:act_lims_fraction_reagent_list"
+msgid "Fraction Reagents"
+msgstr "Reactivos de fracción"
+
+msgctxt "model:ir.action,name:act_lims_lab_professional_method_list"
+msgid "Professionals Methods"
+msgstr "Métodos de profesionales"
+
+msgctxt "model:ir.action,name:act_lims_planification_list"
+msgid "Planifications"
+msgstr "Planificaciones"
+
+msgctxt "model:ir.action,name:act_print_blind_sample"
+msgid "Blind Samples Report"
+msgstr "Informe de Muestras ciegas"
+
+msgctxt "model:ir.action,name:report_blind_sample"
+msgid "Blind Samples Report"
+msgstr "Informe de Muestras ciegas"
+
+msgctxt "model:ir.action,name:report_pending_services_unplanned"
+msgid "Pending Services Unplanned"
+msgstr "Servicios pendientes sin planificar"
+
+msgctxt "model:ir.action,name:report_pending_services_unplanned_spreadsheet"
+msgid "Pending Services Unplanned"
+msgstr "Servicios pendientes sin planificar"
+
+msgctxt "model:ir.action,name:report_planification_sequence"
+msgid "Sequence"
+msgstr "Armado de Secuencia"
+
+msgctxt "model:ir.action,name:report_planification_worksheet"
+msgid "Worksheet"
+msgstr "Planilla de trabajos a realizar"
+
+msgctxt "model:ir.action,name:report_planification_worksheet_analysis"
+msgid "Worksheet by Analysis"
+msgstr "Planilla de trabajos a realizar por análisis"
+
+msgctxt "model:ir.action,name:report_planification_worksheet_method"
+msgid "Worksheet by Method"
+msgstr "Planilla de trabajos a realizar por método"
+
+msgctxt "model:ir.action,name:wiz_lims_add_analysis"
+msgid "Add Analysis"
+msgstr "Añadir Análisis"
+
+msgctxt "model:ir.action,name:wiz_lims_add_fraction_bre"
+msgid "Add Fraction BRE"
+msgstr "Añadir fracción BRE"
+
+msgctxt "model:ir.action,name:wiz_lims_add_fraction_con"
+msgid "Add Fraction Control"
+msgstr "Añadir fracción Control"
+
+msgctxt "model:ir.action,name:wiz_lims_add_fraction_mrt"
+msgid "Add Fraction MRT"
+msgstr "Añadir fracción MRT"
+
+msgctxt "model:ir.action,name:wiz_lims_add_fraction_rm_bmz"
+msgid "Add Fraction RM/BMZ"
+msgstr "Añadir fracción RM/BMZ"
+
+msgctxt "model:ir.action,name:wiz_lims_create_fraction_con"
+msgid "Create Fraction Control"
+msgstr "Crear fracción Control"
+
+msgctxt "model:ir.action,name:wiz_lims_load_services"
+msgid "Load Services"
+msgstr "Cargar servicios"
+
+msgctxt "model:ir.action,name:wiz_lims_relate_technicians"
+msgid "Relate Technicians"
+msgstr "Relacionar técnicos"
+
+msgctxt "model:ir.action,name:wiz_lims_release_fraction"
+msgid "Release Fractions"
+msgstr "Liberar fracciones planificadas"
+
+msgctxt "model:ir.action,name:wiz_lims_remove_control"
+msgid "Remove Control"
+msgstr "Quitar control"
+
+msgctxt "model:ir.action,name:wiz_lims_replace_technician"
+msgid "Replace Technician"
+msgstr "Reemplazar técnico"
+
+msgctxt "model:ir.action,name:wiz_lims_search_fractions"
+msgid "Search Fractions"
+msgstr "Buscar fracciones"
+
+msgctxt "model:ir.action,name:wiz_lims_search_planned_fractions"
+msgid "Search Planned Fractions"
+msgstr "Buscar fracciones planificadas"
+
+msgctxt "model:ir.action,name:wiz_lims_technicians_qualification"
+msgid "Technicians Qualification"
+msgstr "Calificación de Técnicos"
+
+msgctxt "model:ir.action,name:wiz_lims_unlink_technicians"
+msgid "Unlink Technicians"
+msgstr "Desvincular técnicos"
+
+msgctxt "model:ir.action,name:wizard_pending_services_unplanned_report"
+msgid "Print Pending Services Unplanned Report"
+msgstr "Imprimir Servicios pendientes sin planificar"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_planification_list_domain_all"
+msgid "All"
+msgstr "Todo"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_planification_list_domain_confirmed"
+msgid "Confirmed"
+msgstr "Confirmado"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_planification_list_domain_draft"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_planification_list_domain_not_executed"
+msgid "Not executed"
+msgstr "No ejecutado"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_planification_list_domain_preplanned"
+msgid "Pre-Planned"
+msgstr "Pre-Planificado"
+
+msgctxt "model:ir.cron,name:cron_lims_process_waiting_planifications"
+msgid "Lims Process Waiting Planifications"
+msgstr "Procesar planificaciones en espera"
+
+msgctxt "model:ir.sequence,name:seq_planification"
+msgid "Planification"
+msgstr "Planificación"
+
+msgctxt "model:ir.sequence.type,name:seq_type_planification"
+msgid "Planification"
+msgstr "Planificación"
+
+msgctxt "model:ir.ui.menu,name:lims_blind_sample_menu"
+msgid "Blind Samples"
+msgstr "Muestras ciegas"
+
+msgctxt "model:ir.ui.menu,name:lims_create_fraction_con_menu"
+msgid "Create Fraction Control"
+msgstr "Crear fracción Control"
+
+msgctxt "model:ir.ui.menu,name:lims_lab_professional_method_menu"
+msgid "Professionals Methods"
+msgstr "Métodos de profesionales"
+
+msgctxt "model:ir.ui.menu,name:lims_planification_menu"
+msgid "Planifications"
+msgstr "Planificaciones"
+
+msgctxt "model:ir.ui.menu,name:lims_print_blind_sample_menu"
+msgid "Blind Samples Report"
+msgstr "Informe de Muestras ciegas"
+
+msgctxt "model:ir.ui.menu,name:lims_release_fraction_menu"
+msgid "Release Fractions"
+msgstr "Liberar fracciones planificadas"
+
+msgctxt "model:lims.blind_sample,name:"
+msgid "Blind Sample"
+msgstr "Muestra ciega"
+
+msgctxt "model:lims.configuration-product.category,name:"
+msgid "Configuration - Product Category"
+msgstr "Configuración - Categoría de producto"
+
+msgctxt "model:lims.fraction.reagent,name:"
+msgid "Fraction Reagent"
+msgstr "Reactivo de fracción"
+
+msgctxt "model:lims.lab.professional.method,name:"
+msgid "Laboratory Professional Method"
+msgstr "Método de Profesional"
+
+msgctxt "model:lims.lab.professional.method.requalification,name:"
+msgid "Laboratory Professional Method Requalification"
+msgstr "Recualificación de Método de Profesional"
+
+msgctxt "model:lims.lab.professional.method.requalification.control,name:"
+msgid "Laboratory Professional Method Requalification Control"
+msgstr "Control de Recualificación de Método de Profesional"
+
+msgctxt "model:lims.lab.professional.method.requalification.supervisor,name:"
+msgid "Laboratory Professional Method Requalification Supervisor"
+msgstr "Supervisor de Recualificación de Método de Profesional"
+
+msgctxt "model:lims.notebook.line-fraction,name:"
+msgid "Laboratory Notebook Line - Fraction"
+msgstr "Línea de cuaderno laboratorio - Fracción"
+
+msgctxt "model:lims.pending_services_unplanned.start,name:"
+msgid "Print Pending Services Unplanned Report Start"
+msgstr "Imprimir Servicios pendientes sin planificar"
+
+msgctxt "model:lims.planification-analysis,name:"
+msgid "Planification - Analysis"
+msgstr "Planificación - Análisis"
+
+msgctxt "model:lims.planification-fraction,name:"
+msgid "Planification - Fraction"
+msgstr "Planificación - Fracción"
+
+msgctxt "model:lims.planification.add_analysis.start,name:"
+msgid "Add Analysis"
+msgstr "Añadir Análisis"
+
+msgctxt "model:lims.planification.add_fraction_bre.start,name:"
+msgid "Add Fraction BRE"
+msgstr "Añadir fracción BRE"
+
+msgctxt "model:lims.planification.add_fraction_con.start,name:"
+msgid "Add Fraction Control"
+msgstr "Añadir fracción Control"
+
+msgctxt "model:lims.planification.add_fraction_mrt.start,name:"
+msgid "Add Fraction MRT"
+msgstr "Añadir fracción MRT"
+
+msgctxt "model:lims.planification.add_fraction_rm_bmz.start,name:"
+msgid "Add Fraction RM/BMZ"
+msgstr "Añadir fracción RM/BMZ"
+
+msgctxt "model:lims.planification.create_fraction_con.start,name:"
+msgid "Create Fraction Control"
+msgstr "Crear fracción Control"
+
+msgctxt "model:lims.planification.detail,name:"
+msgid "Fraction to Plan"
+msgstr "Fracción a planificar"
+
+msgctxt "model:lims.planification.qualification.action,name:"
+msgid "Qualification Action"
+msgstr "Acción de Cualificación"
+
+msgctxt "model:lims.planification.qualification.situation,name:"
+msgid "Qualification Situation"
+msgstr "Situación de Cualificación"
+
+msgctxt "model:lims.planification.qualification.situation.2,name:"
+msgid "Technicians Qualification"
+msgstr "Cualificación de Técnicos"
+
+msgctxt "model:lims.planification.qualification.situation.3,name:"
+msgid "Technicians Qualification"
+msgstr "Cualificación de Técnicos"
+
+msgctxt "model:lims.planification.qualification.situation.4,name:"
+msgid "Technicians Qualification"
+msgstr "Cualificación de Técnicos"
+
+msgctxt "model:lims.planification.qualification.situations,name:"
+msgid "Technicians Qualification"
+msgstr "Cualificación de Técnicos"
+
+msgctxt "model:lims.planification.relate_technicians.detail1,name:"
+msgid "Fraction Detail"
+msgstr "Detalle de fracción"
+
+msgctxt "model:lims.planification.relate_technicians.detail2,name:"
+msgid "Fraction Detail"
+msgstr "Detalle de fracción"
+
+msgctxt "model:lims.planification.relate_technicians.detail3,name:"
+msgid "Fraction Detail"
+msgstr "Detalle de fracción"
+
+msgctxt "model:lims.planification.relate_technicians.result,name:"
+msgid "Relate Technicians"
+msgstr "Relacionar técnicos"
+
+msgctxt "model:lims.planification.relate_technicians.start,name:"
+msgid "Relate Technicians"
+msgstr "Relacionar técnicos"
+
+msgctxt "model:lims.planification.release_fraction.empty,name:"
+msgid "Release Fraction"
+msgstr "Liberar fracciones planificadas"
+
+msgctxt "model:lims.planification.release_fraction.result,name:"
+msgid "Release Fraction"
+msgstr "Liberar fracciones planificadas"
+
+msgctxt "model:lims.planification.release_fraction.start,name:"
+msgid "Release Fraction"
+msgstr "Liberar fracciones planificadas"
+
+msgctxt "model:lims.planification.remove_control.start,name:"
+msgid "Remove Control"
+msgstr "Quitar control"
+
+msgctxt "model:lims.planification.replace_technician.start,name:"
+msgid "Replace Technician"
+msgstr "Reemplazar técnico"
+
+msgctxt "model:lims.planification.search_fractions.detail,name:"
+msgid "Fraction to Plan"
+msgstr "Fracción a planificar"
+
+msgctxt "model:lims.planification.search_fractions.next,name:"
+msgid "Search Fractions"
+msgstr "Buscar fracciones"
+
+msgctxt "model:lims.planification.search_planned_fractions.detail,name:"
+msgid "Fraction to Replan"
+msgstr "Fracción a replanificar"
+
+msgctxt "model:lims.planification.search_planned_fractions.next,name:"
+msgid "Search Planned Fractions"
+msgstr "Buscar fracciones planificadas"
+
+msgctxt "model:lims.planification.search_planned_fractions.start,name:"
+msgid "Search Planned Fractions"
+msgstr "Buscar fracciones planificadas"
+
+msgctxt "model:lims.planification.service_detail,name:"
+msgid "Planification Detail"
+msgstr "Detalle de planificación"
+
+msgctxt ""
+"model:lims.planification.service_detail-laboratory.professional,name:"
+msgid "Planification Detail - Laboratory Professional"
+msgstr "Detalle de planificación - Profesional de laboratorio"
+
+msgctxt "model:lims.planification.technician,name:"
+msgid "Technician"
+msgstr "Técnico"
+
+msgctxt "model:lims.planification.technician.detail,name:"
+msgid "Technician Detail"
+msgstr "Detalle de técnico"
+
+msgctxt "model:lims.planification.unlink_technicians.detail1,name:"
+msgid "Fraction Detail Unlink"
+msgstr "Detalle de Fracción - Desvincular"
+
+msgctxt "model:lims.planification.unlink_technicians.start,name:"
+msgid "Unlink Technicians Start"
+msgstr "Desvincular Técnicos Inicio"
+
+msgctxt "model:lims.print_blind_sample_report.start,name:"
+msgid "Blind Samples Report"
+msgstr "Informe de Muestras ciegas"
+
+msgctxt "model:res.group,name:group_lims_blind_sample"
+msgid "Lims Blind Samples"
+msgstr "Lims Muestras ciegas"
+
+msgctxt "model:res.group,name:group_lims_blind_sample_readonly"
+msgid "Lims Blind Samples Read Only"
+msgstr "Lims Muestras ciegas Sólo lectura"
+
+msgctxt "model:res.group,name:group_lims_planification"
+msgid "Lims Planification"
+msgstr "Lims Planificación"
+
+msgctxt "model:res.group,name:group_lims_planification_readonly"
+msgid "Lims Planification Read Only"
+msgstr "Lims Planificación Sólo lectura"
+
+msgctxt "model:res.user,name:user_planification_process"
+msgid "Cron Lims Planification Process"
+msgstr "Programador de Procesamiento de planificaciones"
+
+msgctxt "report:lims.blind_sample_report:"
+msgid "-"
+msgstr "-"
+
+msgctxt "report:lims.blind_sample_report:"
+msgid "2sMax A."
+msgstr "2sMax A."
+
+msgctxt "report:lims.blind_sample_report:"
+msgid "Accepted"
+msgstr "Aceptado"
+
+msgctxt "report:lims.blind_sample_report:"
+msgid "Associated sample"
+msgstr "Muestra asociada"
+
+msgctxt "report:lims.blind_sample_report:"
+msgid "Blind Samples Report"
+msgstr "Informe de Muestras ciegas"
+
+msgctxt "report:lims.blind_sample_report:"
+msgid "Conc."
+msgstr "Conc."
+
+msgctxt "report:lims.blind_sample_report:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "report:lims.blind_sample_report:"
+msgid "Eval/Dif"
+msgstr "Eval/Dif"
+
+msgctxt "report:lims.blind_sample_report:"
+msgid "Rep."
+msgstr "Rep."
+
+msgctxt "report:lims.blind_sample_report:"
+msgid "Report"
+msgstr "Informe"
+
+msgctxt "report:lims.blind_sample_report:"
+msgid "Result"
+msgstr "Resultado"
+
+msgctxt "report:lims.blind_sample_report:"
+msgid "Sample"
+msgstr "Muestra"
+
+msgctxt "report:lims.blind_sample_report:"
+msgid "Service"
+msgstr "Servicio"
+
+msgctxt "report:lims.blind_sample_report:"
+msgid "of"
+msgstr "de"
+
+msgctxt "report:lims.blind_sample_report:"
+msgid "sMax A."
+msgstr "sMax A."
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Client:"
+msgstr "Cliente:"
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Date agreed for result"
+msgstr "Fecha pact. de res."
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Date of issue:"
+msgstr "Fecha de emisión:"
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Location"
+msgstr "Ubicación"
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Pending Services Unplanned"
+msgstr "Servicios pendientes sin planificar"
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Priority"
+msgstr "Prior."
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Product described /client"
+msgstr "Producto descripto /cliente"
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Service"
+msgstr "Servicio"
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Total client:"
+msgstr "Total cliente:"
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Total laboratory:"
+msgstr "Total laboratorio:"
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Total service:"
+msgstr "Total servicio:"
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Urgent"
+msgstr "Urg."
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Confirmation date"
+msgstr "Fecha de conf."
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Confirmation date"
+msgstr "Fecha de confirmación"
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "of"
+msgstr "de"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "("
+msgstr "("
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid ")"
+msgstr ")"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid ","
+msgstr ","
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "-"
+msgstr "-"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "/for"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "/if"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "00/00/0000"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "00:00:00"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "???"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Client"
+msgstr "Cliente"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Date"
+msgstr "Fecha de ingreso"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Date agreed for result"
+msgstr "Fecha pactada de resultado"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Date of issue:"
+msgstr "Fecha de emisión:"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Location"
+msgstr "Ubicación"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Page"
+msgstr "Página"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Pending Services Unplanned"
+msgstr "Servicios pendientes sin planificar"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Priority"
+msgstr "Prioridad"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Product described /client"
+msgstr "Producto descripto /cliente"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Service"
+msgstr "Servicio"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Urgent"
+msgstr "Urgente"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "for each=\"line in objects\""
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "format_date(datetime.date.today(), user.language)"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "format_date(line.date, user.language)"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "format_date(line.report_date, user.language)"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "if test=\"line.report_date\""
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "line.comments"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "line.current_location"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "line.fraction_type"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "line.laboratory"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "line.number"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "line.party"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "line.priority"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "line.sample_client_description"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "line.service"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "line.urgent"
+msgstr ""
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "€"
+msgstr ""
+
+msgctxt "report:lims.planification.sequence.report:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "report:lims.planification.sequence.report:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "report:lims.planification.sequence.report:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "report:lims.planification.sequence.report:"
+msgid "Method:"
+msgstr "Método:"
+
+msgctxt "report:lims.planification.sequence.report:"
+msgid "Origin"
+msgstr "Origen"
+
+msgctxt "report:lims.planification.sequence.report:"
+msgid "Priority"
+msgstr "Prioridad"
+
+msgctxt "report:lims.planification.sequence.report:"
+msgid "Product"
+msgstr "Producto"
+
+msgctxt "report:lims.planification.sequence.report:"
+msgid "Sample Sequence"
+msgstr "Armado de Secuencia de Muestras"
+
+msgctxt "report:lims.planification.sequence.report:"
+msgid "Trace report"
+msgstr "Informar traza"
+
+msgctxt "report:lims.planification.sequence.report:"
+msgid "Yes"
+msgstr "Sí"
+
+msgctxt "report:lims.planification.sequence.report:"
+msgid "of"
+msgstr "de"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "Client"
+msgstr "Cliente"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "Device"
+msgstr "Equipo"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "Location"
+msgstr "Ubicación"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "Method:"
+msgstr "Método:"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "Operator:"
+msgstr "Operador:"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "Product"
+msgstr "Producto"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "Service:"
+msgstr "Servicio:"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "Signature of Operator"
+msgstr "Firma del Operador"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "Signature of Responsible"
+msgstr "Firma del Responsable"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "Standard used"
+msgstr "Estándar usado"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "Total operator:"
+msgstr "Total por Operador:"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "Worksheet"
+msgstr "Planilla de trabajos a realizar"
+
+msgctxt "report:lims.planification.worksheet.report:"
+msgid "of"
+msgstr "de"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Analysis:"
+msgstr "Análisis"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Client"
+msgstr "Cliente"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Device"
+msgstr "Equipo"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "End date"
+msgstr "Fecha de finalización"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Location"
+msgstr "Ubicación"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Method:"
+msgstr "Método:"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Operator:"
+msgstr "Operador:"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Product"
+msgstr "Producto"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Result"
+msgstr "Resultado"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Signature of Operator"
+msgstr "Firma del Operador"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Signature of Responsible"
+msgstr "Firma del Responsable"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Standard used"
+msgstr "Estándar usado"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Total operator:"
+msgstr "Total por Operador:"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "Worksheet by Analysis"
+msgstr "Planilla de trabajos a realizar por análisis"
+
+msgctxt "report:lims.planification.worksheet_analysis.report:"
+msgid "of"
+msgstr "de"
+
+msgctxt "report:lims.planification.worksheet_method.report:"
+msgid "Client"
+msgstr "Cliente"
+
+msgctxt "report:lims.planification.worksheet_method.report:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "report:lims.planification.worksheet_method.report:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "report:lims.planification.worksheet_method.report:"
+msgid "Device"
+msgstr "Equipo"
+
+msgctxt "report:lims.planification.worksheet_method.report:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "report:lims.planification.worksheet_method.report:"
+msgid "Location"
+msgstr "Ubicación"
+
+msgctxt "report:lims.planification.worksheet_method.report:"
+msgid "Method:"
+msgstr "Método:"
+
+msgctxt "report:lims.planification.worksheet_method.report:"
+msgid "Operator:"
+msgstr "Operador:"
+
+msgctxt "report:lims.planification.worksheet_method.report:"
+msgid "Product"
+msgstr "Producto"
+
+msgctxt "report:lims.planification.worksheet_method.report:"
+msgid "Signature of Operator"
+msgstr "Firma del Operador"
+
+msgctxt "report:lims.planification.worksheet_method.report:"
+msgid "Signature of Responsible"
+msgstr "Firma del Responsable"
+
+msgctxt "report:lims.planification.worksheet_method.report:"
+msgid "Standard used"
+msgstr "Estándar usado"
+
+msgctxt "report:lims.planification.worksheet_method.report:"
+msgid "Total operator:"
+msgstr "Total por Operador:"
+
+msgctxt "report:lims.planification.worksheet_method.report:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "report:lims.planification.worksheet_method.report:"
+msgid "Worksheet by Method"
+msgstr "Planilla de trabajos a realizar por método"
+
+msgctxt "report:lims.planification.worksheet_method.report:"
+msgid "of"
+msgstr "de"
+
+msgctxt "selection:lims.entry.detail.analysis,state:"
+msgid "Done"
+msgstr "Realizado"
+
+msgctxt "selection:lims.entry.detail.analysis,state:"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "selection:lims.entry.detail.analysis,state:"
+msgid "Planned"
+msgstr "Planificado"
+
+msgctxt "selection:lims.entry.detail.analysis,state:"
+msgid "Reported"
+msgstr "Informado"
+
+msgctxt "selection:lims.entry.detail.analysis,state:"
+msgid "Unplanned"
+msgstr "Sin planificar"
+
+msgctxt "selection:lims.fraction,bmz_type:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:lims.fraction,bmz_type:"
+msgid "No initial BMZ"
+msgstr "Sin BMZ Inicial"
+
+msgctxt "selection:lims.fraction,bmz_type:"
+msgid "SLA"
+msgstr "SLA"
+
+msgctxt "selection:lims.fraction,con_type:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:lims.fraction,con_type:"
+msgid "COI"
+msgstr "COI"
+
+msgctxt "selection:lims.fraction,con_type:"
+msgid "CON"
+msgstr "CON"
+
+msgctxt "selection:lims.fraction,con_type:"
+msgid "ITC"
+msgstr "ITC"
+
+msgctxt "selection:lims.fraction,con_type:"
+msgid "ITL"
+msgstr "ITL"
+
+msgctxt "selection:lims.fraction,con_type:"
+msgid "MRC"
+msgstr "MRC"
+
+msgctxt "selection:lims.fraction,con_type:"
+msgid "SLA"
+msgstr "SLA"
+
+msgctxt "selection:lims.fraction,rm_type:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:lims.fraction,rm_type:"
+msgid "No initial RM"
+msgstr "Sin RM Inicial"
+
+msgctxt "selection:lims.fraction,rm_type:"
+msgid "SLA"
+msgstr "SLA"
+
+msgctxt "selection:lims.lab.professional.method,state:"
+msgid "Qualified"
+msgstr "Cualificado"
+
+msgctxt "selection:lims.lab.professional.method,state:"
+msgid "Requalified"
+msgstr "Recualificado"
+
+msgctxt "selection:lims.lab.professional.method,state:"
+msgid "Training"
+msgstr "Entrenamiento"
+
+msgctxt "selection:lims.lab.professional.method,type:"
+msgid "Analytical"
+msgstr "Analítica"
+
+msgctxt "selection:lims.lab.professional.method,type:"
+msgid "Preparation"
+msgstr "Preparación"
+
+msgctxt "selection:lims.lab.professional.method.requalification,type:"
+msgid "Qualification"
+msgstr "Cualificación"
+
+msgctxt "selection:lims.lab.professional.method.requalification,type:"
+msgid "Requalification"
+msgstr "Recualificación"
+
+msgctxt "selection:lims.lab.professional.method.requalification,type:"
+msgid "Training"
+msgstr "Entrenamiento"
+
+msgctxt "selection:lims.planification,state:"
+msgid "Confirmed"
+msgstr "Confirmado"
+
+msgctxt "selection:lims.planification,state:"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "selection:lims.planification,state:"
+msgid "Not executed"
+msgstr "No ejecutado"
+
+msgctxt "selection:lims.planification,state:"
+msgid "Pre-Planned"
+msgstr "Pre-Planificado"
+
+msgctxt "selection:lims.planification.add_fraction_bre.start,type:"
+msgid "Existing BRE"
+msgstr "BRE Existente"
+
+msgctxt "selection:lims.planification.add_fraction_bre.start,type:"
+msgid "New BRE"
+msgstr "Nuevo BRE"
+
+msgctxt "selection:lims.planification.add_fraction_con.start,type:"
+msgid "COI"
+msgstr "COI"
+
+msgctxt "selection:lims.planification.add_fraction_con.start,type:"
+msgid "Existing CON"
+msgstr "CON Existente"
+
+msgctxt "selection:lims.planification.add_fraction_con.start,type:"
+msgid "ITC"
+msgstr "ITC"
+
+msgctxt "selection:lims.planification.add_fraction_con.start,type:"
+msgid "ITL"
+msgstr "ITL"
+
+msgctxt "selection:lims.planification.add_fraction_con.start,type:"
+msgid "MRC"
+msgstr "MRC"
+
+msgctxt "selection:lims.planification.add_fraction_con.start,type:"
+msgid "SLA"
+msgstr "SLA"
+
+msgctxt "selection:lims.planification.add_fraction_mrt.start,type:"
+msgid "Existing MRT"
+msgstr "MRT Existente"
+
+msgctxt "selection:lims.planification.add_fraction_mrt.start,type:"
+msgid "New MRT"
+msgstr "Nuevo MRT"
+
+msgctxt "selection:lims.planification.add_fraction_rm_bmz.start,rm_bmz_type:"
+msgid "Existing RM/BMZ"
+msgstr "RM/BMZ Existente"
+
+msgctxt "selection:lims.planification.add_fraction_rm_bmz.start,rm_bmz_type:"
+msgid "No Reference"
+msgstr "Sin referecia"
+
+msgctxt "selection:lims.planification.add_fraction_rm_bmz.start,rm_bmz_type:"
+msgid "SLA"
+msgstr "SLA"
+
+msgctxt "selection:lims.planification.add_fraction_rm_bmz.start,type:"
+msgid "BMZ"
+msgstr "BMZ"
+
+msgctxt "selection:lims.planification.add_fraction_rm_bmz.start,type:"
+msgid "RM"
+msgstr "RM"
+
+msgctxt "selection:lims.planification.create_fraction_con.start,type:"
+msgid "COI"
+msgstr "COI"
+
+msgctxt "selection:lims.planification.create_fraction_con.start,type:"
+msgid "MRC"
+msgstr "MRC"
+
+msgctxt "selection:lims.planification.create_fraction_con.start,type:"
+msgid "SLA"
+msgstr "SLA"
+
+msgctxt "selection:lims.planification.relate_technicians.result,grouping:"
+msgid "Analysis origin"
+msgstr "Análisis origen"
+
+msgctxt "selection:lims.planification.relate_technicians.result,grouping:"
+msgid "Analysis origin and Method"
+msgstr "Análisis origen y Método"
+
+msgctxt "selection:lims.planification.relate_technicians.result,grouping:"
+msgid "None"
+msgstr "Ninguna"
+
+msgctxt "selection:lims.planification.relate_technicians.start,grouping:"
+msgid "Analysis origin"
+msgstr "Análisis origen"
+
+msgctxt "selection:lims.planification.relate_technicians.start,grouping:"
+msgid "Analysis origin and Method"
+msgstr "Análisis origen y Método"
+
+msgctxt "selection:lims.planification.relate_technicians.start,grouping:"
+msgid "None"
+msgstr "Ninguna"
+
+msgctxt "view:lims.blind_sample:"
+msgid "Blind Sample"
+msgstr "Muestra ciega"
+
+msgctxt "view:lims.blind_sample:"
+msgid "Blind Samples"
+msgstr "Muestras ciegas"
+
+msgctxt "view:lims.configuration:"
+msgid "Fraction Types"
+msgstr "Tipos de fracción"
+
+msgctxt "view:lims.configuration:"
+msgid "Reagents"
+msgstr "Reactivos"
+
+msgctxt "view:lims.entry.detail.analysis:"
+msgid "CIE"
+msgstr "CIE"
+
+msgctxt "view:lims.fraction.reagent:"
+msgid "Fraction Reagent"
+msgstr "Reactivo de fracción"
+
+msgctxt "view:lims.fraction.reagent:"
+msgid "Fraction Reagents"
+msgstr "Reactivos de fracción"
+
+msgctxt "view:lims.fraction:"
+msgid "BMZ"
+msgstr "BMZ"
+
+msgctxt "view:lims.fraction:"
+msgid "BRE"
+msgstr "BRE"
+
+msgctxt "view:lims.fraction:"
+msgid "CIE"
+msgstr "CIE"
+
+msgctxt "view:lims.fraction:"
+msgid "Control"
+msgstr "Control"
+
+msgctxt "view:lims.fraction:"
+msgid "Load Services"
+msgstr "Cargar servicios"
+
+msgctxt "view:lims.fraction:"
+msgid "MRT"
+msgstr "MRT"
+
+msgctxt "view:lims.fraction:"
+msgid "RM"
+msgstr "RM"
+
+msgctxt "view:lims.lab.professional.method.requalification.control:"
+msgid "Control"
+msgstr "Control"
+
+msgctxt "view:lims.lab.professional.method.requalification.control:"
+msgid "Controls"
+msgstr "Controles"
+
+msgctxt "view:lims.lab.professional.method.requalification.supervisor:"
+msgid "Supervisor"
+msgstr "Supervisor"
+
+msgctxt "view:lims.lab.professional.method.requalification.supervisor:"
+msgid "Supervisors"
+msgstr "Supervisores"
+
+msgctxt "view:lims.lab.professional.method.requalification:"
+msgid "Requalification"
+msgstr "Recualificación"
+
+msgctxt "view:lims.lab.professional.method.requalification:"
+msgid "Requalifications"
+msgstr "Recualificaciones"
+
+msgctxt "view:lims.lab.professional.method:"
+msgid "Method"
+msgstr "Método"
+
+msgctxt "view:lims.lab.professional.method:"
+msgid "Methods"
+msgstr "Métodos"
+
+msgctxt "view:lims.pending_services_unplanned.start:"
+msgid "Pending Services Unplanned Report"
+msgstr "Servicios pendientes sin planificar"
+
+msgctxt "view:lims.planification.add_analysis.start:"
+msgid "Add Analysis"
+msgstr "Añadir Análisis"
+
+msgctxt "view:lims.planification.add_fraction_bre.start:"
+msgid "Add Fraction BRE"
+msgstr "Añadir fracción BRE"
+
+msgctxt "view:lims.planification.add_fraction_con.start:"
+msgid "Add Fraction Control"
+msgstr "Añadir fracción Control"
+
+msgctxt "view:lims.planification.add_fraction_mrt.start:"
+msgid "Add Fraction MRT"
+msgstr "Añadir fracción MRT"
+
+msgctxt "view:lims.planification.add_fraction_rm_bmz.start:"
+msgid "Add Fraction RM/BMZ"
+msgstr "Añadir fracción RM/BMZ"
+
+msgctxt "view:lims.planification.create_fraction_con.start:"
+msgid "Create Fraction Control"
+msgstr "Crear fracción Control"
+
+msgctxt "view:lims.planification.detail:"
+msgid "Fraction to Plan"
+msgstr "Fracción a planificar"
+
+msgctxt "view:lims.planification.detail:"
+msgid "Fractions to Plan"
+msgstr "Fracciones a planificar"
+
+msgctxt "view:lims.planification.qualification.situation.2:"
+msgid "Do you want to qualify the technician or enter a new training?"
+msgstr "¿Desea cualificar al técnico o escribir un nuevo entrenamiento?"
+
+msgctxt "view:lims.planification.qualification.situation.2:"
+msgid "Technicians Qualification"
+msgstr "Cualificación de Técnicos"
+
+msgctxt "view:lims.planification.qualification.situation.3:"
+msgid "Do you want to requalify the technician?"
+msgstr "¿Desea recualificar al técnico?"
+
+msgctxt "view:lims.planification.qualification.situation.3:"
+msgid "Technicians Qualification"
+msgstr "Cualificación de Técnicos"
+
+msgctxt "view:lims.planification.qualification.situation.4:"
+msgid "Technicians Qualification"
+msgstr "Cualificación de Técnicos"
+
+msgctxt "view:lims.planification.qualification.situation.4:"
+msgid "The following methods have no qualified technician"
+msgstr "Los siguientes métodos no poseen técnico cualificado"
+
+msgctxt "view:lims.planification.qualification.situation:"
+msgid "Qualification Situation"
+msgstr "Situación de Cualificación"
+
+msgctxt "view:lims.planification.qualification.situation:"
+msgid "Qualification Situations"
+msgstr "Situaciones de Cualificación"
+
+msgctxt "view:lims.planification.qualification.situations:"
+msgid "Technicians Qualification"
+msgstr "Cualificación de Técnicos"
+
+msgctxt "view:lims.planification.relate_technicians.detail1:"
+msgid "Fraction Detail"
+msgstr "Detalle de fracción"
+
+msgctxt "view:lims.planification.relate_technicians.detail1:"
+msgid "Fraction Details"
+msgstr "Detalles de fracción"
+
+msgctxt "view:lims.planification.relate_technicians.detail2:"
+msgid "Fraction Detail"
+msgstr "Detalle de fracción"
+
+msgctxt "view:lims.planification.relate_technicians.detail2:"
+msgid "Fraction Details"
+msgstr "Detalles de fracción"
+
+msgctxt "view:lims.planification.relate_technicians.detail3:"
+msgid "Fraction Detail"
+msgstr "Detalle de fracción"
+
+msgctxt "view:lims.planification.relate_technicians.detail3:"
+msgid "Fraction Details"
+msgstr "Detalles de fracción"
+
+msgctxt "view:lims.planification.relate_technicians.result:"
+msgid "Relate Technicians"
+msgstr "Relacionar técnicos"
+
+msgctxt "view:lims.planification.relate_technicians.start:"
+msgid "Relate Technicians"
+msgstr "Relacionar técnicos"
+
+msgctxt "view:lims.planification.release_fraction.empty:"
+msgid "No fractions found"
+msgstr "Ninguna fracción encontrada"
+
+msgctxt "view:lims.planification.release_fraction.empty:"
+msgid "Release Fractions"
+msgstr "Liberar fracciones planificadas"
+
+msgctxt "view:lims.planification.release_fraction.result:"
+msgid "Release Fractions"
+msgstr "Liberar fracciones planificadas"
+
+msgctxt "view:lims.planification.release_fraction.start:"
+msgid "Release Fractions"
+msgstr "Liberar fracciones planificadas"
+
+msgctxt "view:lims.planification.remove_control.start:"
+msgid "Remove Control"
+msgstr "Quitar control"
+
+msgctxt "view:lims.planification.replace_technician.start:"
+msgid "Replace Technician"
+msgstr "Reemplazar técnico"
+
+msgctxt "view:lims.planification.search_fractions.detail:"
+msgid "Fraction to Plan"
+msgstr "Fracción a planificar"
+
+msgctxt "view:lims.planification.search_fractions.detail:"
+msgid "Fractions to Plan"
+msgstr "Fracciones a planificar"
+
+msgctxt "view:lims.planification.search_fractions.next:"
+msgid "Search Fractions"
+msgstr "Buscar fracciones"
+
+msgctxt "view:lims.planification.search_planned_fractions.detail:"
+msgid "Fraction to Replan"
+msgstr "Fracción a replanificar"
+
+msgctxt "view:lims.planification.search_planned_fractions.detail:"
+msgid "Fractions to Replan"
+msgstr "Fracciones a replanificar"
+
+msgctxt "view:lims.planification.search_planned_fractions.next:"
+msgid "Search Planned Fractions"
+msgstr "Buscar fracciones planificadas"
+
+msgctxt "view:lims.planification.search_planned_fractions.start:"
+msgid "Search Planned Fractions"
+msgstr "Buscar fracciones planificadas"
+
+msgctxt "view:lims.planification.service_detail:"
+msgid "Planification Detail"
+msgstr "Detalle de planificación"
+
+msgctxt "view:lims.planification.service_detail:"
+msgid "Planification Details"
+msgstr "Detalles de planificación"
+
+msgctxt "view:lims.planification.technician.detail:"
+msgid "Fraction to plan"
+msgstr "Fracción a planificar"
+
+msgctxt "view:lims.planification.technician.detail:"
+msgid "Fractions to plan"
+msgstr "Fracciones a planificar"
+
+msgctxt "view:lims.planification.technician:"
+msgid "Technician"
+msgstr "Técnico"
+
+msgctxt "view:lims.planification.technician:"
+msgid "Technicians"
+msgstr "Técnicos"
+
+msgctxt "view:lims.planification.unlink_technicians.detail1:"
+msgid "Fraction Detail"
+msgstr "Detalle de fracción"
+
+msgctxt "view:lims.planification.unlink_technicians.detail1:"
+msgid "Fraction Details"
+msgstr "Detalles de fracción"
+
+msgctxt "view:lims.planification.unlink_technicians.start:"
+msgid "Unlink Technicians"
+msgstr "Desvincular técnicos"
+
+msgctxt "view:lims.planification:"
+msgid "Add Analysis"
+msgstr "Añadir Análisis"
+
+msgctxt "view:lims.planification:"
+msgid "Add BRE"
+msgstr "Añadir BRE"
+
+msgctxt "view:lims.planification:"
+msgid "Add Control"
+msgstr "Añadir Control"
+
+msgctxt "view:lims.planification:"
+msgid "Add MRT"
+msgstr "Añadir MRT"
+
+msgctxt "view:lims.planification:"
+msgid "Add RM/BMZ"
+msgstr "Añadir RM/BMZ"
+
+msgctxt "view:lims.planification:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "view:lims.planification:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "view:lims.planification:"
+msgid "Controls"
+msgstr "Controles"
+
+msgctxt "view:lims.planification:"
+msgid "General"
+msgstr "General"
+
+msgctxt "view:lims.planification:"
+msgid "Planification"
+msgstr "Planificación"
+
+msgctxt "view:lims.planification:"
+msgid "Planifications"
+msgstr "Planificaciones"
+
+msgctxt "view:lims.planification:"
+msgid "Pre-Plan"
+msgstr "Pre-Planificar"
+
+msgctxt "view:lims.planification:"
+msgid "Relate technicians"
+msgstr "Relacionar técnicos"
+
+msgctxt "view:lims.planification:"
+msgid "Remove Control"
+msgstr "Quitar control"
+
+msgctxt "view:lims.planification:"
+msgid "Replace technician"
+msgstr "Reemplazar técnico"
+
+msgctxt "view:lims.planification:"
+msgid "Search fractions"
+msgstr "Buscar fracciones"
+
+msgctxt "view:lims.planification:"
+msgid "Search planned fractions"
+msgstr "Buscar fracciones planificadas"
+
+msgctxt "view:lims.planification:"
+msgid "Technicians"
+msgstr "Técnicos"
+
+msgctxt "view:lims.planification:"
+msgid "Unlink technicians"
+msgstr "Desvincular técnicos"
+
+msgctxt "view:lims.print_blind_sample_report.start:"
+msgid "Blind Samples Report"
+msgstr "Informe de Muestras ciegas"
+
+msgctxt "wizard_button:lims.pending_services_unplanned,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.pending_services_unplanned,start,print_:"
+msgid "Print"
+msgstr "Imprimir"
+
+msgctxt "wizard_button:lims.pending_services_unplanned,start,save:"
+msgid "Save"
+msgstr "Guardar"
+
+msgctxt "wizard_button:lims.planification.add_analysis,start,add:"
+msgid "Add"
+msgstr "Añadir"
+
+msgctxt "wizard_button:lims.planification.add_analysis,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.add_fraction_bre,start,add:"
+msgid "Add"
+msgstr "Añadir"
+
+msgctxt "wizard_button:lims.planification.add_fraction_bre,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.add_fraction_con,start,add:"
+msgid "Add"
+msgstr "Añadir"
+
+msgctxt "wizard_button:lims.planification.add_fraction_con,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.add_fraction_mrt,start,add:"
+msgid "Add"
+msgstr "Añadir"
+
+msgctxt "wizard_button:lims.planification.add_fraction_mrt,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.add_fraction_rm_bmz,start,add:"
+msgid "Add"
+msgstr "Añadir"
+
+msgctxt "wizard_button:lims.planification.add_fraction_rm_bmz,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.create_fraction_con,start,create_:"
+msgid "Create"
+msgstr "Crear"
+
+msgctxt "wizard_button:lims.planification.create_fraction_con,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.relate_technicians,result,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.relate_technicians,result,relate:"
+msgid "Relate"
+msgstr "Relacionar"
+
+msgctxt "wizard_button:lims.planification.relate_technicians,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.relate_technicians,start,search:"
+msgid "Search"
+msgstr "Buscar"
+
+msgctxt "wizard_button:lims.planification.release_fraction,empty,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.release_fraction,empty,start:"
+msgid "Search again"
+msgstr "Buscar nuevamente"
+
+msgctxt "wizard_button:lims.planification.release_fraction,result,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.release_fraction,result,release:"
+msgid "Release"
+msgstr "Liberar"
+
+msgctxt "wizard_button:lims.planification.release_fraction,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.release_fraction,start,search:"
+msgid "Search"
+msgstr "Buscar"
+
+msgctxt "wizard_button:lims.planification.remove_control,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.remove_control,start,remove:"
+msgid "Remove"
+msgstr "Quitar"
+
+msgctxt "wizard_button:lims.planification.replace_technician,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.replace_technician,start,replace:"
+msgid "Replace"
+msgstr "Reemplazar"
+
+msgctxt "wizard_button:lims.planification.search_fractions,next,add:"
+msgid "Add"
+msgstr "Añadir"
+
+msgctxt "wizard_button:lims.planification.search_fractions,next,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.search_planned_fractions,next,add:"
+msgid "Add"
+msgstr "Añadir"
+
+msgctxt "wizard_button:lims.planification.search_planned_fractions,next,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.search_planned_fractions,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt ""
+"wizard_button:lims.planification.search_planned_fractions,start,search:"
+msgid "Search"
+msgstr "Buscar"
+
+msgctxt "wizard_button:lims.planification.technicians_qualification,sit2,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt ""
+"wizard_button:lims.planification.technicians_qualification,sit2,sit2_op1:"
+msgid "Qualify"
+msgstr "Cualificar"
+
+msgctxt ""
+"wizard_button:lims.planification.technicians_qualification,sit2,sit2_op2:"
+msgid "New Training"
+msgstr "Nuevo entrenamiento"
+
+msgctxt "wizard_button:lims.planification.technicians_qualification,sit3,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt ""
+"wizard_button:lims.planification.technicians_qualification,sit3,sit3_op1:"
+msgid "Requalify"
+msgstr "Recualificar"
+
+msgctxt "wizard_button:lims.planification.technicians_qualification,sit4,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.unlink_technicians,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.unlink_technicians,start,unlink:"
+msgid "Unlink"
+msgstr "Desvincular"
+
+msgctxt "wizard_button:lims.print_blind_sample_report,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.print_blind_sample_report,start,print_:"
+msgid "Print"
+msgstr "Imprimir"
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Date range"
+msgstr "Rango de Fechas"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Date range:"
+msgstr "Rango de Fechas"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Result estimated date"
+msgstr "Mínima fecha estimada de resultado"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Result estimated waiting"
+msgstr "Cantidad mínima estimada de días para resultados"
+
+msgctxt "report:lims.pending_services_unplanned.report:"
+msgid "Date estimated for result"
+msgstr "Fecha min. est. de result."
+
+##
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Notice"
+msgstr "Aviso"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "Timed out"
+msgstr "Vencido"
+
+msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
+msgid "To expire"
+msgstr "A vencer"
