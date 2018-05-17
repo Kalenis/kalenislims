@@ -38,6 +38,8 @@ def register():
         configuration.ConfigurationProductCategory,
         configuration.LabWorkYear,
         configuration.LabWorkYearSequence,
+        configuration.ModelDoc,
+        configuration.Model,
         laboratory.LaboratoryProfessional,
         laboratory.Laboratory,
         laboratory.LabMethod,
