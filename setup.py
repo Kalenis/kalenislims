@@ -73,8 +73,8 @@ for name in os.listdir('.'):
             package_dir[subpackage] = os.path.join(name, suffix)
             packages.append(subpackage)
         for data_pattern in (info.get('xml', []) + ['view/*.xml',
-                    'locale/*.po', '*.odt', 'icons/*.svg', 'tests/*.rst',
-                    '*.cfg']):
+                    'locale/*.po', '*.odt', '*.ods', 'icons/*.svg',
+                    'tests/*.rst', '*.cfg']):
             data.append(data_pattern)
         if data:
             package_data[subpackage] = data
