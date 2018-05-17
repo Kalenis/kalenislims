@@ -13,7 +13,8 @@ from trytond.modules.company.model import (
 __all__ = ['NotebookView', 'NotebookViewColumn', 'UserRole', 'UserRoleGroup',
     'Printer', 'User', 'UserLaboratory', 'Configuration',
     'ConfigurationLaboratory', 'ConfigurationSequence',
-    'ConfigurationProductCategory', 'LabWorkYear', 'LabWorkYearSequence']
+    'ConfigurationProductCategory', 'LabWorkYear', 'LabWorkYearSequence',
+    'ModelDoc', 'Model']
 sequence_names = [
     'entry_sequence', 'sample_sequence', 'service_sequence',
     'results_report_sequence']
@@ -565,3 +566,26 @@ class LabWorkYearSequence(ModelSQL, CompanyValueMixin):
             return ModelData.get_id('lims.service', 'seq_service')
         except KeyError:
             return None
+
+
+class ModelDoc(ModelSQL, ModelView):
+    'Model Doc'
+    __name__ = 'ir.model.doc'
+
+    model = fields.Many2One('ir.model', 'Model')
+    doc = fields.Text('Documentation', translate=True)
+    kind = fields.Selection([
+        ('base', 'Base'),
+        ('extended', 'Extended'),
+        ], 'Kind')
+    name = fields.Function(fields.Char('Name'), 'get_name')
+
+    def get_name(self, name):
+        return self.model.name
+
+
+class Model:
+    __name__ = 'ir.model'
+    __metaclass__ = PoolMeta
+
+    docs = fields.One2Many('ir.model.doc', 'model', 'Docs')

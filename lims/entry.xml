@@ -125,6 +125,12 @@
             <field name="group" ref="group_lims_entry"/>
         </record>
 
+        <record model="ir.model.doc" id="lims_entry_model_doc">
+            <field name="model" search="[('model', '=', 'lims.entry')]"/>
+            <field name="kind">base</field>
+            <field name="doc"><![CDATA[<div align="left"><b><font face="normal" size="7">Entry <i>Documentation</i></font></b></div>]]></field>
+        </record>
+
 <!-- Entry Invoice Contact -->
 
         <record model="ir.ui.view" id="lims_entry_invoice_contacts_view_form">

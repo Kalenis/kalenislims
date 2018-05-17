@@ -122,6 +122,24 @@
             <field name="act_window" ref="act_printer_list"/>
         </record>
 
+<!-- Model -->
+
+        <record model="ir.ui.view" id="model_view_form">
+            <field name="model">ir.model</field>
+            <field name="inherit" ref="ir.model_view_form"/>
+            <field name="name">model_form</field>
+        </record>
+        <record model="ir.ui.view" id="model_doc_view_form">
+            <field name="model">ir.model.doc</field>
+            <field name="type">form</field>
+            <field name="name">model_doc_form</field>
+        </record>
+        <record model="ir.ui.view" id="model_doc_view_tree">
+            <field name="model">ir.model.doc</field>
+            <field name="type">tree</field>
+            <field name="name">model_doc_tree</field>
+        </record>
+
         <!-- Configuration -->
         <menuitem name="Configuration" parent="lims_laboratory"
             id="lims_config" sequence="10" icon="lims-configuration"/>
