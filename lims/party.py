@@ -108,6 +108,8 @@ class Company:
     __name__ = 'company.company'
     __metaclass__ = PoolMeta
 
+    logo = fields.Binary('Logo')
+
     def get_timezone(self):
         timezone = pytz.utc
         if self.timezone:
