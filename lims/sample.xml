@@ -644,9 +644,9 @@
         </record>
         <record model="ir.action.report" id="report_countersample_storage">
             <field name="name">Countersamples Storage Report</field>
-<!--             <field name="model">lims.fraction</field> -->
             <field name="report_name">lims.countersample.storage.report</field>
             <field name="report">lims/report/countersample_storage_report.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="lims_countersample_storage_print_keyword">
             <field name="keyword">form_print</field>
@@ -667,9 +667,9 @@
         </record>
         <record model="ir.action.report" id="report_countersample_discharge">
             <field name="name">Countersamples Discharge Report</field>
-<!--             <field name="model">lims.fraction</field> -->
             <field name="report_name">lims.countersample.discharge.report</field>
             <field name="report">lims/report/countersample_discharge_report.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="lims_countersample_discharge_print_keyword">
             <field name="keyword">form_print</field>

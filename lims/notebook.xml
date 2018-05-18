@@ -660,6 +660,7 @@
             <field name="name">Pending analysis Unchecked</field>
             <field name="report_name">lims.analysis_pending_inform</field>
             <field name="report">lims/report/analysis_pending_inform.ods</field>
+            <field name="extension">xls</field>
         </record>
 
 
@@ -678,6 +679,7 @@
             <field name="name">Analysis checked pending of inform</field>
             <field name="report_name">lims.analysis_checked_pending_inform</field>
             <field name="report">lims/report/analysis_checked_pending_inform.ods</field>
+            <field name="extension">xls</field>
         </record>
 
         <menuitem parent="lims_laboratory" action="act_lims_notebook_list"

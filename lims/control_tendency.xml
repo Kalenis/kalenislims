@@ -256,6 +256,7 @@
             <field name="model">lims.control.tendency</field>
             <field name="report_name">lims.control_chart.report</field>
             <field name="report">lims/report/control_chart_report.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_control_chart_keyword">
             <field name="keyword">form_print</field>

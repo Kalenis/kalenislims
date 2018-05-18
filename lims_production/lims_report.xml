@@ -8,6 +8,7 @@
             <field name="name">Family/Equivalents</field>
             <field name="report_name">lims.family.equivalent.report</field>
             <field name="report">lims_production/report/family_equivalent.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_family_equivalent_keyword">
             <field name="keyword">form_print</field>
