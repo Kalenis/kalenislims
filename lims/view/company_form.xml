@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='reports']"
+        position="inside">
+        <separator name="logo"/>
+        <field name="logo" widget="image"/>
+    </xpath>
+</data>
