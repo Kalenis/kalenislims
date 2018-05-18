@@ -393,20 +393,6 @@
             <field name="action" ref="report_entry_labels"/>
         </record>
 
-<!-- Entry Labels Printer -->
-
-        <record model="ir.action.wizard" id="wiz_report_entry_labels_printer">
-            <field name="name">Entry Labels Printer</field>
-            <field name="wiz_name">lims.entry.labels.printer.report</field>
-            <field name="model">lims.entry</field>
-        </record>
-        <record model="ir.action.keyword"
-                id="wiz_report_entry_labels_printer_keyword">
-            <field name="keyword">form_print</field>
-            <field name="model">lims.entry,-1</field>
-            <field name="action" ref="wiz_report_entry_labels_printer"/>
-        </record>
-
         <!-- Configuration / Entry -->
         <menuitem name="Entry" parent="lims_config"
             id="lims_config_entry" sequence="30"/>

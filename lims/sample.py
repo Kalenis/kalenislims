@@ -5,7 +5,6 @@
 import sys
 import logging
 import operator
-import cups
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from trytond.model import ModelView, ModelSQL, fields, Unique
@@ -32,10 +31,9 @@ __all__ = ['Zone', 'Variety', 'MatrixVariety', 'PackagingIntegrity',
     'FractionDischargeRevertStart', 'FractionDischargeRevertEmpty',
     'FractionDischargeRevertResult', 'FractionDischargeRevert',
     'CreateSampleStart', 'CreateSampleService', 'CreateSample',
-    'SampleLabelsPrinter', 'CountersampleStoragePrintStart',
-    'CountersampleStoragePrint', 'CountersampleStorageReport',
-    'CountersampleDischargePrintStart', 'CountersampleDischargePrint',
-    'CountersampleDischargeReport']
+    'CountersampleStoragePrintStart', 'CountersampleStoragePrint',
+    'CountersampleStorageReport', 'CountersampleDischargePrintStart',
+    'CountersampleDischargePrint', 'CountersampleDischargeReport']
 
 
 class Zone(ModelSQL, ModelView):
@@ -4747,65 +4745,6 @@ class CreateSample(Wizard):
         if not labels:
             return [None]
         return labels.split('\n')
-
-
-class SampleLabelsPrinter(Wizard):
-    'Sample Labels Printer'
-    __name__ = 'lims.sample.labels.printer.report'
-
-    start = StateTransition()
-
-    def transition_start(self):
-        pool = Pool()
-        User = pool.get('res.user')
-        Sample = pool.get('lims.sample')
-
-        user = User(Transaction().user)
-        if not user.printer:
-            return 'end'
-
-        s = u'\n'
-        s += u'q750\n'
-        s += u'I8,A\n'
-
-        for active_id in Transaction().context['active_ids']:
-            sample = Sample(active_id)
-            for fraction in sample.fractions:
-                if (fraction.shared):
-                    c = 'C'
-                else:
-                    c = ''
-                if sample.restricted_entry:
-                    f = 'F'
-                else:
-                    f = ''
-                labelline = fraction.label
-                if len(labelline) > 52:
-                    line1 = labelline[0:52]
-                    line2 = labelline[52:105]
-                else:
-                    line1 = fraction.label
-                    line2 = ''
-
-                s += u'N\n'
-                s += u'A90,0,0,3,1,2,N,"' + fraction.number + '"\n'
-                s += (u'A320,0,0,3,1,2,N,"' +
-                    fraction.storage_location.code + '"\n')
-                s += u'A90,40,0,1,1,2,N,"' + line1 + '"\n'
-                s += u'A90,65,0,1,1,2,N,"' + line2 + '"\n'
-                s += (u'A90,100,0,1,1,2,N,"' +
-                    fraction.sample.product_type.description + ' - ' +
-                    fraction.sample.matrix.description + '"\n')
-                s += u'B90,125,0,1,2,0,60,N,"' + fraction.number + '"\n'
-                s += u'A500,140,0,3,2,2,N,"' + c + ' ' + f + '"\n'
-                s += u'P' + str(fraction.packages_quantity) + '\n'
-        labels_to_print = open('labels', 'w')
-        labels_to_print.write(s.encode('cp1252', 'ignore'))
-        labels_to_print.close()
-
-        conn = cups.Connection()
-        conn.printFile(user.printer.name, 'labels', 'Labels', {})
-        return 'end'
 
 
 class CountersampleStoragePrintStart(ModelView):

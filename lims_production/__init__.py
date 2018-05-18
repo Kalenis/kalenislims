@@ -29,7 +29,6 @@ def register():
         module='lims_production', type_='model')
     Pool.register(
         UpdateCostPrice,
-        ShipmentInLabels,
         LimsMoveProductionRelated,
         module='lims_production', type_='wizard')
     Pool.register(

@@ -182,19 +182,5 @@
             <field name="name">stock_shipment_in_form</field>
         </record>
 
-<!-- Shipment In Labels -->
-
-        <record model="ir.action.wizard" id="wiz_report_shipment_in_labels">
-            <field name="name">Shipment In Labels</field>
-            <field name="wiz_name">stock.shipment.in.labels.report</field>
-            <field name="model">stock.shipment.in</field>
-        </record>
-        <record model="ir.action.keyword"
-                id="wiz_report_shipment_in_labels_keyword">
-            <field name="keyword">form_print</field>
-            <field name="model">stock.shipment.in,-1</field>
-            <field name="action" ref="wiz_report_shipment_in_labels"/>
-        </record>
-
     </data>
 </tryton>

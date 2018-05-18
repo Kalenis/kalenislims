@@ -631,20 +631,6 @@
             <field name="action" ref="ir.act_module_form"/>
         </record>
 
-<!-- Sample Labels Printer -->
-
-        <record model="ir.action.wizard" id="wiz_report_sample_labels_printer">
-            <field name="name">Sample Labels Printer</field>
-            <field name="wiz_name">lims.sample.labels.printer.report</field>
-            <field name="model">lims.sample</field>
-        </record>
-        <record model="ir.action.keyword"
-                id="wiz_report_sample_labels_printer_keyword">
-            <field name="keyword">form_print</field>
-            <field name="model">lims.sample,-1</field>
-            <field name="action" ref="wiz_report_sample_labels_printer"/>
-        </record>
-
 <!-- Countersamples Storage Report -->
 
         <record model="ir.ui.view" id="lims_countersample_storage_print_start_view_form">
