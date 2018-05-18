@@ -309,6 +309,7 @@
             <field name="model">lims.results_report.version.detail</field>
             <field name="report_name">lims.result_report</field>
             <field name="report">lims/report/results_report.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_results_report_keyword">
             <field name="keyword">form_print</field>
@@ -323,6 +324,7 @@
             <field name="model">lims.results_report.version.detail</field>
             <field name="report_name">lims.result_report.transcription</field>
             <field name="report">lims/report/results_report.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_results_report_transcription_keyword">
             <field name="keyword">form_print</field>
@@ -334,9 +336,9 @@
 
         <record model="ir.action.report" id="report_global_results_report">
             <field name="name">Global Results Report</field>
-            <field name="model"></field>
             <field name="report_name">lims.global_result_report</field>
             <field name="report">lims/report/global_results_report.odt</field>
+            <field name="extension">pdf</field>
         </record>
 
         <menuitem name="Results reports" parent="lims_laboratory"

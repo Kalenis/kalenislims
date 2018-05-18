@@ -321,6 +321,7 @@
             <field name="model">lims.planification</field>
             <field name="report_name">lims.planification.sequence.report</field>
             <field name="report">lims/report/planification_sequence_report.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_planification_sequence_keyword">
             <field name="keyword">form_print</field>
@@ -335,6 +336,7 @@
             <field name="model">lims.planification</field>
             <field name="report_name">lims.planification.worksheet_analysis.report</field>
             <field name="report">lims/report/planification_worksheet_analysis_report.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_planification_worksheet_analysis_keyword">
             <field name="keyword">form_print</field>
@@ -349,6 +351,7 @@
             <field name="model">lims.planification</field>
             <field name="report_name">lims.planification.worksheet_method.report</field>
             <field name="report">lims/report/planification_worksheet_method_report.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_planification_worksheet_method_keyword">
             <field name="keyword">form_print</field>
@@ -363,6 +366,7 @@
             <field name="model">lims.planification</field>
             <field name="report_name">lims.planification.worksheet.report</field>
             <field name="report">lims/report/planification_worksheet_report.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_planification_worksheet_keyword">
             <field name="keyword">form_print</field>
@@ -384,17 +388,15 @@
 
         <record model="ir.action.report" id="report_pending_services_unplanned">
             <field name="name">Pending Services Unplanned</field>
-            <field name="model"></field>
             <field name="report_name">lims.pending_services_unplanned.report</field>
             <field name="report">lims/report/pending_services_unplanned_report.odt</field>
-            <field name="active" eval="True"/>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.report" id="report_pending_services_unplanned_spreadsheet">
             <field name="name">Pending Services Unplanned</field>
-            <field name="model"></field>
             <field name="report_name">lims.pending_services_unplanned.spreadsheet</field>
             <field name="report">lims/report/pending_services_unplanned_spreadsheet.ods</field>
-            <field name="active" eval="True"/>
+            <field name="extension">xls</field>
         </record>
         <record model="ir.action.keyword" id="report_pending_services_unplanned_keyword">
             <field name="keyword">form_print</field>
@@ -406,9 +408,9 @@
 
         <record model="ir.action.report" id="report_blind_sample">
             <field name="name">Blind Samples Report</field>
-            <field name="model"></field>
             <field name="report_name">lims.blind_sample_report</field>
             <field name="report">lims/report/blind_sample_report.odt</field>
+            <field name="extension">pdf</field>
         </record>
 
         <record model="ir.ui.view" id="lims_print_blind_sample_report_start_view_form">

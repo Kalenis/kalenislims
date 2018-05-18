@@ -9,6 +9,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.01</field>
             <field name="report">lims_project_study_plan/report/glp_01.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_01_keyword">
             <field name="keyword">form_print</field>
@@ -24,6 +25,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.02</field>
             <field name="report">lims_project_study_plan/report/glp_02.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_02_keyword">
             <field name="keyword">form_print</field>
@@ -48,6 +50,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.03</field>
             <field name="report">lims_project_study_plan/report/glp_03.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_03_keyword">
             <field name="keyword">form_print</field>
@@ -62,6 +65,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.04</field>
             <field name="report">lims_project_study_plan/report/glp_04.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_04_keyword">
             <field name="keyword">form_print</field>
@@ -86,6 +90,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.05</field>
             <field name="report">lims_project_study_plan/report/glp_05.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_05_keyword">
             <field name="keyword">form_print</field>
@@ -100,6 +105,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.06</field>
             <field name="report">lims_project_study_plan/report/glp_06.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_06_keyword">
             <field name="keyword">form_print</field>
@@ -114,6 +120,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.07</field>
             <field name="report">lims_project_study_plan/report/glp_07.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_07_keyword">
             <field name="keyword">form_print</field>
@@ -128,6 +135,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.08</field>
             <field name="report">lims_project_study_plan/report/glp_08.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_08_keyword">
             <field name="keyword">form_print</field>
@@ -142,6 +150,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.09</field>
             <field name="report">lims_project_study_plan/report/glp_09.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_09_keyword">
             <field name="keyword">form_print</field>
@@ -166,6 +175,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.10</field>
             <field name="report">lims_project_study_plan/report/glp_10.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_10_keyword">
             <field name="keyword">form_print</field>
@@ -180,6 +190,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.11</field>
             <field name="report">lims_project_study_plan/report/glp_11.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_11_keyword">
             <field name="keyword">form_print</field>
@@ -204,6 +215,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.12</field>
             <field name="report">lims_project_study_plan/report/glp_12.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_12_keyword">
             <field name="keyword">form_print</field>
@@ -221,6 +233,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.study_plan</field>
             <field name="report">lims_project_study_plan/report/glp_study_plan.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_study_plan_keyword">
             <field name="keyword">form_print</field>
@@ -235,6 +248,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.final_rp</field>
             <field name="report">lims_project_study_plan/report/glp_final_report_rp.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_final_rp_keyword">
             <field name="keyword">form_print</field>
@@ -249,6 +263,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.final_for</field>
             <field name="report">lims_project_study_plan/report/glp_final_report_for.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_final_for_keyword">
             <field name="keyword">form_print</field>
@@ -263,6 +278,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.analytical_phase</field>
             <field name="report">lims_project_study_plan/report/glp_analytical_phase_report.odt</field>
+            <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_analytical_phase_keyword">
             <field name="keyword">form_print</field>
@@ -278,6 +294,7 @@
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.13</field>
             <field name="report">lims_project_study_plan/report/glp_13.ods</field>
+            <field name="extension">xls</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_13_keyword">
             <field name="keyword">form_print</field>
