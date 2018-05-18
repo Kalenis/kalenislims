@@ -3,7 +3,6 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import logging
-import cups
 from datetime import datetime
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
@@ -24,7 +23,7 @@ __all__ = ['Entry', 'EntryInvoiceContact', 'EntryReportContact',
     'EntryDetailAnalysis', 'ForwardAcknowledgmentOfReceipt',
     'ChangeInvoicePartyStart', 'ChangeInvoicePartyError', 'ChangeInvoiceParty',
     'PrintAcknowledgmentOfReceipt', 'AcknowledgmentOfReceipt', 'EntryDetail',
-    'EntryLabels', 'EntryLabelsPrinter']
+    'EntryLabels']
 
 # Genshi fix: https://genshi.edgewall.org/ticket/582
 from genshi.template.astutil import ASTCodeGenerator, ASTTransformer
@@ -1611,62 +1610,3 @@ class EntryLabels(Report):
         report_context['labels'] = labels
 
         return report_context
-
-
-class EntryLabelsPrinter(Wizard):
-    'Entry Labels Printer'
-    __name__ = 'lims.entry.labels.printer.report'
-
-    start = StateTransition()
-
-    def transition_start(self):
-        pool = Pool()
-        User = pool.get('res.user')
-        Entry = pool.get('lims.entry')
-
-        user = User(Transaction().user)
-        if not user.printer:
-            return 'end'
-
-        s = u'\n'
-        s += u'q750\n'
-        s += u'I8,A\n'
-
-        entry = Entry(Transaction().context.get('active_id'))
-        for sample in entry.samples:
-            for fraction in sample.fractions:
-                if (fraction.shared):
-                    c = 'C'
-                else:
-                    c = ''
-                if sample.restricted_entry:
-                    f = 'F'
-                else:
-                    f = ''
-                labelline = fraction.label
-                if len(labelline) > 52:
-                    line1 = labelline[0:52]
-                    line2 = labelline[52:105]
-                else:
-                    line1 = fraction.label
-                    line2 = ''
-
-                s += u'N\n'
-                s += u'A90,0,0,3,1,2,N,"' + fraction.number + '"\n'
-                s += (u'A320,0,0,3,1,2,N,"' +
-                    fraction.storage_location.code + '"\n')
-                s += u'A90,40,0,1,1,2,N,"' + line1 + '"\n'
-                s += u'A90,65,0,1,1,2,N,"' + line2 + '"\n'
-                s += (u'A90,100,0,1,1,2,N,"' +
-                    fraction.sample.product_type.description + ' - ' +
-                    fraction.sample.matrix.description + '"\n')
-                s += u'B90,125,0,1,2,0,60,N,"' + fraction.number + '"\n'
-                s += u'A500,140,0,3,2,2,N,"' + c + ' ' + f + '"\n'
-                s += u'P' + str(fraction.packages_quantity) + '\n'
-        labels_to_print = open('labels', 'w')
-        labels_to_print.write(s.encode('cp1252', 'ignore'))
-        labels_to_print.close()
-
-        conn = cups.Connection()
-        conn.printFile(user.printer.name, 'labels', 'Labels', {})
-        return 'end'

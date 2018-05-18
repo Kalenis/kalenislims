@@ -34,7 +34,7 @@ major_version, minor_version, _ = version.split('.', 2)
 major_version = int(major_version)
 minor_version = int(minor_version)
 
-requires = ['pytz', 'xlrd', 'xlutils', 'pycups']
+requires = ['pytz', 'xlrd', 'xlutils']
 packages = []
 package_dir = {}
 package_data = {}

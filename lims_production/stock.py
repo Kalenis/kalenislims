@@ -2,7 +2,6 @@
 # This file is part of lims_production module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-import cups
 from decimal import Decimal
 from collections import defaultdict
 from functools import partial
@@ -16,7 +15,7 @@ from trytond.modules.product import price_digits
 
 __all__ = ['PurityDegree', 'Brand', 'FamilyEquivalent', 'Template', 'Product',
     'UpdateCostPrice', 'LotCategory', 'Lot', 'Move', 'ShipmentIn',
-    'ShipmentInLabels', 'LimsMoveProductionRelated']
+    'LimsMoveProductionRelated']
 
 
 class PurityDegree(ModelSQL, ModelView):
@@ -568,73 +567,6 @@ class ShipmentIn:
             incoming_move.origin.purchase.currency.id
         move.origin_purchase_unit_price = incoming_move.origin.unit_price
         return move
-
-
-class ShipmentInLabels(Wizard):
-    'Shipment In Labels'
-    __name__ = 'stock.shipment.in.labels.report'
-
-    start = StateTransition()
-
-    def transition_start(self):
-        pool = Pool()
-        User = pool.get('res.user')
-        Shipment = pool.get('stock.shipment.in')
-        Lang = pool.get('ir.lang')
-
-        user = User(Transaction().user)
-        if not user.printer:
-            return 'end'
-
-        shipment = Shipment(Transaction().context.get('active_id'))
-        if shipment.state != 'done':
-            return 'end'
-
-        lang, = Lang.search([
-                ('code', '=', Transaction().language),
-                ])
-
-        s = u'\n'
-        s += u'q750\n'
-        s += u'I8,A\n'
-
-        for move in shipment.inventory_moves:
-            if move.label_quantity < 1:
-                continue
-            department = move.department and move.department.code or ''
-            lot = move.lot and move.lot.number or ''
-            catalog = move.product.catalog or ''
-            catalog = catalog[0:30]
-            desline = move.product.template.name
-            if len(desline) > 52:
-                line1 = desline[0:52]
-                line2 = desline[52:105]
-            else:
-                line1 = move.product.template.name
-                line2 = ''
-            barcode = move.product.barcode or ''
-
-            s += u'N\n'
-            s += (u'A90,0,0,3,1,2,N,"' + catalog + '     ' + department +
-                '  ' + move.to_location.code + '"\n')
-            s += u'A90,40,0,2,1,2,N,"' + line1 + '"\n'
-            s += u'A90,65,0,2,1,2,N,"' + line2 + '"\n'
-            s += u'A90,85,0,2,1,1,N,"' + Lang.strftime(
-                shipment.effective_date, lang.code, lang.date) + '"\n'
-            s += u'A450,80,0,3,1,2,N,"' + lot + '"\n'
-            s += u'B90,110,0,1,2,0,60,N,"' + barcode + '"\n'
-            s += (u'A550,135,0,2,1,1,N,"' + move.origin_purchase_currency.code
-                + ' ' + Lang.format(lang, '%.2f',
-                move.origin_purchase_unit_price) + '"\n')
-            s += u'P' + str(move.label_quantity) + '\n'
-
-        labels_to_print = open('labels', 'w')
-        labels_to_print.write(s.encode('cp1252', 'ignore'))
-        labels_to_print.close()
-
-        conn = cups.Connection()
-        conn.printFile(user.printer.name, 'labels', 'Labels', {})
-        return 'end'
 
 
 class LimsMoveProductionRelated(Wizard):

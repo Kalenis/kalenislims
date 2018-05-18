@@ -248,8 +248,6 @@ def register():
         module='lims', type_='model')
     Pool.register(
         entry.PrintAcknowledgmentOfReceipt,
-        entry.EntryLabelsPrinter,
-        sample.SampleLabelsPrinter,
         control_tendency.PrintControlChart,
         sample.CountersampleStoragePrint,
         sample.CountersampleDischargePrint,
