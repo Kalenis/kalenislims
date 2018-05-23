@@ -3,14 +3,14 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import Pool
-from .sale import *
+from . import sale
 
 
 def register():
     Pool.register(
-        Sale,
-        SaleLoadServicesStart,
+        sale.Sale,
+        sale.SaleLoadServicesStart,
         module='lims_sale', type_='model')
     Pool.register(
-        SaleLoadServices,
+        sale.SaleLoadServices,
         module='lims_sale', type_='wizard')

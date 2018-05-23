@@ -2,6 +2,192 @@
 <tryton>
     <data>
 
+<!-- Sequences for Sample in Custody -->
+
+        <record model="ir.sequence.type" id="seq_type_sample_in_custody">
+            <field name="name">Sample in Custody</field>
+            <field name="code">lims.project.sample_in_custody</field>
+        </record>
+        <record model="ir.sequence.type-res.group"
+            id="seq_type_sample_in_custody_group_admin">
+            <field name="sequence_type" ref="seq_type_sample_in_custody"/>
+            <field name="group" ref="res.group_admin"/>
+        </record>
+        <record model="ir.sequence" id="seq_sample_in_custody">
+            <field name="name">Sample in Custody</field>
+            <field name="code">lims.project.sample_in_custody</field>
+        </record>
+
+<!-- Sequences for Project -->
+
+        <record model="ir.sequence.type" id="seq_type_stp_project">
+            <field name="name">Project</field>
+            <field name="code">lims.project</field>
+        </record>
+        <record model="ir.sequence.type-res.group"
+            id="seq_type_stp_project_group_admin">
+            <field name="sequence_type" ref="seq_type_stp_project"/>
+            <field name="group" ref="res.group_admin"/>
+        </record>
+
+<!-- Project -->
+
+        <record model="ir.ui.view" id="lims_project_view_form">
+            <field name="model">lims.project</field>
+            <field name="inherit" ref="lims_project.lims_project_view_form"/>
+            <field name="name">project_form</field>
+        </record>
+
+<!-- Project Professional-->
+
+        <record model="ir.ui.view" id="lims_project_stp_professional_view_form">
+            <field name="model">lims.project.stp_professional</field>
+            <field name="type">form</field>
+            <field name="name">project_stp_professional_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_project_stp_professional_view_list">
+            <field name="model">lims.project.stp_professional</field>
+            <field name="type">tree</field>
+            <field name="name">project_stp_professional_list</field>
+        </record>
+
+<!-- Professional Position-->
+
+        <record model="ir.ui.view" id="lims_project_stp_professional_position_view_form">
+            <field name="model">lims.project.stp_professional.position</field>
+            <field name="type">form</field>
+            <field name="name">project_stp_professional_position_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_project_stp_professional_position_view_list">
+            <field name="model">lims.project.stp_professional.position</field>
+            <field name="type">tree</field>
+            <field name="name">project_stp_professional_position_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_project_stp_professional_position_list">
+            <field name="name">Professional Positions</field>
+            <field name="res_model">lims.project.stp_professional.position</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_project_stp_professional_position_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_project_stp_professional_position_view_list"/>
+            <field name="act_window" ref="act_lims_project_stp_professional_position_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_project_stp_professional_position_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_project_stp_professional_position_view_form"/>
+            <field name="act_window" ref="act_lims_project_stp_professional_position_list"/>
+        </record>
+
+<!-- Reference Element in GLP-->
+
+        <record model="ir.ui.view" id="lims_project_reference_element_view_form">
+            <field name="model">lims.project.reference_element</field>
+            <field name="type">form</field>
+            <field name="name">project_reference_element_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_project_reference_element_view_list">
+            <field name="model">lims.project.reference_element</field>
+            <field name="type">tree</field>
+            <field name="name">project_reference_element_list</field>
+        </record>
+
+<!-- Solvent and Reagent-->
+
+        <record model="ir.ui.view" id="lims_project_solvent_reagent_view_form">
+            <field name="model">lims.project.solvent_reagent</field>
+            <field name="type">form</field>
+            <field name="name">project_solvent_reagent_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_project_solvent_reagent_view_list">
+            <field name="model">lims.project.solvent_reagent</field>
+            <field name="type">tree</field>
+            <field name="name">project_solvent_reagent_list</field>
+        </record>
+
+<!-- Sample in Custody-->
+
+        <record model="ir.ui.view" id="lims_project_sample_in_custody_view_form">
+            <field name="model">lims.project.sample_in_custody</field>
+            <field name="type">form</field>
+            <field name="name">project_sample_in_custody_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_project_sample_in_custody_view_list">
+            <field name="model">lims.project.sample_in_custody</field>
+            <field name="type">tree</field>
+            <field name="name">project_sample_in_custody_list</field>
+        </record>
+
+<!-- Deviation and Amendment-->
+
+        <record model="ir.ui.view" id="lims_project_deviation_amendment_view_form">
+            <field name="model">lims.project.deviation_amendment</field>
+            <field name="type">form</field>
+            <field name="name">project_deviation_amendment_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_project_deviation_amendment_view_list">
+            <field name="model">lims.project.deviation_amendment</field>
+            <field name="type">tree</field>
+            <field name="name">project_deviation_amendment_list</field>
+        </record>
+
+<!-- Deviation/Amendment Professional-->
+
+        <record model="ir.ui.view" id="lims_project_deviation_amendment_professional_view_form">
+            <field name="model">lims.project.deviation_amendment.professional</field>
+            <field name="type">form</field>
+            <field name="name">project_deviation_amendment_professional_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_project_deviation_amendment_professional_view_list">
+            <field name="model">lims.project.deviation_amendment.professional</field>
+            <field name="type">tree</field>
+            <field name="name">project_deviation_amendment_professional_list</field>
+        </record>
+
+<!-- Sample -->
+
+        <record model="ir.ui.view" id="lims_sample_view_form">
+            <field name="model">lims.sample</field>
+            <field name="inherit" ref="lims.lims_sample_view_form"/>
+            <field name="name">sample_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_sample_view_list">
+            <field name="model">lims.sample</field>
+            <field name="type">tree</field>
+            <field name="name">sample_list</field>
+        </record>
+
+<!-- Wizard Create Sample -->
+
+        <record model="ir.ui.view" id="lims_create_sample_start_view_form">
+            <field name="model">lims.create_sample.start</field>
+            <field name="inherit" ref="lims.lims_create_sample_start_view_form"/>
+            <field name="name">create_sample_start_form</field>
+        </record>
+
+<!-- Lot -->
+
+        <record model="ir.ui.view" id="lims_lot_view_form">
+            <field name="model">stock.lot</field>
+            <field name="inherit" ref="stock_lot.lot_view_form"/>
+            <field name="name">stock_lot_form</field>
+        </record>
+
+<!-- Notebook Line -->
+
+        <record model="ir.ui.view" id="lims_notebook_line_view_list">
+            <field name="model">lims.notebook.line</field>
+            <field name="type">tree</field>
+            <field name="name">notebook_line_list</field>
+        </record>
+
+<!-- Menu -->
+
+        <!-- Configuration / Projects / Professional Positions -->
+        <menuitem parent="lims_project.lims_config_projects"
+            action="act_lims_project_stp_professional_position_list"
+            id="lims_project_stp_professional_position_menu" sequence="20"/>
+
 <!-- BPL 01. BPL-005- Anexo 3 Ingreso y egreso provisorio de muestras al archivo -->
 
         <record model="ir.action.report" id="report_glp_01">
@@ -300,6 +486,55 @@
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
             <field name="action" ref="report_glp_13"/>
+        </record>
+
+        <record model="ir.model.button" id="project_get_stp_test_system_button">
+            <field name="name">get_stp_test_system</field>
+            <field name="string">Update</field>
+            <field name="model" search="[('model', '=', 'lims.project')]"/>
+        </record>
+
+        <record model="ir.model.button" id="project_get_stp_test_method_button">
+            <field name="name">get_stp_test_method</field>
+            <field name="string">Update</field>
+            <field name="model" search="[('model', '=', 'lims.project')]"/>
+        </record>
+
+        <record model="ir.model.button" id="project_re_open_button">
+            <field name="name">re_open</field>
+            <field name="string">Open</field>
+            <field name="model" search="[('model', '=', 'lims.project')]"/>
+        </record>
+
+<!-- Wizard Open Project -->
+
+        <record model="ir.ui.view" id="lims_project_re_open_start_view_form">
+            <field name="model">lims.project.re_open.start</field>
+            <field name="type">form</field>
+            <field name="name">project_re_open_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_re_open_project">
+            <field name="name">Open Project</field>
+            <field name="wiz_name">lims.project.re_open</field>
+        </record>
+
+<!-- Access Rights on Models -->
+
+        <record model="ir.model.access" id="access_project_stp_professional_position">
+            <field name="model" search="[('model', '=', 'lims.project.stp_professional.position')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_project_stp_professional_position_group_conf_project_admin">
+            <field name="model" search="[('model', '=', 'lims.project.stp_professional.position')]"/>
+            <field name="group" ref="lims_project.group_lims_conf_project_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
     </data>

@@ -7,7 +7,7 @@ from trytond.model import ModelView, ModelSQL, fields, Unique
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Equal, Bool, Not
 
-__all__ = ['LimsTasType', 'LimsProject', 'LimsEntry']
+__all__ = ['TasType', 'Project', 'Entry']
 
 STATES = {
     'required': Bool(Equal(Eval('type'), 'tas')),
@@ -16,7 +16,7 @@ DEPENDS = ['type']
 PROJECT_TYPE = ('tas', 'TAS')
 
 
-class LimsProject:
+class Project:
     __name__ = 'lims.project'
     __metaclass__ = PoolMeta
 
@@ -39,7 +39,7 @@ class LimsProject:
 
     @classmethod
     def __setup__(cls):
-        super(LimsProject, cls).__setup__()
+        super(Project, cls).__setup__()
         project_type = PROJECT_TYPE
         if project_type not in cls.type.selection:
             cls.type.selection.append(project_type)
@@ -52,7 +52,7 @@ class LimsProject:
 
     @classmethod
     def view_attributes(cls):
-        return super(LimsProject, cls).view_attributes() + [
+        return super(Project, cls).view_attributes() + [
             ('//group[@id="tas"]', 'states', {
                     'invisible': Not(Bool(Equal(Eval('type'), 'tas'))),
                     })]
@@ -87,18 +87,18 @@ class LimsProject:
     @fields.depends('tas_laboratory')
     def on_change_with_tas_responsible_domain(self, name=None):
         pool = Pool()
-        LimsUserLaboratory = pool.get('lims.user-laboratory')
-        LimsLaboratoryProfessional = pool.get('lims.laboratory.professional')
+        UserLaboratory = pool.get('lims.user-laboratory')
+        LaboratoryProfessional = pool.get('lims.laboratory.professional')
 
         if not self.tas_laboratory:
             return []
 
-        users = LimsUserLaboratory.search([
+        users = UserLaboratory.search([
             ('laboratory', '=', self.tas_laboratory.id),
             ])
         if not users:
             return []
-        professionals = LimsLaboratoryProfessional.search([
+        professionals = LaboratoryProfessional.search([
             ('party.lims_user', 'in', [u.user.id for u in users]),
             ('role', '!=', ''),
             ])
@@ -109,11 +109,11 @@ class LimsProject:
     @classmethod
     def create(cls, vlist):
         pool = Pool()
-        LimsLabWorkYear = pool.get('lims.lab.workyear')
+        LabWorkYear = pool.get('lims.lab.workyear')
         Sequence = pool.get('ir.sequence.strict')
 
-        workyear_id = LimsLabWorkYear.find()
-        workyear = LimsLabWorkYear(workyear_id)
+        workyear_id = LabWorkYear.find()
+        workyear = LabWorkYear(workyear_id)
         sequence = workyear.get_sequence('project_tas')
         if not sequence:
             cls.raise_user_error('no_project_tas_sequence',
@@ -123,22 +123,22 @@ class LimsProject:
         for values in vlist:
             if values['type'] == 'tas':
                 values['code'] = Sequence.get_id(sequence.id)
-        return super(LimsProject, cls).create(vlist)
+        return super(Project, cls).create(vlist)
 
 
-class LimsEntry:
+class Entry:
     __name__ = 'lims.entry'
     __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):
-        super(LimsEntry, cls).__setup__()
+        super(Entry, cls).__setup__()
         project_type = PROJECT_TYPE
         if project_type not in cls.project_type.selection:
             cls.project_type.selection.append(project_type)
 
 
-class LimsTasType(ModelSQL, ModelView):
+class TasType(ModelSQL, ModelView):
     'TAS Type'
     __name__ = 'lims.tas.type'
 
@@ -147,7 +147,7 @@ class LimsTasType(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(LimsTasType, cls).__setup__()
+        super(TasType, cls).__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),

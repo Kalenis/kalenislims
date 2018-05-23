@@ -2,6 +2,6 @@
 <data>
     <xpath expr="/form/notebook/page[@id='sale']/field[@name='currency']"
         position="after">
-        <button name="load_services" string="Load Services from Entry"/>
+        <button name="load_services"/>
     </xpath>
 </data>

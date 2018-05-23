@@ -3,15 +3,13 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond import backend
 from trytond.model import ModelSQL, fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
-from trytond.tools.multivalue import migrate_property
 from trytond.modules.company.model import CompanyValueMixin
 
 __all__ = ['ProductionConfiguration', 'ProductionConfigurationLotSequence',
-    'LimsConfiguration', 'LimsConfigurationSolvents']
+    'Configuration', 'ConfigurationSolvents']
 
 
 class ProductionConfiguration:
@@ -59,7 +57,7 @@ class ProductionConfigurationLotSequence(ModelSQL, CompanyValueMixin):
             return None
 
 
-class LimsConfiguration:
+class Configuration:
     __name__ = 'lims.configuration'
     __metaclass__ = PoolMeta
 
@@ -94,7 +92,7 @@ class LimsConfiguration:
         return res
 
 
-class LimsConfigurationSolvents(ModelSQL):
+class ConfigurationSolvents(ModelSQL):
     'Configuration - Solvents'
     __name__ = 'lims.configuration.solvents'
 

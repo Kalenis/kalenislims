@@ -9,8 +9,8 @@ from trytond.model import ModelView, fields
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.pool import Pool
 from trytond.transaction import Transaction
-from ..lims import HAS_PDFMERGER
-from ..lims import HAS_TOKEN
+from .lims import HAS_PDFMERGER
+from .lims import HAS_TOKEN
 
 __all__ = ['DigitalSignStart', 'DigitalSignSucceed', 'DigitalSignFailed',
     'DigitalSign']
@@ -61,19 +61,19 @@ class DigitalSign(Wizard):
         '''
         logger = logging.getLogger('lims_digital_sign')
         logger.info('Wizard - Digital Sign:INIT')
-        LimsResultsReport = Pool().get('lims.results_report')
+        ResultsReport = Pool().get('lims.results_report')
 
         if not HAS_PDFMERGER:
-            LimsResultsReport.raise_user_error('missing_module')
+            ResultsReport.raise_user_error('missing_module')
         if not HAS_TOKEN:
-            LimsResultsReport.raise_user_error('missing_module_token')
+            ResultsReport.raise_user_error('missing_module_token')
 
         context = Transaction().context
         model = context.get('active_model', None)
         if model and model == 'ir.ui.menu':
             # If it was executed from `menu item`, then get ids
             # TODO: Include signed but not sent?
-            active_ids = [r.id for r in LimsResultsReport.search([
+            active_ids = [r.id for r in ResultsReport.search([
                     ('signed', '=', False)])]
             logger.info('Wizard - Digital Sign:Processing all Results '
                     'Reports')
@@ -86,7 +86,7 @@ class DigitalSign(Wizard):
         unsigned_reports = []
         unsent_reports = []
         for active_id in active_ids:
-            results_report = LimsResultsReport(active_id)
+            results_report = ResultsReport(active_id)
             logger.info('Wizard - Digital Sign:results_report.number:%s',
                     results_report.number)
             if (results_report.single_sending_report and not

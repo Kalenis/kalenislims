@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Groups -->
+
+        <record model="res.group" id="group_lims_conf_project_readonly">
+            <field name="name">Lims Configuration Projects Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_conf_project_admin">
+            <field name="name">Lims Configuration Projects Admin</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_conf_project_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_conf_project_admin"/>
+        </record>
+
+        <record model="res.group" id="group_lims_project_readonly">
+            <field name="name">Lims Projects Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_project">
+            <field name="name">Lims Projects</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_project">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_project"/>
+        </record>
+
+<!-- Project -->
+
+        <record model="ir.ui.view" id="lims_project_view_form">
+            <field name="model">lims.project</field>
+            <field name="type">form</field>
+            <field name="name">project_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_project_view_list">
+            <field name="model">lims.project</field>
+            <field name="type">tree</field>
+            <field name="name">project_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_project_list">
+            <field name="name">Projects</field>
+            <field name="res_model">lims.project</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_project_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_project_view_list"/>
+            <field name="act_window" ref="act_lims_project_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_project_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_project_view_form"/>
+            <field name="act_window" ref="act_lims_project_list"/>
+        </record>
+
+<!-- Entry -->
+
+        <record model="ir.ui.view" id="lims_entry_view_form">
+            <field name="model">lims.entry</field>
+            <field name="inherit" ref="lims.lims_entry_view_form"/>
+            <field name="name">entry_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_entry_view_list">
+            <field name="model">lims.entry</field>
+            <field name="inherit" ref="lims.lims_entry_view_list"/>
+            <field name="name">entry_list</field>
+        </record>
+
+<!-- Icons -->
+
+        <record model="ir.ui.icon" id="project_icon">
+            <field name="name">lims-project</field>
+            <field name="path">icons/project.svg</field>
+        </record>
+
+<!-- Menu -->
+
+        <!-- Configuration / Projects -->
+        <menuitem name="Projects" parent="lims.lims_config"
+            id="lims_config_projects" sequence="60"/>
+
+        <!-- Projects -->
+        <menuitem parent="lims.lims_laboratory" action="act_lims_project_list"
+            id="lims_project_menu" sequence="20"
+            icon="lims-project"/>
+
+<!-- Access Rights on Models -->
+
+        <record model="ir.model.access" id="access_project">
+            <field name="model" search="[('model', '=', 'lims.project')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_project_group_project">
+            <field name="model" search="[('model', '=', 'lims.project')]"/>
+            <field name="group" ref="group_lims_project"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+<!-- Access Rights on Menu -->
+
+        <!-- Configuration / Projects -->
+
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_project_readonly">
+            <field name="menu" ref="lims.lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_project_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_project_admin">
+            <field name="menu" ref="lims.lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_project_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_project_readonly">
+            <field name="menu" ref="lims.lims_config"/>
+            <field name="group" ref="group_lims_conf_project_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_project_admin">
+            <field name="menu" ref="lims.lims_config"/>
+            <field name="group" ref="group_lims_conf_project_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_projects_group_conf_project_readonly">
+            <field name="menu" ref="lims_config_projects"/>
+            <field name="group" ref="group_lims_conf_project_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_projects_group_conf_project_admin">
+            <field name="menu" ref="lims_config_projects"/>
+            <field name="group" ref="group_lims_conf_project_admin"/>
+        </record>
+
+        <!-- Projects -->
+
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_project_readonly">
+            <field name="menu" ref="lims.lims_laboratory"/>
+            <field name="group" ref="group_lims_project_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_project">
+            <field name="menu" ref="lims.lims_laboratory"/>
+            <field name="group" ref="group_lims_project"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_project_group_project_readonly">
+            <field name="menu" ref="lims_project_menu"/>
+            <field name="group" ref="group_lims_project_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_project_group_project">
+            <field name="menu" ref="lims_project_menu"/>
+            <field name="group" ref="group_lims_project"/>
+        </record>
+
+    </data>
+</tryton>

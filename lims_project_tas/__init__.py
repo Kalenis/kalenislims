@@ -3,15 +3,15 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import Pool
-from .project import *
-from .configuration import *
+from . import project
+from . import configuration
 
 
 def register():
     Pool.register(
-        LimsTasType,
-        LimsProject,
-        LimsEntry,
-        LimsLabWorkYear,
-        LimsLabWorkYearSequence,
+        project.TasType,
+        project.Project,
+        project.Entry,
+        configuration.LabWorkYear,
+        configuration.LabWorkYearSequence,
         module='lims_project_tas', type_='model')

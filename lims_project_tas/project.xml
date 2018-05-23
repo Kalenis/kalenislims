@@ -40,5 +40,30 @@
             <field name="act_window" ref="act_lims_tas_type_list"/>
         </record>
 
+<!-- Menu -->
+
+        <!-- Configuration / Projects / TAS Types -->
+        <menuitem parent="lims_project.lims_config_projects"
+            action="act_lims_tas_type_list"
+            id="lims_tas_type_menu" sequence="10"/>
+
+<!-- Access Rights on Models -->
+
+        <record model="ir.model.access" id="access_tas_type">
+            <field name="model" search="[('model', '=', 'lims.tas.type')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_tas_type_group_conf_project_admin">
+            <field name="model" search="[('model', '=', 'lims.tas.type')]"/>
+            <field name="group" ref="lims_project.group_lims_conf_project_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
     </data>
 </tryton>

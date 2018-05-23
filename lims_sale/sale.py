@@ -60,14 +60,14 @@ class SaleLoadServices(Wizard):
 
     def transition_load(self):
         pool = Pool()
-        LimsService = pool.get('lims.service')
+        Service = pool.get('lims.service')
         SaleLine = pool.get('sale.line')
 
         sale_id = Transaction().context['active_id']
 
         sale_services = {}
         with Transaction().set_context(_check_access=False):
-            services = LimsService.search([
+            services = Service.search([
                 ('entry', '=', self.start.entry.id),
                 ('fraction.type.invoiceable', '=', True),
                 ('fraction.cie_fraction_type', '=', False),

@@ -1,8 +1,143 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- This file is part of Tryton. The COPYRIGHT file at the top level of
-this repository contains the full copyright notices and license terms. -->
+<?xml version="1.0"?>
 <tryton>
     <data>
+
+<!-- Sequences for Lot -->
+
+        <record model="ir.sequence.type" id="seq_type_lot">
+            <field name="name">Lot</field>
+            <field name="code">stock.lot</field>
+        </record>
+        <record model="ir.sequence.type-res.group"
+            id="seq_type_lot_group_admin">
+            <field name="sequence_type" ref="seq_type_lot"/>
+            <field name="group" ref="res.group_admin"/>
+        </record>
+        <record model="ir.sequence" id="seq_lot">
+            <field name="name">Lot</field>
+            <field name="code">stock.lot</field>
+        </record>
+
+<!-- Groups -->
+
+        <record model="res.group" id="group_lims_conf_material_readonly">
+            <field name="name">Lims Configuration Material Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_conf_material_admin">
+            <field name="name">Lims Configuration Material Admin</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_conf_material_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_conf_material_admin"/>
+        </record>
+
+        <record model="res.group" id="group_lims_lot_input_prod">
+            <field name="name">Lims Lot Input for production</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lot_input_prod">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_lot_input_prod"/>
+        </record>
+
+        <record model="res.group" id="group_lims_lot_prod_sale">
+            <field name="name">Lims Lot Production for sale</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lot_prod_sale">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_lot_prod_sale"/>
+        </record>
+
+        <record model="res.group" id="group_lims_lot_domestic_use">
+            <field name="name">Lims Lot Production for domestic use</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lot_domestic_use">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_lot_domestic_use"/>
+        </record>
+
+<!-- Production -->
+
+        <record model="ir.ui.view" id="lims_production_view_form">
+            <field name="model">production</field>
+            <field name="inherit" ref="production.production_view_form"/>
+            <field name="name">production_production_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_production_view_list">
+            <field name="model">production</field>
+            <field name="inherit" ref="production.production_view_list"/>
+            <field name="name">production_production_list</field>
+        </record>
+
+<!-- BOM -->
+
+        <record model="ir.ui.view" id="lims_bom_view_form">
+            <field name="model">production.bom</field>
+            <field name="inherit" ref="production.bom_view_form"/>
+            <field name="name">production_bom_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_bom_view_list">
+            <field name="model">production.bom</field>
+            <field name="inherit" ref="production.bom_view_list"/>
+            <field name="name">production_bom_list</field>
+        </record>
+
+<!-- Move actions related -->
+
+        <record model="ir.action.act_window" id="act_production_related">
+            <field name="name">Related Productions</field>
+            <field name="res_model">production</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_production_related_list_view">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="production.production_view_list"/>
+            <field name="act_window" ref="act_production_related"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_production_related_form_view">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="production.production_view_form"/>
+            <field name="act_window" ref="act_production_related"/>
+        </record>
+
+        <record model="ir.action.wizard" id="wizard_move_production_related">
+            <field name="name">Related Productions</field>
+            <field name="wiz_name">lims.move.production_related</field>
+        </record>
+        <record model="ir.action.keyword" id="act_open_production_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">stock.move,-1</field>
+            <field name="action" ref="wizard_move_production_related"/>
+        </record>
+
+<!-- Menu -->
+
+        <!-- Configuration / Material -->
+        <menuitem name="Material" parent="lims.lims_config"
+            id="lims_config_material" sequence="50"/>
+        <menuitem parent="lims_config_material" action="act_lims_brand_list"
+            id="lims_brand_menu" sequence="10"/>
+        <menuitem parent="lims_config_material" action="act_lims_purity_degree_list"
+            id="lims_purity_degree_menu" sequence="20"/>
+        <menuitem parent="lims_config_material" action="act_lims_family_equivalent_list"
+            id="lims_family_equivalent_menu" sequence="30"/>
+
+<!-- Other menu items -->
+
+        <menuitem parent="stock.menu_configuration" action="act_lims_lot_category_list"
+            id="lims_lot_category_menu" sequence="10"/>
+
+<!-- Family/Equivalents Report -->
+
+        <record model="ir.action.report" id="report_family_equivalent">
+            <field name="name">Family/Equivalents</field>
+            <field name="report_name">lims.family.equivalent.report</field>
+            <field name="report">lims_production/report/family_equivalent.odt</field>
+            <field name="extension">pdf</field>
+        </record>
+        <record model="ir.action.keyword" id="report_family_equivalent_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.family.equivalent,-1</field>
+            <field name="action" ref="report_family_equivalent"/>
+        </record>
 
 <!-- Access Rights on Models -->
 
@@ -220,12 +355,12 @@ this repository contains the full copyright notices and license terms. -->
 
         <!-- Configuration / Material -->
 
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_conf_material_readonly">
-            <field name="menu" ref="lims.lims_menu"/>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_material_readonly">
+            <field name="menu" ref="lims.lims_laboratory"/>
             <field name="group" ref="group_lims_conf_material_readonly"/>
         </record>
-        <record model="ir.ui.menu-res.group" id="menu_lims_group_conf_material_admin">
-            <field name="menu" ref="lims.lims_menu"/>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_material_admin">
+            <field name="menu" ref="lims.lims_laboratory"/>
             <field name="group" ref="group_lims_conf_material_admin"/>
         </record>
 

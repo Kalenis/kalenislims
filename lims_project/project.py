@@ -8,11 +8,10 @@ from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
 
-__all__ = ['LimsProject', 'LimsEntry', 'LimsSample', 'LimsCreateSampleStart',
-    'LimsCreateSample']
+__all__ = ['Project', 'Entry', 'Sample', 'CreateSampleStart', 'CreateSample']
 
 
-class LimsProject(ModelSQL, ModelView):
+class Project(ModelSQL, ModelView):
     'Project'
     __name__ = 'lims.project'
     _rec_name = 'description'
@@ -29,7 +28,7 @@ class LimsProject(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(LimsProject, cls).__setup__()
+        super(Project, cls).__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -62,7 +61,7 @@ class LimsProject(ModelSQL, ModelView):
         return [(cls._rec_name,) + tuple(clause[1:])]
 
 
-class LimsEntry:
+class Entry:
     __name__ = 'lims.entry'
     __metaclass__ = PoolMeta
 
@@ -74,7 +73,7 @@ class LimsEntry:
 
     @classmethod
     def __setup__(cls):
-        super(LimsEntry, cls).__setup__()
+        super(Entry, cls).__setup__()
         cls.samples.context.update({
             'project': Eval('project', None),
             })
@@ -89,7 +88,7 @@ class LimsEntry:
         return res
 
 
-class LimsSample:
+class Sample:
     __name__ = 'lims.sample'
     __metaclass__ = PoolMeta
 
@@ -98,9 +97,9 @@ class LimsSample:
 
     @staticmethod
     def default_project_type():
-        LimsProject = Pool().get('lims.project')
+        Project = Pool().get('lims.project')
         if Transaction().context.get('project'):
-            return LimsProject(Transaction().context.get('project')).type
+            return Project(Transaction().context.get('project')).type
         return ''
 
     @fields.depends('entry')
@@ -111,24 +110,24 @@ class LimsSample:
         return res
 
 
-class LimsCreateSampleStart:
+class CreateSampleStart:
     __name__ = 'lims.create_sample.start'
     __metaclass__ = PoolMeta
 
     project_type = fields.Char('Type')
 
 
-class LimsCreateSample:
+class CreateSample:
     __name__ = 'lims.create_sample'
     __metaclass__ = PoolMeta
 
     def default_start(self, fields):
-        LimsEntry = Pool().get('lims.entry')
+        Entry = Pool().get('lims.entry')
 
-        defaults = super(LimsCreateSample, self).default_start(fields)
+        defaults = super(CreateSample, self).default_start(fields)
         defaults['project_type'] = ''
 
-        entry = LimsEntry(Transaction().context['active_id'])
+        entry = Entry(Transaction().context['active_id'])
         if entry.project:
             defaults['project_type'] = entry.project.type
         return defaults
