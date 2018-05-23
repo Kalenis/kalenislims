@@ -2248,7 +2248,6 @@ class CreateAnalysisProduct(Wizard):
         Template = pool.get('product.template')
         TemplateCategory = pool.get('product.template-product.category')
         Uom = pool.get('product.uom')
-        # Distribution = pool.get('analytic_account.distribution')
         Lang = pool.get('ir.lang')
         Config = pool.get('lims.configuration')
 
@@ -2277,18 +2276,6 @@ class CreateAnalysisProduct(Wizard):
         template.sale_uom = uom
         template.account_category = config_.analysis_product_category.id
         template.accounts_category = True
-
-        if analysis.behavior != 'additional':
-            if analysis.type != 'group':
-                laboratory = analysis.laboratories[0].laboratory
-            else:
-                laboratory = analysis.included_analysis[0].laboratory
-
-            # analytic_distribution = Distribution.search([
-            #     ('code', '=', laboratory.code),
-            #     ])
-            # if analytic_distribution:
-            #     template.analytic_distribution = analytic_distribution[0]
 
         template.save()
 

@@ -19,7 +19,8 @@ from trytond.transaction import Transaction
 from trytond.tools import get_smtp_server
 from trytond.config import config as tconfig
 
-__all__ = ['LimsResultsReportVersionDetail', 'LimsResultsReport']
+__all__ = ['ResultsReportVersionDetail', 'ResultsReport',
+    'ResultsReportAnnulation']
 
 HAS_PDFMERGER = False
 try:
@@ -42,7 +43,7 @@ except ImportError:
         exc_info=True)
 
 
-class LimsResultsReportVersionDetail:
+class ResultsReportVersionDetail:
     __name__ = 'lims.results_report.version.detail'
     __metaclass__ = PoolMeta
 
@@ -62,19 +63,19 @@ class LimsResultsReportVersionDetail:
     @classmethod
     @ModelView.button
     def revise(cls, details):
-        super(LimsResultsReportVersionDetail, cls).revise(details)
+        super(ResultsReportVersionDetail, cls).revise(details)
         for detail in details:
             detail.unsign()
 
     @classmethod
     @ModelView.button
     def revise_all_lang(cls, details):
-        super(LimsResultsReportVersionDetail, cls).revise_all_lang(details)
+        super(ResultsReportVersionDetail, cls).revise_all_lang(details)
         for detail in details:
             detail.unsign()
 
 
-class LimsResultsReport:
+class ResultsReport:
     __name__ = 'lims.results_report'
     __metaclass__ = PoolMeta
 
@@ -85,7 +86,7 @@ class LimsResultsReport:
 
     @classmethod
     def __setup__(cls):
-        super(LimsResultsReport, cls).__setup__()
+        super(ResultsReport, cls).__setup__()
         cls._error_messages.update({
             'missing_module_token': 'Missing tokenclient module',
             'polisample': 'Polisample',
@@ -93,7 +94,7 @@ class LimsResultsReport:
 
     @classmethod
     def _get_modified_fields(cls):
-        fields = super(LimsResultsReport, cls)._get_modified_fields()
+        fields = super(ResultsReport, cls)._get_modified_fields()
         fields.extend([
             'signed',
             'signed_date',
@@ -110,16 +111,16 @@ class LimsResultsReport:
         logging.getLogger('lims_digital_sign').info(
                 'Cron - Digital Signs:INIT')
         pool = Pool()
-        LimsResultsReport = pool.get('lims.results_report')
+        ResultsReport = pool.get('lims.results_report')
         DigitalSign = pool.get('lims_digital_sign.digital_sign', type='wizard')
 
         if not HAS_PDFMERGER:
-            LimsResultsReport.raise_user_error('missing_module')
+            ResultsReport.raise_user_error('missing_module')
         if not HAS_TOKEN:
-            LimsResultsReport.raise_user_error('missing_module_token')
+            ResultsReport.raise_user_error('missing_module_token')
 
-        results_reports = LimsResultsReport.search([
-                ('signed', '=', False)])  # TODO: Include signed but not sent?
+        results_reports = ResultsReport.search([
+                ('signed', '=', False)])
 
         session_id, _, _ = DigitalSign.create()
         digital_sign = DigitalSign(session_id)
@@ -149,13 +150,13 @@ class LimsResultsReport:
         :return: list of details
         '''
         pool = Pool()
-        LimsResultsReportVersionDetail = pool.get(
+        ResultsReportVersionDetail = pool.get(
             'lims.results_report.version.detail')
 
         format_field = 'report_format'
         if english_report:
             format_field = 'report_format_eng'
-        details = LimsResultsReportVersionDetail.search([
+        details = ResultsReportVersionDetail.search([
             ('report_version.results_report.id', '=', self.id),
             ('valid', '=', True),
             (format_field, '=', 'pdf'),
@@ -247,8 +248,8 @@ class LimsResultsReport:
                     for line in detail.notebook_lines:
                         to_addrs.extend([c.contact.email for c
                             in line.notebook_line.fraction.entry.report_contacts
-                            if c.contact.report_contact
-                            and not c.entry.invoice_party.block_reports_automatic_sending])
+                            if c.contact.report_contact and not
+                            c.entry.invoice_party.block_reports_automatic_sending])
                         entries.append(line.notebook_line.fraction.entry.number)  # TODO: Debug line
         logging.getLogger('lims_digital_sign').info(
             'Cron - Digital Signs:results_report.number:%s:to_addrs:%s'
@@ -322,12 +323,14 @@ class LimsResultsReport:
     def attachment(self, english_report=False):
         suffix = 'eng' if english_report else 'esp'
         data = {
-            'content': (english_report
-                and self.report_cache_eng
-                or self.report_cache),
-            'format': (english_report
-                and self.report_format_eng
-                or self.report_format),
+            'content': (
+                english_report and
+                self.report_cache_eng or
+                self.report_cache),
+            'format': (
+                english_report and
+                self.report_format_eng or
+                self.report_format),
             'mimetype': 'pdf',
             'filename': unicode(self.number) + '-' + suffix + '.pdf',
             'name': unicode(self.number),
@@ -341,7 +344,7 @@ class LimsResultsReport:
 
         msg = MIMEMultipart()
         msg['From'] = from_addr
-        hidden = True  # TODO: HARDCODE!
+        hidden = True
         if not hidden:
             msg['To'] = ', '.join(to_addrs)
         msg['Subject'] = subject
@@ -416,3 +419,41 @@ class LimsResultsReport:
         if attachment:
             Attachment.delete(attachment)
         return True
+
+
+class ResultsReportAnnulation:
+    __name__ = 'lims.results_report_annulation'
+    __metaclass__ = PoolMeta
+
+    def transition_annul(self):
+        logging.getLogger('lims_digital_sign').info(
+                'transition_annul():INIT')
+        super(ResultsReportAnnulation, self).transition_annul()
+        logging.getLogger('lims_digital_sign').info(
+                'transition_annul():INHERIT')
+
+        ResultsReportVersionDetail = Pool().get(
+            'lims.results_report.version.detail')
+
+        # Check if the detail was annulled
+        detail_annulled = ResultsReportVersionDetail.search([
+            ('id', 'in', Transaction().context['active_ids']),
+            ('state', '=', 'annulled'),
+            ])
+        for detail in detail_annulled:
+            detail.unsign()
+
+        # Check if the report is not longer valid details
+        if detail_annulled:
+            results_report = detail_annulled[0].report_version.results_report
+            detail_valid = ResultsReportVersionDetail.search([
+                ('report_version.results_report.id', '=', results_report.id),
+                ('state', '!=', 'annulled'),
+                ('valid', '=', True),
+                ])
+            if not detail_valid:
+                results_report.clean_attachments_reports()
+
+        logging.getLogger('lims_digital_sign').info(
+                'transition_annul():END')
+        return 'end'

@@ -3,21 +3,21 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import Pool
-from .configuration import *
-from .lims import *
-from wizard import *
+from . import configuration
+from . import lims
+from . import digital_sign
 
 
 def register():
     Pool.register(
-        LimsConfiguration,
-        LimsResultsReportVersionDetail,
-        LimsResultsReport,
-        DigitalSignStart,
-        DigitalSignSucceed,
-        DigitalSignFailed,
+        configuration.Configuration,
+        lims.ResultsReportVersionDetail,
+        lims.ResultsReport,
+        digital_sign.DigitalSignStart,
+        digital_sign.DigitalSignSucceed,
+        digital_sign.DigitalSignFailed,
         module='lims_digital_sign', type_='model')
     Pool.register(
-        LimsResultsReportAnnulation,
-        DigitalSign,
+        lims.ResultsReportAnnulation,
+        digital_sign.DigitalSign,
         module='lims_digital_sign', type_='wizard')

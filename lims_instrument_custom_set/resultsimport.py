@@ -7,10 +7,10 @@ from trytond.pool import PoolMeta
 import custom_set_csv
 import custom_set_xls
 
-__all__ = ['LimsResultsImport']
+__all__ = ['ResultsImport']
 
 
-class LimsResultsImport:
+class ResultsImport:
     __name__ = 'lims.resultsimport'
     __metaclass__ = PoolMeta
 
@@ -19,7 +19,7 @@ class LimsResultsImport:
 
     @classmethod
     def __setup__(cls):
-        super(LimsResultsImport, cls).__setup__()
+        super(ResultsImport, cls).__setup__()
         controllers = [
             ('custom_set_csv', 'Custom Set - CSV'),
             ('custom_set_xls', 'Custom Set - XLS'),
@@ -34,7 +34,7 @@ class LimsResultsImport:
         elif self.name == 'custom_set_xls':
             self.controller = custom_set_xls
         else:
-            return super(LimsResultsImport, self).loadController()
+            return super(ResultsImport, self).loadController()
 
     def getAnalysisCode(self, row):
         return self.controller.getAnalysisCode(self, row)

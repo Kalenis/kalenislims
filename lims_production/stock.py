@@ -10,12 +10,11 @@ from trytond.model import ModelView, ModelSQL, fields
 from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not
 from trytond.transaction import Transaction
 from trytond.pool import PoolMeta, Pool
-from trytond.wizard import Wizard, StateTransition, StateAction
+from trytond.wizard import Wizard, StateAction
 from trytond.modules.product import price_digits
 
 __all__ = ['PurityDegree', 'Brand', 'FamilyEquivalent', 'Template', 'Product',
-    'UpdateCostPrice', 'LotCategory', 'Lot', 'Move', 'ShipmentIn',
-    'LimsMoveProductionRelated']
+    'LotCategory', 'Lot', 'Move', 'ShipmentIn', 'MoveProductionRelated']
 
 
 class PurityDegree(ModelSQL, ModelView):
@@ -220,8 +219,8 @@ class Product:
             qty = Decimal(str(qty))
             if move.from_location.type == 'storage':
                 qty *= -1
-            if (move.from_location.type in ['supplier', 'production']
-                    or move.to_location.type == 'supplier'):
+            if (move.from_location.type in ['supplier', 'production'] or
+                    move.to_location.type == 'supplier'):
                 with Transaction().set_context(date=move.effective_date):
                     unit_price = Currency.compute(
                         move.currency, move.unit_price,
@@ -255,34 +254,6 @@ class Product:
         return [('template.' + name,) + tuple(clause[1:])]
 
 
-class UpdateCostPrice:
-    __name__ = 'product.update_cost_price'
-    __metaclass__ = PoolMeta
-
-    start_state = 'check'
-    check = StateTransition()
-
-    def transition_check(self):
-        context = Transaction().context
-        if context['active_model'] == 'product.template':
-            return 'ask_price'
-        return 'end'
-
-    def default_ask_price(self, fields):
-        Template = Pool().get('product.template')
-        default = super(UpdateCostPrice, self).default_ask_price(fields)
-        if 'template' in default:
-            template = Template(default['template'])
-            default['cost_price'] = template.cost_price
-        return default
-
-    def transition_update_price(self):
-        Template = Pool().get('product.template')
-        write = partial(Template.write, [self.ask_price.template])
-        write({'cost_price': self.ask_price.cost_price})
-        return 'end'
-
-
 class LotCategory(ModelSQL, ModelView):
     "Lot Category"
     __name__ = "stock.lot.category"
@@ -302,7 +273,7 @@ class Lot:
 
     category = fields.Many2One('stock.lot.category', 'Category')
     special_category = fields.Function(fields.Char('Category'),
-        'on_change_with_special_category', searcher='search_special_category')
+        'on_change_with_special_category')
 
     stability = fields.Char('Stability', depends=['special_category'],
         states={
@@ -446,24 +417,24 @@ class Lot:
     def create(cls, vlist):
         pool = Pool()
         Product = pool.get('product.product')
-        LimsConfig = pool.get('lims.configuration')
+        Config = pool.get('lims.configuration')
 
-        lims_config = LimsConfig(1)
+        config = Config(1)
         vlist = [x.copy() for x in vlist]
         for values in vlist:
             if not values.get('category'):
                 product = Product(values['product'])
                 lot_category_id = None
                 if (product.purchasable and not product.salable):
-                    lot_category_id = (lims_config.lot_category_input_prod.id
-                        if lims_config.lot_category_input_prod else None)
+                    lot_category_id = (config.lot_category_input_prod.id
+                        if config.lot_category_input_prod else None)
                 elif (not product.purchasable and product.salable):
-                    lot_category_id = (lims_config.lot_category_prod_sale.id
-                        if lims_config.lot_category_prod_sale else None)
+                    lot_category_id = (config.lot_category_prod_sale.id
+                        if config.lot_category_prod_sale else None)
                 elif (not product.purchasable and not product.salable):
                     lot_category_id = (
-                        lims_config.lot_category_prod_domestic_use.id if
-                        lims_config.lot_category_prod_domestic_use else None)
+                        config.lot_category_prod_domestic_use.id if
+                        config.lot_category_prod_domestic_use else None)
                 if lot_category_id:
                     values['category'] = lot_category_id
         return super(Lot, cls).create(vlist)
@@ -569,7 +540,7 @@ class ShipmentIn:
         return move
 
 
-class LimsMoveProductionRelated(Wizard):
+class MoveProductionRelated(Wizard):
     'Related Productions'
     __name__ = 'lims.move.production_related'
 

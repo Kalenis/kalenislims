@@ -4,6 +4,34 @@
 
 <!-- Menu items in lims_menu.xml -->
 
+        <!-- Results Import -->
+
+        <record model="ir.ui.view" id="lims_resultsimport_view_form">
+            <field name="model">lims.resultsimport</field>
+            <field name="type">form</field>
+            <field name="name">resultsimport_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_resultsimport_view_list">
+            <field name="model">lims.resultsimport</field>
+            <field name="type">tree</field>
+            <field name="name">resultsimport_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_resultsimport_list">
+            <field name="name">Results Importers</field>
+            <field name="res_model">lims.resultsimport</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_resultsimport_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_resultsimport_view_list"/>
+            <field name="act_window" ref="act_lims_resultsimport_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_resultsimport_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_resultsimport_view_form"/>
+            <field name="act_window" ref="act_lims_resultsimport_list"/>
+        </record>
+
         <!-- Wizard Load Results from File -->
 
         <record model="ir.ui.view" id="lims_load_results_file_start_view_form">
@@ -46,6 +74,24 @@
             <field name="name">Load Results from File</field>
             <field name="wiz_name">lims.notebook.load_results_file</field>
         </record>
+
+<!-- Icons -->
+
+        <record model="ir.ui.icon" id="notebook_load_results_file_icon">
+            <field name="name">lims-notebook_load_results_file</field>
+            <field name="path">icons/notebook_load_results_file.svg</field>
+        </record>
+
+<!-- Menu -->
+
+        <!-- Configuration / Laboratory / Results Importers -->
+        <menuitem parent="lims.lims_config_laboratory" action="act_lims_resultsimport_list"
+            id="lims_resultsimport_menu" sequence="60"/>
+
+        <!-- Laboratory / Results entry / Load Results from File -->
+        <menuitem parent="lims.lims_laboratory_results" action="wiz_lims_notebook_load_results_file"
+            id="lims_notebook_load_results_file_menu" sequence="30"
+            icon="lims-notebook_load_results_file"/>
 
     </data>
 </tryton>

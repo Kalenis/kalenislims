@@ -3,10 +3,10 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import Pool
-from .resultsimport import *
+from . import resultsimport
 
 
 def register():
     Pool.register(
-        LimsResultsImport,
+        resultsimport.ResultsImport,
         module='lims_instrument_generic_form', type_='model')

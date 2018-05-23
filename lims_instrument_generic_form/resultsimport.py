@@ -6,16 +6,16 @@
 from trytond.pool import PoolMeta
 import generic_form_xls
 
-__all__ = ['LimsResultsImport']
+__all__ = ['ResultsImport']
 
 
-class LimsResultsImport:
+class ResultsImport:
     __name__ = 'lims.resultsimport'
     __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):
-        super(LimsResultsImport, cls).__setup__()
+        super(ResultsImport, cls).__setup__()
         controllers = [
             ('generic_form_xls', 'Generic Form - XLS'),
             ]
@@ -27,4 +27,4 @@ class LimsResultsImport:
         if self.name == 'generic_form_xls':
             self.controller = generic_form_xls
         else:
-            return super(LimsResultsImport, self).loadController()
+            return super(ResultsImport, self).loadController()

@@ -28,8 +28,8 @@
                     <separator string="Test method" colspan="2" id="stp_test_method"/>
                     <field name="stp_test_system" colspan="2"/>
                     <field name="stp_test_method" colspan="2"/>
-                    <button colspan="2" name="get_stp_test_system" string="Update"/>
-                    <button colspan="2" name="get_stp_test_method" string="Update"/>
+                    <button colspan="2" name="get_stp_test_system"/>
+                    <button colspan="2" name="get_stp_test_method"/>
                     <label name="stp_records"/>
                     <field name="stp_records" colspan="3"/>
                     <label name="stp_pattern_availability"/>
@@ -50,7 +50,7 @@
                     </group>
                     <label name="stp_state"/>
                     <field name="stp_state"/>
-                    <button colspan="2" name="re_open" string="Open"/>
+                    <button colspan="2" name="re_open"/>
                 </page>
                 <page string="Dates" id="dates">
                     <label name="stp_date"/>

@@ -3,12 +3,12 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import Pool
-from .lims import *
-from .stock import *
+from . import lims
+from . import stock
 
 
 def register():
     Pool.register(
-        Location,
-        Move,
+        lims.Location,
+        stock.Move,
         module='lims_analytic', type_='model')

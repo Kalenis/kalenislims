@@ -3,15 +3,14 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond import backend
 from trytond.model import fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
 
-__all__ = ['LimsLabWorkYear', 'LimsLabWorkYearSequence']
+__all__ = ['LabWorkYear', 'LabWorkYearSequence']
 
 
-class LimsLabWorkYear:
+class LabWorkYear:
     __name__ = 'lims.lab.workyear'
     __metaclass__ = PoolMeta
 
@@ -28,10 +27,10 @@ class LimsLabWorkYear:
         pool = Pool()
         if field == 'project_tas_sequence':
             return pool.get('lims.lab.workyear.sequence')
-        return super(LimsLabWorkYear, cls).multivalue_model(field)
+        return super(LabWorkYear, cls).multivalue_model(field)
 
 
-class LimsLabWorkYearSequence:
+class LabWorkYearSequence:
     __name__ = 'lims.lab.workyear.sequence'
     __metaclass__ = PoolMeta
 

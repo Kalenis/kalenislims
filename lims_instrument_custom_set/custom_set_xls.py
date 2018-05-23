@@ -23,7 +23,7 @@ def getControllerName():
 
 
 def parse(self, infile):
-    LimsLabWorkYear = Pool().get('lims.lab.workyear')
+    LabWorkYear = Pool().get('lims.lab.workyear')
 
     filedata = StringIO.StringIO(infile)
     workbook = xlrd.open_workbook(file_contents=filedata.getvalue())
@@ -69,7 +69,7 @@ def parse(self, infile):
                     header_found = False
                     continue
 
-                workyear = LimsLabWorkYear.search(
+                workyear = LabWorkYear.search(
                     ['code', '=', str(int(row[1]))
                     ])
                 padding = None

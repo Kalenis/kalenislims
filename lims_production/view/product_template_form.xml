@@ -3,7 +3,7 @@
     <xpath
         expr="/form/notebook/page[@id='general']"
         position="after">
-        <page string="Lims" id="lims">
+        <page string="LIMS" id="lims">
             <label name="common_name"/>
             <field name="common_name"/>
             <label name="chemical_name"/>

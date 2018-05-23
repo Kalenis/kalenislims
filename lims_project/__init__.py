@@ -3,16 +3,16 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import Pool
-from .project import *
+from . import project
 
 
 def register():
     Pool.register(
-        LimsProject,
-        LimsEntry,
-        LimsSample,
-        LimsCreateSampleStart,
+        project.Project,
+        project.Entry,
+        project.Sample,
+        project.CreateSampleStart,
         module='lims_project', type_='model')
     Pool.register(
-        LimsCreateSample,
+        project.CreateSample,
         module='lims_project', type_='wizard')

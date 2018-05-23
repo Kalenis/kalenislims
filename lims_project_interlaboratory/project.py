@@ -7,7 +7,7 @@ from trytond.model import fields
 from trytond.pool import PoolMeta
 from trytond.pyson import Eval, Equal, Bool, Not, And
 
-__all__ = ['LimsProject', 'LimsEntry']
+__all__ = ['Project', 'Entry']
 
 STATES = {
     'required': Bool(Equal(Eval('type'), 'itl')),
@@ -16,7 +16,7 @@ DEPENDS = ['type']
 PROJECT_TYPE = ('itl', 'Interlaboratory')
 
 
-class LimsProject:
+class Project:
     __name__ = 'lims.project'
     __metaclass__ = PoolMeta
 
@@ -32,26 +32,26 @@ class LimsProject:
 
     @classmethod
     def __setup__(cls):
-        super(LimsProject, cls).__setup__()
+        super(Project, cls).__setup__()
         project_type = PROJECT_TYPE
         if project_type not in cls.type.selection:
             cls.type.selection.append(project_type)
 
     @classmethod
     def view_attributes(cls):
-        return super(LimsProject, cls).view_attributes() + [
+        return super(Project, cls).view_attributes() + [
             ('//group[@id="itl"]', 'states', {
                     'invisible': Not(Bool(Equal(Eval('type'), 'itl'))),
                     })]
 
 
-class LimsEntry:
+class Entry:
     __name__ = 'lims.entry'
     __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):
-        super(LimsEntry, cls).__setup__()
+        super(Entry, cls).__setup__()
         project_type = PROJECT_TYPE
         if project_type not in cls.project_type.selection:
             cls.project_type.selection.append(project_type)

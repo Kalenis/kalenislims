@@ -6,10 +6,10 @@
 from trytond.model import fields
 from trytond.pool import PoolMeta
 
-__all__ = ['LimsConfiguration']
+__all__ = ['Configuration']
 
 
-class LimsConfiguration:
+class Configuration:
     __name__ = 'lims.configuration'
     __metaclass__ = PoolMeta
 

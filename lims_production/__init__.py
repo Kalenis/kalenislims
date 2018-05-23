@@ -3,34 +3,32 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import Pool
-from .stock import *
-from .configuration import *
-from .production import *
-from report import *
+from . import stock
+from . import configuration
+from . import production
 
 
 def register():
     Pool.register(
-        PurityDegree,
-        Brand,
-        FamilyEquivalent,
-        LotCategory,
-        Lot,
-        Move,
-        ShipmentIn,
-        Template,
-        Product,
-        ProductionConfiguration,
-        ProductionConfigurationLotSequence,
-        LimsConfiguration,
-        LimsConfigurationSolvents,
-        BOM,
-        Production,
+        stock.PurityDegree,
+        stock.Brand,
+        stock.FamilyEquivalent,
+        stock.LotCategory,
+        stock.Lot,
+        stock.Move,
+        stock.ShipmentIn,
+        stock.Template,
+        stock.Product,
+        configuration.ProductionConfiguration,
+        configuration.ProductionConfigurationLotSequence,
+        configuration.Configuration,
+        configuration.ConfigurationSolvents,
+        production.BOM,
+        production.Production,
         module='lims_production', type_='model')
     Pool.register(
-        UpdateCostPrice,
-        LimsMoveProductionRelated,
+        stock.MoveProductionRelated,
         module='lims_production', type_='wizard')
     Pool.register(
-        FamilyEquivalentReport,
+        production.FamilyEquivalentReport,
         module='lims_production', type_='report')

@@ -3,21 +3,20 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import Pool
-from .resultsimport import *
-from wizard import *
+from . import resultsimport
 
 
 def register():
     Pool.register(
-        LimsNotebookLine,
-        LimsResultsImport,
-        LimsNotebookLoadResultsFileStart,
-        LimsNotebookLoadResultsFileStartLine,
-        LimsNotebookLoadResultsFileEmpty,
-        LimsNotebookLoadResultsFileResult,
-        LimsNotebookLoadResultsFileWarning,
-        LimsNotebookLoadResultsFileExport,
+        resultsimport.NotebookLine,
+        resultsimport.ResultsImport,
+        resultsimport.NotebookLoadResultsFileStart,
+        resultsimport.NotebookLoadResultsFileStartLine,
+        resultsimport.NotebookLoadResultsFileEmpty,
+        resultsimport.NotebookLoadResultsFileResult,
+        resultsimport.NotebookLoadResultsFileWarning,
+        resultsimport.NotebookLoadResultsFileExport,
         module='lims_instrument', type_='model')
     Pool.register(
-        LimsNotebookLoadResultsFile,
+        resultsimport.NotebookLoadResultsFile,
         module='lims_instrument', type_='wizard')

@@ -24,5 +24,11 @@
             <field name="model">sale.sale</field>
         </record>
 
+        <record model="ir.model.button" id="sale_load_services_button">
+            <field name="name">load_services</field>
+            <field name="string">Load Services from Entry</field>
+            <field name="model" search="[('model', '=', 'sale.sale')]"/>
+        </record>
+
     </data>
 </tryton>
