@@ -67,8 +67,10 @@ Create Samples::
     ...     ('code', '=', 'MCL')])
     >>> storage_location, = Model.get('stock.location').find([
     ...     ('code', '=', 'STO')])
-    >>> analysis, = Model.get('lims.analysis').find([
-    ...     ('code', '=', '0002')])
+    >>> with config.set_context(
+    ...         date_from=today, date_to=today, calculate=True):
+    ...     analysis, = Model.get('lims.analysis').find([
+    ...         ('code', '=', '0002')])
     >>> laboratory, = Model.get('lims.laboratory').find([
     ...     ('code', '=', 'SQ')])
     >>> method, = Model.get('lims.lab.method').find([
