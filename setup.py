@@ -13,6 +13,12 @@ except ImportError:
 MODULE2PREFIX = {}
 
 
+def kalenis_test_suite():
+    from trytond.tests.test_tryton import modules_suite
+    return modules_suite([name for name in os.listdir('.')
+        if name.startswith('lims')])
+
+
 def read(fname):
     return io.open(
         os.path.join(os.path.dirname(__file__), fname),
@@ -62,29 +68,20 @@ for name in os.listdir('.'):
     if os.path.isdir(os.path.join(name, 'tests')):
         packages.append(package + '.tests')
     module_entry_points.append('%s = %s' % (name, package))
-    for suffix in [None, 'report', 'wizard']:
-        data = []
-        if not suffix:
-            for data_pattern in (info.get('xml', []) + ['tryton.cfg']):
-                data.append(data_pattern)
-            subpackage = package
-        elif os.path.isdir(os.path.join(name, suffix)):
-            subpackage = package + '.' + suffix
-            package_dir[subpackage] = os.path.join(name, suffix)
-            packages.append(subpackage)
-        for data_pattern in (info.get('xml', []) + ['view/*.xml',
-                    'locale/*.po', '*.odt', '*.ods', 'icons/*.svg',
-                    'tests/*.rst', '*.cfg']):
-            data.append(data_pattern)
-        if data:
-            package_data[subpackage] = data
+    data = []
+    for data_pattern in (info.get('xml', []) + ['tryton.cfg']):
+        data.append(data_pattern)
+    subpackage = package
+    for data_pattern in (info.get('xml', []) + ['tryton.cfg', 'view/*.xml',
+                'locale/*.po', 'report/*.odt', 'report/*.ods',
+                'icons/*.svg', 'tests/*.rst']):
+        data.append(data_pattern)
+    if data:
+        package_data[subpackage] = data
 requires.append(get_require_version('trytond'))
 
-tests_require = []
+tests_require = [get_require_version('proteus')]
 dependency_links = []
-if minor_version % 2:
-    # Add development index for testing with proteus
-    dependency_links.append('https://trydevpi.tryton.org/')
 
 setup(name='kalenis_lims',
     version=version,
@@ -103,18 +100,19 @@ setup(name='kalenis_lims',
         'Environment :: Plugins',
         'Framework :: Tryton',
         'Intended Audience :: Developers',
-        'Intended Audience :: Financial and Insurance Industry',
-        'Intended Audience :: Legal Industry',
+        'Intended Audience :: Manufacturing',
+        'Intended Audience :: Science/Research',
+        'Intended Audience :: Other Audience',
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
         'Natural Language :: English',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Office/Business',
+        'Topic :: Scientific/Engineering',
         ],
     license='GPL-3',
     install_requires=requires,
@@ -124,8 +122,11 @@ setup(name='kalenis_lims',
     [trytond.modules]
     %s
     """ % '\n'.join(module_entry_points),
-    test_suite='tests',
+    test_suite='setup.kalenis_test_suite',
     test_loader='trytond.test_loader:Loader',
     tests_require=tests_require,
     use_2to3=True,
+    convert_2to3_doctests=[
+        'lims/tests/scenario_lims.rst',
+        ],
     )
