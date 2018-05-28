@@ -13,8 +13,6 @@ pipeline:
         commands:
             - pip install tox
             - tox -e "${TOXENV}-${DATABASE}"
-        volumes:
-            - cache:/root/.cache
 
 services:
     postgresql:
