@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+        <record model="lims.fraction.type" id="fraction_type_mcl">
+            <field name="code">CUS</field>
+            <field name="description">Customer Sample</field>
+            <field name="max_storage_time" eval="3"/>
+            <field name="requalify" eval="False"/>
+            <field name="plannable" eval="True"/>
+            <field name="control_charts" eval="False"/>
+            <field name="report" eval="True"/>
+            <field name="cie_fraction_type" eval="True"/>
+        </record>
+        <record model="lims.fraction.type" id="fraction_type_con">
+            <field name="code">CON</field>
+            <field name="description">Control Sample</field>
+            <field name="requalify" eval="True"/>
+            <field name="plannable" eval="False"/>
+            <field name="control_charts" eval="True"/>
+            <field name="report" eval="False"/>
+            <field name="cie_fraction_type" eval="False"/>
+        </record>
+        <record model="lims.fraction.type" id="fraction_type_bmz">
+            <field name="code">BNK</field>
+            <field name="description">Blank Matrix</field>
+            <field name="requalify" eval="True"/>
+            <field name="plannable" eval="False"/>
+            <field name="control_charts" eval="False"/>
+            <field name="report" eval="False"/>
+            <field name="cie_fraction_type" eval="False"/>
+        </record>
+        <record model="lims.fraction.type" id="fraction_type_bre">
+            <field name="code">REA</field>
+            <field name="description">Blank Reagent</field>
+            <field name="requalify" eval="True"/>
+            <field name="plannable" eval="False"/>
+            <field name="control_charts" eval="False"/>
+            <field name="report" eval="False"/>
+            <field name="cie_fraction_type" eval="False"/>
+        </record>
+        <record model="lims.fraction.type" id="fraction_type_coi">
+            <field name="code">INI</field>
+            <field name="description">Initial Control Sample</field>
+            <field name="requalify" eval="False"/>
+            <field name="plannable" eval="True"/>
+            <field name="control_charts" eval="False"/>
+            <field name="report" eval="False"/>
+            <field name="cie_fraction_type" eval="False"/>
+        </record>
+        <record model="lims.fraction.type" id="fraction_type_itc">
+            <field name="code">INC</field>
+            <field name="description">Intercomparison Sample</field>
+            <field name="requalify" eval="False"/>
+            <field name="plannable" eval="True"/>
+            <field name="control_charts" eval="False"/>
+            <field name="report" eval="True"/>
+            <field name="cie_fraction_type" eval="False"/>
+        </record>
+        <record model="lims.fraction.type" id="fraction_type_itl">
+            <field name="code">INL</field>
+            <field name="description">Interlaboratory Sample</field>
+            <field name="max_storage_time" eval="60"/>
+            <field name="requalify" eval="False"/>
+            <field name="plannable" eval="True"/>
+            <field name="control_charts" eval="False"/>
+            <field name="report" eval="True"/>
+            <field name="cie_fraction_type" eval="False"/>
+        </record>
+        <record model="lims.fraction.type" id="fraction_type_mrc">
+            <field name="code">CRS</field>
+            <field name="description">Certified Reference Sample</field>
+            <field name="max_storage_time" eval="60"/>
+            <field name="requalify" eval="False"/>
+            <field name="plannable" eval="True"/>
+            <field name="control_charts" eval="False"/>
+            <field name="report" eval="False"/>
+            <field name="cie_fraction_type" eval="False"/>
+        </record>
+        <record model="lims.fraction.type" id="fraction_type_mrt">
+            <field name="code">RPS</field>
+            <field name="description">Repeatability Sample</field>
+            <field name="requalify" eval="True"/>
+            <field name="plannable" eval="False"/>
+            <field name="control_charts" eval="False"/>
+            <field name="report" eval="False"/>
+            <field name="cie_fraction_type" eval="False"/>
+        </record>
+        <record model="lims.fraction.type" id="fraction_type_rm">
+            <field name="code">MR</field>
+            <field name="description">Methods Retrieval</field>
+            <field name="requalify" eval="True"/>
+            <field name="plannable" eval="False"/>
+            <field name="control_charts" eval="True"/>
+            <field name="report" eval="False"/>
+            <field name="cie_fraction_type" eval="False"/>
+        </record>
+        <record model="lims.fraction.type" id="fraction_type_sat">
+            <field name="code">TAS</field>
+            <field name="description">Technical Assistance Service</field>
+            <field name="max_storage_time" eval="12"/>
+            <field name="requalify" eval="False"/>
+            <field name="plannable" eval="True"/>
+            <field name="control_charts" eval="False"/>
+            <field name="report" eval="True"/>
+            <field name="cie_fraction_type" eval="False"/>
+        </record>
+        <record model="lims.fraction.type" id="fraction_type_sla">
+            <field name="code">AFS</field>
+            <field name="description">Analyte Free Substrate</field>
+            <field name="requalify" eval="False"/>
+            <field name="plannable" eval="True"/>
+            <field name="control_charts" eval="False"/>
+            <field name="report" eval="False"/>
+            <field name="cie_fraction_type" eval="False"/>
+        </record>
+
+    </data>
+</tryton>

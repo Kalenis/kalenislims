@@ -8388,6 +8388,102 @@ msgctxt "model:lims.fraction.discharge_revert.start,name:"
 msgid "Revert Fractions Discharge"
 msgstr "Revertir descarte de fracciones"
 
+msgctxt "model:lims.fraction.type,code:fraction_type_bmz"
+msgid "BNK"
+msgstr "BMZ"
+
+msgctxt "model:lims.fraction.type,code:fraction_type_bre"
+msgid "REA"
+msgstr "BRE"
+
+msgctxt "model:lims.fraction.type,code:fraction_type_coi"
+msgid "INI"
+msgstr "COI"
+
+msgctxt "model:lims.fraction.type,code:fraction_type_con"
+msgid "CON"
+msgstr "CON"
+
+msgctxt "model:lims.fraction.type,code:fraction_type_itc"
+msgid "INC"
+msgstr "ITC"
+
+msgctxt "model:lims.fraction.type,code:fraction_type_itl"
+msgid "INL"
+msgstr "ITL"
+
+msgctxt "model:lims.fraction.type,code:fraction_type_mcl"
+msgid "CUS"
+msgstr "MCL"
+
+msgctxt "model:lims.fraction.type,code:fraction_type_mrc"
+msgid "CRS"
+msgstr "MRC"
+
+msgctxt "model:lims.fraction.type,code:fraction_type_mrt"
+msgid "RPS"
+msgstr "MRT"
+
+msgctxt "model:lims.fraction.type,code:fraction_type_rm"
+msgid "MR"
+msgstr "RM"
+
+msgctxt "model:lims.fraction.type,code:fraction_type_sat"
+msgid "TAS"
+msgstr "SAT"
+
+msgctxt "model:lims.fraction.type,code:fraction_type_sla"
+msgid "AFS"
+msgstr "SLA"
+
+msgctxt "model:lims.fraction.type,description:fraction_type_bmz"
+msgid "Blank Matrix"
+msgstr "Blanco Matriz"
+
+msgctxt "model:lims.fraction.type,description:fraction_type_bre"
+msgid "Blank Reagent"
+msgstr "Blanco Reagente"
+
+msgctxt "model:lims.fraction.type,description:fraction_type_coi"
+msgid "Initial Control Sample"
+msgstr "Muestra Control Inicial"
+
+msgctxt "model:lims.fraction.type,description:fraction_type_con"
+msgid "Control Sample"
+msgstr "Muestra Control"
+
+msgctxt "model:lims.fraction.type,description:fraction_type_itc"
+msgid "Intercomparison Sample"
+msgstr "Muestra Intercomparación"
+
+msgctxt "model:lims.fraction.type,description:fraction_type_itl"
+msgid "Interlaboratory Sample"
+msgstr "Muestra Interlaboratorio"
+
+msgctxt "model:lims.fraction.type,description:fraction_type_mcl"
+msgid "Customer Sample"
+msgstr "Muestra de Cliente"
+
+msgctxt "model:lims.fraction.type,description:fraction_type_mrc"
+msgid "Certified Reference Sample"
+msgstr "Muestra de Referencia Certificada"
+
+msgctxt "model:lims.fraction.type,description:fraction_type_mrt"
+msgid "Repeatability Sample"
+msgstr "Muestra para Repetibilidad"
+
+msgctxt "model:lims.fraction.type,description:fraction_type_rm"
+msgid "Methods Retrieval"
+msgstr "Recuperación de Métodos"
+
+msgctxt "model:lims.fraction.type,description:fraction_type_sat"
+msgid "Technical Assistance Service"
+msgstr "Servicio de Asistencia Técnico"
+
+msgctxt "model:lims.fraction.type,description:fraction_type_sla"
+msgid "Analyte Free Substrate"
+msgstr "Sustrato Libre de Analito"
+
 msgctxt "model:lims.fraction.type,name:"
 msgid "Fraction Type"
 msgstr "Tipo de fracción"

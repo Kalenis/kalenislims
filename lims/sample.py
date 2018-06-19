@@ -194,8 +194,8 @@ class FractionType(ModelSQL, ModelView):
     __name__ = 'lims.fraction.type'
     _rec_name = 'description'
 
-    code = fields.Char('Code', required=True)
-    description = fields.Char('Description', required=True)
+    code = fields.Char('Code', required=True, translate=True)
+    description = fields.Char('Description', required=True, translate=True)
     max_storage_time = fields.Integer('Maximum storage time (in months)')
     requalify = fields.Boolean('Requalify')
     control_charts = fields.Boolean('Available for Control Charts')
