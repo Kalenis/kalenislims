@@ -320,7 +320,7 @@
             <field name="name">Sequence</field>
             <field name="model">lims.planification</field>
             <field name="report_name">lims.planification.sequence.report</field>
-            <field name="report">lims/report/planification_sequence_report.odt</field>
+            <field name="report">lims/report/planification_sequence_report.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_planification_sequence_keyword">
@@ -335,7 +335,7 @@
             <field name="name">Worksheet by Analysis</field>
             <field name="model">lims.planification</field>
             <field name="report_name">lims.planification.worksheet_analysis.report</field>
-            <field name="report">lims/report/planification_worksheet_analysis_report.odt</field>
+            <field name="report">lims/report/planification_worksheet_analysis_report.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_planification_worksheet_analysis_keyword">
@@ -350,7 +350,7 @@
             <field name="name">Worksheet by Method</field>
             <field name="model">lims.planification</field>
             <field name="report_name">lims.planification.worksheet_method.report</field>
-            <field name="report">lims/report/planification_worksheet_method_report.odt</field>
+            <field name="report">lims/report/planification_worksheet_method_report.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_planification_worksheet_method_keyword">
@@ -365,7 +365,7 @@
             <field name="name">Worksheet</field>
             <field name="model">lims.planification</field>
             <field name="report_name">lims.planification.worksheet.report</field>
-            <field name="report">lims/report/planification_worksheet_report.odt</field>
+            <field name="report">lims/report/planification_worksheet_report.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_planification_worksheet_keyword">
@@ -389,7 +389,7 @@
         <record model="ir.action.report" id="report_pending_services_unplanned">
             <field name="name">Pending Services Unplanned</field>
             <field name="report_name">lims.pending_services_unplanned.report</field>
-            <field name="report">lims/report/pending_services_unplanned_report.odt</field>
+            <field name="report">lims/report/pending_services_unplanned_report.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.report" id="report_pending_services_unplanned_spreadsheet">
@@ -409,7 +409,7 @@
         <record model="ir.action.report" id="report_blind_sample">
             <field name="name">Blind Samples Report</field>
             <field name="report_name">lims.blind_sample_report</field>
-            <field name="report">lims/report/blind_sample_report.odt</field>
+            <field name="report">lims/report/blind_sample_report.fodt</field>
             <field name="extension">pdf</field>
         </record>
 
