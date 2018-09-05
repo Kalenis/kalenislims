@@ -357,7 +357,7 @@
             <field name="name">Acknowledgment of Samples Receipt</field>
             <field name="model">lims.entry</field>
             <field name="report_name">lims.entry.acknowledgment.report</field>
-            <field name="report">lims/report/entry_acknowledgment_report.odt</field>
+            <field name="report">lims/report/entry_acknowledgment_report.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_entry_acknowledgment_keyword">
@@ -372,7 +372,7 @@
             <field name="name">Entry Detail</field>
             <field name="model">lims.entry</field>
             <field name="report_name">lims.entry.detail.report</field>
-            <field name="report">lims/report/entry_detail_report.odt</field>
+            <field name="report">lims/report/entry_detail_report.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_entry_detail_keyword">
@@ -387,7 +387,7 @@
             <field name="name">Entry Labels</field>
             <field name="model">lims.entry</field>
             <field name="report_name">lims.entry.labels.report</field>
-            <field name="report">lims/report/entry_labels_report.odt</field>
+            <field name="report">lims/report/entry_labels_report.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_entry_labels_keyword">

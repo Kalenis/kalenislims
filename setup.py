@@ -73,7 +73,7 @@ for name in os.listdir('.'):
         data.append(data_pattern)
     subpackage = package
     for data_pattern in (info.get('xml', []) + ['tryton.cfg', 'view/*.xml',
-                'locale/*.po', 'report/*.odt', 'report/*.ods',
+                'locale/*.po', 'report/*.fodt', 'report/*.fods',
                 'icons/*.svg', 'tests/*.rst']):
         data.append(data_pattern)
     if data:
@@ -87,7 +87,7 @@ setup(name='kalenis_lims',
     version=version,
     description='Kalenis LIMS & ERP',
     long_description=read('README.md'),
-    author='',
+    author='Kalenis',
     author_email='info@kalenislims.com',
     url='http://www.kalenislims.com/',
     download_url='https://bitbucket.org/kalenis/kalenislims',

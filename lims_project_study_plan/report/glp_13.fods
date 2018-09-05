@@ -1,0 +1,994 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:presentation="urn:oasis:names:tc:opendocument:xmlns:presentation:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2" office:mimetype="application/vnd.oasis.opendocument.spreadsheet">
+ <office:meta><meta:creation-date>2016-03-08T11:34:41</meta:creation-date><meta:generator>LibreOffice/6.0.5.1$Linux_X86_64 LibreOffice_project/00m0$Build-1</meta:generator><dc:date>2017-10-07T17:22:33.489047009</dc:date><meta:editing-duration>P39DT10H35M2S</meta:editing-duration><meta:editing-cycles>163</meta:editing-cycles><meta:document-statistic meta:table-count="3" meta:cell-count="61" meta:object-count="0"/></office:meta>
+ <office:settings>
+  <config:config-item-set config:name="ooo:view-settings">
+   <config:config-item config:name="VisibleAreaTop" config:type="int">451</config:config-item>
+   <config:config-item config:name="VisibleAreaLeft" config:type="int">0</config:config-item>
+   <config:config-item config:name="VisibleAreaWidth" config:type="int">43111</config:config-item>
+   <config:config-item config:name="VisibleAreaHeight" config:type="int">32309</config:config-item>
+   <config:config-item-map-indexed config:name="Views">
+    <config:config-item-map-entry>
+     <config:config-item config:name="ViewId" config:type="string">view1</config:config-item>
+     <config:config-item-map-named config:name="Tables">
+      <config:config-item-map-entry config:name="Hoja1">
+       <config:config-item config:name="CursorPositionX" config:type="int">0</config:config-item>
+       <config:config-item config:name="CursorPositionY" config:type="int">23</config:config-item>
+       <config:config-item config:name="HorizontalSplitMode" config:type="short">0</config:config-item>
+       <config:config-item config:name="VerticalSplitMode" config:type="short">0</config:config-item>
+       <config:config-item config:name="HorizontalSplitPosition" config:type="int">0</config:config-item>
+       <config:config-item config:name="VerticalSplitPosition" config:type="int">0</config:config-item>
+       <config:config-item config:name="ActiveSplitRange" config:type="short">2</config:config-item>
+       <config:config-item config:name="PositionLeft" config:type="int">0</config:config-item>
+       <config:config-item config:name="PositionRight" config:type="int">0</config:config-item>
+       <config:config-item config:name="PositionTop" config:type="int">0</config:config-item>
+       <config:config-item config:name="PositionBottom" config:type="int">21</config:config-item>
+       <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
+       <config:config-item config:name="ZoomValue" config:type="int">75</config:config-item>
+       <config:config-item config:name="PageViewZoomValue" config:type="int">85</config:config-item>
+       <config:config-item config:name="ShowGrid" config:type="boolean">true</config:config-item>
+       <config:config-item config:name="AnchoredTextOverflowLegacy" config:type="boolean">false</config:config-item>
+      </config:config-item-map-entry>
+     </config:config-item-map-named>
+     <config:config-item config:name="ActiveTable" config:type="string">Hoja1</config:config-item>
+     <config:config-item config:name="HorizontalScrollbarWidth" config:type="int">1285</config:config-item>
+     <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
+     <config:config-item config:name="ZoomValue" config:type="int">75</config:config-item>
+     <config:config-item config:name="PageViewZoomValue" config:type="int">85</config:config-item>
+     <config:config-item config:name="ShowPageBreakPreview" config:type="boolean">false</config:config-item>
+     <config:config-item config:name="ShowZeroValues" config:type="boolean">true</config:config-item>
+     <config:config-item config:name="ShowNotes" config:type="boolean">true</config:config-item>
+     <config:config-item config:name="ShowGrid" config:type="boolean">true</config:config-item>
+     <config:config-item config:name="GridColor" config:type="long">12632256</config:config-item>
+     <config:config-item config:name="ShowPageBreaks" config:type="boolean">true</config:config-item>
+     <config:config-item config:name="HasColumnRowHeaders" config:type="boolean">true</config:config-item>
+     <config:config-item config:name="HasSheetTabs" config:type="boolean">true</config:config-item>
+     <config:config-item config:name="IsOutlineSymbolsSet" config:type="boolean">true</config:config-item>
+     <config:config-item config:name="IsValueHighlightingEnabled" config:type="boolean">false</config:config-item>
+     <config:config-item config:name="IsSnapToRaster" config:type="boolean">false</config:config-item>
+     <config:config-item config:name="RasterIsVisible" config:type="boolean">false</config:config-item>
+     <config:config-item config:name="RasterResolutionX" config:type="int">1000</config:config-item>
+     <config:config-item config:name="RasterResolutionY" config:type="int">1000</config:config-item>
+     <config:config-item config:name="RasterSubdivisionX" config:type="int">1</config:config-item>
+     <config:config-item config:name="RasterSubdivisionY" config:type="int">1</config:config-item>
+     <config:config-item config:name="IsRasterAxisSynchronized" config:type="boolean">true</config:config-item>
+     <config:config-item config:name="AnchoredTextOverflowLegacy" config:type="boolean">false</config:config-item>
+    </config:config-item-map-entry>
+   </config:config-item-map-indexed>
+  </config:config-item-set>
+  <config:config-item-set config:name="ooo:configuration-settings">
+   <config:config-item config:name="SyntaxStringRef" config:type="short">7</config:config-item>
+   <config:config-item config:name="AllowPrintJobCancel" config:type="boolean">true</config:config-item>
+   <config:config-item config:name="SaveVersionOnClose" config:type="boolean">false</config:config-item>
+   <config:config-item config:name="IsKernAsianPunctuation" config:type="boolean">false</config:config-item>
+   <config:config-item config:name="CharacterCompressionType" config:type="short">0</config:config-item>
+   <config:config-item config:name="ApplyUserData" config:type="boolean">true</config:config-item>
+   <config:config-item config:name="PrinterSetup" config:type="base64Binary">mQH+/2hwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ1VQUzpocAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAAMAtgAAAAAAAAAEAAhSAAAEdAAASm9iRGF0YSAxCnByaW50ZXI9aHAKb3JpZW50YXRpb249UG9ydHJhaXQKY29waWVzPTEKY29sbGF0ZT1mYWxzZQptYXJnaW5kYWp1c3RtZW50PTAsMCwwLDAKY29sb3JkZXB0aD0yNApwc2xldmVsPTAKcGRmZGV2aWNlPTEKY29sb3JkZXZpY2U9MApQUERDb250ZXhEYXRhCklucHV0U2xvdDpBdXRvAFBhZ2VTaXplOkE0AAASAENPTVBBVF9EVVBMRVhfTU9ERRMARHVwbGV4TW9kZTo6VW5rbm93bg==</config:config-item>
+   <config:config-item config:name="PrinterName" config:type="string">hp</config:config-item>
+   <config:config-item-map-indexed config:name="ForbiddenCharacters">
+    <config:config-item-map-entry>
+     <config:config-item config:name="Language" config:type="string">zxx</config:config-item>
+     <config:config-item config:name="Country" config:type="string"/>
+     <config:config-item config:name="Variant" config:type="string"/>
+     <config:config-item config:name="BeginLine" config:type="string"/>
+     <config:config-item config:name="EndLine" config:type="string"/>
+    </config:config-item-map-entry>
+    <config:config-item-map-entry>
+     <config:config-item config:name="Language" config:type="string">es</config:config-item>
+     <config:config-item config:name="Country" config:type="string">AR</config:config-item>
+     <config:config-item config:name="Variant" config:type="string"/>
+     <config:config-item config:name="BeginLine" config:type="string"/>
+     <config:config-item config:name="EndLine" config:type="string"/>
+    </config:config-item-map-entry>
+   </config:config-item-map-indexed>
+   <config:config-item config:name="AutoCalculate" config:type="boolean">true</config:config-item>
+   <config:config-item config:name="LinkUpdateMode" config:type="short">3</config:config-item>
+   <config:config-item config:name="HasColumnRowHeaders" config:type="boolean">true</config:config-item>
+   <config:config-item config:name="LoadReadonly" config:type="boolean">false</config:config-item>
+   <config:config-item config:name="UpdateFromTemplate" config:type="boolean">true</config:config-item>
+   <config:config-item config:name="ShowZeroValues" config:type="boolean">true</config:config-item>
+   <config:config-item config:name="GridColor" config:type="long">12632256</config:config-item>
+   <config:config-item config:name="ShowPageBreaks" config:type="boolean">true</config:config-item>
+   <config:config-item config:name="ShowGrid" config:type="boolean">true</config:config-item>
+   <config:config-item config:name="IsOutlineSymbolsSet" config:type="boolean">true</config:config-item>
+   <config:config-item config:name="IsDocumentShared" config:type="boolean">false</config:config-item>
+   <config:config-item config:name="ShowNotes" config:type="boolean">true</config:config-item>
+   <config:config-item config:name="EmbedFonts" config:type="boolean">false</config:config-item>
+   <config:config-item config:name="HasSheetTabs" config:type="boolean">true</config:config-item>
+   <config:config-item config:name="RasterSubdivisionY" config:type="int">1</config:config-item>
+   <config:config-item config:name="RasterIsVisible" config:type="boolean">false</config:config-item>
+   <config:config-item config:name="RasterResolutionX" config:type="int">1000</config:config-item>
+   <config:config-item config:name="RasterResolutionY" config:type="int">1000</config:config-item>
+   <config:config-item config:name="IsSnapToRaster" config:type="boolean">false</config:config-item>
+   <config:config-item config:name="RasterSubdivisionX" config:type="int">1</config:config-item>
+   <config:config-item config:name="IsRasterAxisSynchronized" config:type="boolean">true</config:config-item>
+  </config:config-item-set>
+ </office:settings>
+ <office:scripts>
+  <office:script script:language="ooo:Basic">
+   <ooo:libraries xmlns:ooo="http://openoffice.org/2004/office" xmlns:xlink="http://www.w3.org/1999/xlink"/>
+  </office:script>
+ </office:scripts>
+ <office:font-face-decls>
+  <style:font-face style:name="Arial" svg:font-family="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/>
+  <style:font-face style:name="Liberation Sans1" svg:font-family="&apos;Liberation Sans&apos;" style:font-family-generic="swiss" style:font-pitch="variable"/>
+  <style:font-face style:name="Liberation Sans" svg:font-family="&apos;Liberation Sans&apos;, Arial" style:font-family-generic="swiss" style:font-pitch="variable"/>
+  <style:font-face style:name="DejaVu Sans" svg:font-family="&apos;DejaVu Sans&apos;" style:font-family-generic="system" style:font-pitch="variable"/>
+  <style:font-face style:name="Droid Sans" svg:font-family="&apos;Droid Sans&apos;" style:font-family-generic="system" style:font-pitch="variable"/>
+  <style:font-face style:name="Lohit Hindi" svg:font-family="&apos;Lohit Hindi&apos;" style:font-family-generic="system" style:font-pitch="variable"/>
+ </office:font-face-decls>
+ <office:styles>
+  <style:default-style style:family="table-cell">
+   <style:paragraph-properties style:tab-stop-distance="12.5mm"/>
+   <style:text-properties style:font-name="Arial" fo:language="es" fo:country="AR" style:font-name-asian="DejaVu Sans" style:language-asian="zh" style:country-asian="CN" style:font-name-complex="DejaVu Sans" style:language-complex="hi" style:country-complex="IN"/>
+  </style:default-style>
+  <number:number-style style:name="N0">
+   <number:number number:min-integer-digits="1"/>
+  </number:number-style>
+  <number:currency-style style:name="N104P0" style:volatile="true">
+   <number:currency-symbol number:language="es" number:country="AR">$</number:currency-symbol>
+   <number:number number:decimal-places="2" loext:min-decimal-places="2" number:min-integer-digits="1" number:grouping="true"/>
+  </number:currency-style>
+  <number:currency-style style:name="N104">
+   <style:text-properties fo:color="#ff0000"/>
+   <number:text>(</number:text>
+   <number:currency-symbol number:language="es" number:country="AR">$</number:currency-symbol>
+   <number:number number:decimal-places="2" loext:min-decimal-places="2" number:min-integer-digits="1" number:grouping="true"/>
+   <number:text>)</number:text>
+   <style:map style:condition="value()&gt;=0" style:apply-style-name="N104P0"/>
+  </number:currency-style>
+  <style:style style:name="Default" style:family="table-cell">
+   <style:text-properties style:font-name-asian="Droid Sans" style:font-family-asian="&apos;Droid Sans&apos;" style:font-family-generic-asian="system" style:font-pitch-asian="variable" style:font-name-complex="Lohit Hindi" style:font-family-complex="&apos;Lohit Hindi&apos;" style:font-family-generic-complex="system" style:font-pitch-complex="variable"/>
+  </style:style>
+  <style:style style:name="Result" style:family="table-cell" style:parent-style-name="Default">
+   <style:text-properties fo:font-style="italic" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" fo:font-weight="bold"/>
+  </style:style>
+  <style:style style:name="Result2" style:family="table-cell" style:parent-style-name="Result" style:data-style-name="N104"/>
+  <style:style style:name="Heading" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false"/>
+   <style:paragraph-properties fo:text-align="center"/>
+   <style:text-properties fo:font-size="16pt" fo:font-style="italic" fo:font-weight="bold"/>
+  </style:style>
+  <style:style style:name="Heading1" style:family="table-cell" style:parent-style-name="Heading">
+   <style:table-cell-properties style:rotation-angle="90"/>
+  </style:style>
+ </office:styles>
+ <office:automatic-styles>
+  <style:style style:name="co1" style:family="table-column">
+   <style:table-column-properties fo:break-before="auto" style:column-width="60.73mm"/>
+  </style:style>
+  <style:style style:name="co2" style:family="table-column">
+   <style:table-column-properties fo:break-before="auto" style:column-width="46.58mm"/>
+  </style:style>
+  <style:style style:name="co3" style:family="table-column">
+   <style:table-column-properties fo:break-before="auto" style:column-width="29.4mm"/>
+  </style:style>
+  <style:style style:name="co4" style:family="table-column">
+   <style:table-column-properties fo:break-before="auto" style:column-width="53.64mm"/>
+  </style:style>
+  <style:style style:name="co5" style:family="table-column">
+   <style:table-column-properties fo:break-before="auto" style:column-width="39.76mm"/>
+  </style:style>
+  <style:style style:name="co6" style:family="table-column">
+   <style:table-column-properties fo:break-before="auto" style:column-width="20.41mm"/>
+  </style:style>
+  <style:style style:name="co7" style:family="table-column">
+   <style:table-column-properties fo:break-before="auto" style:column-width="22.98mm"/>
+  </style:style>
+  <style:style style:name="co8" style:family="table-column">
+   <style:table-column-properties fo:break-before="auto" style:column-width="40.23mm"/>
+  </style:style>
+  <style:style style:name="co9" style:family="table-column">
+   <style:table-column-properties fo:break-before="auto" style:column-width="38.66mm"/>
+  </style:style>
+  <style:style style:name="co10" style:family="table-column">
+   <style:table-column-properties fo:break-before="auto" style:column-width="56.13mm"/>
+  </style:style>
+  <style:style style:name="co11" style:family="table-column">
+   <style:table-column-properties fo:break-before="auto" style:column-width="22.58mm"/>
+  </style:style>
+  <style:style style:name="ro1" style:family="table-row">
+   <style:table-row-properties style:row-height="4.52mm" fo:break-before="auto" style:use-optimal-row-height="true"/>
+  </style:style>
+  <style:style style:name="ro2" style:family="table-row">
+   <style:table-row-properties style:row-height="5.29mm" fo:break-before="auto" style:use-optimal-row-height="true"/>
+  </style:style>
+  <style:style style:name="ro3" style:family="table-row">
+   <style:table-row-properties style:row-height="7.88mm" fo:break-before="auto" style:use-optimal-row-height="false"/>
+  </style:style>
+  <style:style style:name="ro4" style:family="table-row">
+   <style:table-row-properties style:row-height="10.23mm" fo:break-before="auto" style:use-optimal-row-height="false"/>
+  </style:style>
+  <style:style style:name="ro5" style:family="table-row">
+   <style:table-row-properties style:row-height="9.93mm" fo:break-before="auto" style:use-optimal-row-height="false"/>
+  </style:style>
+  <style:style style:name="ro6" style:family="table-row">
+   <style:table-row-properties style:row-height="17.2mm" fo:break-before="auto" style:use-optimal-row-height="false"/>
+  </style:style>
+  <style:style style:name="ro7" style:family="table-row">
+   <style:table-row-properties style:row-height="7.88mm" fo:break-before="page" style:use-optimal-row-height="false"/>
+  </style:style>
+  <style:style style:name="ro8" style:family="table-row">
+   <style:table-row-properties style:row-height="14.04mm" fo:break-before="auto" style:use-optimal-row-height="false"/>
+  </style:style>
+  <style:style style:name="ro9" style:family="table-row">
+   <style:table-row-properties style:row-height="4.96mm" fo:break-before="auto" style:use-optimal-row-height="true"/>
+  </style:style>
+  <style:style style:name="ro10" style:family="table-row">
+   <style:table-row-properties style:row-height="4.87mm" fo:break-before="auto" style:use-optimal-row-height="true"/>
+  </style:style>
+  <style:style style:name="ta1" style:family="table" style:master-page-name="Default">
+   <style:table-properties table:display="true" style:writing-mode="lr-tb"/>
+  </style:style>
+  <number:date-style style:name="N36" number:automatic-order="true">
+   <number:day number:style="long"/>
+   <number:text>/</number:text>
+   <number:month number:style="long"/>
+   <number:text>/</number:text>
+   <number:year number:style="long"/>
+  </number:date-style>
+  <number:text-style style:name="N100">
+   <number:text-content/>
+  </number:text-style>
+  <style:style style:name="ce1" style:family="table-cell" style:parent-style-name="Default">
+   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" fo:font-size="12pt" fo:language="en" fo:country="US" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-size-asian="6.80000019073486pt" style:language-asian="en" style:country-asian="US" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="6.80000019073486pt" style:language-complex="en" style:country-complex="US" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
+  </style:style>
+  <style:style style:name="ce11" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:background-color="#eeeeee" fo:border="0.06pt solid #000000"/>
+  </style:style>
+  <style:style style:name="ce12" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:wrap-option="wrap" fo:border="0.06pt solid #000000"/>
+   <style:paragraph-properties fo:text-align="center" fo:margin-left="0mm"/>
+   <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce13" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:wrap-option="wrap" fo:border="0.06pt solid #000000"/>
+   <style:text-properties fo:font-size="11pt" style:font-size-asian="11pt" style:font-size-complex="11pt"/>
+  </style:style>
+  <style:style style:name="ce14" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="center"/>
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce15" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="start" fo:margin-left="0mm"/>
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce17" style:family="table-cell" style:parent-style-name="Default">
+   <style:text-properties fo:font-size="12pt" fo:font-weight="normal" style:font-size-asian="12pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+  </style:style>
+  <style:style style:name="ce18" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false"/>
+   <style:paragraph-properties fo:text-align="center"/>
+   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Sans" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
+  </style:style>
+  <style:style style:name="ce19" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:wrap-option="wrap" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="start" fo:margin-left="0mm"/>
+   <style:text-properties fo:font-size="12pt" fo:font-weight="bold" style:font-size-asian="12pt" style:font-weight-asian="bold" style:font-size-complex="12pt" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce2" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:background-color="#eeeeee" style:text-align-source="fix" style:repeat-content="false" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="start" fo:margin-left="0mm"/>
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce20" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:wrap-option="wrap" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="start" fo:margin-left="0mm"/>
+   <style:text-properties fo:font-size="12pt" fo:font-weight="bold" style:font-size-asian="12pt" style:font-weight-asian="bold" style:font-size-complex="12pt" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce21" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:background-color="transparent" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="center"/>
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce22" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="center"/>
+   <style:text-properties fo:font-size="12pt" fo:font-weight="normal" style:font-size-asian="12pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+  </style:style>
+  <style:style style:name="ce23" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="center"/>
+  </style:style>
+  <style:style style:name="ce24" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="center"/>
+   <style:text-properties fo:font-weight="normal" style:font-weight-asian="normal" style:font-weight-complex="normal"/>
+  </style:style>
+  <style:style style:name="ce25" style:family="table-cell" style:parent-style-name="Default">
+   <style:text-properties fo:font-size="14pt" fo:font-weight="bold" style:font-size-asian="14pt" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce26" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false"/>
+   <style:paragraph-properties fo:text-align="end" fo:margin-left="0mm"/>
+   <style:text-properties fo:font-size="12pt" fo:font-weight="bold" style:font-size-asian="12pt" style:font-weight-asian="bold" style:font-size-complex="12pt" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce27" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
+   <style:text-properties fo:font-size="12pt" fo:font-weight="normal" style:font-size-asian="12pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+  </style:style>
+  <style:style style:name="ce28" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:background-color="transparent" fo:border="0.06pt solid #000000"/>
+  </style:style>
+  <style:style style:name="ce29" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:wrap-option="wrap"/>
+   <style:text-properties fo:font-size="12pt" fo:font-weight="bold" style:font-size-asian="12pt" style:font-weight-asian="bold" style:font-size-complex="12pt" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce3" style:family="table-cell" style:parent-style-name="Default">
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce30" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:background-color="#eeeeee" fo:border="0.06pt solid #000000"/>
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce31" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
+  </style:style>
+  <style:style style:name="ce32" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="center"/>
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce33" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N36">
+   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
+  </style:style>
+  <style:style style:name="ce34" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce36" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N100">
+   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
+  </style:style>
+  <style:style style:name="ce37" style:family="table-cell" style:parent-style-name="Default">
+   <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce4" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="start" fo:margin-left="0mm"/>
+   <style:text-properties fo:font-size="12pt" fo:font-weight="bold" style:font-size-asian="12pt" style:font-weight-asian="bold" style:font-size-complex="12pt" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce40" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
+   <style:text-properties fo:font-weight="normal" style:font-weight-asian="normal" style:font-weight-complex="normal"/>
+  </style:style>
+  <style:style style:name="ce46" style:family="table-cell" style:parent-style-name="Default">
+   <style:text-properties fo:font-weight="normal" style:font-weight-asian="normal" style:font-weight-complex="normal"/>
+  </style:style>
+  <style:style style:name="ce53" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:background-color="transparent" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="center"/>
+  </style:style>
+  <style:style style:name="ce61" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:background-color="#eeeeee" fo:wrap-option="wrap" fo:border="0.06pt solid #000000"/>
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce65" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="start" fo:margin-left="0mm"/>
+  </style:style>
+  <style:style style:name="ce7" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
+   <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce8" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
+   <style:text-properties style:font-name="Arial" fo:font-size="11pt" fo:font-weight="normal" style:font-name-asian="Droid Sans" style:font-size-asian="11pt" style:font-weight-asian="normal" style:font-name-complex="Lohit Hindi" style:font-size-complex="11pt" style:font-weight-complex="normal"/>
+  </style:style>
+  <style:style style:name="ce9" style:family="table-cell" style:parent-style-name="Default">
+   <style:text-properties fo:font-size="11pt" style:font-size-asian="11pt" style:font-size-complex="11pt"/>
+  </style:style>
+  <style:style style:name="ce69" style:family="table-cell" style:parent-style-name="Default">
+   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" fo:font-size="12pt" fo:language="en" fo:country="US" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-size-asian="6.80000019073486pt" style:language-asian="en" style:country-asian="US" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="6.80000019073486pt" style:language-complex="en" style:country-complex="US" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
+  </style:style>
+  <style:style style:name="ce70" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:background-color="#eeeeee" style:text-align-source="fix" style:repeat-content="false" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="start" fo:margin-left="0mm"/>
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce71" style:family="table-cell" style:parent-style-name="Default">
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce72" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="start" fo:margin-left="0mm"/>
+   <style:text-properties fo:font-size="12pt" fo:font-weight="bold" style:font-size-asian="12pt" style:font-weight-asian="bold" style:font-size-complex="12pt" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce73" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="center"/>
+  </style:style>
+  <style:style style:name="ce74" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
+  </style:style>
+  <style:style style:name="ce75" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
+   <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce76" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
+   <style:text-properties style:font-name="Arial" fo:font-size="11pt" fo:font-weight="normal" style:font-name-asian="Droid Sans" style:font-size-asian="11pt" style:font-weight-asian="normal" style:font-name-complex="Lohit Hindi" style:font-size-complex="11pt" style:font-weight-complex="normal"/>
+  </style:style>
+  <style:style style:name="ce77" style:family="table-cell" style:parent-style-name="Default">
+   <style:text-properties fo:font-size="11pt" style:font-size-asian="11pt" style:font-size-complex="11pt"/>
+  </style:style>
+  <style:style style:name="ce78" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
+   <style:text-properties fo:font-weight="normal" style:font-weight-asian="normal" style:font-weight-complex="normal"/>
+  </style:style>
+  <style:style style:name="ce79" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:background-color="#eeeeee" fo:border="0.06pt solid #000000"/>
+  </style:style>
+  <style:style style:name="ce80" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:wrap-option="wrap" fo:border="0.06pt solid #000000"/>
+   <style:paragraph-properties fo:text-align="center" fo:margin-left="0mm"/>
+   <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce81" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:wrap-option="wrap" fo:border="0.06pt solid #000000"/>
+   <style:text-properties fo:font-size="11pt" style:font-size-asian="11pt" style:font-size-complex="11pt"/>
+  </style:style>
+  <style:style style:name="ce82" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="center"/>
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce83" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="start" fo:margin-left="0mm"/>
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce84" style:family="table-cell" style:parent-style-name="Default">
+   <style:text-properties fo:font-weight="normal" style:font-weight-asian="normal" style:font-weight-complex="normal"/>
+  </style:style>
+  <style:style style:name="ce85" style:family="table-cell" style:parent-style-name="Default">
+   <style:text-properties fo:font-size="12pt" fo:font-weight="normal" style:font-size-asian="12pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+  </style:style>
+  <style:style style:name="ce86" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false"/>
+   <style:paragraph-properties fo:text-align="center"/>
+   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Sans" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
+  </style:style>
+  <style:style style:name="ce87" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:wrap-option="wrap" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="start" fo:margin-left="0mm"/>
+   <style:text-properties fo:font-size="12pt" fo:font-weight="bold" style:font-size-asian="12pt" style:font-weight-asian="bold" style:font-size-complex="12pt" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce88" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:wrap-option="wrap" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="start" fo:margin-left="0mm"/>
+   <style:text-properties fo:font-size="12pt" fo:font-weight="bold" style:font-size-asian="12pt" style:font-weight-asian="bold" style:font-size-complex="12pt" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce89" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:background-color="transparent" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="center"/>
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce90" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="center"/>
+   <style:text-properties fo:font-size="12pt" fo:font-weight="normal" style:font-size-asian="12pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+  </style:style>
+  <style:style style:name="ce91" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:background-color="transparent" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="center"/>
+  </style:style>
+  <style:style style:name="ce92" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="center"/>
+   <style:text-properties fo:font-weight="normal" style:font-weight-asian="normal" style:font-weight-complex="normal"/>
+  </style:style>
+  <style:style style:name="ce93" style:family="table-cell" style:parent-style-name="Default">
+   <style:text-properties fo:font-size="14pt" fo:font-weight="bold" style:font-size-asian="14pt" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce94" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false"/>
+   <style:paragraph-properties fo:text-align="end" fo:margin-left="0mm"/>
+   <style:text-properties fo:font-size="12pt" fo:font-weight="bold" style:font-size-asian="12pt" style:font-weight-asian="bold" style:font-size-complex="12pt" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce95" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
+   <style:text-properties fo:font-size="12pt" fo:font-weight="normal" style:font-size-asian="12pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+  </style:style>
+  <style:style style:name="ce96" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:background-color="transparent" fo:border="0.06pt solid #000000"/>
+  </style:style>
+  <style:style style:name="ce97" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:wrap-option="wrap"/>
+   <style:text-properties fo:font-size="12pt" fo:font-weight="bold" style:font-size-asian="12pt" style:font-weight-asian="bold" style:font-size-complex="12pt" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="ce98" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:background-color="#eeeeee" fo:border="0.06pt solid #000000"/>
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce99" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:background-color="#eeeeee" fo:wrap-option="wrap" fo:border="0.06pt solid #000000"/>
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce100" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="center"/>
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce101" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N36">
+   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
+  </style:style>
+  <style:style style:name="ce102" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
+   <style:text-properties fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="ce103" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:border="0.06pt solid #000000" style:vertical-align="middle"/>
+   <style:paragraph-properties fo:text-align="start" fo:margin-left="0mm"/>
+  </style:style>
+  <style:style style:name="ce104" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N100">
+   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
+  </style:style>
+  <style:style style:name="ce105" style:family="table-cell" style:parent-style-name="Default">
+   <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:page-layout style:name="pm1">
+   <style:page-layout-properties fo:page-width="297mm" fo:page-height="210.01mm" style:num-format="1" style:print-orientation="landscape" fo:margin-top="10mm" fo:margin-bottom="10mm" fo:margin-left="4.99mm" fo:margin-right="4.99mm" style:scale-to="65%" style:writing-mode="lr-tb"/>
+   <style:header-style>
+    <style:header-footer-properties fo:min-height="7.5mm" fo:margin-left="0mm" fo:margin-right="0mm" fo:margin-bottom="2.5mm"/>
+   </style:header-style>
+   <style:footer-style>
+    <style:header-footer-properties fo:min-height="7.5mm" fo:margin-left="0mm" fo:margin-right="0mm" fo:margin-top="2.5mm"/>
+   </style:footer-style>
+  </style:page-layout>
+  <style:page-layout style:name="pm2">
+   <style:page-layout-properties style:writing-mode="lr-tb"/>
+   <style:header-style>
+    <style:header-footer-properties fo:min-height="7.5mm" fo:margin-left="0mm" fo:margin-right="0mm" fo:margin-bottom="2.5mm" fo:border="2.49pt solid #000000" fo:padding="0.18mm" fo:background-color="#c0c0c0">
+     <style:background-image/>
+    </style:header-footer-properties>
+   </style:header-style>
+   <style:footer-style>
+    <style:header-footer-properties fo:min-height="7.5mm" fo:margin-left="0mm" fo:margin-right="0mm" fo:margin-top="2.5mm" fo:border="2.49pt solid #000000" fo:padding="0.18mm" fo:background-color="#c0c0c0">
+     <style:background-image/>
+    </style:header-footer-properties>
+   </style:footer-style>
+  </style:page-layout>
+  <style:style style:name="T1" style:family="text">
+   <style:text-properties style:text-position="super 58%"/>
+  </style:style>
+  <style:style style:name="T2" style:family="text">
+   <style:text-properties style:font-name-asian="Droid Sans"/>
+  </style:style>
+  <style:style style:name="T3" style:family="text">
+   <style:text-properties style:font-name-asian="Droid Sans"/>
+  </style:style>
+ </office:automatic-styles>
+ <office:master-styles>
+  <style:master-page style:name="Default" style:page-layout-name="pm1">
+   <style:header/>
+   <style:header-left style:display="false"/>
+   <style:footer>
+    <style:region-right>
+     <text:p>Página <text:page-number>1</text:page-number></text:p>
+    </style:region-right>
+   </style:footer>
+   <style:footer-left style:display="false"/>
+  </style:master-page>
+  <style:master-page style:name="Report" style:page-layout-name="pm2">
+   <style:header>
+    <style:region-left>
+     <text:p><text:sheet-name>???</text:sheet-name><text:s/>(<text:title>???</text:title>)</text:p>
+    </style:region-left>
+    <style:region-right>
+     <text:p><text:date style:data-style-name="N2" text:date-value="2018-06-08">00/00/0000</text:date>, <text:time style:data-style-name="N2" text:time-value="09:33:05.880255011">00:00:00</text:time></text:p>
+    </style:region-right>
+   </style:header>
+   <style:header-left style:display="false"/>
+   <style:footer>
+    <text:p>Página <text:page-number>1</text:page-number><text:s/>/ <text:page-count>99</text:page-count></text:p>
+   </style:footer>
+   <style:footer-left style:display="false"/>
+  </style:master-page>
+ </office:master-styles>
+ <office:body>
+  <office:spreadsheet>
+   <table:table table:name="Hoja1" table:style-name="ta1">
+    <table:table-column table:style-name="co1" table:default-cell-style-name="Default"/>
+    <table:table-column table:style-name="co2" table:default-cell-style-name="Default"/>
+    <table:table-column table:style-name="co3" table:default-cell-style-name="ce84"/>
+    <table:table-column table:style-name="co4" table:default-cell-style-name="Default"/>
+    <table:table-column table:style-name="co5" table:default-cell-style-name="Default"/>
+    <table:table-column table:style-name="co6" table:default-cell-style-name="Default"/>
+    <table:table-column table:style-name="co7" table:default-cell-style-name="Default"/>
+    <table:table-column table:style-name="co8" table:default-cell-style-name="Default"/>
+    <table:table-column table:style-name="co9" table:default-cell-style-name="Default"/>
+    <table:table-column table:style-name="co10" table:default-cell-style-name="Default"/>
+    <table:table-column table:style-name="co11" table:number-columns-repeated="1013" table:default-cell-style-name="Default"/>
+    <table:table-row table:style-name="ro1">
+     <table:table-cell table:number-columns-repeated="1023"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro2">
+     <table:table-cell table:style-name="ce69" table:number-columns-repeated="2"/>
+     <table:table-cell table:style-name="ce85"/>
+     <table:table-cell table:number-columns-repeated="4"/>
+     <table:table-cell table:style-name="ce105"/>
+     <table:table-cell/>
+     <table:table-cell table:style-name="ce105" office:value-type="string" calcext:value-type="string">
+      <text:p>BPL 007 – Annex 3</text:p>
+     </table:table-cell>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:number-columns-repeated="2"/>
+     <table:table-cell table:style-name="ce86"/>
+     <table:table-cell table:style-name="ce93" office:value-type="string" calcext:value-type="string">
+      <text:p>Sample preparation registration GLP</text:p>
+     </table:table-cell>
+     <table:table-cell table:number-columns-repeated="1019"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:number-columns-repeated="3"/>
+     <table:table-cell table:style-name="ce94" office:value-type="string" calcext:value-type="string">
+      <text:p>Study plan </text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce97" office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://code" xlink:type="simple">code</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell table:number-columns-repeated="1018"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:number-columns-repeated="1023"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:style-name="ce70" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+      <text:p>Testing System (Culture):</text:p>
+     </table:table-cell>
+     <table:covered-table-cell/>
+     <table:table-cell table:style-name="ce87" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="8" table:number-rows-spanned="1"><text:p><text:a xlink:href="relatorio://stp_matrix%20if%20stp_matrix%20else%20&apos;&apos;" xlink:type="simple">stp_matrix if stp_matrix else &apos;&apos;</text:a></text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:number-columns-repeated="5" table:style-name="ce74"/>
+     <table:covered-table-cell table:number-columns-repeated="2"/>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:style-name="ce70" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+      <text:p>Reference substances:</text:p>
+     </table:table-cell>
+     <table:covered-table-cell/>
+     <table:table-cell table:style-name="ce87" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="8" table:number-rows-spanned="1"><text:p><text:a xlink:href="relatorio://stp_reference_objects_list%20if%20stp_reference_objects_list%20else%20&apos;&apos;" xlink:type="simple">stp_reference_objects_list if stp_reference_objects_list else &apos;&apos;</text:a></text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:number-columns-repeated="5" table:style-name="ce74"/>
+     <table:covered-table-cell table:number-columns-repeated="2"/>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro4">
+     <table:table-cell table:style-name="ce70" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+      <text:p>Procedure and / or method:</text:p>
+     </table:table-cell>
+     <table:covered-table-cell/>
+     <table:table-cell table:style-name="ce88" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="6" table:number-rows-spanned="1"><text:p><text:a xlink:href="relatorio://stp_test_method%20if%20stp_test_method%20else%20&apos;&apos;" xlink:type="simple">stp_test_method if stp_test_method else &apos;&apos;</text:a></text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:style-name="ce74"/>
+     <table:covered-table-cell table:style-name="ce79"/>
+     <table:covered-table-cell table:style-name="ce91"/>
+     <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce74"/>
+     <table:table-cell table:style-name="ce99" office:value-type="string" calcext:value-type="string">
+      <text:p>AFS or control used:</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce74"/>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:style-name="ce70" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1"><text:p>Date of Weighing / Removal  <text:span text:style-name="T1">*2</text:span></text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:style-name="ce78"/>
+     <table:table-cell table:style-name="ce89" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+      <text:p><text:s/>_____/_____/201___ <text:s text:c="2"/></text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:style-name="ce95"/>
+     <table:table-cell table:style-name="ce98" office:value-type="string" calcext:value-type="string">
+      <text:p>Scales N°</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce100" table:number-columns-spanned="3" table:number-rows-spanned="1"/>
+     <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce102"/>
+     <table:table-cell table:style-name="ce98" office:value-type="string" calcext:value-type="string"><text:p>OP <text:span text:style-name="T1">*3</text:span></text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce74"/>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:style-name="ce70" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1"><text:p>Storage of extract <text:span text:style-name="T1">*1</text:span></text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:style-name="ce79"/>
+     <table:table-cell table:style-name="ce70" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+      <text:p>Location:</text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:style-name="ce74"/>
+     <table:table-cell table:style-name="ce91" table:number-columns-spanned="4" table:number-rows-spanned="1"/>
+     <table:covered-table-cell table:style-name="ce73"/>
+     <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce74"/>
+     <table:table-cell table:style-name="ce98" office:value-type="string" calcext:value-type="string">
+      <text:p>T°:</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce74"/>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro5">
+     <table:table-cell table:style-name="ce70" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1"><text:p>Date of purification and / or cleaning  <text:span text:style-name="T1">*2</text:span></text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:style-name="ce78"/>
+     <table:table-cell table:style-name="ce90" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+      <text:p><text:s/>_____/_____/201___ <text:s text:c="2"/></text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:style-name="ce79"/>
+     <table:table-cell table:style-name="ce98" office:value-type="string" calcext:value-type="string">
+      <text:p>Factor or aliquot:</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce74"/>
+     <table:table-cell table:style-name="ce99" office:value-type="string" calcext:value-type="string">
+      <text:p>Final volume:</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce74"/>
+     <table:table-cell table:style-name="ce98" office:value-type="string" calcext:value-type="string"><text:p>OP <text:span text:style-name="T1">*3</text:span></text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce74"/>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:number-columns-repeated="1023"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:style-name="ce70" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1"><text:p>Storage of extract <text:span text:style-name="T1">*4</text:span></text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:style-name="ce74"/>
+     <table:table-cell table:style-name="ce91" table:number-columns-spanned="2" table:number-rows-spanned="1"/>
+     <table:covered-table-cell table:style-name="ce74"/>
+     <table:table-cell table:style-name="ce98" office:value-type="string" calcext:value-type="string">
+      <text:p>Location:</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce74"/>
+     <table:table-cell table:style-name="ce98" office:value-type="string" calcext:value-type="string">
+      <text:p>T°:</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce74"/>
+     <table:table-cell table:style-name="ce98" office:value-type="string" calcext:value-type="string"><text:p>OP. <text:span text:style-name="T1">*5</text:span></text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce74"/>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro6">
+     <table:table-cell table:style-name="ce70" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+      <text:p>Injection date:</text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:style-name="ce78"/>
+     <table:table-cell table:style-name="ce90" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+      <text:p><text:s/>_____/_____/201___ <text:s text:c="2"/></text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:style-name="ce96"/>
+     <table:table-cell table:style-name="ce99" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+      <text:p>Equipment (corresponding batch number):</text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:style-name="ce74"/>
+     <table:table-cell table:style-name="ce103" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+      <text:p>LC-MS-MS N°: <text:s text:c="21"/></text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:style-name="ce74"/>
+     <table:table-cell table:style-name="ce103" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+      <text:p>GC-MS-MS N°:</text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:style-name="ce103"/>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:style-name="ce70" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+      <text:p>Chromatographic column:</text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:style-name="ce74"/>
+     <table:table-cell table:style-name="ce92" table:number-columns-spanned="8" table:number-rows-spanned="1"/>
+     <table:covered-table-cell table:number-columns-repeated="5" table:style-name="ce74"/>
+     <table:covered-table-cell table:number-columns-repeated="2"/>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:number-columns-repeated="1023"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:style-name="ce71" office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T1">*2</text:span>: (See weight records on back). If sampling and / or purification are not carried out on the same day of weighing, indicate storage place at * 1.</text:p>
+     </table:table-cell>
+     <table:table-cell table:number-columns-repeated="1022"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:style-name="ce71" office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T1">*3</text:span>: Place the initials of the operator, if more than one, indicate the initials separated by /.</text:p>
+     </table:table-cell>
+     <table:table-cell table:number-columns-repeated="1022"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:style-name="ce71" office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T1">*4</text:span>: Indicate place of storage if the date of injection differs from the date of purification and / or cleaning.</text:p>
+     </table:table-cell>
+     <table:table-cell table:number-columns-repeated="1022"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:style-name="ce71" office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T1">*5</text:span>: Initials operator that performs sequence and injection arming.</text:p>
+     </table:table-cell>
+     <table:table-cell table:number-columns-repeated="1022"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3" table:number-rows-repeated="2">
+     <table:table-cell table:number-columns-repeated="1023"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:style-name="ce72" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="10" table:number-rows-spanned="1">
+      <text:p>Observations and / or comments</text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:style-name="ce74"/>
+     <table:covered-table-cell table:style-name="ce78"/>
+     <table:covered-table-cell table:number-columns-repeated="5" table:style-name="ce74"/>
+     <table:covered-table-cell table:number-columns-repeated="2"/>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:style-name="ce73" table:number-columns-spanned="10" table:number-rows-spanned="4"/>
+     <table:covered-table-cell table:style-name="ce74"/>
+     <table:covered-table-cell table:style-name="ce78"/>
+     <table:covered-table-cell table:number-columns-repeated="5" table:style-name="ce74"/>
+     <table:covered-table-cell table:number-columns-repeated="2"/>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce74"/>
+     <table:covered-table-cell table:style-name="ce78"/>
+     <table:covered-table-cell table:number-columns-repeated="5" table:style-name="ce74"/>
+     <table:covered-table-cell table:number-columns-repeated="2"/>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce74"/>
+     <table:covered-table-cell table:style-name="ce78"/>
+     <table:covered-table-cell table:number-columns-repeated="5" table:style-name="ce74"/>
+     <table:covered-table-cell table:number-columns-repeated="2"/>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce74"/>
+     <table:covered-table-cell table:style-name="ce78"/>
+     <table:covered-table-cell table:number-columns-repeated="5" table:style-name="ce74"/>
+     <table:covered-table-cell table:number-columns-repeated="2"/>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:number-columns-repeated="1023"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro7">
+     <table:table-cell table:number-columns-repeated="9"/>
+     <table:table-cell table:style-name="ce105" office:value-type="string" calcext:value-type="string">
+      <text:p>BPL 007 – Annex 3</text:p>
+     </table:table-cell>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:number-columns-repeated="9"/>
+     <table:table-cell table:style-name="ce105"/>
+     <table:table-cell table:number-columns-repeated="1013"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro3">
+     <table:table-cell table:number-columns-repeated="1023"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro8">
+     <table:table-cell table:style-name="ce75" office:value-type="string" calcext:value-type="string">
+      <text:p>CIATI code</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce80" office:value-type="string" calcext:value-type="string">
+      <text:p>Label (described by customer)</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce75" office:value-type="string" calcext:value-type="string"><text:p>Type <text:span text:style-name="T1">1</text:span></text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce75" office:value-type="string" calcext:value-type="string">
+      <text:p>Sample Weight (g)</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce75" office:value-type="string" calcext:value-type="string">
+      <text:p>Fortification (mg/kg)</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce80" office:value-type="string" calcext:value-type="string">
+      <text:p>Volume of added std (ml)</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce80" office:value-type="string" calcext:value-type="string">
+      <text:p>Date preparation std</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce75" office:value-type="string" calcext:value-type="string">
+      <text:p>Std added</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce75" office:value-type="string" calcext:value-type="string">
+      <text:p>Dilution Factor</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce75" office:value-type="string" calcext:value-type="string"><text:p>Dilution date <text:span text:style-name="T1">2</text:span></text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce75" office:value-type="string" calcext:value-type="string"><text:p>OP <text:span text:style-name="T1">*3</text:span></text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce105" table:number-columns-repeated="1012"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro1">
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://for%20each=%22object%20in%20objects%22" xlink:type="simple">for each=&quot;object in objects&quot;</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell table:number-columns-repeated="1022"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro9">
+     <table:table-cell table:style-name="ce76" office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T3"><text:a xlink:href="relatorio://object.number" xlink:type="simple">object.number</text:a></text:span></text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce81" office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://object.label" xlink:type="simple">object.label</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce81" office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://object.fraction_type" xlink:type="simple">object.fraction_type</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce74" table:number-columns-repeated="2"/>
+     <table:table-cell table:style-name="ce101"/>
+     <table:table-cell table:style-name="ce104"/>
+     <table:table-cell table:style-name="ce101"/>
+     <table:table-cell table:style-name="ce74" table:number-columns-repeated="3"/>
+     <table:table-cell table:number-columns-repeated="1012"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro1">
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio:///for" xlink:type="simple">/for</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell table:number-columns-repeated="1022"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro1" table:number-rows-repeated="2">
+     <table:table-cell table:number-columns-repeated="1023"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro10">
+     <table:table-cell table:style-name="ce77" office:value-type="string" calcext:value-type="string">
+      <text:p>1: RM: method recovery - BZM: blank sample - MCL: client sample - LC: limit of quantification - LD limit of detection - Vol: volume - STD: standard – 2: Indicate dilution date</text:p>
+     </table:table-cell>
+     <table:table-cell table:number-columns-repeated="1022"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro10">
+     <table:table-cell table:style-name="ce77" office:value-type="string" calcext:value-type="string">
+      <text:p>3: initials operator performing sample dilution</text:p>
+     </table:table-cell>
+     <table:table-cell table:number-columns-repeated="1022"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro1" table:number-rows-repeated="4">
+     <table:table-cell table:number-columns-repeated="1023"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro2">
+     <table:table-cell/>
+     <table:table-cell table:style-name="ce82" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+      <text:p><text:s text:c="2"/>Date/Sign: _____/_____/201___ <text:s text:c="6"/></text:p>
+     </table:table-cell>
+     <table:covered-table-cell/>
+     <table:table-cell table:number-columns-repeated="3"/>
+     <table:table-cell table:style-name="ce83" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="3" table:number-rows-spanned="1">
+      <text:p><text:s text:c="3"/>Date/Sign: _____/_____/201___ <text:s text:c="6"/></text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:number-columns-repeated="2"/>
+     <table:table-cell table:number-columns-repeated="1014"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro2">
+     <table:table-cell/>
+     <table:table-cell table:style-name="ce83" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="3" table:number-rows-spanned="1">
+      <text:p><text:s/>(DE/IP, Strike out what does not apply) <text:s/></text:p>
+     </table:table-cell>
+     <table:covered-table-cell table:number-columns-repeated="2"/>
+     <table:table-cell table:number-columns-repeated="2"/>
+     <table:table-cell table:style-name="ce71" office:value-type="string" calcext:value-type="string">
+      <text:p><text:s/>(Operator) <text:s/></text:p>
+     </table:table-cell>
+     <table:table-cell table:number-columns-repeated="1016"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro1" table:number-rows-repeated="1048530">
+     <table:table-cell table:number-columns-repeated="1023"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro1">
+     <table:table-cell table:number-columns-repeated="1023"/>
+    </table:table-row>
+   </table:table>
+   <table:table table:name="Hoja2" table:style-name="ta1">
+    <table:table-column table:style-name="co11" table:default-cell-style-name="Default"/>
+    <table:table-row table:style-name="ro1">
+     <table:table-cell/>
+    </table:table-row>
+   </table:table>
+   <table:table table:name="Hoja3" table:style-name="ta1">
+    <table:table-column table:style-name="co11" table:default-cell-style-name="Default"/>
+    <table:table-row table:style-name="ro1">
+     <table:table-cell/>
+    </table:table-row>
+   </table:table>
+   <table:named-expressions/>
+  </office:spreadsheet>
+ </office:body>
+</office:document>

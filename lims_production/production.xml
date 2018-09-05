@@ -130,7 +130,7 @@
         <record model="ir.action.report" id="report_family_equivalent">
             <field name="name">Family/Equivalents</field>
             <field name="report_name">lims.family.equivalent.report</field>
-            <field name="report">lims_production/report/family_equivalent.odt</field>
+            <field name="report">lims_production/report/family_equivalent.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_family_equivalent_keyword">

@@ -194,7 +194,7 @@
             <field name="name">GLP 01. GLP-005- Annex 3 Temporary input and output of samples to the file</field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.01</field>
-            <field name="report">lims_project_study_plan/report/glp_01.odt</field>
+            <field name="report">lims_project_study_plan/report/glp_01.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_01_keyword">
@@ -210,7 +210,7 @@
             <field name="name">GLP 02. GLP-005- Annex 4 Definitive input and output of samples to analyze</field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.02</field>
-            <field name="report">lims_project_study_plan/report/glp_02.odt</field>
+            <field name="report">lims_project_study_plan/report/glp_02.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_02_keyword">
@@ -235,7 +235,7 @@
             <field name="name">GLP 03. GLP-005- Annex 5 Storage of samples</field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.03</field>
-            <field name="report">lims_project_study_plan/report/glp_03.odt</field>
+            <field name="report">lims_project_study_plan/report/glp_03.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_03_keyword">
@@ -250,7 +250,7 @@
             <field name="name">GLP 04. GLP-005- Annex 6 Movements of countersamples</field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.04</field>
-            <field name="report">lims_project_study_plan/report/glp_04.odt</field>
+            <field name="report">lims_project_study_plan/report/glp_04.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_04_keyword">
@@ -275,7 +275,7 @@
             <field name="name">GLP 05. GLP-005- Annex 7 Discharge of samples</field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.05</field>
-            <field name="report">lims_project_study_plan/report/glp_05.odt</field>
+            <field name="report">lims_project_study_plan/report/glp_05.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_05_keyword">
@@ -290,7 +290,7 @@
             <field name="name">GLP 06. GLP-001- Annex 3 Deviations and amendments of Study plan</field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.06</field>
-            <field name="report">lims_project_study_plan/report/glp_06.odt</field>
+            <field name="report">lims_project_study_plan/report/glp_06.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_06_keyword">
@@ -305,7 +305,7 @@
             <field name="name">GLP 07. Table 1- Study plan</field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.07</field>
-            <field name="report">lims_project_study_plan/report/glp_07.odt</field>
+            <field name="report">lims_project_study_plan/report/glp_07.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_07_keyword">
@@ -320,7 +320,7 @@
             <field name="name">GLP 08. Table 2- Test elements for Final report (RP)</field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.08</field>
-            <field name="report">lims_project_study_plan/report/glp_08.odt</field>
+            <field name="report">lims_project_study_plan/report/glp_08.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_08_keyword">
@@ -335,7 +335,7 @@
             <field name="name">GLP 09. Table 3- Result of Final report</field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.09</field>
-            <field name="report">lims_project_study_plan/report/glp_09.odt</field>
+            <field name="report">lims_project_study_plan/report/glp_09.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_09_keyword">
@@ -360,7 +360,7 @@
             <field name="name">GLP 10. Rector scheme</field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.10</field>
-            <field name="report">lims_project_study_plan/report/glp_10.odt</field>
+            <field name="report">lims_project_study_plan/report/glp_10.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_10_keyword">
@@ -375,7 +375,7 @@
             <field name="name">GLP 11. Reference/Test elements (FOR)</field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.11</field>
-            <field name="report">lims_project_study_plan/report/glp_11.odt</field>
+            <field name="report">lims_project_study_plan/report/glp_11.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_11_keyword">
@@ -400,7 +400,7 @@
             <field name="name">GLP 12. Changelog</field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.12</field>
-            <field name="report">lims_project_study_plan/report/glp_12.odt</field>
+            <field name="report">lims_project_study_plan/report/glp_12.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_12_keyword">
@@ -418,7 +418,7 @@
             <field name="name">GLP Study plan</field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.study_plan</field>
-            <field name="report">lims_project_study_plan/report/glp_study_plan.odt</field>
+            <field name="report">lims_project_study_plan/report/glp_study_plan.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_study_plan_keyword">
@@ -433,7 +433,7 @@
             <field name="name">GLP Final Report (RP)</field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.final_rp</field>
-            <field name="report">lims_project_study_plan/report/glp_final_report_rp.odt</field>
+            <field name="report">lims_project_study_plan/report/glp_final_report_rp.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_final_rp_keyword">
@@ -448,7 +448,7 @@
             <field name="name">GLP Final Report (FOR)</field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.final_for</field>
-            <field name="report">lims_project_study_plan/report/glp_final_report_for.odt</field>
+            <field name="report">lims_project_study_plan/report/glp_final_report_for.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_final_for_keyword">
@@ -463,7 +463,7 @@
             <field name="name">GLP Analytical Phase Report </field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.analytical_phase</field>
-            <field name="report">lims_project_study_plan/report/glp_analytical_phase_report.odt</field>
+            <field name="report">lims_project_study_plan/report/glp_analytical_phase_report.fodt</field>
             <field name="extension">pdf</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_analytical_phase_keyword">
@@ -479,7 +479,7 @@
             <field name="name">GLP 13. GLP-007- Annex 3 Sample preparation registration GLP</field>
             <field name="model">lims.project</field>
             <field name="report_name">lims.project.glp_report.13</field>
-            <field name="report">lims_project_study_plan/report/glp_13.ods</field>
+            <field name="report">lims_project_study_plan/report/glp_13.fods</field>
             <field name="extension">xls</field>
         </record>
         <record model="ir.action.keyword" id="report_glp_13_keyword">
