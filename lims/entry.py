@@ -394,27 +394,12 @@ class Entry(Workflow, ModelSQL, ModelView):
 
         new_entries = []
         for entry in entries:
-            invoice_contacts = [{
-                'contact': c.contact.id,
-                } for c in entry.invoice_contacts]
-            report_contacts = [{
-                'contact': c.contact.id,
-                } for c in entry.report_contacts]
-            acknowledgment_contacts = [{
-                'contact': c.contact.id,
-                } for c in entry.acknowledgment_contacts]
             current_default = default.copy()
             current_default['state'] = 'draft'
             current_default['ack_report_cache'] = None
             current_default['ack_report_format'] = None
             current_default['sent_date'] = None
             current_default['result_cron'] = ''
-            current_default['invoice_contacts'] = [('create',
-                invoice_contacts)]
-            current_default['report_contacts'] = [('create',
-                report_contacts)]
-            current_default['acknowledgment_contacts'] = [('create',
-                acknowledgment_contacts)]
 
             new_entry, = super(Entry, cls).copy([entry],
                 default=current_default)
