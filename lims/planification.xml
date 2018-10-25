@@ -395,7 +395,7 @@
         <record model="ir.action.report" id="report_pending_services_unplanned_spreadsheet">
             <field name="name">Pending Services Unplanned</field>
             <field name="report_name">lims.pending_services_unplanned.spreadsheet</field>
-            <field name="report">lims/report/pending_services_unplanned_spreadsheet.ods</field>
+            <field name="report">lims/report/pending_services_unplanned_spreadsheet.fods</field>
             <field name="extension">xls</field>
         </record>
         <record model="ir.action.keyword" id="report_pending_services_unplanned_keyword">
