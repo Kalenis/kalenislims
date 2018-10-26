@@ -375,6 +375,29 @@ class CreditInvoice:
         pool = Pool()
         AccountInvoice = pool.get('account.invoice')
         AccountInvoiceLine = pool.get('account.invoice.line')
+        Sale = pool.get('sale.sale')
+        SaleLine = pool.get('sale.line')
+
+        invoices = AccountInvoice.browse(Transaction().context['active_ids'])
+        if self.start.with_refund:
+            for invoice in invoices:
+                if invoice.type == 'out':
+                    for line in invoice.lines:
+                        if line.type == 'line':
+                            new_lines = AccountInvoiceLine.copy([line],
+                                default={
+                                    'invoice': None,
+                                    'invoice_type': invoice.type,
+                                    'party': invoice.party,
+                                    'origin':
+                                        str(line.origin)
+                                        if line.origin else None,
+                                    })
+                            if isinstance(line.origin, SaleLine):
+                                sale_line = SaleLine(line.origin.id)
+                                Sale.write([sale_line.sale], {
+                                    'invoice_lines': [('add', new_lines)],
+                                    })
 
         action, data = super(CreditInvoice, self).do_credit(action)
 
