@@ -18,7 +18,7 @@
             <field name="sequence_type" ref="seq_type_entry"/>
             <field name="group" ref="res.group_admin"/>
         </record>
-        <record model="ir.sequence.strict" id="seq_entry">
+        <record model="ir.sequence" id="seq_entry">
             <field name="name">Entry</field>
             <field name="code">lims.entry</field>
             <field eval="7" name="padding"/>
