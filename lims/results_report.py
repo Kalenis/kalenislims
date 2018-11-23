@@ -287,12 +287,14 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         ('result', 'Result'),
         ('both', 'Both'),
         ('result_range', 'Result and Ranges'),
+        ('both_range', 'Both and Ranges'),
         ], 'Forced Result type', sort=False, depends=['state'],
         states={'readonly': Eval('state') != 'draft'})
     report_result_type = fields.Function(fields.Selection([
         ('result', 'Result'),
         ('both', 'Both'),
         ('result_range', 'Result and Ranges'),
+        ('both_range', 'Both and Ranges'),
         ], 'Result type', sort=False), 'on_change_with_report_result_type')
     english_report = fields.Function(fields.Boolean('English report'),
         'get_report_field', searcher='search_report_field')
@@ -342,8 +344,10 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     resultrange_origin = fields.Many2One('lims.range.type', 'Origin',
         domain=[('use', '=', 'result_range')],
         depends=['report_result_type', 'state'], states={
-            'invisible': Eval('report_result_type') != 'result_range',
-            'required': Eval('report_result_type') == 'result_range',
+            'invisible': Not(Eval('report_result_type').in_([
+                'result_range', 'both_range'])),
+            'required': Eval('report_result_type').in_([
+                'result_range', 'both_range']),
             'readonly': Eval('state') != 'draft',
             })
     fraction_comments = fields.Function(fields.Text('Fraction comments'),
@@ -532,7 +536,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         pool = Pool()
         RangeType = pool.get('lims.range.type')
 
-        if (self.report_result_type_forced == 'result_range' and
+        if ((self.report_result_type_forced == 'result_range' or
+                self.report_result_type_forced == 'both_range') and
                 not self.resultrange_origin):
             ranges = RangeType.search([
                 ('use', '=', 'result_range'),
@@ -2275,7 +2280,7 @@ class ResultReport(Report):
         report_context['report_type'] = report.report_type
         report_context['report_result_type'] = report.report_result_type
         group_field = ('final_concentration' if
-            report.report_result_type == 'both' else
+            report.report_result_type in ('both', 'both_range') else
             'initial_concentration')
 
         report_context['signer'] = ''
@@ -2304,7 +2309,7 @@ class ResultReport(Report):
         obs_uncert = False
         obs_result_range = False
         report_context['range_title'] = ''
-        if report.report_result_type == 'result_range':
+        if report.report_result_type in ('result_range', 'both_range'):
             obs_result_range = True
             with Transaction().set_context(language=lang_code):
                 range_type = RangeType(report.resultrange_origin.id)
@@ -2435,7 +2440,8 @@ class ResultReport(Report):
                     t_line, lang_code, report_context['report_section']))
             if (t_line.rm_correction_formula and (record['result'] or
                     (record['converted_result'] and
-                    report_context['report_result_type'] == 'both'))):
+                    report_context['report_result_type'] in (
+                        'both', 'both_range')))):
                 obs_rm_c_f = True
                 record['corrected'] = ''
             else:
@@ -2582,7 +2588,8 @@ class ResultReport(Report):
                         conc_is_numeric = False
                     hide_concentration_label = (
                         report_context['report_section'] in ('amb', 'sq') and
-                        report_context['report_result_type'] == 'both')
+                        report_context['report_result_type'] in (
+                            'both', 'both_range'))
                     if conc and conc != '-' and not hide_concentration_label:
                         if conc == 'Muestra Recibida':
                             fraction['concentrations'][conc]['label'] = (
@@ -2830,7 +2837,7 @@ class ResultReport(Report):
         ResultsReport = pool.get('lims.results_report.version.detail')
 
         if (report_section in ('for', 'mi', 'rp') or
-                report_result_type != 'both'):
+                report_result_type not in ('both', 'both_range')):
             return '', obs_ql
 
         literal_result = notebook_line.literal_result
@@ -2935,7 +2942,7 @@ class ResultReport(Report):
         ResultsReport = pool.get('lims.results_report.version.detail')
 
         if (report_section in ('for', 'mi', 'rp') or
-                report_result_type != 'both'):
+                report_result_type not in ('both', 'both_range')):
             return '', obs_dl, obs_uncert
         if not notebook_line.final_unit:
             return '', obs_dl, obs_uncert

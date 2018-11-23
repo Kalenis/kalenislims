@@ -16398,3 +16398,12 @@ msgstr "(LD = %s)"
 msgctxt "field:lims.change_results_estimated_waiting.start,party:"
 msgid "Party"
 msgstr "Entidad"
+
+msgctxt "selection:lims.results_report.version.detail,report_result_type:"
+msgid "Both and Ranges"
+msgstr "Ambos y Rangos"
+
+msgctxt ""
+"selection:lims.results_report.version.detail,report_result_type_forced:"
+msgid "Both and Ranges"
+msgstr "Ambos y Rangos"
