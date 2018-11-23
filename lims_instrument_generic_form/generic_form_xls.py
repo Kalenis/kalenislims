@@ -101,8 +101,18 @@ def parse(self, infile):
                 device = str(int(row[COL['C']].value))
             elif row[COL['C']].ctype == xlrd.XL_CELL_TEXT:
                 device = row[COL['C']].value
-            rm_correction_formula = row[COL['L']].value if (
-                row[COL['L']].ctype == xlrd.XL_CELL_TEXT) else None
+            inj_date_raw = row[COL['L']].value
+            if row[COL['L']].ctype == xlrd.XL_CELL_TEXT:
+                try:
+                    it = inj_date_raw.split('/')
+                    inj_date = date(int(it[2]), int(it[1]), int(it[0]))
+                except:
+                    inj_date = None
+            elif row[COL['L']].ctype == xlrd.XL_CELL_DATE:
+                it = xlrd.xldate_as_tuple(inj_date_raw, workbook.datemode)
+                inj_date = date(it[0], it[1], it[2])
+            else:
+                inj_date = None
 
             if result is not None:
                 values['result'] = result
@@ -111,14 +121,14 @@ def parse(self, infile):
                     worksheet.number, curr_row, STATUS_COLUMN]
             if end_date:
                 values['end_date'] = end_date
+            if inj_date:
+                values['injection_date'] = inj_date
             if professionals:
                 values['professionals'] = professionals
             if chromatogram:
                 values['chromatogram'] = chromatogram
             if device:
                 values['device'] = device
-            if rm_correction_formula:
-                values['rm_correction_formula'] = rm_correction_formula
             values['row_number'] = curr_row + 1
 
             if fraction in self.rawresults:

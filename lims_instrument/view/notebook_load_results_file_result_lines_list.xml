@@ -12,4 +12,5 @@
     <field name="imported_chromatogram"/>
     <field name="imported_rm_correction_formula"/>
     <field name="imported_literal_result"/>
+    <field name="imported_inj_date"/>
 </tree>

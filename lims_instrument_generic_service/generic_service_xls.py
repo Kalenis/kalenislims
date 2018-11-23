@@ -51,6 +51,21 @@ def parse(self, infile):
         chromatogram = row2nd[COL['G']].value if (
             row2nd[COL['G']].ctype == xlrd.XL_CELL_TEXT) else None
 
+        # 3rd row: injection date 
+        row3nd = worksheet.row(2)
+        inj_date_raw = row3nd[COL['E']].value
+        if row3nd[COL['E']].ctype == xlrd.XL_CELL_TEXT:
+            try:
+                it = inj_date_raw.split('/')
+                inj_date = date(int(it[2]), int(it[1]), int(it[0]))
+            except:
+                inj_date = None
+        elif row3nd[COL['E']].ctype == xlrd.XL_CELL_DATE:
+            it = xlrd.xldate_as_tuple(inj_date_raw, workbook.datemode)
+            inj_date = date(it[0], it[1], it[2])
+        else:
+            inj_date = None
+
         # 4th row: sample, year, fraction, repetition,
         #          professional and dilution factor
         row4th = worksheet.row(3)
@@ -125,6 +140,8 @@ def parse(self, infile):
                 values['device'] = device
             if end_date:
                 values['end_date'] = end_date
+            if inj_date:
+                values['injection_date'] = inj_date
             if professionals:
                 values['professionals'] = professionals
             if chromatogram:

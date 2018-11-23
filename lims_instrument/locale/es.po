@@ -253,3 +253,7 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.notebook.load_results_file,warning,close:"
 msgid "Ok"
 msgstr "Aceptar"
+
+msgctxt "field:lims.notebook.line,imported_inj_date:"
+msgid "Injection date"
+msgstr "Fecha de Inyección"
