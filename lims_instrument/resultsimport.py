@@ -35,6 +35,7 @@ class NotebookLine:
     imported_device = fields.Many2One('lims.lab.device', 'Device')
     imported_dilution_factor = fields.Float('Dilution factor')
     imported_rm_correction_formula = fields.Char('RM Correction Formula')
+    imported_inj_date = fields.Date('Inject date')
 
 
 class ResultsImport(ModelSQL, ModelView):
@@ -267,6 +268,8 @@ class NotebookLoadResultsFile(Wizard):
                 res['imported_literal_result'] = data['literal_result']
             res['imported_end_date'] = (data['end_date'] if 'end_date' in data
                 else line.end_date)
+            res['imported_inj_date'] = (data['injection_date']
+                if 'injection_date' in data else None)
             if 'professionals' in data:
                 res['imported_professionals'] = data['professionals']
             if 'chromatogram' in data:
@@ -359,6 +362,7 @@ class NotebookLoadResultsFile(Wizard):
                 'imported_device': None,
                 'imported_dilution_factor': None,
                 'imported_rm_correction_formula': None,
+                'imported_inj_date': None,
                 }
 
             prevent_line = False
@@ -386,6 +390,18 @@ class NotebookLoadResultsFile(Wizard):
                         outcome = 'End date cannot be lower than Start date'
                 else:
                     notebook_line_write['end_date'] = None
+            if line.injection_date != line.imported_inj_date:
+                if line.imported_result != '-1000.0':
+                    if (line.start_date and
+                            line.start_date <= line.imported_inj_date):
+                        notebook_line_write['injection_date'] = (
+                            line.imported_inj_date)
+                    else:
+                        prevent_line = True
+                        outcome = \
+                            'Injection date cannot be lower than Start date'
+                else:
+                    notebook_line_write['injection_date'] = None
             if line.chromatogram != line.imported_chromatogram:
                 notebook_line_write['chromatogram'] = (
                     line.imported_chromatogram)
@@ -438,6 +454,7 @@ class NotebookLoadResultsFile(Wizard):
                         'device': line.device,
                         'dilution_factor': line.dilution_factor,
                         'rm_correction_formula': line.rm_correction_formula,
+                        'injection_date': line.injection_date,
                         }
                     NotebookLine.write(
                         [line], notebook_line_original_values)
@@ -482,6 +499,7 @@ class NotebookLoadResultsFile(Wizard):
             'imported_device': None,
             'imported_dilution_factor': None,
             'imported_rm_correction_formula': None,
+            'imported_inj_date': None,
             }
         NotebookLine.write(
             list(self.result.result_lines), notebook_line_clean)
