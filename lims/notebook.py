@@ -4622,6 +4622,7 @@ class ChangeEstimatedDaysForResultsStart(ModelView):
     methods = fields.Many2Many('lims.lab.method',
         None, None, 'Methods', required=True)
     results_estimated_waiting = fields.Integer('Days to add')
+    party = fields.Many2One('party.party', 'Party')
 
 
 class ChangeEstimatedDaysForResults(Wizard):
@@ -4639,12 +4640,17 @@ class ChangeEstimatedDaysForResults(Wizard):
         NotebookLine = Pool().get('lims.notebook.line')
 
         methods_ids = [m.id for m in self.start.methods]
-        notebook_lines = NotebookLine.search([
-            ('method', 'in', methods_ids),
-            ('analysis_detail.confirmation_date', '>=', self.start.date_from),
-            ('analysis_detail.confirmation_date', '<=', self.start.date_to),
-            ('accepted', '=', False),
-            ])
+        clause = [('method', 'in', methods_ids)]
+        clause.append(('analysis_detail.confirmation_date',
+            '>=', self.start.date_from))
+        clause.append(('analysis_detail.confirmation_date',
+            '<=', self.start.date_to))
+        clause.append(('accepted', '=', False))
+        party_id = self.start.party and self.start.party.id or None
+        if party_id:
+            clause.append(('party', '=', party_id))
+
+        notebook_lines = NotebookLine.search(clause)
         if notebook_lines:
             lines_to_save = []
             for line in notebook_lines:

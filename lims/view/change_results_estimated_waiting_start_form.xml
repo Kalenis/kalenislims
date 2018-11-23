@@ -7,5 +7,7 @@
     <field name="date_from"/>
     <label name="date_to"/>
     <field name="date_to"/>
+    <label name="party"/>
+    <field name="party" colspan="3"/>
     <field name="methods" colspan="4"/>
 </form>

@@ -16394,3 +16394,7 @@ msgstr ""
 msgctxt "error:lims.results_report.version.detail:"
 msgid "(LoD = %s)"
 msgstr "(LD = %s)"
+
+msgctxt "field:lims.change_results_estimated_waiting.start,party:"
+msgid "Party"
+msgstr "Entidad"
