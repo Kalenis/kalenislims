@@ -2261,10 +2261,10 @@ class CreateAnalysisProduct(Wizard):
             return 'end'
 
         config_ = Config(1)
-        uom, = Uom.search(['OR',
+        uom = Uom.search(['OR',
             ('symbol', '=', 'u'),
             ('symbol', '=', 'x 1 u'),
-            ])
+            ])[0]
 
         template = Template()
         template.name = analysis.description
