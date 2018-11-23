@@ -3681,6 +3681,7 @@ class NotebookAddInternalRelations(Wizard):
             'divide': divide,
             }]
         new_service, = Service.create(service_create)
+        Service.set_confirmation_date([new_service])
         analysis_detail = list(new_service.analysis_detail)
         if report_grouper != 0:
             EntryDetailAnalysis.write(analysis_detail, {
