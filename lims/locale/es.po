@@ -16390,3 +16390,7 @@ msgid ""
 msgstr ""
 "<div align=\"left\"><b><font face=\"normal\" size=\"7\"><i>Documentación "
 "de</i> Partidas</font></b></div>"
+
+msgctxt "error:lims.results_report.version.detail:"
+msgid "(LoD = %s)"
+msgstr "(LD = %s)"

@@ -384,6 +384,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
             'replace_number': u'Supplants the Results Report N° %s',
             'quantification_limit': '< LoQ = %s',
             'detection_limit': '(LoD = %s %s)',
+            'detection_limit_2': '(LoD = %s)',
             'uncertainty': u'(U± %s %s)',
             'obs_uncert': 'U = Uncertainty.',
             'neg': 'Negative',
@@ -2425,7 +2426,8 @@ class ResultReport(Report):
                 obs_uncert, language=lang_code)
             record['detection_limit'] = cls.get_detection_limit(
                 report_context['report_section'],
-                report_context['report_result_type'], t_line,
+                report_context['report_result_type'],
+                report_context['report_type'], t_line,
                 language=lang_code)
             record['reference'] = ''
             if obs_result_range:
@@ -2978,12 +2980,20 @@ class ResultReport(Report):
 
     @classmethod
     def get_detection_limit(cls, report_section, report_result_type,
-            notebook_line, language):
+            report_type, notebook_line, language):
+        ResultsReport = Pool().get('lims.results_report.version.detail')
+
         detection_limit = notebook_line.detection_limit
         literal_result = notebook_line.literal_result
+        result_modifier = notebook_line.result_modifier
 
         if report_section in ('amb', 'sq'):
-                res = ''
+            res = ''
+            if report_type == 'polisample' and result_modifier == 'nd':
+                with Transaction().set_context(language=language):
+                    res = ResultsReport.raise_user_error(
+                        'detection_limit_2', (detection_limit),
+                        raise_exception=False)
         else:
             if (not detection_limit or detection_limit in ('0', '0.0') or
                     literal_result):
