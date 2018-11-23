@@ -5779,6 +5779,10 @@ class PlanificationWorksheetMethodReport(Report):
                                 '', notebook_line.service.comments or '',
                                 notebook_line.service.fraction.comments or '')
 
+                        if fraction.packages_quantity != 0.0:
+                            pack_quant = str(fraction.packages_quantity)
+                        else:
+                            pack_quant = ''
                         record = {
                             'order': order,
                             'number': number,
@@ -5794,7 +5798,9 @@ class PlanificationWorksheetMethodReport(Report):
                             'urgent': 'SI' if notebook_line.urgent else '',
                             'comments': comments,
                             'planification_code': planification.code,
-                            'package_type': fraction.package_type.description,
+                            'package_type':
+                                pack_quant + ' ' +
+                                fraction.package_type.description,
                             'methods': {},
                             }
                         objects[date]['professionals'][p_key]['lines'][
@@ -5948,6 +5954,10 @@ class PlanificationWorksheetReport(Report):
                                 '', notebook_line.service.comments or '',
                                 notebook_line.service.fraction.comments or '')
 
+                        if fraction.packages_quantity != 0.0:
+                            pack_quant = str(fraction.packages_quantity)
+                        else:
+                            pack_quant = ''
                         record = {
                             'order': order,
                             'number': number,
@@ -5965,7 +5975,9 @@ class PlanificationWorksheetReport(Report):
                             'urgent': 'SI' if notebook_line.urgent else '',
                             'comments': comments,
                             'planification_code': planification.code,
-                            'package_type': fraction.package_type.description,
+                            'package_type':
+                                pack_quant + ' ' +
+                                fraction.package_type.description,
                             'methods': {},
                             }
                         objects[date]['professionals'][p_key]['analysis'][key][
