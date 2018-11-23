@@ -2,11 +2,8 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-try:
-    import cStringIO as StringIO
-except ImportError:
-    import StringIO
 import logging
+from io import StringIO
 from datetime import datetime
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
@@ -2003,13 +2000,13 @@ class PrintResultsReport(Wizard):
         merger = PdfFileMerger()
         if english_report:
             for detail in details:
-                filedata = StringIO.StringIO(detail.report_cache_eng)
+                filedata = StringIO(detail.report_cache_eng)
                 merger.append(filedata)
         else:
             for detail in details:
-                filedata = StringIO.StringIO(detail.report_cache)
+                filedata = StringIO(detail.report_cache)
                 merger.append(filedata)
-        output = StringIO.StringIO()
+        output = StringIO()
         merger.write(output)
         return bytearray(output.getvalue())
 
@@ -2292,8 +2289,7 @@ class ResultReport(Report):
             report_context['signer'] = report.signer.rec_name
             report_context['signer_role'] = report.signer.role
             if report.signer.signature:
-                report_context['signature'] = StringIO.StringIO(str(
-                    report.signer.signature))
+                report_context['signature'] = report.signer.signature
 
         enac = False
         enac_all_acredited = True
