@@ -4672,6 +4672,8 @@ class PrintAnalysisPendingInformStart(ModelView):
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         required=True)
     party = fields.Many2One('party.party', 'Party')
+    include_comments_of_fraction = fields.Boolean(
+        'Include comments of the fraction')
 
 
 class PrintAnalysisPendingInform(Wizard):
@@ -4691,6 +4693,8 @@ class PrintAnalysisPendingInform(Wizard):
             'date_to': self.start.date_to,
             'laboratory': self.start.laboratory.id,
             'party': self.start.party and self.start.party.id or None,
+            'include_comments_of_fraction': (
+                self.start.include_comments_of_fraction),
             }
         return action, data
 
@@ -4718,6 +4722,8 @@ class AnalysisPendingInform(Report):
         report_context['party'] = ''
         if data['party']:
             report_context['party'] = Party(data['party']).rec_name
+        report_context['include_comments_of_fraction'] = \
+            data['include_comments_of_fraction']
 
         objects = cls._get_report_records(data['date_from'], data['date_to'],
             data['laboratory'], data['party'])

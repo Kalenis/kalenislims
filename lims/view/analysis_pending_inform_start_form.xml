@@ -8,4 +8,6 @@
     <field name="laboratory"/>
     <label name="party"/>
     <field name="party"/>
+    <label name="include_comments_of_fraction"/>
+    <field name="include_comments_of_fraction"/>
 </form>
