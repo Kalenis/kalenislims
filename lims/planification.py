@@ -13,6 +13,7 @@ from trytond.report import Report
 from trytond.pool import Pool
 from trytond.transaction import Transaction
 from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or
+from .results_report import get_print_date
 
 __all__ = ['Planification', 'PlanificationTechnician',
     'PlanificationTechnicianDetail', 'PlanificationDetail',
@@ -6415,7 +6416,8 @@ class PendingServicesUnplannedSpreadsheet(Report):
                     relativedelta(days=c_days))
             notice = None
             report_date = service.report_date
-            today = datetime.today().date()
+            today_datetime = get_print_date()
+            today = today_datetime.date()
 
             if report_date:
                 if report_date < today:
