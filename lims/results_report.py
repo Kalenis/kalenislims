@@ -1679,6 +1679,9 @@ class GenerateResultsReport(Wizard):
                                 valid_detail[0].report_result_type_forced)
                             if valid_detail[0].signer:
                                 details['signer'] = valid_detail[0].signer.id
+                            if valid_detail[0].resultrange_origin:
+                                details['resultrange_origin'] = (
+                                    valid_detail[0].resultrange_origin.id)
                             details['comments'] = unicode(
                                 valid_detail[0].comments or '')
                         detail, = ResultsReportVersionDetail.create([
@@ -1729,6 +1732,9 @@ class GenerateResultsReport(Wizard):
                                 valid_detail[0].report_result_type_forced)
                             if valid_detail[0].signer:
                                 details['signer'] = valid_detail[0].signer.id
+                            if valid_detail[0].resultrange_origin:
+                                details['resultrange_origin'] = (
+                                    valid_detail[0].resultrange_origin.id)
                             details['comments'] = unicode(
                                 valid_detail[0].comments or '')
                         detail, = ResultsReportVersionDetail.create([
@@ -1928,6 +1934,9 @@ class GenerateResultsReport(Wizard):
                         valid_detail[0].report_result_type_forced)
                     if valid_detail[0].signer:
                         details['signer'] = valid_detail[0].signer.id
+                    if valid_detail[0].resultrange_origin:
+                        details['resultrange_origin'] = (
+                            valid_detail[0].resultrange_origin.id)
                     details['comments'] = unicode(
                         valid_detail[0].comments or '')
                 detail, = ResultsReportVersionDetail.create([details])
