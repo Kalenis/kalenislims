@@ -16407,3 +16407,27 @@ msgctxt ""
 "selection:lims.results_report.version.detail,report_result_type_forced:"
 msgid "Both and Ranges"
 msgstr "Ambos y Rangos"
+
+msgctxt "report:lims.analysis_pending_inform:"
+msgid "Web Visible Time"
+msgstr "Tiempo visible en Web"
+
+msgctxt "report:lims.analysis_checked_pending_inform:"
+msgid "Web Visible Time"
+msgstr "Tiempo visible en Web"
+
+msgctxt "report:lims.analysis_pending_inform:"
+msgid "Yes"
+msgstr "SI"
+
+msgctxt "report:lims.analysis_checked_pending_inform:"
+msgid "Yes"
+msgstr "SI"
+
+msgctxt "field:lims.print_analysis_pending_inform.start,include_comments_of_fraction:"
+msgid "Include comments of the fraction"
+msgstr "Incluir observaciones de la fracción"
+
+msgctxt "report:lims.analysis_pending_inform:"
+msgid "Comments of the Fraction"
+msgstr "Observaciones de la fracción"
