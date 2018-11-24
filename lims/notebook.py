@@ -14,6 +14,7 @@ from trytond.pyson import PYSONEncoder, Eval, Bool, Not, Or
 from trytond.transaction import Transaction
 from trytond.report import Report
 from .formula_parser import FormulaParser
+from .results_report import get_print_date
 
 __all__ = ['Notebook', 'NotebookLine', 'NotebookLineAllFields',
     'NotebookLineLaboratoryProfessional',
@@ -4720,6 +4721,8 @@ class AnalysisPendingInform(Report):
         report_context['date_to'] = data['date_to']
         report_context['laboratory'] = Laboratory(data['laboratory']).rec_name
         report_context['party'] = ''
+        today_datetime = get_print_date()
+        report_context['print_date'] = today_datetime.date()
         if data['party']:
             report_context['party'] = Party(data['party']).rec_name
         report_context['include_comments_of_fraction'] = \
