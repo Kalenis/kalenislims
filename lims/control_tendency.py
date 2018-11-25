@@ -872,10 +872,10 @@ class TendenciesAnalysisStart(ModelView):
     @staticmethod
     def default_product_type_domain():
         cursor = Transaction().connection.cursor()
-        LimsTypification = Pool().get('lims.typification')
+        Typification = Pool().get('lims.typification')
 
         cursor.execute('SELECT DISTINCT(product_type) '
-            'FROM "' + LimsTypification._table + '" '
+            'FROM "' + Typification._table + '" '
             'WHERE valid')
         return [x[0] for x in cursor.fetchall()]
 

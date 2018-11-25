@@ -285,10 +285,10 @@ class Project:
 
     @ModelView.button_change('stp_test_system')
     def get_stp_test_system(self, name=None):
-        LimsNotebookLine = Pool().get('lims.notebook.line')
+        NotebookLine = Pool().get('lims.notebook.line')
 
         stp_test_system = None
-        notebook_lines = LimsNotebookLine.search([
+        notebook_lines = NotebookLine.search([
             ('notebook.fraction.sample.entry.project', '=', self.id),
             ('device', '!=', None),
             ], order=[('device', 'ASC')])
@@ -2082,24 +2082,24 @@ class ProjectGLPReportFinalRP(Report):
     def get_experimental_start_date(project_id):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        LimsPlanification = pool.get('lims.planification')
-        LimsNotebookLine = pool.get('lims.notebook.line')
-        LimsService = pool.get('lims.service')
-        LimsFraction = pool.get('lims.fraction')
-        LimsSample = pool.get('lims.sample')
-        LimsEntry = pool.get('lims.entry')
+        Planification = pool.get('lims.planification')
+        NotebookLine = pool.get('lims.notebook.line')
+        Service = pool.get('lims.service')
+        Fraction = pool.get('lims.fraction')
+        Sample = pool.get('lims.sample')
+        Entry = pool.get('lims.entry')
 
         cursor.execute('SELECT MIN(p.start_date) '
-            'FROM "' + LimsPlanification._table + '" p '
-                'INNER JOIN "' + LimsNotebookLine._table + '" nl '
+            'FROM "' + Planification._table + '" p '
+                'INNER JOIN "' + NotebookLine._table + '" nl '
                 'ON nl.planification = p.id '
-                'INNER JOIN "' + LimsService._table + '" srv '
+                'INNER JOIN "' + Service._table + '" srv '
                 'ON nl.service = srv.id '
-                'INNER JOIN "' + LimsFraction._table + '" f '
+                'INNER JOIN "' + Fraction._table + '" f '
                 'ON srv.fraction = f.id '
-                'INNER JOIN "' + LimsSample._table + '" s '
+                'INNER JOIN "' + Sample._table + '" s '
                 'ON f.sample = s.id '
-                'INNER JOIN "' + LimsEntry._table + '" e '
+                'INNER JOIN "' + Entry._table + '" e '
                 'ON s.entry = e.id '
             'WHERE e.project = %s '
                 'AND nl.results_report IS NOT NULL',
@@ -2599,7 +2599,7 @@ class ProjectGLPReportAnalyticalPhase(Report):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
-        ervice = pool.get('lims.service')
+        Service = pool.get('lims.service')
         Fraction = pool.get('lims.fraction')
         Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
