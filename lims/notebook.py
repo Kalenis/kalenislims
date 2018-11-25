@@ -435,6 +435,12 @@ class NotebookLine(ModelSQL, ModelView):
         return False
 
     @classmethod
+    def create(cls, vlist):
+        lines = super(NotebookLine, cls).create(vlist)
+        cls.update_detail_report(lines)
+        return lines
+
+    @classmethod
     def write(cls, *args):
         super(NotebookLine, cls).write(*args)
         actions = iter(args)
@@ -445,6 +451,8 @@ class NotebookLine(ModelSQL, ModelView):
                     })
             if 'accepted' in vals:
                 cls.update_detail_analysis(lines, vals['accepted'])
+            if 'report' in vals:
+                cls.update_detail_report(lines)
 
     @staticmethod
     def update_detail_analysis(lines, accepted):
@@ -476,6 +484,27 @@ class NotebookLine(ModelSQL, ModelView):
                 EntryDetailAnalysis.write(analysis_details, {
                     'state': 'unplanned',
                     })
+
+    @staticmethod
+    def update_detail_report(lines):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        to_save = []
+        details_ids = list(set(nl.analysis_detail.id for nl in lines))
+        analysis_details = EntryDetailAnalysis.browse(details_ids)
+        for d in analysis_details:
+            cursor.execute('SELECT report '
+                'FROM "' + NotebookLine._table + '" '
+                'WHERE analysis_detail = %s '
+                'ORDER BY id DESC LIMIT 1',
+                (d.id,))
+            value = cursor.fetchone()
+            d.report = value[0] if value else False
+            to_save.append(d)
+        EntryDetailAnalysis.save(to_save)
 
     @classmethod
     def validate(cls, notebook_lines):

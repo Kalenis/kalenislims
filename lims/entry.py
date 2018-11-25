@@ -780,8 +780,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     report_grouper = fields.Integer('Report Grouper')
     results_report = fields.Function(fields.Many2One('lims.results_report',
         'Results Report'), 'get_results_report')
-    report = fields.Function(fields.Boolean('Report'), 'get_report',
-        searcher='search_report')
+    report = fields.Boolean('Report', states={'readonly': True})
     state = fields.Selection([
         ('draft', 'Draft'),
         ('unplanned', 'Unplanned'),
@@ -965,6 +964,10 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     def default_report_grouper():
         return 0
 
+    @staticmethod
+    def default_report():
+        return True
+
     @fields.depends('analysis')
     def on_change_with_analysis_type(self, name=None):
         if self.analysis:
@@ -1042,47 +1045,6 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
             value = cursor.fetchone()
             result[d.id] = value[0] if value else None
         return result
-
-    @classmethod
-    def get_report(cls, details, name):
-        cursor = Transaction().connection.cursor()
-        NotebookLine = Pool().get('lims.notebook.line')
-
-        result = {}
-        for d in details:
-            cursor.execute('SELECT report '
-                'FROM "' + NotebookLine._table + '" '
-                'WHERE analysis_detail = %s '
-                'ORDER BY id DESC LIMIT 1',
-                (d.id,))
-            value = cursor.fetchone()
-            result[d.id] = value[0] if value else False
-        return result
-
-    @classmethod
-    def search_report(cls, name, clause):
-        cursor = Transaction().connection.cursor()
-        NotebookLine = Pool().get('lims.notebook.line')
-
-        cursor.execute('SELECT detail.id '
-            'FROM "' + cls._table + '" detail '
-                'INNER JOIN ( '
-                    'SELECT DISTINCT ON (analysis_detail) '
-                    'analysis_detail, report '
-                    'FROM "' + NotebookLine._table + '" '
-                    'ORDER BY analysis_detail, id DESC '
-                ') last_nbl '
-                'ON detail.id = last_nbl.analysis_detail '
-            'WHERE last_nbl.report = TRUE')
-        to_report = cursor.fetchall()
-
-        field, op, operand = clause
-        if (op, operand) in (('=', True), ('!=', False)):
-            return [('id', 'in', to_report)]
-        elif (op, operand) in (('=', False), ('!=', True)):
-            return [('id', 'not in', to_report)]
-        else:
-            return []
 
     @staticmethod
     def default_state():
