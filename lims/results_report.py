@@ -326,8 +326,11 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         readonly=True)
     report_format_odt_eng = fields.Char('Transcription Report format',
         readonly=True)
-    annulment_reason = fields.Text('Annulment reason', readonly=True)
+    annulment_reason = fields.Text('Annulment reason', translate=True,
+        states={'readonly': Eval('state') != 'annulled'}, depends=['state'])
     annulment_date = fields.DateTime('Annulment date', readonly=True)
+    annulment_reason_print = fields.Boolean('Print annulment reason',
+        states={'readonly': Eval('state') != 'annulled'}, depends=['state'])
     date = fields.Function(fields.Date('Date'), 'get_date',
         searcher='search_date')
     party = fields.Function(fields.Many2One('party.party', 'Party'),
@@ -424,6 +427,10 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     @staticmethod
     def default_report_result_type_forced():
         return 'none'
+
+    @staticmethod
+    def default_annulment_reason_print():
+        return True
 
     @classmethod
     def get_next_number(cls, report_version_id, d_count):
@@ -2144,7 +2151,14 @@ class ResultsReportAnnulationStart(ModelView):
     'Report Annulation'
     __name__ = 'lims.results_report_annulation.start'
 
-    annulment_reason = fields.Text('Annulment reason', required=True)
+    annulment_reason = fields.Text('Annulment reason', required=True,
+        translate=True)
+    annulment_reason_print = fields.Boolean(
+        'Print annulment reason in next version')
+
+    @staticmethod
+    def default_annulment_reason_print():
+        return True
 
 
 class ResultsReportAnnulation(Wizard):
@@ -2720,6 +2734,17 @@ class ResultReport(Report):
                 report_context['comments'] += (
                     ResultsReport.raise_user_error('obs_rm_c_f',
                         raise_exception=False))
+
+        report_context['annulment_reason'] = ''
+        if report.number != '1':
+            with Transaction().set_context(language=lang_code):
+                prev_report = ResultsReport.search([
+                    ('report_version', '=', report.report_version.id),
+                    ('number', '=', str(int(report.number) - 1)),
+                    ])
+                if prev_report and prev_report[0].annulment_reason_print:
+                    report_context['annulment_reason'] = (
+                        prev_report[0].annulment_reason)
 
         return report_context
 

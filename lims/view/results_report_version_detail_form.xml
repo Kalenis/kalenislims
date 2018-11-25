@@ -43,7 +43,8 @@
         <page string="Annulation" id="annulation">
             <label name="annulment_date"/>
             <field name="annulment_date"/>
-            <newline/>
+            <label name="annulment_reason_print"/>
+            <field name="annulment_reason_print"/>
             <separator string="Annulment reason" colspan="4" id="annulment_reason"/>
             <field name="annulment_reason" colspan="4"/>
         </page>
