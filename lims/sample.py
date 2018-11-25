@@ -923,13 +923,13 @@ class Service(ModelSQL, ModelView):
     @fields.depends('analysis')
     def on_change_with_laboratory_domain(self, name=None):
         cursor = Transaction().connection.cursor()
-        LimsAnalysisLaboratory = Pool().get('lims.analysis-laboratory')
+        AnalysisLaboratory = Pool().get('lims.analysis-laboratory')
 
         if not self.analysis:
             return []
 
         cursor.execute('SELECT DISTINCT(laboratory) '
-            'FROM "' + LimsAnalysisLaboratory._table + '" '
+            'FROM "' + AnalysisLaboratory._table + '" '
             'WHERE analysis = %s',
             (self.analysis.id,))
         res = cursor.fetchall()
@@ -1773,15 +1773,15 @@ class Fraction(ModelSQL, ModelView):
     @classmethod
     def check_divided_report(cls, fractions):
         pool = Pool()
-        LimsService = pool.get('lims.service')
-        LimsEntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
-        services = LimsService.search([
+        services = Service.search([
             ('fraction', 'in', [f.id for f in fractions]),
             ('divide', '=', True),
             ])
         if services:
-            if (LimsEntryDetailAnalysis.search_count([
+            if (EntryDetailAnalysis.search_count([
                     ('service', 'in', [s.id for s in services]),
                     ('report_grouper', '!=', 0),
                     ]) == 0):
@@ -1836,9 +1836,9 @@ class Fraction(ModelSQL, ModelView):
 
     def create_laboratory_notebook(self):
         pool = Pool()
-        LimsNotebook = pool.get('lims.notebook')
+        Notebook = pool.get('lims.notebook')
         with Transaction().set_user(0):
-            notebook = LimsNotebook(
+            notebook = Notebook(
                 fraction=self.id,
                 )
             notebook.save()
@@ -2443,15 +2443,15 @@ class Sample(ModelSQL, ModelView):
     def on_change_with_analysis_domain(self, name=None):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        LimsTypification = pool.get('lims.typification')
-        LimsCalculatedTypification = pool.get('lims.typification.calculated')
-        LimsAnalysis = pool.get('lims.analysis')
+        Typification = pool.get('lims.typification')
+        CalculatedTypification = pool.get('lims.typification.calculated')
+        Analysis = pool.get('lims.analysis')
 
         if not self.product_type or not self.matrix:
             return []
 
         cursor.execute('SELECT DISTINCT(analysis) '
-            'FROM "' + LimsTypification._table + '" '
+            'FROM "' + Typification._table + '" '
             'WHERE product_type = %s '
                 'AND matrix = %s '
                 'AND valid',
@@ -2461,7 +2461,7 @@ class Sample(ModelSQL, ModelView):
             return []
 
         cursor.execute('SELECT id '
-            'FROM "' + LimsAnalysis._table + '" '
+            'FROM "' + Analysis._table + '" '
             'WHERE type = \'analysis\' '
                 'AND behavior IN (\'normal\', \'internal_relation\') '
                 'AND disable_as_individual IS TRUE '
@@ -2472,14 +2472,14 @@ class Sample(ModelSQL, ModelView):
                 set(disabled_analysis))
 
         cursor.execute('SELECT DISTINCT(analysis) '
-            'FROM "' + LimsCalculatedTypification._table + '" '
+            'FROM "' + CalculatedTypification._table + '" '
             'WHERE product_type = %s '
                 'AND matrix = %s',
             (self.product_type.id, self.matrix.id))
         typified_sets_groups = [a[0] for a in cursor.fetchall()]
 
         cursor.execute('SELECT id '
-            'FROM "' + LimsAnalysis._table + '" '
+            'FROM "' + Analysis._table + '" '
             'WHERE behavior = \'additional\' '
                 'AND state = \'active\'')
         additional_analysis = [a[0] for a in cursor.fetchall()]
@@ -2489,13 +2489,13 @@ class Sample(ModelSQL, ModelView):
     @fields.depends('product_type', 'matrix')
     def on_change_with_typification_domain(self, name=None):
         cursor = Transaction().connection.cursor()
-        LimsTypification = Pool().get('lims.typification')
+        Typification = Pool().get('lims.typification')
 
         if not self.product_type or not self.matrix:
             return []
 
         cursor.execute('SELECT id '
-            'FROM "' + LimsTypification._table + '" '
+            'FROM "' + Typification._table + '" '
             'WHERE product_type = %s '
                 'AND matrix = %s '
                 'AND valid',
@@ -2508,10 +2508,10 @@ class Sample(ModelSQL, ModelView):
     @staticmethod
     def default_product_type_domain():
         cursor = Transaction().connection.cursor()
-        LimsTypification = Pool().get('lims.typification')
+        Typification = Pool().get('lims.typification')
 
         cursor.execute('SELECT DISTINCT(product_type) '
-            'FROM "' + LimsTypification._table + '" '
+            'FROM "' + Typification._table + '" '
             'WHERE valid')
         res = cursor.fetchall()
         if not res:
@@ -2533,13 +2533,13 @@ class Sample(ModelSQL, ModelView):
     @fields.depends('product_type')
     def on_change_with_matrix_domain(self, name=None):
         cursor = Transaction().connection.cursor()
-        LimsTypification = Pool().get('lims.typification')
+        Typification = Pool().get('lims.typification')
 
         if not self.product_type:
             return []
 
         cursor.execute('SELECT DISTINCT(matrix) '
-            'FROM "' + LimsTypification._table + '" '
+            'FROM "' + Typification._table + '" '
             'WHERE product_type = %s '
             'AND valid',
             (self.product_type.id,))
@@ -2550,8 +2550,8 @@ class Sample(ModelSQL, ModelView):
 
     def get_product_type_matrix_readonly(self, name=None):
         pool = Pool()
-        LimsService = pool.get('lims.service')
-        if LimsService.search_count([('sample', '=', self.id)]) != 0:
+        Service = pool.get('lims.service')
+        if Service.search_count([('sample', '=', self.id)]) != 0:
             return True
         return False
 
@@ -2693,19 +2693,19 @@ class Sample(ModelSQL, ModelView):
     def get_has_results_report(cls, samples, names):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        LimsFraction = pool.get('lims.fraction')
-        LimsService = pool.get('lims.service')
-        LimsNotebookLine = pool.get('lims.notebook.line')
+        Fraction = pool.get('lims.fraction')
+        Service = pool.get('lims.service')
+        NotebookLine = pool.get('lims.notebook.line')
 
         result = {}
         for name in names:
             result[name] = {}
             for s in samples:
                 cursor.execute('SELECT f.sample '
-                    'FROM "' + LimsFraction._table + '" f '
-                        'INNER JOIN "' + LimsService._table + '" s '
+                    'FROM "' + Fraction._table + '" f '
+                        'INNER JOIN "' + Service._table + '" s '
                         'ON f.id = s.fraction '
-                        'INNER JOIN "' + LimsNotebookLine._table + '" nl '
+                        'INNER JOIN "' + NotebookLine._table + '" nl '
                         'ON s.id = nl.service '
                     'WHERE f.sample = %s '
                         'AND nl.results_report IS NOT NULL',
@@ -2738,21 +2738,21 @@ class DuplicateSample(Wizard):
     duplicate = StateTransition()
 
     def default_start(self, fields):
-        LimsSample = Pool().get('lims.sample')
-        sample = LimsSample(Transaction().context['active_id'])
+        Sample = Pool().get('lims.sample')
+        sample = Sample(Transaction().context['active_id'])
         return {
             'sample': sample.id,
             'date': sample.date,
             }
 
     def transition_duplicate(self):
-        LimsSample = Pool().get('lims.sample')
+        Sample = Pool().get('lims.sample')
 
         sample = self.start.sample
         date = self.start.date
         labels_list = self._get_labels_list(self.start.labels)
         for label in labels_list:
-            LimsSample.copy([sample], default={
+            Sample.copy([sample], default={
                 'label': label,
                 'date': date,
                 })
@@ -2798,13 +2798,13 @@ class DuplicateSampleFromEntry(Wizard):
             }
 
     def transition_duplicate(self):
-        LimsSample = Pool().get('lims.sample')
+        Sample = Pool().get('lims.sample')
 
         sample = self.start.sample
         date = self.start.date
         labels_list = self._get_labels_list(self.start.labels)
         for label in labels_list:
-            LimsSample.copy([sample], default={
+            Sample.copy([sample], default={
                 'label': label,
                 'date': date,
                 })
@@ -2838,9 +2838,9 @@ class ManageServices(Wizard):
             })
 
     def default_start(self, fields):
-        LimsFraction = Pool().get('lims.fraction')
+        Fraction = Pool().get('lims.fraction')
 
-        fraction = LimsFraction(Transaction().context['active_id'])
+        fraction = Fraction(Transaction().context['active_id'])
         if not fraction:
             return {}
 
@@ -2863,9 +2863,9 @@ class ManageServices(Wizard):
         return default
 
     def transition_check(self):
-        LimsFraction = Pool().get('lims.fraction')
+        Fraction = Pool().get('lims.fraction')
 
-        fraction = LimsFraction(Transaction().context['active_id'])
+        fraction = Fraction(Transaction().context['active_id'])
         if fraction.countersample_date is None:
             return 'start'
         else:
@@ -2932,7 +2932,7 @@ class ManageServices(Wizard):
 
     def create_service(self, service, fraction):
         pool = Pool()
-        LimsService = pool.get('lims.service')
+        Service = pool.get('lims.service')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
         service_create = [{
@@ -2950,10 +2950,10 @@ class ManageServices(Wizard):
             'divide': service.divide,
             }]
         with Transaction().set_context(manage_service=True):
-            new_service, = LimsService.create(service_create)
+            new_service, = Service.create(service_create)
 
-        LimsService.copy_analysis_comments([new_service])
-        LimsService.set_confirmation_date([new_service])
+        Service.copy_analysis_comments([new_service])
+        Service.set_confirmation_date([new_service])
         analysis_detail = EntryDetailAnalysis.search([
             ('service', '=', new_service.id)])
         if analysis_detail:
@@ -2969,30 +2969,30 @@ class ManageServices(Wizard):
         return new_service
 
     def delete_service(self, service):
-        LimsService = Pool().get('lims.service')
+        Service = Pool().get('lims.service')
         with Transaction().set_user(0, set_context=True):
-            LimsService.delete([service])
+            Service.delete([service])
 
     def update_service(self, original_service, actual_service, fraction,
             field_changed):
         pool = Pool()
-        LimsService = pool.get('lims.service')
-        LimsNotebookLine = pool.get('lims.notebook.line')
+        Service = pool.get('lims.service')
+        NotebookLine = pool.get('lims.notebook.line')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
         service_write = {}
         service_write[field_changed] = getattr(actual_service, field_changed)
-        LimsService.write([original_service], service_write)
+        Service.write([original_service], service_write)
 
         update_details = True if field_changed in ('analysis', 'laboratory',
             'method', 'device') else False
 
         if update_details:
-            notebook_lines = LimsNotebookLine.search([
+            notebook_lines = NotebookLine.search([
                 ('service', '=', original_service.id),
                 ])
             if notebook_lines:
-                LimsNotebookLine.delete(notebook_lines)
+                NotebookLine.delete(notebook_lines)
 
             analysis_detail = EntryDetailAnalysis.search([
                 ('service', '=', original_service.id)])
@@ -3061,18 +3061,18 @@ class CompleteServices(Wizard):
     start = StateTransition()
 
     def transition_start(self):
-        LimsFraction = Pool().get('lims.fraction')
-        fraction = LimsFraction(Transaction().context['active_id'])
+        Fraction = Pool().get('lims.fraction')
+        fraction = Fraction(Transaction().context['active_id'])
         for service in fraction.services:
             if service.analysis.behavior != 'additional':
                 self.complete_analysis_detail(service)
         return 'end'
 
     def complete_analysis_detail(self, service):
-        'Similar to LimsService.update_analysis_detail(services)'
+        'Similar to Service.update_analysis_detail(services)'
         pool = Pool()
-        LimsService = pool.get('lims.service')
-        LimsEntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
         analysis_data = []
         if service.analysis.type == 'analysis':
@@ -3093,13 +3093,13 @@ class CompleteServices(Wizard):
                 'matrix': service.fraction.matrix.id,
                 }
 
-            analysis_data.extend(LimsService._get_included_analysis(
+            analysis_data.extend(Service._get_included_analysis(
                 service.analysis, service.analysis.code,
                 service_context))
 
         to_create = []
         for analysis in analysis_data:
-            if LimsEntryDetailAnalysis.search_count([
+            if EntryDetailAnalysis.search_count([
                     ('service', '=', service.id),
                     ('analysis', '=', analysis['id']),
                     ]) != 0:
@@ -3119,9 +3119,9 @@ class CompleteServices(Wizard):
 
         if to_create:
             with Transaction().set_user(0, set_context=True):
-                analysis_detail = LimsEntryDetailAnalysis.create(to_create)
+                analysis_detail = EntryDetailAnalysis.create(to_create)
             if analysis_detail:
-                LimsEntryDetailAnalysis.create_notebook_lines(analysis_detail,
+                EntryDetailAnalysis.create_notebook_lines(analysis_detail,
                     service.fraction)
 
 

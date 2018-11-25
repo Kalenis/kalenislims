@@ -184,15 +184,15 @@ class LabMethod(ModelSQL, ModelView):
 
     @classmethod
     def update_laboratory_notebook(cls, methods):
-        LimsNotebookLine = Pool().get('lims.notebook.line')
+        NotebookLine = Pool().get('lims.notebook.line')
 
         for method in methods:
-            notebook_lines = LimsNotebookLine.search([
+            notebook_lines = NotebookLine.search([
                 ('method', '=', method.id),
                 ('accepted', '=', False),
                 ])
             if notebook_lines:
-                LimsNotebookLine.write(notebook_lines, {
+                NotebookLine.write(notebook_lines, {
                     'results_estimated_waiting': (
                         method.results_estimated_waiting),
                     })

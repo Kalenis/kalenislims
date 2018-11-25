@@ -322,12 +322,12 @@ class InvoiceLine:
     @classmethod
     def get_results_reports(cls, lines, name):
         pool = Pool()
-        LimsNotebookLine = pool.get('lims.notebook.line')
+        NotebookLine = pool.get('lims.notebook.line')
         result = {}
         for l in lines:
             reports = []
             if l.origin and l.origin.__name__ == 'lims.service':
-                notebook_lines = LimsNotebookLine.search([
+                notebook_lines = NotebookLine.search([
                     ('service', '=', l.origin.id),
                     ('results_report', '!=', None),
                     ], limit=1)
@@ -442,7 +442,7 @@ class PopulateInvoiceContacts(Wizard):
         InvoiceLine = pool.get('account.invoice.line')
         InvoiceContacts = pool.get('account.invoice.invoice_contacts')
         EntryInvoiceContacts = pool.get('lims.entry.invoice_contacts')
-        LimsEntry = pool.get('lims.entry')
+        Entry = pool.get('lims.entry')
 
         invoice = Invoice(Transaction().context['active_id'])
 
@@ -463,7 +463,7 @@ class PopulateInvoiceContacts(Wizard):
 
         # Set entries comments
         entries_comments = ''
-        entries = LimsEntry.search([('id', 'in', entry_ids)],
+        entries = Entry.search([('id', 'in', entry_ids)],
             order=[('id', 'ASC')])
         for entry in entries:
             if not entry.invoice_comments:

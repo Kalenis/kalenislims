@@ -204,10 +204,10 @@ class Typification(ModelSQL, ModelView):
 
     def get_technical_scope_versions(self, name=None):
         pool = Pool()
-        LimsTechnicalScopeVersionLine = pool.get(
+        TechnicalScopeVersionLine = pool.get(
             'lims.technical.scope.version.line')
 
-        version_lines = LimsTechnicalScopeVersionLine.search([
+        version_lines = TechnicalScopeVersionLine.search([
             ('typification', '=', self.id),
             ('version.valid', '=', True),
             ])
@@ -306,8 +306,8 @@ class Typification(ModelSQL, ModelView):
     def create_typification_calculated(cls, typifications):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        LimsAnalysis = pool.get('lims.analysis')
-        LimsCalculatedTypification = pool.get('lims.typification.calculated')
+        Analysis = pool.get('lims.analysis')
+        CalculatedTypification = pool.get('lims.typification.calculated')
 
         for typification in typifications:
 
@@ -321,24 +321,24 @@ class Typification(ModelSQL, ModelView):
             typified_analysis_ids = ', '.join(str(a) for a in
                 typified_analysis)
 
-            sets_groups_ids = LimsAnalysis.get_parents_analysis(
+            sets_groups_ids = Analysis.get_parents_analysis(
                 typification.analysis.id)
             for set_group_id in sets_groups_ids:
-                t_set_group = LimsCalculatedTypification.search([
+                t_set_group = CalculatedTypification.search([
                     ('product_type', '=', typification.product_type.id),
                     ('matrix', '=', typification.matrix.id),
                     ('analysis', '=', set_group_id),
                     ])
                 if not t_set_group:
 
-                    ia = LimsAnalysis.get_included_analysis_analysis(
+                    ia = Analysis.get_included_analysis_analysis(
                         set_group_id)
                     if not ia:
                         continue
                     included_ids = ', '.join(str(a) for a in ia)
 
                     cursor.execute('SELECT id '
-                        'FROM "' + LimsAnalysis._table + '" '
+                        'FROM "' + Analysis._table + '" '
                         'WHERE id IN (' + included_ids + ') '
                             'AND id NOT IN (' + typified_analysis_ids +
                             ')')
@@ -353,7 +353,7 @@ class Typification(ModelSQL, ModelView):
                             'matrix': typification.matrix.id,
                             'analysis': set_group_id,
                             }]
-                        LimsCalculatedTypification.create(
+                        CalculatedTypification.create(
                             typification_create)
 
         return typifications
@@ -413,14 +413,14 @@ class Typification(ModelSQL, ModelView):
 
     @classmethod
     def update_laboratory_notebook(cls, typifications):
-        LimsNotebookLine = Pool().get('lims.notebook.line')
+        NotebookLine = Pool().get('lims.notebook.line')
 
         for typification in typifications:
             if not typification.valid:
                 continue
 
             # Update not RM
-            notebook_lines = LimsNotebookLine.search([
+            notebook_lines = NotebookLine.search([
                 ('notebook.fraction.special_type', '!=', 'rm'),
                 ('notebook.product_type', '=', typification.product_type.id),
                 ('notebook.matrix', '=', typification.matrix.id),
@@ -429,7 +429,7 @@ class Typification(ModelSQL, ModelView):
                 ('end_date', '=', None),
                 ])
             if notebook_lines:
-                LimsNotebookLine.write(notebook_lines, {
+                NotebookLine.write(notebook_lines, {
                     'detection_limit': str(
                         typification.detection_limit),
                     'quantification_limit': str(
@@ -445,7 +445,7 @@ class Typification(ModelSQL, ModelView):
                     })
 
             # Update RM
-            notebook_lines = LimsNotebookLine.search([
+            notebook_lines = NotebookLine.search([
                 ('notebook.fraction.special_type', '=', 'rm'),
                 ('notebook.product_type', '=', typification.product_type.id),
                 ('notebook.matrix', '=', typification.matrix.id),
@@ -454,7 +454,7 @@ class Typification(ModelSQL, ModelView):
                 ('end_date', '=', None),
                 ])
             if notebook_lines:
-                LimsNotebookLine.write(notebook_lines, {
+                NotebookLine.write(notebook_lines, {
                     'initial_concentration': unicode(
                         typification.initial_concentration or ''),
                     })
@@ -529,11 +529,11 @@ class CalculatedTypification(ModelSQL):
     def populate_typification_calculated(cls):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        LimsAnalysis = pool.get('lims.analysis')
-        LimsTypification = pool.get('lims.typification')
+        Analysis = pool.get('lims.analysis')
+        Typification = pool.get('lims.typification')
 
         cursor.execute('SELECT DISTINCT(product_type, matrix) '
-            'FROM "' + LimsTypification._table + '" '
+            'FROM "' + Typification._table + '" '
             'WHERE valid')
         typifications = cursor.fetchall()
         if typifications:
@@ -549,7 +549,7 @@ class CalculatedTypification(ModelSQL):
                 product_type = int(typification[0].split(',')[0][1:])
                 matrix = int(typification[0].split(',')[1][:-1])
                 cursor.execute('SELECT DISTINCT(analysis) '
-                    'FROM "' + LimsTypification._table + '" '
+                    'FROM "' + Typification._table + '" '
                     'WHERE product_type = %s '
                         'AND matrix = %s '
                         'AND valid',
@@ -559,7 +559,7 @@ class CalculatedTypification(ModelSQL):
                     typified_analysis)
 
                 cursor.execute('SELECT id '
-                    'FROM "' + LimsAnalysis._table + '" '
+                    'FROM "' + Analysis._table + '" '
                     'WHERE type IN (\'set\', \'group\') '
                         'AND state = \'active\'')
                 sets_groups_ids = [x[0] for x in cursor.fetchall()]
@@ -567,14 +567,14 @@ class CalculatedTypification(ModelSQL):
                     for set_group_id in sets_groups_ids:
                         typified = True
 
-                        ia = LimsAnalysis.get_included_analysis_analysis(
+                        ia = Analysis.get_included_analysis_analysis(
                             set_group_id)
                         if not ia:
                             continue
                         included_ids = ', '.join(str(a) for a in ia)
 
                         cursor.execute('SELECT id '
-                            'FROM "' + LimsAnalysis._table + '" '
+                            'FROM "' + Analysis._table + '" '
                             'WHERE id IN (' + included_ids + ') '
                                 'AND id NOT IN (' + typified_analysis_ids +
                                 ')')
@@ -931,8 +931,8 @@ class Analysis(Workflow, ModelSQL, ModelView):
 
     @fields.depends('included_analysis')
     def on_change_with_all_included_analysis(self, name=None):
-        LimsAnalysis = Pool().get('lims.analysis')
-        return LimsAnalysis.get_included_analysis(self.id)
+        Analysis = Pool().get('lims.analysis')
+        return Analysis.get_included_analysis(self.id)
 
     @classmethod
     def view_attributes(cls):
@@ -1002,13 +1002,13 @@ class Analysis(Workflow, ModelSQL, ModelView):
     def get_parents_analysis(cls, analysis_id):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        LimsAnalysisIncluded = pool.get('lims.analysis.included')
-        LimsAnalysis = pool.get('lims.analysis')
+        AnalysisIncluded = pool.get('lims.analysis.included')
+        Analysis = pool.get('lims.analysis')
 
         parents = []
         cursor.execute('SELECT ia.analysis '
-            'FROM "' + LimsAnalysisIncluded._table + '" ia '
-                'INNER JOIN "' + LimsAnalysis._table + '" a '
+            'FROM "' + AnalysisIncluded._table + '" ia '
+                'INNER JOIN "' + Analysis._table + '" a '
                 'ON a.id = ia.analysis '
             'WHERE ia.included_analysis = %s '
                 'AND a.state = \'active\'', (analysis_id,))
@@ -1092,14 +1092,14 @@ class Analysis(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def check_laboratory_change(cls, analysis, laboratories):
-        LimsAnalysisIncluded = Pool().get('lims.analysis.included')
+        AnalysisIncluded = Pool().get('lims.analysis.included')
 
         for a in analysis:
             if a.type == 'analysis':
                 for operation in laboratories:
                     if operation[0] == 'unlink':
                         for laboratory in operation[1]:
-                            parent = LimsAnalysisIncluded.search([
+                            parent = AnalysisIncluded.search([
                                 ('included_analysis', '=', a.id),
                                 ('laboratory', '=', laboratory),
                                 ])
@@ -1134,26 +1134,26 @@ class Analysis(Workflow, ModelSQL, ModelView):
     def create_typification_calculated(cls, analysis):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        LimsAnalysis = pool.get('lims.analysis')
-        LimsTypification = pool.get('lims.typification')
-        LimsCalculatedTypification = pool.get('lims.typification.calculated')
+        Analysis = pool.get('lims.analysis')
+        Typification = pool.get('lims.typification')
+        CalculatedTypification = pool.get('lims.typification.calculated')
 
         for included in analysis:
             if included.type == 'analysis':
                 continue
             sets_groups_ids = [included.id]
-            sets_groups_ids.extend(LimsAnalysis.get_parents_analysis(
+            sets_groups_ids.extend(Analysis.get_parents_analysis(
                 included.id))
             for set_group_id in sets_groups_ids:
 
-                ia = LimsAnalysis.get_included_analysis_analysis(
+                ia = Analysis.get_included_analysis_analysis(
                     set_group_id)
                 if not ia:
                     continue
                 included_ids = ', '.join(str(a) for a in ia)
 
                 cursor.execute('SELECT DISTINCT(product_type, matrix) '
-                    'FROM "' + LimsTypification._table + '" '
+                    'FROM "' + Typification._table + '" '
                     'WHERE valid '
                         'AND analysis IN (' + included_ids + ')')
                 typifications = cursor.fetchall()
@@ -1165,7 +1165,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
                     product_type = int(typification[0].split(',')[0][1:])
                     matrix = int(typification[0].split(',')[1][:-1])
                     cursor.execute('SELECT DISTINCT(analysis) '
-                        'FROM "' + LimsTypification._table + '" '
+                        'FROM "' + Typification._table + '" '
                         'WHERE product_type = %s '
                             'AND matrix = %s '
                             'AND valid',
@@ -1175,7 +1175,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
                         typified_analysis)
 
                     cursor.execute('SELECT id '
-                        'FROM "' + LimsAnalysis._table + '" '
+                        'FROM "' + Analysis._table + '" '
                         'WHERE id IN (' + included_ids + ') '
                             'AND id NOT IN (' + typified_analysis_ids +
                             ')')
@@ -1185,7 +1185,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
                         typified = True
 
                     if typified:
-                        t_set_group = LimsCalculatedTypification.search([
+                        t_set_group = CalculatedTypification.search([
                             ('product_type', '=', product_type),
                             ('matrix', '=', matrix),
                             ('analysis', '=', set_group_id),
@@ -1196,16 +1196,16 @@ class Analysis(Workflow, ModelSQL, ModelView):
                                 'matrix': matrix,
                                 'analysis': set_group_id,
                                 }]
-                            LimsCalculatedTypification.create(
+                            CalculatedTypification.create(
                                 typification_create)
                     else:
-                        t_set_group = LimsCalculatedTypification.search([
+                        t_set_group = CalculatedTypification.search([
                             ('product_type', '=', product_type),
                             ('matrix', '=', matrix),
                             ('analysis', '=', set_group_id),
                             ])
                         if t_set_group:
-                            LimsCalculatedTypification.delete(t_set_group)
+                            CalculatedTypification.delete(t_set_group)
 
         return analysis
 
@@ -1222,8 +1222,8 @@ class Analysis(Workflow, ModelSQL, ModelView):
     @classmethod
     def disable_typifications(cls, analysis):
         pool = Pool()
-        LimsTypification = pool.get('lims.typification')
-        LimsCalculatedTypification = pool.get('lims.typification.calculated')
+        Typification = pool.get('lims.typification')
+        CalculatedTypification = pool.get('lims.typification.calculated')
 
         analysis_ids = []
         sets_groups_ids = []
@@ -1233,28 +1233,28 @@ class Analysis(Workflow, ModelSQL, ModelView):
             else:
                 sets_groups_ids.append(a.id)
         if analysis_ids:
-            typifications = LimsTypification.search([
+            typifications = Typification.search([
                 ('analysis', 'in', analysis_ids),
                 ])
             if typifications:
-                LimsTypification.write(typifications, {'valid': False})
+                Typification.write(typifications, {'valid': False})
         if sets_groups_ids:
-            typifications = LimsCalculatedTypification.search([
+            typifications = CalculatedTypification.search([
                 ('analysis', 'in', sets_groups_ids),
                 ])
             if typifications:
-                LimsCalculatedTypification.delete(typifications)
+                CalculatedTypification.delete(typifications)
 
     @classmethod
     def delete_included_analysis(cls, analysis):
-        LimsAnalysisIncluded = Pool().get('lims.analysis.included')
+        AnalysisIncluded = Pool().get('lims.analysis.included')
         analysis_ids = [a.id for a in analysis]
         if analysis_ids:
-            included_delete = LimsAnalysisIncluded.search([
+            included_delete = AnalysisIncluded.search([
                 ('included_analysis', 'in', analysis_ids),
                 ])
             if included_delete:
-                LimsAnalysisIncluded.delete(included_delete)
+                AnalysisIncluded.delete(included_delete)
 
     @classmethod
     def disable_product(cls, analysis):
@@ -1289,11 +1289,11 @@ class Analysis(Workflow, ModelSQL, ModelView):
     @staticmethod
     def is_typified(analysis, product_type, matrix):
         pool = Pool()
-        LimsTypification = pool.get('lims.typification')
-        LimsCalculatedTypification = pool.get('lims.typification.calculated')
+        Typification = pool.get('lims.typification')
+        CalculatedTypification = pool.get('lims.typification.calculated')
 
         if analysis.type == 'analysis':
-            typified_service = LimsTypification.search([
+            typified_service = Typification.search([
                 ('analysis', '=', analysis.id),
                 ('product_type', '=', product_type.id),
                 ('matrix', '=', matrix.id),
@@ -1302,7 +1302,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
             if typified_service:
                 return True
         else:
-            typified_service = LimsCalculatedTypification.search([
+            typified_service = CalculatedTypification.search([
                 ('analysis', '=', analysis.id),
                 ('product_type', '=', product_type.id),
                 ('matrix', '=', matrix.id),
@@ -1517,7 +1517,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
             analysis.check_duplicated_analysis()
 
     def check_duplicated_analysis(self):
-        LimsAnalysis = Pool().get('lims.analysis')
+        Analysis = Pool().get('lims.analysis')
 
         analysis_id = self.analysis.id
         included = self.search([
@@ -1529,7 +1529,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
             for ai in included:
                 if ai.included_analysis:
                     analysis_ids.append(ai.included_analysis.id)
-                    analysis_ids.extend(LimsAnalysis.get_included_analysis(
+                    analysis_ids.extend(Analysis.get_included_analysis(
                         ai.included_analysis.id))
             if self.included_analysis.id in analysis_ids:
                 self.raise_user_error('duplicated_analysis',
@@ -1554,12 +1554,12 @@ class AnalysisIncluded(ModelSQL, ModelView):
 
     @staticmethod
     def default_analysis_domain():
-        LimsAnalysisIncluded = Pool().get('lims.analysis.included')
+        AnalysisIncluded = Pool().get('lims.analysis.included')
         context = Transaction().context
         analysis_id = context.get('analysis', None)
         analysis_type = context.get('type', None)
         laboratories = context.get('laboratory_domain', [])
-        return LimsAnalysisIncluded.get_analysis_domain(analysis_id,
+        return AnalysisIncluded.get_analysis_domain(analysis_id,
             analysis_type, laboratories)
 
     @fields.depends('analysis', '_parent_analysis.type',
@@ -1994,7 +1994,7 @@ class CopyTypification(Wizard):
     confirm = StateTransition()
 
     def transition_confirm(self):
-        LimsTypification = Pool().get('lims.typification')
+        Typification = Pool().get('lims.typification')
 
         clause = [
             ('product_type', '=', self.start.origin_product_type.id),
@@ -2011,9 +2011,9 @@ class CopyTypification(Wizard):
         method_id = (self.start.destination_method.id if
             self.start.destination_method else None)
 
-        origins = LimsTypification.search(clause)
+        origins = Typification.search(clause)
         if origins and self.start.action == 'move':
-            LimsTypification.write(origins, {
+            Typification.write(origins, {
                 'valid': False,
                 'by_default': False,
                 })
@@ -2021,14 +2021,14 @@ class CopyTypification(Wizard):
         to_copy_1 = []
         to_copy_2 = []
         for origin in origins:
-            if LimsTypification.search_count([
+            if Typification.search_count([
                     ('product_type', '=', product_type_id),
                     ('matrix', '=', matrix_id),
                     ('analysis', '=', origin.analysis.id),
                     ('method', '=', method_id or origin.method.id)
                     ]) != 0:
                 continue
-            if LimsTypification.search_count([
+            if Typification.search_count([
                     ('valid', '=', True),
                     ('product_type', '=', product_type_id),
                     ('matrix', '=', matrix_id),
@@ -2052,7 +2052,7 @@ class CopyTypification(Wizard):
                     method_domain = [m.id for m in r.analysis.methods]
                     if method_id not in method_domain:
                         to_copy_1.remove(r)
-            LimsTypification.copy(to_copy_1, default=default)
+            Typification.copy(to_copy_1, default=default)
         if to_copy_2:
             default = {
                 'valid': True,
@@ -2066,7 +2066,7 @@ class CopyTypification(Wizard):
                     method_domain = [m.id for m in r.analysis.methods]
                     if method_id not in method_domain:
                         to_copy_2.remove(r)
-            LimsTypification.copy(to_copy_2, default=default)
+            Typification.copy(to_copy_2, default=default)
         return 'end'
 
 
@@ -2101,10 +2101,10 @@ class CopyCalculatedTypification(Wizard):
 
     def transition_confirm(self):
         pool = Pool()
-        LimsAnalysis = pool.get('lims.analysis')
-        LimsTypification = pool.get('lims.typification')
+        Analysis = pool.get('lims.analysis')
+        Typification = pool.get('lims.typification')
 
-        included_analysis_ids = LimsAnalysis.get_included_analysis_analysis(
+        included_analysis_ids = Analysis.get_included_analysis_analysis(
             self.start.origin_analysis.id)
         if not included_analysis_ids:
             return 'end'
@@ -2119,19 +2119,19 @@ class CopyCalculatedTypification(Wizard):
         product_type_id = self.start.destination_product_type.id
         matrix_id = self.start.destination_matrix.id
 
-        origins = LimsTypification.search(clause)
+        origins = Typification.search(clause)
 
         to_copy_1 = []
         to_copy_2 = []
         for origin in origins:
-            if LimsTypification.search_count([
+            if Typification.search_count([
                     ('product_type', '=', product_type_id),
                     ('matrix', '=', matrix_id),
                     ('analysis', '=', origin.analysis.id),
                     ('method', '=', origin.method.id)
                     ]) != 0:
                 continue
-            if LimsTypification.search_count([
+            if Typification.search_count([
                     ('valid', '=', True),
                     ('product_type', '=', product_type_id),
                     ('matrix', '=', matrix_id),
@@ -2149,7 +2149,7 @@ class CopyCalculatedTypification(Wizard):
                 'matrix': matrix_id,
                 'by_default': False,
                 }
-            LimsTypification.copy(to_copy_1, default=default)
+            Typification.copy(to_copy_1, default=default)
         if to_copy_2:
             default = {
                 'valid': True,
@@ -2157,7 +2157,7 @@ class CopyCalculatedTypification(Wizard):
                 'matrix': matrix_id,
                 'by_default': True,
                 }
-            LimsTypification.copy(to_copy_2, default=default)
+            Typification.copy(to_copy_2, default=default)
         return 'end'
 
 
@@ -2194,10 +2194,10 @@ class RelateAnalysis(Wizard):
     def default_start(self, fields):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        LimsAnalysis = pool.get('lims.analysis')
-        LimsAnalysisLaboratory = pool.get('lims.analysis-laboratory')
+        Analysis = pool.get('lims.analysis')
+        AnalysisLaboratory = pool.get('lims.analysis-laboratory')
 
-        analysis = LimsAnalysis(Transaction().context['active_id'])
+        analysis = Analysis(Transaction().context['active_id'])
         default = {
             'analysis_domain': [],
             }
@@ -2205,8 +2205,8 @@ class RelateAnalysis(Wizard):
             self.raise_user_error('not_set_laboratory')
 
         cursor.execute('SELECT DISTINCT(al.analysis) '
-            'FROM "' + LimsAnalysisLaboratory._table + '" al '
-                'INNER JOIN "' + LimsAnalysis._table + '" a '
+            'FROM "' + AnalysisLaboratory._table + '" al '
+                'INNER JOIN "' + Analysis._table + '" a '
                 'ON a.id = al.analysis '
             'WHERE al.laboratory = %s '
                 'AND a.state = \'active\' '
@@ -2220,15 +2220,15 @@ class RelateAnalysis(Wizard):
         return default
 
     def transition_relate(self):
-        LimsAnalysis = Pool().get('lims.analysis')
-        analysis = LimsAnalysis(Transaction().context['active_id'])
+        Analysis = Pool().get('lims.analysis')
+        analysis = Analysis(Transaction().context['active_id'])
 
         to_create = [{
             'analysis': analysis.id,
             'included_analysis': al.id,
             'laboratory': analysis.laboratories[0].laboratory.id,
             } for al in self.start.analysis]
-        LimsAnalysis.write([analysis], {
+        Analysis.write([analysis], {
             'included_analysis': [('create', to_create)],
             })
         return 'end'

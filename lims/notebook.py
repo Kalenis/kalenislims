@@ -717,9 +717,9 @@ class NotebookLine(ModelSQL, ModelView):
                 else:
                     self.acceptance_date = datetime.now()
         else:
-            LimsResultsReportVersionDetailLine = Pool().get(
+            ResultsReportVersionDetailLine = Pool().get(
                 'lims.results_report.version.detail.line')
-            report_lines = LimsResultsReportVersionDetailLine.search([
+            report_lines = ResultsReportVersionDetailLine.search([
                 ('notebook_line', '=', self.id),
                 ('report_version_detail.state', '!=', 'annulled'),
                 ])
@@ -745,10 +745,10 @@ class NotebookLine(ModelSQL, ModelView):
 
     @classmethod
     def get_typification_field(cls, notebook_lines, names):
-        LimsTypification = Pool().get('lims.typification')
+        Typification = Pool().get('lims.typification')
         result = dict((name, {}) for name in names)
         for nl in notebook_lines:
-            typifications = LimsTypification.search([
+            typifications = Typification.search([
                 ('product_type', '=', nl.notebook.product_type.id),
                 ('matrix', '=', nl.notebook.matrix.id),
                 ('analysis', '=', nl.analysis.id),
@@ -777,8 +777,8 @@ class NotebookLine(ModelSQL, ModelView):
         pool = Pool()
         Notebook = pool.get('lims.notebook')
         Fraction = pool.get('lims.fraction')
-        LimsSample = pool.get('lims.sample')
-        LimsTypification = pool.get('lims.typification')
+        Sample = pool.get('lims.sample')
+        Typification = pool.get('lims.typification')
 
         operator_ = clause[1:2][0]
         cursor.execute('SELECT nl.id '
@@ -787,9 +787,9 @@ class NotebookLine(ModelSQL, ModelView):
                 'ON nl.notebook = n.id '
                 'INNER JOIN "' + Fraction._table + '" f '
                 'ON n.fraction = f.id '
-                'INNER JOIN "' + LimsSample._table + '" s '
+                'INNER JOIN "' + Sample._table + '" s '
                 'ON f.sample = s.id '
-                'INNER JOIN "' + LimsTypification._table + '" t '
+                'INNER JOIN "' + Typification._table + '" t '
                 'ON (nl.analysis = t.analysis AND nl.method = t.method '
                 'AND s.product_type = t.product_type AND t.matrix = t.matrix) '
             'WHERE t.valid = TRUE '
@@ -837,13 +837,13 @@ class NotebookLine(ModelSQL, ModelView):
     @fields.depends('analysis', 'laboratory')
     def on_change_with_device_domain(self, name=None):
         cursor = Transaction().connection.cursor()
-        LimsAnalysisDevice = Pool().get('lims.analysis.device')
+        AnalysisDevice = Pool().get('lims.analysis.device')
 
         if not self.analysis or not self.laboratory:
             return []
 
         cursor.execute('SELECT DISTINCT(device) '
-            'FROM "' + LimsAnalysisDevice._table + '" '
+            'FROM "' + AnalysisDevice._table + '" '
             'WHERE analysis = %s  '
                 'AND laboratory = %s',
             (self.analysis.id, self.laboratory.id))
@@ -1112,17 +1112,17 @@ class NotebookInitialConcentrationCalc(Wizard):
     ok = StateTransition()
 
     def transition_ok(self):
-        LimsNotebook = Pool().get('lims.notebook')
+        Notebook = Pool().get('lims.notebook')
 
         for active_id in Transaction().context['active_ids']:
-            notebook = LimsNotebook(active_id)
+            notebook = Notebook(active_id)
             if not notebook.lines:
                 continue
             self.lines_initial_concentration_calc(notebook.lines)
         return 'end'
 
     def lines_initial_concentration_calc(self, notebook_lines):
-        LimsNotebookLine = Pool().get('lims.notebook.line')
+        NotebookLine = Pool().get('lims.notebook.line')
 
         lines_to_save = []
         for notebook_line in notebook_lines:
@@ -1148,13 +1148,13 @@ class NotebookInitialConcentrationCalc(Wizard):
             else:
                 continue
         if lines_to_save:
-            LimsNotebookLine.save(lines_to_save)
+            NotebookLine.save(lines_to_save)
 
     def _get_analysis_result(self, analysis_code, notebook, round_=False):
-        LimsNotebookLine = Pool().get('lims.notebook.line')
+        NotebookLine = Pool().get('lims.notebook.line')
 
         with Transaction().set_user(0):
-            notebook_lines = LimsNotebookLine.search([
+            notebook_lines = NotebookLine.search([
                 ('notebook', '=', notebook.id),
                 ('analysis.code', '=', analysis_code),
                 ('annulment_date', '=', None),
@@ -1172,10 +1172,10 @@ class NotebookInitialConcentrationCalc(Wizard):
 
     def _get_relation_result(self, analysis_code, notebook, round_=False):
         pool = Pool()
-        LimsAnalysis = pool.get('lims.analysis')
-        LimsNotebookLine = pool.get('lims.notebook.line')
+        Analysis = pool.get('lims.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
 
-        internal_relations = LimsAnalysis.search([
+        internal_relations = Analysis.search([
             ('code', '=', analysis_code),
             ])
         if not internal_relations:
@@ -1206,7 +1206,7 @@ class NotebookInitialConcentrationCalc(Wizard):
             return res
 
         with Transaction().set_user(0):
-            notebook_lines = LimsNotebookLine.search([
+            notebook_lines = NotebookLine.search([
                 ('notebook', '=', notebook.id),
                 ('analysis.code', '=', analysis_code),
                 ('repetition', '=', 0),
@@ -1217,7 +1217,7 @@ class NotebookInitialConcentrationCalc(Wizard):
         return round(res, notebook_lines[0].decimals)
 
     def _get_variables(self, formula, notebook):
-        LimsVolumeConversion = Pool().get('lims.volume.conversion')
+        VolumeConversion = Pool().get('lims.volume.conversion')
 
         variables = {}
         for prefix in ('A', 'D', 'T', 'Y', 'R'):
@@ -1241,7 +1241,7 @@ class NotebookInitialConcentrationCalc(Wizard):
                 result = self._get_analysis_result(analysis_code, notebook,
                     round_=True)
                 if result is not None:
-                    result = LimsVolumeConversion.brixToDensity(result)
+                    result = VolumeConversion.brixToDensity(result)
                     if result is not None:
                         variables[var] = result
             elif var[0] == 'T':
@@ -1249,7 +1249,7 @@ class NotebookInitialConcentrationCalc(Wizard):
                 result = self._get_analysis_result(analysis_code, notebook,
                     round_=True)
                 if result is not None:
-                    result = LimsVolumeConversion.brixToSolubleSolids(result)
+                    result = VolumeConversion.brixToSolubleSolids(result)
                     if result is not None:
                         variables[var] = result
             elif var[0] == 'R':
@@ -1257,7 +1257,7 @@ class NotebookInitialConcentrationCalc(Wizard):
                 result = self._get_relation_result(analysis_code, notebook,
                     round_=True)
                 if result is not None:
-                    result = LimsVolumeConversion.brixToSolubleSolids(result)
+                    result = VolumeConversion.brixToSolubleSolids(result)
                     if result is not None:
                         variables[var] = result
             elif var[0] == 'Y':
@@ -1265,7 +1265,7 @@ class NotebookInitialConcentrationCalc(Wizard):
                 result = self._get_relation_result(analysis_code, notebook,
                     round_=True)
                 if result is not None:
-                    result = LimsVolumeConversion.brixToDensity(result)
+                    result = VolumeConversion.brixToDensity(result)
                     if result is not None:
                         variables[var] = result
         for var in variables.itervalues():
@@ -1279,9 +1279,9 @@ class NotebookLineInitialConcentrationCalc(NotebookInitialConcentrationCalc):
     __name__ = 'lims.notebook_line.initial_concentration_calc'
 
     def transition_ok(self):
-        LimsNotebookLine = Pool().get('lims.notebook.line')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        notebook_lines = LimsNotebookLine.browse(
+        notebook_lines = NotebookLine.browse(
             Transaction().context['active_ids'])
         if not notebook_lines:
             return 'end'
@@ -1308,10 +1308,10 @@ class NotebookResultsConversion(Wizard):
     ok = StateTransition()
 
     def transition_ok(self):
-        LimsNotebook = Pool().get('lims.notebook')
+        Notebook = Pool().get('lims.notebook')
 
         for active_id in Transaction().context['active_ids']:
-            notebook = LimsNotebook(active_id)
+            notebook = Notebook(active_id)
             if not notebook.lines:
                 continue
             self.lines_results_conversion(notebook.lines)
@@ -1319,9 +1319,9 @@ class NotebookResultsConversion(Wizard):
 
     def lines_results_conversion(self, notebook_lines):
         pool = Pool()
-        LimsNotebookLine = pool.get('lims.notebook.line')
-        LimsUomConversion = pool.get('lims.uom.conversion')
-        LimsVolumeConversion = pool.get('lims.volume.conversion')
+        NotebookLine = pool.get('lims.notebook.line')
+        UomConversion = pool.get('lims.uom.conversion')
+        VolumeConversion = pool.get('lims.volume.conversion')
 
         lines_to_save = []
         for notebook_line in notebook_lines:
@@ -1355,7 +1355,7 @@ class NotebookResultsConversion(Wizard):
                 notebook_line.converted_result_modifier = 'eq'
                 lines_to_save.append(notebook_line)
             elif (iu != fu and ic == fc):
-                formula = LimsUomConversion.get_conversion_formula(iu, fu)
+                formula = UomConversion.get_conversion_formula(iu, fu)
                 if not formula:
                     continue
                 variables = self._get_variables(formula, notebook_line)
@@ -1373,7 +1373,7 @@ class NotebookResultsConversion(Wizard):
                 lines_to_save.append(notebook_line)
             else:
                 formula = None
-                conversions = LimsUomConversion.search([
+                conversions = UomConversion.search([
                     ('initial_uom', '=', iu),
                     ('final_uom', '=', fu),
                     ])
@@ -1390,8 +1390,8 @@ class NotebookResultsConversion(Wizard):
                 formula_result = parser.getValue()
 
                 if initial_uom_volume and final_uom_volume:
-                    d_ic = LimsVolumeConversion.brixToDensity(ic)
-                    d_fc = LimsVolumeConversion.brixToDensity(fc)
+                    d_ic = VolumeConversion.brixToDensity(ic)
+                    d_fc = VolumeConversion.brixToDensity(fc)
                     converted_result = (result * (fc / ic) * (d_fc / d_ic) *
                         formula_result)
                     notebook_line.converted_result = str(converted_result)
@@ -1403,11 +1403,11 @@ class NotebookResultsConversion(Wizard):
                     notebook_line.converted_result_modifier = 'eq'
                     lines_to_save.append(notebook_line)
         if lines_to_save:
-            LimsNotebookLine.save(lines_to_save)
+            NotebookLine.save(lines_to_save)
 
     def _get_variables(self, formula, notebook_line,
             initial_uom_volume=False, final_uom_volume=False):
-        LimsVolumeConversion = Pool().get('lims.volume.conversion')
+        VolumeConversion = Pool().get('lims.volume.conversion')
 
         variables = {}
         for var in ('DI',):
@@ -1422,12 +1422,12 @@ class NotebookResultsConversion(Wizard):
             if var == 'DI':
                 if initial_uom_volume:
                     c = float(notebook_line.initial_concentration)
-                    result = LimsVolumeConversion.brixToDensity(c)
+                    result = VolumeConversion.brixToDensity(c)
                     if result:
                         variables[var] = result
                 elif final_uom_volume:
                     c = float(notebook_line.final_concentration)
-                    result = LimsVolumeConversion.brixToDensity(c)
+                    result = VolumeConversion.brixToDensity(c)
                     if result:
                         variables[var] = result
         return variables
@@ -1438,9 +1438,9 @@ class NotebookLineResultsConversion(NotebookResultsConversion):
     __name__ = 'lims.notebook_line.results_conversion'
 
     def transition_ok(self):
-        LimsNotebookLine = Pool().get('lims.notebook.line')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        notebook_lines = LimsNotebookLine.browse(
+        notebook_lines = NotebookLine.browse(
             Transaction().context['active_ids'])
         if not notebook_lines:
             return 'end'
@@ -1467,17 +1467,17 @@ class NotebookLimitsValidation(Wizard):
     ok = StateTransition()
 
     def transition_ok(self):
-        LimsNotebook = Pool().get('lims.notebook')
+        Notebook = Pool().get('lims.notebook')
 
         for active_id in Transaction().context['active_ids']:
-            notebook = LimsNotebook(active_id)
+            notebook = Notebook(active_id)
             if not notebook.lines:
                 continue
             self.lines_limits_validation(notebook.lines)
         return 'end'
 
     def lines_limits_validation(self, notebook_lines):
-        LimsNotebookLine = Pool().get('lims.notebook.line')
+        NotebookLine = Pool().get('lims.notebook.line')
 
         lines_to_save = []
         for notebook_line in notebook_lines:
@@ -1548,7 +1548,7 @@ class NotebookLimitsValidation(Wizard):
                 continue
 
         if lines_to_save:
-            LimsNotebookLine.save(lines_to_save)
+            NotebookLine.save(lines_to_save)
 
 
 class NotebookLineLimitsValidation(NotebookLimitsValidation):
@@ -1556,9 +1556,9 @@ class NotebookLineLimitsValidation(NotebookLimitsValidation):
     __name__ = 'lims.notebook_line.limits_validation'
 
     def transition_ok(self):
-        LimsNotebookLine = Pool().get('lims.notebook.line')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        notebook_lines = LimsNotebookLine.browse(
+        notebook_lines = NotebookLine.browse(
             Transaction().context['active_ids'])
         if not notebook_lines:
             return 'end'
@@ -1619,9 +1619,9 @@ class NotebookInternalRelationsCalc1(Wizard):
     confirm = StateTransition()
 
     def transition_search(self):
-        LimsNotebook = Pool().get('lims.notebook')
+        Notebook = Pool().get('lims.notebook')
 
-        notebook = LimsNotebook(Transaction().context['active_id'])
+        notebook = Notebook(Transaction().context['active_id'])
         if not notebook.lines:
             return 'end'
 
@@ -1630,7 +1630,7 @@ class NotebookInternalRelationsCalc1(Wizard):
         return 'end'
 
     def get_relations(self, notebook_lines):
-        LimsNotebookInternalRelationsCalc1Relation = Pool().get(
+        NotebookInternalRelationsCalc1Relation = Pool().get(
             'lims.notebook.internal_relations_calc_1.relation')
 
         relations = {}
@@ -1667,15 +1667,15 @@ class NotebookInternalRelationsCalc1(Wizard):
                 'session_id': self._session_id,
                 }
         if relations:
-            LimsNotebookInternalRelationsCalc1Relation.create(
+            NotebookInternalRelationsCalc1Relation.create(
                 [ir for ir in relations.itervalues()])
             return True
         return False
 
     def _get_variables_list(self, formula, notebook, analysis={}):
         pool = Pool()
-        LimsAnalysis = pool.get('lims.analysis')
-        LimsNotebookLine = pool.get('lims.notebook.line')
+        Analysis = pool.get('lims.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
 
         variables = {}
         for prefix in ('A', 'D', 'T', 'Y', 'R'):
@@ -1691,7 +1691,7 @@ class NotebookInternalRelationsCalc1(Wizard):
             if var[0] in ('A', 'D', 'T'):
                 analysis_code = var[1:]
                 with Transaction().set_user(0):
-                    notebook_lines = LimsNotebookLine.search([
+                    notebook_lines = NotebookLine.search([
                         ('notebook', '=', notebook.id),
                         ('analysis.code', '=', analysis_code),
                         ('annulment_date', '=', None),
@@ -1707,7 +1707,7 @@ class NotebookInternalRelationsCalc1(Wizard):
                         }
             elif var[0] in ('Y', 'R'):
                 analysis_code = var[1:]
-                internal_relations = LimsAnalysis.search([
+                internal_relations = Analysis.search([
                     ('code', '=', analysis_code),
                     ])
                 if not internal_relations:
@@ -1723,18 +1723,18 @@ class NotebookInternalRelationsCalc1(Wizard):
     def transition_confirm(self):
         pool = Pool()
         Date = pool.get('ir.date')
-        LimsNotebookInternalRelationsCalc1Relation = pool.get(
+        NotebookInternalRelationsCalc1Relation = pool.get(
             'lims.notebook.internal_relations_calc_1.relation')
-        LimsNotebookLine = pool.get('lims.notebook.line')
+        NotebookLine = pool.get('lims.notebook.line')
 
         date = Date.today()
 
-        relations = LimsNotebookInternalRelationsCalc1Relation.search([
+        relations = NotebookInternalRelationsCalc1Relation.search([
             ('session_id', '=', self._session_id),
             ])
         notebook_lines_to_save = []
         for relation in relations:
-            notebook_lines = LimsNotebookLine.search([
+            notebook_lines = NotebookLine.search([
                 ('notebook', '=', relation.notebook.id),
                 ('analysis', '=', relation.internal_relation.id)
                 ])
@@ -1756,15 +1756,15 @@ class NotebookInternalRelationsCalc1(Wizard):
                 notebook_line.start_date = date
                 notebook_line.end_date = date
                 notebook_lines_to_save.append(notebook_line)
-        LimsNotebookLine.save(notebook_lines_to_save)
+        NotebookLine.save(notebook_lines_to_save)
         return 'end'
 
     def _get_analysis_result(self, analysis_code, notebook, relation_code,
             converted=False):
-        LimsNotebookInternalRelationsCalc1Variable = Pool().get(
+        NotebookInternalRelationsCalc1Variable = Pool().get(
             'lims.notebook.internal_relations_calc_1.variable')
 
-        variables = LimsNotebookInternalRelationsCalc1Variable.search([
+        variables = NotebookInternalRelationsCalc1Variable.search([
             ('relation.session_id', '=', self._session_id),
             ('relation.notebook', '=', notebook.id),
             ('relation.internal_relation.code', '=', relation_code),
@@ -1790,10 +1790,10 @@ class NotebookInternalRelationsCalc1(Wizard):
     def _get_relation_result(self, analysis_code, notebook, relation_code,
             converted=False, round_=False):
         pool = Pool()
-        LimsAnalysis = pool.get('lims.analysis')
-        LimsNotebookLine = pool.get('lims.notebook.line')
+        Analysis = pool.get('lims.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
 
-        internal_relations = LimsAnalysis.search([
+        internal_relations = Analysis.search([
             ('code', '=', analysis_code),
             ])
         if not internal_relations:
@@ -1828,7 +1828,7 @@ class NotebookInternalRelationsCalc1(Wizard):
             return res
 
         with Transaction().set_user(0):
-            notebook_lines = LimsNotebookLine.search([
+            notebook_lines = NotebookLine.search([
                 ('notebook', '=', notebook.id),
                 ('analysis.code', '=', analysis_code),
                 ('repetition', '=', 0),
@@ -1840,7 +1840,7 @@ class NotebookInternalRelationsCalc1(Wizard):
 
     def _get_variables(self, formula, notebook, relation_code,
             converted=False):
-        LimsVolumeConversion = Pool().get('lims.volume.conversion')
+        VolumeConversion = Pool().get('lims.volume.conversion')
 
         variables = {}
         for prefix in ('A', 'D', 'T', 'Y', 'R'):
@@ -1864,7 +1864,7 @@ class NotebookInternalRelationsCalc1(Wizard):
                 result = self._get_analysis_result(analysis_code, notebook,
                     relation_code, converted)
                 if result is not None:
-                    result = LimsVolumeConversion.brixToDensity(result)
+                    result = VolumeConversion.brixToDensity(result)
                     if result is not None:
                         variables[var] = result
             elif var[0] == 'T':
@@ -1872,7 +1872,7 @@ class NotebookInternalRelationsCalc1(Wizard):
                 result = self._get_analysis_result(analysis_code, notebook,
                     relation_code, converted)
                 if result is not None:
-                    result = LimsVolumeConversion.brixToSolubleSolids(result)
+                    result = VolumeConversion.brixToSolubleSolids(result)
                     if result is not None:
                         variables[var] = result
             elif var[0] == 'R':
@@ -1880,7 +1880,7 @@ class NotebookInternalRelationsCalc1(Wizard):
                 result = self._get_relation_result(analysis_code, notebook,
                     relation_code, converted, round_=True)
                 if result is not None:
-                    result = LimsVolumeConversion.brixToSolubleSolids(result)
+                    result = VolumeConversion.brixToSolubleSolids(result)
                     if result is not None:
                         variables[var] = result
             elif var[0] == 'Y':
@@ -1888,7 +1888,7 @@ class NotebookInternalRelationsCalc1(Wizard):
                 result = self._get_relation_result(analysis_code, notebook,
                     relation_code, converted, round_=True)
                 if result is not None:
-                    result = LimsVolumeConversion.brixToDensity(result)
+                    result = VolumeConversion.brixToDensity(result)
                     if result is not None:
                         variables[var] = result
         for var in variables.itervalues():
@@ -1902,9 +1902,9 @@ class NotebookLineInternalRelationsCalc1(NotebookInternalRelationsCalc1):
     __name__ = 'lims.notebook_line.internal_relations_calc_1'
 
     def transition_search(self):
-        LimsNotebookLine = Pool().get('lims.notebook.line')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        notebook_lines = LimsNotebookLine.browse(
+        notebook_lines = NotebookLine.browse(
             Transaction().context['active_ids'])
         if not notebook_lines:
             return 'end'
@@ -2050,10 +2050,10 @@ class NotebookInternalRelationsCalc2(Wizard):
     confirm = StateTransition()
 
     def transition_search(self):
-        LimsNotebook = Pool().get('lims.notebook')
+        Notebook = Pool().get('lims.notebook')
 
         for active_id in Transaction().context['active_ids']:
-            notebook = LimsNotebook(active_id)
+            notebook = Notebook(active_id)
             if not notebook.lines:
                 continue
 
@@ -2062,7 +2062,7 @@ class NotebookInternalRelationsCalc2(Wizard):
         return 'end'
 
     def get_relations(self, notebook_lines):
-        LimsNotebookInternalRelationsCalc2Relation = Pool().get(
+        NotebookInternalRelationsCalc2Relation = Pool().get(
             'lims.notebook.internal_relations_calc_2.relation')
 
         relations = {}
@@ -2100,7 +2100,7 @@ class NotebookInternalRelationsCalc2(Wizard):
                 }
 
         if relations:
-            res_lines = LimsNotebookInternalRelationsCalc2Relation.create(
+            res_lines = NotebookInternalRelationsCalc2Relation.create(
                 [ir for ir in relations.itervalues()])
             self.result.relations = res_lines
             self.result.total = len(self.result.relations)
@@ -2119,7 +2119,7 @@ class NotebookInternalRelationsCalc2(Wizard):
         return 'confirm'
 
     def default_process(self, fields):
-        LimsNotebookInternalRelationsCalc2Variable = Pool().get(
+        NotebookInternalRelationsCalc2Variable = Pool().get(
             'lims.notebook.internal_relations_calc_2.variable')
 
         if not self.process.internal_relation:
@@ -2131,7 +2131,7 @@ class NotebookInternalRelationsCalc2(Wizard):
         if self.process.variables:
             default['variables'] = [v.id for v in self.process.variables]
         else:
-            variables = LimsNotebookInternalRelationsCalc2Variable.search([
+            variables = NotebookInternalRelationsCalc2Variable.search([
                 ('relation.session_id', '=', self._session_id),
                 ('relation.notebook', '=', self.process.notebook.id),
                 ('relation.internal_relation', '=',
@@ -2143,8 +2143,8 @@ class NotebookInternalRelationsCalc2(Wizard):
 
     def _get_variables_list(self, formula, notebook, analysis={}):
         pool = Pool()
-        LimsAnalysis = pool.get('lims.analysis')
-        LimsNotebookLine = pool.get('lims.notebook.line')
+        Analysis = pool.get('lims.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
 
         variables = {}
         for prefix in ('A', 'D', 'T', 'Y', 'R'):
@@ -2160,7 +2160,7 @@ class NotebookInternalRelationsCalc2(Wizard):
             if var[0] in ('A', 'D', 'T'):
                 analysis_code = var[1:]
                 with Transaction().set_user(0):
-                    notebook_lines = LimsNotebookLine.search([
+                    notebook_lines = NotebookLine.search([
                         ('notebook', '=', notebook.id),
                         ('analysis.code', '=', analysis_code),
                         ('annulment_date', '=', None),
@@ -2176,7 +2176,7 @@ class NotebookInternalRelationsCalc2(Wizard):
                         }
             elif var[0] in ('R', 'Y'):
                 analysis_code = var[1:]
-                internal_relations = LimsAnalysis.search([
+                internal_relations = Analysis.search([
                     ('code', '=', analysis_code),
                     ])
                 if not internal_relations:
@@ -2210,18 +2210,18 @@ class NotebookInternalRelationsCalc2(Wizard):
     def transition_confirm(self):
         pool = Pool()
         Date = pool.get('ir.date')
-        LimsNotebookInternalRelationsCalc2Relation = pool.get(
+        NotebookInternalRelationsCalc2Relation = pool.get(
             'lims.notebook.internal_relations_calc_2.relation')
-        LimsNotebookLine = pool.get('lims.notebook.line')
+        NotebookLine = pool.get('lims.notebook.line')
 
         date = Date.today()
 
-        relations = LimsNotebookInternalRelationsCalc2Relation.search([
+        relations = NotebookInternalRelationsCalc2Relation.search([
             ('session_id', '=', self._session_id),
             ])
         notebook_lines_to_save = []
         for relation in relations:
-            notebook_lines = LimsNotebookLine.search([
+            notebook_lines = NotebookLine.search([
                 ('notebook', '=', relation.notebook.id),
                 ('analysis', '=', relation.internal_relation.id)
                 ])
@@ -2243,16 +2243,16 @@ class NotebookInternalRelationsCalc2(Wizard):
                 notebook_line.start_date = date
                 notebook_line.end_date = date
                 notebook_lines_to_save.append(notebook_line)
-        LimsNotebookLine.save(notebook_lines_to_save)
+        NotebookLine.save(notebook_lines_to_save)
 
         return 'end'
 
     def _get_analysis_result(self, analysis_code, notebook, relation_code,
             converted=False):
-        LimsNotebookInternalRelationsCalc2Variable = Pool().get(
+        NotebookInternalRelationsCalc2Variable = Pool().get(
             'lims.notebook.internal_relations_calc_2.variable')
 
-        variables = LimsNotebookInternalRelationsCalc2Variable.search([
+        variables = NotebookInternalRelationsCalc2Variable.search([
             ('relation.session_id', '=', self._session_id),
             ('relation.notebook', '=', notebook.id),
             ('relation.internal_relation.code', '=', relation_code),
@@ -2278,10 +2278,10 @@ class NotebookInternalRelationsCalc2(Wizard):
     def _get_relation_result(self, analysis_code, notebook, relation_code,
             converted=False, round_=False):
         pool = Pool()
-        LimsAnalysis = pool.get('lims.analysis')
-        LimsNotebookLine = pool.get('lims.notebook.line')
+        Analysis = pool.get('lims.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
 
-        internal_relations = LimsAnalysis.search([
+        internal_relations = Analysis.search([
             ('code', '=', analysis_code),
             ])
         if not internal_relations:
@@ -2316,7 +2316,7 @@ class NotebookInternalRelationsCalc2(Wizard):
             return res
 
         with Transaction().set_user(0):
-            notebook_lines = LimsNotebookLine.search([
+            notebook_lines = NotebookLine.search([
                 ('notebook', '=', notebook.id),
                 ('analysis.code', '=', analysis_code),
                 ('repetition', '=', 0),
@@ -2328,7 +2328,7 @@ class NotebookInternalRelationsCalc2(Wizard):
 
     def _get_variables(self, formula, notebook, relation_code,
             converted=False):
-        LimsVolumeConversion = Pool().get('lims.volume.conversion')
+        VolumeConversion = Pool().get('lims.volume.conversion')
 
         variables = {}
         for prefix in ('A', 'D', 'T', 'Y', 'R'):
@@ -2352,7 +2352,7 @@ class NotebookInternalRelationsCalc2(Wizard):
                 result = self._get_analysis_result(analysis_code, notebook,
                     relation_code, converted)
                 if result is not None:
-                    result = LimsVolumeConversion.brixToDensity(result)
+                    result = VolumeConversion.brixToDensity(result)
                     if result is not None:
                         variables[var] = result
             elif var[0] == 'T':
@@ -2360,7 +2360,7 @@ class NotebookInternalRelationsCalc2(Wizard):
                 result = self._get_analysis_result(analysis_code, notebook,
                     relation_code, converted)
                 if result is not None:
-                    result = LimsVolumeConversion.brixToSolubleSolids(result)
+                    result = VolumeConversion.brixToSolubleSolids(result)
                     if result is not None:
                         variables[var] = result
             elif var[0] == 'R':
@@ -2368,7 +2368,7 @@ class NotebookInternalRelationsCalc2(Wizard):
                 result = self._get_relation_result(analysis_code, notebook,
                     relation_code, converted, round_=True)
                 if result is not None:
-                    result = LimsVolumeConversion.brixToSolubleSolids(result)
+                    result = VolumeConversion.brixToSolubleSolids(result)
                     if result is not None:
                         variables[var] = result
             elif var[0] == 'Y':
@@ -2376,7 +2376,7 @@ class NotebookInternalRelationsCalc2(Wizard):
                 result = self._get_relation_result(analysis_code, notebook,
                     relation_code, converted, round_=True)
                 if result is not None:
-                    result = LimsVolumeConversion.brixToDensity(result)
+                    result = VolumeConversion.brixToDensity(result)
                     if result is not None:
                         variables[var] = result
         for var in variables.itervalues():
@@ -2390,9 +2390,9 @@ class NotebookLineInternalRelationsCalc2(NotebookInternalRelationsCalc2):
     __name__ = 'lims.notebook_line.internal_relations_calc_2'
 
     def transition_search(self):
-        LimsNotebookLine = Pool().get('lims.notebook.line')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        notebook_lines = LimsNotebookLine.browse(
+        notebook_lines = NotebookLine.browse(
             Transaction().context['active_ids'])
         if not notebook_lines:
             return 'end'
@@ -2609,10 +2609,10 @@ class NotebookLoadResultsFormulaSit2Detail(ModelSQL, ModelView):
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
     def get_supervisor_domain(self, name=None):
-        LimsLabProfessionalMethod = Pool().get('lims.lab.professional.method')
+        LabProfessionalMethod = Pool().get('lims.lab.professional.method')
 
         res = []
-        qualifications = LimsLabProfessionalMethod.search([
+        qualifications = LabProfessionalMethod.search([
             ('method', '=', self.method.id),
             ('type', '=', 'analytical'),
             ('state', 'in', ('qualified', 'requalified')),
@@ -2685,8 +2685,8 @@ class NotebookLoadResultsFormula(Wizard):
 
     def transition_search(self):
         pool = Pool()
-        LimsNotebookLine = pool.get('lims.notebook.line')
-        LimsNotebookLoadResultsFormulaLine = pool.get(
+        NotebookLine = pool.get('lims.notebook.line')
+        NotebookLoadResultsFormulaLine = pool.get(
             'lims.notebook.load_results_formula.line')
 
         clause = [
@@ -2699,13 +2699,13 @@ class NotebookLoadResultsFormula(Wizard):
         if self.start.method:
             clause.append(('method', '=', self.start.method.id))
 
-        lines = LimsNotebookLine.search(clause, order=[
+        lines = NotebookLine.search(clause, order=[
             ('analysis_order', 'ASC'), ('id', 'ASC')])
         if lines:
             res_lines = []
             count = 1
             for line in lines:
-                res_line, = LimsNotebookLoadResultsFormulaLine.create([{
+                res_line, = NotebookLoadResultsFormulaLine.create([{
                     'session_id': self._session_id,
                     'index': count,
                     'line': line.id,
@@ -2721,11 +2721,11 @@ class NotebookLoadResultsFormula(Wizard):
 
     def transition_next_(self):
         pool = Pool()
-        LimsNotebookLoadResultsFormulaAction = pool.get(
+        NotebookLoadResultsFormulaAction = pool.get(
             'lims.notebook.load_results_formula.action')
-        LimsNotebookLoadResultsFormulaLine = pool.get(
+        NotebookLoadResultsFormulaLine = pool.get(
             'lims.notebook.load_results_formula.line')
-        LimsLaboratoryProfessional = pool.get('lims.laboratory.professional')
+        LaboratoryProfessional = pool.get('lims.laboratory.professional')
 
         has_prev = (hasattr(self.process, 'line') and
             getattr(self.process, 'line'))
@@ -2752,7 +2752,7 @@ class NotebookLoadResultsFormula(Wizard):
                     })
             defaults['variables'] = [('create', variables)]
 
-            action = LimsNotebookLoadResultsFormulaAction.search([
+            action = NotebookLoadResultsFormulaAction.search([
                 ('session_id', '=', self._session_id),
                 ('line', '=', self.process.line.id),
                 ])
@@ -2760,20 +2760,20 @@ class NotebookLoadResultsFormula(Wizard):
                 defaults['variables'] = [(
                     'delete', [v.id for a in action for v in a.variables],
                     )] + defaults['variables']
-                LimsNotebookLoadResultsFormulaAction.write(action, defaults)
+                NotebookLoadResultsFormulaAction.write(action, defaults)
             else:
-                LimsNotebookLoadResultsFormulaAction.create([defaults])
+                NotebookLoadResultsFormulaAction.create([defaults])
 
         self.result.index += 1
         if self.result.index <= self.result.total:
 
-            line = LimsNotebookLoadResultsFormulaLine.search([
+            line = NotebookLoadResultsFormulaLine.search([
                 ('session_id', '=', self._session_id),
                 ('index', '=', self.result.index),
                 ])
             self.process.line = line[0].line.id
 
-            action = LimsNotebookLoadResultsFormulaAction.search([
+            action = NotebookLoadResultsFormulaAction.search([
                 ('session_id', '=', self._session_id),
                 ('line', '=', line[0].line.id),
                 ])
@@ -2803,7 +2803,7 @@ class NotebookLoadResultsFormula(Wizard):
                 self.process.variables = None
             else:
                 professional_id = (
-                    LimsLaboratoryProfessional.get_lab_professional())
+                    LaboratoryProfessional.get_lab_professional())
                 self.process.professional = professional_id
 
             return 'process'
@@ -2811,20 +2811,20 @@ class NotebookLoadResultsFormula(Wizard):
 
     def transition_prev_(self):
         pool = Pool()
-        LimsNotebookLoadResultsFormulaAction = pool.get(
+        NotebookLoadResultsFormulaAction = pool.get(
             'lims.notebook.load_results_formula.action')
-        LimsNotebookLoadResultsFormulaLine = pool.get(
+        NotebookLoadResultsFormulaLine = pool.get(
             'lims.notebook.load_results_formula.line')
 
         self.result.index -= 1
         if self.result.index >= 1:
-            line = LimsNotebookLoadResultsFormulaLine.search([
+            line = NotebookLoadResultsFormulaLine.search([
                 ('session_id', '=', self._session_id),
                 ('index', '=', self.result.index),
                 ])
             self.process.line = line[0].line.id
 
-            action = LimsNotebookLoadResultsFormulaAction.search([
+            action = NotebookLoadResultsFormulaAction.search([
                 ('session_id', '=', self._session_id),
                 ('line', '=', line[0].line.id),
                 ])
@@ -2941,15 +2941,15 @@ class NotebookLoadResultsFormula(Wizard):
 
     def transition_check_professional(self):
         pool = Pool()
-        LimsNotebookLoadResultsFormulaAction = pool.get(
+        NotebookLoadResultsFormulaAction = pool.get(
             'lims.notebook.load_results_formula.action')
-        LimsLabProfessionalMethod = pool.get('lims.lab.professional.method')
-        LimsLaboratoryProfessional = pool.get('lims.laboratory.professional')
-        LimsLabMethod = pool.get('lims.lab.method')
-        LimsNotebookLoadResultsFormulaSit2Detail = pool.get(
+        LabProfessionalMethod = pool.get('lims.lab.professional.method')
+        LaboratoryProfessional = pool.get('lims.laboratory.professional')
+        LabMethod = pool.get('lims.lab.method')
+        NotebookLoadResultsFormulaSit2Detail = pool.get(
             'lims.notebook.load_results_formula.sit2.detail')
 
-        actions = LimsNotebookLoadResultsFormulaAction.search([
+        actions = NotebookLoadResultsFormulaAction.search([
             ('session_id', '=', self._session_id),
             ])
 
@@ -2965,7 +2965,7 @@ class NotebookLoadResultsFormula(Wizard):
 
         situation_1 = []
         for key in situations.iterkeys():
-            qualifications = LimsLabProfessionalMethod.search([
+            qualifications = LabProfessionalMethod.search([
                 ('professional', '=', key[0]),
                 ('method', '=', key[1]),
                 ('type', '=', 'analytical'),
@@ -2980,8 +2980,8 @@ class NotebookLoadResultsFormula(Wizard):
         if situation_1:
             msg = ''
             for key in situation_1:
-                professional = LimsLaboratoryProfessional(key[0])
-                method = LimsLabMethod(key[1])
+                professional = LaboratoryProfessional(key[0])
+                method = LabMethod(key[1])
                 msg += '%s: %s\n' % (professional.rec_name, method.code)
             self.sit1.msg = msg
             return 'sit1'
@@ -2996,7 +2996,7 @@ class NotebookLoadResultsFormula(Wizard):
                     'lines': [('add', prof_lines[key])],
                     })
         if situation_2:
-            details = LimsNotebookLoadResultsFormulaSit2Detail.create(
+            details = NotebookLoadResultsFormulaSit2Detail.create(
                 situation_2)
             self.sit2.details = details
             return 'sit2'
@@ -3023,20 +3023,20 @@ class NotebookLoadResultsFormula(Wizard):
 
     def transition_confirm_(self):
         pool = Pool()
-        LimsNotebookLoadResultsFormulaAction = pool.get(
+        NotebookLoadResultsFormulaAction = pool.get(
             'lims.notebook.load_results_formula.action')
-        LimsNotebookLine = pool.get('lims.notebook.line')
-        LimsLabProfessionalMethod = pool.get('lims.lab.professional.method')
-        LimsLabProfessionalMethodRequalification = pool.get(
+        NotebookLine = pool.get('lims.notebook.line')
+        LabProfessionalMethod = pool.get('lims.lab.professional.method')
+        LabProfessionalMethodRequalification = pool.get(
             'lims.lab.professional.method.requalification')
         Date = pool.get('ir.date')
 
         # Write Results to Notebook lines
-        actions = LimsNotebookLoadResultsFormulaAction.search([
+        actions = NotebookLoadResultsFormulaAction.search([
             ('session_id', '=', self._session_id),
             ])
         for data in actions:
-            notebook_line = LimsNotebookLine(data.line.id)
+            notebook_line = NotebookLine(data.line.id)
             if not notebook_line:
                 continue
             notebook_line_write = {
@@ -3060,7 +3060,7 @@ class NotebookLoadResultsFormula(Wizard):
             notebook_line_write['professionals'] = (
                 [('delete', [p.id for p in notebook_line.professionals])] +
                 [('create', professionals)])
-            LimsNotebookLine.write([notebook_line], notebook_line_write)
+            NotebookLine.write([notebook_line], notebook_line_write)
 
         # Write Supervisors to Notebook lines
         supervisor_lines = {}
@@ -3071,7 +3071,7 @@ class NotebookLoadResultsFormula(Wizard):
                 supervisor_lines[detail.supervisor.id].extend([
                     l.id for l in detail.lines])
         for prof_id, lines in supervisor_lines.iteritems():
-            notebook_lines = LimsNotebookLine.search([
+            notebook_lines = NotebookLine.search([
                 ('id', 'in', lines),
                 ])
             if notebook_lines:
@@ -3079,7 +3079,7 @@ class NotebookLoadResultsFormula(Wizard):
                 notebook_line_write = {
                     'professionals': [('create', professionals)],
                     }
-                LimsNotebookLine.write(notebook_lines, notebook_line_write)
+                NotebookLine.write(notebook_lines, notebook_line_write)
 
         # Write the execution of method
         all_prof = {}
@@ -3098,13 +3098,13 @@ class NotebookLoadResultsFormula(Wizard):
 
         today = Date.today()
         for key, sup in all_prof.iteritems():
-            professional_method, = LimsLabProfessionalMethod.search([
+            professional_method, = LabProfessionalMethod.search([
                 ('professional', '=', key[0]),
                 ('method', '=', key[1]),
                 ('type', '=', 'analytical'),
                 ])
             if professional_method.state == 'training':
-                history = LimsLabProfessionalMethodRequalification.search([
+                history = LabProfessionalMethodRequalification.search([
                     ('professional_method', '=', professional_method.id),
                     ('type', '=', 'training'),
                     ])
@@ -3113,7 +3113,7 @@ class NotebookLoadResultsFormula(Wizard):
                         history[0].supervisors]
                     supervisors = [{'supervisor': s} for s in sup
                         if s not in prev_supervisors]
-                    LimsLabProfessionalMethodRequalification.write(history, {
+                    LabProfessionalMethodRequalification.write(history, {
                         'last_execution_date': today,
                         'supervisors': [('create', supervisors)],
                         })
@@ -3126,15 +3126,15 @@ class NotebookLoadResultsFormula(Wizard):
                         'last_execution_date': today,
                         'supervisors': [('create', supervisors)],
                         }]
-                    LimsLabProfessionalMethodRequalification.create(to_create)
+                    LabProfessionalMethodRequalification.create(to_create)
 
             elif professional_method.state == 'qualified':
-                history = LimsLabProfessionalMethodRequalification.search([
+                history = LabProfessionalMethodRequalification.search([
                     ('professional_method', '=', professional_method.id),
                     ('type', '=', 'qualification'),
                     ])
                 if history:
-                    LimsLabProfessionalMethodRequalification.write(history, {
+                    LabProfessionalMethodRequalification.write(history, {
                         'last_execution_date': today,
                         })
                 else:
@@ -3144,15 +3144,15 @@ class NotebookLoadResultsFormula(Wizard):
                         'date': today,
                         'last_execution_date': today,
                         }]
-                    LimsLabProfessionalMethodRequalification.create(to_create)
+                    LabProfessionalMethodRequalification.create(to_create)
 
             else:
-                history = LimsLabProfessionalMethodRequalification.search([
+                history = LabProfessionalMethodRequalification.search([
                     ('professional_method', '=', professional_method.id),
                     ('type', '=', 'requalification'),
                     ])
                 if history:
-                    LimsLabProfessionalMethodRequalification.write(history, {
+                    LabProfessionalMethodRequalification.write(history, {
                         'last_execution_date': today,
                         })
                 else:
@@ -3162,7 +3162,7 @@ class NotebookLoadResultsFormula(Wizard):
                         'date': today,
                         'last_execution_date': today,
                         }]
-                    LimsLabProfessionalMethodRequalification.create(to_create)
+                    LabProfessionalMethodRequalification.create(to_create)
 
         return 'end'
 
@@ -3573,11 +3573,11 @@ class NotebookAddInternalRelations(Wizard):
     def default_start(self, fields):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        LimsNotebook = pool.get('lims.notebook')
-        LimsAnalysis = pool.get('lims.analysis')
-        LimsTypification = pool.get('lims.typification')
+        Notebook = pool.get('lims.notebook')
+        Analysis = pool.get('lims.analysis')
+        Typification = pool.get('lims.typification')
 
-        notebook = LimsNotebook(Transaction().context['active_id'])
+        notebook = Notebook(Transaction().context['active_id'])
         default = {
             'analysis_domain': [],
             }
@@ -3591,8 +3591,8 @@ class NotebookAddInternalRelations(Wizard):
             in notebook_analysis)
 
         cursor.execute('SELECT DISTINCT(a.id, a.result_formula) '
-            'FROM "' + LimsAnalysis._table + '" a '
-                'INNER JOIN "' + LimsTypification._table + '" t '
+            'FROM "' + Analysis._table + '" a '
+                'INNER JOIN "' + Typification._table + '" t '
                 'ON a.id = t.analysis '
             'WHERE t.product_type = %s '
                 'AND t.matrix = %s '
@@ -4040,10 +4040,10 @@ class NotebookResultsVerification(Wizard):
             })
 
     def default_start(self, fields):
-        LimsRangeType = Pool().get('lims.range.type')
+        RangeType = Pool().get('lims.range.type')
 
         default = {}
-        default_range_type = LimsRangeType.search([
+        default_range_type = RangeType.search([
             ('use', '=', 'results_verification'),
             ('by_default', '=', True),
             ])
@@ -4052,10 +4052,10 @@ class NotebookResultsVerification(Wizard):
         return default
 
     def transition_ok(self):
-        LimsNotebook = Pool().get('lims.notebook')
+        Notebook = Pool().get('lims.notebook')
 
         for active_id in Transaction().context['active_ids']:
-            notebook = LimsNotebook(active_id)
+            notebook = Notebook(active_id)
             if not notebook.lines:
                 continue
             self.lines_results_verification(notebook.lines)
@@ -4063,10 +4063,10 @@ class NotebookResultsVerification(Wizard):
 
     def lines_results_verification(self, notebook_lines):
         pool = Pool()
-        LimsNotebookLine = pool.get('lims.notebook.line')
-        LimsRange = pool.get('lims.range')
-        LimsUomConversion = pool.get('lims.uom.conversion')
-        LimsVolumeConversion = pool.get('lims.volume.conversion')
+        NotebookLine = pool.get('lims.notebook.line')
+        Range = pool.get('lims.range')
+        UomConversion = pool.get('lims.uom.conversion')
+        VolumeConversion = pool.get('lims.volume.conversion')
 
         verifications = self._get_verifications()
 
@@ -4099,7 +4099,7 @@ class NotebookResultsVerification(Wizard):
             except (TypeError, ValueError):
                 continue
 
-            ranges = LimsRange.search([
+            ranges = Range.search([
                 ('range_type', '=', self.start.range_type),
                 ('analysis', '=', notebook_line.analysis.id),
                 ('product_type', '=', notebook_line.notebook.product_type.id),
@@ -4118,7 +4118,7 @@ class NotebookResultsVerification(Wizard):
                 if (iu == fu and ic == fc):
                     converted_result = result
                 elif (iu != fu and ic == fc):
-                    formula = LimsUomConversion.get_conversion_formula(iu,
+                    formula = UomConversion.get_conversion_formula(iu,
                         fu)
                     if not formula:
                         continue
@@ -4131,7 +4131,7 @@ class NotebookResultsVerification(Wizard):
                     converted_result = result * (fc / ic)
                 else:
                     formula = None
-                    conversions = LimsUomConversion.search([
+                    conversions = UomConversion.search([
                         ('initial_uom', '=', iu),
                         ('final_uom', '=', fu),
                         ])
@@ -4145,8 +4145,8 @@ class NotebookResultsVerification(Wizard):
 
                     if (conversions[0].initial_uom_volume and
                             conversions[0].final_uom_volume):
-                        d_ic = LimsVolumeConversion.brixToDensity(ic)
-                        d_fc = LimsVolumeConversion.brixToDensity(fc)
+                        d_ic = VolumeConversion.brixToDensity(ic)
+                        d_fc = VolumeConversion.brixToDensity(fc)
                         converted_result = (result * (fc / ic) *
                             (d_fc / d_ic) * formula_result)
                     else:
@@ -4158,10 +4158,10 @@ class NotebookResultsVerification(Wizard):
             notebook_line.verification = verifications.get(verification)
             lines_to_save.append(notebook_line)
         if lines_to_save:
-            LimsNotebookLine.save(lines_to_save)
+            NotebookLine.save(lines_to_save)
 
     def _get_variables(self, formula, notebook_line):
-        LimsVolumeConversion = Pool().get('lims.volume.conversion')
+        VolumeConversion = Pool().get('lims.volume.conversion')
 
         variables = {}
         for var in ('DI',):
@@ -4175,7 +4175,7 @@ class NotebookResultsVerification(Wizard):
         for var in variables.iterkeys():
             if var == 'DI':
                 ic = float(notebook_line.final_concentration)
-                result = LimsVolumeConversion.brixToDensity(ic)
+                result = VolumeConversion.brixToDensity(ic)
                 if result:
                     variables[var] = result
         return variables
@@ -4228,9 +4228,9 @@ class NotebookLineResultsVerification(NotebookResultsVerification):
     __name__ = 'lims.notebook_line.results_verification'
 
     def transition_ok(self):
-        LimsNotebookLine = Pool().get('lims.notebook.line')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        notebook_lines = LimsNotebookLine.browse(
+        notebook_lines = NotebookLine.browse(
             Transaction().context['active_ids'])
         if not notebook_lines:
             return 'end'
@@ -4408,13 +4408,13 @@ class NotebookPrecisionControlStart(ModelView):
     @fields.depends('product_type')
     def on_change_with_matrix_domain(self, name=None):
         cursor = Transaction().connection.cursor()
-        LimsTypification = Pool().get('lims.typification')
+        Typification = Pool().get('lims.typification')
 
         if not self.product_type:
             return []
 
         cursor.execute('SELECT DISTINCT(matrix) '
-            'FROM "' + LimsTypification._table + '" '
+            'FROM "' + Typification._table + '" '
             'WHERE product_type = %s '
             'AND valid',
             (self.product_type.id,))
