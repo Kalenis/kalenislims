@@ -286,7 +286,8 @@ class Service(ModelSQL, ModelView):
         searcher='search_fraction_field')
     analysis = fields.Many2One('lims.analysis', 'Analysis/Set/Group',
         required=True, depends=['analysis_domain'],
-        domain=[('id', 'in', Eval('analysis_domain'))],
+        domain=['OR', ('id', '=', Eval('analysis')),
+            ('id', 'in', Eval('analysis_domain'))],
         states={'readonly': Bool(Eval('context', {}).get('readonly', True))})
     analysis_view = fields.Function(fields.Many2One('lims.analysis',
         'Analysis/Set/Group'), 'get_views_field',
@@ -321,7 +322,8 @@ class Service(ModelSQL, ModelView):
         None, None, 'Laboratory domain'),
         'on_change_with_laboratory_domain')
     method = fields.Many2One('lims.lab.method', 'Method',
-        domain=[('id', 'in', Eval('method_domain'))],
+        domain=['OR', ('id', '=', Eval('method')),
+            ('id', 'in', Eval('method_domain'))],
         states={
             'required': Bool(Eval('method_domain')),
             'readonly': Bool(Eval('context', {}).get('readonly', True)),
@@ -837,8 +839,6 @@ class Service(ModelSQL, ModelView):
     def on_change_with_analysis_domain(self, name=None):
         if Transaction().context.get('analysis_domain'):
             return Transaction().context.get('analysis_domain')
-        if self.fraction:
-            return self.fraction.on_change_with_analysis_domain()
         return []
 
     @staticmethod
@@ -849,8 +849,6 @@ class Service(ModelSQL, ModelView):
     def on_change_with_typification_domain(self, name=None):
         if Transaction().context.get('typification_domain'):
             return Transaction().context.get('typification_domain')
-        if self.fraction:
-            return self.fraction.on_change_with_typification_domain()
         return []
 
     @fields.depends('analysis')
