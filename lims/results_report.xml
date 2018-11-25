@@ -472,5 +472,45 @@
             <field name="group" ref="group_lims_laboratory_results_acceptance"/>
         </record>
 
+        <record model="ir.model.field.access"
+            id="access_results_report_version_detail_annulment_reason">
+            <field name="field"
+                search="[('name', '=', 'annulment_reason'), ('model.model', '=', 'lims.results_report.version.detail')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_results_report_version_detail_annulment_reason_group_lims_laboratory_reports_qa">
+            <field name="field"
+                search="[('name', '=', 'annulment_reason'), ('model.model', '=', 'lims.results_report.version.detail')]"/>
+            <field name="group" ref="group_lims_laboratory_reports_qa"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access"
+            id="access_results_report_version_detail_annulment_reason_print">
+            <field name="field"
+                search="[('name', '=', 'annulment_reason_print'), ('model.model', '=', 'lims.results_report.version.detail')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_results_report_version_detail_annulment_reason_print_group_lims_laboratory_reports_qa">
+            <field name="field"
+                search="[('name', '=', 'annulment_reason_print'), ('model.model', '=', 'lims.results_report.version.detail')]"/>
+            <field name="group" ref="group_lims_laboratory_reports_qa"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
     </data>
 </tryton>

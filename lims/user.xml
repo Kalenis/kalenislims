@@ -159,6 +159,14 @@ this repository contains the full copyright notices and license terms. -->
             <field name="group" ref="group_lims_laboratory_reports"/>
         </record>
 
+        <record model="res.group" id="group_lims_laboratory_reports_qa">
+            <field name="name">Lims Results reports QA</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_laboratory_reports_qa">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_laboratory_reports_qa"/>
+        </record>
+
         <record model="res.group" id="group_lims_control_readonly">
             <field name="name">Lims Control Charts Read Only</field>
         </record>
