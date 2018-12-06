@@ -9,7 +9,6 @@ from trytond.model import ModelView, fields
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.pool import Pool
 from trytond.transaction import Transaction
-from .lims import HAS_PDFMERGER
 from .lims import HAS_TOKEN
 
 __all__ = ['DigitalSignStart', 'DigitalSignSucceed', 'DigitalSignFailed',
@@ -63,8 +62,6 @@ class DigitalSign(Wizard):
         logger.info('Wizard - Digital Sign:INIT')
         ResultsReport = Pool().get('lims.results_report')
 
-        if not HAS_PDFMERGER:
-            ResultsReport.raise_user_error('missing_module')
         if not HAS_TOKEN:
             ResultsReport.raise_user_error('missing_module_token')
 
