@@ -2,7 +2,7 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-from io import StringIO
+from io import StringIO, BytesIO
 from datetime import datetime
 from PyPDF2 import PdfFileMerger
 from trytond.model import ModelView, ModelSQL, fields
@@ -2003,13 +2003,13 @@ class PrintResultsReport(Wizard):
         merger = PdfFileMerger()
         if english_report:
             for detail in details:
-                filedata = StringIO(detail.report_cache_eng)
+                filedata = BytesIO(detail.report_cache_eng)
                 merger.append(filedata)
         else:
             for detail in details:
-                filedata = StringIO(detail.report_cache)
+                filedata = BytesIO(detail.report_cache)
                 merger.append(filedata)
-        output = StringIO()
+        output = BytesIO()
         merger.write(output)
         return bytearray(output.getvalue())
 
