@@ -2,11 +2,8 @@
 # This file is part of lims_instrument_generic_form module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-try:
-    import cStringIO as StringIO
-except ImportError:
-    import StringIO
 import xlrd
+from io import BytesIO
 from datetime import date
 
 from trytond.pool import Pool
@@ -20,15 +17,15 @@ STATUS_COLUMN = 10
 
 def getControllerName():
     if Transaction().language in ('es', 'es_419'):
-        return u'Formulario genérico - XLS'
+        return 'Formulario genérico - XLS'
     else:
-        return u'Generic Form - XLS'
+        return 'Generic Form - XLS'
 
 
 def parse(self, infile):
     LabWorkYear = Pool().get('lims.lab.workyear')
 
-    filedata = StringIO.StringIO(infile)
+    filedata = BytesIO(infile)
     workbook = xlrd.open_workbook(file_contents=filedata.getvalue())
     worksheets = workbook.sheet_names()
     for worksheet_name in worksheets:
@@ -48,7 +45,7 @@ def parse(self, infile):
             if not analysis_code_raw:
                 continue
             if row[COL['A']].ctype == xlrd.XL_CELL_NUMBER:
-                analysis_code = unicode(int(analysis_code_raw))
+                analysis_code = str(int(analysis_code_raw))
             elif row[COL['A']].ctype == xlrd.XL_CELL_TEXT:
                 analysis_code = analysis_code_raw
             else:
