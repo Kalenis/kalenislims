@@ -457,10 +457,6 @@ msgid "min: %s"
 msgstr "mín: %s"
 
 msgctxt "error:lims.results_report:"
-msgid "Missing PyPDF2 module"
-msgstr "Falta el módulo PyPDF2"
-
-msgctxt "error:lims.results_report:"
 msgid "The report has not details to print"
 msgstr "El informe no tiene detalles para imprimir"
 
