@@ -11,6 +11,7 @@ import time
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
+from PyPDF2 import PdfFileMerger
 import logging
 
 from trytond.model import ModelView, fields
@@ -21,16 +22,6 @@ from trytond.config import config as tconfig
 
 __all__ = ['ResultsReportVersionDetail', 'ResultsReport',
     'ResultsReportAnnulation']
-
-HAS_PDFMERGER = False
-try:
-    from PyPDF2 import PdfFileMerger
-    HAS_PDFMERGER = True
-except ImportError:
-    logger = logging.getLogger(__name__)
-    logger.warning(
-        'Unable to import PyPDF2. PDF merge disabled.',
-        exc_info=True)
 
 HAS_TOKEN = False
 try:
@@ -114,8 +105,6 @@ class ResultsReport:
         ResultsReport = pool.get('lims.results_report')
         DigitalSign = pool.get('lims_digital_sign.digital_sign', type='wizard')
 
-        if not HAS_PDFMERGER:
-            ResultsReport.raise_user_error('missing_module')
         if not HAS_TOKEN:
             ResultsReport.raise_user_error('missing_module_token')
 

@@ -2,9 +2,9 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-import logging
 from io import StringIO
 from datetime import datetime
+from PyPDF2 import PdfFileMerger
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
@@ -28,16 +28,6 @@ __all__ = ['ResultsReport', 'ResultsReportVersion',
     'FractionResultsReport', 'SampleResultsReport', 'ResultsReportSample',
     'ResultsReportAnnulationStart', 'ResultsReportAnnulation', 'ResultReport',
     'GlobalResultReport', 'ResultReportTranscription']
-
-HAS_PDFMERGER = False
-try:
-    from PyPDF2 import PdfFileMerger
-    HAS_PDFMERGER = True
-except ImportError:
-    logger = logging.getLogger(__name__)
-    logger.warning(
-        'Unable to import PyPDF2. PDF merge disabled.',
-        exc_info=True)
 
 
 def get_print_date():
@@ -1982,9 +1972,6 @@ class PrintResultsReport(Wizard):
         ResultsReport = pool.get('lims.results_report')
         ResultsReportVersionDetail = pool.get(
             'lims.results_report.version.detail')
-
-        if not HAS_PDFMERGER:
-            ResultsReport.raise_user_error('missing_module')
 
         for active_id in Transaction().context['active_ids']:
             results_report = ResultsReport(active_id)
