@@ -1653,7 +1653,7 @@ class Fraction(ModelSQL, ModelView):
 
     @staticmethod
     def default_package_type():
-        if (Transaction().context.get('package_type', 0) > 0):
+        if Transaction().context.get('package_type'):
             return Transaction().context.get('package_type')
         return None
 
@@ -1677,7 +1677,7 @@ class Fraction(ModelSQL, ModelView):
 
     @staticmethod
     def default_size_uom():
-        if (Transaction().context.get('size_uom', 0) > 0):
+        if Transaction().context.get('size_uom'):
             return Transaction().context.get('size_uom')
         return None
 
@@ -1690,7 +1690,7 @@ class Fraction(ModelSQL, ModelView):
 
     @staticmethod
     def default_fraction_state():
-        if (Transaction().context.get('fraction_state', 0) > 0):
+        if Transaction().context.get('fraction_state'):
             return Transaction().context.get('fraction_state')
         return None
 
