@@ -19,19 +19,10 @@ from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.tools import get_smtp_server
 from trytond.config import config as tconfig
+from .tokenclient import GetToken
 
 __all__ = ['ResultsReportVersionDetail', 'ResultsReport',
     'ResultsReportAnnulation']
-
-HAS_TOKEN = False
-try:
-    from trytond.tools.tokenclient import GetToken
-    HAS_TOKEN = True
-except ImportError:
-    logger = logging.getLogger(__name__)
-    logger.warning(
-        'Unable to import tokenclient. Digital Sign disabled.',
-        exc_info=True)
 
 
 class ResultsReportVersionDetail:
@@ -79,7 +70,6 @@ class ResultsReport:
     def __setup__(cls):
         super(ResultsReport, cls).__setup__()
         cls._error_messages.update({
-            'missing_module_token': 'Missing tokenclient module',
             'polisample': 'Polisample',
             })
 
@@ -104,9 +94,6 @@ class ResultsReport:
         pool = Pool()
         ResultsReport = pool.get('lims.results_report')
         DigitalSign = pool.get('lims_digital_sign.digital_sign', type='wizard')
-
-        if not HAS_TOKEN:
-            ResultsReport.raise_user_error('missing_module_token')
 
         results_reports = ResultsReport.search([
                 ('signed', '=', False)])
