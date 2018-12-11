@@ -2,12 +2,9 @@
 # This file is part of lims_digital_sign module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-try:
-    import cStringIO as StringIO
-except ImportError:
-    import StringIO
 import os
 import time
+from io import BytesIO
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
@@ -169,16 +166,15 @@ class ResultsReport:
         merger = PdfFileMerger()
         if english_report:
             for detail in details:
-                filedata = StringIO.StringIO(detail.report_cache_eng)
+                filedata = BytesIO(detail.report_cache_eng)
                 merger.append(filedata)
         else:
             for detail in details:
-                filedata = StringIO.StringIO(detail.report_cache)
+                filedata = BytesIO(detail.report_cache)
                 merger.append(filedata)
-        output = StringIO.StringIO()
+        output = BytesIO()
         merger.write(output)
-        return output
-        # return bytearray(output.getvalue())
+        return bytearray(output.getvalue())
 
     def sign_report(self, output):
         '''
