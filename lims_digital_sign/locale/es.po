@@ -3,10 +3,6 @@ msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "error:lims.results_report:"
-msgid "Missing tokenclient module"
-msgstr "Falta el módulo tokenclient"
-
-msgctxt "error:lims.results_report:"
 msgid "Polisample"
 msgstr "Polimuestra"
 
