@@ -150,7 +150,6 @@ class ResultsReport:
 
         output = self._get_global_report(details, english_report)
         output = self.sign_report(output)
-        # output = bytearray(output.getvalue())  # debug: TODELETE
         if not output:
             return False
         if english_report:
@@ -174,7 +173,7 @@ class ResultsReport:
                 merger.append(filedata)
         output = BytesIO()
         merger.write(output)
-        return bytearray(output.getvalue())
+        return output
 
     def sign_report(self, output):
         '''
@@ -189,8 +188,8 @@ class ResultsReport:
         origin = ''.join(['origin', t, '.pdf'])
         target = ''.join(['target', t, '.pdf'])
 
-        with open(os.path.join(path, origin), 'w') as f:
-            f.write(bytearray(output.getvalue()))
+        with open(os.path.join(path, origin), 'wb') as f:
+            f.write(output.getvalue())
         try:
             token = GetToken(listen, origin, target)
             token.signDoc()
@@ -200,7 +199,7 @@ class ResultsReport:
                 % (self.number))
             logging.getLogger('lims_digital_sign').error(msg[1])
             return False
-        with open(os.path.join(path, target)) as f:
+        with open(os.path.join(path, target), 'rb') as f:
             f_target = f.read()
         return f_target
 
