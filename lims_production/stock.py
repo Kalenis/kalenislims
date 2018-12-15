@@ -448,7 +448,8 @@ class Move:
     __name__ = 'stock.move'
     __metaclass__ = PoolMeta
 
-    label_quantity = fields.Integer("Label Quantity")
+    label_quantity = fields.Float("Label Quantity",
+        digits=(16, Eval('unit_digits', 2)))
     origin_purchase_unit_price = fields.Numeric('Unit Price',
         digits=price_digits)
     origin_purchase_currency = fields.Many2One('currency.currency',
@@ -457,7 +458,7 @@ class Move:
     @fields.depends('quantity')
     def on_change_quantity(self):
         if self.quantity:
-            self.label_quantity = int(self.quantity)
+            self.label_quantity = self.quantity
 
     @classmethod
     def _get_origin(cls):
