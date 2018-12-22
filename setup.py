@@ -35,7 +35,7 @@ def get_require_version(name):
     return require
 
 
-version = '4.8.0'
+version = '5.0.0'
 major_version, minor_version, _ = version.split('.', 2)
 major_version = int(major_version)
 minor_version = int(minor_version)
@@ -109,6 +109,7 @@ setup(name='kalenis_lims',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Office/Business',
