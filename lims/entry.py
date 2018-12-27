@@ -1109,7 +1109,8 @@ class ForwardAcknowledgmentOfReceipt(Wizard):
         Entry = Pool().get('lims.entry')
 
         for active_id in Transaction().context['active_ids']:
-            entry = Entry(active_id)
+            with Transaction().set_context(_check_access=False):
+                entry = Entry(active_id)
             if entry.state != 'ongoing':
                 continue
             if not entry.no_acknowledgment_of_receipt:
@@ -1284,7 +1285,8 @@ class PrintAcknowledgmentOfReceipt(Wizard):
         data_ids = Transaction().context['active_ids'][:]
         while len(data_ids) > 0:
             data_id = data_ids.pop()
-            entry = Entry(data_id)
+            with Transaction().set_context(_check_access=False):
+                entry = Entry(data_id)
             if entry.state == 'ongoing':
                 printable = False
                 for sample in entry.samples:
@@ -1386,11 +1388,12 @@ class AcknowledgmentOfReceipt(Report):
                 }
             samples.append(sample_data)
 
-            services_obj = Service.search([
-                ('sample', '=', sample.id),
-                ('fraction.confirmed', '=', True),
-                ('fraction.cie_fraction_type', '=', False),
-                ])
+            with Transaction().set_context(_check_access=False):
+                services_obj = Service.search([
+                    ('sample', '=', sample.id),
+                    ('fraction.confirmed', '=', True),
+                    ('fraction.cie_fraction_type', '=', False),
+                    ])
             for service in services_obj:
                 if (service.analysis.type == 'analysis' and not
                         cls.get_analysis_reportable(sample.product_type,
