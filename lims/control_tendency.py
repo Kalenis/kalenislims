@@ -2,7 +2,10 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import logging
+from io import BytesIO
 from math import sqrt
+
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
@@ -18,6 +21,14 @@ __all__ = ['RangeType', 'Range', 'ControlTendency', 'ControlTendencyDetail',
     'MeansDeviationsCalcResult2', 'MeansDeviationsCalc',
     'TendenciesAnalysisStart', 'TendenciesAnalysisResult',
     'TendenciesAnalysis', 'PrintControlChart', 'ControlChartReport']
+
+CAN_PLOT = False
+try:
+    import pandas as pd
+    CAN_PLOT = True
+except ImportError:
+    logging.getLogger(__name__).warning(
+        'Unable to import pandas. Plotting disabled.', exc_info=True)
 
 
 class RangeType(ModelSQL, ModelView):
@@ -1198,6 +1209,22 @@ class PrintControlChart(Wizard):
             return 'start'
         return 'end'
 
+    @classmethod
+    def __setup__(cls):
+        super(PrintControlChart, cls).__setup__()
+        cls._error_messages.update({
+            'number': 'Measurement',
+            'result': 'Result',
+            'ucl': 'UCL (M+3D)',
+            'uwl': 'UWL (M+2D)',
+            'upl': 'UPL (M+D)',
+            'cl': 'CL (M)',
+            'lpl': 'LPL (M-D)',
+            'lwl': 'LWL (M-2D)',
+            'lcl': 'LCL (M-3D)',
+            'cv': 'CV (%)',
+            })
+
 
 class ControlChartReport(Report):
     'Control Chart'
@@ -1220,40 +1247,122 @@ class ControlChartReport(Report):
         report_context['company'] = company
         report_context['title'] = tendency.analysis.rec_name
 
-        records_limit = 100
-        details = []
+        columns = [x for x in range(1, len(tendency.details) + 1)]
+        report_context['columns'] = columns
+
+        records = cls._get_objects(tendency)
+        report_context['records'] = records
+
+        report_context['plot'] = cls._get_plot(columns, records)
+        return report_context
+
+    @classmethod
+    def _get_objects(cls, tendency):
+        pool = Pool()
+        PrintControlChart = pool.get('lims.control_chart.print',
+            type='wizard')
+
+        objects = {
+            'number': {'name': PrintControlChart.raise_user_error('number',
+                raise_exception=False), 'order': 1, 'recs': {}},
+            'result': {'name': PrintControlChart.raise_user_error('result',
+                raise_exception=False), 'order': 2, 'recs': {}},
+            'ucl': {'name': PrintControlChart.raise_user_error('ucl',
+                raise_exception=False), 'order': 3, 'recs': {}},
+            'uwl': {'name': PrintControlChart.raise_user_error('uwl',
+                raise_exception=False), 'order': 4, 'recs': {}},
+            'upl': {'name': PrintControlChart.raise_user_error('upl',
+                raise_exception=False), 'order': 5, 'recs': {}},
+            'cl': {'name': PrintControlChart.raise_user_error('cl',
+                raise_exception=False), 'order': 6, 'recs': {}},
+            'lpl': {'name': PrintControlChart.raise_user_error('lpl',
+                raise_exception=False), 'order': 7, 'recs': {}},
+            'lwl': {'name': PrintControlChart.raise_user_error('lwl',
+                raise_exception=False), 'order': 8, 'recs': {}},
+            'lcl': {'name': PrintControlChart.raise_user_error('lcl',
+                raise_exception=False), 'order': 9, 'recs': {}},
+            'cv': {'name': PrintControlChart.raise_user_error('cv',
+                raise_exception=False), 'order': 10, 'recs': {}},
+            }
         count = 1
         for detail in tendency.details:
-            report_context['number_' + str(count)] = count
-            report_context['result_' + str(count)] = detail.result
-            report_context['ucl_' + str(count)] = tendency.ucl
-            report_context['uwl_' + str(count)] = tendency.uwl
-            report_context['upl_' + str(count)] = tendency.upl
-            report_context['cl_' + str(count)] = tendency.cl
-            report_context['lwl_' + str(count)] = tendency.lwl
-            report_context['lcl_' + str(count)] = tendency.lcl
-            report_context['lpl_' + str(count)] = tendency.lpl
-            report_context['cv_' + str(count)] = tendency.cv
-            details.append({
-                'number': count,
-                'result': detail.result,
-                })
+            objects['number']['recs'][count] = count
+            objects['result']['recs'][count] = detail.result
+            objects['ucl']['recs'][count] = tendency.ucl
+            objects['uwl']['recs'][count] = tendency.uwl
+            objects['upl']['recs'][count] = tendency.upl
+            objects['cl']['recs'][count] = tendency.cl
+            objects['lpl']['recs'][count] = tendency.lpl
+            objects['lwl']['recs'][count] = tendency.lwl
+            objects['lcl']['recs'][count] = tendency.lcl
+            objects['cv']['recs'][count] = tendency.cv
             count += 1
-            if count > records_limit:
-                break
-        report_context['details'] = details
+        return objects
 
-        if count <= records_limit:
-            for x in range(count, records_limit + 1):
-                report_context['number_' + str(x)] = ''
-                report_context['result_' + str(x)] = ''
-                report_context['ucl_' + str(x)] = ''
-                report_context['uwl_' + str(x)] = ''
-                report_context['upl_' + str(x)] = ''
-                report_context['cl_' + str(x)] = ''
-                report_context['lwl_' + str(x)] = ''
-                report_context['lcl_' + str(x)] = ''
-                report_context['lpl_' + str(x)] = ''
-                report_context['cv_' + str(x)] = ''
+    @classmethod
+    def _get_plot(cls, columns, records):
+        if not CAN_PLOT:
+            return None
+        pool = Pool()
+        PrintControlChart = pool.get('lims.control_chart.print',
+            type='wizard')
 
-        return report_context
+        index = columns
+        cols = []
+        ds = {}
+        for r in sorted(records.values(), key=lambda x: x['order']):
+            cols.append(r['name'])
+            ds[r['name']] = [r['recs'][col] for col in index]
+        df = pd.DataFrame(ds, index=index)
+        df = df.reindex_axis(cols, axis=1)
+
+        try:
+            ax = df[[
+                PrintControlChart.raise_user_error('ucl',
+                    raise_exception=False),
+                ]].plot(kind='line', color='red', rot=45, fontsize=7,
+                    figsize=(10, 7.5), linestyle='-')
+            ax = df[[
+                PrintControlChart.raise_user_error('uwl',
+                    raise_exception=False),
+                ]].plot(kind='line', color='orange', rot=45, fontsize=7,
+                    figsize=(10, 7.5), linestyle='-', ax=ax)
+            ax = df[[
+                PrintControlChart.raise_user_error('upl',
+                    raise_exception=False),
+                ]].plot(kind='line', color='yellow', rot=45, fontsize=7,
+                    figsize=(10, 7.5), linestyle='--', ax=ax)
+            ax = df[[
+                PrintControlChart.raise_user_error('cl',
+                    raise_exception=False),
+                ]].plot(kind='line', color='green', rot=45, fontsize=7,
+                    figsize=(10, 7.5), linestyle='-', ax=ax)
+            ax = df[[
+                PrintControlChart.raise_user_error('lpl',
+                    raise_exception=False),
+                ]].plot(kind='line', color='yellow', rot=45, fontsize=7,
+                    figsize=(10, 7.5), linestyle='--', ax=ax)
+            ax = df[[
+                PrintControlChart.raise_user_error('lwl',
+                    raise_exception=False),
+                ]].plot(kind='line', color='orange', rot=45, fontsize=7,
+                    figsize=(10, 7.5), linestyle='-', ax=ax)
+            ax = df[[
+                PrintControlChart.raise_user_error('lcl',
+                    raise_exception=False),
+                ]].plot(kind='line', color='red', rot=45, fontsize=7,
+                    figsize=(10, 7.5), linestyle='-', ax=ax)
+            ax = df[[
+                PrintControlChart.raise_user_error('result',
+                    raise_exception=False),
+                ]].plot(kind='line', color='blue', rot=45, fontsize=7,
+                    figsize=(10, 7.5), marker='o', linestyle='-', ax=ax)
+
+            output = BytesIO()
+            ax.legend(loc='center left', bbox_to_anchor=(1.0, 0.5))
+            ax.get_figure().savefig(output, bbox_inches='tight', dpi=300)
+            image = output.getvalue()
+            output.close()
+            return image
+        except TypeError:
+            return output.getvalue()
