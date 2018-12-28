@@ -99,6 +99,46 @@ msgctxt "error:lims.concentration.level:"
 msgid "Concentration level code must be unique"
 msgstr "El código del nivel de concentración debe ser único"
 
+msgctxt "error:lims.control_chart.print:"
+msgid "CL (M)"
+msgstr "LC (M)"
+
+msgctxt "error:lims.control_chart.print:"
+msgid "CV (%)"
+msgstr "CV (%)"
+
+msgctxt "error:lims.control_chart.print:"
+msgid "LCL (M-3D)"
+msgstr "LIC (M-3D)"
+
+msgctxt "error:lims.control_chart.print:"
+msgid "LPL (M-D)"
+msgstr "LIP (M-D)"
+
+msgctxt "error:lims.control_chart.print:"
+msgid "LWL (M-2D)"
+msgstr "LIA (M-2D)"
+
+msgctxt "error:lims.control_chart.print:"
+msgid "Measurement"
+msgstr "Medición"
+
+msgctxt "error:lims.control_chart.print:"
+msgid "Result"
+msgstr "Resultado"
+
+msgctxt "error:lims.control_chart.print:"
+msgid "UCL (M+3D)"
+msgstr "LSC (M+3D)"
+
+msgctxt "error:lims.control_chart.print:"
+msgid "UPL (M+D)"
+msgstr "LSP (M+D)"
+
+msgctxt "error:lims.control_chart.print:"
+msgid "UWL (M+2D)"
+msgstr "LSA (M+2D)"
+
 msgctxt "error:lims.countersample.discharge:"
 msgid "Countersamples Discharge"
 msgstr "Descarte de contramuestras"
@@ -9265,48 +9305,8 @@ msgid "€"
 msgstr ""
 
 msgctxt "report:lims.control_chart.report:"
-msgid "CL (M)"
-msgstr "LC (M)"
-
-msgctxt "report:lims.control_chart.report:"
-msgid "CV (%)"
-msgstr "CV (%)"
-
-msgctxt "report:lims.control_chart.report:"
 msgid "Control Chart"
 msgstr "Carta de Control"
-
-msgctxt "report:lims.control_chart.report:"
-msgid "LCL (M-3D)"
-msgstr "LIC (M-3D)"
-
-msgctxt "report:lims.control_chart.report:"
-msgid "LPL (M-D)"
-msgstr "LIP (M-D)"
-
-msgctxt "report:lims.control_chart.report:"
-msgid "LWL (M-2D)"
-msgstr "LIA (M-2D)"
-
-msgctxt "report:lims.control_chart.report:"
-msgid "Measurement"
-msgstr "Medición"
-
-msgctxt "report:lims.control_chart.report:"
-msgid "Result"
-msgstr "Resultado"
-
-msgctxt "report:lims.control_chart.report:"
-msgid "UCL (M+3D)"
-msgstr "LSC (M+3D)"
-
-msgctxt "report:lims.control_chart.report:"
-msgid "UPL (M+D)"
-msgstr "LSP (M+D)"
-
-msgctxt "report:lims.control_chart.report:"
-msgid "UWL (M+2D)"
-msgstr "LSA (M+2D)"
 
 msgctxt "report:lims.countersample.discharge.report:"
 msgid "-"
