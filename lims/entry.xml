@@ -407,7 +407,7 @@
 <!--        <menuitem parent="lims_entry_board_menu" action="wiz_lims_create_entry"
             id="lims_create_entry_menu" sequence="5"/>-->
         <menuitem parent="lims_entry_board_menu" action="act_lims_entry_form"
-            id="lims_entry_form_menu" sequence="10"  icon="tryton-new"/>
+            id="lims_entry_form_menu" sequence="10"  icon="tryton-form"/>
         <menuitem parent="lims_entry_board_menu" action="act_lims_entry_list"
             id="lims_entry_menu" sequence="20"  icon="tryton-list"/>
 
