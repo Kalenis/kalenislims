@@ -4222,9 +4222,9 @@ class NotebookResultsVerification(Wizard):
             else:
                 return 'out'
         else:
-            if result < range_.min:
+            if (range_.min and result < range_.min):
                 return 'out'
-            elif result <= range_.max:
+            elif (range_.max and result <= range_.max):
                 return 'ok'
             else:
                 return 'out'
