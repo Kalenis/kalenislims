@@ -1642,7 +1642,7 @@ class NotebookInternalRelationsCalc1(Wizard):
     start = StateView('lims.notebook.internal_relations_calc_1.start',
         'lims.lims_notebook_internal_relations_calc_1_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search', 'search', 'tryton-go-next', default=True),
+            Button('Search', 'search', 'tryton-forward', default=True),
             ])
     search = StateTransition()
     confirm = StateTransition()
@@ -2065,7 +2065,7 @@ class NotebookInternalRelationsCalc2(Wizard):
     start = StateView('lims.notebook.internal_relations_calc_2.start',
         'lims.lims_notebook_internal_relations_calc_2_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search', 'search', 'tryton-go-next', default=True),
+            Button('Search', 'search', 'tryton-forward', default=True),
             ])
     search = StateTransition()
     result = StateView('lims.notebook.internal_relations_calc_2.result',
@@ -2073,7 +2073,7 @@ class NotebookInternalRelationsCalc2(Wizard):
     next_ = StateTransition()
     process = StateView('lims.notebook.internal_relations_calc_2.process',
         'lims.lims_notebook_internal_relations_calc_2_process_view_form', [
-            Button('Next', 'check_variables', 'tryton-go-next', default=True),
+            Button('Next', 'check_variables', 'tryton-forward', default=True),
             ])
     check_variables = StateTransition()
     confirm = StateTransition()
@@ -2670,13 +2670,13 @@ class NotebookLoadResultsFormula(Wizard):
     start = StateView('lims.notebook.load_results_formula.start',
         'lims.lims_notebook_load_results_formula_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search', 'search', 'tryton-go-next', default=True),
+            Button('Search', 'search', 'tryton-forward', default=True),
             ])
     search = StateTransition()
     empty = StateView('lims.notebook.load_results_formula.empty',
         'lims.lims_notebook_load_results_formula_empty_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search again', 'start', 'tryton-go-next', default=True),
+            Button('Search again', 'start', 'tryton-forward', default=True),
             ])
     result = StateView('lims.notebook.load_results_formula.result',
         'lims.lims_notebook_load_results_formula_result_view_form', [])
@@ -2685,18 +2685,18 @@ class NotebookLoadResultsFormula(Wizard):
     process = StateView('lims.notebook.load_results_formula.process',
         'lims.lims_notebook_load_results_formula_process_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Previous', 'prev_', 'tryton-go-previous'),
-            Button('Next', 'next_', 'tryton-go-next', default=True),
+            Button('Previous', 'prev_', 'tryton-back'),
+            Button('Next', 'next_', 'ttryton-forward', default=True),
             ])
     beginning = StateView('lims.notebook.load_results_formula.beginning',
         'lims.lims_notebook_load_results_formula_beginning_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Next', 'next_', 'tryton-go-next', default=True),
+            Button('Next', 'next_', 'tryton-forward', default=True),
             ])
     confirm = StateView('lims.notebook.load_results_formula.confirm',
         'lims.lims_notebook_load_results_formula_confirm_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Previous', 'prev_', 'tryton-go-previous'),
+            Button('Previous', 'prev_', 'tryton-back'),
             Button('Confirm', 'check_professional', 'tryton-ok', default=True),
             ])
     check_professional = StateTransition()
@@ -3295,13 +3295,13 @@ class NotebookLoadResultsManual(Wizard):
     start = StateView('lims.notebook.load_results_manual.start',
         'lims.lims_notebook_load_results_manual_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search', 'search', 'tryton-go-next', default=True),
+            Button('Search', 'search', 'tryton-forward', default=True),
             ])
     search = StateTransition()
     empty = StateView('lims.notebook.load_results_manual.empty',
         'lims.lims_notebook_load_results_manual_empty_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search again', 'start', 'tryton-go-next', default=True),
+            Button('Search again', 'start', 'tryton-forward', default=True),
             ])
     result = StateView('lims.notebook.load_results_manual.result',
         'lims.lims_notebook_load_results_manual_result_view_form', [

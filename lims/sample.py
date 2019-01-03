@@ -3205,13 +3205,13 @@ class CountersampleStorage(Wizard):
     start = StateView('lims.countersample.storage.start',
         'lims.lims_countersample_storage_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search', 'search', 'tryton-go-next', default=True),
+            Button('Search', 'search', 'tryton-forward', default=True),
             ])
     search = StateTransition()
     empty = StateView('lims.countersample.storage.empty',
         'lims.lims_countersample_storage_empty_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search again', 'start', 'tryton-go-next', default=True),
+            Button('Search again', 'start', 'tryton-forward', default=True),
             ])
     result = StateView('lims.countersample.storage.result',
         'lims.lims_countersample_storage_result_view_form', [
@@ -3525,13 +3525,13 @@ class CountersampleStorageRevert(Wizard):
     start = StateView('lims.countersample.storage_revert.start',
         'lims.lims_countersample_storage_revert_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search', 'search', 'tryton-go-next', default=True),
+            Button('Search', 'search', 'tryton-forward', default=True),
             ])
     search = StateTransition()
     empty = StateView('lims.countersample.storage_revert.empty',
         'lims.lims_countersample_storage_revert_empty_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search again', 'start', 'tryton-go-next', default=True),
+            Button('Search again', 'start', 'tryton-forward', default=True),
             ])
     result = StateView('lims.countersample.storage_revert.result',
         'lims.lims_countersample_storage_revert_result_view_form', [
@@ -3720,13 +3720,13 @@ class CountersampleDischarge(Wizard):
     start = StateView('lims.countersample.discharge.start',
         'lims.lims_countersample_discharge_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search', 'search', 'tryton-go-next', default=True),
+            Button('Search', 'search', 'tryton-forward', default=True),
             ])
     search = StateTransition()
     empty = StateView('lims.countersample.discharge.empty',
         'lims.lims_countersample_discharge_empty_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search again', 'start', 'tryton-go-next', default=True),
+            Button('Search again', 'start', 'tryton-forward', default=True),
             ])
     result = StateView('lims.countersample.discharge.result',
         'lims.lims_countersample_discharge_result_view_form', [
@@ -3915,13 +3915,13 @@ class FractionDischarge(Wizard):
     start = StateView('lims.fraction.discharge.start',
         'lims.lims_fraction_discharge_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search', 'search', 'tryton-go-next', default=True),
+            Button('Search', 'search', 'tryton-forward', default=True),
             ])
     search = StateTransition()
     empty = StateView('lims.fraction.discharge.empty',
         'lims.lims_fraction_discharge_empty_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search again', 'start', 'tryton-go-next', default=True),
+            Button('Search again', 'start', 'tryton-forward', default=True),
             ])
     result = StateView('lims.fraction.discharge.result',
         'lims.lims_fraction_discharge_result_view_form', [
@@ -4114,13 +4114,13 @@ class FractionDischargeRevert(Wizard):
     start = StateView('lims.fraction.discharge_revert.start',
         'lims.lims_fraction_discharge_revert_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search', 'search', 'tryton-go-next', default=True),
+            Button('Search', 'search', 'tryton-forward', default=True),
             ])
     search = StateTransition()
     empty = StateView('lims.fraction.discharge_revert.empty',
         'lims.lims_fraction_discharge_revert_empty_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search again', 'start', 'tryton-go-next', default=True),
+            Button('Search again', 'start', 'tryton-forward', default=True),
             ])
     result = StateView('lims.fraction.discharge_revert.result',
         'lims.lims_fraction_discharge_revert_result_view_form', [

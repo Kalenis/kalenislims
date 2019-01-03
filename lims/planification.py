@@ -4008,7 +4008,7 @@ class SearchPlannedFractions(Wizard):
     start = StateView('lims.planification.search_planned_fractions.start',
         'lims.lims_search_planned_fractions_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search', 'search', 'tryton-go-next', default=True),
+            Button('Search', 'search', 'tryton-forward', default=True),
             ])
     search = StateTransition()
     next = StateView('lims.planification.search_planned_fractions.next',
@@ -4622,13 +4622,13 @@ class ReleaseFraction(Wizard):
     start = StateView('lims.planification.release_fraction.start',
         'lims.lims_planification_release_fraction_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search', 'search', 'tryton-go-next', default=True),
+            Button('Search', 'search', 'tryton-forward', default=True),
             ])
     search = StateTransition()
     empty = StateView('lims.planification.release_fraction.empty',
         'lims.lims_planification_release_fraction_empty_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search again', 'start', 'tryton-go-next', default=True),
+            Button('Search again', 'start', 'tryton-forward', default=True),
             ])
     result = StateView('lims.planification.release_fraction.result',
         'lims.lims_planification_release_fraction_result_view_form', [

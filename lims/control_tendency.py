@@ -619,18 +619,18 @@ class MeansDeviationsCalc(Wizard):
     start = StateView('lims.control.means_deviations_calc.start',
         'lims.lims_control_means_deviations_calc_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search', 'search', 'tryton-go-next', default=True),
+            Button('Search', 'search', 'tryton-forward', default=True),
             ])
     search = StateTransition()
     empty = StateView('lims.control.means_deviations_calc.empty',
         'lims.lims_control_means_deviations_calc_empty_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search again', 'start', 'tryton-go-next', default=True),
+            Button('Search again', 'start', 'tryton-forward', default=True),
             ])
     result = StateView('lims.control.means_deviations_calc.result',
         'lims.lims_control_means_deviations_calc_result_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Update', 'update', 'tryton-go-next', default=True),
+            Button('Update', 'update', 'tryton-forward', default=True),
             ])
     update = StateTransition()
     result2 = StateView('lims.control.means_deviations_calc.result2',
