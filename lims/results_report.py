@@ -963,7 +963,7 @@ class DivideReports(Wizard):
     process = StateView('lims.divide_reports.process',
         'lims.lims_divide_reports_process_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Next', 'next_', 'tryton-go-next', default=True),
+            Button('Next', 'next_', 'tryton-forward', default=True),
             ])
     confirm = StateTransition()
 
@@ -1277,13 +1277,13 @@ class GenerateResultsReport(Wizard):
     start = StateView('lims.generate_results_report.start',
         'lims.lims_generate_results_report_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search', 'search', 'tryton-go-next', default=True),
+            Button('Search', 'search', 'tryton-forward', default=True),
             ])
     search = StateTransition()
     empty = StateView('lims.generate_results_report.empty',
         'lims.lims_generate_results_report_empty_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search again', 'start', 'tryton-go-next', default=True),
+            Button('Search again', 'start', 'tryton-forward', default=True),
             ])
     result_aut = StateView('lims.generate_results_report.result_aut',
         'lims.lims_generate_results_report_result_aut_view_form', [

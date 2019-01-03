@@ -164,12 +164,12 @@ class NotebookLoadResultsFile(Wizard):
     start = StateView('lims.notebook.load_results_file.start',
         'lims_instrument.lims_load_results_file_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Collect', 'collect', 'tryton-go-next', default=True),
+            Button('Collect', 'collect', 'tryton-forward', default=True),
             ])
     collect = StateTransition()
     empty = StateView('lims.notebook.load_results_file.empty',
         'lims_instrument.lims_load_results_file_empty_view_form', [
-            Button('Try again', 'start', 'tryton-go-next'),
+            Button('Try again', 'start', 'tryton-forward'),
             Button('Close', 'end', 'tryton-close', default=True),
             ])
     result = StateView('lims.notebook.load_results_file.result',
