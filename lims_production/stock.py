@@ -449,7 +449,7 @@ class Move:
     __metaclass__ = PoolMeta
 
     label_quantity = fields.Float("Label Quantity",
-        digits=(16, Eval('unit_digits', 2)))
+        digits=(16, Eval('unit_digits', 2)), depends=['unit_digits'])
     origin_purchase_unit_price = fields.Numeric('Unit Price',
         digits=price_digits)
     origin_purchase_currency = fields.Many2One('currency.currency',

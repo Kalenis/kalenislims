@@ -5,6 +5,7 @@
 from trytond.pool import Pool
 from . import project
 from . import configuration
+from . import invoice
 
 
 def register():
@@ -15,3 +16,7 @@ def register():
         configuration.LabWorkYear,
         configuration.LabWorkYearSequence,
         module='lims_project_tas', type_='model')
+    Pool.register(
+        invoice.Invoice,
+        module='lims_project_tas', type_='model',
+        depends=['lims_account_invoice'])

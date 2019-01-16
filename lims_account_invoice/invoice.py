@@ -28,12 +28,6 @@ class Invoice:
     __name__ = 'account.invoice'
     __metaclass__ = PoolMeta
 
-    # lims_project = fields.Many2One('lims.project', 'TAS Project',
-    #     domain=[('type', '=', 'tas')],
-    #     states={
-    #         'readonly': Eval('state') != 'draft',
-    #         'invisible': Eval('type').in_(['in'])
-    #         })
     no_send_invoice = fields.Boolean('No send invoice',
         states={'invisible': Eval('type') == 'in'},
         depends=['type'],
