@@ -3774,7 +3774,7 @@ class CountersampleDischarge(Wizard):
         fractions = [f.id for f in self.result.fractions]
         self.result.fractions = None
         return {
-            'fractions': fractions,
+            'fractions': [],
             'fraction_domain': fractions,
             }
 
