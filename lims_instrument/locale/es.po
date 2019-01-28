@@ -70,25 +70,169 @@ msgctxt "field:lims.notebook.load_results_file.start,id:"
 msgid "ID"
 msgstr "ID"
 
-msgctxt "field:lims.notebook.load_results_file.start,lines:"
-msgid "Files"
-msgstr "Archivos"
+msgctxt "field:lims.notebook.load_results_file.start,infile_01:"
+msgid "File 01"
+msgstr "Archivo 01"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_02:"
+msgid "File 02"
+msgstr "Archivo 02"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_03:"
+msgid "File 03"
+msgstr "Archivo 03"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_04:"
+msgid "File 04"
+msgstr "Archivo 04"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_05:"
+msgid "File 05"
+msgstr "Archivo 05"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_06:"
+msgid "File 06"
+msgstr "Archivo 06"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_07:"
+msgid "File 07"
+msgstr "Archivo 07"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_08:"
+msgid "File 08"
+msgstr "Archivo 08"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_09:"
+msgid "File 09"
+msgstr "Archivo 09"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_10:"
+msgid "File 10"
+msgstr "Archivo 10"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_11:"
+msgid "File 11"
+msgstr "Archivo 11"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_12:"
+msgid "File 12"
+msgstr "Archivo 12"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_13:"
+msgid "File 13"
+msgstr "Archivo 13"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_14:"
+msgid "File 14"
+msgstr "Archivo 14"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_15:"
+msgid "File 15"
+msgstr "Archivo 15"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_16:"
+msgid "File 16"
+msgstr "Archivo 16"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_17:"
+msgid "File 17"
+msgstr "Archivo 17"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_18:"
+msgid "File 18"
+msgstr "Archivo 18"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_19:"
+msgid "File 19"
+msgstr "Archivo 19"
+
+msgctxt "field:lims.notebook.load_results_file.start,infile_20:"
+msgid "File 20"
+msgstr "Archivo 20"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_01:"
+msgid "Name 01"
+msgstr "Nombre 01"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_02:"
+msgid "Name 02"
+msgstr "Nombre 02"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_03:"
+msgid "Name 03"
+msgstr "Nombre 03"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_04:"
+msgid "Name 04"
+msgstr "Nombre 04"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_05:"
+msgid "Name 05"
+msgstr "Nombre 05"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_06:"
+msgid "Name 06"
+msgstr "Nombre 06"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_07:"
+msgid "Name 07"
+msgstr "Nombre 07"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_08:"
+msgid "Name 08"
+msgstr "Nombre 08"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_09:"
+msgid "Name 09"
+msgstr "Nombre 09"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_10:"
+msgid "Name 10"
+msgstr "Nombre 10"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_11:"
+msgid "Name 11"
+msgstr "Nombre 11"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_12:"
+msgid "Name 12"
+msgstr "Nombre 12"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_13:"
+msgid "Name 13"
+msgstr "Nombre 13"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_14:"
+msgid "Name 14"
+msgstr "Nombre 14"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_15:"
+msgid "Name 15"
+msgstr "Nombre 15"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_16:"
+msgid "Name 16"
+msgstr "Nombre 16"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_17:"
+msgid "Name 17"
+msgstr "Nombre 17"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_18:"
+msgid "Name 18"
+msgstr "Nombre 18"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_19:"
+msgid "Name 19"
+msgstr "Nombre 19"
+
+msgctxt "field:lims.notebook.load_results_file.start,name_20:"
+msgid "Name 20"
+msgstr "Nombre 20"
 
 msgctxt "field:lims.notebook.load_results_file.start,results_importer:"
 msgid "Results importer"
 msgstr "Importador de resultados"
-
-msgctxt "field:lims.notebook.load_results_file.start.line,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.notebook.load_results_file.start.line,infile:"
-msgid "File"
-msgstr "Archivo"
-
-msgctxt "field:lims.notebook.load_results_file.start.line,name:"
-msgid "Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.notebook.load_results_file.warning,id:"
 msgid "ID"
@@ -119,7 +263,7 @@ msgid "Name"
 msgstr "Nombre"
 
 msgctxt "field:lims.resultsimport,rec_name:"
-msgid "Name"
+msgid "Record Name"
 msgstr "Nombre"
 
 msgctxt "field:lims.resultsimport,write_date:"
@@ -162,10 +306,6 @@ msgctxt "model:lims.notebook.load_results_file.start,name:"
 msgid "Load Results from File"
 msgstr "Carga de resultados desde archivo"
 
-msgctxt "model:lims.notebook.load_results_file.start.line,name:"
-msgid "Load Results from File"
-msgstr "Carga de resultados desde archivo"
-
 msgctxt "model:lims.notebook.load_results_file.warning,name:"
 msgid "Load Results from File Warning"
 msgstr "Carga de resultados desde archivo - Advertencia"
@@ -179,16 +319,8 @@ msgid "Notebook lines"
 msgstr "Líneas de cuaderno"
 
 msgctxt "view:lims.notebook.load_results_file.empty:"
-msgid "Load Results from File"
-msgstr "Carga de resultados desde archivo"
-
-msgctxt "view:lims.notebook.load_results_file.empty:"
 msgid "No data could be collected from files"
 msgstr "No fue posible obtener resultados desde los archivos"
-
-msgctxt "view:lims.notebook.load_results_file.export:"
-msgid "Export Results"
-msgstr "Exportar resultados"
 
 msgctxt "view:lims.notebook.load_results_file.export:"
 msgid "Save the results in file"
@@ -198,15 +330,7 @@ msgctxt "view:lims.notebook.load_results_file.result:"
 msgid "Load Results from File"
 msgstr "Carga de resultados desde archivo"
 
-msgctxt "view:lims.notebook.load_results_file.start.line:"
-msgid "Files"
-msgstr "Archivos"
-
 msgctxt "view:lims.notebook.load_results_file.start:"
-msgid "Load Results from File"
-msgstr "Carga de resultados desde archivo"
-
-msgctxt "view:lims.notebook.load_results_file.warning:"
 msgid "Load Results from File"
 msgstr "Carga de resultados desde archivo"
 
@@ -253,7 +377,3 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.notebook.load_results_file,warning,close:"
 msgid "Ok"
 msgstr "Aceptar"
-
-msgctxt "field:lims.notebook.line,imported_inj_date:"
-msgid "Injection date"
-msgstr "Fecha de Inyección"

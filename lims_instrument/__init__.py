@@ -11,7 +11,6 @@ def register():
         resultsimport.NotebookLine,
         resultsimport.ResultsImport,
         resultsimport.NotebookLoadResultsFileStart,
-        resultsimport.NotebookLoadResultsFileStartLine,
         resultsimport.NotebookLoadResultsFileEmpty,
         resultsimport.NotebookLoadResultsFileResult,
         resultsimport.NotebookLoadResultsFileWarning,

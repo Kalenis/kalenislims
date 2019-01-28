@@ -18,7 +18,7 @@ from trytond.transaction import Transaction
 
 
 __all__ = ['NotebookLine', 'ResultsImport', 'NotebookLoadResultsFileStart',
-    'NotebookLoadResultsFileStartLine', 'NotebookLoadResultsFileEmpty',
+    'NotebookLoadResultsFileEmpty',
     'NotebookLoadResultsFileResult', 'NotebookLoadResultsFileWarning',
     'NotebookLoadResultsFileExport', 'NotebookLoadResultsFile']
 
@@ -118,16 +118,46 @@ class NotebookLoadResultsFileStart(ModelView):
 
     results_importer = fields.Many2One('lims.resultsimport',
         'Results importer', required=True)
-    lines = fields.One2Many('lims.notebook.load_results_file.start.line',
-        None, 'Files', required=True)
-
-
-class NotebookLoadResultsFileStartLine(ModelView):
-    'Load Results from File'
-    __name__ = 'lims.notebook.load_results_file.start.line'
-
-    infile = fields.Binary('File', required=True, filename='name')
-    name = fields.Char('Name', readonly=True)
+    infile_01 = fields.Binary('File 01', filename='name_01')
+    name_01 = fields.Char('Name 01', readonly=True)
+    infile_02 = fields.Binary('File 02', filename='name_02')
+    name_02 = fields.Char('Name 02', readonly=True)
+    infile_03 = fields.Binary('File 03', filename='name_03')
+    name_03 = fields.Char('Name 03', readonly=True)
+    infile_04 = fields.Binary('File 04', filename='name_04')
+    name_04 = fields.Char('Name 04', readonly=True)
+    infile_05 = fields.Binary('File 05', filename='name_05')
+    name_05 = fields.Char('Name 05', readonly=True)
+    infile_06 = fields.Binary('File 06', filename='name_06')
+    name_06 = fields.Char('Name 06', readonly=True)
+    infile_07 = fields.Binary('File 07', filename='name_07')
+    name_07 = fields.Char('Name 07', readonly=True)
+    infile_08 = fields.Binary('File 08', filename='name_08')
+    name_08 = fields.Char('Name 08', readonly=True)
+    infile_09 = fields.Binary('File 09', filename='name_09')
+    name_09 = fields.Char('Name 09', readonly=True)
+    infile_10 = fields.Binary('File 10', filename='name_10')
+    name_10 = fields.Char('Name 10', readonly=True)
+    infile_11 = fields.Binary('File 11', filename='name_11')
+    name_11 = fields.Char('Name 11', readonly=True)
+    infile_12 = fields.Binary('File 12', filename='name_12')
+    name_12 = fields.Char('Name 12', readonly=True)
+    infile_13 = fields.Binary('File 13', filename='name_13')
+    name_13 = fields.Char('Name 13', readonly=True)
+    infile_14 = fields.Binary('File 14', filename='name_14')
+    name_14 = fields.Char('Name 14', readonly=True)
+    infile_15 = fields.Binary('File 15', filename='name_15')
+    name_15 = fields.Char('Name 15', readonly=True)
+    infile_16 = fields.Binary('File 16', filename='name_16')
+    name_16 = fields.Char('Name 16', readonly=True)
+    infile_17 = fields.Binary('File 17', filename='name_17')
+    name_17 = fields.Char('Name 17', readonly=True)
+    infile_18 = fields.Binary('File 18', filename='name_18')
+    name_18 = fields.Char('Name 18', readonly=True)
+    infile_19 = fields.Binary('File 19', filename='name_19')
+    name_19 = fields.Char('Name 19', readonly=True)
+    infile_20 = fields.Binary('File 20', filename='name_20')
+    name_20 = fields.Char('Name 20', readonly=True)
 
 
 class NotebookLoadResultsFileEmpty(ModelView):
@@ -198,9 +228,12 @@ class NotebookLoadResultsFile(Wizard):
         Analysis = pool.get('lims.analysis')
 
         lines = []
-        for fline in self.start.lines:
+        for fline in [str(item).zfill(2) for item in range(1, 21)]:
+            file_ = getattr(self.start, 'infile_%s' % fline)
+            if not file_:
+                continue
             self.start.results_importer.rawresults = {}
-            self.start.results_importer.parse(fline.infile)
+            self.start.results_importer.parse(file_)
             raw_results = self.start.results_importer.rawresults
             fractions_numbers = list(raw_results.keys())
             if not fractions_numbers:

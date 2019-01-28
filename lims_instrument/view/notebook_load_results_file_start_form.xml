@@ -2,5 +2,69 @@
 <form>
     <label name="results_importer"/>
     <field name="results_importer" widget="selection"/>
-    <field name="lines" colspan="4"/>
+    <newline/>
+    <group col="3" colspan="2" id="files_10">
+        <label name="infile_01"/>
+        <field name="infile_01"/>
+        <field name="name_01"/>
+        <label name="infile_02"/>
+        <field name="infile_02"/>
+        <field name="name_02"/>
+        <label name="infile_03"/>
+        <field name="infile_03"/>
+        <field name="name_03"/>
+        <label name="infile_04"/>
+        <field name="infile_04"/>
+        <field name="name_04"/>
+        <label name="infile_05"/>
+        <field name="infile_05"/>
+        <field name="name_05"/>
+        <label name="infile_06"/>
+        <field name="infile_06"/>
+        <field name="name_06"/>
+        <label name="infile_07"/>
+        <field name="infile_07"/>
+        <field name="name_07"/>
+        <label name="infile_08"/>
+        <field name="infile_08"/>
+        <field name="name_08"/>
+        <label name="infile_09"/>
+        <field name="infile_09"/>
+        <field name="name_09"/>
+        <label name="infile_10"/>
+        <field name="infile_10"/>
+        <field name="name_10"/>
+    </group>
+    <group col="3" colspan="2" id="files_20">
+        <label name="infile_11"/>
+        <field name="infile_11"/>
+        <field name="name_11"/>
+        <label name="infile_12"/>
+        <field name="infile_12"/>
+        <field name="name_12"/>
+        <label name="infile_13"/>
+        <field name="infile_13"/>
+        <field name="name_13"/>
+        <label name="infile_14"/>
+        <field name="infile_14"/>
+        <field name="name_14"/>
+        <label name="infile_15"/>
+        <field name="infile_15"/>
+        <field name="name_15"/>
+        <label name="infile_16"/>
+        <field name="infile_16"/>
+        <field name="name_16"/>
+        <label name="infile_17"/>
+        <field name="infile_17"/>
+        <field name="name_17"/>
+        <label name="infile_18"/>
+        <field name="infile_18"/>
+        <field name="name_18"/>
+        <label name="infile_19"/>
+        <field name="infile_19"/>
+        <field name="name_19"/>
+        <label name="infile_20"/>
+        <field name="infile_20"/>
+        <field name="name_20"/>
+    </group>
 </form>
