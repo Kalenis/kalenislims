@@ -1,70 +1,205 @@
 <?xml version="1.0"?>
 <form>
     <label name="results_importer"/>
-    <field name="results_importer" widget="selection"/>
-    <newline/>
-    <group col="3" colspan="2" id="files_10">
-        <label name="infile_01"/>
-        <field name="infile_01"/>
-        <field name="name_01"/>
-        <label name="infile_02"/>
-        <field name="infile_02"/>
-        <field name="name_02"/>
-        <label name="infile_03"/>
-        <field name="infile_03"/>
-        <field name="name_03"/>
-        <label name="infile_04"/>
-        <field name="infile_04"/>
-        <field name="name_04"/>
-        <label name="infile_05"/>
-        <field name="infile_05"/>
-        <field name="name_05"/>
-        <label name="infile_06"/>
-        <field name="infile_06"/>
-        <field name="name_06"/>
-        <label name="infile_07"/>
-        <field name="infile_07"/>
-        <field name="name_07"/>
-        <label name="infile_08"/>
-        <field name="infile_08"/>
-        <field name="name_08"/>
-        <label name="infile_09"/>
-        <field name="infile_09"/>
-        <field name="name_09"/>
-        <label name="infile_10"/>
-        <field name="infile_10"/>
-        <field name="name_10"/>
-    </group>
-    <group col="3" colspan="2" id="files_20">
-        <label name="infile_11"/>
-        <field name="infile_11"/>
-        <field name="name_11"/>
-        <label name="infile_12"/>
-        <field name="infile_12"/>
-        <field name="name_12"/>
-        <label name="infile_13"/>
-        <field name="infile_13"/>
-        <field name="name_13"/>
-        <label name="infile_14"/>
-        <field name="infile_14"/>
-        <field name="name_14"/>
-        <label name="infile_15"/>
-        <field name="infile_15"/>
-        <field name="name_15"/>
-        <label name="infile_16"/>
-        <field name="infile_16"/>
-        <field name="name_16"/>
-        <label name="infile_17"/>
-        <field name="infile_17"/>
-        <field name="name_17"/>
-        <label name="infile_18"/>
-        <field name="infile_18"/>
-        <field name="name_18"/>
-        <label name="infile_19"/>
-        <field name="infile_19"/>
-        <field name="name_19"/>
-        <label name="infile_20"/>
-        <field name="infile_20"/>
-        <field name="name_20"/>
-    </group>
+    <field name="results_importer" widget="selection" width="600"/>
+    <notebook height="400">
+        <page string="20" id="p20">
+            <group col="3" colspan="2" id="g10">
+                <label name="infile_01"/>
+                <field name="infile_01"/>
+                <field name="name_01"/>
+                <label name="infile_02"/>
+                <field name="infile_02"/>
+                <field name="name_02"/>
+                <label name="infile_03"/>
+                <field name="infile_03"/>
+                <field name="name_03"/>
+                <label name="infile_04"/>
+                <field name="infile_04"/>
+                <field name="name_04"/>
+                <label name="infile_05"/>
+                <field name="infile_05"/>
+                <field name="name_05"/>
+                <label name="infile_06"/>
+                <field name="infile_06"/>
+                <field name="name_06"/>
+                <label name="infile_07"/>
+                <field name="infile_07"/>
+                <field name="name_07"/>
+                <label name="infile_08"/>
+                <field name="infile_08"/>
+                <field name="name_08"/>
+                <label name="infile_09"/>
+                <field name="infile_09"/>
+                <field name="name_09"/>
+                <label name="infile_10"/>
+                <field name="infile_10"/>
+                <field name="name_10"/>
+            </group>
+            <group col="3" colspan="2" id="g20">
+                <label name="infile_11"/>
+                <field name="infile_11"/>
+                <field name="name_11"/>
+                <label name="infile_12"/>
+                <field name="infile_12"/>
+                <field name="name_12"/>
+                <label name="infile_13"/>
+                <field name="infile_13"/>
+                <field name="name_13"/>
+                <label name="infile_14"/>
+                <field name="infile_14"/>
+                <field name="name_14"/>
+                <label name="infile_15"/>
+                <field name="infile_15"/>
+                <field name="name_15"/>
+                <label name="infile_16"/>
+                <field name="infile_16"/>
+                <field name="name_16"/>
+                <label name="infile_17"/>
+                <field name="infile_17"/>
+                <field name="name_17"/>
+                <label name="infile_18"/>
+                <field name="infile_18"/>
+                <field name="name_18"/>
+                <label name="infile_19"/>
+                <field name="infile_19"/>
+                <field name="name_19"/>
+                <label name="infile_20"/>
+                <field name="infile_20"/>
+                <field name="name_20"/>
+            </group>
+        </page>
+        <page string="40" id="p40" >
+            <group col="3" colspan="2" id="g30">
+                <label name="infile_21"/>
+                <field name="infile_21"/>
+                <field name="name_21"/>
+                <label name="infile_22"/>
+                <field name="infile_22"/>
+                <field name="name_22"/>
+                <label name="infile_23"/>
+                <field name="infile_23"/>
+                <field name="name_23"/>
+                <label name="infile_24"/>
+                <field name="infile_24"/>
+                <field name="name_24"/>
+                <label name="infile_25"/>
+                <field name="infile_25"/>
+                <field name="name_25"/>
+                <label name="infile_26"/>
+                <field name="infile_26"/>
+                <field name="name_26"/>
+                <label name="infile_27"/>
+                <field name="infile_27"/>
+                <field name="name_27"/>
+                <label name="infile_28"/>
+                <field name="infile_28"/>
+                <field name="name_28"/>
+                <label name="infile_29"/>
+                <field name="infile_29"/>
+                <field name="name_29"/>
+                <label name="infile_30"/>
+                <field name="infile_30"/>
+                <field name="name_30"/>
+            </group>
+            <group col="3" colspan="2" id="g40">
+                <label name="infile_31"/>
+                <field name="infile_31"/>
+                <field name="name_31"/>
+                <label name="infile_32"/>
+                <field name="infile_32"/>
+                <field name="name_32"/>
+                <label name="infile_33"/>
+                <field name="infile_33"/>
+                <field name="name_33"/>
+                <label name="infile_34"/>
+                <field name="infile_34"/>
+                <field name="name_34"/>
+                <label name="infile_35"/>
+                <field name="infile_35"/>
+                <field name="name_35"/>
+                <label name="infile_36"/>
+                <field name="infile_36"/>
+                <field name="name_36"/>
+                <label name="infile_37"/>
+                <field name="infile_37"/>
+                <field name="name_37"/>
+                <label name="infile_38"/>
+                <field name="infile_38"/>
+                <field name="name_38"/>
+                <label name="infile_39"/>
+                <field name="infile_39"/>
+                <field name="name_39"/>
+                <label name="infile_40"/>
+                <field name="infile_40"/>
+                <field name="name_40"/>
+            </group>
+        </page>
+        <page string="60" id="p60" >
+            <group col="3" colspan="2" id="g50">
+                <label name="infile_41"/>
+                <field name="infile_41"/>
+                <field name="name_41"/>
+                <label name="infile_42"/>
+                <field name="infile_42"/>
+                <field name="name_42"/>
+                <label name="infile_43"/>
+                <field name="infile_43"/>
+                <field name="name_43"/>
+                <label name="infile_44"/>
+                <field name="infile_44"/>
+                <field name="name_44"/>
+                <label name="infile_45"/>
+                <field name="infile_45"/>
+                <field name="name_45"/>
+                <label name="infile_46"/>
+                <field name="infile_46"/>
+                <field name="name_46"/>
+                <label name="infile_47"/>
+                <field name="infile_47"/>
+                <field name="name_47"/>
+                <label name="infile_48"/>
+                <field name="infile_48"/>
+                <field name="name_48"/>
+                <label name="infile_49"/>
+                <field name="infile_49"/>
+                <field name="name_49"/>
+                <label name="infile_50"/>
+                <field name="infile_50"/>
+                <field name="name_50"/>
+            </group>
+            <group col="3" colspan="2" id="g60">
+                <label name="infile_51"/>
+                <field name="infile_51"/>
+                <field name="name_51"/>
+                <label name="infile_52"/>
+                <field name="infile_52"/>
+                <field name="name_52"/>
+                <label name="infile_53"/>
+                <field name="infile_53"/>
+                <field name="name_53"/>
+                <label name="infile_54"/>
+                <field name="infile_54"/>
+                <field name="name_54"/>
+                <label name="infile_55"/>
+                <field name="infile_55"/>
+                <field name="name_55"/>
+                <label name="infile_56"/>
+                <field name="infile_56"/>
+                <field name="name_56"/>
+                <label name="infile_57"/>
+                <field name="infile_57"/>
+                <field name="name_57"/>
+                <label name="infile_58"/>
+                <field name="infile_58"/>
+                <field name="name_58"/>
+                <label name="infile_59"/>
+                <field name="infile_59"/>
+                <field name="name_59"/>
+                <label name="infile_60"/>
+                <field name="infile_60"/>
+                <field name="name_60"/>
+            </group>
+        </page>
+    </notebook>
 </form>
