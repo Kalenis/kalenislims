@@ -102,6 +102,7 @@ class Entry(Workflow, ModelSQL, ModelView):
         ('pending', 'Administration pending'),
         ('closed', 'Closed'),
         ], 'State', required=True, readonly=True)
+    state_string = state.translated('state')
     ack_report_cache = fields.Binary('Acknowledgment report cache',
         readonly=True,
         file_id='ack_report_cache_id', store_prefix='ack_report')
