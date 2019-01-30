@@ -460,85 +460,61 @@ class NotebookLoadResultsFile(Wizard):
     def transition_confirm(self):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
+        AnalyticProfessional = pool.get('lims.notebook.line.professional')
 
         NOW = datetime.now()
         warnings = False
         messages = ''
-        # Write Results to Notebook lines
+
+        previous_professionals = []
+        lines_to_update = []
         for line in self.result.result_lines:
-            notebook_line_write = {
-                'imported_result': None,
-                'imported_literal_result': None,
-                'imported_end_date': None,
-                'imported_professionals': None,
-                'imported_chromatogram': None,
-                'imported_device': None,
-                'imported_dilution_factor': None,
-                'imported_rm_correction_formula': None,
-                'imported_inj_date': None,
-                }
-
             prevent_line = False
-            outcome = ''
-            if line.result != line.imported_result:
-                if line.imported_result != '-1000.0':
-                    notebook_line_write['result'] = line.imported_result
-                else:
-                    notebook_line_write['result'] = None
-                    notebook_line_write['result_modifier'] = 'na'
-                    notebook_line_write['report'] = False
-                    notebook_line_write['annulled'] = True
-                    notebook_line_write['annulment_date'] = NOW
-            if line.literal_result != line.imported_literal_result:
-                notebook_line_write['literal_result'] = (
-                    line.imported_literal_result)
-            if line.end_date != line.imported_end_date:
-                if line.imported_result != '-1000.0':
-                    if (line.start_date and
-                            line.start_date <= line.imported_end_date):
-                        notebook_line_write['end_date'] = (
-                            line.imported_end_date)
-                    else:
-                        prevent_line = True
-                        outcome = 'End date cannot be lower than Start date'
-                else:
-                    notebook_line_write['end_date'] = None
-            if line.injection_date != line.imported_inj_date:
-                if line.imported_result != '-1000.0':
-                    if (line.start_date and
-                            line.start_date <= line.imported_inj_date):
-                        notebook_line_write['injection_date'] = (
-                            line.imported_inj_date)
-                    else:
-                        prevent_line = True
-                        outcome = \
-                            'Injection date cannot be lower than Start date'
-                else:
-                    notebook_line_write['injection_date'] = None
-            if line.chromatogram != line.imported_chromatogram:
-                notebook_line_write['chromatogram'] = (
-                    line.imported_chromatogram)
-            if line.device != line.imported_device:
-                notebook_line_write['device'] = line.imported_device
-            if line.dilution_factor != line.imported_dilution_factor:
-                notebook_line_write['dilution_factor'] = (
-                    line.imported_dilution_factor)
-            if (line.rm_correction_formula !=
-                    line.imported_rm_correction_formula):
-                notebook_line_write['rm_correction_formula'] = (
-                    line.imported_rm_correction_formula)
+            outcome = 'OK'
 
+            if line.imported_result != '-1000.0':
+                line.result = line.imported_result
+                if (line.start_date and
+                        line.start_date <= line.imported_end_date):
+                    line.end_date = line.imported_end_date
+                else:
+                    prevent_line = True
+                    outcome = 'End date cannot be lower than Start date'
+                if (line.start_date and
+                        line.start_date <= line.imported_inj_date):
+                    line.injection_date = line.imported_inj_date
+                else:
+                    prevent_line = True
+                    outcome = ('Injection date cannot be lower than '
+                        'Start date')
+            else:
+                line.result = None
+                line.result_modifier = 'na'
+                line.report = False
+                line.annulled = True
+                line.annulment_date = NOW
+                line.end_date = None
+                line.injection_date = None
+
+            line.literal_result = line.imported_literal_result
+            line.chromatogram = line.imported_chromatogram
+            line.device = line.imported_device
+            line.dilution_factor = line.imported_dilution_factor
+            line.rm_correction_formula = line.imported_rm_correction_formula
+
+            line_previous_professionals = []
             if line.imported_professionals:
                 profs = self.get_professionals(line.imported_professionals)
                 if profs:
                     validated, msg = self.check_professionals(
                         profs, line.method)
                     if validated:
-                        professionals = [{'professional': p[0]}
+                        line_previous_professionals = [p for p in
+                            line.professionals]
+                        new_professionals = [
+                            AnalyticProfessional(professional=p[0])
                             for p in profs]
-                        notebook_line_write['professionals'] = (
-                            [('delete', [p.id for p in line.professionals])]
-                            + [('create', professionals)])
+                        line.professionals = new_professionals
                     else:
                         prevent_line = True
                         outcome = msg
@@ -548,31 +524,21 @@ class NotebookLoadResultsFile(Wizard):
                         + unicode(line.imported_professionals)
                         + ' not identified')
 
-            if not prevent_line:
-                try:
-                    NotebookLine.write([line], notebook_line_write)
-                except Exception as e:
-                    prevent_line = True
-                    outcome = unicode(e)
-                    original_profs = [{'professional': p.professional}
-                            for p in line.professionals]
-                    notebook_line_original_values = {
-                        'result': line.result,
-                        'literal_result': line.literal_result,
-                        'end_date': line.end_date,
-                        'professionals': (
-                            [('delete', [p.id for p in line.professionals])]
-                            + [('create', original_profs,)]),
-                        'chromatogram': line.chromatogram,
-                        'device': line.device,
-                        'dilution_factor': line.dilution_factor,
-                        'rm_correction_formula': line.rm_correction_formula,
-                        'injection_date': line.injection_date,
-                        }
-                    NotebookLine.write(
-                        [line], notebook_line_original_values)
-                else:
-                    outcome = 'OK'
+            if prevent_line:
+                warnings = True
+                messages += str(row_num) + ': ' + outcome + '\n'
+            else:
+                previous_professionals.extend(line_previous_professionals)
+                line.imported_result = None
+                line.imported_literal_result = None
+                line.imported_end_date = None
+                line.imported_professionals = None
+                line.imported_chromatogram = None
+                line.imported_device = None
+                line.imported_dilution_factor = None
+                line.imported_rm_correction_formula = None
+                line.imported_inj_date = None
+                lines_to_update.append(line)
 
             # Update rawresults
             row_num = 0
@@ -588,9 +554,9 @@ class NotebookLoadResultsFile(Wizard):
                             row_num = rawresults[number][code][rep][
                                 'row_number']
 
-            if prevent_line:
-                warnings = True
-                messages += str(row_num) + ': ' + outcome + '\n'
+        # Write Results to Notebook lines
+        AnalyticProfessional.delete(previous_professionals)
+        NotebookLine.save(lines_to_update)
 
         if warnings:
             self.warning.msg = messages
