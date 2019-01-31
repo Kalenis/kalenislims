@@ -220,7 +220,7 @@ class Notebook(ModelSQL, ModelView):
             'current_location': location,
             } for fraction, location in current_locations]
 
-        record_ids = [line['notebook'] for line in processed_lines
+        record_ids = [line['fraction'] for line in processed_lines
             if _search_current_location_eval_domain(line, domain)]
         return [('id', 'in', record_ids)]
 
