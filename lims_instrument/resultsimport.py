@@ -488,6 +488,11 @@ class NotebookLoadResultsFile(Wizard):
                     prevent_line = True
                     outcome = ('Injection date cannot be lower than '
                         'Start date')
+                if line.imported_inj_date > line.imported_end_date:
+                    prevent_line = True
+                    outcome = ('Injection date cannot be upper than '
+                        'End date')
+
             else:
                 line.result = None
                 line.result_modifier = 'na'
