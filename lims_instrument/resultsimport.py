@@ -474,24 +474,25 @@ class NotebookLoadResultsFile(Wizard):
             outcome = 'OK'
 
             if line.imported_result != '-1000.0':
-                line.result = line.imported_result
-                if (line.start_date and
-                        line.start_date <= line.imported_end_date):
-                    line.end_date = line.imported_end_date
-                else:
+                if not line.imported_end_date:
+                    prevent_line = True
+                    outcome = 'End date cannot be empty'
+                elif (line.imported_end_date and line.start_date and
+                        line.start_date > line.imported_end_date):
                     prevent_line = True
                     outcome = 'End date cannot be lower than Start date'
-                if (line.start_date and
-                        line.start_date <= line.imported_inj_date):
-                    line.injection_date = line.imported_inj_date
+                elif (line.imported_inj_date and line.start_date and
+                        line.start_date > line.imported_inj_date):
+                    prevent_line = True
+                    outcome = 'Injection date cannot be lower than Start date'
+                elif (line.imported_end_date and line.imported_inj_date and
+                        line.imported_inj_date > line.imported_end_date):
+                    prevent_line = True
+                    outcome = 'Injection date cannot be upper than End date'
                 else:
-                    prevent_line = True
-                    outcome = ('Injection date cannot be lower than '
-                        'Start date')
-                if line.imported_inj_date > line.imported_end_date:
-                    prevent_line = True
-                    outcome = ('Injection date cannot be upper than '
-                        'End date')
+                    line.result = line.imported_result
+                    line.end_date = line.imported_end_date
+                    line.injection_date = line.imported_inj_date
 
             else:
                 line.result = None
