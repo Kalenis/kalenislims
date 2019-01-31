@@ -28,6 +28,7 @@ __all__ = ['ProductType', 'Matrix', 'Formula', 'FormulaVariable', 'Analysis',
 class Typification(ModelSQL, ModelView):
     'Typification'
     __name__ = 'lims.typification'
+    _rec_name = 'analysis'
 
     product_type = fields.Many2One('lims.product.type', 'Product type',
         required=True, select=True,
