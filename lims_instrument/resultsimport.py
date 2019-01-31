@@ -465,6 +465,7 @@ class NotebookLoadResultsFile(Wizard):
         NOW = datetime.now()
         warnings = False
         messages = ''
+        export_results = self.start.results_importer.exportResults()
 
         previous_professionals = []
         lines_to_update = []
@@ -525,6 +526,20 @@ class NotebookLoadResultsFile(Wizard):
                         + ' not identified')
 
             if prevent_line:
+                row_num = 0
+                rawresults = self.start.results_importer.rawresults
+                number = line.fraction.number
+                if number in rawresults:
+                    code = line.analysis.code
+                    if code in rawresults[number]:
+                        rep = line.repetition
+                        if rep in rawresults[number][code]:
+                            row_num = rawresults[number][code][rep][
+                                'row_number']
+                            # Update rawresults
+                            if export_results:
+                                rawresults[number][code][rep]['outcome'] = (
+                                    outcome)
                 warnings = True
                 messages += str(row_num) + ': ' + outcome + '\n'
             else:
@@ -539,20 +554,6 @@ class NotebookLoadResultsFile(Wizard):
                 line.imported_rm_correction_formula = None
                 line.imported_inj_date = None
                 lines_to_update.append(line)
-
-            # Update rawresults
-            row_num = 0
-            if self.start.results_importer.exportResults() or prevent_line:
-                rawresults = self.start.results_importer.rawresults
-                number = line.fraction.number
-                if number in rawresults:
-                    code = line.analysis.code
-                    if code in rawresults[number]:
-                        rep = line.repetition
-                        if rep in rawresults[number][code]:
-                            rawresults[number][code][rep]['outcome'] = outcome
-                            row_num = rawresults[number][code][rep][
-                                'row_number']
 
         # Write Results to Notebook lines
         AnalyticProfessional.delete(previous_professionals)
