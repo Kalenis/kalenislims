@@ -549,22 +549,24 @@ class NotebookLoadResultsFile(Wizard):
                         raise_exception=False)
 
             if prevent_line:
-                row_num = 0
-                rawresults = self.start.results_importer.rawresults
-                number = line.fraction.number
-                if number in rawresults:
-                    code = line.analysis.code
-                    if code in rawresults[number]:
-                        rep = line.repetition
-                        if rep in rawresults[number][code]:
-                            row_num = rawresults[number][code][rep][
-                                'row_number']
-                            # Update rawresults
-                            if export_results:
+                warnings = True
+                message = '%s [%s] (%s): %s\n' % (
+                    line.fraction.number, line.analysis.code, line.repetition,
+                    outcome)
+                messages += message
+
+                # Update rawresults
+                if export_results:
+                    rawresults = self.start.results_importer.rawresults
+                    number = line.fraction.number
+                    if number in rawresults:
+                        code = line.analysis.code
+                        if code in rawresults[number]:
+                            rep = line.repetition
+                            if rep in rawresults[number][code]:
                                 rawresults[number][code][rep]['outcome'] = (
                                     outcome)
-                warnings = True
-                messages += str(row_num) + ': ' + outcome + '\n'
+
             else:
                 previous_professionals.extend(line_previous_professionals)
                 line.imported_result = None
@@ -586,7 +588,7 @@ class NotebookLoadResultsFile(Wizard):
             self.warning.msg = messages
             return 'warning'
         else:
-            if self.start.results_importer.exportResults():
+            if export_results:
                 return 'end'  # 'export'
         return 'end'
 
