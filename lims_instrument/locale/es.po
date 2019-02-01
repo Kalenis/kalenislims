@@ -2,6 +2,26 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "error:lims.notebook.load_results_file:"
+msgid "End date cannot be empty"
+msgstr "La Fecha de finalización no puede estar vacía"
+
+msgctxt "error:lims.notebook.load_results_file:"
+msgid "End date cannot be lower than Start date"
+msgstr "La Fecha de finalización no puede ser menor que la Fecha de inicio"
+
+msgctxt "error:lims.notebook.load_results_file:"
+msgid "Injection date cannot be lower than Start date"
+msgstr "La Fecha de inyección no puede ser menor que la Fecha de inicio"
+
+msgctxt "error:lims.notebook.load_results_file:"
+msgid "Injection date cannot be upper than End date"
+msgstr "La Fecha de inyección no puede ser mayor que la Fecha de finalización"
+
+msgctxt "error:lims.notebook.load_results_file:"
+msgid "Professional(s) with code %s not identified"
+msgstr "Profesional(es) no identificado(s): %s"
+
 msgctxt "error:lims.resultsimport:"
 msgid "No module for importer type \"%s\""
 msgstr "No se ha definido un módulo para el importador \"%s\""

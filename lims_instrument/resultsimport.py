@@ -299,6 +299,19 @@ class NotebookLoadResultsFile(Wizard):
             Button('Done', 'end', 'tryton-close', default=True),
             ])
 
+    @classmethod
+    def __setup__(cls):
+        super(NotebookLoadResultsFile, cls).__setup__()
+        cls._error_messages.update({
+            'end_date': 'End date cannot be empty',
+            'end_date_start_date': 'End date cannot be lower than Start date',
+            'inj_date_start_date': ('Injection date cannot be lower than '
+                'Start date'),
+            'inj_date_end_date': ('Injection date cannot be upper than '
+                'End date'),
+            'professionals': 'Professional(s) with code %s not identified',
+            })
+
     def transition_collect(self):
         cursor = Transaction().connection.cursor()
         pool = Pool()
@@ -476,19 +489,23 @@ class NotebookLoadResultsFile(Wizard):
             if line.imported_result != '-1000.0':
                 if not line.imported_end_date:
                     prevent_line = True
-                    outcome = 'End date cannot be empty'
+                    outcome = self.raise_user_error('end_date',
+                        raise_exception=False)
                 elif (line.imported_end_date and line.start_date and
                         line.start_date > line.imported_end_date):
                     prevent_line = True
-                    outcome = 'End date cannot be lower than Start date'
+                    outcome = self.raise_user_error('end_date_start_date',
+                        raise_exception=False)
                 elif (line.imported_inj_date and line.start_date and
                         line.start_date > line.imported_inj_date):
                     prevent_line = True
-                    outcome = 'Injection date cannot be lower than Start date'
+                    outcome = self.raise_user_error('inj_date_start_date',
+                        raise_exception=False)
                 elif (line.imported_end_date and line.imported_inj_date and
                         line.imported_inj_date > line.imported_end_date):
                     prevent_line = True
-                    outcome = 'Injection date cannot be upper than End date'
+                    outcome = self.raise_user_error('inj_date_end_date',
+                        raise_exception=False)
                 else:
                     line.result = line.imported_result
                     line.end_date = line.imported_end_date
@@ -527,9 +544,9 @@ class NotebookLoadResultsFile(Wizard):
                         outcome = msg
                 else:
                     prevent_line = True
-                    outcome = ('Professional(s) with code '
-                        + unicode(line.imported_professionals)
-                        + ' not identified')
+                    outcome = self.raise_user_error('professionals',
+                        (unicode(line.imported_professionals),),
+                        raise_exception=False)
 
             if prevent_line:
                 row_num = 0
