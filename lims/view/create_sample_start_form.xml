@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <form>
-    <notebook>
+    <notebook width="1200" height="550">
         <page id="general" string="General">
             <label name="date"/>
             <field name="date"/>
