@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <form>
-    <image name="tryton-dialog-information" xexpand="0" xfill="0"/>
+    <image name="tryton-info" xexpand="0" xfill="0"/>
     <label string="Professional without a supervisor" id="ask"
         yalign="0.0" xalign="0.0" xexpand="1"/>
     <newline/>
