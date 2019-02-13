@@ -496,12 +496,8 @@ class LabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
             ], order=[('start_date', 'DESC')], limit=1)
         if not workyears:
             if exception:
-                language = Transaction().language
-                languages = Lang.search([('code', '=', language)])
-                if not languages:
-                    languages = Lang.search([('code', '=', 'en')])
-                language, = languages
-                formatted = Lang.strftime(date, language.code, language.date)
+                lang = Lang.get()
+                formatted = lang.strftime(date)
                 cls.raise_user_error('no_workyear_date', (formatted,))
             else:
                 return None
