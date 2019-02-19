@@ -494,7 +494,8 @@ class NotebookLine(ModelSQL, ModelView):
 
         to_save = []
         details_ids = list(set(nl.analysis_detail.id for nl in lines))
-        analysis_details = EntryDetailAnalysis.browse(details_ids)
+        with Transaction().set_context(_check_access=False):
+            analysis_details = EntryDetailAnalysis.browse(details_ids)
         for d in analysis_details:
             cursor.execute('SELECT report '
                 'FROM "' + NotebookLine._table + '" '
