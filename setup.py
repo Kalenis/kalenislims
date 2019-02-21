@@ -40,7 +40,7 @@ major_version, minor_version, _ = version.split('.', 2)
 major_version = int(major_version)
 minor_version = int(minor_version)
 
-requires = ['pytz', 'xlrd', 'xlutils', 'PyPDF2', 'pandas']
+requires = ['pytz', 'xlrd', 'xlutils', 'PyPDF2']
 packages = []
 package_dir = {}
 package_data = {}
