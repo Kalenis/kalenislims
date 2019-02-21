@@ -1,4 +1,4 @@
-![Alt text](http://news.kalenislims.com/wp/wp-content/uploads/2017/10/isologo-transparent.png)
+![Alt text](http://kalenislims.com/img/isologo-kalenis.png)
 
 ---
 
