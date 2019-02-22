@@ -1124,6 +1124,7 @@ class Service(ModelSQL, ModelView):
             return 'lims-green'
         if not self.confirmed:
             return 'lims-red'
+        return 'lims-white'
 
     def get_planned(self, name):
         if not self.analysis_detail:
@@ -2150,6 +2151,7 @@ class Fraction(ModelSQL, ModelView):
             return 'lims-green'
         if not self.confirmed:
             return 'lims-red'
+        return 'lims-white'
 
     def update_detail_analysis(self):
         EntryDetailAnalysis = Pool().get('lims.entry.detail.analysis')
@@ -2668,6 +2670,7 @@ class Sample(ModelSQL, ModelView):
             return 'lims-green'
         if not self.confirmed:
             return 'lims-red'
+        return 'lims-white'
 
     @classmethod
     def order_create_date2(cls, tables):

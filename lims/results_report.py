@@ -824,6 +824,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     def get_icon(self, name):
         if self.fraction_comments:
             return 'lims-blue'
+        return 'lims-white'
 
 
 class ResultsReportVersionDetailLine(ModelSQL, ModelView):

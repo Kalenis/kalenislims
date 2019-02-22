@@ -227,6 +227,7 @@ class Notebook(ModelSQL, ModelView):
     def get_icon(self, name):
         if self.fraction_comments:
             return 'lims-blue'
+        return 'lims-white'
 
 
 class NotebookLine(ModelSQL, ModelView):
@@ -885,6 +886,7 @@ class NotebookLine(ModelSQL, ModelView):
     def get_icon(self, name):
         if self.report_date:
             return 'lims-red'
+        return 'lims-white'
 
     def get_planning_comments(self, name=None):
         if self.planification:
