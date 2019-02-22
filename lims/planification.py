@@ -705,6 +705,7 @@ class PlanificationDetail(ModelSQL, ModelView):
     def get_icon(self, name):
         if self.comments:
             return 'lims-blue'
+        return 'lims-white'
 
 
 class PlanificationServiceDetail(ModelSQL, ModelView):

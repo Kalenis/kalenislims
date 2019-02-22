@@ -638,6 +638,7 @@ class Entry(Workflow, ModelSQL, ModelView):
     def get_icon(self, name):
         if not self.confirmed:
             return 'lims-red'
+        return 'lims-white'
 
 
 class EntryInvoiceContact(ModelSQL, ModelView):

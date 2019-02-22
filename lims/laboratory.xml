@@ -26,6 +26,10 @@
             <field name="name">lims-green</field>
             <field name="path">icons/green.svg</field>
         </record>
+        <record model="ir.ui.icon" id="white_icon">
+            <field name="name">lims-white</field>
+            <field name="path">icons/white.svg</field>
+        </record>
 
         <menuitem name="Laboratory"
             id="lims_laboratory" icon="lims-laboratory"/>
