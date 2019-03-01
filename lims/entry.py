@@ -188,6 +188,8 @@ class Entry(Workflow, ModelSQL, ModelView):
         Company = pool.get('company.company')
 
         date = self.date
+        if not date:
+            return None
         company_id = Transaction().context.get('company')
         if company_id:
             date = Company(company_id).convert_timezone_datetime(date)
