@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <tryton>
-    <data>
+    <data depends="lims_account_invoice">
 
       <!-- Invoice -->
       <record model="ir.ui.view" id="lims_invoice_view_form">
