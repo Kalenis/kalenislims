@@ -828,7 +828,7 @@
        <text:p text:style-name="P40">Label</text:p>
       </table:table-cell>
       <table:table-cell table:style-name="Tabla2.A1" office:value-type="string">
-       <text:p text:style-name="P14">Code</text:p>
+       <text:p text:style-name="P14"><text:span>Code </text:span><text:placeholder text:placeholder-type="text">&lt;company.short_name&gt;</text:placeholder></text:p>
       </table:table-cell>
       <table:table-cell table:style-name="Tabla2.C1" office:value-type="string">
        <text:p text:style-name="P15">Packages</text:p>

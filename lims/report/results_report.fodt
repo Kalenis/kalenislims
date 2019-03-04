@@ -2212,7 +2212,7 @@
      </table:table-row>
      <table:table-row>
       <table:table-cell table:style-name="Tabla2.A2" table:number-columns-spanned="4" office:value-type="string">
-       <text:p text:style-name="P8"><text:a xlink:type="simple" xlink:href="http://www.ciati.com.ar/" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"/></text:p>
+       <text:p text:style-name="P8"></text:p>
       </table:table-cell>
       <table:covered-table-cell/>
       <table:covered-table-cell/>

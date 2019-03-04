@@ -1034,7 +1034,7 @@ msgid "/"
 msgstr "/"
 
 msgctxt "report:lims.project.glp_report.02:"
-msgid "Code"
+msgid "CODE"
 msgstr "Código"
 
 msgctxt "report:lims.project.glp_report.02:"
@@ -1118,7 +1118,7 @@ msgid "/"
 msgstr "/"
 
 msgctxt "report:lims.project.glp_report.03:"
-msgid "Code"
+msgid "CODE"
 msgstr "Código"
 
 msgctxt "report:lims.project.glp_report.03:"

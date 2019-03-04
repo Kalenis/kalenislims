@@ -871,7 +871,7 @@
     </table:table-row>
     <table:table-row table:style-name="ro8">
      <table:table-cell table:style-name="ce75" office:value-type="string" calcext:value-type="string">
-      <text:p>CIATI code</text:p>
+      <text:p><text:a xlink:href="relatorio://'Código %s' % (company.short_name, )" xlink:type="simple">company.short_name</text:a></text:p>
      </table:table-cell>
      <table:table-cell table:style-name="ce80" office:value-type="string" calcext:value-type="string">
       <text:p>Label (described by customer)</text:p>

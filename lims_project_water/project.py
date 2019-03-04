@@ -269,7 +269,7 @@ class ProjectWaterSampling(Report):
             (project_id,))
 
         return PartyAddress.search([
-            ('id', 'in', cursor.fetchall()),
+            ('id', 'in', [x[0] for x in cursor.fetchall()]),
             ])
 
     @staticmethod
@@ -291,5 +291,5 @@ class ProjectWaterSampling(Report):
             (project_id,))
 
         return PartyAddress.search([
-            ('id', 'in', cursor.fetchall()),
+            ('id', 'in', [x[0] for x in cursor.fetchall()]),
             ])
