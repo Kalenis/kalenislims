@@ -4,15 +4,14 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import PoolMeta
-import custom_set_csv
-import custom_set_xls
+from . import custom_set_csv
+from . import custom_set_xls
 
 __all__ = ['ResultsImport']
 
 
-class ResultsImport:
+class ResultsImport(metaclass=PoolMeta):
     __name__ = 'lims.resultsimport'
-    __metaclass__ = PoolMeta
 
     analysis_code = None
     formula = None

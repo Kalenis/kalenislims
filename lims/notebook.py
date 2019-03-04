@@ -213,7 +213,7 @@ class Notebook(ModelSQL, ModelView):
             domain = ('current_location', 'in', [l.id for l in locations])
 
         all_notebooks = cls.search([])
-        current_locations = cls.get_current_location(all_notebooks).iteritems()
+        current_locations = iter(cls.get_current_location(all_notebooks).items())
 
         processed_lines = [{
             'fraction': fraction,
@@ -1261,7 +1261,7 @@ class NotebookInitialConcentrationCalc(Wizard):
                     formula = formula.replace(var, '_')
                 else:
                     break
-        for var in variables.iterkeys():
+        for var in variables.keys():
             if var[0] == 'A':
                 analysis_code = var[1:]
                 result = self._get_analysis_result(analysis_code, notebook,
@@ -1300,7 +1300,7 @@ class NotebookInitialConcentrationCalc(Wizard):
                     result = VolumeConversion.brixToDensity(result)
                     if result is not None:
                         variables[var] = result
-        for var in variables.itervalues():
+        for var in variables.values():
             if var is None:
                 return None
         return variables
@@ -1450,7 +1450,7 @@ class NotebookResultsConversion(Wizard):
                     formula = formula.replace(var, '_')
                 else:
                     break
-        for var in variables.iterkeys():
+        for var in variables.keys():
             if var == 'DI':
                 if initial_uom_volume:
                     c = float(notebook_line.initial_concentration)
@@ -1700,7 +1700,7 @@ class NotebookInternalRelationsCalc1(Wizard):
                 }
         if relations:
             NotebookInternalRelationsCalc1Relation.create(
-                [ir for ir in relations.itervalues()])
+                [ir for ir in relations.values()])
             return True
         return False
 
@@ -1719,7 +1719,7 @@ class NotebookInternalRelationsCalc1(Wizard):
                     formula = formula.replace(var, '_')
                 else:
                     break
-        for var in variables.iterkeys():
+        for var in variables.keys():
             if var[0] in ('A', 'D', 'T'):
                 analysis_code = var[1:]
                 with Transaction().set_user(0):
@@ -1750,7 +1750,7 @@ class NotebookInternalRelationsCalc1(Wizard):
                     more_formulas = more_formulas.replace(i, '')
                 self._get_variables_list(more_formulas, notebook, analysis)
 
-        return [v for v in analysis.itervalues()]
+        return [v for v in analysis.values()]
 
     def transition_confirm(self):
         pool = Pool()
@@ -1884,7 +1884,7 @@ class NotebookInternalRelationsCalc1(Wizard):
                     formula = formula.replace(var, '_')
                 else:
                     break
-        for var in variables.iterkeys():
+        for var in variables.keys():
             if var[0] == 'A':
                 analysis_code = var[1:]
                 result = self._get_analysis_result(analysis_code, notebook,
@@ -1923,7 +1923,7 @@ class NotebookInternalRelationsCalc1(Wizard):
                     result = VolumeConversion.brixToDensity(result)
                     if result is not None:
                         variables[var] = result
-        for var in variables.itervalues():
+        for var in variables.values():
             if var is None:
                 return None
         return variables
@@ -2133,7 +2133,7 @@ class NotebookInternalRelationsCalc2(Wizard):
 
         if relations:
             res_lines = NotebookInternalRelationsCalc2Relation.create(
-                [ir for ir in relations.itervalues()])
+                [ir for ir in relations.values()])
             self.result.relations = res_lines
             self.result.total = len(self.result.relations)
             self.result.index = 0
@@ -2188,7 +2188,7 @@ class NotebookInternalRelationsCalc2(Wizard):
                     formula = formula.replace(var, '_')
                 else:
                     break
-        for var in variables.iterkeys():
+        for var in variables.keys():
             if var[0] in ('A', 'D', 'T'):
                 analysis_code = var[1:]
                 with Transaction().set_user(0):
@@ -2219,7 +2219,7 @@ class NotebookInternalRelationsCalc2(Wizard):
                     more_formulas = more_formulas.replace(i, '')
                 self._get_variables_list(more_formulas, notebook, analysis)
 
-        return [v for v in analysis.itervalues()]
+        return [v for v in analysis.values()]
 
     def transition_check_variables(self):
         variables = {}
@@ -2234,7 +2234,7 @@ class NotebookInternalRelationsCalc2(Wizard):
                     variables[analysis_code] = True
             var.save()
 
-        for var in variables.itervalues():
+        for var in variables.values():
             if not var:
                 return 'process'
         return 'next_'
@@ -2372,7 +2372,7 @@ class NotebookInternalRelationsCalc2(Wizard):
                     formula = formula.replace(var, '_')
                 else:
                     break
-        for var in variables.iterkeys():
+        for var in variables.keys():
             if var[0] == 'A':
                 analysis_code = var[1:]
                 result = self._get_analysis_result(analysis_code, notebook,
@@ -2411,7 +2411,7 @@ class NotebookInternalRelationsCalc2(Wizard):
                     result = VolumeConversion.brixToDensity(result)
                     if result is not None:
                         variables[var] = result
-        for var in variables.itervalues():
+        for var in variables.values():
             if var is None:
                 return None
         return variables
@@ -2572,7 +2572,7 @@ class NotebookLoadResultsFormulaProcess(ModelView):
             variables = {}
             for variable in self.variables:
                 variables[variable.number] = variable.description
-            for k, v in variables.iteritems():
+            for k, v in variables.items():
                 formula = formula.replace(k, v)
             return formula
         return ''
@@ -2914,7 +2914,7 @@ class NotebookLoadResultsFormula(Wizard):
                 variables_desc[var.number] = var.description
             default['variables'] = variables
             formula_formula = formula.formula
-            for k, v in variables_desc.iteritems():
+            for k, v in variables_desc.items():
                 formula_formula = formula_formula.replace(k, v)
             default['formula_formula'] = formula_formula
 
@@ -2943,7 +2943,7 @@ class NotebookLoadResultsFormula(Wizard):
                     variables_desc[var.number] = var.description
                 default['variables'] = variables
                 formula_formula = formula.formula
-                for k, v in variables_desc.iteritems():
+                for k, v in variables_desc.items():
                     formula_formula = formula_formula.replace(k, v)
                 default['formula_formula'] = formula_formula
             default['result_modifier'] = 'eq'
@@ -2996,7 +2996,7 @@ class NotebookLoadResultsFormula(Wizard):
             prof_lines[key].append(data.line.id)
 
         situation_1 = []
-        for key in situations.iterkeys():
+        for key in situations.keys():
             qualifications = LabProfessionalMethod.search([
                 ('professional', '=', key[0]),
                 ('method', '=', key[1]),
@@ -3019,7 +3019,7 @@ class NotebookLoadResultsFormula(Wizard):
             return 'sit1'
 
         situation_2 = []
-        for key, sit in situations.iteritems():
+        for key, sit in situations.items():
             if sit == 2:
                 situation_2.append({
                     'session_id': self._session_id,
@@ -3102,7 +3102,7 @@ class NotebookLoadResultsFormula(Wizard):
                     supervisor_lines[detail.supervisor.id] = []
                 supervisor_lines[detail.supervisor.id].extend([
                     l.id for l in detail.lines])
-        for prof_id, lines in supervisor_lines.iteritems():
+        for prof_id, lines in supervisor_lines.items():
             notebook_lines = NotebookLine.search([
                 ('id', 'in', lines),
                 ])
@@ -3129,7 +3129,7 @@ class NotebookLoadResultsFormula(Wizard):
                     all_prof[key].append(detail.supervisor.id)
 
         today = Date.today()
-        for key, sup in all_prof.iteritems():
+        for key, sup in all_prof.items():
             professional_method, = LabProfessionalMethod.search([
                 ('professional', '=', key[0]),
                 ('method', '=', key[1]),
@@ -3484,7 +3484,7 @@ class NotebookLoadResultsManual(Wizard):
         if hasattr(self.sit2, 'supervisor'):
             supervisor_lines[self.sit2.supervisor.id] = [
                 l.id for l in self.sit2.lines]
-        for prof_id, lines in supervisor_lines.iteritems():
+        for prof_id, lines in supervisor_lines.items():
             notebook_lines = NotebookLine.search([
                 ('id', 'in', lines),
                 ])
@@ -3509,7 +3509,7 @@ class NotebookLoadResultsManual(Wizard):
                     all_prof[key].append(self.sit2.supervisor.id)
 
         today = Date.today()
-        for key, sup in all_prof.iteritems():
+        for key, sup in all_prof.items():
             professional_method, = LabProfessionalMethod.search([
                 ('professional', '=', key[0]),
                 ('method', '=', key[1]),
@@ -4204,7 +4204,7 @@ class NotebookResultsVerification(Wizard):
                     formula = formula.replace(var, '_')
                 else:
                     break
-        for var in variables.iterkeys():
+        for var in variables.keys():
             if var == 'DI':
                 ic = float(notebook_line.final_concentration)
                 result = VolumeConversion.brixToDensity(ic)
@@ -4777,7 +4777,7 @@ class AnalysisPendingInform(Report):
         excluded_notebooks = cls._get_excluded_notebooks(date_from, date_to,
             laboratory, party)
         if excluded_notebooks:
-            for n_id, a_ids in excluded_notebooks.iteritems():
+            for n_id, a_ids in excluded_notebooks.items():
                 clause = [
                     ('notebook.id', '=', n_id),
                     ('analysis', 'in', a_ids),

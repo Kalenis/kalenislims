@@ -677,8 +677,8 @@ class Service(ModelSQL, ModelView):
 
         if aditional_services:
             services_default = []
-            for fraction_id, analysis in aditional_services.iteritems():
-                for analysis_id, service_data in analysis.iteritems():
+            for fraction_id, analysis in aditional_services.items():
+                for analysis_id, service_data in analysis.items():
                     if not Service.search([
                             ('fraction', '=', fraction_id),
                             ('analysis', '=', analysis_id),
@@ -779,7 +779,7 @@ class Service(ModelSQL, ModelView):
                 comments[fraction_id] += service.analysis.comments
         if comments:
             fractions_to_save = []
-            for fraction_id, comment in comments.iteritems():
+            for fraction_id, comment in comments.items():
                 fraction = Fraction(fraction_id)
                 if fraction.comments:
                     fraction.comments += '\n' + comment
@@ -4873,7 +4873,7 @@ class CountersampleStorageReport(Report):
                     if fraction.comments else ''),
                 })
 
-        ordered_objects = sorted(objects.values(),
+        ordered_objects = sorted(list(objects.values()),
             key=lambda x: x['location'])
 
         report_context['objects'] = ordered_objects
@@ -5031,7 +5031,7 @@ class CountersampleDischargeReport(Report):
                     if fraction.comments else ''),
                 })
 
-        ordered_objects = sorted(objects.values(),
+        ordered_objects = sorted(list(objects.values()),
             key=lambda x: x['location'])
 
         report_context['objects'] = ordered_objects

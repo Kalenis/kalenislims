@@ -12,9 +12,8 @@ from trytond.pyson import Bool, Eval, Or
 __all__ = ['Party', 'Address', 'Company']
 
 
-class Party:
+class Party(metaclass=PoolMeta):
     __name__ = 'party.party'
-    __metaclass__ = PoolMeta
 
     email_report = fields.Boolean('Email report')
     single_sending_report = fields.Boolean('Single sending of report')
@@ -54,9 +53,8 @@ class Party:
         return False
 
 
-class Address:
+class Address(metaclass=PoolMeta):
     __name__ = 'party.address'
-    __metaclass__ = PoolMeta
 
     email = fields.Char('Email',
         states={
@@ -104,9 +102,8 @@ class Address:
             self.invoice_contact_default = False
 
 
-class Company:
+class Company(metaclass=PoolMeta):
     __name__ = 'company.company'
-    __metaclass__ = PoolMeta
 
     logo = fields.Binary('Logo')
 

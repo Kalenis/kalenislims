@@ -3,9 +3,9 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 try:
-    import cStringIO as StringIO
+    import io as StringIO
 except ImportError:
-    import StringIO
+    import io
 import traceback
 import xlrd
 from xlutils.copy import copy
@@ -23,9 +23,8 @@ __all__ = ['NotebookLine', 'ResultsImport', 'NotebookLoadResultsFileStart',
     'NotebookLoadResultsFileExport', 'NotebookLoadResultsFile']
 
 
-class NotebookLine:
+class NotebookLine(metaclass=PoolMeta):
     __name__ = 'lims.notebook.line'
-    __metaclass__ = PoolMeta
 
     imported_result = fields.Char('Result')
     imported_literal_result = fields.Char('Literal result')
@@ -347,7 +346,7 @@ class NotebookLoadResultsFile(Wizard):
                 if not notebook:
                     continue
 
-                for analysis in raw_results[f[1]].keys():
+                for analysis in list(raw_results[f[1]].keys()):
                     cursor.execute('SELECT id '
                         'FROM "' + Analysis._table + '" '
                         'WHERE code = %s '
@@ -356,7 +355,7 @@ class NotebookLoadResultsFile(Wizard):
                     if not cursor.fetchone():
                         continue
 
-                    for rep in raw_results[f[1]][analysis].keys():
+                    for rep in list(raw_results[f[1]][analysis].keys()):
                         clause = [
                             ('notebook', '=', notebook[0]),
                             ('analysis', '=', analysis),
@@ -389,7 +388,7 @@ class NotebookLoadResultsFile(Wizard):
         res = {}
         if 'result' in data or 'literal_result' in data:
             if 'result' in data:
-                res['imported_result'] = unicode(float(data['result']))
+                res['imported_result'] = str(float(data['result']))
             if 'literal_result' in data:
                 res['imported_literal_result'] = data['literal_result']
             res['imported_end_date'] = (data['end_date'] if 'end_date' in data
@@ -545,7 +544,7 @@ class NotebookLoadResultsFile(Wizard):
                 else:
                     prevent_line = True
                     outcome = self.raise_user_error('professionals',
-                        (unicode(line.imported_professionals),),
+                        (str(line.imported_professionals),),
                         raise_exception=False)
 
             if prevent_line:
@@ -623,7 +622,7 @@ class NotebookLoadResultsFile(Wizard):
 
     def default_export(self, fields):
         rawresults = self.start.results_importer.rawresults
-        filedata = StringIO.StringIO(self.start.infile)  # TODO: refactoring
+        filedata = io.StringIO(self.start.infile)  # TODO: refactoring
         workbook = xlrd.open_workbook(file_contents=filedata.getvalue(),
                 formatting_info=True)
         wb_copy = copy(workbook)
@@ -635,6 +634,6 @@ class NotebookLoadResultsFile(Wizard):
                         sheet, row, col = repetition['status_cell']
                         wb_sheet = wb_copy.get_sheet(sheet)
                         wb_sheet.write(row, col, repetition['outcome'])
-        output = StringIO.StringIO()
+        output = io.StringIO()
         wb_copy.save(output)
         return {'file': bytearray(output.getvalue())}

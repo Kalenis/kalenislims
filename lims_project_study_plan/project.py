@@ -36,9 +36,8 @@ DEPENDS = ['stp_state']
 PROJECT_TYPE = ('study_plan', 'Study plan')
 
 
-class Project:
+class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'
-    __metaclass__ = PoolMeta
 
     stp_number = fields.Char('SP Id', readonly=True)
     stp_title = fields.Function(fields.Char('Title'),
@@ -298,7 +297,7 @@ class Project:
                 if line.device.id not in devices:
                     devices[line.device.id] = line.device.rec_name
             if devices:
-                stp_test_system = '\n'.join([d for d in devices.values()])
+                stp_test_system = '\n'.join([d for d in list(devices.values())])
         self.stp_test_system = stp_test_system
 
     @ModelView.button_change('stp_test_method')
@@ -316,7 +315,7 @@ class Project:
                 if line.method.id not in methods:
                     methods[line.method.id] = line.method.rec_name
             if methods:
-                stp_test_method = '\n'.join([m for m in methods.values()])
+                stp_test_method = '\n'.join([m for m in list(methods.values())])
         self.stp_test_method = stp_test_method
 
     @classmethod
@@ -387,9 +386,8 @@ class Project:
         return []
 
 
-class Entry:
+class Entry(metaclass=PoolMeta):
     __name__ = 'lims.entry'
-    __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):
@@ -797,9 +795,8 @@ class ProjectChangeLog(ModelSQL):
         return [('id', 'in', [x[0] for x in cursor.fetchall()])]
 
 
-class Sample:
+class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
-    __metaclass__ = PoolMeta
 
     application_date = fields.Date('Application date', states={
             'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
@@ -837,9 +834,8 @@ class Sample:
                     })]
 
 
-class CreateSampleStart:
+class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
-    __metaclass__ = PoolMeta
 
     application_date = fields.Date('Application date', states={
             'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
@@ -877,9 +873,8 @@ class CreateSampleStart:
                     })]
 
 
-class CreateSample:
+class CreateSample(metaclass=PoolMeta):
     __name__ = 'lims.create_sample'
-    __metaclass__ = PoolMeta
 
     def _get_samples_defaults(self, entry_id):
         samples_defaults = super(CreateSample,
@@ -924,9 +919,8 @@ class CreateSample:
         return samples_defaults
 
 
-class Lot:
+class Lot(metaclass=PoolMeta):
     __name__ = 'stock.lot'
-    __metaclass__ = PoolMeta
 
     formula = fields.Char('Formula', depends=['special_category'],
         states={
@@ -1019,7 +1013,7 @@ class ProjectGLPReport01(Report):
                 'packages': '%s %s' % (sample.packages_quantity or '',
                     sample.package_type.description if sample.package_type
                     else ''),
-                'comments': unicode(sample.comments or ''),
+                'comments': str(sample.comments or ''),
                 'entry_responsible': (sample.entry_responsible.rec_name
                     if sample.entry_responsible else ''),
                 'file_operator_responsible': (
@@ -1090,7 +1084,7 @@ class ProjectGLPReport02(Report):
                 'entry_date': fraction.sample.date2,
                 'label': fraction.sample.label,
                 'sample_weight': fraction.sample.sample_weight,
-                'comments': unicode(fraction.comments or '')
+                'comments': str(fraction.comments or '')
                 })
 
         report_context['objects'] = objects
@@ -1183,7 +1177,7 @@ class ProjectGLPReport03(Report):
                 'countersample_location': (fraction.countersample_location.code
                     if fraction.countersample_location else ''),
                 'countersample_date': fraction.countersample_date or '',
-                'comments': unicode(fraction.comments or ''),
+                'comments': str(fraction.comments or ''),
                 })
         report_context['objects'] = objects
 
@@ -1345,7 +1339,7 @@ class ProjectGLPReport05(Report):
                     if fraction.countersample_location else ''),
                 'countersample_date': fraction.countersample_date or '',
                 'discharge_date': fraction.discharge_date or '',
-                'comments': unicode(fraction.comments or ''),
+                'comments': str(fraction.comments or ''),
                 })
         report_context['objects'] = objects
 
@@ -1397,8 +1391,8 @@ class ProjectGLPReport06(Report):
                 'type_number': '%s %s' % (dev_amnd.type_string,
                     dev_amnd.number),
                 'document_type': dev_amnd.document_type_string,
-                'reason': unicode(dev_amnd.reason or ''),
-                'description': unicode(dev_amnd.description or ''),
+                'reason': str(dev_amnd.reason or ''),
+                'description': str(dev_amnd.description or ''),
                 'professionals': [{
                     'name': p.professional.rec_name,
                     'date': p.date or '',
@@ -1744,7 +1738,7 @@ class ProjectGLPReport10(Report):
                     'packages': '%s %s' % (s.packages_quantity or '',
                         s.package_type.description if s.package_type
                         else ''),
-                    'comments': unicode(s.comments or ''),
+                    'comments': str(s.comments or ''),
                     } for s in project.stp_samples_in_custody],
                 })
         report_context['objects'] = objects
@@ -1882,16 +1876,16 @@ class ProjectGLPReport12(Report):
                 'stp_state': project.stp_state_string,
                 'stp_proposal_start_date': project.stp_proposal_start_date,
                 'stp_proposal_end_date': project.stp_proposal_end_date,
-                'stp_rector_scheme_comments': unicode(
+                'stp_rector_scheme_comments': str(
                     project.stp_rector_scheme_comments or ''),
                 'stp_implementation_validation': (True if
                     project.stp_implementation_validation ==
                     'implementation_validation' else False),
                 'stp_pattern_availability': (
                     project.stp_pattern_availability),
-                'stp_target': unicode(project.stp_target or ''),
+                'stp_target': str(project.stp_target or ''),
                 'stp_description': project.stp_description,
-                'stp_test_method': unicode(project.stp_test_method or ''),
+                'stp_test_method': str(project.stp_test_method or ''),
                 'stp_study_director': (project.stp_study_director.rec_name
                     if project.stp_study_director else ''),
                 'stp_facility_director': (
@@ -1941,7 +1935,7 @@ class ProjectGLPReportStudyPlan(Report):
         report_context['stp_number'] = project.stp_number
         report_context['code'] = project.code
         report_context['stp_title'] = project.stp_title
-        report_context['stp_target'] = unicode(project.stp_target or '')
+        report_context['stp_target'] = str(project.stp_target or '')
         report_context['stp_description'] = project.stp_description
         report_context['stp_sponsor'] = project.stp_sponsor
         report_context['stp_date'] = project.stp_date
@@ -1951,9 +1945,9 @@ class ProjectGLPReportStudyPlan(Report):
         report_context['stp_proposal_start_date'] = (
             project.stp_proposal_start_date)
         report_context['stp_proposal_end_date'] = project.stp_proposal_end_date
-        report_context['stp_test_method'] = unicode(project.stp_test_method
+        report_context['stp_test_method'] = str(project.stp_test_method
             or '')
-        report_context['stp_test_system'] = unicode(project.stp_test_system
+        report_context['stp_test_system'] = str(project.stp_test_system
             or '')
         report_context['stp_study_director'] = None
         report_context['stp_study_director_date'] = None
@@ -2050,7 +2044,7 @@ class ProjectGLPReportFinalRP(Report):
         report_context['stp_study_director'] = (
             project.stp_study_director.party if project.stp_study_director
             else None)
-        report_context['stp_target'] = unicode(project.stp_target or '')
+        report_context['stp_target'] = str(project.stp_target or '')
         report_context['stp_description'] = project.stp_description
         report_context['stp_test_elements'] = [e for e in
             project.stp_reference_elements if e.type == 'test']
@@ -2065,7 +2059,7 @@ class ProjectGLPReportFinalRP(Report):
             cls.get_experimental_end_date(project.id))
         report_context['stp_lims_sample_input'] = (
             cls.get_lims_sample_input(project.id))
-        report_context['stp_test_method'] = unicode(project.stp_test_method
+        report_context['stp_test_method'] = str(project.stp_test_method
             or '')
         report_context['stp_solvents_and_reagents'] = (
             project.stp_solvents_and_reagents)
@@ -2291,7 +2285,7 @@ class ProjectGLPReportFinalFOR(Report):
                 product_type_matrix[key] = '%s-%s' % (
                     s.product_type.code, s.matrix.code)
         report_context['product_type_matrix_list'] = ', '.join(
-            product_type_matrix.values())
+            list(product_type_matrix.values()))
         report_context['stp_test_elements'] = [e for e in
             project.stp_reference_elements if e.type == 'test']
         report_context['stp_test_elements_list'] = ', '.join([
@@ -2301,7 +2295,7 @@ class ProjectGLPReportFinalFOR(Report):
         report_context['stp_study_director'] = (
             project.stp_study_director.party if project.stp_study_director
             else None)
-        report_context['stp_target'] = unicode(project.stp_target or '')
+        report_context['stp_target'] = str(project.stp_target or '')
         report_context['stp_description'] = project.stp_description
         report_context['stp_professionals'] = [pp.professional.party
             for pp in project.stp_laboratory_professionals]
@@ -2314,7 +2308,7 @@ class ProjectGLPReportFinalFOR(Report):
             cls.get_lims_sample_input(project.id))
         report_context['stp_all_professionals'] = (
             cls.get_laboratory_professionals(project.id))
-        report_context['stp_test_method'] = unicode(project.stp_test_method
+        report_context['stp_test_method'] = str(project.stp_test_method
             or '')
         report_context['stp_reference_elements'] = [e for e in
             project.stp_reference_elements if e.type == 'reference']
@@ -2340,7 +2334,7 @@ class ProjectGLPReportFinalFOR(Report):
         for detail in details:
             if detail.analysis.id not in analysis:
                 analysis[detail.analysis.id] = detail.analysis.description
-        return ', '.join(analysis.values())
+        return ', '.join(list(analysis.values()))
 
     @staticmethod
     def get_experimental_start_date(project_id):
@@ -2538,7 +2532,7 @@ class ProjectGLPReportAnalyticalPhase(Report):
         report_context['stp_study_director'] = (
             project.stp_study_director.party if project.stp_study_director
             else None)
-        report_context['stp_target'] = unicode(project.stp_target or '')
+        report_context['stp_target'] = str(project.stp_target or '')
         report_context['stp_description'] = project.stp_description
         report_context['stp_test_elements'] = [e for e in
             project.stp_reference_elements if e.type == 'test']
@@ -2553,7 +2547,7 @@ class ProjectGLPReportAnalyticalPhase(Report):
             cls.get_lims_sample_input(project.id))
         report_context['stp_all_professionals'] = (
             cls.get_laboratory_professionals(project.id))
-        report_context['stp_test_method'] = unicode(project.stp_test_method
+        report_context['stp_test_method'] = str(project.stp_test_method
             or '')
         report_context['stp_solvents_and_reagents'] = (
             project.stp_solvents_and_reagents)

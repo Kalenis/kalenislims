@@ -9,9 +9,8 @@ from trytond.pool import Pool, PoolMeta
 __all__ = ['InventoryLine']
 
 
-class InventoryLine:
+class InventoryLine(metaclass=PoolMeta):
     __name__ = 'stock.inventory.line'
-    __metaclass__ = PoolMeta
 
     account_move = fields.Function(fields.Many2One('account.move',
         'Account Move'), 'get_account_move')

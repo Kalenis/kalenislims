@@ -10,9 +10,8 @@ __all__ = ['Uom', 'UomCategory', 'UomConversion', 'Template',
     'ConcentrationLevel', 'VolumeConversion']
 
 
-class Uom:
+class Uom(metaclass=PoolMeta):
     __name__ = 'product.uom'
-    __metaclass__ = PoolMeta
 
     maximum_concentration = fields.Char('Maximum concentration')
     rsd_horwitz = fields.Char('% RSD Horwitz')
@@ -31,9 +30,8 @@ class Uom:
         return self.symbol
 
 
-class UomCategory:
+class UomCategory(metaclass=PoolMeta):
     __name__ = 'product.uom.category'
-    __metaclass__ = PoolMeta
 
     lims_only_available = fields.Boolean('Only available in Lims')
 
@@ -67,9 +65,8 @@ class UomConversion(ModelSQL, ModelView):
         return None
 
 
-class Template:
+class Template(metaclass=PoolMeta):
     __name__ = "product.template"
-    __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):

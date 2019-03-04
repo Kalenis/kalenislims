@@ -16,9 +16,8 @@ DEPENDS = ['type']
 PROJECT_TYPE = ('itl', 'Interlaboratory')
 
 
-class Project:
+class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'
-    __metaclass__ = PoolMeta
 
     int_itl_party = fields.Many2One('party.party', 'ITL Party',
         states=STATES, depends=DEPENDS)
@@ -45,9 +44,8 @@ class Project:
                     })]
 
 
-class Entry:
+class Entry(metaclass=PoolMeta):
     __name__ = 'lims.entry'
-    __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):

@@ -24,9 +24,8 @@ __all__ = ['Invoice', 'InvoiceContact', 'InvoiceLine', 'CreditInvoice',
 logger = logging.getLogger('lims_account_invoice')
 
 
-class Invoice:
+class Invoice(metaclass=PoolMeta):
     __name__ = 'account.invoice'
-    __metaclass__ = PoolMeta
 
     no_send_invoice = fields.Boolean('No send invoice',
         states={'invisible': Eval('type') == 'in'},
@@ -155,9 +154,9 @@ class Invoice:
                     ], limit=1)
 
         with Transaction().set_context(language=lang.code):
-            subject = unicode('%s %s' % (config.mail_send_invoice_subject,
+            subject = str('%s %s' % (config.mail_send_invoice_subject,
                     self.number)).strip()
-            body = unicode(config.mail_send_invoice_body)
+            body = str(config.mail_send_invoice_body)
 
         return subject, body
 
@@ -170,9 +169,9 @@ class Invoice:
                 self.invoice_report_format == 'pdf' and 'pdf' or
                 'vnd.oasis.opendocument.text',
             'filename':
-                unicode(self.number) + '.' +
+                str(self.number) + '.' +
                 str(self.invoice_report_format),
-            'name': unicode(self.number),
+            'name': str(self.number),
             })
         if self.invoice_service_report_cache:
             data.append({
@@ -182,9 +181,9 @@ class Invoice:
                     self.invoice_service_report_format == 'pdf' and 'pdf' or
                     'vnd.oasis.opendocument.text',
                 'filename':
-                    unicode(self.number) + ' (II).' +
+                    str(self.number) + ' (II).' +
                     str(self.invoice_report_format),
-                'name': unicode(self.number) + ' (II)',
+                'name': str(self.number) + ' (II)',
                 })
         return data
 
@@ -242,9 +241,8 @@ class InvoiceContact(ModelSQL, ModelView):
         return credit
 
 
-class InvoiceLine:
+class InvoiceLine(metaclass=PoolMeta):
     __name__ = 'account.invoice.line'
-    __metaclass__ = PoolMeta
 
     lims_service_party = fields.Function(fields.Many2One('party.party',
         'Party', depends=['invoice_type'],
@@ -361,9 +359,8 @@ class InvoiceLine:
         return models
 
 
-class CreditInvoice:
+class CreditInvoice(metaclass=PoolMeta):
     __name__ = 'account.invoice.credit'
-    __metaclass__ = PoolMeta
 
     def do_credit(self, action):
         pool = Pool()

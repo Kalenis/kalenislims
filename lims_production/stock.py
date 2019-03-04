@@ -78,9 +78,8 @@ class FamilyEquivalent(ModelSQL, ModelView):
             default=current_default)
 
 
-class Template:
+class Template(metaclass=PoolMeta):
     __name__ = 'product.template'
-    __metaclass__ = PoolMeta
 
     common_name = fields.Char('Common name')
     chemical_name = fields.Char('Chemical name')
@@ -106,14 +105,13 @@ class Template:
                     [('barcode',) + tuple(clause[1:])],
                     ], order=[])
         if products:
-            return [('id', 'in', map(int, [product.template.id
-                    for product in products]))]
+            return [('id', 'in', list(map(int, [product.template.id
+                    for product in products])))]
         return super(Template, cls).search_rec_name(name, clause)
 
 
-class Product:
+class Product(metaclass=PoolMeta):
     __name__ = 'product.product'
-    __metaclass__ = PoolMeta
 
     catalog = fields.Char('Catalog', depends=['active'],
         states={'readonly': ~Eval('active', True)})
@@ -175,7 +173,7 @@ class Product:
             return
 
         to_write = []
-        for cost, records in costs.iteritems():
+        for cost, records in costs.items():
             to_write.append(records)
             to_write.append({'cost_price': cost})
 
@@ -267,9 +265,8 @@ class LotCategory(ModelSQL, ModelView):
         cls._order.insert(0, ('name', 'ASC'))
 
 
-class Lot:
+class Lot(metaclass=PoolMeta):
     __name__ = 'stock.lot'
-    __metaclass__ = PoolMeta
 
     category = fields.Many2One('stock.lot.category', 'Category')
     special_category = fields.Function(fields.Char('Category'),
@@ -444,9 +441,8 @@ class Lot:
         return [('product.' + name,) + tuple(clause[1:])]
 
 
-class Move:
+class Move(metaclass=PoolMeta):
     __name__ = 'stock.move'
-    __metaclass__ = PoolMeta
 
     label_quantity = fields.Float("Label Quantity",
         digits=(16, Eval('unit_digits', 2)), depends=['unit_digits'])
@@ -518,9 +514,8 @@ class Move:
         write({'cost_price': new_cost_price})
 
 
-class ShipmentIn:
+class ShipmentIn(metaclass=PoolMeta):
     __name__ = 'stock.shipment.in'
-    __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):

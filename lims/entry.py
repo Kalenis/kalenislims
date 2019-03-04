@@ -276,14 +276,14 @@ class Entry(Workflow, ModelSQL, ModelView):
                     if (c.report_contact_default and c not
                             in a_report_contacts):
                         value = ReportContacts(**ReportContacts.default_get(
-                            ReportContacts._fields.keys()))
+                            list(ReportContacts._fields.keys())))
                         value.contact = c
                         report_contacts.append(value)
                     if (c.acknowledgment_contact_default and c not
                             in a_acknowledgment_contacts):
                         value = AcknowledgmentContacts(
                             **AcknowledgmentContacts.default_get(
-                                AcknowledgmentContacts._fields.keys()))
+                                list(AcknowledgmentContacts._fields.keys())))
                         value.contact = c
                         acknowledgment_contacts.append(value)
 
@@ -336,7 +336,7 @@ class Entry(Workflow, ModelSQL, ModelView):
                     if (c.invoice_contact_default and c not
                             in a_invoice_contacts):
                         value = InvoiceContacts(**InvoiceContacts.default_get(
-                            InvoiceContacts._fields.keys()))
+                            list(InvoiceContacts._fields.keys())))
                         value.contact = c
                         invoice_contacts.append(value)
 
@@ -539,9 +539,9 @@ class Entry(Workflow, ModelSQL, ModelView):
                     ], limit=1)
 
         with Transaction().set_context(language=lang.code):
-            subject = unicode('%s %s' % (config.mail_ack_subject,
+            subject = str('%s %s' % (config.mail_ack_subject,
                     self.number)).strip()
-            body = unicode(config.mail_ack_body)
+            body = str(config.mail_ack_body)
 
         return subject, body
 
@@ -553,9 +553,9 @@ class Entry(Workflow, ModelSQL, ModelView):
                 self.ack_report_format == 'pdf' and 'pdf' or
                 'vnd.oasis.opendocument.text',
             'filename':
-                (unicode(self.number) + '.' +
+                (str(self.number) + '.' +
                     str(self.ack_report_format)),
-            'name': unicode(self.number),
+            'name': str(self.number),
             }
         return data
 
@@ -858,8 +858,8 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                 else None)
             if typification:
                 repetitions = typification[0]
-                initial_concentration = unicode(typification[1] or '')
-                final_concentration = unicode(typification[2] or '')
+                initial_concentration = str(typification[1] or '')
+                final_concentration = str(typification[2] or '')
                 initial_unit = typification[3]
                 final_unit = typification[4]
                 detection_limit = str(typification[5])
@@ -1443,7 +1443,7 @@ class AcknowledgmentOfReceipt(Report):
                                     ia['acredited']):
                                 s_methods[ia['method_id']]['enac'] = True
 
-                    for v in s_methods.itervalues():
+                    for v in s_methods.values():
                         if v['enac']:
                             v['enac_label'] = (Entry.raise_user_error(
                                 'enac_acredited', raise_exception=False))

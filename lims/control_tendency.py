@@ -727,8 +727,8 @@ class MeansDeviationsCalc(Wizard):
                     }
             if records:
                 to_create = []
-                for record in records.itervalues():
-                    details = [d for d in record['details'].itervalues()]
+                for record in records.values():
+                    details = [d for d in record['details'].values()]
                     to_create.append({
                         'session_id': self._session_id,
                         'product_type': record['product_type'],
@@ -1310,7 +1310,7 @@ class ControlChartReport(Report):
         index = columns
         cols = []
         ds = {}
-        for r in sorted(records.values(), key=lambda x: x['order']):
+        for r in sorted(list(records.values()), key=lambda x: x['order']):
             cols.append(r['name'])
             ds[r['name']] = [r['recs'][col] for col in index]
         df = pd.DataFrame(ds, index=index)

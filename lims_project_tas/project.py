@@ -16,9 +16,8 @@ DEPENDS = ['type']
 PROJECT_TYPE = ('tas', 'TAS')
 
 
-class Project:
+class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'
-    __metaclass__ = PoolMeta
 
     tas_invoice_party = fields.Many2One('party.party', 'Invoice party',
         domain=[('id', 'in', Eval('tas_invoice_party_domain'))],
@@ -126,9 +125,8 @@ class Project:
         return super(Project, cls).create(vlist)
 
 
-class Entry:
+class Entry(metaclass=PoolMeta):
     __name__ = 'lims.entry'
-    __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):

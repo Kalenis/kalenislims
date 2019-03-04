@@ -12,9 +12,8 @@ from trytond.transaction import Transaction
 __all__ = ['Sale', 'SaleLoadServicesStart', 'SaleLoadServices']
 
 
-class Sale:
+class Sale(metaclass=PoolMeta):
     __name__ = 'sale.sale'
-    __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):
@@ -85,7 +84,7 @@ class SaleLoadServices(Wizard):
             sale_services[service.analysis.id]['quantity'] += 1
 
         sale_lines = []
-        for service in sale_services.itervalues():
+        for service in sale_services.values():
             sale_line = SaleLine(
                 quantity=service['quantity'],
                 unit=service['unit'],

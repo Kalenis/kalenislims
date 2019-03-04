@@ -9,9 +9,8 @@ from trytond.pool import PoolMeta
 __all__ = ['Party', 'Address']
 
 
-class Party:
+class Party(metaclass=PoolMeta):
     __name__ = 'party.party'
-    __metaclass__ = PoolMeta
 
     no_send_invoice = fields.Boolean('No send invoice',
         help='If checked, customer invoices will not be set by default '
@@ -24,9 +23,8 @@ class Party:
         return False
 
 
-class Address:
+class Address(metaclass=PoolMeta):
     __name__ = 'party.address'
-    __metaclass__ = PoolMeta
 
     @classmethod
     def validate(cls, addresses):

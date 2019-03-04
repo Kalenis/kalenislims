@@ -2,7 +2,7 @@
 # This file is part of lims_instrument_custom_set module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-import StringIO
+import io
 import xlrd
 
 from trytond.pool import Pool
@@ -17,15 +17,15 @@ FORMULA = 'Formula'
 
 def getControllerName():
     if Transaction().language in ('es', 'es_419'):
-        return u'Planilla personalizada - XLS'
+        return 'Planilla personalizada - XLS'
     else:
-        return u'Custom Set - XLS'
+        return 'Custom Set - XLS'
 
 
 def parse(self, infile):
     LabWorkYear = Pool().get('lims.lab.workyear')
 
-    filedata = StringIO.StringIO(infile)
+    filedata = io.StringIO(infile)
     workbook = xlrd.open_workbook(file_contents=filedata.getvalue())
     worksheets = workbook.sheet_names()
     for worksheet_name in worksheets:

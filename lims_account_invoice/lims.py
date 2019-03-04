@@ -11,9 +11,8 @@ from trytond.transaction import Transaction
 __all__ = ['FractionType', 'Entry', 'Fraction', 'Service', 'ManageServices']
 
 
-class FractionType:
+class FractionType(metaclass=PoolMeta):
     __name__ = 'lims.fraction.type'
-    __metaclass__ = PoolMeta
 
     invoiceable = fields.Boolean('Invoiceable')
 
@@ -22,9 +21,8 @@ class FractionType:
         return True
 
 
-class Entry:
+class Entry(metaclass=PoolMeta):
     __name__ = 'lims.entry'
-    __metaclass__ = PoolMeta
 
     @classmethod
     def on_hold(cls, entries):
@@ -43,9 +41,8 @@ class Entry:
             service.create_invoice_line('out')
 
 
-class Fraction:
+class Fraction(metaclass=PoolMeta):
     __name__ = 'lims.fraction'
-    __metaclass__ = PoolMeta
 
     @classmethod
     def confirm(cls, fractions):
@@ -67,9 +64,8 @@ class Fraction:
             service.create_invoice_line('out')
 
 
-class Service:
+class Service(metaclass=PoolMeta):
     __name__ = 'lims.service'
-    __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):
@@ -177,9 +173,8 @@ class Service:
                 InvoiceLine.delete(lines_to_delete)
 
 
-class ManageServices:
+class ManageServices(metaclass=PoolMeta):
     __name__ = 'lims.manage_services'
-    __metaclass__ = PoolMeta
 
     def create_service(self, service, fraction):
         new_service = super(ManageServices, self).create_service(service,

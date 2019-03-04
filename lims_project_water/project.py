@@ -18,9 +18,8 @@ DEPENDS = ['type']
 PROJECT_TYPE = ('water', 'Water sampling')
 
 
-class Project:
+class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'
-    __metaclass__ = PoolMeta
 
     wtr_comments = fields.Text('Climatic conditions of the sampling')
 
@@ -43,9 +42,8 @@ class Project:
                     })]
 
 
-class Entry:
+class Entry(metaclass=PoolMeta):
     __name__ = 'lims.entry'
-    __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):
@@ -55,9 +53,8 @@ class Entry:
             cls.project_type.selection.append(project_type)
 
 
-class Sample:
+class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
-    __metaclass__ = PoolMeta
 
     sampling_point = fields.Char('Sampling point', states={
             'invisible': Not(Bool(Equal(Eval('project_type'), 'water'))),
@@ -82,9 +79,8 @@ class Sample:
                     })]
 
 
-class CreateSampleStart:
+class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
-    __metaclass__ = PoolMeta
 
     sampling_point = fields.Char('Sampling point', states={
             'invisible': Not(Bool(Equal(Eval('project_type'), 'water'))),
@@ -109,9 +105,8 @@ class CreateSampleStart:
                     })]
 
 
-class CreateSample:
+class CreateSample(metaclass=PoolMeta):
     __name__ = 'lims.create_sample'
-    __metaclass__ = PoolMeta
 
     def _get_samples_defaults(self, entry_id):
         samples_defaults = super(CreateSample,
@@ -207,7 +202,7 @@ class ProjectWaterSampling(Report):
                     if fraction.countersample_location else ''),
                 'countersample_date': fraction.countersample_date or '',
                 'discharge_date': fraction.discharge_date or '',
-                'sample_comments': unicode(fraction.sample.comments or ''),
+                'sample_comments': str(fraction.sample.comments or ''),
                 'label': fraction.sample.label,
                 'results': (cls.get_results_insitu(fraction.id)),
                 })

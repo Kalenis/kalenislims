@@ -125,8 +125,4 @@ setup(name='kalenis_lims',
     test_suite='setup.kalenis_test_suite',
     test_loader='trytond.test_loader:Loader',
     tests_require=tests_require,
-    use_2to3=True,
-    convert_2to3_doctests=[
-        'lims/tests/scenario_lims.rst',
-        ],
     )

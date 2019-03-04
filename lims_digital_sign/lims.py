@@ -22,9 +22,8 @@ __all__ = ['ResultsReportVersionDetail', 'ResultsReport',
     'ResultsReportAnnulation']
 
 
-class ResultsReportVersionDetail:
+class ResultsReportVersionDetail(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail'
-    __metaclass__ = PoolMeta
 
     def unsign(self):
         '''
@@ -54,9 +53,8 @@ class ResultsReportVersionDetail:
             detail.unsign()
 
 
-class ResultsReport:
+class ResultsReport(metaclass=PoolMeta):
     __name__ = 'lims.results_report'
-    __metaclass__ = PoolMeta
 
     signed = fields.Boolean('Signed', readonly=True)
     signed_date = fields.DateTime('Signed date', readonly=True)
@@ -193,7 +191,7 @@ class ResultsReport:
         try:
             token = GetToken(listen, origin, target)
             token.signDoc()
-        except Exception, msg:
+        except Exception as msg:
             logging.getLogger('lims_digital_sign').error(
                 'Unable to digitally sign for results report %s'
                 % (self.number))
@@ -267,10 +265,10 @@ class ResultsReport:
             else:
                 label = self.raise_user_error('polisample',
                     raise_exception=False)
-            subject = unicode('%s %s (%s)' % (
+            subject = str('%s %s (%s)' % (
                 config.mail_ack_report_subject,
                 self.number, label)).strip()
-            body = unicode(config.mail_ack_report_body)
+            body = str(config.mail_ack_report_body)
 
         body = body.replace('<SAMPLES>', '\n'.join(sample_list))
         return subject, body
@@ -303,8 +301,8 @@ class ResultsReport:
                 self.report_format_eng or
                 self.report_format),
             'mimetype': 'pdf',
-            'filename': unicode(self.number) + '-' + suffix + '.pdf',
-            'name': unicode(self.number),
+            'filename': str(self.number) + '-' + suffix + '.pdf',
+            'name': str(self.number),
             }
         return data
 
@@ -392,9 +390,8 @@ class ResultsReport:
         return True
 
 
-class ResultsReportAnnulation:
+class ResultsReportAnnulation(metaclass=PoolMeta):
     __name__ = 'lims.results_report_annulation'
-    __metaclass__ = PoolMeta
 
     def transition_annul(self):
         logging.getLogger('lims_digital_sign').info(

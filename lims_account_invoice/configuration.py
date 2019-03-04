@@ -9,9 +9,8 @@ from trytond.pool import PoolMeta
 __all__ = ['Configuration']
 
 
-class Configuration:
+class Configuration(metaclass=PoolMeta):
     __name__ = 'lims.configuration'
-    __metaclass__ = PoolMeta
 
     mail_send_invoice_subject = fields.Char('Email subject of Invoice report',
         help="In the text will be added suffix with the invoice report number")

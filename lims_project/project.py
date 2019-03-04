@@ -61,9 +61,8 @@ class Project(ModelSQL, ModelView):
         return [(cls._rec_name,) + tuple(clause[1:])]
 
 
-class Entry:
+class Entry(metaclass=PoolMeta):
     __name__ = 'lims.entry'
-    __metaclass__ = PoolMeta
 
     project = fields.Many2One('lims.project', 'Project',
         domain=[('client', '=', Eval('party'))], depends=['party'])
@@ -88,9 +87,8 @@ class Entry:
         return res
 
 
-class Sample:
+class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
-    __metaclass__ = PoolMeta
 
     project_type = fields.Function(fields.Selection([], 'Type'),
         'on_change_with_project_type')
@@ -110,16 +108,14 @@ class Sample:
         return res
 
 
-class CreateSampleStart:
+class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
-    __metaclass__ = PoolMeta
 
     project_type = fields.Char('Type')
 
 
-class CreateSample:
+class CreateSample(metaclass=PoolMeta):
     __name__ = 'lims.create_sample'
-    __metaclass__ = PoolMeta
 
     def default_start(self, fields):
         Entry = Pool().get('lims.entry')
