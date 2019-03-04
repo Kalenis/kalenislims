@@ -789,7 +789,7 @@
     </table:table-row>
     <table:table-row>
      <table:table-cell table:style-name="Detail.A3" office:value-type="string">
-      <text:p text:style-name="P15">CIATI Code</text:p>
+      <text:p text:style-name="P15"><text:span>CODE </text:span><text:placeholder text:placeholder-type="text">&lt;company.short_name&gt;</text:placeholder></text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Detail.B3" office:value-type="string">
       <text:p text:style-name="P33">Rótulo</text:p>

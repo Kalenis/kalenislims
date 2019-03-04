@@ -691,7 +691,7 @@
      </table:table-row>
      <table:table-row table:style-name="Detail.2">
       <table:table-cell table:style-name="Detail.A2" office:value-type="string">
-       <text:p text:style-name="P10">CIATI Code</text:p>
+       <text:p text:style-name="P10"><text:span>CODE </text:span><text:placeholder text:placeholder-type="text">&lt;company.short_name&gt;</text:placeholder></text:p>
       </table:table-cell>
       <table:table-cell table:style-name="Detail.B2" office:value-type="string">
        <text:p text:style-name="P24">Type</text:p>

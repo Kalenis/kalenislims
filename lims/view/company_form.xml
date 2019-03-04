@@ -3,6 +3,11 @@
     <xpath
         expr="/form/notebook/page[@id='reports']"
         position="inside">
+        <group id="short_namne" colspan="1" col="4">
+            <label name="short_name"/>
+            <field name="short_name"/>
+            <newline/>
+        </group>
         <separator name="logo"/>
         <field name="logo" widget="image"/>
     </xpath>

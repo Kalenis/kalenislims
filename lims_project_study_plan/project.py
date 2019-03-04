@@ -1995,7 +1995,7 @@ class ProjectGLPReportStudyPlan(Report):
             'WHERE e.project = %s ',
             (project_id,))
         return Entry.search([
-            ('id', 'in', cursor.fetchall()),
+            ('id', 'in', [x[0] for x in cursor.fetchall()]),
             ])
 
 
@@ -2150,7 +2150,7 @@ class ProjectGLPReportFinalRP(Report):
                 'AND nl.results_report IS NOT NULL',
             (project_id,))
         return ResultsReport.search([
-            ('id', 'in', cursor.fetchall()),
+            ('id', 'in', [x[0] for x in cursor.fetchall()]),
             ])
 
     @staticmethod
@@ -2414,7 +2414,7 @@ class ProjectGLPReportFinalFOR(Report):
                 'AND nl.results_report IS NOT NULL',
             (project_id,))
         return ResultsReport.search([
-            ('id', 'in', cursor.fetchall()),
+            ('id', 'in', [x[0] for x in cursor.fetchall()]),
             ])
 
     @staticmethod
@@ -2638,7 +2638,7 @@ class ProjectGLPReportAnalyticalPhase(Report):
                 'AND nl.results_report IS NOT NULL',
             (project_id,))
         return ResultsReport.search([
-            ('id', 'in', cursor.fetchall()),
+            ('id', 'in', [x[0] for x in cursor.fetchall()]),
             ])
 
     @staticmethod
@@ -2788,5 +2788,5 @@ class ProjectGLPReport13(Report):
             'WHERE e.project = %s ',
             (project_id,))
         return ReferenceElement.search([
-            ('id', 'in', cursor.fetchall()),
+            ('id', 'in', [x[0] for x in cursor.fetchall()]),
             ])

@@ -106,6 +106,7 @@ class Company(metaclass=PoolMeta):
     __name__ = 'company.company'
 
     logo = fields.Binary('Logo')
+    short_name = fields.Char('Short Name')
 
     def get_timezone(self):
         timezone = pytz.utc
