@@ -36,7 +36,7 @@ class FormulaParser(Model):
             'pi': 3.141592653589793,
             'e': 2.718281828459045,
             }
-        for var in vars.keys():
+        for var in list(vars.keys()):
             if self.vars.get(var) is not None:
                 self.raise_user_error('variable_redefine', (var,))
             self.vars[var] = vars[var]

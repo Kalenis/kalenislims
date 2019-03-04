@@ -4,14 +4,13 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import PoolMeta
-import generic_service_xls
+from . import generic_service_xls
 
 __all__ = ['ResultsImport']
 
 
-class ResultsImport:
+class ResultsImport(metaclass=PoolMeta):
     __name__ = 'lims.resultsimport'
-    __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):

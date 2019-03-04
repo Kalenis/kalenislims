@@ -3,7 +3,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import json
-import xmlrpclib
+import xmlrpc.client
 
 
 class EchoClient():
@@ -16,7 +16,7 @@ class EchoClient():
 
     def _get_server(self, listen):
         host, port = listen.split(':')
-        return xmlrpclib.Server('http://%s:%s/' % (host, port))
+        return xmlrpc.client.Server('http://%s:%s/' % (host, port))
 
     def signDoc(self):
         data = json.dumps({

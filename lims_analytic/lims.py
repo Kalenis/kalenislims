@@ -10,9 +10,8 @@ from trytond.pool import PoolMeta
 __all__ = ['Location']
 
 
-class Location:
+class Location(metaclass=PoolMeta):
     __name__ = 'stock.location'
-    __metaclass__ = PoolMeta
 
     cost_center = fields.Many2One('analytic_account.account', 'Cost center',
         domain=[('type', '=', 'normal')],

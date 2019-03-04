@@ -89,7 +89,7 @@ Create Samples::
     >>> create_sample.form.zone = zone
     >>> create_sample.form.fraction_type = fraction_type
     >>> create_sample.form.storage_location = storage_location
-    >>> create_sample.form.labels = u'LBL-001\nLBL-002\nLBL-003'
+    >>> create_sample.form.labels = 'LBL-001\nLBL-002\nLBL-003'
 
     >>> service = create_sample.form.services.new()
     >>> service.analysis = analysis
@@ -140,3 +140,4 @@ Plan the analysis::
     >>> technicians_qualification = Wizard(
     ...     'lims.planification.technicians_qualification', [planification])
     >>> _ = planification.click('confirm')
+

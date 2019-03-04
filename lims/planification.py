@@ -322,7 +322,7 @@ class Planification(Workflow, ModelSQL, ModelView):
                         fractions[key] = '%s (%s)' % (detail.fraction.rec_name,
                             service_detail.notebook_line.method.code)
         if fractions:
-            sorted_fractions = sorted(fractions.values(), key=lambda x: x)
+            sorted_fractions = sorted(list(fractions.values()), key=lambda x: x)
             self.raise_user_error('no_technician',
                 ('\n' + '\n'.join(sorted_fractions) + '\n',))
 
@@ -1218,7 +1218,7 @@ class RelateTechnicians(Wizard):
                     }
 
         to_create = []
-        for d in details1.itervalues():
+        for d in details1.values():
             to_create.append({
                 'session_id': self._session_id,
                 'fraction': d['fraction'],
@@ -1273,7 +1273,7 @@ class RelateTechnicians(Wizard):
                     }
 
         to_create = []
-        for d in details2.itervalues():
+        for d in details2.values():
             to_create.append({
                 'session_id': self._session_id,
                 'fraction': d['fraction'],
@@ -1327,7 +1327,7 @@ class RelateTechnicians(Wizard):
                     }
 
         to_create = []
-        for d in details3.itervalues():
+        for d in details3.values():
             to_create.append({
                 'session_id': self._session_id,
                 'fraction': d['fraction'],
@@ -1605,7 +1605,7 @@ class UnlinkTechnicians(Wizard):
                     }
 
         to_create = []
-        for d in details1.itervalues():
+        for d in details1.values():
             to_create.append({
                 'session_id': self._session_id,
                 'fraction': d['fraction'],
@@ -1937,7 +1937,7 @@ class AddFractionControl(Wizard):
         notebook = Notebook(notebook_lines[0].notebook.id)
 
         to_create = []
-        for analysis_id, nline in analysis_to_repeat.iteritems():
+        for analysis_id, nline in analysis_to_repeat.items():
             to_create.append({
                 'analysis_detail': nline.analysis_detail.id,
                 'service': nline.service.id,
@@ -2010,7 +2010,7 @@ class AddFractionControl(Wizard):
                     'is_control': True,
                     })
             if details_to_create:
-                for k, v in details_to_create.iteritems():
+                for k, v in details_to_create.items():
                     details = PlanificationDetail.search([
                         ('planification', '=', self.start.planification.id),
                         ('fraction', '=', k[0]),
@@ -2591,7 +2591,7 @@ class AddFractionRMBMZ(Wizard):
         notebook = Notebook(notebook_lines[0].notebook.id)
 
         to_create = []
-        for nline in analysis_to_repeat.itervalues():
+        for nline in analysis_to_repeat.values():
             for i in range(1, repetitions + 1):
                 to_create.append({
                     'analysis_detail': nline.analysis_detail.id,
@@ -2665,7 +2665,7 @@ class AddFractionRMBMZ(Wizard):
                     'is_control': True,
                     })
             if details_to_create:
-                for k, v in details_to_create.iteritems():
+                for k, v in details_to_create.items():
                     details = PlanificationDetail.search([
                         ('planification', '=', self.start.planification.id),
                         ('fraction', '=', k[0]),
@@ -3024,7 +3024,7 @@ class AddFractionBRE(Wizard):
                     'is_control': True,
                     })
             if details_to_create:
-                for k, v in details_to_create.iteritems():
+                for k, v in details_to_create.items():
                     details = PlanificationDetail.search([
                         ('planification', '=', self.start.planification.id),
                         ('fraction', '=', k[0]),
@@ -3364,7 +3364,7 @@ class AddFractionMRT(Wizard):
         notebook = Notebook(notebook_lines[0].notebook.id)
 
         to_create = []
-        for nline in analysis_to_repeat.itervalues():
+        for nline in analysis_to_repeat.values():
             for i in range(1, repetitions + 1):
                 to_create.append({
                     'analysis_detail': nline.analysis_detail.id,
@@ -3438,7 +3438,7 @@ class AddFractionMRT(Wizard):
                     'is_control': True,
                     })
             if details_to_create:
-                for k, v in details_to_create.iteritems():
+                for k, v in details_to_create.items():
                     details = PlanificationDetail.search([
                         ('planification', '=', self.start.planification.id),
                         ('fraction', '=', k[0]),
@@ -3730,7 +3730,7 @@ class SearchFractions(Wizard):
         data = self._get_service_details(planification)
 
         to_create = []
-        for k, v in data.iteritems():
+        for k, v in data.items():
             to_create.append({
                 'session_id': self._session_id,
                 'fraction': k[0],
@@ -3768,7 +3768,7 @@ class SearchFractions(Wizard):
         data = self._get_service_details(planification, extra_where)
 
         to_create = []
-        for k, v in data.iteritems():
+        for k, v in data.items():
             details = PlanificationDetail.search([
                 ('planification', '=', planification.id),
                 ('fraction', '=', k[0]),
@@ -4039,7 +4039,7 @@ class SearchPlannedFractions(Wizard):
         data = self._get_service_details()
 
         to_create = []
-        for k, v in data.iteritems():
+        for k, v in data.items():
             to_create.append({
                 'session_id': self._session_id,
                 'fraction': k[0],
@@ -4077,7 +4077,7 @@ class SearchPlannedFractions(Wizard):
         data = self._get_service_details(extra_where)
 
         to_create = []
-        for k, v in data.iteritems():
+        for k, v in data.items():
             details = PlanificationDetail.search([
                 ('planification', '=', planification.id),
                 ('fraction', '=', k[0]),
@@ -4904,7 +4904,7 @@ class TechniciansQualification(Wizard):
                 'professional': k[0],
                 'method': k[1],
                 'situation': v,
-                } for k, v in situations.iteritems()])
+                } for k, v in situations.items()])
             self.situations.total = len(self.situations.situations)
             self.situations.index = 0
             return 'next_'
@@ -5589,9 +5589,9 @@ class PlanificationSequenceReport(Report):
                                 sample_client_description),
                             }
 
-        for k1 in objects.iterkeys():
-            for k2, lines in objects[k1]['methods'].iteritems():
-                sorted_lines = sorted(lines['lines'].values(),
+        for k1 in objects.keys():
+            for k2, lines in objects[k1]['methods'].items():
+                sorted_lines = sorted(list(lines['lines'].values()),
                     key=lambda x: x['order'])
                 objects[k1]['methods'][k2]['lines'] = sorted_lines
 
@@ -5692,13 +5692,13 @@ class PlanificationWorksheetAnalysisReport(Report):
                         key]['lines'][number] = record
                     objects[date]['professionals'][p_key]['total'] += 1
 
-        for k1 in objects.iterkeys():
-            for k2 in objects[k1]['professionals'].iterkeys():
-                sorted_analysis = sorted(objects[k1]['professionals'][k2][
-                    'analysis'].items(), key=lambda x: x[1]['order'])
+        for k1 in objects.keys():
+            for k2 in objects[k1]['professionals'].keys():
+                sorted_analysis = sorted(list(objects[k1]['professionals'][k2][
+                    'analysis'].items()), key=lambda x: x[1]['order'])
                 objects[k1]['professionals'][k2]['analysis'] = []
                 for item in sorted_analysis:
-                    sorted_lines = sorted(item[1]['lines'].items(),
+                    sorted_lines = sorted(list(item[1]['lines'].items()),
                             key=lambda x: x[1]['order'])
                     item[1]['lines'] = [l[1] for l in sorted_lines]
                     objects[k1]['professionals'][k2]['analysis'].append(
@@ -5815,14 +5815,14 @@ class PlanificationWorksheetMethodReport(Report):
                             number]['methods'][notebook_line.method.id] = (
                                 notebook_line.method.rec_name)
 
-        for k1 in objects.iterkeys():
-            for k2 in objects[k1]['professionals'].iterkeys():
+        for k1 in objects.keys():
+            for k2 in objects[k1]['professionals'].keys():
                 objects[k1]['professionals'][k2]['methods'] = {}
-                fractions = objects[k1]['professionals'][k2]['lines'].values()
+                fractions = list(objects[k1]['professionals'][k2]['lines'].values())
                 for fraction in fractions:
                     m_key = ()
                     m_names = []
-                    for m_id, m_name in fraction['methods'].iteritems():
+                    for m_id, m_name in fraction['methods'].items():
                         m_key += (m_id,)
                         m_names.append(m_name)
                     m_key = tuple(sorted(m_key))
@@ -5837,7 +5837,7 @@ class PlanificationWorksheetMethodReport(Report):
 
                 del objects[k1]['professionals'][k2]['lines']
                 for m_key in objects[k1]['professionals'][k2][
-                        'methods'].iterkeys():
+                        'methods'].keys():
                     sorted_lines = sorted(objects[k1]['professionals'][k2][
                         'methods'][m_key]['lines'], key=lambda x: x['order'])
                     objects[k1]['professionals'][k2]['methods'][m_key][
@@ -5993,18 +5993,18 @@ class PlanificationWorksheetReport(Report):
                             notebook_line.method.id] = (
                                 notebook_line.method.rec_name)
 
-        for k1 in objects.iterkeys():
-            for k2 in objects[k1]['professionals'].iterkeys():
+        for k1 in objects.keys():
+            for k2 in objects[k1]['professionals'].keys():
                 for k3 in objects[k1]['professionals'][k2][
-                        'analysis'].iterkeys():
+                        'analysis'].keys():
                     objects[k1]['professionals'][k2]['analysis'][k3][
                         'methods'] = {}
-                    fractions = objects[k1]['professionals'][k2]['analysis'][
-                        k3]['lines'].values()
+                    fractions = list(objects[k1]['professionals'][k2]['analysis'][
+                        k3]['lines'].values())
                     for fraction in fractions:
                         m_key = ()
                         m_names = []
-                        for m_id, m_name in fraction['methods'].iteritems():
+                        for m_id, m_name in fraction['methods'].items():
                             m_key += (m_id,)
                             m_names.append(m_name)
                         m_key = tuple(sorted(m_key))
@@ -6021,7 +6021,7 @@ class PlanificationWorksheetReport(Report):
                     del objects[k1]['professionals'][k2]['analysis'][k3][
                         'lines']
                     for m_key in objects[k1]['professionals'][k2][
-                            'analysis'][k3]['methods'].iterkeys():
+                            'analysis'][k3]['methods'].keys():
                         sorted_lines = sorted(objects[k1]['professionals'][k2][
                             'analysis'][k3]['methods'][m_key]['lines'],
                             key=lambda x: x['order'])
@@ -6181,7 +6181,7 @@ class PendingServicesUnplannedReport(Report):
                         }
 
             number = service.fraction.get_formated_number('pt-m-sn-sy-fn')
-            number = (number + '-' + unicode(service.sample.label))
+            number = (number + '-' + str(service.sample.label))
             number_parts = number.split('-')
             order = (number_parts[3] + '-' + number_parts[2] + '-' +
                 number_parts[4])
@@ -6257,10 +6257,10 @@ class PendingServicesUnplannedReport(Report):
                 objects[laboratory.id]['services'][analysis.id]['total'] += 1
                 objects[laboratory.id]['services'][analysis.id]['parties'][
                     party.id]['total'] += 1
-        for k1 in objects.iterkeys():
-            for k2 in objects[k1]['services'].iterkeys():
+        for k1 in objects.keys():
+            for k2 in objects[k1]['services'].keys():
                 for k3, lines in objects[k1]['services'][k2][
-                        'parties'].iteritems():
+                        'parties'].items():
                     sorted_lines = sorted(lines['lines'],
                         key=lambda x: x['order'])
                     objects[k1]['services'][k2]['parties'][k3]['lines'] = (
@@ -6399,7 +6399,7 @@ class PendingServicesUnplannedSpreadsheet(Report):
                 continue
 
             number = service.fraction.get_formated_number('pt-m-sn-sy-fn')
-            number = (number + '-' + unicode(service.sample.label))
+            number = (number + '-' + str(service.sample.label))
             number_parts = number.split('-')
             order = (number_parts[3] + '-' + number_parts[2] + '-' +
                 number_parts[4])
@@ -6763,7 +6763,7 @@ class BlindSampleReport(Report):
                     formula = formula.replace(var, '_')
                 else:
                     break
-        for var in variables.iterkeys():
+        for var in variables.keys():
             if var == 'DI':
                 ic = float(notebook_line.final_concentration)
                 result = VolumeConversion.brixToDensity(ic)
@@ -6839,9 +6839,9 @@ class PlanificationSequenceAnalysisReport(Report):
                                 sample_client_description),
                             }
 
-        for k1 in objects.iterkeys():
-            for k2, lines in objects[k1]['methods'].iteritems():
-                sorted_lines = sorted(lines['lines'].values(),
+        for k1 in objects.keys():
+            for k2, lines in objects[k1]['methods'].items():
+                sorted_lines = sorted(list(lines['lines'].values()),
                     key=lambda x: x['order'])
                 objects[k1]['methods'][k2]['lines'] = sorted_lines
 

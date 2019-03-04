@@ -12,9 +12,8 @@ __all__ = ['ProductionConfiguration', 'ProductionConfigurationLotSequence',
     'Configuration', 'ConfigurationSolvents']
 
 
-class ProductionConfiguration:
+class ProductionConfiguration(metaclass=PoolMeta):
     __name__ = 'production.configuration'
-    __metaclass__ = PoolMeta
 
     lot_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence', 'Lot Sequence', required=True,
@@ -57,9 +56,8 @@ class ProductionConfigurationLotSequence(ModelSQL, CompanyValueMixin):
             return None
 
 
-class Configuration:
+class Configuration(metaclass=PoolMeta):
     __name__ = 'lims.configuration'
-    __metaclass__ = PoolMeta
 
     solvents = fields.Many2Many('lims.configuration.solvents',
         'configuration', 'category', 'Solvents')

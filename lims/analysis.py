@@ -435,9 +435,9 @@ class Typification(ModelSQL, ModelView):
                         typification.detection_limit),
                     'quantification_limit': str(
                         typification.quantification_limit),
-                    'initial_concentration': unicode(
+                    'initial_concentration': str(
                         typification.initial_concentration or ''),
-                    'final_concentration': unicode(
+                    'final_concentration': str(
                         typification.final_concentration or ''),
                     'initial_unit': typification.start_uom,
                     'final_unit': typification.end_uom,
@@ -456,7 +456,7 @@ class Typification(ModelSQL, ModelView):
                 ])
             if notebook_lines:
                 NotebookLine.write(notebook_lines, {
-                    'initial_concentration': unicode(
+                    'initial_concentration': str(
                         typification.initial_concentration or ''),
                     })
 
@@ -1352,7 +1352,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
         new_context['date_from'] = date_from
         new_context['date_to'] = date_to
         with Transaction().set_context(new_context):
-            pending_fractions = cls.analysis_pending_fractions().iteritems()
+            pending_fractions = iter(cls.analysis_pending_fractions().items())
 
         processed_lines = []
         for analysis, pending in pending_fractions:

@@ -11,9 +11,8 @@ __all__ = ['Configuration', 'ConfigurationSequence', 'LabWorkYear',
     'LabWorkYearSequence']
 
 
-class Configuration:
+class Configuration(metaclass=PoolMeta):
     __name__ = 'lims.configuration'
-    __metaclass__ = PoolMeta
 
     sample_in_custody_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence', 'Sample in Custody Sequence', required=True,
@@ -36,9 +35,8 @@ class Configuration:
             'sample_in_custody_sequence').default_sample_in_custody_sequence()
 
 
-class ConfigurationSequence:
+class ConfigurationSequence(metaclass=PoolMeta):
     __name__ = 'lims.configuration.sequence'
-    __metaclass__ = PoolMeta
 
     sample_in_custody_sequence = fields.Many2One('ir.sequence',
         'Sample in Custody Sequence', depends=['company'], domain=[
@@ -57,9 +55,8 @@ class ConfigurationSequence:
             return None
 
 
-class LabWorkYear:
+class LabWorkYear(metaclass=PoolMeta):
     __name__ = 'lims.lab.workyear'
-    __metaclass__ = PoolMeta
 
     project_study_plan_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence.strict', 'Study plan Projects Sequence', required=True,
@@ -77,9 +74,8 @@ class LabWorkYear:
         return super(LabWorkYear, cls).multivalue_model(field)
 
 
-class LabWorkYearSequence:
+class LabWorkYearSequence(metaclass=PoolMeta):
     __name__ = 'lims.lab.workyear.sequence'
-    __metaclass__ = PoolMeta
 
     project_study_plan_sequence = fields.Many2One('ir.sequence.strict',
         'Study plan Projects Sequence', depends=['company'], domain=[

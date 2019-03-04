@@ -120,9 +120,8 @@ class Printer(ModelSQL, ModelView):
     name = fields.Char('Name', required=True)
 
 
-class User:
+class User(metaclass=PoolMeta):
     __name__ = 'res.user'
-    __metaclass__ = PoolMeta
 
     notebook_view = fields.Many2One('lims.notebook.view', 'Notebook view')
     role = fields.Many2One('lims.user.role', 'Role')
@@ -580,8 +579,7 @@ class ModelDoc(ModelSQL, ModelView):
         return self.model.name
 
 
-class Model:
+class Model(metaclass=PoolMeta):
     __name__ = 'ir.model'
-    __metaclass__ = PoolMeta
 
     docs = fields.One2Many('ir.model.doc', 'model', 'Docs')

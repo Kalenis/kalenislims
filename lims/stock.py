@@ -11,9 +11,8 @@ from trytond.transaction import Transaction
 __all__ = ['Location', 'Move', 'ShipmentInternal']
 
 
-class Location:
+class Location(metaclass=PoolMeta):
     __name__ = 'stock.location'
-    __metaclass__ = PoolMeta
 
     storage_time = fields.Integer('Storage time (in months)')
 
@@ -29,9 +28,8 @@ class Location:
         return [(cls._rec_name,) + tuple(clause[1:])]
 
 
-class Move:
+class Move(metaclass=PoolMeta):
     __name__ = 'stock.move'
-    __metaclass__ = PoolMeta
 
     fraction = fields.Many2One('lims.fraction', 'Fraction', select=True,
         ondelete='CASCADE', states={
@@ -78,9 +76,8 @@ class Move:
             return super(Move, cls).copy(moves, default=default)
 
 
-class ShipmentInternal:
+class ShipmentInternal(metaclass=PoolMeta):
     __name__ = 'stock.shipment.internal'
-    __metaclass__ = PoolMeta
 
     @classmethod
     def copy(cls, shipments, default=None):

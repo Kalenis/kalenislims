@@ -13,16 +13,14 @@ from trytond.report import Report
 __all__ = ['BOM', 'Production', 'FamilyEquivalentReport']
 
 
-class BOM:
+class BOM(metaclass=PoolMeta):
     __name__ = 'production.bom'
-    __metaclass__ = PoolMeta
 
     divide_lots = fields.Boolean('Divide lots')
 
 
-class Production:
+class Production(metaclass=PoolMeta):
     __name__ = 'production'
-    __metaclass__ = PoolMeta
 
     concentration = fields.Char('Concentration',
         depends=['salable_product', 'state'], states={

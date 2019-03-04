@@ -10,9 +10,8 @@ from trytond.pyson import Eval
 __all__ = ['LabWorkYear', 'LabWorkYearSequence']
 
 
-class LabWorkYear:
+class LabWorkYear(metaclass=PoolMeta):
     __name__ = 'lims.lab.workyear'
-    __metaclass__ = PoolMeta
 
     project_tas_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence.strict', 'TAS Projects Sequence', required=True,
@@ -30,9 +29,8 @@ class LabWorkYear:
         return super(LabWorkYear, cls).multivalue_model(field)
 
 
-class LabWorkYearSequence:
+class LabWorkYearSequence(metaclass=PoolMeta):
     __name__ = 'lims.lab.workyear.sequence'
-    __metaclass__ = PoolMeta
 
     project_tas_sequence = fields.Many2One('ir.sequence.strict',
         'TAS Projects Sequence', depends=['company'], domain=[

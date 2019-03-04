@@ -10,9 +10,8 @@ from trytond.pyson import Eval
 __all__ = ['Invoice']
 
 
-class Invoice:
+class Invoice(metaclass=PoolMeta):
     __name__ = 'account.invoice'
-    __metaclass__ = PoolMeta
 
     lims_project = fields.Many2One('lims.project', 'TAS Project',
         domain=[('type', '=', 'tas')],

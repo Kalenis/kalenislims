@@ -375,11 +375,11 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
             'multiple_reports': 'Please, select only one report to print',
             'annulled_report': 'This report is annulled',
             'empty_report': 'The report has not lines to print',
-            'replace_number': u'Supplants the Results Report N° %s',
+            'replace_number': 'Supplants the Results Report N° %s',
             'quantification_limit': '< LoQ = %s',
             'detection_limit': '(LoD = %s %s)',
             'detection_limit_2': '(LoD = %s)',
-            'uncertainty': u'(U± %s %s)',
+            'uncertainty': '(U± %s %s)',
             'obs_uncert': 'U = Uncertainty.',
             'neg': 'Negative',
             'pos': 'Positive',
@@ -393,7 +393,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                 'analysis covered by the Accreditation is available.'),
             'concentration_label_1': ('(Expressed at the concentration of '
                 'the received sample)'),
-            'concentration_label_2': u'(Expressed at %s° Brix)',
+            'concentration_label_2': '(Expressed at %s° Brix)',
             'concentration_label_3': '(Expressed at %s)',
             'final_unit_label_1': 'Expressed at %s %% Alcohol',
             'final_unit_label_2': 'Expressed at %s',
@@ -1442,7 +1442,7 @@ class GenerateResultsReport(Wizard):
         excluded_notebooks = self._get_excluded_notebooks()
         if excluded_notebooks:
             notebooks = {}
-            for (n_id, grouper), a_ids in excluded_notebooks.iteritems():
+            for (n_id, grouper), a_ids in excluded_notebooks.items():
                 clause = [
                     ('notebook.id', '=', n_id),
                     ('analysis_detail.report_grouper', '=', grouper),
@@ -1459,13 +1459,13 @@ class GenerateResultsReport(Wizard):
                 'session_id': self._session_id,
                 'notebook': k,
                 'lines': [('add', v)],
-                } for k, v in notebooks.iteritems()]
+                } for k, v in notebooks.items()]
             self.result_aut.excluded_notebooks = (
                 GenerateResultsReportResultAutExcludedNotebook.create(
                     to_create))
 
         notebook_lines = self._get_notebook_lines('aut',
-            excluded_notebooks.keys())
+            list(excluded_notebooks.keys()))
         if notebook_lines:
             notebooks = {}
             for line in notebook_lines:
@@ -1474,7 +1474,7 @@ class GenerateResultsReport(Wizard):
                 notebooks[line.notebook.id].append(line.id)
 
             to_create = []
-            for k, v in notebooks.iteritems():
+            for k, v in notebooks.items():
                 to_create.append({
                     'session_id': self._session_id,
                     'notebook': k,
@@ -1571,7 +1571,7 @@ class GenerateResultsReport(Wizard):
                 })
 
         reports_details = []
-        for notebook in notebooks.itervalues():
+        for notebook in notebooks.values():
             if not notebook['divided_report']:
                 details = {
                     'notebook_lines': [('create', notebook['notebook_lines'])],
@@ -1602,7 +1602,7 @@ class GenerateResultsReport(Wizard):
                         grouped_reports[report_grouper] = []
                     grouped_reports[report_grouper].append(line)
 
-                for grouper, notebook_lines in grouped_reports.iteritems():
+                for grouper, notebook_lines in grouped_reports.items():
                     details = {
                         'notebook_lines': [('create', notebook_lines)],
                         'signer': self.start.laboratory.default_signer.id,
@@ -1680,7 +1680,7 @@ class GenerateResultsReport(Wizard):
                             if valid_detail[0].resultrange_origin:
                                 details['resultrange_origin'] = (
                                     valid_detail[0].resultrange_origin.id)
-                            details['comments'] = unicode(
+                            details['comments'] = str(
                                 valid_detail[0].comments or '')
                         detail, = ResultsReportVersionDetail.create([
                             details])
@@ -1733,7 +1733,7 @@ class GenerateResultsReport(Wizard):
                             if valid_detail[0].resultrange_origin:
                                 details['resultrange_origin'] = (
                                     valid_detail[0].resultrange_origin.id)
-                            details['comments'] = unicode(
+                            details['comments'] = str(
                                 valid_detail[0].comments or '')
                         detail, = ResultsReportVersionDetail.create([
                             details])
@@ -1766,7 +1766,7 @@ class GenerateResultsReport(Wizard):
                         })
 
                 reports_details = []
-                for party in parties.itervalues():
+                for party in parties.values():
                     grouped_reports = {}
                     for line in party['notebook_lines']:
                         nline = NotebookLine(line['notebook_line'])
@@ -1775,7 +1775,7 @@ class GenerateResultsReport(Wizard):
                             grouped_reports[report_grouper] = []
                         grouped_reports[report_grouper].append(line)
 
-                    for grouper, notebook_lines in grouped_reports.iteritems():
+                    for grouper, notebook_lines in grouped_reports.items():
                         details = {
                             'notebook_lines': [('create', notebook_lines)],
                             'report_type_forced': report_type_forced,
@@ -1816,7 +1816,7 @@ class GenerateResultsReport(Wizard):
                         })
 
                 reports_details = []
-                for notebook in notebooks.itervalues():
+                for notebook in notebooks.values():
                     if not notebook['divided_report']:
                         details = {
                             'notebook_lines': [('create',
@@ -1851,7 +1851,7 @@ class GenerateResultsReport(Wizard):
                             grouped_reports[report_grouper].append(line)
 
                         for grouper, notebook_lines in \
-                                grouped_reports.iteritems():
+                                grouped_reports.items():
                             details = {
                                 'notebook_lines': [('create', notebook_lines)],
                                 'report_type_forced': report_type_forced,
@@ -1935,7 +1935,7 @@ class GenerateResultsReport(Wizard):
                     if valid_detail[0].resultrange_origin:
                         details['resultrange_origin'] = (
                             valid_detail[0].resultrange_origin.id)
-                    details['comments'] = unicode(
+                    details['comments'] = str(
                         valid_detail[0].comments or '')
                 detail, = ResultsReportVersionDetail.create([details])
                 reports_details = [detail.id]
@@ -2443,7 +2443,7 @@ class ResultReport(Report):
                 language=lang_code)
             record['reference'] = ''
             if obs_result_range:
-                record['reference'] = unicode(cls.get_reference(range_type,
+                record['reference'] = str(cls.get_reference(range_type,
                     t_line, lang_code, report_context['report_section']))
             if (t_line.rm_correction_formula and (record['result'] or
                     (record['converted_result'] and
@@ -2571,11 +2571,11 @@ class ResultReport(Report):
                 reference_sample.matrix.code in ('SUELO', 'LODO')):
             dry_matter = True
 
-        sorted_fractions = sorted(fractions.values(),
+        sorted_fractions = sorted(list(fractions.values()),
             key=lambda x: x['fraction'])
         with Transaction().set_context(language=lang_code):
             for fraction in sorted_fractions:
-                for conc, lines in fraction['concentrations'].iteritems():
+                for conc, lines in fraction['concentrations'].items():
                     if report_context['report_section'] == 'rp':
                         sorted_lines = sorted(lines, key=lambda x: (
                             x['rp_order'], x['analysis']))
@@ -2650,12 +2650,12 @@ class ResultReport(Report):
         report_context['fractions'] = sorted_fractions
 
         report_context['methods'] = []
-        for method in methods.itervalues():
+        for method in methods.values():
             concat_lines = ', '.join(list(set(method['analysis'])))
             method['analysis'] = concat_lines
             report_context['methods'].append(method)
 
-        report_context['pnt_methods'] = [m for m in pnt_methods.itervalues()]
+        report_context['pnt_methods'] = [m for m in pnt_methods.values()]
 
         report_context['enac'] = 'True' if enac else 'False'
         if enac:
@@ -2674,12 +2674,12 @@ class ResultReport(Report):
         report_context['initial_unit'] = initial_unit
 
         report_context['comments'] = ''
-        for entry_comment in comments.itervalues():
+        for entry_comment in comments.values():
             if entry_comment['report_comments']:
                 if report_context['comments']:
                     report_context['comments'] += '\n'
                 report_context['comments'] += entry_comment['report_comments']
-            for sample_comment in entry_comment['samples'].itervalues():
+            for sample_comment in entry_comment['samples'].values():
                 if sample_comment:
                     if report_context['comments']:
                         report_context['comments'] += '\n'
