@@ -1412,7 +1412,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
         if not_planned_services:
             not_planned_services_ids = ', '.join(str(s) for s in
                 not_planned_services)
-            not_planned_services_clause = ('AND id  IN (' +
+            not_planned_services_clause = ('AND id IN (' +
                 not_planned_services_ids + ')')
 
         if analysis_ids:
