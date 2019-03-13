@@ -3571,13 +3571,12 @@ class AddAnalysis(Wizard):
         new_context['date_from'] = date_from
         new_context['date_to'] = date_to
         with Transaction().set_context(new_context):
-            analysis_domain = Analysis.search([
-                ('id', 'in', asg_list),
-                ('pending_fractions', '>', 0),
-                ])
-            if analysis_domain:
-                return [a.id for a in analysis_domain]
-            return []
+            pending_fractions = Analysis.analysis_pending_fractions(asg_list)
+        res = []
+        for analysis, pending in iter(pending_fractions.items()):
+            if pending > 0:
+                res.append(analysis)
+        return res
 
     def transition_add(self):
         Planification = Pool().get('lims.planification')
@@ -3871,28 +3870,28 @@ class SearchFractions(Wizard):
                     (planification.laboratory.id, planification.date_from,
                     planification.date_to,))
             notebook_lines = cursor.fetchall()
-            if notebook_lines:
-                if extra_where:
-                    for nl in notebook_lines:
-                        f_ = nl[1]
-                        s_ = nl[2]
-                        if (f_, s_) not in result:
-                            result[(f_, s_)] = []
-                        if nl[0] not in nlines_added:
-                            nlines_added.append(nl[0])
-                            result[(f_, s_)].append({
-                                'notebook_line': nl[0],
-                                'planned_service': a.id,
-                                })
-                else:
-                    for nl in notebook_lines:
-                        f_ = nl[1]
-                        s_ = nl[2]
-                        if (f_, s_) not in result:
-                            result[(f_, s_)] = {
-                                'product_type': nl[3],
-                                'matrix': nl[4],
-                                }
+            if not notebook_lines:
+                continue
+            if extra_where:
+                for nl in notebook_lines:
+                    f_ = nl[1]
+                    s_ = nl[2]
+                    if (f_, s_) not in result:
+                        result[(f_, s_)] = []
+                    if nl[0] not in nlines_added:
+                        nlines_added.append(nl[0])
+                        result[(f_, s_)].append({
+                            'notebook_line': nl[0],
+                            'planned_service': a.id,
+                            })
+            else:
+                for nl in notebook_lines:
+                    f_ = nl[1]
+                    s_ = nl[2]
+                    result[(f_, s_)] = {
+                        'product_type': nl[3],
+                        'matrix': nl[4],
+                        }
 
         return result
 
@@ -4123,12 +4122,9 @@ class SearchPlannedFractions(Wizard):
                 for x in all_included_analysis)
             service_where = ('AND ad.analysis IN (' +
                 all_included_analysis_ids + ') ')
-            service_clause = [
-                ('analysis_detail.analysis', 'in', all_included_analysis),
-                ]
 
             excluded_fractions = self.get_control_fractions_excluded(
-                self.start.laboratory.id, service_clause)
+                self.start.laboratory.id, service_where)
             excluded_fractions_ids = ', '.join(str(x)
                 for x in [0] + excluded_fractions)
 
@@ -4197,46 +4193,70 @@ class SearchPlannedFractions(Wizard):
                     for nl in notebook_lines:
                         f_ = nl[1]
                         s_ = nl[2]
-                        if (f_, s_) not in result:
-                            result[(f_, s_)] = {
-                                'product_type': nl[3],
-                                'matrix': nl[4],
-                                }
+                        result[(f_, s_)] = {
+                            'product_type': nl[3],
+                            'matrix': nl[4],
+                            }
 
         return result
 
     def get_control_fractions_excluded(self, laboratory, search_clause):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
+        Fraction = pool.get('lims.fraction')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Config = pool.get('lims.configuration')
+
+        config = Config(1)
+        special_types = []
+        if config.rm_fraction_type:
+            special_types.append(config.rm_fraction_type.id)
+        if config.bmz_fraction_type:
+            special_types.append(config.bmz_fraction_type.id)
+        if config.bre_fraction_type:
+            special_types.append(config.bre_fraction_type.id)
+        if config.mrt_fraction_type:
+            special_types.append(config.mrt_fraction_type.id)
+        special_types_ids = ', '.join(str(x) for x in special_types)
+
+        cursor.execute('SELECT nl.analysis, nl.notebook '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + Notebook._table + '" nb '
+                'ON nb.id = nl.notebook '
+                'INNER JOIN "' + Fraction._table + '" frc '
+                'ON frc.id = nb.fraction '
+                'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
+                'ON ad.id = nl.analysis_detail '
+            'WHERE nl.planification IS NOT NULL '
+                'AND nl.end_date IS NULL '
+                'AND nl.laboratory = %s '
+                'AND frc.type IN (' + special_types_ids + ') ' +
+                search_clause,
+                (laboratory,))
+        notebook_lines = cursor.fetchall()
+        if not notebook_lines:
+            return []
 
         excluded_fractions = []
+        analysis = []
+        notebooks_id = []
+        for nbl in notebook_lines:
+            analysis.append(nbl[0])
+            notebooks_id.append(nbl[1])
+        analysis = set(analysis)
 
-        notebook_lines = NotebookLine.search([
-            ('planification', '!=', None),
-            ('end_date', '=', None),
-            ('laboratory', '=', laboratory),
-            ('notebook.fraction.special_type', 'in',
-                ('rm', 'bmz', 'bre', 'mrt')),
-            search_clause])
-        if notebook_lines:
-            analysis = []
-            notebooks_id = []
-            for nbl in notebook_lines:
-                analysis.append(nbl.analysis.id)
-                if nbl.notebook.id not in notebooks_id:
-                    notebooks_id.append(nbl.notebook.id)
-            analysis = list(set(analysis))
-            notebooks = Notebook.search([
-                ('id', 'in', notebooks_id),
-                ])
-            if notebooks:
-                for nb in notebooks:
-                    nbl_analysis_ids = [l.analysis.id for l in nb.lines or []]
-                    for p_analysis_id in analysis:
-                        if p_analysis_id not in nbl_analysis_ids:
-                            excluded_fractions.append(nb.fraction.id)
-                            break
+        notebooks = Notebook.search([
+            ('id', 'in', list(set(notebooks_id))),
+            ])
+        for nb in notebooks:
+            cursor.execute('SELECT analysis '
+                'FROM "' + NotebookLine._table + '" '
+                'WHERE notebook = %s', (nb.id,))
+            nbl_analysis_ids = set(cursor.fetchall())
+            if not analysis.issubset(nbl_analysis_ids):
+                excluded_fractions.append(nb.fraction.id)
         return list(set(excluded_fractions))
 
 
