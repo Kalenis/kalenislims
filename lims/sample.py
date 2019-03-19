@@ -304,10 +304,8 @@ class Service(ModelSQL, ModelView):
         ('group', 'Group'),
         ], 'Type', sort=False),
         'on_change_with_analysis_type', searcher='search_analysis_field')
-    urgent = fields.Boolean('Urgent',
-        states={'readonly': Bool(Eval('context', {}).get('readonly', True))})
-    priority = fields.Integer('Priority',
-        states={'readonly': Bool(Eval('context', {}).get('readonly', True))})
+    urgent = fields.Boolean('Urgent')
+    priority = fields.Integer('Priority')
     report_date = fields.Date('Date agreed for result')
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         domain=[('id', 'in', Eval('laboratory_domain'))],
