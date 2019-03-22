@@ -1780,8 +1780,8 @@ class Fraction(ModelSQL, ModelView):
         if services:
             if (EntryDetailAnalysis.search_count([
                     ('service', 'in', [s.id for s in services]),
-                    ('report_grouper', '!=', 0),
-                    ]) == 0):
+                    ('report_grouper', '=', 0),
+                    ]) != 0):
                 cls.raise_user_error('not_divided')
 
     @classmethod
