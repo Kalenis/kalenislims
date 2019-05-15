@@ -399,7 +399,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
             'final_unit_label_2': 'Expressed at %s',
             'final_unit_label_3': 'Expressed at %s Bx',
             'final_unit_label_4': 'Expressed at dry matter',
-            'obs_ql': ('LoQ= Limit of Quantitation. Result <LoQ '
+            'obs_ql': ('LoQ= Limit of Quantitation. If the Detection '
+                'Limit is reported, Result <LoQ '
                 'indicates that the detected value is between LoD '
                 '(Limit of Detection) and LoQ (Limit of Quantitation).'),
             'obs_dl': 'LoD= Limit of Detection.',
