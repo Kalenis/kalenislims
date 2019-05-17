@@ -1691,6 +1691,10 @@ msgid "Study N°"
 msgstr "Estudio N°"
 
 msgctxt "report:lims.project.glp_report.10:"
+msgid "Description:"
+msgstr "Descripción:"
+
+msgctxt "report:lims.project.glp_report.10:"
 msgid "Study director:"
 msgstr "Director del estudio / Investigador Principal:"
 
