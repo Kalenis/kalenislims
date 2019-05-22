@@ -142,6 +142,19 @@
             <field name="act_window" ref="act_lims_lab_method_list"/>
         </record>
 
+<!-- Waiting Time per Client -->
+
+        <record model="ir.ui.view" id="lims_lab_method_results_waiting_view_form">
+            <field name="model">lims.lab.method.results_waiting</field>
+            <field name="type">form</field>
+            <field name="name">lab_method_results_waiting_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_lab_method_results_waiting_view_list">
+            <field name="model">lims.lab.method.results_waiting</field>
+            <field name="type">tree</field>
+            <field name="name">lab_method_results_waiting_list</field>
+        </record>
+
 <!-- Laboratory Device -->
 
         <record model="ir.ui.view" id="lims_lab_device_view_form">

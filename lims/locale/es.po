@@ -234,6 +234,10 @@ msgctxt "error:lims.lab.device:"
 msgid "Device code must be unique"
 msgstr "El código del equipo debe ser único"
 
+msgctxt "error:lims.lab.method.results_waiting:"
+msgid "Repeated record"
+msgstr "Registro repetido"
+
 msgctxt "error:lims.lab.method:"
 msgid "Method code must be unique"
 msgstr "El código del método debe ser único"
@@ -3403,6 +3407,10 @@ msgctxt "field:lims.lab.method,results_estimated_waiting:"
 msgid "Estimated number of days for results"
 msgstr "Cantidad estimada de días para resultados"
 
+msgctxt "field:lims.lab.method,results_waiting:"
+msgid "Waiting times per client"
+msgstr "Tiempos de respuesta por cliente"
+
 msgctxt "field:lims.lab.method,supervised_requalification:"
 msgid "Supervised requalification"
 msgstr "Recualificación supervisada"
@@ -3412,6 +3420,42 @@ msgid "Write Date"
 msgstr "Fecha modificación"
 
 msgctxt "field:lims.lab.method,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.lab.method.results_waiting,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.lab.method.results_waiting,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.lab.method.results_waiting,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.lab.method.results_waiting,method:"
+msgid "Method"
+msgstr "Método"
+
+msgctxt "field:lims.lab.method.results_waiting,party:"
+msgid "Party"
+msgstr "Entidad"
+
+msgctxt "field:lims.lab.method.results_waiting,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.lab.method.results_waiting,results_estimated_waiting:"
+msgid "Estimated number of days for results"
+msgstr "Cantidad estimada de días para resultados"
+
+msgctxt "field:lims.lab.method.results_waiting,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.lab.method.results_waiting,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
 
@@ -8585,6 +8629,10 @@ msgstr "Tipo de equipo de laboratorio - Método de laboratorio"
 msgctxt "model:lims.lab.method,name:"
 msgid "Laboratory Method"
 msgstr "Método de laboratorio"
+
+msgctxt "model:lims.lab.method.results_waiting,name:"
+msgid "Waiting Time per Client"
+msgstr "Tiempo de respuesta por cliente"
 
 msgctxt "model:lims.lab.workyear,name:"
 msgid "Work Year"

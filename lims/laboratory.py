@@ -5,10 +5,11 @@
 from trytond.model import ModelView, ModelSQL, fields, Unique
 from trytond.pool import Pool
 from trytond.transaction import Transaction
+from trytond.pyson import Eval, Bool
 
 __all__ = ['LaboratoryProfessional', 'Laboratory', 'LaboratoryCVCorrection',
-    'LabMethod', 'LabDeviceType', 'LabDevice', 'LabDeviceLaboratory',
-    'LabDeviceTypeLabMethod', ]
+    'LabMethod', 'LabMethodWaitingTime', 'LabDeviceType', 'LabDevice',
+    'LabDeviceLaboratory', 'LabDeviceTypeLabMethod', ]
 
 
 class Laboratory(ModelSQL, ModelView):
@@ -147,6 +148,8 @@ class LabMethod(ModelSQL, ModelView):
     pnt = fields.Char('PNT')
     results_estimated_waiting = fields.Integer(
         'Estimated number of days for results')
+    results_waiting = fields.One2Many('lims.lab.method.results_waiting',
+        'method', 'Waiting times per client')
 
     @classmethod
     def __setup__(cls):
@@ -187,8 +190,11 @@ class LabMethod(ModelSQL, ModelView):
         NotebookLine = Pool().get('lims.notebook.line')
 
         for method in methods:
+            waiting_times_parties = [rw.party.id
+                for rw in method.results_waiting]
             notebook_lines = NotebookLine.search([
                 ('method', '=', method.id),
+                ('party', 'not in', waiting_times_parties),
                 ('accepted', '=', False),
                 ])
             if notebook_lines:
@@ -196,6 +202,65 @@ class LabMethod(ModelSQL, ModelView):
                     'results_estimated_waiting': (
                         method.results_estimated_waiting),
                     })
+
+
+class LabMethodWaitingTime(ModelSQL, ModelView):
+    'Waiting Time per Client'
+    __name__ = 'lims.lab.method.results_waiting'
+
+    method = fields.Many2One('lims.lab.method', 'Method',
+        ondelete='CASCADE', select=True, required=True)
+    party = fields.Many2One('party.party', 'Party',
+        ondelete='CASCADE', select=True, required=True,
+        states={'readonly': Bool(Eval('id', 0) > 0)})
+    results_estimated_waiting = fields.Integer(
+        'Estimated number of days for results', required=True)
+
+    @classmethod
+    def __setup__(cls):
+        super(LabMethodWaitingTime, cls).__setup__()
+        t = cls.__table__()
+        cls._sql_constraints += [
+            ('method_party_uniq', Unique(t, t.method, t.party),
+                'Repeated record'),
+            ]
+
+    @classmethod
+    def create(cls, vlist):
+        waiting_times = super(LabMethodWaitingTime, cls).create(vlist)
+        cls.update_laboratory_notebook(waiting_times)
+        return waiting_times
+
+    @classmethod
+    def write(cls, *args):
+        super(LabMethodWaitingTime, cls).write(*args)
+        actions = iter(args)
+        for waiting_times, vals in zip(actions, actions):
+            if 'results_estimated_waiting' in vals:
+                cls.update_laboratory_notebook(waiting_times)
+
+    @classmethod
+    def update_laboratory_notebook(cls, waiting_times, waiting=None):
+        NotebookLine = Pool().get('lims.notebook.line')
+
+        for waiting_time in waiting_times:
+            notebook_lines = NotebookLine.search([
+                ('method', '=', waiting_time.method.id),
+                ('party', '=', waiting_time.party.id),
+                ('accepted', '=', False),
+                ])
+            if notebook_lines:
+                results_estimated_waiting = (waiting or
+                    waiting_time.results_estimated_waiting)
+                NotebookLine.write(notebook_lines, {
+                    'results_estimated_waiting': results_estimated_waiting,
+                    })
+
+    @classmethod
+    def delete(cls, waiting_times):
+        waiting = waiting_times[0].method.results_estimated_waiting
+        cls.update_laboratory_notebook(waiting_times, waiting)
+        super(LabMethodWaitingTime, cls).delete(waiting_times)
 
 
 class LabDevice(ModelSQL, ModelView):
