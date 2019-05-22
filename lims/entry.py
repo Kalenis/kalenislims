@@ -833,6 +833,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         pool = Pool()
         Typification = pool.get('lims.typification')
         Method = pool.get('lims.lab.method')
+        WaitingTime = pool.get('lims.lab.method.results_waiting')
         AnalysisLaboratory = pool.get('lims.analysis-laboratory')
         Fraction = pool.get('lims.fraction')
         Notebook = pool.get('lims.notebook')
@@ -878,10 +879,19 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                 report = False
 
             cursor.execute('SELECT results_estimated_waiting '
-                'FROM "' + Method._table + '" '
-                'WHERE id = %s', (detail.method.id,))
+                'FROM "' + WaitingTime._table + '" '
+                'WHERE method = %s '
+                    'AND party = %s',
+                (detail.method.id, detail.party.id))
             res = cursor.fetchone()
-            results_estimated_waiting = res and res[0] or None
+            if res:
+                results_estimated_waiting = res[0]
+            else:
+                cursor.execute('SELECT results_estimated_waiting '
+                    'FROM "' + Method._table + '" '
+                    'WHERE id = %s', (detail.method.id,))
+                res = cursor.fetchone()
+                results_estimated_waiting = res and res[0] or None
 
             cursor.execute('SELECT department '
                 'FROM "' + AnalysisLaboratory._table + '" '

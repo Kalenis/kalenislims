@@ -43,6 +43,7 @@ def register():
         laboratory.LaboratoryProfessional,
         laboratory.Laboratory,
         laboratory.LabMethod,
+        laboratory.LabMethodWaitingTime,
         laboratory.LabDeviceType,
         laboratory.LabDevice,
         laboratory.LabDeviceLaboratory,
