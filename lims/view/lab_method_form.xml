@@ -18,4 +18,5 @@
     <field name="pnt"/>
     <label name="results_estimated_waiting"/>
     <field name="results_estimated_waiting"/>
+    <field name="results_waiting" colspan="4"/>
 </form>

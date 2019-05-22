@@ -828,9 +828,16 @@ class NotebookLine(ModelSQL, ModelView):
             clause[2:3])
         return [('id', 'in', [x[0] for x in cursor.fetchall()])]
 
-    @fields.depends('method')
+    @fields.depends('method', 'party')
     def on_change_with_results_estimated_waiting(self, name=None):
+        LabMethodWaitingTime = Pool().get('lims.lab.method.results_waiting')
         if self.method:
+            waiting_times = LabMethodWaitingTime.search([
+                ('method', '=', self.method.id),
+                ('party', '=', self.party.id),
+                ])
+            if waiting_times:
+                return waiting_times[0].results_estimated_waiting
             return self.method.results_estimated_waiting
         return None
 
