@@ -12474,6 +12474,10 @@ msgid "Date range:"
 msgstr "Rango de fechas:"
 
 msgctxt "report:lims.analysis_checked_pending_inform:"
+msgid "Print date:"
+msgstr "Fecha de impresión:"
+
+msgctxt "report:lims.analysis_checked_pending_inform:"
 msgid "Device"
 msgstr "Equipo"
 
@@ -12580,10 +12584,6 @@ msgid "Print"
 msgstr "Imprimir"
 
 msgctxt "report:lims.analysis_checked_pending_inform:"
-msgid "Print date"
-msgstr "Fecha de impresión:"
-
-msgctxt "report:lims.analysis_checked_pending_inform:"
 msgid "End date"
 msgstr "Fecha de finalización"
 
@@ -12634,7 +12634,6 @@ msgstr "Cantidad estimada de días para resultados"
 msgctxt "report:lims.analysis_pending_inform:"
 msgid "Department"
 msgstr "Departamento"
-
 
 msgctxt "report:lims.analysis_pending_inform:"
 msgid "Notice"

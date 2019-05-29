@@ -4755,13 +4755,22 @@ class AnalysisPendingInform(Report):
         report_context = super(AnalysisPendingInform, cls).get_context(
             records, data)
 
+        # Company = pool.get('company.company')
+        # today = datetime.now()
+        # company_id = Transaction().context.get('company')
+        # if company_id:
+        #     today = Company(company_id).convert_timezone_datetime(today)
+        # uso get_print_date() en lugar de las lineas comentadas que se define
+        # en result_report.py
+
+        today = get_print_date()
+        report_context['today'] = today
         report_context['company'] = report_context['user'].company
         report_context['date_from'] = data['date_from']
         report_context['date_to'] = data['date_to']
         report_context['laboratory'] = Laboratory(data['laboratory']).rec_name
         report_context['party'] = ''
-        today_datetime = get_print_date()
-        report_context['print_date'] = today_datetime.date()
+
         if data['party']:
             report_context['party'] = Party(data['party']).rec_name
         report_context['include_comments_of_fraction'] = \
@@ -4902,6 +4911,16 @@ class AnalysisCheckedPendingInform(Report):
         report_context = super(AnalysisCheckedPendingInform, cls).get_context(
             records, data)
 
+        # Company = pool.get('company.company')
+        # today = datetime.now()
+        # company_id = Transaction().context.get('company')
+        # if company_id:
+        #     today = Company(company_id).convert_timezone_datetime(today)
+        # uso get_print_date() en lugar de las lineas comentadas que se define
+        # en result_report.py
+
+        today = get_print_date()
+        report_context['today'] = today
         report_context['company'] = report_context['user'].company
         report_context['date_from'] = data['date_from']
         report_context['date_to'] = data['date_to']
