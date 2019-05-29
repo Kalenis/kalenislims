@@ -4755,14 +4755,6 @@ class AnalysisPendingInform(Report):
         report_context = super(AnalysisPendingInform, cls).get_context(
             records, data)
 
-        # Company = pool.get('company.company')
-        # today = datetime.now()
-        # company_id = Transaction().context.get('company')
-        # if company_id:
-        #     today = Company(company_id).convert_timezone_datetime(today)
-        # uso get_print_date() en lugar de las lineas comentadas que se define
-        # en result_report.py
-
         today = get_print_date()
         report_context['today'] = today
         report_context['company'] = report_context['user'].company
@@ -4910,14 +4902,6 @@ class AnalysisCheckedPendingInform(Report):
 
         report_context = super(AnalysisCheckedPendingInform, cls).get_context(
             records, data)
-
-        # Company = pool.get('company.company')
-        # today = datetime.now()
-        # company_id = Transaction().context.get('company')
-        # if company_id:
-        #     today = Company(company_id).convert_timezone_datetime(today)
-        # uso get_print_date() en lugar de las lineas comentadas que se define
-        # en result_report.py
 
         today = get_print_date()
         report_context['today'] = today
