@@ -2122,11 +2122,12 @@ class ResultsReportSample(Wizard):
         ResultsReport = pool.get('lims.results_report')
         NotebookLine = pool.get('lims.notebook.line')
 
-        results_report = ResultsReport(Transaction().context['active_id'])
+        active_ids = Transaction().context['active_ids']
+        results_reports = ResultsReport.browse(active_ids)
 
         samples_ids = []
         lines = NotebookLine.search([
-            ('results_report', '=', results_report.id),
+            ('results_report', 'in', active_ids),
             ])
         if lines:
             samples_ids = [l.fraction.sample.id for l in lines]
@@ -2134,7 +2135,8 @@ class ResultsReportSample(Wizard):
         action['pyson_domain'] = PYSONEncoder().encode([
             ('id', 'in', samples_ids),
             ])
-        action['name'] += ' (%s)' % results_report.rec_name
+        action['name'] += ' (%s)' % ', '.join(
+            r.rec_name for r in results_reports)
         return action, {}
 
 
