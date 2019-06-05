@@ -2094,10 +2094,11 @@ class SampleResultsReport(Wizard):
         Sample = pool.get('lims.sample')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
-        sample = Sample(Transaction().context['active_id'])
+        active_ids = Transaction().context['active_ids']
+        samples = Sample.browse(active_ids)
 
         results_report_ids = []
-        details = EntryDetailAnalysis.search([('sample', '=', sample.id)])
+        details = EntryDetailAnalysis.search([('sample', 'in', active_ids)])
         if details:
             results_report_ids = [d.results_report.id for d in details
                 if d.results_report]
@@ -2105,7 +2106,8 @@ class SampleResultsReport(Wizard):
         action['pyson_domain'] = PYSONEncoder().encode([
             ('id', 'in', results_report_ids),
             ])
-        action['name'] += ' (%s)' % sample.rec_name
+        action['name'] += ' (%s)' % ', '.join(
+            s.rec_name for s in samples)
         return action, {}
 
 
