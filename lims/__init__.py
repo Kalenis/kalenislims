@@ -49,6 +49,7 @@ def register():
         laboratory.LabDeviceLaboratory,
         analysis.ProductType,
         analysis.Matrix,
+        analysis.ObjectiveDescription,
         analysis.Formula,
         sample.FractionType,
         laboratory.LaboratoryCVCorrection,

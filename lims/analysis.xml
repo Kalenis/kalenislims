@@ -122,6 +122,34 @@
             <field name="act_window" ref="act_lims_matrix_list"/>
         </record>
 
+<!-- Objective Description -->
+
+        <record model="ir.ui.view" id="lims_objective_description_view_form">
+            <field name="model">lims.objective_description</field>
+            <field name="type">form</field>
+            <field name="name">objective_description_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_objective_description_view_list">
+            <field name="model">lims.objective_description</field>
+            <field name="type">tree</field>
+            <field name="name">objective_description_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_objective_description_list">
+            <field name="name">Objective Descriptions</field>
+            <field name="res_model">lims.objective_description</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_objective_description_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_objective_description_view_list"/>
+            <field name="act_window" ref="act_lims_objective_description_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_objective_description_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_objective_description_view_form"/>
+            <field name="act_window" ref="act_lims_objective_description_list"/>
+        </record>
+
 <!-- Formula -->
 
         <record model="ir.ui.view" id="lims_formula_view_form">
@@ -388,6 +416,8 @@
             id="lims_product_type_menu" sequence="10"/>
         <menuitem parent="lims_config_base_tables" action="act_lims_matrix_list"
             id="lims_matrix_menu" sequence="20"/>
+        <menuitem parent="lims_config_base_tables" action="act_lims_objective_description_list"
+            id="lims_objective_description_menu" sequence="25"/>
         <menuitem parent="lims_config_base_tables" action="act_lims_lab_method_list"
             id="lims_lab_method_menu" sequence="30"/>
         <menuitem parent="lims_config_base_tables" action="act_lims_formula_list"
@@ -424,6 +454,22 @@
         </record>
         <record model="ir.model.access" id="access_matrix_group_conf_base_tables_admin">
             <field name="model" search="[('model', '=', 'lims.matrix')]"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="access_objective_description">
+            <field name="model" search="[('model', '=', 'lims.objective_description')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_objective_description_group_conf_base_tables_admin">
+            <field name="model" search="[('model', '=', 'lims.objective_description')]"/>
             <field name="group" ref="group_lims_conf_base_tables_admin"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>

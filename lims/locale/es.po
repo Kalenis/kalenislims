@@ -342,6 +342,10 @@ msgctxt "error:lims.notebook_line.results_verification:"
 msgid "Out of Range"
 msgstr "Fuera de Rango"
 
+msgctxt "error:lims.objective_description:"
+msgid "This objective description already exists"
+msgstr "Esta descripción objetiva ya existe"
+
 msgctxt "error:lims.packaging.integrity:"
 msgid "Packaging integrity code must be unique"
 msgstr "El código del estado de envase debe ser único"
@@ -1929,6 +1933,18 @@ msgstr "Matriz"
 msgctxt "field:lims.create_sample.start,matrix_domain:"
 msgid "Matrix domain"
 msgstr "Dominio para Matriz"
+
+msgctxt "field:lims.create_sample.start,obj_description:"
+msgid "Objective description"
+msgstr "Descripción objetiva"
+
+msgctxt "field:lims.create_sample.start,obj_description_manual:"
+msgid "Manual Objective description"
+msgstr "Descripción objetiva manual"
+
+msgctxt "field:lims.create_sample.start,obj_description_manual_eng:"
+msgid "Manual Objective description (English)"
+msgstr "Descripción objetiva manual (Inglés)"
 
 msgctxt "field:lims.create_sample.start,package_type:"
 msgid "Package type"
@@ -5360,6 +5376,42 @@ msgctxt "field:lims.notebook.view.column,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
 
+msgctxt "field:lims.objective_description,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.objective_description,create_uid:"
+msgid "Create User"
+msgstr "Usuario creción"
+
+msgctxt "field:lims.objective_description,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:lims.objective_description,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.objective_description,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.objective_description,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.objective_description,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.objective_description,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.objective_description,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
 msgctxt "field:lims.packaging.integrity,code:"
 msgid "Code"
 msgstr "Código"
@@ -6228,6 +6280,14 @@ msgstr "Matriz"
 msgctxt "field:lims.sample,number:"
 msgid "Number"
 msgstr "Número"
+
+msgctxt "field:lims.sample,obj_description:"
+msgid "Objective description"
+msgstr "Descripción objetiva"
+
+msgctxt "field:lims.sample,obj_description_manual:"
+msgid "Manual Objective description"
+msgstr "Descripción objetiva manual"
 
 msgctxt "field:lims.sample,package_state:"
 msgid "Package state"
@@ -7535,6 +7595,10 @@ msgctxt "model:ir.action,name:act_lims_notebook_views_list"
 msgid "Laboratory Notebook Views"
 msgstr "Vistas de cuaderno de laboratorio"
 
+msgctxt "model:ir.action,name:act_lims_objective_description_list"
+msgid "Objective Descriptions"
+msgstr "Descripciones objetivas"
+
 msgctxt "model:ir.action,name:act_lims_packaging_integrity_list"
 msgid "Packaging Integrities"
 msgstr "Estados de envase"
@@ -8157,6 +8221,10 @@ msgstr "Cuadernos de laboratorio"
 msgctxt "model:ir.ui.menu,name:lims_notebook_views_menu"
 msgid "Laboratory Notebook Views"
 msgstr "Vistas de cuaderno de laboratorio"
+
+msgctxt "model:ir.ui.menu,name:lims_objective_description_menu"
+msgid "Objective Descriptions"
+msgstr "Descripciones objetivas"
 
 msgctxt "model:ir.ui.menu,name:lims_packaging_integrity_menu"
 msgid "Packaging Integrities"
@@ -8833,6 +8901,10 @@ msgstr "Vista de cuaderno de laboratorio"
 msgctxt "model:lims.notebook.view.column,name:"
 msgid "Laboratory Notebook View Column"
 msgstr "Columna de vista de cuaderno de laboratorio"
+
+msgctxt "model:lims.objective_description,name:"
+msgid "Objective Description"
+msgstr "Descripción objetiva"
 
 msgctxt "model:lims.packaging.integrity,name:"
 msgid "Packaging Integrity"

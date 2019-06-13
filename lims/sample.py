@@ -2269,6 +2269,15 @@ class Sample(ModelSQL, ModelView):
     product_type_matrix_readonly = fields.Function(fields.Boolean(
         'Product type and Matrix readonly'),
         'get_product_type_matrix_readonly')
+    obj_description = fields.Many2One('lims.objective_description',
+        'Objective description', depends=['product_type', 'matrix'],
+        domain=[
+            ('product_type', '=', Eval('product_type')),
+            ('matrix', '=', Eval('matrix')),
+            ])
+    obj_description_manual = fields.Char('Manual Objective description',
+        translate=True, states={'readonly': Bool(Eval('obj_description'))},
+        depends=['obj_description'])
     package_state = fields.Many2One('lims.packaging.integrity',
         'Package state')
     package_type = fields.Many2One('lims.packaging.type', 'Package type')
@@ -2554,6 +2563,22 @@ class Sample(ModelSQL, ModelView):
         if Service.search_count([('sample', '=', self.id)]) != 0:
             return True
         return False
+
+    @fields.depends('product_type', 'matrix')
+    def on_change_with_obj_description(self):
+        cursor = Transaction().connection.cursor()
+        ObjectiveDescription = Pool().get('lims.objective_description')
+
+        if not self.product_type or not self.matrix:
+            return None
+
+        cursor.execute('SELECT id '
+            'FROM "' + ObjectiveDescription._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s',
+            (self.product_type.id, self.matrix.id))
+        res = cursor.fetchone()
+        return res and res[0] or None
 
     @classmethod
     def check_delete(cls, samples):
@@ -4293,6 +4318,18 @@ class CreateSampleStart(ModelView):
         depends=['matrix_domain', 'services'])
     matrix_domain = fields.Many2Many('lims.matrix', None, None,
         'Matrix domain')
+    obj_description = fields.Many2One('lims.objective_description',
+        'Objective description', depends=['product_type', 'matrix'],
+        domain=[
+            ('product_type', '=', Eval('product_type')),
+            ('matrix', '=', Eval('matrix')),
+            ])
+    obj_description_manual = fields.Char(
+        'Manual Objective description', depends=['obj_description'],
+        states={'readonly': Bool(Eval('obj_description'))})
+    obj_description_manual_eng = fields.Char(
+        'Manual Objective description (English)', depends=['obj_description'],
+        states={'readonly': Bool(Eval('obj_description'))})
     fraction_state = fields.Many2One('lims.packaging.integrity',
         'Package state', required=True)
     package_type = fields.Many2One('lims.packaging.type', 'Package type',
@@ -4467,6 +4504,22 @@ class CreateSampleStart(ModelView):
             return self.storage_location.storage_time
         return 3
 
+    @fields.depends('product_type', 'matrix')
+    def on_change_with_obj_description(self):
+        cursor = Transaction().connection.cursor()
+        ObjectiveDescription = Pool().get('lims.objective_description')
+
+        if not self.product_type or not self.matrix:
+            return None
+
+        cursor.execute('SELECT id '
+            'FROM "' + ObjectiveDescription._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s',
+            (self.product_type.id, self.matrix.id))
+        res = cursor.fetchone()
+        return res and res[0] or None
+
 
 class CreateSampleService(ModelView):
     'Service'
@@ -4631,6 +4684,13 @@ class CreateSample(Wizard):
                 sample_eng.sample_client_description = (
                     self.start.sample_client_description_eng)
                 sample_eng.save()
+        if (hasattr(self.start, 'obj_description_manual_eng') and
+                getattr(self.start, 'obj_description_manual_eng')):
+            with Transaction().set_context(language='en'):
+                sample_eng = Sample(sample.id)
+                sample_eng.obj_description_manual = (
+                    self.start.obj_description_manual_eng)
+                sample_eng.save()
 
         labels_list = self._get_labels_list(self.start.labels)
         if len(labels_list) > 1:
@@ -4644,6 +4704,10 @@ class CreateSample(Wizard):
         return 'end'
 
     def _get_samples_defaults(self, entry_id):
+        obj_description_id = None
+        if (hasattr(self.start, 'obj_description') and
+                getattr(self.start, 'obj_description')):
+            obj_description_id = getattr(self.start, 'obj_description').id
         producer_id = None
         if (hasattr(self.start, 'producer') and
                 getattr(self.start, 'producer')):
@@ -4723,6 +4787,8 @@ class CreateSample(Wizard):
                     self.start.sample_client_description),
                 'product_type': self.start.product_type.id,
                 'matrix': self.start.matrix.id,
+                'obj_description': obj_description_id,
+                'obj_description_manual': self.start.obj_description_manual,
                 'package_state': self.start.fraction_state.id,
                 'package_type': self.start.package_type.id,
                 'packages_quantity': self.start.packages_quantity,

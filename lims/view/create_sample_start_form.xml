@@ -14,6 +14,14 @@
             <field name="variety"/>
             <label name="producer"/>
             <field name="producer"/>
+            <group col="6" colspan="4" id="obj_description">
+                <label name="obj_description"/>
+                <field name="obj_description"/>
+                <label name="obj_description_manual"/>
+                <field name="obj_description_manual"/>
+                <label name="obj_description_manual_eng"/>
+                <field name="obj_description_manual_eng"/>
+            </group>
             <group col="2" colspan="2" id="sample_client_description">
                 <label name="sample_client_description"/>
                 <field name="sample_client_description"/>
