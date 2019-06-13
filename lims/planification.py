@@ -1818,12 +1818,14 @@ class AddFractionControl(Wizard):
         entry = Entry(workyear.default_entry_control.id)
         original_fraction = self.start.original_fraction
         original_sample = Sample(original_fraction.sample.id)
+        obj_description = self._get_obj_description(original_sample)
 
         # new sample
         new_sample, = Sample.copy([original_sample], default={
             'entry': entry.id,
             'date': datetime.now(),
             'label': self.start.label,
+            'obj_description': obj_description,
             'fractions': [],
             })
 
@@ -1910,6 +1912,21 @@ class AddFractionControl(Wizard):
                 self.generate_repetition(notebook_lines)
 
         return new_fraction
+
+    def _get_obj_description(self, sample):
+        cursor = Transaction().connection.cursor()
+        ObjectiveDescription = Pool().get('lims.objective_description')
+
+        if not sample.product_type or not sample.matrix:
+            return None
+
+        cursor.execute('SELECT id '
+            'FROM "' + ObjectiveDescription._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s',
+            (sample.product_type.id, sample.matrix.id))
+        res = cursor.fetchone()
+        return res and res[0] or None
 
     def generate_repetition(self, notebook_lines):
         pool = Pool()
@@ -2293,12 +2310,14 @@ class AddFractionRMBMZ(Wizard):
         entry = Entry(workyear.default_entry_control.id)
         original_fraction = self.start.reference_fraction
         original_sample = Sample(original_fraction.sample.id)
+        obj_description = self._get_obj_description(original_sample)
 
         # new sample
         new_sample, = Sample.copy([original_sample], default={
             'entry': entry.id,
             'date': datetime.now(),
             'label': self.start.label,
+            'obj_description': obj_description,
             'fractions': [],
             })
 
@@ -2412,6 +2431,21 @@ class AddFractionRMBMZ(Wizard):
 
         return new_fraction
 
+    def _get_obj_description(self, sample):
+        cursor = Transaction().connection.cursor()
+        ObjectiveDescription = Pool().get('lims.objective_description')
+
+        if not sample.product_type or not sample.matrix:
+            return None
+
+        cursor.execute('SELECT id '
+            'FROM "' + ObjectiveDescription._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s',
+            (sample.product_type.id, sample.matrix.id))
+        res = cursor.fetchone()
+        return res and res[0] or None
+
     def _create_control_noref(self):
         pool = Pool()
         Config = pool.get('lims.configuration')
@@ -2450,6 +2484,7 @@ class AddFractionRMBMZ(Wizard):
 
         laboratory = self.start.planification.laboratory
         entry = Entry(workyear.default_entry_control.id)
+        obj_description = self._get_obj_description(self.start)
 
         # new sample
         new_sample, = Sample.create([{
@@ -2459,6 +2494,7 @@ class AddFractionRMBMZ(Wizard):
             'matrix': self.start.matrix.id,
             'zone': entry.party.entry_zone.id,
             'label': self.start.label,
+            'obj_description': obj_description,
             'packages_quantity': 1,
             'fractions': [],
             }])
@@ -2564,6 +2600,21 @@ class AddFractionRMBMZ(Wizard):
                     self.start.repetitions)
 
         return new_fraction
+
+    def _get_obj_description(self, sample):
+        cursor = Transaction().connection.cursor()
+        ObjectiveDescription = Pool().get('lims.objective_description')
+
+        if not sample.product_type or not sample.matrix:
+            return None
+
+        cursor.execute('SELECT id '
+            'FROM "' + ObjectiveDescription._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s',
+            (sample.product_type.id, sample.matrix.id))
+        res = cursor.fetchone()
+        return res and res[0] or None
 
     def generate_repetition(self, notebook_lines, repetitions):
         pool = Pool()
@@ -2887,6 +2938,7 @@ class AddFractionBRE(Wizard):
 
         laboratory = self.start.planification.laboratory
         entry = Entry(workyear.default_entry_control.id)
+        obj_description = self._get_obj_description(self.start)
 
         # new sample
         new_sample, = Sample.create([{
@@ -2896,6 +2948,7 @@ class AddFractionBRE(Wizard):
             'matrix': self.start.matrix.id,
             'zone': entry.party.entry_zone.id,
             'label': self.start.label,
+            'obj_description': obj_description,
             'packages_quantity': 1,
             'fractions': [],
             }])
@@ -2977,6 +3030,21 @@ class AddFractionBRE(Wizard):
                 NotebookLine.write(notebook_lines, defaults)
 
         return new_fraction
+
+    def _get_obj_description(self, sample):
+        cursor = Transaction().connection.cursor()
+        ObjectiveDescription = Pool().get('lims.objective_description')
+
+        if not sample.product_type or not sample.matrix:
+            return None
+
+        cursor.execute('SELECT id '
+            'FROM "' + ObjectiveDescription._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s',
+            (sample.product_type.id, sample.matrix.id))
+        res = cursor.fetchone()
+        return res and res[0] or None
 
     def add_control(self, fraction):
         Planification = Pool().get('lims.planification')
@@ -3243,6 +3311,7 @@ class AddFractionMRT(Wizard):
 
         laboratory = self.start.planification.laboratory
         entry = Entry(workyear.default_entry_control.id)
+        obj_description = self._get_obj_description(self.start)
 
         # new sample
         new_sample, = Sample.create([{
@@ -3252,6 +3321,7 @@ class AddFractionMRT(Wizard):
             'matrix': self.start.matrix.id,
             'zone': entry.party.entry_zone.id,
             'label': self.start.label,
+            'obj_description': obj_description,
             'packages_quantity': 1,
             'fractions': [],
             }])
@@ -3337,6 +3407,21 @@ class AddFractionMRT(Wizard):
                     self.start.repetitions)
 
         return new_fraction
+
+    def _get_obj_description(self, sample):
+        cursor = Transaction().connection.cursor()
+        ObjectiveDescription = Pool().get('lims.objective_description')
+
+        if not sample.product_type or not sample.matrix:
+            return None
+
+        cursor.execute('SELECT id '
+            'FROM "' + ObjectiveDescription._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s',
+            (sample.product_type.id, sample.matrix.id))
+        res = cursor.fetchone()
+        return res and res[0] or None
 
     def generate_repetition(self, notebook_lines, repetitions):
         pool = Pool()
@@ -4524,6 +4609,7 @@ class CreateFractionControl(Wizard):
 
         laboratory = self.start.laboratory
         entry = Entry(workyear.default_entry_control.id)
+        obj_description = self._get_obj_description(self.start)
 
         # new sample
         new_sample, = Sample.create([{
@@ -4533,6 +4619,7 @@ class CreateFractionControl(Wizard):
             'matrix': self.start.matrix.id,
             'zone': entry.party.entry_zone.id,
             'label': self.start.label,
+            'obj_description': obj_description,
             'packages_quantity': 1,
             'fractions': [],
             }])
@@ -4601,6 +4688,21 @@ class CreateFractionControl(Wizard):
                 NotebookLine.write(notebook_lines, defaults)
 
         return new_fraction
+
+    def _get_obj_description(self, sample):
+        cursor = Transaction().connection.cursor()
+        ObjectiveDescription = Pool().get('lims.objective_description')
+
+        if not sample.product_type or not sample.matrix:
+            return None
+
+        cursor.execute('SELECT id '
+            'FROM "' + ObjectiveDescription._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s',
+            (sample.product_type.id, sample.matrix.id))
+        res = cursor.fetchone()
+        return res and res[0] or None
 
     def do_open_(self, action):
         action['pyson_domain'] = PYSONEncoder().encode([

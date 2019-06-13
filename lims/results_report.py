@@ -2384,6 +2384,13 @@ class ResultReport(Report):
                     'package_state': (
                         sample.package_state.description
                         if sample.package_state else ''),
+                    'producer': (sample.producer.rec_name
+                        if sample.producer else
+                        ResultsReport.raise_user_error('data_not_specified',
+                        raise_exception=False)),
+                    'obj_description': (sample.obj_description.description
+                        if sample.obj_description else
+                        sample.obj_description_manual),
                     'concentrations': {},
                     }
                 if (report.report_section == 'rp' and
@@ -2519,6 +2526,10 @@ class ResultReport(Report):
                 reference_sample.producer.rec_name if reference_sample.producer
                 else ResultsReport.raise_user_error('data_not_specified',
                     raise_exception=False))
+            report_context['sample_obj_description'] = (
+                reference_sample.obj_description.description
+                if reference_sample.obj_description
+                else reference_sample.obj_description_manual)
         report_context['sample_date'] = min_confirmation_date
         report_context['min_start_date'] = min_start_date
         report_context['max_end_date'] = max_end_date
@@ -2604,10 +2615,7 @@ class ResultReport(Report):
                             'both', 'both_range'))
                     if conc and conc != '-' and not hide_concentration_label:
                         if conc == 'Muestra Recibida':
-                            fraction['concentrations'][conc]['label'] = (
-                                ResultsReport.raise_user_error(
-                                    'concentration_label_1',
-                                    raise_exception=False))
+                            fraction['concentrations'][conc]['label'] = ''
                         elif conc_is_numeric and numeric_conc < 100:
                             fraction['concentrations'][conc]['label'] = (
                                 ResultsReport.raise_user_error(

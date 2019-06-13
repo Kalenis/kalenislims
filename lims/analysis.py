@@ -14,15 +14,15 @@ from trytond.pool import Pool
 from trytond.transaction import Transaction
 from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or, And
 
-__all__ = ['ProductType', 'Matrix', 'Formula', 'FormulaVariable', 'Analysis',
-    'Typification', 'TypificationAditional', 'TypificationReadOnly',
-    'CalculatedTypification', 'CalculatedTypificationReadOnly',
-    'AnalysisIncluded', 'AnalysisLaboratory', 'AnalysisLabMethod',
-    'AnalysisDevice', 'CopyTypificationStart', 'CopyTypification',
-    'CopyCalculatedTypificationStart', 'CopyCalculatedTypification',
-    'RelateAnalysisStart', 'RelateAnalysis', 'CreateAnalysisProduct',
-    'OpenTypifications', 'AddTypificationsStart', 'AddTypifications',
-    'RemoveTypificationsStart', 'RemoveTypifications']
+__all__ = ['ProductType', 'Matrix', 'ObjectiveDescription', 'Formula',
+    'FormulaVariable', 'Analysis', 'Typification', 'TypificationAditional',
+    'TypificationReadOnly', 'CalculatedTypification',
+    'CalculatedTypificationReadOnly', 'AnalysisIncluded', 'AnalysisLaboratory',
+    'AnalysisLabMethod', 'AnalysisDevice', 'CopyTypificationStart',
+    'CopyTypification', 'CopyCalculatedTypificationStart',
+    'CopyCalculatedTypification', 'RelateAnalysisStart', 'RelateAnalysis',
+    'CreateAnalysisProduct', 'OpenTypifications', 'AddTypificationsStart',
+    'AddTypifications', 'RemoveTypificationsStart', 'RemoveTypifications']
 
 
 class Typification(ModelSQL, ModelView):
@@ -704,6 +704,32 @@ class Matrix(ModelSQL, ModelView):
         if records:
             return [(field,) + tuple(clause[1:])]
         return [(cls._rec_name,) + tuple(clause[1:])]
+
+
+class ObjectiveDescription(ModelSQL, ModelView):
+    'Objective Description'
+    __name__ = 'lims.objective_description'
+    _rec_name = 'description'
+
+    product_type = fields.Many2One('lims.product.type', 'Product type',
+        required=True, select=True,
+        states={'readonly': Bool(Eval('id', 0) > 0)})
+    matrix = fields.Many2One('lims.matrix', 'Matrix',
+        required=True, select=True,
+        states={'readonly': Bool(Eval('id', 0) > 0)})
+    description = fields.Char('Description', required=True, translate=True)
+
+    @classmethod
+    def __setup__(cls):
+        super(ObjectiveDescription, cls).__setup__()
+        cls._order.insert(0, ('product_type', 'ASC'))
+        cls._order.insert(1, ('matrix', 'ASC'))
+        cls._order.insert(2, ('description', 'ASC'))
+        t = cls.__table__()
+        cls._sql_constraints += [
+            ('product_matrix_uniq', Unique(t, t.product_type, t.matrix),
+                'This objective description already exists'),
+            ]
 
 
 class Formula(ModelSQL, ModelView):

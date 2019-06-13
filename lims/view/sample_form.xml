@@ -24,6 +24,10 @@
             <field name="product_type"/>
             <label name="matrix"/>
             <field name="matrix"/>
+            <label name="obj_description"/>
+            <field name="obj_description"/>
+            <label name="obj_description_manual"/>
+            <field name="obj_description_manual"/>
             <label name="package_state"/>
             <field name="package_state"/>
             <label name="package_type"/>
