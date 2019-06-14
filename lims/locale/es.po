@@ -442,16 +442,20 @@ msgstr ""
 "detección y el límite de cuantificación."
 
 msgctxt "error:lims.results_report.version.detail:"
-msgid "NOT SPECIFIED BY THE CLIENT"
-msgstr "NO ESPECIFICADO POR EL CLIENTE"
-
-msgctxt "error:lims.results_report.version.detail:"
 msgid "Negative"
 msgstr "Negativo"
 
 msgctxt "error:lims.results_report.version.detail:"
 msgid "Not detected"
 msgstr "No detectado"
+
+msgctxt "error:lims.results_report.version.detail:"
+msgid "Not done by the company"
+msgstr "No realizado por la Empresa"
+
+msgctxt "error:lims.results_report.version.detail:"
+msgid "NOT SPECIFIED BY THE CLIENT"
+msgstr "NO ESPECIFICADO POR EL CLIENTE"
 
 msgctxt "error:lims.results_report.version.detail:"
 msgid "Please, select only one report to print"
