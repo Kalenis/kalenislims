@@ -409,6 +409,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
             'obs_rm_c_f': ('Elements results are reported without recovery '
                 'correction.'),
             'data_not_specified': 'NOT SPECIFIED BY THE CLIENT',
+            'not_done': 'Not done by the company',
             })
 
     @staticmethod
@@ -2331,6 +2332,7 @@ class ResultReport(Report):
         tas_project = False
         stp_project = False
         stp_polisample_project = False
+        water_project = False
         alcohol = False
         dry_matter = False
 
@@ -2363,6 +2365,10 @@ class ResultReport(Report):
                 getattr(reference_sample.entry, 'project_type') ==
                 'tas'):
             tas_project = True
+        if (hasattr(reference_sample.entry, 'project_type') and
+                getattr(reference_sample.entry, 'project_type') ==
+                'water'):
+            water_project = True
 
         for line in notebook_lines:
             with Transaction().set_context(language=lang_code):
@@ -2373,6 +2379,7 @@ class ResultReport(Report):
             if key not in fractions:
                 fractions[key] = {
                     'fraction': sample.number,
+                    'date': sample.date2,
                     'client_description': (
                         sample.sample_client_description),
                     'number': sample.number,
@@ -2413,6 +2420,16 @@ class ResultReport(Report):
                     fractions[key]['stp_variety'] = (
                         sample.variety.description if
                         sample.variety else '')
+                if water_project:
+                    if sample.sampling_datetime:
+                        fractions[key]['water_sampling_date'] = (
+                            cls.format_date(sample.sampling_datetime.date(),
+                                report_context['user'].language))
+                    else:
+                        fractions[key]['water_sampling_date'] = (
+                            ResultsReport.raise_user_error('not_done',
+                                raise_exception=False))
+
             record = {
                 'order': t_line.analysis.order or 9999,
                 'acredited': cls.get_accreditation(
@@ -2530,7 +2547,8 @@ class ResultReport(Report):
                 reference_sample.obj_description.description
                 if reference_sample.obj_description
                 else reference_sample.obj_description_manual)
-        report_context['sample_date'] = min_confirmation_date
+        report_context['sample_date'] = reference_sample.date2
+        report_context['sample_confirmation_date'] = min_confirmation_date
         report_context['min_start_date'] = min_start_date
         report_context['max_end_date'] = max_end_date
         report_context['sample_packages_quantity'] = (
@@ -2575,11 +2593,21 @@ class ResultReport(Report):
                 reference_sample.variety else '')
         if stp_polisample_project:
             report_context['stp_code'] = reference_sample.entry.project.code
+        if water_project:
+            if reference_sample.sampling_datetime:
+                report_context['water_sampling_date'] = (
+                    cls.format_date(reference_sample.sampling_datetime.date(),
+                        report_context['user'].language))
+            else:
+                report_context['water_sampling_date'] = (
+                    ResultsReport.raise_user_error('not_done',
+                        raise_exception=False))
 
         report_context['tas_project'] = 'True' if tas_project else 'False'
         report_context['stp_project'] = 'True' if stp_project else 'False'
         report_context['stp_polisample_project'] = ('True' if
             stp_polisample_project else 'False')
+        report_context['water_project'] = 'True' if water_project else 'False'
 
         if reference_sample.product_type.code == 'VINO':
             alcohol = True
