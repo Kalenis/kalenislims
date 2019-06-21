@@ -5690,6 +5690,8 @@ class PlanificationSequenceReport(Report):
                     analysis_origin = notebook_line.analysis_origin
                     priority = notebook_line.priority
                     urgent = notebook_line.urgent
+                    report_date = (notebook_line.report_date or
+                        notebook_line.results_estimated_date)
                     trace_report = fraction.sample.trace_report
                     sample_client_description = (
                         fraction.sample.sample_client_description)
@@ -5704,8 +5706,9 @@ class PlanificationSequenceReport(Report):
                             'fraction_type': fraction_type,
                             'analysis_origin': analysis_origin,
                             'priority': priority,
-                            'trace_report': trace_report,
                             'urgent': urgent,
+                            'report_date': report_date,
+                            'trace_report': trace_report,
                             'comments': comments,
                             'sample_client_description': (
                                 sample_client_description),
@@ -6941,6 +6944,8 @@ class PlanificationSequenceAnalysisReport(Report):
                     analysis = notebook_line.analysis.rec_name
                     priority = notebook_line.priority
                     urgent = notebook_line.urgent
+                    report_date = (notebook_line.report_date or
+                        notebook_line.results_estimated_date)
                     trace_report = fraction.sample.trace_report
                     sample_client_description = (
                         fraction.sample.sample_client_description)
@@ -6955,8 +6960,9 @@ class PlanificationSequenceAnalysisReport(Report):
                             'fraction_type': fraction_type,
                             'analysis': analysis,
                             'priority': priority,
-                            'trace_report': trace_report,
                             'urgent': urgent,
+                            'report_date': report_date,
+                            'trace_report': trace_report,
                             'sample_client_description': (
                                 sample_client_description),
                             }
