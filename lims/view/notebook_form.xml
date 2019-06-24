@@ -12,6 +12,8 @@
     <field name="label"/>
     <label name="fraction_type"/>
     <field name="fraction_type"/>
+    <label name="obj_description"/>
+    <field name="obj_description"/>
     <label name="date"/>
     <group col="3" colspan="1" id="shared">
         <field name="date"/>

@@ -3851,6 +3851,10 @@ msgctxt "field:lims.notebook,matrix:"
 msgid "Matrix"
 msgstr "Matriz"
 
+msgctxt "field:lims.notebook,obj_description:"
+msgid "Objective description"
+msgstr "Descripción objetiva"
+
 msgctxt "field:lims.notebook,party:"
 msgid "Party"
 msgstr "Entidad"

@@ -89,6 +89,8 @@ class Notebook(ModelSQL, ModelView):
     divided_report = fields.Function(fields.Boolean('Divided report'),
         'get_divided_report')
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
+    obj_description = fields.Function(fields.Char('Objective description',
+        translate=True), 'get_obj_description')
 
     @classmethod
     def __setup__(cls):
@@ -120,6 +122,18 @@ class Notebook(ModelSQL, ModelView):
     @classmethod
     def search_sample_field(cls, name, clause):
         return [('fraction.sample.' + name,) + tuple(clause[1:])]
+
+    @classmethod
+    def get_obj_description(cls, notebooks, name):
+        result = {}
+        for n in notebooks:
+            field = getattr(n.fraction.sample, 'obj_description', None)
+            if field:
+                result[n.id] = field.description
+            else:
+                result[n.id] = getattr(n.fraction.sample,
+                    'obj_description_manual', None)
+        return result
 
     @classmethod
     def get_party_code(cls, notebooks, name):
