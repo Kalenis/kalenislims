@@ -16,18 +16,19 @@
     <field name="result_formula"/>
     <label name="converted_result_formula"/>
     <field name="converted_result_formula"/>
-    <label name="automatic_acquisition"/>
-    <field name="automatic_acquisition"/>
     <label name="product"/>
     <field name="product"/>
     <label name="order"/>
     <field name="order"/>
-    <label name="disable_as_individual"/>
-    <field name="disable_as_individual"/>
     <label name="formula"/>
     <field name="formula"/>
     <label name="planning_legend"/>
     <field name="planning_legend"/>
+    <label name="automatic_acquisition" />
+    <field name="automatic_acquisition" xexpand="0"/>
+    <label name="disable_as_individual"/>
+    <field name="disable_as_individual" xexpand="0"/>
+
     <notebook>
         <page string="Laboratories" id="laboratories" >
             <field name="laboratories" colspan="4"/>
