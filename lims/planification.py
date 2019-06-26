@@ -1976,6 +1976,9 @@ class AddFractionControl(Wizard):
                 'report': nline.report,
                 'concentration_level': (nline.concentration_level.id if
                     nline.concentration_level else None),
+                'results_estimated_waiting': nline.results_estimated_waiting,
+                'department': (nline.department.id if
+                    nline.department else None),
                 })
         Notebook.write([notebook], {
             'lines': [('create', to_create)],
@@ -2665,6 +2668,10 @@ class AddFractionRMBMZ(Wizard):
                     'report': nline.report,
                     'concentration_level': (nline.concentration_level.id if
                         nline.concentration_level else None),
+                    'results_estimated_waiting': (
+                        nline.results_estimated_waiting),
+                    'department': (nline.department.id if
+                        nline.department else None),
                     })
         Notebook.write([notebook], {
             'lines': [('create', to_create)],
@@ -3472,6 +3479,10 @@ class AddFractionMRT(Wizard):
                     'report': nline.report,
                     'concentration_level': (nline.concentration_level.id if
                         nline.concentration_level else None),
+                    'results_estimated_waiting': (
+                        nline.results_estimated_waiting),
+                    'department': (nline.department.id if
+                        nline.department else None),
                     })
         Notebook.write([notebook], {
             'lines': [('create', to_create)],
