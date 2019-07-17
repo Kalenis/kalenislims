@@ -5823,6 +5823,11 @@ class PlanificationWorksheetAnalysisReport(Report):
                         'urgent': 'SI' if notebook_line.urgent else '',
                         'comments': comments,
                         'planification_code': planification.code,
+                        'sample_obj_description': (
+                            fraction.sample.obj_description.description
+                            if fraction.sample.obj_description else
+                            fraction.sample.obj_description_manual
+                            if fraction.sample.obj_description_manual else ''),
                         }
                     objects[date]['professionals'][p_key]['analysis'][
                         key]['lines'][number] = record
@@ -5940,6 +5945,11 @@ class PlanificationWorksheetMethodReport(Report):
                                 pack_quant + ' ' +
                                 fraction.package_type.description,
                             'methods': {},
+                            'sample_obj_description': (
+                                fraction.sample.obj_description.description
+                                if fraction.sample.obj_description else
+                                fraction.sample.obj_description_manual
+                                if fraction.sample.obj_description_manual else ''),
                             }
                         objects[date]['professionals'][p_key]['lines'][
                             number] = record
@@ -6117,6 +6127,11 @@ class PlanificationWorksheetReport(Report):
                                 pack_quant + ' ' +
                                 fraction.package_type.description,
                             'methods': {},
+                            'sample_obj_description': (
+                                fraction.sample.obj_description.description
+                                if fraction.sample.obj_description else
+                                fraction.sample.obj_description_manual
+                                if fraction.sample.obj_description_manual else ''),
                             }
                         objects[date]['professionals'][p_key]['analysis'][key][
                             'lines'][number] = record
@@ -6953,6 +6968,8 @@ class PlanificationSequenceAnalysisReport(Report):
                     matrix = fraction.matrix.code
                     fraction_type = fraction.type.code
                     analysis = notebook_line.analysis.rec_name
+                    initial_unit = (notebook_line.initial_unit.symbol 
+                        if notebook_line.initial_unit else '')
                     priority = notebook_line.priority
                     urgent = notebook_line.urgent
                     report_date = (notebook_line.report_date or
@@ -6976,6 +6993,7 @@ class PlanificationSequenceAnalysisReport(Report):
                             'trace_report': trace_report,
                             'sample_client_description': (
                                 sample_client_description),
+                            'initial_unit': initial_unit,
                             }
 
         for k1 in objects.keys():
