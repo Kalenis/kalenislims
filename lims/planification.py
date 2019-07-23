@@ -13,6 +13,8 @@ from trytond.report import Report
 from trytond.pool import Pool
 from trytond.transaction import Transaction
 from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 from .results_report import get_print_date
 
 __all__ = ['Planification', 'PlanificationTechnician',
@@ -152,17 +154,6 @@ class Planification(Workflow, ModelSQL, ModelView):
                 'readonly': (Eval('state') != 'preplanned'),
                 },
             })
-        cls._error_messages.update({
-            'not_start_date': 'The planification must have a start date',
-            'invalid_start_date': 'The start date must be after "%s"',
-            'no_technician': ('The following fractions have not a responsible '
-                'technician:%s'),
-            'waiting_process': ('Planification "%s" is still waiting for '
-                'processing'),
-            'delete_planification': ('You can not delete planification "%s" '
-                'because it is not in draft or pre-planned state'),
-            'copy_planification': ('You can not copy planifications'),
-            })
 
     @staticmethod
     def default_state():
@@ -262,8 +253,8 @@ class Planification(Workflow, ModelSQL, ModelView):
     def check_delete(cls, planifications):
         for planification in planifications:
             if planification.state not in ['draft', 'preplanned']:
-                cls.raise_user_error('delete_planification',
-                    (planification.rec_name,))
+                raise UserError(gettext('lims.msg_delete_planification',
+                    planification=planification.rec_name))
 
     @classmethod
     def delete(cls, planifications):
@@ -272,7 +263,7 @@ class Planification(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def copy(cls, planifications, default=None):
-        cls.raise_user_error('copy_planification')
+        raise UserError(gettext('lims.msg_copy_planification'))
 
     @classmethod
     @ModelView.button_action('lims.wiz_lims_add_analysis')
@@ -305,11 +296,11 @@ class Planification(Workflow, ModelSQL, ModelView):
 
     def check_start_date(self):
         if not self.start_date:
-            self.raise_user_error('not_start_date')
+            raise UserError(gettext('lims.msg_not_start_date'))
         for detail in self.details:
             if detail.fraction.sample.date2 > self.start_date:
-                self.raise_user_error('invalid_start_date',
-                        (detail.fraction.sample.date2,))
+                raise UserError(gettext('lims.msg_invalid_start_date',
+                    date=detail.fraction.sample.date2))
 
     def check_technicians(self):
         fractions = {}
@@ -322,9 +313,10 @@ class Planification(Workflow, ModelSQL, ModelView):
                         fractions[key] = '%s (%s)' % (detail.fraction.rec_name,
                             service_detail.notebook_line.method.code)
         if fractions:
-            sorted_fractions = sorted(list(fractions.values()), key=lambda x: x)
-            self.raise_user_error('no_technician',
-                ('\n' + '\n'.join(sorted_fractions) + '\n',))
+            sorted_fractions = sorted(
+                list(fractions.values()), key=lambda x: x)
+            raise UserError(gettext('lims.msg_no_technician',
+                fractions='\n' + '\n'.join(sorted_fractions) + '\n'))
 
     @classmethod
     def process_waiting_planifications(cls):
@@ -412,8 +404,8 @@ class Planification(Workflow, ModelSQL, ModelView):
         for planification in planifications:
             # Check if is still waiting for confirmation
             if planification.waiting_process:
-                cls.raise_user_error('waiting_process',
-                    (planification.code,))
+                raise UserError(gettext('lims.msg_waiting_process',
+                    planification=planification.code))
             if process_background:
                 planification.waiting_process = True
                 planification.save()
@@ -1740,8 +1732,8 @@ class AddFractionControlStart(ModelView):
         if self.original_fraction:
             label += self.original_fraction.label
         if self.concentration_level:
-                label += (' (' +
-                        self.concentration_level.description + ')')
+            label += (' (' +
+                    self.concentration_level.description + ')')
         label += ' ' + str(Date.today())
         return label
 
@@ -1756,18 +1748,6 @@ class AddFractionControl(Wizard):
             Button('Add', 'add', 'tryton-ok', default=True),
             ])
     add = StateTransition()
-
-    @classmethod
-    def __setup__(cls):
-        super(AddFractionControl, cls).__setup__()
-        cls._error_messages.update({
-            'no_entry_control': ('There is no default entry control for this '
-                'work year'),
-            'no_con_fraction_type': ('There is no Control fraction type '
-                'configured'),
-            'no_concentration_level': ('Missing concentration level '
-                'for this control type'),
-            })
 
     def default_start(self, fields):
         Config = Pool().get('lims.configuration')
@@ -1804,16 +1784,16 @@ class AddFractionControl(Wizard):
         config = Config(1)
         fraction_type = config.con_fraction_type
         if not fraction_type:
-            self.raise_user_error('no_con_fraction_type')
+            raise UserError(gettext('lims.msg_no_con_fraction_type'))
 
         if (fraction_type.control_charts and not
                 self.start.concentration_level):
-            self.raise_user_error('no_concentration_level')
+            raise UserError(gettext('lims.msg_no_concentration_level'))
 
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
         if not workyear.default_entry_control:
-            self.raise_user_error('no_entry_control')
+            raise UserError(gettext('lims.msg_no_entry_control'))
 
         entry = Entry(workyear.default_entry_control.id)
         original_fraction = self.start.original_fraction
@@ -2238,26 +2218,6 @@ class AddFractionRMBMZ(Wizard):
             ])
     add = StateTransition()
 
-    @classmethod
-    def __setup__(cls):
-        super(AddFractionRMBMZ, cls).__setup__()
-        cls._error_messages.update({
-            'no_entry_control': ('There is no default entry control for this '
-                'work year'),
-            'no_rm_fraction_type': ('There is no RM fraction type '
-                'configured'),
-            'no_bmz_fraction_type': ('There is no BMZ fraction type '
-                'configured'),
-            'no_rm_default_configuration': ('Missing default configuration '
-                'for RM fraction type'),
-            'no_bmz_default_configuration': ('Missing default configuration '
-                'for BMZ fraction type'),
-            'no_concentration_level': ('Missing concentration level '
-                'for this control type'),
-            'not_typified': ('The analysis "%(analysis)s" is not typified '
-                'for product type "%(product_type)s" and matrix "%(matrix)s"'),
-            })
-
     def default_start(self, fields):
         defaults = {
             'planification': Transaction().context['active_id'],
@@ -2294,21 +2254,21 @@ class AddFractionRMBMZ(Wizard):
         config = Config(1)
         if self.start.type == 'rm':
             if not config.rm_fraction_type:
-                self.raise_user_error('no_rm_fraction_type')
+                raise UserError(gettext('lims.msg_no_rm_fraction_type'))
             fraction_type = config.rm_fraction_type
         elif self.start.type == 'bmz':
             if not config.bmz_fraction_type:
-                self.raise_user_error('no_bmz_fraction_type')
+                raise UserError(gettext('lims.msg_no_bmz_fraction_type'))
             fraction_type = config.bmz_fraction_type
 
         if (fraction_type.control_charts and not
                 self.start.concentration_level):
-            self.raise_user_error('no_concentration_level')
+            raise UserError(gettext('lims.msg_no_concentration_level'))
 
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
         if not workyear.default_entry_control:
-            self.raise_user_error('no_entry_control')
+            raise UserError(gettext('lims.msg_no_entry_control'))
 
         entry = Entry(workyear.default_entry_control.id)
         original_fraction = self.start.reference_fraction
@@ -2463,27 +2423,29 @@ class AddFractionRMBMZ(Wizard):
         config = Config(1)
         if self.start.type == 'rm':
             if not config.rm_fraction_type:
-                self.raise_user_error('no_rm_fraction_type')
+                raise UserError(gettext('lims.msg_no_rm_fraction_type'))
             fraction_type = config.rm_fraction_type
             if (not fraction_type.default_package_type or
                     not fraction_type.default_fraction_state):
-                self.raise_user_error('no_rm_default_configuration')
+                raise UserError(gettext(
+                    'lims.msg_no_rm_default_configuration'))
         elif self.start.type == 'bmz':
             if not config.bmz_fraction_type:
-                self.raise_user_error('no_bmz_fraction_type')
+                raise UserError(gettext('lims.msg_no_bmz_fraction_type'))
             fraction_type = config.bmz_fraction_type
             if (not fraction_type.default_package_type or
                     not fraction_type.default_fraction_state):
-                self.raise_user_error('no_bmz_default_configuration')
+                raise UserError(gettext(
+                    'lims.msg_no_bmz_default_configuration'))
 
         if (fraction_type.control_charts and not
                 self.start.concentration_level):
-            self.raise_user_error('no_concentration_level')
+            raise UserError(gettext('lims.msg_no_concentration_level'))
 
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
         if not workyear.default_entry_control:
-            self.raise_user_error('no_entry_control')
+            raise UserError(gettext('lims.msg_no_entry_control'))
 
         laboratory = self.start.planification.laboratory
         entry = Entry(workyear.default_entry_control.id)
@@ -2534,11 +2496,11 @@ class AddFractionRMBMZ(Wizard):
         for p_analysis in self.start.planification.analysis:
             if not Analysis.is_typified(p_analysis,
                     new_sample.product_type, new_sample.matrix):
-                self.raise_user_error('not_typified', {
-                    'analysis': p_analysis.rec_name,
-                    'product_type': new_sample.product_type.rec_name,
-                    'matrix': new_sample.matrix.rec_name,
-                    })
+                raise UserError(gettext('lims.msg_not_typified',
+                    analysis=p_analysis.rec_name,
+                    product_type=new_sample.product_type.rec_name,
+                    matrix=new_sample.matrix.rec_name,
+                    ))
             laboratory_id = (laboratory.id if p_analysis.type != 'group'
                 else None)
             method_id = None
@@ -2603,21 +2565,6 @@ class AddFractionRMBMZ(Wizard):
                     self.start.repetitions)
 
         return new_fraction
-
-    def _get_obj_description(self, sample):
-        cursor = Transaction().connection.cursor()
-        ObjectiveDescription = Pool().get('lims.objective_description')
-
-        if not sample.product_type or not sample.matrix:
-            return None
-
-        cursor.execute('SELECT id '
-            'FROM "' + ObjectiveDescription._table + '" '
-            'WHERE product_type = %s '
-                'AND matrix = %s',
-            (sample.product_type.id, sample.matrix.id))
-        res = cursor.fetchone()
-        return res and res[0] or None
 
     def generate_repetition(self, notebook_lines, repetitions):
         pool = Pool()
@@ -2879,22 +2826,6 @@ class AddFractionBRE(Wizard):
             ])
     add = StateTransition()
 
-    @classmethod
-    def __setup__(cls):
-        super(AddFractionBRE, cls).__setup__()
-        cls._error_messages.update({
-            'no_entry_control': ('There is no default entry control for this '
-                'work year'),
-            'no_bre_fraction_type': ('There is no BRE fraction type '
-                'configured'),
-            'no_bre_default_configuration': ('Missing default configuration '
-                'for BRE fraction type'),
-            'no_concentration_level': ('Missing concentration level '
-                'for this control type'),
-            'not_typified': ('The analysis "%(analysis)s" is not typified '
-                'for product type "%(product_type)s" and matrix "%(matrix)s"'),
-            })
-
     def default_start(self, fields):
         Config = Pool().get('lims.configuration')
         config = Config(1)
@@ -2928,20 +2859,20 @@ class AddFractionBRE(Wizard):
 
         config = Config(1)
         if not config.bre_fraction_type:
-            self.raise_user_error('no_bre_fraction_type')
+            raise UserError(gettext('lims.msg_no_bre_fraction_type'))
         fraction_type = config.bre_fraction_type
         if (not fraction_type.default_package_type or
                 not fraction_type.default_fraction_state):
-            self.raise_user_error('no_bre_default_configuration')
+            raise UserError(gettext('lims.msg_no_bre_default_configuration'))
 
         if (fraction_type.control_charts and not
                 self.start.concentration_level):
-            self.raise_user_error('no_concentration_level')
+            raise UserError(gettext('lims.msg_no_concentration_level'))
 
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
         if not workyear.default_entry_control:
-            self.raise_user_error('no_entry_control')
+            raise UserError(gettext('lims.msg_no_entry_control'))
 
         laboratory = self.start.planification.laboratory
         entry = Entry(workyear.default_entry_control.id)
@@ -2991,11 +2922,11 @@ class AddFractionBRE(Wizard):
         for p_analysis in self.start.planification.analysis:
             if not Analysis.is_typified(p_analysis,
                     new_sample.product_type, new_sample.matrix):
-                self.raise_user_error('not_typified', {
-                    'analysis': p_analysis.rec_name,
-                    'product_type': new_sample.product_type.rec_name,
-                    'matrix': new_sample.matrix.rec_name,
-                    })
+                raise UserError(gettext('lims.msg_not_typified',
+                    analysis=p_analysis.rec_name,
+                    product_type=new_sample.product_type.rec_name,
+                    matrix=new_sample.matrix.rec_name,
+                    ))
             laboratory_id = (laboratory.id if p_analysis.type != 'group'
                 else None)
             method_id = None
@@ -3252,22 +3183,6 @@ class AddFractionMRT(Wizard):
             ])
     add = StateTransition()
 
-    @classmethod
-    def __setup__(cls):
-        super(AddFractionMRT, cls).__setup__()
-        cls._error_messages.update({
-            'no_entry_control': ('There is no default entry control for this '
-                'work year'),
-            'no_mrt_fraction_type': ('There is no MRT fraction type '
-                'configured'),
-            'no_mrt_default_configuration': ('Missing default configuration '
-                'for MRT fraction type'),
-            'no_concentration_level': ('Missing concentration level '
-                'for this control type'),
-            'not_typified': ('The analysis "%(analysis)s" is not typified '
-                'for product type "%(product_type)s" and matrix "%(matrix)s"'),
-            })
-
     def default_start(self, fields):
         Config = Pool().get('lims.configuration')
         config = Config(1)
@@ -3301,20 +3216,20 @@ class AddFractionMRT(Wizard):
 
         config = Config(1)
         if not config.mrt_fraction_type:
-            self.raise_user_error('no_mrt_fraction_type')
+            raise UserError(gettext('lims.msg_no_mrt_fraction_type'))
         fraction_type = config.mrt_fraction_type
         if (not fraction_type.default_package_type or
                 not fraction_type.default_fraction_state):
-            self.raise_user_error('no_mrt_default_configuration')
+            raise UserError(gettext('lims.msg_no_mrt_default_configuration'))
 
         if (fraction_type.control_charts and not
                 self.start.concentration_level):
-            self.raise_user_error('no_concentration_level')
+            raise UserError(gettext('lims.msg_no_concentration_level'))
 
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
         if not workyear.default_entry_control:
-            self.raise_user_error('no_entry_control')
+            raise UserError(gettext('lims.msg_no_entry_control'))
 
         laboratory = self.start.planification.laboratory
         entry = Entry(workyear.default_entry_control.id)
@@ -3359,11 +3274,11 @@ class AddFractionMRT(Wizard):
         for p_analysis in self.start.planification.analysis:
             if not Analysis.is_typified(p_analysis,
                     new_sample.product_type, new_sample.matrix):
-                self.raise_user_error('not_typified', {
-                    'analysis': p_analysis.rec_name,
-                    'product_type': new_sample.product_type.rec_name,
-                    'matrix': new_sample.matrix.rec_name,
-                    })
+                raise UserError(gettext('lims.msg_not_typified',
+                    analysis=p_analysis.rec_name,
+                    product_type=new_sample.product_type.rec_name,
+                    matrix=new_sample.matrix.rec_name,
+                    ))
             laboratory_id = (laboratory.id if p_analysis.type != 'group'
                 else None)
             method_id = None
@@ -4542,28 +4457,6 @@ class CreateFractionControl(Wizard):
     create_ = StateTransition()
     open_ = StateAction('lims.act_lims_sample_list')
 
-    @classmethod
-    def __setup__(cls):
-        super(CreateFractionControl, cls).__setup__()
-        cls._error_messages.update({
-            'no_entry_control': ('There is no default entry control for this '
-                'work year'),
-            'no_coi_fraction_type': ('There is no COI fraction type '
-                'configured'),
-            'no_mrc_fraction_type': ('There is no MRC fraction type '
-                'configured'),
-            'no_sla_fraction_type': ('There is no SLA fraction type '
-                'configured'),
-            'no_coi_default_configuration': ('Missing default configuration '
-                'for COI fraction type'),
-            'no_mrc_default_configuration': ('Missing default configuration '
-                'for MRC fraction type'),
-            'no_sla_default_configuration': ('Missing default configuration '
-                'for SLA fraction type'),
-            'no_concentration_level': ('Missing concentration level '
-                'for this control type'),
-            })
-
     def default_start(self, fields):
         defaults = {
             'laboratory': Transaction().context.get('laboratory', None),
@@ -4589,34 +4482,37 @@ class CreateFractionControl(Wizard):
         config = Config(1)
         if self.start.type == 'coi':
             if not config.coi_fraction_type:
-                self.raise_user_error('no_coi_fraction_type')
+                raise UserError(gettext('lims.msg_no_coi_fraction_type'))
             fraction_type = config.coi_fraction_type
             if (not fraction_type.default_package_type or
                     not fraction_type.default_fraction_state):
-                self.raise_user_error('no_coi_default_configuration')
+                raise UserError(gettext(
+                    'lims.msg_no_coi_default_configuration'))
         elif self.start.type == 'mrc':
             if not config.mrc_fraction_type:
-                self.raise_user_error('no_mrc_fraction_type')
+                raise UserError(gettext('lims.msg_no_mrc_fraction_type'))
             fraction_type = config.mrc_fraction_type
             if (not fraction_type.default_package_type or
                     not fraction_type.default_fraction_state):
-                self.raise_user_error('no_mrc_default_configuration')
+                raise UserError(gettext(
+                    'lims.msg_no_mrc_default_configuration'))
         elif self.start.type == 'sla':
             if not config.sla_fraction_type:
-                self.raise_user_error('no_sla_fraction_type')
+                raise UserError(gettext('lims.msg_no_sla_fraction_type'))
             fraction_type = config.sla_fraction_type
             if (not fraction_type.default_package_type or
                     not fraction_type.default_fraction_state):
-                self.raise_user_error('no_sla_default_configuration')
+                raise UserError(gettext(
+                    'lims.msg_no_sla_default_configuration'))
 
         if (fraction_type.control_charts and not
                 self.start.concentration_level):
-            self.raise_user_error('no_concentration_level')
+            raise UserError(gettext('lims.msg_no_concentration_level'))
 
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
         if not workyear.default_entry_control:
-            self.raise_user_error('no_entry_control')
+            raise UserError(gettext('lims.msg_no_entry_control'))
 
         laboratory = self.start.laboratory
         entry = Entry(workyear.default_entry_control.id)
@@ -5964,7 +5860,8 @@ class PlanificationWorksheetMethodReport(Report):
         for k1 in objects.keys():
             for k2 in objects[k1]['professionals'].keys():
                 objects[k1]['professionals'][k2]['methods'] = {}
-                fractions = list(objects[k1]['professionals'][k2]['lines'].values())
+                fractions = list(
+                    objects[k1]['professionals'][k2]['lines'].values())
                 for fraction in fractions:
                     m_key = ()
                     m_names = []
@@ -6150,8 +6047,9 @@ class PlanificationWorksheetReport(Report):
                         'analysis'].keys():
                     objects[k1]['professionals'][k2]['analysis'][k3][
                         'methods'] = {}
-                    fractions = list(objects[k1]['professionals'][k2]['analysis'][
-                        k3]['lines'].values())
+                    fractions = list(
+                        objects[k1]['professionals'][k2]['analysis'][
+                            k3]['lines'].values())
                     for fraction in fractions:
                         m_key = ()
                         m_names = []

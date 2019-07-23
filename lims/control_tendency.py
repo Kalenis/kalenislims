@@ -13,6 +13,8 @@ from trytond.pyson import PYSONEncoder, Eval, Bool
 from trytond.pool import Pool
 from trytond.transaction import Transaction
 from trytond.report import Report
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['RangeType', 'Range', 'ControlTendency', 'ControlTendencyDetail',
     'ControlTendencyDetailRule', 'MeansDeviationsCalcStart',
@@ -52,15 +54,6 @@ class RangeType(ModelSQL, ModelView):
         translate=True, states={'invisible': Eval('use') != 'result_range'},
         depends=['use'])
 
-    @classmethod
-    def __setup__(cls):
-        super(RangeType, cls).__setup__()
-        cls._error_messages.update({
-            'default_range_type':
-                'There is already a default origin'
-                ' for this use',
-            })
-
     @staticmethod
     def default_by_default():
         return False
@@ -79,7 +72,7 @@ class RangeType(ModelSQL, ModelView):
                 ('id', '!=', self.id),
                 ])
             if range_types:
-                self.raise_user_error('default_range_type')
+                raise UserError(gettext('lims.msg_default_range_type'))
 
 
 class Range(ModelSQL, ModelView):
@@ -1209,22 +1202,6 @@ class PrintControlChart(Wizard):
             return 'start'
         return 'end'
 
-    @classmethod
-    def __setup__(cls):
-        super(PrintControlChart, cls).__setup__()
-        cls._error_messages.update({
-            'number': 'Measurement',
-            'result': 'Result',
-            'ucl': 'UCL (M+3D)',
-            'uwl': 'UWL (M+2D)',
-            'upl': 'UPL (M+D)',
-            'cl': 'CL (M)',
-            'lpl': 'LPL (M-D)',
-            'lwl': 'LWL (M-2D)',
-            'lcl': 'LCL (M-3D)',
-            'cv': 'CV (%)',
-            })
-
 
 class ControlChartReport(Report):
     'Control Chart'
@@ -1258,31 +1235,19 @@ class ControlChartReport(Report):
 
     @classmethod
     def _get_objects(cls, tendency):
-        pool = Pool()
-        PrintControlChart = pool.get('lims.control_chart.print',
-            type='wizard')
-
         objects = {
-            'number': {'name': PrintControlChart.raise_user_error('number',
-                raise_exception=False), 'order': 1, 'recs': {}},
-            'result': {'name': PrintControlChart.raise_user_error('result',
-                raise_exception=False), 'order': 2, 'recs': {}},
-            'ucl': {'name': PrintControlChart.raise_user_error('ucl',
-                raise_exception=False), 'order': 3, 'recs': {}},
-            'uwl': {'name': PrintControlChart.raise_user_error('uwl',
-                raise_exception=False), 'order': 4, 'recs': {}},
-            'upl': {'name': PrintControlChart.raise_user_error('upl',
-                raise_exception=False), 'order': 5, 'recs': {}},
-            'cl': {'name': PrintControlChart.raise_user_error('cl',
-                raise_exception=False), 'order': 6, 'recs': {}},
-            'lpl': {'name': PrintControlChart.raise_user_error('lpl',
-                raise_exception=False), 'order': 7, 'recs': {}},
-            'lwl': {'name': PrintControlChart.raise_user_error('lwl',
-                raise_exception=False), 'order': 8, 'recs': {}},
-            'lcl': {'name': PrintControlChart.raise_user_error('lcl',
-                raise_exception=False), 'order': 9, 'recs': {}},
-            'cv': {'name': PrintControlChart.raise_user_error('cv',
-                raise_exception=False), 'order': 10, 'recs': {}},
+            'number': {
+                'name': gettext('lims.msg_number'), 'order': 1, 'recs': {}},
+            'result': {
+                'name': gettext('lims.msg_result'), 'order': 2, 'recs': {}},
+            'ucl': {'name': gettext('lims.msg_ucl'), 'order': 3, 'recs': {}},
+            'uwl': {'name': gettext('lims.msg_uwl'), 'order': 4, 'recs': {}},
+            'upl': {'name': gettext('lims.msg_upl'), 'order': 5, 'recs': {}},
+            'cl': {'name': gettext('lims.msg_cl'), 'order': 6, 'recs': {}},
+            'lpl': {'name': gettext('lims.msg_lpl'), 'order': 7, 'recs': {}},
+            'lwl': {'name': gettext('lims.msg_lwl'), 'order': 8, 'recs': {}},
+            'lcl': {'name': gettext('lims.msg_lcl'), 'order': 9, 'recs': {}},
+            'cv': {'name': gettext('lims.msg_cv'), 'order': 10, 'recs': {}},
             }
         count = 1
         for detail in tendency.details:
@@ -1303,9 +1268,6 @@ class ControlChartReport(Report):
     def _get_plot(cls, columns, records):
         if not CAN_PLOT:
             return None
-        pool = Pool()
-        PrintControlChart = pool.get('lims.control_chart.print',
-            type='wizard')
 
         index = columns
         cols = []
@@ -1317,44 +1279,28 @@ class ControlChartReport(Report):
         df = df.reindex_axis(cols, axis=1)
 
         try:
-            ax = df[[
-                PrintControlChart.raise_user_error('ucl',
-                    raise_exception=False),
+            ax = df[[gettext('lims.msg_ucl'),
                 ]].plot(kind='line', color='red', rot=45, fontsize=7,
                     figsize=(10, 7.5), linestyle='-')
-            ax = df[[
-                PrintControlChart.raise_user_error('uwl',
-                    raise_exception=False),
+            ax = df[[gettext('lims.msg_uwl'),
                 ]].plot(kind='line', color='orange', rot=45, fontsize=7,
                     figsize=(10, 7.5), linestyle='-', ax=ax)
-            ax = df[[
-                PrintControlChart.raise_user_error('upl',
-                    raise_exception=False),
+            ax = df[[gettext('lims.msg_upl'),
                 ]].plot(kind='line', color='yellow', rot=45, fontsize=7,
                     figsize=(10, 7.5), linestyle='--', ax=ax)
-            ax = df[[
-                PrintControlChart.raise_user_error('cl',
-                    raise_exception=False),
+            ax = df[[gettext('lims.msg_cl'),
                 ]].plot(kind='line', color='green', rot=45, fontsize=7,
                     figsize=(10, 7.5), linestyle='-', ax=ax)
-            ax = df[[
-                PrintControlChart.raise_user_error('lpl',
-                    raise_exception=False),
+            ax = df[[gettext('lims.msg_lpl'),
                 ]].plot(kind='line', color='yellow', rot=45, fontsize=7,
                     figsize=(10, 7.5), linestyle='--', ax=ax)
-            ax = df[[
-                PrintControlChart.raise_user_error('lwl',
-                    raise_exception=False),
+            ax = df[[gettext('lims.msg_lwl'),
                 ]].plot(kind='line', color='orange', rot=45, fontsize=7,
                     figsize=(10, 7.5), linestyle='-', ax=ax)
-            ax = df[[
-                PrintControlChart.raise_user_error('lcl',
-                    raise_exception=False),
+            ax = df[[gettext('lims.msg_lcl'),
                 ]].plot(kind='line', color='red', rot=45, fontsize=7,
                     figsize=(10, 7.5), linestyle='-', ax=ax)
-            ax = df[[
-                PrintControlChart.raise_user_error('result',
-                    raise_exception=False),
+            ax = df[[gettext('lims.msg_result'),
                 ]].plot(kind='line', color='blue', rot=45, fontsize=7,
                     figsize=(10, 7.5), marker='o', linestyle='-', ax=ax)
 

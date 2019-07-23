@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<tryton>
+    <data group="1">
+        <record model="ir.message" id="msg_not_module">
+            <field name="text">No module for importer type "%(module)s"</field>
+        </record>
+        <record model="ir.message" id="msg_not_implemented">
+            <field name="text">The function "%(function)s" is not implemented for this importer</field>
+        </record>
+        <record model="ir.message" id="msg_invalid_alias">
+            <field name="text">Invalid symbol "%(symbol)s" in formula "%(name)s".</field>
+        </record>
+        <record model="ir.message" id="msg_invalid_store">
+            <field name="text">Formula "%(formula)s" cannot be stored because type is not set.</field>
+        </record>
+        <record model="ir.message" id="msg_end_date">
+            <field name="text">End date cannot be empty</field>
+        </record>
+        <record model="ir.message" id="msg_end_date_start_date">
+            <field name="text">End date cannot be lower than Start date</field>
+        </record>
+        <record model="ir.message" id="msg_inj_date_start_date">
+            <field name="text">Injection date cannot be lower than Start date</field>
+        </record>
+        <record model="ir.message" id="msg_inj_date_end_date">
+            <field name="text">Injection date cannot be upper than End date</field>
+        </record>
+        <record model="ir.message" id="msg_professionals">
+            <field name="text">Professional(s) with code %(code)s not identified</field>
+        </record>
+    </data>
+</tryton>

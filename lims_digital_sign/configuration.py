@@ -6,7 +6,7 @@
 from trytond.model import fields
 from trytond.pool import PoolMeta
 
-__all__ = ['Configuration']
+__all__ = ['Configuration', 'Cron']
 
 
 class Configuration(metaclass=PoolMeta):
@@ -18,3 +18,15 @@ class Configuration(metaclass=PoolMeta):
     mail_ack_report_body = fields.Text('Email body of Acknowledgment of'
         ' results report',
         help='<SAMPLES> will be replaced by the list of sample\'s labels')
+
+
+class Cron(metaclass=PoolMeta):
+    __name__ = 'ir.cron'
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls.method.selection.extend([
+                ('lims.results_repor|cron_digital_signs',
+                    "Cron Lims Digital Sign"),
+                ])

@@ -13,6 +13,7 @@ from . import lims
 def register():
     Pool.register(
         configuration.Configuration,
+        configuration.Cron,
         party.Party,
         party.Address,
         invoice.InvoiceContact,

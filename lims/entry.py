@@ -17,6 +17,8 @@ from trytond.tools import get_smtp_server
 from trytond.config import config
 from trytond.report import Report
 from trytond.rpc import RPC
+from trytond.exceptions import UserError, UserWarning
+from trytond.i18n import gettext
 
 __all__ = ['Entry', 'EntryInvoiceContact', 'EntryReportContact',
     'EntryAcknowledgmentContact', 'EntrySuspensionReason',
@@ -140,19 +142,6 @@ class Entry(Workflow, ModelSQL, ModelView):
             'on_hold': {
                 'invisible': ~Eval('state').in_(['draft']),
                 },
-            })
-        cls._error_messages.update({
-            'no_entry_sequence': ('There is no entry sequence for '
-                'the work year "%s".'),
-            'delete_entry': ('You can not delete entry "%s" because '
-                'it is not in draft state'),
-            'not_fraction': ('You can not confirm entry "%s" because '
-                'has not fractions'),
-            'missing_entry_contacts': ('Missing contacts in entry "%s"'),
-            'enac_acredited': ('The analysis marked with * are not '
-                'covered by the Accreditation.'),
-            'english_report': ('Do not forget to load the translations '
-                'into English'),
             })
 
     @staticmethod
@@ -382,8 +371,8 @@ class Entry(Workflow, ModelSQL, ModelView):
         workyear = LabWorkYear(workyear_id)
         sequence = workyear.get_sequence('entry')
         if not sequence:
-            cls.raise_user_error('no_entry_sequence',
-                (workyear.rec_name,))
+            raise UserError(gettext('lims.msg_no_entry_sequence',
+                work_year=workyear.rec_name))
 
         vlist = [x.copy() for x in vlist]
         for values in vlist:
@@ -487,12 +476,16 @@ class Entry(Workflow, ModelSQL, ModelView):
         if (not self.invoice_contacts or
                 not self.report_contacts or
                 not self.acknowledgment_contacts):
-            self.raise_user_error('missing_entry_contacts', (self.rec_name,))
+            raise UserError(gettext(
+                'lims.msg_missing_entry_contacts', entry=self.rec_name))
 
     def warn_english_report(self):
+        Warning = Pool().get('res.user.warning')
+
         if self.english_report:
-            self.raise_user_warning('lims_english_report@%s' %
-                    self.number, 'english_report')
+            key = 'lims_english_report@%s' % self.number
+            if Warning.check(key):
+                raise UserWarning(gettext('lims.english_report'))
 
     def print_report(self):
         if self.ack_report_cache:
@@ -608,14 +601,16 @@ class Entry(Workflow, ModelSQL, ModelView):
             Company = Pool().get('company.company')
             companies = Company.search([])
             if self.party.id not in [c.party.id for c in companies]:
-                self.raise_user_error('not_fraction', (self.rec_name,))
+                raise UserError(gettext(
+                    'lims.msg_not_fraction', entry=self.rec_name))
         Fraction.confirm(fractions)
 
     @classmethod
     def check_delete(cls, entries):
         for entry in entries:
             if entry.state != 'draft':
-                cls.raise_user_error('delete_entry', (entry.rec_name,))
+                raise UserError(gettext(
+                    'lims.msg_delete_entry', entry=entry.rec_name))
 
     @classmethod
     def delete(cls, entries):
@@ -702,11 +697,6 @@ class EntrySuspensionReason(ModelSQL, ModelView):
             ('code_uniq', Unique(t, t.code),
                 'Suspension reason code must be unique'),
             ]
-        cls._error_messages.update({
-            'default_suspension_reason':
-                'There is already a default '
-                'suspension reason',
-            })
 
     @staticmethod
     def default_by_default():
@@ -742,7 +732,7 @@ class EntrySuspensionReason(ModelSQL, ModelView):
                 ('id', '!=', self.id),
                 ])
             if reasons:
-                self.raise_user_error('default_suspension_reason')
+                raise UserError(gettext('lims.msg_default_suspension_reason'))
 
 
 class EntryDetailAnalysis(ModelSQL, ModelView):
@@ -801,10 +791,6 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     def __setup__(cls):
         super(EntryDetailAnalysis, cls).__setup__()
         cls._order.insert(0, ('service', 'DESC'))
-        cls._error_messages.update({
-            'delete_detail': ('You can not delete the analysis detail because '
-                'its fraction is confirmed'),
-            })
 
     @classmethod
     def copy(cls, details, default=None):
@@ -819,7 +805,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     def check_delete(cls, details):
         for detail in details:
             if detail.fraction and detail.fraction.confirmed:
-                cls.raise_user_error('delete_detail')
+                raise UserError(gettext('lims.msg_delete_detail'))
 
     @classmethod
     def delete(cls, details):
@@ -835,7 +821,6 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         Method = pool.get('lims.lab.method')
         WaitingTime = pool.get('lims.lab.method.results_waiting')
         AnalysisLaboratory = pool.get('lims.analysis-laboratory')
-        Fraction = pool.get('lims.fraction')
         Notebook = pool.get('lims.notebook')
         Company = pool.get('company.company')
 
@@ -927,8 +912,8 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         if not lines_create:
             companies = Company.search([])
             if fraction.party.id not in [c.party.id for c in companies]:
-                Fraction.raise_user_error('not_services',
-                    (fraction.rec_name,))
+                raise UserError(gettext(
+                    'lims.msg_not_services', fraction=fraction.rec_name))
 
         with Transaction().set_user(0):
             notebook = Notebook.search([
@@ -1455,8 +1440,8 @@ class AcknowledgmentOfReceipt(Report):
 
                     for v in s_methods.values():
                         if v['enac']:
-                            v['enac_label'] = (Entry.raise_user_error(
-                                'enac_acredited', raise_exception=False))
+                            v['enac_label'] = gettext(
+                                'lims.msg_enac_acredited')
                         else:
                             v['enac_label'] = ''
                         sorted_analysis = sorted(v['analysis'],

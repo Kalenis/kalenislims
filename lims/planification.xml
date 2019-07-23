@@ -302,16 +302,9 @@
 <!-- Cron -->
 
         <record model="ir.cron" id="cron_lims_process_waiting_planifications">
-            <field name="name">Lims Process Waiting Planifications</field>
-            <field name="request_user" ref="res.user_admin"/>
-            <field name="user" ref="user_planification_process"/>
-            <field name="active" eval="True"/>
             <field name="interval_number" eval="1"/>
             <field name="interval_type">minutes</field>
-            <field name="number_calls" eval="-1"/>
-            <field name="repeat_missed" eval="False"/>
-            <field name="model">lims.planification</field>
-            <field name="function">process_waiting_planifications</field>
+            <field name="method">lims.planification|process_waiting_planifications</field>
         </record>
 
 <!-- Sequence -->

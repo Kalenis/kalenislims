@@ -9,12 +9,14 @@ from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
 from trytond.modules.company.model import (
     CompanyMultiValueMixin, CompanyValueMixin)
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['NotebookView', 'NotebookViewColumn', 'UserRole', 'UserRoleGroup',
     'Printer', 'User', 'UserLaboratory', 'Configuration',
     'ConfigurationLaboratory', 'ConfigurationSequence',
     'ConfigurationProductCategory', 'LabWorkYear', 'LabWorkYearSequence',
-    'ModelDoc', 'Model']
+    'Cron', 'ModelDoc', 'Model']
 sequence_names = [
     'entry_sequence', 'sample_sequence', 'service_sequence',
     'results_report_sequence']
@@ -428,11 +430,6 @@ class LabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
     def __setup__(cls):
         super(LabWorkYear, cls).__setup__()
         cls._order.insert(0, ('start_date', 'ASC'))
-        cls._error_messages.update({
-                'workyear_overlaps': ('Work year "%(first)s" and '
-                    '"%(second)s" overlap.'),
-                'no_workyear_date': 'No work year defined for "%s".',
-                })
 
     @classmethod
     def multivalue_model(cls, field):
@@ -476,10 +473,10 @@ class LabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
         second_id = cursor.fetchone()
         if second_id:
             second = self.__class__(second_id[0])
-            self.raise_user_error('workyear_overlaps', {
-                    'first': self.rec_name,
-                    'second': second.rec_name,
-                    })
+            raise UserError(gettext('lims.msg_workyear_overlaps',
+                    first=self.rec_name,
+                    second=second.rec_name,
+                    ))
 
     @classmethod
     def find(cls, date=None, exception=True):
@@ -497,7 +494,8 @@ class LabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
             if exception:
                 lang = Lang.get()
                 formatted = lang.strftime(date)
-                cls.raise_user_error('no_workyear_date', (formatted,))
+                raise UserError(gettext(
+                    'lims.msg_no_workyear_date', date=formatted))
             else:
                 return None
         return workyears[0].id
@@ -561,6 +559,22 @@ class LabWorkYearSequence(ModelSQL, CompanyValueMixin):
             return ModelData.get_id('lims.service', 'seq_service')
         except KeyError:
             return None
+
+
+class Cron(metaclass=PoolMeta):
+    __name__ = 'ir.cron'
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls.method.selection.extend([
+                ('lims.entry|cron_acknowledgment_of_receipt',
+                    "Lims Acknowledgment of Receipt (Samples)"),
+                ('lims.fraction|confirm_waiting_fractions',
+                    "Lims Confirm Waiting Entries"),
+                ('lims.planification|process_waiting_planifications',
+                    "Lims Process Waiting Planification"),
+                ])
 
 
 class ModelDoc(ModelSQL, ModelView):

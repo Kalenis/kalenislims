@@ -69,32 +69,12 @@
             <field name="group" ref="group_lims_account_invoice"/>
         </record>
 
-<!-- Users -->
-
-        <record model="res.user" id="user_send_invoice">
-            <field name="login">user_cron_send_invoice</field>
-            <field name="name">Cron Send Of Invoice</field>
-            <field name="signature"></field>
-            <field name="active" eval="False"/>
-        </record>
-        <record model="res.user-res.group" id="user_send_invoice_group_lims_account_invoice">
-            <field name="user" ref="user_send_invoice"/>
-            <field name="group" ref="group_lims_account_invoice"/>
-        </record>
-
 <!-- Cron Send Of Invoice -->
 
         <record model="ir.cron" id="cron_account_invoice_send_invoice">
-            <field name="name">Send Invoice</field>
-            <field name="request_user" ref="res.user_admin"/>
-            <field name="user" ref="user_send_invoice"/>
-            <field name="active" eval="True"/>
             <field name="interval_number" eval="1"/>
             <field name="interval_type">days</field>
-            <field name="number_calls" eval="-1"/>
-            <field name="repeat_missed" eval="False"/>
-            <field name="model">account.invoice</field>
-            <field name="function">cron_send_invoice</field>
+            <field name="method">account.invoice|cron_send_invoice</field>
         </record>
 
         <record model="ir.action.wizard" id="wiz_send_invoice">

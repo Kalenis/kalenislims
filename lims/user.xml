@@ -178,30 +178,6 @@ this repository contains the full copyright notices and license terms. -->
             <field name="group" ref="group_lims_control"/>
         </record>
 
-<!-- Users -->
-
-        <record model="res.user" id="user_acknowledgment_of_receipt">
-            <field name="login">user_cron_acknowledgment_of_receipt</field>
-            <field name="name">Cron Lims Acknowledgment Of Receipt</field>
-            <field name="signature"></field>
-            <field name="active" eval="False"/>
-        </record>
-        <record model="res.user-res.group" id="user_acknowledgment_of_receipt_group_entry">
-            <field name="user" ref="user_acknowledgment_of_receipt"/>
-            <field name="group" ref="group_lims_entry"/>
-        </record>
-
-        <record model="res.user" id="user_entry_confirm">
-            <field name="login">user_cron_entry_confirm</field>
-            <field name="name">Cron Lims Entry Confirm</field>
-            <field name="signature"></field>
-            <field name="active" eval="False"/>
-        </record>
-        <record model="res.user-res.group" id="user_entry_confirm_group_entry">
-            <field name="user" ref="user_entry_confirm"/>
-            <field name="group" ref="group_lims_entry"/>
-        </record>
-
 <!-- Groups -->
 
         <record model="res.group" id="group_lims_blind_sample_readonly">
@@ -223,19 +199,6 @@ this repository contains the full copyright notices and license terms. -->
         </record>
         <record model="res.user-res.group" id="user_admin_group_lims_planification">
             <field name="user" ref="res.user_admin"/>
-            <field name="group" ref="group_lims_planification"/>
-        </record>
-
-<!-- Users -->
-
-        <record model="res.user" id="user_planification_process">
-            <field name="login">user_cron_planification_process</field>
-            <field name="name">Cron Lims Planification Process</field>
-            <field name="signature"></field>
-            <field name="active" eval="False"/>
-        </record>
-        <record model="res.user-res.group" id="user_planification_process_group_planification">
-            <field name="user" ref="user_planification_process"/>
             <field name="group" ref="group_lims_planification"/>
         </record>
 

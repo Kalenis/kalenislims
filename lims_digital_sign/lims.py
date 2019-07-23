@@ -16,6 +16,7 @@ from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.tools import get_smtp_server
 from trytond.config import config as tconfig
+from trytond.i18n import gettext
 from .tokenclient import GetToken
 
 __all__ = ['ResultsReportVersionDetail', 'ResultsReport',
@@ -60,13 +61,6 @@ class ResultsReport(metaclass=PoolMeta):
     signed_date = fields.DateTime('Signed date', readonly=True)
     sent = fields.Boolean('Sent', readonly=True)
     sent_date = fields.DateTime('Sent date', readonly=True)
-
-    @classmethod
-    def __setup__(cls):
-        super(ResultsReport, cls).__setup__()
-        cls._error_messages.update({
-            'polisample': 'Polisample',
-            })
 
     @classmethod
     def _get_modified_fields(cls):
@@ -263,8 +257,7 @@ class ResultsReport(metaclass=PoolMeta):
             if len(sample_list) == 1:
                 label = '%s' % sample_list[0]
             else:
-                label = self.raise_user_error('polisample',
-                    raise_exception=False)
+                label = gettext('lims_digital_sign.msg_polisample')
             subject = str('%s %s (%s)' % (
                 config.mail_ack_report_subject,
                 self.number, label)).strip()

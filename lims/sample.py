@@ -14,6 +14,8 @@ from trytond.pool import Pool
 from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or
 from trytond.transaction import Transaction
 from trytond.report import Report
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['Zone', 'Variety', 'MatrixVariety', 'PackagingIntegrity',
     'PackagingType', 'FractionType', 'SampleProducer', 'Service',
@@ -362,14 +364,6 @@ class Service(ModelSQL, ModelView):
     def __setup__(cls):
         super(Service, cls).__setup__()
         cls._order.insert(0, ('number', 'DESC'))
-        cls._error_messages.update({
-            'no_service_sequence': ('There is no service sequence for '
-                'the work year "%s".'),
-            'delete_service': ('You can not delete service "%s" because '
-                'its fraction is confirmed'),
-            'duplicated_analysis': ('The analysis "%(analysis)s" is assigned '
-                'more than once to the fraction "%(fraction)s"'),
-            })
 
     @staticmethod
     def default_urgent():
@@ -411,10 +405,11 @@ class Service(ModelSQL, ModelView):
             for a_id in new_analysis_ids:
                 if a_id in analysis_ids:
                     analysis = Analysis(a_id)
-                    self.raise_user_error('duplicated_analysis', {
-                        'analysis': analysis.rec_name,
-                        'fraction': self.fraction.rec_name,
-                        })
+                    raise UserError(gettext(
+                        'lims.msg_duplicated_analysis_service',
+                        analysis=analysis.rec_name,
+                        fraction=self.fraction.rec_name,
+                        ))
 
     @classmethod
     def create(cls, vlist):
@@ -427,8 +422,8 @@ class Service(ModelSQL, ModelView):
         workyear = LabWorkYear(workyear_id)
         sequence = workyear.get_sequence('service')
         if not sequence:
-            cls.raise_user_error('no_service_sequence',
-                (workyear.rec_name,))
+            raise UserError(gettext('lims.msg_no_service_sequence',
+                work_year=workyear.rec_name))
 
         vlist = [x.copy() for x in vlist]
         for values in vlist:
@@ -489,7 +484,8 @@ class Service(ModelSQL, ModelView):
     def check_delete(cls, services):
         for service in services:
             if service.fraction and service.fraction.confirmed:
-                cls.raise_user_error('delete_service', (service.rec_name,))
+                raise UserError(gettext(
+                    'lims.msg_delete_service', service=service.rec_name))
 
     @staticmethod
     def update_analysis_detail(services):
@@ -1318,18 +1314,6 @@ class Fraction(ModelSQL, ModelView):
                     Bool(Eval('services'))),
                 },
             })
-        cls._error_messages.update({
-            'missing_fraction_product': ('Missing "Fraction product" '
-                'on Lims configuration'),
-            'delete_fraction': ('You can not delete fraction "%s" because '
-                'it is confirmed'),
-            'duplicated_analysis': ('The analysis "%s" is assigned more'
-                ' than once'),
-            'not_services': ('You can not confirm fraction "%s" because '
-                'has not services'),
-            'not_divided': ('You can not confirm fraction because '
-                'is not yet divided'),
-            })
 
     @staticmethod
     def default_packages_quantity():
@@ -1419,7 +1403,8 @@ class Fraction(ModelSQL, ModelView):
     def check_delete(cls, fractions):
         for fraction in fractions:
             if fraction.confirmed:
-                cls.raise_user_error('delete_fraction', (fraction.rec_name,))
+                raise UserError(gettext(
+                    'lims.msg_delete_fraction', fraction=fraction.rec_name))
 
     @classmethod
     def delete(cls, fractions):
@@ -1782,7 +1767,7 @@ class Fraction(ModelSQL, ModelView):
                     ('service', '=', service.id),
                     ('report_grouper', '!=', 0),
                     ]) == 0):
-                cls.raise_user_error('not_divided')
+                raise UserError(gettext('lims.msg_not_divided'))
 
     @classmethod
     @ModelView.button
@@ -1855,7 +1840,7 @@ class Fraction(ModelSQL, ModelView):
         if config_.fraction_product:
             product = config_.fraction_product
         else:
-            self.raise_user_error('missing_fraction_product')
+            raise UserError(gettext('lims.msg_missing_fraction_product'))
         today = Date.today()
         company = User(Transaction().user).company
         if self.sample.entry.party.customer_location:
@@ -1921,9 +1906,9 @@ class Fraction(ModelSQL, ModelView):
                         if a_id in analysis_ids:
                             analysis = Analysis(a_id)
                             self.duplicated_analysis_message = (
-                                self.raise_user_error('duplicated_analysis',
-                                    (analysis.rec_name,),
-                                    raise_exception=False))
+                                gettext(
+                                    'lims.msg_duplicated_analysis_fraction',
+                                    analysis=analysis.rec_name))
                             return
                     analysis_ids.extend(new_analysis_ids)
 
@@ -2321,14 +2306,6 @@ class Sample(ModelSQL, ModelView):
     def __setup__(cls):
         super(Sample, cls).__setup__()
         cls._order.insert(0, ('number', 'DESC'))
-        cls._error_messages.update({
-            'no_sample_sequence': ('There is no sample sequence for '
-                'the work year "%s".'),
-            'duplicated_label': ('The label "%s" is already present in '
-                'another sample'),
-            'delete_sample': ('You can not delete sample "%s" because '
-                'its entry is not in draft state'),
-            })
 
     @staticmethod
     def default_date():
@@ -2410,8 +2387,8 @@ class Sample(ModelSQL, ModelView):
         workyear = LabWorkYear(workyear_id)
         sequence = workyear.get_sequence('sample')
         if not sequence:
-            cls.raise_user_error('no_sample_sequence',
-                (workyear.rec_name,))
+            raise UserError(gettext('lims.msg_no_sample_sequence',
+                work_year=workyear.rec_name))
 
         vlist = [x.copy() for x in vlist]
         for values in vlist:
@@ -2423,6 +2400,7 @@ class Sample(ModelSQL, ModelView):
 
     def warn_duplicated_label(self):
         return  # deactivated
+        Warning = Pool().get('res.user.warning')
         if self.label:
             duplicated = self.search([
                 ('entry', '=', self.entry.id),
@@ -2430,8 +2408,10 @@ class Sample(ModelSQL, ModelView):
                 ('id', '!=', self.id),
                 ])
             if duplicated:
-                self.raise_user_warning('lims_sample_label@%s' %
-                    self.number, 'duplicated_label', self.label)
+                key = 'lims_sample_label@%s' % self.number
+                if Warning.check(key):
+                    raise UserWarning(gettext(
+                        'lims.duplicated_label', label=self.label))
 
     @classmethod
     def write(cls, *args):
@@ -2584,7 +2564,8 @@ class Sample(ModelSQL, ModelView):
     def check_delete(cls, samples):
         for sample in samples:
             if sample.entry and sample.entry.state != 'draft':
-                cls.raise_user_error('delete_sample', (sample.rec_name,))
+                raise UserError(
+                    gettext('lims.msg_delete_sample', sample=sample.rec_name))
 
     @classmethod
     def delete(cls, samples):
@@ -2855,14 +2836,6 @@ class ManageServices(Wizard):
             ])
     ok = StateTransition()
 
-    @classmethod
-    def __setup__(cls):
-        super(ManageServices, cls).__setup__()
-        cls._error_messages.update({
-            'counter_sample_date':
-                'Reverse counter sample storage to enter the service ',
-            })
-
     def default_start(self, fields):
         Fraction = Pool().get('lims.fraction')
 
@@ -2895,7 +2868,7 @@ class ManageServices(Wizard):
         if fraction.countersample_date is None:
             return 'start'
         else:
-            self.raise_user_error('counter_sample_date')
+            raise UserError(gettext('lims.msg_counter_sample_date'))
         return 'end'
 
     def transition_ok(self):
@@ -3249,13 +3222,6 @@ class CountersampleStorage(Wizard):
     storage = StateTransition()
     open = StateAction('stock.act_shipment_internal_form')
 
-    @classmethod
-    def __setup__(cls):
-        super(CountersampleStorage, cls).__setup__()
-        cls._error_messages.update({
-            'reference': 'Countersamples Storage',
-            })
-
     def default_start(self, fields):
         res = {}
         for field in ('report_date_from', 'report_date_to',
@@ -3443,8 +3409,7 @@ class CountersampleStorage(Wizard):
 
         with Transaction().set_user(0, set_context=True):
             shipment = ShipmentInternal()
-        shipment.reference = CountersampleStorage.raise_user_error(
-            'reference', raise_exception=False)
+        shipment.reference = gettext('lims.msg_reference')
         shipment.planned_date = planned_date
         shipment.planned_start_date = planned_date
         shipment.company = company
@@ -3456,7 +3421,6 @@ class CountersampleStorage(Wizard):
     def _get_stock_moves(self, fractions):
         pool = Pool()
         Config = pool.get('lims.configuration')
-        Fraction = pool.get('lims.fraction')
         User = pool.get('res.user')
         Move = pool.get('stock.move')
 
@@ -3464,7 +3428,7 @@ class CountersampleStorage(Wizard):
         if config_.fraction_product:
             product = config_.fraction_product
         else:
-            Fraction.raise_user_error('missing_fraction_product')
+            raise UserError(gettext('lims.msg_missing_fraction_product'))
         company = User(Transaction().user).company
 
         from_location = self.start.location_origin
@@ -3569,13 +3533,6 @@ class CountersampleStorageRevert(Wizard):
     revert = StateTransition()
     open = StateAction('stock.act_shipment_internal_form')
 
-    @classmethod
-    def __setup__(cls):
-        super(CountersampleStorageRevert, cls).__setup__()
-        cls._error_messages.update({
-            'reference': 'Countersamples Storage Reversion',
-            })
-
     def default_start(self, fields):
         res = {}
         for field in ('date_from', 'date_to'):
@@ -3651,8 +3608,7 @@ class CountersampleStorageRevert(Wizard):
 
         with Transaction().set_user(0, set_context=True):
             shipment = ShipmentInternal()
-        shipment.reference = CountersampleStorageRevert.raise_user_error(
-            'reference', raise_exception=False)
+        shipment.reference = gettext('lims.msg_reference_reversion')
         shipment.planned_date = today
         shipment.planned_start_date = today
         shipment.company = company
@@ -3664,7 +3620,6 @@ class CountersampleStorageRevert(Wizard):
     def _get_stock_moves(self, fractions):
         pool = Pool()
         Config = pool.get('lims.configuration')
-        Fraction = pool.get('lims.fraction')
         User = pool.get('res.user')
         Date = pool.get('ir.date')
         Move = pool.get('stock.move')
@@ -3673,7 +3628,7 @@ class CountersampleStorageRevert(Wizard):
         if config_.fraction_product:
             product = config_.fraction_product
         else:
-            Fraction.raise_user_error('missing_fraction_product')
+            raise UserError(gettext('lims.msg_missing_fraction_product'))
         company = User(Transaction().user).company
 
         from_location = self.start.location_origin
@@ -3764,13 +3719,6 @@ class CountersampleDischarge(Wizard):
     discharge = StateTransition()
     open = StateAction('stock.act_shipment_internal_form')
 
-    @classmethod
-    def __setup__(cls):
-        super(CountersampleDischarge, cls).__setup__()
-        cls._error_messages.update({
-            'reference': 'Countersamples Discharge',
-            })
-
     def default_start(self, fields):
         res = {}
         for field in ('expiry_date_from', 'expiry_date_to',
@@ -3848,8 +3796,7 @@ class CountersampleDischarge(Wizard):
 
         with Transaction().set_user(0, set_context=True):
             shipment = ShipmentInternal()
-        shipment.reference = CountersampleDischarge.raise_user_error(
-            'reference', raise_exception=False)
+        shipment.reference = gettext('lims.msg_reference_discharge')
         shipment.planned_date = planned_date
         shipment.planned_start_date = planned_date
         shipment.company = company
@@ -3861,7 +3808,6 @@ class CountersampleDischarge(Wizard):
     def _get_stock_moves(self, fractions):
         pool = Pool()
         Config = pool.get('lims.configuration')
-        Fraction = pool.get('lims.fraction')
         User = pool.get('res.user')
         Move = pool.get('stock.move')
 
@@ -3869,7 +3815,7 @@ class CountersampleDischarge(Wizard):
         if config_.fraction_product:
             product = config_.fraction_product
         else:
-            Fraction.raise_user_error('missing_fraction_product')
+            raise UserError(gettext('lims.msg_missing_fraction_product'))
         company = User(Transaction().user).company
 
         from_location = self.start.location_origin
@@ -3959,13 +3905,6 @@ class FractionDischarge(Wizard):
     discharge = StateTransition()
     open = StateAction('stock.act_shipment_internal_form')
 
-    @classmethod
-    def __setup__(cls):
-        super(FractionDischarge, cls).__setup__()
-        cls._error_messages.update({
-            'reference': 'Fractions Discharge',
-            })
-
     def default_start(self, fields):
         res = {}
         for field in ('date_from', 'date_to'):
@@ -4049,8 +3988,7 @@ class FractionDischarge(Wizard):
 
         with Transaction().set_user(0, set_context=True):
             shipment = ShipmentInternal()
-        shipment.reference = FractionDischarge.raise_user_error(
-            'reference', raise_exception=False)
+        shipment.reference = gettext('lims.msg_reference_fractions_discharge')
         shipment.planned_date = planned_date
         shipment.planned_start_date = planned_date
         shipment.company = company
@@ -4062,7 +4000,6 @@ class FractionDischarge(Wizard):
     def _get_stock_moves(self, fractions):
         pool = Pool()
         Config = pool.get('lims.configuration')
-        Fraction = pool.get('lims.fraction')
         User = pool.get('res.user')
         Move = pool.get('stock.move')
 
@@ -4070,7 +4007,7 @@ class FractionDischarge(Wizard):
         if config_.fraction_product:
             product = config_.fraction_product
         else:
-            Fraction.raise_user_error('missing_fraction_product')
+            raise UserError(gettext('lims.msg_missing_fraction_product'))
         company = User(Transaction().user).company
 
         from_location = self.start.location_origin
@@ -4158,13 +4095,6 @@ class FractionDischargeRevert(Wizard):
     revert = StateTransition()
     open = StateAction('stock.act_shipment_internal_form')
 
-    @classmethod
-    def __setup__(cls):
-        super(FractionDischargeRevert, cls).__setup__()
-        cls._error_messages.update({
-            'reference': 'Fractions Discharge Reversion',
-            })
-
     def default_start(self, fields):
         res = {}
         for field in ('date_from', 'date_to'):
@@ -4238,8 +4168,7 @@ class FractionDischargeRevert(Wizard):
 
         with Transaction().set_user(0, set_context=True):
             shipment = ShipmentInternal()
-        shipment.reference = FractionDischargeRevert.raise_user_error(
-            'reference', raise_exception=False)
+        shipment.reference = gettext('lims.msg_reference')
         shipment.planned_date = today
         shipment.planned_start_date = today
         shipment.company = company
@@ -4251,7 +4180,6 @@ class FractionDischargeRevert(Wizard):
     def _get_stock_moves(self, fractions):
         pool = Pool()
         Config = pool.get('lims.configuration')
-        Fraction = pool.get('lims.fraction')
         User = pool.get('res.user')
         Date = pool.get('ir.date')
         Move = pool.get('stock.move')
@@ -4260,7 +4188,7 @@ class FractionDischargeRevert(Wizard):
         if config_.fraction_product:
             product = config_.fraction_product
         else:
-            Fraction.raise_user_error('missing_fraction_product')
+            raise UserError(gettext('lims.msg_missing_fraction_product'))
         company = User(Transaction().user).company
 
         from_location = self.start.location_origin

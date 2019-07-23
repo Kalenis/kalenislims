@@ -6,7 +6,7 @@
 from trytond.model import fields
 from trytond.pool import PoolMeta
 
-__all__ = ['Configuration']
+__all__ = ['Configuration', 'Cron']
 
 
 class Configuration(metaclass=PoolMeta):
@@ -15,3 +15,14 @@ class Configuration(metaclass=PoolMeta):
     mail_send_invoice_subject = fields.Char('Email subject of Invoice report',
         help="In the text will be added suffix with the invoice report number")
     mail_send_invoice_body = fields.Text('Email body of Invoice report')
+
+
+class Cron(metaclass=PoolMeta):
+    __name__ = 'ir.cron'
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls.method.selection.extend([
+                ('account.invoice|cron_send_invoice', "Cron Send Of Invoice"),
+                ])

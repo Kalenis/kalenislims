@@ -35,12 +35,12 @@ def get_require_version(name):
     return require
 
 
-version = '5.0.0'
+version = '5.2.0'
 major_version, minor_version, _ = version.split('.', 2)
 major_version = int(major_version)
 minor_version = int(minor_version)
 
-requires = ['pytz', 'xlrd', 'xlutils', 'PyPDF2']
+requires = ['pytz', 'xlrd', 'xlutils', 'PyPDF2', 'unidecode']
 packages = []
 package_dir = {}
 package_data = {}

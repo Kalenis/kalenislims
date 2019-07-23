@@ -6,6 +6,8 @@ from trytond.model import ModelView, ModelSQL, fields, Unique
 from trytond.pool import Pool
 from trytond.transaction import Transaction
 from trytond.pyson import Eval, Bool
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['LaboratoryProfessional', 'Laboratory', 'LaboratoryCVCorrection',
     'LabMethod', 'LabMethodWaitingTime', 'LabDeviceType', 'LabDevice',
@@ -360,14 +362,6 @@ class LabDeviceLaboratory(ModelSQL, ModelView):
         required=True)
     physically_here = fields.Boolean('Physically here')
 
-    @classmethod
-    def __setup__(cls):
-        super(LabDeviceLaboratory, cls).__setup__()
-        cls._error_messages.update({
-            'physically_elsewhere': ('This Device is physically in another'
-            ' Laboratory'),
-            })
-
     @staticmethod
     def default_physically_here():
         return True
@@ -386,4 +380,4 @@ class LabDeviceLaboratory(ModelSQL, ModelView):
                 ('id', '!=', self.id),
                 ])
             if laboratories:
-                self.raise_user_error('physically_elsewhere')
+                raise UserError(gettext('lims.msg_physically_elsewhere'))

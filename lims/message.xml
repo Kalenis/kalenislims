@@ -1,0 +1,407 @@
+<?xml version="1.0"?>
+<tryton>
+    <data group="1">
+        <record model="ir.message" id="msg_limits">
+            <field name="text">Quantification limit must be greater than Detection limit</field>
+        </record>
+        <record model="ir.message" id="msg_default_typification">
+            <field name="text">There is already a default typification for this combination of product type, matrix and analysis</field>
+        </record>
+        <record model="ir.message" id="msg_not_default_typification">
+            <field name="text">This typification should be the default</field>
+        </record>
+        <record model="ir.message" id="msg_description_uniq">
+            <field name="text">Analysis description must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_not_laboratory">
+            <field name="text">Must define a Laboratory</field>
+        </record>
+        <record model="ir.message" id="msg_set_laboratories">
+            <field name="text">A Set can be assigned to a single laboratory</field>
+        </record>
+        <record model="ir.message" id="msg_analysis_laboratory">
+            <field name="text">The "%(analysis)s" analysis is not defined in laboratory "%(laboratory)s"</field>
+        </record>
+        <record model="ir.message" id="msg_not_laboratory_change">
+            <field name="text">You can not change the laboratory because the analysis is included in a set/group with this laboratory</field>
+        </record>
+        <record model="ir.message" id="msg_end_date">
+            <field name="text">The leaving date cannot be lower than entry date</field>
+        </record>
+        <record model="ir.message" id="msg_end_date_wrong">
+            <field name="text">End date should not be greater than the current date</field>
+        </record>
+        <record model="ir.message" id="msg_duplicated_analysis">
+            <field name="text">The analysis "%(analysis)s" is already included</field>
+        </record>
+        <record model="ir.message" id="msg_not_set_laboratory">
+            <field name="text">No Laboratory loaded for the Set</field>
+        </record>
+        <record model="ir.message" id="msg_typificated_method">
+            <field name="text">You can not delete method "%(method)s" because is typificated</field>
+        </record>
+        <record model="ir.message" id="msg_default_device">
+            <field name="text">There is already a default device for this analysis on this laboratory</field>
+        </record>
+        <record model="ir.message" id="msg_active_version">
+            <field name="text">Only one version can be active for each technical scope</field>
+        </record>
+        <record model="ir.message" id="msg_workyear_overlaps">
+            <field name="text">Work year "%(first)s" and "%(second)s" overlap.</field>
+        </record>
+        <record model="ir.message" id="msg_no_workyear_date">
+            <field name="text">No work year defined for "%(date)s".</field>
+        </record>
+        <record model="ir.message" id="msg_default_range_type">
+            <field name="text">There is already a default origin for this use</field>
+        </record>
+        <record model="ir.message" id="msg_number">
+            <field name="text">Measurement</field>
+        </record>
+        <record model="ir.message" id="msg_result">
+            <field name="text">Result</field>
+        </record>
+        <record model="ir.message" id="msg_ucl">
+            <field name="text">UCL (M+3D)</field>
+        </record>
+        <record model="ir.message" id="msg_uwl">
+            <field name="text">UWL (M+2D)</field>
+        </record>
+        <record model="ir.message" id="msg_upl">
+            <field name="text">UPL (M+D)</field>
+        </record>
+        <record model="ir.message" id="msg_cl">
+            <field name="text">CL (M)</field>
+        </record>
+        <record model="ir.message" id="msg_lpl">
+            <field name="text">LPL (M-D)</field>
+        </record>
+        <record model="ir.message" id="msg_lwl">
+            <field name="text">LWL (M-2D)</field>
+        </record>
+        <record model="ir.message" id="msg_lcl">
+            <field name="text">LCL (M-3D)</field>
+        </record>
+        <record model="ir.message" id="msg_cv">
+            <field name="text">CV (%)</field>
+        </record>
+        <record model="ir.message" id="msg_default_department">
+            <field name="text">There is already a default department for this user</field>
+        </record>
+        <record model="ir.message" id="msg_no_entry_sequence">
+            <field name="text">There is no entry sequence for the work year "%(work_year)s".</field>
+        </record>
+        <record model="ir.message" id="msg_delete_entry">
+            <field name="text">You can not delete entry "%(entry)s" because it is not in draft state</field>
+        </record>
+        <record model="ir.message" id="msg_not_fraction">
+            <field name="text">You can not confirm entry "%(entry)s" because has not fractions</field>
+        </record>
+        <record model="ir.message" id="msg_missing_entry_contacts">
+            <field name="text">Missing contacts in entry "%(entry)s"</field>
+        </record>
+        <record model="ir.message" id="msg_enac_acredited">
+            <field name="text">The analysis marked with * are not covered by the Accreditation.</field>
+        </record>
+        <record model="ir.message" id="msg_english_report">
+            <field name="text">Do not forget to load the translations into English</field>
+        </record>
+        <record model="ir.message" id="msg_default_suspension_reason">
+            <field name="text">There is already a default suspension reason</field>
+        </record>
+        <record model="ir.message" id="msg_delete_detail">
+            <field name="text">You can not delete the analysis detail because its fraction is confirmed</field>
+        </record>
+        <record model="ir.message" id="msg_variable_redefine">
+            <field name="text">Cannot redefine the value of "%(variable)s"</field>
+        </record>
+        <record model="ir.message" id="msg_unexpected_character">
+            <field name="text">Unexpected character found: "%(character)s" at index %(index)s</field>
+        </record>
+        <record model="ir.message" id="msg_division_zero">
+            <field name="text">Division by 0 (occured at index %(index)s)</field>
+        </record>
+        <record model="ir.message" id="msg_closing_parenthesis">
+            <field name="text">No closing parenthesis found at character %(index)s</field>
+        </record>
+        <record model="ir.message" id="msg_unrecognized_variable">
+            <field name="text">Unrecognized variable: "%(variable)s"</field>
+        </record>
+        <record model="ir.message" id="msg_extra_period">
+            <field name="text">Found an extra period in a number at character %(index)s</field>
+        </record>
+        <record model="ir.message" id="msg_unexpected_end">
+            <field name="text">Unexpected end found</field>
+        </record>
+        <record model="ir.message" id="msg_number_expected">
+            <field name="text">Expecting to find a number at character %(index)s but instead there is a "%(character)s"</field>
+        </record>
+        <record model="ir.message" id="msg_physically_elsewhere">
+            <field name="text">This Device is physically in another Laboratory</field>
+        </record>
+        <record model="ir.message" id="msg_line_end_date">
+            <field name="text">The end date cannot be lower than start date</field>
+        </record>
+        <record model="ir.message" id="msg_accepted">
+            <field name="text">The analysis "%(analysis)s" is already accepted</field>
+        </record>
+        <record model="ir.message" id="msg_not_accepted_1">
+            <field name="text">The analysis is not reported</field>
+        </record>
+        <record model="ir.message" id="msg_not_accepted_2">
+            <field name="text">The analysis is annulled</field>
+        </record>
+        <record model="ir.message" id="msg_not_accepted_3">
+            <field name="text">The analysis has not End date</field>
+        </record>
+        <record model="ir.message" id="msg_not_accepted_4">
+            <field name="text">The analysis has not Result / Converted result</field>
+        </record>
+        <record model="ir.message" id="msg_not_accepted_5">
+            <field name="text">The Converted result modifier is invalid</field>
+        </record>
+        <record model="ir.message" id="msg_not_accepted_6">
+            <field name="text">The Result modifier is invalid</field>
+        </record>
+        <record model="ir.message" id="msg_not_accepted_7">
+            <field name="text">The Converted result / Converted result modifier is invalid</field>
+        </record>
+        <record model="ir.message" id="msg_accepted_1">
+            <field name="text">The analysis is already reported (%(report)s)</field>
+        </record>
+        <record model="ir.message" id="msg_ok">
+            <field name="text">OK</field>
+        </record>
+        <record model="ir.message" id="msg_ok*">
+            <field name="text">OK*</field>
+        </record>
+        <record model="ir.message" id="msg_out">
+            <field name="text">Out of Range</field>
+        </record>
+        <record model="ir.message" id="msg_acceptable">
+            <field name="text">Acceptable / Factor: %(factor)s - CV: %(cv)s</field>
+        </record>
+        <record model="ir.message" id="msg_unacceptable">
+            <field name="text">Unacceptable / Factor: %(factor)s - CV: %(cv)s</field>
+        </record>
+        <record model="ir.message" id="msg_invoice_address">
+            <field name="text">There is already a address with invoice type</field>
+        </record>
+        <record model="ir.message" id="msg_not_start_date">
+            <field name="text">The planification must have a start date</field>
+        </record>
+        <record model="ir.message" id="msg_invalid_start_date">
+            <field name="text">The start date must be after "%(date)s"</field>
+        </record>
+        <record model="ir.message" id="msg_no_technician">
+            <field name="text">The following fractions have not a responsible technician: %(fractions)s</field>
+        </record>
+        <record model="ir.message" id="msg_waiting_process">
+            <field name="text">Planification "%(planification)s" is still waiting for processing</field>
+        </record>
+        <record model="ir.message" id="msg_delete_planification">
+            <field name="text">You can not delete planification "%(planification)s" because it is not in draft or pre-planned state</field>
+        </record>
+        <record model="ir.message" id="msg_copy_planification">
+            <field name="text">You can not copy planifications</field>
+        </record>
+        <record model="ir.message" id="msg_no_entry_control">
+            <field name="text">There is no default entry control for this work year</field>
+        </record>
+        <record model="ir.message" id="msg_no_con_fraction_type">
+            <field name="text">There is no Control fraction type configured</field>
+        </record>
+        <record model="ir.message" id="msg_no_concentration_level">
+            <field name="text">Missing concentration level for this control type</field>
+        </record>
+        <record model="ir.message" id="msg_no_rm_fraction_type">
+            <field name="text">There is no RM fraction type configured</field>
+        </record>
+        <record model="ir.message" id="msg_no_bmz_fraction_type">
+            <field name="text">There is no BMZ fraction type configured</field>
+        </record>
+        <record model="ir.message" id="msg_no_rm_default_configuration">
+            <field name="text">Missing default configuration for RM fraction type</field>
+        </record>
+        <record model="ir.message" id="msg_no_bmz_default_configuration">
+            <field name="text">Missing default configuration for BMZ fraction type</field>
+        </record>
+        <record model="ir.message" id="msg_not_typified">
+            <field name="text">The analysis "%(analysis)s" is not typified for product type "%(product_type)s" and matrix "%(matrix)s"</field>
+        </record>
+        <record model="ir.message" id="msg_no_bre_fraction_type">
+            <field name="text">There is no BRE fraction type configured</field>
+        </record>
+        <record model="ir.message" id="msg_no_bre_default_configuration">
+            <field name="text">Missing default configuration for BRE fraction type</field>
+        </record>
+        <record model="ir.message" id="msg_no_mrt_fraction_type">
+            <field name="text">There is no MRT fraction type configured</field>
+        </record>
+        <record model="ir.message" id="msg_no_mrt_default_configuration">
+            <field name="text">Missing default configuration for MRT fraction type</field>
+        </record>
+        <record model="ir.message" id="msg_no_coi_fraction_type">
+            <field name="text">There is no COI fraction type configured</field>
+        </record>
+        <record model="ir.message" id="msg_no_mrc_fraction_type">
+            <field name="text">There is no MRC fraction type configured</field>
+        </record>
+        <record model="ir.message" id="msg_no_sla_fraction_type">
+            <field name="text">There is no SLA fraction type configured</field>
+        </record>
+        <record model="ir.message" id="msg_no_coi_default_configuration">
+            <field name="text">Missing default configuration for COI fraction type</field>
+        </record>
+        <record model="ir.message" id="msg_no_mrc_default_configuration">
+            <field name="text">Missing default configuration for MRC fraction type</field>
+        </record>
+        <record model="ir.message" id="msg_no_sla_default_configuration">
+            <field name="text">Missing default configuration for SLA fraction type</field>
+        </record>
+        <record model="ir.message" id="msg_no_sequence">
+            <field name="text">There is no results report sequence for the work year "%(work_year)s".</field>
+        </record>
+        <record model="ir.message" id="msg_missing_module">
+            <field name="text">Missing PyPDF2 module</field>
+        </record>
+        <record model="ir.message" id="msg_empty_report">
+            <field name="text">The report has not details to print</field>
+        </record>
+        <record model="ir.message" id="msg_delete_detail_not_draft">
+            <field name="text">You can not delete a detail that is not in draft state</field>
+        </record>
+        <record model="ir.message" id="msg_multiple_reports">
+            <field name="text">Please, select only one report to print</field>
+        </record>
+        <record model="ir.message" id="msg_annulled_report">
+            <field name="text">This report is annulled</field>
+        </record>
+        <record model="ir.message" id="msg_replace_number">
+            <field name="text">Supplants the Results Report N° %(report)s</field>
+        </record>
+        <record model="ir.message" id="msg_quantification_limit">
+            <field name="text">&lt; LoQ = %(loq)s</field>
+        </record>
+        <record model="ir.message" id="msg_detection_limit">
+            <field name="text">(LoD = %(detection_limit)s %(initial_unit)s)</field>
+        </record>
+        <record model="ir.message" id="msg_detection_limit_2">
+            <field name="text">(LoD = %(detection_limit)s)</field>
+        </record>
+        <record model="ir.message" id="msg_uncertainty">
+            <field name="text">(U± %(res)s %(initial_unit)s)</field>
+        </record>
+        <record model="ir.message" id="msg_obs_uncert">
+            <field name="text">U = Uncertainty</field>
+        </record>
+        <record model="ir.message" id="msg_neg">
+            <field name="text">Negative</field>
+        </record>
+        <record model="ir.message" id="msg_pos">
+            <field name="text">Positive</field>
+        </record>
+        <record model="ir.message" id="msg_nd">
+            <field name="text">Not detected</field>
+        </record>
+        <record model="ir.message" id="msg_pre">
+            <field name="text">Presence</field>
+        </record>
+        <record model="ir.message" id="msg_abs">
+            <field name="text">Absence</field>
+        </record>
+        <record model="ir.message" id="msg_enac_all_acredited">
+            <field name="text">Uncertainty for the analysis covered by the Accreditation is available.</field>
+        </record>
+        <record model="ir.message" id="msg_concentration_label_1">
+            <field name="text">(Expressed at the concentration of the received sample)</field>
+        </record>
+        <record model="ir.message" id="msg_concentration_label_2">
+            <field name="text">(Expressed at %(concentration)s° Brix)</field>
+        </record>
+        <record model="ir.message" id="msg_concentration_label_3">
+            <field name="text">(Expressed at %(concentration)s)</field>
+        </record>
+        <record model="ir.message" id="msg_final_unit_label_1">
+            <field name="text">Expressed at %(concentration)s %% Alcohol</field>
+        </record>
+        <record model="ir.message" id="msg_final_unit_label_2">
+            <field name="text">Expressed at %(concentration)s</field>
+        </record>
+        <record model="ir.message" id="msg_final_unit_label_3">
+            <field name="text">Expressed at %(concentration)s Bx</field>
+        </record>
+        <record model="ir.message" id="msg_final_unit_label_4">
+            <field name="text">Expressed at dry matter</field>
+        </record>
+        <record model="ir.message" id="msg_obs_ql">
+            <field name="text">LoQ= Limit of Quantitation. If the Detection Limit is reported, Result &lt;LoQ indicates that the detected value is between LoD (Limit of Detection) and LoQ (Limit of Quantitation).</field>
+        </record>
+        <record model="ir.message" id="msg_obs_dl">
+            <field name="text">LoD= Limit of Detection.</field>
+        </record>
+        <record model="ir.message" id="msg_caa_min">
+            <field name="text">min: %(min)s</field>
+        </record>
+        <record model="ir.message" id="msg_caa_max">
+            <field name="text">max: %(max)s</field>
+        </record>
+        <record model="ir.message" id="msg_obs_rm_c_f">
+            <field name="text">Elements results are reported without recovery correction.</field>
+        </record>
+        <record model="ir.message" id="msg_data_not_specified">
+            <field name="text">NOT SPECIFIED BY THE CLIENT</field>
+        </record>
+        <record model="ir.message" id="msg_not_done">
+            <field name="text">Not done by the company</field>
+        </record>
+        <record model="ir.message" id="msg_no_service_sequence">
+            <field name="text">There is no service sequence for the work year "%(work_year)s".</field>
+        </record>
+        <record model="ir.message" id="msg_delete_service">
+            <field name="text">You can not delete service "%(service)s" because its fraction is confirmed</field>
+        </record>
+        <record model="ir.message" id="msg_duplicated_analysis_service">
+            <field name="text">The analysis "%(analysis)s" is assigned more than once to the fraction "%(fraction)s"</field>
+        </record>
+        <record model="ir.message" id="msg_missing_fraction_product">
+            <field name="text">Missing "Fraction product" on Lims configuration</field>
+        </record>
+        <record model="ir.message" id="msg_delete_fraction">
+            <field name="text">You can not delete fraction "%(fraction)s" because it is confirmed</field>
+        </record>
+        <record model="ir.message" id="msg_not_services">
+            <field name="text">You can not confirm fraction "%(fraction)s" because has not services</field>
+        </record>
+        <record model="ir.message" id="msg_not_divided">
+            <field name="text">You can not confirm fraction because is not yet divided</field>
+        </record>
+        <record model="ir.message" id="msg_no_sample_sequence">
+            <field name="text">There is no sample sequence for the work year "%(work_year)s".</field>
+        </record>
+        <record model="ir.message" id="msg_duplicated_label">
+            <field name="text">The label "%(label)s" is already present in another sample</field>
+        </record>
+        <record model="ir.message" id="msg_delete_sample">
+            <field name="text">You can not delete sample "%(sample)s" because its entry is not in draft state</field>
+        </record>
+        <record model="ir.message" id="msg_counter_sample_date">
+            <field name="text">Reverse counter sample storage to enter the service </field>
+        </record>
+        <record model="ir.message" id="msg_reference">
+            <field name="text">Countersamples Storage</field>
+        </record>
+        <record model="ir.message" id="msg_reference_reversion">
+            <field name="text">Countersamples Storage Reversion</field>
+        </record>
+        <record model="ir.message" id="msg_reference_discharge">
+            <field name="text">Countersamples Discharge</field>
+        </record>
+        <record model="ir.message" id="msg_reference_fractions_discharge">
+            <field name="text">Fractions Discharge</field>
+        </record>
+        <record model="ir.message" id="msg_reference_fractions_discharge_reversion">
+            <field name="text">Fractions Discharge Reversion</field>
+        </record>
+    </data>
+</tryton>

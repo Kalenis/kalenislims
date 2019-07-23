@@ -11,6 +11,8 @@ from trytond.transaction import Transaction
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
 from trytond.report import Report
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['Project', 'Entry', 'ProjectReferenceElement',
     'ProjectSolventAndReagent', 'ProjectSampleInCustody',
@@ -226,16 +228,6 @@ class Project(metaclass=PoolMeta):
                 'invisible': (Eval('stp_state') != 'finalized'),
                 },
             })
-        cls._error_messages.update({
-            'no_project_study_plan_sequence': ('There is no sequence for '
-                'Study plan Projects for the work year "%s".'),
-            'not_glp': ('Please, select a "Study plan" Project to print this '
-                'report'),
-            'not_analytical_phase': ('Please, select a "Analytical Phase '
-                'Project" to print this report'),
-            'not_study_plan': ('Please, select a "Study Plan Phase '
-                'Project" to print this report'),
-            })
 
     @classmethod
     def view_attributes(cls):
@@ -254,8 +246,9 @@ class Project(metaclass=PoolMeta):
         workyear = LabWorkYear(workyear_id)
         sequence = workyear.get_sequence('project_study_plan')
         if not sequence:
-            cls.raise_user_error('no_project_study_plan_sequence',
-                (workyear.rec_name,))
+            raise UserError(gettext(
+                'lims_project_study_plan.msg_no_project_study_plan_sequence',
+                work_year=workyear.rec_name))
 
         vlist = [x.copy() for x in vlist]
         for values in vlist:
@@ -297,7 +290,8 @@ class Project(metaclass=PoolMeta):
                 if line.device.id not in devices:
                     devices[line.device.id] = line.device.rec_name
             if devices:
-                stp_test_system = '\n'.join([d for d in list(devices.values())])
+                stp_test_system = '\n'.join(
+                    [d for d in list(devices.values())])
         self.stp_test_system = stp_test_system
 
     @ModelView.button_change('stp_test_method')
@@ -315,7 +309,8 @@ class Project(metaclass=PoolMeta):
                 if line.method.id not in methods:
                     methods[line.method.id] = line.method.rec_name
             if methods:
-                stp_test_method = '\n'.join([m for m in list(methods.values())])
+                stp_test_method = '\n'.join(
+                    [m for m in list(methods.values())])
         self.stp_test_method = stp_test_method
 
     @classmethod
@@ -414,18 +409,6 @@ class ProjectLaboratoryProfessional(ModelSQL, ModelView):
     approval_date = fields.Date('Approval date')
 
     @classmethod
-    def __setup__(cls):
-        super(ProjectLaboratoryProfessional, cls).__setup__()
-        cls._error_messages.update({
-            'existing_role_study_director': ('There is already a '
-                'Study director for this project'),
-            'existing_role_facility_director': ('There is already a '
-                'Facility director for this project'),
-            'existing_role_quality_unit': ('There is already a '
-                'Quality unit for this project'),
-            })
-
-    @classmethod
     def validate(cls, professionals):
         super(ProjectLaboratoryProfessional, cls).validate(professionals)
         for p in professionals:
@@ -441,7 +424,8 @@ class ProjectLaboratoryProfessional(ModelSQL, ModelView):
                     ('id', '!=', self.id),
                     ])
                 if existing_roles:
-                    self.raise_user_error('existing_' + field)
+                    raise UserError(gettext(
+                        'lims_project_study_plan.msg_existing_' + field))
 
     @fields.depends('role_study_director', 'role_facility_director',
         'role_quality_unit', 'role_other')
@@ -970,11 +954,11 @@ class ProjectGLPReport01(Report):
     def execute(cls, ids, data):
         Project = Pool().get('lims.project')
         if len(ids) > 1:
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         project = Project(ids[0])
         if project.type != 'study_plan':
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         return super(ProjectGLPReport01, cls).execute(ids, data)
 
@@ -1033,11 +1017,11 @@ class ProjectGLPReport02(Report):
     def execute(cls, ids, data):
         Project = Pool().get('lims.project')
         if len(ids) > 1:
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         project = Project(ids[0])
         if project.type != 'study_plan':
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         return super(ProjectGLPReport02, cls).execute(ids, data)
 
@@ -1135,7 +1119,7 @@ class ProjectGLPReport03(Report):
 
         project = Project(data['id'])
         if project.type != 'study_plan':
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         return super(ProjectGLPReport03, cls).execute(ids, data)
 
@@ -1192,11 +1176,11 @@ class ProjectGLPReport04(Report):
     def execute(cls, ids, data):
         Project = Pool().get('lims.project')
         if len(ids) > 1:
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         project = Project(ids[0])
         if project.type != 'study_plan':
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         return super(ProjectGLPReport04, cls).execute(ids, data)
 
@@ -1299,7 +1283,7 @@ class ProjectGLPReport05(Report):
 
         project = Project(data['id'])
         if project.type != 'study_plan':
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         return super(ProjectGLPReport05, cls).execute(ids, data)
 
@@ -1354,11 +1338,11 @@ class ProjectGLPReport06(Report):
     def execute(cls, ids, data):
         Project = Pool().get('lims.project')
         if len(ids) > 1:
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         project = Project(ids[0])
         if project.type != 'study_plan':
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         return super(ProjectGLPReport06, cls).execute(ids, data)
 
@@ -1411,11 +1395,11 @@ class ProjectGLPReport07(Report):
     def execute(cls, ids, data):
         Project = Pool().get('lims.project')
         if len(ids) > 1:
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         project = Project(ids[0])
         if project.type != 'study_plan':
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         return super(ProjectGLPReport07, cls).execute(ids, data)
 
@@ -1476,11 +1460,11 @@ class ProjectGLPReport08(Report):
     def execute(cls, ids, data):
         Project = Pool().get('lims.project')
         if len(ids) > 1:
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         project = Project(ids[0])
         if project.type != 'study_plan':
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         return super(ProjectGLPReport08, cls).execute(ids, data)
 
@@ -1538,11 +1522,11 @@ class ProjectGLPReport09(Report):
     def execute(cls, ids, data):
         Project = Pool().get('lims.project')
         if len(ids) > 1:
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         project = Project(ids[0])
         if project.type != 'study_plan':
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         return super(ProjectGLPReport09, cls).execute(ids, data)
 
@@ -1608,7 +1592,7 @@ class ProjectGLPReport09(Report):
                 re = None
                 analysis = None
                 if report_id[1] == 'eq':
-                        re = report_id[2]
+                    re = report_id[2]
                 else:
                     if report_id[1] == 'low':
                         re = '< ' + report_id[2]
@@ -1754,11 +1738,11 @@ class ProjectGLPReport11(Report):
     def execute(cls, ids, data):
         Project = Pool().get('lims.project')
         if len(ids) > 1:
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         project = Project(ids[0])
         if project.type != 'study_plan':
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         return super(ProjectGLPReport11, cls).execute(ids, data)
 
@@ -1913,11 +1897,11 @@ class ProjectGLPReportStudyPlan(Report):
     def execute(cls, ids, data):
         Project = Pool().get('lims.project')
         if len(ids) > 1:
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         project = Project(ids[0])
         if project.type != 'study_plan':
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         return super(ProjectGLPReportStudyPlan, cls).execute(ids, data)
 
@@ -2007,14 +1991,15 @@ class ProjectGLPReportFinalRP(Report):
     def execute(cls, ids, data):
         Project = Pool().get('lims.project')
         if len(ids) > 1:
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         project = Project(ids[0])
         if project.type != 'study_plan':
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
         else:
             if project.stp_phase != 'study_plan':
-                Project.raise_user_error('not_study_plan')
+                raise UserError(gettext(
+                    'lims_project_study_plan.msg_not_study_plan'))
         return super(ProjectGLPReportFinalRP, cls).execute(ids, data)
 
     @classmethod
@@ -2248,14 +2233,15 @@ class ProjectGLPReportFinalFOR(Report):
     def execute(cls, ids, data):
         Project = Pool().get('lims.project')
         if len(ids) > 1:
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         project = Project(ids[0])
         if project.type != 'study_plan':
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
         else:
             if project.stp_phase != 'study_plan':
-                Project.raise_user_error('not_study_plan')
+                raise UserError(gettext(
+                    'lims_project_study_plan.msg_not_study_plan'))
         return super(ProjectGLPReportFinalFOR, cls).execute(ids, data)
 
     @classmethod
@@ -2494,14 +2480,15 @@ class ProjectGLPReportAnalyticalPhase(Report):
     def execute(cls, ids, data):
         Project = Pool().get('lims.project')
         if len(ids) > 1:
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         project = Project(ids[0])
         if project.type != 'study_plan':
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
         else:
             if project.stp_phase != 'analytical_phase':
-                Project.raise_user_error('not_analytical_phase')
+                raise UserError(gettext(
+                    'lims_project_study_plan.msg_not_analytical_phase'))
         return super(ProjectGLPReportAnalyticalPhase,
             cls).execute(ids, data)
 
@@ -2736,11 +2723,11 @@ class ProjectGLPReport13(Report):
     def execute(cls, ids, data):
         Project = Pool().get('lims.project')
         if len(ids) > 1:
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         project = Project(ids[0])
         if project.type != 'study_plan':
-            Project.raise_user_error('not_glp')
+            raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
         return super(ProjectGLPReport13, cls).execute(ids, data)
 

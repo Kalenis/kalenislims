@@ -12,6 +12,8 @@ from trytond.transaction import Transaction
 from trytond.pool import PoolMeta, Pool
 from trytond.wizard import Wizard, StateAction
 from trytond.modules.product import price_digits
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['PurityDegree', 'Brand', 'FamilyEquivalent', 'Template', 'Product',
     'LotCategory', 'Lot', 'Move', 'ShipmentIn', 'MoveProductionRelated']
@@ -47,15 +49,6 @@ class FamilyEquivalent(ModelSQL, ModelView):
         'Products', readonly=True)
 
     @classmethod
-    def __setup__(cls):
-        super(FamilyEquivalent, cls).__setup__()
-        cls._error_messages.update({
-                'invalid_product_uom_category': ('The UoM\'s Category '
-                    'of each Product should be the same as the UoM\'s '
-                    'Category of Family/Equivalent.'),
-                })
-
-    @classmethod
     def validate(cls, family_equivalents):
         super(FamilyEquivalent, cls).validate(family_equivalents)
         for fe in family_equivalents:
@@ -66,7 +59,8 @@ class FamilyEquivalent(ModelSQL, ModelView):
             main_category = self.uom.category
             for product in self.products:
                 if main_category != product.default_uom.category:
-                    self.raise_user_error('invalid_product_uom_category')
+                    raise UserError(gettext(
+                        'lims_production.msg_invalid_product_uom_category'))
 
     @classmethod
     def copy(cls, family_equivalents, default=None):

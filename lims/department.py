@@ -4,6 +4,8 @@
 # the full copyright notices and license terms.
 
 from trytond.model import ModelView, ModelSQL, fields
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['Department', 'UserDepartment']
 
@@ -27,14 +29,6 @@ class UserDepartment(ModelSQL, ModelView):
         required=True)
     default = fields.Boolean('By default')
 
-    @classmethod
-    def __setup__(cls):
-        super(UserDepartment, cls).__setup__()
-        cls._error_messages.update({
-            'default_department': ('There is already a default department'
-                ' for this user'),
-            })
-
     @staticmethod
     def default_default():
         return False
@@ -53,4 +47,4 @@ class UserDepartment(ModelSQL, ModelView):
                 ('id', '!=', self.id),
                 ])
             if user_departments:
-                self.raise_user_error('default_department')
+                raise UserError(gettext('lims.msg_default_department'))

@@ -13,6 +13,8 @@ from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
 from trytond.pool import Pool
 from trytond.transaction import Transaction
 from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or, And
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['ProductType', 'Matrix', 'ObjectiveDescription', 'Formula',
     'FormulaVariable', 'Analysis', 'Typification', 'TypificationAditional',
@@ -109,14 +111,6 @@ class Typification(ModelSQL, ModelView):
                 Unique(t, t.product_type, t.matrix, t.analysis, t.method),
                 'This typification already exists'),
             ]
-        cls._error_messages.update({
-            'limits': ('Quantification limit must be greater than'
-                ' Detection limit'),
-            'default_typification': ('There is already a default typification'
-                ' for this combination of product type, matrix and analysis'),
-            'not_default_typification': ('This typification should be the'
-                ' default'),
-            })
 
     @staticmethod
     def default_limit_digits():
@@ -270,7 +264,7 @@ class Typification(ModelSQL, ModelView):
     def check_limits(self):
         if (self.detection_limit and
                 self.quantification_limit <= self.detection_limit):
-            self.raise_user_error('limits')
+            raise UserError(gettext('lims.lims.msg_limits'))
 
     def check_default(self):
         if self.by_default:
@@ -283,7 +277,7 @@ class Typification(ModelSQL, ModelView):
                 ('id', '!=', self.id),
                 ])
             if typifications:
-                self.raise_user_error('default_typification')
+                raise UserError(gettext('lims.lims.msg_default_typification'))
         else:
             if self.valid:
                 typifications = self.search([
@@ -294,7 +288,8 @@ class Typification(ModelSQL, ModelView):
                     ('id', '!=', self.id),
                     ])
                 if not typifications:
-                    self.raise_user_error('not_default_typification')
+                    raise UserError(
+                        gettext('lims.msg_not_default_typification'))
 
     @classmethod
     def create(cls, vlist):
@@ -897,20 +892,6 @@ class Analysis(Workflow, ModelSQL, ModelView):
             ('code_uniq', Unique(t, t.code),
                 'Analysis code must be unique'),
             ]
-        cls._error_messages.update({
-            'description_uniq': 'Analysis description must be unique',
-            'not_laboratory': 'Must define a Laboratory',
-            'set_laboratories': ('A Set can be assigned to a single'
-                ' laboratory'),
-            'analysis_laboratory': ('The "%(analysis)s" analysis is not'
-                ' defined in laboratory "%(laboratory)s"'),
-            'not_laboratory_change': ('You can not change the laboratory'
-                ' because the analysis is included in a set/group with this'
-                ' laboratory'),
-            'end_date': 'The leaving date cannot be lower than entry date',
-            'end_date_wrong': ('End date should not be greater than the '
-                'current date'),
-            })
         cls._transitions |= set((
             ('draft', 'active'),
             ('active', 'disabled'),
@@ -1079,31 +1060,31 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 ('type', '=', type),
                 ('end_date', '=', None),
                 ]) > count:
-            cls.raise_user_error('description_uniq')
+            raise UserError(gettext('lims.msg_description_uniq'))
 
     def check_set(self):
         if self.type == 'set':
             if self.laboratories and len(self.laboratories) > 1:
-                self.raise_user_error('set_laboratories')
+                raise UserError(gettext('lims.msg_set_laboratories'))
             if self.included_analysis and not self.laboratories:
-                self.raise_user_error('not_laboratory')
+                raise UserError(gettext('lims.msg_not_laboratory'))
             if self.included_analysis:
                 set_laboratory = self.laboratories[0].laboratory
                 for ia in self.included_analysis:
                     included_analysis_laboratories = [lab.laboratory
                         for lab in ia.included_analysis.laboratories]
                     if (set_laboratory not in included_analysis_laboratories):
-                        self.raise_user_error('analysis_laboratory', {
-                            'analysis': ia.included_analysis.rec_name,
-                            'laboratory': set_laboratory.rec_name,
-                            })
+                        raise UserError(gettext('lims.msg_analysis_laboratory',
+                            analysis=ia.included_analysis.rec_name,
+                            laboratory=set_laboratory.rec_name,
+                            ))
 
     def check_end_date(self):
         if self.end_date:
             if not self.start_date or self.end_date < self.start_date:
-                self.raise_user_error('end_date')
+                raise UserError(gettext('lims.msg_end_date'))
             if not self.start_date or self.end_date > datetime.now().date():
-                self.raise_user_error('end_date_wrong')
+                raise UserError(gettext('lims.msg_end_date_wrong'))
 
     @classmethod
     def write(cls, *args):
@@ -1131,7 +1112,8 @@ class Analysis(Workflow, ModelSQL, ModelView):
                                 ('laboratory', '=', laboratory),
                                 ])
                             if parent:
-                                cls.raise_user_error('not_laboratory_change')
+                                raise UserError(
+                                    gettext('lims.msg_not_laboratory_change'))
 
     @classmethod
     @ModelView.button_action('lims.wiz_lims_relate_analysis')
@@ -1530,14 +1512,6 @@ class AnalysisIncluded(ModelSQL, ModelView):
         None, None, 'Laboratory domain'), 'on_change_with_laboratory_domain')
 
     @classmethod
-    def __setup__(cls):
-        super(AnalysisIncluded, cls).__setup__()
-        cls._error_messages.update({
-            'duplicated_analysis': 'The analysis "%s" is already included',
-            'not_set_laboratory': 'No Laboratory loaded for the Set',
-            })
-
-    @classmethod
     def validate(cls, included_analysis):
         super(AnalysisIncluded, cls).validate(included_analysis)
         for analysis in included_analysis:
@@ -1559,8 +1533,8 @@ class AnalysisIncluded(ModelSQL, ModelView):
                     analysis_ids.extend(Analysis.get_included_analysis(
                         ai.included_analysis.id))
             if self.included_analysis.id in analysis_ids:
-                self.raise_user_error('duplicated_analysis',
-                    (self.included_analysis.rec_name,))
+                raise UserError(gettext('lims.msg_duplicated_analysis',
+                    analysis=self.included_analysis.rec_name))
 
     @fields.depends('included_analysis', 'analysis', 'laboratory',
         '_parent_analysis.type', '_parent_analysis.laboratories')
@@ -1606,7 +1580,6 @@ class AnalysisIncluded(ModelSQL, ModelView):
             laboratories=[]):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        AnalysisIncluded = pool.get('lims.analysis.included')
         Analysis = pool.get('lims.analysis')
         AnalysisLaboratory = pool.get('lims.analysis-laboratory')
 
@@ -1615,7 +1588,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
 
         if analysis_type == 'set':
             if len(laboratories) != 1:
-                AnalysisIncluded.raise_user_error('not_set_laboratory')
+                raise UserError(gettext('lims.msg_not_set_laboratory'))
             set_laboratory_id = laboratories[0]
             not_parent_clause = ''
             if analysis_id:
@@ -1883,14 +1856,6 @@ class AnalysisLabMethod(ModelSQL):
         ondelete='CASCADE', select=True, required=True)
 
     @classmethod
-    def __setup__(cls):
-        super(AnalysisLabMethod, cls).__setup__()
-        cls._error_messages.update({
-            'typificated_method': ('You can not delete method "%s" because '
-                'is typificated'),
-            })
-
-    @classmethod
     def delete(cls, methods):
         cls.check_delete(methods)
         super(AnalysisLabMethod, cls).delete(methods)
@@ -1905,8 +1870,8 @@ class AnalysisLabMethod(ModelSQL):
                 ('valid', '=', True),
                 ])
             if typifications != 0:
-                cls.raise_user_error('typificated_method',
-                    (method.method.code,))
+                raise UserError(gettext('lims.msg_typificated_method',
+                    method=method.method.code))
 
 
 class AnalysisDevice(ModelSQL, ModelView):
@@ -1925,14 +1890,6 @@ class AnalysisDevice(ModelSQL, ModelView):
         domain=[('laboratories.laboratory', '=', Eval('laboratory'))],
         depends=['laboratory'])
     by_default = fields.Boolean('By default')
-
-    @classmethod
-    def __setup__(cls):
-        super(AnalysisDevice, cls).__setup__()
-        cls._error_messages.update({
-            'default_device': ('There is already a default device for this'
-            ' analysis on this laboratory'),
-            })
 
     @staticmethod
     def default_by_default():
@@ -1953,7 +1910,7 @@ class AnalysisDevice(ModelSQL, ModelView):
                 ('id', '!=', self.id),
                 ])
             if devices:
-                self.raise_user_error('default_device')
+                raise UserError(gettext('lims.msg_default_device'))
 
     @staticmethod
     def default_laboratory_domain():
@@ -2211,13 +2168,6 @@ class RelateAnalysis(Wizard):
             ])
     relate = StateTransition()
 
-    @classmethod
-    def __setup__(cls):
-        super(RelateAnalysis, cls).__setup__()
-        cls._error_messages.update({
-            'not_set_laboratory': 'No Laboratory loaded for the Set',
-            })
-
     def default_start(self, fields):
         cursor = Transaction().connection.cursor()
         pool = Pool()
@@ -2229,7 +2179,7 @@ class RelateAnalysis(Wizard):
             'analysis_domain': [],
             }
         if len(analysis.laboratories) != 1:
-            self.raise_user_error('not_set_laboratory')
+            raise UserError(gettext('lims.msg_not_set_laboratory'))
 
         cursor.execute('SELECT DISTINCT(al.analysis) '
             'FROM "' + AnalysisLaboratory._table + '" al '

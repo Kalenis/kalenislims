@@ -2,10 +2,7 @@
 # This file is part of lims_instrument module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-try:
-    import io as StringIO
-except ImportError:
-    import io
+import io
 import traceback
 import xlrd
 from xlutils.copy import copy
@@ -15,6 +12,8 @@ from trytond.model import ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 
 __all__ = ['NotebookLine', 'ResultsImport', 'NotebookLoadResultsFileStart',
@@ -60,11 +59,6 @@ class ResultsImport(ModelSQL, ModelView):
             ('name_uniq', Unique(t, t.name),
                 'The results importer name must be unique'),
             ]
-        cls._error_messages.update({
-            'not_module': 'No module for importer type "%s"',
-            'not_implemented': ('The function "%s" is not implemented for'
-                ' this importer'),
-            })
 
     @fields.depends('name')
     def on_change_with_description(self, name=None):
@@ -75,12 +69,12 @@ class ResultsImport(ModelSQL, ModelView):
             try:
                 description = self.controller.getControllerName()
             except AttributeError:
-                self.raise_user_error('not_implemented',
-                    ('getControllerName',))
+                raise UserError(gettext('lims_instrument.msg_not_implemented',
+                    function='getControllerName'))
         return description
 
     def loadController(self):
-        self.raise_user_error('not_module', (self.name,))
+        raise UserError(gettext('lims_instrument.msg_not_module', module=self.name))
 
     def getInputFile(self):
         return self._infile
@@ -95,7 +89,7 @@ class ResultsImport(ModelSQL, ModelView):
             return self.controller.parse(self, infile)
         except AttributeError:
             traceback.print_exc()
-            self.raise_user_error('not_implemented', ('parse',))
+            raise UserError(gettext('lims_instrument.msg_not_implemented', function='parse'))
 
     def exportResults(self):
         '''
@@ -298,19 +292,6 @@ class NotebookLoadResultsFile(Wizard):
             Button('Done', 'end', 'tryton-close', default=True),
             ])
 
-    @classmethod
-    def __setup__(cls):
-        super(NotebookLoadResultsFile, cls).__setup__()
-        cls._error_messages.update({
-            'end_date': 'End date cannot be empty',
-            'end_date_start_date': 'End date cannot be lower than Start date',
-            'inj_date_start_date': ('Injection date cannot be lower than '
-                'Start date'),
-            'inj_date_end_date': ('Injection date cannot be upper than '
-                'End date'),
-            'professionals': 'Professional(s) with code %s not identified',
-            })
-
     def transition_collect(self):
         cursor = Transaction().connection.cursor()
         pool = Pool()
@@ -488,23 +469,19 @@ class NotebookLoadResultsFile(Wizard):
             if line.imported_result != '-1000.0':
                 if not line.imported_end_date:
                     prevent_line = True
-                    outcome = self.raise_user_error('end_date',
-                        raise_exception=False)
+                    outcome = gettext('lims_instrument.msg_end_date')
                 elif (line.imported_end_date and line.start_date and
                         line.start_date > line.imported_end_date):
                     prevent_line = True
-                    outcome = self.raise_user_error('end_date_start_date',
-                        raise_exception=False)
+                    outcome = gettext('lims_instrument.msg_end_date_start_date')
                 elif (line.imported_inj_date and line.start_date and
                         line.start_date > line.imported_inj_date):
                     prevent_line = True
-                    outcome = self.raise_user_error('inj_date_start_date',
-                        raise_exception=False)
+                    outcome = gettext('lims_instrument.msg_inj_date_start_date')
                 elif (line.imported_end_date and line.imported_inj_date and
                         line.imported_inj_date > line.imported_end_date):
                     prevent_line = True
-                    outcome = self.raise_user_error('inj_date_end_date',
-                        raise_exception=False)
+                    outcome = gettext('lims_instrument.msg_inj_date_end_date')
                 else:
                     line.result = line.imported_result
                     line.end_date = line.imported_end_date
@@ -543,9 +520,8 @@ class NotebookLoadResultsFile(Wizard):
                         outcome = msg
                 else:
                     prevent_line = True
-                    outcome = self.raise_user_error('professionals',
-                        (str(line.imported_professionals),),
-                        raise_exception=False)
+                    outcome = gettext('lims_instrument.msg_professionals',
+                        code=str(line.imported_professionals))
 
             if prevent_line:
                 warnings = True

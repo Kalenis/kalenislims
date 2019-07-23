@@ -7,6 +7,8 @@ from decimal import Decimal
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['FractionType', 'Entry', 'Fraction', 'Service', 'ManageServices']
 
@@ -68,16 +70,6 @@ class Service(metaclass=PoolMeta):
     __name__ = 'lims.service'
 
     @classmethod
-    def __setup__(cls):
-        super(Service, cls).__setup__()
-        cls._error_messages.update({
-            'missing_account_revenue': ('Analysis product \"%(product)s\" in '
-                'Service "%(service)s" misses an "account revenue".'),
-            'delete_service_invoice': ('You can not delete a service '
-                'related to an invoice'),
-            })
-
-    @classmethod
     def create(cls, vlist):
         services = super(Service, cls).create(vlist)
         services_to_invoice = [s for s in services if
@@ -108,10 +100,10 @@ class Service(metaclass=PoolMeta):
             return
         account_revenue = product.account_revenue_used
         if not account_revenue:
-            self.raise_user_error('missing_account_revenue', {
-                'product': self.analysis.product.rec_name,
-                'service': self.rec_name,
-                })
+            raise UserError(
+                gettext('lims_account_invoice.msg_missing_account_revenue',
+                    product=self.analysis.product.rec_name,
+                    service=self.rec_name))
 
         party = self.entry.invoice_party
         taxes = []
@@ -167,7 +159,8 @@ class Service(metaclass=PoolMeta):
         if lines_to_delete:
             for line in lines_to_delete:
                 if line.invoice:
-                    cls.raise_user_error('delete_service_invoice')
+                    raise UserError(gettext(
+                        'lims_account_invoice.msg_delete_service_invoice'))
             with Transaction().set_context(_check_access=False,
                     delete_service=True):
                 InvoiceLine.delete(lines_to_delete)
