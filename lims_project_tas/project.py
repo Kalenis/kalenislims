@@ -6,6 +6,8 @@
 from trytond.model import ModelView, ModelSQL, fields, Unique
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Equal, Bool, Not
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['TasType', 'Project', 'Entry']
 
@@ -44,10 +46,6 @@ class Project(metaclass=PoolMeta):
             cls.type.selection.append(project_type)
         cls.client.states = STATES
         cls.client.depends = DEPENDS
-        cls._error_messages.update({
-            'no_project_tas_sequence': ('There is no sequence for '
-                'TAS Projects for the work year "%s".'),
-            })
 
     @classmethod
     def view_attributes(cls):
@@ -115,8 +113,9 @@ class Project(metaclass=PoolMeta):
         workyear = LabWorkYear(workyear_id)
         sequence = workyear.get_sequence('project_tas')
         if not sequence:
-            cls.raise_user_error('no_project_tas_sequence',
-                (workyear.rec_name,))
+            raise UserError(gettext(
+                'lims_project_tas.msg_no_project_tas_sequence',
+                work_year=workyear.rec_name))
 
         vlist = [x.copy() for x in vlist]
         for values in vlist:

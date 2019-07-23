@@ -4,30 +4,14 @@
 # the full copyright notices and license terms.
 
 from trytond.model import Model
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['FormulaParser']
 
 
 class FormulaParser(Model):
     'Formula Parser'
-
-    @classmethod
-    def __setup__(cls):
-        super(FormulaParser, cls).__setup__()
-        cls._error_messages.update({
-            'variable_redefine': 'Cannot redefine the value of "%s"',
-            'unexpected_character': ('Unexpected character found: "%s"'
-                ' at index %s'),
-            'division_zero': 'Division by 0 (occured at index %s)',
-            'closing_parenthesis': ('No closing parenthesis found at'
-                ' character %s'),
-            'unrecognized_variable': 'Unrecognized variable: "%s"',
-            'extra_period': ('Found an extra period in a number at'
-                ' character %s'),
-            'unexpected_end': 'Unexpected end found',
-            'number_expected': ('Expecting to find a number at character'
-                ' %s but instead there is a "%s"'),
-            })
 
     def __init__(self, string, vars={}, id=None, **kwargs):
         self.string = string
@@ -38,7 +22,8 @@ class FormulaParser(Model):
             }
         for var in list(vars.keys()):
             if self.vars.get(var) is not None:
-                self.raise_user_error('variable_redefine', (var,))
+                raise UserError(gettext(
+                    'lims.msg_variable_redefine', variable=var))
             self.vars[var] = vars[var]
         super(FormulaParser, self).__init__(id, **kwargs)
 
@@ -46,8 +31,8 @@ class FormulaParser(Model):
         value = self.parseExpression()
         self.skipWhitespace()
         if self.hasNext():
-            self.raise_user_error('unexpected_character',
-                (self.peek(), str(self.index)))
+            raise UserError(gettext('lims.msg_unexpected_character',
+                character=self.peek(), index=str(self.index)))
         return value
 
     def peek(self):
@@ -90,11 +75,12 @@ class FormulaParser(Model):
                 self.index += 1
                 values.append(self.parsePower())
             elif char == '/':
-                #div_index = self.index
+                # div_index = self.index
                 self.index += 1
                 denominator = self.parsePower()
                 if denominator == 0:
-                    #self.raise_user_error('division_zero', (str(div_index),))
+                    # raise UserError(gettext(
+                    #     'lims.msg_division_zero', index=str(div_index)))
                     return 0.0
                 values.append(1.0 / denominator)
             else:
@@ -127,8 +113,8 @@ class FormulaParser(Model):
             value = self.parseExpression()
             self.skipWhitespace()
             if self.peek() != ')':
-                self.raise_user_error('closing_parenthesis',
-                    (str(self.index),))
+                raise UserError(gettext(
+                    'lims.msg_closing_parenthesis', index=str(self.index)))
             self.index += 1
             return value
         else:
@@ -164,7 +150,8 @@ class FormulaParser(Model):
 
         value = self.vars.get(var, None)
         if value is None:
-            self.raise_user_error('unrecognized_variable', (var,))
+            raise UserError(gettext(
+                'lims.msg_unrecognized_variable', variable=var))
         if value == '':
             return float(0)
         try:
@@ -183,7 +170,8 @@ class FormulaParser(Model):
             char = self.peek()
             if char == '.':
                 if decimal_found:
-                    self.raise_user_error('extra_period', (str(self.index),))
+                    raise UserError(gettext(
+                        'lims.msg_extra_period', index=str(self.index)))
                 decimal_found = True
                 strValue += '.'
             elif char in '0123456789':
@@ -194,9 +182,9 @@ class FormulaParser(Model):
 
         if len(strValue) == 0:
             if char == '':
-                self.raise_user_error('unexpected_end')
+                raise UserError(gettext('lims.msg_unexpected_end'))
             else:
-                self.raise_user_error('number_expected',
-                    (str(self.index), char))
+                raise UserError(gettext('lims.msg_number_expected',
+                    index=str(self.index), character=char))
 
         return float(strValue)

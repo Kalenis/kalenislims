@@ -5,6 +5,8 @@
 
 from trytond.model import fields
 from trytond.pool import PoolMeta
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['Party', 'Address']
 
@@ -40,4 +42,5 @@ class Address(metaclass=PoolMeta):
                 ('id', '!=', self.id),
                 ])
             if addresses:
-                self.raise_user_error('invoice_address')
+                raise UserError(
+                    gettext('lims_account_invoice.msg_invoice_address'))

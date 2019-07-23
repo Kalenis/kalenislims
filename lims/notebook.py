@@ -13,6 +13,8 @@ from trytond.pool import Pool
 from trytond.pyson import PYSONEncoder, Eval, Bool, Not, Or
 from trytond.transaction import Transaction
 from trytond.report import Report
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 from .formula_parser import FormulaParser
 from .results_report import get_print_date
 
@@ -227,7 +229,8 @@ class Notebook(ModelSQL, ModelView):
             domain = ('current_location', 'in', [l.id for l in locations])
 
         all_notebooks = cls.search([])
-        current_locations = iter(cls.get_current_location(all_notebooks).items())
+        current_locations = iter(
+            cls.get_current_location(all_notebooks).items())
 
         processed_lines = [{
             'fraction': fraction,
@@ -401,21 +404,6 @@ class NotebookLine(ModelSQL, ModelView):
         super(NotebookLine, cls).__setup__()
         cls._order.insert(0, ('analysis_order', 'ASC'))
         cls._order.insert(1, ('repetition', 'ASC'))
-        cls._error_messages.update({
-            'end_date': 'The end date cannot be lower than start date',
-            'end_date_wrong': ('End date should not be greater than the '
-                'current date'),
-            'accepted': 'The analysis "%s" is already accepted',
-            'not_accepted_1': 'The analysis is not reported',
-            'not_accepted_2': 'The analysis is annulled',
-            'not_accepted_3': 'The analysis has not End date',
-            'not_accepted_4': 'The analysis has not Result / Converted result',
-            'not_accepted_5': 'The Converted result modifier is invalid',
-            'not_accepted_6': 'The Result modifier is invalid',
-            'not_accepted_7': ('The Converted result / Converted result '
-                'modifier is invalid'),
-            'accepted_1': 'The analysis is already reported (%s)',
-            })
 
     @staticmethod
     def default_repetition():
@@ -532,9 +520,9 @@ class NotebookLine(ModelSQL, ModelView):
     def check_end_date(self):
         if self.end_date:
             if not self.start_date or self.end_date < self.start_date:
-                self.raise_user_error('end_date')
+                raise UserError(gettext('lims.msg_line_end_date'))
             if not self.start_date or self.end_date > datetime.now().date():
-                self.raise_user_error('end_date_wrong')
+                raise UserError(gettext('lims.msg_end_date_wrong'))
 
     def check_accepted(self):
         if self.accepted:
@@ -545,7 +533,8 @@ class NotebookLine(ModelSQL, ModelView):
                 ('id', '!=', self.id),
                 ])
             if accepted_lines:
-                self.raise_user_error('accepted', (self.analysis.rec_name,))
+                raise UserError(gettext(
+                    'lims.msg_accepted', analysis=self.analysis.rec_name))
 
     @classmethod
     def get_analysis_order(cls, notebook_lines, name):
@@ -721,16 +710,13 @@ class NotebookLine(ModelSQL, ModelView):
         if self.accepted:
             if not self.report:
                 self.accepted = False
-                self.not_accepted_message = self.raise_user_error(
-                    'not_accepted_1', raise_exception=False)
+                self.not_accepted_message = gettext('lims.msg_not_accepted_1')
             elif self.annulled:
                 self.accepted = False
-                self.not_accepted_message = self.raise_user_error(
-                    'not_accepted_2', raise_exception=False)
+                self.not_accepted_message = gettext('lims.msg_not_accepted_2')
             elif not self.end_date:
                 self.accepted = False
-                self.not_accepted_message = self.raise_user_error(
-                    'not_accepted_3', raise_exception=False)
+                self.not_accepted_message = gettext('lims.msg_not_accepted_3')
             elif not (self.result or self.converted_result or
                     self.literal_result or
                     self.result_modifier in
@@ -738,27 +724,26 @@ class NotebookLine(ModelSQL, ModelView):
                     self.converted_result_modifier in
                     ('nd', 'pos', 'neg', 'ni', 'abs', 'pre')):
                 self.accepted = False
-                self.not_accepted_message = self.raise_user_error(
-                    'not_accepted_4', raise_exception=False)
+                self.not_accepted_message = gettext('lims.msg_not_accepted_4')
             else:
                 if (self.converted_result and self.converted_result_modifier
                         not in ('ni', 'eq', 'low')):
                     self.accepted = False
-                    self.not_accepted_message = self.raise_user_error(
-                        'not_accepted_5', raise_exception=False)
+                    self.not_accepted_message = gettext(
+                        'lims.msg_not_accepted_5')
                 elif (self.result and self.result_modifier
                         not in ('ni', 'eq', 'low')):
                     self.accepted = False
-                    self.not_accepted_message = self.raise_user_error(
-                        'not_accepted_6', raise_exception=False)
+                    self.not_accepted_message = gettext(
+                        'lims.msg_not_accepted_6')
                 elif (self.result_modifier == 'ni' and
                         not self.literal_result and
                         (not self.converted_result_modifier or
                             not self.converted_result) and
                         self.converted_result_modifier != 'nd'):
                     self.accepted = False
-                    self.not_accepted_message = self.raise_user_error(
-                        'not_accepted_7', raise_exception=False)
+                    self.not_accepted_message = gettext(
+                        'lims.msg_not_accepted_7')
                 else:
                     self.acceptance_date = datetime.now()
         else:
@@ -771,9 +756,8 @@ class NotebookLine(ModelSQL, ModelView):
             if report_lines:
                 self.accepted = True
                 report_detail = report_lines[0].report_version_detail
-                self.not_accepted_message = self.raise_user_error('accepted_1',
-                    (report_detail.report_version.results_report.number,),
-                    raise_exception=False)
+                self.not_accepted_message = gettext('lims.msg_accepted_1',
+                    report=report_detail.report_version.results_report.number)
             else:
                 self.acceptance_date = None
 
@@ -4083,15 +4067,6 @@ class NotebookResultsVerification(Wizard):
             ])
     ok = StateTransition()
 
-    @classmethod
-    def __setup__(cls):
-        super(NotebookResultsVerification, cls).__setup__()
-        cls._error_messages.update({
-            'ok': 'OK',
-            'ok*': 'OK*',
-            'out': 'Out of Range',
-            })
-
     def default_start(self, fields):
         RangeType = Pool().get('lims.range.type')
 
@@ -4266,12 +4241,9 @@ class NotebookResultsVerification(Wizard):
 
         verifications = {}
         with Transaction().set_context(language=lang.code):
-            verifications['ok'] = self.raise_user_error('ok',
-                raise_exception=False)
-            verifications['ok*'] = self.raise_user_error('ok*',
-                raise_exception=False)
-            verifications['out'] = self.raise_user_error('out',
-                raise_exception=False)
+            verifications['ok'] = gettext('lims.msg_ok')
+            verifications['ok*'] = gettext('lims.msg_ok*')
+            verifications['out'] = gettext('lims.msg_out')
 
         return verifications
 
@@ -4490,14 +4462,6 @@ class NotebookPrecisionControl(Wizard):
             ])
     ok = StateTransition()
 
-    @classmethod
-    def __setup__(cls):
-        super(NotebookPrecisionControl, cls).__setup__()
-        cls._error_messages.update({
-            'acceptable': 'Acceptable / Factor: %s - CV: %s',
-            'unacceptable': 'Unacceptable / Factor: %s - CV: %s',
-            })
-
     def transition_check(self):
         Notebook = Pool().get('lims.notebook')
 
@@ -4589,11 +4553,11 @@ class NotebookPrecisionControl(Wizard):
             error = abs(rep_0 - rep_1) / average * 100
 
             if error < (cv * self.start.factor):
-                res = self.raise_user_error('acceptable', (
-                    self.start.factor, cv), raise_exception=False)
+                res = gettext(
+                    'lims.msg_acceptable', factor=self.start.factor, cv=cv)
             else:
-                res = self.raise_user_error('unacceptable', (
-                    self.start.factor, cv), raise_exception=False)
+                res = gettext(
+                    'lims.msg_unacceptable', factor=self.start.factor, cv=cv)
             notebook_line.verification = res
             lines_to_save.append(notebook_line)
         if lines_to_save:

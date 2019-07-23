@@ -79,13 +79,6 @@ class Address(metaclass=PoolMeta):
         states={'readonly': ~Bool(Eval('invoice_contact'))},
         depends=['invoice_contact'])
 
-    @classmethod
-    def __setup__(cls):
-        super(Address, cls).__setup__()
-        cls._error_messages.update({
-            'invoice_address': 'There is already a address with invoice type',
-            })
-
     @fields.depends('report_contact')
     def on_change_report_contact(self):
         if not self.report_contact:

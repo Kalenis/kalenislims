@@ -2,7 +2,7 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-from io import StringIO, BytesIO
+from io import BytesIO
 from datetime import datetime
 from PyPDF2 import PdfFileMerger
 from trytond.model import ModelView, ModelSQL, fields
@@ -13,6 +13,8 @@ from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, And, Or, If
 from trytond.transaction import Transaction
 from trytond.report import Report
 from trytond.rpc import RPC
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['ResultsReport', 'ResultsReportVersion',
     'ResultsReportVersionDetail', 'ResultsReportVersionDetailLine',
@@ -76,12 +78,6 @@ class ResultsReport(ModelSQL, ModelView):
     def __setup__(cls):
         super(ResultsReport, cls).__setup__()
         cls._order.insert(0, ('number', 'DESC'))
-        cls._error_messages.update({
-            'no_sequence': ('There is no results report sequence for '
-            'the work year "%s".'),
-            'missing_module': 'Missing PyPDF2 module',
-            'empty_report': 'The report has not details to print',
-            })
 
     @staticmethod
     def default_report_grouper():
@@ -97,8 +93,8 @@ class ResultsReport(ModelSQL, ModelView):
         workyear = LabWorkYear(workyear_id)
         sequence = workyear.get_sequence('results_report')
         if not sequence:
-            cls.raise_user_error('no_sequence',
-                (workyear.rec_name,))
+            raise UserError(gettext('lims.msg_no_sequence',
+                work_year=workyear.rec_name))
 
         vlist = [x.copy() for x in vlist]
         for values in vlist:
@@ -368,48 +364,6 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                         )),
                     )),
                 },
-            })
-        cls._error_messages.update({
-            'delete_detail': ('You can not delete a detail that is not in '
-                'draft state'),
-            'multiple_reports': 'Please, select only one report to print',
-            'annulled_report': 'This report is annulled',
-            'empty_report': 'The report has not lines to print',
-            'replace_number': 'Supplants the Results Report N° %s',
-            'quantification_limit': '< LoQ = %s',
-            'detection_limit': '(LoD = %s %s)',
-            'detection_limit_2': '(LoD = %s)',
-            'uncertainty': '(U± %s %s)',
-            'obs_uncert': 'U = Uncertainty.',
-            'neg': 'Negative',
-            'pos': 'Positive',
-            'nd': 'Not detected',
-            'pre': 'Presence',
-            'abs': 'Absence',
-            'enac_all_acredited': ('Uncertainty for the analysis covered '
-                'by the Accreditation is available.'),
-            'enac_acredited': ('The analysis marked with * are not '
-                'covered by the Accreditation. Uncertainty for the '
-                'analysis covered by the Accreditation is available.'),
-            'concentration_label_1': ('(Expressed at the concentration of '
-                'the received sample)'),
-            'concentration_label_2': '(Expressed at %s° Brix)',
-            'concentration_label_3': '(Expressed at %s)',
-            'final_unit_label_1': 'Expressed at %s %% Alcohol',
-            'final_unit_label_2': 'Expressed at %s',
-            'final_unit_label_3': 'Expressed at %s Bx',
-            'final_unit_label_4': 'Expressed at dry matter',
-            'obs_ql': ('LoQ= Limit of Quantitation. If the Detection '
-                'Limit is reported, Result <LoQ '
-                'indicates that the detected value is between LoD '
-                '(Limit of Detection) and LoQ (Limit of Quantitation).'),
-            'obs_dl': 'LoD= Limit of Detection.',
-            'caa_min': 'min: %s',
-            'caa_max': 'max: %s',
-            'obs_rm_c_f': ('Elements results are reported without recovery '
-                'correction.'),
-            'data_not_specified': 'NOT SPECIFIED BY THE CLIENT',
-            'not_done': 'Not done by the company',
             })
 
     @staticmethod
@@ -810,7 +764,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     def check_delete(cls, details):
         for detail in details:
             if detail.state != 'draft':
-                cls.raise_user_error('delete_detail')
+                raise UserError(gettext('lims.msg_delete_detail_not_draft'))
 
     @classmethod
     def get_fraction_comments(cls, details, name):
@@ -1989,7 +1943,7 @@ class PrintResultsReport(Wizard):
                     (format_field, '=', 'pdf'),
                     ])
             if not details:
-                ResultsReport.raise_user_error('empty_report')
+                raise UserError(gettext('lims.msg_empty_report'))
 
             if results_report.english_report:
                 results_report.report_format_eng = 'pdf'
@@ -2201,11 +2155,11 @@ class ResultReport(Report):
     def execute(cls, ids, data):
         ResultsReport = Pool().get('lims.results_report.version.detail')
         if len(ids) > 1:
-            ResultsReport.raise_user_error('multiple_reports')
+            raise UserError(gettext('lims.msg_multiple_reports'))
 
         results_report = ResultsReport(ids[0])
         if results_report.state == 'annulled':
-            ResultsReport.raise_user_error('annulled_report')
+            raise UserError(gettext('lims.msg_annulled_report'))
 
         if data is None:
             data = {}
@@ -2279,8 +2233,7 @@ class ResultReport(Report):
                 prev_number = "%s-%s" % (report.report_version.number,
                     int(report.number) - 1)
                 report_context['replace_number'] = (
-                    ResultsReport.raise_user_error('replace_number',
-                        (prev_number,), raise_exception=False))
+                    gettext('lims.msg_replace_number', report=prev_number))
         report_context['print_date'] = get_print_date()
         report_context['party'] = (
             report.report_version.results_report.party.rec_name)
@@ -2347,7 +2300,7 @@ class ResultReport(Report):
                 ('report_version_detail.valid', '=', True)],
             ], order=[('report_version_detail', 'ASC')])
         if not notebook_lines:
-            ResultsReport.raise_user_error('empty_report')
+            raise UserError(gettext('lims.msg_empty_report'))
 
         with Transaction().set_context(language=lang_code):
             reference_sample = Sample(
@@ -2393,8 +2346,7 @@ class ResultReport(Report):
                         if sample.package_state else ''),
                     'producer': (sample.producer.rec_name
                         if sample.producer else
-                        ResultsReport.raise_user_error('data_not_specified',
-                        raise_exception=False)),
+                        gettext('lims.msg_data_not_specified')),
                     'obj_description': (sample.obj_description.description
                         if sample.obj_description else
                         sample.obj_description_manual),
@@ -2426,9 +2378,8 @@ class ResultReport(Report):
                             cls.format_date(sample.sampling_datetime.date(),
                                 report_context['user'].language))
                     else:
-                        fractions[key]['water_sampling_date'] = (
-                            ResultsReport.raise_user_error('not_done',
-                                raise_exception=False))
+                        fractions[key]['water_sampling_date'] = gettext(
+                            'not_done')
 
             record = {
                 'order': t_line.analysis.order or 9999,
@@ -2541,8 +2492,7 @@ class ResultReport(Report):
         with Transaction().set_context(language=lang_code):
             report_context['sample_producer'] = (
                 reference_sample.producer.rec_name if reference_sample.producer
-                else ResultsReport.raise_user_error('data_not_specified',
-                    raise_exception=False))
+                else gettext('lims.msg_data_not_specified'))
             report_context['sample_obj_description'] = (
                 reference_sample.obj_description.description
                 if reference_sample.obj_description
@@ -2599,9 +2549,8 @@ class ResultReport(Report):
                     cls.format_date(reference_sample.sampling_datetime.date(),
                         report_context['user'].language))
             else:
-                report_context['water_sampling_date'] = (
-                    ResultsReport.raise_user_error('not_done',
-                        raise_exception=False))
+                report_context['water_sampling_date'] = gettext(
+                    'lims.msg_not_done')
 
         report_context['tas_project'] = 'True' if tas_project else 'False'
         report_context['stp_project'] = 'True' if stp_project else 'False'
@@ -2646,14 +2595,14 @@ class ResultReport(Report):
                             fraction['concentrations'][conc]['label'] = ''
                         elif conc_is_numeric and numeric_conc < 100:
                             fraction['concentrations'][conc]['label'] = (
-                                ResultsReport.raise_user_error(
-                                    'concentration_label_2', (conc,),
-                                    raise_exception=False))
+                                gettext(
+                                    'concentration_label_2', concentration=conc
+                                    ))
                         else:
                             fraction['concentrations'][conc]['label'] = (
-                                ResultsReport.raise_user_error(
-                                    'concentration_label_3', (conc,),
-                                    raise_exception=False))
+                                gettext(
+                                    'concentration_label_3', concentration=conc
+                                    ))
 
                     show_unit_label = False
                     for line in sorted_lines:
@@ -2664,29 +2613,27 @@ class ResultReport(Report):
                         if dry_matter:
                             fraction['concentrations'][conc][
                                     'unit_label'] = (
-                                ResultsReport.raise_user_error(
-                                    'final_unit_label_4',
-                                    raise_exception=False))
+                                gettext('lims.msg_final_unit_label_4'))
                         else:
                             if conc_is_numeric:
                                 if alcohol:
                                     fraction['concentrations'][conc][
                                             'unit_label'] = (
-                                        ResultsReport.raise_user_error(
-                                            'final_unit_label_1', (conc,),
-                                            raise_exception=False))
+                                        gettext(
+                                            'final_unit_label_1',
+                                            concentration=conc))
                                 else:
                                     fraction['concentrations'][conc][
                                             'unit_label'] = (
-                                        ResultsReport.raise_user_error(
-                                            'final_unit_label_3', (conc,),
-                                            raise_exception=False))
+                                        gettext(
+                                            'final_unit_label_3',
+                                            concentration=conc))
                             else:
                                 fraction['concentrations'][conc][
                                         'unit_label'] = (
-                                    ResultsReport.raise_user_error(
-                                        'final_unit_label_2', (conc,),
-                                        raise_exception=False))
+                                    gettext(
+                                        'final_unit_label_2',
+                                        concentration=conc))
 
         report_context['fractions'] = sorted_fractions
 
@@ -2703,12 +2650,10 @@ class ResultReport(Report):
             with Transaction().set_context(language=lang_code):
                 if enac_all_acredited:
                     report_context['enac_label'] = (
-                        ResultsReport.raise_user_error(
-                            'enac_all_acredited', raise_exception=False))
+                        gettext('lims.msg_enac_all_acredited'))
                 else:
-                    report_context['enac_label'] = (
-                        ResultsReport.raise_user_error(
-                            'enac_acredited', raise_exception=False))
+                    report_context['enac_label'] = gettext(
+                        'lims.msg_enac_acredited')
         else:
             report_context['enac_label'] = ''
 
@@ -2735,23 +2680,17 @@ class ResultReport(Report):
             with Transaction().set_context(language=lang_code):
                 if report_context['comments']:
                     report_context['comments'] += '\n'
-                report_context['comments'] += (
-                    ResultsReport.raise_user_error('obs_ql',
-                        raise_exception=False))
+                report_context['comments'] += gettext('lims.msg_obs_ql')
         if obs_dl and report_context['report_section']:
             with Transaction().set_context(language=lang_code):
                 if report_context['comments']:
                     report_context['comments'] += '\n'
-                report_context['comments'] += (
-                    ResultsReport.raise_user_error('obs_dl',
-                        raise_exception=False))
+                report_context['comments'] += gettext('lims.msg_obs_dl')
         if obs_uncert:
             with Transaction().set_context(language=lang_code):
                 if report_context['comments']:
                     report_context['comments'] += '\n'
-                report_context['comments'] += (
-                    ResultsReport.raise_user_error('obs_uncert',
-                        raise_exception=False))
+                report_context['comments'] += gettext('lims.msg_obs_uncert')
         if obs_result_range and range_type.resultrange_comments:
             if report_context['comments']:
                 report_context['comments'] += '\n'
@@ -2760,9 +2699,7 @@ class ResultReport(Report):
             with Transaction().set_context(language=lang_code):
                 if report_context['comments']:
                     report_context['comments'] += '\n'
-                report_context['comments'] += (
-                    ResultsReport.raise_user_error('obs_rm_c_f',
-                        raise_exception=False))
+                report_context['comments'] += gettext('lims.msg_obs_rm_c_f')
 
         report_context['annulment_reason'] = ''
         if report.number != '1':
@@ -2812,9 +2749,6 @@ class ResultReport(Report):
 
     @classmethod
     def get_result(cls, report_section, notebook_line, obs_ql, language):
-        pool = Pool()
-        ResultsReport = pool.get('lims.results_report.version.detail')
-
         literal_result = notebook_line.literal_result
         result = notebook_line.result
         decimals = notebook_line.decimals
@@ -2835,27 +2769,20 @@ class ResultReport(Report):
                     if result_modifier == 'eq':
                         res = res
                     elif result_modifier == 'low':
-                        res = ResultsReport.raise_user_error(
-                            'quantification_limit', (res,),
-                            raise_exception=False)
+                        res = gettext('lims.msg_quantification_limit', loq=res)
                         obs_ql = True
                     elif result_modifier == 'nd':
-                        res = ResultsReport.raise_user_error('nd',
-                            raise_exception=False)
+                        res = gettext('lims.msg_nd')
                     elif result_modifier == 'ni':
                         res = ''
                     elif result_modifier == 'pos':
-                        res = ResultsReport.raise_user_error('pos',
-                            raise_exception=False)
+                        res = gettext('lims.msg_pos')
                     elif result_modifier == 'neg':
-                        res = ResultsReport.raise_user_error('neg',
-                            raise_exception=False)
+                        res = gettext('lims.msg_neg')
                     elif result_modifier == 'pre':
-                        res = ResultsReport.raise_user_error('pre',
-                            raise_exception=False)
+                        res = gettext('lims.msg_pre')
                     elif result_modifier == 'abs':
-                        res = ResultsReport.raise_user_error('abs',
-                            raise_exception=False)
+                        res = gettext('lims.msg_abs')
                     else:
                         res = result_modifier
             elif report_section == 'mi':
@@ -2873,28 +2800,20 @@ class ResultReport(Report):
                     elif result_modifier == 'low':
                         res = '< %s' % res
                     elif result_modifier == 'nd':
-                        res = ResultsReport.raise_user_error('nd',
-                            raise_exception=False)
+                        res = gettext('lims.msg_nd')
                     elif result_modifier == 'pos':
-                        res = ResultsReport.raise_user_error('pos',
-                            raise_exception=False)
+                        res = gettext('lims.msg_pos')
                     elif result_modifier == 'neg':
-                        res = ResultsReport.raise_user_error('neg',
-                            raise_exception=False)
+                        res = gettext('lims.msg_neg')
                     elif result_modifier == 'pre':
-                        res = ResultsReport.raise_user_error('pre',
-                            raise_exception=False)
+                        res = gettext('lims.msg_pre')
                     elif result_modifier == 'abs':
-                        res = ResultsReport.raise_user_error('abs',
-                            raise_exception=False)
+                        res = gettext('lims.msg_abs')
             return res, obs_ql
 
     @classmethod
     def get_converted_result(cls, report_section, report_result_type,
             notebook_line, obs_ql, language):
-        pool = Pool()
-        ResultsReport = pool.get('lims.results_report.version.detail')
-
         if (report_section in ('for', 'mi', 'rp') or
                 report_result_type not in ('both', 'both_range')):
             return '', obs_ql
@@ -2909,38 +2828,29 @@ class ResultReport(Report):
             res = ''
             if analysis != '0001' and not literal_result:
                 if converted_result_modifier == 'neg':
-                    res = ResultsReport.raise_user_error('neg',
-                        raise_exception=False)
+                    res = gettext('lims.msg_neg')
                 elif converted_result_modifier == 'pos':
-                    res = ResultsReport.raise_user_error('pos',
-                        raise_exception=False)
+                    res = gettext('lims.msg_pos')
                 elif converted_result_modifier == 'pre':
-                    res = ResultsReport.raise_user_error('pre',
-                        raise_exception=False)
+                    res = gettext('lims.msg_pre')
                 elif converted_result_modifier == 'abs':
-                    res = ResultsReport.raise_user_error('abs',
-                        raise_exception=False)
+                    res = gettext('lims.msg_abs')
                 elif converted_result_modifier == 'nd':
-                    res = ResultsReport.raise_user_error('nd',
-                        raise_exception=False)
+                    res = gettext('lims.msg_nd')
                 else:
                     if converted_result and converted_result_modifier != 'ni':
                         res = round(float(converted_result), decimals)
                         if decimals == 0:
                             res = int(res)
                         if converted_result_modifier == 'low':
-                            res = ResultsReport.raise_user_error(
-                                'quantification_limit', (res,),
-                                raise_exception=False)
+                            res = gettext(
+                                'quantification_limit', loq=res)
                             obs_ql = True
             return res, obs_ql
 
     @classmethod
     def get_initial_unit(cls, report_section, report_result_type,
             notebook_line, obs_dl, obs_uncert, language):
-        pool = Pool()
-        ResultsReport = pool.get('lims.results_report.version.detail')
-
         if not notebook_line.initial_unit:
             return '', obs_dl, obs_uncert
 
@@ -2960,9 +2870,8 @@ class ResultReport(Report):
                     res = round(float(uncertainty), decimals)
                     if decimals == 0:
                         res = int(res)
-                    res = ResultsReport.raise_user_error(
-                        'uncertainty', (res, ''),
-                        raise_exception=False)
+                    res = gettext(
+                        'lims.msg_uncertainty', res=res, initial_unit='')
                     obs_uncert = True
             else:
                 res = initial_unit
@@ -2978,9 +2887,9 @@ class ResultReport(Report):
                                     '0', '0.0')):
                                 res = initial_unit
                             else:
-                                res = ResultsReport.raise_user_error(
-                                    'detection_limit', (detection_limit,
-                                    initial_unit), raise_exception=False)
+                                res = gettext('lims.msg_detection_limit',
+                                    detection_limit=detection_limit,
+                                    initial_unit=initial_unit)
                                 obs_dl = True
                     else:
                         if (not converted_result and uncertainty and
@@ -2988,18 +2897,14 @@ class ResultReport(Report):
                             res = round(float(uncertainty), decimals)
                             if decimals == 0:
                                 res = int(res)
-                            res = ResultsReport.raise_user_error(
-                                'uncertainty', (res, initial_unit),
-                                raise_exception=False)
+                            res = gettext('lims.msg_uncertainty',
+                                res=res, initial_unit=initial_unit)
                             obs_uncert = True
             return res, obs_dl, obs_uncert
 
     @classmethod
     def get_final_unit(cls, report_section, report_result_type,
             notebook_line, obs_dl, obs_uncert, language):
-        pool = Pool()
-        ResultsReport = pool.get('lims.results_report.version.detail')
-
         if (report_section in ('for', 'mi', 'rp') or
                 report_result_type not in ('both', 'both_range')):
             return '', obs_dl, obs_uncert
@@ -3026,9 +2931,9 @@ class ResultReport(Report):
                             '0', '0.0')):
                         res = final_unit
                     else:
-                        res = ResultsReport.raise_user_error(
-                            'detection_limit', (detection_limit,
-                            final_unit), raise_exception=False)
+                        res = gettext('lims.msg_detection_limit',
+                            detection_limit=detection_limit,
+                            final_unit=final_unit)
                         obs_dl = True
                 else:
                     if not converted_result:
@@ -3038,17 +2943,14 @@ class ResultReport(Report):
                             res = round(float(uncertainty), decimals)
                             if decimals == 0:
                                 res = int(res)
-                            res = ResultsReport.raise_user_error(
-                                'uncertainty', (res, final_unit),
-                                raise_exception=False)
+                            res = gettext('lims.msg_uncertainty',
+                                res=res, final_unit=final_unit)
                             obs_uncert = True
             return res, obs_dl, obs_uncert
 
     @classmethod
     def get_detection_limit(cls, report_section, report_result_type,
             report_type, notebook_line, language):
-        ResultsReport = Pool().get('lims.results_report.version.detail')
-
         detection_limit = notebook_line.detection_limit
         literal_result = notebook_line.literal_result
         result_modifier = notebook_line.result_modifier
@@ -3057,9 +2959,8 @@ class ResultReport(Report):
             res = ''
             if report_type == 'polisample' and result_modifier == 'nd':
                 with Transaction().set_context(language=language):
-                    res = ResultsReport.raise_user_error(
-                        'detection_limit_2', (detection_limit),
-                        raise_exception=False)
+                    res = gettext('lims.msg_detection_limit_2',
+                        detection_limit=detection_limit)
         else:
             if (not detection_limit or detection_limit in ('0', '0.0') or
                     literal_result):
@@ -3073,7 +2974,6 @@ class ResultReport(Report):
             report_section):
         pool = Pool()
         Range = pool.get('lims.range')
-        ResultsReport = pool.get('lims.results_report.version.detail')
 
         with Transaction().set_context(language=language):
             ranges = Range.search([
@@ -3101,8 +3001,7 @@ class ResultReport(Report):
                     res1 = str(round(range_.min, 2))
                 else:
                     res1 = str(int(range_.min))
-                res = ResultsReport.raise_user_error('caa_min',
-                    (res1,), raise_exception=False)
+                res = gettext('lims.msg_caa_min', min=res1)
 
         if range_.max:
             if res:
@@ -3115,8 +3014,7 @@ class ResultReport(Report):
                 else:
                     res1 = str(int(range_.max))
 
-                res += ResultsReport.raise_user_error('caa_max',
-                    (res1,), raise_exception=False)
+                res += gettext('lims.msg_caa_max', max=res1)
         return res
 
 
@@ -3128,11 +3026,11 @@ class ResultReportTranscription(ResultReport):
     def execute(cls, ids, data):
         ResultsReport = Pool().get('lims.results_report.version.detail')
         if len(ids) > 1:
-            ResultsReport.raise_user_error('multiple_reports')
+            raise UserError(gettext('lims.msg_multiple_reports'))
 
         results_report = ResultsReport(ids[0])
         if results_report.state == 'annulled':
-            ResultsReport.raise_user_error('annulled_report')
+            raise UserError(gettext('lims.msg_annulled_report'))
 
         if data is None:
             data = {}

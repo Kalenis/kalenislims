@@ -12,32 +12,12 @@
             <field name="group" ref="group_lims_digital_sign"/>
         </record>
 
-<!-- Users -->
-
-        <record model="res.user" id="user_digital_sign">
-            <field name="login">user_cron_digital_sign</field>
-            <field name="name">Cron Lims Digital Sign</field>
-            <field name="signature"></field>
-            <field name="active" eval="False"/>
-        </record>
-        <record model="res.user-res.group" id="user_digital_sign_group_digital_sign">
-            <field name="user" ref="user_digital_sign"/>
-            <field name="group" ref="group_lims_digital_sign"/>
-        </record>
-
 <!-- Cron -->
 
         <record model="ir.cron" id="cron_lims_digital_sign_results_reports">
-            <field name="name">Lims Digital Sign Results Reports</field>
-            <field name="request_user" ref="res.user_admin"/>
-            <field name="user" ref="user_digital_sign"/>
-            <field name="active" eval="True"/>
             <field name="interval_number" eval="1"/>
             <field name="interval_type">days</field>
-            <field name="number_calls" eval="-1"/>
-            <field name="repeat_missed" eval="False"/>
-            <field name="model">lims.results_report</field>
-            <field name="function">cron_digital_signs</field>
+            <field name="method">lims.results_repor|cron_digital_signs</field>
         </record>
 
 <!-- Wizard Digital Sign -->

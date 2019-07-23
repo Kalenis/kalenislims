@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<tryton>
+    <data group="1">
+        <record model="ir.message" id="msg_not_invoice_contacts">
+            <field name="text">Invoice Contacts field must have a value</field>
+        </record>
+        <record model="ir.message" id="msg_delete_service_invoice">
+            <field name="text">You can not delete an invoice line related to a service ("%(service)s")</field>
+        </record>
+        <record model="ir.message" id="msg_missing_account_revenue">
+            <field name="text">Analysis product \"%(product)s\" in Service "%(service)s" misses an "account revenue".</field>
+        </record>
+    </data>
+</tryton>

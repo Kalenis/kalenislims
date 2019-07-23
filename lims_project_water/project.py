@@ -8,6 +8,8 @@ from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Equal, Bool, Not
 from trytond.transaction import Transaction
 from trytond.report import Report
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['Project', 'Entry', 'Sample', 'CreateSampleStart', 'CreateSample']
 
@@ -29,10 +31,6 @@ class Project(metaclass=PoolMeta):
         project_type = PROJECT_TYPE
         if project_type not in cls.type.selection:
             cls.type.selection.append(project_type)
-        cls._error_messages.update({
-            'not_water': ('Please, select a "Water sampling" Project to print '
-                'this report'),
-            })
 
     @classmethod
     def view_attributes(cls):
@@ -140,7 +138,7 @@ class ProjectWaterSampling(Report):
 
         project = Project(data['id'])
         if project.type != 'water':
-            Project.raise_user_error('not_water')
+            raise UserError(gettext('lims_project_water.msg_not_water'))
 
         return super(ProjectWaterSampling, cls).execute(ids, data)
 

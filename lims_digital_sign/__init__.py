@@ -11,6 +11,7 @@ from . import digital_sign
 def register():
     Pool.register(
         configuration.Configuration,
+        configuration.Cron,
         lims.ResultsReportVersionDetail,
         lims.ResultsReport,
         digital_sign.DigitalSignStart,

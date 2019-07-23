@@ -7,6 +7,8 @@ from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pyson import Eval
 from trytond.pool import Pool
 from trytond.transaction import Transaction
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['CertificationType', 'TechnicalScope', 'TechnicalScopeVersion',
     'TechnicalScopeVersionLine', 'AnalysisFamily', 'AnalysisFamilyCertificant',
@@ -76,10 +78,6 @@ class TechnicalScopeVersion(ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super(TechnicalScopeVersion, cls).__setup__()
-        cls._error_messages.update({
-            'active_version': ('Only one version can be active for each '
-                'technical scope'),
-            })
         cls._buttons.update({
             'open_typifications': {},
             'add_typifications': {
@@ -108,7 +106,7 @@ class TechnicalScopeVersion(ModelSQL, ModelView):
                     ('id', '!=', self.id),
                     ])
             if versions:
-                self.raise_user_error('active_version')
+                raise UserError(gettext('lims.msg_active_version'))
 
     @classmethod
     @ModelView.button_action('lims.act_open_typifications')

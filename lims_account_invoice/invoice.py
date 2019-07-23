@@ -17,6 +17,8 @@ from trytond.pyson import Eval, Bool, Or
 from trytond.transaction import Transaction
 from trytond.tools import get_smtp_server
 from trytond.config import config
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['Invoice', 'InvoiceContact', 'InvoiceLine', 'CreditInvoice',
     'PopulateInvoiceContactsStart', 'PopulateInvoiceContacts', 'SendOfInvoice']
@@ -50,9 +52,6 @@ class Invoice(metaclass=PoolMeta):
         super(Invoice, cls).__setup__()
         cls._check_modify_exclude.extend(['sent', 'sent_date',
             'invoice_contacts', 'no_send_invoice'])
-        cls._error_messages.update({
-            'not_invoice_contacts': 'Invoice Contacts field must have a value',
-            })
 
     @classmethod
     def view_attributes(cls):
@@ -90,7 +89,8 @@ class Invoice(metaclass=PoolMeta):
             if invoice.type == 'out':
                 if (not invoice.no_send_invoice and not
                         invoice.invoice_contacts):
-                    cls.raise_user_error('not_invoice_contacts')
+                    raise UserError(gettext(
+                        'lims_account_invoice.msg_not_invoice_contacts'))
 
     @classmethod
     def cron_send_invoice(cls):
@@ -273,10 +273,6 @@ class InvoiceLine(metaclass=PoolMeta):
     def __setup__(cls):
         super(InvoiceLine, cls).__setup__()
         cls.origin.states['readonly'] = True
-        cls._error_messages.update({
-            'delete_service_invoice': ('You can not delete an invoice line '
-                'related to a service ("%s")'),
-            })
 
     @classmethod
     def delete(cls, lines):
@@ -289,8 +285,9 @@ class InvoiceLine(metaclass=PoolMeta):
         for line in lines:
             if (line.origin and line.origin.__name__ == 'lims.service' and not
                     line.economic_offer):
-                cls.raise_user_error('delete_service_invoice',
-                    (line.origin.rec_name,))
+                raise UserError(
+                    gettext('lims_account_invoice.msg_delete_service_invoice',
+                        service=line.origin.rec_name))
 
     @classmethod
     def get_fraction_field(cls, lines, names):

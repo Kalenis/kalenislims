@@ -9,6 +9,8 @@ from trytond.pyson import Eval, Bool
 from trytond.pool import PoolMeta, Pool
 from trytond.transaction import Transaction
 from trytond.report import Report
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['BOM', 'Production', 'FamilyEquivalentReport']
 
@@ -50,14 +52,6 @@ class Production(metaclass=PoolMeta):
         'on_change_with_salable_product')
     comments = fields.Text('Comments')
 
-    @classmethod
-    def __setup__(cls):
-        super(Production, cls).__setup__()
-        cls._error_messages.update({
-            'quantity_multiple_required': ('Quantity multiple of output bom '
-                'required.'),
-            })
-
     @fields.depends('product')
     def on_change_with_salable_product(self, name=None):
         if self.product:
@@ -96,7 +90,8 @@ class Production(metaclass=PoolMeta):
             for output in self.bom.outputs:
                 quantity += output.quantity
             if not (self.quantity % quantity == 0):
-                self.raise_user_error('quantity_multiple_required')
+                raise UserError(
+                    gettext('lims_production.msg_quantity_multiple_required'))
 
         outputs = []
 

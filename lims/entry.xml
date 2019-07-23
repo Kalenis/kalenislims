@@ -286,29 +286,15 @@
 <!-- Cron -->
 
         <record model="ir.cron" id="cron_lims_acknowledgment_of_receipt">
-            <field name="name">Lims Acknowledgment of Receipt (Samples)</field>
-            <field name="request_user" ref="res.user_admin"/>
-            <field name="user" ref="user_acknowledgment_of_receipt"/>
-            <field name="active" eval="True"/>
             <field name="interval_number" eval="20"/>
             <field name="interval_type">minutes</field>
-            <field name="number_calls" eval="-1"/>
-            <field name="repeat_missed" eval="False"/>
-            <field name="model">lims.entry</field>
-            <field name="function">cron_acknowledgment_of_receipt</field>
+            <field name="method">lims.entry|cron_acknowledgment_of_receipt</field>
         </record>
 
         <record model="ir.cron" id="cron_lims_confirm_waiting_entries">
-            <field name="name">Lims Confirm Waiting Entries</field>
-            <field name="request_user" ref="res.user_admin"/>
-            <field name="user" ref="user_entry_confirm"/>
-            <field name="active" eval="True"/>
             <field name="interval_number" eval="1"/>
             <field name="interval_type">minutes</field>
-            <field name="number_calls" eval="-1"/>
-            <field name="repeat_missed" eval="False"/>
-            <field name="model">lims.fraction</field>
-            <field name="function">confirm_waiting_fractions</field>
+            <field name="method">lims.fraction|confirm_waiting_fractions</field>
         </record>
 
 <!-- Wizard Forward Acknowledgment of Samples Receipt -->
