@@ -322,6 +322,10 @@ msgctxt "field:stock.lot,concentration:"
 msgid "Concentration"
 msgstr "Concentración"
 
+msgctxt "field:stock.lot,exclusive_glp:"
+msgid "Exclusive use GLP"
+msgstr "Uso Exclusivo BPL"
+
 msgctxt "field:stock.lot,expiration_date:"
 msgid "Expiration Date"
 msgstr "Fecha caducidad"
