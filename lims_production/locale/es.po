@@ -323,8 +323,8 @@ msgid "Concentration"
 msgstr "Concentración"
 
 msgctxt "field:stock.lot,expiration_date:"
-msgid "Expiration date"
-msgstr "Fecha de vencimiento"
+msgid "Expiration Date"
+msgstr "Fecha caducidad"
 
 msgctxt "field:stock.lot,homogeneity:"
 msgid "Homogeneity"
