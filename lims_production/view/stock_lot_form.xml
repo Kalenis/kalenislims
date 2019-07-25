@@ -1,5 +1,12 @@
 <?xml version="1.0"?>
 <data>
+    <xpath expr="/form/label[@name='shelf_life_expiration_date']"
+        position="replace"/>
+    <xpath expr="/form/field[@name='shelf_life_expiration_date']"
+        position="replace"/>
+    <xpath expr="/form/label[@name='expiration_date']" position="replace"/>
+    <xpath expr="/form/field[@name='expiration_date']" position="replace"/>
+
     <xpath
         expr="/form/field[@name='product']"
         position="after">
@@ -14,13 +21,17 @@
         <label name="concentration"/>
         <field name="concentration"/>
         <newline/>
-        <label name="expiration_date"/>
-        <field name="expiration_date"/>
-        <group colspan="2" id="dates">
-            <label name="reception_date"/>
-            <field name="reception_date"/>
-            <label name="preparation_date"/>
-            <field name="preparation_date"/>
+        <group col="6" colspan="4" id="dates">
+            <label name="shelf_life_expiration_date"/>
+            <field name="shelf_life_expiration_date"/>
+            <label name="expiration_date"/>
+            <field name="expiration_date"/>
+            <group colspan="2" id="dates2">
+                <label name="reception_date"/>
+                <field name="reception_date"/>
+                <label name="preparation_date"/>
+                <field name="preparation_date"/>
+            </group>
         </group>
         <newline/>
         <label name="common_name"/>

@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 <data>
+    <xpath expr="/tree/field[@name='shelf_life_expiration_date']"
+        position="replace"/>
+    <xpath expr="/tree/field[@name='expiration_date']"
+        position="replace"/>
+
     <xpath
         expr="/tree/field[@name='product']"
         position="after">
@@ -8,6 +13,7 @@
         <field name="stability"/>
         <field name="homogeneity"/>
         <field name="concentration"/>
+        <field name="shelf_life_expiration_date"/>
         <field name="expiration_date"/>
         <field name="reception_date"/>
         <field name="preparation_date"/>
