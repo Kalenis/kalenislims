@@ -287,7 +287,6 @@ class Lot(metaclass=PoolMeta):
             'invisible': ~Eval('special_category').in_(
                 ['input_prod', 'domestic_use']),
             })
-    expiration_date = fields.Date('Expiration date')
     reception_date = fields.Date('Reception date',
         depends=['special_category'], states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
@@ -348,6 +347,11 @@ class Lot(metaclass=PoolMeta):
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod'))),
             }), 'get_account_category', searcher='search_account_category')
+
+    @classmethod
+    def __setup__(cls):
+        super(Lot, cls).__setup__()
+        cls.expiration_date.states['invisible'] = Eval(False)
 
     @fields.depends('category', 'product')
     def on_change_with_special_category(self, name=None):
