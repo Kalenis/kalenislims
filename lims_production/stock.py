@@ -310,7 +310,7 @@ class Lot(metaclass=PoolMeta):
         depends=['special_category'], states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod'))),
-            }), 'get_cas_number')
+            }), 'get_cas_number', searcher='search_cas_number')
     commercial_brand = fields.Function(fields.Many2One('lims.brand',
         'Commercial Brand', depends=['special_category'], states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
@@ -341,11 +341,19 @@ class Lot(metaclass=PoolMeta):
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod'))),
             }), 'get_account_category', searcher='search_account_category')
+    exclusive_glp = fields.Boolean('Exclusive use GLP',
+        depends=['special_category'], states={
+            'invisible': Not(Bool(Equal(Eval('special_category'),
+                'input_prod')))})
 
     @classmethod
     def __setup__(cls):
         super(Lot, cls).__setup__()
         cls.expiration_date.states['invisible'] = Eval(False)
+
+    @staticmethod
+    def default_exclusive_glp():
+        return False
 
     @fields.depends('category', 'product')
     def on_change_with_special_category(self, name=None):
@@ -387,6 +395,10 @@ class Lot(metaclass=PoolMeta):
         if self.product:
             return self.product.cas_number
         return ''
+
+    @classmethod
+    def search_cas_number(cls, name, clause):
+        return [('product.cas_number',) + tuple(clause[1:])]
 
     def get_commercial_brand(self, name=None):
         if self.product and self.product.commercial_brand:

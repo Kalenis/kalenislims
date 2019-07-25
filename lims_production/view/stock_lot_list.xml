@@ -24,6 +24,7 @@
         <field name="commercial_brand"/>
         <field name="catalog"/>
         <field name="purity_degree"/>
+        <field name="exclusive_glp"/>
         <field name="solvent"/>
         <field name="technician"/>
     </xpath>

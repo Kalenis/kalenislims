@@ -48,7 +48,8 @@
         <field name="catalog"/>
         <label name="purity_degree"/>
         <field name="purity_degree"/>
-        <newline/>
+        <label name="exclusive_glp"/>
+        <field name="exclusive_glp"/>
         <label name="technician"/>
         <field name="technician"/>
         <label name="solvent"/>
