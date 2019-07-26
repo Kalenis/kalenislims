@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/field[@name='subdivision']"
+        position="after">
+        <newline/>
+        <label name="commercial_item"/>
+        <field name="commercial_item"/>
+        <label name="commercial_zone"/>
+        <field name="commercial_zone"/> 
+    </xpath>
+</data>
