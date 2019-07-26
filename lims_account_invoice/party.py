@@ -26,6 +26,31 @@ class Party(metaclass=PoolMeta):
 class Address(metaclass=PoolMeta):
     __name__ = 'party.address'
 
+    commercial_item = fields.Function(fields.Many2One('party.category',
+        'Commercial Item'), 'get_commercial_item',
+        searcher='search_commercial_item')
+    commercial_zone = fields.Function(fields.Many2One('party.category',
+        'Commercial Zone'), 'get_commercial_zone',
+        searcher='search_commercial_zone')
+
+    def get_commercial_item(self, name=None):
+        if self.party  and self.party.commercial_item:
+            return self.party.commercial_item.id
+        return None
+
+    def get_commercial_zone(self, name=None):
+        if self.party and self.party.commercial_zone:
+            return self.party.commercial_zone.id
+        return None
+
+    @classmethod
+    def search_commercial_item(cls, name, clause):
+        return [('party.' + name,) + tuple(clause[1:])]
+
+    @classmethod
+    def search_commercial_zone(cls, name, clause):
+        return [('party.' + name,) + tuple(clause[1:])]
+
     @classmethod
     def validate(cls, addresses):
         super(Address, cls).validate(addresses)
