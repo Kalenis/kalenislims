@@ -10,5 +10,18 @@
             <field name="name">party_party_form</field>
         </record>
 
+<!-- Address -->
+
+        <record model="ir.ui.view" id="lims_address_view_form">
+            <field name="model">party.address</field>
+            <field name="inherit" ref="party.address_view_form"/>
+            <field name="name">party_address_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_address_view_list1">
+            <field name="model">party.address</field>
+            <field name="inherit" ref="party.address_view_tree"/>
+            <field name="name">party_address_list</field>
+        </record>
+
     </data>
 </tryton>

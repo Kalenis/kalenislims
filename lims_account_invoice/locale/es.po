@@ -211,3 +211,11 @@ msgstr "Rubro comercial"
 msgctxt "field:party.party,commercial_zone:"
 msgid "Commercial Zone"
 msgstr "Región comercial"
+
+msgctxt "field:party.address,commercial_item:"
+msgid "Commercial Item"
+msgstr "Rubro comercial"
+
+msgctxt "field:party.address,commercial_zone:"
+msgid "Commercial Zone"
+msgstr "Región comercial"
