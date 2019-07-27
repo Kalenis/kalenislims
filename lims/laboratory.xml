@@ -63,6 +63,7 @@
         </record>
 
         <record model="ir.rule.group" id="rule_group_laboratory">
+            <field name="name">User in laboratory</field>
             <field name="model" search="[('model', '=', 'lims.laboratory')]"/>
             <field name="global_p" eval="True"/>
         </record>

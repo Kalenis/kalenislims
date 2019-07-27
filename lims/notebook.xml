@@ -52,6 +52,7 @@
         </record>
 
         <record model="ir.rule.group" id="rule_group_notebook">
+            <field name="name">User in laboratory</field>
             <field name="model" search="[('model', '=', 'lims.notebook')]"/>
             <field name="global_p" eval="True"/>
         </record>
@@ -105,6 +106,7 @@
         </record>
 
         <record model="ir.rule.group" id="rule_group_notebook_line">
+            <field name="name">User in laboratory</field>
             <field name="model" search="[('model', '=', 'lims.notebook.line')]"/>
             <field name="global_p" eval="True"/>
         </record>
@@ -157,6 +159,7 @@
         </record>
 
         <record model="ir.rule.group" id="rule_group_notebook_line_all_fields">
+            <field name="name">User in laboratory</field>
             <field name="model" search="[('model', '=', 'lims.notebook.line.all_fields')]"/>
             <field name="global_p" eval="True"/>
         </record>
