@@ -55,4 +55,5 @@
             <field name="comments" colspan="4"/>
         </page>
     </notebook>
+    <field name="id" colspan="4" invisible="1"/>
 </form>

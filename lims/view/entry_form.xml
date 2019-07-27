@@ -55,4 +55,5 @@
         <button name="confirm" string="Confirm"/>
         <button name="on_hold" string="Administration pending"/>
     </group>
+    <field name="id" colspan="4" invisible="1"/>
 </form>
