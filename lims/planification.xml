@@ -106,6 +106,7 @@
         </record>
 
         <record model="ir.rule.group" id="rule_group_planification">
+            <field name="name">User in laboratory</field>
             <field name="model" search="[('model', '=', 'lims.planification')]"/>
             <field name="global_p" eval="True"/>
         </record>

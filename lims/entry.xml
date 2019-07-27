@@ -227,6 +227,7 @@
         </record>
 
         <record model="ir.rule.group" id="rule_group_entry_detail_analysis">
+            <field name="name">User in laboratory</field>
             <field name="model" search="[('model', '=', 'lims.entry.detail.analysis')]"/>
             <field name="global_p" eval="True"/>
         </record>

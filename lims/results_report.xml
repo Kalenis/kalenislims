@@ -69,6 +69,7 @@
         </record>
 
         <record model="ir.rule.group" id="rule_group_results_report_version">
+            <field name="name">User in laboratory</field>
             <field name="model" search="[('model', '=', 'lims.results_report.version')]"/>
             <field name="global_p" eval="True"/>
         </record>
@@ -108,6 +109,7 @@
         </record>
 
         <record model="ir.rule.group" id="rule_group_results_report_version_detail">
+            <field name="name">User in laboratory</field>
             <field name="model" search="[('model', '=', 'lims.results_report.version.detail')]"/>
             <field name="global_p" eval="True"/>
         </record>
