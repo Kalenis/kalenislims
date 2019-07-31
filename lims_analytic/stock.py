@@ -16,18 +16,18 @@ class Move(metaclass=PoolMeta):
     def _get_account_stock_move_lines(self, type_):
         move_line, = super(Move, self)._get_account_stock_move_lines(type_)
 
-        if move_line.account.kind != 'expense':
+        if not move_line.account.type.expense:
             return [move_line]
 
         analytic_account = None
         if type_ in ('out_lost_found', 'out_production'):
             if self.product.account_stock_used:
-                if self.product.account_stock_used.kind == 'expense':
+                if self.product.account_stock_used.type.expense:
                     return [move_line]
             analytic_account = self.from_location.cost_center
         elif type_ == 'in_lost_found':
             if self.product.account_stock_used:
-                if self.product.account_stock_used.kind == 'expense':
+                if self.product.account_stock_used.type.expense:
                     return [move_line]
             analytic_account = self.to_location.cost_center
         elif type_ in ('in_supplier', 'out_supplier'):
@@ -61,18 +61,18 @@ class Move(metaclass=PoolMeta):
             move_line.debit = - amount
             move_line.credit = Decimal('0.0')
 
-        if move_line.account.kind != 'expense':
+        if not move_line.account.type.expense:
             return move_line
 
         analytic_account = None
         if type_ in ('out_lost_found', 'out_production'):
             if self.product.account_stock_used:
-                if self.product.account_stock_used.kind == 'expense':
+                if self.product.account_stock_used.type.expense:
                     return move_line
             analytic_account = self.from_location.cost_center
         elif type_ == 'in_lost_found':
             if self.product.account_stock_used:
-                if self.product.account_stock_used.kind == 'expense':
+                if self.product.account_stock_used.type.expense:
                     return move_line
             analytic_account = self.to_location.cost_center
         elif type_ in ('in_supplier', 'out_supplier'):
