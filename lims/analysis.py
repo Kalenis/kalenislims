@@ -109,7 +109,7 @@ class Typification(ModelSQL, ModelView):
         cls._sql_constraints += [
             ('product_matrix_analysis_method_uniq',
                 Unique(t, t.product_type, t.matrix, t.analysis, t.method),
-                'This typification already exists'),
+                'lims.msg_typification_unique_id'),
             ]
 
     @staticmethod
@@ -264,7 +264,7 @@ class Typification(ModelSQL, ModelView):
     def check_limits(self):
         if (self.detection_limit and
                 self.quantification_limit <= self.detection_limit):
-            raise UserError(gettext('lims.lims.msg_limits'))
+            raise UserError(gettext('lims.msg_limits'))
 
     def check_default(self):
         if self.by_default:
@@ -636,7 +636,7 @@ class ProductType(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Product type code must be unique'),
+                'lims.msg_product_type_unique_id'),
             ]
 
     @staticmethod
@@ -676,7 +676,7 @@ class Matrix(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Matrix code must be unique'),
+                'lims.msg_matrix_unique_id'),
             ]
 
     @staticmethod
@@ -723,7 +723,7 @@ class ObjectiveDescription(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('product_matrix_uniq', Unique(t, t.product_type, t.matrix),
-                'This objective description already exists'),
+                'lims.msg_objective_description_unique_id'),
             ]
 
 
@@ -890,7 +890,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Analysis code must be unique'),
+                'lims.msg_analysis_code_unique_id'),
             ]
         cls._transitions |= set((
             ('draft', 'active'),

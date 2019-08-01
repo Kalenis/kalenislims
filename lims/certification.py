@@ -152,7 +152,7 @@ class AnalysisFamily(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Analysis family code must be unique'),
+                'lims.msg_analysis_family_code_unique_id'),
             ]
 
     def get_rec_name(self, name):
@@ -189,7 +189,7 @@ class AnalysisFamilyCertificant(ModelSQL, ModelView):
         cls._sql_constraints += [
             ('product_matrix_uniq',
                 Unique(t, t.family, t.product_type, t.matrix),
-                'This record already exists'),
+                'lims.msg_analysis_family_certificant_unique_id'),
             ]
 
 

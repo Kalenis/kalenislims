@@ -23,7 +23,7 @@ class Uom(metaclass=PoolMeta):
         t = cls.__table__()
         cls._sql_constraints += [
             ('symbol_uniq', Unique(t, t.symbol),
-                'UoM symbol must be unique'),
+                'lims.msg_uom_symbol_unique_id'),
             ]
 
     def get_rec_name(self, name):
@@ -221,7 +221,7 @@ class ConcentrationLevel(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Concentration level code must be unique'),
+                'lims.msg_concentration_level_code_unique_id'),
             ]
 
     def get_rec_name(self, name):

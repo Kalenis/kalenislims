@@ -75,7 +75,7 @@ msgid "Water sampling"
 msgstr "Muestreo"
 
 ##
-msgctxt "error:lims.project:"
+msgctxt "model:ir.message,text:msg_not_water"
 msgid "Please, select a \"Water sampling\" Project to print this report"
 msgstr "Por favor, seleccione un proyecto de muestreo para imprimir."
 

@@ -32,7 +32,7 @@ class Project(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Project code must be unique'),
+                'lims_project.msg_code_unique_id'),
             ]
 
     @staticmethod

@@ -2,7 +2,7 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "error:lims.project:"
+msgctxt "model:ir.message,text:msg_code_unique_id"
 msgid "Project code must be unique"
 msgstr "El código del proyecto debe ser único"
 

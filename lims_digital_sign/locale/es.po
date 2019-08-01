@@ -2,7 +2,7 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "error:lims.results_report:"
+msgctxt "model:ir.message,text:msg_polisample"
 msgid "Polisample"
 msgstr "Polimuestra"
 

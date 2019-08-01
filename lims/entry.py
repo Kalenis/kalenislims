@@ -695,7 +695,7 @@ class EntrySuspensionReason(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Suspension reason code must be unique'),
+                'lims.msg_suspension_reason_unique_id'),
             ]
 
     @staticmethod

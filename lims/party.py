@@ -34,7 +34,7 @@ class Party(metaclass=PoolMeta):
         t = cls.__table__()
         cls._sql_constraints += [
             ('lims_user_uniq', Unique(t, t.lims_user),
-                'This lims user is already assigned to a party')]
+                'lims.msg_party_lims_user_unique_id')]
 
     @staticmethod
     def default_email_report():
