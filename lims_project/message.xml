@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tryton>
+    <data group="1">
+        <record model="ir.message" id="msg_code_unique_id">
+            <field name="text">Project code must be unique</field>
+        </record>
+    </data>
+</tryton>

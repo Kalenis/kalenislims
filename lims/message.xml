@@ -403,5 +403,80 @@
         <record model="ir.message" id="msg_reference_fractions_discharge_reversion">
             <field name="text">Fractions Discharge Reversion</field>
         </record>
+        <record model="ir.message" id="msg_typification_unique_id">
+            <field name="text">This typification already exists</field>
+        </record>
+        <record model="ir.message" id="msg_product_type_unique_id">
+            <field name="text">Product type code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_matrix_unique_id">
+            <field name="text">Matrix code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_objective_description_unique_id">
+            <field name="text">This objective description already exists</field>
+        </record>
+        <record model="ir.message" id="msg_analysis_code_unique_id">
+            <field name="text">Analysis code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_analysis_family_code_unique_id">
+            <field name="text">Analysis family code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_analysis_family_certificant_unique_id">
+            <field name="text">This record already exists</field>
+        </record>
+        <record model="ir.message" id="msg_suspension_reason_unique_id">
+            <field name="text">Suspension reason code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_laboratory_code_unique_id">
+            <field name="text">Laboratory code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_professional_code_unique_id">
+            <field name="text">Professional code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_professional_party_unique_id">
+            <field name="text">The party is already associated to a professional</field>
+        </record>
+        <record model="ir.message" id="msg_method_code_unique_id">
+            <field name="text">Method code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_method_waiting_time_unique_id">
+            <field name="text">Repeated record</field>
+        </record>
+        <record model="ir.message" id="msg_device_code_unique_id">
+            <field name="text">Device code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_device_type_code_unique_id">
+            <field name="text">Device type code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_party_lims_user_unique_id">
+            <field name="text">This lims user is already assigned to a party</field>
+        </record>
+        <record model="ir.message" id="msg_planification_professional_unique_id">
+            <field name="text">Professionals cannot be repeated</field>
+        </record>
+        <record model="ir.message" id="msg_professional_method_unique_id">
+            <field name="text">The method already exists for this professional</field>
+        </record>
+        <record model="ir.message" id="msg_zone_code_unique_id">
+            <field name="text">Zone code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_variety_code_unique_id">
+            <field name="text">Variety code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_packaging_integrity_code_unique_id">
+            <field name="text">Packaging integrity code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_packaging_type_code_unique_id">
+            <field name="text">Packaging type code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_fraction_type_code_unique_id">
+            <field name="text">Fraction type code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_uom_symbol_unique_id">
+            <field name="text">UoM symbol must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_concentration_level_code_unique_id">
+            <field name="text">Concentration level code must be unique</field>
+        </record>
     </data>
 </tryton>

@@ -2,25 +2,21 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "error:account.invoice.line:"
-msgid "You can not delete an invoice line related to a service (\"%s\")"
-msgstr "No puede eliminar una línea de factura relacionada a un servicio (\"%s\")"
+msgctxt "model:ir.message,text:msg_delete_service_invoice"
+msgid "You can not delete an invoice line related to a service (\"%(service)s\")"
+msgstr "No puede eliminar una línea de factura relacionada a un servicio (\"%(service)s\")"
 
-msgctxt "error:account.invoice:"
+msgctxt "model:ir.message,text:msg_not_invoice_contacts"
 msgid "Invoice Contacts field must have a value"
 msgstr "El campo Contactos de factura debe tener un valor"
 
-msgctxt "error:lims.service:"
+msgctxt "model:ir.message,text:msg_missing_account_revenue"
 msgid ""
 "Analysis product \"%(product)s\" in Service \"%(service)s\" misses an "
 "\"account revenue\"."
 msgstr ""
 "Al producto \"%(product)s\" del análisis del servicio \"%(service)s\" le "
 "falta una \"cuenta de ingresos\"."
-
-msgctxt "error:lims.service:"
-msgid "You can not delete a service related to an invoice"
-msgstr "No puede eliminar un servicio relacionado a una factura"
 
 msgctxt "field:account.invoice,currency_rate:"
 msgid "Currency rate"

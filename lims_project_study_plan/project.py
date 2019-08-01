@@ -473,7 +473,8 @@ class ProjectProfessionalPosition(ModelSQL, ModelView):
         super(ProjectProfessionalPosition, cls).__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
-            ('code_uniq', Unique(t, t.code), 'Position code must be unique'),
+            ('code_uniq', Unique(t, t.code),
+                'lims_project_study_plan.msg_position_code_unique_id'),
             ]
 
     def get_rec_name(self, name):

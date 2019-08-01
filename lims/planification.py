@@ -563,7 +563,7 @@ class PlanificationTechnician(ModelSQL, ModelView):
         cls._sql_constraints += [
             ('planification_professional_uniq',
                 Unique(t, t.planification, t.laboratory_professional),
-                'Professionals cannot be repeated'),
+                'lims.msg_planification_professional_unique_id'),
             ]
 
     def get_details(self, name=None):
@@ -867,7 +867,7 @@ class LabProfessionalMethod(ModelSQL, ModelView):
         cls._sql_constraints += [
             ('professional_method_type_uniq',
                 Unique(t, t.professional, t.method, t.type),
-                'The method already exists for this professional'),
+                'lims.msg_professional_method_unique_id'),
             ]
 
     def get_determination(self, name=None):

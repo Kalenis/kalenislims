@@ -148,7 +148,7 @@ class TasType(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'TAS type code must be unique'),
+                'lims_project_tas.msg_tas_type_code_unique_id'),
             ]
 
     def get_rec_name(self, name):

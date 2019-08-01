@@ -28,5 +28,8 @@
         <record model="ir.message" id="msg_professionals">
             <field name="text">Professional(s) with code %(code)s not identified</field>
         </record>
+        <record model="ir.message" id="msg_results_importer_unique_id">
+            <field name="text">The results importer name must be unique</field>
+        </record>
     </data>
 </tryton>

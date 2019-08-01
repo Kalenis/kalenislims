@@ -4,5 +4,8 @@
         <record model="ir.message" id="msg_no_project_tas_sequence">
             <field name="text">There is no sequence for TAS Projects for the work year "%(work_year)s".</field>
         </record>
+        <record model="ir.message" id="msg_tas_type_code_unique_id">
+            <field name="text">TAS type code must be unique</field>
+        </record>
     </data>
 </tryton>

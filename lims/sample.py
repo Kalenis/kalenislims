@@ -53,7 +53,7 @@ class Zone(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Zone code must be unique'),
+                'lims.msg_zone_code_unique_id'),
             ]
 
     def get_rec_name(self, name):
@@ -90,7 +90,7 @@ class Variety(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Variety code must be unique'),
+                'lims.msg_variety_code_unique_id'),
             ]
 
     def get_rec_name(self, name):
@@ -135,7 +135,7 @@ class PackagingIntegrity(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Packaging integrity code must be unique'),
+                'lims.msg_packaging_integrity_code_unique_id'),
             ]
 
     def get_rec_name(self, name):
@@ -170,7 +170,7 @@ class PackagingType(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Packaging type code must be unique'),
+                'lims.msg_packaging_type_code_unique_id'),
             ]
 
     def get_rec_name(self, name):
@@ -216,7 +216,7 @@ class FractionType(ModelSQL, ModelView):
         cls._order.insert(0, ('code', 'ASC'))
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Fraction type code must be unique'),
+                'lims.msg_fraction_type_code_unique_id'),
             ]
 
     @staticmethod

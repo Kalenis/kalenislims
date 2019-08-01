@@ -45,7 +45,7 @@ class Laboratory(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Laboratory code must be unique'),
+                'lims.msg_laboratory_code_unique_id'),
             ]
 
     def get_rec_name(self, name):
@@ -100,9 +100,9 @@ class LaboratoryProfessional(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Professional code must be unique'),
+                'lims.msg_professional_code_unique_id'),
             ('party_uniq', Unique(t, t.party),
-                'The party is already associated to a professional'),
+                'lims.msg_professional_party_unique_id'),
             ]
 
     def get_rec_name(self, name):
@@ -159,7 +159,7 @@ class LabMethod(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Method code must be unique'),
+                'lims.msg_method_code_unique_id'),
             ]
 
     def get_rec_name(self, name):
@@ -224,7 +224,7 @@ class LabMethodWaitingTime(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('method_party_uniq', Unique(t, t.method, t.party),
-                'Repeated record'),
+                'lims.msg_method_waiting_time_unique_id'),
             ]
 
     @classmethod
@@ -284,7 +284,7 @@ class LabDevice(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Device code must be unique'),
+                'lims.msg_device_code_unique_id'),
             ]
 
     def get_rec_name(self, name):
@@ -321,7 +321,7 @@ class LabDeviceType(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
-                'Device type code must be unique'),
+                'lims.msg_device_type_code_unique_id'),
             ]
 
     def get_rec_name(self, name):

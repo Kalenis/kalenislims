@@ -2,11 +2,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "error:lims.project:"
-msgid "There is no sequence for TAS Projects for the work year \"%s\"."
-msgstr "No existe una secuencia para Proyectos SAT para este año laboral \"%s\"."
+msgctxt "model:ir.message,text:msg_no_project_tas_sequence"
+msgid "There is no sequence for TAS Projects for the work year \"%(work_year)s\"."
+msgstr "No existe una secuencia para Proyectos SAT para este año laboral \"%(work_year)s\"."
 
-msgctxt "error:lims.tas.type:"
+msgctxt "model:ir.message,text:msg_tas_type_code_unique_id"
 msgid "TAS type code must be unique"
 msgstr "El código del tipo de SAT debe ser único"
 

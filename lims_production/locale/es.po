@@ -2,7 +2,7 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "error:lims.family.equivalent:"
+msgctxt "model:ir.message,text:msg_invalid_product_uom_category"
 msgid ""
 "The UoM's Category of each Product should be the same as the UoM's Category "
 "of Family/Equivalent."
@@ -10,7 +10,7 @@ msgstr ""
 "La Categoría de UdM de cada Producto debe ser la misma que la Categoría de "
 "UdM de la Familia/Equivalente."
 
-msgctxt "error:production:"
+msgctxt "model:ir.message,text:msg_quantity_multiple_required"
 msgid "Quantity multiple of output bom required."
 msgstr "La cantidad no es múltiplo de la cantidad de salida de la LdM"
 

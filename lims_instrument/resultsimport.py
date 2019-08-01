@@ -57,7 +57,7 @@ class ResultsImport(ModelSQL, ModelView):
         t = cls.__table__()
         cls._sql_constraints += [
             ('name_uniq', Unique(t, t.name),
-                'The results importer name must be unique'),
+                'lims_instrument.msg_results_importer_unique_id'),
             ]
 
     @fields.depends('name')
