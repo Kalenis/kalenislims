@@ -838,7 +838,7 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         'lims.results_report.version.detail', 'Report Detail',
         required=True, ondelete='CASCADE', select=True)
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
-        required=True)
+        required=True, select=True)
     notebook = fields.Function(fields.Many2One('lims.notebook',
         'Laboratory notebook'), 'get_nline_field')
     party = fields.Function(fields.Many2One('party.party', 'Party'),
