@@ -717,7 +717,7 @@ class PlanificationServiceDetail(ModelSQL, ModelView):
     planification = fields.Function(fields.Many2One('lims.planification',
         'Planification'), 'get_planification', searcher='search_planification')
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook line',
-        required=True)
+        required=True, select=True)
     staff_responsible = fields.Many2Many(
         'lims.planification.service_detail-laboratory.professional', 'detail',
         'professional', 'Laboratory professionals')
