@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/tree/field[@name='email']"
+        position="after">
+        <field name="phone"/>
+        <field name="plant"/>
+        <field name="equipment"/>
+        <field name="purchase_contact"/>
+        <field name="technical_contact"/>
+        <field name="administrative_contact"/>
+        <field name="contract_contact"/>
+    </xpath>
+</data>

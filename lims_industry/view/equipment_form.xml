@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<form>
+    <label name="name"/>
+    <field name="name"/>
+    <label name="template"/>
+    <field name="template"/>
+    <notebook>
+        <page id="general" string="General">
+            <label name="plant"/>
+            <field name="plant" colspan="3"/>
+            <label name="serial_number"/>
+            <field name="serial_number"/>
+            <label name="internal_id"/>
+            <field name="internal_id"/>
+            <group colspan="2" id="year_manufacturing">
+                <label name="year_manufacturing"/>
+                <field name="year_manufacturing"/>
+            </group>
+            <label name="internal_location"/>
+            <field name="internal_location"/>
+            <group colspan="4" id="coordinates" string="GPS Coordinates">
+                <label name="latitude"/>
+                <field name="latitude"/>
+                <label name="longitude"/>
+                <field name="longitude"/>
+            </group>
+        </page>
+        <page id="components" string="Components">
+            <field name="components" colspan="4"/>
+        </page>
+        <page id="contacts" string="Contacts">
+            <field name="contacts" colspan="4"/>
+        </page>
+    </notebook>
+</form>

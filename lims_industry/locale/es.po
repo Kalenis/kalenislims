@@ -1,0 +1,559 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:lims.brand,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.brand,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.brand,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.brand,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.brand,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.brand,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.brand,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.component,brand:"
+msgid "Brand"
+msgstr "Marca"
+
+msgctxt "field:lims.component,capacity:"
+msgid "Capacity (lts)"
+msgstr "Capacidad (lts)"
+
+msgctxt "field:lims.component,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.component,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.component,customer_description:"
+msgid "Customer description"
+msgstr "Descripción del cliente"
+
+msgctxt "field:lims.component,equipment:"
+msgid "Equipment"
+msgstr "Equipo"
+
+msgctxt "field:lims.component,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.component,internal_id:"
+msgid "Internal ID Code"
+msgstr "Código ID interno"
+
+msgctxt "field:lims.component,model:"
+msgid "Model"
+msgstr "Modelo"
+
+msgctxt "field:lims.component,party:"
+msgid "Party"
+msgstr "Tercero"
+
+msgctxt "field:lims.component,power:"
+msgid "Power"
+msgstr "Potencia"
+
+msgctxt "field:lims.component,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.component,serial_number:"
+msgid "Serial number"
+msgstr "Número de serie"
+
+msgctxt "field:lims.component,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.component,type_domain:"
+msgid "Type domain"
+msgstr "Dominio para Tipo"
+
+msgctxt "field:lims.component,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.component,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.component,year_manufacturing:"
+msgid "Year of manufacturing"
+msgstr "Año de fabricación"
+
+msgctxt "field:lims.component.type,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.component.type,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.component.type,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.component.type,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.component.type,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.component.type,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.component.type,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.equipment,components:"
+msgid "Components"
+msgstr "Componentes"
+
+msgctxt "field:lims.equipment,contacts:"
+msgid "Contacts"
+msgstr "Contactos"
+
+msgctxt "field:lims.equipment,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.equipment,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.equipment,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.equipment,internal_id:"
+msgid "Internal ID Code"
+msgstr "Código ID interno"
+
+msgctxt "field:lims.equipment,internal_location:"
+msgid "Internal location"
+msgstr "Ubicación interna"
+
+msgctxt "field:lims.equipment,latitude:"
+msgid "Latitude"
+msgstr "Latitud"
+
+msgctxt "field:lims.equipment,longitude:"
+msgid "Longitude"
+msgstr "Longitud"
+
+msgctxt "field:lims.equipment,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.equipment,party:"
+msgid "Party"
+msgstr "Tercero"
+
+msgctxt "field:lims.equipment,plant:"
+msgid "Plant"
+msgstr "Planta"
+
+msgctxt "field:lims.equipment,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.equipment,serial_number:"
+msgid "Serial number"
+msgstr "Número de serie"
+
+msgctxt "field:lims.equipment,template:"
+msgid "Template"
+msgstr "Plantilla"
+
+msgctxt "field:lims.equipment,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.equipment,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.equipment,year_manufacturing:"
+msgid "Year of manufacturing"
+msgstr "Año de fabricación"
+
+msgctxt "field:lims.equipment.template,brand:"
+msgid "Brand"
+msgstr "Marca"
+
+msgctxt "field:lims.equipment.template,component_types:"
+msgid "Component types"
+msgstr "Tipos de componente"
+
+msgctxt "field:lims.equipment.template,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.equipment.template,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.equipment.template,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.equipment.template,model:"
+msgid "Model"
+msgstr "Modelo"
+
+msgctxt "field:lims.equipment.template,power:"
+msgid "Power"
+msgstr "Potencia"
+
+msgctxt "field:lims.equipment.template,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.equipment.template,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.equipment.template,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.equipment.template,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.equipment.template-component.type,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.equipment.template-component.type,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.equipment.template-component.type,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.equipment.template-component.type,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.equipment.template-component.type,template:"
+msgid "Template"
+msgstr "Plantilla"
+
+msgctxt "field:lims.equipment.template-component.type,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.equipment.template-component.type,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.equipment.template-component.type,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.equipment.type,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.equipment.type,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.equipment.type,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.equipment.type,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.equipment.type,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.equipment.type,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.equipment.type,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.plant,city:"
+msgid "City"
+msgstr "Ciudad"
+
+msgctxt "field:lims.plant,contacts:"
+msgid "Contacts"
+msgstr "Contactos"
+
+msgctxt "field:lims.plant,country:"
+msgid "Country"
+msgstr "País"
+
+msgctxt "field:lims.plant,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.plant,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.plant,equipments:"
+msgid "Equipments"
+msgstr "Equipos"
+
+msgctxt "field:lims.plant,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.plant,invoice_party:"
+msgid "Invoice Party"
+msgstr "Entidad de facturación"
+
+msgctxt "field:lims.plant,latitude:"
+msgid "Latitude"
+msgstr "Latitud"
+
+msgctxt "field:lims.plant,longitude:"
+msgid "Longitude"
+msgstr "Longitud"
+
+msgctxt "field:lims.plant,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.plant,party:"
+msgid "Party"
+msgstr "Tercero"
+
+msgctxt "field:lims.plant,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.plant,street:"
+msgid "Street"
+msgstr "Calle"
+
+msgctxt "field:lims.plant,subdivision:"
+msgid "Subdivision"
+msgstr "Subdivisión"
+
+msgctxt "field:lims.plant,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.plant,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.plant,zip:"
+msgid "Zip"
+msgstr "Código postal"
+
+msgctxt "field:party.address,administrative_contact:"
+msgid "Administrative contact"
+msgstr "Administrativo"
+
+msgctxt "field:party.address,contract_contact:"
+msgid "Contract contact"
+msgstr "Contratos"
+
+msgctxt "field:party.address,equipment:"
+msgid "Equipment"
+msgstr "Equipo"
+
+msgctxt "field:party.address,phone:"
+msgid "Phone"
+msgstr "Teléfono"
+
+msgctxt "field:party.address,plant:"
+msgid "Plant"
+msgstr "Planta"
+
+msgctxt "field:party.address,purchase_contact:"
+msgid "Purchase contact"
+msgstr "Compras"
+
+msgctxt "field:party.address,technical_contact:"
+msgid "Technical contact"
+msgstr "Técnico"
+
+msgctxt "field:party.party,fantasy_name:"
+msgid "Fantasy Name"
+msgstr "Nombre de fantasía"
+
+msgctxt "field:party.party,plants:"
+msgid "Plants"
+msgstr "Plantas"
+
+msgctxt "model:ir.action,name:act_brand"
+msgid "Brands"
+msgstr "Marcas"
+
+msgctxt "model:ir.action,name:act_component"
+msgid "Components"
+msgstr "Componentes"
+
+msgctxt "model:ir.action,name:act_component_from_party"
+msgid "Components"
+msgstr "Componentes"
+
+msgctxt "model:ir.action,name:act_component_type"
+msgid "Component Types"
+msgstr "Tipos de componente"
+
+msgctxt "model:ir.action,name:act_equipment"
+msgid "Equipments"
+msgstr "Equipos"
+
+msgctxt "model:ir.action,name:act_equipment_from_party"
+msgid "Equipments"
+msgstr "Equipos"
+
+msgctxt "model:ir.action,name:act_equipment_template"
+msgid "Equipment Templates"
+msgstr "Plantillas de equipo"
+
+msgctxt "model:ir.action,name:act_equipment_type"
+msgid "Equipment Types"
+msgstr "Tipos de equipo"
+
+msgctxt "model:ir.action,name:act_plant"
+msgid "Plants"
+msgstr "Plantas"
+
+msgctxt "model:ir.ui.menu,name:menu_brand"
+msgid "Brands"
+msgstr "Marcas"
+
+msgctxt "model:ir.ui.menu,name:menu_component"
+msgid "Components"
+msgstr "Componentes"
+
+msgctxt "model:ir.ui.menu,name:menu_component_type"
+msgid "Component Types"
+msgstr "Tipos de componente"
+
+msgctxt "model:ir.ui.menu,name:menu_config"
+msgid "Configuration"
+msgstr "Configuración"
+
+msgctxt "model:ir.ui.menu,name:menu_equipment"
+msgid "Equipments"
+msgstr "Equipos"
+
+msgctxt "model:ir.ui.menu,name:menu_equipment_template"
+msgid "Equipment Templates"
+msgstr "Plantillas de equipo"
+
+msgctxt "model:ir.ui.menu,name:menu_equipment_type"
+msgid "Equipment Types"
+msgstr "Tipos de equipo"
+
+msgctxt "model:ir.ui.menu,name:menu_industry"
+msgid "Industry"
+msgstr "Industria"
+
+msgctxt "model:ir.ui.menu,name:menu_plant"
+msgid "Plants"
+msgstr "Plantas"
+
+msgctxt "model:lims.brand,name:"
+msgid "Brand"
+msgstr "Marca"
+
+msgctxt "model:lims.component,name:"
+msgid "Component"
+msgstr "Componente"
+
+msgctxt "model:lims.component.type,name:"
+msgid "Component Type"
+msgstr "Tipo de componente"
+
+msgctxt "model:lims.equipment,name:"
+msgid "Equipment"
+msgstr "Equipo"
+
+msgctxt "model:lims.equipment.template,name:"
+msgid "Equipment Template"
+msgstr "Plantilla de equipo"
+
+msgctxt "model:lims.equipment.template-component.type,name:"
+msgid "Equipment Template - Component Type"
+msgstr "Plantilla de equipo - Tipo de componente"
+
+msgctxt "model:lims.equipment.type,name:"
+msgid "Equipment Type"
+msgstr "Tipo de componente"
+
+msgctxt "model:lims.plant,name:"
+msgid "Plant"
+msgstr "Planta"
+
+msgctxt "view:lims.equipment:"
+msgid "Components"
+msgstr "Componentes"
+
+msgctxt "view:lims.equipment:"
+msgid "Contacts"
+msgstr "Contactos"
+
+msgctxt "view:lims.equipment:"
+msgid "GPS Coordinates"
+msgstr "Coordenadas GPS"
+
+msgctxt "view:lims.equipment:"
+msgid "General"
+msgstr "General"
+
+msgctxt "view:lims.plant:"
+msgid "Address"
+msgstr "Dirección"
+
+msgctxt "view:lims.plant:"
+msgid "Contacts"
+msgstr "Contactos"
+
+msgctxt "view:lims.plant:"
+msgid "Equipments"
+msgstr "Equipos"
+
+msgctxt "view:lims.plant:"
+msgid "GPS Coordinates"
+msgstr "Coordenadas GPS"
+
+msgctxt "view:lims.plant:"
+msgid "General"
+msgstr "General"
+
+msgctxt "view:party.party:"
+msgid "Plants"
+msgstr "Plantas"

@@ -1,0 +1,284 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+        <menuitem name="Industry" id="menu_industry"/>
+        <menuitem name="Configuration" id="menu_config"
+            parent="menu_industry" sequence="10"
+            icon="lims-configuration"/>
+
+<!-- Equipment Type -->
+
+        <record model="ir.ui.view" id="equipment_type_view_list">
+            <field name="model">lims.equipment.type</field>
+            <field name="type">tree</field>
+            <field name="name">equipment_type_list</field>
+        </record>
+        <record model="ir.ui.view" id="equipment_type_view_form">
+            <field name="model">lims.equipment.type</field>
+            <field name="type">form</field>
+            <field name="name">equipment_type_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_equipment_type">
+            <field name="name">Equipment Types</field>
+            <field name="res_model">lims.equipment.type</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_equipment_type_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="equipment_type_view_list"/>
+            <field name="act_window" ref="act_equipment_type"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_equipment_type_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="equipment_type_view_form"/>
+            <field name="act_window" ref="act_equipment_type"/>
+        </record>
+
+        <menuitem action="act_equipment_type" id="menu_equipment_type"
+            parent="menu_config" sequence="10"/>
+
+<!-- Brand -->
+
+        <record model="ir.ui.view" id="brand_view_list">
+            <field name="model">lims.brand</field>
+            <field name="type">tree</field>
+            <field name="name">brand_list</field>
+        </record>
+        <record model="ir.ui.view" id="brand_view_form">
+            <field name="model">lims.brand</field>
+            <field name="type">form</field>
+            <field name="name">brand_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_brand">
+            <field name="name">Brands</field>
+            <field name="res_model">lims.brand</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_brand_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="brand_view_list"/>
+            <field name="act_window" ref="act_brand"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_brand_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="brand_view_form"/>
+            <field name="act_window" ref="act_brand"/>
+        </record>
+
+        <menuitem action="act_brand" id="menu_brand"
+            parent="menu_config" sequence="20"/>
+
+<!-- Component Type -->
+
+        <record model="ir.ui.view" id="component_type_view_list">
+            <field name="model">lims.component.type</field>
+            <field name="type">tree</field>
+            <field name="name">component_type_list</field>
+        </record>
+        <record model="ir.ui.view" id="component_type_view_form">
+            <field name="model">lims.component.type</field>
+            <field name="type">form</field>
+            <field name="name">component_type_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_component_type">
+            <field name="name">Component Types</field>
+            <field name="res_model">lims.component.type</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_component_type_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="component_type_view_list"/>
+            <field name="act_window" ref="act_component_type"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_component_type_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="component_type_view_form"/>
+            <field name="act_window" ref="act_component_type"/>
+        </record>
+
+        <menuitem action="act_component_type" id="menu_component_type"
+            parent="menu_config" sequence="30"/>
+
+<!-- Equipment Template -->
+
+        <record model="ir.ui.view" id="equipment_template_view_list">
+            <field name="model">lims.equipment.template</field>
+            <field name="type">tree</field>
+            <field name="name">equipment_template_list</field>
+        </record>
+        <record model="ir.ui.view" id="equipment_template_view_form">
+            <field name="model">lims.equipment.template</field>
+            <field name="type">form</field>
+            <field name="name">equipment_template_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_equipment_template">
+            <field name="name">Equipment Templates</field>
+            <field name="res_model">lims.equipment.template</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_equipment_template_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="equipment_template_view_list"/>
+            <field name="act_window" ref="act_equipment_template"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_equipment_template_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="equipment_template_view_form"/>
+            <field name="act_window" ref="act_equipment_template"/>
+        </record>
+
+        <menuitem action="act_equipment_template" id="menu_equipment_template"
+            parent="menu_config" sequence="40"/>
+
+<!-- Plant -->
+
+        <record model="ir.ui.view" id="plant_view_list">
+            <field name="model">lims.plant</field>
+            <field name="type">tree</field>
+            <field name="name">plant_list</field>
+        </record>
+        <record model="ir.ui.view" id="plant_view_form">
+            <field name="model">lims.plant</field>
+            <field name="type">form</field>
+            <field name="name">plant_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_plant">
+            <field name="name">Plants</field>
+            <field name="res_model">lims.plant</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_plant_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="plant_view_list"/>
+            <field name="act_window" ref="act_plant"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_plant_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="plant_view_form"/>
+            <field name="act_window" ref="act_plant"/>
+        </record>
+
+        <menuitem action="act_plant" id="menu_plant"
+            parent="menu_industry" sequence="20"/>
+
+<!-- Equipment -->
+
+        <record model="ir.ui.view" id="equipment_view_list">
+            <field name="model">lims.equipment</field>
+            <field name="type">tree</field>
+            <field name="name">equipment_list</field>
+        </record>
+        <record model="ir.ui.view" id="equipment_view_form">
+            <field name="model">lims.equipment</field>
+            <field name="type">form</field>
+            <field name="name">equipment_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_equipment">
+            <field name="name">Equipments</field>
+            <field name="res_model">lims.equipment</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_equipment_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="equipment_view_list"/>
+            <field name="act_window" ref="act_equipment"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_equipment_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="equipment_view_form"/>
+            <field name="act_window" ref="act_equipment"/>
+        </record>
+
+        <menuitem action="act_equipment" id="menu_equipment"
+            parent="menu_industry" sequence="30"/>
+
+        <record model="ir.action.act_window" id="act_equipment_from_party">
+            <field name="name">Equipments</field>
+            <field name="res_model">lims.equipment</field>
+            <field name="domain" pyson="1"
+                eval="[If(Eval('active_ids', []) == [Eval('active_id')], ('party', '=', Eval('active_id')), ('party', 'in', Eval('active_ids')))]"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_equipment_from_party_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="equipment_view_list"/>
+            <field name="act_window" ref="act_equipment_from_party"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_equipment_from_party_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="equipment_view_form"/>
+            <field name="act_window" ref="act_equipment_from_party"/>
+        </record>
+
+        <record model="ir.action.keyword" id="act_equipment_from_party_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">party.party,-1</field>
+            <field name="action" ref="act_equipment_from_party"/>
+        </record>
+
+<!-- Component -->
+
+        <record model="ir.ui.view" id="component_view_list">
+            <field name="model">lims.component</field>
+            <field name="type">tree</field>
+            <field name="name">component_list</field>
+        </record>
+        <record model="ir.ui.view" id="component_view_form">
+            <field name="model">lims.component</field>
+            <field name="type">form</field>
+            <field name="name">component_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_component">
+            <field name="name">Components</field>
+            <field name="res_model">lims.component</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_component_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="component_view_list"/>
+            <field name="act_window" ref="act_component"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_component_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="component_view_form"/>
+            <field name="act_window" ref="act_component"/>
+        </record>
+
+        <menuitem action="act_component" id="menu_component"
+            parent="menu_industry" sequence="40"/>
+
+        <record model="ir.action.act_window" id="act_component_from_party">
+            <field name="name">Components</field>
+            <field name="res_model">lims.component</field>
+            <field name="domain" pyson="1"
+                eval="[If(Eval('active_ids', []) == [Eval('active_id')], ('party', '=', Eval('active_id')), ('party', 'in', Eval('active_ids')))]"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_component_from_party_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="component_view_list"/>
+            <field name="act_window" ref="act_component_from_party"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_component_from_party_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="component_view_form"/>
+            <field name="act_window" ref="act_component_from_party"/>
+        </record>
+
+        <record model="ir.action.keyword" id="act_component_from_party_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">party.party,-1</field>
+            <field name="action" ref="act_component_from_party"/>
+        </record>
+
+    </data>
+</tryton>

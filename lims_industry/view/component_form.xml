@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<form>
+    <label name="type"/>
+    <field name="type"/>
+    <label name="equipment"/>
+    <field name="equipment"/>
+    <label name="brand"/>
+    <field name="brand"/>
+    <label name="model"/>
+    <field name="model"/>
+    <label name="serial_number"/>
+    <field name="serial_number"/>
+    <label name="internal_id"/>
+    <field name="internal_id"/>
+    <label name="customer_description"/>
+    <field name="customer_description"/>
+    <label name="capacity"/>
+    <field name="capacity"/>
+    <label name="power"/>
+    <field name="power"/>
+    <label name="year_manufacturing"/>
+    <field name="year_manufacturing"/>
+    <field name="type_domain" colspan="4" invisible="1"/>
+</form>

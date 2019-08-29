@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="type" expand="1"/>
+    <field name="brand" expand="1"/>
+    <field name="model" expand="1"/>
+</tree>
