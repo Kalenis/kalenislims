@@ -73,8 +73,8 @@ for name in os.listdir('.'):
         data.append(data_pattern)
     subpackage = package
     for data_pattern in (info.get('xml', []) + ['tryton.cfg', 'view/*.xml',
-                'locale/*.po', 'report/*.fodt', 'report/*.fods',
-                'icons/*.svg', 'tests/*.rst']):
+                'locale/*.po', 'locale/override/*.po', 'report/*.fodt',
+                'report/*.fods', 'icons/*.svg', 'tests/*.rst']):
         data.append(data_pattern)
     if data:
         package_data[subpackage] = data
