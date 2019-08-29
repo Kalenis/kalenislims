@@ -1,0 +1,19 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:party.party,addresses:party."
+msgid "Addresses"
+msgstr "Direcciones y contactos"
+
+msgctxt "model:ir.action,name:party.act_address_form"
+msgid "Addresses"
+msgstr "Direcciones y contactos"
+
+msgctxt "model:ir.ui.menu,name:party.menu_address_form"
+msgid "Addresses"
+msgstr "Direcciones y contactos"
+
+msgctxt "view:party.address:party."
+msgid "Addresses"
+msgstr "Direcciones y contactos"
