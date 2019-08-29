@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="equipment" expand="1"/>
+    <field name="type" expand="1"/>
+    <field name="brand"/>
+    <field name="model"/>
+    <field name="serial_number"/>
+    <field name="internal_id"/>
+    <field name="customer_description"/>
+    <field name="capacity"/>
+    <field name="power"/>
+    <field name="year_manufacturing"/>
+</tree>

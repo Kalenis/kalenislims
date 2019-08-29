@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<form>
+    <label name="name"/>
+    <field name="name" xexpand="1"/>
+    <label name="party"/>
+    <field name="party"/>
+    <notebook>
+        <page id="general" string="General">
+            <group colspan="4" id="address" string="Address">
+                <label name="street"/>
+                <field name="street" colspan="3"/>
+                <label name="zip"/>
+                <field name="zip"/>
+                <label name="city"/>
+                <field name="city"/>
+                <label name="subdivision"/>
+                <field name="subdivision"/>
+                <label name="country"/>
+                <field name="country"/>
+            </group>
+            <group colspan="4" id="coordinates" string="GPS Coordinates">
+                <label name="latitude"/>
+                <field name="latitude"/>
+                <label name="longitude"/>
+                <field name="longitude"/>
+            </group>
+            <label name="invoice_party"/>
+            <field name="invoice_party" xexpand="1"/>
+        </page>
+        <page id="equipments" string="Equipments">
+            <field name="equipments" colspan="4"/>
+        </page>
+        <page id="contacts" string="Contacts">
+            <field name="contacts" colspan="4"/>
+        </page>
+    </notebook>
+</form>

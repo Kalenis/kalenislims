@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<form>
+    <label name="type"/>
+    <field name="type"/>
+    <label name="brand"/>
+    <field name="brand"/>
+    <label name="model"/>
+    <field name="model"/>
+    <label name="power"/>
+    <field name="power"/>
+    <field name="component_types" colspan="4"/>
+</form>

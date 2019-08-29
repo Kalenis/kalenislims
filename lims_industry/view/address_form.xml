@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/form/field[@name='email']" position="after">
+        <label name="phone"/>
+        <field name="phone"/>
+        <newline/>
+        <label name="plant"/>
+        <field name="plant"/>
+        <label name="equipment"/>
+        <field name="equipment"/>
+        <newline/>
+        <group col="8" colspan="6" id="industry_contacts">
+            <label name="purchase_contact"/>
+            <field name="purchase_contact"/>
+            <label name="technical_contact"/>
+            <field name="technical_contact"/>
+            <label name="administrative_contact"/>
+            <field name="administrative_contact"/>
+            <label name="contract_contact"/>
+            <field name="contract_contact"/>
+        </group>
+    </xpath>
+</data>
