@@ -485,7 +485,7 @@ class Entry(Workflow, ModelSQL, ModelView):
         if self.english_report:
             key = 'lims_english_report@%s' % self.number
             if Warning.check(key):
-                raise UserWarning(gettext('lims.english_report'))
+                raise UserWarning(key, gettext('lims.msg_english_report'))
 
     def print_report(self):
         if self.ack_report_cache:

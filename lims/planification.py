@@ -98,7 +98,7 @@ class Planification(Workflow, ModelSQL, ModelView):
         'on_change_with_method_domain')
     technicians_domain = fields.Function(fields.One2Many(
         'lims.laboratory.professional', None, 'Technicians domain'),
-        'on_change_with_technicians_domain')
+        'on_change_with_technicians_domain', setter='set_technicians_domain')
     comments = fields.Text('Comments')
 
     @classmethod
@@ -499,6 +499,10 @@ class Planification(Workflow, ModelSQL, ModelView):
         if not professionals:
             return []
         return [p.id for p in professionals]
+
+    @classmethod
+    def set_technicians_domain(cls, records, name, value):
+        return
 
     @classmethod
     @ModelView.button_action('lims.wiz_lims_relate_technicians')
