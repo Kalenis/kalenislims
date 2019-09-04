@@ -2,7 +2,10 @@
 <tree>
     <field name="template" expand="1"/>
     <field name="name" expand="1"/>
+    <field name="model" expand="1"/>
     <field name="serial_number"/>
     <field name="internal_id"/>
     <field name="plant" expand="1"/>
+    <field name="party" expand="1"/>
+    <field name="missing_data"/>
 </tree>

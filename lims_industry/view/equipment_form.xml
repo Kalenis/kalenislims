@@ -6,8 +6,12 @@
     <field name="template"/>
     <notebook>
         <page id="general" string="General">
+            <label name="model"/>
+            <field name="model"/>
             <label name="plant"/>
-            <field name="plant" colspan="3"/>
+            <field name="plant"/>
+            <label name="party"/>
+            <field name="party" colspan="3"/>
             <label name="serial_number"/>
             <field name="serial_number"/>
             <label name="internal_id"/>
@@ -24,6 +28,8 @@
                 <label name="longitude"/>
                 <field name="longitude"/>
             </group>
+            <label name="missing_data"/>
+            <field name="missing_data"/>
         </page>
         <page id="components" string="Components">
             <field name="components" colspan="4"/>
