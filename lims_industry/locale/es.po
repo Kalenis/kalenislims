@@ -86,10 +86,6 @@ msgctxt "field:lims.component,type:"
 msgid "Type"
 msgstr "Tipo"
 
-msgctxt "field:lims.component,type_domain:"
-msgid "Type domain"
-msgstr "Dominio para Tipo"
-
 msgctxt "field:lims.component,write_date:"
 msgid "Write Date"
 msgstr "Fecha modificación"
@@ -165,6 +161,14 @@ msgstr "Latitud"
 msgctxt "field:lims.equipment,longitude:"
 msgid "Longitude"
 msgstr "Longitud"
+
+msgctxt "field:lims.equipment,missing_data:"
+msgid "Missing data"
+msgstr "Falta información"
+
+msgctxt "field:lims.equipment,model:"
+msgid "Model"
+msgstr "Modelo"
 
 msgctxt "field:lims.equipment,name:"
 msgid "Name"

@@ -4,6 +4,7 @@
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pyson import Eval
+from trytond.pool import Pool
 
 __all__ = ['Plant', 'EquipmentType', 'Brand', 'ComponentType',
     'EquipmentTemplate', 'EquipmentTemplateComponentType', 'Equipment',
@@ -72,7 +73,7 @@ class EquipmentTemplate(ModelSQL, ModelView):
 
     type = fields.Many2One('lims.equipment.type', 'Type', required=True)
     brand = fields.Many2One('lims.brand', 'Brand', required=True)
-    model = fields.Char('Model', required=True)
+    model = fields.Char('Model')
     power = fields.Char('Power')
     component_types = fields.Many2Many(
         'lims.equipment.template-component.type',
@@ -86,8 +87,10 @@ class EquipmentTemplate(ModelSQL, ModelView):
         cls._order.insert(2, ('model', 'ASC'))
 
     def get_rec_name(self, name):
-        return '%s - %s - %s' % (
-            self.type.rec_name, self.brand.rec_name, self.model)
+        res = '%s - %s' % (self.type.rec_name, self.brand.rec_name)
+        if self.model:
+            res += ' - ' + self.model
+        return res
 
 
 class EquipmentTemplateComponentType(ModelSQL):
@@ -108,6 +111,7 @@ class Equipment(ModelSQL, ModelView):
     template = fields.Many2One('lims.equipment.template', 'Template',
         required=True)
     name = fields.Char('Name', required=True)
+    model = fields.Char('Model', required=True)
     serial_number = fields.Char('Serial number')
     internal_id = fields.Char('Internal ID Code')
     latitude = fields.Numeric('Latitude', digits=(3, 14))
@@ -123,6 +127,7 @@ class Equipment(ModelSQL, ModelView):
         depends=['party'])
     party = fields.Function(fields.Many2One('party.party', 'Party'),
         'get_party', searcher='search_party')
+    missing_data = fields.Boolean('Missing data')
 
     @classmethod
     def __setup__(cls):
@@ -138,6 +143,23 @@ class Equipment(ModelSQL, ModelView):
     def search_party(cls, name, clause):
         return [('plant.party',) + tuple(clause[1:])]
 
+    @fields.depends('template')
+    def on_change_template(self):
+        pool = Pool()
+        Component = pool.get('lims.component')
+
+        model = None
+        components = []
+        if self.template:
+            model = self.template.model
+            for type in self.template.component_types:
+                value = Component(**Component.default_get(
+                    list(Component._fields.keys())))
+                value.type = type.id
+                components.append(value)
+        self.model = model
+        self.components = components
+
 
 class Component(ModelSQL, ModelView):
     'Component'
@@ -146,13 +168,7 @@ class Component(ModelSQL, ModelView):
     equipment = fields.Many2One('lims.equipment', 'Equipment',
         required=True, ondelete='CASCADE', select=True,)
     type = fields.Many2One('lims.component.type', 'Type',
-        required=True, domain=['OR',
-            ('id', '=', Eval('type')),
-            ('id', 'in', Eval('type_domain')),
-            ],
-        depends=['type_domain'])
-    type_domain = fields.Function(fields.Many2Many('lims.component.type',
-        None, None, 'Type domain'), 'on_change_with_type_domain')
+        required=True)
     capacity = fields.Char('Capacity (lts)')
     serial_number = fields.Char('Serial number')
     model = fields.Char('Model')
@@ -177,13 +193,6 @@ class Component(ModelSQL, ModelView):
         if self.model:
             res += ' - ' + self.model
         return res
-
-    @fields.depends('equipment')
-    def on_change_with_type_domain(self, name=None):
-        types = []
-        if self.equipment and self.equipment.template.component_types:
-            types = [t.id for t in self.equipment.template.component_types]
-        return types
 
     def get_party(self, name):
         if self.equipment:

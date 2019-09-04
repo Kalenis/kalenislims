@@ -20,5 +20,4 @@
     <field name="power"/>
     <label name="year_manufacturing"/>
     <field name="year_manufacturing"/>
-    <field name="type_domain" colspan="4" invisible="1"/>
 </form>
