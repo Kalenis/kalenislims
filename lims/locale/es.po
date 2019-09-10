@@ -13825,7 +13825,7 @@ msgstr "Dominio para Tipo de producto"
 msgctxt ""
 "field:lims.planification.add_fraction_rm_bmz.start,reference_fraction:"
 msgid "Reference fraction"
-msgstr "Fracción de referecia"
+msgstr "Fracción de referencia"
 
 msgctxt "field:lims.planification.add_fraction_rm_bmz.start,rm_bmz_type:"
 msgid "RM/BMZ type"
@@ -15835,7 +15835,7 @@ msgstr "RM/BMZ Existente"
 
 msgctxt "selection:lims.planification.add_fraction_rm_bmz.start,rm_bmz_type:"
 msgid "No Reference"
-msgstr "Sin referecia"
+msgstr "Sin referencia"
 
 msgctxt "selection:lims.planification.add_fraction_rm_bmz.start,rm_bmz_type:"
 msgid "SLA"
