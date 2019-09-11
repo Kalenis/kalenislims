@@ -10913,6 +10913,10 @@ msgid "General"
 msgstr "General"
 
 msgctxt "view:lims.create_sample.start:"
+msgid "Additional Information"
+msgstr "Información Adicional"
+
+msgctxt "view:lims.create_sample.start:"
 msgid "Labels"
 msgstr "Rótulos"
 
@@ -11003,6 +11007,10 @@ msgstr "Observaciones"
 msgctxt "view:lims.entry:"
 msgid "Confirm"
 msgstr "Confirmar"
+
+msgctxt "view:lims.entry:"
+msgid "Additional Information"
+msgstr "Información Adicional"
 
 msgctxt "view:lims.entry:"
 msgid "Contacts"
