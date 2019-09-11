@@ -10,14 +10,6 @@
             <field name="party"/>
             <label name="invoice_party"/>
             <field name="invoice_party"/>
-            <label name="carrier"/>
-            <field name="carrier"/>
-            <label name="package_type"/>
-            <field name="package_type"/>
-            <label name="package_state"/>
-            <field name="package_state"/>
-            <label name="packages_quantity"/>
-            <field name="packages_quantity"/>
             <group col="8" colspan="4" id="options_holder">
                 <label name="email_report"/>
                 <field name="email_report"/>
@@ -28,8 +20,19 @@
                 <label name="no_acknowledgment_of_receipt"/>
                 <field name="no_acknowledgment_of_receipt"/>
             </group>
-            <button name="create_sample" string="Create Samples" colspan="4"/>
+            <button name="create_sample" string="Create Samples"
+                colspan="4" icon="tryton-add"/>
             <field name="samples" colspan="4"/>
+        </page>
+        <page string="Additional Information" id="additional_information">
+            <label name="carrier"/>
+            <field name="carrier"/>
+            <label name="package_type"/>
+            <field name="package_type"/>
+            <label name="package_state"/>
+            <field name="package_state"/>
+            <label name="packages_quantity"/>
+            <field name="packages_quantity"/>
         </page>
         <page string="Contacts" id="contacts">
             <field name="invoice_contacts" colspan="4"/>
@@ -52,8 +55,8 @@
     <group colspan="4" id="buttons">
         <label name="state"/>
         <field name="state"/>
-        <button name="confirm" string="Confirm"/>
-        <button name="on_hold" string="Administration pending"/>
+        <button name="confirm" string="Confirm" icon="tryton-ok"/>
+        <button name="on_hold" string="Administration pending" icon="tryton-forward"/>
     </group>
     <field name="id" colspan="4" invisible="1"/>
 </form>
