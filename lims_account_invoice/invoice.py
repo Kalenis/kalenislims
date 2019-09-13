@@ -13,7 +13,7 @@ import logging
 from trytond.model import Workflow, ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval, Bool, Or
+from trytond.pyson import Eval, Bool, Or, If
 from trytond.transaction import Transaction
 from trytond.tools import get_smtp_server
 from trytond.config import config
@@ -34,8 +34,7 @@ class Invoice(metaclass=PoolMeta):
     invoice_contacts = fields.One2Many('account.invoice.invoice_contacts',
         'invoice', 'Invoice contacts',
         states={'invisible': Eval('type') == 'in'},
-        depends=['type'],
-        )
+        depends=['type'])
     sent = fields.Boolean('Sent', readonly=True,
         help='If checked, then the invoice was mailed to contacts.')
     sent_date = fields.DateTime('Sent date', readonly=True,
@@ -268,6 +267,8 @@ class InvoiceLine(metaclass=PoolMeta):
             'invisible': Or(Eval('_parent_invoice', {}).get('type') == 'in',
                 Eval('invoice_type') == 'in'),
             }), 'get_results_reports', searcher='search_results_reports')
+    party_domain = fields.Function(fields.Many2Many('party.party',
+        None, None, 'Party domain'), 'get_party_domain')
 
     @classmethod
     def __setup__(cls):
@@ -277,6 +278,10 @@ class InvoiceLine(metaclass=PoolMeta):
             'delete_service_invoice': ('You can not delete an invoice line '
                 'related to a service ("%s")'),
             })
+        cls.party.domain = [If(Bool(Eval('party_domain')),
+            ('id', 'in', Eval('party_domain')), ('id', '!=', -1))]
+        if 'party_domain' not in cls.party.depends:
+            cls.party.depends.append('party_domain')
 
     @classmethod
     def delete(cls, lines):
@@ -357,6 +362,22 @@ class InvoiceLine(metaclass=PoolMeta):
         models = super(InvoiceLine, cls)._get_origin()
         models.append('lims.service')
         return models
+
+    @fields.depends('origin')
+    def get_party_domain(self, name=None):
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+
+        config_ = Config(1)
+
+        parties = []
+        if self.origin and self.origin.__name__ == 'lims.service':
+            party = self.origin.party
+            parties.append(party.id)
+            if config_.invoice_party_relation_type:
+                parties.extend([r.to.id for r in party.relations
+                    if r.type == config_.invoice_party_relation_type])
+        return parties
 
 
 class CreditInvoice(metaclass=PoolMeta):

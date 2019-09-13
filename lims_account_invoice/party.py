@@ -34,7 +34,7 @@ class Address(metaclass=PoolMeta):
         searcher='search_commercial_zone')
 
     def get_commercial_item(self, name=None):
-        if self.party  and self.party.commercial_item:
+        if self.party and self.party.commercial_item:
             return self.party.commercial_item.id
         return None
 
