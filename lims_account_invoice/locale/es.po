@@ -98,6 +98,10 @@ msgctxt "field:account.invoice.line,lims_service_sample:"
 msgid "Sample"
 msgstr "Muestra"
 
+msgctxt "field:account.invoice.line,party_domain:"
+msgid "Party domain"
+msgstr "Dominio para Entidad"
+
 msgctxt "field:account.invoice.populate_invoice_contacts.start,id:"
 msgid "ID"
 msgstr "ID"
