@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+        <menuitem name="Administrative Tasks" id="menu_administrative_task"/>
+        <menuitem name="Configuration" id="menu_config"
+            parent="menu_administrative_task" sequence="10"
+            icon="lims-configuration"/>
+
+<!-- Administrative Task Configuration -->
+
+        <record model="ir.ui.view" id="task_template_view_list">
+            <field name="model">lims.administrative.task.template</field>
+            <field name="type">tree</field>
+            <field name="name">task_template_list</field>
+        </record>
+        <record model="ir.ui.view" id="task_template_view_form">
+            <field name="model">lims.administrative.task.template</field>
+            <field name="type">form</field>
+            <field name="name">task_template_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_task_template">
+            <field name="name">Administrative Tasks Configuration</field>
+            <field name="res_model">lims.administrative.task.template</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_task_template_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="task_template_view_list"/>
+            <field name="act_window" ref="act_task_template"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_task_template_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="task_template_view_form"/>
+            <field name="act_window" ref="act_task_template"/>
+        </record>
+
+        <menuitem name="Automatic generation of administrative tasks"
+            action="act_task_template" id="menu_task_template"
+            parent="menu_config" sequence="20"/>
+
+<!-- Administrative Task -->
+
+        <record model="ir.ui.view" id="task_view_list">
+            <field name="model">lims.administrative.task</field>
+            <field name="type">tree</field>
+            <field name="name">task_list</field>
+        </record>
+        <record model="ir.ui.view" id="task_view_form">
+            <field name="model">lims.administrative.task</field>
+            <field name="type">form</field>
+            <field name="name">task_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_task">
+            <field name="name">Administrative Tasks</field>
+            <field name="res_model">lims.administrative.task</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_task_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="task_view_list"/>
+            <field name="act_window" ref="act_task"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_task_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="task_view_form"/>
+            <field name="act_window" ref="act_task"/>
+        </record>
+
+        <menuitem action="act_task" id="menu_task"
+            parent="menu_administrative_task" sequence="20"/>
+
+<!-- Wizard Edit Administrative Task -->
+
+        <record model="ir.ui.view" id="edit_task_start_view_form">
+            <field name="model">lims.administrative.task.edit.start</field>
+            <field name="type">form</field>
+            <field name="name">edit_task_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_edit_task">
+            <field name="name">Edit Administrative Task</field>
+            <field name="wiz_name">lims.administrative.task.edit</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_edit_task_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.administrative.task,-1</field>
+            <field name="action" ref="wiz_edit_task"/>
+        </record>
+
+    </data>
+</tryton>
