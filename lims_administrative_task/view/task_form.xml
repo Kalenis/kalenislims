@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<form>
+    <label name="number"/>
+    <field name="number"/>
+    <label name="date"/>
+    <field name="date"/>
+    <label name="description"/>
+    <field name="description"/>
+    <label name="expiration_date"/>
+    <field name="expiration_date"/>
+    <label name="origin"/>
+    <field name="origin"/>
+    <label name="priority"/>
+    <field name="priority"/>
+    <label name="responsible"/>
+    <field name="responsible"/>
+    <label name="closing_date"/>
+    <field name="closing_date"/>
+    <label name="rejection_reason"/>
+    <field name="rejection_reason"/>
+    <group colspan="4" id="state">
+        <label name="state"/>
+        <field name="state"/>
+        <group col="-1" colspan="2" id="buttons">
+            <button name="pending" string="Pending"/>
+            <button name="reject" string="Reject"/>
+            <button name="ongoing" string="Ongoing"/>
+            <button name="standby" string="Stand By"/>
+            <button name="discard" string="Discard"/>
+            <button name="do" string="Done"/>
+        </group>
+    </group>
+</form>
