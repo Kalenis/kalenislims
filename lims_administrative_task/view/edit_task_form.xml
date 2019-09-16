@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form>
+    <label name="priority"/>
+    <field name="priority"/>
+    <label name="expiration_date"/>
+    <field name="expiration_date"/>
+    <label name="responsible"/>
+    <field name="responsible"/>
+</form>
