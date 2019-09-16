@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/group[@id='checkboxes']"
+        position="inside">
+        <label name="complete_file"/>
+        <field name="complete_file" xexpand="0" width="25"/>
+    </xpath>
+</data>

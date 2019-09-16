@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<tryton>
+    <data group="1">
+        <record model="ir.message" id="msg_delete_task">
+            <field name="text">You can not delete task "%(task)s" because it is not in draft state</field>
+        </record>
+        <record model="ir.message" id="msg_no_task_sequence">
+            <field name="text">There is no task sequence configured</field>
+        </record>
+        <record model="ir.message" id="msg_party_email">
+            <field name="text">Party "%(party)s" has no Email</field>
+        </record>
+        <record model="ir.message" id="msg_party_phone">
+            <field name="text">Party "%(party)s" has no Phone</field>
+        </record>
+        <record model="ir.message" id="msg_party_tax_identifier">
+            <field name="text">Party "%(party)s" has no Tax Identifier</field>
+        </record>
+    </data>
+</tryton>

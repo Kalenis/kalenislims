@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Configuration -->
+
+        <record model="ir.ui.view" id="task_configuration_view">
+            <field name="model">lims.administrative.task.configuration</field>
+            <field name="type">form</field>
+            <field name="name">configuration_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_task_configuration">
+            <field name="name">Configuration</field>
+            <field name="res_model">lims.administrative.task.configuration</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_task_configuration_view">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="task_configuration_view"/>
+            <field name="act_window" ref="act_task_configuration"/>
+        </record>
+
+        <menuitem action="act_task_configuration" id="menu_task_configuration"
+            parent="menu_config" sequence="10"/>
+
+<!-- Sequences for Administrative Task -->
+
+        <record model="ir.sequence.type" id="seq_type_task">
+            <field name="name">Administrative Task</field>
+            <field name="code">lims.administrative.task</field>
+        </record>
+        <record model="ir.sequence" id="seq_task">
+            <field name="name">Administrative Task</field>
+            <field name="code">lims.administrative.task</field>
+        </record>
+
+    </data>
+</tryton>

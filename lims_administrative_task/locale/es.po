@@ -1,0 +1,398 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:company.department,responsible:"
+msgid "Responsible User"
+msgstr "Usuario responsable"
+
+msgctxt "field:lims.administrative.task,closing_date:"
+msgid "Closing Date"
+msgstr "Fecha de cierre"
+
+msgctxt "field:lims.administrative.task,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.administrative.task,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.administrative.task,date:"
+msgid "Create Date"
+msgstr "Fecha de creación"
+
+msgctxt "field:lims.administrative.task,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:lims.administrative.task,expiration_date:"
+msgid "Expiration Date"
+msgstr "Fecha de vencimiento"
+
+msgctxt "field:lims.administrative.task,icon:"
+msgid "Icon"
+msgstr "Icono"
+
+msgctxt "field:lims.administrative.task,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.administrative.task,number:"
+msgid "Number"
+msgstr "Número"
+
+msgctxt "field:lims.administrative.task,origin:"
+msgid "Operation Origin"
+msgstr "Operación origen"
+
+msgctxt "field:lims.administrative.task,priority:"
+msgid "Priority"
+msgstr "Prioridad"
+
+msgctxt "field:lims.administrative.task,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.administrative.task,rejection_reason:"
+msgid "Rejection/Stand By Reason"
+msgstr "Motivo de Rechazo/Stand By"
+
+msgctxt "field:lims.administrative.task,responsible:"
+msgid "Responsible User"
+msgstr "Usuario responsable"
+
+msgctxt "field:lims.administrative.task,state:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:lims.administrative.task,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.administrative.task,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.administrative.task.configuration,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.administrative.task.configuration,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt ""
+"field:lims.administrative.task.configuration,email_responsible_subject:"
+msgid "Subject of the task assignment email"
+msgstr "Asunto del email de asignación de tareas"
+
+msgctxt "field:lims.administrative.task.configuration,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.administrative.task.configuration,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.administrative.task.configuration,task_sequence:"
+msgid "Task Sequence"
+msgstr "Secuencia de Tarea"
+
+msgctxt "field:lims.administrative.task.configuration,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.administrative.task.configuration,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.administrative.task.configuration.sequence,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:lims.administrative.task.configuration.sequence,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.administrative.task.configuration.sequence,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.administrative.task.configuration.sequence,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.administrative.task.configuration.sequence,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.administrative.task.configuration.sequence,task_sequence:"
+msgid "Task Sequence"
+msgstr "Secuencia de Tarea"
+
+msgctxt "field:lims.administrative.task.configuration.sequence,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.administrative.task.configuration.sequence,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.administrative.task.edit.start,expiration_date:"
+msgid "Expiration Date"
+msgstr "Fecha de vencimiento"
+
+msgctxt "field:lims.administrative.task.edit.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.administrative.task.edit.start,priority:"
+msgid "Priority"
+msgstr "Prioridad"
+
+msgctxt "field:lims.administrative.task.edit.start,responsible:"
+msgid "Responsible User"
+msgstr "Usuario responsable"
+
+msgctxt "field:lims.administrative.task.template,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.administrative.task.template,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.administrative.task.template,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:lims.administrative.task.template,expiration_days:"
+msgid "Days to Expiration"
+msgstr "Días para el vencimiento"
+
+msgctxt "field:lims.administrative.task.template,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.administrative.task.template,model:"
+msgid "Model"
+msgstr "Modelo"
+
+msgctxt "field:lims.administrative.task.template,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.administrative.task.template,responsible:"
+msgid "Responsible User"
+msgstr "Usuario responsable"
+
+msgctxt "field:lims.administrative.task.template,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.administrative.task.template,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.component,missing_data:"
+msgid "Missing data"
+msgstr "Falta información"
+
+msgctxt "field:party.party,complete_file:"
+msgid "Complete File"
+msgstr "Ficha completa"
+
+msgctxt "field:res.user,superior:"
+msgid "Responsible Superior"
+msgstr "Superior responsable"
+
+msgctxt ""
+"help:lims.administrative.task.configuration,email_responsible_subject:"
+msgid "In the text will be added suffix with the task number"
+msgstr "En el texto se añadirá sufijo con el número de tarea"
+
+msgctxt "model:ir.action,name:act_task"
+msgid "Administrative Tasks"
+msgstr "Tareas administrativas"
+
+msgctxt "model:ir.action,name:act_task_configuration"
+msgid "Configuration"
+msgstr "Configuración"
+
+msgctxt "model:ir.action,name:act_task_template"
+msgid "Administrative Tasks Configuration"
+msgstr "Configuración de Tareas administrativas"
+
+msgctxt "model:ir.action,name:wiz_edit_task"
+msgid "Edit Administrative Task"
+msgstr "Editar Tarea administrativa"
+
+msgctxt "model:ir.message,text:msg_delete_task"
+msgid "You can not delete task \"%(task)s\" because it is not in draft state"
+msgstr ""
+"No puede eliminar la tarea «%(task)s» porque no está en estado borrador"
+
+msgctxt "model:ir.message,text:msg_no_task_sequence"
+msgid "There is no task sequence configured"
+msgstr "No hay una secuencia de tarea configurada"
+
+msgctxt "model:ir.message,text:msg_party_email"
+msgid "Party \"%(party)s\" has no Email"
+msgstr "La entidad «%(party)s» no tiene correo electrónico"
+
+msgctxt "model:ir.message,text:msg_party_phone"
+msgid "Party \"%(party)s\" has no Phone"
+msgstr "La entidad «%(party)s» no tiene teléfono"
+
+msgctxt "model:ir.message,text:msg_party_tax_identifier"
+msgid "Party \"%(party)s\" has no Tax Identifier"
+msgstr "La entidad «%(party)s» no tiene identificador fiscal"
+
+msgctxt "model:ir.sequence,name:seq_task"
+msgid "Administrative Task"
+msgstr "Tarea administrativa"
+
+msgctxt "model:ir.sequence.type,name:seq_type_task"
+msgid "Administrative Task"
+msgstr "Tarea administrativa"
+
+msgctxt "model:ir.ui.menu,name:menu_administrative_task"
+msgid "Administrative Tasks"
+msgstr "Tareas administrativas"
+
+msgctxt "model:ir.ui.menu,name:menu_config"
+msgid "Configuration"
+msgstr "Configuración"
+
+msgctxt "model:ir.ui.menu,name:menu_task"
+msgid "Administrative Tasks"
+msgstr "Tareas administrativas"
+
+msgctxt "model:ir.ui.menu,name:menu_task_configuration"
+msgid "Configuration"
+msgstr "Configuración"
+
+msgctxt "model:ir.ui.menu,name:menu_task_template"
+msgid "Automatic generation of administrative tasks"
+msgstr "Generación automática de Tareas administrativas"
+
+msgctxt "model:lims.administrative.task,name:"
+msgid "Administrative Task"
+msgstr "Tarea administrativa"
+
+msgctxt "model:lims.administrative.task.configuration,name:"
+msgid "Configuration"
+msgstr "Configuración"
+
+msgctxt "model:lims.administrative.task.configuration.sequence,name:"
+msgid "Configuration - Sequence"
+msgstr "Configuración - Secuencia"
+
+msgctxt "model:lims.administrative.task.edit.start,name:"
+msgid "Edit Administrative Task"
+msgstr "Editar Tarea administrativa"
+
+msgctxt "model:lims.administrative.task.template,name:"
+msgid "Administrative Task Configuration"
+msgstr "Configuración de Tarea administrativa"
+
+msgctxt "selection:lims.administrative.task,priority:"
+msgid "High"
+msgstr "Alta"
+
+msgctxt "selection:lims.administrative.task,priority:"
+msgid "Low"
+msgstr "Baja"
+
+msgctxt "selection:lims.administrative.task,priority:"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "selection:lims.administrative.task,priority:"
+msgid "Very High"
+msgstr "Muy alta"
+
+msgctxt "selection:lims.administrative.task,priority:"
+msgid "Very Low"
+msgstr "Muy baja"
+
+msgctxt "selection:lims.administrative.task,state:"
+msgid "Discarded"
+msgstr "Descartada"
+
+msgctxt "selection:lims.administrative.task,state:"
+msgid "Done"
+msgstr "Realizada"
+
+msgctxt "selection:lims.administrative.task,state:"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "selection:lims.administrative.task,state:"
+msgid "Ongoing"
+msgstr "En curso"
+
+msgctxt "selection:lims.administrative.task,state:"
+msgid "Pending"
+msgstr "Pendiente"
+
+msgctxt "selection:lims.administrative.task,state:"
+msgid "Rejected"
+msgstr "Rechazada"
+
+msgctxt "selection:lims.administrative.task,state:"
+msgid "Stand By"
+msgstr "Stand By"
+
+msgctxt "selection:lims.administrative.task.edit.start,priority:"
+msgid "High"
+msgstr "Alta"
+
+msgctxt "selection:lims.administrative.task.edit.start,priority:"
+msgid "Low"
+msgstr "Baja"
+
+msgctxt "selection:lims.administrative.task.edit.start,priority:"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "selection:lims.administrative.task.edit.start,priority:"
+msgid "Very High"
+msgstr "Muy alta"
+
+msgctxt "selection:lims.administrative.task.edit.start,priority:"
+msgid "Very Low"
+msgstr "Muy baja"
+
+msgctxt "view:lims.administrative.task:"
+msgid "Discard"
+msgstr "Descartar"
+
+msgctxt "view:lims.administrative.task:"
+msgid "Done"
+msgstr "Realizada"
+
+msgctxt "view:lims.administrative.task:"
+msgid "Ongoing"
+msgstr "En curso"
+
+msgctxt "view:lims.administrative.task:"
+msgid "Pending"
+msgstr "Pendiente"
+
+msgctxt "view:lims.administrative.task:"
+msgid "Reject"
+msgstr "Rechazar"
+
+msgctxt "view:lims.administrative.task:"
+msgid "Stand By"
+msgstr "Stand By"
+
+msgctxt "wizard_button:lims.administrative.task.edit,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.administrative.task.edit,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
