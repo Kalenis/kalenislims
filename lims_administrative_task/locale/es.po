@@ -213,12 +213,16 @@ msgid "In the text will be added suffix with the task number"
 msgstr "En el texto se añadirá sufijo con el número de tarea"
 
 msgctxt "model:ir.action,name:act_task"
-msgid "Administrative Tasks"
-msgstr "Tareas administrativas"
+msgid "All Administrative Tasks"
+msgstr "Todas las tareas administrativas"
 
 msgctxt "model:ir.action,name:act_task_configuration"
 msgid "Configuration"
 msgstr "Configuración"
+
+msgctxt "model:ir.action,name:act_task_mine"
+msgid "My Administrative Tasks"
+msgstr "Mis tareas administrativas"
 
 msgctxt "model:ir.action,name:act_task_template"
 msgid "Administrative Tasks Configuration"
@@ -227,6 +231,71 @@ msgstr "Configuración de Tareas administrativas"
 msgctxt "model:ir.action,name:wiz_edit_task"
 msgid "Edit Administrative Task"
 msgstr "Editar Tarea administrativa"
+
+msgctxt "model:ir.action.act_window.domain,name:act_task_domain_all"
+msgid "All"
+msgstr "Todas"
+
+msgctxt "model:ir.action.act_window.domain,name:act_task_domain_discarded"
+msgid "Discarded"
+msgstr "Descartadas"
+
+msgctxt "model:ir.action.act_window.domain,name:act_task_domain_done"
+msgid "Done"
+msgstr "Realizadas"
+
+msgctxt "model:ir.action.act_window.domain,name:act_task_domain_draft"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "model:ir.action.act_window.domain,name:act_task_domain_ongoing"
+msgid "Ongoing"
+msgstr "En curso"
+
+msgctxt "model:ir.action.act_window.domain,name:act_task_domain_pending"
+msgid "Pending"
+msgstr "Pendientes"
+
+msgctxt "model:ir.action.act_window.domain,name:act_task_domain_rejected"
+msgid "Rejected"
+msgstr "Rechazadas"
+
+msgctxt "model:ir.action.act_window.domain,name:act_task_domain_standby"
+msgid "Stand By"
+msgstr "Stand By"
+
+msgctxt "model:ir.action.act_window.domain,name:act_task_mine_domain_all"
+msgid "All"
+msgstr "Todas"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_task_mine_domain_discarded"
+msgid "Discarded"
+msgstr "Descartadas"
+
+msgctxt "model:ir.action.act_window.domain,name:act_task_mine_domain_done"
+msgid "Done"
+msgstr "Realizadas"
+
+msgctxt "model:ir.action.act_window.domain,name:act_task_mine_domain_draft"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "model:ir.action.act_window.domain,name:act_task_mine_domain_ongoing"
+msgid "Ongoing"
+msgstr "En curso"
+
+msgctxt "model:ir.action.act_window.domain,name:act_task_mine_domain_pending"
+msgid "Pending"
+msgstr "Pendientes"
+
+msgctxt "model:ir.action.act_window.domain,name:act_task_mine_domain_rejected"
+msgid "Rejected"
+msgstr "Rechazadas"
+
+msgctxt "model:ir.action.act_window.domain,name:act_task_mine_domain_standby"
+msgid "Stand By"
+msgstr "Stand By"
 
 msgctxt "model:ir.message,text:msg_delete_task"
 msgid "You can not delete task \"%(task)s\" because it is not in draft state"
@@ -266,12 +335,16 @@ msgid "Configuration"
 msgstr "Configuración"
 
 msgctxt "model:ir.ui.menu,name:menu_task"
-msgid "Administrative Tasks"
-msgstr "Tareas administrativas"
+msgid "All Administrative Tasks"
+msgstr "Todas las tareas administrativas"
 
 msgctxt "model:ir.ui.menu,name:menu_task_configuration"
 msgid "Configuration"
 msgstr "Configuración"
+
+msgctxt "model:ir.ui.menu,name:menu_task_mine"
+msgid "My Administrative Tasks"
+msgstr "Mis tareas administrativas"
 
 msgctxt "model:ir.ui.menu,name:menu_task_template"
 msgid "Automatic generation of administrative tasks"
