@@ -55,7 +55,7 @@
         </record>
 
         <record model="ir.action.act_window" id="act_task">
-            <field name="name">Administrative Tasks</field>
+            <field name="name">All Administrative Tasks</field>
             <field name="res_model">lims.administrative.task</field>
         </record>
         <record model="ir.action.act_window.view" id="act_task_view_list">
@@ -69,7 +69,157 @@
             <field name="act_window" ref="act_task"/>
         </record>
 
+        <record model="ir.action.act_window.domain"
+            id="act_task_domain_draft">
+            <field name="name">Draft</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain" pyson="1"
+                eval="[('state', '=', 'draft')]"/>
+            <field name="act_window" ref="act_task"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_task_domain_pending">
+            <field name="name">Pending</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain" pyson="1"
+                eval="[('state', '=', 'pending')]"/>
+            <field name="act_window" ref="act_task"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_task_domain_rejected">
+            <field name="name">Rejected</field>
+            <field name="sequence" eval="30"/>
+            <field name="domain" pyson="1"
+                eval="[('state', '=', 'rejected')]"/>
+            <field name="act_window" ref="act_task"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_task_domain_ongoing">
+            <field name="name">Ongoing</field>
+            <field name="sequence" eval="40"/>
+            <field name="domain" pyson="1"
+                eval="[('state', '=', 'ongoing')]"/>
+            <field name="act_window" ref="act_task"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_task_domain_standby">
+            <field name="name">Stand By</field>
+            <field name="sequence" eval="50"/>
+            <field name="domain" pyson="1"
+                eval="[('state', '=', 'standby')]"/>
+            <field name="act_window" ref="act_task"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_task_domain_done">
+            <field name="name">Done</field>
+            <field name="sequence" eval="60"/>
+            <field name="domain" pyson="1"
+                eval="[('state', '=', 'done')]"/>
+            <field name="act_window" ref="act_task"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_task_domain_discarded">
+            <field name="name">Discarded</field>
+            <field name="sequence" eval="70"/>
+            <field name="domain" pyson="1"
+                eval="[('state', '=', 'discarded')]"/>
+            <field name="act_window" ref="act_task"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_task_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="200"/>
+            <field name="domain"></field>
+            <field name="act_window" ref="act_task"/>
+        </record>
+
         <menuitem action="act_task" id="menu_task"
+            parent="menu_administrative_task" sequence="30"/>
+
+<!-- My Administrative Task -->
+
+        <record model="ir.action.act_window" id="act_task_mine">
+            <field name="name">My Administrative Tasks</field>
+            <field name="res_model">lims.administrative.task</field>
+            <field name="domain" pyson="1"
+                eval="[('responsible', '=', Eval('user', {}).get('id', -1))]"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_task_mine_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="task_view_list"/>
+            <field name="act_window" ref="act_task_mine"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_task_mine_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="task_view_form"/>
+            <field name="act_window" ref="act_task_mine"/>
+        </record>
+
+        <record model="ir.action.act_window.domain"
+            id="act_task_mine_domain_draft">
+            <field name="name">Draft</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain" pyson="1"
+                eval="[('state', '=', 'draft')]"/>
+            <field name="act_window" ref="act_task_mine"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_task_mine_domain_pending">
+            <field name="name">Pending</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain" pyson="1"
+                eval="[('state', '=', 'pending')]"/>
+            <field name="act_window" ref="act_task_mine"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_task_mine_domain_rejected">
+            <field name="name">Rejected</field>
+            <field name="sequence" eval="30"/>
+            <field name="domain" pyson="1"
+                eval="[('state', '=', 'rejected')]"/>
+            <field name="act_window" ref="act_task_mine"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_task_mine_domain_ongoing">
+            <field name="name">Ongoing</field>
+            <field name="sequence" eval="40"/>
+            <field name="domain" pyson="1"
+                eval="[('state', '=', 'ongoing')]"/>
+            <field name="act_window" ref="act_task_mine"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_task_mine_domain_standby">
+            <field name="name">Stand By</field>
+            <field name="sequence" eval="50"/>
+            <field name="domain" pyson="1"
+                eval="[('state', '=', 'standby')]"/>
+            <field name="act_window" ref="act_task_mine"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_task_mine_domain_done">
+            <field name="name">Done</field>
+            <field name="sequence" eval="60"/>
+            <field name="domain" pyson="1"
+                eval="[('state', '=', 'done')]"/>
+            <field name="act_window" ref="act_task_mine"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_task_mine_domain_discarded">
+            <field name="name">Discarded</field>
+            <field name="sequence" eval="70"/>
+            <field name="domain" pyson="1"
+                eval="[('state', '=', 'discarded')]"/>
+            <field name="act_window" ref="act_task_mine"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_task_mine_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="200"/>
+            <field name="domain"></field>
+            <field name="act_window" ref="act_task_mine"/>
+        </record>
+
+        <menuitem action="act_task_mine" id="menu_task_mine"
             parent="menu_administrative_task" sequence="20"/>
 
 <!-- Wizard Edit Administrative Task -->
