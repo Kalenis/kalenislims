@@ -179,6 +179,10 @@ msgctxt "field:lims.administrative.task.template,model:"
 msgid "Model"
 msgstr "Modelo"
 
+msgctxt "field:lims.administrative.task.template,model_domain:"
+msgid "Model domain"
+msgstr "Dominio para Modelo"
+
 msgctxt "field:lims.administrative.task.template,rec_name:"
 msgid "Record Name"
 msgstr "Nombre"
