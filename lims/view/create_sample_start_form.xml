@@ -10,18 +10,6 @@
             <field name="product_type"/>
             <label name="matrix"/>
             <field name="matrix"/>
-            <label name="variety"/>
-            <field name="variety"/>
-            <label name="producer"/>
-            <field name="producer"/>
-            <group col="6" colspan="4" id="obj_description">
-                <label name="obj_description"/>
-                <field name="obj_description"/>
-                <label name="obj_description_manual"/>
-                <field name="obj_description_manual"/>
-                <label name="obj_description_manual_eng"/>
-                <field name="obj_description_manual_eng"/>
-            </group>
             <group col="2" colspan="2" id="sample_client_description">
                 <label name="sample_client_description"/>
                 <field name="sample_client_description"/>
@@ -38,14 +26,6 @@
             <field name="package_type"/>
             <label name="packages_quantity"/>
             <field name="packages_quantity"/>
-            <label name="weight"/>
-            <field name="weight"/>
-            <label name="weight_uom"/>
-            <field name="weight_uom"/>
-            <label name="size"/>
-            <field name="size"/>
-            <label name="size_uom"/>
-            <field name="size_uom"/>
             <label name="zone"/>
             <field name="zone"/>
             <label name="restricted_entry"/>
@@ -65,6 +45,28 @@
                 <field name="labels" colspan="2"/>
             </group>
             <field name="services" colspan="2"/>
+        </page>
+        <page string="Additional Information" id="additional_information">
+            <label name="variety"/>
+            <field name="variety"/>
+            <label name="producer"/>
+            <field name="producer"/>
+            <group col="6" colspan="4" id="obj_description">
+                <label name="obj_description"/>
+                <field name="obj_description"/>
+                <label name="obj_description_manual"/>
+                <field name="obj_description_manual"/>
+                <label name="obj_description_manual_eng"/>
+                <field name="obj_description_manual_eng"/>
+            </group>
+            <label name="weight"/>
+            <field name="weight"/>
+            <label name="weight_uom"/>
+            <field name="weight_uom"/>
+            <label name="size"/>
+            <field name="size"/>
+            <label name="size_uom"/>
+            <field name="size_uom"/>
         </page>
         <page id="comments" string="Comments">
             <separator string="Report comments" colspan="4" id="report_comments"/>
