@@ -3,9 +3,11 @@
     <field name="number" icon="icon"/>
     <field name="date" widget="date"/>
     <field name="description" expand="1"/>
+    <field name="origin"/>
     <field name="expiration_date" widget="date"/>
     <field name="priority"/>
     <field name="responsible" expand="1"/>
     <field name="closing_date" widget="date"/>
     <field name="state"/>
+    <field name="rejection_reason"/>
 </tree>
