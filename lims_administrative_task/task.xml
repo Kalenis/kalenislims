@@ -142,7 +142,7 @@
             <field name="name">My Administrative Tasks</field>
             <field name="res_model">lims.administrative.task</field>
             <field name="domain" pyson="1"
-                eval="[('responsible', '=', Eval('user', {}).get('id', -1))]"/>
+                eval="[('responsible.employee.id', '=', Eval('context', {}).get('employee', -1))]"/>
         </record>
         <record model="ir.action.act_window.view" id="act_task_mine_view_list">
             <field name="sequence" eval="10"/>
