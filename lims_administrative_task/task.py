@@ -26,11 +26,33 @@ class AdministrativeTaskTemplate(ModelSQL, ModelView):
     'Administrative Task Configuration'
     __name__ = 'lims.administrative.task.template'
 
-    model = fields.Many2One('ir.model', 'Model', select=True, required=True)
+    model = fields.Many2One('ir.model', 'Model', select=True, required=True,
+        domain=[('id', 'in', Eval('model_domain'))], depends=['model_domain'])
+    model_domain = fields.Function(fields.Many2Many('ir.model', None, None,
+        'Model domain'), 'get_model_domain')
     description = fields.Char('Description', required=True)
     expiration_days = fields.Integer('Days to Expiration', required=True)
     responsible = fields.Many2One('res.user', 'Responsible User',
         required=True)
+
+    @classmethod
+    def default_model_domain(cls):
+        return cls._get_model_domain()
+
+    def get_model_domain(self, name=None):
+        return self._get_model_domain()
+
+    @staticmethod
+    def _get_model_domain():
+        pool = Pool()
+        AdministrativeTask = pool.get('lims.administrative.task')
+        Model = pool.get('ir.model')
+
+        models = AdministrativeTask._get_origin()
+        models = Model.search([
+            ('model', 'in', models),
+            ])
+        return [m.id for m in models]
 
     @classmethod
     def create_tasks(cls, model_name, records):
