@@ -7360,6 +7360,10 @@ msgctxt "field:product.uom.category,lims_only_available:"
 msgid "Only available in Lims"
 msgstr "Sólo disponible en Lims"
 
+msgctxt "field:res.user,departments:"
+msgid "Departments"
+msgstr "Departamentos"
+
 msgctxt "field:res.user,laboratories:"
 msgid "Laboratories"
 msgstr "Laboratorios"
@@ -7396,6 +7400,42 @@ msgctxt "field:stock.move,fraction_readonly:"
 msgid "Fraction Read Only"
 msgstr "Fracción solo lectura"
 
+msgctxt "field:user.department,create_date:"
+msgid "Create Date"
+msgstr "Fecha de creación"
+
+msgctxt "field:user.department,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
+msgctxt "field:user.department,default:"
+msgid "By default"
+msgstr "Por defecto"
+
+msgctxt "field:user.department,department:"
+msgid "Department"
+msgstr "Departamento"
+
+msgctxt "field:user.department,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:user.department,rec_name:"
+msgid "Record Name"
+msgstr "Nombre del registro"
+
+msgctxt "field:user.department,user:"
+msgid "User"
+msgstr "Usuario"
+
+msgctxt "field:user.department,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:user.department,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
 msgctxt "help:lims.configuration,mail_ack_subject:"
 msgid "In the text will be added suffix with the entry report number"
 msgstr "En el texto se añadirá sufijo con el número de partida del informe"
@@ -7420,6 +7460,10 @@ msgctxt "model:FormulaParser,name:"
 msgid "Formula Parser"
 msgstr "Parser de Fórmula"
 
+msgctxt "model:company.department,name:"
+msgid "Department"
+msgstr "Departamento"
+
 msgctxt "model:ir.action,name:"
 msgid "Acknowledgment of Samples Receipt"
 msgstr "Acuse de recibo de muestras"
@@ -7427,6 +7471,10 @@ msgstr "Acuse de recibo de muestras"
 msgctxt "model:ir.action,name:act_add_typifications"
 msgid "Add Typifications"
 msgstr "Agregar tipificaciones"
+
+msgctxt "model:ir.action,name:act_company_department_list"
+msgid "Departments"
+msgstr "Departamentos"
 
 msgctxt "model:ir.action,name:act_lims_analysis_family_certificant_list"
 msgid "Certificant Party - Product Type - Matrix"
@@ -8034,6 +8082,10 @@ msgstr "Servicio"
 msgctxt "model:ir.ui.menu,name:"
 msgid "Laboratory Notebook"
 msgstr "Cuaderno de laboratorio"
+
+msgctxt "model:ir.ui.menu,name:company_department_menu"
+msgid "Departments"
+msgstr "Departamentos"
 
 msgctxt "model:ir.ui.menu,name:lims_analysis_family_menu"
 msgid "Analysis Families"
@@ -9118,6 +9170,10 @@ msgstr "Programador de Acuse de recibo"
 msgctxt "model:res.user,name:user_entry_confirm"
 msgid "Cron Lims Entry Confirm"
 msgstr "Programador de Confirmación de partidas"
+
+msgctxt "model:user.department,name:"
+msgid "User Department"
+msgstr "Usuario Departamento"
 
 msgctxt "report:lims.analysis_pending_inform:"
 msgid "'X' if line.urgent else ''"
@@ -16487,3 +16543,40 @@ msgstr "Imprimir motivo de anulación"
 msgctxt "field:lims.results_report_annulation.start,annulment_reason_print:"
 msgid "Print annulment reason in next version"
 msgstr "Imprimir motivo de anulación en próxima versión"
+
+msgctxt "field:company.department,code:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "field:company.department,create_date:"
+msgid "Create Date"
+msgstr "Fecha de creación"
+
+msgctxt "field:company.department,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
+msgctxt "field:company.department,default_location:"
+msgid "Default Location"
+msgstr "Ubicación por Defecto"
+
+msgctxt "field:company.department,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:company.department,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:company.department,rec_name:"
+msgid "Record Name"
+msgstr "Nombre del registro"
+
+msgctxt "field:company.department,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:company.department,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
