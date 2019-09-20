@@ -3,8 +3,9 @@
 # the full copyright notices and license terms.
 
 from trytond.model import ModelSQL, ModelView, fields
-from trytond.pyson import Eval
 from trytond.pool import Pool
+from trytond.pyson import Eval
+from trytond.transaction import Transaction
 
 __all__ = ['Plant', 'EquipmentType', 'Brand', 'ComponentType',
     'EquipmentTemplate', 'EquipmentTemplateComponentType', 'Equipment',
@@ -44,6 +45,15 @@ class Plant(ModelSQL, ModelView):
         super(Plant, cls).__setup__()
         cls._order.insert(0, ('party', 'ASC'))
         cls._order.insert(1, ('name', 'ASC'))
+
+    @staticmethod
+    def default_country():
+        Company = Pool().get('company.company')
+        company_id = Transaction().context.get('company')
+        if company_id:
+            address = Company(company_id).party.address_get()
+            if address and address.country:
+                return address.country.id
 
 
 class EquipmentType(ModelSQL, ModelView):
