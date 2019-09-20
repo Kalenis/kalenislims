@@ -3,8 +3,9 @@
 # the full copyright notices and license terms.
 
 from trytond.model import fields
-from trytond.pool import PoolMeta
+from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
+from trytond.transaction import Transaction
 
 __all__ = ['Party', 'Address']
 
@@ -43,3 +44,12 @@ class Address(metaclass=PoolMeta):
     technical_contact = fields.Boolean('Technical contact')
     administrative_contact = fields.Boolean('Administrative contact')
     contract_contact = fields.Boolean('Contract contact')
+
+    @staticmethod
+    def default_country():
+        Company = Pool().get('company.company')
+        company_id = Transaction().context.get('company')
+        if company_id:
+            address = Company(company_id).party.address_get()
+            if address and address.country:
+                return address.country.id
