@@ -129,7 +129,10 @@ class Equipment(ModelSQL, ModelView):
     template = fields.Many2One('lims.equipment.template', 'Template',
         required=True)
     name = fields.Char('Name', required=True)
+    brand = fields.Function(fields.Many2One('lims.brand', 'Brand'),
+        'get_brand', searcher='search_brand')
     model = fields.Char('Model', required=True)
+    power = fields.Char('Power', required=True)
     serial_number = fields.Char('Serial number')
     internal_id = fields.Char('Internal ID Code')
     latitude = fields.Numeric('Latitude', digits=(3, 14))
@@ -162,21 +165,32 @@ class Equipment(ModelSQL, ModelView):
     def search_party(cls, name, clause):
         return [('plant.party',) + tuple(clause[1:])]
 
+    def get_brand(self, name):
+        if self.template:
+            return self.template.brand.id
+
+    @classmethod
+    def search_brand(cls, name, clause):
+        return [('template.brand',) + tuple(clause[1:])]
+
     @fields.depends('template')
     def on_change_template(self):
         pool = Pool()
         Component = pool.get('lims.component')
 
         model = None
+        power = None
         components = []
         if self.template:
             model = self.template.model
+            power = self.template.power
             for type in self.template.component_types:
                 value = Component(**Component.default_get(
                     list(Component._fields.keys())))
                 value.type = type.id
                 components.append(value)
         self.model = model
+        self.power = power
         self.components = components
 
 

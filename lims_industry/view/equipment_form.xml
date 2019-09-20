@@ -6,12 +6,16 @@
     <field name="template"/>
     <notebook>
         <page id="general" string="General">
-            <label name="model"/>
-            <field name="model"/>
             <label name="plant"/>
             <field name="plant"/>
             <label name="party"/>
-            <field name="party" colspan="3"/>
+            <field name="party"/>
+            <label name="brand"/>
+            <field name="brand"/>
+            <label name="model"/>
+            <field name="model"/>
+            <label name="power"/>
+            <field name="power"/>
             <label name="serial_number"/>
             <field name="serial_number"/>
             <label name="internal_id"/>
