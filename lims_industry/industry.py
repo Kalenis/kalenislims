@@ -134,7 +134,8 @@ class Equipment(ModelSQL, ModelView):
     internal_location = fields.Char('Internal location')
     contacts = fields.One2Many('party.address', 'equipment',
         'Contacts', domain=[('party', '=', Eval('party'))],
-        depends=['party'])
+        context={'plant': Eval('plant')},
+        depends=['party', 'plant'])
     party = fields.Function(fields.Many2One('party.party', 'Party'),
         'get_party', searcher='search_party')
     missing_data = fields.Boolean('Missing data')
