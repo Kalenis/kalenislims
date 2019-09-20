@@ -53,3 +53,7 @@ class Address(metaclass=PoolMeta):
             address = Company(company_id).party.address_get()
             if address and address.country:
                 return address.country.id
+
+    @staticmethod
+    def default_plant():
+        return Transaction().context.get('plant', None)
