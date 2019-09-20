@@ -102,6 +102,14 @@ class EquipmentTemplate(ModelSQL, ModelView):
             res += ' - ' + self.model
         return res
 
+    @classmethod
+    def search_rec_name(cls, name, clause):
+        return ['OR',
+            ('type.name',) + tuple(clause[1:]),
+            ('brand.name',) + tuple(clause[1:]),
+            ('model',) + tuple(clause[1:]),
+            ]
+
 
 class EquipmentTemplateComponentType(ModelSQL):
     'Equipment Template - Component Type'
