@@ -95,7 +95,7 @@ class Planification(Workflow, ModelSQL, ModelView):
     waiting_process = fields.Boolean('Waiting process')
     method_domain = fields.Function(fields.One2Many('lims.lab.method',
         None, 'Method domain'),
-        'on_change_with_method_domain')
+        'on_change_with_method_domain', setter='set_method_domain')
     technicians_domain = fields.Function(fields.One2Many(
         'lims.laboratory.professional', None, 'Technicians domain'),
         'on_change_with_technicians_domain', setter='set_technicians_domain')
@@ -479,6 +479,10 @@ class Planification(Workflow, ModelSQL, ModelView):
                 if a.methods:
                     methods.extend([m.id for m in a.methods])
         return methods
+
+    @classmethod
+    def set_method_domain(cls, records, name, value):
+        return
 
     @fields.depends('laboratory')
     def on_change_with_technicians_domain(self, name=None):
