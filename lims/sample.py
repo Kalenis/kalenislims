@@ -278,7 +278,7 @@ class Service(ModelSQL, ModelView):
         'Fraction', states={'invisible': Not(Bool(Eval('_parent_fraction')))}),
         'on_change_with_fraction_view')
     sample = fields.Function(fields.Many2One('lims.sample', 'Sample'),
-        'get_fraction_field',
+        'get_fraction_field', setter='set_fraction_field',
         searcher='search_fraction_field')
     entry = fields.Function(fields.Many2One('lims.entry', 'Entry'),
         'get_fraction_field',
@@ -1024,6 +1024,10 @@ class Service(ModelSQL, ModelView):
                     field = getattr(s.fraction, name, None)
                     result[name][s.id] = field.id if field else None
         return result
+
+    @classmethod
+    def set_fraction_field(cls, records, name, value):
+        return
 
     def get_create_date2(self, name):
         return self.create_date.replace(microsecond=0)

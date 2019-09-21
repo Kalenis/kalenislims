@@ -808,7 +808,8 @@ class Analysis(Workflow, ModelSQL, ModelView):
             }, depends=['type', 'laboratory_domain', 'state'])
     all_included_analysis = fields.Function(fields.One2Many('lims.analysis',
         None, 'All included analysis'),
-        'on_change_with_all_included_analysis')
+        'on_change_with_all_included_analysis',
+        setter='set_all_included_analysis')
     behavior = fields.Selection([
         ('normal', 'Normal'),
         ('internal_relation', 'Internal Relation'),
@@ -941,6 +942,10 @@ class Analysis(Workflow, ModelSQL, ModelView):
     def on_change_with_all_included_analysis(self, name=None):
         Analysis = Pool().get('lims.analysis')
         return Analysis.get_included_analysis(self.id)
+
+    @classmethod
+    def set_all_included_analysis(cls, records, name, value):
+        return
 
     @classmethod
     def view_attributes(cls):
