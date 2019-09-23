@@ -13,10 +13,10 @@
                 <field name="zip"/>
                 <label name="city"/>
                 <field name="city"/>
-                <label name="subdivision"/>
-                <field name="subdivision"/>
                 <label name="country"/>
                 <field name="country"/>
+                <label name="subdivision"/>
+                <field name="subdivision"/>
             </group>
             <group colspan="4" id="coordinates" string="GPS Coordinates">
                 <label name="latitude"/>

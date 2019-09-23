@@ -3,8 +3,9 @@
 # the full copyright notices and license terms.
 
 from trytond.model import ModelSQL, ModelView, fields
-from trytond.pyson import Eval
 from trytond.pool import Pool
+from trytond.pyson import Eval
+from trytond.transaction import Transaction
 
 __all__ = ['Plant', 'EquipmentType', 'Brand', 'ComponentType',
     'EquipmentTemplate', 'EquipmentTemplateComponentType', 'Equipment',
@@ -44,6 +45,15 @@ class Plant(ModelSQL, ModelView):
         super(Plant, cls).__setup__()
         cls._order.insert(0, ('party', 'ASC'))
         cls._order.insert(1, ('name', 'ASC'))
+
+    @staticmethod
+    def default_country():
+        Company = Pool().get('company.company')
+        company_id = Transaction().context.get('company')
+        if company_id:
+            address = Company(company_id).party.address_get()
+            if address and address.country:
+                return address.country.id
 
 
 class EquipmentType(ModelSQL, ModelView):
@@ -92,6 +102,14 @@ class EquipmentTemplate(ModelSQL, ModelView):
             res += ' - ' + self.model
         return res
 
+    @classmethod
+    def search_rec_name(cls, name, clause):
+        return ['OR',
+            ('type.name',) + tuple(clause[1:]),
+            ('brand.name',) + tuple(clause[1:]),
+            ('model',) + tuple(clause[1:]),
+            ]
+
 
 class EquipmentTemplateComponentType(ModelSQL):
     'Equipment Template - Component Type'
@@ -111,7 +129,10 @@ class Equipment(ModelSQL, ModelView):
     template = fields.Many2One('lims.equipment.template', 'Template',
         required=True)
     name = fields.Char('Name', required=True)
+    brand = fields.Function(fields.Many2One('lims.brand', 'Brand'),
+        'get_brand', searcher='search_brand')
     model = fields.Char('Model', required=True)
+    power = fields.Char('Power', required=True)
     serial_number = fields.Char('Serial number')
     internal_id = fields.Char('Internal ID Code')
     latitude = fields.Numeric('Latitude', digits=(3, 14))
@@ -124,7 +145,8 @@ class Equipment(ModelSQL, ModelView):
     internal_location = fields.Char('Internal location')
     contacts = fields.One2Many('party.address', 'equipment',
         'Contacts', domain=[('party', '=', Eval('party'))],
-        depends=['party'])
+        context={'plant': Eval('plant')},
+        depends=['party', 'plant'])
     party = fields.Function(fields.Many2One('party.party', 'Party'),
         'get_party', searcher='search_party')
     missing_data = fields.Boolean('Missing data')
@@ -143,21 +165,32 @@ class Equipment(ModelSQL, ModelView):
     def search_party(cls, name, clause):
         return [('plant.party',) + tuple(clause[1:])]
 
+    def get_brand(self, name):
+        if self.template:
+            return self.template.brand.id
+
+    @classmethod
+    def search_brand(cls, name, clause):
+        return [('template.brand',) + tuple(clause[1:])]
+
     @fields.depends('template')
     def on_change_template(self):
         pool = Pool()
         Component = pool.get('lims.component')
 
         model = None
+        power = None
         components = []
         if self.template:
             model = self.template.model
+            power = self.template.power
             for type in self.template.component_types:
                 value = Component(**Component.default_get(
                     list(Component._fields.keys())))
                 value.type = type.id
                 components.append(value)
         self.model = model
+        self.power = power
         self.components = components
 
 

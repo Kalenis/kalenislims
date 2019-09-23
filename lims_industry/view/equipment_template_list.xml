@@ -3,4 +3,5 @@
     <field name="type" expand="1"/>
     <field name="brand" expand="1"/>
     <field name="model" expand="1"/>
+    <field name="power" expand="1"/>
 </tree>
