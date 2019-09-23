@@ -126,6 +126,10 @@ msgctxt "field:lims.component.type,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
 
+msgctxt "field:lims.equipment,brand:"
+msgid "Brand"
+msgstr "Marca"
+
 msgctxt "field:lims.equipment,components:"
 msgid "Components"
 msgstr "Componentes"
@@ -181,6 +185,10 @@ msgstr "Tercero"
 msgctxt "field:lims.equipment,plant:"
 msgid "Plant"
 msgstr "Planta"
+
+msgctxt "field:lims.equipment,power:"
+msgid "Power"
+msgstr "Potencia"
 
 msgctxt "field:lims.equipment,rec_name:"
 msgid "Record Name"
