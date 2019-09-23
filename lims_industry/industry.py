@@ -132,7 +132,7 @@ class Equipment(ModelSQL, ModelView):
     brand = fields.Function(fields.Many2One('lims.brand', 'Brand'),
         'get_brand', searcher='search_brand')
     model = fields.Char('Model', required=True)
-    power = fields.Char('Power', required=True)
+    power = fields.Char('Power')
     serial_number = fields.Char('Serial number')
     internal_id = fields.Char('Internal ID Code')
     latitude = fields.Numeric('Latitude', digits=(3, 14))
