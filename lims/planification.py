@@ -562,7 +562,7 @@ class PlanificationTechnician(ModelSQL, ModelView):
             ])
     details = fields.Function(fields.One2Many(
         'lims.planification.technician.detail', 'technician',
-        'Fractions to plan'), 'get_details')
+        'Fractions to plan'), 'get_details', setter='set_details')
 
     @classmethod
     def __setup__(cls):
@@ -612,6 +612,10 @@ class PlanificationTechnician(ModelSQL, ModelView):
                 'method': str(','.join(r[2:])[:-1].replace('"', '')),
                 })
         return fractions
+
+    @classmethod
+    def set_details(cls, records, name, value):
+        return
 
 
 class PlanificationTechnicianDetail(ModelView):
