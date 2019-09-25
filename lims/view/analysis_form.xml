@@ -61,4 +61,5 @@
         <button name="activate" string="Activate"/>
         <button name="disable" string="Disable"/>
     </group>
+    <field name="id" colspan="4" invisible="1"/>
 </form>
