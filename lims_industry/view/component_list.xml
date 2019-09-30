@@ -6,6 +6,8 @@
     <field name="model"/>
     <field name="serial_number"/>
     <field name="internal_id"/>
+    <field name="plant" expand="1"/>
+    <field name="party" expand="1"/>
     <field name="customer_description"/>
     <field name="capacity"/>
     <field name="power"/>

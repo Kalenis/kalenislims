@@ -70,6 +70,10 @@ msgctxt "field:lims.component,party:"
 msgid "Party"
 msgstr "Tercero"
 
+msgctxt "field:lims.component,plant:"
+msgid "Plant"
+msgstr "Planta"
+
 msgctxt "field:lims.component,power:"
 msgid "Power"
 msgstr "Potencia"
