@@ -210,6 +210,8 @@ class Component(ModelSQL, ModelView):
     internal_id = fields.Char('Internal ID Code')
     customer_description = fields.Char('Customer description')
     year_manufacturing = fields.Integer('Year of manufacturing')
+    plant = fields.Function(fields.Many2One('lims.plant', 'Plant'),
+        'get_plant', searcher='search_plant')
     party = fields.Function(fields.Many2One('party.party', 'Party'),
         'get_party', searcher='search_party')
 
@@ -226,6 +228,14 @@ class Component(ModelSQL, ModelView):
         if self.model:
             res += ' - ' + self.model
         return res
+
+    def get_plant(self, name):
+        if self.equipment:
+            return self.equipment.plant.id
+
+    @classmethod
+    def search_plant(cls, name, clause):
+        return [('equipment.plant',) + tuple(clause[1:])]
 
     def get_party(self, name):
         if self.equipment:
