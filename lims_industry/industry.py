@@ -2,7 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond.model import ModelSQL, ModelView, fields
+from trytond.model import ModelSQL, ModelView, fields, Unique
 from trytond.pool import Pool
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
@@ -45,6 +45,11 @@ class Plant(ModelSQL, ModelView):
         super(Plant, cls).__setup__()
         cls._order.insert(0, ('party', 'ASC'))
         cls._order.insert(1, ('name', 'ASC'))
+        t = cls.__table__()
+        cls._sql_constraints = [
+            ('name_unique', Unique(t, t.party, t.name),
+                'lims_industry.msg_plant_name_unique'),
+            ]
 
     @staticmethod
     def default_country():
@@ -54,6 +59,19 @@ class Plant(ModelSQL, ModelView):
             address = Company(company_id).party.address_get()
             if address and address.country:
                 return address.country.id
+
+    @classmethod
+    def copy(cls, plants, default=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+
+        new_plants = []
+        for plant in plants:
+            default['name'] = plant.name + ' (copy)'
+            new_plant, = super(Plant, cls).copy([plant], default)
+            new_plants.append(new_plant)
+        return new_plants
 
 
 class EquipmentType(ModelSQL, ModelView):
@@ -156,6 +174,11 @@ class Equipment(ModelSQL, ModelView):
         super(Equipment, cls).__setup__()
         cls._order.insert(0, ('template', 'ASC'))
         cls._order.insert(1, ('name', 'ASC'))
+        t = cls.__table__()
+        cls._sql_constraints = [
+            ('name_unique', Unique(t, t.plant, t.name),
+                'lims_industry.msg_equipment_name_unique'),
+            ]
 
     def get_party(self, name):
         if self.plant:
@@ -193,6 +216,19 @@ class Equipment(ModelSQL, ModelView):
         self.power = power
         self.components = components
 
+    @classmethod
+    def copy(cls, equipments, default=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+
+        new_equipments = []
+        for equipment in equipments:
+            default['name'] = equipment.name + ' (copy)'
+            new_equipment, = super(Equipment, cls).copy([equipment], default)
+            new_equipments.append(new_equipment)
+        return new_equipments
+
 
 class Component(ModelSQL, ModelView):
     'Component'
@@ -220,6 +256,11 @@ class Component(ModelSQL, ModelView):
         super(Component, cls).__setup__()
         cls._order.insert(0, ('equipment', 'ASC'))
         cls._order.insert(1, ('type', 'ASC'))
+        t = cls.__table__()
+        cls._sql_constraints = [
+            ('type_unique', Unique(t, t.equipment, t.type),
+                'lims_industry.msg_component_type_unique'),
+            ]
 
     def get_rec_name(self, name):
         res = self.type.rec_name
