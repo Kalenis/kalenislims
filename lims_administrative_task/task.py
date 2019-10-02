@@ -126,6 +126,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         ('discarded', 'Discarded'),
         ], 'State', select=True, readonly=True, required=True)
     icon = fields.Function(fields.Char('Icon'), 'get_icon')
+    comments = fields.Text('Comments')
 
     @classmethod
     def __setup__(cls):

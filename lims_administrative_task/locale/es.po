@@ -10,6 +10,10 @@ msgctxt "field:lims.administrative.task,closing_date:"
 msgid "Closing Date"
 msgstr "Fecha de cierre"
 
+msgctxt "field:lims.administrative.task,comments:"
+msgid "Comments"
+msgstr "Observaciones"
+
 msgctxt "field:lims.administrative.task,create_date:"
 msgid "Create Date"
 msgstr "Fecha creación"
@@ -441,6 +445,10 @@ msgstr "Muy alta"
 msgctxt "selection:lims.administrative.task.edit.start,priority:"
 msgid "Very Low"
 msgstr "Muy baja"
+
+msgctxt "view:lims.administrative.task:"
+msgid "Comments"
+msgstr "Observaciones"
 
 msgctxt "view:lims.administrative.task:"
 msgid "Discard"
