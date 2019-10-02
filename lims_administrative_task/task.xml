@@ -75,6 +75,7 @@
             <field name="sequence" eval="10"/>
             <field name="domain" pyson="1"
                 eval="[('state', '=', 'draft')]"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_task"/>
         </record>
         <record model="ir.action.act_window.domain"
@@ -83,6 +84,7 @@
             <field name="sequence" eval="20"/>
             <field name="domain" pyson="1"
                 eval="[('state', '=', 'pending')]"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_task"/>
         </record>
         <record model="ir.action.act_window.domain"
@@ -91,6 +93,7 @@
             <field name="sequence" eval="30"/>
             <field name="domain" pyson="1"
                 eval="[('state', '=', 'rejected')]"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_task"/>
         </record>
         <record model="ir.action.act_window.domain"
@@ -99,6 +102,7 @@
             <field name="sequence" eval="40"/>
             <field name="domain" pyson="1"
                 eval="[('state', '=', 'ongoing')]"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_task"/>
         </record>
         <record model="ir.action.act_window.domain"
@@ -107,6 +111,7 @@
             <field name="sequence" eval="50"/>
             <field name="domain" pyson="1"
                 eval="[('state', '=', 'standby')]"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_task"/>
         </record>
         <record model="ir.action.act_window.domain"
@@ -115,6 +120,7 @@
             <field name="sequence" eval="60"/>
             <field name="domain" pyson="1"
                 eval="[('state', '=', 'done')]"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_task"/>
         </record>
         <record model="ir.action.act_window.domain"
@@ -123,6 +129,7 @@
             <field name="sequence" eval="70"/>
             <field name="domain" pyson="1"
                 eval="[('state', '=', 'discarded')]"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_task"/>
         </record>
         <record model="ir.action.act_window.domain"
@@ -130,6 +137,7 @@
             <field name="name">All</field>
             <field name="sequence" eval="200"/>
             <field name="domain"></field>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_task"/>
         </record>
 
@@ -161,6 +169,7 @@
             <field name="sequence" eval="10"/>
             <field name="domain" pyson="1"
                 eval="[('state', '=', 'draft')]"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_task_mine"/>
         </record>
         <record model="ir.action.act_window.domain"
@@ -169,6 +178,7 @@
             <field name="sequence" eval="20"/>
             <field name="domain" pyson="1"
                 eval="[('state', '=', 'pending')]"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_task_mine"/>
         </record>
         <record model="ir.action.act_window.domain"
@@ -177,6 +187,7 @@
             <field name="sequence" eval="30"/>
             <field name="domain" pyson="1"
                 eval="[('state', '=', 'rejected')]"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_task_mine"/>
         </record>
         <record model="ir.action.act_window.domain"
@@ -185,6 +196,7 @@
             <field name="sequence" eval="40"/>
             <field name="domain" pyson="1"
                 eval="[('state', '=', 'ongoing')]"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_task_mine"/>
         </record>
         <record model="ir.action.act_window.domain"
@@ -193,6 +205,7 @@
             <field name="sequence" eval="50"/>
             <field name="domain" pyson="1"
                 eval="[('state', '=', 'standby')]"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_task_mine"/>
         </record>
         <record model="ir.action.act_window.domain"
@@ -201,6 +214,7 @@
             <field name="sequence" eval="60"/>
             <field name="domain" pyson="1"
                 eval="[('state', '=', 'done')]"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_task_mine"/>
         </record>
         <record model="ir.action.act_window.domain"
@@ -209,13 +223,15 @@
             <field name="sequence" eval="70"/>
             <field name="domain" pyson="1"
                 eval="[('state', '=', 'discarded')]"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_task_mine"/>
         </record>
         <record model="ir.action.act_window.domain"
             id="act_task_mine_domain_all">
             <field name="name">All</field>
-            <field name="sequence" eval="200"/>
+            <field name="sequence" eval="0"/>
             <field name="domain"></field>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_task_mine"/>
         </record>
 
