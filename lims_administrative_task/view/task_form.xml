@@ -18,6 +18,9 @@
     <field name="closing_date"/>
     <label name="rejection_reason"/>
     <field name="rejection_reason"/>
+    <newline/>
+    <separator string="Comments" colspan="4" id="comments"/>
+    <field name="comments" colspan="4"/>
     <group colspan="4" id="state">
         <label name="state"/>
         <field name="state"/>
