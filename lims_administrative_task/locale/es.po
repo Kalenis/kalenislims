@@ -305,6 +305,30 @@ msgctxt "model:ir.action.act_window.domain,name:act_task_mine_domain_standby"
 msgid "Stand By"
 msgstr "Stand By"
 
+msgctxt "model:ir.message,text:field_task_date"
+msgid "Create Date"
+msgstr "Fecha de creación"
+
+msgctxt "model:ir.message,text:field_task_expiration_date"
+msgid "Expiration Date"
+msgstr "Fecha de vencimiento"
+
+msgctxt "model:ir.message,text:field_task_number"
+msgid "Task Number"
+msgstr "Número Tarea"
+
+msgctxt "model:ir.message,text:field_task_origin"
+msgid "Operation Origin"
+msgstr "Operación origen"
+
+msgctxt "model:ir.message,text:field_task_priority"
+msgid "Priority"
+msgstr "Prioridad"
+
+msgctxt "model:ir.message,text:field_task_url"
+msgid "URL"
+msgstr "URL"
+
 msgctxt "model:ir.message,text:msg_delete_task"
 msgid "You can not delete task \"%(task)s\" because it is not in draft state"
 msgstr ""
