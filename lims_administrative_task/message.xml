@@ -16,5 +16,23 @@
         <record model="ir.message" id="msg_party_tax_identifier">
             <field name="text">Party "%(party)s" has no Tax Identifier</field>
         </record>
+        <record model="ir.message" id="field_task_number">
+            <field name="text">Task Number</field>
+        </record>
+        <record model="ir.message" id="field_task_date">
+            <field name="text">Create Date</field>
+        </record>
+        <record model="ir.message" id="field_task_expiration_date">
+            <field name="text">Expiration Date</field>
+        </record>
+        <record model="ir.message" id="field_task_priority">
+            <field name="text">Priority</field>
+        </record>
+        <record model="ir.message" id="field_task_origin">
+            <field name="text">Operation Origin</field>
+        </record>
+        <record model="ir.message" id="field_task_url">
+            <field name="text">URL</field>
+        </record>
     </data>
 </tryton>

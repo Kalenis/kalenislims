@@ -106,6 +106,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         ('4', 'High'),
         ('5', 'Very High'),
         ], 'Priority', sort=False, required=True)
+    priority_string = priority.translated('priority')
     origin = fields.Reference('Operation Origin', selection='get_origin')
     description = fields.Char('Description', required=True)
     responsible = fields.Many2One('res.user', 'Responsible User',
@@ -344,12 +345,47 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
     def _get_subject_body(self):
         pool = Pool()
         Config = pool.get('lims.administrative.task.configuration')
+        Lang = pool.get('ir.lang')
 
         config = Config(1)
+        lang = Lang.get()
+
         subject = str('%s (%s)' % (config.email_responsible_subject,
             self.number)).strip()
+
         body = str(self.description)
+        body += '\n%s: %s' % (
+            gettext('lims_administrative_task.field_task_number'),
+            str(self.number))
+        body += '\n%s: %s' % (
+            gettext('lims_administrative_task.field_task_url'),
+            str(self._get_task_url()))
+        body += '\n%s: %s' % (
+            gettext('lims_administrative_task.field_task_date'),
+            lang.strftime(self.date))
+        body += '\n%s: %s' % (
+            gettext('lims_administrative_task.field_task_expiration_date'),
+            lang.strftime(self.expiration_date))
+        body += '\n%s: %s' % (
+            gettext('lims_administrative_task.field_task_priority'),
+            str(self.priority_string))
+        body += '\n%s: %s' % (
+            gettext('lims_administrative_task.field_task_origin'),
+            str(self.origin.rec_name))
         return subject, body
+
+    def _get_task_url(self):
+        tr = Transaction()
+        url_part = {}
+        hostname = '%s://%s/' % (
+            str(tr.context['_request']['scheme']),
+            str(tr.context['_request']['http_host']))
+        url_part['hostname'] = hostname
+        url_part['database'] = tr.database.name
+        url_part['type'] = 'model'
+        url_part['name'] = self.__name__
+        url_part['id'] = self.id
+        return '%(hostname)s#%(database)s/%(type)s/%(name)s/%(id)d' % url_part
 
     @staticmethod
     def create_msg(from_addr, to_addr, subject, body):
