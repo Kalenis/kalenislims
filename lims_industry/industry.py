@@ -69,6 +69,7 @@ class Plant(ModelSQL, ModelView):
         new_plants = []
         for plant in plants:
             default['name'] = plant.name + ' (copy)'
+            default['equipments'] = None
             new_plant, = super(Plant, cls).copy([plant], default)
             new_plants.append(new_plant)
         return new_plants
