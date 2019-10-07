@@ -181,17 +181,31 @@ class Equipment(ModelSQL, ModelView):
                 'lims_industry.msg_equipment_name_unique'),
             ]
 
-    def get_party(self, name):
-        if self.plant:
-            return self.plant.party.id
+    @fields.depends('plant')
+    def on_change_with_party(self, name=None):
+        return self.get_party([self], name)[self.id]
+
+    @classmethod
+    def get_party(cls, equipments, name):
+        result = {}
+        for e in equipments:
+            result[e.id] = e.plant and e.plant.party.id or None
+        return result
 
     @classmethod
     def search_party(cls, name, clause):
         return [('plant.party',) + tuple(clause[1:])]
 
-    def get_brand(self, name):
-        if self.template:
-            return self.template.brand.id
+    @fields.depends('template')
+    def on_change_with_brand(self, name=None):
+        return self.get_brand([self], name)[self.id]
+
+    @classmethod
+    def get_brand(cls, equipments, name):
+        result = {}
+        for e in equipments:
+            result[e.id] = e.template and e.template.brand.id or None
+        return result
 
     @classmethod
     def search_brand(cls, name, clause):
@@ -271,17 +285,23 @@ class Component(ModelSQL, ModelView):
             res += ' - ' + self.model
         return res
 
-    def get_plant(self, name):
-        if self.equipment:
-            return self.equipment.plant.id
+    @classmethod
+    def get_plant(cls, component, name):
+        result = {}
+        for c in component:
+            result[c.id] = c.equipment and c.equipment.plant.id or None
+        return result
 
     @classmethod
     def search_plant(cls, name, clause):
         return [('equipment.plant',) + tuple(clause[1:])]
 
-    def get_party(self, name):
-        if self.equipment:
-            return self.equipment.plant.party.id
+    @classmethod
+    def get_party(cls, component, name):
+        result = {}
+        for c in component:
+            result[c.id] = c.equipment and c.equipment.plant.party.id or None
+        return result
 
     @classmethod
     def search_party(cls, name, clause):
