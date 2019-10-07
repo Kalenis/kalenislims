@@ -58,5 +58,4 @@
         <button name="confirm" string="Confirm" icon="tryton-ok"/>
         <button name="on_hold" string="Administration pending" icon="tryton-forward"/>
     </group>
-    <field name="id" colspan="4" invisible="1"/>
 </form>
