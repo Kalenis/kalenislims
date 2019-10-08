@@ -1276,7 +1276,7 @@ class ControlChartReport(Report):
             cols.append(r['name'])
             ds[r['name']] = [r['recs'][col] for col in index]
         df = pd.DataFrame(ds, index=index)
-        df = df.reindex_axis(cols, axis=1)
+        df = df.reindex(cols, axis=1)
 
         try:
             ax = df[[gettext('lims.msg_ucl'),
