@@ -171,7 +171,7 @@ msgstr "No olvide cargar las traducciones al Inglés"
 
 msgctxt "model:ir.message,text:msg_missing_entry_contacts"
 msgid "Missing contacts in entry \"%(entry)s\""
-msgstr "Faltan contactos en la partida \"%(entry)s\""
+msgstr "Faltan contactos en el ingreso \"%(entry)s\""
 
 msgctxt "model:ir.message,text:msg_enac_acredited"
 msgid "The analysis marked with * are not covered by the Accreditation."
@@ -180,15 +180,15 @@ msgstr ""
 
 msgctxt "model:ir.message,text:msg_no_entry_sequence"
 msgid "There is no entry sequence for the work year \"%(work_year)s\"."
-msgstr "No hay una secuencia de partidas para el año laboral «%(work_year)s»"
+msgstr "No hay una secuencia de ingresos para el año laboral «%(work_year)s»"
 
 msgctxt "model:ir.message,text:msg_not_fraction"
 msgid "You can not confirm entry \"%(entry)s\" because has not fractions"
-msgstr "No puede confirmar la partida «%(entry)s» porque no posee fracciones"
+msgstr "No puede confirmar el ingreso «%(entry)s» porque no posee fracciones"
 
 msgctxt "model:ir.message,text:msg_delete_entry"
 msgid "You can not delete entry \"%(entry)s\" because it is not in draft state"
-msgstr "No puede eliminar la partida «%(entry)s» porque no está en estado borrador"
+msgstr "No puede eliminar el ingreso «%(entry)s» porque no está en estado borrador"
 
 msgctxt "model:ir.message,text:msg_reference_fractions_discharge"
 msgid "Fractions Discharge"
@@ -495,7 +495,7 @@ msgstr "No hay una secuencia de muestras para el año laboral «%(work_year)s»"
 msgctxt "model:ir.message,text:msg_delete_sample"
 msgid "You can not delete sample \"%(sample)s\" because its entry is not in draft state"
 msgstr ""
-"No puede eliminar la muestra «%(sample)s» porque su partida no está en estado "
+"No puede eliminar la muestra «%(sample)s» porque su ingreso no está en estado "
 "borrador"
 
 msgctxt "model:ir.message,text:msg_duplicated_analysis_service"
@@ -1061,7 +1061,7 @@ msgstr "Correo electrónico QA"
 
 msgctxt "field:lims.configuration,entry_confirm_background:"
 msgid "Confirm Entries in Background"
-msgstr "Confirmar partidas en segundo plano"
+msgstr "Confirmar ingresos en segundo plano"
 
 msgctxt "field:lims.configuration,fraction_product:"
 msgid "Fraction product"
@@ -2253,7 +2253,7 @@ msgstr "Usuario creación"
 
 msgctxt "field:lims.entry.acknowledgment_contacts,entry:"
 msgid "Entry"
-msgstr "Partida"
+msgstr "Ingreso"
 
 msgctxt "field:lims.entry.acknowledgment_contacts,id:"
 msgid "ID"
@@ -2321,7 +2321,7 @@ msgstr "Equipo"
 
 msgctxt "field:lims.entry.detail.analysis,entry:"
 msgid "Entry"
-msgstr "Partida"
+msgstr "Ingreso"
 
 msgctxt "field:lims.entry.detail.analysis,fraction:"
 msgid "Fraction"
@@ -2385,7 +2385,7 @@ msgstr "Fecha de ingreso"
 
 msgctxt "field:lims.entry.duplicate_sample.start,entry:"
 msgid "Entry"
-msgstr "Partida"
+msgstr "Ingreso"
 
 msgctxt "field:lims.entry.duplicate_sample.start,id:"
 msgid "ID"
@@ -2413,7 +2413,7 @@ msgstr "Usuario creación"
 
 msgctxt "field:lims.entry.invoice_contacts,entry:"
 msgid "Entry"
-msgstr "Partida"
+msgstr "Ingreso"
 
 msgctxt "field:lims.entry.invoice_contacts,id:"
 msgid "ID"
@@ -2445,7 +2445,7 @@ msgstr "Usuario creación"
 
 msgctxt "field:lims.entry.report_contacts,entry:"
 msgid "Entry"
-msgstr "Partida"
+msgstr "Ingreso"
 
 msgctxt "field:lims.entry.report_contacts,id:"
 msgid "ID"
@@ -2633,11 +2633,11 @@ msgstr "Mensaje"
 
 msgctxt "field:lims.fraction,entry:"
 msgid "Entry"
-msgstr "Partida"
+msgstr "Ingreso"
 
 msgctxt "field:lims.fraction,entry_state:"
 msgid "Entry State"
-msgstr "Estado partida"
+msgstr "Estado ingreso"
 
 msgctxt "field:lims.fraction,expiry_date:"
 msgid "Expiry date"
@@ -3462,7 +3462,7 @@ msgstr "Fecha de finalización"
 
 msgctxt "field:lims.lab.workyear,entry_sequence:"
 msgid "Entry Sequence"
-msgstr "Secuencia de partidas"
+msgstr "Secuencia de ingresos"
 
 msgctxt "field:lims.lab.workyear,id:"
 msgid "ID"
@@ -3514,7 +3514,7 @@ msgstr "Usuario creación"
 
 msgctxt "field:lims.lab.workyear.sequence,entry_sequence:"
 msgid "Entry Sequence"
-msgstr "Secuencia de partidas"
+msgstr "Secuencia de ingresos"
 
 msgctxt "field:lims.lab.workyear.sequence,id:"
 msgid "ID"
@@ -6212,11 +6212,11 @@ msgstr "Fecha de ingreso"
 
 msgctxt "field:lims.sample,entry:"
 msgid "Entry"
-msgstr "Partida"
+msgstr "Ingreso"
 
 msgctxt "field:lims.sample,entry_view:"
 msgid "Entry"
-msgstr "Partida"
+msgstr "Ingreso"
 
 msgctxt "field:lims.sample,fractions:"
 msgid "Fractions"
@@ -6477,7 +6477,7 @@ msgstr "Dividir"
 
 msgctxt "field:lims.service,entry:"
 msgid "Entry"
-msgstr "Partida"
+msgstr "Ingreso"
 
 msgctxt "field:lims.service,fraction:"
 msgid "Fraction"
@@ -7438,7 +7438,7 @@ msgstr "Usuario modificación"
 
 msgctxt "help:lims.configuration,mail_ack_subject:"
 msgid "In the text will be added suffix with the entry report number"
-msgstr "En el texto se añadirá sufijo con el número de partida del informe"
+msgstr "En el texto se añadirá sufijo con el número de ingreso del informe"
 
 msgctxt "help:lims.laboratory,cv_corrections:"
 msgid "Corrections for Coefficients of Variation (Control Charts)"
@@ -7534,15 +7534,15 @@ msgstr "1. Detalle de análisis"
 
 msgctxt "model:ir.action,name:act_lims_entry_form"
 msgid "New Entry"
-msgstr "Nueva Partida"
+msgstr "Nuevo Ingreso"
 
 msgctxt "model:ir.action,name:act_lims_entry_list"
 msgid "Entries"
-msgstr "Partidas"
+msgstr "Ingresos"
 
 msgctxt "model:ir.action,name:act_lims_entry_suspension_reason_list"
 msgid "Entry Suspension Reasons"
-msgstr "Motivos de suspensión de partida"
+msgstr "Motivos de suspensión de ingreso"
 
 msgctxt "model:ir.action,name:act_lims_formula_list"
 msgid "Formulas"
@@ -7766,7 +7766,7 @@ msgstr "Acuse de recibo de muestras"
 
 msgctxt "model:ir.action,name:report_entry_detail"
 msgid "Entry Detail"
-msgstr "Detalle de partida"
+msgstr "Detalle de ingreso"
 
 msgctxt "model:ir.action,name:report_entry_labels"
 msgid "Entry Labels"
@@ -8045,7 +8045,7 @@ msgstr "Acuse de recibo (Muestras)"
 
 msgctxt "model:ir.cron,name:cron_lims_confirm_waiting_entries"
 msgid "Lims Confirm Waiting Entries"
-msgstr "Confirmar partidas en espera"
+msgstr "Confirmar ingresos en espera"
 
 msgctxt "model:ir.sequence,name:seq_sample"
 msgid "Sample"
@@ -8061,11 +8061,11 @@ msgstr "Muestra"
 
 msgctxt "model:ir.sequence.strict,name:seq_entry"
 msgid "Entry"
-msgstr "Partida"
+msgstr "Ingreso"
 
 msgctxt "model:ir.sequence.type,name:seq_type_entry"
 msgid "Entry"
-msgstr "Partida"
+msgstr "Ingreso"
 
 msgctxt "model:ir.sequence.type,name:seq_type_results_report"
 msgid "Results Report"
@@ -8145,7 +8145,7 @@ msgstr "Tendencias"
 
 msgctxt "model:ir.ui.menu,name:lims_entry_board_menu"
 msgid "Entries Board"
-msgstr "Tablero de Partidas"
+msgstr "Gestión de Muestras"
 
 msgctxt "model:ir.ui.menu,name:lims_entry_detail_analysis_menu"
 msgid "Entry Detail Analysis"
@@ -8153,15 +8153,15 @@ msgstr "Detalle de análisis"
 
 msgctxt "model:ir.ui.menu,name:lims_entry_form_menu"
 msgid "New Entry"
-msgstr "Nueva Partida"
+msgstr "Nuevo Ingreso"
 
 msgctxt "model:ir.ui.menu,name:lims_entry_menu"
 msgid "Entries"
-msgstr "Partidas"
+msgstr "Ingresos"
 
 msgctxt "model:ir.ui.menu,name:lims_entry_suspension_reason_menu"
 msgid "Entry Suspension Reasons"
-msgstr "Motivos de suspensión de partida"
+msgstr "Motivos de suspensión de ingreso"
 
 msgctxt "model:ir.ui.menu,name:lims_formula_list_menu"
 msgid "Formulas"
@@ -8497,11 +8497,11 @@ msgstr "Dividir informes"
 
 msgctxt "model:lims.entry,name:"
 msgid "Entry"
-msgstr "Partida"
+msgstr "Ingreso"
 
 msgctxt "model:lims.entry.acknowledgment_contacts,name:"
 msgid "Entry Acknowledgment Contact"
-msgstr "Contacto acuse de recibo de Partida"
+msgstr "Contacto acuse de recibo de Ingreso"
 
 msgctxt "model:lims.entry.change_invoice_party.error,name:"
 msgid "Change Invoice Party"
@@ -8521,15 +8521,15 @@ msgstr "Copiar muestra"
 
 msgctxt "model:lims.entry.invoice_contacts,name:"
 msgid "Entry Invoice Contact"
-msgstr "Contacto facturación de Partida"
+msgstr "Contacto facturación de Ingreso"
 
 msgctxt "model:lims.entry.report_contacts,name:"
 msgid "Entry Report Contact"
-msgstr "Contacto informe de Partida"
+msgstr "Contacto informe de Ingreso"
 
 msgctxt "model:lims.entry.suspension.reason,name:"
 msgid "Entry Suspension Reason"
-msgstr "Motivo de suspensión de partida"
+msgstr "Motivo de suspensión de ingreso"
 
 msgctxt "model:lims.formula,name:"
 msgid "Formula"
@@ -9169,7 +9169,7 @@ msgstr "Programador de Acuse de recibo"
 
 msgctxt "model:res.user,name:user_entry_confirm"
 msgid "Cron Lims Entry Confirm"
-msgstr "Programador de Confirmación de partidas"
+msgstr "Programador de Confirmación de ingresos"
 
 msgctxt "model:user.department,name:"
 msgid "User Department"
@@ -9651,11 +9651,11 @@ msgstr "Fecha:"
 
 msgctxt "report:lims.entry.detail.report:"
 msgid "Entry Detail"
-msgstr "Detalle de partida"
+msgstr "Detalle de ingreso"
 
 msgctxt "report:lims.entry.detail.report:"
 msgid "Entry:"
-msgstr "Partida:"
+msgstr "Ingreso:"
 
 msgctxt "report:lims.entry.detail.report:"
 msgid "Invoice Party:"
@@ -11006,7 +11006,7 @@ msgstr "Cambiar Entidad facturación"
 
 msgctxt "view:lims.entry.change_invoice_party.error:"
 msgid "The entry has lines already invoiced"
-msgstr "La partida tiene líneas ya facturadas"
+msgstr "El ingreso tiene líneas ya facturadas"
 
 msgctxt "view:lims.entry.change_invoice_party.start:"
 msgid "Change Invoice Party"
@@ -11046,11 +11046,11 @@ msgstr "Contactos informe"
 
 msgctxt "view:lims.entry.suspension.reason:"
 msgid "Entry Suspension Reason"
-msgstr "Motivo de suspensión de partida"
+msgstr "Motivo de suspensión de ingreso"
 
 msgctxt "view:lims.entry.suspension.reason:"
 msgid "Entry Suspension Reasons"
-msgstr "Motivos de suspensión de partida"
+msgstr "Motivos de suspensión de ingreso"
 
 msgctxt "view:lims.entry:"
 msgid "Administration pending"
@@ -11078,11 +11078,11 @@ msgstr "Crear muestras"
 
 msgctxt "view:lims.entry:"
 msgid "Entries"
-msgstr "Partidas"
+msgstr "Ingresos"
 
 msgctxt "view:lims.entry:"
 msgid "Entry"
-msgstr "Partida"
+msgstr "Ingreso"
 
 msgctxt "view:lims.entry:"
 msgid "General"
@@ -12812,7 +12812,7 @@ msgstr "No hay configurado ningún tipo de fracción BRE"
 
 msgctxt "model:ir.message,text:msg_no_entry_control"
 msgid "There is no default entry control for this work year"
-msgstr "No hay una partida control por defecto para este año laboral"
+msgstr "No hay un ingreso control por defecto para este año laboral"
 
 msgctxt "model:ir.message,text:msg_no_concentration_level"
 msgid "Missing concentration level for this control type"
@@ -12824,7 +12824,7 @@ msgstr "No hay configurado ningún tipo de fracción Control"
 
 msgctxt "model:ir.message,text:msg_no_entry_control"
 msgid "There is no default entry control for this work year"
-msgstr "No hay una partida control por defecto para este año laboral"
+msgstr "No hay un ingreso control por defecto para este año laboral"
 
 msgctxt "model:ir.message,text:msg_no_concentration_level"
 msgid "Missing concentration level for this control type"
@@ -12840,7 +12840,7 @@ msgstr "No hay configurado ningún tipo de fracción MRT"
 
 msgctxt "model:ir.message,text:msg_no_entry_control"
 msgid "There is no default entry control for this work year"
-msgstr "No hay una partida control por defecto para este año laboral"
+msgstr "No hay un ingreso control por defecto para este año laboral"
 
 msgctxt "model:ir.message,text:msg_no_concentration_level"
 msgid "Missing concentration level for this control type"
@@ -12864,7 +12864,7 @@ msgstr "No hay configurado ningún tipo de fracción RM"
 
 msgctxt "model:ir.message,text:msg_no_entry_control"
 msgid "There is no default entry control for this work year"
-msgstr "No hay una partida control por defecto para este año laboral"
+msgstr "No hay un ingreso control por defecto para este año laboral"
 
 msgctxt "model:ir.message,text:msg_no_concentration_level"
 msgid "Missing concentration level for this control type"
@@ -12896,7 +12896,7 @@ msgstr "No hay configurado ningún tipo de fracción SLA"
 
 msgctxt "model:ir.message,text:msg_no_entry_control"
 msgid "There is no default entry control for this work year"
-msgstr "No hay una partida control por defecto para este año laboral"
+msgstr "No hay un ingreso control por defecto para este año laboral"
 
 msgctxt "model:ir.message,text:msg_planification_professional_unique_id"
 msgid "Professionals cannot be repeated"
@@ -12952,7 +12952,7 @@ msgstr "Fecha"
 
 msgctxt "field:lims.blind_sample,entry:"
 msgid "Entry"
-msgstr "Partida"
+msgstr "Ingreso"
 
 msgctxt "field:lims.blind_sample,fraction:"
 msgid "Fraction"
@@ -13430,7 +13430,7 @@ msgstr "Usuario modificación"
 
 msgctxt "field:lims.lab.workyear,default_entry_control:"
 msgid "Default entry control"
-msgstr "Partida control por defecto"
+msgstr "Ingreso control por defecto"
 
 msgctxt "field:lims.laboratory.professional,methods:"
 msgid "Methods"
@@ -16481,7 +16481,7 @@ msgid ""
 "<i>Documentation</i></font></b></div>"
 msgstr ""
 "<div align=\"left\"><b><font face=\"normal\" size=\"7\"><i>Documentación "
-"de</i> Partidas</font></b></div>"
+"de</i> Ingresos</font></b></div>"
 
 msgctxt "model:ir.message,text:msg_detection_limit_2"
 msgid "(LoD = %(detection_limit)s)"

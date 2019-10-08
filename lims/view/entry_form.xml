@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
-<form>
+<form cursor="party">
     <label name="number"/>
     <field name="number"/>
     <label name="date"/>
     <field name="date"/>
+    <label name="party"/>
+    <field name="party"/>
+    <label name="invoice_party"/>
+    <field name="invoice_party"/>
     <notebook>
         <page string="General" id="general">
-            <label name="party"/>
-            <field name="party"/>
-            <label name="invoice_party"/>
-            <field name="invoice_party"/>
             <group col="8" colspan="4" id="options_holder">
                 <label name="email_report"/>
                 <field name="email_report"/>
