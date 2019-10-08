@@ -342,10 +342,6 @@ msgctxt "model:ir.message,text:msg_default_range_type"
 msgid "There is already a default origin for this use"
 msgstr "Ya existe un origen por defecto para este uso"
 
-msgctxt "model:ir.message,text:msg_not_set_laboratory"
-msgid "No Laboratory loaded for the Set"
-msgstr "Ningún laboratorio definido para el Set"
-
 msgctxt "model:ir.message,text:msg_concentration_label_3"
 msgid "(Expressed at %(concentration)s)"
 msgstr "(Expresado a %(concentration)s)"
@@ -497,14 +493,6 @@ msgid "You can not delete sample \"%(sample)s\" because its entry is not in draf
 msgstr ""
 "No puede eliminar la muestra «%(sample)s» porque su ingreso no está en estado "
 "borrador"
-
-msgctxt "model:ir.message,text:msg_duplicated_analysis_service"
-msgid ""
-"The analysis \"%(analysis)s\" is assigned more than once to the fraction "
-"\"%(fraction)s\""
-msgstr ""
-"El análisis \"%(analysis)s\" está asignado más de una vez a la fracción "
-"\"%(fraction)s\""
 
 msgctxt "model:ir.message,text:msg_no_service_sequence"
 msgid "There is no service sequence for the work year \"%(work_year)s\"."
@@ -8055,14 +8043,6 @@ msgctxt "model:ir.sequence,name:seq_service"
 msgid "Service"
 msgstr "Servicio"
 
-msgctxt "model:ir.sequence.strict,name:"
-msgid "Sample"
-msgstr "Muestra"
-
-msgctxt "model:ir.sequence.strict,name:seq_entry"
-msgid "Entry"
-msgstr "Ingreso"
-
 msgctxt "model:ir.sequence.type,name:seq_type_entry"
 msgid "Entry"
 msgstr "Ingreso"
@@ -12713,15 +12693,9 @@ msgid "Reverse counter sample storage to enter the service "
 msgstr ""
 "Revertir el almacenamiento de la contramuestra para realizar el cambio."
 
-
 msgctxt "model:ir.message,text:msg_end_date_wrong"
 msgid "End date should not be greater than the current date"
 msgstr "La fecha de finalización no debe ser mayor que la fecha actual"
-
-msgctxt "model:ir.message,text:msg_end_date_wrong"
-msgid "End date should not be greater than the current date"
-msgstr "La fecha de finalización no debe ser mayor que la fecha actual"
-
 
 msgctxt "report:lims.analysis_checked_pending_inform:"
 msgid "Result estimated date"
@@ -12814,21 +12788,9 @@ msgctxt "model:ir.message,text:msg_no_entry_control"
 msgid "There is no default entry control for this work year"
 msgstr "No hay un ingreso control por defecto para este año laboral"
 
-msgctxt "model:ir.message,text:msg_no_concentration_level"
-msgid "Missing concentration level for this control type"
-msgstr "Falta definir el nivel de concentración para este tipo de control"
-
 msgctxt "model:ir.message,text:msg_no_con_fraction_type"
 msgid "There is no Control fraction type configured"
 msgstr "No hay configurado ningún tipo de fracción Control"
-
-msgctxt "model:ir.message,text:msg_no_entry_control"
-msgid "There is no default entry control for this work year"
-msgstr "No hay un ingreso control por defecto para este año laboral"
-
-msgctxt "model:ir.message,text:msg_no_concentration_level"
-msgid "Missing concentration level for this control type"
-msgstr "Falta definir el nivel de concentración para este tipo de control"
 
 msgctxt "model:ir.message,text:msg_no_mrt_default_configuration"
 msgid "Missing default configuration for MRT fraction type"
@@ -12837,14 +12799,6 @@ msgstr "Falta la configuración por defecto para el tipo de fracción MRT"
 msgctxt "model:ir.message,text:msg_no_mrt_fraction_type"
 msgid "There is no MRT fraction type configured"
 msgstr "No hay configurado ningún tipo de fracción MRT"
-
-msgctxt "model:ir.message,text:msg_no_entry_control"
-msgid "There is no default entry control for this work year"
-msgstr "No hay un ingreso control por defecto para este año laboral"
-
-msgctxt "model:ir.message,text:msg_no_concentration_level"
-msgid "Missing concentration level for this control type"
-msgstr "Falta definir el nivel de concentración para este tipo de control"
 
 msgctxt "model:ir.message,text:msg_no_bmz_default_configuration"
 msgid "Missing default configuration for BMZ fraction type"
@@ -12861,14 +12815,6 @@ msgstr "No hay configurado ningún tipo de fracción BMZ"
 msgctxt "model:ir.message,text:msg_no_rm_fraction_type"
 msgid "There is no RM fraction type configured"
 msgstr "No hay configurado ningún tipo de fracción RM"
-
-msgctxt "model:ir.message,text:msg_no_entry_control"
-msgid "There is no default entry control for this work year"
-msgstr "No hay un ingreso control por defecto para este año laboral"
-
-msgctxt "model:ir.message,text:msg_no_concentration_level"
-msgid "Missing concentration level for this control type"
-msgstr "Falta definir el nivel de concentración para este tipo de control"
 
 msgctxt "model:ir.message,text:msg_no_coi_default_configuration"
 msgid "Missing default configuration for COI fraction type"
@@ -12893,10 +12839,6 @@ msgstr "No hay configurado ningún tipo de fracción MRC"
 msgctxt "model:ir.message,text:msg_no_sla_fraction_type"
 msgid "There is no SLA fraction type configured"
 msgstr "No hay configurado ningún tipo de fracción SLA"
-
-msgctxt "model:ir.message,text:msg_no_entry_control"
-msgid "There is no default entry control for this work year"
-msgstr "No hay un ingreso control por defecto para este año laboral"
 
 msgctxt "model:ir.message,text:msg_planification_professional_unique_id"
 msgid "Professionals cannot be repeated"
