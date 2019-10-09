@@ -4,7 +4,7 @@ msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "field:sale.load_services.start,entry:"
 msgid "Entry"
-msgstr "Partida"
+msgstr "Ingreso"
 
 msgctxt "field:sale.load_services.start,id:"
 msgid "ID"
@@ -16,19 +16,19 @@ msgstr "Entidad"
 
 msgctxt "model:ir.action,name:wiz_sale_load_services"
 msgid "Load Services from Entry"
-msgstr "Cargar servicios desde partida"
+msgstr "Cargar servicios desde ingreso"
 
 msgctxt "model:sale.load_services.start,name:"
 msgid "Load Services from Entry"
-msgstr "Cargar servicios desde partida"
+msgstr "Cargar servicios desde ingreso"
 
 msgctxt "view:sale.load_services.start:"
 msgid "Load Services from Entry"
-msgstr "Cargar servicios desde partida"
+msgstr "Cargar servicios desde ingreso"
 
 msgctxt "view:sale.sale:"
 msgid "Load Services from Entry"
-msgstr "Cargar servicios desde partida"
+msgstr "Cargar servicios desde ingreso"
 
 msgctxt "wizard_button:sale.load_services,start,end:"
 msgid "Cancel"

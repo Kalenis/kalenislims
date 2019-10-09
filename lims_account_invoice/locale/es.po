@@ -24,7 +24,7 @@ msgstr "Cotización"
 
 msgctxt "field:account.invoice,entries_comments:"
 msgid "Entries comments"
-msgstr "Observaciones partidas"
+msgstr "Observaciones ingresos"
 
 msgctxt "field:account.invoice,invoice_contacts:"
 msgid "Invoice contacts"
@@ -80,7 +80,7 @@ msgstr "Usuario modificación"
 
 msgctxt "field:account.invoice.line,lims_service_entry:"
 msgid "Entry"
-msgstr "Partida"
+msgstr "Ingreso"
 
 msgctxt "field:account.invoice.line,lims_service_party:"
 msgid "Party"
