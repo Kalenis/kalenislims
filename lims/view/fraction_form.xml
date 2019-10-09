@@ -123,5 +123,4 @@
         <field name="button_confirm_available" invisible="1"/>
         <button name="confirm" string="Confirm"/>
     </group>
-    <field name="id" colspan="4" invisible="1"/>
 </form>
