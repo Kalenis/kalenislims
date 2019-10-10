@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/form/notebook" position="inside">
+        <page string="Industry" id="industry">
+            <label name="label_from"/>
+            <field name="label_from"/>
+            <label name="label_to"/>
+            <field name="label_to"/>
+            <field name="plants" colspan="4" mode="tree"/>
+            <field name="equipments" colspan="4" mode="tree"/>
+            <field name="components" colspan="4" mode="tree"/>
+        </page>
+    </xpath>
+</data>

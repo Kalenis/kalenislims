@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Configuration -->
+
+        <record model="ir.ui.view" id="sale_configuration_view_form">
+            <field name="model">sale.configuration</field>
+            <field name="inherit" ref="sale.sale_configuration_view_form"/>
+            <field name="name">configuration_form</field>
+        </record>
+
+<!-- Sequences for Label -->
+
+        <record model="ir.sequence.type" id="seq_type_sample_label">
+            <field name="name">Sample Label</field>
+            <field name="code">lims.sample.label</field>
+        </record>
+        <record model="ir.sequence" id="seq_sample_label">
+            <field name="name">Sample Label</field>
+            <field name="code">lims.sample.label</field>
+        </record>
+
+    </data>
+</tryton>
