@@ -224,7 +224,8 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
     @classmethod
     def _get_origin(cls):
         'Return list of Model names for origin Reference'
-        return ['party.party', 'lims.equipment', 'lims.component']
+        return ['party.party', 'lims.equipment', 'lims.component',
+            'sale.sale', 'sale.line']
 
     @classmethod
     def get_origin(cls):
