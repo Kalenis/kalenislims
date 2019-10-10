@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Sale -->
+
+        <record model="ir.ui.view" id="sale_view_form">
+            <field name="model">sale.sale</field>
+            <field name="inherit" ref="sale.sale_view_form"/>
+            <field name="name">sale_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_sale">
+            <field name="name">Sales</field>
+            <field name="res_model">sale.sale</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_sale_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="sale.sale_view_tree"/>
+            <field name="act_window" ref="act_sale"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_sale_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="sale.sale_view_form"/>
+            <field name="act_window" ref="act_sale"/>
+        </record>
+
+        <record model="ir.action.report" id="sale.report_sale">
+            <field name="report">lims_sale_industry/report/sale.fodt</field>
+        </record>
+
+<!-- Sale Line -->
+
+        <record model="ir.ui.view" id="sale_line_view_form">
+            <field name="model">sale.line</field>
+            <field name="inherit" ref="sale.sale_line_view_form"/>
+            <field name="name">sale_line_form</field>
+        </record>
+
+<!-- Sale Add Products Kits Wizard -->
+
+        <record model="ir.ui.view" id="sale_add_product_kit_start_view_form">
+            <field name="model">sale.add_product_kit.start</field>
+            <field name="type">form</field>
+            <field name="name">sale_add_product_kit_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_sale_add_product_kit">
+            <field name="name">Add Products Kits</field>
+            <field name="wiz_name">sale.add_product_kit</field>
+            <field name="model">sale.sale</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_sale_add_product_kit_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">sale.sale,-1</field>
+            <field name="action" ref="wiz_sale_add_product_kit"/>
+        </record>
+
+<!-- Print Labels Wizard -->
+
+        <record model="ir.ui.view" id="sale_print_label_start_view_form">
+            <field name="model">sale.print_label.start</field>
+            <field name="type">form</field>
+            <field name="name">sale_print_label_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_sale_print_label">
+            <field name="name">Labels</field>
+            <field name="wiz_name">sale.print_label</field>
+            <field name="model">sale.sale</field>
+        </record>
+
+        <record model="ir.action.report" id="report_sale_label">
+            <field name="name">Sale Labels</field>
+            <field name="model">sale.sale</field>
+            <field name="report_name">sale.label.report</field>
+            <field name="report">lims_sale_industry/report/sale_label.fodt</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_sale_print_label_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">sale.sale,-1</field>
+            <field name="action" ref="wiz_sale_print_label"/>
+        </record>
+
+<!-- Shipping Labels Report -->
+
+        <record model="ir.action.report" id="report_sale_label_shipping">
+            <field name="name">Shipping Labels</field>
+            <field name="model">sale.sale</field>
+            <field name="report_name">sale.label_shipping.report</field>
+            <field name="report">lims_sale_industry/report/sale_label_shipping.fodt</field>
+        </record>
+
+        <record model="ir.action.keyword" id="report_sale_label_shipping_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">sale.sale,-1</field>
+            <field name="action" ref="report_sale_label_shipping"/>
+        </record>
+
+<!-- Return Labels Report -->
+
+        <record model="ir.action.report" id="report_sale_label_return">
+            <field name="name">Return Labels</field>
+            <field name="model">sale.sale</field>
+            <field name="report_name">sale.label_return.report</field>
+            <field name="report">lims_sale_industry/report/sale_label_return.fodt</field>
+        </record>
+
+        <record model="ir.action.keyword" id="report_sale_label_return_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">sale.sale,-1</field>
+            <field name="action" ref="report_sale_label_return"/>
+        </record>
+
+<!-- Sale Search Label Wizard -->
+
+        <record model="ir.ui.view" id="sale_search_label_start_view_form">
+            <field name="model">sale.search_label.start</field>
+            <field name="type">form</field>
+            <field name="name">sale_search_label_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_sale_search_label">
+            <field name="name">Search label</field>
+            <field name="wiz_name">sale.search_label</field>
+        </record>
+
+        <menuitem action="wiz_sale_search_label" id="menu_sale_search_label"
+            parent="sale.menu_sale" sequence="20"/>
+
+   </data>
+</tryton>

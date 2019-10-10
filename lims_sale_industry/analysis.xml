@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Analysis/Set/Group -->
+
+        <record model="ir.ui.view" id="lims_analysis_view_form">
+            <field name="model">lims.analysis</field>
+            <field name="inherit" ref="lims.lims_analysis_view_form"/>
+            <field name="name">analysis_form</field>
+        </record>
+
+    </data>
+</tryton>
