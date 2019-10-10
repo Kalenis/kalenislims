@@ -6,6 +6,7 @@ from trytond.pool import Pool
 from . import task
 from . import industry
 from . import party
+from . import sale
 from . import department
 from . import user
 from . import configuration
@@ -19,6 +20,8 @@ def register():
         industry.Component,
         industry.Equipment,
         party.Party,
+        sale.Sale,
+        sale.SaleLine,
         department.Department,
         user.User,
         configuration.Configuration,
