@@ -10,6 +10,14 @@
             <field name="name">sale_form</field>
         </record>
 
+<!-- Sale Line -->
+
+        <record model="ir.ui.view" id="sale_line_view_form">
+            <field name="model">sale.line</field>
+            <field name="inherit" ref="sale.sale_line_view_form"/>
+            <field name="name">sale_line_form</field>
+        </record>
+
 <!-- Sale Load Services from Entry Wizard-->
 
         <record model="ir.ui.view" id="sale_load_services_start_view_form">
