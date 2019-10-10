@@ -2,6 +2,94 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "field:party.party,internal_code:"
+msgid "Internal Code"
+msgstr "Código interno"
+
+msgctxt "field:party.party,purchase_order_required:"
+msgid "Purchase order required"
+msgstr "Orden de compra requerida"
+
+msgctxt "field:sale.clause,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:sale.clause,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:sale.clause,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:sale.clause,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:sale.clause,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:sale.clause,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:sale.clause,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:sale.clause,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:sale.configuration,email_quotation_body:"
+msgid "Body of the quotation email"
+msgstr "Cuerpo del email de presupuesto"
+
+msgctxt "field:sale.configuration,email_quotation_subject:"
+msgid "Subject of the quotation email"
+msgstr "Asunto del email de presupuesto"
+
+msgctxt "field:sale.line,analysis:"
+msgid "Service"
+msgstr "Servicio"
+
+msgctxt "field:sale.line,analysis_domain:"
+msgid "Analysis domain"
+msgstr "Dominio para Análisis"
+
+msgctxt "field:sale.line,expiration_date:"
+msgid "Expiration date"
+msgstr "Fecha de vencimiento"
+
+msgctxt "field:sale.line,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:sale.line,matrix_domain:"
+msgid "Matrix domain"
+msgstr "Dominio para Matriz"
+
+msgctxt "field:sale.line,print_price:"
+msgid "Print price on quotation"
+msgstr "Imprimir precio en presupuesto"
+
+msgctxt "field:sale.line,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:sale.line,product_type_domain:"
+msgid "Product type domain"
+msgstr "Dominio para Tipo de producto"
+
+msgctxt "field:sale.line,purchase_order:"
+msgid "PO Nº"
+msgstr "OC Nº"
+
+msgctxt "field:sale.line,unlimited_quantity:"
+msgid "Unlimited quantity"
+msgstr "Cantidad ilimitada"
+
 msgctxt "field:sale.load_services.start,entry:"
 msgid "Entry"
 msgstr "Partida"
@@ -14,13 +102,93 @@ msgctxt "field:sale.load_services.start,party:"
 msgid "Party"
 msgstr "Entidad"
 
+msgctxt "field:sale.sale,clauses:"
+msgid "Clauses"
+msgstr "Cláusulas"
+
+msgctxt "field:sale.sale,expiration_date:"
+msgid "Expiration date"
+msgstr "Fecha de vencimiento"
+
+msgctxt "field:sale.sale,invoice_party:"
+msgid "Invoice party"
+msgstr "Tercero de facturación"
+
+msgctxt "field:sale.sale,invoice_party_domain:"
+msgid "Invoice party domain"
+msgstr "Dominio para Tercero de facturación"
+
+msgctxt "field:sale.sale,purchase_order:"
+msgid "Purchase order"
+msgstr "Orden de compra"
+
+msgctxt "field:sale.sale,send_email:"
+msgid "Send automatically by Email"
+msgstr "Enviar automáticamente por email"
+
+msgctxt "field:sale.sale-sale.clause,clause:"
+msgid "Clause"
+msgstr "Cláusula"
+
+msgctxt "field:sale.sale-sale.clause,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:sale.sale-sale.clause,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:sale.sale-sale.clause,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:sale.sale-sale.clause,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:sale.sale-sale.clause,sale:"
+msgid "Sale"
+msgstr "Venta"
+
+msgctxt "field:sale.sale-sale.clause,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:sale.sale-sale.clause,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "model:ir.action,name:act_sale_clause"
+msgid "Clauses"
+msgstr "Cláusulas"
+
 msgctxt "model:ir.action,name:wiz_sale_load_services"
 msgid "Load Services from Entry"
 msgstr "Cargar servicios desde partida"
 
+msgctxt "model:ir.model.button,string:sale_load_services_button"
+msgid "Load Services from Entry"
+msgstr "Cargar servicios desde partida"
+
+msgctxt "model:ir.ui.menu,name:menu_sale_clause"
+msgid "Clauses"
+msgstr "Cláusulas"
+
+msgctxt "model:sale.clause,name:"
+msgid "Clause"
+msgstr "Cláusula"
+
 msgctxt "model:sale.load_services.start,name:"
 msgid "Load Services from Entry"
 msgstr "Cargar servicios desde partida"
+
+msgctxt "model:sale.sale-sale.clause,name:"
+msgid "Sale - Clause"
+msgstr "Venta - Cláusula"
+
+msgctxt "view:party.party:"
+msgid "Sale"
+msgstr "Venta"
 
 msgctxt "view:sale.load_services.start:"
 msgid "Load Services from Entry"

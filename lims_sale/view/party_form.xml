@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/form/notebook/page[@id='accounting']"
+        position="after">
+        <page string="Sale" id="sale">
+            <label name="internal_code"/>
+            <field name="internal_code"/>
+            <label name="purchase_order_required"/>
+            <field name="purchase_order_required"/>
+        </page>
+    </xpath>
+</data>

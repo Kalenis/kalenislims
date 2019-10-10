@@ -1,7 +1,40 @@
 <?xml version="1.0"?>
 <data>
+    <xpath expr="/form/field[@name='party']"
+        position="after">
+        <label name="invoice_party"/>
+        <field name="invoice_party"/>
+    </xpath>
+
+    <xpath expr="/form/field[@name='description']"
+        position="replace">
+        <field name="description"/>
+        <label name="purchase_order"/>
+        <field name="purchase_order"/>
+    </xpath>
+
+    <xpath expr="/form/notebook/page[@id='sale']/field[@name='sale_date']"
+        position="after">
+        <label name="expiration_date"/>
+        <field name="expiration_date"/>
+    </xpath>
+
     <xpath expr="/form/notebook/page[@id='sale']/field[@name='currency']"
         position="after">
-        <button name="load_services"/>
+        <button name="load_services" colspan="2"/>
+    </xpath>
+
+    <xpath
+        expr="/form/notebook/page[@id='other']/field[@name='shipment_method']"
+        position="after">
+        <label name="send_email"/>
+        <field name="send_email"/>
+    </xpath>
+
+    <xpath expr="/form/notebook/page[@id='other']"
+        position="after">
+        <page name="clauses">
+            <field name="clauses" colspan="4" mode="tree"/>
+        </page>
     </xpath>
 </data>

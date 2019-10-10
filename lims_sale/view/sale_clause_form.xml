@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form>
+    <label name="name"/>
+    <field name="name" xexpand="1"/>
+    <separator name="description" colspan="4"/>
+    <field name="description" colspan="4"/>
+</form>
