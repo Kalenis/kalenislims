@@ -17,5 +17,4 @@
     <field name="order"/>
     <field name="disable_as_individual"/>
     <field name="state"/>
-    <field name="id" tree_invisible="1"/>
 </tree>

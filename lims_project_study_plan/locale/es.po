@@ -1423,7 +1423,7 @@ msgstr "Rótulo"
 
 msgctxt "report:lims.project.glp_report.07:"
 msgid "Entries:"
-msgstr "Partidas:"
+msgstr "Ingresos:"
 
 msgctxt "report:lims.project.glp_report.07:"
 msgid "Matrix:"
@@ -1508,7 +1508,7 @@ msgstr "Dosis"
 
 msgctxt "report:lims.project.glp_report.08:"
 msgid "Entries:"
-msgstr "Partidas:"
+msgstr "Ingresos:"
 
 msgctxt "report:lims.project.glp_report.08:"
 msgid "Page:"
@@ -3572,7 +3572,7 @@ msgstr "Fecha de verificación:"
 
 msgctxt "report:lims.project.glp_report.study_plan:"
 msgid "Entry:"
-msgstr "Partida:"
+msgstr "Ingreso:"
 
 msgctxt "report:lims.project.glp_report.study_plan:"
 msgid "Name:"
