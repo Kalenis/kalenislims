@@ -26,7 +26,6 @@ def register():
         invoice.PopulateInvoiceContactsStart,
         module='lims_account_invoice', type_='model')
     Pool.register(
-        invoice.CreditInvoice,
         lims.ManageServices,
         invoice.PopulateInvoiceContacts,
         invoice.SendOfInvoice,
