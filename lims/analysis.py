@@ -1444,8 +1444,8 @@ class Analysis(Workflow, ModelSQL, ModelView):
                     'INNER JOIN "' + FractionType._table + '" f_type '
                     'ON f_type.id = fraction.type '
                 'WHERE service.analysis = %s '
-                    'AND confirmation_date::date >= %s::date '
-                    'AND confirmation_date::date <= %s::date '
+                    'AND service.confirmation_date::date >= %s::date '
+                    'AND service.confirmation_date::date <= %s::date '
                     'AND fraction.confirmed = TRUE '
                     'AND f_type.plannable = TRUE ' +
                     preplanned_clause,
