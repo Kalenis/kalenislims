@@ -202,7 +202,7 @@ class FractionType(ModelSQL, ModelView):
     requalify = fields.Boolean('Requalify')
     control_charts = fields.Boolean('Available for Control Charts')
     report = fields.Boolean('Available for Results Report')
-    plannable = fields.Boolean('Plannable')
+    plannable = fields.Boolean('Plannable', select=True)
     default_package_type = fields.Many2One('lims.packaging.type',
         'Default Package type')
     default_fraction_state = fields.Many2One('lims.packaging.integrity',
@@ -287,7 +287,7 @@ class Service(ModelSQL, ModelView):
         'get_fraction_field',
         searcher='search_fraction_field')
     analysis = fields.Many2One('lims.analysis', 'Analysis/Set/Group',
-        required=True, depends=['analysis_domain'],
+        required=True, select=True, depends=['analysis_domain'],
         domain=['OR', ('id', '=', Eval('analysis')),
             ('id', 'in', Eval('analysis_domain'))],
         states={'readonly': Bool(Eval('context', {}).get('readonly', True))})
@@ -1180,7 +1180,7 @@ class Fraction(ModelSQL, ModelView):
     label = fields.Function(fields.Char('Label'), 'get_sample_field',
         searcher='search_sample_field')
     type = fields.Many2One('lims.fraction.type', 'Fraction type',
-        required=True)
+        required=True, select=True)
     storage_location = fields.Many2One('stock.location', 'Storage location',
         required=True, domain=[('type', '=', 'storage')])
     storage_time = fields.Integer('Storage time (in months)', required=True)
@@ -1230,7 +1230,7 @@ class Fraction(ModelSQL, ModelView):
     button_manage_services_available = fields.Function(fields.Boolean(
         'Button manage services available'),
         'on_change_with_button_manage_services_available')
-    confirmed = fields.Boolean('Confirmed')
+    confirmed = fields.Boolean('Confirmed', select=True)
     button_confirm_available = fields.Function(fields.Boolean(
         'Button confirm available'),
         'on_change_with_button_confirm_available')
