@@ -20,7 +20,7 @@ from trytond.config import config
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['Invoice', 'InvoiceContact', 'InvoiceLine', 'CreditInvoice',
+__all__ = ['Invoice', 'InvoiceContact', 'InvoiceLine',
     'PopulateInvoiceContactsStart', 'PopulateInvoiceContacts', 'SendOfInvoice']
 
 logger = logging.getLogger('lims_account_invoice')
@@ -375,55 +375,6 @@ class InvoiceLine(metaclass=PoolMeta):
                 parties.extend([r.to.id for r in party.relations
                     if r.type == config_.invoice_party_relation_type])
         return parties
-
-
-class CreditInvoice(metaclass=PoolMeta):
-    __name__ = 'account.invoice.credit'
-
-    def do_credit(self, action):
-        pool = Pool()
-        AccountInvoice = pool.get('account.invoice')
-        AccountInvoiceLine = pool.get('account.invoice.line')
-        Sale = pool.get('sale.sale')
-        SaleLine = pool.get('sale.line')
-
-        invoices = AccountInvoice.browse(Transaction().context['active_ids'])
-        if self.start.with_refund:
-            for invoice in invoices:
-                if invoice.type == 'out':
-                    for line in invoice.lines:
-                        if line.type == 'line':
-                            new_lines = AccountInvoiceLine.copy([line],
-                                default={
-                                    'invoice': None,
-                                    'invoice_type': invoice.type,
-                                    'party': invoice.party,
-                                    'origin':
-                                        str(line.origin)
-                                        if line.origin else None,
-                                    })
-                            if isinstance(line.origin, SaleLine):
-                                sale_line = SaleLine(line.origin.id)
-                                Sale.write([sale_line.sale], {
-                                    'invoice_lines': [('add', new_lines)],
-                                    })
-
-        action, data = super(CreditInvoice, self).do_credit(action)
-
-        if self.start.with_refund:
-            old_lines = []
-            invoices = AccountInvoice.browse(
-                Transaction().context['active_ids'])
-            for invoice in invoices:
-                for line in invoice.lines:
-                    if line.origin and line.origin.__name__ == 'lims.service':
-                        old_line = AccountInvoiceLine(line.id)
-                        old_line.origin = None
-                        old_lines.append(old_line)
-            if old_lines:
-                AccountInvoiceLine.save(old_lines)
-
-        return action, data
 
 
 class PopulateInvoiceContactsStart(ModelView):
