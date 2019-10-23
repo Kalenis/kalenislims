@@ -69,6 +69,8 @@
                     <field name="stp_suspension_date"/>
                     <label name="stp_suspension_reason"/>
                     <field name="stp_suspension_reason"/>
+                    <label name="stp_date_entry_document_file"/>
+                    <field name="stp_date_entry_document_file"/>
                 </page>
                 <page string="Laboratory professionals" id="stp_laboratory_professionals">
                     <field name="stp_laboratory_professionals" colspan="4"/>
