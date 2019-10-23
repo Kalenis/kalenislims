@@ -6,4 +6,7 @@
     <field name="date_to"/>
     <label name="stp_state"/>
     <field name="stp_state" colspan="3"/>
+    <label name="professional"/>
+    <field name="professional" colspan="3"/>
+
 </form>
