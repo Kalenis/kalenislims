@@ -98,6 +98,7 @@ class Project(metaclass=PoolMeta):
         ('', ''),
         ('implementation_validation', 'Implementation and validation'),
         ('validation_only', 'Validation only'),
+        ('not_apply', 'Does not apply'),
         ], 'Implementation - Validation', sort=False, states=STATES,
         depends=DEPENDS)
     stp_rector_scheme_comments = fields.Text('Rector scheme comments',
@@ -158,6 +159,9 @@ class Project(metaclass=PoolMeta):
         'min_qty_sample_compliance')
     stp_changelog = fields.One2Many('lims.project.stp_changelog', 'project',
         'Changelog', states=STATES, depends=DEPENDS)
+    stp_date_entry_document_file = fields.Date(
+        'Date of entry into the BPL document file',
+        states=STATES, depends=DEPENDS)
 
     @staticmethod
     def default_stp_pattern_availability():
@@ -1377,6 +1381,8 @@ class ProjectGLPReport06(Report):
         report_context['stp_number'] = records[0].stp_number
         report_context['stp_title'] = records[0].stp_title
         report_context['code'] = records[0].code
+        report_context['stp_position'] = (
+            cls.get_position_professional(records[0].id))
 
         devs_amnds = ProjectDevAndAmndmnt.search([
             ('project', '=', records[0].id),
@@ -1401,7 +1407,28 @@ class ProjectGLPReport06(Report):
         report_context['objects'] = objects
 
         return report_context
+    
+    @classmethod
+    def get_position_professional(cls, project_id):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        LaboratoryProfessionals = pool.get('lims.project.stp_professional')
+        Position = pool.get('lims.project.stp_professional.position')
 
+        cursor.execute('SELECT  p.description '
+            'FROM "' + LaboratoryProfessionals._table + '" lp '
+                'INNER JOIN "' + Position._table + '" p '
+                'ON lp.position = p.id '
+            'WHERE lp.project = %s '
+            'AND lp.role_study_director IS TRUE',
+            (project_id,))
+        position = []
+        position = cursor.fetchall()
+        if not position:
+            res = ''
+        else:
+            res = position[0]
+        return res
 
 class ProjectGLPReport07(Report):
     'Table 1- Study plan'
@@ -1651,6 +1678,8 @@ class ProjectGLPReport10PrintStart(ModelView):
         ('requested', 'Requested'),
         ('all', 'All'),
         ], 'State', sort=False, required=True)
+    professional = fields.Many2One('lims.laboratory.professional',
+        'Laboratory professional', required=False)
 
     @staticmethod
     def default_stp_state():
@@ -1673,6 +1702,8 @@ class ProjectGLPReport10Print(Wizard):
             'date_from': self.start.date_from,
             'date_to': self.start.date_to,
             'stp_state': self.start.stp_state,
+            'professional': (self.start.professional 
+                and self.start.professional.id or None),
             }
         return action, data
 
@@ -1692,6 +1723,8 @@ class ProjectGLPReport10(Report):
         report_context['company'] = report_context['user'].company
         report_context['date_from'] = data['date_from']
         report_context['date_to'] = data['date_to']
+        report_context['professional'] = data['professional']
+
         clause = [
             ('type', '=', 'study_plan'),
             ('stp_date', '>=', data['date_from']),
@@ -1710,41 +1743,109 @@ class ProjectGLPReport10(Report):
             clause.append(('stp_state', '=', None))
 
         projects = Project.search(clause)
-
         objects = []
         for project in projects:
-            objects.append({
-                'stp_number': project.stp_number,
-                'stp_code': project.code,
-                'stp_glp': project.stp_glp,
-                'stp_sponsor': (project.stp_sponsor.code
-                    if project.stp_sponsor else ''),
-                'stp_study_director': (project.stp_study_director.rec_name
-                    if project.stp_study_director else ''),
-                'stp_start_date': project.stp_start_date,
-                'stp_end_date': project.stp_end_date,
-                'stp_state': project.stp_state_string,
-                'stp_proposal_start_date': project.stp_proposal_start_date,
-                'stp_proposal_end_date': project.stp_proposal_end_date,
-                'stp_product_brand': project.stp_product_brand,
-                'stp_implementation_validation': (True if
-                    project.stp_implementation_validation ==
-                    'implementation_validation' else False),
-                'stp_pattern_availability': project.stp_pattern_availability,
-                'stp_matrix': project.stp_matrix_client_description,
-                'stp_description': project.stp_description,
-                'samples': [{
-                    'entry_date': s.entry_date,
-                    'packages': '%s %s' % (s.packages_quantity or '',
-                        s.package_type.description if s.package_type
-                        else ''),
-                    'comments': str(s.comments or ''),
-                    } for s in project.stp_samples_in_custody],
-                })
+            if data['professional']:
+                if (project.stp_study_director and 
+                    data['professional'] == project.stp_study_director.id):
+                    objects.append({
+                        'stp_number': project.stp_number,
+                        'stp_code': project.code,
+                        'stp_glp': project.stp_glp,
+                        'stp_sponsor': (project.stp_sponsor.code
+                            if project.stp_sponsor else ''),
+                        'stp_study_director': (
+                            project.stp_study_director.rec_name
+                            if project.stp_study_director else ''),
+                        'stp_position': (
+                            cls.get_position_professional(project.id)),
+                        'stp_start_date': project.stp_start_date,
+                        'stp_end_date': project.stp_end_date,
+                        'stp_state': project.stp_state_string,
+                        'stp_proposal_start_date': (
+                            project.stp_proposal_start_date),
+                        'stp_proposal_end_date': project.stp_proposal_end_date,
+                        'stp_product_brand': project.stp_product_brand,
+                        'stp_implementation_validation': (
+                            project.stp_implementation_validation),
+                        'stp_pattern_availability': (
+                            project.stp_pattern_availability),
+                        'stp_matrix': project.stp_matrix_client_description,
+                        'stp_description': project.stp_description,
+                        'stp_rector_scheme_comments': (
+                            project.stp_rector_scheme_comments),
+                        'stp_date_entry_document_file': (
+                            project.stp_date_entry_document_file),
+                        'samples': [{
+                            'entry_date': s.entry_date,
+                            'packages': '%s %s' % (s.packages_quantity or '',
+                                s.package_type.description if s.package_type
+                                else ''),
+                            'comments': str(s.comments or ''),
+                            } for s in project.stp_samples_in_custody],
+                        })
+            else:
+                objects.append({
+                    'stp_number': project.stp_number,
+                    'stp_code': project.code,
+                    'stp_glp': project.stp_glp,
+                    'stp_sponsor': (project.stp_sponsor.code
+                        if project.stp_sponsor else ''),
+                    'stp_study_director': (
+                        project.stp_study_director.rec_name
+                        if project.stp_study_director else ''),
+                    'stp_position': (
+                        cls.get_position_professional(project.id)),
+                    'stp_start_date': project.stp_start_date,
+                    'stp_end_date': project.stp_end_date,
+                    'stp_state': project.stp_state_string,
+                    'stp_proposal_start_date': (
+                        project.stp_proposal_start_date),
+                    'stp_proposal_end_date': project.stp_proposal_end_date,
+                    'stp_product_brand': project.stp_product_brand,
+                    'stp_implementation_validation': (
+                        project.stp_implementation_validation),
+                    'stp_pattern_availability': (
+                        project.stp_pattern_availability),
+                    'stp_matrix': project.stp_matrix_client_description,
+                    'stp_description': project.stp_description,
+                    'stp_rector_scheme_comments': (
+                        project.stp_rector_scheme_comments),
+                    'stp_date_entry_document_file': (
+                        project.stp_date_entry_document_file),
+                    'samples': [{
+                        'entry_date': s.entry_date,
+                        'packages': '%s %s' % (s.packages_quantity or '',
+                            s.package_type.description if s.package_type
+                            else ''),
+                        'comments': str(s.comments or ''),
+                        } for s in project.stp_samples_in_custody],
+                    })
         report_context['objects'] = objects
 
         return report_context
 
+    @classmethod
+    def get_position_professional(cls, project_id):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        LaboratoryProfessionals = pool.get('lims.project.stp_professional')
+        Position = pool.get('lims.project.stp_professional.position')
+
+        cursor.execute('SELECT  p.description '
+            'FROM "' + LaboratoryProfessionals._table + '" lp '
+                'INNER JOIN "' + Position._table + '" p '
+                'ON lp.position = p.id '
+            'WHERE lp.project = %s '
+            'AND lp.role_study_director IS TRUE',
+            (project_id,))
+        position = []
+        position = cursor.fetchall()
+        if not position:
+            res = ''
+        else:
+            res = position[0]
+        return res
 
 class ProjectGLPReport11(Report):
     'Reference/Test elements (FOR)'
@@ -1878,9 +1979,8 @@ class ProjectGLPReport12(Report):
                 'stp_proposal_end_date': project.stp_proposal_end_date,
                 'stp_rector_scheme_comments': str(
                     project.stp_rector_scheme_comments or ''),
-                'stp_implementation_validation': (True if
-                    project.stp_implementation_validation ==
-                    'implementation_validation' else False),
+                'stp_implementation_validation': (
+                    project.stp_implementation_validation),
                 'stp_pattern_availability': (
                     project.stp_pattern_availability),
                 'stp_target': str(project.stp_target or ''),
