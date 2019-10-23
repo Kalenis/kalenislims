@@ -122,7 +122,7 @@ msgstr "Buenas prácticas de laboratorio"
 
 msgctxt "field:lims.project,stp_implementation_validation:"
 msgid "Implementation - Validation"
-msgstr "Implementación - Validación"
+msgstr "Implementación de metodología:"
 
 msgctxt "field:lims.project,stp_laboratory_professionals:"
 msgid "Laboratory professionals"
@@ -691,7 +691,7 @@ msgstr "Unidad de Calidad"
 
 msgctxt "field:lims.project.stp_professional,role_study_director:"
 msgid "Study director"
-msgstr "Director del estudio"
+msgstr "DE/IP"
 
 msgctxt "field:lims.project.stp_professional,write_date:"
 msgid "Write Date"
@@ -1627,8 +1627,8 @@ msgid "End date:"
 msgstr "Fecha de finalización:"
 
 msgctxt "report:lims.project.glp_report.10:"
-msgid "Implementation - Validation:"
-msgstr "Implementación - Validación:"
+msgid "Methodology implementation:"
+msgstr "Implementación de metodología:"
 
 msgctxt "report:lims.project.glp_report.10:"
 msgid "Ingress date range:"
@@ -3872,7 +3872,6 @@ msgctxt "field:lims.project.glp_report.10.print.start,stp_state:"
 msgid "State"
 msgstr "Estado"
 
-##
 msgctxt "report:lims.project.glp_report.03:"
 msgid "DE/IP Signature (Strike out what does not apply):"
 msgstr "Firma DE/IP (Tachar lo que no corresponda):"
@@ -3928,3 +3927,35 @@ msgid "Please, select a \"Study Plan Phase Project\" to print this report"
 msgstr ""
 "Por favor, seleccione un proyecto de fase 'Plan de Estudio' para "
 "imprimir este informe"
+
+msgctxt "field:lims.project.glp_report.10.print.start,professional:"
+msgid "Laboratory professional"
+msgstr "Profesional de laboratorio"
+
+msgctxt "selection:lims.project,stp_implementation_validation:"
+msgid "Does not apply"
+msgstr "No aplica"
+
+msgctxt "field:lims.project,stp_date_entry_document_file:"
+msgid "Date of entry into the BPL document file"
+msgstr "Fecha de ingreso al archivo de documentos PBL"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Observations:"
+msgstr "Observaciones:"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "Date of entry into the BPL document file:"
+msgstr "Fecha de ingreso al archivo de documentos PBL:"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "not_apply"
+msgstr "No aplica"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "implementation_validation"
+msgstr "Implementación y validación"
+
+msgctxt "report:lims.project.glp_report.10:"
+msgid "validation_only"
+msgstr "Solo validación"
