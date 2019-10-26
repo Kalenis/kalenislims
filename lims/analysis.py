@@ -406,7 +406,7 @@ class Typification(ModelSQL, ModelView):
 
             fields_check = ('detection_limit', 'quantification_limit',
                 'initial_concentration', 'final_concentration', 'start_uom',
-                'end_uom', 'calc_decimals', 'report')
+                'end_uom', 'calc_decimals')
             for field in fields_check:
                 if field in vals:
                     cls.update_laboratory_notebook(typifications)
@@ -427,6 +427,7 @@ class Typification(ModelSQL, ModelView):
                 ('notebook.matrix', '=', typification.matrix.id),
                 ('analysis', '=', typification.analysis.id),
                 ('method', '=', typification.method.id),
+                ('annulled', '=', False),
                 ('end_date', '=', None),
                 ])
             if notebook_lines:
@@ -442,7 +443,6 @@ class Typification(ModelSQL, ModelView):
                     'initial_unit': typification.start_uom,
                     'final_unit': typification.end_uom,
                     'decimals': typification.calc_decimals,
-                    'report': typification.report,
                     })
 
             # Update RM
@@ -452,6 +452,7 @@ class Typification(ModelSQL, ModelView):
                 ('notebook.matrix', '=', typification.matrix.id),
                 ('analysis', '=', typification.analysis.id),
                 ('method', '=', typification.method.id),
+                ('annulled', '=', False),
                 ('end_date', '=', None),
                 ])
             if notebook_lines:
