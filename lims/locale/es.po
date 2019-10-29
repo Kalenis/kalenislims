@@ -435,8 +435,8 @@ msgid "Presence"
 msgstr "Presencia"
 
 msgctxt "model:ir.message,text:msg_result"
-msgid "Supplants the Results Report N° %s"
-msgstr "Sustituye al informe de resultados N° %s"
+msgid "Supplants the Results Report N° %(report)s"
+msgstr "Sustituye al informe de resultados N° %(report)s"
 
 msgctxt "model:ir.message,text:msg_enac_acredited"
 msgid ""
