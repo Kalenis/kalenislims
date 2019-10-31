@@ -51,7 +51,7 @@ class SaleLine(metaclass=PoolMeta):
         AdministrativeTask = Pool().get('lims.administrative.task')
         res = []
         for line in lines:
-            if not line.product.create_task_quotation:
+            if not line.product or not line.product.create_task_quotation:
                 continue
             if AdministrativeTask.search([
                     ('origin', '=', '%s,%s' % (cls.__name__, line.id)),
