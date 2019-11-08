@@ -790,13 +790,13 @@ class Analysis(Workflow, ModelSQL, ModelView):
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
             }, depends=['type', 'behavior', 'state'])
     devices = fields.One2Many('lims.analysis.device', 'analysis', 'Devices',
-        context={'laboratory_domain': Eval('laboratory_domain')},
         states={
             'invisible': Or(
                 Eval('type').in_(['set', 'group']),
                 Bool(Equal(Eval('behavior'), 'additional'))),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
-            }, depends=['type', 'behavior', 'laboratory_domain', 'state'])
+            },
+        depends=['type', 'behavior', 'state'])
     start_date = fields.Date('Entry date', readonly=True)
     end_date = fields.Date('Leaving date', readonly=True)
     included_analysis = fields.One2Many('lims.analysis.included', 'analysis',
@@ -1887,11 +1887,9 @@ class AnalysisDevice(ModelSQL, ModelView):
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
         ondelete='CASCADE', select=True)
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        required=True, domain=[('id', 'in', Eval('laboratory_domain'))],
-        depends=['laboratory_domain'])
-    laboratory_domain = fields.Function(fields.Many2Many('lims.laboratory',
-        None, None, 'Laboratory domain'),
-        'on_change_with_laboratory_domain')
+        required=True, depends=['_parent_analysis.laboratory_domain'],
+        domain=[('id', 'in', Eval('_parent_analysis',
+            {}).get('laboratory_domain', [Eval('laboratory')]))])
     device = fields.Many2One('lims.lab.device', 'Device', required=True,
         domain=[('laboratories.laboratory', '=', Eval('laboratory'))],
         depends=['laboratory'])
@@ -1917,20 +1915,6 @@ class AnalysisDevice(ModelSQL, ModelView):
                 ])
             if devices:
                 raise UserError(gettext('lims.msg_default_device'))
-
-    @staticmethod
-    def default_laboratory_domain():
-        return Transaction().context.get('laboratory_domain', [])
-
-    @fields.depends('analysis', '_parent_analysis.laboratories', 'laboratory')
-    def on_change_with_laboratory_domain(self, name=None):
-        laboratories = []
-        if self.analysis and self.analysis.laboratories:
-            laboratories = [l.laboratory.id for l in
-                self.analysis.laboratories]
-        if not laboratories and self.laboratory:
-            laboratories = [self.laboratory.id]
-        return laboratories
 
     @classmethod
     def search_rec_name(cls, name, clause):
