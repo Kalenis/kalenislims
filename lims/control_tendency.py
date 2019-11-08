@@ -316,7 +316,7 @@ class ControlTendencyDetail(ModelSQL, ModelView):
         'detail', 'Rules')
     rules2 = fields.Function(fields.Char('Rules', depends=['rules']),
         'get_rules2')
-    icon = fields.Function(fields.Char("Icon"), 'get_icon')
+    icon = fields.Function(fields.Char('Icon', depends=['rule']), 'get_icon')
 
     @classmethod
     def __setup__(cls):
