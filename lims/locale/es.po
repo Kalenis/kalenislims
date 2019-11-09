@@ -770,10 +770,6 @@ msgctxt "field:lims.analysis.device,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
 
-msgctxt "field:lims.analysis.device,laboratory_domain:"
-msgid "Laboratory domain"
-msgstr "Dominio para Laboratorio"
-
 msgctxt "field:lims.analysis.device,rec_name:"
 msgid "Name"
 msgstr "Nombre"

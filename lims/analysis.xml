@@ -336,6 +336,12 @@
             <field name="action" ref="wiz_lims_copy_typification"/>
         </record>
 
+        <record model="ir.action-res.group"
+            id="wiz_copy_typification-group_conf_base_tables_admin">
+            <field name="action" ref="wiz_lims_copy_typification"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+        </record>
+
 <!-- Wizard Copy Calculated Typification -->
 
         <record model="ir.ui.view" id="lims_copy_calculated_typification_start_view_form">
