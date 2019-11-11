@@ -4532,6 +4532,22 @@ class CreateSampleService(ModelView):
         self.device_domain = device_domain
         self.device = device_id
 
+    @fields.depends('analysis', 'laboratory')
+    def on_change_laboratory(self):
+        analysis_id = self.analysis.id if self.analysis else None
+        laboratory_id = self.laboratory.id if self.laboratory else None
+
+        device_id = None
+        device_domain = []
+        if analysis_id and laboratory_id:
+            device_domain = self._get_device_domain(analysis_id,
+                laboratory_id)
+            if len(device_domain) == 1:
+                device_id = device_domain[0]
+
+        self.device_domain = device_domain
+        self.device = device_id
+
     @staticmethod
     def _get_laboratory_domain(analysis_id):
         cursor = Transaction().connection.cursor()
