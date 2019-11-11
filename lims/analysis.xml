@@ -360,6 +360,12 @@
             <field name="action" ref="wiz_lims_copy_calculated_typification"/>
         </record>
 
+        <record model="ir.action-res.group"
+            id="wiz_copy_calculated_typification-group_conf_base_tables_admin">
+            <field name="action" ref="wiz_lims_copy_calculated_typification"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+        </record>
+
 <!-- Wizard Relate Analysis -->
 
         <record model="ir.ui.view" id="lims_relate_analysis_start_view_form">
