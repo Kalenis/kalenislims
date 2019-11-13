@@ -2,6 +2,154 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "field:lims.aliquot,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.aliquot,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.aliquot,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "field:lims.aliquot,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.aliquot,kind:"
+msgid "Kind"
+msgstr "Clase"
+
+msgctxt "field:lims.aliquot,laboratory:"
+msgid "Destination Laboratory"
+msgstr "Laboratorio destino"
+
+msgctxt "field:lims.aliquot,number:"
+msgid "Number"
+msgstr "Número"
+
+msgctxt "field:lims.aliquot,preparation:"
+msgid "Preparation"
+msgstr "Preparación"
+
+msgctxt "field:lims.aliquot,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.aliquot,shipment_date:"
+msgid "Shipment date"
+msgstr "Fecha de envío"
+
+msgctxt "field:lims.aliquot,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.aliquot,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.aliquot,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.aliquot.type,code:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "field:lims.aliquot.type,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.aliquot.type,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.aliquot.type,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.aliquot.type,ind_volume:"
+msgid "Required volume"
+msgstr "Volumen requerido"
+
+msgctxt "field:lims.aliquot.type,kind:"
+msgid "Kind"
+msgstr "Clase"
+
+msgctxt "field:lims.aliquot.type,laboratory:"
+msgid "Destination Laboratory"
+msgstr "Laboratorio destino"
+
+msgctxt "field:lims.aliquot.type,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.aliquot.type,preparation:"
+msgid "Preparation"
+msgstr "Preparación"
+
+msgctxt "field:lims.aliquot.type,product_types:"
+msgid "Product types"
+msgstr "Tipos de producto"
+
+msgctxt "field:lims.aliquot.type,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.aliquot.type,uom:"
+msgid "UoM"
+msgstr "UdM"
+
+msgctxt "field:lims.aliquot.type,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.aliquot.type,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.aliquot.type-product.type,aliquot_type:"
+msgid "Aliquot type"
+msgstr "Tipo de alícuota"
+
+msgctxt "field:lims.aliquot.type-product.type,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.aliquot.type-product.type,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.aliquot.type-product.type,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.aliquot.type-product.type,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.aliquot.type-product.type,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.aliquot.type-product.type,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.aliquot.type-product.type,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.analysis,aliquot_type:"
+msgid "Aliquot type"
+msgstr "Tipo de alícuota"
+
+msgctxt "field:lims.analysis,ind_volume:"
+msgid "Required volume"
+msgstr "Volumen requerido"
+
 msgctxt "field:lims.brand,create_date:"
 msgid "Create Date"
 msgstr "Fecha creación"
@@ -30,6 +178,70 @@ msgctxt "field:lims.brand,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
 
+msgctxt "field:lims.comercial.product,brand:"
+msgid "Brand"
+msgstr "Marca"
+
+msgctxt "field:lims.comercial.product,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.comercial.product,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.comercial.product,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.comercial.product,matrix:"
+msgid "Base/Matrix"
+msgstr "Base/Matriz"
+
+msgctxt "field:lims.comercial.product,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.comercial.product,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.comercial.product,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.comercial.product,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.comercial.product.brand,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.comercial.product.brand,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.comercial.product.brand,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.comercial.product.brand,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.comercial.product.brand,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.comercial.product.brand,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.comercial.product.brand,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
 msgctxt "field:lims.component,brand:"
 msgid "Brand"
 msgstr "Marca"
@@ -37,6 +249,10 @@ msgstr "Marca"
 msgctxt "field:lims.component,capacity:"
 msgid "Capacity (lts)"
 msgstr "Capacidad (lts)"
+
+msgctxt "field:lims.component,comercial_product:"
+msgid "Comercial product"
+msgstr "Producto comercial"
 
 msgctxt "field:lims.component,create_date:"
 msgid "Create Date"
@@ -82,6 +298,10 @@ msgctxt "field:lims.component,power:"
 msgid "Power"
 msgstr "Potencia"
 
+msgctxt "field:lims.component,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
 msgctxt "field:lims.component,rec_name:"
 msgid "Record Name"
 msgstr "Nombre"
@@ -122,6 +342,10 @@ msgctxt "field:lims.component.type,name:"
 msgid "Name"
 msgstr "Nombre"
 
+msgctxt "field:lims.component.type,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
 msgctxt "field:lims.component.type,rec_name:"
 msgid "Record Name"
 msgstr "Nombre"
@@ -133,6 +357,74 @@ msgstr "Fecha modificación"
 msgctxt "field:lims.component.type,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
+
+msgctxt "field:lims.configuration,rack_sequence:"
+msgid "Rack Sequence"
+msgstr "Secuencia de Rack"
+
+msgctxt "field:lims.configuration.sequence,rack_sequence:"
+msgid "Rack Sequence"
+msgstr "Secuencia de Rack"
+
+msgctxt "field:lims.create_sample.start,attributes:"
+msgid "Attributes"
+msgstr "Atributos"
+
+msgctxt "field:lims.create_sample.start,attributes_domain:"
+msgid "Attributes domain"
+msgstr "Dominio para Atributos"
+
+msgctxt "field:lims.create_sample.start,comercial_product:"
+msgid "Comercial Product"
+msgstr "Producto comercial"
+
+msgctxt "field:lims.create_sample.start,component:"
+msgid "Component"
+msgstr "Componente"
+
+msgctxt "field:lims.create_sample.start,equipment:"
+msgid "Equipment"
+msgstr "Equipo"
+
+msgctxt "field:lims.create_sample.start,ind_analysis_reason:"
+msgid "Reason for analysis"
+msgstr "Motivo de análisis"
+
+msgctxt "field:lims.create_sample.start,ind_operational_detail:"
+msgid "Operational detail"
+msgstr "Detalle operativo"
+
+msgctxt "field:lims.create_sample.start,ind_sampling_date:"
+msgid "Sampling date"
+msgstr "Fecha muestra"
+
+msgctxt "field:lims.create_sample.start,ind_volume:"
+msgid "Received volume"
+msgstr "Volumen recibido"
+
+msgctxt "field:lims.create_sample.start,ind_work_environment:"
+msgid "Work environment"
+msgstr "Ambiente de trabajo"
+
+msgctxt "field:lims.create_sample.start,label:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "field:lims.create_sample.start,label_photo:"
+msgid "Label Photo"
+msgstr "Foto etiqueta"
+
+msgctxt "field:lims.create_sample.start,missing_data:"
+msgid "Missing data"
+msgstr "Falta información"
+
+msgctxt "field:lims.create_sample.start,sample_photo:"
+msgid "Sample Photo"
+msgstr "Foto muestra"
+
+msgctxt "field:lims.create_sample.start,sampling_type:"
+msgid "Sampling Type"
+msgstr "Muestreo"
 
 msgctxt "field:lims.equipment,brand:"
 msgid "Brand"
@@ -326,6 +618,74 @@ msgctxt "field:lims.equipment.type,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
 
+msgctxt "field:lims.lab.workyear,aliquot_sequence:"
+msgid "Aliquot Sequence"
+msgstr "Secuencia de Alícuota"
+
+msgctxt "field:lims.lab.workyear.sequence,aliquot_sequence:"
+msgid "Aliquot Sequence"
+msgstr "Secuencia de Alícuota"
+
+msgctxt "field:lims.planification,aliquot_type:"
+msgid "Rack type"
+msgstr "Tipo Rack"
+
+msgctxt "field:lims.planification,positions:"
+msgid "Positions"
+msgstr "Posiciones"
+
+msgctxt "field:lims.planification,rack_number:"
+msgid "Rack number"
+msgstr "Número Rack"
+
+msgctxt "field:lims.planification,rack_state:"
+msgid "Rack state"
+msgstr "Estado Rack"
+
+msgctxt "field:lims.planification,rack_user:"
+msgid "Rack user"
+msgstr "Usuario Rack"
+
+msgctxt "field:lims.planification,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.planification.position,aliquot:"
+msgid "Aliquot"
+msgstr "Alícuota"
+
+msgctxt "field:lims.planification.position,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.planification.position,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.planification.position,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.position,planification:"
+msgid "Planification"
+msgstr "Planificación"
+
+msgctxt "field:lims.planification.position,position:"
+msgid "Position"
+msgstr "Posición"
+
+msgctxt "field:lims.planification.position,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.planification.position,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.planification.position,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
 msgctxt "field:lims.plant,city:"
 msgid "City"
 msgstr "Ciudad"
@@ -398,9 +758,249 @@ msgctxt "field:lims.plant,zip:"
 msgid "Zip"
 msgstr "Código postal"
 
+msgctxt "field:lims.product.type,attribute_set:"
+msgid "Attribute Set"
+msgstr "Conjunto de atributos"
+
+msgctxt "field:lims.sample,attributes:"
+msgid "Attributes"
+msgstr "Atributos"
+
+msgctxt "field:lims.sample,attributes_domain:"
+msgid "Attributes domain"
+msgstr "Dominio para Atributos"
+
+msgctxt "field:lims.sample,comercial_product:"
+msgid "Comercial Product"
+msgstr "Producto comercial"
+
+msgctxt "field:lims.sample,component:"
+msgid "Component"
+msgstr "Componente"
+
+msgctxt "field:lims.sample,equipment:"
+msgid "Equipment"
+msgstr "Equipo"
+
+msgctxt "field:lims.sample,ind_analysis_reason:"
+msgid "Reason for analysis"
+msgstr "Motivo de análisis"
+
+msgctxt "field:lims.sample,ind_operational_detail:"
+msgid "Operational detail"
+msgstr "Detalle operativo"
+
+msgctxt "field:lims.sample,ind_sampling_date:"
+msgid "Sampling date"
+msgstr "Fecha muestra"
+
+msgctxt "field:lims.sample,ind_volume:"
+msgid "Received volume"
+msgstr "Volumen recibido"
+
+msgctxt "field:lims.sample,ind_work_environment:"
+msgid "Work environment"
+msgstr "Ambiente de trabajo"
+
+msgctxt "field:lims.sample,label_photo:"
+msgid "Label Photo"
+msgstr "Foto etiqueta"
+
+msgctxt "field:lims.sample,label_photo_id:"
+msgid "Label Photo ID"
+msgstr "ID Foto etiqueta"
+
 msgctxt "field:lims.sample,missing_data:"
 msgid "Missing data"
 msgstr "Falta información"
+
+msgctxt "field:lims.sample,sample_photo:"
+msgid "Sample Photo"
+msgstr "Foto muestra"
+
+msgctxt "field:lims.sample,sample_photo_id:"
+msgid "Sample Photo ID"
+msgstr "ID Foto muestra"
+
+msgctxt "field:lims.sample,sampling_type:"
+msgid "Sampling Type"
+msgstr "Muestreo"
+
+msgctxt "field:lims.sample.attribute,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.sample.attribute,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.sample.attribute,digits:"
+msgid "Digits"
+msgstr "Dígitos"
+
+msgctxt "field:lims.sample.attribute,domain:"
+msgid "Domain"
+msgstr "Dominio"
+
+msgctxt "field:lims.sample.attribute,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.sample.attribute,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.sample.attribute,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.sample.attribute,selection:"
+msgid "Selection"
+msgstr "Selección"
+
+msgctxt "field:lims.sample.attribute,selection_json:"
+msgid "Selection JSON"
+msgstr "Selección JSON"
+
+msgctxt "field:lims.sample.attribute,selection_sorted:"
+msgid "Selection Sorted"
+msgstr "Selección Ordenada"
+
+msgctxt "field:lims.sample.attribute,sets:"
+msgid "Sets"
+msgstr "Conjuntos"
+
+msgctxt "field:lims.sample.attribute,string:"
+msgid "String"
+msgstr "Etiqueta"
+
+msgctxt "field:lims.sample.attribute,type_:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.sample.attribute,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.sample.attribute,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.sample.attribute-attribute.set,attribute:"
+msgid "Attribute"
+msgstr "Atributo"
+
+msgctxt "field:lims.sample.attribute-attribute.set,attribute_set:"
+msgid "Set"
+msgstr "Conjunto"
+
+msgctxt "field:lims.sample.attribute-attribute.set,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.sample.attribute-attribute.set,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.sample.attribute-attribute.set,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.sample.attribute-attribute.set,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.sample.attribute-attribute.set,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.sample.attribute-attribute.set,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.sample.attribute.set,attributes:"
+msgid "Attributes"
+msgstr "Atributos"
+
+msgctxt "field:lims.sample.attribute.set,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.sample.attribute.set,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.sample.attribute.set,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.sample.attribute.set,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.sample.attribute.set,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.sample.attribute.set,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.sample.attribute.set,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.sample.edit.start,component:"
+msgid "Component"
+msgstr "Componente"
+
+msgctxt "field:lims.sample.edit.start,equipment:"
+msgid "Equipment"
+msgstr "Equipo"
+
+msgctxt "field:lims.sample.edit.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.sample.edit.start,party:"
+msgid "Party"
+msgstr "Tercero"
+
+msgctxt "field:lims.sample.edit.start,plant:"
+msgid "Plant"
+msgstr "Planta"
+
+msgctxt "field:lims.sampling.type,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.sampling.type,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.sampling.type,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:lims.sampling.type,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.sampling.type,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.sampling.type,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.sampling.type,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.sampling.type,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
 
 msgctxt "field:party.address,administrative_contact:"
 msgid "Administrative contact"
@@ -442,9 +1042,33 @@ msgctxt "field:party.party,plants:"
 msgid "Plants"
 msgstr "Plantas"
 
+msgctxt "help:lims.sample.attribute,selection:"
+msgid "A couple of key and label separated by \":\" per line"
+msgstr "Por cada lína una clave y una etiqueta separadas por \":\""
+
+msgctxt "help:lims.sample.attribute,selection_sorted:"
+msgid "If the selection must be sorted on label"
+msgstr "Si la selección debe ordenarse por la etiqueta"
+
+msgctxt "model:ir.action,name:act_aliquot"
+msgid "Aliquots"
+msgstr "Alícuotas"
+
+msgctxt "model:ir.action,name:act_aliquot_type"
+msgid "Aliquot Types"
+msgstr "Tipos de alícuota"
+
 msgctxt "model:ir.action,name:act_brand"
 msgid "Brands"
 msgstr "Marcas"
+
+msgctxt "model:ir.action,name:act_comercial_product"
+msgid "Comercial Products"
+msgstr "Productos comerciales"
+
+msgctxt "model:ir.action,name:act_comercial_product_brand"
+msgid "Comercial Products Brands"
+msgstr "Marcas de Productos comerciales"
 
 msgctxt "model:ir.action,name:act_component"
 msgid "Components"
@@ -478,6 +1102,53 @@ msgctxt "model:ir.action,name:act_plant"
 msgid "Plants"
 msgstr "Plantas"
 
+msgctxt "model:ir.action,name:act_rack_list"
+msgid "Racks"
+msgstr "Racks"
+
+msgctxt "model:ir.action,name:act_sample_attribute"
+msgid "Sample Attributes"
+msgstr "Atributos de muestra"
+
+msgctxt "model:ir.action,name:act_sample_attribute_set"
+msgid "Sample Attributes Sets"
+msgstr "Conjuntos de Atributos de muestra"
+
+msgctxt "model:ir.action,name:act_sampling_type"
+msgid "Sampling Types"
+msgstr "Tipos de muestreo"
+
+msgctxt "model:ir.action,name:wiz_edit_sample"
+msgid "Edit Samples"
+msgstr "Modificar muestras"
+
+msgctxt "model:ir.action.act_window.domain,name:act_rack_list_domain_all"
+msgid "All"
+msgstr "Todo"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_rack_list_domain_confirmed"
+msgid "Confirmed"
+msgstr "Confirmado"
+
+msgctxt "model:ir.action.act_window.domain,name:act_rack_list_domain_draft"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_rack_list_domain_not_executed"
+msgid "Not executed"
+msgstr "No ejecutado"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_rack_list_domain_preplanned"
+msgid "Pre-Planned"
+msgstr "Pre-Planificado"
+
+msgctxt "model:ir.message,text:lbl_aliquot_preparation"
+msgid "Aliquot preparation"
+msgstr "Preparación de Alícuota"
+
 msgctxt "model:ir.message,text:lbl_component_missing_data"
 msgid "Missing data in Component"
 msgstr "Faltan datos en Componente"
@@ -490,9 +1161,17 @@ msgctxt "model:ir.message,text:lbl_party_incomplete_file"
 msgid "Incomplete file in Party"
 msgstr "Ficha incompleta en Tercero"
 
+msgctxt "model:ir.message,text:lbl_sample_insufficient_volume"
+msgid "Insufficient volume in Sample"
+msgstr "Volumen insuficiente en Muestra"
+
 msgctxt "model:ir.message,text:lbl_sample_missing_data"
 msgid "Missing data in Sample"
 msgstr "Faltan datos en Muestra"
+
+msgctxt "model:ir.message,text:msg_aliquot_no_sequence"
+msgid "There is no aliquot sequence for the work year \"%(work_year)s\"."
+msgstr "No hay una secuencia de alícuotas para el año laboral «%(work_year)s»"
 
 msgctxt "model:ir.message,text:msg_component_type_unique"
 msgid "A component of the same type already exists for the equipment"
@@ -514,13 +1193,53 @@ msgctxt "model:ir.message,text:msg_party_no_tax_identifier"
 msgid "Party \"%(party)s\" has no Tax Identifier"
 msgstr "La entidad «%(party)s» no tiene identificador fiscal"
 
+msgctxt "model:ir.message,text:msg_planification_position_unique"
+msgid "Rack positions must be unique"
+msgstr "Las posiciones del Rack deben ser únicas"
+
 msgctxt "model:ir.message,text:msg_plant_name_unique"
 msgid "There is already a plant with the same name for the party"
 msgstr "Ya existe una planta con el mismo nombre para el tercero"
 
+msgctxt "model:ir.message,text:msg_user_no_laboratory"
+msgid "There is no laboratory for this user"
+msgstr "No hay un Laboratorio por defecto para este usuario"
+
+msgctxt "model:ir.sequence,name:seq_aliquot"
+msgid "Aliquot"
+msgstr "Alícuota"
+
+msgctxt "model:ir.sequence,name:seq_rack"
+msgid "Rack"
+msgstr "Rack"
+
+msgctxt "model:ir.sequence.type,name:seq_type_aliquot"
+msgid "Aliquot"
+msgstr "Alícuota"
+
+msgctxt "model:ir.sequence.type,name:seq_type_rack"
+msgid "Rack"
+msgstr "Rack"
+
+msgctxt "model:ir.ui.menu,name:menu_aliquot"
+msgid "Aliquots"
+msgstr "Alícuotas"
+
+msgctxt "model:ir.ui.menu,name:menu_aliquot_type"
+msgid "Aliquot Types"
+msgstr "Tipos de alícuota"
+
 msgctxt "model:ir.ui.menu,name:menu_brand"
 msgid "Brands"
 msgstr "Marcas"
+
+msgctxt "model:ir.ui.menu,name:menu_comercial_product"
+msgid "Comercial Products"
+msgstr "Productos comerciales"
+
+msgctxt "model:ir.ui.menu,name:menu_comercial_product_brand"
+msgid "Comercial Products Brands"
+msgstr "Marcas de Productos comerciales"
 
 msgctxt "model:ir.ui.menu,name:menu_component"
 msgid "Components"
@@ -554,9 +1273,45 @@ msgctxt "model:ir.ui.menu,name:menu_plant"
 msgid "Plants"
 msgstr "Plantas"
 
+msgctxt "model:ir.ui.menu,name:menu_rack_list"
+msgid "Racks"
+msgstr "Racks"
+
+msgctxt "model:ir.ui.menu,name:menu_sample_attribute"
+msgid "Sample Attributes"
+msgstr "Atributos de muestra"
+
+msgctxt "model:ir.ui.menu,name:menu_sample_attribute_set"
+msgid "Sample Attributes Sets"
+msgstr "Conjuntos de Atributos de muestra"
+
+msgctxt "model:ir.ui.menu,name:menu_sampling_type"
+msgid "Sampling Types"
+msgstr "Tipos de muestreo"
+
+msgctxt "model:lims.aliquot,name:"
+msgid "Aliquot"
+msgstr "Alícuota"
+
+msgctxt "model:lims.aliquot.type,name:"
+msgid "Aliquot Type"
+msgstr "Tipo de alícuota"
+
+msgctxt "model:lims.aliquot.type-product.type,name:"
+msgid "Equipment Template - Component Type"
+msgstr "Plantilla de equipo - Tipo de componente"
+
 msgctxt "model:lims.brand,name:"
 msgid "Brand"
 msgstr "Marca"
+
+msgctxt "model:lims.comercial.product,name:"
+msgid "Comercial Product"
+msgstr "Producto comercial"
+
+msgctxt "model:lims.comercial.product.brand,name:"
+msgid "Comercial Product Brand"
+msgstr "Marca de Producto comercial"
 
 msgctxt "model:lims.component,name:"
 msgid "Component"
@@ -582,9 +1337,129 @@ msgctxt "model:lims.equipment.type,name:"
 msgid "Equipment Type"
 msgstr "Tipo de componente"
 
+msgctxt "model:lims.planification.position,name:"
+msgid "Rack Position"
+msgstr "Posición de Rack"
+
 msgctxt "model:lims.plant,name:"
 msgid "Plant"
 msgstr "Planta"
+
+msgctxt "model:lims.sample.attribute,name:"
+msgid "Sample Attribute"
+msgstr "Atributo de muestra"
+
+msgctxt "model:lims.sample.attribute-attribute.set,name:"
+msgid "Sample Attribute - Set"
+msgstr "Atributo de muestra - Conjunto"
+
+msgctxt "model:lims.sample.attribute.set,name:"
+msgid "Sample Attribute Set"
+msgstr "Conjunto de Atributos de muestra"
+
+msgctxt "model:lims.sample.edit.start,name:"
+msgid "Edit Samples"
+msgstr "Modificar muestras"
+
+msgctxt "model:lims.sampling.type,name:"
+msgid "Sampling Type"
+msgstr "Muestreo"
+
+msgctxt "selection:lims.aliquot,kind:"
+msgid "External"
+msgstr "Externa"
+
+msgctxt "selection:lims.aliquot,kind:"
+msgid "Internal"
+msgstr "Interna"
+
+msgctxt "selection:lims.aliquot,kind:"
+msgid "Rack"
+msgstr "Rack"
+
+msgctxt "selection:lims.aliquot.type,kind:"
+msgid "External"
+msgstr "Externa"
+
+msgctxt "selection:lims.aliquot.type,kind:"
+msgid "Internal"
+msgstr "Interna"
+
+msgctxt "selection:lims.aliquot.type,kind:"
+msgid "Rack"
+msgstr "Rack"
+
+msgctxt "selection:lims.planification,rack_state:"
+msgid "Closed"
+msgstr "Cerrado"
+
+msgctxt "selection:lims.planification,rack_state:"
+msgid "Open"
+msgstr "Abierto"
+
+msgctxt "selection:lims.planification,type:"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "selection:lims.planification,type:"
+msgid "Rack"
+msgstr "Rack"
+
+msgctxt "selection:lims.sample.attribute,type_:"
+msgid "Boolean"
+msgstr "Boolean"
+
+msgctxt "selection:lims.sample.attribute,type_:"
+msgid "Char"
+msgstr "Char"
+
+msgctxt "selection:lims.sample.attribute,type_:"
+msgid "Date"
+msgstr "Date"
+
+msgctxt "selection:lims.sample.attribute,type_:"
+msgid "DateTime"
+msgstr "DateTime"
+
+msgctxt "selection:lims.sample.attribute,type_:"
+msgid "Float"
+msgstr "Float"
+
+msgctxt "selection:lims.sample.attribute,type_:"
+msgid "Integer"
+msgstr "Integer"
+
+msgctxt "selection:lims.sample.attribute,type_:"
+msgid "Numeric"
+msgstr "Numeric"
+
+msgctxt "selection:lims.sample.attribute,type_:"
+msgid "Selection"
+msgstr "Selección"
+
+msgctxt "view:lims.create_sample.start:"
+msgid "Industry"
+msgstr "Industria"
+
+msgctxt "view:lims.create_sample.start:"
+msgid "Label Photo"
+msgstr "Foto etiqueta"
+
+msgctxt "view:lims.create_sample.start:"
+msgid "Operational detail"
+msgstr "Detalle operativo"
+
+msgctxt "view:lims.create_sample.start:"
+msgid "Reason for analysis"
+msgstr "Motivo de análisis"
+
+msgctxt "view:lims.create_sample.start:"
+msgid "Sample Photo"
+msgstr "Foto muestra"
+
+msgctxt "view:lims.create_sample.start:"
+msgid "Work environment"
+msgstr "Ambiente de trabajo"
 
 msgctxt "view:lims.equipment:"
 msgid "Components"
@@ -601,6 +1476,66 @@ msgstr "Coordenadas GPS"
 msgctxt "view:lims.equipment:"
 msgid "General"
 msgstr "General"
+
+msgctxt "view:lims.planification:"
+msgid "Add BRE"
+msgstr "Añadir BRE"
+
+msgctxt "view:lims.planification:"
+msgid "Add Control"
+msgstr "Añadir Control"
+
+msgctxt "view:lims.planification:"
+msgid "Add MRT"
+msgstr "Añadir MRT"
+
+msgctxt "view:lims.planification:"
+msgid "Add RM/BMZ"
+msgstr "Añadir RM/BMZ"
+
+msgctxt "view:lims.planification:"
+msgid "Aliquots"
+msgstr "Alícuotas"
+
+msgctxt "view:lims.planification:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "view:lims.planification:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "view:lims.planification:"
+msgid "Controls"
+msgstr "Controles"
+
+msgctxt "view:lims.planification:"
+msgid "General"
+msgstr "General"
+
+msgctxt "view:lims.planification:"
+msgid "Pre-Plan"
+msgstr "Pre-Planificar"
+
+msgctxt "view:lims.planification:"
+msgid "Relate technicians"
+msgstr "Relacionar técnicos"
+
+msgctxt "view:lims.planification:"
+msgid "Remove Control"
+msgstr "Quitar control"
+
+msgctxt "view:lims.planification:"
+msgid "Replace technician"
+msgstr "Reemplazar técnico"
+
+msgctxt "view:lims.planification:"
+msgid "Technicians"
+msgstr "Técnicos"
+
+msgctxt "view:lims.planification:"
+msgid "Unlink technicians"
+msgstr "Desvincular técnicos"
 
 msgctxt "view:lims.plant:"
 msgid "Address"
@@ -622,6 +1557,42 @@ msgctxt "view:lims.plant:"
 msgid "General"
 msgstr "General"
 
+msgctxt "view:lims.sample:"
+msgid "Industry"
+msgstr "Industria"
+
+msgctxt "view:lims.sample:"
+msgid "Label Photo"
+msgstr "Foto etiqueta"
+
+msgctxt "view:lims.sample:"
+msgid "Operational detail"
+msgstr "Detalle operativo"
+
+msgctxt "view:lims.sample:"
+msgid "Reason for analysis"
+msgstr "Motivo de análisis"
+
+msgctxt "view:lims.sample:"
+msgid "Sample Photo"
+msgstr "Foto muestra"
+
+msgctxt "view:lims.sample:"
+msgid "Work environment"
+msgstr "Ambiente de trabajo"
+
 msgctxt "view:party.party:"
 msgid "Plants"
 msgstr "Plantas"
+
+msgctxt "wizard_button:lims.create_sample,start,create_continue:"
+msgid "Create same Equipment"
+msgstr "Crear mismo Equipo"
+
+msgctxt "wizard_button:lims.sample.edit,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.sample.edit,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"

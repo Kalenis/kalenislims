@@ -9,6 +9,88 @@
             <field name="inherit" ref="lims.lims_sample_view_form"/>
             <field name="name">sample_form</field>
         </record>
+        <record model="ir.ui.view" id="sample_view_list">
+            <field name="model">lims.sample</field>
+            <field name="inherit" ref="lims.lims_sample_view_list"/>
+            <field name="name">sample_list</field>
+        </record>
+
+<!-- Wizard Create Sample -->
+
+        <record model="ir.ui.view" id="create_sample_start_view_form">
+            <field name="model">lims.create_sample.start</field>
+            <field name="inherit" ref="lims.lims_create_sample_start_view_form"/>
+            <field name="name">create_sample_start_form</field>
+        </record>
+
+<!-- Wizard Edit Samples -->
+
+        <record model="ir.ui.view" id="edit_sample_start_view_form">
+            <field name="model">lims.sample.edit.start</field>
+            <field name="type">form</field>
+            <field name="name">sample_edit_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_edit_sample">
+            <field name="name">Edit Samples</field>
+            <field name="wiz_name">lims.sample.edit</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_edit_sample_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.sample,-1</field>
+            <field name="action" ref="wiz_edit_sample"/>
+        </record>
+
+<!-- Aliquot -->
+
+        <record model="ir.ui.view" id="aliquot_view_list">
+            <field name="model">lims.aliquot</field>
+            <field name="type">tree</field>
+            <field name="name">aliquot_list</field>
+        </record>
+        <record model="ir.ui.view" id="aliquot_view_form">
+            <field name="model">lims.aliquot</field>
+            <field name="type">form</field>
+            <field name="name">aliquot_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_aliquot">
+            <field name="name">Aliquots</field>
+            <field name="res_model">lims.aliquot</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_aliquot_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="aliquot_view_list"/>
+            <field name="act_window" ref="act_aliquot"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_aliquot_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="aliquot_view_form"/>
+            <field name="act_window" ref="act_aliquot"/>
+        </record>
+
+        <menuitem action="act_aliquot" id="menu_aliquot"
+            parent="lims.lims_entry_board_menu" sequence="45"/>
+
+    </data>
+    <data noupdate="1">
+
+<!-- Sequence for Aliquot -->
+
+        <record model="ir.sequence.type" id="seq_type_aliquot">
+            <field name="name">Aliquot</field>
+            <field name="code">lims.aliquot</field>
+        </record>
+        <record model="ir.sequence.type-res.group"
+            id="seq_type_aliquot_group_admin">
+            <field name="sequence_type" ref="seq_type_aliquot"/>
+            <field name="group" ref="res.group_admin"/>
+        </record>
+        <record model="ir.sequence" id="seq_aliquot">
+            <field name="name">Aliquot</field>
+            <field name="code">lims.aliquot</field>
+            <field name="padding" eval="8"/>
+        </record>
 
     </data>
 </tryton>

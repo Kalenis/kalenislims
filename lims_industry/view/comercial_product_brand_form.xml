@@ -2,6 +2,4 @@
 <form>
     <label name="name"/>
     <field name="name" xexpand="1"/>
-    <label name="product_type"/>
-    <field name="product_type"/>
 </form>

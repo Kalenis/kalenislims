@@ -280,5 +280,71 @@
             <field name="action" ref="act_component_from_party"/>
         </record>
 
+<!-- Comercial Product Brand -->
+
+        <record model="ir.ui.view" id="comercial_product_brand_view_list">
+            <field name="model">lims.comercial.product.brand</field>
+            <field name="type">tree</field>
+            <field name="name">comercial_product_brand_list</field>
+        </record>
+        <record model="ir.ui.view" id="comercial_product_brand_view_form">
+            <field name="model">lims.comercial.product.brand</field>
+            <field name="type">form</field>
+            <field name="name">comercial_product_brand_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_comercial_product_brand">
+            <field name="name">Comercial Products Brands</field>
+            <field name="res_model">lims.comercial.product.brand</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_comercial_product_brand_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="comercial_product_brand_view_list"/>
+            <field name="act_window" ref="act_comercial_product_brand"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_comercial_product_brand_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="comercial_product_brand_view_form"/>
+            <field name="act_window" ref="act_comercial_product_brand"/>
+        </record>
+
+        <menuitem action="act_comercial_product_brand" id="menu_comercial_product_brand"
+            parent="lims.lims_config_base_tables" sequence="120"/>
+
+<!-- Comercial Product -->
+
+        <record model="ir.ui.view" id="comercial_product_view_list">
+            <field name="model">lims.comercial.product</field>
+            <field name="type">tree</field>
+            <field name="name">comercial_product_list</field>
+        </record>
+        <record model="ir.ui.view" id="comercial_product_view_form">
+            <field name="model">lims.comercial.product</field>
+            <field name="type">form</field>
+            <field name="name">comercial_product_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_comercial_product">
+            <field name="name">Comercial Products</field>
+            <field name="res_model">lims.comercial.product</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_comercial_product_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="comercial_product_view_list"/>
+            <field name="act_window" ref="act_comercial_product"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_comercial_product_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="comercial_product_view_form"/>
+            <field name="act_window" ref="act_comercial_product"/>
+        </record>
+
+        <menuitem action="act_comercial_product" id="menu_comercial_product"
+            parent="lims.lims_config_base_tables" sequence="130"/>
+
     </data>
 </tryton>
