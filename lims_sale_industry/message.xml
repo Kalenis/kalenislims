@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 <tryton>
     <data group="1">
+        <record model="ir.message" id="lbl_product_quotation">
+            <field name="text">Product sold</field>
+        </record>
+        <record model="ir.message" id="lbl_sale_purchase_order_required">
+            <field name="text">Purchase Order Required</field>
+        </record>
         <record model="ir.message" id="msg_no_sample_label_sequence">
             <field name="text">There is no label sequence configured</field>
         </record>
