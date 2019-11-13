@@ -24,4 +24,6 @@
     <field name="power"/>
     <label name="year_manufacturing"/>
     <field name="year_manufacturing"/>
+    <label name="missing_data"/>
+    <field name="missing_data"/>
 </form>
