@@ -70,6 +70,10 @@ msgctxt "field:lims.administrative.task,state:"
 msgid "State"
 msgstr "Estado"
 
+msgctxt "field:lims.administrative.task,type:"
+msgid "Type"
+msgstr "Tipo"
+
 msgctxt "field:lims.administrative.task,write_date:"
 msgid "Write Date"
 msgstr "Fecha modificación"
@@ -179,14 +183,6 @@ msgctxt "field:lims.administrative.task.template,id:"
 msgid "ID"
 msgstr "ID"
 
-msgctxt "field:lims.administrative.task.template,model:"
-msgid "Model"
-msgstr "Modelo"
-
-msgctxt "field:lims.administrative.task.template,model_domain:"
-msgid "Model domain"
-msgstr "Dominio para Modelo"
-
 msgctxt "field:lims.administrative.task.template,rec_name:"
 msgid "Record Name"
 msgstr "Nombre"
@@ -194,6 +190,10 @@ msgstr "Nombre"
 msgctxt "field:lims.administrative.task.template,responsible:"
 msgid "Responsible User"
 msgstr "Usuario responsable"
+
+msgctxt "field:lims.administrative.task.template,type:"
+msgid "Type"
+msgstr "Tipo"
 
 msgctxt "field:lims.administrative.task.template,write_date:"
 msgid "Write Date"
@@ -337,18 +337,6 @@ msgstr ""
 msgctxt "model:ir.message,text:msg_no_task_sequence"
 msgid "There is no task sequence configured"
 msgstr "No hay una secuencia de tarea configurada"
-
-msgctxt "model:ir.message,text:msg_party_email"
-msgid "Party \"%(party)s\" has no Email"
-msgstr "La entidad «%(party)s» no tiene correo electrónico"
-
-msgctxt "model:ir.message,text:msg_party_phone"
-msgid "Party \"%(party)s\" has no Phone"
-msgstr "La entidad «%(party)s» no tiene teléfono"
-
-msgctxt "model:ir.message,text:msg_party_tax_identifier"
-msgid "Party \"%(party)s\" has no Tax Identifier"
-msgstr "La entidad «%(party)s» no tiene identificador fiscal"
 
 msgctxt "model:ir.sequence,name:seq_task"
 msgid "Administrative Task"

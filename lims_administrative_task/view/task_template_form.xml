@@ -2,8 +2,8 @@
 <form>
     <label name="description"/>
     <field name="description"/>
-    <label name="model"/>
-    <field name="model"/>
+    <label name="type"/>
+    <field name="type"/>
     <label name="responsible"/>
     <field name="responsible"/>
     <label name="expiration_days"/>
