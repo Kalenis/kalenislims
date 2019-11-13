@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of lims_sale_industry module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
@@ -72,6 +71,34 @@ class Sale(metaclass=PoolMeta):
         elif self.party:
             contacts = Contact.search([('party', '=', self.party)])
         return [c.id for c in contacts]
+
+    @classmethod
+    def confirm(cls, sales):
+        pool = Pool()
+        TaskTemplate = pool.get('lims.administrative.task.template')
+        SaleLine = pool.get('sale.line')
+        super(Sale, cls).confirm(sales)
+        TaskTemplate.create_tasks('sale_purchase_order_required',
+            cls._for_task_purchase_order_required(sales))
+        lines = [l for s in sales for l in s.lines]
+        SaleLine._confirm_lines(lines)
+
+    @classmethod
+    def _for_task_purchase_order_required(cls, sales):
+        AdministrativeTask = Pool().get('lims.administrative.task')
+        res = []
+        for sale in sales:
+            if not (sale.invoice_party.purchase_order_required and
+                    not sale.purchase_order):
+                continue
+            if AdministrativeTask.search([
+                    ('type', '=', 'sale_purchase_order_required'),
+                    ('origin', '=', '%s,%s' % (cls.__name__, sale.id)),
+                    ('state', 'not in', ('done', 'discarded')),
+                    ]):
+                continue
+            res.append(sale)
+        return res
 
 
 class SalePlant(ModelSQL):
@@ -181,6 +208,28 @@ class SaleLine(metaclass=PoolMeta):
                 Bool(Eval('_parent_sale', {}).get('lubrication_plan', False)),
                 Bool(Eval('analysis')))}
         cls.expiration_date.depends.extend(['_parent_sale', 'analysis'])
+
+    @classmethod
+    def _confirm_lines(cls, lines):
+        TaskTemplate = Pool().get('lims.administrative.task.template')
+        TaskTemplate.create_tasks('product_quotation',
+            cls._for_task_product_quotation(lines))
+
+    @classmethod
+    def _for_task_product_quotation(cls, lines):
+        AdministrativeTask = Pool().get('lims.administrative.task')
+        res = []
+        for line in lines:
+            if not line.product or not line.product.create_task_quotation:
+                continue
+            if AdministrativeTask.search([
+                    ('type', '=', 'product_quotation'),
+                    ('origin', '=', '%s,%s' % (cls.__name__, line.id)),
+                    ('state', 'not in', ('done', 'discarded')),
+                    ]):
+                continue
+            res.append(line)
+        return res
 
 
 class SaleLinePlant(ModelSQL):
