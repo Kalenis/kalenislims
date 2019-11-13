@@ -9,7 +9,7 @@ from trytond.transaction import Transaction
 
 __all__ = ['Plant', 'EquipmentType', 'Brand', 'ComponentType',
     'EquipmentTemplate', 'EquipmentTemplateComponentType', 'Equipment',
-    'Component']
+    'Component', 'ComercialProductBrand', 'ComercialProduct']
 
 
 class Plant(ModelSQL, ModelView):
@@ -94,6 +94,8 @@ class ComponentType(ModelSQL, ModelView):
     __name__ = 'lims.component.type'
 
     name = fields.Char('Name', required=True)
+    product_type = fields.Many2One('lims.product.type', 'Product type',
+        required=True)
 
 
 class EquipmentTemplate(ModelSQL, ModelView):
@@ -274,9 +276,13 @@ class Component(ModelSQL, ModelView):
     __name__ = 'lims.component'
 
     equipment = fields.Many2One('lims.equipment', 'Equipment',
-        required=True, ondelete='CASCADE', select=True,)
+        required=True, ondelete='CASCADE', select=True)
     type = fields.Many2One('lims.component.type', 'Type',
         required=True)
+    product_type = fields.Function(fields.Many2One('lims.product.type',
+        'Product type'), 'get_product_type')
+    comercial_product = fields.Many2One('lims.comercial.product',
+        'Comercial product')
     capacity = fields.Char('Capacity (lts)')
     serial_number = fields.Char('Serial number')
     model = fields.Char('Model')
@@ -355,3 +361,31 @@ class Component(ModelSQL, ModelView):
     @classmethod
     def search_party(cls, name, clause):
         return [('equipment.plant.party',) + tuple(clause[1:])]
+
+    @fields.depends('type')
+    def on_change_with_product_type(self, name=None):
+        return self.get_product_type([self], name)[self.id]
+
+    @classmethod
+    def get_product_type(cls, components, name):
+        result = {}
+        for c in components:
+            result[c.id] = c.type and c.type.product_type.id or None
+        return result
+
+
+class ComercialProductBrand(ModelSQL, ModelView):
+    'Comercial Product Brand'
+    __name__ = 'lims.comercial.product.brand'
+
+    name = fields.Char('Name', required=True)
+
+
+class ComercialProduct(ModelSQL, ModelView):
+    'Comercial Product'
+    __name__ = 'lims.comercial.product'
+
+    name = fields.Char('Name', required=True)
+    brand = fields.Many2One('lims.comercial.product.brand', 'Brand',
+        required=True)
+    matrix = fields.Many2One('lims.matrix', 'Base/Matrix', required=True)

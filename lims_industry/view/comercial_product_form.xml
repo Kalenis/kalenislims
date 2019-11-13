@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form>
+    <label name="name"/>
+    <field name="name"/>
+    <label name="brand"/>
+    <field name="brand"/>
+    <label name="matrix"/>
+    <field name="matrix"/>
+</form>
