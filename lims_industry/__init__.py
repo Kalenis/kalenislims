@@ -4,7 +4,9 @@
 
 from trytond.pool import Pool
 from . import industry
+from . import sample
 from . import party
+from . import task
 
 
 def register():
@@ -17,6 +19,10 @@ def register():
         industry.EquipmentTemplateComponentType,
         industry.Equipment,
         industry.Component,
+        sample.Entry,
+        sample.Sample,
         party.Party,
         party.Address,
+        task.AdministrativeTaskTemplate,
+        task.AdministrativeTask,
         module='lims_industry', type_='model')

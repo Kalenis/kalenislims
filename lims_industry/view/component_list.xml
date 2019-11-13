@@ -12,4 +12,5 @@
     <field name="capacity"/>
     <field name="power"/>
     <field name="year_manufacturing"/>
+    <field name="missing_data"/>
 </tree>

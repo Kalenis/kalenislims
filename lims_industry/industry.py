@@ -181,6 +181,30 @@ class Equipment(ModelSQL, ModelView):
                 'lims_industry.msg_equipment_name_unique'),
             ]
 
+    @classmethod
+    def create(cls, vlist):
+        TaskTemplate = Pool().get('lims.administrative.task.template')
+        equipments = super(Equipment, cls).create(vlist)
+        TaskTemplate.create_tasks('equipment_missing_data',
+            cls._for_task_missing_data(equipments))
+        return equipments
+
+    @classmethod
+    def _for_task_missing_data(cls, equipments):
+        AdministrativeTask = Pool().get('lims.administrative.task')
+        res = []
+        for equipment in equipments:
+            if not equipment.missing_data:
+                continue
+            if AdministrativeTask.search([
+                    ('type', '=', 'equipment_missing_data'),
+                    ('origin', '=', '%s,%s' % (cls.__name__, equipment.id)),
+                    ('state', 'not in', ('done', 'discarded')),
+                    ]):
+                continue
+            res.append(equipment)
+        return res
+
     @fields.depends('plant')
     def on_change_with_party(self, name=None):
         return self.get_party([self], name)[self.id]
@@ -265,6 +289,7 @@ class Component(ModelSQL, ModelView):
         'get_plant', searcher='search_plant')
     party = fields.Function(fields.Many2One('party.party', 'Party'),
         'get_party', searcher='search_party')
+    missing_data = fields.Boolean('Missing data')
 
     @classmethod
     def __setup__(cls):
@@ -276,6 +301,30 @@ class Component(ModelSQL, ModelView):
             ('type_unique', Unique(t, t.equipment, t.type),
                 'lims_industry.msg_component_type_unique'),
             ]
+
+    @classmethod
+    def create(cls, vlist):
+        TaskTemplate = Pool().get('lims.administrative.task.template')
+        components = super(Component, cls).create(vlist)
+        TaskTemplate.create_tasks('component_missing_data',
+            cls._for_task_missing_data(components))
+        return components
+
+    @classmethod
+    def _for_task_missing_data(cls, components):
+        AdministrativeTask = Pool().get('lims.administrative.task')
+        res = []
+        for component in components:
+            if not component.missing_data:
+                continue
+            if AdministrativeTask.search([
+                    ('type', '=', 'component_missing_data'),
+                    ('origin', '=', '%s,%s' % (cls.__name__, component.id)),
+                    ('state', 'not in', ('done', 'discarded')),
+                    ]):
+                continue
+            res.append(component)
+        return res
 
     def get_rec_name(self, name):
         res = self.type.rec_name

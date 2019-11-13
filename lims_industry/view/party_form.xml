@@ -15,6 +15,12 @@
         <field name="code" xexpand="0"/>
     </xpath>
     <xpath
+        expr="/form/group[@id='checkboxes']"
+        position="inside">
+        <label name="complete_file"/>
+        <field name="complete_file" xexpand="0" width="25"/>
+    </xpath>
+    <xpath
         expr="/form/notebook/page[@id='stock']"
         position="after">
         <page id="plants" string="Plants">
