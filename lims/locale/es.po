@@ -1913,7 +1913,7 @@ msgstr "Entidad"
 
 msgctxt "field:lims.create_sample.start,producer:"
 msgid "Producer company"
-msgstr "Empresa productora"
+msgstr "Empresa productora / Unidad de negocio"
 
 msgctxt "field:lims.create_sample.start,product_type:"
 msgid "Product type"
@@ -6264,7 +6264,7 @@ msgstr "Entidad"
 
 msgctxt "field:lims.sample,producer:"
 msgid "Producer company"
-msgstr "Empresa productora"
+msgstr "Empresa productora / Unidad de negocio"
 
 msgctxt "field:lims.sample,product_type:"
 msgid "Product type"
