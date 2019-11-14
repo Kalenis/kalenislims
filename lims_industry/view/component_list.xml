@@ -2,6 +2,8 @@
 <tree>
     <field name="equipment" expand="1"/>
     <field name="type" expand="1"/>
+    <field name="product_type"/>
+    <field name="comercial_product"/>
     <field name="brand"/>
     <field name="model"/>
     <field name="serial_number"/>
@@ -12,4 +14,5 @@
     <field name="capacity"/>
     <field name="power"/>
     <field name="year_manufacturing"/>
+    <field name="missing_data"/>
 </tree>

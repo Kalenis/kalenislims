@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="number"/>
+    <field name="fraction"/>
+    <field name="type"/>
+    <field name="kind"/>
+    <field name="shipment_date"/>
+    <field name="laboratory"/>
+    <field name="preparation"/>
+</tree>

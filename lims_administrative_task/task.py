@@ -26,47 +26,25 @@ class AdministrativeTaskTemplate(ModelSQL, ModelView):
     'Administrative Task Configuration'
     __name__ = 'lims.administrative.task.template'
 
-    model = fields.Many2One('ir.model', 'Model', select=True, required=True,
-        domain=[('id', 'in', Eval('model_domain'))], depends=['model_domain'])
-    model_domain = fields.Function(fields.Many2Many('ir.model', None, None,
-        'Model domain'), 'get_model_domain')
+    type = fields.Selection('get_types', 'Type', required=True)
     description = fields.Char('Description', required=True)
     expiration_days = fields.Integer('Days to Expiration', required=True)
     responsible = fields.Many2One('res.user', 'Responsible User',
         required=True)
 
     @classmethod
-    def default_model_domain(cls):
-        return cls._get_model_domain()
-
-    def get_model_domain(self, name=None):
-        return self._get_model_domain()
-
-    @staticmethod
-    def _get_model_domain():
-        pool = Pool()
-        AdministrativeTask = pool.get('lims.administrative.task')
-        Model = pool.get('ir.model')
-
-        models = AdministrativeTask._get_origin()
-        models = Model.search([
-            ('model', 'in', models),
-            ])
-        return [m.id for m in models]
+    def get_types(cls):
+        return []
 
     @classmethod
-    def create_tasks(cls, model_name, records):
+    def create_tasks(cls, type, records):
         pool = Pool()
-        Model = pool.get('ir.model')
         AdministrativeTask = pool.get('lims.administrative.task')
         Date = pool.get('ir.date')
 
         if not records:
             return
-        models = Model.search([('model', '=', model_name)])
-        if not models:
-            return
-        templates = cls.search([('model', '=', models[0])])
+        templates = cls.search([('type', '=', type)])
         if not templates:
             return
 
@@ -79,10 +57,11 @@ class AdministrativeTaskTemplate(ModelSQL, ModelView):
         for record in records:
             value = AdministrativeTask.default_get(default_fields)
             value.update({
+                'type': type,
                 'description': template.description,
                 'responsible': template.responsible,
                 'expiration_date': expiration_date,
-                'origin': '%s,%s' % (model_name, record.id),
+                'origin': '%s,%s' % (record.__name__, record.id),
                 })
             new_tasks.append(AdministrativeTask(**value))
         AdministrativeTask.save(new_tasks)
@@ -95,6 +74,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
     _rec_name = 'number'
 
     number = fields.Char('Number', select=True, readonly=True)
+    type = fields.Char('Type', readonly=True)
     date = fields.Function(fields.Date('Create Date'), 'get_date',
         searcher='search_date')
     expiration_date = fields.Date('Expiration Date')
@@ -107,7 +87,8 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         ('5', 'Very High'),
         ], 'Priority', sort=False, required=True)
     priority_string = priority.translated('priority')
-    origin = fields.Reference('Operation Origin', selection='get_origin')
+    origin = fields.Reference('Operation Origin', selection='get_origin',
+        readonly=True)
     description = fields.Char('Description', required=True)
     responsible = fields.Many2One('res.user', 'Responsible User',
         select=True, required=True)
@@ -223,9 +204,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def _get_origin(cls):
-        'Return list of Model names for origin Reference'
-        return ['party.party', 'lims.equipment', 'lims.component',
-            'sale.sale', 'sale.line']
+        return []
 
     @classmethod
     def get_origin(cls):

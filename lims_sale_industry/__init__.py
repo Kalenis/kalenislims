@@ -7,6 +7,7 @@ from . import configuration
 from . import sale
 from . import analysis
 from . import product
+from . import task
 
 
 def register():
@@ -27,6 +28,8 @@ def register():
         sale.SaleSearchLabelStart,
         analysis.Analysis,
         product.Template,
+        task.AdministrativeTaskTemplate,
+        task.AdministrativeTask,
         module='lims_sale_industry', type_='model')
     Pool.register(
         sale.SaleAddProductKit,

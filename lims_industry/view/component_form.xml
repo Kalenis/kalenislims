@@ -8,6 +8,10 @@
     <field name="plant"/>
     <label name="party"/>
     <field name="party"/>
+    <label name="product_type"/>
+    <field name="product_type"/>
+    <label name="comercial_product"/>
+    <field name="comercial_product"/>
     <label name="brand"/>
     <field name="brand"/>
     <label name="model"/>
@@ -24,4 +28,6 @@
     <field name="power"/>
     <label name="year_manufacturing"/>
     <field name="year_manufacturing"/>
+    <label name="missing_data"/>
+    <field name="missing_data"/>
 </form>

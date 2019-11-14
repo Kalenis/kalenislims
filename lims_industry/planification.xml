@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Planification -->
+
+        <record model="ir.action.act_window" id="lims.act_lims_planification_list">
+            <field name="domain" eval="[('type', '=', 'normal')]" pyson="1"/>
+        </record>
+
+<!-- Rack -->
+
+        <record model="ir.ui.view" id="rack_view_form">
+            <field name="model">lims.planification</field>
+            <field name="type">form</field>
+            <field name="name">rack_form</field>
+        </record>
+        <record model="ir.ui.view" id="rack_view_list">
+            <field name="model">lims.planification</field>
+            <field name="type">tree</field>
+            <field name="name">rack_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_rack_list">
+            <field name="name">Racks</field>
+            <field name="res_model">lims.planification</field>
+            <field name="domain" eval="[('type', '=', 'rack')]" pyson="1"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_rack_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="rack_view_list"/>
+            <field name="act_window" ref="act_rack_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_rack_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="rack_view_form"/>
+            <field name="act_window" ref="act_rack_list"/>
+        </record>
+
+        <record model="ir.action.act_window.domain"
+            id="act_rack_list_domain_draft">
+            <field name="name">Draft</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain"
+                eval="[('state', '=', 'draft')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_rack_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_rack_list_domain_preplanned">
+            <field name="name">Pre-Planned</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain"
+                eval="[('state', '=', 'preplanned')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_rack_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_rack_list_domain_confirmed">
+            <field name="name">Confirmed</field>
+            <field name="sequence" eval="30"/>
+            <field name="domain"
+                eval="[('state', '=', 'confirmed')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_rack_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_rack_list_domain_not_executed">
+            <field name="name">Not executed</field>
+            <field name="sequence" eval="40"/>
+            <field name="domain"
+                eval="[('state', '=', 'not_executed')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_rack_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_rack_list_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="9999"/>
+            <field name="domain"></field>
+            <field name="act_window" ref="act_rack_list"/>
+        </record>
+
+        <menuitem action="act_rack_list" id="menu_rack_list"
+            parent="lims.lims_laboratory" sequence="25"
+            icon="lims-planification"/>
+
+<!-- Rack Position -->
+
+        <record model="ir.ui.view" id="planification_position_view_form">
+            <field name="model">lims.planification.position</field>
+            <field name="type">form</field>
+            <field name="name">planification_position_form</field>
+        </record>
+        <record model="ir.ui.view" id="planification_position_view_list">
+            <field name="model">lims.planification.position</field>
+            <field name="type">tree</field>
+            <field name="name">planification_position_list</field>
+        </record>
+
+    </data>
+    <data noupdate="1">
+
+<!-- Sequence for Rack -->
+
+        <record model="ir.sequence.type" id="seq_type_rack">
+            <field name="name">Rack</field>
+            <field name="code">lims.planification</field>
+        </record>
+        <record model="ir.sequence.type-res.group"
+            id="seq_type_rack_group_admin">
+            <field name="sequence_type" ref="seq_type_rack"/>
+            <field name="group" ref="res.group_admin"/>
+        </record>
+        <record model="ir.sequence" id="seq_rack">
+            <field name="name">Rack</field>
+            <field name="code">lims.planification</field>
+            <field name="padding" eval="8"/>
+        </record>
+
+    </data>
+</tryton>
