@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Sample Attribute Set -->
+
+        <record model="ir.ui.view" id="sample_attribute_set_view_list">
+            <field name="model">lims.sample.attribute.set</field>
+            <field name="type">tree</field>
+            <field name="name">sample_attribute_set_list</field>
+        </record>
+        <record model="ir.ui.view" id="sample_attribute_set_view_form">
+            <field name="model">lims.sample.attribute.set</field>
+            <field name="type">form</field>
+            <field name="name">sample_attribute_set_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_sample_attribute_set">
+            <field name="name">Sample Attributes Sets</field>
+            <field name="res_model">lims.sample.attribute.set</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_sample_attribute_set_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="sample_attribute_set_view_list"/>
+            <field name="act_window" ref="act_sample_attribute_set"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_sample_attribute_set_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="sample_attribute_set_view_form"/>
+            <field name="act_window" ref="act_sample_attribute_set"/>
+        </record>
+
+        <menuitem action="act_sample_attribute_set" id="menu_sample_attribute_set"
+            parent="lims.lims_config_entry" sequence="60"/>
+
+<!-- Sample Attribute -->
+
+        <record model="ir.ui.view" id="sample_attribute_view_list">
+            <field name="model">lims.sample.attribute</field>
+            <field name="type">tree</field>
+            <field name="name">sample_attribute_list</field>
+        </record>
+        <record model="ir.ui.view" id="sample_attribute_view_form">
+            <field name="model">lims.sample.attribute</field>
+            <field name="type">form</field>
+            <field name="name">sample_attribute_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_sample_attribute">
+            <field name="name">Sample Attributes</field>
+            <field name="res_model">lims.sample.attribute</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_sample_attribute_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="sample_attribute_view_list"/>
+            <field name="act_window" ref="act_sample_attribute"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_sample_attribute_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="sample_attribute_view_form"/>
+            <field name="act_window" ref="act_sample_attribute"/>
+        </record>
+
+        <menuitem action="act_sample_attribute" id="menu_sample_attribute"
+            parent="lims.lims_config_entry" sequence="70"/>
+
+<!-- Sampling Type -->
+
+        <record model="ir.ui.view" id="sampling_type_view_list">
+            <field name="model">lims.sampling.type</field>
+            <field name="type">tree</field>
+            <field name="name">sampling_type_list</field>
+        </record>
+        <record model="ir.ui.view" id="sampling_type_view_form">
+            <field name="model">lims.sampling.type</field>
+            <field name="type">form</field>
+            <field name="name">sampling_type_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_sampling_type">
+            <field name="name">Sampling Types</field>
+            <field name="res_model">lims.sampling.type</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_sampling_type_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="sampling_type_view_list"/>
+            <field name="act_window" ref="act_sampling_type"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_sampling_type_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="sampling_type_view_form"/>
+            <field name="act_window" ref="act_sampling_type"/>
+        </record>
+
+        <menuitem action="act_sampling_type" id="menu_sampling_type"
+            parent="lims.lims_config_entry" sequence="80"/>
+
+<!-- Product type -->
+
+        <record model="ir.ui.view" id="product_type_view_form">
+            <field name="model">lims.product.type</field>
+            <field name="inherit" ref="lims.lims_product_type_view_form"/>
+            <field name="name">product_type_form</field>
+        </record>
+
+<!-- Aliquot Type -->
+
+        <record model="ir.ui.view" id="aliquot_type_view_list">
+            <field name="model">lims.aliquot.type</field>
+            <field name="type">tree</field>
+            <field name="name">aliquot_type_list</field>
+        </record>
+        <record model="ir.ui.view" id="aliquot_type_view_form">
+            <field name="model">lims.aliquot.type</field>
+            <field name="type">form</field>
+            <field name="name">aliquot_type_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_aliquot_type">
+            <field name="name">Aliquot Types</field>
+            <field name="res_model">lims.aliquot.type</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_aliquot_type_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="aliquot_type_view_list"/>
+            <field name="act_window" ref="act_aliquot_type"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_aliquot_type_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="aliquot_type_view_form"/>
+            <field name="act_window" ref="act_aliquot_type"/>
+        </record>
+
+        <menuitem action="act_aliquot_type" id="menu_aliquot_type"
+            parent="lims.lims_config_base_tables" sequence="140"/>
+
+<!-- Analysis/Set/Group -->
+
+        <record model="ir.ui.view" id="lims_analysis_view_form">
+            <field name="model">lims.analysis</field>
+            <field name="inherit" ref="lims.lims_analysis_view_form"/>
+            <field name="name">analysis_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_analysis_view_list">
+            <field name="model">lims.analysis</field>
+            <field name="inherit" ref="lims.lims_analysis_view_list"/>
+            <field name="name">analysis_list</field>
+        </record>
+
+    </data>
+</tryton>

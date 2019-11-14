@@ -342,6 +342,14 @@ msgctxt "model:ir.action,name:wiz_sale_search_label"
 msgid "Search label"
 msgstr "Buscar etiqueta"
 
+msgctxt "model:ir.message,text:lbl_product_quotation"
+msgid "Product sold"
+msgstr "Producto vendido"
+
+msgctxt "model:ir.message,text:lbl_sale_purchase_order_required"
+msgid "Purchase Order Required"
+msgstr "Orden de compra requerida"
+
 msgctxt "model:ir.message,text:msg_no_sample_label_sequence"
 msgid "There is no label sequence configured"
 msgstr "No hay una secuencia de etiqueta configurada"

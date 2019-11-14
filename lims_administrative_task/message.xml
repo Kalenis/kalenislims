@@ -7,15 +7,6 @@
         <record model="ir.message" id="msg_no_task_sequence">
             <field name="text">There is no task sequence configured</field>
         </record>
-        <record model="ir.message" id="msg_party_email">
-            <field name="text">Party "%(party)s" has no Email</field>
-        </record>
-        <record model="ir.message" id="msg_party_phone">
-            <field name="text">Party "%(party)s" has no Phone</field>
-        </record>
-        <record model="ir.message" id="msg_party_tax_identifier">
-            <field name="text">Party "%(party)s" has no Tax Identifier</field>
-        </record>
         <record model="ir.message" id="field_task_number">
             <field name="text">Task Number</field>
         </record>

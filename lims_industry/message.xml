@@ -1,14 +1,50 @@
 <?xml version="1.0"?>
 <tryton>
     <data group="1">
-        <record model="ir.message" id="msg_plant_name_unique">
-            <field name="text">There is already a plant with the same name for the party</field>
+        <record model="ir.message" id="lbl_aliquot_preparation">
+            <field name="text">Aliquot preparation</field>
+        </record>
+        <record model="ir.message" id="lbl_component_missing_data">
+            <field name="text">Missing data in Component</field>
+        </record>
+        <record model="ir.message" id="lbl_equipment_missing_data">
+            <field name="text">Missing data in Equipment</field>
+        </record>
+        <record model="ir.message" id="lbl_party_incomplete_file">
+            <field name="text">Incomplete file in Party</field>
+        </record>
+        <record model="ir.message" id="lbl_sample_insufficient_volume">
+            <field name="text">Insufficient volume in Sample</field>
+        </record>
+        <record model="ir.message" id="lbl_sample_missing_data">
+            <field name="text">Missing data in Sample</field>
+        </record>
+        <record model="ir.message" id="msg_aliquot_no_sequence">
+            <field name="text">There is no aliquot sequence for the work year "%(work_year)s".</field>
+        </record>
+        <record model="ir.message" id="msg_component_type_unique">
+            <field name="text">A component of the same type already exists for the equipment</field>
         </record>
         <record model="ir.message" id="msg_equipment_name_unique">
             <field name="text">There is already an equipment with the same name for the plant</field>
         </record>
-        <record model="ir.message" id="msg_component_type_unique">
-            <field name="text">A component of the same type already exists for the equipment</field>
+        <record model="ir.message" id="msg_party_no_email">
+            <field name="text">Party "%(party)s" has no Email</field>
+        </record>
+        <record model="ir.message" id="msg_party_no_phone">
+            <field name="text">Party "%(party)s" has no Phone</field>
+        </record>
+        <record model="ir.message" id="msg_party_no_tax_identifier">
+            <field name="text">Party "%(party)s" has no Tax Identifier</field>
+        </record>
+        <record model="ir.message" id="msg_plant_name_unique">
+            <field name="text">There is already a plant with the same name for the party</field>
+        </record>
+        <record model="ir.message" id="msg_user_no_laboratory">
+            <field name="text">There is no laboratory for this user</field>
+        </record>
+        <record model="ir.message" id="msg_planification_position_unique">
+            <field name="text">Rack positions must be unique</field>
         </record>
     </data>
 </tryton>

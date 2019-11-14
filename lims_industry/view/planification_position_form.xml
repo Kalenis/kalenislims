@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form>
+    <label name="position"/>
+    <field name="position"/>
+    <label name="aliquot"/>
+    <field name="aliquot"/>
+</form>
