@@ -6346,6 +6346,26 @@ msgctxt "field:lims.sample.duplicate.start,sample:"
 msgid "Sample"
 msgstr "Muestra"
 
+msgctxt "field:lims.sample.edit_service.start,analysis_domain:"
+msgid "Analysis domain"
+msgstr "Dominio para Análisis"
+
+msgctxt "field:lims.sample.edit_service.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.sample.edit_service.start,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.sample.edit_service.start,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.sample.edit_service.start,services:"
+msgid "Services"
+msgstr "Servicios"
+
 msgctxt "field:lims.sample.producer,create_date:"
 msgid "Create Date"
 msgstr "Fecha creación"
@@ -7776,6 +7796,10 @@ msgctxt "model:ir.action,name:wiz_control_chart_print"
 msgid "Control Chart"
 msgstr "Carta de Control"
 
+msgctxt "model:ir.action,name:wiz_edit_sample_service"
+msgid "Edit Sample Services"
+msgstr "Modificar servicios de muestras"
+
 msgctxt "model:ir.action,name:wiz_lims_change_invoice_party"
 msgid "Change Invoice Party"
 msgstr "Cambiar Entidad facturación"
@@ -8970,6 +8994,10 @@ msgstr "Muestra"
 msgctxt "model:lims.sample.duplicate.start,name:"
 msgid "Copy Sample"
 msgstr "Copiar muestra"
+
+msgctxt "model:lims.sample.edit_service.start,name:"
+msgid "Edit Sample Services"
+msgstr "Modificar servicios de muestras"
 
 msgctxt "model:lims.sample.producer,name:"
 msgid "Sample Producer"
@@ -12471,6 +12499,14 @@ msgid "Copy"
 msgstr "Copiar"
 
 msgctxt "wizard_button:lims.sample.duplicate,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.sample.edit_service,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.sample.edit_service,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
