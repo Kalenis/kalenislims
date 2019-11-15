@@ -58,7 +58,7 @@
         <record model="ir.message" id="msg_number">
             <field name="text">Measurement</field>
         </record>
-        <record model="ir.message" id="msg_result">
+        <record model="ir.message" id="msg_control_chart_result">
             <field name="text">Result</field>
         </record>
         <record model="ir.message" id="msg_ucl">

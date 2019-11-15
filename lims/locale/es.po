@@ -123,7 +123,7 @@ msgctxt "model:ir.message,text:msg_number"
 msgid "Measurement"
 msgstr "Medición"
 
-msgctxt "model:ir.message,text:msg_result"
+msgctxt "model:ir.message,text:msg_control_chart_result"
 msgid "Result"
 msgstr "Resultado"
 
@@ -270,7 +270,7 @@ msgctxt "model:ir.message,text:msg_not_accepted_5"
 msgid "The Converted result modifier is invalid"
 msgstr "El Modificador de resultado convertido no es válido"
 
-msgctxt "model:ir.message,text:msg_result"
+msgctxt "model:ir.message,text:msg_not_accepted_6"
 msgid "The Result modifier is invalid"
 msgstr "El Modificador de resultado no es válido"
 
@@ -434,9 +434,9 @@ msgctxt "model:ir.message,text:msg_pre"
 msgid "Presence"
 msgstr "Presencia"
 
-msgctxt "model:ir.message,text:msg_result"
-msgid "Supplants the Results Report N° %s"
-msgstr "Sustituye al informe de resultados N° %s"
+msgctxt "model:ir.message,text:msg_replace_number"
+msgid "Supplants the Results Report N° %(report)s"
+msgstr "Sustituye al informe de resultados N° %(report)s"
 
 msgctxt "model:ir.message,text:msg_enac_acredited"
 msgid ""
@@ -1913,7 +1913,7 @@ msgstr "Entidad"
 
 msgctxt "field:lims.create_sample.start,producer:"
 msgid "Producer company"
-msgstr "Empresa productora"
+msgstr "Empresa productora / Unidad de negocio"
 
 msgctxt "field:lims.create_sample.start,product_type:"
 msgid "Product type"
@@ -6264,7 +6264,7 @@ msgstr "Entidad"
 
 msgctxt "field:lims.sample,producer:"
 msgid "Producer company"
-msgstr "Empresa productora"
+msgstr "Empresa productora / Unidad de negocio"
 
 msgctxt "field:lims.sample,product_type:"
 msgid "Product type"

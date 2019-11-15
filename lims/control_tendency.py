@@ -1239,7 +1239,8 @@ class ControlChartReport(Report):
             'number': {
                 'name': gettext('lims.msg_number'), 'order': 1, 'recs': {}},
             'result': {
-                'name': gettext('lims.msg_result'), 'order': 2, 'recs': {}},
+                'name': gettext('lims.msg_control_chart_result'),
+                'order': 2, 'recs': {}},
             'ucl': {'name': gettext('lims.msg_ucl'), 'order': 3, 'recs': {}},
             'uwl': {'name': gettext('lims.msg_uwl'), 'order': 4, 'recs': {}},
             'upl': {'name': gettext('lims.msg_upl'), 'order': 5, 'recs': {}},
@@ -1300,7 +1301,7 @@ class ControlChartReport(Report):
             ax = df[[gettext('lims.msg_lcl'),
                 ]].plot(kind='line', color='red', rot=45, fontsize=7,
                     figsize=(10, 7.5), linestyle='-', ax=ax)
-            ax = df[[gettext('lims.msg_result'),
+            ax = df[[gettext('lims.msg_control_chart_result'),
                 ]].plot(kind='line', color='blue', rot=45, fontsize=7,
                     figsize=(10, 7.5), marker='o', linestyle='-', ax=ax)
 
