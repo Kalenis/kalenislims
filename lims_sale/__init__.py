@@ -6,6 +6,7 @@ from trytond.pool import Pool
 from . import configuration
 from . import party
 from . import sale
+from . import sample
 
 
 def register():
@@ -17,6 +18,7 @@ def register():
         sale.SaleClause,
         sale.SaleLine,
         sale.SaleLoadServicesStart,
+        sample.CreateSampleStart,
         module='lims_sale', type_='model')
     Pool.register(
         sale.SaleLoadServices,

@@ -2,6 +2,14 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "field:lims.create_sample.start,sale_lines:"
+msgid "Quotes"
+msgstr "Presupuestos"
+
+msgctxt "field:lims.create_sample.start,sale_lines_domain:"
+msgid "Quotes domain"
+msgstr "Dominio para Presupuestos"
+
 msgctxt "field:party.party,internal_code:"
 msgid "Internal Code"
 msgstr "Código interno"
