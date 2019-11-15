@@ -5,6 +5,7 @@
 from trytond.pool import Pool
 from . import configuration
 from . import sale
+from . import sample
 from . import analysis
 from . import product
 from . import task
@@ -26,6 +27,7 @@ def register():
         sale.SaleAddProductKitStart,
         sale.SalePrintLabelStart,
         sale.SaleSearchLabelStart,
+        sample.CreateSampleStart,
         analysis.Analysis,
         product.Template,
         task.AdministrativeTaskTemplate,
