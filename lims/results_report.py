@@ -2946,7 +2946,7 @@ class ResultReport(Report):
                             if decimals == 0:
                                 res = int(res)
                             res = gettext('lims.msg_uncertainty',
-                                res=res, final_unit=final_unit)
+                                res=res, initial_unit=final_unit)
                             obs_uncert = True
             return res, obs_dl, obs_uncert
 
