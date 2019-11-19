@@ -10,7 +10,7 @@ from email.header import Header
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.pool import PoolMeta, Pool
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Bool
 from trytond.transaction import Transaction
 from trytond.config import config
 from trytond.tools import get_smtp_server
@@ -210,8 +210,23 @@ class SaleLine(metaclass=PoolMeta):
         depends=['analysis_domain'])
     analysis_domain = fields.Function(fields.Many2Many('lims.analysis',
         None, None, 'Analysis domain'), 'on_change_with_analysis_domain')
+    method = fields.Many2One('lims.lab.method', 'Method',
+        domain=['OR', ('id', '=', Eval('method')),
+            ('id', 'in', Eval('method_domain'))],
+        states={'invisible': Bool(Eval('method_invisible'))},
+        depends=['method_domain', 'method_invisible'])
+    method_invisible = fields.Function(fields.Boolean('Method invisible'),
+        'on_change_with_method_invisible')
+    method_domain = fields.Function(fields.Many2Many('lims.lab.method',
+        None, None, 'Method domain'), 'on_change_with_method_domain')
     expiration_date = fields.Date('Expiration date')
     print_price = fields.Boolean('Print price on quotation')
+    print_service_detail = fields.Boolean('Print service detail',
+        states={'invisible': Bool(Eval('print_service_detail_invisible'))},
+        depends=['print_service_detail_invisible'])
+    print_service_detail_invisible = fields.Function(fields.Boolean(
+        'Print service detail invisible'),
+        'on_change_with_print_service_detail_invisible')
     unlimited_quantity = fields.Boolean('Unlimited quantity')
 
     @staticmethod
@@ -307,6 +322,32 @@ class SaleLine(metaclass=PoolMeta):
         additional_analysis = [a[0] for a in cursor.fetchall()]
 
         return typified_analysis + typified_sets_groups + additional_analysis
+
+    @fields.depends('analysis')
+    def on_change_with_method_domain(self, name=None):
+        if not self.analysis:
+            return []
+        return [m.id for m in self.analysis.methods]
+
+    @staticmethod
+    def default_method_invisible():
+        return True
+
+    @fields.depends('analysis')
+    def on_change_with_method_invisible(self, name=None):
+        if self.analysis and self.analysis.type == 'analysis':
+            return False
+        return True
+
+    @staticmethod
+    def default_print_service_detail_invisible():
+        return True
+
+    @fields.depends('analysis')
+    def on_change_with_print_service_detail_invisible(self, name=None):
+        if self.analysis and self.analysis.type in ('set', 'group'):
+            return False
+        return True
 
     @fields.depends('analysis')
     def on_change_analysis(self):
