@@ -2935,7 +2935,7 @@ class ResultReport(Report):
                     else:
                         res = gettext('lims.msg_detection_limit',
                             detection_limit=detection_limit,
-                            final_unit=final_unit)
+                            initial_unit=final_unit)
                         obs_dl = True
                 else:
                     if not converted_result:
