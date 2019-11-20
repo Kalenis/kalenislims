@@ -380,7 +380,7 @@ msgctxt "model:ir.message,text:msg_final_unit_label_2"
 msgid "Expressed at %(concentration)s"
 msgstr "Expresado a %(concentration)s"
 
-msgctxt "model:ir.message,text:msg_final_unit_label_2"
+msgctxt "model:ir.message,text:msg_final_unit_label_1"
 msgid "Expressed at %(concentration)s %% Alcohol"
 msgstr "Expresado a %(concentration)s %% Alcohol"
 
