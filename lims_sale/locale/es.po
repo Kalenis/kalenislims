@@ -78,9 +78,29 @@ msgctxt "field:sale.line,matrix_domain:"
 msgid "Matrix domain"
 msgstr "Dominio para Matriz"
 
+msgctxt "field:sale.line,method:"
+msgid "Method"
+msgstr "Método"
+
+msgctxt "field:sale.line,method_domain:"
+msgid "Method domain"
+msgstr "Dominio para Método"
+
+msgctxt "field:sale.line,method_invisible:"
+msgid "Method invisible"
+msgstr "Método invisible"
+
 msgctxt "field:sale.line,print_price:"
 msgid "Print price on quotation"
 msgstr "Imprimir precio en presupuesto"
+
+msgctxt "field:sale.line,print_service_detail:"
+msgid "Print service detail"
+msgstr "Imprimir detalle de servicio"
+
+msgctxt "field:sale.line,print_service_detail_invisible:"
+msgid "Print service detail invisible"
+msgstr "Imprimir detalle de servicio invisible"
 
 msgctxt "field:sale.line,product_type:"
 msgid "Product type"

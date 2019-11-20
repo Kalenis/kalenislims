@@ -21,15 +21,16 @@ __all__ = ['Zone', 'Variety', 'MatrixVariety', 'PackagingIntegrity',
     'PackagingType', 'FractionType', 'SampleProducer', 'Service',
     'Fraction', 'Sample', 'DuplicateSampleStart', 'DuplicateSample',
     'DuplicateSampleFromEntryStart', 'DuplicateSampleFromEntry',
-    'ManageServices', 'CompleteServices', 'FractionsByLocationsStart',
-    'FractionsByLocations', 'CountersampleStorageStart',
-    'CountersampleStorageEmpty', 'CountersampleStorageResult',
-    'CountersampleStorage', 'CountersampleStorageRevertStart',
-    'CountersampleStorageRevertEmpty', 'CountersampleStorageRevertResult',
-    'CountersampleStorageRevert', 'CountersampleDischargeStart',
-    'CountersampleDischargeEmpty', 'CountersampleDischargeResult',
-    'CountersampleDischarge', 'FractionDischargeStart',
-    'FractionDischargeEmpty', 'FractionDischargeResult', 'FractionDischarge',
+    'ManageServices', 'CompleteServices', 'EditSampleServiceStart',
+    'EditSampleService', 'FractionsByLocationsStart', 'FractionsByLocations',
+    'CountersampleStorageStart', 'CountersampleStorageEmpty',
+    'CountersampleStorageResult', 'CountersampleStorage',
+    'CountersampleStorageRevertStart', 'CountersampleStorageRevertEmpty',
+    'CountersampleStorageRevertResult', 'CountersampleStorageRevert',
+    'CountersampleDischargeStart', 'CountersampleDischargeEmpty',
+    'CountersampleDischargeResult', 'CountersampleDischarge',
+    'FractionDischargeStart', 'FractionDischargeEmpty',
+    'FractionDischargeResult', 'FractionDischarge',
     'FractionDischargeRevertStart', 'FractionDischargeRevertEmpty',
     'FractionDischargeRevertResult', 'FractionDischargeRevert',
     'CreateSampleStart', 'CreateSampleService', 'CreateSample',
@@ -3126,6 +3127,133 @@ class CompleteServices(Wizard):
             if analysis_detail:
                 EntryDetailAnalysis.create_notebook_lines(analysis_detail,
                     service.fraction)
+
+
+class EditSampleServiceStart(ModelView):
+    'Edit Sample Services'
+    __name__ = 'lims.sample.edit_service.start'
+
+    product_type = fields.Many2One('lims.product.type', 'Product type')
+    matrix = fields.Many2One('lims.matrix', 'Matrix')
+    analysis_domain = fields.Many2Many('lims.analysis', None, None,
+        'Analysis domain')
+    services = fields.One2Many('lims.create_sample.service', None, 'Services',
+        required=True, depends=['analysis_domain', 'product_type', 'matrix'],
+        context={
+            'analysis_domain': Eval('analysis_domain'),
+            'product_type': Eval('product_type'), 'matrix': Eval('matrix'),
+            })
+
+
+class EditSampleService(Wizard):
+    'Edit Sample Services'
+    __name__ = 'lims.sample.edit_service'
+
+    start = StateView('lims.sample.edit_service.start',
+        'lims.edit_sample_service_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Confirm', 'confirm', 'tryton-ok', default=True),
+            ])
+    confirm = StateTransition()
+
+    def default_start(self, fields):
+        Sample = Pool().get('lims.sample')
+
+        sample = Sample(Transaction().context['active_id'])
+        if not sample:
+            return {}
+
+        analysis_domain_ids = sample.on_change_with_analysis_domain()
+        services = []
+        for f in sample.fractions:
+            for s in f.services:
+                services.append({
+                    'analysis': s.analysis.id,
+                    'laboratory': s.laboratory and s.laboratory.id or None,
+                    'method': s.method and s.method.id or None,
+                    'device': s.device and s.device.id or None,
+                    'urgent': s.urgent,
+                    'priority': s.priority,
+                    'report_date': s.report_date,
+                    'divide': s.divide,
+                    })
+
+        default = {
+            'product_type': sample.product_type.id,
+            'matrix': sample.matrix.id,
+            'analysis_domain': analysis_domain_ids,
+            'services': services,
+            }
+        return default
+
+    def transition_confirm(self):
+        Sample = Pool().get('lims.sample')
+
+        actual_analysis = [s.analysis.id for s in self.start.services]
+
+        for sample in Sample.browse(Transaction().context['active_ids']):
+            for fraction in sample.fractions:
+                original_analysis = []
+
+                for service in fraction.services:
+                    original_analysis.append(service.analysis.id)
+                    if service.analysis.id not in actual_analysis:
+                        self.delete_service(service)
+
+                for service in self.start.services:
+                    if service.analysis.id not in original_analysis:
+                        self.create_service(service, fraction)
+
+        return 'end'
+
+    def create_service(self, service, fraction):
+        pool = Pool()
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        service_create = [{
+            'fraction': fraction.id,
+            'sample': fraction.sample.id,
+            'analysis': service.analysis.id,
+            'laboratory': (service.laboratory.id if service.laboratory
+                else None),
+            'method': service.method.id if service.method else None,
+            'device': service.device.id if service.device else None,
+            'urgent': service.urgent,
+            'priority': service.priority,
+            'report_date': service.report_date,
+            'divide': service.divide,
+            }]
+        with Transaction().set_context(manage_service=True):
+            new_service, = Service.create(service_create)
+
+        Service.copy_analysis_comments([new_service])
+        Service.set_confirmation_date([new_service])
+        analysis_detail = EntryDetailAnalysis.search([
+            ('service', '=', new_service.id)])
+        if analysis_detail:
+            EntryDetailAnalysis.create_notebook_lines(analysis_detail,
+                fraction)
+
+        EntryDetailAnalysis.write(analysis_detail, {
+            'state': 'unplanned',
+            })
+
+        return new_service
+
+    def delete_service(self, service):
+        pool = Pool()
+        #Service = pool.get('lims.service')
+        NotebookLine = pool.get('lims.notebook.line')
+        with Transaction().set_user(0, set_context=True):
+            #Service.delete([service])
+            notebook_lines = NotebookLine.search([
+                ('service', '=', service.id),
+                ])
+            NotebookLine.write(notebook_lines, {
+                'annulled': True,
+                'annulment_date': datetime.now(),
+                })
 
 
 class FractionsByLocationsStart(ModelView):
