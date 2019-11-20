@@ -9,6 +9,9 @@
         <field name="matrix"/>
         <label name="analysis"/>
         <field name="analysis"/>
+        <label name="method"/>
+        <field name="method"/>
+        <newline/>
     </xpath>
     <xpath
         expr="/form/notebook/page[@id='general']/field[@name='shipping_date']"
@@ -19,7 +22,13 @@
         <field name="purchase_order"/>
         <label name="unlimited_quantity"/>
         <field name="unlimited_quantity"/>
-        <label name="print_price"/>
-        <field name="print_price"/>
+        <group col="2" colspan="2" id="print_price">
+            <label name="print_price"/>
+            <field name="print_price"/>
+        </group>
+        <group col="2" colspan="2" id="print_service_detail">
+            <label name="print_service_detail"/>
+            <field name="print_service_detail"/>
+        </group>
     </xpath>
 </data>
