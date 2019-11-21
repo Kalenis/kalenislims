@@ -53,3 +53,6 @@ def register():
         sample.CreateSample,
         sample.EditSample,
         module='lims_industry', type_='wizard')
+    Pool.register(
+        sample.AliquotExternalReport,
+        module='lims_sale_industry', type_='report')
