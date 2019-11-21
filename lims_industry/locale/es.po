@@ -1118,6 +1118,10 @@ msgctxt "model:ir.action,name:act_sampling_type"
 msgid "Sampling Types"
 msgstr "Tipos de muestreo"
 
+msgctxt "model:ir.action,name:report_aliquot_external"
+msgid "External Aliquots Shipping"
+msgstr "Envío de Alícuotas externas"
+
 msgctxt "model:ir.action,name:wiz_edit_sample"
 msgid "Edit Samples"
 msgstr "Modificar muestras"

@@ -72,6 +72,21 @@
         <menuitem action="act_aliquot" id="menu_aliquot"
             parent="lims.lims_entry_board_menu" sequence="45"/>
 
+<!-- External Aliquots Shipping Report -->
+
+        <record model="ir.action.report" id="report_aliquot_external">
+            <field name="name">External Aliquots Shipping</field>
+            <field name="model">lims.aliquot</field>
+            <field name="report_name">lims.aliquot.external.report</field>
+            <field name="report">lims_industry/report/aliquot_external.fodt</field>
+        </record>
+
+        <record model="ir.action.keyword" id="report_aliquot_external_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.aliquot,-1</field>
+            <field name="action" ref="report_aliquot_external"/>
+        </record>
+
     </data>
     <data noupdate="1">
 
