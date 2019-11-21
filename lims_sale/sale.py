@@ -333,20 +333,32 @@ class SaleLine(metaclass=PoolMeta):
     def default_method_invisible():
         return True
 
-    @fields.depends('analysis')
+    @fields.depends('product', 'analysis')
     def on_change_with_method_invisible(self, name=None):
+        Analysis = Pool().get('lims.analysis')
         if self.analysis and self.analysis.type == 'analysis':
             return False
+        if (self.product and Analysis.search_count([
+                    ('product', '=', self.product.id),
+                    ('type', '=', 'analysis'),
+                    ]) > 0):
+                return False
         return True
 
     @staticmethod
     def default_print_service_detail_invisible():
         return True
 
-    @fields.depends('analysis')
+    @fields.depends('product', 'analysis')
     def on_change_with_print_service_detail_invisible(self, name=None):
+        Analysis = Pool().get('lims.analysis')
         if self.analysis and self.analysis.type in ('set', 'group'):
             return False
+        if (self.product and Analysis.search_count([
+                    ('product', '=', self.product.id),
+                    ('type', 'in', ('set', 'group')),
+                    ]) > 0):
+                return False
         return True
 
     @fields.depends('analysis')
