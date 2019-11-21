@@ -27,6 +27,6 @@ class Cron(metaclass=PoolMeta):
     def __setup__(cls):
         super().__setup__()
         cls.method.selection.extend([
-                ('lims.results_repor|cron_digital_signs',
+                ('lims.results_report|cron_digital_signs',
                     "Cron Lims Digital Sign"),
                 ])
