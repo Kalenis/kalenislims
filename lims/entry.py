@@ -344,7 +344,7 @@ class Entry(Workflow, ModelSQL, ModelView):
             if config_.invoice_party_relation_type:
                 parties.extend([r.to.id for r in self.party.relations
                     if r.type == config_.invoice_party_relation_type])
-        return parties
+        return list(set(parties))
 
     @classmethod
     def get_views_field(cls, parties, names):
