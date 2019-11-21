@@ -4,6 +4,7 @@
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.wizard import Wizard, StateTransition, StateView, Button
+from trytond.report import Report
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Bool
 from trytond.transaction import Transaction
@@ -11,7 +12,8 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
 __all__ = ['Entry', 'Sample', 'CreateSampleStart', 'CreateSample',
-    'EditSampleStart', 'EditSample', 'Fraction', 'Aliquot']
+    'EditSampleStart', 'EditSample', 'Fraction', 'Aliquot',
+    'AliquotExternalReport']
 
 
 class Entry(metaclass=PoolMeta):
@@ -488,3 +490,8 @@ class Aliquot(ModelSQL, ModelView):
                 continue
             res.append(aliquot)
         return res
+
+
+class AliquotExternalReport(Report):
+    'External Aliquots Shipping'
+    __name__ = 'lims.aliquot.external.report'
