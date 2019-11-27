@@ -323,11 +323,19 @@ class SaleLine(metaclass=PoolMeta):
 
         return typified_analysis + typified_sets_groups + additional_analysis
 
-    @fields.depends('analysis')
+    @fields.depends('product', 'analysis')
     def on_change_with_method_domain(self, name=None):
-        if not self.analysis:
-            return []
-        return [m.id for m in self.analysis.methods]
+        Analysis = Pool().get('lims.analysis')
+        if self.analysis:
+            return [m.id for m in self.analysis.methods]
+        if self.product:
+            res = Analysis.search([
+                ('product', '=', self.product.id),
+                ('type', '=', 'analysis'),
+                ])
+            if res:
+                return [m.id for m in res[0].methods]
+        return []
 
     @staticmethod
     def default_method_invisible():
