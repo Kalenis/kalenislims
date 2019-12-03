@@ -34,7 +34,7 @@
                 <label name="storage_time"/>
                 <field name="storage_time"/>
             </group>
-            <group col="4" colspan="2" id="storage_time">
+            <group col="4" colspan="2" id="trace_report">
                 <label name="trace_report"/>
                 <field name="trace_report"/>
                 <label name="shared"/>
