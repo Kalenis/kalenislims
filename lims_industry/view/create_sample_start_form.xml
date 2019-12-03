@@ -1,6 +1,23 @@
 <?xml version="1.0"?>
 <data>
     <xpath
+        expr="/form/notebook/page[@id='general']/group[@id='trace_report']"
+        position="after">
+        <newline/>
+        <group id="oil_fields" colspan="4" col="10">
+            <label name="oil_added"/>
+            <field name="oil_added"/>
+            <label name="hours_equipment"/>
+            <field name="hours_equipment"/>
+            <label name="hours_component"/>
+            <field name="hours_component"/>
+            <label name="hours_oil"/>
+            <field name="hours_oil"/>
+            <label name="changed_oil"/>
+            <field name="changed_oil"/>
+        </group>
+    </xpath>
+    <xpath
         expr="/form/notebook/page[@id='general']/field[@name='storage_location']"
         position="after">
         <label name="equipment"/>
