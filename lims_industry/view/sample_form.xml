@@ -1,5 +1,19 @@
 <?xml version="1.0"?>
 <data>
+    <xpath
+        expr="/form/notebook/page[@id='general']/field[@name='variety']"
+        position="after">
+        <label name="oil_added"/>
+        <field name="oil_added"/>
+        <label name="hours_equipment"/>
+        <field name="hours_equipment"/>
+        <label name="hours_component"/>
+        <field name="hours_component"/>
+        <label name="hours_oil"/>
+        <field name="hours_oil"/>
+        <label name="changed_oil"/>
+        <field name="changed_oil"/>
+    </xpath>
     <xpath expr="/form/notebook/page[@id='general']"
         position="after">
         <page id="industry" string="Industry">

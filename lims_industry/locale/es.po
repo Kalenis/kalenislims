@@ -374,6 +374,10 @@ msgctxt "field:lims.create_sample.start,attributes_domain:"
 msgid "Attributes domain"
 msgstr "Dominio para Atributos"
 
+msgctxt "field:lims.create_sample.start,changed_oil:"
+msgid "Did change Oil?"
+msgstr "Cambió aceite?"
+
 msgctxt "field:lims.create_sample.start,comercial_product:"
 msgid "Comercial Product"
 msgstr "Producto comercial"
@@ -385,6 +389,18 @@ msgstr "Componente"
 msgctxt "field:lims.create_sample.start,equipment:"
 msgid "Equipment"
 msgstr "Equipo"
+
+msgctxt "field:lims.create_sample.start,hours_component:"
+msgid "Hs. Component"
+msgstr "Hs. Componente"
+
+msgctxt "field:lims.create_sample.start,hours_equipment:"
+msgid "Hs. Equipment"
+msgstr "Hs. Equipo"
+
+msgctxt "field:lims.create_sample.start,hours_oil:"
+msgid "Hs. Oil"
+msgstr "Hs. Aceite"
 
 msgctxt "field:lims.create_sample.start,ind_analysis_reason:"
 msgid "Reason for analysis"
@@ -417,6 +433,10 @@ msgstr "Foto etiqueta"
 msgctxt "field:lims.create_sample.start,missing_data:"
 msgid "Missing data"
 msgstr "Falta información"
+
+msgctxt "field:lims.create_sample.start,oil_added:"
+msgid "Liters Oil added"
+msgstr "Litros aceite agregado"
 
 msgctxt "field:lims.create_sample.start,sample_photo:"
 msgid "Sample Photo"
@@ -770,6 +790,10 @@ msgctxt "field:lims.sample,attributes_domain:"
 msgid "Attributes domain"
 msgstr "Dominio para Atributos"
 
+msgctxt "field:lims.sample,changed_oil:"
+msgid "Did change Oil?"
+msgstr "Cambió aceite?"
+
 msgctxt "field:lims.sample,comercial_product:"
 msgid "Comercial Product"
 msgstr "Producto comercial"
@@ -781,6 +805,18 @@ msgstr "Componente"
 msgctxt "field:lims.sample,equipment:"
 msgid "Equipment"
 msgstr "Equipo"
+
+msgctxt "field:lims.sample,hours_component:"
+msgid "Hs. Component"
+msgstr "Hs. Componente"
+
+msgctxt "field:lims.sample,hours_equipment:"
+msgid "Hs. Equipment"
+msgstr "Hs. Equipo"
+
+msgctxt "field:lims.sample,hours_oil:"
+msgid "Hs. Oil"
+msgstr "Hs. Aceite"
 
 msgctxt "field:lims.sample,ind_analysis_reason:"
 msgid "Reason for analysis"
@@ -813,6 +849,10 @@ msgstr "ID Foto etiqueta"
 msgctxt "field:lims.sample,missing_data:"
 msgid "Missing data"
 msgstr "Falta información"
+
+msgctxt "field:lims.sample,oil_added:"
+msgid "Liters Oil added"
+msgstr "Litros aceite agregado"
 
 msgctxt "field:lims.sample,sample_photo:"
 msgid "Sample Photo"

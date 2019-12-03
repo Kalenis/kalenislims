@@ -58,6 +58,11 @@ class Sample(metaclass=PoolMeta):
     label_photo = fields.Binary('Label Photo',
         file_id='label_photo_id', store_prefix='sample')
     label_photo_id = fields.Char('Label Photo ID', readonly=True)
+    oil_added = fields.Float('Liters Oil added')
+    hours_equipment = fields.Integer('Hs. Equipment')
+    hours_component = fields.Integer('Hs. Component')
+    hours_oil = fields.Integer('Hs. Oil')
+    changed_oil = fields.Boolean('Did change Oil?')
 
     @fields.depends('component')
     def on_change_component(self):
@@ -162,6 +167,11 @@ class CreateSampleStart(metaclass=PoolMeta):
         'on_change_with_attributes_domain')
     sample_photo = fields.Binary('Sample Photo')
     label_photo = fields.Binary('Label Photo')
+    oil_added = fields.Float('Liters Oil added')
+    hours_equipment = fields.Integer('Hs. Equipment')
+    hours_component = fields.Integer('Hs. Component')
+    hours_oil = fields.Integer('Hs. Oil')
+    changed_oil = fields.Boolean('Did change Oil?')
 
     @classmethod
     def __setup__(cls):
@@ -240,6 +250,16 @@ class CreateSample(metaclass=PoolMeta):
             getattr(self.start, 'sample_photo') or None)
         label_photo = (hasattr(self.start, 'label_photo') and
             getattr(self.start, 'label_photo') or None)
+        oil_added = (hasattr(self.start, 'oil_added') and
+            getattr(self.start, 'oil_added') or None)
+        hours_equipment = (hasattr(self.start, 'hours_equipment') and
+            getattr(self.start, 'hours_equipment') or None)
+        hours_component = (hasattr(self.start, 'hours_component') and
+            getattr(self.start, 'hours_component') or None)
+        hours_oil = (hasattr(self.start, 'hours_oil') and
+            getattr(self.start, 'hours_oil') or None)
+        changed_oil = (hasattr(self.start, 'changed_oil') and
+            getattr(self.start, 'changed_oil') or False)
 
         for sample_defaults in samples_defaults:
             sample_defaults['equipment'] = self.start.equipment.id
@@ -256,6 +276,11 @@ class CreateSample(metaclass=PoolMeta):
             sample_defaults['attributes'] = attributes
             sample_defaults['sample_photo'] = sample_photo
             sample_defaults['label_photo'] = label_photo
+            sample_defaults['oil_added'] = oil_added
+            sample_defaults['hours_equipment'] = hours_equipment
+            sample_defaults['hours_component'] = hours_component
+            sample_defaults['hours_oil'] = hours_oil
+            sample_defaults['changed_oil'] = changed_oil
 
         return samples_defaults
 
