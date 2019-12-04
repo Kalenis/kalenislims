@@ -116,13 +116,7 @@ class Project(metaclass=PoolMeta):
         'project', 'Samples in custody', states=STATES, depends=DEPENDS)
     stp_deviation_and_amendment = fields.One2Many(
         'lims.project.deviation_amendment', 'project',
-        'Deviations and Amendments', context={
-            'dev_amnd_prof_domain': Eval('dev_amnd_prof_domain'),
-            },
-        states=STATES, depends=['dev_amnd_prof_domain', 'stp_state'])
-    dev_amnd_prof_domain = fields.Function(fields.Many2Many(
-        'lims.laboratory.professional', None, None, 'Professional domain'),
-        'on_change_with_dev_amnd_prof_domain')
+        'Deviations and Amendments', states=STATES, depends=DEPENDS)
     stp_state = fields.Selection([
         ('', ''),
         ('canceled', 'Canceled'),
@@ -357,14 +351,6 @@ class Project(metaclass=PoolMeta):
                 if pp.role_quality_unit:
                     return pp.professional.id
         return None
-
-    @fields.depends('stp_laboratory_professionals')
-    def on_change_with_dev_amnd_prof_domain(self, name=None):
-        professionals = []
-        if self.stp_laboratory_professionals:
-            professionals = [pp.professional.id for pp in
-                self.stp_laboratory_professionals if pp.professional]
-        return professionals
 
     def get_stp_samples(self, name=None):
         Sample = Pool().get('lims.sample')
@@ -691,9 +677,12 @@ class ProjectDeviationAndAmendment(ModelSQL, ModelView):
     professionals = fields.One2Many(
         'lims.project.deviation_amendment.professional',
         'deviation_amendment', 'Staff involved', context={
-            'dev_amnd_prof_domain': Eval('context', {}).get(
-                'dev_amnd_prof_domain', []),
-            })
+            'dev_amnd_prof_domain': Eval('dev_amnd_prof_domain'),
+            },
+        depends=['dev_amnd_prof_domain'])
+    dev_amnd_prof_domain = fields.Function(fields.Many2Many(
+        'lims.laboratory.professional', None, None, 'Professional domain'),
+        'on_change_with_dev_amnd_prof_domain')
 
     @classmethod
     def __setup__(cls):
@@ -723,6 +712,14 @@ class ProjectDeviationAndAmendment(ModelSQL, ModelView):
             ])
         number += count
         return str(number)
+
+    @fields.depends('_parent_project.stp_laboratory_professionals')
+    def on_change_with_dev_amnd_prof_domain(self, name=None):
+        professionals = []
+        if self.project.stp_laboratory_professionals:
+            professionals = [pp.professional.id for pp in
+                self.project.stp_laboratory_professionals if pp.professional]
+        return professionals
 
 
 class ProjectDeviationAndAmendmentProfessional(ModelSQL, ModelView):
@@ -887,8 +884,8 @@ class CreateSample(metaclass=PoolMeta):
         sample_weight = (hasattr(self.start, 'sample_weight') and
             getattr(self.start, 'sample_weight') or None)
         balance_id = None
-        if (hasattr(self.start, 'balance')
-                and getattr(self.start, 'balance')):
+        if (hasattr(self.start, 'balance') and
+                getattr(self.start, 'balance')):
             balance_id = getattr(self.start, 'balance').id
         cultivation_zone = (hasattr(self.start, 'cultivation_zone') and
             getattr(self.start, 'cultivation_zone') or None)
@@ -1392,7 +1389,7 @@ class ProjectGLPReport06(Report):
         report_context['objects'] = objects
 
         return report_context
-    
+
     @classmethod
     def get_position_professional(cls, project_id):
         cursor = Transaction().connection.cursor()
@@ -1414,6 +1411,7 @@ class ProjectGLPReport06(Report):
         else:
             res = position[0]
         return res
+
 
 class ProjectGLPReport07(Report):
     'Table 1- Study plan'
@@ -1687,8 +1685,8 @@ class ProjectGLPReport10Print(Wizard):
             'date_from': self.start.date_from,
             'date_to': self.start.date_to,
             'stp_state': self.start.stp_state,
-            'professional': (self.start.professional 
-                and self.start.professional.id or None),
+            'professional': (self.start.professional and
+                self.start.professional.id or None),
             }
         return action, data
 
@@ -1731,8 +1729,8 @@ class ProjectGLPReport10(Report):
         objects = []
         for project in projects:
             if data['professional']:
-                if (project.stp_study_director and 
-                    data['professional'] == project.stp_study_director.id):
+                if (project.stp_study_director and
+                        data['professional'] == project.stp_study_director.id):
                     objects.append({
                         'stp_number': project.stp_number,
                         'stp_code': project.code,
@@ -1831,6 +1829,7 @@ class ProjectGLPReport10(Report):
         else:
             res = position[0]
         return res
+
 
 class ProjectGLPReport11(Report):
     'Reference/Test elements (FOR)'
@@ -2030,10 +2029,8 @@ class ProjectGLPReportStudyPlan(Report):
         report_context['stp_proposal_start_date'] = (
             project.stp_proposal_start_date)
         report_context['stp_proposal_end_date'] = project.stp_proposal_end_date
-        report_context['stp_test_method'] = str(project.stp_test_method
-            or '')
-        report_context['stp_test_system'] = str(project.stp_test_system
-            or '')
+        report_context['stp_test_method'] = str(project.stp_test_method or '')
+        report_context['stp_test_system'] = str(project.stp_test_system or '')
         report_context['stp_study_director'] = None
         report_context['stp_study_director_date'] = None
         report_context['stp_quality_unit'] = None
@@ -2145,8 +2142,7 @@ class ProjectGLPReportFinalRP(Report):
             cls.get_experimental_end_date(project.id))
         report_context['stp_lims_sample_input'] = (
             cls.get_lims_sample_input(project.id))
-        report_context['stp_test_method'] = str(project.stp_test_method
-            or '')
+        report_context['stp_test_method'] = str(project.stp_test_method or '')
         report_context['stp_solvents_and_reagents'] = (
             project.stp_solvents_and_reagents)
         report_context['stp_results_reports_list'] = ', '.join([
@@ -2395,8 +2391,7 @@ class ProjectGLPReportFinalFOR(Report):
             cls.get_lims_sample_input(project.id))
         report_context['stp_all_professionals'] = (
             cls.get_laboratory_professionals(project.id))
-        report_context['stp_test_method'] = str(project.stp_test_method
-            or '')
+        report_context['stp_test_method'] = str(project.stp_test_method or '')
         report_context['stp_reference_elements'] = [e for e in
             project.stp_reference_elements if e.type == 'reference']
         report_context['stp_solvents_and_reagents'] = (
@@ -2635,8 +2630,7 @@ class ProjectGLPReportAnalyticalPhase(Report):
             cls.get_lims_sample_input(project.id))
         report_context['stp_all_professionals'] = (
             cls.get_laboratory_professionals(project.id))
-        report_context['stp_test_method'] = str(project.stp_test_method
-            or '')
+        report_context['stp_test_method'] = str(project.stp_test_method or '')
         report_context['stp_solvents_and_reagents'] = (
             project.stp_solvents_and_reagents)
         report_context['stp_results_reports_list'] = ', '.join([
