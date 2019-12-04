@@ -76,10 +76,6 @@ msgctxt "field:lims.lab.workyear,project_study_plan_sequence:"
 msgid "Study plan Projects Sequence"
 msgstr "Secuencia de Proyectos Plan de estudio"
 
-msgctxt "field:lims.project,dev_amnd_prof_domain:"
-msgid "Professional domain"
-msgstr "Dominio para Profesional"
-
 msgctxt "field:lims.project,min_qty_sample:"
 msgid "Minimum quantity of sample"
 msgstr "Cantidad mínima de muestra"
@@ -251,6 +247,10 @@ msgstr "Fecha"
 msgctxt "field:lims.project.deviation_amendment,description:"
 msgid "Description"
 msgstr "Descripción"
+
+msgctxt "field:lims.project.deviation_amendment,dev_amnd_prof_domain:"
+msgid "Professional domain"
+msgstr "Dominio para Profesional"
 
 msgctxt "field:lims.project.deviation_amendment,document_type:"
 msgid "Document Type"
