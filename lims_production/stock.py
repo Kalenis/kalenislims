@@ -533,9 +533,8 @@ class ShipmentIn(metaclass=PoolMeta):
         cls.inventory_moves.states['readonly'] = Eval('state').in_(
             ['draft', 'cancel'])
 
-    @classmethod
-    def _get_inventory_moves(cls, incoming_move):
-        move = super(ShipmentIn, cls)._get_inventory_moves(incoming_move)
+    def _get_inventory_move(self, incoming_move):
+        move = super(ShipmentIn, self)._get_inventory_move(incoming_move)
         if not move:
             return None
 
