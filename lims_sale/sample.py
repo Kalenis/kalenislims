@@ -2,11 +2,11 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond.model import fields
+from trytond.model import ModelSQL, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 
-__all__ = ['CreateSampleStart']
+__all__ = ['CreateSampleStart', 'CreateSample', 'Sample', 'SampleSaleLine']
 
 
 class CreateSampleStart(metaclass=PoolMeta):
@@ -54,3 +54,40 @@ class CreateSampleStart(metaclass=PoolMeta):
                 quoted_analysis.append(sale_line.analysis.id)
 
         return [a for a in analysis_domain if a in quoted_analysis]
+
+
+class CreateSample(metaclass=PoolMeta):
+    __name__ = 'lims.create_sample'
+
+    def _get_samples_defaults(self, entry_id):
+        samples_defaults = super(CreateSample,
+            self)._get_samples_defaults(entry_id)
+
+        analysis = [s.analysis.id for s in self.start.services]
+        sale_lines = []
+        for line in self.start.sale_lines:
+            if line.analysis and line.analysis.id in analysis:
+                sale_lines.append(line.id)
+
+        if sale_lines:
+            for sample in samples_defaults:
+                sample['sale_lines'] = [('add', sale_lines)]
+        return samples_defaults
+
+
+class Sample(metaclass=PoolMeta):
+    __name__ = 'lims.sample'
+
+    sale_lines = fields.Many2Many('lims.sample-sale.line',
+        'sample', 'sale_line', 'Quotes', readonly=True)
+
+
+class SampleSaleLine(ModelSQL):
+    'Sample - Sale Line'
+    __name__ = 'lims.sample-sale.line'
+    _table = 'lims_sample_sale_line'
+
+    sample = fields.Many2One('lims.sample', 'Sample',
+        ondelete='CASCADE', select=True, required=True)
+    sale_line = fields.Many2One('sale.line', 'Sale Line',
+        ondelete='CASCADE', select=True, required=True)

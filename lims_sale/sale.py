@@ -247,6 +247,8 @@ class SaleLine(metaclass=PoolMeta):
     unlimited_quantity = fields.Boolean('Unlimited quantity',
         states={'readonly': Eval('sale_state') != 'draft'},
         depends=['sale_state'])
+    samples = fields.Many2Many('lims.sample-sale.line',
+        'sale_line', 'sample', 'Samples', readonly=True)
 
     @staticmethod
     def default_product_type_domain():

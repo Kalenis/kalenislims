@@ -10,6 +10,42 @@ msgctxt "field:lims.create_sample.start,sale_lines_domain:"
 msgid "Quotes domain"
 msgstr "Dominio para Presupuestos"
 
+msgctxt "field:lims.sample,sale_lines:"
+msgid "Quotes"
+msgstr "Presupuestos"
+
+msgctxt "field:lims.sample-sale.line,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.sample-sale.line,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.sample-sale.line,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.sample-sale.line,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.sample-sale.line,sale_line:"
+msgid "Sale Line"
+msgstr "Línea de venta"
+
+msgctxt "field:lims.sample-sale.line,sample:"
+msgid "Sample"
+msgstr "Muestra"
+
+msgctxt "field:lims.sample-sale.line,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.sample-sale.line,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
 msgctxt "field:party.party,internal_code:"
 msgid "Internal Code"
 msgstr "Código interno"
@@ -114,6 +150,10 @@ msgctxt "field:sale.line,purchase_order:"
 msgid "PO Nº"
 msgstr "OC Nº"
 
+msgctxt "field:sale.line,samples:"
+msgid "Samples"
+msgstr "Muestras"
+
 msgctxt "field:sale.line,unlimited_quantity:"
 msgid "Unlimited quantity"
 msgstr "Cantidad ilimitada"
@@ -202,6 +242,10 @@ msgctxt "model:ir.ui.menu,name:menu_sale_clause"
 msgid "Clauses"
 msgstr "Cláusulas"
 
+msgctxt "model:lims.sample-sale.line,name:"
+msgid "Sample - Sale Line"
+msgstr "Muestra - Línea de venta"
+
 msgctxt "model:sale.clause,name:"
 msgid "Clause"
 msgstr "Cláusula"
@@ -217,6 +261,10 @@ msgstr "Venta - Cláusula"
 msgctxt "view:party.party:"
 msgid "Sale"
 msgstr "Venta"
+
+msgctxt "view:sale.line:"
+msgid "Samples"
+msgstr "Muestras"
 
 msgctxt "view:sale.load_services.start:"
 msgid "Load Services from Entry"
