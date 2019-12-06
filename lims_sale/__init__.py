@@ -19,7 +19,10 @@ def register():
         sale.SaleLine,
         sale.SaleLoadServicesStart,
         sample.CreateSampleStart,
+        sample.Sample,
+        sample.SampleSaleLine,
         module='lims_sale', type_='model')
     Pool.register(
         sale.SaleLoadServices,
+        sample.CreateSample,
         module='lims_sale', type_='wizard')
