@@ -2379,7 +2379,7 @@ class ResultReport(Report):
                                 report_context['user'].language))
                     else:
                         fractions[key]['water_sampling_date'] = gettext(
-                            'not_done')
+                            'lims.msg_not_done')
 
             record = {
                 'order': t_line.analysis.order or 9999,
@@ -2596,12 +2596,14 @@ class ResultReport(Report):
                         elif conc_is_numeric and numeric_conc < 100:
                             fraction['concentrations'][conc]['label'] = (
                                 gettext(
-                                    'concentration_label_2', concentration=conc
+                                    'lims.msg_concentration_label_2',
+                                    concentration=conc
                                     ))
                         else:
                             fraction['concentrations'][conc]['label'] = (
                                 gettext(
-                                    'concentration_label_3', concentration=conc
+                                    'lims.msg_concentration_label_3',
+                                    concentration=conc
                                     ))
 
                     show_unit_label = False
@@ -2620,19 +2622,19 @@ class ResultReport(Report):
                                     fraction['concentrations'][conc][
                                             'unit_label'] = (
                                         gettext(
-                                            'final_unit_label_1',
+                                            'lims.msg_final_unit_label_1',
                                             concentration=conc))
                                 else:
                                     fraction['concentrations'][conc][
                                             'unit_label'] = (
                                         gettext(
-                                            'final_unit_label_3',
+                                            'lims.msg_final_unit_label_3',
                                             concentration=conc))
                             else:
                                 fraction['concentrations'][conc][
                                         'unit_label'] = (
                                     gettext(
-                                        'final_unit_label_2',
+                                        'lims.msg_final_unit_label_2',
                                         concentration=conc))
 
         report_context['fractions'] = sorted_fractions
@@ -2844,7 +2846,7 @@ class ResultReport(Report):
                             res = int(res)
                         if converted_result_modifier == 'low':
                             res = gettext(
-                                'quantification_limit', loq=res)
+                                'lims.msg_quantification_limit', loq=res)
                             obs_ql = True
             return res, obs_ql
 
@@ -2933,7 +2935,7 @@ class ResultReport(Report):
                     else:
                         res = gettext('lims.msg_detection_limit',
                             detection_limit=detection_limit,
-                            final_unit=final_unit)
+                            initial_unit=final_unit)
                         obs_dl = True
                 else:
                     if not converted_result:
@@ -2944,7 +2946,7 @@ class ResultReport(Report):
                             if decimals == 0:
                                 res = int(res)
                             res = gettext('lims.msg_uncertainty',
-                                res=res, final_unit=final_unit)
+                                res=res, initial_unit=final_unit)
                             obs_uncert = True
             return res, obs_dl, obs_uncert
 
