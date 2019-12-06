@@ -39,8 +39,12 @@ class Sale(metaclass=PoolMeta):
         states={'readonly': ~Eval('state').in_(['draft', 'quotation'])},
         depends=['state'])
     clauses = fields.Many2Many('sale.sale-sale.clause', 'sale', 'clause',
-        'Clauses')
-    send_email = fields.Boolean('Send automatically by Email')
+        'Clauses',
+        states={'readonly': Eval('state') != 'draft'},
+        depends=['state'])
+    send_email = fields.Boolean('Send automatically by Email',
+        states={'readonly': Eval('state') != 'draft'},
+        depends=['state'])
 
     @classmethod
     def __setup__(cls):
@@ -194,40 +198,55 @@ class SaleLine(metaclass=PoolMeta):
     product_type = fields.Many2One('lims.product.type', 'Product type',
         domain=['OR', ('id', '=', Eval('product_type')),
             ('id', 'in', Eval('product_type_domain'))],
-        depends=['product_type_domain'])
+        states={'readonly': Eval('sale_state') != 'draft'},
+        depends=['product_type_domain', 'sale_state'])
     product_type_domain = fields.Function(fields.Many2Many('lims.product.type',
         None, None, 'Product type domain'),
         'on_change_with_product_type_domain')
     matrix = fields.Many2One('lims.matrix', 'Matrix',
         domain=['OR', ('id', '=', Eval('matrix')),
             ('id', 'in', Eval('matrix_domain'))],
-        depends=['matrix_domain', 'services'])
+        states={'readonly': Eval('sale_state') != 'draft'},
+        depends=['matrix_domain', 'services', 'sale_state'])
     matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
         None, None, 'Matrix domain'), 'on_change_with_matrix_domain')
     analysis = fields.Many2One('lims.analysis', 'Service',
         domain=['OR', ('id', '=', Eval('analysis')),
             ('id', 'in', Eval('analysis_domain'))],
-        depends=['analysis_domain'])
+        states={'readonly': Eval('sale_state') != 'draft'},
+        depends=['analysis_domain', 'sale_state'])
     analysis_domain = fields.Function(fields.Many2Many('lims.analysis',
         None, None, 'Analysis domain'), 'on_change_with_analysis_domain')
     method = fields.Many2One('lims.lab.method', 'Method',
         domain=['OR', ('id', '=', Eval('method')),
             ('id', 'in', Eval('method_domain'))],
-        states={'invisible': Bool(Eval('method_invisible'))},
-        depends=['method_domain', 'method_invisible'])
+        states={
+            'invisible': Bool(Eval('method_invisible')),
+            'readonly': Eval('sale_state') != 'draft',
+            },
+        depends=['method_domain', 'method_invisible', 'sale_state'])
     method_invisible = fields.Function(fields.Boolean('Method invisible'),
         'on_change_with_method_invisible')
     method_domain = fields.Function(fields.Many2Many('lims.lab.method',
         None, None, 'Method domain'), 'on_change_with_method_domain')
-    expiration_date = fields.Date('Expiration date')
-    print_price = fields.Boolean('Print price on quotation')
+    expiration_date = fields.Date('Expiration date',
+        states={'readonly': Eval('sale_state') != 'draft'},
+        depends=['sale_state'])
+    print_price = fields.Boolean('Print price on quotation',
+        states={'readonly': Eval('sale_state') != 'draft'},
+        depends=['sale_state'])
     print_service_detail = fields.Boolean('Print service detail',
-        states={'invisible': Bool(Eval('print_service_detail_invisible'))},
-        depends=['print_service_detail_invisible'])
+        states={
+            'invisible': Bool(Eval('print_service_detail_invisible')),
+            'readonly': Eval('sale_state') != 'draft',
+            },
+        depends=['print_service_detail_invisible', 'sale_state'])
     print_service_detail_invisible = fields.Function(fields.Boolean(
         'Print service detail invisible'),
         'on_change_with_print_service_detail_invisible')
-    unlimited_quantity = fields.Boolean('Unlimited quantity')
+    unlimited_quantity = fields.Boolean('Unlimited quantity',
+        states={'readonly': Eval('sale_state') != 'draft'},
+        depends=['sale_state'])
 
     @staticmethod
     def default_product_type_domain():

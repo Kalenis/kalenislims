@@ -64,6 +64,12 @@ class Sample(metaclass=PoolMeta):
     hours_oil = fields.Integer('Hs. Oil')
     changed_oil = fields.Boolean('Did change Oil?')
 
+    @classmethod
+    def __setup__(cls):
+        super(Sample, cls).__setup__()
+        cls.product_type.states['readonly'] = True
+        cls.matrix.states['readonly'] = True
+
     @fields.depends('component')
     def on_change_component(self):
         if self.component:
@@ -178,6 +184,8 @@ class CreateSampleStart(metaclass=PoolMeta):
         super(CreateSampleStart, cls).__setup__()
         for field in ('component', 'comercial_product'):
             cls.analysis_domain.on_change_with.add(field)
+        cls.product_type.states['readonly'] = True
+        cls.matrix.states['readonly'] = True
 
     @fields.depends('component')
     def on_change_component(self):
