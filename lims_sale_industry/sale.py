@@ -7,7 +7,7 @@ from trytond.wizard import Wizard, StateView, StateTransition, StateReport, \
     StateAction, Button
 from trytond.report import Report
 from trytond.pool import PoolMeta, Pool
-from trytond.pyson import PYSONEncoder, Eval, And, Bool, If
+from trytond.pyson import PYSONEncoder, Eval, And, Bool, If, Or
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
@@ -22,23 +22,26 @@ __all__ = ['Sale', 'SalePlant', 'SaleEquipment', 'SaleComponent',
 class Sale(metaclass=PoolMeta):
     __name__ = 'sale.sale'
 
-    lubrication_plan = fields.Boolean('Lubrication plan')
+    _states = {'readonly': Eval('state') != 'draft'}
+
+    lubrication_plan = fields.Boolean('Lubrication plan',
+        states=_states, depends=['state'])
     plants = fields.Many2Many('sale.sale-lims.plant',
         'sale', 'plant', 'Plants',
         domain=[('party', '=', Eval('party'))],
-        depends=['party'])
+        states=_states, depends=['party', 'state'])
     equipments = fields.Many2Many('sale.sale-lims.equipment',
         'sale', 'equipment', 'Equipments',
         domain=[('plant', 'in', Eval('plants'))],
-        depends=['plants'])
+        states=_states, depends=['plants', 'state'])
     components = fields.Many2Many('sale.sale-lims.component',
         'sale', 'component', 'Components',
         domain=[('equipment', 'in', Eval('equipments'))],
-        depends=['equipments'])
+        states=_states, depends=['equipments', 'state'])
     contacts = fields.Many2Many('sale.sale-party.address',
         'sale', 'address', 'Contacts',
         domain=[('id', 'in', Eval('contacts_domain'))],
-        depends=['contacts_domain'])
+        states=_states, depends=['contacts_domain', 'state'])
     contacts_domain = fields.Function(fields.Many2Many('party.address',
         None, None, 'Contacts domain'), 'on_change_with_contacts_domain')
     label_from = fields.Integer('Label from', readonly=True)
@@ -151,20 +154,20 @@ class SaleLine(metaclass=PoolMeta):
     plants = fields.Many2Many('sale.line-lims.plant',
         'line', 'plant', 'Plants',
         states={
-            'readonly': Bool(Eval('_parent_sale', {}).get(
-                'plants', False)),
+            'readonly': Or(Eval('sale_state') != 'draft',
+                Bool(Eval('_parent_sale', {}).get('plants', False))),
             'required': And(
                 Bool(Eval('_parent_sale', {}).get('lubrication_plan', False)),
                 Bool(Eval('analysis')),
                 ~Bool(Eval('_parent_sale', {}).get('plants', []))),
             },
         domain=[('party', '=', Eval('_parent_sale', {}).get('party', None))],
-        depends=['_parent_sale', 'analysis'])
+        depends=['_parent_sale', 'analysis', 'sale_state'])
     equipments = fields.Many2Many('sale.line-lims.equipment',
         'line', 'equipment', 'Equipments',
         states={
-            'readonly': Bool(Eval('_parent_sale', {}).get(
-                'equipments', False)),
+            'readonly': Or(Eval('sale_state') != 'draft',
+                Bool(Eval('_parent_sale', {}).get('equipments', False))),
             'required': And(
                 Bool(Eval('_parent_sale', {}).get('lubrication_plan', False)),
                 Bool(Eval('analysis')),
@@ -173,12 +176,12 @@ class SaleLine(metaclass=PoolMeta):
         domain=[If(Bool(Eval('plants')),
             ('plant', 'in', Eval('plants')),
             ('plant', 'in', Eval('_parent_sale', {}).get('plants', [])))],
-        depends=['plants', '_parent_sale', 'analysis'])
+        depends=['plants', '_parent_sale', 'analysis', 'sale_state'])
     components = fields.Many2Many('sale.line-lims.component',
         'line', 'component', 'Components',
         states={
-            'readonly': Bool(Eval('_parent_sale', {}).get(
-                'components', False)),
+            'readonly': Or(Eval('sale_state') != 'draft',
+                Bool(Eval('_parent_sale', {}).get('components', False))),
             'required': And(
                 Bool(Eval('_parent_sale', {}).get('lubrication_plan', False)),
                 Bool(Eval('analysis')),
@@ -188,25 +191,28 @@ class SaleLine(metaclass=PoolMeta):
             ('equipment', 'in', Eval('equipments')),
             ('equipment', 'in', Eval('_parent_sale', {}).get(
                 'equipments', [])))],
-        depends=['equipments', '_parent_sale', 'analysis'])
+        depends=['equipments', '_parent_sale', 'analysis', 'sale_state'])
     label_from = fields.Integer('Label from', readonly=True,
-        depends=['_parent_sale'], states={
+        states={
             'invisible': ~Bool(Eval('_parent_sale', {}).get(
                 'lubrication_plan', False)),
-            })
+            'readonly': Eval('sale_state') != 'draft',
+            },
+        depends=['_parent_sale', 'sale_state'])
     label_to = fields.Integer('Label to', readonly=True,
-        depends=['_parent_sale'], states={
+        states={
             'invisible': ~Bool(Eval('_parent_sale', {}).get(
                 'lubrication_plan', False)),
-            })
+            'readonly': Eval('sale_state') != 'draft',
+            },
+        depends=['_parent_sale', 'sale_state'])
 
     @classmethod
     def __setup__(cls):
         super(SaleLine, cls).__setup__()
-        cls.expiration_date.states = {
-            'required': And(
+        cls.expiration_date.states['required'] = And(
                 Bool(Eval('_parent_sale', {}).get('lubrication_plan', False)),
-                Bool(Eval('analysis')))}
+                Bool(Eval('analysis')))
         cls.expiration_date.depends.extend(['_parent_sale', 'analysis'])
 
     @classmethod
