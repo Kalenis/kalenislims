@@ -21,7 +21,10 @@
 
     <xpath expr="/form/notebook/page[@id='sale']/field[@name='currency']"
         position="after">
-        <button name="load_services" colspan="2"/>
+        <group col="2" colspan="2" id="lims_buttons">
+            <button name="load_services"/>
+            <button name="load_set_group"/>
+        </group>
     </xpath>
 
     <xpath
