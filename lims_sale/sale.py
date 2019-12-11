@@ -16,7 +16,7 @@ from trytond.config import config
 from trytond.tools import get_smtp_server
 
 __all__ = ['Sale', 'SaleClause', 'SaleLine', 'SaleLoadServicesStart',
-    'SaleLoadServices']
+    'SaleLoadServices', 'SaleLoadAnalysisStart', 'SaleLoadAnalysis']
 logger = logging.getLogger(__name__)
 
 
@@ -55,6 +55,9 @@ class Sale(metaclass=PoolMeta):
             'load_services': {
                 'invisible': (Eval('state') != 'draft'),
                 },
+            'load_set_group': {
+                'invisible': (Eval('state') != 'draft'),
+                },
             })
 
     @fields.depends('party', 'invoice_party')
@@ -90,6 +93,11 @@ class Sale(metaclass=PoolMeta):
     @classmethod
     @ModelView.button_action('lims_sale.wiz_sale_load_services')
     def load_services(cls, sales):
+        pass
+
+    @classmethod
+    @ModelView.button_action('lims_sale.wiz_sale_load_set_group')
+    def load_set_group(cls, sales):
         pass
 
     @classmethod
@@ -465,5 +473,55 @@ class SaleLoadServices(Wizard):
             sale_line.on_change_product()
             sale_lines.append(sale_line)
         SaleLine.save(sale_lines)
+        return 'end'
 
+
+class SaleLoadAnalysisStart(ModelView):
+    'Load Analysis from Set/Group'
+    __name__ = 'sale.load_set_group.start'
+
+    analysis = fields.Many2One('lims.analysis', 'Set/Group', required=True,
+        domain=[('type', 'in', ['set', 'group'])])
+
+
+class SaleLoadAnalysis(Wizard):
+    'Load Analysis from Set/Group'
+    __name__ = 'sale.load_set_group'
+
+    start = StateView('sale.load_set_group.start',
+        'lims_sale.sale_load_set_group_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Load', 'load', 'tryton-ok', default=True),
+            ])
+    load = StateTransition()
+
+    def transition_load(self):
+        pool = Pool()
+        SaleLine = pool.get('sale.line')
+
+        sale_id = Transaction().context['active_id']
+
+        sale_services = {}
+        for analysis in self.start.analysis.all_included_analysis:
+            if not analysis.product:
+                continue
+            sale_services[analysis.id] = {
+                'quantity': 1,
+                'unit': analysis.product.default_uom.id,
+                'product': analysis.product.id,
+                'description': analysis.rec_name,
+                }
+
+        sale_lines = []
+        for service in sale_services.values():
+            sale_line = SaleLine(
+                quantity=service['quantity'],
+                unit=service['unit'],
+                product=service['product'],
+                description=service['description'],
+                sale=sale_id,
+                )
+            sale_line.on_change_product()
+            sale_lines.append(sale_line)
+        SaleLine.save(sale_lines)
         return 'end'

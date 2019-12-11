@@ -48,5 +48,25 @@
             <field name="model" search="[('model', '=', 'sale.sale')]"/>
         </record>
 
+<!-- Sale Load Analysis from Set/Group Wizard-->
+
+        <record model="ir.ui.view" id="sale_load_set_group_start_view_form">
+            <field name="model">sale.load_set_group.start</field>
+            <field name="type">form</field>
+            <field name="name">sale_load_set_group_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_sale_load_set_group">
+            <field name="name">Load Analysis from Set/Group</field>
+            <field name="wiz_name">sale.load_set_group</field>
+            <field name="model">sale.sale</field>
+        </record>
+
+        <record model="ir.model.button" id="sale_load_set_group_button">
+            <field name="name">load_set_group</field>
+            <field name="string">Load Analysis from Set/Group</field>
+            <field name="model" search="[('model', '=', 'sale.sale')]"/>
+        </record>
+
     </data>
 </tryton>

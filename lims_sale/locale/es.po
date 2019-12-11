@@ -170,6 +170,14 @@ msgctxt "field:sale.load_services.start,party:"
 msgid "Party"
 msgstr "Entidad"
 
+msgctxt "field:sale.load_set_group.start,analysis:"
+msgid "Set/Group"
+msgstr "Set/Grupo"
+
+msgctxt "field:sale.load_set_group.start,id:"
+msgid "ID"
+msgstr "ID"
+
 msgctxt "field:sale.sale,clauses:"
 msgid "Clauses"
 msgstr "Cláusulas"
@@ -234,9 +242,17 @@ msgctxt "model:ir.action,name:wiz_sale_load_services"
 msgid "Load Services from Entry"
 msgstr "Cargar servicios desde ingreso"
 
+msgctxt "model:ir.action,name:wiz_sale_load_set_group"
+msgid "Load Analysis from Set/Group"
+msgstr "Cargar análisis desde Set/Grupo"
+
 msgctxt "model:ir.model.button,string:sale_load_services_button"
 msgid "Load Services from Entry"
 msgstr "Cargar servicios desde partida"
+
+msgctxt "model:ir.model.button,string:sale_load_set_group_button"
+msgid "Load Analysis from Set/Group"
+msgstr "Cargar análisis desde Set/Grupo"
 
 msgctxt "model:ir.ui.menu,name:menu_sale_clause"
 msgid "Clauses"
@@ -253,6 +269,10 @@ msgstr "Cláusula"
 msgctxt "model:sale.load_services.start,name:"
 msgid "Load Services from Entry"
 msgstr "Cargar servicios desde ingreso"
+
+msgctxt "model:sale.load_set_group.start,name:"
+msgid "Load Analysis from Set/Group"
+msgstr "Cargar análisis desde Set/Grupo"
 
 msgctxt "model:sale.sale-sale.clause,name:"
 msgid "Sale - Clause"
@@ -279,5 +299,13 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 msgctxt "wizard_button:sale.load_services,start,load:"
+msgid "Load"
+msgstr "Cargar"
+
+msgctxt "wizard_button:sale.load_set_group,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:sale.load_set_group,start,load:"
 msgid "Load"
 msgstr "Cargar"
