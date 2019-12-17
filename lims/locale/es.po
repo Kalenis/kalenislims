@@ -5793,6 +5793,10 @@ msgctxt "field:lims.results_report,single_sending_report_ready:"
 msgid "Single sending Ready"
 msgstr "Listo para Envío único"
 
+msgctxt "field:lims.results_report,state:"
+msgid "State"
+msgstr "Estado"
+
 msgctxt "field:lims.results_report,versions:"
 msgid "Laboratories"
 msgstr "Laboratorios"
