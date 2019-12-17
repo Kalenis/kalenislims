@@ -518,7 +518,6 @@ class SaleLoadAnalysis(Wizard):
                 quantity=service['quantity'],
                 unit=service['unit'],
                 product=service['product'],
-                description=service['description'],
                 sale=sale_id,
                 )
             sale_line.on_change_product()
