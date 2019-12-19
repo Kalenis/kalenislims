@@ -1484,6 +1484,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
 class AnalysisIncluded(ModelSQL, ModelView):
     'Included Analysis'
     __name__ = 'lims.analysis.included'
+    _rec_name = 'included_analysis'
 
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
         ondelete='CASCADE', select=True)
@@ -1852,6 +1853,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
 class AnalysisLaboratory(ModelSQL, ModelView):
     'Analysis - Laboratory'
     __name__ = 'lims.analysis-laboratory'
+    _rec_name = 'laboratory'
 
     analysis = fields.Many2One('lims.analysis', 'Analysis',
         ondelete='CASCADE', select=True, required=True)
@@ -1893,6 +1895,7 @@ class AnalysisLabMethod(ModelSQL):
 class AnalysisDevice(ModelSQL, ModelView):
     'Analysis Device'
     __name__ = 'lims.analysis.device'
+    _rec_name = 'device'
 
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
         ondelete='CASCADE', select=True)
@@ -1925,13 +1928,6 @@ class AnalysisDevice(ModelSQL, ModelView):
                 ])
             if devices:
                 raise UserError(gettext('lims.msg_default_device'))
-
-    @classmethod
-    def search_rec_name(cls, name, clause):
-        return ['OR',
-            ('laboratory.code',) + tuple(clause[1:]),
-            ('laboratory.description',) + tuple(clause[1:]),
-            ]
 
 
 class CopyTypificationStart(ModelView):
