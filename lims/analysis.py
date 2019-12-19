@@ -1773,6 +1773,11 @@ class AnalysisIncluded(ModelSQL, ModelView):
                         if da in ia:
                             ia.remove(da)
                 if not ia:
+                    t_set_group = CalculatedTypification.search([
+                        ('analysis', '=', set_group_id),
+                        ])
+                    if t_set_group:
+                        CalculatedTypification.delete(t_set_group)
                     continue
                 included_ids = ', '.join(str(a) for a in ia)
 
@@ -1782,6 +1787,11 @@ class AnalysisIncluded(ModelSQL, ModelView):
                         'AND analysis IN (' + included_ids + ')')
                 typifications = cursor.fetchall()
                 if not typifications:
+                    t_set_group = CalculatedTypification.search([
+                        ('analysis', '=', set_group_id),
+                        ])
+                    if t_set_group:
+                        CalculatedTypification.delete(t_set_group)
                     continue
 
                 for typification in typifications:
