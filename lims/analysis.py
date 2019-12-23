@@ -1771,16 +1771,20 @@ class AnalysisIncluded(ModelSQL, ModelView):
         Typification = pool.get('lims.typification')
         CalculatedTypification = pool.get('lims.typification.calculated')
 
+        deleted_analysis = []
         for included in included_analysis:
             if included.analysis.state != 'active':
                 continue
             if included.included_analysis.type == 'analysis':
-                deleted_analysis = [included.included_analysis.id]
+                deleted_analysis.append(included.included_analysis.id)
             else:
-                deleted_analysis = (
+                deleted_analysis.extend(
                     Analysis.get_included_analysis_analysis(
                         included.included_analysis.id))
 
+        for included in included_analysis:
+            if included.analysis.state != 'active':
+                continue
             sets_groups_ids = [included.analysis.id]
             sets_groups_ids.extend(Analysis.get_parents_analysis(
                 included.analysis.id))
@@ -1789,10 +1793,9 @@ class AnalysisIncluded(ModelSQL, ModelView):
 
                 ia = Analysis.get_included_analysis_analysis(
                     set_group_id)
-                if deleted_analysis:
-                    for da in deleted_analysis:
-                        if da in ia:
-                            ia.remove(da)
+                for da in deleted_analysis:
+                    if da in ia:
+                        ia.remove(da)
                 if not ia:
                     t_set_group = CalculatedTypification.search([
                         ('analysis', '=', set_group_id),
