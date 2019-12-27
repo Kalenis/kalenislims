@@ -301,6 +301,9 @@
         <record model="ir.message" id="msg_pos">
             <field name="text">Positive</field>
         </record>
+        <record model="ir.message" id="msg_d">
+            <field name="text">Detected</field>
+        </record>
         <record model="ir.message" id="msg_nd">
             <field name="text">Not detected</field>
         </record>
