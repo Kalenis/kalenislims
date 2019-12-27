@@ -855,6 +855,7 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
     result_modifier = fields.Function(fields.Selection([
         ('eq', '='),
         ('low', '<'),
+        ('d', 'Detected'),
         ('nd', 'nd'),
         ('na', 'na'),
         ('pos', 'Positive'),
@@ -2810,6 +2811,8 @@ class ResultReport(Report):
                     elif result_modifier == 'low':
                         res = gettext('lims.msg_quantification_limit', loq=res)
                         obs_ql = True
+                    elif result_modifier == 'd':
+                        res = gettext('lims.msg_d')
                     elif result_modifier == 'nd':
                         res = gettext('lims.msg_nd')
                     elif result_modifier == 'ni':
@@ -2838,6 +2841,8 @@ class ResultReport(Report):
                         res = res
                     elif result_modifier == 'low':
                         res = '< %s' % res
+                    elif result_modifier == 'd':
+                        res = gettext('lims.msg_d')
                     elif result_modifier == 'nd':
                         res = gettext('lims.msg_nd')
                     elif result_modifier == 'pos':
@@ -2874,6 +2879,8 @@ class ResultReport(Report):
                     res = gettext('lims.msg_pre')
                 elif converted_result_modifier == 'abs':
                     res = gettext('lims.msg_abs')
+                elif converted_result_modifier == 'd':
+                    res = gettext('lims.msg_d')
                 elif converted_result_modifier == 'nd':
                     res = gettext('lims.msg_nd')
                 else:

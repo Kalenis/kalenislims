@@ -370,6 +370,10 @@ msgctxt "model:ir.message,text:msg_abs"
 msgid "Absence"
 msgstr "Ausencia"
 
+msgctxt "model:ir.message,text:msg_d"
+msgid "Detected"
+msgstr "Detectado"
+
 msgctxt "model:ir.message,text:msg_obs_rm_c_f"
 msgid "Elements results are reported without recovery correction."
 msgstr ""
@@ -10260,6 +10264,11 @@ msgstr "Ausencia"
 
 msgctxt ""
 "selection:lims.notebook.internal_relations_calc_2.variable,result_modifier:"
+msgid "Detected"
+msgstr "Detectado"
+
+msgctxt ""
+"selection:lims.notebook.internal_relations_calc_2.variable,result_modifier:"
 msgid "Negative"
 msgstr "Negativo"
 
@@ -10325,6 +10334,10 @@ msgid "Absence"
 msgstr "Ausencia"
 
 msgctxt "selection:lims.notebook.line,result_modifier:"
+msgid "Detected"
+msgstr "Detectado"
+
+msgctxt "selection:lims.notebook.line,result_modifier:"
 msgid "Negative"
 msgstr "Negativo"
 
@@ -10385,6 +10398,10 @@ msgid "Absence"
 msgstr "Ausencia"
 
 msgctxt "selection:lims.notebook.line.all_fields,result_modifier:"
+msgid "Detected"
+msgstr "Detectado"
+
+msgctxt "selection:lims.notebook.line.all_fields,result_modifier:"
 msgid "Negative"
 msgstr "Negativo"
 
@@ -10419,6 +10436,10 @@ msgstr "="
 msgctxt "selection:lims.notebook.load_results_formula.action,result_modifier:"
 msgid "Absence"
 msgstr "Ausencia"
+
+msgctxt "selection:lims.notebook.load_results_formula.action,result_modifier:"
+msgid "Detected"
+msgstr "Detectado"
 
 msgctxt "selection:lims.notebook.load_results_formula.action,result_modifier:"
 msgid "Negative"
@@ -10458,6 +10479,11 @@ msgctxt ""
 "selection:lims.notebook.load_results_formula.process,result_modifier:"
 msgid "Absence"
 msgstr "Ausencia"
+
+msgctxt ""
+"selection:lims.notebook.load_results_formula.process,result_modifier:"
+msgid "Detected"
+msgstr "Detectado"
 
 msgctxt ""
 "selection:lims.notebook.load_results_formula.process,result_modifier:"
@@ -10500,6 +10526,10 @@ msgstr "="
 msgctxt "selection:lims.notebook.load_results_manual.line,result_modifier:"
 msgid "Absence"
 msgstr "Ausencia"
+
+msgctxt "selection:lims.notebook.load_results_manual.line,result_modifier:"
+msgid "Detected"
+msgstr "Detectado"
 
 msgctxt "selection:lims.notebook.load_results_manual.line,result_modifier:"
 msgid "Negative"
@@ -10659,6 +10689,10 @@ msgstr "="
 msgctxt "selection:lims.results_report.version.detail.line,result_modifier:"
 msgid "Absence"
 msgstr "Ausencia"
+
+msgctxt "selection:lims.results_report.version.detail.line,result_modifier:"
+msgid "Detected"
+msgstr "Detectado"
 
 msgctxt "selection:lims.results_report.version.detail.line,result_modifier:"
 msgid "Negative"

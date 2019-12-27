@@ -298,6 +298,7 @@ class NotebookLine(ModelSQL, ModelView):
     result_modifier = fields.Selection([
         ('eq', '='),
         ('low', '<'),
+        ('d', 'Detected'),
         ('nd', 'nd'),
         ('na', 'na'),
         ('pos', 'Positive'),
@@ -720,9 +721,9 @@ class NotebookLine(ModelSQL, ModelView):
             elif not (self.result or self.converted_result or
                     self.literal_result or
                     self.result_modifier in
-                    ('nd', 'pos', 'neg', 'ni', 'abs', 'pre') or
+                    ('d', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre') or
                     self.converted_result_modifier in
-                    ('nd', 'pos', 'neg', 'ni', 'abs', 'pre')):
+                    ('d', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre')):
                 self.accepted = False
                 self.not_accepted_message = gettext('lims.msg_not_accepted_4')
             else:
@@ -939,6 +940,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     result_modifier = fields.Selection([
         ('eq', '='),
         ('low', '<'),
+        ('d', 'Detected'),
         ('nd', 'nd'),
         ('na', 'na'),
         ('pos', 'Positive'),
@@ -2000,6 +2002,7 @@ class NotebookInternalRelationsCalc2Variable(ModelSQL, ModelView):
     result_modifier = fields.Function(fields.Selection([
         ('eq', '='),
         ('low', '<'),
+        ('d', 'Detected'),
         ('nd', 'nd'),
         ('na', 'na'),
         ('pos', 'Positive'),
@@ -2488,6 +2491,7 @@ class NotebookLoadResultsFormulaAction(ModelSQL):
     result_modifier = fields.Selection([
         ('eq', '='),
         ('low', '<'),
+        ('d', 'Detected'),
         ('nd', 'nd'),
         ('na', 'na'),
         ('pos', 'Positive'),
@@ -2534,6 +2538,7 @@ class NotebookLoadResultsFormulaProcess(ModelView):
     result_modifier = fields.Selection([
         ('eq', '='),
         ('low', '<'),
+        ('d', 'Detected'),
         ('nd', 'nd'),
         ('na', 'na'),
         ('pos', 'Positive'),
@@ -3240,6 +3245,7 @@ class NotebookLoadResultsManualLine(ModelSQL, ModelView):
     result_modifier = fields.Selection([
         ('eq', '='),
         ('low', '<'),
+        ('d', 'Detected'),
         ('nd', 'nd'),
         ('na', 'na'),
         ('pos', 'Positive'),
@@ -3954,9 +3960,9 @@ class NotebookAcceptLines(Wizard):
             if not (notebook_line.result or notebook_line.converted_result or
                     notebook_line.literal_result or
                     notebook_line.result_modifier in
-                    ('nd', 'pos', 'neg', 'ni', 'abs', 'pre') or
+                    ('d', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre') or
                     notebook_line.converted_result_modifier in
-                    ('nd', 'pos', 'neg', 'ni', 'abs', 'pre')):
+                    ('d', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre')):
                 continue
             if (notebook_line.converted_result and
                     notebook_line.converted_result_modifier

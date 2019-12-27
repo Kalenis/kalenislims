@@ -344,10 +344,10 @@ class NotebookLoadResultsFile(Wizard):
                             ('result', 'in', [None, '']),
                             ('converted_result', 'in', [None, '']),
                             ('literal_result', 'in', [None, '']),
-                            ('result_modifier', 'not in', ['nd', 'pos', 'neg',
-                                'ni', 'abs', 'pre', 'na']),
+                            ('result_modifier', 'not in', ['d', 'nd', 'pos',
+                                'neg', 'ni', 'abs', 'pre', 'na']),
                             ('converted_result_modifier', 'not in',
-                                ['nd', 'pos', 'neg', 'ni', 'abs', 'pre']),
+                                ['d', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre']),
                             ]
                         line = NotebookLine.search(clause)
                         if line:
