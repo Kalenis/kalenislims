@@ -2596,7 +2596,7 @@ class ResultReport(Report):
             stp_polisample_project else 'False')
         report_context['water_project'] = 'True' if water_project else 'False'
 
-        if reference_sample.product_type.code == 'VINO':
+        if 'VINO' in reference_sample.product_type.code:
             alcohol = True
         if (report_context['report_section'] in ('amb', 'sq') and
                 reference_sample.matrix.code in ('SUELO', 'LODO')):
