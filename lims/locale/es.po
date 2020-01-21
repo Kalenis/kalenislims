@@ -14407,6 +14407,10 @@ msgctxt "field:lims.planification.search_fractions.detail,rec_name:"
 msgid "Name"
 msgstr "Nombre"
 
+msgctxt "field:lims.planification.search_fractions.detail,repetition:"
+msgid "Repetition"
+msgstr "Repetición"
+
 msgctxt "field:lims.planification.search_fractions.detail,report_date:"
 msgid "Date agreed for result"
 msgstr "Fecha pactada de resultado"
@@ -14485,6 +14489,10 @@ msgstr "Tipo de producto"
 msgctxt "field:lims.planification.search_planned_fractions.detail,rec_name:"
 msgid "Name"
 msgstr "Nombre"
+
+msgctxt "field:lims.planification.search_planned_fractions.detail,repetition:"
+msgid "Repetition"
+msgstr "Repetición"
 
 msgctxt ""
 "field:lims.planification.search_planned_fractions.detail,report_date:"

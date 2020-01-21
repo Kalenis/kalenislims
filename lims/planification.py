@@ -3643,6 +3643,7 @@ class SearchFractionsDetail(ModelSQL, ModelView):
     matrix = fields.Many2One('lims.matrix', 'Matrix')
     urgent = fields.Function(fields.Boolean('Urgent'), 'get_service_field')
     priority = fields.Function(fields.Integer('Priority'), 'get_service_field')
+    repetition = fields.Boolean('Repetition', readonly=True)
     report_date = fields.Function(fields.Date('Date agreed for result'),
         'get_service_field')
     session_id = fields.Integer('Session ID')
@@ -3759,6 +3760,7 @@ class SearchFractions(Wizard):
                 'service_analysis': k[1],
                 'product_type': v['product_type'],
                 'matrix': v['matrix'],
+                'repetition': v['repetition'],
                 })
         fractions_added = SearchFractionsDetail.create(to_create)
 
@@ -3847,16 +3849,18 @@ class SearchFractions(Wizard):
                 all_included_analysis_ids + ') ')
 
             if extra_where:
-                sample_select = ' '
+                sample_select = ''
                 sample_from = ''
+                repetition_select = ''
             else:
-                sample_select = ', smp.product_type, smp.matrix '
+                sample_select = ', smp.product_type, smp.matrix'
                 sample_from = (
                     'INNER JOIN "' + Sample._table + '" smp '
                     'ON smp.id = frc.sample ')
+                repetition_select = ', nl.repetition != 0'
 
-            sql_select = (
-                'SELECT nl.id, nb.fraction, srv.analysis' + sample_select)
+            sql_select = ('SELECT nl.id, nb.fraction, srv.analysis' +
+                sample_select + repetition_select + ' ')
 
             sql_from = (
                 'FROM "' + NotebookLine._table + '" nl '
@@ -3914,6 +3918,7 @@ class SearchFractions(Wizard):
                     result[(f_, s_)] = {
                         'product_type': nl[3],
                         'matrix': nl[4],
+                        'repetition': nl[5],
                         }
 
         return result
@@ -3962,6 +3967,7 @@ class SearchPlannedFractionsDetail(ModelSQL, ModelView):
     matrix = fields.Many2One('lims.matrix', 'Matrix')
     urgent = fields.Function(fields.Boolean('Urgent'), 'get_service_field')
     priority = fields.Function(fields.Integer('Priority'), 'get_service_field')
+    repetition = fields.Boolean('Repetition', readonly=True)
     report_date = fields.Function(fields.Date('Date agreed for result'),
         'get_service_field')
     session_id = fields.Integer('Session ID')
@@ -4068,6 +4074,7 @@ class SearchPlannedFractions(Wizard):
                 'service_analysis': k[1],
                 'product_type': v['product_type'],
                 'matrix': v['matrix'],
+                'repetition': v['repetition'],
                 })
         fractions_added = SearchPlannedFractionsDetail.create(to_create)
 
@@ -4152,16 +4159,18 @@ class SearchPlannedFractions(Wizard):
                 for x in [0] + excluded_fractions)
 
             if extra_where:
-                sample_select = ' '
+                sample_select = ''
                 sample_from = ''
+                repetition_select = ''
             else:
-                sample_select = ', smp.product_type, smp.matrix '
+                sample_select = ', smp.product_type, smp.matrix'
                 sample_from = (
                     'INNER JOIN "' + Sample._table + '" smp '
                     'ON smp.id = frc.sample ')
+                repetition_select = ', nl.repetition != 0'
 
-            sql_select = (
-                'SELECT nl.id, nb.fraction, srv.analysis' + sample_select)
+            sql_select = ('SELECT nl.id, nb.fraction, srv.analysis' +
+                sample_select + repetition_select + ' ')
 
             sql_from = (
                 'FROM "' + NotebookLine._table + '" nl '
@@ -4219,6 +4228,7 @@ class SearchPlannedFractions(Wizard):
                         result[(f_, s_)] = {
                             'product_type': nl[3],
                             'matrix': nl[4],
+                            'repetition': nl[5],
                             }
 
         return result
@@ -5735,7 +5745,8 @@ class PlanificationWorksheetAnalysisReport(Report):
                             fraction.sample.obj_description.description
                             if fraction.sample.obj_description else
                             fraction.sample.obj_description_manual
-                            if fraction.sample.obj_description_manual else ''),
+                            if fraction.sample.obj_description_manual else
+                            ''),
                         }
                     objects[date]['professionals'][p_key]['analysis'][
                         key]['lines'][number] = record
@@ -5857,7 +5868,8 @@ class PlanificationWorksheetMethodReport(Report):
                                 fraction.sample.obj_description.description
                                 if fraction.sample.obj_description else
                                 fraction.sample.obj_description_manual
-                                if fraction.sample.obj_description_manual else ''),
+                                if fraction.sample.obj_description_manual else
+                                ''),
                             }
                         objects[date]['professionals'][p_key]['lines'][
                             number] = record
@@ -6040,7 +6052,8 @@ class PlanificationWorksheetReport(Report):
                                 fraction.sample.obj_description.description
                                 if fraction.sample.obj_description else
                                 fraction.sample.obj_description_manual
-                                if fraction.sample.obj_description_manual else ''),
+                                if fraction.sample.obj_description_manual else
+                                ''),
                             }
                         objects[date]['professionals'][p_key]['analysis'][key][
                             'lines'][number] = record
@@ -6878,7 +6891,7 @@ class PlanificationSequenceAnalysisReport(Report):
                     matrix = fraction.matrix.code
                     fraction_type = fraction.type.code
                     analysis = notebook_line.analysis.rec_name
-                    initial_unit = (notebook_line.initial_unit.symbol 
+                    initial_unit = (notebook_line.initial_unit.symbol
                         if notebook_line.initial_unit else '')
                     priority = notebook_line.priority
                     urgent = notebook_line.urgent

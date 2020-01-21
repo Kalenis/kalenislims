@@ -8,5 +8,6 @@
     <field name="matrix"/>
     <field name="urgent"/>
     <field name="priority"/>
+    <field name="repetition"/>
     <field name="report_date"/>
 </tree>
