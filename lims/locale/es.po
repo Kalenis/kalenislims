@@ -1231,6 +1231,10 @@ msgctxt "field:lims.control.result_line,mean:"
 msgid "Mean"
 msgstr "Media"
 
+msgctxt "field:lims.control.result_line,mr_avg_abs_diff:"
+msgid "Average of Absolute Differences"
+msgstr "Media de Diferencias Absolutas"
+
 msgctxt "field:lims.control.result_line,one_sd:"
 msgid "1 SD"
 msgstr "1 DE"
@@ -1242,6 +1246,10 @@ msgstr "CV Anterior (%)"
 msgctxt "field:lims.control.result_line,prev_mean:"
 msgid "Previous Mean"
 msgstr "Media Anterior"
+
+msgctxt "field:lims.control.result_line,prev_mr_avg_abs_diff:"
+msgid "Previous Average of Absolute Differences"
+msgstr "Media de Diferencias Absolutas Anterior"
 
 msgctxt "field:lims.control.result_line,prev_one_sd:"
 msgid "Previous 1 SD"
@@ -1314,6 +1322,10 @@ msgstr "ID"
 msgctxt "field:lims.control.result_line.detail,line:"
 msgid "Line"
 msgstr "Línea"
+
+msgctxt "field:lims.control.result_line.detail,mr:"
+msgid "Mobile Range"
+msgstr "Rango Móvil"
 
 msgctxt "field:lims.control.result_line.detail,rec_name:"
 msgid "Name"
@@ -1459,6 +1471,26 @@ msgctxt "field:lims.control.tendency,min_cv_corr_fact:"
 msgid "Correction factor for Minimum CV"
 msgstr "Factor de corrección para CV Mínimo"
 
+msgctxt "field:lims.control.tendency,mr_avg_abs_diff:"
+msgid "Average of Absolute Differences"
+msgstr "Media de Diferencias Absolutas"
+
+msgctxt "field:lims.control.tendency,mr_d3:"
+msgid "D3 Constant"
+msgstr "Constante D3"
+
+msgctxt "field:lims.control.tendency,mr_d4:"
+msgid "D4 Constant"
+msgstr "Constante D4"
+
+msgctxt "field:lims.control.tendency,mr_ll:"
+msgid "MR LL"
+msgstr "RM LI"
+
+msgctxt "field:lims.control.tendency,mr_ul:"
+msgid "MR UL"
+msgstr "RM LS"
+
 msgctxt "field:lims.control.tendency,one_sd:"
 msgid "1 SD"
 msgstr "1 DE"
@@ -1554,6 +1586,10 @@ msgstr "Icono"
 msgctxt "field:lims.control.tendency.detail,id:"
 msgid "ID"
 msgstr "ID"
+
+msgctxt "field:lims.control.tendency.detail,mr:"
+msgid "Mobile Range"
+msgstr "Rango Móvil"
 
 msgctxt "field:lims.control.tendency.detail,notebook_line:"
 msgid "Notebook Line"
