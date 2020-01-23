@@ -184,6 +184,15 @@ class ControlTendency(ModelSQL, ModelView):
     rule_3_count = fields.Integer('Rule 3', readonly=True)
     rule_4_count = fields.Integer('Rule 4', readonly=True)
     digits = fields.Integer('Digits')
+    # Mobile Range
+    mr_avg_abs_diff = fields.Float('Average of Absolute Differences',
+        states={'readonly': Bool(Eval('context', {}).get('readonly', False))})
+    mr_d3 = fields.Float('D3 Constant')
+    mr_d4 = fields.Float('D4 Constant')
+    mr_ll = fields.Function(fields.Float('MR LL',
+        depends=['mr_avg_abs_diff', 'mr_d3']), 'get_mr_ll')
+    mr_ul = fields.Function(fields.Float('MR UL',
+        depends=['mr_avg_abs_diff', 'mr_d4']), 'get_mr_ul')
 
     @classmethod
     def __setup__(cls):
@@ -233,6 +242,14 @@ class ControlTendency(ModelSQL, ModelView):
     def default_max_cv_corr_fact():
         return 1
 
+    @staticmethod
+    def default_mr_d3():
+        return 0
+
+    @staticmethod
+    def default_mr_d4():
+        return 3.267
+
     def get_one_sd(self, name=None):
         return round(self.deviation, self.digits)
 
@@ -245,6 +262,7 @@ class ControlTendency(ModelSQL, ModelView):
     def get_cv(self, name=None):
         if self.mean:
             return round((self.deviation / self.mean) * 100, self.digits)
+        return 0
 
     def get_one_sd_adj(self, name=None):
         if self.cv < self.min_cv:
@@ -299,6 +317,16 @@ class ControlTendency(ModelSQL, ModelView):
     def get_cl(self, name=None):
         return round(self.mean, self.digits)
 
+    def get_mr_ll(self, name=None):
+        if self.mr_avg_abs_diff:
+            return round(self.mr_avg_abs_diff * self.mr_d3, self.digits)
+        return 0
+
+    def get_mr_ul(self, name=None):
+        if self.mr_avg_abs_diff:
+            return round(self.mr_avg_abs_diff * self.mr_d4, self.digits)
+        return 0
+
 
 class ControlTendencyDetail(ModelSQL, ModelView):
     'Control Chart Tendency Detail'
@@ -317,6 +345,8 @@ class ControlTendencyDetail(ModelSQL, ModelView):
     rules2 = fields.Function(fields.Char('Rules', depends=['rules']),
         'get_rules2')
     icon = fields.Function(fields.Char('Icon', depends=['rule']), 'get_icon')
+    # Mobile Range
+    mr = fields.Float('Mobile Range')
 
     @classmethod
     def __setup__(cls):
@@ -333,12 +363,11 @@ class ControlTendencyDetail(ModelSQL, ModelView):
 
     def get_icon(self, name):
         if self.rule in ['1', '2', '3', '4']:
-            return \
-                {
-                    '1': 'lims-green',
-                    '2': 'lims-blue',
-                    '3': 'lims-yellow',
-                    '4': 'lims-red',
+            return {
+                '1': 'lims-green',
+                '2': 'lims-blue',
+                '3': 'lims-yellow',
+                '4': 'lims-red',
                 }[self.rule]
 
 
@@ -462,23 +491,30 @@ class ControlResultLine(ModelSQL, ModelView):
         'mean']), 'get_cv')
     prev_mean = fields.Function(fields.Float('Previous Mean', depends=[
         'product_type', 'matrix', 'fraction_type', 'analysis',
-        'concentration_level', ]), 'get_prev_mean')
+        'concentration_level', ]), 'get_prev_field')
     prev_one_sd = fields.Function(fields.Float('Previous 1 SD', depends=[
         'product_type', 'matrix', 'fraction_type', 'analysis',
-        'concentration_level', ]), 'get_prev_one_sd')
+        'concentration_level', ]), 'get_prev_field')
     prev_two_sd = fields.Function(fields.Float('Previous 2 SD', depends=[
         'product_type', 'matrix', 'fraction_type', 'analysis',
-        'concentration_level', ]), 'get_prev_two_sd')
+        'concentration_level', ]), 'get_prev_field')
     prev_three_sd = fields.Function(fields.Float('Previous 3 SD', depends=[
         'product_type', 'matrix', 'fraction_type', 'analysis',
-        'concentration_level', ]), 'get_prev_three_sd')
+        'concentration_level', ]), 'get_prev_field')
     prev_cv = fields.Function(fields.Float('Previous CV (%)', depends=[
         'product_type', 'matrix', 'fraction_type', 'analysis',
-        'concentration_level', ]), 'get_prev_cv')
+        'concentration_level', ]), 'get_prev_field')
     details = fields.One2Many('lims.control.result_line.detail', 'line',
         'Details', readonly=True)
     update = fields.Boolean('Update')
     session_id = fields.Integer('Session ID')
+    # Mobile Range
+    mr_avg_abs_diff = fields.Float('Average of Absolute Differences',
+        readonly=True)
+    prev_mr_avg_abs_diff = fields.Function(fields.Float(
+        'Previous Average of Absolute Differences', depends=[
+            'product_type', 'matrix', 'fraction_type', 'analysis',
+            'concentration_level', ]), 'get_prev_field')
 
     @classmethod
     def __register__(cls, module_name):
@@ -511,71 +547,27 @@ class ControlResultLine(ModelSQL, ModelView):
     def get_cv(self, name=None):
         if self.mean:
             return (self.deviation / self.mean) * 100
+        return 0
 
-    def get_prev_mean(self, name=None):
+    @classmethod
+    def get_prev_field(cls, tendencies, names):
         ControlTendency = Pool().get('lims.control.tendency')
-        tendency = ControlTendency.search([
-            ('product_type', '=', self.product_type.id),
-            ('matrix', '=', self.matrix.id),
-            ('fraction_type', '=', self.fraction_type.id),
-            ('analysis', '=', self.analysis.id),
-            ('concentration_level', '=', self.concentration_level),
-            ])
-        if tendency:
-            return tendency[0].mean
-        return 0.00
-
-    def get_prev_one_sd(self, name=None):
-        ControlTendency = Pool().get('lims.control.tendency')
-        tendency = ControlTendency.search([
-            ('product_type', '=', self.product_type.id),
-            ('matrix', '=', self.matrix.id),
-            ('fraction_type', '=', self.fraction_type.id),
-            ('analysis', '=', self.analysis.id),
-            ('concentration_level', '=', self.concentration_level),
-            ])
-        if tendency:
-            return tendency[0].one_sd
-        return 0.00
-
-    def get_prev_two_sd(self, name=None):
-        ControlTendency = Pool().get('lims.control.tendency')
-        tendency = ControlTendency.search([
-            ('product_type', '=', self.product_type.id),
-            ('matrix', '=', self.matrix.id),
-            ('fraction_type', '=', self.fraction_type.id),
-            ('analysis', '=', self.analysis.id),
-            ('concentration_level', '=', self.concentration_level),
-            ])
-        if tendency:
-            return tendency[0].two_sd
-        return 0.00
-
-    def get_prev_three_sd(self, name=None):
-        ControlTendency = Pool().get('lims.control.tendency')
-        tendency = ControlTendency.search([
-            ('product_type', '=', self.product_type.id),
-            ('matrix', '=', self.matrix.id),
-            ('fraction_type', '=', self.fraction_type.id),
-            ('analysis', '=', self.analysis.id),
-            ('concentration_level', '=', self.concentration_level),
-            ])
-        if tendency:
-            return tendency[0].three_sd
-        return 0.00
-
-    def get_prev_cv(self, name=None):
-        ControlTendency = Pool().get('lims.control.tendency')
-        tendency = ControlTendency.search([
-            ('product_type', '=', self.product_type.id),
-            ('matrix', '=', self.matrix.id),
-            ('fraction_type', '=', self.fraction_type.id),
-            ('analysis', '=', self.analysis.id),
-            ('concentration_level', '=', self.concentration_level),
-            ])
-        if tendency:
-            return tendency[0].cv
-        return 0.00
+        result = {}
+        for name in names:
+            field_name = name[5:]
+            result[name] = {}
+            for t in tendencies:
+                result[name][t.id] = 0.0
+                prev_tendency = ControlTendency.search([
+                    ('product_type', '=', t.product_type.id),
+                    ('matrix', '=', t.matrix.id),
+                    ('fraction_type', '=', t.fraction_type.id),
+                    ('analysis', '=', t.analysis.id),
+                    ('concentration_level', '=', t.concentration_level),
+                    ])
+                if prev_tendency:
+                    result[name][t.id] = getattr(prev_tendency[0], field_name)
+        return result
 
 
 class ControlResultLineDetail(ModelSQL, ModelView):
@@ -588,6 +580,8 @@ class ControlResultLineDetail(ModelSQL, ModelView):
     fraction = fields.Many2One('lims.fraction', 'Fraction')
     device = fields.Many2One('lims.lab.device', 'Device')
     result = fields.Float('Result')
+    #
+    mr = fields.Float('Mobile Range')
 
     @classmethod
     def __setup__(cls):
@@ -679,7 +673,8 @@ class MeansDeviationsCalc(Wizard):
             if res:
                 families = [(x[0], x[1]) for x in res]
 
-        lines = NotebookLine.search(clause)
+        lines = NotebookLine.search(clause,
+            order=[('end_date', 'ASC'), ('id', 'ASC')])
         if lines:
             records = {}
             for line in lines:
@@ -711,12 +706,17 @@ class MeansDeviationsCalc(Wizard):
                         'analysis': analysis_id,
                         'concentration_level': concentration_level_id,
                         'details': {},
+                        'mr_last_result': None,
                         }
+                mr = (records[key]['mr_last_result'] and
+                    abs(result - records[key]['mr_last_result']) or 0.0)
+                records[key]['mr_last_result'] = result
                 records[key]['details'][line.id] = {
                     'date': line.end_date,
                     'fraction': line.notebook.fraction.id,
                     'device': line.device.id if line.device else None,
                     'result': result,
+                    'mr': mr,
                     }
             if records:
                 to_create = []
@@ -736,11 +736,18 @@ class MeansDeviationsCalc(Wizard):
 
                     to_save = []
                     for line in res_lines:
-                        count = 0.00
+                        count = 0
                         total = 0.00
+                        mr_abs_diff = 0.00
                         for detail in line.details:
                             count += 1
                             total += detail.result
+                            mr_abs_diff += detail.mr
+                        if count > 2:
+                            mr_avg_abs_diff = round(
+                                mr_abs_diff / (count - 1), 2)
+                        else:
+                            mr_avg_abs_diff = mr_abs_diff
                         mean = round(total / count, 2)
                         total = 0.00
                         for detail in line.details:
@@ -752,6 +759,7 @@ class MeansDeviationsCalc(Wizard):
                             deviation = 0.00
                         line.mean = mean
                         line.deviation = deviation
+                        line.mr_avg_abs_diff = mr_avg_abs_diff
                         to_save.append(line)
                     ControlResultLine.save(to_save)
 
@@ -819,6 +827,7 @@ class MeansDeviationsCalc(Wizard):
                     'rule_2_count': 0,
                     'rule_3_count': 0,
                     'rule_4_count': 0,
+                    'mr_avg_abs_diff': line.mr_avg_abs_diff,
                     })
                 tendencies.extend(tendency)
             else:
@@ -834,6 +843,7 @@ class MeansDeviationsCalc(Wizard):
                     'max_cv': max_cv,
                     'min_cv_corr_fact': min_cv_corr_fact,
                     'max_cv_corr_fact': max_cv_corr_fact,
+                    'mr_avg_abs_diff': line.mr_avg_abs_diff,
                     }])
                 tendencies.append(tendency)
         self.result2.tendencies = tendencies
@@ -1009,34 +1019,39 @@ class TendenciesAnalysis(Wizard):
                 rule_2_count = 0
                 rule_3_count = 0
                 rule_4_count = 0
-                lines = \
-                    NotebookLine.search(clause + [
+                lines = NotebookLine.search(clause + [
                         ('end_date', '>=', self.start.date_from),
                         ('end_date', '<=', self.start.date_to),
-                    ], order=[('end_date', 'ASC'), ('id', 'ASC')])
+                        ], order=[('end_date', 'ASC'), ('id', 'ASC')])
                 if lines:
                     results = []
                     prevs = 8 - len(lines)  # Qty of previous results required
                     if prevs > 0:
-                        prev_lines = \
-                            NotebookLine.search(clause + [
+                        prev_lines = NotebookLine.search(clause + [
                                 ('end_date', '<', self.start.date_from),
                                 ], order=[('end_date', 'ASC'), ('id', 'ASC')],
                                 limit=prevs)
                         if prev_lines:
                             for line in prev_lines:
-                                result = float(line.result if
-                                    line.result else None)
+                                try:
+                                    result = float(line.result if
+                                        line.result else None)
+                                except(TypeError, ValueError):
+                                    continue
                                 results.append(result)
 
+                    mr_last_result = None
                     to_create = []
                     for line in lines:
                         try:
                             result = float(line.result if
                                 line.result else None)
-                            results.append(result)
                         except(TypeError, ValueError):
                             continue
+                        mr = (mr_last_result and
+                              abs(result - mr_last_result) or 0.0)
+                        mr_last_result = result
+                        results.append(result)
                         rules = self.get_rules(results, tendency)
                         rules_to_create = []
                         for r in rules:
@@ -1060,6 +1075,7 @@ class TendenciesAnalysis(Wizard):
                             'device': line.device.id if line.device else None,
                             'result': result,
                             'rule': rules[0],
+                            'mr': mr,
                             }
                         if rules_to_create:
                             record['rules'] = [('create', rules_to_create)]
@@ -1229,8 +1245,8 @@ class ControlChartReport(Report):
 
         records = cls._get_objects(tendency)
         report_context['records'] = records
-
         report_context['plot'] = cls._get_plot(columns, records)
+
         return report_context
 
     @classmethod
