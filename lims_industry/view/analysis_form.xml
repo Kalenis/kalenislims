@@ -2,8 +2,6 @@
 <data>
     <xpath expr="/form/field[@name='disable_as_individual']"
         position="after">
-        <label name="aliquot_type"/>
-        <field name="aliquot_type"/>
         <label name="ind_volume"/>
         <field name="ind_volume"/>
     </xpath>

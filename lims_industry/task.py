@@ -24,8 +24,6 @@ class AdministrativeTaskTemplate(metaclass=PoolMeta):
             gettext('lims_industry.lbl_sample_missing_data')))
         types.append(('sample_insufficient_volume',
             gettext('lims_industry.lbl_sample_insufficient_volume')))
-        types.append(('aliquot_preparation',
-            gettext('lims_industry.lbl_aliquot_preparation')))
         return types
 
 
@@ -40,6 +38,5 @@ class AdministrativeTask(metaclass=PoolMeta):
             'lims.component',
             'party.party',
             'lims.sample',
-            'lims.aliquot',
             ])
         return origins
