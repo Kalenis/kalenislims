@@ -4,11 +4,10 @@
 
 from trytond.model import ModelSQL, ModelView, DictSchemaMixin, fields
 from trytond.pool import PoolMeta
-from trytond.pyson import Eval
 
 __all__ = ['SampleAttributeSet', 'SampleAttribute',
     'SampleAttributeAttributeSet', 'SamplingType', 'ProductType',
-    'AliquotType', 'AliquotTypeProductType', 'Analysis']
+    'Analysis']
 
 
 class SampleAttributeSet(ModelSQL, ModelView):
@@ -54,54 +53,7 @@ class ProductType(metaclass=PoolMeta):
         'Attribute Set')
 
 
-class AliquotType(ModelSQL, ModelView):
-    'Aliquot Type'
-    __name__ = 'lims.aliquot.type'
-
-    name = fields.Char('Name', required=True)
-    code = fields.Char('Code', required=True)
-    ind_volume = fields.Float('Required volume')
-    uom = fields.Many2One('product.uom', 'UoM')
-    kind = fields.Selection([
-        ('int', 'Internal'),
-        ('ext', 'External'),
-        ('rack', 'Rack'),
-        ], 'Kind', sort=False, required=True)
-    product_types = fields.Many2Many('lims.aliquot.type-product.type',
-        'aliquot_type', 'product_type', 'Product types',
-        depends=['kind'], states={
-            'invisible': Eval('kind') != 'rack',
-            'required': Eval('kind') == 'rack',
-            })
-    laboratory = fields.Many2One('party.party', 'Destination Laboratory',
-        depends=['kind'], states={
-            'invisible': Eval('kind') != 'ext',
-            'required': Eval('kind') == 'ext',
-            })
-    preparation = fields.Boolean('Preparation',
-        depends=['kind'], states={
-            'invisible': Eval('kind') != 'int',
-            })
-
-
-class AliquotTypeProductType(ModelSQL):
-    'Equipment Template - Component Type'
-    __name__ = 'lims.aliquot.type-product.type'
-    _table = 'lims_aliquot_type_product_type'
-
-    aliquot_type = fields.Many2One('lims.aliquot.type', 'Aliquot type',
-        required=True, ondelete='CASCADE', select=True)
-    product_type = fields.Many2One('lims.product.type', 'Product type',
-        required=True, ondelete='CASCADE', select=True)
-
-
 class Analysis(metaclass=PoolMeta):
     __name__ = 'lims.analysis'
 
-    aliquot_type = fields.Many2One('lims.aliquot.type', 'Aliquot type')
     ind_volume = fields.Float('Required volume')
-
-    @fields.depends('aliquot_type')
-    def on_change_aliquot_type(self):
-        if self.aliquot_type:
-            self.ind_volume = self.aliquot_type.ind_volume

@@ -7,8 +7,6 @@ from . import industry
 from . import analysis
 from . import sample
 from . import party
-from . import planification
-from . import configuration
 from . import task
 
 
@@ -29,23 +27,13 @@ def register():
         analysis.SampleAttributeAttributeSet,
         analysis.SamplingType,
         analysis.ProductType,
-        analysis.AliquotType,
-        analysis.AliquotTypeProductType,
         analysis.Analysis,
         sample.Entry,
         sample.Sample,
         sample.CreateSampleStart,
         sample.EditSampleStart,
-        sample.Fraction,
-        sample.Aliquot,
         party.Party,
         party.Address,
-        planification.Rack,
-        planification.RackPosition,
-        configuration.Configuration,
-        configuration.ConfigurationSequence,
-        configuration.LabWorkYear,
-        configuration.LabWorkYearSequence,
         task.AdministrativeTaskTemplate,
         task.AdministrativeTask,
         module='lims_industry', type_='model')
@@ -53,6 +41,3 @@ def register():
         sample.CreateSample,
         sample.EditSample,
         module='lims_industry', type_='wizard')
-    Pool.register(
-        sample.AliquotExternalReport,
-        module='lims_sale_industry', type_='report')

@@ -2,150 +2,6 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "field:lims.aliquot,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.aliquot,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.aliquot,fraction:"
-msgid "Fraction"
-msgstr "Fracción"
-
-msgctxt "field:lims.aliquot,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.aliquot,kind:"
-msgid "Kind"
-msgstr "Clase"
-
-msgctxt "field:lims.aliquot,laboratory:"
-msgid "Destination Laboratory"
-msgstr "Laboratorio destino"
-
-msgctxt "field:lims.aliquot,number:"
-msgid "Number"
-msgstr "Número"
-
-msgctxt "field:lims.aliquot,preparation:"
-msgid "Preparation"
-msgstr "Preparación"
-
-msgctxt "field:lims.aliquot,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.aliquot,shipment_date:"
-msgid "Shipment date"
-msgstr "Fecha de envío"
-
-msgctxt "field:lims.aliquot,type:"
-msgid "Type"
-msgstr "Tipo"
-
-msgctxt "field:lims.aliquot,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.aliquot,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.aliquot.type,code:"
-msgid "Code"
-msgstr "Código"
-
-msgctxt "field:lims.aliquot.type,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.aliquot.type,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.aliquot.type,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.aliquot.type,ind_volume:"
-msgid "Required volume"
-msgstr "Volumen requerido"
-
-msgctxt "field:lims.aliquot.type,kind:"
-msgid "Kind"
-msgstr "Clase"
-
-msgctxt "field:lims.aliquot.type,laboratory:"
-msgid "Destination Laboratory"
-msgstr "Laboratorio destino"
-
-msgctxt "field:lims.aliquot.type,name:"
-msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.aliquot.type,preparation:"
-msgid "Preparation"
-msgstr "Preparación"
-
-msgctxt "field:lims.aliquot.type,product_types:"
-msgid "Product types"
-msgstr "Tipos de producto"
-
-msgctxt "field:lims.aliquot.type,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.aliquot.type,uom:"
-msgid "UoM"
-msgstr "UdM"
-
-msgctxt "field:lims.aliquot.type,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.aliquot.type,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.aliquot.type-product.type,aliquot_type:"
-msgid "Aliquot type"
-msgstr "Tipo de alícuota"
-
-msgctxt "field:lims.aliquot.type-product.type,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.aliquot.type-product.type,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.aliquot.type-product.type,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.aliquot.type-product.type,product_type:"
-msgid "Product type"
-msgstr "Tipo de producto"
-
-msgctxt "field:lims.aliquot.type-product.type,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.aliquot.type-product.type,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.aliquot.type-product.type,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.analysis,aliquot_type:"
-msgid "Aliquot type"
-msgstr "Tipo de alícuota"
-
 msgctxt "field:lims.analysis,ind_volume:"
 msgid "Required volume"
 msgstr "Volumen requerido"
@@ -357,14 +213,6 @@ msgstr "Fecha modificación"
 msgctxt "field:lims.component.type,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
-
-msgctxt "field:lims.configuration,rack_sequence:"
-msgid "Rack Sequence"
-msgstr "Secuencia de Rack"
-
-msgctxt "field:lims.configuration.sequence,rack_sequence:"
-msgid "Rack Sequence"
-msgstr "Secuencia de Rack"
 
 msgctxt "field:lims.create_sample.start,attributes:"
 msgid "Attributes"
@@ -635,74 +483,6 @@ msgid "Write Date"
 msgstr "Fecha modificación"
 
 msgctxt "field:lims.equipment.type,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.lab.workyear,aliquot_sequence:"
-msgid "Aliquot Sequence"
-msgstr "Secuencia de Alícuota"
-
-msgctxt "field:lims.lab.workyear.sequence,aliquot_sequence:"
-msgid "Aliquot Sequence"
-msgstr "Secuencia de Alícuota"
-
-msgctxt "field:lims.planification,aliquot_type:"
-msgid "Rack type"
-msgstr "Tipo Rack"
-
-msgctxt "field:lims.planification,positions:"
-msgid "Positions"
-msgstr "Posiciones"
-
-msgctxt "field:lims.planification,rack_number:"
-msgid "Rack number"
-msgstr "Número Rack"
-
-msgctxt "field:lims.planification,rack_state:"
-msgid "Rack state"
-msgstr "Estado Rack"
-
-msgctxt "field:lims.planification,rack_user:"
-msgid "Rack user"
-msgstr "Usuario Rack"
-
-msgctxt "field:lims.planification,type:"
-msgid "Type"
-msgstr "Tipo"
-
-msgctxt "field:lims.planification.position,aliquot:"
-msgid "Aliquot"
-msgstr "Alícuota"
-
-msgctxt "field:lims.planification.position,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.planification.position,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.planification.position,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.planification.position,planification:"
-msgid "Planification"
-msgstr "Planificación"
-
-msgctxt "field:lims.planification.position,position:"
-msgid "Position"
-msgstr "Posición"
-
-msgctxt "field:lims.planification.position,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.planification.position,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.planification.position,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
 
@@ -1090,14 +870,6 @@ msgctxt "help:lims.sample.attribute,selection_sorted:"
 msgid "If the selection must be sorted on label"
 msgstr "Si la selección debe ordenarse por la etiqueta"
 
-msgctxt "model:ir.action,name:act_aliquot"
-msgid "Aliquots"
-msgstr "Alícuotas"
-
-msgctxt "model:ir.action,name:act_aliquot_type"
-msgid "Aliquot Types"
-msgstr "Tipos de alícuota"
-
 msgctxt "model:ir.action,name:act_brand"
 msgid "Brands"
 msgstr "Marcas"
@@ -1142,10 +914,6 @@ msgctxt "model:ir.action,name:act_plant"
 msgid "Plants"
 msgstr "Plantas"
 
-msgctxt "model:ir.action,name:act_rack_list"
-msgid "Racks"
-msgstr "Racks"
-
 msgctxt "model:ir.action,name:act_sample_attribute"
 msgid "Sample Attributes"
 msgstr "Atributos de muestra"
@@ -1158,40 +926,9 @@ msgctxt "model:ir.action,name:act_sampling_type"
 msgid "Sampling Types"
 msgstr "Tipos de muestreo"
 
-msgctxt "model:ir.action,name:report_aliquot_external"
-msgid "External Aliquots Shipping"
-msgstr "Envío de Alícuotas externas"
-
 msgctxt "model:ir.action,name:wiz_edit_sample"
 msgid "Edit Samples"
 msgstr "Modificar muestras"
-
-msgctxt "model:ir.action.act_window.domain,name:act_rack_list_domain_all"
-msgid "All"
-msgstr "Todo"
-
-msgctxt ""
-"model:ir.action.act_window.domain,name:act_rack_list_domain_confirmed"
-msgid "Confirmed"
-msgstr "Confirmado"
-
-msgctxt "model:ir.action.act_window.domain,name:act_rack_list_domain_draft"
-msgid "Draft"
-msgstr "Borrador"
-
-msgctxt ""
-"model:ir.action.act_window.domain,name:act_rack_list_domain_not_executed"
-msgid "Not executed"
-msgstr "No ejecutado"
-
-msgctxt ""
-"model:ir.action.act_window.domain,name:act_rack_list_domain_preplanned"
-msgid "Pre-Planned"
-msgstr "Pre-Planificado"
-
-msgctxt "model:ir.message,text:lbl_aliquot_preparation"
-msgid "Aliquot preparation"
-msgstr "Preparación de Alícuota"
 
 msgctxt "model:ir.message,text:lbl_component_missing_data"
 msgid "Missing data in Component"
@@ -1213,10 +950,6 @@ msgctxt "model:ir.message,text:lbl_sample_missing_data"
 msgid "Missing data in Sample"
 msgstr "Faltan datos en Muestra"
 
-msgctxt "model:ir.message,text:msg_aliquot_no_sequence"
-msgid "There is no aliquot sequence for the work year \"%(work_year)s\"."
-msgstr "No hay una secuencia de alícuotas para el año laboral «%(work_year)s»"
-
 msgctxt "model:ir.message,text:msg_component_type_unique"
 msgid "A component of the same type already exists for the equipment"
 msgstr "Ya existe un componente del mismo tipo para el equipo"
@@ -1237,41 +970,9 @@ msgctxt "model:ir.message,text:msg_party_no_tax_identifier"
 msgid "Party \"%(party)s\" has no Tax Identifier"
 msgstr "La entidad «%(party)s» no tiene identificador fiscal"
 
-msgctxt "model:ir.message,text:msg_planification_position_unique"
-msgid "Rack positions must be unique"
-msgstr "Las posiciones del Rack deben ser únicas"
-
 msgctxt "model:ir.message,text:msg_plant_name_unique"
 msgid "There is already a plant with the same name for the party"
 msgstr "Ya existe una planta con el mismo nombre para el tercero"
-
-msgctxt "model:ir.message,text:msg_user_no_laboratory"
-msgid "There is no laboratory for this user"
-msgstr "No hay un Laboratorio por defecto para este usuario"
-
-msgctxt "model:ir.sequence,name:seq_aliquot"
-msgid "Aliquot"
-msgstr "Alícuota"
-
-msgctxt "model:ir.sequence,name:seq_rack"
-msgid "Rack"
-msgstr "Rack"
-
-msgctxt "model:ir.sequence.type,name:seq_type_aliquot"
-msgid "Aliquot"
-msgstr "Alícuota"
-
-msgctxt "model:ir.sequence.type,name:seq_type_rack"
-msgid "Rack"
-msgstr "Rack"
-
-msgctxt "model:ir.ui.menu,name:menu_aliquot"
-msgid "Aliquots"
-msgstr "Alícuotas"
-
-msgctxt "model:ir.ui.menu,name:menu_aliquot_type"
-msgid "Aliquot Types"
-msgstr "Tipos de alícuota"
 
 msgctxt "model:ir.ui.menu,name:menu_brand"
 msgid "Brands"
@@ -1317,10 +1018,6 @@ msgctxt "model:ir.ui.menu,name:menu_plant"
 msgid "Plants"
 msgstr "Plantas"
 
-msgctxt "model:ir.ui.menu,name:menu_rack_list"
-msgid "Racks"
-msgstr "Racks"
-
 msgctxt "model:ir.ui.menu,name:menu_sample_attribute"
 msgid "Sample Attributes"
 msgstr "Atributos de muestra"
@@ -1332,18 +1029,6 @@ msgstr "Conjuntos de Atributos de muestra"
 msgctxt "model:ir.ui.menu,name:menu_sampling_type"
 msgid "Sampling Types"
 msgstr "Tipos de muestreo"
-
-msgctxt "model:lims.aliquot,name:"
-msgid "Aliquot"
-msgstr "Alícuota"
-
-msgctxt "model:lims.aliquot.type,name:"
-msgid "Aliquot Type"
-msgstr "Tipo de alícuota"
-
-msgctxt "model:lims.aliquot.type-product.type,name:"
-msgid "Equipment Template - Component Type"
-msgstr "Plantilla de equipo - Tipo de componente"
 
 msgctxt "model:lims.brand,name:"
 msgid "Brand"
@@ -1381,10 +1066,6 @@ msgctxt "model:lims.equipment.type,name:"
 msgid "Equipment Type"
 msgstr "Tipo de componente"
 
-msgctxt "model:lims.planification.position,name:"
-msgid "Rack Position"
-msgstr "Posición de Rack"
-
 msgctxt "model:lims.plant,name:"
 msgid "Plant"
 msgstr "Planta"
@@ -1408,46 +1089,6 @@ msgstr "Modificar muestras"
 msgctxt "model:lims.sampling.type,name:"
 msgid "Sampling Type"
 msgstr "Muestreo"
-
-msgctxt "selection:lims.aliquot,kind:"
-msgid "External"
-msgstr "Externa"
-
-msgctxt "selection:lims.aliquot,kind:"
-msgid "Internal"
-msgstr "Interna"
-
-msgctxt "selection:lims.aliquot,kind:"
-msgid "Rack"
-msgstr "Rack"
-
-msgctxt "selection:lims.aliquot.type,kind:"
-msgid "External"
-msgstr "Externa"
-
-msgctxt "selection:lims.aliquot.type,kind:"
-msgid "Internal"
-msgstr "Interna"
-
-msgctxt "selection:lims.aliquot.type,kind:"
-msgid "Rack"
-msgstr "Rack"
-
-msgctxt "selection:lims.planification,rack_state:"
-msgid "Closed"
-msgstr "Cerrado"
-
-msgctxt "selection:lims.planification,rack_state:"
-msgid "Open"
-msgstr "Abierto"
-
-msgctxt "selection:lims.planification,type:"
-msgid "Normal"
-msgstr "Normal"
-
-msgctxt "selection:lims.planification,type:"
-msgid "Rack"
-msgstr "Rack"
 
 msgctxt "selection:lims.sample.attribute,type_:"
 msgid "Boolean"
@@ -1536,10 +1177,6 @@ msgstr "Añadir MRT"
 msgctxt "view:lims.planification:"
 msgid "Add RM/BMZ"
 msgstr "Añadir RM/BMZ"
-
-msgctxt "view:lims.planification:"
-msgid "Aliquots"
-msgstr "Alícuotas"
 
 msgctxt "view:lims.planification:"
 msgid "Comments"

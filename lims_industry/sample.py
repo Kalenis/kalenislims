@@ -2,18 +2,14 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond.model import ModelSQL, ModelView, fields
+from trytond.model import ModelView, fields
 from trytond.wizard import Wizard, StateTransition, StateView, Button
-from trytond.report import Report
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval, Bool
+from trytond.pyson import Eval
 from trytond.transaction import Transaction
-from trytond.exceptions import UserError
-from trytond.i18n import gettext
 
 __all__ = ['Entry', 'Sample', 'CreateSampleStart', 'CreateSample',
-    'EditSampleStart', 'EditSample', 'Fraction', 'Aliquot',
-    'AliquotExternalReport']
+    'EditSampleStart', 'EditSample']
 
 
 class Entry(metaclass=PoolMeta):
@@ -369,162 +365,3 @@ class EditSample(Wizard):
         entry.state = 'draft'
         entry.save()
         return entry
-
-
-class Fraction(metaclass=PoolMeta):
-    __name__ = 'lims.fraction'
-
-    @classmethod
-    def confirm(cls, fractions):
-        super(Fraction, cls).confirm(fractions)
-        for fraction in fractions:
-            fraction.create_aliquots()
-            fraction.plan_aliquots()
-
-    def create_aliquots(self):
-        pool = Pool()
-        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
-        Aliquot = pool.get('lims.aliquot')
-
-        aliquot_types = []
-        analysis_detail = EntryDetailAnalysis.search([
-            ('fraction', '=', self.id)])
-        for detail in analysis_detail:
-            if detail.analysis.aliquot_type:
-                aliquot_types.append(detail.analysis.aliquot_type.id)
-
-        aliquots = []
-        for type in list(set(aliquot_types)):
-            aliquot = Aliquot()
-            aliquot.fraction = self.id
-            aliquot.type = type
-            aliquots.append(aliquot)
-        if aliquots:
-            Aliquot.save(aliquots)
-
-    def plan_aliquots(self):
-        pool = Pool()
-        Service = pool.get('lims.service')
-        Aliquot = pool.get('lims.aliquot')
-        Planification = pool.get('lims.planification')
-
-        analysis_ids = []
-        services = Service.search([('fraction', '=', self.id)])
-        for service in services:
-            analysis_ids.append(service.analysis.id)
-        analysis = list(set(analysis_ids))
-
-        aliquots = Aliquot.search([('fraction', '=', self.id)])
-        for aliquot in aliquots:
-            Planification.plan_aliquot(aliquot, analysis)
-
-
-class Aliquot(ModelSQL, ModelView):
-    'Aliquot'
-    __name__ = 'lims.aliquot'
-    _rec_name = 'number'
-
-    number = fields.Char('Number', select=True, readonly=True)
-    fraction = fields.Many2One('lims.fraction', 'Fraction', required=True,
-        ondelete='CASCADE', select=True, depends=['number'],
-        states={'readonly': Bool(Eval('number'))})
-    type = fields.Many2One('lims.aliquot.type', 'Type', required=True)
-    kind = fields.Function(fields.Selection([
-        ('int', 'Internal'),
-        ('ext', 'External'),
-        ('rack', 'Rack'),
-        ], 'Kind'), 'get_type_field')
-    shipment_date = fields.Date('Shipment date',
-        states={'invisible': Eval('kind') != 'ext'},
-        depends=['kind'])
-    laboratory = fields.Function(fields.Many2One('party.party',
-        'Destination Laboratory',
-        states={'invisible': Eval('kind') != 'ext'},
-        depends=['kind']), 'get_type_field')
-    preparation = fields.Function(fields.Boolean('Preparation',
-        states={'invisible': Eval('kind') != 'int'},
-        depends=['kind']), 'get_type_field')
-
-    @classmethod
-    def __setup__(cls):
-        super(Aliquot, cls).__setup__()
-        cls._order.insert(0, ('number', 'DESC'))
-
-    @fields.depends('type')
-    def on_change_with_kind(self, name=None):
-        if self.type:
-            result = self.get_type_field((self,), ('kind',))
-            return result['kind'][self.id]
-        return None
-
-    @fields.depends('type')
-    def on_change_with_laboratory(self, name=None):
-        if self.type:
-            result = self.get_type_field((self,), ('laboratory',))
-            return result['laboratory'][self.id]
-        return None
-
-    @fields.depends('type')
-    def on_change_with_preparation(self, name=None):
-        if self.type:
-            result = self.get_type_field((self,), ('preparation',))
-            return result['preparation'][self.id]
-        return None
-
-    @classmethod
-    def get_type_field(cls, aliquots, names):
-        result = {}
-        for name in names:
-            result[name] = {}
-            if name == 'laboratory':
-                for a in aliquots:
-                    field = getattr(a.type, name, None)
-                    result[name][a.id] = field.id if field else None
-            else:
-                for a in aliquots:
-                    result[name][a.id] = getattr(a.type, name, None)
-        return result
-
-    @classmethod
-    def create(cls, vlist):
-        pool = Pool()
-        LabWorkYear = pool.get('lims.lab.workyear')
-        Sequence = pool.get('ir.sequence')
-        TaskTemplate = Pool().get('lims.administrative.task.template')
-
-        workyear_id = LabWorkYear.find()
-        workyear = LabWorkYear(workyear_id)
-        sequence = workyear.get_sequence('aliquot')
-        if not sequence:
-            raise UserError(gettext('lims_industry.msg_aliquot_no_sequence',
-                work_year=workyear.rec_name))
-
-        vlist = [x.copy() for x in vlist]
-        for values in vlist:
-            values['number'] = Sequence.get_id(sequence.id)
-
-        aliquots = super(Aliquot, cls).create(vlist)
-        TaskTemplate.create_tasks('aliquot_preparation',
-            cls._for_task_preparation(aliquots))
-        return aliquots
-
-    @classmethod
-    def _for_task_preparation(cls, aliquots):
-        AdministrativeTask = Pool().get('lims.administrative.task')
-        res = []
-        for aliquot in aliquots:
-            if not aliquot.preparation:
-                continue
-            if AdministrativeTask.search([
-                    ('type', '=', 'aliquot_preparation'),
-                    ('origin', '=', '%s,%s' % (cls.__name__, aliquot.id)),
-                    ('state', 'not in', ('done', 'discarded')),
-                    ]):
-                continue
-            res.append(aliquot)
-        return res
-
-
-class AliquotExternalReport(Report):
-    'External Aliquots Shipping'
-    __name__ = 'lims.aliquot.external.report'
