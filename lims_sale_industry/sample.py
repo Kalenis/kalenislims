@@ -28,13 +28,16 @@ class CreateSampleStart(metaclass=PoolMeta):
             ]
 
         if self.label:
-            label = int(self.label)
-            clause.extend([
-                ('sale.label_from', '<=', label),
-                ('sale.label_to', '>=', label),
-                ])
-            res = SaleLine.search(clause)
-            return [x.id for x in res]
+            try:
+                label = int(self.label)
+                clause.extend([
+                    ('sale.label_from', '<=', label),
+                    ('sale.label_to', '>=', label),
+                    ])
+                res = SaleLine.search(clause)
+                return [x.id for x in res]
+            except ValueError:
+                pass
 
         if self.component:
             clause.append(['OR',
