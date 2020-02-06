@@ -1499,9 +1499,9 @@ class AnalysisIncluded(ModelSQL, ModelView):
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
         ondelete='CASCADE', select=True)
     included_analysis = fields.Many2One('lims.analysis', 'Included analysis',
-        required=True, depends=['analysis_domain'], domain=[
-            ('id', 'in', Eval('analysis_domain')),
-            ])
+        required=True, depends=['analysis_domain'],
+        domain=['OR', ('id', '=', Eval('included_analysis')),
+            ('id', 'in', Eval('analysis_domain'))])
     analysis_domain = fields.Function(fields.Many2Many('lims.analysis',
         None, None, 'Analysis domain'),
         'on_change_with_analysis_domain')
