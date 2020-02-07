@@ -6214,6 +6214,10 @@ msgctxt "field:lims.sample,comments:"
 msgid "Comments"
 msgstr "Observaciones"
 
+msgctxt "field:lims.sample,completion_percentage:"
+msgid "Complete"
+msgstr "Completo"
+
 msgctxt "field:lims.sample,confirmed:"
 msgid "Confirmed"
 msgstr "Confirmado"
@@ -11817,6 +11821,10 @@ msgstr "Copiar muestra"
 msgctxt "view:lims.sample.duplicate.start:"
 msgid "Labels"
 msgstr "Rótulos"
+
+msgctxt "view:lims.sample:"
+msgid "%"
+msgstr "%"
 
 msgctxt "view:lims.sample:"
 msgid "Comments"

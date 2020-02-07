@@ -18,6 +18,9 @@
     <field name="restricted_entry"/>
     <field name="zone"/>
     <field name="trace_report"/>
+    <field name="completion_percentage" factor="100">
+        <suffix name="completion_percentage" string="%"/>
+    </field>
     <field name="confirmed" tree_invisible="1" />
     <field name="has_results_report" tree_invisible="1" />
 </tree>
