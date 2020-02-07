@@ -2306,6 +2306,12 @@ class Sample(ModelSQL, ModelView):
     has_results_report = fields.Function(fields.Boolean('Results Report'),
         'get_has_results_report')
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
+    completion_percentage = fields.Function(fields.Float('Complete',
+        digits=(1, 4), domain=[
+            ('completion_percentage', '>=', 0),
+            ('completion_percentage', '<=', 1),
+            ]),
+        'get_completion_percentage')
 
     @classmethod
     def __setup__(cls):
@@ -2727,6 +2733,53 @@ class Sample(ModelSQL, ModelView):
                     value = True
                 result[name][s.id] = value
         return result
+
+    def get_completion_percentage(self, name=None):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Notebook = pool.get('lims.notebook')
+        Fraction = pool.get('lims.fraction')
+        FractionType = pool.get('lims.fraction.type')
+
+        cursor.execute('SELECT nl.notebook, nl.analysis, nl.accepted '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + EntryDetailAnalysis._table + '" d '
+                'ON d.id = nl.analysis_detail '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON n.id = nl.notebook '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + FractionType._table + '" ft '
+                'ON ft.id = f.type '
+            'WHERE ft.report = TRUE '
+                'AND f.sample = %s '
+                'AND nl.report = TRUE '
+                'AND nl.annulled = FALSE',
+            (self.id,))
+        notebook_lines = cursor.fetchall()
+        total = len(notebook_lines)
+        if not total:
+            return 0
+
+        oks, to_check = [], []
+        for line in notebook_lines:
+            key = (line[0], line[1])
+            if line[2]:
+                oks.append(key)
+            else:
+                to_check.append(key)
+
+        accepted = len(oks)
+        if not accepted:
+            return 0
+
+        for key in to_check:
+            if key in oks:
+                total -= 1
+
+        return round(accepted / total, 4)
 
 
 class DuplicateSampleStart(ModelView):
