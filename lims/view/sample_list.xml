@@ -18,6 +18,7 @@
     <field name="restricted_entry"/>
     <field name="zone"/>
     <field name="trace_report"/>
+    <field name="urgent"/>
     <field name="completion_percentage" factor="100">
         <suffix name="completion_percentage" string="%"/>
     </field>
