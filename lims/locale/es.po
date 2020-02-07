@@ -6362,6 +6362,10 @@ msgctxt "field:lims.sample,typification_domain:"
 msgid "Typification domain"
 msgstr "Dominio para Tipificaciones"
 
+msgctxt "field:lims.sample,urgent:"
+msgid "Urgent"
+msgstr "Urgente"
+
 msgctxt "field:lims.sample,variety:"
 msgid "Variety"
 msgstr "Variedad"

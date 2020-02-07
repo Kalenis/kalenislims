@@ -2306,6 +2306,8 @@ class Sample(ModelSQL, ModelView):
     has_results_report = fields.Function(fields.Boolean('Results Report'),
         'get_has_results_report')
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
+    urgent = fields.Function(fields.Boolean('Urgent'), 'get_urgent',
+        searcher='search_urgent')
     completion_percentage = fields.Function(fields.Float('Complete',
         digits=(1, 4), domain=[
             ('completion_percentage', '>=', 0),
@@ -2733,6 +2735,33 @@ class Sample(ModelSQL, ModelView):
                     value = True
                 result[name][s.id] = value
         return result
+
+    @classmethod
+    def get_urgent(cls, samples, name):
+        pool = Pool()
+        Service = pool.get('lims.service')
+
+        result = {}
+        for s in samples:
+            services = Service.search_count([
+                ('sample', '=', s.id),
+                ('urgent', '=', True),
+                ])
+            if services > 0:
+                result[s.id] = True
+            else:
+                result[s.id] = False
+        return result
+
+    @classmethod
+    def search_urgent(cls, name, clause):
+        field, op, operand = clause
+        if (op, operand) in (('=', True), ('!=', False)):
+            return [('fractions.services.urgent', '=', True)]
+        elif (op, operand) in (('=', False), ('!=', True)):
+            urgents = cls.search([('fractions.services.urgent', '=', True)])
+            return [('id', 'not in', [u.id for u in urgents])]
+        return []
 
     def get_completion_percentage(self, name=None):
         cursor = Transaction().connection.cursor()
