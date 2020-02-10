@@ -100,5 +100,7 @@ class Service(metaclass=PoolMeta):
     def get_invoice_line(self, invoice_type):
         invoice_line = super(Service, self).get_invoice_line(invoice_type)
         if self.sample.sale_lines:
-            invoice_line['unit_price'] = self.sample.sale_lines[0].unit_price
+            for sale_line in self.sample.sale_lines:
+                if sale_line.product.id == self.analysis.product.id:
+                    invoice_line['unit_price'] = sale_line.unit_price
         return invoice_line
