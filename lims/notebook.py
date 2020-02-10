@@ -265,7 +265,7 @@ class NotebookLine(ModelSQL, ModelView):
         'readonly': Or(~Bool(Eval('start_date')), Bool(Eval('accepted'))),
         }, depends=['start_date', 'accepted'])
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        readonly=True)
+        readonly=True, select=True)
     method = fields.Many2One('lims.lab.method', 'Method',
         required=True, domain=['OR', ('id', '=', Eval('method')),
             ('id', 'in', Eval('method_domain'))],
