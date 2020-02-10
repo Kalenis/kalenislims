@@ -6,7 +6,8 @@ from trytond.model import ModelSQL, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 
-__all__ = ['CreateSampleStart', 'CreateSample', 'Sample', 'SampleSaleLine']
+__all__ = ['CreateSampleStart', 'CreateSample', 'Sample', 'SampleSaleLine',
+    'Service']
 
 
 class CreateSampleStart(metaclass=PoolMeta):
@@ -91,3 +92,13 @@ class SampleSaleLine(ModelSQL):
         ondelete='CASCADE', select=True, required=True)
     sale_line = fields.Many2One('sale.line', 'Sale Line',
         ondelete='CASCADE', select=True, required=True)
+
+
+class Service(metaclass=PoolMeta):
+    __name__ = 'lims.service'
+
+    def get_invoice_line(self, invoice_type):
+        invoice_line = super(Service, self).get_invoice_line(invoice_type)
+        if self.sample.sale_lines:
+            invoice_line['unit_price'] = self.sample.sale_lines[0].unit_price
+        return invoice_line
