@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="date_time" widget="date"/>
+    <field name="date_time" widget="time" string="Time"/>
+    <field name="interface"/>
+    <field name="revision"/>
+    <field name="table_name"/>
+    <field name="device"/>
+    <field name="state"/>
+</tree>
