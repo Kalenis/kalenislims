@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<form>
+    <group id="name"  colspan="2" col="4">
+        <label name="name"/>
+        <field name="name"/>
+        <label name="revision"/>
+        <field name="revision"/>
+    </group>
+    <label name="language"/>
+    <field name="language" widget="selection"/>
+    <group id="interface_kind" colspan="4" col="6">
+        <label name="kind"/>
+        <field name="kind"/>
+        <label name="template_type"/>
+        <field name="template_type"/>
+        <label name="controller_name"/>
+        <field name="controller_name"/>
+    </group>
+    <group id="separators" colspan="4" col="6">
+        <label name="first_row"/>
+        <field name="first_row"/>
+        <label name="field_separator"/>
+        <field name="field_separator"/>
+        <label name="field_separator_other"/>
+        <field name="field_separator_other"/>
+    </group>
+    <group id="definition_fields" colspan="4" col="6">
+        <label name="analysis_field"/>
+        <field name="analysis_field"/>
+        <label name="fraction_field"/>
+        <field name="fraction_field"/>
+        <label name="repetition_field"/>
+        <field name="repetition_field"/>
+    </group>
+    <label name="notebook_line_field"/>
+    <field name="notebook_line_field"/>
+    <field name="columns" colspan="4"/>
+    <label name="state"/>
+    <field name="state"/>
+    <group id="buttons" colspan="2" col="4">
+        <button name="draft" string="Draft"/>
+        <button name="activate" string="Activate"/>
+    </group>
+</form>

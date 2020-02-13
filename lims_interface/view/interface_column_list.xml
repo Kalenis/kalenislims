@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<tree sequence="sequence">
+    <field name="name"/>
+    <field name="alias"/>
+    <field name="evaluation_order"/>
+    <field name="expression" icon="expression_icon"/>
+    <field name="type_"/>
+    <field name="transfer_field"/>
+    <field name="related_line_field"/>
+    <field name="source_column"/>
+    <field name="source_start"/>
+    <field name="source_end"/>
+    <field name="singleton"/>
+    <field name="source_row"/>
+</tree>
