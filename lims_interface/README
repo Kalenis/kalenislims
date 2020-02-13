@@ -1,0 +1,32 @@
+
+Import data Interface module for Kalenis LIMS
+
+This module provides a way to define and use different interfaces
+to import data into Kalenis LIMS system.
+
+Prerequisites
+-------------
+
+ * Python 3.4 or later (http://www.python.org/)
+ * Tryton 5.2 (http://www.tryton.org/)
+
+Support
+-------
+
+For more information or if you encounter any problems with this module,
+please contact the programmers at
+
+  Kalenis
+  --------------
+  website: https://www.kalenislims.com
+  email: info@kalenislims.com
+
+License
+-------
+
+See LICENSE
+
+Copyright
+---------
+
+See COPYRIGHT

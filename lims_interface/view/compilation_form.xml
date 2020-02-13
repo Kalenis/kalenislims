@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<form cursor="interface">
+    <label name="date_time"/>
+    <field name="date_time"/>
+    <group id="interface_and_revision" colspan="2" col="4">
+        <label name="interface"/>
+        <field name="interface"/>
+        <label name="revision"/>
+        <field name="revision"/>
+    </group>
+    <label name="table_name"/>
+    <field name="table_name"/>
+    <label name="device"/>
+    <field name="device"/>
+    <button name="view_data" string="View data" colspan="4"/>
+    <notebook>
+        <page string="Origins" id="origins">
+            <field name="origins" colspan="4"/>
+        </page>
+    </notebook>
+    <label name="state"/>
+    <field name="state"/>
+    <group id="buttons" colspan="2" col="4">
+        <button name="draft" string="Draft"/>
+        <button name="activate" string="Activate"/>
+        <button name="collect" string="Collect"/>
+        <button name="validate_" string="Validate"/>
+        <button name="confirm" string="Confirm"/>
+    </group>
+</form>

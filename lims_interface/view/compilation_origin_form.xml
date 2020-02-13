@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<form>
+    <group col="3" colspan="2" id="origin">
+        <label name="origin_file"/>
+        <field name="origin_file"/>
+        <field name="file_name"/>
+    </group>
+</form>

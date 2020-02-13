@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<form>
+    <group id="name_header" colspan="4" col="6">
+        <label name="name"/>
+        <field name="name"/>
+        <label name="alias"/>
+        <field name="alias"/>
+        <label name="evaluation_order"/>
+        <field name="evaluation_order"/>
+    </group>
+    <label name="expression"/>
+    <group id="expression" col="2" colspan="3">
+        <field name="expression"/>
+        <image name="expression_icon"/>
+    </group>
+    <newline/>
+    <label name="type_"/>
+    <field name="type_"/>
+    <label name="related_model"/>
+    <field name="related_model"/>
+    <group id="interface_kind" colspan="4" col="10">
+        <label name="singleton"/>
+        <field name="singleton"/>
+        <label name="source_column"/>
+        <field name="source_column"/>
+        <label name="source_row"/>
+        <field name="source_row"/>
+        <label name="source_start"/>
+        <field name="source_start"/>
+        <label name="source_end"/>
+        <field name="source_end"/>
+    </group>
+    <label name="transfer_field"/>
+    <field name="transfer_field"/>
+    <label name="related_line_field"/>
+    <field name="related_line_field"/>
+</form>
