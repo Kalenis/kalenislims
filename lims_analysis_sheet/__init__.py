@@ -5,6 +5,7 @@
 from trytond.pool import Pool
 from . import configuration
 from . import interface
+from . import planification
 
 
 def register():
@@ -14,7 +15,11 @@ def register():
         interface.TemplateAnalysisSheet,
         interface.TemplateAnalysisSheetAnalysis,
         interface.AnalysisSheet,
+        planification.Planification,
+        planification.SearchAnalysisSheetStart,
+        planification.SearchAnalysisSheetNext,
         module='lims_analysis_sheet', type_='model')
     Pool.register(
         interface.OpenAnalysisSheetData,
+        planification.SearchAnalysisSheet,
         module='lims_analysis_sheet', type_='wizard')

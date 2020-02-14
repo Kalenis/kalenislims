@@ -70,6 +70,31 @@ msgctxt "field:lims.configuration.sequence,analysis_sheet_sequence:"
 msgid "Analysis Sheet Sequence"
 msgstr "Secuencia de Hoja de análisis"
 
+msgctxt "field:lims.planification.search_analysis_sheet.next,details:"
+msgid "Fractions to plan"
+msgstr "Fracciones a planificar"
+
+msgctxt "field:lims.planification.search_analysis_sheet.next,details_domain:"
+msgid "Fractions domain"
+msgstr "Dominio para Fracciones"
+
+msgctxt "field:lims.planification.search_analysis_sheet.next,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.search_analysis_sheet.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.search_analysis_sheet.start,templates:"
+msgid "Templates"
+msgstr "Plantillas"
+
+msgctxt ""
+"field:lims.planification.search_analysis_sheet.start,templates_domain:"
+msgid "Templates domain"
+msgstr "Dominio para Plantillas"
+
 msgctxt "field:lims.template.analysis_sheet,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
@@ -166,6 +191,10 @@ msgctxt "model:ir.action,name:wiz_open_analysis_sheet_data"
 msgid "Open Analysis Sheet Data"
 msgstr "Abrir datos de Hoja de análisis"
 
+msgctxt "model:ir.action,name:wiz_search_analysis_sheet"
+msgid "Search Analysis Sheets"
+msgstr "Buscar Hojas de ensayos"
+
 msgctxt "model:ir.message,text:msg_sheet_compilation_unique"
 msgid "Compilation already in use by another Analysis Sheet"
 msgstr "La Compilación ya está en uso para otra Hoja de análisis"
@@ -189,6 +218,14 @@ msgstr "Plantillas de Hoja de análisis"
 msgctxt "model:lims.analysis_sheet,name:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
+
+msgctxt "model:lims.planification.search_analysis_sheet.next,name:"
+msgid "Search Analysis Sheets"
+msgstr "Buscar Hojas de ensayos"
+
+msgctxt "model:lims.planification.search_analysis_sheet.start,name:"
+msgid "Search Analysis Sheets"
+msgstr "Buscar Hojas de ensayos"
 
 msgctxt "model:lims.template.analysis_sheet,name:"
 msgid "Analysis Sheet Template"
@@ -218,6 +255,10 @@ msgctxt "view:lims.analysis_sheet:"
 msgid "View data"
 msgstr "Ver datos"
 
+msgctxt "view:lims.planification:"
+msgid "Search Analysis Sheets"
+msgstr "Buscar Hojas de ensayos"
+
 msgctxt "view:lims.template.analysis_sheet:"
 msgid "Analysis"
 msgstr "Análisis"
@@ -225,3 +266,19 @@ msgstr "Análisis"
 msgctxt "view:lims.template.analysis_sheet:"
 msgid "Comments"
 msgstr "Observaciones"
+
+msgctxt "wizard_button:lims.planification.search_analysis_sheet,next,add:"
+msgid "Add"
+msgstr "Añadir"
+
+msgctxt "wizard_button:lims.planification.search_analysis_sheet,next,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.search_analysis_sheet,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.planification.search_analysis_sheet,start,search:"
+msgid "Search"
+msgstr "Buscar"
