@@ -96,9 +96,26 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def get_samples_qty(cls, sheets, name):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+        NotebookLine = pool.get('lims.notebook.line')
+
         result = {}
         for s in sheets:
             result[s.id] = 0
+            nl_field = (s.template.interface.notebook_line_field and
+                s.template.interface.notebook_line_field.alias or None)
+            if not nl_field:
+                continue
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                samples = []
+                lines = Data.search([('compilation', '=', s.compilation.id)])
+                for line in lines:
+                    nl = getattr(line, nl_field)
+                    if nl:
+                        samples.append(NotebookLine(nl).fraction.id)
+                result[s.id] = len(list(set(samples)))
         return result
 
     @classmethod
