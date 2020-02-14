@@ -17,7 +17,9 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
     __name__ = 'lims.template.analysis_sheet'
 
     interface = fields.Many2One('lims.interface', 'Device Interface',
-        required=True, domain=[('state', '=', 'active')],
+        required=True, domain=[
+            ('kind', '=', 'template'),
+            ('state', '=', 'active')],
         states={'readonly': Bool(Eval('interface'))})
     name = fields.Char('Name', required=True)
     analysis = fields.One2Many('lims.template.analysis_sheet.analysis',
@@ -119,6 +121,13 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             number = Sequence.get_id(config.analysis_sheet_sequence.id)
             values['number'] = number
         return vlist
+
+    @classmethod
+    def delete(cls, sheets):
+        Compilation = Pool().get('lims.interface.compilation')
+        compilations = [s.compilation for s in sheets]
+        super(AnalysisSheet, cls).delete(sheets)
+        Compilation.delete(compilations)
 
     @classmethod
     @ModelView.button
