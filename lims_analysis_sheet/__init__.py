@@ -18,8 +18,12 @@ def register():
         planification.Planification,
         planification.SearchAnalysisSheetStart,
         planification.SearchAnalysisSheetNext,
+        planification.RelateTechniciansStart,
+        planification.RelateTechniciansResult,
+        planification.RelateTechniciansDetail4,
         module='lims_analysis_sheet', type_='model')
     Pool.register(
         interface.OpenAnalysisSheetData,
         planification.SearchAnalysisSheet,
+        planification.RelateTechnicians,
         module='lims_analysis_sheet', type_='wizard')
