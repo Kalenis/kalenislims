@@ -562,7 +562,8 @@ class PlanificationTechnician(ModelSQL, ModelView):
             ])
     details = fields.Function(fields.One2Many(
         'lims.planification.technician.detail', 'technician',
-        'Fractions to plan'), 'get_details', setter='set_details')
+        'Fractions to plan', readonly=True),
+        'get_details', setter='set_details')
 
     @classmethod
     def __setup__(cls):
@@ -1340,23 +1341,12 @@ class RelateTechnicians(Wizard):
         return RelateTechniciansDetail3.create(to_create)
 
     def transition_relate(self):
-        pool = Pool()
-        Planification = pool.get('lims.planification')
-        PlanificationServiceDetail = pool.get(
+        PlanificationServiceDetail = Pool().get(
             'lims.planification.service_detail')
 
-        planification = Planification(Transaction().context['active_id'])
-
-        if self.start.grouping == 'none':
-            details = self._get_details1(planification.id,
-                self.start.exclude_relateds)
-        elif self.start.grouping == 'origin_method':
-            details = self._get_details2(planification.id,
-                self.start.exclude_relateds)
-        elif self.start.grouping == 'origin':
-            details = self._get_details3(planification.id,
-                self.start.exclude_relateds)
-        else:
+        planification_id = Transaction().context['active_id']
+        details = self._get_details(planification_id)
+        if not details:
             return 'end'
 
         PlanificationServiceDetail.write(details, {
@@ -1368,6 +1358,19 @@ class RelateTechnicians(Wizard):
                 [t.id for t in self.result.technicians])],
             })
         return 'end'
+
+    def _get_details(self, planification_id):
+        details = []
+        if self.start.grouping == 'none':
+            details = self._get_details1(planification_id,
+                self.start.exclude_relateds)
+        elif self.start.grouping == 'origin_method':
+            details = self._get_details2(planification_id,
+                self.start.exclude_relateds)
+        elif self.start.grouping == 'origin':
+            details = self._get_details3(planification_id,
+                self.start.exclude_relateds)
+        return details
 
     def _get_details1(self, planification_id, exclude_relateds):
         cursor = Transaction().connection.cursor()
