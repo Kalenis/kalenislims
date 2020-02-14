@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Planification -->
+
+        <record model="ir.ui.view" id="planification_view_form">
+            <field name="model">lims.planification</field>
+            <field name="inherit" ref="lims.lims_planification_view_form"/>
+            <field name="name">planification_form</field>
+        </record>
+
+        <record model="ir.model.button" id="button_planification_search_analysis_sheet">
+            <field name="name">search_analysis_sheet</field>
+            <field name="model" search="[('model', '=', 'lims.planification')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="button_planification_search_analysis_sheet_group_lims_planification">
+            <field name="button" ref="button_planification_search_analysis_sheet"/>
+            <field name="group" ref="lims.group_lims_planification"/>
+        </record>
+
+<!-- Wizard Search Analysis Sheets -->
+
+        <record model="ir.ui.view" id="planification_search_analysis_sheet_start_view_form">
+            <field name="model">lims.planification.search_analysis_sheet.start</field>
+            <field name="type">form</field>
+            <field name="name">planification_search_analysis_sheet_start_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="planification_search_analysis_sheet_next_view_form">
+            <field name="model">lims.planification.search_analysis_sheet.next</field>
+            <field name="type">form</field>
+            <field name="name">planification_search_analysis_sheet_next_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_search_analysis_sheet">
+            <field name="name">Search Analysis Sheets</field>
+            <field name="wiz_name">lims.planification.search_analysis_sheet</field>
+        </record>
+
+<!-- Wizard Relate Technicians -->
+
+        <record model="ir.ui.view" id="planification_relate_technicians_result_view_form">
+            <field name="model">lims.planification.relate_technicians.result</field>
+            <field name="inherit" ref="lims.lims_relate_technicians_result_view_form"/>
+            <field name="name">planification_relate_technicians_result_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_relate_technicians_detail4_view_form">
+            <field name="model">lims.planification.relate_technicians.detail4</field>
+            <field name="type">form</field>
+            <field name="name">planification_relate_technicians_detail4_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_relate_technicians_detail4_view_list">
+            <field name="model">lims.planification.relate_technicians.detail4</field>
+            <field name="type">tree</field>
+            <field name="name">planification_relate_technicians_detail4_list</field>
+        </record>
+
+    </data>
+</tryton>
