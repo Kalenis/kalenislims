@@ -3646,6 +3646,8 @@ class SearchFractionsDetail(ModelSQL, ModelView):
     repetition = fields.Boolean('Repetition', readonly=True)
     report_date = fields.Function(fields.Date('Date agreed for result'),
         'get_service_field')
+    completion_percentage = fields.Function(fields.Float('Complete',
+        digits=(1, 4)), 'get_completion_percentage')
     session_id = fields.Integer('Session ID')
 
     @classmethod
@@ -3703,6 +3705,13 @@ class SearchFractionsDetail(ModelSQL, ModelView):
                     if service.analysis == d.service_analysis:
                         for name in names:
                             result[name][d.id] = getattr(service, name)
+        return result
+
+    @classmethod
+    def get_completion_percentage(cls, details, name):
+        result = {}
+        for d in details:
+            result[d.id] = getattr(d.fraction.sample, name, None)
         return result
 
 
