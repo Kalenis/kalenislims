@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='general']/group[@id='analysis_holder']/button[@name='add_analysis']"
+        position="before">
+        <button name="search_analysis_sheet" string="Search Analysis Sheets"/>
+    </xpath>
+</data>

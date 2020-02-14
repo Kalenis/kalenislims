@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Analysis Sheet Template -->
+
+        <record model="ir.ui.view" id="template_analysis_sheet_view_form">
+            <field name="model">lims.template.analysis_sheet</field>
+            <field name="type">form</field>
+            <field name="name">template_analysis_sheet_form</field>
+        </record>
+        <record model="ir.ui.view" id="template_analysis_sheet_view_list">
+            <field name="model">lims.template.analysis_sheet</field>
+            <field name="type">tree</field>
+            <field name="name">template_analysis_sheet_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_template_analysis_sheet_list">
+            <field name="name">Analysis Sheet Templates</field>
+            <field name="res_model">lims.template.analysis_sheet</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_template_analysis_sheet_list_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="template_analysis_sheet_view_list"/>
+            <field name="act_window" ref="act_template_analysis_sheet_list"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_template_analysis_sheet_list_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="template_analysis_sheet_view_form"/>
+            <field name="act_window" ref="act_template_analysis_sheet_list"/>
+        </record>
+
+        <menuitem action="act_template_analysis_sheet_list"
+            id="menu_template_analysis_sheet_list"
+            parent="lims.lims_config_laboratory" sequence="65"/>
+
+<!-- Template Analysis -->
+
+        <record model="ir.ui.view" id="template_analysis_view_form">
+            <field name="model">lims.template.analysis_sheet.analysis</field>
+            <field name="type">form</field>
+            <field name="name">template_analysis_form</field>
+        </record>
+        <record model="ir.ui.view" id="template_analysis_view_list">
+            <field name="model">lims.template.analysis_sheet.analysis</field>
+            <field name="type">tree</field>
+            <field name="name">template_analysis_list</field>
+        </record>
+
+<!-- Analysis Sheet -->
+
+        <record model="ir.ui.view" id="analysis_sheet_view_form">
+            <field name="model">lims.analysis_sheet</field>
+            <field name="type">form</field>
+            <field name="name">analysis_sheet_form</field>
+        </record>
+        <record model="ir.ui.view" id="analysis_sheet_view_list">
+            <field name="model">lims.analysis_sheet</field>
+            <field name="type">tree</field>
+            <field name="name">analysis_sheet_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_analysis_sheet_list">
+            <field name="name">Analysis Sheets</field>
+            <field name="res_model">lims.analysis_sheet</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_analysis_sheet_list_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="analysis_sheet_view_list"/>
+            <field name="act_window" ref="act_analysis_sheet_list"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_analysis_sheet_list_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="analysis_sheet_view_form"/>
+            <field name="act_window" ref="act_analysis_sheet_list"/>
+        </record>
+
+        <menuitem action="act_analysis_sheet_list" id="menu_analysis_sheet_list"
+            parent="lims.lims_laboratory_results" sequence="35"/>
+
+        <record model="ir.model.button" id="button_sheet_view_data">
+            <field name="name">view_data</field>
+            <field name="model" search="[('model', '=', 'lims.analysis_sheet')]"/>
+        </record>
+        <record model="ir.model.button" id="button_sheet_activate">
+            <field name="name">activate</field>
+            <field name="model" search="[('model', '=', 'lims.analysis_sheet')]"/>
+        </record>
+
+<!-- Wizard Open Analysis Sheet Data -->
+
+        <record model="ir.action.wizard" id="wiz_open_analysis_sheet_data">
+            <field name="name">Open Analysis Sheet Data</field>
+            <field name="wiz_name">lims.analysis_sheet.open_data</field>
+        </record>
+
+    </data>
+</tryton>

@@ -14415,6 +14415,11 @@ msgctxt ""
 msgid "Technician substitute"
 msgstr "Técnico sustituto"
 
+msgctxt ""
+"field:lims.planification.search_fractions.detail,completion_percentage:"
+msgid "Complete"
+msgstr "Completo"
+
 msgctxt "field:lims.planification.search_fractions.detail,create_date:"
 msgid "Create Date"
 msgstr "Fecha creación"
@@ -16189,6 +16194,10 @@ msgstr "Quitar control"
 msgctxt "view:lims.planification.replace_technician.start:"
 msgid "Replace Technician"
 msgstr "Reemplazar técnico"
+
+msgctxt "view:lims.planification.search_fractions.detail:"
+msgid "%"
+msgstr "%"
 
 msgctxt "view:lims.planification.search_fractions.detail:"
 msgid "Fraction to Plan"
