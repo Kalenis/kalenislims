@@ -10,4 +10,7 @@
     <field name="priority"/>
     <field name="repetition"/>
     <field name="report_date"/>
+    <field name="completion_percentage" factor="100">
+        <suffix name="completion_percentage" string="%"/>
+    </field>
 </tree>
