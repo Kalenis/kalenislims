@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form>
+    <label name="analysis"/>
+    <field name="analysis"/>
+    <label name="method"/>
+    <field name="method"/>
+</form>

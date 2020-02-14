@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tryton>
+    <data group="1">
+        <record model="ir.message" id="msg_sheet_compilation_unique">
+            <field name="text">Compilation already in use by another Analysis Sheet</field>
+        </record>
+    </data>
+</tryton>

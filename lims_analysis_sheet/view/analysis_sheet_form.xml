@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<form>
+    <label name="template"/>
+    <field name="template"/>
+    <label name="number"/>
+    <field name="number"/>
+    <label name="professional"/>
+    <field name="professional"/>
+    <label name="laboratory"/>
+    <field name="laboratory"/>
+    <label name="date"/>
+    <field name="date"/>
+    <label name="samples_qty"/>
+    <field name="samples_qty"/>
+    <label name="compilation"/>
+    <field name="compilation"/>
+    <label name="planification"/>
+    <field name="planification"/>
+    <button name="view_data" string="View data" colspan="4"/>
+    <label name="state"/>
+    <field name="state"/>
+    <group id="buttons" colspan="2" col="4">
+        <button name="activate" string="Activate"/>
+    </group>
+</form>
