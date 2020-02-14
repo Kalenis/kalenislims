@@ -30,6 +30,51 @@ class Planification(metaclass=PoolMeta):
     def search_analysis_sheet(cls, planifications):
         pass
 
+    @classmethod
+    def do_confirm(cls, planifications):
+        super(Planification, cls).do_confirm(planifications)
+        for planification in planifications:
+            planification.create_analysis_sheets()
+
+    def create_analysis_sheets(self):
+        pool = Pool()
+        cursor = Transaction().connection.cursor()
+        PlanificationServiceDetail = pool.get(
+            'lims.planification.service_detail')
+        TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+
+        analysis_sheets = {}
+        service_details = PlanificationServiceDetail.search([
+            ('detail.planification', '=', self.id),
+            ('notebook_line', '!=', None),
+            ])
+        for service_detail in service_details:
+            nl = service_detail.notebook_line
+            cursor.execute('SELECT template '
+                'FROM "' + TemplateAnalysis._table + '" '
+                'WHERE analysis = %s '
+                'AND (method = %s OR method IS NULL)',
+                (nl.analysis.id, nl.method.id))
+            template = cursor.fetchone()
+            if not template:
+                continue
+            key = (template[0], service_detail.staff_responsible[0])
+            if key not in analysis_sheets:
+                analysis_sheets[key] = []
+            analysis_sheets[key].append(nl)
+
+        for key, values in analysis_sheets.items():
+            sheet = AnalysisSheet()
+            sheet.template = key[0]
+            sheet.compilation = sheet.get_new_compilation()
+            sheet.professional = key[1]
+            sheet.laboratory = self.laboratory.id
+            sheet.planification = self.id
+            sheet.save()
+            sheet.activate([sheet])
+            sheet.create_lines(values)
+
 
 class SearchAnalysisSheetStart(ModelView):
     'Search Analysis Sheets'

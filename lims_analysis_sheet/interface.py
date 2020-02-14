@@ -159,6 +159,46 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def view_data(cls, sheets):
         pass
 
+    def get_new_compilation(self):
+        Compilation = Pool().get('lims.interface.compilation')
+        compilation = Compilation(
+            interface=self.template.interface.id,
+            revision=self.template.interface.revision,
+            )
+        return compilation
+
+    def create_lines(self, lines):
+        Data = Pool().get('lims.interface.data')
+
+        interface = self.template.interface
+        if not interface.notebook_line_field:
+            return
+
+        with Transaction().set_context(
+                lims_interface_table=self.compilation.table.id):
+            data = []
+            for nl in lines:
+                line = {'compilation': self.compilation.id}
+                line[interface.notebook_line_field.alias] = nl.id
+                if interface.analysis_field:
+                    if interface.analysis_field.type_ == 'many2one':
+                        line[interface.analysis_field.alias] = nl.analysis.id
+                    else:
+                        line[interface.analysis_field.alias] = (
+                            nl.analysis.rec_name)
+                if interface.fraction_field:
+                    if interface.fraction_field.type_ == 'many2one':
+                        line[interface.fraction_field.alias] = nl.fraction.id
+                    else:
+                        line[interface.fraction_field.alias] = (
+                            nl.fraction.rec_name)
+                if interface.repetition_field:
+                    line[interface.repetition_field.alias] = nl.repetition
+                data.append(line)
+
+            if data:
+                Data.create(data)
+
 
 class OpenAnalysisSheetData(Wizard):
     'Open Analysis Sheet Data'
