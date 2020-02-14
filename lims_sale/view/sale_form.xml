@@ -19,9 +19,9 @@
         <field name="expiration_date"/>
     </xpath>
 
-    <xpath expr="/form/notebook/page[@id='sale']/field[@name='currency']"
-        position="after">
-        <group col="2" colspan="2" id="lims_buttons">
+    <xpath expr="/form/notebook/page[@id='sale']/field[@name='lines']"
+        position="before">
+        <group col="3" colspan="4" id="lims_buttons">
             <button name="load_services"/>
             <button name="load_set_group"/>
         </group>
