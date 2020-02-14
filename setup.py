@@ -40,7 +40,9 @@ major_version, minor_version, _ = version.split('.', 2)
 major_version = int(major_version)
 minor_version = int(minor_version)
 
-requires = ['pytz', 'xlrd', 'xlutils', 'PyPDF2', 'unidecode']
+# TODO: check new openpyxl versions, v.3 seems to be buggy in PyPI
+requires = ['pytz', 'xlrd', 'xlutils', 'PyPDF2', 'unidecode', 'formulas',
+    'openpyxl==2.6.4']
 packages = []
 package_dir = {}
 package_data = {}
