@@ -2,14 +2,15 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond.model import ModelView, fields
+from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Equal, Bool
 from trytond.transaction import Transaction
 
 __all__ = ['Planification', 'SearchAnalysisSheetStart',
-    'SearchAnalysisSheetNext', 'SearchAnalysisSheet']
+    'SearchAnalysisSheetNext', 'SearchAnalysisSheet', 'RelateTechniciansStart',
+    'RelateTechniciansResult', 'RelateTechniciansDetail4', 'RelateTechnicians']
 
 
 class Planification(metaclass=PoolMeta):
@@ -353,3 +354,212 @@ class SearchAnalysisSheet(Wizard):
                     }
 
         return result
+
+
+class RelateTechniciansStart(metaclass=PoolMeta):
+    __name__ = 'lims.planification.relate_technicians.start'
+
+    @classmethod
+    def __setup__(cls):
+        super(RelateTechniciansStart, cls).__setup__()
+        grouping = ('analysis_sheet', 'Analysis sheet')
+        if grouping not in cls.grouping.selection:
+            cls.grouping.selection.append(grouping)
+
+
+class RelateTechniciansResult(metaclass=PoolMeta):
+    __name__ = 'lims.planification.relate_technicians.result'
+
+    details4 = fields.Many2Many(
+        'lims.planification.relate_technicians.detail4', None, None,
+        'Fractions to plan', domain=[('id', 'in', Eval('details4_domain'))],
+        states={'invisible': ~Bool(Equal(Eval('grouping'), 'analysis_sheet'))},
+        depends=['details4_domain', 'grouping'])
+    details4_domain = fields.One2Many(
+        'lims.planification.relate_technicians.detail4', None,
+        'Fractions domain')
+
+    @classmethod
+    def __setup__(cls):
+        super(RelateTechniciansResult, cls).__setup__()
+        grouping = ('analysis_sheet', 'Analysis sheet')
+        if grouping not in cls.grouping.selection:
+            cls.grouping.selection.append(grouping)
+
+    @fields.depends('grouping')
+    def on_change_grouping(self):
+        super(RelateTechniciansResult, self).on_change_grouping()
+        self.details4 = []
+
+
+class RelateTechniciansDetail4(ModelSQL, ModelView):
+    'Fraction Detail'
+    __name__ = 'lims.planification.relate_technicians.detail4'
+    _table = 'lims_planification_relate_technicians_d4'
+
+    fraction = fields.Many2One('lims.fraction', 'Fraction')
+    template = fields.Many2One('lims.template.analysis_sheet',
+        'Analysis sheet')
+    session_id = fields.Integer('Session ID')
+
+    @classmethod
+    def __register__(cls, module_name):
+        super(RelateTechniciansDetail4,
+            cls).__register__(module_name)
+        cursor = Transaction().connection.cursor()
+        cursor.execute('DELETE FROM "' + cls._table + '"')
+
+    @classmethod
+    def __setup__(cls):
+        super(RelateTechniciansDetail4, cls).__setup__()
+        cls._order.insert(0, ('fraction', 'ASC'))
+        cls._order.insert(1, ('template', 'ASC'))
+
+
+class RelateTechnicians(metaclass=PoolMeta):
+    __name__ = 'lims.planification.relate_technicians'
+
+    def transition_search(self):
+        planification_id = Transaction().context['active_id']
+
+        self.result.details4_domain = []
+
+        if self.start.grouping == 'analysis_sheet':
+            self.result.details4_domain = self._view_details4(planification_id,
+                self.start.exclude_relateds)
+        return super(RelateTechnicians, self).transition_search()
+
+    def default_result(self, fields):
+        res = super(RelateTechnicians, self).default_result(fields)
+        details4_domain = []
+        if self.result.details4_domain:
+            details4_domain = [d.id for d in self.result.details4_domain]
+        res['details4_domain'] = details4_domain
+        return res
+
+    def _view_details4(self, planification_id, exclude_relateds):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        PlanificationDetail = pool.get(
+            'lims.planification.detail')
+        PlanificationServiceDetail = pool.get(
+            'lims.planification.service_detail')
+        ServiceDetailProfessional = pool.get(
+            'lims.planification.service_detail-laboratory.professional')
+        NotebookLine = pool.get(
+            'lims.notebook.line')
+        RelateTechniciansDetail4 = pool.get(
+            'lims.planification.relate_technicians.detail4')
+        TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
+
+        exclude_relateds_clause = ''
+        if exclude_relateds:
+            exclude_relateds_clause = (' AND sd.id NOT IN ('
+                'SELECT sdp.detail '
+                'FROM "' + ServiceDetailProfessional._table + '" sdp '
+                    'INNER JOIN "' + PlanificationServiceDetail._table + '" sd'
+                    ' ON sdp.detail = sd.id '
+                    'INNER JOIN "' + PlanificationDetail._table + '" d'
+                    ' ON sd.detail = d.id '
+                 'WHERE d.planification = %s'
+                ')' % planification_id)
+
+        details4 = {}
+        cursor.execute('SELECT d.fraction, nl.analysis, nl.method '
+            'FROM "' + PlanificationDetail._table + '" d '
+                'INNER JOIN "' + PlanificationServiceDetail._table + '" sd '
+                    'ON sd.detail = d.id '
+                'INNER JOIN "' + NotebookLine._table + '" nl '
+                    'ON sd.notebook_line = nl.id '
+            'WHERE d.planification = %s' +
+            exclude_relateds_clause,
+            (planification_id,))
+        for x in cursor.fetchall():
+            cursor.execute('SELECT template '
+                'FROM "' + TemplateAnalysis._table + '" '
+                'WHERE analysis = %s '
+                'AND (method = %s OR method IS NULL)',
+                (x[1], x[2]))
+            template = cursor.fetchone()
+            t = template and template[0] or None
+            f = x[0]
+            if (f, t) not in details4:
+                details4[(f, t)] = {
+                    'fraction': f,
+                    'template': t,
+                    }
+
+        to_create = []
+        for d in details4.values():
+            to_create.append({
+                'session_id': self._session_id,
+                'fraction': d['fraction'],
+                'template': d['template'],
+                })
+        return RelateTechniciansDetail4.create(to_create)
+
+    def _get_details(self, planification_id):
+        details = super(RelateTechnicians, self)._get_details(planification_id)
+        if self.start.grouping == 'analysis_sheet':
+            details = self._get_details4(planification_id,
+                self.start.exclude_relateds)
+        return details
+
+    def _get_details4(self, planification_id, exclude_relateds):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        PlanificationDetail = pool.get(
+            'lims.planification.detail')
+        PlanificationServiceDetail = pool.get(
+            'lims.planification.service_detail')
+        ServiceDetailProfessional = pool.get(
+            'lims.planification.service_detail-laboratory.professional')
+        NotebookLine = pool.get('lims.notebook.line')
+        TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
+
+        exclude_relateds_clause = ''
+        if exclude_relateds:
+            exclude_relateds_clause = (' AND sd.id NOT IN ('
+                'SELECT sdp.detail '
+                'FROM "' + ServiceDetailProfessional._table + '" sdp '
+                    'INNER JOIN "' + PlanificationServiceDetail._table + '" sd'
+                    ' ON sdp.detail = sd.id '
+                    'INNER JOIN "' + PlanificationDetail._table + '" d'
+                    ' ON sd.detail = d.id '
+                 'WHERE d.planification = %s'
+                ')' % planification_id)
+
+        details = []
+        for detail in self.result.details4:
+
+            template_analysis = {}
+            cursor.execute('SELECT analysis, method '
+                'FROM "' + TemplateAnalysis._table + '" '
+                'WHERE template = %s',
+                (detail.template and detail.template.id or None,))
+            for res in cursor.fetchall():
+                template_analysis[res[0]] = res[1]
+            if not template_analysis:
+                continue
+            all_included_analysis_ids = ', '.join(str(x)
+                for x in list(template_analysis.keys()))
+            analysis_where = ('AND nl.analysis IN (' +
+                all_included_analysis_ids + ') ')
+
+            cursor.execute('SELECT sd.id, nl.analysis, nl.method '
+                'FROM "' + PlanificationDetail._table + '" d '
+                    'INNER JOIN "' + PlanificationServiceDetail._table + '" sd'
+                        ' ON sd.detail = d.id '
+                    'INNER JOIN "' + NotebookLine._table + '" nl '
+                        'ON sd.notebook_line = nl.id '
+                'WHERE d.planification = %s '
+                    'AND d.fraction = %s ' +
+                    analysis_where + exclude_relateds_clause,
+                (planification_id, detail.fraction.id))
+            for x in cursor.fetchall():
+                if (template_analysis[x[1]] and
+                        template_analysis[x[1]] != x[2]):
+                    continue
+                details.append(x[0])
+
+        return PlanificationServiceDetail.browse(details)

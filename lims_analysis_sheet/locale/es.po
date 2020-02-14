@@ -70,6 +70,50 @@ msgctxt "field:lims.configuration.sequence,analysis_sheet_sequence:"
 msgid "Analysis Sheet Sequence"
 msgstr "Secuencia de Hoja de análisis"
 
+msgctxt "field:lims.planification.relate_technicians.detail4,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.planification.relate_technicians.detail4,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.planification.relate_technicians.detail4,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "field:lims.planification.relate_technicians.detail4,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.planification.relate_technicians.detail4,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.planification.relate_technicians.detail4,session_id:"
+msgid "Session ID"
+msgstr "ID Sesión"
+
+msgctxt "field:lims.planification.relate_technicians.detail4,template:"
+msgid "Analysis sheet"
+msgstr "Hoja de análisis"
+
+msgctxt "field:lims.planification.relate_technicians.detail4,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.planification.relate_technicians.detail4,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.planification.relate_technicians.result,details4:"
+msgid "Fractions to plan"
+msgstr "Fracciones a planificar"
+
+msgctxt "field:lims.planification.relate_technicians.result,details4_domain:"
+msgid "Fractions domain"
+msgstr "Dominio para Fracciones"
+
 msgctxt "field:lims.planification.search_analysis_sheet.next,details:"
 msgid "Fractions to plan"
 msgstr "Fracciones a planificar"
@@ -219,6 +263,10 @@ msgctxt "model:lims.analysis_sheet,name:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
 
+msgctxt "model:lims.planification.relate_technicians.detail4,name:"
+msgid "Fraction Detail"
+msgstr "Detalle de fracción"
+
 msgctxt "model:lims.planification.search_analysis_sheet.next,name:"
 msgid "Search Analysis Sheets"
 msgstr "Buscar Hojas de ensayos"
@@ -242,6 +290,14 @@ msgstr "Activo"
 msgctxt "selection:lims.analysis_sheet,state:"
 msgid "Draft"
 msgstr "Borrador"
+
+msgctxt "selection:lims.planification.relate_technicians.result,grouping:"
+msgid "Analysis sheet"
+msgstr "Hoja de análisis"
+
+msgctxt "selection:lims.planification.relate_technicians.start,grouping:"
+msgid "Analysis sheet"
+msgstr "Hoja de análisis"
 
 msgctxt "view:lims.analysis_sheet:"
 msgid "Activate"

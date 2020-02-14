@@ -39,5 +39,24 @@
             <field name="wiz_name">lims.planification.search_analysis_sheet</field>
         </record>
 
+<!-- Wizard Relate Technicians -->
+
+        <record model="ir.ui.view" id="planification_relate_technicians_result_view_form">
+            <field name="model">lims.planification.relate_technicians.result</field>
+            <field name="inherit" ref="lims.lims_relate_technicians_result_view_form"/>
+            <field name="name">planification_relate_technicians_result_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_relate_technicians_detail4_view_form">
+            <field name="model">lims.planification.relate_technicians.detail4</field>
+            <field name="type">form</field>
+            <field name="name">planification_relate_technicians_detail4_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_relate_technicians_detail4_view_list">
+            <field name="model">lims.planification.relate_technicians.detail4</field>
+            <field name="type">tree</field>
+            <field name="name">planification_relate_technicians_detail4_list</field>
+        </record>
+
     </data>
 </tryton>
