@@ -53,9 +53,11 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         required=True, readonly=True)
     compilation = fields.Many2One('lims.interface.compilation', 'Compilation',
         required=True, readonly=True)
-    laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
+    laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
+        readonly=True)
     professional = fields.Many2One('lims.laboratory.professional',
-        'Professional', required=True)
+        'Professional', required=True, readonly=True)
+    urgent = fields.Function(fields.Boolean('Urgent'), 'get_urgent')
     samples_qty = fields.Function(fields.Integer('Samples Qty.'),
         'get_samples_qty')
     number = fields.Char('Number', readonly=True)
@@ -93,6 +95,29 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
     def get_date(self, name):
         return self.compilation.date_time
+
+    @classmethod
+    def get_urgent(cls, sheets, name):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        result = {}
+        for s in sheets:
+            result[s.id] = False
+            nl_field = (s.template.interface.notebook_line_field and
+                s.template.interface.notebook_line_field.alias or None)
+            if not nl_field:
+                continue
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                lines = Data.search([('compilation', '=', s.compilation.id)])
+                for line in lines:
+                    nl = getattr(line, nl_field)
+                    if nl and NotebookLine(nl).service.urgent:
+                        result[s.id] = True
+                        break
+        return result
 
     @classmethod
     def get_samples_qty(cls, sheets, name):
