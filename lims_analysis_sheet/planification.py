@@ -38,10 +38,8 @@ class Planification(metaclass=PoolMeta):
 
     def create_analysis_sheets(self):
         pool = Pool()
-        cursor = Transaction().connection.cursor()
         PlanificationServiceDetail = pool.get(
             'lims.planification.service_detail')
-        TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
         AnalysisSheet = pool.get('lims.analysis_sheet')
 
         analysis_sheets = {}
@@ -51,15 +49,10 @@ class Planification(metaclass=PoolMeta):
             ])
         for service_detail in service_details:
             nl = service_detail.notebook_line
-            cursor.execute('SELECT template '
-                'FROM "' + TemplateAnalysis._table + '" '
-                'WHERE analysis = %s '
-                'AND (method = %s OR method IS NULL)',
-                (nl.analysis.id, nl.method.id))
-            template = cursor.fetchone()
-            if not template:
+            template_id = nl.get_analysis_sheet_template()
+            if not template_id:
                 continue
-            key = (template[0], service_detail.staff_responsible[0])
+            key = (template_id, service_detail.staff_responsible[0])
             if key not in analysis_sheets:
                 analysis_sheets[key] = []
             analysis_sheets[key].append(nl)
@@ -72,8 +65,8 @@ class Planification(metaclass=PoolMeta):
             sheet.laboratory = self.laboratory.id
             sheet.planification = self.id
             sheet.save()
-            sheet.activate([sheet])
             sheet.create_lines(values)
+            #sheet.activate([sheet])
 
 
 class SearchAnalysisSheetStart(ModelView):
