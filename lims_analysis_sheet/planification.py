@@ -30,6 +30,44 @@ class Planification(metaclass=PoolMeta):
     def search_analysis_sheet(cls, planifications):
         pass
 
+    @classmethod
+    def do_confirm(cls, planifications):
+        super(Planification, cls).do_confirm(planifications)
+        for planification in planifications:
+            planification.create_analysis_sheets()
+
+    def create_analysis_sheets(self):
+        pool = Pool()
+        PlanificationServiceDetail = pool.get(
+            'lims.planification.service_detail')
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+
+        analysis_sheets = {}
+        service_details = PlanificationServiceDetail.search([
+            ('detail.planification', '=', self.id),
+            ('notebook_line', '!=', None),
+            ])
+        for service_detail in service_details:
+            nl = service_detail.notebook_line
+            template_id = nl.get_analysis_sheet_template()
+            if not template_id:
+                continue
+            key = (template_id, service_detail.staff_responsible[0])
+            if key not in analysis_sheets:
+                analysis_sheets[key] = []
+            analysis_sheets[key].append(nl)
+
+        for key, values in analysis_sheets.items():
+            sheet = AnalysisSheet()
+            sheet.template = key[0]
+            sheet.compilation = sheet.get_new_compilation()
+            sheet.professional = key[1]
+            sheet.laboratory = self.laboratory.id
+            sheet.planification = self.id
+            sheet.save()
+            sheet.create_lines(values)
+            #sheet.activate([sheet])
+
 
 class SearchAnalysisSheetStart(ModelView):
     'Search Analysis Sheets'
@@ -195,7 +233,7 @@ class SearchAnalysisSheet(Wizard):
         records_ids_added = ', '.join(str(x)
             for x in ['(0,0)'] + records_added)
         extra_where = (
-            'AND (nb.fraction, nl.analysis) IN (' + records_ids_added + ') ')
+            'AND (nb.fraction, srv.analysis) IN (' + records_ids_added + ') ')
 
         data = self._get_service_details(planification, extra_where)
 
@@ -246,6 +284,7 @@ class SearchAnalysisSheet(Wizard):
         FractionType = pool.get('lims.fraction.type')
         Sample = pool.get('lims.sample')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Service = pool.get('lims.service')
         Analysis = pool.get('lims.analysis')
         TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
 
@@ -284,7 +323,8 @@ class SearchAnalysisSheet(Wizard):
                 'ON smp.id = frc.sample ')
             repetition_select = ', nl.repetition != 0'
 
-        sql_select = ('SELECT nl.id, nb.fraction, nl.analysis, nl.method' +
+        sql_select = ('SELECT nl.id, nb.fraction, srv.analysis' +
+            ', nl.analysis, nl.method' +
             sample_select + repetition_select + ' ')
 
         sql_from = (
@@ -298,7 +338,9 @@ class SearchAnalysisSheet(Wizard):
             'INNER JOIN "' + FractionType._table + '" ft '
             'ON ft.id = frc.type '
             'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
-            'ON ad.id = nl.analysis_detail ' +
+            'ON ad.id = nl.analysis_detail '
+            'INNER JOIN "' + Service._table + '" srv '
+            'ON srv.id = nl.service ' +
             sample_from)
 
         sql_where = (
@@ -313,7 +355,7 @@ class SearchAnalysisSheet(Wizard):
             service_where + extra_where)
 
         sql_order = (
-            'ORDER BY nb.fraction ASC, nl.analysis ASC')
+            'ORDER BY nb.fraction ASC, srv.analysis ASC')
 
         with Transaction().set_user(0):
             cursor.execute(sql_select + sql_from + sql_where + sql_order,
@@ -327,8 +369,8 @@ class SearchAnalysisSheet(Wizard):
         nlines_added = []
         if extra_where:
             for nl in notebook_lines:
-                if (template_analysis[nl[2]] and
-                        template_analysis[nl[2]] != nl[3]):
+                if (template_analysis[nl[3]] and
+                        template_analysis[nl[3]] != nl[4]):
                     continue
                 f_ = nl[1]
                 s_ = nl[2]
@@ -342,15 +384,15 @@ class SearchAnalysisSheet(Wizard):
                         })
         else:
             for nl in notebook_lines:
-                if (template_analysis[nl[2]] and
-                        template_analysis[nl[2]] != nl[3]):
+                if (template_analysis[nl[3]] and
+                        template_analysis[nl[3]] != nl[4]):
                     continue
                 f_ = nl[1]
                 s_ = nl[2]
                 result[(f_, s_)] = {
-                    'product_type': nl[4],
-                    'matrix': nl[5],
-                    'repetition': nl[6],
+                    'product_type': nl[5],
+                    'matrix': nl[6],
+                    'repetition': nl[7],
                     }
 
         return result

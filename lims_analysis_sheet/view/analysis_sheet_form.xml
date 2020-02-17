@@ -10,16 +10,22 @@
     <field name="laboratory"/>
     <label name="date"/>
     <field name="date"/>
-    <label name="samples_qty"/>
-    <field name="samples_qty"/>
+    <group id="samples" colspan="2" col="4">
+        <label name="samples_qty"/>
+        <field name="samples_qty"/>
+        <label name="urgent"/>
+        <field name="urgent"/>
+    </group>
     <label name="compilation"/>
     <field name="compilation"/>
     <label name="planification"/>
     <field name="planification"/>
     <button name="view_data" string="View data" colspan="4"/>
-    <label name="state"/>
-    <field name="state"/>
-    <group id="buttons" colspan="2" col="4">
-        <button name="activate" string="Activate"/>
-    </group>
+    <group colspan="4" id="state_holder">
+        <label name="state"/>
+        <field name="state"/>
+        <group colspan="2" id="buttons_holder">
+            <button name="activate" string="Activate"/>
+         </group>
+     </group>
 </form>

@@ -44,7 +44,7 @@ msgstr "Nombre"
 
 msgctxt "field:lims.analysis_sheet,samples_qty:"
 msgid "Samples Qty."
-msgstr "Cantidad de Muestras"
+msgstr "Cant. Muestras"
 
 msgctxt "field:lims.analysis_sheet,state:"
 msgid "State"
@@ -53,6 +53,10 @@ msgstr "Estado"
 msgctxt "field:lims.analysis_sheet,template:"
 msgid "Template"
 msgstr "Plantilla"
+
+msgctxt "field:lims.analysis_sheet,urgent:"
+msgid "Urgent"
+msgstr "Urgente"
 
 msgctxt "field:lims.analysis_sheet,write_date:"
 msgid "Write Date"
@@ -302,10 +306,6 @@ msgstr "Hoja de análisis"
 msgctxt "view:lims.analysis_sheet:"
 msgid "Activate"
 msgstr "Activar"
-
-msgctxt "view:lims.analysis_sheet:"
-msgid "Time"
-msgstr "Hora"
 
 msgctxt "view:lims.analysis_sheet:"
 msgid "View data"

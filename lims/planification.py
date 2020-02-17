@@ -648,7 +648,8 @@ class PlanificationDetail(ModelSQL, ModelView):
         'get_fraction_field')
     details = fields.One2Many('lims.planification.service_detail',
         'detail', 'Planification detail', states={'readonly': True})
-    urgent = fields.Function(fields.Boolean('Urgent'), 'get_service_field')
+    urgent = fields.Function(fields.Boolean('Urgent'), 'get_service_field',
+        setter='set_urgent')
     priority = fields.Function(fields.Integer('Priority'), 'get_service_field')
     report_date = fields.Function(fields.Date('Date agreed for result'),
         'get_service_field')
@@ -706,6 +707,15 @@ class PlanificationDetail(ModelSQL, ModelView):
                         for name in names:
                             result[name][d.id] = getattr(service, name)
         return result
+
+    @classmethod
+    def set_urgent(cls, details, name, value):
+        Service = Pool().get('lims.service')
+        for d in details:
+            if d.fraction and d.service_analysis:
+                for service in d.fraction.services:
+                    if service.analysis == d.service_analysis:
+                        Service.write([service], {'urgent': value})
 
     def get_icon(self, name):
         if self.comments:

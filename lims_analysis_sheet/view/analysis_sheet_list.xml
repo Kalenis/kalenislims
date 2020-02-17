@@ -5,7 +5,8 @@
     <field name="template"/>
     <field name="samples_qty"/>
     <field name="date" widget="date"/>
-    <field name="date" widget="time" string="Time"/>
+    <field name="urgent"/>
     <field name="state"/>
+    <button name="activate" string="Activate"/>
     <field name="number"/>
 </tree>
