@@ -214,13 +214,15 @@ class Data(ModelSQL, ModelView):
                     break
             assert(view.id)
 
+        fields_names = []
+        for field in table.fields_:
+            fields_names.append(field.name)
         res = {
             'type': view.type,
             'view_id': view_id,
             'field_childs': None,
             'arch': view.arch,
-            # TODO: We should specify the exact fields required by the view
-            'fields': cls.fields_get(),
+            'fields': cls.fields_get(fields_names),
             }
         return res
 
