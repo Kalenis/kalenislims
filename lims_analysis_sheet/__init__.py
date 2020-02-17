@@ -6,6 +6,7 @@ from trytond.pool import Pool
 from . import configuration
 from . import interface
 from . import planification
+from . import notebook
 
 
 def register():
@@ -21,6 +22,7 @@ def register():
         planification.RelateTechniciansStart,
         planification.RelateTechniciansResult,
         planification.RelateTechniciansDetail4,
+        notebook.NotebookLine,
         module='lims_analysis_sheet', type_='model')
     Pool.register(
         interface.OpenAnalysisSheetData,

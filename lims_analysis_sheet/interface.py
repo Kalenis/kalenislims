@@ -53,9 +53,11 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         required=True, readonly=True)
     compilation = fields.Many2One('lims.interface.compilation', 'Compilation',
         required=True, readonly=True)
-    laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
+    laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
+        readonly=True)
     professional = fields.Many2One('lims.laboratory.professional',
-        'Professional', required=True)
+        'Professional', required=True, readonly=True)
+    urgent = fields.Function(fields.Boolean('Urgent'), 'get_urgent')
     samples_qty = fields.Function(fields.Integer('Samples Qty.'),
         'get_samples_qty')
     number = fields.Char('Number', readonly=True)
@@ -95,10 +97,50 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         return self.compilation.date_time
 
     @classmethod
+    def get_urgent(cls, sheets, name):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        result = {}
+        for s in sheets:
+            result[s.id] = False
+            nl_field = (s.template.interface.notebook_line_field and
+                s.template.interface.notebook_line_field.alias or None)
+            if not nl_field:
+                continue
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                lines = Data.search([('compilation', '=', s.compilation.id)])
+                for line in lines:
+                    nl = getattr(line, nl_field)
+                    if nl and NotebookLine(nl).service.urgent:
+                        result[s.id] = True
+                        break
+        return result
+
+    @classmethod
     def get_samples_qty(cls, sheets, name):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+        NotebookLine = pool.get('lims.notebook.line')
+
         result = {}
         for s in sheets:
             result[s.id] = 0
+            nl_field = (s.template.interface.notebook_line_field and
+                s.template.interface.notebook_line_field.alias or None)
+            if not nl_field:
+                continue
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                samples = []
+                lines = Data.search([('compilation', '=', s.compilation.id)])
+                for line in lines:
+                    nl = getattr(line, nl_field)
+                    if nl:
+                        samples.append(NotebookLine(nl).fraction.id)
+                result[s.id] = len(list(set(samples)))
         return result
 
     @classmethod
@@ -141,6 +183,46 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         'lims_analysis_sheet.wiz_open_analysis_sheet_data')
     def view_data(cls, sheets):
         pass
+
+    def get_new_compilation(self):
+        Compilation = Pool().get('lims.interface.compilation')
+        compilation = Compilation(
+            interface=self.template.interface.id,
+            revision=self.template.interface.revision,
+            )
+        return compilation
+
+    def create_lines(self, lines):
+        Data = Pool().get('lims.interface.data')
+
+        interface = self.template.interface
+        if not interface.notebook_line_field:
+            return
+
+        with Transaction().set_context(
+                lims_interface_table=self.compilation.table.id):
+            data = []
+            for nl in lines:
+                line = {'compilation': self.compilation.id}
+                line[interface.notebook_line_field.alias] = nl.id
+                if interface.analysis_field:
+                    if interface.analysis_field.type_ == 'many2one':
+                        line[interface.analysis_field.alias] = nl.analysis.id
+                    else:
+                        line[interface.analysis_field.alias] = (
+                            nl.analysis.rec_name)
+                if interface.fraction_field:
+                    if interface.fraction_field.type_ == 'many2one':
+                        line[interface.fraction_field.alias] = nl.fraction.id
+                    else:
+                        line[interface.fraction_field.alias] = (
+                            nl.fraction.rec_name)
+                if interface.repetition_field:
+                    line[interface.repetition_field.alias] = nl.repetition
+                data.append(line)
+
+            if data:
+                Data.create(data)
 
 
 class OpenAnalysisSheetData(Wizard):

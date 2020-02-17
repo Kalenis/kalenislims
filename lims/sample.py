@@ -3045,10 +3045,9 @@ class ManageServices(Wizard):
         if analysis_detail:
             EntryDetailAnalysis.create_notebook_lines(analysis_detail,
                 fraction)
-
-        EntryDetailAnalysis.write(analysis_detail, {
-            'state': 'unplanned',
-            })
+            EntryDetailAnalysis.write(analysis_detail, {
+                'state': 'unplanned',
+                })
         if fraction.cie_fraction_type:
             self._create_blind_samples(analysis_detail, fraction)
 
@@ -3085,10 +3084,10 @@ class ManageServices(Wizard):
             if analysis_detail:
                 EntryDetailAnalysis.create_notebook_lines(analysis_detail,
                     fraction)
-
-            EntryDetailAnalysis.write(analysis_detail, {
-                'state': 'unplanned',
-                })
+                EntryDetailAnalysis.write(analysis_detail, {
+                    'state': 'unplanned',
+                    'confirmation_date': original_service.confirmation_date,
+                    })
             if fraction.cie_fraction_type:
                 self._create_blind_samples(analysis_detail, fraction)
 
@@ -3198,9 +3197,7 @@ class CompleteServices(Wizard):
             values['method'] = analysis['method']
             values['device'] = analysis['device']
             values['confirmation_date'] = service.confirmation_date
-            # from lims_planification
-            if 'trytond.modules.lims_planification' in sys.modules:
-                values['state'] = 'unplanned'
+            values['state'] = 'unplanned'
             to_create.append(values)
 
         if to_create:
@@ -3316,10 +3313,9 @@ class EditSampleService(Wizard):
         if analysis_detail:
             EntryDetailAnalysis.create_notebook_lines(analysis_detail,
                 fraction)
-
-        EntryDetailAnalysis.write(analysis_detail, {
-            'state': 'unplanned',
-            })
+            EntryDetailAnalysis.write(analysis_detail, {
+                'state': 'unplanned',
+                })
 
         return new_service
 
