@@ -6179,7 +6179,7 @@ class PrintPendingServicesUnplannedReport(Wizard):
             'start_date': self.start.start_date,
             'end_date': self.start.end_date or None,
             'party': self.start.party and self.start.party.id or None,
-            'include_method': self.start.include_method or None,
+            'include_method': self.start.include_method,
             }
         return action, data
 
@@ -6188,7 +6188,7 @@ class PrintPendingServicesUnplannedReport(Wizard):
             'start_date': self.start.start_date,
             'end_date': self.start.end_date or None,
             'party': self.start.party and self.start.party.id or None,
-            'include_method': self.start.include_method or None,
+            'include_method': self.start.include_method,
             }
         return action, data
 
@@ -6199,243 +6199,152 @@ class PendingServicesUnplannedReport(Report):
 
     @classmethod
     def get_context(cls, records, data):
+        pool = Pool()
+        Laboratory = pool.get('lims.laboratory')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
         report_context = super(PendingServicesUnplannedReport,
                 cls).get_context(records, data)
 
-        pool = Pool()
-        Service = pool.get('lims.service')
-        Laboratory = pool.get('lims.laboratory')
+        report_context['company'] = report_context['user'].company
+        report_context['start_date'] = (data['start_date']
+            if data['start_date'] else '')
+        report_context['end_date'] = (data['end_date']
+            if data['end_date'] else '')
+        report_context['include_method'] = data['include_method']
 
         if report_context['user'].laboratory:
             labs = [report_context['user'].laboratory.id]
         else:
             labs = [l.id for l in Laboratory.search([])]
 
-        report_context['company'] = report_context['user'].company
-
-        clause = []
+        clause = [
+            ('plannable', '=', True),
+            ('state', '=', 'unplanned'),
+            ('analysis.behavior', '!=', 'internal_relation'),
+            ('service.fraction.confirmed', '=', True),
+            ]
         if data['start_date']:
-            clause.append(('confirmation_date', '>=', data['start_date']))
+            clause.append(
+                ('service.confirmation_date', '>=', data['start_date']))
         if data['end_date']:
-            clause.append(('confirmation_date', '<=', data['end_date']))
+            clause.append(
+                ('service.confirmation_date', '<=', data['end_date']))
         if data['party']:
             clause.append(('party', '=', data['party']))
-        clause.extend([
-            ('fraction.confirmed', '=', True),
-            ('analysis.behavior', '!=', 'internal_relation'),
-            ])
-        unplanned_services = cls.get_unplanned_services()
-        clause.append(('id', 'in', unplanned_services))
 
-        report_context['start_date'] = (data['start_date']
-            if data['start_date'] else '')
-        report_context['end_date'] = (data['end_date']
-            if data['end_date'] else '')
-        report_context['include_method'] = data['include_method']
         objects = {}
         with Transaction().set_user(0):
-            pending_services = Service.search(clause)
-        for service in pending_services:
+            details = EntryDetailAnalysis.search(clause)
+        for detail in details:
             # Laboratory
-            laboratory = cls.get_service_laboratory(service.id)
-            if laboratory.id not in labs:
+            laboratory_id = detail.laboratory.id
+            if laboratory_id not in labs:
                 continue
 
-            if laboratory.id not in objects:
-                objects[laboratory.id] = {
-                    'laboratory': laboratory.rec_name,
+            if laboratory_id not in objects:
+                objects[laboratory_id] = {
+                    'laboratory': detail.laboratory.rec_name,
                     'services': {},
                     'total': 0,
                     }
 
             # Service
-            analysis = service.analysis
-            if analysis.id not in objects[laboratory.id]['services']:
-                objects[laboratory.id]['services'][analysis.id] = {
-                    'service': analysis.rec_name,
+            analysis_id = detail.service.analysis.id
+            if analysis_id not in objects[laboratory_id]['services']:
+                objects[laboratory_id]['services'][analysis_id] = {
+                    'service': detail.service.analysis.rec_name,
                     'parties': {},
                     'total': 0,
                     }
 
             # Party
-            party = service.party
-            if (party.id not in objects[laboratory.id]['services'][
-                    analysis.id]['parties']):
-                objects[laboratory.id]['services'][analysis.id]['parties'][
-                    party.id] = {
-                        'party': party.code,
-                        'lines': [],
+            party_id = detail.party.id
+            if (party_id not in objects[laboratory_id]['services'][
+                    analysis_id]['parties']):
+                objects[laboratory_id]['services'][analysis_id]['parties'][
+                    party_id] = {
+                        'party': detail.party.code,
+                        'lines': {},
                         'total': 0,
                         }
 
-            number = service.fraction.get_formated_number('pt-m-sn-sy-fn')
-            number = (number + '-' + str(service.sample.label))
+            # Key
+            if data['include_method']:
+                key = (detail.fraction.id, detail.method.id)
+            else:
+                key = detail.fraction.id
+
+            if (key in objects[laboratory_id]['services'][analysis_id][
+                    'parties'][party_id]['lines']):
+                continue
+
+            number = detail.service.fraction.get_formated_number(
+                'pt-m-sn-sy-fn')
+            number = (number + '-' + str(detail.service.sample.label))
             number_parts = number.split('-')
             order = (number_parts[3] + '-' + number_parts[2] + '-' +
                 number_parts[4])
 
-            result_estimated = []
-            result_estimated = cls.get_results_estimated(service.id)
-            result_estimated_date = None
-            result_estimated_waiting = None
+            results_estimated_date = None
+            results_estimated_waiting = cls._get_estimated_waiting(detail.id)
+            if results_estimated_waiting:
+                results_estimated_date = (detail.service.confirmation_date +
+                    relativedelta(days=results_estimated_waiting))
 
-            if result_estimated:
-                result_estimated_waiting = result_estimated[0][1]
-                confirmation_date = result_estimated[0][0]
-                c_days = result_estimated_waiting
-                result_estimated_date = (confirmation_date +
-                    relativedelta(days=c_days))
+            record = {
+                'order': order,
+                'number': number,
+                'date': detail.service.sample.date2,
+                'sample_client_description': (
+                    detail.service.sample.sample_client_description),
+                'current_location': (
+                    detail.service.fraction.current_location.code
+                    if detail.service.fraction.current_location else ''),
+                'fraction_type': detail.service.fraction.type.code,
+                'priority': detail.service.priority,
+                'urgent': 'Yes' if detail.service.urgent else 'No',
+                'method': detail.method.code if data['include_method'] else '',
+                'comments': ('%s - %s' % (
+                    detail.service.fraction.comments or '',
+                    detail.service.sample.comments or '')),
+                'report_date': detail.service.report_date,
+                'confirmation_date': (detail.service.confirmation_date
+                    if detail.service.confirmation_date else ''),
+                'results_estimated_date': results_estimated_date or '',
+                }
+            objects[laboratory_id]['services'][analysis_id]['parties'][
+                party_id]['lines'][key] = record
+            objects[laboratory_id]['services'][analysis_id]['parties'][
+                party_id]['total'] += 1
+            objects[laboratory_id]['services'][analysis_id][
+                'total'] += 1
+            objects[laboratory_id]['total'] += 1
 
-            if data['include_method']:
-                method_pending = cls.get_unplanned_method(service.id)
-                for method in method_pending:
-                    record = {
-                        'order': order,
-                        'number': number,
-                        'date': service.sample.date2,
-                        'sample_client_description': (
-                            service.sample.sample_client_description),
-                        'current_location': (
-                            service.fraction.current_location.code
-                            if service.fraction.current_location else ''),
-                        'fraction_type': service.fraction.type.code,
-                        'priority': service.priority,
-                        'urgent': 'Yes' if service.urgent else 'No',
-                        'method': method[0],
-                        'comments': (
-                            '%s - %s' % (service.fraction.comments or '',
-                            service.sample.comments or '')),
-                        'report_date': service.report_date,
-                        'confirmation_date': (service.confirmation_date
-                            if service.confirmation_date else ''),
-                        'results_estimated_date': (result_estimated_date
-                            if result_estimated_date else ''),
-                        }
-                    objects[laboratory.id]['services'][analysis.id]['parties'][
-                        party.id]['lines'].append(record)
-                    objects[laboratory.id]['total'] += 1
-                    objects[laboratory.id]['services'][analysis.id][
-                        'total'] += 1
-                    objects[laboratory.id]['services'][analysis.id]['parties'][
-                        party.id]['total'] += 1
-            else:
-                record = {
-                    'order': order,
-                    'number': number,
-                    'date': service.sample.date2,
-                    'sample_client_description': (
-                        service.sample.sample_client_description),
-                    'current_location': (service.fraction.current_location.code
-                        if service.fraction.current_location else ''),
-                    'fraction_type': service.fraction.type.code,
-                    'priority': service.priority,
-                    'urgent': 'Yes' if service.urgent else 'No',
-                    'method': '',
-                    'comments': ('%s - %s' % (service.fraction.comments or '',
-                        service.sample.comments or '')),
-                    'report_date': service.report_date,
-                    'confirmation_date': (service.confirmation_date
-                        if service.confirmation_date else ''),
-                    'results_estimated_date': (result_estimated_date
-                        if result_estimated_date else ''),
-                    }
-                objects[laboratory.id]['services'][analysis.id]['parties'][
-                    party.id]['lines'].append(record)
-                objects[laboratory.id]['total'] += 1
-                objects[laboratory.id]['services'][analysis.id]['total'] += 1
-                objects[laboratory.id]['services'][analysis.id]['parties'][
-                    party.id]['total'] += 1
         for k1 in objects.keys():
             for k2 in objects[k1]['services'].keys():
                 for k3, lines in objects[k1]['services'][k2][
                         'parties'].items():
-                    sorted_lines = sorted(lines['lines'],
+                    sorted_lines = sorted(lines['lines'].values(),
                         key=lambda x: x['order'])
                     objects[k1]['services'][k2]['parties'][k3]['lines'] = (
                         sorted_lines)
 
         report_context['objects'] = objects
-
         return report_context
 
     @classmethod
-    def get_unplanned_services(cls):
+    def _get_estimated_waiting(cls, detail_id):
         cursor = Transaction().connection.cursor()
-        pool = Pool()
-        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
-        Analysis = pool.get('lims.analysis')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        cursor.execute('SELECT DISTINCT(d.service) '
-            'FROM "' + EntryDetailAnalysis._table + '" d '
-                'INNER JOIN "' + Analysis._table + '" a '
-                'ON a.id = d.analysis '
-            'WHERE d.plannable = TRUE '
-                'AND d.state = \'unplanned\' '
-                'AND a.behavior != \'internal_relation\'')
-        not_planned_ids = [s[0] for s in cursor.fetchall()]
-        return not_planned_ids
-
-    @classmethod
-    def get_unplanned_method(cls, service_id):
-        cursor = Transaction().connection.cursor()
-        pool = Pool()
-        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
-        Analysis = pool.get('lims.analysis')
-        LabMethod = pool.get('lims.lab.method')
-
-        cursor.execute('SELECT DISTINCT(m.code) '
-            'FROM "' + EntryDetailAnalysis._table + '" d '
-                'INNER JOIN "' + Analysis._table + '" a '
-                'ON a.id = d.analysis '
-                'INNER JOIN"' + LabMethod._table + '" m '
-                'ON d.method = m.id '
-            'WHERE d.service = %s '
-                'AND d.state = \'unplanned\' '
-                'AND a.behavior != \'internal_relation\'',
-                (service_id,))
-        not_planned_ids = list(cursor.fetchall())
-        return not_planned_ids
-
-    @classmethod
-    def get_service_laboratory(cls, service_id):
-        cursor = Transaction().connection.cursor()
-        pool = Pool()
-        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
-        Service = pool.get('lims.service')
-        Laboratory = pool.get('lims.laboratory')
-
-        cursor.execute('SELECT d.laboratory '
-            'FROM "' + EntryDetailAnalysis._table + '" d '
-                'INNER JOIN "' + Service._table + '" s '
-                'ON s.id = d.service '
-            'WHERE s.id = %s '
-            'ORDER BY d.id ASC LIMIT 1',
-            (service_id,))
-        return Laboratory(cursor.fetchone()[0])
-
-    @classmethod
-    def get_results_estimated(cls, service_id):
-        cursor = Transaction().connection.cursor()
-        pool = Pool()
-        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
-        NotebookLine = pool.get('lims.notebook.line')
-        Analysis = pool.get('lims.analysis')
-
-        cursor.execute('SELECT  d.confirmation_date, '
-                'n.results_estimated_waiting '
-            'FROM "' + NotebookLine._table + '" n '
-                'INNER JOIN "' + EntryDetailAnalysis._table + '" d '
-                'ON (d.service = n.service  AND d.analysis = n.analysis) '
-                'INNER JOIN "' + Analysis._table + '" a '
-                'ON a.id = d.analysis '
-            'WHERE d.state = \'unplanned\' '
-                'AND d.service = %s '
-                'AND n.results_estimated_waiting IS NOT Null '
-                'AND a.behavior != \'internal_relation\''
-                'ORDER BY n.results_estimated_waiting ASC LIMIT 1',
-                (service_id,))
-
-        return list(cursor.fetchall())
+        cursor.execute('SELECT MIN(results_estimated_waiting) '
+            'FROM "' + NotebookLine._table + '" '
+            'WHERE analysis_detail = %s '
+                'AND results_estimated_waiting IS NOT NULL',
+            (detail_id,))
+        res = cursor.fetchone()
+        return res and res[0] or None
 
 
 class PendingServicesUnplannedSpreadsheet(Report):
@@ -6444,238 +6353,135 @@ class PendingServicesUnplannedSpreadsheet(Report):
 
     @classmethod
     def get_context(cls, records, data):
+        pool = Pool()
+        Laboratory = pool.get('lims.laboratory')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
         report_context = super(PendingServicesUnplannedSpreadsheet,
                 cls).get_context(records, data)
-
-        pool = Pool()
-        Service = pool.get('lims.service')
-        Laboratory = pool.get('lims.laboratory')
+        report_context['company'] = report_context['user'].company
+        report_context['start_date'] = (data['start_date']
+            if data['start_date'] else '')
+        report_context['end_date'] = (data['end_date']
+            if data['end_date'] else '')
+        report_context['include_method'] = data['include_method']
 
         if report_context['user'].laboratory:
             labs = [report_context['user'].laboratory.id]
         else:
             labs = [l.id for l in Laboratory.search([])]
 
-        report_context['company'] = report_context['user'].company
-
-        clause = []
+        clause = [
+            ('plannable', '=', True),
+            ('state', '=', 'unplanned'),
+            ('analysis.behavior', '!=', 'internal_relation'),
+            ('service.fraction.confirmed', '=', True),
+            ]
         if data['start_date']:
-            clause.append(('confirmation_date', '>=', data['start_date']))
+            clause.append(
+                ('service.confirmation_date', '>=', data['start_date']))
         if data['end_date']:
-            clause.append(('confirmation_date', '<=', data['end_date']))
+            clause.append(
+                ('service.confirmation_date', '<=', data['end_date']))
         if data['party']:
             clause.append(('party', '=', data['party']))
-        clause.extend([
-            ('fraction.confirmed', '=', True),
-            ('analysis.behavior', '!=', 'internal_relation'),
-            ])
-        unplanned_services = cls.get_unplanned_services()
-        clause.append(('id', 'in', unplanned_services))
 
-        report_context['start_date'] = (data['start_date']
-            if data['start_date'] else '')
-        report_context['end_date'] = (data['end_date']
-            if data['end_date'] else '')
-        report_context['include_method'] = data['include_method']
-        objects = []
+        objects = {}
         with Transaction().set_user(0):
-            pending_services = Service.search(clause)
-
-        for service in pending_services:
-            laboratory = cls.get_service_laboratory(service.id)
-            if laboratory.id not in labs:
+            details = EntryDetailAnalysis.search(clause)
+        for detail in details:
+            # Laboratory
+            laboratory_id = detail.laboratory.id
+            if laboratory_id not in labs:
                 continue
 
-            number = service.fraction.get_formated_number('pt-m-sn-sy-fn')
-            number = (number + '-' + str(service.sample.label))
+            # Key
+            if data['include_method']:
+                key = (detail.fraction.id, detail.method.id)
+            else:
+                key = detail.fraction.id
+
+            if key in objects:
+                continue
+
+            number = detail.service.fraction.get_formated_number(
+                'pt-m-sn-sy-fn')
+            number = (number + '-' + str(detail.service.sample.label))
             number_parts = number.split('-')
             order = (number_parts[3] + '-' + number_parts[2] + '-' +
                 number_parts[4])
 
-            result_estimated = []
-            result_estimated = cls.get_results_estimated(service.id)
-            result_estimated_date = None
-            result_estimated_waiting = None
+            results_estimated_date = None
+            results_estimated_waiting = cls._get_estimated_waiting(detail.id)
+            if results_estimated_waiting:
+                results_estimated_date = (detail.service.confirmation_date +
+                    relativedelta(days=results_estimated_waiting))
 
-            if result_estimated:
-                result_estimated_waiting = result_estimated[0][1]
-                confirmation_date = result_estimated[0][0]
-                c_days = result_estimated_waiting
-                result_estimated_date = (confirmation_date +
-                    relativedelta(days=c_days))
             notice = None
-            report_date = service.report_date
-            today_datetime = get_print_date()
-            today = today_datetime.date()
+            report_date = detail.service.report_date
+            today = get_print_date().date()
 
             if report_date:
                 if report_date < today:
                     notice = 'Timed out'
-            else:
-                if result_estimated_date:
-                    if result_estimated_date < today:
-                        notice = 'Timed out'
-
-            if report_date:
-                d = (report_date - today).days
-                if d >= 0 and d < 3:
-                    notice = 'To expire'
-            else:
-                if result_estimated_date:
-                    d = (result_estimated_date - today).days
+                else:
+                    d = (report_date - today).days
+                    if d >= 0 and d < 3:
+                        notice = 'To expire'
+            elif results_estimated_date:
+                if results_estimated_date < today:
+                    notice = 'Timed out'
+                else:
+                    d = (results_estimated_date - today).days
                     if d >= 0 and d < 3:
                         notice = 'To expire'
 
-            if data['include_method']:
-                method_pending = cls.get_unplanned_method(service.id)
-                for method in method_pending:
-                    record = {
-                        'laboratory': laboratory.rec_name,
-                        'service': service.analysis.rec_name,
-                        'method': method[0],
-                        'party': service.party.code,
-                        'order': order,
-                        'number': number,
-                        'date': service.sample.date2,
-                        'sample_client_description': (
-                            service.sample.sample_client_description),
-                        'current_location': (
-                            service.fraction.current_location.code
-                            if service.fraction.current_location else ''),
-                        'fraction_type': service.fraction.type.code,
-                        'priority': service.priority,
-                        'urgent': 'Yes' if service.urgent else 'No',
-                        'comments': (
-                            '%s - %s' % (service.fraction.comments or '',
-                            service.sample.comments or '')),
-                        'report_date': service.report_date,
-                        'confirmation_date': (service.confirmation_date
-                           if service.confirmation_date else ''),
-                        'results_estimated_date': (result_estimated_date
-                            if result_estimated_date else ''),
-                        'results_estimated_waiting': (
-                            result_estimated_waiting
-                            if result_estimated_waiting else ''),
-                        'notice': (notice
-                            if notice else ''),
-                        }
-                    objects.append(record)
-            else:
-                record = {
-                    'laboratory': laboratory.rec_name,
-                    'service': service.analysis.rec_name,
-                    'party': service.party.code,
-                    'order': order,
-                    'number': number,
-                    'date': service.sample.date2,
-                    'sample_client_description': (
-                        service.sample.sample_client_description),
-                    'current_location': (
-                        service.fraction.current_location.code
-                        if service.fraction.current_location else ''),
-                    'fraction_type': service.fraction.type.code,
-                    'priority': service.priority,
-                    'urgent': 'Yes' if service.urgent else 'No',
-                    'comments': ('%s - %s' % (service.fraction.comments or '',
-                       service.sample.comments or '')),
-                    'report_date': service.report_date,
-                    'confirmation_date': (service.confirmation_date
-                        if service.confirmation_date else ''),
-                    'results_estimated_date': (result_estimated_date
-                        if result_estimated_date else ''),
-                    'results_estimated_waiting': (
-                        result_estimated_waiting
-                        if result_estimated_waiting else ''),
-                    'notice': (notice
-                        if notice else ''),
-                    }
-                objects.append(record)
+            record = {
+                'laboratory': detail.laboratory.rec_name,
+                'service': detail.service.analysis.rec_name,
+                'party': detail.party.code,
+                'order': order,
+                'number': number,
+                'date': detail.service.sample.date2,
+                'sample_client_description': (
+                    detail.service.sample.sample_client_description),
+                'current_location': (
+                    detail.service.fraction.current_location.code
+                    if detail.service.fraction.current_location else ''),
+                'fraction_type': detail.service.fraction.type.code,
+                'priority': detail.service.priority,
+                'urgent': 'Yes' if detail.service.urgent else 'No',
+                'method': detail.method.code if data['include_method'] else '',
+                'comments': ('%s - %s' % (
+                    detail.service.fraction.comments or '',
+                    detail.service.sample.comments or '')),
+                'report_date': detail.service.report_date,
+                'confirmation_date': (detail.service.confirmation_date
+                    if detail.service.confirmation_date else ''),
+                'results_estimated_date': results_estimated_date or '',
+                'results_estimated_waiting': results_estimated_waiting or '',
+                'notice': notice or '',
+                }
+            objects[key] = record
 
-        objects = sorted(objects, key=lambda x: (
+        objects = sorted(objects.values(), key=lambda x: (
                 x['laboratory'], x['service'], x['party'], x['order']))
 
         report_context['objects'] = objects
-
         return report_context
 
     @classmethod
-    def get_unplanned_services(cls):
+    def _get_estimated_waiting(cls, detail_id):
         cursor = Transaction().connection.cursor()
-        pool = Pool()
-        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
-        Analysis = pool.get('lims.analysis')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        cursor.execute('SELECT DISTINCT(d.service) '
-            'FROM "' + EntryDetailAnalysis._table + '" d '
-                'INNER JOIN "' + Analysis._table + '" a '
-                'ON a.id = d.analysis '
-            'WHERE d.plannable = TRUE '
-                'AND d.state = \'unplanned\' '
-                'AND a.behavior != \'internal_relation\'')
-        not_planned_ids = [s[0] for s in cursor.fetchall()]
-        return not_planned_ids
-
-    @classmethod
-    def get_unplanned_method(cls, service_id):
-        cursor = Transaction().connection.cursor()
-        pool = Pool()
-        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
-        Analysis = pool.get('lims.analysis')
-        LabMethod = pool.get('lims.lab.method')
-
-        cursor.execute('SELECT DISTINCT(m.code) '
-            'FROM "' + EntryDetailAnalysis._table + '" d '
-                'INNER JOIN "' + Analysis._table + '" a '
-                'ON a.id = d.analysis '
-                'INNER JOIN"' + LabMethod._table + '" m '
-                'ON d.method = m.id '
-            'WHERE d.service = %s '
-                'AND d.state = \'unplanned\' '
-                'AND a.behavior != \'internal_relation\'',
-                (service_id,))
-        not_planned_ids = list(cursor.fetchall())
-        return not_planned_ids
-
-    @classmethod
-    def get_service_laboratory(cls, service_id):
-        cursor = Transaction().connection.cursor()
-        pool = Pool()
-        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
-        Service = pool.get('lims.service')
-        Laboratory = pool.get('lims.laboratory')
-
-        cursor.execute('SELECT d.laboratory '
-            'FROM "' + EntryDetailAnalysis._table + '" d '
-                'INNER JOIN "' + Service._table + '" s '
-                'ON s.id = d.service '
-            'WHERE s.id = %s '
-            'ORDER BY d.id ASC LIMIT 1',
-            (service_id,))
-        return Laboratory(cursor.fetchone()[0])
-
-    @classmethod
-    def get_results_estimated(cls, service_id):
-        cursor = Transaction().connection.cursor()
-        pool = Pool()
-        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
-        NotebookLine = pool.get('lims.notebook.line')
-        Analysis = pool.get('lims.analysis')
-
-        cursor.execute('SELECT  d.confirmation_date, '
-                'n.results_estimated_waiting '
-            'FROM "' + NotebookLine._table + '" n '
-                'INNER JOIN "' + EntryDetailAnalysis._table + '" d '
-                'ON (d.service = n.service  AND d.analysis = n.analysis) '
-                'INNER JOIN "' + Analysis._table + '" a '
-                'ON a.id = d.analysis '
-            'WHERE d.state = \'unplanned\' '
-                'AND d.service = %s '
-                'AND n.results_estimated_waiting IS NOT Null '
-                'AND a.behavior != \'internal_relation\''
-                'ORDER BY n.results_estimated_waiting ASC LIMIT 1',
-                (service_id,))
-
-        return list(cursor.fetchall())
+        cursor.execute('SELECT MIN(results_estimated_waiting) '
+            'FROM "' + NotebookLine._table + '" '
+            'WHERE analysis_detail = %s '
+                'AND results_estimated_waiting IS NOT NULL',
+            (detail_id,))
+        res = cursor.fetchone()
+        return res and res[0] or None
 
 
 class PrintBlindSampleReportStart(ModelView):
