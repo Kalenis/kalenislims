@@ -3844,7 +3844,6 @@ class SearchFractions(Wizard):
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
         Fraction = pool.get('lims.fraction')
-        FractionType = pool.get('lims.fraction.type')
         Sample = pool.get('lims.sample')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Service = pool.get('lims.service')
@@ -3892,8 +3891,6 @@ class SearchFractions(Wizard):
                 'ON nb.id = nl.notebook '
                 'INNER JOIN "' + Fraction._table + '" frc '
                 'ON frc.id = nb.fraction '
-                'INNER JOIN "' + FractionType._table + '" ft '
-                'ON ft.id = frc.type '
                 'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
                 'ON ad.id = nl.analysis_detail '
                 'INNER JOIN "' + Service._table + '" srv '
@@ -3901,11 +3898,11 @@ class SearchFractions(Wizard):
                 sample_from)
 
             sql_where = (
-                'WHERE nl.planification IS NULL '
+                'WHERE ad.plannable = TRUE '
+                'AND nl.start_date IS NULL '
                 'AND nl.annulled = FALSE '
-                'AND ft.plannable = TRUE '
-                'AND nl.id NOT IN (' + planned_lines_ids + ') '
                 'AND nl.laboratory = %s '
+                'AND nl.id NOT IN (' + planned_lines_ids + ') '
                 'AND nla.behavior != \'internal_relation\' '
                 'AND ad.confirmation_date::date >= %s::date '
                 'AND ad.confirmation_date::date <= %s::date ' +
@@ -4156,7 +4153,6 @@ class SearchPlannedFractions(Wizard):
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
         Fraction = pool.get('lims.fraction')
-        FractionType = pool.get('lims.fraction.type')
         Sample = pool.get('lims.sample')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Service = pool.get('lims.service')
@@ -4202,8 +4198,6 @@ class SearchPlannedFractions(Wizard):
                 'ON nb.id = nl.notebook '
                 'INNER JOIN "' + Fraction._table + '" frc '
                 'ON frc.id = nb.fraction '
-                'INNER JOIN "' + FractionType._table + '" ft '
-                'ON ft.id = frc.type '
                 'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
                 'ON ad.id = nl.analysis_detail '
                 'INNER JOIN "' + Service._table + '" srv '
@@ -4211,8 +4205,8 @@ class SearchPlannedFractions(Wizard):
                 sample_from)
 
             sql_where = (
-                'WHERE nl.planification IS NOT NULL '
-                'AND ft.plannable = TRUE '
+                'WHERE ad.plannable = TRUE '
+                'AND nl.start_date IS NOT NULL '
                 'AND nl.end_date IS NULL '
                 'AND nl.laboratory = %s '
                 'AND nla.behavior != \'internal_relation\' '
@@ -4284,12 +4278,11 @@ class SearchPlannedFractions(Wizard):
                 'ON frc.id = nb.fraction '
                 'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
                 'ON ad.id = nl.analysis_detail '
-            'WHERE nl.planification IS NOT NULL '
+            'WHERE frc.type IN (' + special_types_ids + ') '
+                'AND nl.start_date IS NOT NULL '
                 'AND nl.end_date IS NULL '
-                'AND nl.laboratory = %s '
-                'AND frc.type IN (' + special_types_ids + ') ' +
-                search_clause,
-                (laboratory,))
+                'AND nl.laboratory = %s ' +
+                search_clause, (laboratory,))
         notebook_lines = cursor.fetchall()
         if not notebook_lines:
             return []
@@ -6228,7 +6221,6 @@ class PendingServicesUnplannedReport(Report):
         if data['party']:
             clause.append(('party', '=', data['party']))
         clause.extend([
-            ('fraction.type.plannable', '=', True),
             ('fraction.confirmed', '=', True),
             ('analysis.behavior', '!=', 'internal_relation'),
             ])
@@ -6377,7 +6369,8 @@ class PendingServicesUnplannedReport(Report):
             'FROM "' + EntryDetailAnalysis._table + '" d '
                 'INNER JOIN "' + Analysis._table + '" a '
                 'ON a.id = d.analysis '
-            'WHERE d.state = \'unplanned\' '
+            'WHERE d.plannable = TRUE '
+                'AND d.state = \'unplanned\' '
                 'AND a.behavior != \'internal_relation\'')
         not_planned_ids = [s[0] for s in cursor.fetchall()]
         return not_planned_ids
@@ -6473,7 +6466,6 @@ class PendingServicesUnplannedSpreadsheet(Report):
         if data['party']:
             clause.append(('party', '=', data['party']))
         clause.extend([
-            ('fraction.type.plannable', '=', True),
             ('fraction.confirmed', '=', True),
             ('analysis.behavior', '!=', 'internal_relation'),
             ])
@@ -6617,7 +6609,8 @@ class PendingServicesUnplannedSpreadsheet(Report):
             'FROM "' + EntryDetailAnalysis._table + '" d '
                 'INNER JOIN "' + Analysis._table + '" a '
                 'ON a.id = d.analysis '
-            'WHERE d.state = \'unplanned\' '
+            'WHERE d.plannable = TRUE '
+                'AND d.state = \'unplanned\' '
                 'AND a.behavior != \'internal_relation\'')
         not_planned_ids = [s[0] for s in cursor.fetchall()]
         return not_planned_ids

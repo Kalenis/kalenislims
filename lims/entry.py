@@ -7,6 +7,7 @@ from datetime import datetime
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
+from trytond import backend
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateReport, \
     Button
@@ -786,11 +787,43 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     cie_max_value = fields.Char('Maximum value')
     cie_fraction_type = fields.Function(fields.Boolean('Blind Sample'),
         'get_cie_fraction_type')
+    plannable = fields.Boolean('Plannable', readonly=True, select=True)
+
+    @classmethod
+    def __register__(cls, module_name):
+        TableHandler = backend.get('TableHandler')
+        tablehandler = TableHandler(cls, module_name)
+
+        plannable_exist = tablehandler.column_exist('plannable')
+
+        super(EntryDetailAnalysis, cls).__register__(module_name)
+
+        if not plannable_exist:
+            cursor = Transaction().connection.cursor()
+            pool = Pool()
+            Service = pool.get('lims.service')
+            Fraction = pool.get('lims.fraction')
+            FractionType = pool.get('lims.fraction.type')
+            cursor.execute('UPDATE "' + cls._table + '" d '
+                'SET plannable = ft.plannable FROM '
+                '"' + Service._table + '" srv, '
+                '"' + Fraction._table + '" frc, '
+                '"' + FractionType._table + '" ft '
+                'WHERE srv.id = d.service '
+                'AND frc.id = srv.fraction '
+                'AND ft.id = frc.type')
 
     @classmethod
     def __setup__(cls):
         super(EntryDetailAnalysis, cls).__setup__()
         cls._order.insert(0, ('service', 'DESC'))
+
+    @classmethod
+    def create(cls, vlist):
+        vlist = [x.copy() for x in vlist]
+        for values in vlist:
+            values['plannable'] = cls._get_plannable(values)
+        return super(EntryDetailAnalysis, cls).create(vlist)
 
     @classmethod
     def copy(cls, details, default=None):
@@ -825,7 +858,6 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         Company = pool.get('company.company')
 
         lines_create = []
-
         for detail in details:
             cursor.execute('SELECT default_repetitions, '
                     'initial_concentration, final_concentration, start_uom, '
@@ -1096,6 +1128,14 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                     'min_value': self.cie_min_value,
                     'max_value': self.cie_max_value,
                     })
+
+    @classmethod
+    def _get_plannable(cls, values):
+        Service = Pool().get('lims.service')
+        service_id = values.get('service', None)
+        if not service_id:
+            return False
+        return Service(service_id).fraction.type.plannable
 
 
 class ForwardAcknowledgmentOfReceipt(Wizard):

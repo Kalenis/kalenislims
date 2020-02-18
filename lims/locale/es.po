@@ -2367,6 +2367,10 @@ msgctxt "field:lims.entry.detail.analysis,party:"
 msgid "Party"
 msgstr "Entidad"
 
+msgctxt "field:lims.entry.detail.analysis,plannable:"
+msgid "Plannable"
+msgstr "Planificable"
+
 msgctxt "field:lims.entry.detail.analysis,rec_name:"
 msgid "Name"
 msgstr "Nombre"
