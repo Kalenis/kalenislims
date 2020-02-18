@@ -130,7 +130,6 @@ class SearchAnalysisSheet(Wizard):
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
         Fraction = pool.get('lims.fraction')
-        FractionType = pool.get('lims.fraction.type')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Analysis = pool.get('lims.analysis')
         TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
@@ -153,17 +152,15 @@ class SearchAnalysisSheet(Wizard):
             'ON nb.id = nl.notebook '
             'INNER JOIN "' + Fraction._table + '" frc '
             'ON frc.id = nb.fraction '
-            'INNER JOIN "' + FractionType._table + '" ft '
-            'ON ft.id = frc.type '
             'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
             'ON ad.id = nl.analysis_detail ')
 
         sql_where = (
-            'WHERE nl.planification IS NULL '
+            'WHERE ad.plannable = TRUE '
+            'AND nl.start_date IS NULL '
             'AND nl.annulled = FALSE '
-            'AND ft.plannable = TRUE '
-            'AND nl.id NOT IN (' + planned_lines_ids + ') '
             'AND nl.laboratory = %s '
+            'AND nl.id NOT IN (' + planned_lines_ids + ') '
             'AND nla.behavior != \'internal_relation\' '
             'AND ad.confirmation_date::date >= %s::date '
             'AND ad.confirmation_date::date <= %s::date')
@@ -281,7 +278,6 @@ class SearchAnalysisSheet(Wizard):
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
         Fraction = pool.get('lims.fraction')
-        FractionType = pool.get('lims.fraction.type')
         Sample = pool.get('lims.sample')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Service = pool.get('lims.service')
@@ -335,8 +331,6 @@ class SearchAnalysisSheet(Wizard):
             'ON nb.id = nl.notebook '
             'INNER JOIN "' + Fraction._table + '" frc '
             'ON frc.id = nb.fraction '
-            'INNER JOIN "' + FractionType._table + '" ft '
-            'ON ft.id = frc.type '
             'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
             'ON ad.id = nl.analysis_detail '
             'INNER JOIN "' + Service._table + '" srv '
@@ -344,11 +338,11 @@ class SearchAnalysisSheet(Wizard):
             sample_from)
 
         sql_where = (
-            'WHERE nl.planification IS NULL '
+            'WHERE ad.plannable = TRUE '
+            'AND nl.start_date IS NULL '
             'AND nl.annulled = FALSE '
-            'AND ft.plannable = TRUE '
-            'AND nl.id NOT IN (' + planned_lines_ids + ') '
             'AND nl.laboratory = %s '
+            'AND nl.id NOT IN (' + planned_lines_ids + ') '
             'AND nla.behavior != \'internal_relation\' '
             'AND ad.confirmation_date::date >= %s::date '
             'AND ad.confirmation_date::date <= %s::date ' +
