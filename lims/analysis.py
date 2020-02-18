@@ -1403,7 +1403,6 @@ class Analysis(Workflow, ModelSQL, ModelView):
         Analysis = pool.get('lims.analysis')
         Service = pool.get('lims.service')
         Fraction = pool.get('lims.fraction')
-        FractionType = pool.get('lims.fraction.type')
 
         date_from = context.get('date_from')
         date_to = context.get('date_to')
@@ -1422,15 +1421,16 @@ class Analysis(Workflow, ModelSQL, ModelView):
         if preplanned_services:
             preplanned_services_ids = ', '.join(str(s) for s in
                     preplanned_services)
-            preplanned_clause = ('AND service.id NOT IN (' +
+            preplanned_clause = ('AND srv.id NOT IN (' +
                 preplanned_services_ids + ')')
 
-        not_planned_services_clause = ''
+        not_planned_services_clause = 'AND id = 0'
         cursor.execute('SELECT DISTINCT(d.service) '
             'FROM "' + EntryDetailAnalysis._table + '" d '
                 'INNER JOIN "' + Analysis._table + '" a '
                 'ON a.id = d.analysis '
-            'WHERE d.state IN (\'draft\', \'unplanned\') '
+            'WHERE d.plannable = TRUE '
+                'AND d.state IN (\'draft\', \'unplanned\') '
                 'AND a.behavior != \'internal_relation\'')
         not_planned_services = [s[0] for s in cursor.fetchall()]
         if not_planned_services:
@@ -1448,17 +1448,14 @@ class Analysis(Workflow, ModelSQL, ModelView):
         res = {}
         for analysis_id in all_analysis_ids:
             count = 0
-            cursor.execute('SELECT service.id '
-                'FROM "' + Service._table + '" service '
-                    'INNER JOIN "' + Fraction._table + '" fraction '
-                    'ON fraction.id = service.fraction '
-                    'INNER JOIN "' + FractionType._table + '" f_type '
-                    'ON f_type.id = fraction.type '
-                'WHERE service.analysis = %s '
-                    'AND service.confirmation_date::date >= %s::date '
-                    'AND service.confirmation_date::date <= %s::date '
-                    'AND fraction.confirmed = TRUE '
-                    'AND f_type.plannable = TRUE ' +
+            cursor.execute('SELECT srv.id '
+                'FROM "' + Service._table + '" srv '
+                    'INNER JOIN "' + Fraction._table + '" frc '
+                    'ON frc.id = srv.fraction '
+                'WHERE srv.analysis = %s '
+                    'AND srv.confirmation_date::date >= %s::date '
+                    'AND srv.confirmation_date::date <= %s::date '
+                    'AND frc.confirmed = TRUE ' +
                     preplanned_clause,
                 (analysis_id, date_from, date_to))
             pending_services = [s[0] for s in cursor.fetchall()]
@@ -1470,7 +1467,6 @@ class Analysis(Workflow, ModelSQL, ModelView):
                     'WHERE id IN (' + pending_services_ids + ') ' +
                         not_planned_services_clause)
                 count = cursor.fetchone()[0]
-
             res[analysis_id] = count
         return res
 
