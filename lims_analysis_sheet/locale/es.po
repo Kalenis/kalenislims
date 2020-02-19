@@ -259,6 +259,10 @@ msgctxt "model:ir.message,text:msg_sheet_compilation_unique"
 msgid "Compilation already in use by another Analysis Sheet"
 msgstr "La Compilación ya está en uso para otra Hoja de análisis"
 
+msgctxt "model:ir.message,text:msg_template_analysis_unique"
+msgid "Analysis \"%(analysis)s\" already exists in another Template"
+msgstr "El análisis \"%(analysis)s\" ya existe en otra plantilla"
+
 msgctxt "model:ir.sequence,name:seq_analysis_sheet"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"

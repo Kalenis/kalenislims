@@ -7,6 +7,8 @@ from trytond.wizard import Wizard, StateAction
 from trytond.pool import Pool
 from trytond.pyson import PYSONEncoder, Eval, Bool
 from trytond.transaction import Transaction
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['TemplateAnalysisSheet', 'TemplateAnalysisSheetAnalysis',
     'AnalysisSheet', 'OpenAnalysisSheetData']
@@ -126,6 +128,25 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
     analysis = fields.Many2One('lims.analysis', 'Analysis',
         required=True, select=True)
     method = fields.Many2One('lims.lab.method', 'Method')
+
+    @classmethod
+    def validate(cls, template_analysis):
+        super(TemplateAnalysisSheetAnalysis, cls).validate(template_analysis)
+        for ta in template_analysis:
+            ta.check_duplicated()
+
+    def check_duplicated(self):
+        clause = [
+            ('id', '!=', self.id),
+            ('analysis', '=', self.analysis.id),
+            ]
+        if self.method:
+            clause.append(('method', '=', self.method.id))
+        duplicated = self.search(clause)
+        if duplicated:
+            raise UserError(gettext(
+                'lims_analysis_sheet.msg_template_analysis_unique',
+                analysis=self.analysis.rec_name))
 
 
 class AnalysisSheet(Workflow, ModelSQL, ModelView):
