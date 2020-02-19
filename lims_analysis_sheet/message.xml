@@ -4,5 +4,8 @@
         <record model="ir.message" id="msg_sheet_compilation_unique">
             <field name="text">Compilation already in use by another Analysis Sheet</field>
         </record>
+        <record model="ir.message" id="msg_template_analysis_unique">
+            <field name="text">Analysis "%(analysis)s" already exists in another Template</field>
+        </record>
     </data>
 </tryton>
