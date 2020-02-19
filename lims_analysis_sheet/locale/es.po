@@ -130,6 +130,14 @@ msgctxt "field:lims.planification.search_analysis_sheet.next,id:"
 msgid "ID"
 msgstr "ID"
 
+msgctxt "field:lims.planification.search_analysis_sheet.start,date_from:"
+msgid "Date from"
+msgstr "Fecha desde"
+
+msgctxt "field:lims.planification.search_analysis_sheet.start,date_to:"
+msgid "Date to"
+msgstr "Fecha hasta"
+
 msgctxt "field:lims.planification.search_analysis_sheet.start,id:"
 msgid "ID"
 msgstr "ID"
@@ -174,6 +182,10 @@ msgstr "Cantidad máxima de muestras"
 msgctxt "field:lims.template.analysis_sheet,name:"
 msgid "Name"
 msgstr "Nombre"
+
+msgctxt "field:lims.template.analysis_sheet,pending_fractions:"
+msgid "Pending fractions"
+msgstr "Fracciones pendientes"
 
 msgctxt "field:lims.template.analysis_sheet,rec_name:"
 msgid "Record Name"

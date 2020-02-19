@@ -1,4 +1,9 @@
 <?xml version="1.0"?>
 <form>
-    <field name="templates" colspan="4"/>
+    <label name="date_from"/>
+    <field name="date_from"/>
+    <label name="date_to"/>
+    <field name="date_to"/>
+    <field name="templates" colspan="4" mode="tree,form"
+        view_ids="lims_analysis_sheet.template_analysis_sheet_pending_view_list,lims_analysis_sheet.template_analysis_sheet_view_form"/>
 </form>

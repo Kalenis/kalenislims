@@ -27,11 +27,94 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
     max_qty_samples = fields.Integer('Maximum quantity of samples',
         help='For generation from racks')
     comments = fields.Text('Comments')
+    pending_fractions = fields.Function(fields.Integer('Pending fractions'),
+        'get_pending_fractions')
 
     @fields.depends('interface')
     def on_change_with_name(self, name=None):
         if self.interface:
             return self.interface.name
+
+    @classmethod
+    def get_pending_fractions(cls, records, name):
+        context = Transaction().context
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        PlanificationServiceDetail = pool.get(
+            'lims.planification.service_detail')
+        PlanificationDetail = pool.get('lims.planification.detail')
+        Planification = pool.get('lims.planification')
+        NotebookLine = pool.get('lims.notebook.line')
+        Notebook = pool.get('lims.notebook')
+        Fraction = pool.get('lims.fraction')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Analysis = pool.get('lims.analysis')
+        TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
+
+        res = dict((r.id, None) for r in records)
+
+        date_from = context.get('date_from') or None
+        date_to = context.get('date_to') or None
+        if not (date_from and date_to):
+            return res
+
+        cursor.execute('SELECT nl.id '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + PlanificationServiceDetail._table +
+                '" psd ON psd.notebook_line = nl.id '
+                'INNER JOIN "' + PlanificationDetail._table + '" pd '
+                'ON psd.detail = pd.id '
+                'INNER JOIN "' + Planification._table + '" p '
+                'ON pd.planification = p.id '
+            'WHERE p.state = \'preplanned\'')
+        preplanned_lines = [x[0] for x in cursor.fetchall()]
+        preplanned_lines_ids = ', '.join(str(x)
+            for x in [0] + preplanned_lines)
+
+        sql_select = 'SELECT nl.analysis, nl.method, frc.id '
+        sql_from = (
+            'FROM "' + NotebookLine._table + '" nl '
+            'INNER JOIN "' + Analysis._table + '" nla '
+            'ON nla.id = nl.analysis '
+            'INNER JOIN "' + Notebook._table + '" nb '
+            'ON nb.id = nl.notebook '
+            'INNER JOIN "' + Fraction._table + '" frc '
+            'ON frc.id = nb.fraction '
+            'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
+            'ON ad.id = nl.analysis_detail ')
+        sql_where = (
+            'WHERE ad.plannable = TRUE '
+            'AND nl.start_date IS NULL '
+            'AND nl.annulled = FALSE '
+            'AND nl.id NOT IN (' + preplanned_lines_ids + ') '
+            'AND nla.behavior != \'internal_relation\' '
+            'AND ad.confirmation_date::date >= %s::date '
+            'AND ad.confirmation_date::date <= %s::date')
+
+        with Transaction().set_user(0):
+            cursor.execute(sql_select + sql_from + sql_where,
+                (date_from, date_to,))
+        notebook_lines = cursor.fetchall()
+        if not notebook_lines:
+            return res
+
+        templates = {}
+        for nl in notebook_lines:
+            cursor.execute('SELECT template '
+                'FROM "' + TemplateAnalysis._table + '" '
+                'WHERE analysis = %s '
+                'AND (method = %s OR method IS NULL)',
+                (nl[0], nl[1]))
+            template = cursor.fetchone()
+            if not template:
+                continue
+            if template[0] not in templates:
+                templates[template[0]] = set()
+            templates[template[0]].add(nl[2])
+
+        for t_id, fractions in templates.items():
+            res[t_id] = len(fractions)
+        return res
 
 
 class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):

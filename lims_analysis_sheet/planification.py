@@ -73,9 +73,13 @@ class SearchAnalysisSheetStart(ModelView):
     'Search Analysis Sheets'
     __name__ = 'lims.planification.search_analysis_sheet.start'
 
+    date_from = fields.Date('Date from', required=True, readonly=True)
+    date_to = fields.Date('Date to', required=True, readonly=True)
     templates = fields.Many2Many('lims.template.analysis_sheet',
-        None, None, 'Templates', depends=['templates_domain'],
-        domain=[('id', 'in', Eval('templates_domain'))], required=True)
+        None, None, 'Templates', required=True,
+        domain=[('id', 'in', Eval('templates_domain'))],
+        context={'date_from': Eval('date_from'), 'date_to': Eval('date_to')},
+        depends=['templates_domain', 'date_from', 'date_to'])
     templates_domain = fields.One2Many('lims.template.analysis_sheet',
         None, 'Templates domain')
 
@@ -120,6 +124,8 @@ class SearchAnalysisSheet(Wizard):
         return {
             'templates': [],
             'templates_domain': templates,
+            'date_from': planification.date_from,
+            'date_to': planification.date_to,
             }
 
     def _get_templates(self, planification):
@@ -127,6 +133,8 @@ class SearchAnalysisSheet(Wizard):
         pool = Pool()
         PlanificationServiceDetail = pool.get(
             'lims.planification.service_detail')
+        PlanificationDetail = pool.get('lims.planification.detail')
+        Planification = pool.get('lims.planification')
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
         Fraction = pool.get('lims.fraction')
@@ -134,16 +142,22 @@ class SearchAnalysisSheet(Wizard):
         Analysis = pool.get('lims.analysis')
         TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
 
-        planification_details = PlanificationServiceDetail.search(['OR',
-            ('planification.state', '=', 'preplanned'),
-            ('planification', '=', planification.id),
-            ])
-        planned_lines = [pd.notebook_line.id for pd in planification_details
-            if pd.notebook_line]
-        planned_lines_ids = ', '.join(str(x) for x in [0] + planned_lines)
+        cursor.execute('SELECT nl.id '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + PlanificationServiceDetail._table +
+                '" psd ON psd.notebook_line = nl.id '
+                'INNER JOIN "' + PlanificationDetail._table + '" pd '
+                'ON psd.detail = pd.id '
+                'INNER JOIN "' + Planification._table + '" p '
+                'ON pd.planification = p.id '
+            'WHERE p.state = \'preplanned\' '
+                'OR p.id = %s',
+            (str(planification.id),))
+        preplanned_lines = [x[0] for x in cursor.fetchall()]
+        preplanned_lines_ids = ', '.join(str(x)
+            for x in [0] + preplanned_lines)
 
         sql_select = 'SELECT nl.analysis, nl.method '
-
         sql_from = (
             'FROM "' + NotebookLine._table + '" nl '
             'INNER JOIN "' + Analysis._table + '" nla '
@@ -154,13 +168,12 @@ class SearchAnalysisSheet(Wizard):
             'ON frc.id = nb.fraction '
             'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
             'ON ad.id = nl.analysis_detail ')
-
         sql_where = (
             'WHERE ad.plannable = TRUE '
             'AND nl.start_date IS NULL '
             'AND nl.annulled = FALSE '
             'AND nl.laboratory = %s '
-            'AND nl.id NOT IN (' + planned_lines_ids + ') '
+            'AND nl.id NOT IN (' + preplanned_lines_ids + ') '
             'AND nla.behavior != \'internal_relation\' '
             'AND ad.confirmation_date::date >= %s::date '
             'AND ad.confirmation_date::date <= %s::date')
