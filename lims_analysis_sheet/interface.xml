@@ -14,6 +14,11 @@
             <field name="type">tree</field>
             <field name="name">template_analysis_sheet_list</field>
         </record>
+        <record model="ir.ui.view" id="template_analysis_sheet_pending_view_list">
+            <field name="model">lims.template.analysis_sheet</field>
+            <field name="type">tree</field>
+            <field name="name">template_analysis_sheet_pending_list</field>
+        </record>
 
         <record model="ir.action.act_window" id="act_template_analysis_sheet_list">
             <field name="name">Analysis Sheet Templates</field>
