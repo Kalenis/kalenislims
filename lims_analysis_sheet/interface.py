@@ -172,6 +172,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         ], 'State', required=True, readonly=True)
     planification = fields.Many2One('lims.planification', 'Planification',
         readonly=True)
+    incomplete_sample = fields.Function(fields.Boolean('Incomplete sample'),
+        'get_incomplete_sample')
 
     @classmethod
     def __setup__(cls):
@@ -245,6 +247,41 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     if nl:
                         samples.append(NotebookLine(nl).fraction.id)
                 result[s.id] = len(list(set(samples)))
+        return result
+
+    @classmethod
+    def get_incomplete_sample(cls, sheets, name):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        result = {}
+        for s in sheets:
+            result[s.id] = False
+            nl_field = (s.template.interface.notebook_line_field and
+                s.template.interface.notebook_line_field.alias or None)
+            if not nl_field:
+                continue
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                samples = {}
+                lines = Data.search([('compilation', '=', s.compilation.id)])
+                for line in lines:
+                    nl = getattr(line, nl_field)
+                    if not nl:
+                        continue
+                    nl = NotebookLine(nl)
+                    if nl.fraction.id not in samples:
+                        samples[nl.fraction.id] = []
+                    samples[nl.fraction.id].append(nl.analysis.id)
+
+                template_analysis = [ta.analysis.id
+                    for ta in s.template.analysis]
+                result[s.id] = False
+                for k, v in samples.items():
+                    if not all(x in v for x in template_analysis):
+                        result[s.id] = True
+                        break
         return result
 
     @classmethod
