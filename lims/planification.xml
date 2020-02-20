@@ -667,17 +667,6 @@
             <field name="name">planification_search_planned_fractions_next_form</field>
         </record>
 
-        <record model="ir.ui.view" id="lims_search_planned_fractions_detail_view_form">
-            <field name="model">lims.planification.search_planned_fractions.detail</field>
-            <field name="type">form</field>
-            <field name="name">planification_search_planned_fractions_detail_form</field>
-        </record>
-        <record model="ir.ui.view" id="lims_search_planned_fractions_detail_view_list">
-            <field name="model">lims.planification.search_planned_fractions.detail</field>
-            <field name="type">tree</field>
-            <field name="name">planification_search_planned_fractions_detail_list</field>
-        </record>
-
         <record model="ir.action.wizard" id="wiz_lims_search_planned_fractions">
             <field name="name">Search Planned Fractions</field>
             <field name="wiz_name">lims.planification.search_planned_fractions</field>

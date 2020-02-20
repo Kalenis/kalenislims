@@ -213,8 +213,6 @@ class SearchAnalysisSheet(Wizard):
                 'session_id': self._session_id,
                 'fraction': k[0],
                 'service_analysis': k[1],
-                'product_type': v['product_type'],
-                'matrix': v['matrix'],
                 'repetition': v['repetition'],
                 })
         fractions_added = SearchFractionsDetail.create(to_create)
@@ -291,7 +289,6 @@ class SearchAnalysisSheet(Wizard):
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
         Fraction = pool.get('lims.fraction')
-        Sample = pool.get('lims.sample')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Service = pool.get('lims.service')
         Analysis = pool.get('lims.analysis')
@@ -321,20 +318,8 @@ class SearchAnalysisSheet(Wizard):
         service_where = ('AND ad.analysis IN (' +
             all_included_analysis_ids + ') ')
 
-        if extra_where:
-            sample_select = ''
-            sample_from = ''
-            repetition_select = ''
-        else:
-            sample_select = ', smp.product_type, smp.matrix'
-            sample_from = (
-                'INNER JOIN "' + Sample._table + '" smp '
-                'ON smp.id = frc.sample ')
-            repetition_select = ', nl.repetition != 0'
-
         sql_select = ('SELECT nl.id, nb.fraction, srv.analysis' +
-            ', nl.analysis, nl.method' +
-            sample_select + repetition_select + ' ')
+            ', nl.analysis, nl.method, nl.repetition != 0 ')
 
         sql_from = (
             'FROM "' + NotebookLine._table + '" nl '
@@ -347,8 +332,7 @@ class SearchAnalysisSheet(Wizard):
             'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
             'ON ad.id = nl.analysis_detail '
             'INNER JOIN "' + Service._table + '" srv '
-            'ON srv.id = nl.service ' +
-            sample_from)
+            'ON srv.id = nl.service ')
 
         sql_where = (
             'WHERE ad.plannable = TRUE '
@@ -397,9 +381,7 @@ class SearchAnalysisSheet(Wizard):
                 f_ = nl[1]
                 s_ = nl[2]
                 result[(f_, s_)] = {
-                    'product_type': nl[5],
-                    'matrix': nl[6],
-                    'repetition': nl[7],
+                    'repetition': nl[5],
                     }
 
         return result

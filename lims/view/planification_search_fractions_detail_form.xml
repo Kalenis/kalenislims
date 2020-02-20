@@ -4,22 +4,26 @@
     <field name="fraction"/>
     <label name="service_analysis"/>
     <field name="service_analysis"/>
-    <label name="fraction_type"/>
-    <field name="fraction_type"/>
+    <label name="type"/>
+    <field name="type"/>
     <label name="label"/>
     <field name="label"/>
     <label name="product_type"/>
     <field name="product_type"/>
     <label name="matrix"/>
     <field name="matrix"/>
-    <group col="8" colspan="4" id="priority">
+    <group col="6" colspan="2" id="priority">
         <label name="urgent"/>
         <field name="urgent"/>
         <label name="priority"/>
         <field name="priority"/>
         <label name="repetition"/>
         <field name="repetition"/>
+    </group>
+    <group col="4" colspan="2" id="dates">
         <label name="report_date"/>
         <field name="report_date"/>
+        <label name="create_date2"/>
+        <field name="create_date2" widget="date"/>
     </group>
 </form>

@@ -14428,6 +14428,10 @@ msgctxt "field:lims.planification.search_fractions.detail,create_date:"
 msgid "Create Date"
 msgstr "Fecha creación"
 
+msgctxt "field:lims.planification.search_fractions.detail,create_date2:"
+msgid "Create Date"
+msgstr "Fecha de creación"
+
 msgctxt "field:lims.planification.search_fractions.detail,create_uid:"
 msgid "Create User"
 msgstr "Usuario creación"
@@ -14435,10 +14439,6 @@ msgstr "Usuario creación"
 msgctxt "field:lims.planification.search_fractions.detail,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
-
-msgctxt "field:lims.planification.search_fractions.detail,fraction_type:"
-msgid "Fraction type"
-msgstr "Tipo de fracción"
 
 msgctxt "field:lims.planification.search_fractions.detail,id:"
 msgid "ID"
@@ -14480,6 +14480,10 @@ msgctxt "field:lims.planification.search_fractions.detail,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
 
+msgctxt "field:lims.planification.search_fractions.detail,type:"
+msgid "Fraction type"
+msgstr "Tipo de fracción"
+
 msgctxt "field:lims.planification.search_fractions.detail,urgent:"
 msgid "Urgent"
 msgstr "Urgente"
@@ -14503,79 +14507,6 @@ msgstr "Dominio para Fracciones"
 msgctxt "field:lims.planification.search_fractions.next,id:"
 msgid "ID"
 msgstr "ID"
-
-msgctxt ""
-"field:lims.planification.search_planned_fractions.detail,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.planification.search_planned_fractions.detail,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.planification.search_planned_fractions.detail,fraction:"
-msgid "Fraction"
-msgstr "Fracción"
-
-msgctxt ""
-"field:lims.planification.search_planned_fractions.detail,fraction_type:"
-msgid "Fraction type"
-msgstr "Tipo de fracción"
-
-msgctxt "field:lims.planification.search_planned_fractions.detail,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.planification.search_planned_fractions.detail,label:"
-msgid "Label"
-msgstr "Rótulo"
-
-msgctxt "field:lims.planification.search_planned_fractions.detail,matrix:"
-msgid "Matrix"
-msgstr "Matriz"
-
-msgctxt "field:lims.planification.search_planned_fractions.detail,priority:"
-msgid "Priority"
-msgstr "Prioridad"
-
-msgctxt ""
-"field:lims.planification.search_planned_fractions.detail,product_type:"
-msgid "Product type"
-msgstr "Tipo de producto"
-
-msgctxt "field:lims.planification.search_planned_fractions.detail,rec_name:"
-msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.planification.search_planned_fractions.detail,repetition:"
-msgid "Repetition"
-msgstr "Repetición"
-
-msgctxt ""
-"field:lims.planification.search_planned_fractions.detail,report_date:"
-msgid "Date agreed for result"
-msgstr "Fecha pactada de resultado"
-
-msgctxt ""
-"field:lims.planification.search_planned_fractions.detail,service_analysis:"
-msgid "Service"
-msgstr "Servicio"
-
-msgctxt "field:lims.planification.search_planned_fractions.detail,session_id:"
-msgid "Session ID"
-msgstr "ID Sesión"
-
-msgctxt "field:lims.planification.search_planned_fractions.detail,urgent:"
-msgid "Urgent"
-msgstr "Urgente"
-
-msgctxt "field:lims.planification.search_planned_fractions.detail,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.planification.search_planned_fractions.detail,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.planification.search_planned_fractions.next,details:"
 msgid "Fractions to replan"
@@ -15161,10 +15092,6 @@ msgstr "Fracción a planificar"
 msgctxt "model:lims.planification.search_fractions.next,name:"
 msgid "Search Fractions"
 msgstr "Buscar fracciones"
-
-msgctxt "model:lims.planification.search_planned_fractions.detail,name:"
-msgid "Fraction to Replan"
-msgstr "Fracción a replanificar"
 
 msgctxt "model:lims.planification.search_planned_fractions.next,name:"
 msgid "Search Planned Fractions"
@@ -16214,14 +16141,6 @@ msgstr "Fracciones a planificar"
 msgctxt "view:lims.planification.search_fractions.next:"
 msgid "Search Fractions"
 msgstr "Buscar fracciones"
-
-msgctxt "view:lims.planification.search_planned_fractions.detail:"
-msgid "Fraction to Replan"
-msgstr "Fracción a replanificar"
-
-msgctxt "view:lims.planification.search_planned_fractions.detail:"
-msgid "Fractions to Replan"
-msgstr "Fracciones a replanificar"
 
 msgctxt "view:lims.planification.search_planned_fractions.next:"
 msgid "Search Planned Fractions"
