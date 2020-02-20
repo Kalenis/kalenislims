@@ -5,7 +5,7 @@
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateAction
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import PYSONEncoder, Eval, Bool
+from trytond.pyson import PYSONEncoder, Eval, Bool, Or
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
@@ -411,3 +411,33 @@ class Compilation(metaclass=PoolMeta):
     __name__ = 'lims.interface.compilation'
 
     analysis_sheet = fields.Many2One('lims.analysis_sheet', 'Analysis Sheet')
+
+    @classmethod
+    def __setup__(cls):
+        super(Compilation, cls).__setup__()
+        cls.date_time.states['readonly'] = Bool(Eval('analysis_sheet'))
+        if 'analysis_sheet' not in cls.date_time.depends:
+            cls.date_time.depends.append('analysis_sheet')
+        cls.interface.states['readonly'] = Bool(Eval('analysis_sheet'))
+        if 'analysis_sheet' not in cls.interface.depends:
+            cls.interface.depends.append('analysis_sheet')
+        cls.table_name.states['readonly'] = Bool(Eval('analysis_sheet'))
+        if 'analysis_sheet' not in cls.table_name.depends:
+            cls.table_name.depends.append('analysis_sheet')
+        cls.revision.states['readonly'] = Or(Bool(Eval('analysis_sheet')),
+            Eval('state') != 'draft')
+        if 'analysis_sheet' not in cls.revision.depends:
+            cls.revision.depends.append('analysis_sheet')
+
+        cls._buttons['draft']['invisible'] = Or(Eval('state') != 'active',
+            Bool(Eval('analysis_sheet')))
+        cls._buttons['activate']['invisible'] = Or(Eval('state') != 'draft',
+            Bool(Eval('analysis_sheet')))
+        cls._buttons['validate_']['invisible'] = Or(Eval('state') != 'active',
+            Bool(Eval('analysis_sheet')))
+        cls._buttons['confirm']['invisible'] = Or(Eval('state') != 'validated',
+            Bool(Eval('analysis_sheet')))
+        #cls._buttons['view_data']['invisible'] = Or(Eval('state') == 'draft',
+            #Bool(Eval('analysis_sheet')))
+        #cls._buttons['collect']['invisible'] = Or(Eval('state') != 'active',
+            #Bool(Eval('analysis_sheet')))
