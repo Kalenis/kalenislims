@@ -34,11 +34,11 @@ __all__ = ['Planification', 'PlanificationTechnician',
     'AddFractionMRT', 'RemoveControlStart', 'RemoveControl',
     'AddAnalysisStart', 'AddAnalysis', 'SearchFractionsNext',
     'SearchFractionsDetail', 'SearchFractions', 'SearchPlannedFractionsStart',
-    'SearchPlannedFractionsNext', 'SearchPlannedFractionsDetail',
-    'SearchPlannedFractions', 'CreateFractionControlStart',
-    'CreateFractionControl', 'ReleaseFractionStart', 'ReleaseFractionEmpty',
-    'ReleaseFractionResult', 'ReleaseFraction', 'QualificationSituations',
-    'QualificationSituation', 'QualificationAction', 'QualificationSituation2',
+    'SearchPlannedFractionsNext', 'SearchPlannedFractions',
+    'CreateFractionControlStart', 'CreateFractionControl',
+    'ReleaseFractionStart', 'ReleaseFractionEmpty', 'ReleaseFractionResult',
+    'ReleaseFraction', 'QualificationSituations', 'QualificationSituation',
+    'QualificationAction', 'QualificationSituation2',
     'QualificationSituation3', 'QualificationSituation4',
     'TechniciansQualification', 'ReplaceTechnicianStart', 'ReplaceTechnician',
     'LoadServices', 'PlanificationSequenceReport',
@@ -3649,11 +3649,18 @@ class SearchFractionsDetail(ModelSQL, ModelView):
     fraction = fields.Many2One('lims.fraction', 'Fraction', readonly=True)
     service_analysis = fields.Many2One('lims.analysis', 'Service',
         readonly=True)
-    fraction_type = fields.Function(fields.Many2One('lims.fraction.type',
-        'Fraction type'), 'get_fraction_field')
-    label = fields.Function(fields.Char('Label'), 'get_fraction_field')
-    product_type = fields.Many2One('lims.product.type', 'Product type')
-    matrix = fields.Many2One('lims.matrix', 'Matrix')
+    type = fields.Function(fields.Many2One('lims.fraction.type',
+        'Fraction type'), 'get_fraction_field',
+        searcher='search_fraction_field')
+    label = fields.Function(fields.Char('Label'), 'get_fraction_field',
+        searcher='search_fraction_field')
+    product_type = fields.Function(fields.Many2One('lims.product.type',
+        'Product type'), 'get_fraction_field',
+        searcher='search_fraction_field')
+    matrix = fields.Function(fields.Many2One('lims.matrix', 'Matrix'),
+        'get_fraction_field', searcher='search_fraction_field')
+    create_date2 = fields.Function(fields.DateTime('Create Date'),
+       'get_fraction_field', searcher='search_fraction_field')
     urgent = fields.Function(fields.Boolean('Urgent'), 'get_service_field')
     priority = fields.Function(fields.Integer('Priority'), 'get_service_field')
     repetition = fields.Boolean('Repetition', readonly=True)
@@ -3681,13 +3688,9 @@ class SearchFractionsDetail(ModelSQL, ModelView):
         result = {}
         for name in names:
             result[name] = {}
-            if name == 'label':
+            if name in ('label', 'create_date2'):
                 for d in details:
                     result[name][d.id] = getattr(d.fraction, name, None)
-            elif name == 'fraction_type':
-                for d in details:
-                    field = getattr(d.fraction, 'type', None)
-                    result[name][d.id] = field.id if field else None
             else:
                 for d in details:
                     field = getattr(d.fraction, name, None)
@@ -3780,8 +3783,6 @@ class SearchFractions(Wizard):
                 'session_id': self._session_id,
                 'fraction': k[0],
                 'service_analysis': k[1],
-                'product_type': v['product_type'],
-                'matrix': v['matrix'],
                 'repetition': v['repetition'],
                 })
         fractions_added = SearchFractionsDetail.create(to_create)
@@ -3844,7 +3845,6 @@ class SearchFractions(Wizard):
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
         Fraction = pool.get('lims.fraction')
-        Sample = pool.get('lims.sample')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Service = pool.get('lims.service')
         Analysis = pool.get('lims.analysis')
@@ -3869,19 +3869,8 @@ class SearchFractions(Wizard):
             service_where = ('AND ad.analysis IN (' +
                 all_included_analysis_ids + ') ')
 
-            if extra_where:
-                sample_select = ''
-                sample_from = ''
-                repetition_select = ''
-            else:
-                sample_select = ', smp.product_type, smp.matrix'
-                sample_from = (
-                    'INNER JOIN "' + Sample._table + '" smp '
-                    'ON smp.id = frc.sample ')
-                repetition_select = ', nl.repetition != 0'
-
-            sql_select = ('SELECT nl.id, nb.fraction, srv.analysis' +
-                sample_select + repetition_select + ' ')
+            sql_select = (
+                'SELECT nl.id, nb.fraction, srv.analysis, nl.repetition != 0 ')
 
             sql_from = (
                 'FROM "' + NotebookLine._table + '" nl '
@@ -3894,8 +3883,7 @@ class SearchFractions(Wizard):
                 'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
                 'ON ad.id = nl.analysis_detail '
                 'INNER JOIN "' + Service._table + '" srv '
-                'ON srv.id = nl.service ' +
-                sample_from)
+                'ON srv.id = nl.service ')
 
             sql_where = (
                 'WHERE ad.plannable = TRUE '
@@ -3935,9 +3923,7 @@ class SearchFractions(Wizard):
                     f_ = nl[1]
                     s_ = nl[2]
                     result[(f_, s_)] = {
-                        'product_type': nl[3],
-                        'matrix': nl[4],
-                        'repetition': nl[5],
+                        'repetition': nl[3],
                         }
 
         return result
@@ -3963,90 +3949,12 @@ class SearchPlannedFractionsNext(ModelView):
     __name__ = 'lims.planification.search_planned_fractions.next'
 
     details = fields.Many2Many(
-        'lims.planification.search_planned_fractions.detail',
+        'lims.planification.search_fractions.detail',
         None, None, 'Fractions to replan', depends=['details_domain'],
         domain=[('id', 'in', Eval('details_domain'))], required=True)
     details_domain = fields.One2Many(
-        'lims.planification.search_planned_fractions.detail',
+        'lims.planification.search_fractions.detail',
         None, 'Fractions domain')
-
-
-class SearchPlannedFractionsDetail(ModelSQL, ModelView):
-    'Fraction to Replan'
-    __name__ = 'lims.planification.search_planned_fractions.detail'
-    _table = 'lims_plan_search_planned_fractions_detail'
-
-    fraction = fields.Many2One('lims.fraction', 'Fraction', readonly=True)
-    service_analysis = fields.Many2One('lims.analysis', 'Service',
-        readonly=True)
-    fraction_type = fields.Function(fields.Many2One('lims.fraction.type',
-        'Fraction type'), 'get_fraction_field')
-    label = fields.Function(fields.Char('Label'), 'get_fraction_field')
-    product_type = fields.Many2One('lims.product.type', 'Product type')
-    matrix = fields.Many2One('lims.matrix', 'Matrix')
-    urgent = fields.Function(fields.Boolean('Urgent'), 'get_service_field')
-    priority = fields.Function(fields.Integer('Priority'), 'get_service_field')
-    repetition = fields.Boolean('Repetition', readonly=True)
-    report_date = fields.Function(fields.Date('Date agreed for result'),
-        'get_service_field')
-    session_id = fields.Integer('Session ID')
-
-    @classmethod
-    def __register__(cls, module_name):
-        super(SearchPlannedFractionsDetail,
-            cls).__register__(module_name)
-        cursor = Transaction().connection.cursor()
-        cursor.execute('DELETE FROM "' + cls._table + '"')
-
-    @classmethod
-    def __setup__(cls):
-        super(SearchPlannedFractionsDetail, cls).__setup__()
-        cls._order.insert(0, ('fraction', 'ASC'))
-        cls._order.insert(1, ('service_analysis', 'ASC'))
-
-    @classmethod
-    def get_fraction_field(cls, details, names):
-        result = {}
-        for name in names:
-            result[name] = {}
-            if name == 'label':
-                for d in details:
-                    result[name][d.id] = getattr(d.fraction, name, None)
-            elif name == 'fraction_type':
-                for d in details:
-                    field = getattr(d.fraction, 'type', None)
-                    result[name][d.id] = field.id if field else None
-            else:
-                for d in details:
-                    field = getattr(d.fraction, name, None)
-                    result[name][d.id] = field.id if field else None
-        return result
-
-    @classmethod
-    def search_fraction_field(cls, name, clause):
-        return [('fraction.' + name,) + tuple(clause[1:])]
-
-    @classmethod
-    def get_service_field(cls, details, names):
-        result = {}
-        for name in names:
-            result[name] = {}
-            if name == 'urgent':
-                for d in details:
-                    result[name][d.id] = False
-            elif name == 'priority':
-                for d in details:
-                    result[name][d.id] = 0
-            else:
-                for d in details:
-                    result[name][d.id] = None
-        for d in details:
-            if d.fraction and d.service_analysis:
-                for service in d.fraction.services:
-                    if service.analysis == d.service_analysis:
-                        for name in names:
-                            result[name][d.id] = getattr(service, name)
-        return result
 
 
 class SearchPlannedFractions(Wizard):
@@ -4080,8 +3988,8 @@ class SearchPlannedFractions(Wizard):
 
     def transition_search(self):
         pool = Pool()
-        SearchPlannedFractionsDetail = pool.get(
-            'lims.planification.search_planned_fractions.detail')
+        SearchFractionsDetail = pool.get(
+            'lims.planification.search_fractions.detail')
 
         data = self._get_service_details()
 
@@ -4091,11 +3999,9 @@ class SearchPlannedFractions(Wizard):
                 'session_id': self._session_id,
                 'fraction': k[0],
                 'service_analysis': k[1],
-                'product_type': v['product_type'],
-                'matrix': v['matrix'],
                 'repetition': v['repetition'],
                 })
-        fractions_added = SearchPlannedFractionsDetail.create(to_create)
+        fractions_added = SearchFractionsDetail.create(to_create)
 
         self.next.details = fractions_added
         return 'next'
@@ -4153,7 +4059,6 @@ class SearchPlannedFractions(Wizard):
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
         Fraction = pool.get('lims.fraction')
-        Sample = pool.get('lims.sample')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Service = pool.get('lims.service')
         Analysis = pool.get('lims.analysis')
@@ -4176,19 +4081,8 @@ class SearchPlannedFractions(Wizard):
             excluded_fractions_ids = ', '.join(str(x)
                 for x in [0] + excluded_fractions)
 
-            if extra_where:
-                sample_select = ''
-                sample_from = ''
-                repetition_select = ''
-            else:
-                sample_select = ', smp.product_type, smp.matrix'
-                sample_from = (
-                    'INNER JOIN "' + Sample._table + '" smp '
-                    'ON smp.id = frc.sample ')
-                repetition_select = ', nl.repetition != 0'
-
-            sql_select = ('SELECT nl.id, nb.fraction, srv.analysis' +
-                sample_select + repetition_select + ' ')
+            sql_select = (
+                'SELECT nl.id, nb.fraction, srv.analysis, nl.repetition != 0 ')
 
             sql_from = (
                 'FROM "' + NotebookLine._table + '" nl '
@@ -4201,8 +4095,7 @@ class SearchPlannedFractions(Wizard):
                 'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
                 'ON ad.id = nl.analysis_detail '
                 'INNER JOIN "' + Service._table + '" srv '
-                'ON srv.id = nl.service ' +
-                sample_from)
+                'ON srv.id = nl.service ')
 
             sql_where = (
                 'WHERE ad.plannable = TRUE '
@@ -4242,9 +4135,7 @@ class SearchPlannedFractions(Wizard):
                         f_ = nl[1]
                         s_ = nl[2]
                         result[(f_, s_)] = {
-                            'product_type': nl[3],
-                            'matrix': nl[4],
-                            'repetition': nl[5],
+                            'repetition': nl[3],
                             }
 
         return result
@@ -4268,7 +4159,7 @@ class SearchPlannedFractions(Wizard):
             special_types.append(config.bre_fraction_type.id)
         if config.mrt_fraction_type:
             special_types.append(config.mrt_fraction_type.id)
-        special_types_ids = ', '.join(str(x) for x in special_types)
+        special_types_ids = ', '.join(str(x) for x in [0] + special_types)
 
         cursor.execute('SELECT nl.analysis, nl.notebook '
             'FROM "' + NotebookLine._table + '" nl '

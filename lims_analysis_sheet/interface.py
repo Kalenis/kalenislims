@@ -7,6 +7,8 @@ from trytond.wizard import Wizard, StateAction
 from trytond.pool import Pool
 from trytond.pyson import PYSONEncoder, Eval, Bool
 from trytond.transaction import Transaction
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['TemplateAnalysisSheet', 'TemplateAnalysisSheetAnalysis',
     'AnalysisSheet', 'OpenAnalysisSheetData']
@@ -127,6 +129,25 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
         required=True, select=True)
     method = fields.Many2One('lims.lab.method', 'Method')
 
+    @classmethod
+    def validate(cls, template_analysis):
+        super(TemplateAnalysisSheetAnalysis, cls).validate(template_analysis)
+        for ta in template_analysis:
+            ta.check_duplicated()
+
+    def check_duplicated(self):
+        clause = [
+            ('id', '!=', self.id),
+            ('analysis', '=', self.analysis.id),
+            ]
+        if self.method:
+            clause.append(('method', '=', self.method.id))
+        duplicated = self.search(clause)
+        if duplicated:
+            raise UserError(gettext(
+                'lims_analysis_sheet.msg_template_analysis_unique',
+                analysis=self.analysis.rec_name))
+
 
 class AnalysisSheet(Workflow, ModelSQL, ModelView):
     'Analysis Sheet'
@@ -151,6 +172,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         ], 'State', required=True, readonly=True)
     planification = fields.Many2One('lims.planification', 'Planification',
         readonly=True)
+    incomplete_sample = fields.Function(fields.Boolean('Incomplete sample'),
+        'get_incomplete_sample')
 
     @classmethod
     def __setup__(cls):
@@ -224,6 +247,41 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     if nl:
                         samples.append(NotebookLine(nl).fraction.id)
                 result[s.id] = len(list(set(samples)))
+        return result
+
+    @classmethod
+    def get_incomplete_sample(cls, sheets, name):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        result = {}
+        for s in sheets:
+            result[s.id] = False
+            nl_field = (s.template.interface.notebook_line_field and
+                s.template.interface.notebook_line_field.alias or None)
+            if not nl_field:
+                continue
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                samples = {}
+                lines = Data.search([('compilation', '=', s.compilation.id)])
+                for line in lines:
+                    nl = getattr(line, nl_field)
+                    if not nl:
+                        continue
+                    nl = NotebookLine(nl)
+                    if nl.fraction.id not in samples:
+                        samples[nl.fraction.id] = []
+                    samples[nl.fraction.id].append(nl.analysis.id)
+
+                template_analysis = [ta.analysis.id
+                    for ta in s.template.analysis]
+                result[s.id] = False
+                for k, v in samples.items():
+                    if not all(x in v for x in template_analysis):
+                        result[s.id] = True
+                        break
         return result
 
     @classmethod

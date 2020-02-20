@@ -235,7 +235,6 @@ def register():
         planification.SearchFractionsDetail,
         planification.SearchPlannedFractionsStart,
         planification.SearchPlannedFractionsNext,
-        planification.SearchPlannedFractionsDetail,
         planification.CreateFractionControlStart,
         planification.ReleaseFractionStart,
         planification.ReleaseFractionEmpty,
