@@ -16,6 +16,7 @@ def register():
         interface.TemplateAnalysisSheet,
         interface.TemplateAnalysisSheetAnalysis,
         interface.AnalysisSheet,
+        interface.Compilation,
         planification.Planification,
         planification.SearchAnalysisSheetStart,
         planification.SearchAnalysisSheetNext,

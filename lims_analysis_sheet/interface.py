@@ -4,14 +4,14 @@
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateAction
-from trytond.pool import Pool
-from trytond.pyson import PYSONEncoder, Eval, Bool
+from trytond.pool import Pool, PoolMeta
+from trytond.pyson import PYSONEncoder, Eval, Bool, Or
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
 __all__ = ['TemplateAnalysisSheet', 'TemplateAnalysisSheetAnalysis',
-    'AnalysisSheet', 'OpenAnalysisSheetData']
+    'AnalysisSheet', 'OpenAnalysisSheetData', 'Compilation']
 
 
 class TemplateAnalysisSheet(ModelSQL, ModelView):
@@ -287,7 +287,9 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     @classmethod
     def create(cls, vlist):
         vlist = cls.set_number(vlist)
-        return super(AnalysisSheet, cls).create(vlist)
+        sheets = super(AnalysisSheet, cls).create(vlist)
+        cls.update_compilation(sheets)
+        return sheets
 
     @classmethod
     def set_number(cls, vlist):
@@ -304,6 +306,16 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             number = Sequence.get_id(config.analysis_sheet_sequence.id)
             values['number'] = number
         return vlist
+
+    @classmethod
+    def update_compilation(cls, sheets):
+        Compilation = Pool().get('lims.interface.compilation')
+        to_save = []
+        for s in sheets:
+            compilation = Compilation(s.compilation.id)
+            compilation.analysis_sheet = s.id
+            to_save.append(compilation)
+        Compilation.save(to_save)
 
     @classmethod
     def delete(cls, sheets):
@@ -388,8 +400,44 @@ class OpenAnalysisSheetData(Wizard):
             context['lims_interface_compilation'] = sheet.compilation.id
             context['lims_interface_table'] = sheet.compilation.table.id
             domain = [('compilation', '=', sheet.compilation.id)]
-            name = ' (%s)' % sheet.number
+            name = ' (%s - %s)' % (sheet.number, sheet.template.name)
         action['pyson_context'] = PYSONEncoder().encode(context)
         action['pyson_domain'] = PYSONEncoder().encode(domain)
         action['name'] += name
         return action, {}
+
+
+class Compilation(metaclass=PoolMeta):
+    __name__ = 'lims.interface.compilation'
+
+    analysis_sheet = fields.Many2One('lims.analysis_sheet', 'Analysis Sheet')
+
+    @classmethod
+    def __setup__(cls):
+        super(Compilation, cls).__setup__()
+        cls.date_time.states['readonly'] = Bool(Eval('analysis_sheet'))
+        if 'analysis_sheet' not in cls.date_time.depends:
+            cls.date_time.depends.append('analysis_sheet')
+        cls.interface.states['readonly'] = Bool(Eval('analysis_sheet'))
+        if 'analysis_sheet' not in cls.interface.depends:
+            cls.interface.depends.append('analysis_sheet')
+        cls.table_name.states['readonly'] = Bool(Eval('analysis_sheet'))
+        if 'analysis_sheet' not in cls.table_name.depends:
+            cls.table_name.depends.append('analysis_sheet')
+        cls.revision.states['readonly'] = Or(Bool(Eval('analysis_sheet')),
+            Eval('state') != 'draft')
+        if 'analysis_sheet' not in cls.revision.depends:
+            cls.revision.depends.append('analysis_sheet')
+
+        cls._buttons['draft']['invisible'] = Or(Eval('state') != 'active',
+            Bool(Eval('analysis_sheet')))
+        cls._buttons['activate']['invisible'] = Or(Eval('state') != 'draft',
+            Bool(Eval('analysis_sheet')))
+        cls._buttons['validate_']['invisible'] = Or(Eval('state') != 'active',
+            Bool(Eval('analysis_sheet')))
+        cls._buttons['confirm']['invisible'] = Or(Eval('state') != 'validated',
+            Bool(Eval('analysis_sheet')))
+        #cls._buttons['view_data']['invisible'] = Or(Eval('state') == 'draft',
+            #Bool(Eval('analysis_sheet')))
+        #cls._buttons['collect']['invisible'] = Or(Eval('state') != 'active',
+            #Bool(Eval('analysis_sheet')))
