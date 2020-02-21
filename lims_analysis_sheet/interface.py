@@ -165,7 +165,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     samples_qty = fields.Function(fields.Integer('Samples Qty.'),
         'get_samples_qty')
     number = fields.Char('Number', readonly=True)
-    date = fields.Function(fields.DateTime('Date'), 'get_date')
+    date = fields.Function(fields.DateTime('Date'), 'get_date',
+        searcher='search_date')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('active', 'Active'),
@@ -178,6 +179,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super(AnalysisSheet, cls).__setup__()
+        cls._order.insert(0, ('date', 'DESC'))
         t = cls.__table__()
         cls._sql_constraints += [
             ('compilation_uniq', Unique(t, t.compilation),
@@ -201,6 +203,25 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
     def get_date(self, name):
         return self.compilation.date_time
+
+    @classmethod
+    def search_date(cls, name, clause):
+        return [('compilation.date_time',) + tuple(clause[1:])]
+
+    @classmethod
+    def order_date(cls, tables):
+        Compilation = Pool().get('lims.interface.compilation')
+        field = Compilation._fields['date_time']
+        table, _ = tables[None]
+        compilation_tables = tables.get('compilation')
+        if compilation_tables is None:
+            compilation = Compilation.__table__()
+            compilation_tables = {
+                None: (compilation, compilation.id == table.compilation),
+                }
+            tables['compilation'] = compilation_tables
+        return field.convert_order('date_time', compilation_tables,
+            Compilation)
 
     @classmethod
     def get_urgent(cls, sheets, name):
