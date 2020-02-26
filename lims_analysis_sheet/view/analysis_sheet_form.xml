@@ -10,11 +10,15 @@
     <field name="laboratory"/>
     <label name="date"/>
     <field name="date"/>
-    <group id="samples" colspan="2" col="4">
-        <label name="samples_qty"/>
-        <field name="samples_qty"/>
+    <group id="samples" colspan="2" col="6">
         <label name="urgent"/>
         <field name="urgent"/>
+        <label name="samples_qty"/>
+        <field name="samples_qty"/>
+        <label name="completion_percentage"/>
+        <field name="completion_percentage" factor="100">
+            <suffix name="completion_percentage" string="%"/>
+        </field>
     </group>
     <label name="compilation"/>
     <field name="compilation"/>
