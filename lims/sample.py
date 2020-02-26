@@ -335,7 +335,8 @@ class Service(ModelSQL, ModelView):
     method_domain = fields.Function(fields.Many2Many('lims.lab.method',
         None, None, 'Method domain'), 'on_change_with_method_domain')
     device = fields.Many2One('lims.lab.device', 'Device',
-        domain=[('id', 'in', Eval('device_domain'))],
+        domain=['OR', ('id', '=', Eval('device')),
+            ('id', 'in', Eval('device_domain'))],
         states={
             'required': Bool(Eval('device_domain')),
             'readonly': Bool(Eval('context', {}).get('readonly', True)),
@@ -656,7 +657,8 @@ class Service(ModelSQL, ModelView):
 
                             cursor.execute('SELECT device '
                                 'FROM "' + AnalysisDevice._table + '" '
-                                'WHERE analysis = %s '
+                                'WHERE active IS TRUE '
+                                    'AND analysis = %s '
                                     'AND laboratory = %s '
                                     'AND by_default IS TRUE',
                                 (additional.id, laboratory_id))
@@ -967,12 +969,13 @@ class Service(ModelSQL, ModelView):
             return []
 
         if by_default:
-            by_default_clause = 'AND by_default = TRUE'
+            by_default_clause = 'AND by_default IS TRUE'
         else:
             by_default_clause = ''
         cursor.execute('SELECT DISTINCT(device) '
             'FROM "' + AnalysisDevice._table + '" '
-            'WHERE analysis = %s  '
+            'WHERE active IS TRUE '
+                'AND analysis = %s  '
                 'AND laboratory = %s ' +
                 by_default_clause,
             (analysis.id, laboratory.id))
@@ -4792,9 +4795,10 @@ class CreateSampleService(ModelView):
 
         cursor.execute('SELECT DISTINCT(device) '
             'FROM "' + AnalysisDevice._table + '" '
-            'WHERE analysis = %s  '
+            'WHERE active IS TRUE '
+                'AND analysis = %s '
                 'AND laboratory = %s '
-                'AND by_default = TRUE',
+                'AND by_default IS TRUE',
             (analysis_id, laboratory_id))
         res = cursor.fetchall()
         if not res:

@@ -2,7 +2,7 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-from trytond.model import ModelView, ModelSQL, fields, Unique
+from trytond.model import ModelView, ModelSQL, DeactivableMixin, fields, Unique
 from trytond.pool import Pool
 from trytond.transaction import Transaction
 from trytond.pyson import Eval, Bool
@@ -265,7 +265,7 @@ class LabMethodWaitingTime(ModelSQL, ModelView):
         super(LabMethodWaitingTime, cls).delete(waiting_times)
 
 
-class LabDevice(ModelSQL, ModelView):
+class LabDevice(DeactivableMixin, ModelSQL, ModelView):
     'Laboratory Device'
     __name__ = 'lims.lab.device'
     _rec_name = 'description'
@@ -303,6 +303,26 @@ class LabDevice(ModelSQL, ModelView):
         if records:
             return [(field,) + tuple(clause[1:])]
         return [(cls._rec_name,) + tuple(clause[1:])]
+
+    @classmethod
+    def write(cls, *args):
+        super(LabDevice, cls).write(*args)
+        actions = iter(args)
+        for devices, vals in zip(actions, actions):
+            if 'active' in vals:
+                cls.update_active_field(devices, vals['active'])
+
+    @classmethod
+    def update_active_field(cls, devices, active):
+        AnalysisDevice = Pool().get('lims.analysis.device')
+        analysis_devices = AnalysisDevice.search([
+            ('device', 'in', devices),
+            ('active', '!=', active),
+            ])
+        fields_to_update = {'active': active}
+        if not active:
+            fields_to_update['by_default'] = False
+        AnalysisDevice.write(analysis_devices, fields_to_update)
 
 
 class LabDeviceType(ModelSQL, ModelView):

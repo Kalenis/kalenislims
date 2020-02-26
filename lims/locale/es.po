@@ -746,6 +746,10 @@ msgctxt "field:lims.analysis-laboratory,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
 
+msgctxt "field:lims.analysis.device,active:"
+msgid "Active"
+msgstr "Activo"
+
 msgctxt "field:lims.analysis.device,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
@@ -3223,6 +3227,10 @@ msgstr "Laboratorio"
 msgctxt "field:lims.generate_results_report.start,party:"
 msgid "Party"
 msgstr "Entidad"
+
+msgctxt "field:lims.lab.device,active:"
+msgid "Active"
+msgstr "Activo"
 
 msgctxt "field:lims.lab.device,code:"
 msgid "Code"
@@ -7496,9 +7504,17 @@ msgctxt "field:user.department,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
 
+msgctxt "help:lims.analysis.device,active:"
+msgid "Uncheck to exclude from future use."
+msgstr "Desmarcar para excluir de uso en el futuro."
+
 msgctxt "help:lims.configuration,mail_ack_subject:"
 msgid "In the text will be added suffix with the entry report number"
 msgstr "En el texto se añadirá sufijo con el número de ingreso del informe"
+
+msgctxt "help:lims.lab.device,active:"
+msgid "Uncheck to exclude from future use."
+msgstr "Desmarcar para excluir de uso en el futuro."
 
 msgctxt "help:lims.laboratory,cv_corrections:"
 msgid "Corrections for Coefficients of Variation (Control Charts)"
