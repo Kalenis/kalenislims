@@ -7,7 +7,8 @@ import operator
 from datetime import datetime
 from decimal import Decimal
 from sql import Literal
-from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
+from trytond.model import Workflow, ModelView, ModelSQL, DeactivableMixin, \
+    fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
 from trytond.pool import Pool
@@ -1911,7 +1912,7 @@ class AnalysisLabMethod(ModelSQL):
                     method=method.method.code))
 
 
-class AnalysisDevice(ModelSQL, ModelView):
+class AnalysisDevice(DeactivableMixin, ModelSQL, ModelView):
     'Analysis Device'
     __name__ = 'lims.analysis.device'
     _rec_name = 'device'

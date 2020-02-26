@@ -881,7 +881,8 @@ class NotebookLine(ModelSQL, ModelView):
 
         cursor.execute('SELECT DISTINCT(device) '
             'FROM "' + AnalysisDevice._table + '" '
-            'WHERE analysis = %s  '
+            'WHERE active IS TRUE '
+                'AND analysis = %s  '
                 'AND laboratory = %s',
             (self.analysis.id, self.laboratory.id))
         res = cursor.fetchall()

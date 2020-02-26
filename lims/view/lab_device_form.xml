@@ -1,9 +1,13 @@
 <?xml version="1.0"?>
 <form>
-    <label name="code"/>
-    <field name="code"/>
-    <label name="description"/>
-    <field name="description"/>
+    <group colspan="4" col="-1" id="description">
+        <label name="code"/>
+        <field name="code" xexpand="0"/>
+        <label name="description"/>
+        <field name="description" xexpand="1"/>
+        <label name="active"/>
+        <field name="active" xexpand="0" width="100"/>
+    </group>
     <label name="device_type"/>
     <field name="device_type"/>
     <label name="serial_number"/>
