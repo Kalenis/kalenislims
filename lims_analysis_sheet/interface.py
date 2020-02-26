@@ -175,6 +175,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         readonly=True)
     incomplete_sample = fields.Function(fields.Boolean('Incomplete sample'),
         'get_incomplete_sample')
+    completion_percentage = fields.Function(fields.Float('Complete',
+        digits=(1, 4), domain=[
+            ('completion_percentage', '>=', 0),
+            ('completion_percentage', '<=', 1),
+            ]),
+        'get_completion_percentage')
 
     @classmethod
     def __setup__(cls):
@@ -303,6 +309,42 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     if not all(x in v for x in template_analysis):
                         result[s.id] = True
                         break
+        return result
+
+    @classmethod
+    def get_completion_percentage(cls, sheets, name):
+        pool = Pool()
+        ModelField = pool.get('ir.model.field')
+        Column = pool.get('lims.interface.column')
+        Data = pool.get('lims.interface.data')
+
+        nl_result_field, = ModelField.search([
+            ('model.model', '=', 'lims.notebook.line'),
+            ('name', '=', 'result'),
+            ])
+
+        result = {}
+        for s in sheets:
+            result[s.id] = 0
+            result_column = Column.search([
+                ('interface', '=', s.template.interface),
+                ('transfer_field', '=', True),
+                ('related_line_field', '=', nl_result_field)
+                ])
+            if not result_column:
+                continue
+            result_field = result_column[0].alias
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                lines = Data.search([('compilation', '=', s.compilation.id)])
+                total = len(lines)
+                if not total:
+                    continue
+                results = 0
+                for line in lines:
+                    if getattr(line, result_field):
+                        results += 1
+                result[s.id] = round(results / total, 4)
         return result
 
     @classmethod

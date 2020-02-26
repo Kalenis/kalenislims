@@ -6,6 +6,10 @@ msgctxt "field:lims.analysis_sheet,compilation:"
 msgid "Compilation"
 msgstr "Compilación"
 
+msgctxt "field:lims.analysis_sheet,completion_percentage:"
+msgid "Complete"
+msgstr "Completo"
+
 msgctxt "field:lims.analysis_sheet,create_date:"
 msgid "Create Date"
 msgstr "Fecha creación"
@@ -326,6 +330,10 @@ msgstr "Hoja de análisis"
 msgctxt "selection:lims.planification.relate_technicians.start,grouping:"
 msgid "Analysis sheet"
 msgstr "Hoja de análisis"
+
+msgctxt "view:lims.analysis_sheet:"
+msgid "%"
+msgstr "%"
 
 msgctxt "view:lims.analysis_sheet:"
 msgid "Activate"
