@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form>
+    <label name="result_from"/>
+    <field name="result_from"/>
+    <label name="result_to"/>
+    <field name="result_to"/>
+    <label name="formula"/>
+    <field name="formula"/>
+</form>

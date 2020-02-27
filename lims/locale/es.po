@@ -234,6 +234,10 @@ msgctxt "model:ir.message,text:msg_device_code_unique_id"
 msgid "Device code must be unique"
 msgstr "El código del equipo debe ser único"
 
+msgctxt "model:ir.message,text:msg_device_correction_number"
+msgid "The From and To fields must be numeric"
+msgstr "Los campos Desde y Hasta deben ser numéricos"
+
 msgctxt "model:ir.message,text:msg_method_waiting_time_unique_id"
 msgid "Repeated record"
 msgstr "Registro repetido"
@@ -3236,6 +3240,10 @@ msgctxt "field:lims.lab.device,code:"
 msgid "Code"
 msgstr "Código"
 
+msgctxt "field:lims.lab.device,corrections:"
+msgid "Corrections"
+msgstr "Correcciones"
+
 msgctxt "field:lims.lab.device,create_date:"
 msgid "Create Date"
 msgstr "Fecha creación"
@@ -3273,6 +3281,46 @@ msgid "Write Date"
 msgstr "Fecha modificación"
 
 msgctxt "field:lims.lab.device,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.lab.device.correction,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.lab.device.correction,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.lab.device.correction,device:"
+msgid "Device"
+msgstr "Equipo"
+
+msgctxt "field:lims.lab.device.correction,formula:"
+msgid "Correction Formula"
+msgstr "Fórmula de corrección"
+
+msgctxt "field:lims.lab.device.correction,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.lab.device.correction,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.lab.device.correction,result_from:"
+msgid "From"
+msgstr "Desde"
+
+msgctxt "field:lims.lab.device.correction,result_to:"
+msgid "To"
+msgstr "Hasta"
+
+msgctxt "field:lims.lab.device.correction,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.lab.device.correction,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
 
@@ -7516,6 +7564,10 @@ msgctxt "help:lims.lab.device,active:"
 msgid "Uncheck to exclude from future use."
 msgstr "Desmarcar para excluir de uso en el futuro."
 
+msgctxt "help:lims.lab.device.correction,formula:"
+msgid "Correction formula based on the given value (X)"
+msgstr "Fórmula de corrección en función del valor dado (X)"
+
 msgctxt "help:lims.laboratory,cv_corrections:"
 msgid "Corrections for Coefficients of Variation (Control Charts)"
 msgstr "Correcciones para Coeficientes de Variación (Cartas de control)"
@@ -8778,6 +8830,10 @@ msgstr "Generar informe de resultados"
 msgctxt "model:lims.lab.device,name:"
 msgid "Laboratory Device"
 msgstr "Equipo de laboratorio"
+
+msgctxt "model:lims.lab.device.correction,name:"
+msgid "Device Correction"
+msgstr "Corrección de Equipo"
 
 msgctxt "model:lims.lab.device.laboratory,name:"
 msgid "Laboratory Device Laboratory"
@@ -11379,12 +11435,12 @@ msgid "Device types"
 msgstr "Tipos de equipo"
 
 msgctxt "view:lims.lab.device:"
-msgid "Device"
-msgstr "Equipo"
+msgid "Corrections"
+msgstr "Correcciones"
 
 msgctxt "view:lims.lab.device:"
-msgid "Devices"
-msgstr "Equipos"
+msgid "Laboratories"
+msgstr "Laboratorios"
 
 msgctxt "view:lims.lab.method:"
 msgid "Method"
