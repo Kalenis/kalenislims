@@ -2,16 +2,19 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+from sql import Cast
+
 from trytond.model import ModelView, ModelSQL, DeactivableMixin, fields, Unique
 from trytond.pool import Pool
 from trytond.transaction import Transaction
 from trytond.pyson import Eval, Bool
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
+from .formula_parser import FormulaParser
 
 __all__ = ['LaboratoryProfessional', 'Laboratory', 'LaboratoryCVCorrection',
     'LabMethod', 'LabMethodWaitingTime', 'LabDeviceType', 'LabDevice',
-    'LabDeviceLaboratory', 'LabDeviceTypeLabMethod', ]
+    'LabDeviceLaboratory', 'LabDeviceCorrection', 'LabDeviceTypeLabMethod', ]
 
 
 class Laboratory(ModelSQL, ModelView):
@@ -276,6 +279,8 @@ class LabDevice(DeactivableMixin, ModelSQL, ModelView):
         required=True)
     laboratories = fields.One2Many('lims.lab.device.laboratory', 'device',
         'Laboratories', required=True)
+    corrections = fields.One2Many('lims.lab.device.correction', 'device',
+        'Corrections')
     serial_number = fields.Char('Serial number')
 
     @classmethod
@@ -323,6 +328,32 @@ class LabDevice(DeactivableMixin, ModelSQL, ModelView):
         if not active:
             fields_to_update['by_default'] = False
         AnalysisDevice.write(analysis_devices, fields_to_update)
+
+    def get_correction(self, value):
+        cursor = Transaction().connection.cursor()
+        DeviceCorrection = Pool().get('lims.lab.device.correction')
+
+        try:
+            value = float(value)
+        except ValueError:
+            return value
+
+        cursor.execute('SELECT formula '
+            'FROM "' + DeviceCorrection._table + '" '
+            'WHERE device = %s '
+                'AND result_from::float <= %s::float '
+                'AND result_to::float >= %s::float',
+            (str(self.id), value, value))
+        correction = cursor.fetchone()
+        if not correction:
+            return value
+
+        formula = correction[0]
+        for i in (' ', '\t', '\n', '\r'):
+            formula = formula.replace(i, '')
+        variables = {'X': value}
+        parser = FormulaParser(formula, variables)
+        return parser.getValue()
 
 
 class LabDeviceType(ModelSQL, ModelView):
@@ -401,3 +432,40 @@ class LabDeviceLaboratory(ModelSQL, ModelView):
                 ])
             if laboratories:
                 raise UserError(gettext('lims.msg_physically_elsewhere'))
+
+
+class LabDeviceCorrection(ModelSQL, ModelView):
+    'Device Correction'
+    __name__ = 'lims.lab.device.correction'
+
+    device = fields.Many2One('lims.lab.device', 'Device', required=True,
+        ondelete='CASCADE', select=True)
+    result_from = fields.Char('From', required=True)
+    result_to = fields.Char('To', required=True)
+    formula = fields.Char('Correction Formula', required=True,
+        help="Correction formula based on the given value (X)")
+
+    @classmethod
+    def __setup__(cls):
+        super(LabDeviceCorrection, cls).__setup__()
+        cls._order.insert(0, ('result_from', 'ASC'))
+
+    @classmethod
+    def validate(cls, corrections):
+        super(LabDeviceCorrection, cls).validate(corrections)
+        for correction in corrections:
+            try:
+                float(correction.result_from)
+                float(correction.result_to)
+            except ValueError:
+                raise UserError(gettext('lims.msg_device_correction_number'))
+
+    @staticmethod
+    def order_result_from(tables):
+        table, _ = tables[None]
+        return [Cast(table.result_from, 'FLOAT'), table.result_from]
+
+    @staticmethod
+    def order_result_to(tables):
+        table, _ = tables[None]
+        return [Cast(table.result_to, 'FLOAT'), table.result_to]

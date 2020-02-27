@@ -225,7 +225,20 @@
             <field name="name">lab_device_laboratory_list</field>
         </record>
 
-        <!-- Configuration / Laboratory -->
+<!-- Device Correction -->
+
+        <record model="ir.ui.view" id="lims_lab_device_correction_view_form">
+            <field name="model">lims.lab.device.correction</field>
+            <field name="type">form</field>
+            <field name="name">lab_device_correction_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_lab_device_correction_view_list">
+            <field name="model">lims.lab.device.correction</field>
+            <field name="type">tree</field>
+            <field name="name">lab_device_correction_list</field>
+        </record>
+
+<!--  -->
 
         <record model="ir.model.access" id="access_laboratory">
             <field name="model" search="[('model', '=', 'lims.laboratory')]"/>

@@ -48,6 +48,7 @@ def register():
         laboratory.LabDeviceType,
         laboratory.LabDevice,
         laboratory.LabDeviceLaboratory,
+        laboratory.LabDeviceCorrection,
         analysis.ProductType,
         analysis.Matrix,
         analysis.ObjectiveDescription,

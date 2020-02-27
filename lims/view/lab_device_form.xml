@@ -12,5 +12,12 @@
     <field name="device_type"/>
     <label name="serial_number"/>
     <field name="serial_number"/>
-    <field name="laboratories" colspan="4"/>
+    <notebook>
+        <page string="Laboratories" id="laboratories">
+            <field name="laboratories" colspan="4"/>
+        </page>
+        <page string="Corrections" id="corrections">
+            <field name="corrections" colspan="4"/>
+        </page>
+    </notebook>
 </form>
