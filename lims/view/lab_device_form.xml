@@ -19,8 +19,5 @@
         <page string="Corrections" id="corrections">
             <field name="corrections" colspan="4"/>
         </page>
-        <page string="Maintenance Program" id="maintenance_program">
-            <field name="maintenance_program" colspan="4"/>
-        </page>
     </notebook>
 </form>
