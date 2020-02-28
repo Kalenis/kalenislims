@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="date"/>
+    <field name="device"/>
+    <field name="activity"/>
+    <field name="responsible"/>
+    <field name="state"/>
+    <field name="comments"/>
+</tree>

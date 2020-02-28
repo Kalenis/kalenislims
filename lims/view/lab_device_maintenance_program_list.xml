@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="activity"/>
+    <field name="frequency"/>
+    <field name="responsible"/>
+    <field name="notice_days"/>
+    <button name="generate_maintenance" string="Generate Calendar"/>
+</tree>
