@@ -49,6 +49,11 @@ def register():
         laboratory.LabDevice,
         laboratory.LabDeviceLaboratory,
         laboratory.LabDeviceCorrection,
+        laboratory.LabDeviceMaintenanceType,
+        laboratory.LabDeviceMaintenanceActivity,
+        laboratory.LabDeviceMaintenanceProgram,
+        laboratory.LabDeviceMaintenance,
+        laboratory.LabDeviceGenerateMaintenanceStart,
         analysis.ProductType,
         analysis.Matrix,
         analysis.ObjectiveDescription,
@@ -331,6 +336,7 @@ def register():
         planification.LoadServices,
         planification.PrintBlindSampleReport,
         planification.PrintPendingServicesUnplannedReport,
+        laboratory.LabDeviceGenerateMaintenance,
         module='lims', type_='wizard')
     Pool.register(
         entry.AcknowledgmentOfReceipt,
