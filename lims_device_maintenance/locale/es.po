@@ -1,0 +1,307 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:lims.lab.device,maintenance_program:"
+msgid "Maintenance Program"
+msgstr "Programa de mantenimiento"
+
+msgctxt "field:lims.lab.device.maintenance,activity:"
+msgid "Activity"
+msgstr "Actividad"
+
+msgctxt "field:lims.lab.device.maintenance,comments:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "field:lims.lab.device.maintenance,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.lab.device.maintenance,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.lab.device.maintenance,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:lims.lab.device.maintenance,device:"
+msgid "Device"
+msgstr "Equipo"
+
+msgctxt "field:lims.lab.device.maintenance,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.lab.device.maintenance,notice_date:"
+msgid "Notice Date"
+msgstr "Fecha de aviso"
+
+msgctxt "field:lims.lab.device.maintenance,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.lab.device.maintenance,responsible:"
+msgid "Responsible User"
+msgstr "Usuario responsable"
+
+msgctxt "field:lims.lab.device.maintenance,state:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:lims.lab.device.maintenance,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.lab.device.maintenance,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.lab.device.maintenance.activity,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.lab.device.maintenance.activity,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.lab.device.maintenance.activity,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.lab.device.maintenance.activity,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.lab.device.maintenance.activity,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.lab.device.maintenance.activity,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.lab.device.maintenance.activity,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.lab.device.maintenance.activity,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.lab.device.maintenance.generate.start,end_date:"
+msgid "End Date"
+msgstr "Fecha de finalización"
+
+msgctxt "field:lims.lab.device.maintenance.generate.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.lab.device.maintenance.generate.start,maintenances:"
+msgid "Maintenances"
+msgstr "Mantenimientos"
+
+msgctxt "field:lims.lab.device.maintenance.generate.start,start_date:"
+msgid "Start Date"
+msgstr "Fecha de inicio"
+
+msgctxt "field:lims.lab.device.maintenance.program,activity:"
+msgid "Activity"
+msgstr "Actividad"
+
+msgctxt "field:lims.lab.device.maintenance.program,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.lab.device.maintenance.program,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.lab.device.maintenance.program,device:"
+msgid "Device"
+msgstr "Equipo"
+
+msgctxt "field:lims.lab.device.maintenance.program,frequency:"
+msgid "Frequency"
+msgstr "Frecuencia"
+
+msgctxt "field:lims.lab.device.maintenance.program,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.lab.device.maintenance.program,notice_days:"
+msgid "Days to notify"
+msgstr "Días para el aviso"
+
+msgctxt "field:lims.lab.device.maintenance.program,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.lab.device.maintenance.program,responsible:"
+msgid "Responsible User"
+msgstr "Usuario responsable"
+
+msgctxt "field:lims.lab.device.maintenance.program,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.lab.device.maintenance.program,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.lab.device.maintenance.type,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:lims.lab.device.maintenance.type,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:lims.lab.device.maintenance.type,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.lab.device.maintenance.type,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.lab.device.maintenance.type,rec_name:"
+msgid "Record Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.lab.device.maintenance.type,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.lab.device.maintenance.type,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "model:ir.action,name:act_lab_device_maintenance_activity_list"
+msgid "Device Maintenance Activities"
+msgstr "Actividades de mantenimiento de Equipo"
+
+msgctxt "model:ir.action,name:act_lab_device_maintenance_calendar_list"
+msgid "Device Maintenance Calendar"
+msgstr "Calendario de mantenimiento de Equipo"
+
+msgctxt "model:ir.action,name:act_lab_device_maintenance_type_list"
+msgid "Device Maintenance Types"
+msgstr "Tipos de mantenimiento de Equipo"
+
+msgctxt "model:ir.action,name:wizard_device_generate_maintenance_calendar"
+msgid "Generate Maintenance Calendar"
+msgstr "Generar Calendario de mantenimiento"
+
+msgctxt "model:ir.message,text:msg_delete_maintenance"
+msgid "You can not delete \"%(maintenance)s\" because it is not in draft state"
+msgstr "No puede eliminar «%(maintenance)s» porque no está en estado borrador"
+
+msgctxt "model:ir.ui.menu,name:menu_device_maintenance"
+msgid "Devices Maintenance"
+msgstr "Mantenimiento de Equipos"
+
+msgctxt "model:ir.ui.menu,name:menu_device_maintenance_activity"
+msgid "Activities"
+msgstr "Actividades"
+
+msgctxt "model:ir.ui.menu,name:menu_device_maintenance_calendar"
+msgid "Calendar"
+msgstr "Calendario"
+
+msgctxt "model:ir.ui.menu,name:menu_device_maintenance_config"
+msgid "Configuration"
+msgstr "Configuración"
+
+msgctxt "model:ir.ui.menu,name:menu_device_maintenance_device"
+msgid "Devices"
+msgstr "Equipos"
+
+msgctxt "model:ir.ui.menu,name:menu_device_maintenance_type"
+msgid "Maintenance Types"
+msgstr "Tipos de mantenimiento"
+
+msgctxt "model:lims.lab.device.maintenance,name:"
+msgid "Device Maintenance Calendar"
+msgstr "Calendario de mantenimiento de Equipo"
+
+msgctxt "model:lims.lab.device.maintenance.activity,name:"
+msgid "Device Maintenance Activity"
+msgstr "Actividad de mantenimiento de Equipo"
+
+msgctxt "model:lims.lab.device.maintenance.generate.start,name:"
+msgid "Generate Device Maintenance Calendar"
+msgstr "Generar Calendario de mantenimiento de Equipo"
+
+msgctxt "model:lims.lab.device.maintenance.program,name:"
+msgid "Device Maintenance Program"
+msgstr "Programa de mantenimiento de Equipo"
+
+msgctxt "model:lims.lab.device.maintenance.type,name:"
+msgid "Device Maintenance Type"
+msgstr "Tipo de mantenimiento de Equipo"
+
+msgctxt "selection:lims.lab.device.maintenance,state:"
+msgid "Discarded"
+msgstr "Descartado"
+
+msgctxt "selection:lims.lab.device.maintenance,state:"
+msgid "Done"
+msgstr "Realizado"
+
+msgctxt "selection:lims.lab.device.maintenance,state:"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "selection:lims.lab.device.maintenance,state:"
+msgid "Pending"
+msgstr "Pendiente"
+
+msgctxt "selection:lims.lab.device.maintenance.program,frequency:"
+msgid "Daily"
+msgstr "Diaria"
+
+msgctxt "selection:lims.lab.device.maintenance.program,frequency:"
+msgid "Monthly"
+msgstr "Mensual"
+
+msgctxt "selection:lims.lab.device.maintenance.program,frequency:"
+msgid "Weekly"
+msgstr "Semanal"
+
+msgctxt "selection:lims.lab.device.maintenance.program,frequency:"
+msgid "Yearly"
+msgstr "Anual"
+
+msgctxt "view:lims.lab.device.maintenance.program:"
+msgid "Generate Calendar"
+msgstr "Generar Calendario"
+
+msgctxt "view:lims.lab.device.maintenance:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "view:lims.lab.device.maintenance:"
+msgid "Discard"
+msgstr "Descartado"
+
+msgctxt "view:lims.lab.device.maintenance:"
+msgid "Done"
+msgstr "Realizado"
+
+msgctxt "view:lims.lab.device.maintenance:"
+msgid "Pending"
+msgstr "Pendiente"
+
+msgctxt "view:lims.lab.device:"
+msgid "Maintenance Program"
+msgstr "Programa de mantenimiento"
+
+msgctxt "wizard_button:lims.lab.device.maintenance.generate,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.lab.device.maintenance.generate,start,generate:"
+msgid "Generate"
+msgstr "Generar"

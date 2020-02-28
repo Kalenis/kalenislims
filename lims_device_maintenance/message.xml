@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tryton>
+    <data group="1">
+        <record model="ir.message" id="msg_delete_maintenance">
+            <field name="text">You can not delete "%(maintenance)s" because it is not in draft state</field>
+        </record>
+    </data>
+</tryton>
