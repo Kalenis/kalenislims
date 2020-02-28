@@ -37,7 +37,7 @@ class AdministrativeTaskTemplate(ModelSQL, ModelView):
         return []
 
     @classmethod
-    def create_tasks(cls, type, records):
+    def create_tasks(cls, type, records, responsible=None):
         pool = Pool()
         AdministrativeTask = pool.get('lims.administrative.task')
         Date = pool.get('ir.date')
@@ -49,6 +49,8 @@ class AdministrativeTaskTemplate(ModelSQL, ModelView):
             return
 
         template = templates[0]
+        if not responsible:
+            responsible = template.responsible
         expiration_date = (Date.today() + relativedelta(
             days=template.expiration_days))
         default_fields = list(AdministrativeTask._fields.keys())
@@ -59,7 +61,7 @@ class AdministrativeTaskTemplate(ModelSQL, ModelView):
             value.update({
                 'type': type,
                 'description': template.description,
-                'responsible': template.responsible,
+                'responsible': responsible,
                 'expiration_date': expiration_date,
                 'origin': '%s,%s' % (record.__name__, record.id),
                 })
