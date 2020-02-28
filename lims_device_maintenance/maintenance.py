@@ -135,7 +135,8 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
     def check_delete(cls, maintenances):
         for m in maintenances:
             if m.state != 'draft':
-                raise UserError(gettext('lims.msg_delete_maintenance',
+                raise UserError(gettext(
+                    'lims_device_maintenance.msg_delete_maintenance',
                     maintenance=m.rec_name))
 
     @classmethod
@@ -155,6 +156,35 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
     @Workflow.transition('discarded')
     def discard(cls, maintenances):
         pass
+
+    @classmethod
+    def send_notice(cls):
+        pool = Pool()
+        TaskTemplate = pool.get('lims.administrative.task.template')
+        Date = pool.get('ir.date')
+
+        today = Date.today()
+        maintenances = cls.search([
+            ('notice_date', '=', today),
+            ('state', '=', 'pending'),
+            ])
+        for maintenance in cls._for_task_device_maintenance(maintenances):
+            TaskTemplate.create_tasks('device_maintenance',
+                [maintenance], responsible=maintenance.responsible)
+
+    @classmethod
+    def _for_task_device_maintenance(cls, maintenances):
+        AdministrativeTask = Pool().get('lims.administrative.task')
+        res = []
+        for maintenance in maintenances:
+            if AdministrativeTask.search([
+                    ('type', '=', 'device_maintenance'),
+                    ('origin', '=', '%s,%s' % (cls.__name__, maintenance.id)),
+                    ('state', 'not in', ('done', 'discarded')),
+                    ]):
+                continue
+            res.append(maintenance)
+        return res
 
 
 class LabDeviceGenerateMaintenanceStart(ModelView):

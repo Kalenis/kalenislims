@@ -194,6 +194,10 @@ msgctxt "model:ir.action,name:wizard_device_generate_maintenance_calendar"
 msgid "Generate Maintenance Calendar"
 msgstr "Generar Calendario de mantenimiento"
 
+msgctxt "model:ir.message,text:lbl_device_maintenance"
+msgid "Device Maintenance"
+msgstr "Mantenimiento de Equipo"
+
 msgctxt "model:ir.message,text:msg_delete_maintenance"
 msgid "You can not delete \"%(maintenance)s\" because it is not in draft state"
 msgstr "No puede eliminar «%(maintenance)s» porque no está en estado borrador"

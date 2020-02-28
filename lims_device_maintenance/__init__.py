@@ -4,6 +4,7 @@
 
 from trytond.pool import Pool
 from . import maintenance
+from . import task
 
 
 def register():
@@ -14,6 +15,8 @@ def register():
         maintenance.LabDeviceMaintenanceProgram,
         maintenance.LabDeviceMaintenance,
         maintenance.LabDeviceGenerateMaintenanceStart,
+        task.AdministrativeTaskTemplate,
+        task.AdministrativeTask,
         module='lims_device_maintenance', type_='model')
     Pool.register(
         maintenance.LabDeviceGenerateMaintenance,
