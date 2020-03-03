@@ -209,6 +209,8 @@ class FractionType(ModelSQL, ModelView):
     default_fraction_state = fields.Many2One('lims.packaging.integrity',
         'Default Fraction state')
     cie_fraction_type = fields.Boolean('Available for Blind Samples')
+    default_storage_location = fields.Many2One('stock.location',
+        'Default Storage location', domain=[('type', '=', 'storage')])
 
     @classmethod
     def __setup__(cls):
@@ -4627,15 +4629,20 @@ class CreateSampleStart(ModelView):
                 self.matrix and self.matrix.restricted_entry and
                 self.zone and self.zone.restricted_entry)
 
-    @fields.depends('fraction_type', 'package_type', 'fraction_state')
+    @fields.depends('fraction_type', 'storage_location', 'package_type',
+        'fraction_state')
     def on_change_fraction_type(self):
-        if self.fraction_type:
-            if (not self.package_type and
-                    self.fraction_type.default_package_type):
-                self.package_type = self.fraction_type.default_package_type
-            if (not self.fraction_state and
-                    self.fraction_type.default_fraction_state):
-                self.fraction_state = self.fraction_type.default_fraction_state
+        if not self.fraction_type:
+            return
+        if (not self.storage_location and
+                self.fraction_type.default_storage_location):
+            self.storage_location = self.fraction_type.default_storage_location
+        if (not self.package_type and
+                self.fraction_type.default_package_type):
+            self.package_type = self.fraction_type.default_package_type
+        if (not self.fraction_state and
+                self.fraction_type.default_fraction_state):
+            self.fraction_state = self.fraction_type.default_fraction_state
 
     @fields.depends('fraction_type', 'storage_location')
     def on_change_with_storage_time(self, name=None):
