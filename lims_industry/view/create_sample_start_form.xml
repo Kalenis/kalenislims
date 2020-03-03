@@ -18,7 +18,7 @@
         </group>
     </xpath>
     <xpath
-        expr="/form/notebook/page[@id='general']/field[@name='storage_location']"
+        expr="/form/notebook/page[@id='general']/group[@id='fraction_type']"
         position="after">
         <label name="equipment"/>
         <field name="equipment"/>
@@ -29,14 +29,18 @@
         <label name="label"/>
         <field name="label"/>
         <field name="labels" colspan="4" invisible="1"/>
-        <label name="ind_sampling_date"/>
-        <field name="ind_sampling_date"/>
-        <label name="ind_volume"/>
-        <field name="ind_volume"/>
-        <label name="sampling_type"/>
-        <field name="sampling_type"/>
-        <label name="missing_data"/>
-        <field name="missing_data"/>
+        <group col="4" colspan="2" id="sampling1">
+            <label name="ind_sampling_date"/>
+            <field name="ind_sampling_date"/>
+            <label name="ind_volume"/>
+            <field name="ind_volume"/>
+        </group>
+        <group col="4" colspan="2" id="sampling2">
+            <label name="sampling_type"/>
+            <field name="sampling_type"/>
+            <label name="missing_data"/>
+            <field name="missing_data" xexpand="0"/>
+        </group>
     </xpath>
     <xpath
         expr="/form/notebook/page[@id='general']/group[@id='labels']"
