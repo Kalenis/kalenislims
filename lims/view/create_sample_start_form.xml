@@ -2,10 +2,14 @@
 <form>
     <notebook width="1200" height="550">
         <page id="general" string="General">
-            <label name="date"/>
-            <field name="date"/>
-            <label name="storage_location"/>
-            <field name="storage_location"/>
+            <group col="6" colspan="4" id="fraction_type">
+                <label name="date"/>
+                <field name="date"/>
+                <label name="fraction_type"/>
+                <field name="fraction_type"/>
+                <label name="storage_location"/>
+                <field name="storage_location"/>
+            </group>
             <label name="product_type"/>
             <field name="product_type"/>
             <label name="matrix"/>
@@ -18,18 +22,20 @@
                 <label name="sample_client_description_eng"/>
                 <field name="sample_client_description_eng"/>
             </group>
-            <label name="fraction_type"/>
-            <field name="fraction_type"/>
-            <label name="fraction_state"/>
-            <field name="fraction_state"/>
-            <label name="package_type"/>
-            <field name="package_type"/>
-            <label name="packages_quantity"/>
-            <field name="packages_quantity"/>
-            <label name="zone"/>
-            <field name="zone"/>
-            <label name="restricted_entry"/>
-            <field name="restricted_entry"/>
+            <group col="6" colspan="4" id="packaging">
+                <label name="packages_quantity"/>
+                <field name="packages_quantity" xexpand="0"/>
+                <label name="package_type"/>
+                <field name="package_type"/>
+                <label name="fraction_state"/>
+                <field name="fraction_state"/>
+            </group>
+            <group col="4" colspan="2" id="zone">
+                <label name="zone"/>
+                <field name="zone"/>
+                <label name="restricted_entry"/>
+                <field name="restricted_entry" xexpand="0"/>
+            </group>
             <group col="2" colspan="2" id="storage_time">
                 <label name="storage_time"/>
                 <field name="storage_time"/>
