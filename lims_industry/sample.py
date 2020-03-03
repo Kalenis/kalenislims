@@ -5,7 +5,7 @@
 from trytond.model import ModelView, fields
 from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Bool
 from trytond.transaction import Transaction
 
 __all__ = ['Entry', 'Sample', 'CreateSampleStart', 'CreateSample',
@@ -27,17 +27,15 @@ class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
 
     equipment = fields.Many2One('lims.equipment', 'Equipment',
-        required=True, domain=[('party', '=', Eval('party'))],
-        depends=['party'])
+        domain=[('party', '=', Eval('party'))], depends=['party'])
     component = fields.Many2One('lims.component', 'Component',
-        required=True, domain=[('equipment', '=', Eval('equipment'))],
-        depends=['equipment'])
+        domain=[('equipment', '=', Eval('equipment'))], depends=['equipment'])
     comercial_product = fields.Many2One('lims.comercial.product',
-        'Comercial Product', required=True)
-    ind_sampling_date = fields.Date('Sampling date', required=True)
-    ind_volume = fields.Float('Received volume', required=True)
+        'Comercial Product')
+    ind_sampling_date = fields.Date('Sampling date')
+    ind_volume = fields.Float('Received volume')
     sampling_type = fields.Many2One('lims.sampling.type',
-        'Sampling Type', required=True)
+        'Sampling Type')
     ind_operational_detail = fields.Text('Operational detail')
     ind_work_environment = fields.Text('Work environment')
     ind_analysis_reason = fields.Text('Reason for analysis')
@@ -63,8 +61,12 @@ class Sample(metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super(Sample, cls).__setup__()
-        cls.product_type.states['readonly'] = True
-        cls.matrix.states['readonly'] = True
+        cls.product_type.states['readonly'] = Bool(Eval('component'))
+        if 'component' not in cls.product_type.depends:
+            cls.product_type.depends.append('component')
+        cls.matrix.states['readonly'] = Bool(Eval('comercial_product'))
+        if 'comercial_product' not in cls.matrix.depends:
+            cls.matrix.depends.append('comercial_product')
 
     @fields.depends('component')
     def on_change_component(self):
@@ -144,19 +146,27 @@ class Sample(metaclass=PoolMeta):
 class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
 
+    ind_required = fields.Function(fields.Boolean('Industry required'),
+        'on_change_with_ind_required')
     equipment = fields.Many2One('lims.equipment', 'Equipment',
-        required=True, domain=[('party', '=', Eval('party'))],
-        depends=['party'])
+        domain=[('party', '=', Eval('party'))],
+        states={'required': Bool(Eval('ind_required'))},
+        depends=['party', 'ind_required'])
     component = fields.Many2One('lims.component', 'Component',
-        required=True, domain=[('equipment', '=', Eval('equipment'))],
-        depends=['equipment'])
+        domain=[('equipment', '=', Eval('equipment'))],
+        states={'required': Bool(Eval('ind_required'))},
+        depends=['equipment', 'ind_required'])
     comercial_product = fields.Many2One('lims.comercial.product',
-        'Comercial Product', required=True)
+        'Comercial Product', depends=['ind_required'],
+        states={'required': Bool(Eval('ind_required'))})
     label = fields.Char('Label')
-    ind_sampling_date = fields.Date('Sampling date', required=True)
-    ind_volume = fields.Float('Received volume', required=True)
+    ind_sampling_date = fields.Date('Sampling date', depends=['ind_required'],
+        states={'required': Bool(Eval('ind_required'))})
+    ind_volume = fields.Float('Received volume', depends=['ind_required'],
+        states={'required': Bool(Eval('ind_required'))})
     sampling_type = fields.Many2One('lims.sampling.type',
-        'Sampling Type', required=True)
+        'Sampling Type', depends=['ind_required'],
+        states={'required': Bool(Eval('ind_required'))})
     ind_operational_detail = fields.Text('Operational detail')
     ind_work_environment = fields.Text('Work environment')
     ind_analysis_reason = fields.Text('Reason for analysis')
@@ -180,8 +190,20 @@ class CreateSampleStart(metaclass=PoolMeta):
         super(CreateSampleStart, cls).__setup__()
         for field in ('component', 'comercial_product'):
             cls.analysis_domain.on_change_with.add(field)
-        cls.product_type.states['readonly'] = True
-        cls.matrix.states['readonly'] = True
+        cls.product_type.states['readonly'] = Bool(Eval('component'))
+        if 'component' not in cls.product_type.depends:
+            cls.product_type.depends.append('component')
+        cls.matrix.states['readonly'] = Bool(Eval('comercial_product'))
+        if 'comercial_product' not in cls.matrix.depends:
+            cls.matrix.depends.append('comercial_product')
+
+    @fields.depends('fraction_type')
+    def on_change_with_ind_required(self, name=None):
+        Config = Pool().get('lims.configuration')
+        if self.fraction_type:
+            if self.fraction_type == Config(1).mcl_fraction_type:
+                return True
+        return False
 
     @fields.depends('component')
     def on_change_component(self):
@@ -237,6 +259,28 @@ class CreateSample(metaclass=PoolMeta):
         samples_defaults = super(CreateSample,
             self)._get_samples_defaults(entry_id)
 
+        equipment_id = None
+        if (hasattr(self.start, 'equipment') and
+                getattr(self.start, 'equipment')):
+            equipment_id = getattr(self.start, 'equipment').id
+        component_id = None
+        if (hasattr(self.start, 'component') and
+                getattr(self.start, 'component')):
+            component_id = getattr(self.start, 'component').id
+        comercial_product_id = None
+        if (hasattr(self.start, 'comercial_product') and
+                getattr(self.start, 'comercial_product')):
+            comercial_product_id = getattr(self.start, 'comercial_product').id
+        sampling_type_id = None
+        if (hasattr(self.start, 'sampling_type') and
+                getattr(self.start, 'sampling_type')):
+            sampling_type_id = getattr(self.start, 'sampling_type').id
+        ind_sampling_date = (hasattr(self.start,
+            'ind_sampling_date') and getattr(self.start,
+            'ind_sampling_date') or None)
+        ind_volume = (hasattr(self.start,
+            'ind_volume') and getattr(self.start,
+            'ind_volume') or None)
         ind_operational_detail = (hasattr(self.start,
             'ind_operational_detail') and getattr(self.start,
             'ind_operational_detail') or None)
@@ -266,13 +310,12 @@ class CreateSample(metaclass=PoolMeta):
             getattr(self.start, 'changed_oil') or False)
 
         for sample_defaults in samples_defaults:
-            sample_defaults['equipment'] = self.start.equipment.id
-            sample_defaults['component'] = self.start.component.id
-            sample_defaults['comercial_product'] = (
-                self.start.comercial_product.id)
-            sample_defaults['ind_sampling_date'] = self.start.ind_sampling_date
-            sample_defaults['ind_volume'] = self.start.ind_volume
-            sample_defaults['sampling_type'] = self.start.sampling_type.id
+            sample_defaults['equipment'] = equipment_id
+            sample_defaults['component'] = component_id
+            sample_defaults['comercial_product'] = comercial_product_id
+            sample_defaults['ind_sampling_date'] = ind_sampling_date
+            sample_defaults['ind_volume'] = ind_volume
+            sample_defaults['sampling_type'] = sampling_type_id
             sample_defaults['ind_operational_detail'] = ind_operational_detail
             sample_defaults['ind_work_environment'] = ind_work_environment
             sample_defaults['ind_analysis_reason'] = ind_analysis_reason

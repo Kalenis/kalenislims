@@ -258,6 +258,10 @@ msgctxt "field:lims.create_sample.start,ind_operational_detail:"
 msgid "Operational detail"
 msgstr "Detalle operativo"
 
+msgctxt "field:lims.create_sample.start,ind_required:"
+msgid "Industry required"
+msgstr "Requerido Industria"
+
 msgctxt "field:lims.create_sample.start,ind_sampling_date:"
 msgid "Sampling date"
 msgstr "Fecha muestra"
