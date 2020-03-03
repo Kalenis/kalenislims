@@ -15,7 +15,7 @@ from trytond.i18n import gettext
 __all__ = ['LabDevice', 'LabDeviceMaintenanceType',
     'LabDeviceMaintenanceActivity', 'LabDeviceMaintenanceProgram',
     'LabDeviceMaintenance', 'LabDeviceGenerateMaintenanceStart',
-    'LabDeviceGenerateMaintenance']
+    'LabDeviceGenerateMaintenance', 'Cron']
 
 
 class LabDevice(metaclass=PoolMeta):
@@ -271,3 +271,15 @@ class LabDeviceGenerateMaintenance(Wizard):
 
     def transition_open(self):
         return 'end'
+
+
+class Cron(metaclass=PoolMeta):
+    __name__ = 'ir.cron'
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls.method.selection.extend([
+            ('lims.lab.device.maintenance|send_notice',
+                'Device Maintenance Calendar Notice'),
+            ])

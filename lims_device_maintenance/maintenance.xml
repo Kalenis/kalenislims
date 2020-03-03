@@ -129,6 +129,14 @@
             <field name="act_window" ref="act_lab_device_maintenance_calendar_list"/>
         </record>
 
+<!-- Cron -->
+
+        <record model="ir.cron" id="cron_device_maintenance_send_notice">
+            <field name="interval_number" eval="1"/>
+            <field name="interval_type">days</field>
+            <field name="method">lims.lab.device.maintenance|send_notice</field>
+        </record>
+
 <!-- Device Maintenance Menu -->
 
         <menuitem name="Devices Maintenance" id="menu_device_maintenance"/>
