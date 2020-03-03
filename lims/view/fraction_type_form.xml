@@ -10,6 +10,8 @@
     </group>
     <label name="requalify"/>
     <field name="requalify"/>
+    <label name="default_storage_location"/>
+    <field name="default_storage_location"/>
     <label name="default_package_type"/>
     <field name="default_package_type"/>
     <label name="default_fraction_state"/>

@@ -28,7 +28,7 @@ msgstr "Usuario creación"
 
 msgctxt "field:company.department,default_location:"
 msgid "Default Location"
-msgstr "Ubicación por Defecto"
+msgstr "Ubicación por defecto"
 
 msgctxt "field:company.department,id:"
 msgid "ID"
@@ -2790,6 +2790,10 @@ msgstr "Estado de fracción por defecto"
 msgctxt "field:lims.fraction.type,default_package_type:"
 msgid "Default Package type"
 msgstr "Tipo de envase por defecto"
+
+msgctxt "field:lims.fraction.type,default_storage_location:"
+msgid "Default Storage location"
+msgstr "Ubicación de almacenamiento por defecto"
 
 msgctxt "field:lims.fraction.type,description:"
 msgid "Description"
