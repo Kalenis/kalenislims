@@ -246,6 +246,10 @@ msgctxt "model:lims.lab.device.maintenance.type,name:"
 msgid "Device Maintenance Type"
 msgstr "Tipo de mantenimiento de Equipo"
 
+msgctxt "selection:ir.cron,method:"
+msgid "Device Maintenance Calendar Notice"
+msgstr "Aviso de Calendario de mantenimiento de Equipo"
+
 msgctxt "selection:lims.lab.device.maintenance,state:"
 msgid "Discarded"
 msgstr "Descartado"

@@ -15,6 +15,7 @@ def register():
         maintenance.LabDeviceMaintenanceProgram,
         maintenance.LabDeviceMaintenance,
         maintenance.LabDeviceGenerateMaintenanceStart,
+        maintenance.Cron,
         task.AdministrativeTaskTemplate,
         task.AdministrativeTask,
         module='lims_device_maintenance', type_='model')
