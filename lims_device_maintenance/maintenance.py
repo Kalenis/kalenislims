@@ -70,7 +70,7 @@ class LabDeviceMaintenanceProgram(ModelSQL, ModelView):
 
     @classmethod
     @ModelView.button_action(
-        'lims.wizard_device_generate_maintenance_calendar')
+        'lims_device_maintenance.wizard_device_generate_maintenance_calendar')
     def generate_maintenance(cls, programs):
         pass
 
@@ -202,12 +202,14 @@ class LabDeviceGenerateMaintenance(Wizard):
     __name__ = 'lims.lab.device.maintenance.generate'
 
     start = StateView('lims.lab.device.maintenance.generate.start',
-        'lims.lab_device_generate_maintenance_calendar_start_view_form', [
+        'lims_device_maintenance.lab_device_generate_maintenance_calendar'
+        '_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
             Button('Generate', 'generate', 'tryton-ok', default=True),
             ])
     generate = StateTransition()
-    open = StateAction('lims.act_lab_device_maintenance_calendar_list')
+    open = StateAction(
+        'lims_device_maintenance.act_lab_device_maintenance_calendar_list')
 
     def default_start(self, fields):
         Date = Pool().get('ir.date')
