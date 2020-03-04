@@ -225,6 +225,23 @@ class Interface(Workflow, ModelSQL, ModelView):
                 },
             })
 
+    @classmethod
+    def view_attributes(cls):
+        return [
+            ('//notebook/page[@id="columns"]', 'states', {
+                    'invisible': Eval('kind') != 'template',
+                    }),
+            ('//notebook/page[@id="fields"]', 'states', {
+                    'invisible': Eval('kind') != 'template',
+                    }),
+            ('//notebook/page[@id="template"]', 'states', {
+                    'invisible': Eval('kind') != 'template',
+                    }),
+            ('//notebook/page[@id="controller"]', 'states', {
+                    'invisible': Eval('kind') != 'controller',
+                    }),
+            ]
+
     @staticmethod
     def default_revision():
         return 0
@@ -434,13 +451,21 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
                 {}).get('template_type') != 'txt',
         })
     source_column = fields.Integer('Column',
-        help='Mapped column in source file')
+        states={
+            'invisible': Eval('_parent_interface',
+                {}).get('template_type') == 'txt',
+        }, help='Mapped column in source file')
     singleton = fields.Boolean('Is a singleton value',
-        help='Is a fixed value (column:row) in source file')
+        states={
+            'invisible': Eval('_parent_interface',
+                {}).get('template_type') == 'txt',
+        }, help='Is a fixed value (column:row) in source file')
     source_row = fields.Integer('Row',
         states={
             'required': Bool(Eval('singleton')),
-            'invisible': Not(Eval('singleton'))
+            'invisible': Or(Not(Eval('singleton')),
+                Eval('_parent_interface',
+                     {}).get('template_type') == 'txt')
         }, depends=['singleton'])
     transfer_field = fields.Boolean('Transfer field',
         help='Check if value have to be transferred to notebook line')
@@ -875,7 +900,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
             lang = Lang.get()
         try:
             return datetime.strptime(value, lang.date)
-        except:
+        except Exception:
             return datetime.strptime(value, '%Y/%m/%d')
 
     @classmethod
