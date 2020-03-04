@@ -7,5 +7,6 @@
 def concat(*args):
     return ''.join([a if isinstance(a, str) else '' for a in args])
 
+
 custom_functions = {}
 custom_functions['CONCAT'] = concat

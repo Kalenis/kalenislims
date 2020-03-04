@@ -3,11 +3,4 @@
     <field name="name"/>
     <field name="kind"/>
     <field name="state"/>
-    <field name="template_type"/>
-    <field name="controller_name"/>
-    <field name="analysis_field"/>
-    <field name="fraction_field"/>
-    <field name="repetition_field"/>
-    <field name="notebook_line_field"/>
-    <field name="language"/>
 </tree>

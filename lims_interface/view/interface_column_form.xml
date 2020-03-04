@@ -6,32 +6,37 @@
         <label name="alias"/>
         <field name="alias"/>
         <label name="evaluation_order"/>
-        <field name="evaluation_order"/>
+        <field name="evaluation_order" xexpand="0"/>
     </group>
-    <label name="expression"/>
-    <group id="expression" col="2" colspan="3">
-        <field name="expression"/>
-        <image name="expression_icon"/>
+    <group id="type" colspan="4" col="4">
+        <label name="type_"/>
+        <field name="type_"/>
+        <label name="related_model"/>
+        <field name="related_model"/>
     </group>
-    <newline/>
-    <label name="type_"/>
-    <field name="type_"/>
-    <label name="related_model"/>
-    <field name="related_model"/>
-    <group id="interface_kind" colspan="4" col="10">
+    <group id="expression" colspan="4" col="3">
+        <label name="expression"/>
+        <field name="expression" xexpand="1"/>
+        <image name="expression_icon" xexpand="0" size="30"/>
+    </group>
+    <separator id="import" colspan="4" string="Import"/>
+    <group id="import_spreadsheet" colspan="4" col="6">
         <label name="singleton"/>
         <field name="singleton"/>
         <label name="source_column"/>
         <field name="source_column"/>
         <label name="source_row"/>
         <field name="source_row"/>
-        <label name="source_start"/>
-        <field name="source_start"/>
-        <label name="source_end"/>
-        <field name="source_end"/>
     </group>
-    <label name="transfer_field"/>
-    <field name="transfer_field"/>
-    <label name="related_line_field"/>
-    <field name="related_line_field"/>
+    <label name="source_start"/>
+    <field name="source_start"/>
+    <label name="source_end"/>
+    <field name="source_end"/>
+    <separator id="storage" colspan="4" string="Storage"/>
+    <group id="storage_field" colspan="4" col="4">
+        <label name="transfer_field"/>
+        <field name="transfer_field" xexpand="0"/>
+        <label name="related_line_field"/>
+        <field name="related_line_field"/>
+    </group>
 </form>

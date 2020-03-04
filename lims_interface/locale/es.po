@@ -488,7 +488,9 @@ msgstr "El símbolo \"%(symbol)s\" en la columna \"%(name)s\" es inválido."
 
 msgctxt "model:ir.message,text:no_notebook_line_field_defined"
 msgid "No field was defined for the Notebook line in the device interface."
-msgstr "Falta definir en la interfaz cuál es el campo que refiere a la Línea de cuaderno."
+msgstr ""
+"Falta definir en la interfaz cuál es el campo que refiere a la Línea de "
+"cuaderno."
 
 msgctxt "model:ir.model.button,string:lims_interface_activate_button"
 msgid "Activate"
@@ -787,6 +789,14 @@ msgctxt "selection:lims.interface.table.field,type:"
 msgid "Timestamp"
 msgstr "Timestamp"
 
+msgctxt "view:lims.interface.column:"
+msgid "Import"
+msgstr "Importación"
+
+msgctxt "view:lims.interface.column:"
+msgid "Storage"
+msgstr "Almacenamiento"
+
 msgctxt "view:lims.interface.compilation:"
 msgid "Activate"
 msgstr "Activar"
@@ -824,5 +834,21 @@ msgid "Activate"
 msgstr "Activar"
 
 msgctxt "view:lims.interface:"
+msgid "Columns"
+msgstr "Columnas"
+
+msgctxt "view:lims.interface:"
+msgid "Controller"
+msgstr "Controlador"
+
+msgctxt "view:lims.interface:"
 msgid "Draft"
 msgstr "Borrador"
+
+msgctxt "view:lims.interface:"
+msgid "Fields"
+msgstr "Campos"
+
+msgctxt "view:lims.interface:"
+msgid "Template"
+msgstr "Plantilla"
