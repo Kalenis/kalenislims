@@ -3268,6 +3268,26 @@ msgctxt "field:lims.lab.device.laboratory,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
 
+msgctxt "field:lims.lab.device.relate_analysis.start,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:lims.lab.device.relate_analysis.start,analysis_domain:"
+msgid "Analysis domain"
+msgstr "Dominio para Análisis"
+
+msgctxt "field:lims.lab.device.relate_analysis.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:lims.lab.device.relate_analysis.start,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
+msgctxt "field:lims.lab.device.relate_analysis.start,laboratory_domain:"
+msgid "Laboratory domain"
+msgstr "Dominio para Laboratorio"
+
 msgctxt "field:lims.lab.device.type,code:"
 msgid "Code"
 msgstr "Código"
@@ -9645,6 +9665,10 @@ msgctxt "model:ir.action,name:wiz_print_analysis_pending_inform"
 msgid "Pending analysis Unchecked"
 msgstr "Análisis pendientes sin tildar"
 
+msgctxt "model:ir.action,name:wizard_device_relate_analysis"
+msgid "Relate Analysis to Device"
+msgstr "Relacionar análisis a equipo"
+
 msgctxt "model:ir.action,name:wizard_fractions_by_locations"
 msgid "Fractions by Locations"
 msgstr "Fracciones por ubicaciones"
@@ -11164,6 +11188,10 @@ msgstr "Corrección de Equipo"
 msgctxt "model:lims.lab.device.laboratory,name:"
 msgid "Laboratory Device Laboratory"
 msgstr "Laboratorio de equipo"
+
+msgctxt "model:lims.lab.device.relate_analysis.start,name:"
+msgid "Relate Analysis to Device"
+msgstr "Relacionar análisis a equipo"
 
 msgctxt "model:lims.lab.device.type,name:"
 msgid "Laboratory Device Type"
@@ -16315,6 +16343,14 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.generate_results_report,start,search:"
 msgid "Search"
 msgstr "Buscar"
+
+msgctxt "wizard_button:lims.lab.device.relate_analysis,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.lab.device.relate_analysis,start,relate:"
+msgid "Relate"
+msgstr "Relacionar"
 
 msgctxt "wizard_button:lims.manage_services,start,end:"
 msgid "Cancel"

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<form>
+    <label name="laboratory"/>
+    <field name="laboratory" xexpand="1"/>
+    <field name="analysis" colspan="4"/>
+</form>

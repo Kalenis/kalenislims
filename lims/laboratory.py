@@ -5,6 +5,7 @@
 from sql import Cast
 
 from trytond.model import ModelView, ModelSQL, DeactivableMixin, fields, Unique
+from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool
 from trytond.transaction import Transaction
 from trytond.pyson import Eval, Bool
@@ -14,7 +15,8 @@ from .formula_parser import FormulaParser
 
 __all__ = ['LaboratoryProfessional', 'Laboratory', 'LaboratoryCVCorrection',
     'LabMethod', 'LabMethodWaitingTime', 'LabDeviceType', 'LabDevice',
-    'LabDeviceLaboratory', 'LabDeviceCorrection', 'LabDeviceTypeLabMethod']
+    'LabDeviceLaboratory', 'LabDeviceCorrection', 'LabDeviceTypeLabMethod',
+    'LabDeviceRelateAnalysisStart', 'LabDeviceRelateAnalysis']
 
 
 class Laboratory(ModelSQL, ModelView):
@@ -469,3 +471,95 @@ class LabDeviceCorrection(ModelSQL, ModelView):
     def order_result_to(tables):
         table, _ = tables[None]
         return [Cast(table.result_to, 'FLOAT'), table.result_to]
+
+
+class LabDeviceRelateAnalysisStart(ModelView):
+    'Relate Analysis to Device'
+    __name__ = 'lims.lab.device.relate_analysis.start'
+
+    laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
+        required=True, depends=['laboratory_domain'],
+        domain=[('id', 'in', Eval('laboratory_domain'))])
+    laboratory_domain = fields.One2Many('lims.laboratory',
+        None, 'Laboratory domain')
+    analysis = fields.Many2Many('lims.analysis', None, None,
+        'Analysis', required=True, depends=['analysis_domain'],
+        domain=[('id', 'in', Eval('analysis_domain'))])
+    analysis_domain = fields.Function(fields.One2Many('lims.analysis',
+        None, 'Analysis domain'), 'on_change_with_analysis_domain')
+
+    @fields.depends('laboratory')
+    def on_change_with_analysis_domain(self, name=None):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        AnalysisLaboratory = pool.get('lims.analysis-laboratory')
+
+        if not self.laboratory:
+            return []
+
+        cursor.execute('SELECT DISTINCT(al.analysis) '
+            'FROM "' + AnalysisLaboratory._table + '" al '
+                'INNER JOIN "' + Analysis._table + '" a '
+                'ON a.id = al.analysis '
+            'WHERE al.laboratory = %s '
+                'AND a.state = \'active\' '
+                'AND a.type = \'analysis\' '
+                'AND a.end_date IS NULL',
+            (self.laboratory.id,))
+        return [x[0] for x in cursor.fetchall()]
+
+
+class LabDeviceRelateAnalysis(Wizard):
+    'Relate Analysis to Device'
+    __name__ = 'lims.lab.device.relate_analysis'
+
+    start = StateView('lims.lab.device.relate_analysis.start',
+        'lims.lab_device_relate_analysis_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Relate', 'relate', 'tryton-ok', default=True),
+            ])
+    relate = StateTransition()
+
+    def default_start(self, fields):
+        Device = Pool().get('lims.lab.device')
+
+        device = Device(Transaction().context['active_id'])
+        default = {
+            'laboratory_domain': [l.laboratory.id
+                for l in device.laboratories],
+            }
+        return default
+
+    def transition_relate(self):
+        AnalysisDevice = Pool().get('lims.analysis.device')
+
+        device_id = Transaction().context['active_id']
+        laboratory_id = self.start.laboratory.id
+
+        to_create = []
+        for a in self.start.analysis:
+            if AnalysisDevice.search([
+                    ('analysis', '=', a.id),
+                    ('laboratory', '=', laboratory_id),
+                    ('device', '=', device_id),
+                    ]):
+                continue
+
+            by_default = True
+            if (AnalysisDevice.search_count([
+                    ('analysis', '=', a.id),
+                    ('laboratory', '=', laboratory_id),
+                    ('by_default', '=', True),
+                    ]) > 0):
+                by_default = False
+            to_create.append({
+                'analysis': a.id,
+                'laboratory': laboratory_id,
+                'device': device_id,
+                'by_default': by_default,
+                })
+
+        if to_create:
+            AnalysisDevice.create(to_create)
+        return 'end'

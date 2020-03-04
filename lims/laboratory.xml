@@ -238,6 +238,23 @@
             <field name="name">lab_device_correction_list</field>
         </record>
 
+<!-- Wizard Relate Analysis to Device -->
+
+        <record model="ir.ui.view" id="lab_device_relate_analysis_start_view_form">
+            <field name="model">lims.lab.device.relate_analysis.start</field>
+            <field name="type">form</field>
+            <field name="name">lab_device_relate_analysis_start_form</field>
+        </record>
+        <record model="ir.action.wizard" id="wizard_device_relate_analysis">
+            <field name="name">Relate Analysis to Device</field>
+            <field name="wiz_name">lims.lab.device.relate_analysis</field>
+        </record>
+        <record model="ir.action.keyword" id="wizard_device_relate_analysis_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.lab.device,-1</field>
+            <field name="action" ref="wizard_device_relate_analysis"/>
+        </record>
+
 <!--  -->
 
         <record model="ir.model.access" id="access_laboratory">
