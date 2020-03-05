@@ -2,12 +2,12 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-import sys
 import logging
 import operator
 from datetime import datetime
 from decimal import Decimal
 from sql import Literal
+
 from trytond.model import Workflow, ModelView, ModelSQL, DeactivableMixin, \
     fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
