@@ -11814,10 +11814,6 @@ msgctxt "model:res.group,name:group_lims_planification_readonly"
 msgid "Lims Planification Read Only"
 msgstr "Lims Planificación Sólo lectura"
 
-msgctxt "model:res.user,name:"
-msgid "Cron Lims Acknowledgment Of Receipt"
-msgstr "Programador de Acuse de recibo"
-
 msgctxt "model:user.department,name:"
 msgid "User Department"
 msgstr "Usuario Departamento"

@@ -6286,12 +6286,19 @@ class PendingServicesUnplannedSpreadsheet(Report):
             if laboratory_id not in labs:
                 continue
 
+            # Service
+            analysis_id = detail.service.analysis.id
+
+            # Party
+            party_id = detail.party.id
+
             # Key
             if data['include_method']:
-                key = (detail.fraction.id, detail.method.id)
+                key = (laboratory_id, analysis_id, party_id,
+                    detail.fraction.id, detail.method.id)
             else:
-                key = detail.fraction.id
-
+                key = (laboratory_id, analysis_id, party_id,
+                    detail.fraction.id)
             if key in objects:
                 continue
 
