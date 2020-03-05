@@ -85,6 +85,13 @@
             <field name="name">lab_device_maintenance_program_list</field>
         </record>
 
+<!-- Device Maintenance Program Buttons -->
+
+        <record model="ir.model.button" id="device_maintenance_program_generate_maintenance_button">
+            <field name="name">generate_maintenance</field>
+            <field name="model" search="[('model', '=', 'lims.lab.device.maintenance.program')]"/>
+        </record>
+
 <!-- Wizard Generate Device Maintenance Calendar -->
 
         <record model="ir.ui.view"
@@ -135,6 +142,21 @@
             <field name="interval_number" eval="1"/>
             <field name="interval_type">days</field>
             <field name="method">lims.lab.device.maintenance|send_notice</field>
+        </record>
+
+<!-- Device Maintenance Buttons -->
+
+        <record model="ir.model.button" id="device_maintenance_pending_button">
+            <field name="name">pending</field>
+            <field name="model" search="[('model', '=', 'lims.lab.device.maintenance')]"/>
+        </record>
+        <record model="ir.model.button" id="device_maintenance_do_button">
+            <field name="name">do</field>
+            <field name="model" search="[('model', '=', 'lims.lab.device.maintenance')]"/>
+        </record>
+        <record model="ir.model.button" id="device_maintenance_discard_button">
+            <field name="name">discard</field>
+            <field name="model" search="[('model', '=', 'lims.lab.device.maintenance')]"/>
         </record>
 
 <!-- Device Maintenance Menu -->

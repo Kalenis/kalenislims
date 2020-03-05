@@ -172,7 +172,8 @@ class Planification(Workflow, ModelSQL, ModelView):
     def default_laboratory():
         return Transaction().context.get('laboratory', None)
 
-    @fields.depends('laboratory', 'state')
+    @fields.depends('laboratory', 'state',
+        methods=['_get_analysis_domain'])
     def on_change_with_analysis_domain(self, name=None):
         if not self.laboratory or self.state != 'draft':
             return []
@@ -838,7 +839,7 @@ class FractionReagent(ModelSQL, ModelView):
     def get_reagent_domain(self, name=None):
         return self.default_reagent_domain()
 
-    @fields.depends('product')
+    @fields.depends('product', '_parent_product.quantity')
     def on_change_with_quantity(self, name=None):
         pool = Pool()
         Location = pool.get('stock.location')
@@ -853,7 +854,7 @@ class FractionReagent(ModelSQL, ModelView):
             product = Product(self.product.id)
         return product.quantity or 0
 
-    @fields.depends('product')
+    @fields.depends('product', '_parent_product.default_uom')
     def on_change_with_default_uom(self, name=None):
         if self.product:
             return self.product.default_uom.id
@@ -1700,7 +1701,7 @@ class AddFractionControlStart(ModelView):
     generate_repetition = fields.Boolean('Generate repetition',
         states={'readonly': Eval('type') == 'exist'}, depends=['type'])
 
-    @fields.depends('planification', 'type')
+    @fields.depends('planification', 'type', '_parent_planification.analysis')
     def on_change_with_fraction_domain(self, name=None):
         cursor = Transaction().connection.cursor()
         pool = Pool()
@@ -1748,7 +1749,9 @@ class AddFractionControlStart(ModelView):
             'WHERE nl.id IN (' + notebook_lines_ids + ')')
         return [x[0] for x in cursor.fetchall()]
 
-    @fields.depends('type', 'original_fraction', 'concentration_level')
+    @fields.depends('type', 'original_fraction', 'concentration_level',
+        '_parent_original_fraction.label',
+        '_parent_concentration_level.description')
     def on_change_with_label(self, name=None):
         Date = Pool().get('ir.date')
         if self.type == 'exist':
@@ -2121,7 +2124,8 @@ class AddFractionRMBMZStart(ModelView):
                 return False
         return True
 
-    @fields.depends('planification', 'type', 'rm_bmz_type')
+    @fields.depends('planification', 'type', 'rm_bmz_type',
+        '_parent_planification.analysis')
     def on_change_with_fraction_domain(self, name=None):
         cursor = Transaction().connection.cursor()
         pool = Pool()
@@ -2209,7 +2213,9 @@ class AddFractionRMBMZStart(ModelView):
         return [x[0] for x in cursor.fetchall()]
 
     @fields.depends('type', 'rm_bmz_type', 'reference_fraction',
-        'product_type', 'matrix', 'concentration_level')
+        'product_type', 'matrix', 'concentration_level',
+        '_parent_reference_fraction.label',
+        '_parent_concentration_level.description')
     def on_change_with_label(self, name=None):
         Date = Pool().get('ir.date')
         if self.rm_bmz_type == 'exist':
@@ -2758,7 +2764,7 @@ class AddFractionBREStart(ModelView):
     concentration_level_invisible = fields.Boolean(
         'Concentration level invisible')
 
-    @fields.depends('planification', 'type')
+    @fields.depends('planification', 'type', '_parent_planification.analysis')
     def on_change_with_fraction_domain(self, name=None):
         pool = Pool()
         Analysis = pool.get('lims.analysis')
@@ -3115,7 +3121,7 @@ class AddFractionMRTStart(ModelView):
     concentration_level_invisible = fields.Boolean(
         'Concentration level invisible')
 
-    @fields.depends('planification', 'type')
+    @fields.depends('planification', 'type', '_parent_planification.analysis')
     def on_change_with_fraction_domain(self, name=None):
         pool = Pool()
         Analysis = pool.get('lims.analysis')
@@ -4357,7 +4363,8 @@ class CreateFractionControlStart(ModelView):
                 (self.product_type.id,))
         return [x[0] for x in cursor.fetchall()]
 
-    @fields.depends('type', 'product_type', 'matrix')
+    @fields.depends('type', 'product_type', 'matrix',
+        '_parent_product_type.code', '_parent_matrix.code')
     def on_change_with_label(self, name=None):
         label = ''
         if self.type == 'coi':
@@ -5285,7 +5292,8 @@ class ReplaceTechnicianStart(ModelView):
         'lims.laboratory.professional', None, 'Substitute domain'),
         'on_change_with_substitute_domain')
 
-    @fields.depends('technician_replaced', 'planification')
+    @fields.depends('technician_replaced', 'planification',
+        '_parent_planification.laboratory')
     def on_change_with_substitute_domain(self, name=None):
         pool = Pool()
         UserLaboratory = pool.get('lims.user-laboratory')

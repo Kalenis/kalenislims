@@ -207,7 +207,7 @@ class Equipment(ModelSQL, ModelView):
             res.append(equipment)
         return res
 
-    @fields.depends('plant')
+    @fields.depends('plant', '_parent_plant.party')
     def on_change_with_party(self, name=None):
         return self.get_party([self], name)[self.id]
 
@@ -222,7 +222,7 @@ class Equipment(ModelSQL, ModelView):
     def search_party(cls, name, clause):
         return [('plant.party',) + tuple(clause[1:])]
 
-    @fields.depends('template')
+    @fields.depends('template', '_parent_template.brand')
     def on_change_with_brand(self, name=None):
         return self.get_brand([self], name)[self.id]
 
@@ -362,7 +362,7 @@ class Component(ModelSQL, ModelView):
     def search_party(cls, name, clause):
         return [('equipment.plant.party',) + tuple(clause[1:])]
 
-    @fields.depends('type')
+    @fields.depends('type', '_parent_type.product_type')
     def on_change_with_product_type(self, name=None):
         return self.get_product_type([self], name)[self.id]
 

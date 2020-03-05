@@ -521,52 +521,52 @@ class ProjectReferenceElement(ModelSQL, ModelView):
     location = fields.Many2One('stock.location', 'Location',
         domain=[('type', '=', 'storage')])
 
-    @fields.depends('input_product')
+    @fields.depends('input_product', '_parent_input_product.common_name')
     def on_change_with_common_name(self, name=None):
         if self.input_product:
             return self.input_product.common_name
 
-    @fields.depends('input_product')
+    @fields.depends('input_product', '_parent_input_product.chemical_name')
     def on_change_with_chemical_name(self, name=None):
         if self.input_product:
             return self.input_product.chemical_name
 
-    @fields.depends('input_product')
+    @fields.depends('input_product', '_parent_input_product.cas_number')
     def on_change_with_cas_number(self, name=None):
         if self.input_product:
             return self.input_product.cas_number
 
-    @fields.depends('lot')
+    @fields.depends('lot', '_parent_lot.purity_degree')
     def on_change_with_purity_degree(self, name=None):
         if self.lot and self.lot.purity_degree:
             return self.lot.purity_degree.id
 
-    @fields.depends('lot')
+    @fields.depends('lot', '_parent_lot.stability')
     def on_change_with_stability(self, name=None):
         if self.lot:
             return self.lot.stability
 
-    @fields.depends('lot')
+    @fields.depends('lot', '_parent_lot.homogeneity')
     def on_change_with_homogeneity(self, name=None):
         if self.lot:
             return self.lot.homogeneity
 
-    @fields.depends('lot')
+    @fields.depends('lot', '_parent_lot.expiration_date')
     def on_change_with_expiration_date(self, name=None):
         if self.lot:
             return self.lot.expiration_date
 
-    @fields.depends('lot')
+    @fields.depends('lot', '_parent_lot.reception_date')
     def on_change_with_reception_date(self, name=None):
         if self.lot:
             return self.lot.reception_date
 
-    @fields.depends('lot')
+    @fields.depends('lot', '_parent_lot.formula')
     def on_change_with_formula(self, name=None):
         if self.lot:
             return self.lot.formula
 
-    @fields.depends('lot')
+    @fields.depends('lot', '_parent_lot.molecular_weight')
     def on_change_with_molecular_weight(self, name=None):
         if self.lot:
             return self.lot.molecular_weight
@@ -713,10 +713,10 @@ class ProjectDeviationAndAmendment(ModelSQL, ModelView):
         number += count
         return str(number)
 
-    @fields.depends('_parent_project.stp_laboratory_professionals')
+    @fields.depends('project', '_parent_project.stp_laboratory_professionals')
     def on_change_with_dev_amnd_prof_domain(self, name=None):
         professionals = []
-        if self.project.stp_laboratory_professionals:
+        if self.project and self.project.stp_laboratory_professionals:
             professionals = [pp.professional.id for pp in
                 self.project.stp_laboratory_professionals if pp.professional]
         return professionals

@@ -1221,19 +1221,19 @@ class GenerateResultsReportResultMan(ModelView):
     reports_details = fields.One2Many('lims.results_report.version.detail',
         None, 'Reports details')
 
-    @fields.depends('report')
+    @fields.depends('report', '_parent_report.party')
     def on_change_with_party(self, name=None):
         if self.report:
             return self.report.party.id
         return None
 
-    @fields.depends('report')
+    @fields.depends('report', '_parent_report.notebook')
     def on_change_with_notebook(self, name=None):
         if self.report and self.report.notebook:
             return self.report.notebook.id
         return None
 
-    @fields.depends('report')
+    @fields.depends('report', '_parent_report.report_grouper')
     def on_change_with_report_grouper(self, name=None):
         if self.report:
             return self.report.report_grouper
@@ -1257,7 +1257,7 @@ class GenerateResultsReportResultMan(ModelView):
                 return version[0].report_type
         return None
 
-    @fields.depends('report')
+    @fields.depends('report', '_parent_report.cie_fraction_type')
     def on_change_with_cie_fraction_type(self, name=None):
         if self.report:
             with Transaction().set_context(_check_access=False):

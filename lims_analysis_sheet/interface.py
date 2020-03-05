@@ -32,7 +32,7 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
     pending_fractions = fields.Function(fields.Integer('Pending fractions'),
         'get_pending_fractions')
 
-    @fields.depends('interface')
+    @fields.depends('interface', '_parent_interface.name')
     def on_change_with_name(self, name=None):
         if self.interface:
             return self.interface.name

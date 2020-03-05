@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <tryton>
+    <data>
 
 <!-- Configuration -->
 
@@ -40,4 +41,5 @@
         <menuitem action="act_sale_clause" id="menu_sale_clause"
             parent="sale.menu_configuration" sequence="20"/>
 
+    </data>
 </tryton>

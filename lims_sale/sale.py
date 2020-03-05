@@ -69,7 +69,7 @@ class Sale(metaclass=PoolMeta):
             if len(invoice_party_domain) == 1:
                 self.invoice_party = invoice_party_domain[0]
 
-    @fields.depends('party')
+    @fields.depends('party', '_parent_party.relations')
     def on_change_with_invoice_party_domain(self, name=None):
         pool = Pool()
         Config = pool.get('lims.configuration')
@@ -215,7 +215,7 @@ class SaleLine(metaclass=PoolMeta):
         domain=['OR', ('id', '=', Eval('matrix')),
             ('id', 'in', Eval('matrix_domain'))],
         states={'readonly': Eval('sale_state') != 'draft'},
-        depends=['matrix_domain', 'services', 'sale_state'])
+        depends=['matrix_domain', 'sale_state'])
     matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
         None, None, 'Matrix domain'), 'on_change_with_matrix_domain')
     analysis = fields.Many2One('lims.analysis', 'Service',
@@ -352,7 +352,7 @@ class SaleLine(metaclass=PoolMeta):
 
         return typified_analysis + typified_sets_groups + additional_analysis
 
-    @fields.depends('product', 'analysis')
+    @fields.depends('product', 'analysis', '_parent_analysis.methods')
     def on_change_with_method_domain(self, name=None):
         Analysis = Pool().get('lims.analysis')
         if self.analysis:
@@ -370,7 +370,7 @@ class SaleLine(metaclass=PoolMeta):
     def default_method_invisible():
         return True
 
-    @fields.depends('product', 'analysis')
+    @fields.depends('product', 'analysis', '_parent_analysis.type')
     def on_change_with_method_invisible(self, name=None):
         Analysis = Pool().get('lims.analysis')
         if self.analysis and self.analysis.type == 'analysis':
@@ -386,7 +386,7 @@ class SaleLine(metaclass=PoolMeta):
     def default_print_service_detail_invisible():
         return True
 
-    @fields.depends('product', 'analysis')
+    @fields.depends('product', 'analysis', '_parent_analysis.type')
     def on_change_with_print_service_detail_invisible(self, name=None):
         Analysis = Pool().get('lims.analysis')
         if self.analysis and self.analysis.type in ('set', 'group'):
