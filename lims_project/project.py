@@ -79,7 +79,7 @@ class Entry(metaclass=PoolMeta):
         if 'project' not in cls.samples.depends:
             cls.samples.depends.append('project')
 
-    @fields.depends('project')
+    @fields.depends('project', '_parent_project.type')
     def on_change_with_project_type(self, name=None):
         res = None
         if self.project:
@@ -100,7 +100,7 @@ class Sample(metaclass=PoolMeta):
             return Project(Transaction().context.get('project')).type
         return ''
 
-    @fields.depends('entry')
+    @fields.depends('entry', '_parent_entry.project')
     def on_change_with_project_type(self, name=None):
         res = ''
         if self.entry and self.entry.project:

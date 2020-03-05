@@ -162,7 +162,7 @@ class SaleLine(metaclass=PoolMeta):
                 ~Bool(Eval('_parent_sale', {}).get('plants', []))),
             },
         domain=[('party', '=', Eval('_parent_sale', {}).get('party', None))],
-        depends=['_parent_sale', 'analysis', 'sale_state'])
+        depends=['sale', 'analysis', 'sale_state'])
     equipments = fields.Many2Many('sale.line-lims.equipment',
         'line', 'equipment', 'Equipments',
         states={
@@ -176,7 +176,7 @@ class SaleLine(metaclass=PoolMeta):
         domain=[If(Bool(Eval('plants')),
             ('plant', 'in', Eval('plants')),
             ('plant', 'in', Eval('_parent_sale', {}).get('plants', [])))],
-        depends=['plants', '_parent_sale', 'analysis', 'sale_state'])
+        depends=['plants', 'sale', 'analysis', 'sale_state'])
     components = fields.Many2Many('sale.line-lims.component',
         'line', 'component', 'Components',
         states={
@@ -191,21 +191,21 @@ class SaleLine(metaclass=PoolMeta):
             ('equipment', 'in', Eval('equipments')),
             ('equipment', 'in', Eval('_parent_sale', {}).get(
                 'equipments', [])))],
-        depends=['equipments', '_parent_sale', 'analysis', 'sale_state'])
+        depends=['equipments', 'sale', 'analysis', 'sale_state'])
     label_from = fields.Integer('Label from', readonly=True,
         states={
             'invisible': ~Bool(Eval('_parent_sale', {}).get(
                 'lubrication_plan', False)),
             'readonly': Eval('sale_state') != 'draft',
             },
-        depends=['_parent_sale', 'sale_state'])
+        depends=['sale', 'sale_state'])
     label_to = fields.Integer('Label to', readonly=True,
         states={
             'invisible': ~Bool(Eval('_parent_sale', {}).get(
                 'lubrication_plan', False)),
             'readonly': Eval('sale_state') != 'draft',
             },
-        depends=['_parent_sale', 'sale_state'])
+        depends=['sale', 'sale_state'])
 
     @classmethod
     def __setup__(cls):
@@ -213,7 +213,7 @@ class SaleLine(metaclass=PoolMeta):
         cls.expiration_date.states['required'] = And(
                 Bool(Eval('_parent_sale', {}).get('lubrication_plan', False)),
                 Bool(Eval('analysis')))
-        cls.expiration_date.depends.extend(['_parent_sale', 'analysis'])
+        cls.expiration_date.depends.extend(['sale', 'analysis'])
 
     @classmethod
     def _confirm_lines(cls, lines):

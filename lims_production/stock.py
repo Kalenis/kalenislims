@@ -355,7 +355,8 @@ class Lot(metaclass=PoolMeta):
     def default_exclusive_glp():
         return False
 
-    @fields.depends('category', 'product')
+    @fields.depends('category', 'product', '_parent_product.purchasable',
+        '_parent_product.salable')
     def on_change_with_special_category(self, name=None):
         Config = Pool().get('lims.configuration')
         if self.category:

@@ -18,6 +18,9 @@ class CreateSampleStart(metaclass=PoolMeta):
         Date = pool.get('ir.date')
         SaleLine = pool.get('sale.line')
 
+        if not self.party:
+            return []
+
         today = Date.today()
         clause = [
             ('sale.party', '=', self.party.id),

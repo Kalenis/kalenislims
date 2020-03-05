@@ -82,7 +82,7 @@ class Sample(metaclass=PoolMeta):
         if self.comercial_product and self.comercial_product.matrix:
             self.matrix = self.comercial_product.matrix.id
 
-    @fields.depends('product_type')
+    @fields.depends('product_type', '_parent_product_type.attribute_set')
     def on_change_with_attributes_domain(self, name=None):
         pool = Pool()
         SampleAttributeAttributeSet = pool.get(
@@ -219,7 +219,8 @@ class CreateSampleStart(metaclass=PoolMeta):
         if self.comercial_product and self.comercial_product.matrix:
             self.matrix = self.comercial_product.matrix.id
 
-    @fields.depends('product_type', 'component')
+    @fields.depends('product_type', 'component',
+        '_parent_product_type.attribute_set')
     def on_change_with_attributes_domain(self, name=None):
         pool = Pool()
         SampleAttributeAttributeSet = pool.get(
