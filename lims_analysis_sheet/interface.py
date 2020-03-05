@@ -1,9 +1,10 @@
 # This file is part of lims_analysis_sheet module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+from io import StringIO
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
-from trytond.wizard import Wizard, StateAction
+from trytond.wizard import Wizard, StateView, StateAction, Button
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import PYSONEncoder, Eval, Bool, Or
 from trytond.transaction import Transaction
@@ -11,7 +12,8 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
 __all__ = ['TemplateAnalysisSheet', 'TemplateAnalysisSheetAnalysis',
-    'AnalysisSheet', 'OpenAnalysisSheetData', 'Compilation']
+    'AnalysisSheet', 'OpenAnalysisSheetData', 'Compilation', 'Column',
+    'ExportAnalysisSheetFileStart', 'ExportAnalysisSheetFile']
 
 
 class TemplateAnalysisSheet(ModelSQL, ModelView):
@@ -152,6 +154,7 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
 class AnalysisSheet(Workflow, ModelSQL, ModelView):
     'Analysis Sheet'
     __name__ = 'lims.analysis_sheet'
+    _rec_name = 'number'
 
     template = fields.Many2One('lims.template.analysis_sheet', 'Template',
         required=True, readonly=True)
@@ -195,11 +198,14 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             ('draft', 'active'),
             ))
         cls._buttons.update({
+            'activate': {
+                'invisible': Eval('state') != 'draft',
+                },
             'view_data': {
                 'invisible': Eval('state') == 'draft',
                 },
-            'activate': {
-                'invisible': Eval('state') != 'draft',
+            'export_file': {
+                'invisible': Eval('state') == 'draft',
                 },
             })
 
@@ -396,8 +402,14 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
     @classmethod
     @ModelView.button_action(
-        'lims_analysis_sheet.wiz_open_analysis_sheet_data')
+        'lims_analysis_sheet.wiz_analysis_sheet_open_data')
     def view_data(cls, sheets):
+        pass
+
+    @classmethod
+    @ModelView.button_action(
+        'lims_analysis_sheet.wiz_analysis_sheet_export_file')
+    def export_file(cls, sheets):
         pass
 
     def get_new_compilation(self):
@@ -470,6 +482,68 @@ class OpenAnalysisSheetData(Wizard):
         return action, {}
 
 
+class ExportAnalysisSheetFileStart(ModelView):
+    'Export Analysis Sheet File'
+    __name__ = 'lims.analysis_sheet.export_file.start'
+
+    file = fields.Binary('File', readonly=True)
+
+
+class ExportAnalysisSheetFile(Wizard):
+    'Export Analysis Sheet File'
+    __name__ = 'lims.analysis_sheet.export_file'
+
+    start = StateView('lims.analysis_sheet.export_file.start',
+        'lims_analysis_sheet.analysis_sheet_export_start_view_form', [
+            Button('Close', 'end', 'tryton-close'),
+            ])
+
+    def default_start(self, fields):
+        file_ = self.get_file(Transaction().context.get('active_id', None))
+        cast = self.start.__class__.file.cast
+        return {
+            'file': cast(file_) if file_ else None,
+            }
+
+    def get_file(self, sheet_id, sep=';', newline='\n'):
+        pool = Pool()
+        Column = pool.get('lims.interface.column')
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+
+        if not sheet_id:
+            return
+        sheet = AnalysisSheet(sheet_id)
+
+        columns = Column.search([
+            ('interface', '=', sheet.template.interface),
+            ('destination_column', '!=', None),
+            ], order=[('destination_column', 'ASC')])
+        if not columns:
+            return
+        cols = [c.alias for c in columns]
+
+        file_ = StringIO(newline=newline)
+        with Transaction().set_context(
+                lims_interface_compilation=sheet.compilation.id,
+                lims_interface_table=sheet.compilation.table.id):
+            lines = Data.search([(
+                'compilation', '=', sheet.compilation.id),
+                ])
+            for line in lines:
+                entry = ''
+                for field in cols:
+                    if entry:
+                        entry += sep
+                    entry += str(getattr(line, field))
+                entry += newline
+                file_.write(entry)
+
+        if file_:
+            return str(file_.getvalue()).encode('utf-8')
+        return
+
+
 class Compilation(metaclass=PoolMeta):
     __name__ = 'lims.interface.compilation'
 
@@ -504,3 +578,10 @@ class Compilation(metaclass=PoolMeta):
             #Bool(Eval('analysis_sheet')))
         #cls._buttons['collect']['invisible'] = Or(Eval('state') != 'active',
             #Bool(Eval('analysis_sheet')))
+
+
+class Column(metaclass=PoolMeta):
+    __name__ = 'lims.interface.column'
+
+    destination_column = fields.Integer('Destination Column',
+        help='Mapped column in batch file')
