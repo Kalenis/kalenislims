@@ -2,6 +2,7 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import sys
 import logging
 import operator
 from datetime import datetime
@@ -176,7 +177,7 @@ class Typification(ModelSQL, ModelView):
     def search_views_field(cls, name, clause):
         return [(name[:-5],) + tuple(clause[1:])]
 
-    @fields.depends('analysis')
+    @fields.depends('analysis', '_parent_analysis.state')
     def on_change_with_valid_readonly(self, name=None):
         if self.analysis and self.analysis.state == 'disabled':
             return True
@@ -191,7 +192,7 @@ class Typification(ModelSQL, ModelView):
                 method = methods[0]
         self.method = method
 
-    @fields.depends('analysis')
+    @fields.depends('analysis', '_parent_analysis.methods')
     def on_change_with_method_domain(self, name=None):
         methods = []
         if self.analysis and self.analysis.methods:
@@ -1491,7 +1492,6 @@ class Analysis(Workflow, ModelSQL, ModelView):
 class AnalysisIncluded(ModelSQL, ModelView):
     'Included Analysis'
     __name__ = 'lims.analysis.included'
-    _rec_name = 'included_analysis'
 
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
         ondelete='CASCADE', select=True)
@@ -1560,7 +1560,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
                 laboratory = laboratories[0]
         self.laboratory = laboratory
 
-    @fields.depends('included_analysis')
+    @fields.depends('included_analysis', '_parent_included_analysis.type')
     def on_change_with_analysis_type(self, name=None):
         res = ''
         if self.included_analysis:
@@ -1873,7 +1873,6 @@ class AnalysisIncluded(ModelSQL, ModelView):
 class AnalysisLaboratory(ModelSQL, ModelView):
     'Analysis - Laboratory'
     __name__ = 'lims.analysis-laboratory'
-    _rec_name = 'laboratory'
 
     analysis = fields.Many2One('lims.analysis', 'Analysis',
         ondelete='CASCADE', select=True, required=True)
@@ -1915,12 +1914,11 @@ class AnalysisLabMethod(ModelSQL):
 class AnalysisDevice(DeactivableMixin, ModelSQL, ModelView):
     'Analysis Device'
     __name__ = 'lims.analysis.device'
-    _rec_name = 'device'
 
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
         ondelete='CASCADE', select=True)
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        required=True, depends=['_parent_analysis.laboratory_domain'],
+        required=True, depends=['analysis'],
         domain=[('id', 'in', Eval('_parent_analysis',
             {}).get('laboratory_domain', [Eval('laboratory')]))])
     device = fields.Many2One('lims.lab.device', 'Device', required=True,
@@ -2264,11 +2262,14 @@ class CreateAnalysisProduct(Wizard):
         template.type = 'service'
         template.list_price = Decimal('1.0')
         template.cost_price = Decimal('1.0')
-        template.salable = True
+        try:
+            template.salable = True
+            template.sale_uom = uom
+            template.accounts_category = True
+            template.account_category = config_.analysis_product_category.id
+        except AttributeError:
+            pass
         template.default_uom = uom
-        template.sale_uom = uom
-        template.account_category = config_.analysis_product_category.id
-        template.accounts_category = True
 
         template.save()
 

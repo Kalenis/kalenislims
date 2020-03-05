@@ -809,7 +809,9 @@ class Service(ModelSQL, ModelView):
                 })
 
     @fields.depends('analysis', 'fraction', 'typification_domain',
-        'laboratory')
+        'laboratory', '_parent_fraction.id',
+        methods=['on_change_with_laboratory_domain',
+        'on_change_with_method_domain', '_on_change_with_device_domain'])
     def on_change_analysis(self):
         Laboratory = Pool().get('lims.laboratory')
         laboratory = None
@@ -834,7 +836,7 @@ class Service(ModelSQL, ModelView):
     def default_analysis_domain():
         return Transaction().context.get('analysis_domain', [])
 
-    @fields.depends('fraction')
+    @fields.depends('fraction', '_parent_fraction.id')
     def on_change_with_analysis_domain(self, name=None):
         if Transaction().context.get('analysis_domain'):
             return Transaction().context.get('analysis_domain')
@@ -844,13 +846,13 @@ class Service(ModelSQL, ModelView):
     def default_typification_domain():
         return Transaction().context.get('typification_domain', [])
 
-    @fields.depends('fraction')
+    @fields.depends('fraction', '_parent_fraction.id')
     def on_change_with_typification_domain(self, name=None):
         if Transaction().context.get('typification_domain'):
             return Transaction().context.get('typification_domain')
         return []
 
-    @fields.depends('analysis')
+    @fields.depends('analysis', '_parent_analysis.type')
     def on_change_with_analysis_type(self, name=None):
         if self.analysis:
             return self.analysis.type
@@ -862,7 +864,7 @@ class Service(ModelSQL, ModelView):
             return Transaction().context.get('fraction')
         return None
 
-    @fields.depends('fraction')
+    @fields.depends('fraction', '_parent_fraction.id')
     def on_change_with_fraction_view(self, name=None):
         if self.fraction:
             return self.fraction.id
@@ -874,7 +876,7 @@ class Service(ModelSQL, ModelView):
             return Transaction().context.get('sample')
         return None
 
-    @fields.depends('fraction')
+    @fields.depends('fraction', '_parent_fraction.sample')
     def on_change_with_sample(self, name=None):
         if self.fraction:
             result = self.get_fraction_field((self,), ('sample',))
@@ -887,7 +889,7 @@ class Service(ModelSQL, ModelView):
             return Transaction().context.get('entry')
         return None
 
-    @fields.depends('fraction')
+    @fields.depends('fraction', '_parent_fraction.entry')
     def on_change_with_entry(self, name=None):
         if self.fraction:
             result = self.get_fraction_field((self,), ('entry',))
@@ -900,14 +902,15 @@ class Service(ModelSQL, ModelView):
             return Transaction().context.get('party')
         return None
 
-    @fields.depends('fraction')
+    @fields.depends('fraction', '_parent_fraction.party')
     def on_change_with_party(self, name=None):
         if self.fraction:
             result = self.get_fraction_field((self,), ('party',))
             return result['party'][self.id]
         return None
 
-    @fields.depends('analysis', 'laboratory')
+    @fields.depends('analysis', 'laboratory',
+        methods=['_on_change_with_device_domain'])
     def on_change_laboratory(self):
         device = None
         if self.analysis and self.laboratory:
@@ -956,7 +959,8 @@ class Service(ModelSQL, ModelView):
             return []
         return [x[0] for x in res]
 
-    @fields.depends('analysis', 'laboratory')
+    @fields.depends('analysis', 'laboratory',
+    methods=['_on_change_with_device_domain'])
     def on_change_with_device_domain(self, name=None):
         return self._on_change_with_device_domain(self.analysis,
             self.laboratory)
@@ -1433,7 +1437,7 @@ class Fraction(ModelSQL, ModelView):
     def default_analysis_domain():
         return Transaction().context.get('analysis_domain', [])
 
-    @fields.depends('sample')
+    @fields.depends('sample', '_parent_sample.id')
     def on_change_with_analysis_domain(self, name=None):
         if Transaction().context.get('analysis_domain'):
             return Transaction().context.get('analysis_domain')
@@ -1445,7 +1449,7 @@ class Fraction(ModelSQL, ModelView):
     def default_typification_domain():
         return Transaction().context.get('typification_domain', [])
 
-    @fields.depends('sample')
+    @fields.depends('sample', '_parent_sample.id')
     def on_change_with_typification_domain(self, name=None):
         if Transaction().context.get('typification_domain'):
             return Transaction().context.get('typification_domain')
@@ -1457,7 +1461,7 @@ class Fraction(ModelSQL, ModelView):
     def default_product_type():
         return Transaction().context.get('product_type', None)
 
-    @fields.depends('sample')
+    @fields.depends('sample', '_parent_sample.product_type')
     def on_change_with_product_type(self, name=None):
         if Transaction().context.get('product_type'):
             return Transaction().context.get('product_type')
@@ -1469,7 +1473,7 @@ class Fraction(ModelSQL, ModelView):
     def default_matrix():
         return Transaction().context.get('matrix', None)
 
-    @fields.depends('sample')
+    @fields.depends('sample', '_parent_sample.matrix')
     def on_change_with_matrix(self, name=None):
         if Transaction().context.get('matrix'):
             return Transaction().context.get('matrix')
@@ -1557,7 +1561,7 @@ class Fraction(ModelSQL, ModelView):
                 return [('type', clause[1], res_type)]
         return []
 
-    @fields.depends('sample')
+    @fields.depends('sample', '_parent_sample.id')
     def on_change_with_sample_view(self, name=None):
         if self.sample:
             return self.sample.id
@@ -1569,7 +1573,7 @@ class Fraction(ModelSQL, ModelView):
             return Transaction().context.get('entry')
         return None
 
-    @fields.depends('sample')
+    @fields.depends('sample', '_parent_sample.entry')
     def on_change_with_entry(self, name=None):
         if self.sample:
             result = self.get_sample_field((self,), ('entry',))
@@ -1582,7 +1586,7 @@ class Fraction(ModelSQL, ModelView):
             return Transaction().context.get('party')
         return None
 
-    @fields.depends('sample')
+    @fields.depends('sample', '_parent_sample.party')
     def on_change_with_party(self, name=None):
         if self.sample:
             result = self.get_sample_field((self,), ('party',))
@@ -1594,7 +1598,7 @@ class Fraction(ModelSQL, ModelView):
         return Transaction().context.get('label', '')
 
     @fields.depends('sample', 'special_type', 'con_original_fraction',
-        'services', 'create_date')
+        'services', 'create_date', '_parent_sample.label')
     def on_change_with_label(self, name=None):
         type = self.special_type
         if type == 'con':
@@ -1651,7 +1655,7 @@ class Fraction(ModelSQL, ModelView):
             return Transaction().context.get('package_type')
         return None
 
-    @fields.depends('sample')
+    @fields.depends('sample', '_parent_sample.package_type')
     def on_change_with_package_type(self, name=None):
         if self.sample:
             result = self.get_sample_field((self,), ('package_type',))
@@ -1662,7 +1666,7 @@ class Fraction(ModelSQL, ModelView):
     def default_size():
         return Transaction().context.get('size', None)
 
-    @fields.depends('sample')
+    @fields.depends('sample', '_parent_sample.size')
     def on_change_with_size(self, name=None):
         if self.sample:
             result = self.get_sample_field((self,), ('size',))
@@ -1675,7 +1679,7 @@ class Fraction(ModelSQL, ModelView):
             return Transaction().context.get('size_uom')
         return None
 
-    @fields.depends('sample')
+    @fields.depends('sample', '_parent_sample.size_uom')
     def on_change_with_size_uom(self, name=None):
         if self.sample:
             result = self.get_sample_field((self,), ('size_uom',))
@@ -1688,7 +1692,7 @@ class Fraction(ModelSQL, ModelView):
             return Transaction().context.get('fraction_state')
         return None
 
-    @fields.depends('sample')
+    @fields.depends('sample', '_parent_sample.package_state')
     def on_change_with_fraction_state(self, name=None):
         if self.sample:
             result = self.get_sample_field((self,), ('fraction_state',))
@@ -1734,7 +1738,7 @@ class Fraction(ModelSQL, ModelView):
             return True
         return False
 
-    @fields.depends('confirmed', 'type')
+    @fields.depends('confirmed', 'type', '_parent_type.cie_fraction_type')
     def on_change_with_cie_fraction_type_available(self, name=None):
         if not self.confirmed and self.type and self.type.cie_fraction_type:
             return True
@@ -1755,7 +1759,7 @@ class Fraction(ModelSQL, ModelView):
     def load_services(cls, fractions):
         pass
 
-    @fields.depends('confirmed', 'sample')
+    @fields.depends('confirmed', 'sample', '_parent_sample.entry')
     def on_change_with_button_confirm_available(self, name=None):
         if (not self.confirmed and self.sample and self.sample.entry and
                 (self.sample.entry.state == 'ongoing')):
@@ -2440,7 +2444,9 @@ class Sample(ModelSQL, ModelView):
                 for sample in samples:
                     sample.warn_duplicated_label()
 
-    @fields.depends('product_type', 'matrix', 'zone')
+    @fields.depends('product_type', 'matrix', 'zone',
+        '_parent_product_type.restricted_entry',
+        '_parent_matrix.restricted_entry', '_parent_zone.restricted_entry')
     def on_change_with_restricted_entry(self, name=None):
         return (self.product_type and self.product_type.restricted_entry and
             self.matrix and self.matrix.restricted_entry and
@@ -2596,7 +2602,7 @@ class Sample(ModelSQL, ModelView):
             return Transaction().context.get('entry')
         return None
 
-    @fields.depends('entry')
+    @fields.depends('entry', '_parent_entry.id')
     def on_change_with_entry_view(self, name=None):
         if self.entry:
             return self.entry.id
@@ -2617,7 +2623,7 @@ class Sample(ModelSQL, ModelView):
             if party.entry_zone:
                 return party.entry_zone.id
 
-    @fields.depends('entry')
+    @fields.depends('entry', '_parent_entry.party')
     def on_change_with_party(self, name=None):
         if self.entry:
             result = self.get_entry_field((self,), ('party',))
@@ -2873,7 +2879,7 @@ class DuplicateSampleFromEntryStart(ModelView):
     date = fields.DateTime('Date', required=True)
     labels = fields.Text('Labels')
 
-    @fields.depends('sample')
+    @fields.depends('sample', '_parent_sample.date')
     def on_change_with_date(self, name=None):
         if self.sample:
             return self.sample.date
@@ -4623,7 +4629,9 @@ class CreateSampleStart(ModelView):
 
         return typified_analysis + typified_sets_groups + additional_analysis
 
-    @fields.depends('product_type', 'matrix', 'zone')
+    @fields.depends('product_type', 'matrix', 'zone',
+        '_parent_product_type.restricted_entry',
+        '_parent_matrix.restricted_entry', '_parent_zone.restricted_entry')
     def on_change_with_restricted_entry(self, name=None):
         return (self.product_type and self.product_type.restricted_entry and
                 self.matrix and self.matrix.restricted_entry and
@@ -4644,7 +4652,9 @@ class CreateSampleStart(ModelView):
                 self.fraction_type.default_fraction_state):
             self.fraction_state = self.fraction_type.default_fraction_state
 
-    @fields.depends('fraction_type', 'storage_location')
+    @fields.depends('fraction_type', 'storage_location',
+        '_parent_fraction_type.max_storage_time',
+        '_parent_storage_location.storage_time')
     def on_change_with_storage_time(self, name=None):
         if self.fraction_type and self.fraction_type.max_storage_time:
             return self.fraction_type.max_storage_time

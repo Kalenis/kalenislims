@@ -256,5 +256,32 @@
             <field name="action" ref="wiz_edit_task"/>
         </record>
 
+<!-- Administrative Task Buttons -->
+
+        <record model="ir.model.button" id="administrative_task_pending_button">
+            <field name="name">pending</field>
+            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
+        </record>
+        <record model="ir.model.button" id="administrative_task_reject_button">
+            <field name="name">reject</field>
+            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
+        </record>
+        <record model="ir.model.button" id="administrative_task_ongoing_button">
+            <field name="name">ongoing</field>
+            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
+        </record>
+        <record model="ir.model.button" id="administrative_task_standby_button">
+            <field name="name">standby</field>
+            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
+        </record>
+        <record model="ir.model.button" id="administrative_task_discard_button">
+            <field name="name">discard</field>
+            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
+        </record>
+        <record model="ir.model.button" id="administrative_task_do_button">
+            <field name="name">do</field>
+            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
+        </record>
+
     </data>
 </tryton>

@@ -180,25 +180,25 @@ class Interface(Workflow, ModelSQL, ModelView):
         domain=[('interface', '=', Eval('id'))],
         states={
             'readonly': Eval('state') != 'draft',
-            }, depends=['state'])
+            }, depends=['state', 'id'])
     fraction_field = fields.Many2One('lims.interface.column',
         'Fraction field',
         domain=[('interface', '=', Eval('id'))],
         states={
             'readonly': Eval('state') != 'draft',
-            }, depends=['state'])
+            }, depends=['state', 'id'])
     repetition_field = fields.Many2One('lims.interface.column',
         'Repetition field',
         domain=[('interface', '=', Eval('id'))],
         states={
             'readonly': Eval('state') != 'draft',
-            }, depends=['state'])
+            }, depends=['state', 'id'])
     notebook_line_field = fields.Many2One('lims.interface.column',
         'Notebook line field',
         domain=[('interface', '=', Eval('id'))],
         states={
             'readonly': Eval('state') != 'draft',
-            }, depends=['state'])
+            }, depends=['state', 'id'])
     charset = fields.Selection([
         (None, ''),
         ('utf-8', 'UTF-8'),
@@ -465,12 +465,12 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
                 'in an interface.')
             ]
 
-    @fields.depends('name', 'alias',
+    @fields.depends('name', 'alias', 'interface',
         '_parent_interface.columns', 'evaluation_order')
     def on_change_name(self):
         if not self.alias:
             self.alias = convert_to_symbol(self.name)
-        if not self.evaluation_order:
+        if not self.evaluation_order and self.interface:
             self.evaluation_order = len(self.interface.columns)
 
     @fields.depends('interface', '_parent_interface.state')
