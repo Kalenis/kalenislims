@@ -7303,10 +7303,6 @@ msgctxt "field:lims.results_report,single_sending_report_ready:"
 msgid "Single sending Ready"
 msgstr "Listo para Envío único"
 
-msgctxt "field:lims.results_report,state:"
-msgid "State"
-msgstr "Estado"
-
 msgctxt "field:lims.results_report,versions:"
 msgid "Laboratories"
 msgstr "Laboratorios"
@@ -14579,14 +14575,6 @@ msgstr "Verificación de resultados"
 msgctxt "selection:lims.range.type,use:"
 msgid "Uncertainty calculation"
 msgstr "Cálculo de incertidumbre"
-
-msgctxt "selection:lims.results_report,state:"
-msgid "Draft"
-msgstr "Borrador"
-
-msgctxt "selection:lims.results_report,state:"
-msgid "Revised"
-msgstr "Revisado"
 
 msgctxt "selection:lims.results_report.version.detail,report_result_type:"
 msgid "Both"

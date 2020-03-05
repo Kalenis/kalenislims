@@ -2,7 +2,6 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-import operator
 from io import BytesIO
 from datetime import datetime
 from PyPDF2 import PdfFileMerger
@@ -70,10 +69,6 @@ class ResultsReport(ModelSQL, ModelView):
         searcher='search_single_sending_report')
     single_sending_report_ready = fields.Function(fields.Boolean(
         'Single sending Ready'), 'get_single_sending_report_ready')
-    state = fields.Function(fields.Selection([
-        ('draft', 'Draft'),
-        ('revised', 'Revised'),
-        ], 'State'), 'get_state', searcher='search_state')
     english_report = fields.Boolean('English report')
     create_date2 = fields.Function(fields.DateTime('Create Date'),
        'get_create_date2', searcher='search_create_date2')
@@ -164,37 +159,6 @@ class ResultsReport(ModelSQL, ModelView):
                 ]):
             return False
         return True
-
-    @classmethod
-    def get_state(cls, reports, name=None):
-        result = {}
-        for r in reports:
-            revised = True
-            for version in r.versions:
-                valid_detail = version.details and version.details[0] or None
-                if not valid_detail:
-                    revised = False
-                    break
-                elif valid_detail.state != 'revised':
-                    revised = False
-                    break
-            result[r.id] = revised and 'revised' or 'draft'
-        return result
-
-    @classmethod
-    def search_state(cls, name, domain=None):
-        operator_funcs = {
-            '=': operator.eq,
-            '!=': operator.ne,
-            'in': lambda v, l: v in l,
-            }
-        _, op, operand = domain
-
-        reports = cls.search([])
-        result = cls.get_state(reports)
-        record_ids = [k for k, v in result.items()
-            if operator_funcs[op](v, operand)]
-        return [('id', 'in', record_ids)]
 
     def get_create_date2(self, name):
         return self.create_date.replace(microsecond=0)
