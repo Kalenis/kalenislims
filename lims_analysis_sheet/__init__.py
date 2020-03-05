@@ -17,6 +17,8 @@ def register():
         interface.TemplateAnalysisSheetAnalysis,
         interface.AnalysisSheet,
         interface.Compilation,
+        interface.Column,
+        interface.ExportAnalysisSheetFileStart,
         planification.Planification,
         planification.SearchAnalysisSheetStart,
         planification.SearchAnalysisSheetNext,
@@ -27,6 +29,7 @@ def register():
         module='lims_analysis_sheet', type_='model')
     Pool.register(
         interface.OpenAnalysisSheetData,
+        interface.ExportAnalysisSheetFile,
         planification.SearchAnalysisSheet,
         planification.RelateTechnicians,
         module='lims_analysis_sheet', type_='wizard')

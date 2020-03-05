@@ -10,21 +10,9 @@ msgctxt "field:lims.analysis_sheet,completion_percentage:"
 msgid "Complete"
 msgstr "Completo"
 
-msgctxt "field:lims.analysis_sheet,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.analysis_sheet,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.analysis_sheet,date:"
 msgid "Date"
 msgstr "Fecha"
-
-msgctxt "field:lims.analysis_sheet,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.analysis_sheet,incomplete_sample:"
 msgid "Incomplete sample"
@@ -46,10 +34,6 @@ msgctxt "field:lims.analysis_sheet,professional:"
 msgid "Professional"
 msgstr "Profesional"
 
-msgctxt "field:lims.analysis_sheet,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.analysis_sheet,samples_qty:"
 msgid "Samples Qty."
 msgstr "Cant. Muestras"
@@ -66,13 +50,9 @@ msgctxt "field:lims.analysis_sheet,urgent:"
 msgid "Urgent"
 msgstr "Urgente"
 
-msgctxt "field:lims.analysis_sheet,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.analysis_sheet,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
+msgctxt "field:lims.analysis_sheet.export_file.start,file:"
+msgid "File"
+msgstr "Archivo"
 
 msgctxt "field:lims.configuration,analysis_sheet_sequence:"
 msgid "Analysis Sheet Sequence"
@@ -82,29 +62,17 @@ msgctxt "field:lims.configuration.sequence,analysis_sheet_sequence:"
 msgid "Analysis Sheet Sequence"
 msgstr "Secuencia de Hoja de análisis"
 
+msgctxt "field:lims.interface.column,destination_column:"
+msgid "Destination Column"
+msgstr "Columna destino"
+
 msgctxt "field:lims.interface.compilation,analysis_sheet:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
 
-msgctxt "field:lims.planification.relate_technicians.detail4,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.planification.relate_technicians.detail4,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.planification.relate_technicians.detail4,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
-
-msgctxt "field:lims.planification.relate_technicians.detail4,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.planification.relate_technicians.detail4,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.planification.relate_technicians.detail4,session_id:"
 msgid "Session ID"
@@ -113,14 +81,6 @@ msgstr "ID Sesión"
 msgctxt "field:lims.planification.relate_technicians.detail4,template:"
 msgid "Analysis sheet"
 msgstr "Hoja de análisis"
-
-msgctxt "field:lims.planification.relate_technicians.detail4,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.planification.relate_technicians.detail4,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.planification.relate_technicians.result,details4:"
 msgid "Fractions to plan"
@@ -138,10 +98,6 @@ msgctxt "field:lims.planification.search_analysis_sheet.next,details_domain:"
 msgid "Fractions domain"
 msgstr "Dominio para Fracciones"
 
-msgctxt "field:lims.planification.search_analysis_sheet.next,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.planification.search_analysis_sheet.start,date_from:"
 msgid "Date from"
 msgstr "Fecha desde"
@@ -149,10 +105,6 @@ msgstr "Fecha desde"
 msgctxt "field:lims.planification.search_analysis_sheet.start,date_to:"
 msgid "Date to"
 msgstr "Fecha hasta"
-
-msgctxt "field:lims.planification.search_analysis_sheet.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.search_analysis_sheet.start,templates:"
 msgid "Templates"
@@ -171,18 +123,6 @@ msgctxt "field:lims.template.analysis_sheet,comments:"
 msgid "Comments"
 msgstr "Observaciones"
 
-msgctxt "field:lims.template.analysis_sheet,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.template.analysis_sheet,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.template.analysis_sheet,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.template.analysis_sheet,interface:"
 msgid "Device Interface"
 msgstr "Interfaz"
@@ -199,57 +139,29 @@ msgctxt "field:lims.template.analysis_sheet,pending_fractions:"
 msgid "Pending fractions"
 msgstr "Fracciones pendientes"
 
-msgctxt "field:lims.template.analysis_sheet,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.template.analysis_sheet,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.template.analysis_sheet,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.template.analysis_sheet.analysis,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
-
-msgctxt "field:lims.template.analysis_sheet.analysis,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.template.analysis_sheet.analysis,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.template.analysis_sheet.analysis,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.template.analysis_sheet.analysis,method:"
 msgid "Method"
 msgstr "Método"
 
-msgctxt "field:lims.template.analysis_sheet.analysis,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.template.analysis_sheet.analysis,template:"
 msgid "Template"
 msgstr "Plantilla"
 
-msgctxt "field:lims.template.analysis_sheet.analysis,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.template.analysis_sheet.analysis,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
+msgctxt "help:lims.interface.column,destination_column:"
+msgid "Mapped column in batch file"
+msgstr "Columna correspondiente en el archivo destino"
 
 msgctxt "help:lims.template.analysis_sheet,max_qty_samples:"
 msgid "For generation from racks"
 msgstr "Para generación desde racks"
+
+msgctxt "model:ir.action,name:"
+msgid "Open Analysis Sheet Data"
+msgstr "Abrir datos de Hoja de análisis"
 
 msgctxt "model:ir.action,name:act_analysis_sheet_list"
 msgid "Analysis Sheets"
@@ -259,7 +171,11 @@ msgctxt "model:ir.action,name:act_template_analysis_sheet_list"
 msgid "Analysis Sheet Templates"
 msgstr "Plantillas de Hoja de análisis"
 
-msgctxt "model:ir.action,name:wiz_open_analysis_sheet_data"
+msgctxt "model:ir.action,name:wiz_analysis_sheet_export_file"
+msgid "Export Analysis Sheet File"
+msgstr "Exportar Hoja de análisis"
+
+msgctxt "model:ir.action,name:wiz_analysis_sheet_open_data"
 msgid "Open Analysis Sheet Data"
 msgstr "Abrir datos de Hoja de análisis"
 
@@ -294,6 +210,10 @@ msgstr "Plantillas de Hoja de análisis"
 msgctxt "model:lims.analysis_sheet,name:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
+
+msgctxt "model:lims.analysis_sheet.export_file.start,name:"
+msgid "Export Analysis Sheet File"
+msgstr "Exportar Hoja de análisis"
 
 msgctxt "model:lims.planification.relate_technicians.detail4,name:"
 msgid "Fraction Detail"
@@ -340,8 +260,16 @@ msgid "Activate"
 msgstr "Activar"
 
 msgctxt "view:lims.analysis_sheet:"
+msgid "Export file"
+msgstr "Exportar archivo"
+
+msgctxt "view:lims.analysis_sheet:"
 msgid "View data"
 msgstr "Ver datos"
+
+msgctxt "view:lims.interface.column:"
+msgid "Export"
+msgstr "Exportación"
 
 msgctxt "view:lims.planification:"
 msgid "Search Analysis Sheets"
@@ -354,6 +282,10 @@ msgstr "Análisis"
 msgctxt "view:lims.template.analysis_sheet:"
 msgid "Comments"
 msgstr "Observaciones"
+
+msgctxt "wizard_button:lims.analysis_sheet.export_file,start,end:"
+msgid "Close"
+msgstr "Cerrar"
 
 msgctxt "wizard_button:lims.planification.search_analysis_sheet,next,add:"
 msgid "Add"

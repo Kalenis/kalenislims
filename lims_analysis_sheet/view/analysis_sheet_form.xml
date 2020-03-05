@@ -25,11 +25,12 @@
     <field name="compilation"/>
     <label name="planification"/>
     <field name="planification"/>
-    <button name="view_data" string="View data" colspan="4"/>
-    <group colspan="4" id="state_holder">
+    <button name="view_data" colspan="3" string="View data"/>
+    <button name="export_file" colspan="1" string="Export file"/>
+    <group id="state_holder" colspan="4">
         <label name="state"/>
         <field name="state"/>
-        <group colspan="2" id="buttons_holder">
+        <group id="buttons_holder" colspan="2">
             <button name="activate" string="Activate"/>
          </group>
      </group>
