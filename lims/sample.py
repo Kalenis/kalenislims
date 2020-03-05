@@ -1160,6 +1160,16 @@ class Service(ModelSQL, ModelView):
         else:
             return []
 
+    @classmethod
+    def is_service_urgent(cls, fraction_id, analysis_id):
+        service = cls.search([
+            ('fraction', '=', fraction_id),
+            ('analysis', '=', analysis_id),
+            ])
+        if service:
+            return service[0].urgent
+        return False
+
 
 class Fraction(ModelSQL, ModelView):
     'Fraction'
