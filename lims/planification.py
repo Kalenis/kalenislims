@@ -2003,6 +2003,7 @@ class AddFractionControl(Wizard):
         Analysis = pool.get('lims.analysis')
         NotebookLine = pool.get('lims.notebook.line')
         PlanificationDetail = pool.get('lims.planification.detail')
+        Service = pool.get('lims.service')
 
         p_analysis_ids = []
         for p_analysis in self.start.planification.analysis:
@@ -2053,6 +2054,7 @@ class AddFractionControl(Wizard):
                             'planification': self.start.planification.id,
                             'fraction': k[0],
                             'service_analysis': k[1],
+                            'urgent': Service.is_service_urgent(k[0], k[1]),
                             'details': [('create', v)],
                             }])
 
@@ -2666,6 +2668,7 @@ class AddFractionRMBMZ(Wizard):
         Analysis = pool.get('lims.analysis')
         NotebookLine = pool.get('lims.notebook.line')
         PlanificationDetail = pool.get('lims.planification.detail')
+        Service = pool.get('lims.service')
 
         p_analysis_ids = []
         for p_analysis in self.start.planification.analysis:
@@ -2716,6 +2719,7 @@ class AddFractionRMBMZ(Wizard):
                             'planification': self.start.planification.id,
                             'fraction': k[0],
                             'service_analysis': k[1],
+                            'urgent': Service.is_service_urgent(k[0], k[1]),
                             'details': [('create', v)],
                             }])
 
@@ -3026,6 +3030,7 @@ class AddFractionBRE(Wizard):
         Analysis = pool.get('lims.analysis')
         NotebookLine = pool.get('lims.notebook.line')
         PlanificationDetail = pool.get('lims.planification.detail')
+        Service = pool.get('lims.service')
 
         p_analysis_ids = []
         for p_analysis in self.start.planification.analysis:
@@ -3076,6 +3081,7 @@ class AddFractionBRE(Wizard):
                             'planification': self.start.planification.id,
                             'fraction': k[0],
                             'service_analysis': k[1],
+                            'urgent': Service.is_service_urgent(k[0], k[1]),
                             'details': [('create', v)],
                             }])
 
@@ -3445,6 +3451,7 @@ class AddFractionMRT(Wizard):
         Analysis = pool.get('lims.analysis')
         NotebookLine = pool.get('lims.notebook.line')
         PlanificationDetail = pool.get('lims.planification.detail')
+        Service = pool.get('lims.service')
 
         p_analysis_ids = []
         for p_analysis in self.start.planification.analysis:
@@ -3495,6 +3502,7 @@ class AddFractionMRT(Wizard):
                             'planification': self.start.planification.id,
                             'fraction': k[0],
                             'service_analysis': k[1],
+                            'urgent': Service.is_service_urgent(k[0], k[1]),
                             'details': [('create', v)],
                             }])
 
@@ -3808,6 +3816,7 @@ class SearchFractions(Wizard):
         pool = Pool()
         Planification = pool.get('lims.planification')
         PlanificationDetail = pool.get('lims.planification.detail')
+        Service = pool.get('lims.service')
 
         planification = Planification(Transaction().context['active_id'])
 
@@ -3836,6 +3845,7 @@ class SearchFractions(Wizard):
                     'planification': planification.id,
                     'fraction': k[0],
                     'service_analysis': k[1],
+                    'urgent': Service.is_service_urgent(k[0], k[1]),
                     'details': [('create', v)],
                     })
         if to_create:
@@ -4024,6 +4034,7 @@ class SearchPlannedFractions(Wizard):
         pool = Pool()
         Planification = pool.get('lims.planification')
         PlanificationDetail = pool.get('lims.planification.detail')
+        Service = pool.get('lims.service')
 
         planification = Planification(Transaction().context['active_id'])
 
@@ -4052,6 +4063,7 @@ class SearchPlannedFractions(Wizard):
                     'planification': planification.id,
                     'fraction': k[0],
                     'service_analysis': k[1],
+                    'urgent': Service.is_service_urgent(k[0], k[1]),
                     'details': [('create', v)],
                     })
         if to_create:
