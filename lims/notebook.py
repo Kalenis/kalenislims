@@ -827,7 +827,8 @@ class NotebookLine(ModelSQL, ModelView):
             clause[2:3])
         return [('id', 'in', [x[0] for x in cursor.fetchall()])]
 
-    @fields.depends('method', 'party')
+    @fields.depends('method', 'party',
+        '_parent_method.results_estimated_waiting')
     def on_change_with_results_estimated_waiting(self, name=None):
         LabMethodWaitingTime = Pool().get('lims.lab.method.results_waiting')
         if self.method:
@@ -864,7 +865,7 @@ class NotebookLine(ModelSQL, ModelView):
             relativedelta(days=estimated_waiting))
         return date
 
-    @fields.depends('analysis')
+    @fields.depends('analysis', '_parent_analysis.methods')
     def on_change_with_method_domain(self, name=None):
         methods = []
         if self.analysis and self.analysis.methods:
@@ -2559,7 +2560,7 @@ class NotebookLoadResultsFormulaProcess(ModelView):
     comments = fields.Text('Comments')
     comments_copy = fields.Boolean('Field copy')
 
-    @fields.depends('formula', 'variables')
+    @fields.depends('formula', 'variables', '_parent_formula.formula')
     def on_change_with_result(self, name=None):
         if not self.formula or not self.variables:
             return None
@@ -2576,7 +2577,7 @@ class NotebookLoadResultsFormulaProcess(ModelView):
 
         return str(value)
 
-    @fields.depends('formula')
+    @fields.depends('formula', '_parent_formula.formula')
     def on_change_with_formula_formula(self, name=None):
         if self.formula:
             formula = self.formula.formula

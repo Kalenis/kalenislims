@@ -52,7 +52,7 @@ class Production(metaclass=PoolMeta):
         'on_change_with_salable_product')
     comments = fields.Text('Comments')
 
-    @fields.depends('product')
+    @fields.depends('product', '_parent_product.salable')
     def on_change_with_salable_product(self, name=None):
         if self.product:
             return self.product.salable

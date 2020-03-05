@@ -265,17 +265,14 @@ class Entry(Workflow, ModelSQL, ModelView):
                 for c in self.party.addresses:
                     if (c.report_contact_default and c not
                             in a_report_contacts):
-                        value = ReportContacts(**ReportContacts.default_get(
-                            list(ReportContacts._fields.keys())))
-                        value.contact = c
-                        report_contacts.append(value)
+                        report_contact = ReportContacts()
+                        report_contact.contact = c
+                        report_contacts.append(report_contact)
                     if (c.acknowledgment_contact_default and c not
                             in a_acknowledgment_contacts):
-                        value = AcknowledgmentContacts(
-                            **AcknowledgmentContacts.default_get(
-                                list(AcknowledgmentContacts._fields.keys())))
-                        value.contact = c
-                        acknowledgment_contacts.append(value)
+                        acknowledgment_contact = AcknowledgmentContacts()
+                        acknowledgment_contact.contact = c
+                        acknowledgment_contacts.append(acknowledgment_contact)
 
         self.email_report = email
         self.single_sending_report = single_sending
@@ -325,16 +322,15 @@ class Entry(Workflow, ModelSQL, ModelView):
                 for c in self.invoice_party.addresses:
                     if (c.invoice_contact_default and c not
                             in a_invoice_contacts):
-                        value = InvoiceContacts(**InvoiceContacts.default_get(
-                            list(InvoiceContacts._fields.keys())))
-                        value.contact = c
-                        invoice_contacts.append(value)
+                        invoice_contact = InvoiceContacts()
+                        invoice_contact.contact = c
+                        invoice_contacts.append(invoice_contact)
 
         self.invoice_contacts = invoice_contacts
         self.report_contacts = report_contacts
         self.acknowledgment_contacts = acknowledgment_contacts
 
-    @fields.depends('party')
+    @fields.depends('party', '_parent_party.relations')
     def on_change_with_invoice_party_domain(self, name=None):
         Config = Pool().get('lims.configuration')
 
@@ -961,7 +957,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
             return Transaction().context.get('service')
         return None
 
-    @fields.depends('service')
+    @fields.depends('service', '_parent_service.id')
     def on_change_with_service_view(self, name=None):
         if self.service:
             return self.service.id
@@ -999,7 +995,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     def default_report():
         return True
 
-    @fields.depends('analysis')
+    @fields.depends('analysis', '_parent_analysis.type')
     def on_change_with_analysis_type(self, name=None):
         if self.analysis:
             return self.analysis.type

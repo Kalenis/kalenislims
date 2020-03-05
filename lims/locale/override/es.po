@@ -13,7 +13,3 @@ msgstr "Direcciones y contactos"
 msgctxt "model:ir.ui.menu,name:party.menu_address_form"
 msgid "Addresses"
 msgstr "Direcciones y contactos"
-
-msgctxt "view:party.address:party."
-msgid "Addresses"
-msgstr "Direcciones y contactos"

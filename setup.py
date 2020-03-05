@@ -1,16 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 
-from setuptools import setup
-import re
-import os
 import io
-try:
-    from configparser import ConfigParser
-except ImportError:
-    from ConfigParser import ConfigParser
-
-MODULE2PREFIX = {}
+import os
+import re
+from configparser import ConfigParser
+from setuptools import setup
 
 
 def kalenis_test_suite():
@@ -35,7 +30,7 @@ def get_require_version(name):
     return require
 
 
-version = '5.2.0'
+version = '5.4.0'
 major_version, minor_version, _ = version.split('.', 2)
 major_version = int(major_version)
 minor_version = int(minor_version)
@@ -62,8 +57,7 @@ for name in os.listdir('.'):
         if re.match(r'^lims*', dep):
             continue
         if not re.match(r'(ir|res)(\W|$)', dep):
-            prefix = MODULE2PREFIX.get(dep, 'trytond')
-            requires.append(get_require_version('%s_%s' % (prefix, dep)))
+            requires.append(get_require_version('trytond_%s' % dep))
     package = 'trytond.modules.%s' % name
     package_dir[package] = os.path.join('.', name)
     packages.append(package)
@@ -107,7 +101,9 @@ setup(name='kalenis_lims',
         'Intended Audience :: Other Audience',
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
         'Natural Language :: English',
+        'Natural Language :: Spanish',
         'Operating System :: OS Independent',
+        'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
@@ -117,6 +113,7 @@ setup(name='kalenis_lims',
         'Topic :: Scientific/Engineering',
         ],
     license='GPL-3',
+    python_requires='>=3.5',
     install_requires=requires,
     dependency_links=dependency_links,
     zip_safe=False,
