@@ -1569,6 +1569,12 @@ class EntryDetail(Report):
     __name__ = 'lims.entry.detail.report'
 
     @classmethod
+    def execute(cls, ids, data):
+        if 'ids' in data:
+            ids = data['ids']
+        return super(EntryDetail, cls).execute(ids, data)
+
+    @classmethod
     def get_context(cls, records, data):
         report_context = super(EntryDetail, cls).get_context(records, data)
         Company = Pool().get('company.company')
