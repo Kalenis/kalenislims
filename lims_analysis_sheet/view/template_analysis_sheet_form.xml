@@ -8,6 +8,8 @@
         <label name="max_qty_samples"/>
         <field name="max_qty_samples"/>
     </group>
+    <label name="report"/>
+    <field name="report"/>
     <notebook>
         <page string="Analysis" id="analysis">
             <field name="analysis" colspan="4"/>

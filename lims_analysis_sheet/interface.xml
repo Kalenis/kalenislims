@@ -119,6 +119,15 @@
             <field name="wiz_name">lims.analysis_sheet.export_file</field>
         </record>
 
+<!-- Analysis Sheet Report -->
+
+        <record model="ir.action.report" id="report_analysis_sheet">
+            <field name="name">Analysis Sheet Report</field>
+            <field name="model">lims.analysis_sheet</field>
+            <field name="report_name">lims.analysis_sheet.report</field>
+            <field name="report">lims_analysis_sheet/report/analysis_sheet.fodt</field>
+        </record>
+
 <!-- Interface Column -->
 
         <record model="ir.ui.view" id="interface_column_view_form">
