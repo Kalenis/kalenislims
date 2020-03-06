@@ -34,6 +34,18 @@ msgctxt "field:lims.analysis_sheet,professional:"
 msgid "Professional"
 msgstr "Profesional"
 
+msgctxt "field:lims.analysis_sheet,report_cache:"
+msgid "Report"
+msgstr "Informe"
+
+msgctxt "field:lims.analysis_sheet,report_cache_id:"
+msgid "Report ID"
+msgstr "ID Informe"
+
+msgctxt "field:lims.analysis_sheet,report_format:"
+msgid "Report Format"
+msgstr "Formato Informe"
+
 msgctxt "field:lims.analysis_sheet,samples_qty:"
 msgid "Samples Qty."
 msgstr "Cant. Muestras"
@@ -139,6 +151,10 @@ msgctxt "field:lims.template.analysis_sheet,pending_fractions:"
 msgid "Pending fractions"
 msgstr "Fracciones pendientes"
 
+msgctxt "field:lims.template.analysis_sheet,report:"
+msgid "Report"
+msgstr "Informe"
+
 msgctxt "field:lims.template.analysis_sheet.analysis,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
@@ -171,6 +187,10 @@ msgctxt "model:ir.action,name:act_template_analysis_sheet_list"
 msgid "Analysis Sheet Templates"
 msgstr "Plantillas de Hoja de análisis"
 
+msgctxt "model:ir.action,name:report_analysis_sheet"
+msgid "Analysis Sheet Report"
+msgstr "Informe de Hoja de análisis"
+
 msgctxt "model:ir.action,name:wiz_analysis_sheet_export_file"
 msgid "Export Analysis Sheet File"
 msgstr "Exportar Hoja de análisis"
@@ -189,7 +209,11 @@ msgstr "La Compilación ya está en uso para otra Hoja de análisis"
 
 msgctxt "model:ir.message,text:msg_template_analysis_unique"
 msgid "Analysis \"%(analysis)s\" already exists in another Template"
-msgstr "El análisis \"%(analysis)s\" ya existe en otra plantilla"
+msgstr "El análisis «%(analysis)s» ya existe en otra plantilla"
+
+msgctxt "model:ir.message,text:msg_template_not_report"
+msgid "Template \"%(template)s\" has no associated report"
+msgstr "La plantilla «%(template)s» no tiene informe asociado"
 
 msgctxt "model:ir.sequence,name:seq_analysis_sheet"
 msgid "Analysis Sheet"
@@ -262,6 +286,10 @@ msgstr "Activar"
 msgctxt "view:lims.analysis_sheet:"
 msgid "Export file"
 msgstr "Exportar archivo"
+
+msgctxt "view:lims.analysis_sheet:"
+msgid "Print report"
+msgstr "Imprimir informe"
 
 msgctxt "view:lims.analysis_sheet:"
 msgid "View data"

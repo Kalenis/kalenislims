@@ -8,12 +8,14 @@ from trytond.wizard import Wizard, StateView, StateAction, Button
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import PYSONEncoder, Eval, Bool, Or
 from trytond.transaction import Transaction
+from trytond.report import Report
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
 __all__ = ['TemplateAnalysisSheet', 'TemplateAnalysisSheetAnalysis',
-    'AnalysisSheet', 'OpenAnalysisSheetData', 'Compilation', 'Column',
-    'ExportAnalysisSheetFileStart', 'ExportAnalysisSheetFile']
+    'AnalysisSheet', 'OpenAnalysisSheetData', 'AnalysisSheetReport',
+    'Compilation', 'Column', 'ExportAnalysisSheetFileStart',
+    'ExportAnalysisSheetFile']
 
 
 class TemplateAnalysisSheet(ModelSQL, ModelView):
@@ -33,6 +35,11 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
     comments = fields.Text('Comments')
     pending_fractions = fields.Function(fields.Integer('Pending fractions'),
         'get_pending_fractions')
+    report = fields.Many2One('ir.action.report', 'Report',
+        domain=[
+            ('model', '=', 'lims.analysis_sheet'),
+            ('report_name', 'ilike', 'lims.analysis_sheet.report.%%'),
+            ])
 
     @fields.depends('interface', '_parent_interface.name')
     def on_change_with_name(self, name=None):
@@ -184,6 +191,10 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             ('completion_percentage', '<=', 1),
             ]),
         'get_completion_percentage')
+    report_cache = fields.Binary('Report', readonly=True,
+        file_id='report_cache_id', store_prefix='analysis_sheet')
+    report_cache_id = fields.Char('Report ID', readonly=True)
+    report_format = fields.Char('Report Format', readonly=True)
 
     @classmethod
     def __setup__(cls):
@@ -205,6 +216,9 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 'invisible': Eval('state') == 'draft',
                 },
             'export_file': {
+                'invisible': Eval('state') == 'draft',
+                },
+            'print_report': {
                 'invisible': Eval('state') == 'draft',
                 },
             })
@@ -412,6 +426,24 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def export_file(cls, sheets):
         pass
 
+    @classmethod
+    @ModelView.button_action(
+        'lims_analysis_sheet.report_analysis_sheet')
+    def print_report(cls, sheets):
+        pool = Pool()
+        for s in sheets:
+            if not s.template.report:
+                raise UserError(gettext(
+                    'lims_analysis_sheet.msg_template_not_report',
+                    template=s.template.rec_name))
+            report_name = s.template.report.report_name
+            AnalysisSheetReport = pool.get(report_name, type='report')
+            result = AnalysisSheetReport.execute([s.id], {'execute': True})
+            cls.write([s], {
+                'report_format': result[0],
+                'report_cache': result[1],
+                })
+
     def get_new_compilation(self):
         Compilation = Pool().get('lims.interface.compilation')
         compilation = Compilation(
@@ -542,6 +574,32 @@ class ExportAnalysisSheetFile(Wizard):
         if file_:
             return str(file_.getvalue()).encode('utf-8')
         return
+
+
+class AnalysisSheetReport(Report):
+    'Analysis Sheet Report'
+    __name__ = 'lims.analysis_sheet.report'
+
+    @classmethod
+    def execute(cls, ids, data):
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
+
+        sheet = AnalysisSheet(ids[0])
+        if data.get('execute') or not sheet.report_cache:
+            return super(AnalysisSheetReport, cls).execute(ids, data)
+        return (sheet.report_format, sheet.report_cache, False, sheet.number)
+
+    @classmethod
+    def _get_records(cls, ids, model, data):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+
+        sheet = AnalysisSheet(ids[0])
+        with Transaction().set_context(
+                lims_interface_table=sheet.compilation.table.id):
+            lines = Data.search([('compilation', '=', sheet.compilation.id)])
+            return lines
 
 
 class Compilation(metaclass=PoolMeta):

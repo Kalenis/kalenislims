@@ -7,5 +7,8 @@
         <record model="ir.message" id="msg_template_analysis_unique">
             <field name="text">Analysis "%(analysis)s" already exists in another Template</field>
         </record>
+        <record model="ir.message" id="msg_template_not_report">
+            <field name="text">Template "%(template)s" has no associated report</field>
+        </record>
     </data>
 </tryton>

@@ -33,3 +33,6 @@ def register():
         planification.SearchAnalysisSheet,
         planification.RelateTechnicians,
         module='lims_analysis_sheet', type_='wizard')
+    Pool.register(
+        interface.AnalysisSheetReport,
+        module='lims_analysis_sheet', type_='report')
