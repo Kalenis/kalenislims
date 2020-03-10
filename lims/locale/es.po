@@ -4921,6 +4921,54 @@ msgctxt "field:lims.results_report_annulation.start,annulment_reason_print:"
 msgid "Print annulment reason in next version"
 msgstr "Imprimir motivo de anulación en próxima versión"
 
+msgctxt "field:lims.rule,action:"
+msgid "Action"
+msgstr "Acción"
+
+msgctxt "field:lims.rule,analysis:"
+msgid "Trigger Analysis"
+msgstr "Análisis disparador"
+
+msgctxt "field:lims.rule,conditions:"
+msgid "Conditions"
+msgstr "Condiciones"
+
+msgctxt "field:lims.rule,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.rule,target_analysis:"
+msgid "Target Analysis"
+msgstr "Análisis destino"
+
+msgctxt "field:lims.rule,target_field:"
+msgid "Target Field"
+msgstr "Campo destino"
+
+msgctxt "field:lims.rule,target_field_domain:"
+msgid "Target Field domain"
+msgstr "Dominio para Campo destino"
+
+msgctxt "field:lims.rule,value:"
+msgid "Value"
+msgstr "Valor"
+
+msgctxt "field:lims.rule.condition,condition:"
+msgid "Condition"
+msgstr "Condición"
+
+msgctxt "field:lims.rule.condition,field:"
+msgid "Field"
+msgstr "Campo"
+
+msgctxt "field:lims.rule.condition,rule:"
+msgid "Rule"
+msgstr "Regla"
+
+msgctxt "field:lims.rule.condition,value:"
+msgid "Value"
+msgstr "Valor"
+
 msgctxt "field:lims.sample,analysis_domain:"
 msgid "Analysis domain"
 msgstr "Dominio para Análisis"
@@ -5743,6 +5791,14 @@ msgctxt "help:lims.laboratory.cv_correction,min_cv_corr_fact:"
 msgid "Correction factor for CV between Min and Max"
 msgstr "Factor de corrección para CV entre Mínimo y Máximo"
 
+msgctxt "help:lims.rule.condition,field:"
+msgid ""
+"Internal name of the field. Relationships are allowed, such as "
+"\"notebook.product_type.code\""
+msgstr ""
+"Nombre interno del campo. Se permiten relaciones, como "
+"\"notebook.product_type.code\""
+
 msgctxt "help:lims.typification.copy.start,action:"
 msgid "If choose <Move>, the origin typifications will be deactivated"
 msgstr "Si elije <Mover>, las tipificaciones origen serán desactivadas"
@@ -6031,6 +6087,10 @@ msgctxt "model:ir.action,name:act_lims_zone_list"
 msgid "Zones/Regions"
 msgstr "Zonas/Regiones"
 
+msgctxt "model:ir.action,name:act_notebook_rule_list"
+msgid "Notebook Rules"
+msgstr "Reglas de cuaderno"
+
 msgctxt "model:ir.action,name:act_open_notebook_lines"
 msgid "Notebook Lines"
 msgstr "Líneas de Cuaderno"
@@ -6261,7 +6321,7 @@ msgstr "Gestionar servicios"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_accept_lines"
 msgid "Accept Lines"
-msgstr "10) Aceptar Resultados a todas las líneas"
+msgstr "11) Aceptar Resultados a todas las líneas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_add_internal_relations"
 msgid "Add Internal Relations"
@@ -6285,7 +6345,7 @@ msgstr "09) Validación de límites"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_line_accept_lines"
 msgid "Accept Lines"
-msgstr "10) Aceptar Resultados a las líneas"
+msgstr "11) Aceptar Resultados a las líneas"
 
 msgctxt ""
 "model:ir.action,name:wiz_lims_notebook_line_initial_concentration_calc"
@@ -6324,7 +6384,7 @@ msgstr "08) Verificación de resultados"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_line_unaccept_lines"
 msgid "Unaccept Lines"
-msgstr "11) Revertir Aceptación de Resultados a las líneas"
+msgstr "12) Revertir Aceptación de Resultados a las líneas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_line_uncertainty_calc"
 msgid "Uncertainty Calculation"
@@ -6409,6 +6469,14 @@ msgstr "Calificación de Técnicos"
 msgctxt "model:ir.action,name:wiz_lims_unlink_technicians"
 msgid "Unlink Technicians"
 msgstr "Desvincular técnicos"
+
+msgctxt "model:ir.action,name:wiz_notebook_evaluate_rules"
+msgid "Evaluate Rules"
+msgstr "10) Evaluar Reglas de cuaderno"
+
+msgctxt "model:ir.action,name:wiz_notebook_line_evaluate_rules"
+msgid "Evaluate Rules"
+msgstr "10) Evaluar Reglas de cuaderno"
 
 msgctxt "model:ir.action,name:wiz_print_analysis_checked_pending_inform"
 msgid "Analysis checked pending of inform"
@@ -7102,6 +7170,10 @@ msgctxt "model:ir.message,text:msg_replace_number"
 msgid "Supplants the Results Report N° %(report)s"
 msgstr "Sustituye al informe de resultados N° %(report)s"
 
+msgctxt "model:ir.message,text:msg_rule_condition_field"
+msgid "Invalid field: %(field)s"
+msgstr "Campo inválido: %(field)s"
+
 msgctxt "model:ir.message,text:msg_set_laboratories"
 msgid "A Set can be assigned to a single laboratory"
 msgstr "Un Set puede ser asignado a un único laboratorio"
@@ -7537,6 +7609,10 @@ msgstr "Años laborales"
 msgctxt "model:ir.ui.menu,name:lims_zone_menu"
 msgid "Zones/Regions"
 msgstr "Zonas/Regiones"
+
+msgctxt "model:ir.ui.menu,name:menu_notebook_rule_list"
+msgid "Notebook Rules"
+msgstr "Reglas de cuaderno"
 
 msgctxt "model:ir.ui.menu,name:menu_print_analysis_checked_pending_inform"
 msgid "Analysis checked pending of inform"
@@ -8018,6 +8094,10 @@ msgctxt "model:lims.notebook.add_internal_relations.start,name:"
 msgid "Add Internal Relations"
 msgstr "Agregar relaciones internas"
 
+msgctxt "model:lims.notebook.evaluate_rules.start,name:"
+msgid "Evaluate Rules"
+msgstr "Evaluar Reglas de cuaderno"
+
 msgctxt "model:lims.notebook.initial_concentration_calc.start,name:"
 msgid "Initial Concentration Calculation"
 msgstr "Cálculo de concentración inicial"
@@ -8394,6 +8474,14 @@ msgstr "Línea de detalle de versión de informe de resultados"
 msgctxt "model:lims.results_report_annulation.start,name:"
 msgid "Report Annulation"
 msgstr "Anulación de Informe"
+
+msgctxt "model:lims.rule,name:"
+msgid "Notebook Rule"
+msgstr "Regla de cuaderno"
+
+msgctxt "model:lims.rule.condition,name:"
+msgid "Notebook Rule Condition"
+msgstr "Condición de Regla de cuaderno"
 
 msgctxt "model:lims.sample,name:"
 msgid "Sample"
@@ -11481,6 +11569,38 @@ msgctxt "selection:lims.results_report.version.detail.line,result_modifier:"
 msgid "ni"
 msgstr "ni"
 
+msgctxt "selection:lims.rule,action:"
+msgid "Add Analysis"
+msgstr "Añadir análisis"
+
+msgctxt "selection:lims.rule,action:"
+msgid "Edit Analysis"
+msgstr "Editar análisis"
+
+msgctxt "selection:lims.rule.condition,condition:"
+msgid "!="
+msgstr "!="
+
+msgctxt "selection:lims.rule.condition,condition:"
+msgid "<"
+msgstr "<"
+
+msgctxt "selection:lims.rule.condition,condition:"
+msgid "<="
+msgstr "<="
+
+msgctxt "selection:lims.rule.condition,condition:"
+msgid "="
+msgstr "="
+
+msgctxt "selection:lims.rule.condition,condition:"
+msgid ">"
+msgstr ">"
+
+msgctxt "selection:lims.rule.condition,condition:"
+msgid ">="
+msgstr ">="
+
 msgctxt "selection:lims.service,analysis_type:"
 msgid "Analysis"
 msgstr "Análisis"
@@ -12120,6 +12240,10 @@ msgstr "¿Aceptar todas las líneas?"
 msgctxt "view:lims.notebook.add_internal_relations.start:"
 msgid "Add Internal Relations"
 msgstr "Agregar relaciones internas"
+
+msgctxt "view:lims.notebook.evaluate_rules.start:"
+msgid "Evaluate rules?"
+msgstr "¿Evaluar reglas de cuaderno?"
 
 msgctxt "view:lims.notebook.initial_concentration_calc.start:"
 msgid "Calculate initial concentration?"
@@ -13117,6 +13241,14 @@ msgctxt "wizard_button:lims.notebook.add_internal_relations,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
+msgctxt "wizard_button:lims.notebook.evaluate_rules,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.notebook.evaluate_rules,start,ok:"
+msgid "Ok"
+msgstr "Aceptar"
+
 msgctxt "wizard_button:lims.notebook.initial_concentration_calc,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
@@ -13297,6 +13429,14 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 msgctxt "wizard_button:lims.notebook_line.accept_lines,start,ok:"
+msgid "Ok"
+msgstr "Aceptar"
+
+msgctxt "wizard_button:lims.notebook_line.evaluate_rules,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.notebook_line.evaluate_rules,start,ok:"
 msgid "Ok"
 msgstr "Aceptar"
 

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<form>
+    <label name="name"/>
+    <field name="name"/>
+    <label name="analysis"/>
+    <field name="analysis"/>
+    <label name="action"/>
+    <field name="action"/>
+    <label name="target_analysis"/>
+    <field name="target_analysis"/>
+    <label name="target_field"/>
+    <field name="target_field"/>
+    <label name="value"/>
+    <field name="value"/>
+    <field name="conditions" colspan="4"/>
+</form>
