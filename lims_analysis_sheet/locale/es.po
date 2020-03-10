@@ -139,10 +139,6 @@ msgctxt "field:lims.template.analysis_sheet,interface:"
 msgid "Device Interface"
 msgstr "Interfaz"
 
-msgctxt "field:lims.template.analysis_sheet,max_qty_samples:"
-msgid "Maximum quantity of samples"
-msgstr "Cantidad máxima de muestras"
-
 msgctxt "field:lims.template.analysis_sheet,name:"
 msgid "Name"
 msgstr "Nombre"
@@ -170,10 +166,6 @@ msgstr "Plantilla"
 msgctxt "help:lims.interface.column,destination_column:"
 msgid "Mapped column in batch file"
 msgstr "Columna correspondiente en el archivo destino"
-
-msgctxt "help:lims.template.analysis_sheet,max_qty_samples:"
-msgid "For generation from racks"
-msgstr "Para generación desde racks"
 
 msgctxt "model:ir.action,name:"
 msgid "Open Analysis Sheet Data"
