@@ -30,8 +30,6 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
     name = fields.Char('Name', required=True)
     analysis = fields.One2Many('lims.template.analysis_sheet.analysis',
         'template', 'Analysis', required=True)
-    max_qty_samples = fields.Integer('Maximum quantity of samples',
-        help='For generation from racks')
     comments = fields.Text('Comments')
     pending_fractions = fields.Function(fields.Integer('Pending fractions'),
         'get_pending_fractions')
