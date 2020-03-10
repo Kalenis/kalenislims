@@ -515,11 +515,11 @@ msgstr "Timestamp"
 
 msgctxt "selection:lims.interface.compilation,state:"
 msgid "Active"
-msgstr "Activo"
+msgstr "Activa"
 
 msgctxt "selection:lims.interface.compilation,state:"
 msgid "Done"
-msgstr "Realizado"
+msgstr "Realizada"
 
 msgctxt "selection:lims.interface.compilation,state:"
 msgid "Draft"

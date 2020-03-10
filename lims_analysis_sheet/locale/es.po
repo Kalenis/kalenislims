@@ -199,6 +199,14 @@ msgctxt "model:ir.message,text:msg_sheet_compilation_unique"
 msgid "Compilation already in use by another Analysis Sheet"
 msgstr "La Compilación ya está en uso para otra Hoja de análisis"
 
+msgctxt "model:ir.message,text:msg_sheet_not_lines"
+msgid "The analysis sheet has no data"
+msgstr "La Hoja de análisis no tiene datos"
+
+msgctxt "model:ir.message,text:msg_sheet_not_results"
+msgid "There are lines without result"
+msgstr "Existen líneas sin resultado"
+
 msgctxt "model:ir.message,text:msg_template_analysis_unique"
 msgid "Analysis \"%(analysis)s\" already exists in another Template"
 msgstr "El análisis «%(analysis)s» ya existe en otra plantilla"
@@ -206,6 +214,10 @@ msgstr "El análisis «%(analysis)s» ya existe en otra plantilla"
 msgctxt "model:ir.message,text:msg_template_not_report"
 msgid "Template \"%(template)s\" has no associated report"
 msgstr "La plantilla «%(template)s» no tiene informe asociado"
+
+msgctxt "model:ir.message,text:msg_template_not_result_field"
+msgid "The template does not have a column for the result field"
+msgstr "La plantilla no tiene una columna para el campo resultado"
 
 msgctxt "model:ir.sequence,name:seq_analysis_sheet"
 msgid "Analysis Sheet"
@@ -469,11 +481,19 @@ msgstr ""
 
 msgctxt "selection:lims.analysis_sheet,state:"
 msgid "Active"
-msgstr "Activo"
+msgstr "Activa"
+
+msgctxt "selection:lims.analysis_sheet,state:"
+msgid "Done"
+msgstr "Realizada"
 
 msgctxt "selection:lims.analysis_sheet,state:"
 msgid "Draft"
 msgstr "Borrador"
+
+msgctxt "selection:lims.analysis_sheet,state:"
+msgid "Validated"
+msgstr "Validada"
 
 msgctxt "selection:lims.planification.relate_technicians.result,grouping:"
 msgid "Analysis sheet"
@@ -492,12 +512,20 @@ msgid "Activate"
 msgstr "Activar"
 
 msgctxt "view:lims.analysis_sheet:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "view:lims.analysis_sheet:"
 msgid "Export file"
 msgstr "Exportar archivo"
 
 msgctxt "view:lims.analysis_sheet:"
 msgid "Print report"
 msgstr "Imprimir informe"
+
+msgctxt "view:lims.analysis_sheet:"
+msgid "Validate"
+msgstr "Validar"
 
 msgctxt "view:lims.analysis_sheet:"
 msgid "View data"
