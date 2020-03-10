@@ -35,6 +35,8 @@
         <field name="state"/>
         <group id="buttons_holder" colspan="2">
             <button name="activate" string="Activate"/>
+            <button name="validate_" string="Validate"/>
+            <button name="confirm" string="Confirm"/>
         </group>
     </group>
 </form>

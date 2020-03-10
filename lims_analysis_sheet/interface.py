@@ -187,6 +187,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('active', 'Active'),
+        ('validated', 'Validated'),
+        ('done', 'Done'),
         ], 'State', required=True, readonly=True)
     planification = fields.Many2One('lims.planification', 'Planification',
         readonly=True)
@@ -214,6 +216,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             ]
         cls._transitions |= set((
             ('draft', 'active'),
+            ('active', 'validated'),
+            ('validated', 'done'),
             ))
         cls._buttons.update({
             'activate': {
@@ -227,6 +231,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 },
             'print_report': {
                 'invisible': Eval('state') == 'draft',
+                },
+            'validate_': {
+                'invisible': Eval('state') != 'active',
+                },
+            'confirm': {
+                'invisible': Eval('state') != 'validated',
                 },
             })
 
@@ -445,14 +455,61 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     template=s.template.rec_name))
             report_name = s.template.report.report_name
             AnalysisSheetReport = pool.get(report_name, type='report')
-            result = AnalysisSheetReport.execute([s.id], {
-                'execute': True,
-                'id': s.id,
-                })
+            result = AnalysisSheetReport.execute([s.id],
+                {'execute': True, 'id': s.id})
             cls.write([s], {
                 'report_format': result[0],
                 'report_cache': result[1],
                 })
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('validated')
+    def validate_(cls, sheets):
+        Compilation = Pool().get('lims.interface.compilation')
+        cls.check_results(sheets)
+        Compilation.validate_([s.compilation for s in sheets])
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('done')
+    def confirm(cls, sheets):
+        Compilation = Pool().get('lims.interface.compilation')
+        cls.check_results(sheets)
+        Compilation.confirm([s.compilation for s in sheets])
+
+    @classmethod
+    def check_results(cls, sheets):
+        pool = Pool()
+        ModelField = pool.get('ir.model.field')
+        Column = pool.get('lims.interface.column')
+        Data = pool.get('lims.interface.data')
+
+        nl_result_field, = ModelField.search([
+            ('model.model', '=', 'lims.notebook.line'),
+            ('name', '=', 'result'),
+            ])
+
+        for s in sheets:
+            result_column = Column.search([
+                ('interface', '=', s.template.interface),
+                ('transfer_field', '=', True),
+                ('related_line_field', '=', nl_result_field)
+                ])
+            if not result_column:
+                raise UserError(gettext(
+                    'lims_analysis_sheet.msg_template_not_result_field'))
+            result_field = result_column[0].alias
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                lines = Data.search([('compilation', '=', s.compilation.id)])
+                if not lines:
+                    raise UserError(gettext(
+                        'lims_analysis_sheet.msg_sheet_not_lines'))
+                for line in lines:
+                    if not getattr(line, result_field):
+                        raise UserError(gettext(
+                            'lims_analysis_sheet.msg_sheet_not_results'))
 
     def get_new_compilation(self):
         Compilation = Pool().get('lims.interface.compilation')

@@ -4,11 +4,20 @@
         <record model="ir.message" id="msg_sheet_compilation_unique">
             <field name="text">Compilation already in use by another Analysis Sheet</field>
         </record>
+        <record model="ir.message" id="msg_sheet_not_lines">
+            <field name="text">The analysis sheet has no data</field>
+        </record>
+        <record model="ir.message" id="msg_sheet_not_results">
+            <field name="text">There are lines without result</field>
+        </record>
         <record model="ir.message" id="msg_template_analysis_unique">
             <field name="text">Analysis "%(analysis)s" already exists in another Template</field>
         </record>
         <record model="ir.message" id="msg_template_not_report">
             <field name="text">Template "%(template)s" has no associated report</field>
+        </record>
+        <record model="ir.message" id="msg_template_not_result_field">
+            <field name="text">The template does not have a column for the result field</field>
         </record>
     </data>
 </tryton>
