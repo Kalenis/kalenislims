@@ -39,7 +39,7 @@
 
         <menuitem action="act_template_analysis_sheet_list"
             id="menu_template_analysis_sheet_list"
-            parent="lims.lims_config_laboratory" sequence="65"/>
+            parent="lims.lims_config_laboratory" sequence="70"/>
 
 <!-- Template Analysis -->
 

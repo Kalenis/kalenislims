@@ -135,7 +135,7 @@
 
         <!-- Configuration / Laboratory / Interfaces -->
         <menuitem parent="lims.lims_config_laboratory" action="act_lims_interface_list"
-            id="lims_interface_menu" sequence="70"/>
+            id="lims_interface_menu" sequence="80"/>
 
         <!-- Laboratory / Results entry / Interface Compilation -->
         <menuitem parent="lims.lims_laboratory_results" action="act_lims_interface_compilation_list"
