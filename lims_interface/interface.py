@@ -195,7 +195,8 @@ class Interface(Workflow, ModelSQL, ModelView):
             }, depends=['state', 'id'])
     notebook_line_field = fields.Many2One('lims.interface.column',
         'Notebook line field',
-        domain=[('interface', '=', Eval('id'))],
+        domain=[('interface', '=', Eval('id')),
+            ('related_model.model', '=', 'lims.notebook.line')],
         states={
             'readonly': Eval('state') != 'draft',
             }, depends=['state', 'id'])
