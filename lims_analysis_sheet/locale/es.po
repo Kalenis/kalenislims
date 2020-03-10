@@ -251,6 +251,222 @@ msgctxt "model:lims.template.analysis_sheet.analysis,name:"
 msgid "Template Analysis"
 msgstr "Análisis de Plantilla"
 
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "("
+msgstr "("
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid ")"
+msgstr ")"
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid ","
+msgstr ","
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "/for"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "00/00/0000"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "00:00:00"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "???"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "Analysis Sheet"
+msgstr "Hoja de análisis"
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "Página"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[0]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[10]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[11]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[12]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[13]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[14]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[15]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[16]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[17]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[18]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[19]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[1]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[2]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[3]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[4]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[5]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[6]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[7]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[8]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "columns[9]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "for each=\"line in rows\""
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "format_date(sheet.date, user.language)"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[0]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[10]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[11]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[12]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[13]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[14]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[15]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[16]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[17]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[18]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[19]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[1]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[2]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[3]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[4]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[5]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[6]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[7]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[8]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "line[9]"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "sheet.number"
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "sheet.template.name"
+msgstr ""
+
 msgctxt "selection:lims.analysis_sheet,state:"
 msgid "Active"
 msgstr "Activo"
