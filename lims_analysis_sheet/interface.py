@@ -36,8 +36,17 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
     report = fields.Many2One('ir.action.report', 'Report',
         domain=[
             ('model', '=', 'lims.analysis_sheet'),
-            ('report_name', 'ilike', 'lims.analysis_sheet.report.%%'),
+            ('report_name', 'ilike', 'lims.analysis_sheet.report%%'),
             ])
+
+    @staticmethod
+    def default_report():
+        ActionReport = Pool().get('ir.action.report')
+        report = ActionReport.search([
+            ('model', '=', 'lims.analysis_sheet'),
+            ('report_name', '=', 'lims.analysis_sheet.report'),
+            ])
+        return report and report[0].id or None
 
     @fields.depends('interface', '_parent_interface.name')
     def on_change_with_name(self, name=None):
@@ -436,7 +445,10 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     template=s.template.rec_name))
             report_name = s.template.report.report_name
             AnalysisSheetReport = pool.get(report_name, type='report')
-            result = AnalysisSheetReport.execute([s.id], {'execute': True})
+            result = AnalysisSheetReport.execute([s.id], {
+                'execute': True,
+                'id': s.id,
+                })
             cls.write([s], {
                 'report_format': result[0],
                 'report_cache': result[1],
@@ -589,15 +601,53 @@ class AnalysisSheetReport(Report):
 
     @classmethod
     def _get_records(cls, ids, model, data):
+        return []
+
+    @classmethod
+    def get_context(cls, records, data):
         pool = Pool()
         AnalysisSheet = pool.get('lims.analysis_sheet')
+        Field = pool.get('lims.interface.table.field')
         Data = pool.get('lims.interface.data')
 
-        sheet = AnalysisSheet(ids[0])
+        report_context = super(AnalysisSheetReport,
+            cls).get_context(records, data)
+
+        sheet = AnalysisSheet(data.get('id'))
+        report_context['sheet'] = sheet
+
+        limit = 20
+        alias = []
+
+        # Columns
+        columns = {}
+        i = 0
+        fields = Field.search([('table', '=', sheet.compilation.table.id)])
+        for field in fields:
+            alias.append(field.name)
+            columns[i] = field.string
+            i += 1
+        for x in range(i, limit):
+            columns[x] = ''
+        report_context['columns'] = columns
+
+        # Rows
+        rows = []
         with Transaction().set_context(
                 lims_interface_table=sheet.compilation.table.id):
             lines = Data.search([('compilation', '=', sheet.compilation.id)])
-            return lines
+            for line in lines:
+                row = {}
+                i = 0
+                for field_name in alias:
+                    row[i] = getattr(line, field_name)
+                    i += 1
+                for x in range(i, limit):
+                    row[x] = ''
+                rows.append(row)
+        report_context['rows'] = rows
+
+        return report_context
 
 
 class Compilation(metaclass=PoolMeta):

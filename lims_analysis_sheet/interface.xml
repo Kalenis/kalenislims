@@ -125,7 +125,7 @@
             <field name="name">Analysis Sheet Report</field>
             <field name="model">lims.analysis_sheet</field>
             <field name="report_name">lims.analysis_sheet.report</field>
-            <field name="report">lims_analysis_sheet/report/analysis_sheet.fodt</field>
+            <field name="report">lims_analysis_sheet/report/analysis_sheet.fods</field>
         </record>
 
 <!-- Interface Column -->
