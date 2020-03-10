@@ -1,7 +1,7 @@
 import sql
 import formulas
 import schedula
-from trytond.model import ModelSQL, ModelView, fields
+from trytond.model import ModelSQL, ModelView, fields, sequence_ordered
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.tools import cursor_dict
@@ -68,6 +68,9 @@ class Adapter:
         obj = fields.Many2One('lims.interface.compilation', 'Compilation')
         obj.name = 'compilation'
         res['compilation'] = obj
+        obj = fields.Integer('Sequence')
+        obj.name = 'sequence'
+        res['sequence'] = obj
 
         return res
 
@@ -92,7 +95,7 @@ class ModelAccess(metaclass=PoolMeta):
             mode)
 
 
-class Data(ModelSQL, ModelView):
+class Data(sequence_ordered(), ModelSQL, ModelView):
     'Lims Interface Data'
     __name__ = 'lims.interface.data'
 
@@ -214,7 +217,10 @@ class Data(ModelSQL, ModelView):
                     break
             assert(view.id)
 
-        fields_names = []
+        fields_names = [
+            'compilation',
+            'sequence'
+            ]
         for field in table.fields_:
             fields_names.append(field.name)
         res = {

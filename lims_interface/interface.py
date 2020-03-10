@@ -359,7 +359,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                     ' '.join(attributes)))
 
         xml = ('<?xml version="1.0"?>\n'
-            '<tree editable="bottom">\n'
+            '<tree sequence="sequence" editable="bottom">\n'
             '%s'
             '</tree>') % ('\n'.join(fields))
         return {
