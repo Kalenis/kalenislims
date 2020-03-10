@@ -44,7 +44,8 @@ class Table(ModelSQL, ModelView):
                 ('write_uid', fields.Integer),
                 ('create_date', fields.Timestamp),
                 ('write_date', fields.Timestamp),
-                ('compilation', fields.Integer)):
+                ('compilation', fields.Integer),
+                ('sequence', fields.Integer)):
             sql_type = field._sql_type
             table.add_column(name, sql_type)
 
