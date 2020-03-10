@@ -54,7 +54,9 @@ __all__ = ['Notebook', 'NotebookLine', 'NotebookLineAllFields',
     'UncertaintyCalcStart', 'UncertaintyCalc', 'NotebookLineUncertaintyCalc',
     'NotebookPrecisionControlStart', 'NotebookPrecisionControl',
     'NotebookLinePrecisionControl', 'OpenNotebookLines',
-    'ChangeEstimatedDaysForResultsStart', 'ChangeEstimatedDaysForResults']
+    'ChangeEstimatedDaysForResultsStart', 'ChangeEstimatedDaysForResults',
+    'NotebookEvaluateRulesStart', 'NotebookEvaluateRules',
+    'NotebookLineEvaluateRules']
 
 
 class Notebook(ModelSQL, ModelView):
@@ -4968,3 +4970,59 @@ class AnalysisCheckedPendingInform(Report):
 
         notebook_lines = cursor.fetchall()
         return notebook_lines
+
+
+class NotebookEvaluateRulesStart(ModelView):
+    'Evaluate Rules'
+    __name__ = 'lims.notebook.evaluate_rules.start'
+
+
+class NotebookEvaluateRules(Wizard):
+    'Evaluate Rules'
+    __name__ = 'lims.notebook.evaluate_rules'
+
+    start_state = 'ok'
+    start = StateView('lims.notebook.evaluate_rules.start',
+        'lims.notebook_evaluate_rules_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Ok', 'ok', 'tryton-ok', default=True),
+            ])
+    ok = StateTransition()
+
+    def transition_ok(self):
+        Notebook = Pool().get('lims.notebook')
+
+        for active_id in Transaction().context['active_ids']:
+            notebook = Notebook(active_id)
+            if not notebook.lines:
+                continue
+            self.evaluate_rules(notebook.lines)
+        return 'end'
+
+    def evaluate_rules(self, notebook_lines):
+        pool = Pool()
+        NotebookRule = pool.get('lims.rule')
+
+        for line in notebook_lines:
+            rules = NotebookRule.search([
+                ('analysis', '=', line.analysis),
+                ])
+            for rule in rules:
+                if rule.eval_condition(line):
+                    rule.exec_action(line.notebook)
+
+
+class NotebookLineEvaluateRules(NotebookEvaluateRules):
+    'Evaluate Rules'
+    __name__ = 'lims.notebook_line.evaluate_rules'
+
+    def transition_ok(self):
+        NotebookLine = Pool().get('lims.notebook.line')
+
+        notebook_lines = NotebookLine.browse(
+            Transaction().context['active_ids'])
+        if not notebook_lines:
+            return 'end'
+
+        self.evaluate_rules(notebook_lines)
+        return 'end'

@@ -2,6 +2,7 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import operator
 from sql import Cast
 
 from trytond.model import ModelView, ModelSQL, DeactivableMixin, fields, Unique
@@ -16,7 +17,8 @@ from .formula_parser import FormulaParser
 __all__ = ['LaboratoryProfessional', 'Laboratory', 'LaboratoryCVCorrection',
     'LabMethod', 'LabMethodWaitingTime', 'LabDeviceType', 'LabDevice',
     'LabDeviceLaboratory', 'LabDeviceCorrection', 'LabDeviceTypeLabMethod',
-    'LabDeviceRelateAnalysisStart', 'LabDeviceRelateAnalysis']
+    'LabDeviceRelateAnalysisStart', 'LabDeviceRelateAnalysis', 'NotebookRule',
+    'NotebookRuleCondition']
 
 
 class Laboratory(ModelSQL, ModelView):
@@ -563,3 +565,286 @@ class LabDeviceRelateAnalysis(Wizard):
         if to_create:
             AnalysisDevice.create(to_create)
         return 'end'
+
+
+class NotebookRule(ModelSQL, ModelView):
+    'Notebook Rule'
+    __name__ = 'lims.rule'
+
+    name = fields.Char('Name', required=True)
+    analysis = fields.Many2One('lims.analysis', 'Trigger Analysis',
+        required=True, domain=[
+            ('state', '=', 'active'),
+            ('type', '=', 'analysis'),
+            ('behavior', '!=', 'additional'),
+            ])
+    conditions = fields.One2Many('lims.rule.condition', 'rule', 'Conditions',
+        required=True)
+    action = fields.Selection([
+        ('add', 'Add Analysis'),
+        ('edit', 'Edit Analysis'),
+        ], 'Action', required=True, sort=False)
+    target_analysis = fields.Many2One('lims.analysis', 'Target Analysis',
+        required=True, domain=[
+            ('state', '=', 'active'),
+            ('type', '=', 'analysis'),
+            ('behavior', '!=', 'additional'),
+            ])
+    target_field = fields.Many2One('ir.model.field', 'Target Field',
+        domain=[('id', 'in', Eval('target_field_domain'))],
+        depends=['target_field_domain', 'action'], states={
+            'required': Eval('action') == 'edit',
+            'invisible': Eval('action') != 'edit',
+            })
+    target_field_domain = fields.Function(fields.Many2Many('ir.model.field',
+        None, None, 'Target Field domain'), 'get_target_field_domain')
+    value = fields.Char('Value', depends=['action'],
+        states={
+            'required': Eval('action') == 'edit',
+            'invisible': Eval('action') != 'edit',
+            })
+
+    @staticmethod
+    def default_target_field_domain():
+        ModelField = Pool().get('ir.model.field')
+        _field_list = ['end_date', 'method', 'device', 'initial_concentration',
+            'final_concentration', 'initial_unit', 'final_unit',
+            'result_modifier', 'result', 'converted_result_modifier',
+            'converted_result', 'detection_limit', 'quantification_limit',
+            'dilution_factor', 'chromatogram', 'comments',
+            'theoretical_concentration', 'concentration_level', 'decimals',
+            'backup', 'reference', 'literal_result', 'rm_correction_formula',
+            'report', 'uncertainty', 'verification', ]
+        fields = ModelField.search([
+            ('model.model', '=', 'lims.notebook.line'),
+            ('name', 'in', _field_list),
+            ])
+        return [f.id for f in fields]
+
+    def get_target_field_domain(self, name=None):
+        return self.default_target_field_domain()
+
+    def eval_condition(self, line):
+        for condition in self.conditions:
+            if not condition.eval_condition(line):
+                return False
+        return True
+
+    def exec_action(self, notebook):
+        if self.action == 'add':
+            self._exec_add(notebook)
+        elif self.action == 'edit':
+            self._exec_edit(notebook)
+
+    def _exec_add(self, notebook):
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        typification = Typification.search([
+            ('product_type', '=', notebook.product_type),
+            ('matrix', '=', notebook.matrix),
+            ('analysis', '=', self.target_analysis),
+            ('by_default', '=', True),
+            ('valid', '=', True),
+            ], limit=1)
+        if not typification:
+            return
+
+        existing_line = NotebookLine.search([
+            ('notebook', '=', notebook),
+            ('analysis', '=', self.target_analysis),
+            ], order=[('repetition', 'DESC')], limit=1)
+        if existing_line:
+            self._exec_add_repetition(existing_line[0])
+        else:
+            self._exec_add_service(notebook, typification[0])
+
+    def _exec_add_repetition(self, line):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        line_create = [{
+            'notebook': line.notebook.id,
+            'analysis_detail': line.analysis_detail.id,
+            'service': line.service.id,
+            'analysis': self.target_analysis.id,
+            'analysis_origin': line.analysis_origin,
+            'repetition': line.repetition + 1,
+            'laboratory': line.laboratory.id,
+            'method': line.method.id,
+            'device': line.device.id if line.device else None,
+            'initial_concentration': line.initial_concentration,
+            'decimals': line.decimals,
+            'report': line.report,
+            'concentration_level': (line.concentration_level and
+                line.concentration_level.id or None),
+            'results_estimated_waiting': line.results_estimated_waiting,
+            'department': line.department,
+            'final_concentration': line.final_concentration,
+            'initial_unit': line.initial_unit and line.initial_unit.id or None,
+            'final_unit': line.final_unit and line.final_unit.id or None,
+            'detection_limit': line.detection_limit,
+            'quantification_limit': line.quantification_limit,
+            }]
+        NotebookLine.create(line_create)
+
+        details = EntryDetailAnalysis.search([
+            ('id', 'in', [line.analysis_detail.id]),
+            ])
+        if details:
+            EntryDetailAnalysis.write(details, {
+                'state': 'unplanned',
+                })
+
+    def _exec_add_service(self, notebook, typification):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        AnalysisLaboratory = pool.get('lims.analysis-laboratory')
+        AnalysisDevice = pool.get('lims.analysis.device')
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        cursor.execute('SELECT DISTINCT(laboratory) '
+            'FROM "' + AnalysisLaboratory._table + '" '
+            'WHERE analysis = %s',
+            (self.target_analysis.id,))
+        laboratories = [x[0] for x in cursor.fetchall()]
+        if not laboratories:
+            return
+        laboratory_id = laboratories[0]
+
+        method_id = typification.method and typification.method.id or None
+
+        cursor.execute('SELECT DISTINCT(device) '
+            'FROM "' + AnalysisDevice._table + '" '
+            'WHERE active IS TRUE '
+                'AND analysis = %s  '
+                'AND laboratory = %s '
+                'AND by_default IS TRUE',
+            (self.target_analysis.id, laboratory_id))
+        devices = [x[0] for x in cursor.fetchall()]
+        device_id = devices and devices[0] or None
+
+        service_create = [{
+            'fraction': notebook.fraction.id,
+            'analysis': self.target_analysis.id,
+            'urgent': True,
+            'laboratory': laboratory_id,
+            'method': method_id,
+            'device': device_id,
+            }]
+        with Transaction().set_context(manage_service=True):
+            new_service, = Service.create(service_create)
+
+        Service.copy_analysis_comments([new_service])
+        Service.set_confirmation_date([new_service])
+        analysis_detail = EntryDetailAnalysis.search([
+            ('service', '=', new_service.id)])
+        if analysis_detail:
+            EntryDetailAnalysis.create_notebook_lines(analysis_detail,
+                notebook.fraction)
+            EntryDetailAnalysis.write(analysis_detail, {
+                'state': 'unplanned',
+                })
+
+    def _exec_edit(self, notebook):
+        NotebookLine = Pool().get('lims.notebook.line')
+
+        target_line = NotebookLine.search([
+            ('notebook', '=', notebook),
+            ('analysis', '=', self.target_analysis),
+            ], order=[('repetition', 'DESC')], limit=1)
+        if not target_line:
+            return
+        line = target_line[0]
+
+        if line.accepted or line.annulled:
+            return
+
+        try:
+            setattr(line, self.target_field.name, self.value)
+            line.save()
+        except Exception as e:
+            return
+
+
+class NotebookRuleCondition(ModelSQL, ModelView):
+    'Notebook Rule Condition'
+    __name__ = 'lims.rule.condition'
+
+    rule = fields.Many2One('lims.rule', 'Rule', required=True,
+        ondelete='CASCADE', select=True)
+    field = fields.Char('Field', required=True, help=("Internal name of the " +
+        "field. Relationships are allowed, such as " +
+        "\"notebook.product_type.code\""))
+    condition = fields.Selection([
+        ('eq', '='),
+        ('ne', '!='),
+        ('gt', '>'),
+        ('ge', '>='),
+        ('lt', '<'),
+        ('le', '<='),
+        ], 'Condition', required=True, sort=False)
+    value = fields.Char('Value', required=True)
+
+    def eval_condition(self, line):
+        path = self.field.split('.')
+        field = path.pop(0)
+        try:
+            value = getattr(line, field)
+            while path:
+                field = path.pop(0)
+                value = getattr(value, field)
+        except AttributeError:
+            return False
+
+        operator_func = {
+            'eq': operator.eq,
+            'ne': operator.ne,
+            'gt': operator.gt,
+            'ge': operator.ge,
+            'lt': operator.lt,
+            'le': operator.le,
+            }
+        result = operator_func[self.condition](value, self.value)
+        return result
+
+    @classmethod
+    def validate(cls, conditions):
+        super(NotebookRuleCondition, cls).validate(conditions)
+        for c in conditions:
+            c.check_field()
+
+    def check_field(self):
+        pool = Pool()
+
+        invalid_fields = ('many2one', 'one2one', 'reference',
+            'one2many', 'many2many')
+        path = self.field.split('.')
+
+        Model = pool.get('lims.notebook.line')
+        field_name = path.pop(0)
+        if field_name not in Model._fields:
+            raise UserError(gettext('lims.msg_rule_condition_field',
+                field=self.field))
+        field = Model._fields[field_name]
+        if not path and field._type in invalid_fields:
+            raise UserError(gettext('lims.msg_rule_condition_field',
+                field=self.field))
+
+        while path:
+            if field._type != 'many2one':
+                raise UserError(gettext('lims.msg_rule_condition_field',
+                    field=self.field))
+
+            Model = pool.get(field.model_name)
+            field_name = path.pop(0)
+            if field_name not in Model._fields:
+                raise UserError(gettext('lims.msg_rule_condition_field',
+                    field=self.field))
+            field = Model._fields[field_name]
+            if not path and field._type in invalid_fields:
+                raise UserError(gettext('lims.msg_rule_condition_field',
+                    field=self.field))

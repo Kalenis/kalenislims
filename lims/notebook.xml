@@ -629,6 +629,34 @@
             <field name="action" ref="wiz_lims_notebook_line_precision_control"/>
         </record>
 
+<!-- Wizard Evaluate Rules -->
+
+        <record model="ir.ui.view" id="notebook_evaluate_rules_start_view_form">
+            <field name="model">lims.notebook.evaluate_rules.start</field>
+            <field name="type">form</field>
+            <field name="name">notebook_evaluate_rules_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_notebook_evaluate_rules">
+            <field name="name">Evaluate Rules</field>
+            <field name="wiz_name">lims.notebook.evaluate_rules</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_notebook_evaluate_rules_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.notebook,-1</field>
+            <field name="action" ref="wiz_notebook_evaluate_rules"/>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_notebook_line_evaluate_rules">
+            <field name="name">Evaluate Rules</field>
+            <field name="wiz_name">lims.notebook_line.evaluate_rules</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_notebook_line_evaluate_rules_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.notebook.line,-1</field>
+            <field name="action" ref="wiz_notebook_line_evaluate_rules"/>
+        </record>
+
 <!-- Change Estimated Days For Results -->
 
         <record model="ir.ui.view" id="change_results_estimated_waiting_start_view_form">

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form col="6">
+    <label name="field"/>
+    <field name="field"/>
+    <label name="condition"/>
+    <field name="condition"/>
+    <label name="value"/>
+    <field name="value"/>
+</form>

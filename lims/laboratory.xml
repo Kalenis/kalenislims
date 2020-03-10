@@ -255,6 +255,51 @@
             <field name="action" ref="wizard_device_relate_analysis"/>
         </record>
 
+<!-- Notebook Rule -->
+
+        <record model="ir.ui.view" id="notebook_rule_view_form">
+            <field name="model">lims.rule</field>
+            <field name="type">form</field>
+            <field name="name">notebook_rule_form</field>
+        </record>
+        <record model="ir.ui.view" id="notebook_rule_view_list">
+            <field name="model">lims.rule</field>
+            <field name="type">tree</field>
+            <field name="name">notebook_rule_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_notebook_rule_list">
+            <field name="name">Notebook Rules</field>
+            <field name="res_model">lims.rule</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_notebook_rule_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="notebook_rule_view_list"/>
+            <field name="act_window" ref="act_notebook_rule_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_notebook_rule_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="notebook_rule_view_form"/>
+            <field name="act_window" ref="act_notebook_rule_list"/>
+        </record>
+
+        <menuitem action="act_notebook_rule_list"
+            id="menu_notebook_rule_list"
+            parent="lims_config_laboratory" sequence="60"/>
+
+<!-- Notebook Rule Condition -->
+
+        <record model="ir.ui.view" id="notebook_rule_condition_view_form">
+            <field name="model">lims.rule.condition</field>
+            <field name="type">form</field>
+            <field name="name">notebook_rule_condition_form</field>
+        </record>
+        <record model="ir.ui.view" id="notebook_rule_condition_view_list">
+            <field name="model">lims.rule.condition</field>
+            <field name="type">tree</field>
+            <field name="name">notebook_rule_condition_list</field>
+        </record>
+
 <!--  -->
 
         <record model="ir.model.access" id="access_laboratory">
