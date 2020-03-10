@@ -18,14 +18,6 @@ msgctxt "field:lims.interface,controller_name:"
 msgid "Controller Name"
 msgstr "Controlador"
 
-msgctxt "field:lims.interface,create_date:"
-msgid "Create Date"
-msgstr "Fecha de creación"
-
-msgctxt "field:lims.interface,create_uid:"
-msgid "Create User"
-msgstr "Usuario de creación"
-
 msgctxt "field:lims.interface,field_separator:"
 msgid "Field separator"
 msgstr "Campo separador"
@@ -42,10 +34,6 @@ msgctxt "field:lims.interface,fraction_field:"
 msgid "Fraction field"
 msgstr "Campo Fracción"
 
-msgctxt "field:lims.interface,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.interface,kind:"
 msgid "Kind"
 msgstr "Tipo"
@@ -61,10 +49,6 @@ msgstr "Nombre"
 msgctxt "field:lims.interface,notebook_line_field:"
 msgid "Notebook line field"
 msgstr "Campo Línea de cuaderno"
-
-msgctxt "field:lims.interface,rec_name:"
-msgid "Record Name"
-msgstr "Nombre del registro"
 
 msgctxt "field:lims.interface,repetition_field:"
 msgid "Repetition field"
@@ -86,25 +70,9 @@ msgctxt "field:lims.interface,template_type:"
 msgid "Template Type"
 msgstr "Tipo de plantilla"
 
-msgctxt "field:lims.interface,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.interface,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.interface.column,alias:"
 msgid "Alias"
 msgstr "Alias"
-
-msgctxt "field:lims.interface.column,create_date:"
-msgid "Create Date"
-msgstr "Fecha de creación"
-
-msgctxt "field:lims.interface.column,create_uid:"
-msgid "Create User"
-msgstr "Usuario de creación"
 
 msgctxt "field:lims.interface.column,evaluation_order:"
 msgid "Evaluation order"
@@ -118,10 +86,6 @@ msgctxt "field:lims.interface.column,expression_icon:"
 msgid "Expression Icon"
 msgstr "Icono"
 
-msgctxt "field:lims.interface.column,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.interface.column,interface:"
 msgid "Interface"
 msgstr "Interfaz"
@@ -134,10 +98,6 @@ msgctxt "field:lims.interface.column,name:"
 msgid "Name"
 msgstr "Nombre"
 
-msgctxt "field:lims.interface.column,rec_name:"
-msgid "Record Name"
-msgstr "Nombre del registro"
-
 msgctxt "field:lims.interface.column,related_line_field:"
 msgid "Related field"
 msgstr "Campo relacionado"
@@ -145,10 +105,6 @@ msgstr "Campo relacionado"
 msgctxt "field:lims.interface.column,related_model:"
 msgid "Related Model"
 msgstr "Modelo relacionado"
-
-msgctxt "field:lims.interface.column,sequence:"
-msgid "Sequence"
-msgstr "Secuencia"
 
 msgctxt "field:lims.interface.column,singleton:"
 msgid "Is a singleton value"
@@ -178,22 +134,6 @@ msgctxt "field:lims.interface.column,type_:"
 msgid "Field Type"
 msgstr "Tipo de campo"
 
-msgctxt "field:lims.interface.column,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.interface.column,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.interface.compilation,create_date:"
-msgid "Create Date"
-msgstr "Fecha de creación"
-
-msgctxt "field:lims.interface.compilation,create_uid:"
-msgid "Create User"
-msgstr "Usuario de creación"
-
 msgctxt "field:lims.interface.compilation,data:"
 msgid "Data"
 msgstr "Datos"
@@ -206,10 +146,6 @@ msgctxt "field:lims.interface.compilation,device:"
 msgid "Device"
 msgstr "Equipo"
 
-msgctxt "field:lims.interface.compilation,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.interface.compilation,interface:"
 msgid "Device Interface"
 msgstr "Interfaz"
@@ -217,10 +153,6 @@ msgstr "Interfaz"
 msgctxt "field:lims.interface.compilation,origins:"
 msgid "Origins"
 msgstr "Orígenes"
-
-msgctxt "field:lims.interface.compilation,rec_name:"
-msgid "Record Name"
-msgstr "Nombre del registro"
 
 msgctxt "field:lims.interface.compilation,revision:"
 msgid "Revision"
@@ -238,33 +170,13 @@ msgctxt "field:lims.interface.compilation,table_name:"
 msgid "Table name"
 msgstr "Nombre de tabla"
 
-msgctxt "field:lims.interface.compilation,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.interface.compilation,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.interface.compilation.origin,compilation:"
 msgid "Compilation"
 msgstr "Compilación"
 
-msgctxt "field:lims.interface.compilation.origin,create_date:"
-msgid "Create Date"
-msgstr "Fecha de creación"
-
-msgctxt "field:lims.interface.compilation.origin,create_uid:"
-msgid "Create User"
-msgstr "Usuario de creación"
-
 msgctxt "field:lims.interface.compilation.origin,file_name:"
 msgid "Name"
 msgstr "Nombre"
-
-msgctxt "field:lims.interface.compilation.origin,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.interface.compilation.origin,imported:"
 msgid "Imported"
@@ -278,89 +190,21 @@ msgctxt "field:lims.interface.compilation.origin,origin_file_id:"
 msgid "Origin File ID"
 msgstr "ID de archivo origen"
 
-msgctxt "field:lims.interface.compilation.origin,rec_name:"
-msgid "Record Name"
-msgstr "Nombre del registro"
-
-msgctxt "field:lims.interface.compilation.origin,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.interface.compilation.origin,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.interface.data,compilation:"
 msgid "Compilation"
 msgstr "Compilación"
-
-msgctxt "field:lims.interface.data,create_date:"
-msgid "Create Date"
-msgstr "Fecha de creación"
-
-msgctxt "field:lims.interface.data,create_uid:"
-msgid "Create User"
-msgstr "Usuario de creación"
-
-msgctxt "field:lims.interface.data,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.interface.data,rec_name:"
-msgid "Record Name"
-msgstr "Nombre del registro"
-
-msgctxt "field:lims.interface.data,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.interface.data,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.interface.table,create_date:"
-msgid "Create Date"
-msgstr "Fecha de creación"
-
-msgctxt "field:lims.interface.table,create_uid:"
-msgid "Create User"
-msgstr "Usuario de creación"
 
 msgctxt "field:lims.interface.table,fields_:"
 msgid "Fields"
 msgstr "Campos"
 
-msgctxt "field:lims.interface.table,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.interface.table,name:"
 msgid "Name"
 msgstr "Nombre"
 
-msgctxt "field:lims.interface.table,rec_name:"
-msgid "Record Name"
-msgstr "Nombre del registro"
-
 msgctxt "field:lims.interface.table,views:"
 msgid "Views"
 msgstr "Vistas"
-
-msgctxt "field:lims.interface.table,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.interface.table,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.interface.table.field,create_date:"
-msgid "Create Date"
-msgstr "Fecha de creación"
-
-msgctxt "field:lims.interface.table.field,create_uid:"
-msgid "Create User"
-msgstr "Usuario de creación"
 
 msgctxt "field:lims.interface.table.field,formula:"
 msgid "On Change With Formula"
@@ -370,10 +214,6 @@ msgctxt "field:lims.interface.table.field,help:"
 msgid "Help"
 msgstr "Ayuda"
 
-msgctxt "field:lims.interface.table.field,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.interface.table.field,inputs:"
 msgid "On Change With Inputs"
 msgstr "Valores de entrada"
@@ -381,10 +221,6 @@ msgstr "Valores de entrada"
 msgctxt "field:lims.interface.table.field,name:"
 msgid "Name"
 msgstr "Nombre"
-
-msgctxt "field:lims.interface.table.field,rec_name:"
-msgid "Record Name"
-msgstr "Nombre del registro"
 
 msgctxt "field:lims.interface.table.field,related_model:"
 msgid "Related Model"
@@ -402,25 +238,9 @@ msgctxt "field:lims.interface.table.field,type:"
 msgid "Field Type"
 msgstr "Tipo de campo"
 
-msgctxt "field:lims.interface.table.field,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.interface.table.field,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.interface.table.view,arch:"
 msgid "Arch"
 msgstr "Arch"
-
-msgctxt "field:lims.interface.table.view,create_date:"
-msgid "Create Date"
-msgstr "Fecha de creación"
-
-msgctxt "field:lims.interface.table.view,create_uid:"
-msgid "Create User"
-msgstr "Usuario de creación"
 
 msgctxt "field:lims.interface.table.view,field_childs:"
 msgid "Field Childs"
@@ -430,14 +250,6 @@ msgctxt "field:lims.interface.table.view,field_names:"
 msgid "Fields"
 msgstr "Campos"
 
-msgctxt "field:lims.interface.table.view,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.interface.table.view,rec_name:"
-msgid "Record Name"
-msgstr "Nombre del registro"
-
 msgctxt "field:lims.interface.table.view,table:"
 msgid "Table"
 msgstr "Tabla"
@@ -445,14 +257,6 @@ msgstr "Tabla"
 msgctxt "field:lims.interface.table.view,type:"
 msgid "Type"
 msgstr "Tipo"
-
-msgctxt "field:lims.interface.table.view,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.interface.table.view,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "help:lims.interface.column,singleton:"
 msgid "Is a fixed value (column:row) in source file"
