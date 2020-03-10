@@ -2,10 +2,6 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "field:FormulaParser,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:company.company,logo:"
 msgid "Logo"
 msgstr "Logo"
@@ -18,61 +14,25 @@ msgctxt "field:company.department,code:"
 msgid "Code"
 msgstr "Código"
 
-msgctxt "field:company.department,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:company.department,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:company.department,default_location:"
 msgid "Default Location"
 msgstr "Ubicación por defecto"
-
-msgctxt "field:company.department,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:company.department,name:"
 msgid "Name"
 msgstr "Nombre"
 
-msgctxt "field:company.department,rec_name:"
-msgid "Record Name"
-msgstr "Nombre del registro"
-
-msgctxt "field:company.department,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:company.department,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:ir.model,docs:"
 msgid "Docs"
 msgstr ""
-
-msgctxt "field:ir.model.doc,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:ir.model.doc,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:ir.model.doc,doc:"
 msgid "Documentation"
 msgstr ""
 
-msgctxt "field:ir.model.doc,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:ir.model.doc,kind:"
 msgid "Kind"
-msgstr ""
+msgstr "Tipo"
 
 msgctxt "field:ir.model.doc,model:"
 msgid "Model"
@@ -81,18 +41,6 @@ msgstr "Modelo"
 msgctxt "field:ir.model.doc,name:"
 msgid "Name"
 msgstr "Nombre"
-
-msgctxt "field:ir.model.doc,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:ir.model.doc,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:ir.model.doc,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.analysis,all_included_analysis:"
 msgid "All included analysis"
@@ -118,14 +66,6 @@ msgctxt "field:lims.analysis,converted_result_formula:"
 msgid "Converted result formula"
 msgstr "Fórmula de resultado convertido"
 
-msgctxt "field:lims.analysis,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.analysis,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.analysis,description:"
 msgid "Description"
 msgstr "Descripción"
@@ -149,10 +89,6 @@ msgstr "Fórmula"
 msgctxt "field:lims.analysis,gender_species:"
 msgid "Gender Species"
 msgstr "Género Especie"
-
-msgctxt "field:lims.analysis,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.analysis,included_analysis:"
 msgid "Included analysis"
@@ -190,10 +126,6 @@ msgctxt "field:lims.analysis,product:"
 msgid "Product"
 msgstr "Producto"
 
-msgctxt "field:lims.analysis,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.analysis,result_formula:"
 msgid "Result formula"
 msgstr "Fórmula de resultado"
@@ -210,85 +142,25 @@ msgctxt "field:lims.analysis,type:"
 msgid "Type"
 msgstr "Tipo"
 
-msgctxt "field:lims.analysis,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.analysis,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.analysis-lab.method,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
-
-msgctxt "field:lims.analysis-lab.method,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.analysis-lab.method,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.analysis-lab.method,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.analysis-lab.method,method:"
 msgid "Method"
 msgstr "Método"
 
-msgctxt "field:lims.analysis-lab.method,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.analysis-lab.method,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.analysis-lab.method,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.analysis-laboratory,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
-
-msgctxt "field:lims.analysis-laboratory,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.analysis-laboratory,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.analysis-laboratory,department:"
 msgid "Department"
 msgstr "Departamento"
 
-msgctxt "field:lims.analysis-laboratory,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.analysis-laboratory,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
-
-msgctxt "field:lims.analysis-laboratory,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.analysis-laboratory,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.analysis-laboratory,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.analysis.device,active:"
-msgid "Active"
-msgstr "Activo"
 
 msgctxt "field:lims.analysis.device,analysis:"
 msgid "Analysis"
@@ -298,37 +170,13 @@ msgctxt "field:lims.analysis.device,by_default:"
 msgid "By default"
 msgstr "Por defecto"
 
-msgctxt "field:lims.analysis.device,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.analysis.device,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.analysis.device,device:"
 msgid "Device"
 msgstr "Equipo"
 
-msgctxt "field:lims.analysis.device,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.analysis.device,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
-
-msgctxt "field:lims.analysis.device,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.analysis.device,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.analysis.device,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.analysis.family,certificants:"
 msgid "Product Type - Matrix"
@@ -338,53 +186,17 @@ msgctxt "field:lims.analysis.family,code:"
 msgid "Code"
 msgstr "Código"
 
-msgctxt "field:lims.analysis.family,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.analysis.family,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.analysis.family,description:"
 msgid "Description"
 msgstr "Descripción"
-
-msgctxt "field:lims.analysis.family,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.analysis.family,party:"
 msgid "Certificant party"
 msgstr "Entidad certificante"
 
-msgctxt "field:lims.analysis.family,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.analysis.family,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.analysis.family,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.analysis.family.certificant,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.analysis.family.certificant,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.analysis.family.certificant,family:"
 msgid "Family"
 msgstr "Familia"
-
-msgctxt "field:lims.analysis.family.certificant,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.analysis.family.certificant,matrix:"
 msgid "Matrix"
@@ -393,18 +205,6 @@ msgstr "Matriz"
 msgctxt "field:lims.analysis.family.certificant,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
-
-msgctxt "field:lims.analysis.family.certificant,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.analysis.family.certificant,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.analysis.family.certificant,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.analysis.family.duplicate.start,code:"
 msgid "Code"
@@ -417,10 +217,6 @@ msgstr "Descripción"
 msgctxt "field:lims.analysis.family.duplicate.start,family_origin:"
 msgid "Family Origin"
 msgstr "Familia origen"
-
-msgctxt "field:lims.analysis.family.duplicate.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.analysis.family.duplicate.start,party:"
 msgid "Certificant party"
@@ -438,18 +234,6 @@ msgctxt "field:lims.analysis.included,analysis_type:"
 msgid "Type"
 msgstr "Tipo"
 
-msgctxt "field:lims.analysis.included,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.analysis.included,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.analysis.included,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.analysis.included,included_analysis:"
 msgid "Included analysis"
 msgstr "Análisis incluido"
@@ -462,29 +246,9 @@ msgctxt "field:lims.analysis.included,laboratory_domain:"
 msgid "Laboratory domain"
 msgstr "Dominio para Laboratorio"
 
-msgctxt "field:lims.analysis.included,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.analysis.included,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.analysis.included,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.blind_sample,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
-
-msgctxt "field:lims.blind_sample,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.blind_sample,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.blind_sample,date:"
 msgid "Date"
@@ -497,10 +261,6 @@ msgstr "Ingreso"
 msgctxt "field:lims.blind_sample,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
-
-msgctxt "field:lims.blind_sample,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.blind_sample,line:"
 msgid "Line"
@@ -530,10 +290,6 @@ msgctxt "field:lims.blind_sample,original_sample:"
 msgid "Original sample"
 msgstr "Muestra original"
 
-msgctxt "field:lims.blind_sample,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.blind_sample,repetition:"
 msgid "Repetition"
 msgstr "Repetición"
@@ -546,49 +302,17 @@ msgctxt "field:lims.blind_sample,service:"
 msgid "Service"
 msgstr "Servicio"
 
-msgctxt "field:lims.blind_sample,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.blind_sample,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.certification.type,code:"
 msgid "Code"
 msgstr "Código"
-
-msgctxt "field:lims.certification.type,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.certification.type,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.certification.type,description:"
 msgid "Description"
 msgstr "Descripción"
 
-msgctxt "field:lims.certification.type,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.certification.type,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.certification.type,report:"
 msgid "Report"
 msgstr "Informar"
-
-msgctxt "field:lims.certification.type,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.certification.type,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.change_results_estimated_waiting.start,date_from:"
 msgid "Confirmation date From"
@@ -597,10 +321,6 @@ msgstr "Fecha de confirmación Desde"
 msgctxt "field:lims.change_results_estimated_waiting.start,date_to:"
 msgid "Confirmation date To"
 msgstr "Fecha de confirmación Hasta"
-
-msgctxt "field:lims.change_results_estimated_waiting.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.change_results_estimated_waiting.start,methods:"
 msgid "Methods"
@@ -619,33 +339,9 @@ msgctxt "field:lims.concentration.level,code:"
 msgid "Code"
 msgstr "Código"
 
-msgctxt "field:lims.concentration.level,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.concentration.level,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.concentration.level,description:"
 msgid "Description"
 msgstr "Descripción"
-
-msgctxt "field:lims.concentration.level,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.concentration.level,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.concentration.level,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.concentration.level,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.configuration,analysis_product_category:"
 msgid "Analysis Product Category"
@@ -671,14 +367,6 @@ msgctxt "field:lims.configuration,con_fraction_type:"
 msgid "Control fraction type"
 msgstr "Tipo de fracción Control"
 
-msgctxt "field:lims.configuration,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.configuration,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.configuration,default_notebook_view:"
 msgid "Default Notebook view"
 msgstr "Vista por defecto de cuaderno de laboratorio"
@@ -698,10 +386,6 @@ msgstr "Confirmar ingresos en segundo plano"
 msgctxt "field:lims.configuration,fraction_product:"
 msgid "Fraction product"
 msgstr "Producto fracción"
-
-msgctxt "field:lims.configuration,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.configuration,invoice_party_relation_type:"
 msgid "Invoice Party Relation Type"
@@ -751,10 +435,6 @@ msgctxt "field:lims.configuration,reagents:"
 msgid "Reagents"
 msgstr "Reactivos"
 
-msgctxt "field:lims.configuration,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.configuration,rm_fraction_type:"
 msgid "RM fraction type"
 msgstr "Tipo de fracción RM"
@@ -771,45 +451,13 @@ msgctxt "field:lims.configuration,soluble_solids_digits:"
 msgid "Soluble solids digits"
 msgstr "Dígitos de Sólidos solubles"
 
-msgctxt "field:lims.configuration,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.configuration,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.configuration-laboratory,configuration:"
 msgid "Configuration"
 msgstr "Configuración"
 
-msgctxt "field:lims.configuration-laboratory,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.configuration-laboratory,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.configuration-laboratory,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.configuration-laboratory,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
-
-msgctxt "field:lims.configuration-laboratory,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.configuration-laboratory,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.configuration-laboratory,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.configuration-product.category,category:"
 msgid "Category"
@@ -819,77 +467,17 @@ msgctxt "field:lims.configuration-product.category,configuration:"
 msgid "Configuration"
 msgstr "Configuración"
 
-msgctxt "field:lims.configuration-product.category,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.configuration-product.category,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.configuration-product.category,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.configuration-product.category,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.configuration-product.category,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.configuration-product.category,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.configuration.sequence,company:"
 msgid "Company"
 msgstr "Empresa"
-
-msgctxt "field:lims.configuration.sequence,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.configuration.sequence,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.configuration.sequence,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.configuration.sequence,planification_sequence:"
 msgid "Planification Sequence"
 msgstr "Secuencia de Planificaciones"
 
-msgctxt "field:lims.configuration.sequence,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.configuration.sequence,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.configuration.sequence,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.control.means_deviations_calc.empty,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.control.means_deviations_calc.result,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.control.means_deviations_calc.result,lines:"
 msgid "Results"
 msgstr "Resultados"
-
-msgctxt "field:lims.control.means_deviations_calc.result2,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.control.means_deviations_calc.result2,tendencies:"
 msgid "Tendencies"
@@ -910,10 +498,6 @@ msgstr "Familia"
 msgctxt "field:lims.control.means_deviations_calc.start,fraction_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
-
-msgctxt "field:lims.control.means_deviations_calc.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.control.means_deviations_calc.start,laboratory:"
 msgid "Laboratory"
@@ -943,14 +527,6 @@ msgctxt "field:lims.control.result_line,concentration_level:"
 msgid "Concentration level"
 msgstr "Nivel de concentración"
 
-msgctxt "field:lims.control.result_line,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.control.result_line,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.control.result_line,cv:"
 msgid "CV (%)"
 msgstr "CV (%)"
@@ -966,10 +542,6 @@ msgstr "Desviación Estándar"
 msgctxt "field:lims.control.result_line,fraction_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
-
-msgctxt "field:lims.control.result_line,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.control.result_line,matrix:"
 msgid "Matrix"
@@ -1015,10 +587,6 @@ msgctxt "field:lims.control.result_line,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
-msgctxt "field:lims.control.result_line,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.control.result_line,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
@@ -1035,22 +603,6 @@ msgctxt "field:lims.control.result_line,update:"
 msgid "Update"
 msgstr "Actualizar"
 
-msgctxt "field:lims.control.result_line,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.control.result_line,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.control.result_line.detail,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.control.result_line.detail,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.control.result_line.detail,date:"
 msgid "Date"
 msgstr "Fecha"
@@ -1063,10 +615,6 @@ msgctxt "field:lims.control.result_line.detail,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
 
-msgctxt "field:lims.control.result_line.detail,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.control.result_line.detail,line:"
 msgid "Line"
 msgstr "Línea"
@@ -1075,25 +623,9 @@ msgctxt "field:lims.control.result_line.detail,mr:"
 msgid "Mobile Range"
 msgstr "Rango Móvil"
 
-msgctxt "field:lims.control.result_line.detail,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.control.result_line.detail,result:"
 msgid "Result"
 msgstr "Resultado"
-
-msgctxt "field:lims.control.result_line.detail,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.control.result_line.detail,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.control.tendencies_analysis.result,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.control.tendencies_analysis.result,tendencies:"
 msgid "Tendencies"
@@ -1114,10 +646,6 @@ msgstr "Familia"
 msgctxt "field:lims.control.tendencies_analysis.start,fraction_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
-
-msgctxt "field:lims.control.tendencies_analysis.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.control.tendencies_analysis.start,laboratory:"
 msgid "Laboratory"
@@ -1151,14 +679,6 @@ msgctxt "field:lims.control.tendency,concentration_level:"
 msgid "Concentration level"
 msgstr "Nivel de concentración"
 
-msgctxt "field:lims.control.tendency,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.control.tendency,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.control.tendency,cv:"
 msgid "CV (%)"
 msgstr "CV (%)"
@@ -1178,10 +698,6 @@ msgstr "Dígitos"
 msgctxt "field:lims.control.tendency,fraction_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
-
-msgctxt "field:lims.control.tendency,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.control.tendency,lcl:"
 msgid "LCL"
@@ -1251,10 +767,6 @@ msgctxt "field:lims.control.tendency,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
-msgctxt "field:lims.control.tendency,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.control.tendency,rule_1_count:"
 msgid "Rule 1"
 msgstr "Regla 1"
@@ -1299,22 +811,6 @@ msgctxt "field:lims.control.tendency,uwl:"
 msgid "UWL"
 msgstr "LSA"
 
-msgctxt "field:lims.control.tendency,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.control.tendency,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.control.tendency.detail,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.control.tendency.detail,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.control.tendency.detail,date:"
 msgid "Date"
 msgstr "Fecha"
@@ -1331,10 +827,6 @@ msgctxt "field:lims.control.tendency.detail,icon:"
 msgid "Icon"
 msgstr "Icono"
 
-msgctxt "field:lims.control.tendency.detail,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.control.tendency.detail,mr:"
 msgid "Mobile Range"
 msgstr "Rango Móvil"
@@ -1342,10 +834,6 @@ msgstr "Rango Móvil"
 msgctxt "field:lims.control.tendency.detail,notebook_line:"
 msgid "Notebook Line"
 msgstr "Línea de cuaderno"
-
-msgctxt "field:lims.control.tendency.detail,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.control.tendency.detail,result:"
 msgid "Result"
@@ -1367,49 +855,13 @@ msgctxt "field:lims.control.tendency.detail,tendency:"
 msgid "Tendency"
 msgstr "Tendencia"
 
-msgctxt "field:lims.control.tendency.detail,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.control.tendency.detail,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.control.tendency.detail.rule,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.control.tendency.detail.rule,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.control.tendency.detail.rule,detail:"
 msgid "Detail"
 msgstr "Detalle"
 
-msgctxt "field:lims.control.tendency.detail.rule,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.control.tendency.detail.rule,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.control.tendency.detail.rule,rule:"
 msgid "Rule"
 msgstr "Regla"
-
-msgctxt "field:lims.control.tendency.detail.rule,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.control.tendency.detail.rule,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.countersample.discharge.empty,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.countersample.discharge.print.start,date_from:"
 msgid "Date from"
@@ -1427,10 +879,6 @@ msgctxt "field:lims.countersample.discharge.print.start,expiry_date_to:"
 msgid "to"
 msgstr "hasta"
 
-msgctxt "field:lims.countersample.discharge.print.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.countersample.discharge.result,discharge_date:"
 msgid "Discharge date"
 msgstr "Fecha de descarte"
@@ -1442,10 +890,6 @@ msgstr "Dominio para Fracciones"
 msgctxt "field:lims.countersample.discharge.result,fractions:"
 msgid "Fractions"
 msgstr "Fracciones"
-
-msgctxt "field:lims.countersample.discharge.result,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.countersample.discharge.result,location_destination:"
 msgid "Destination Location"
@@ -1471,17 +915,9 @@ msgctxt "field:lims.countersample.discharge.start,expiry_date_to:"
 msgid "to"
 msgstr "hasta"
 
-msgctxt "field:lims.countersample.discharge.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.countersample.discharge.start,location_origin:"
 msgid "Origin Location"
 msgstr "Ubicación origen"
-
-msgctxt "field:lims.countersample.storage.empty,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.countersample.storage.print.start,date_from:"
 msgid "Date from"
@@ -1490,10 +926,6 @@ msgstr "Ingreso desde"
 msgctxt "field:lims.countersample.storage.print.start,date_to:"
 msgid "to"
 msgstr "hasta"
-
-msgctxt "field:lims.countersample.storage.print.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.countersample.storage.print.start,report_date_from:"
 msgid "Report date from"
@@ -1515,10 +947,6 @@ msgctxt "field:lims.countersample.storage.result,fractions:"
 msgid "Fractions"
 msgstr "Fracciones"
 
-msgctxt "field:lims.countersample.storage.result,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.countersample.storage.result,location_destination:"
 msgid "Destination Location"
 msgstr "Ubicación destino"
@@ -1534,10 +962,6 @@ msgstr "Fecha desde"
 msgctxt "field:lims.countersample.storage.start,date_to:"
 msgid "to"
 msgstr "hasta"
-
-msgctxt "field:lims.countersample.storage.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.countersample.storage.start,location_origin:"
 msgid "Origin Location"
@@ -1555,10 +979,6 @@ msgctxt "field:lims.countersample.storage.start,storage_force:"
 msgid "Storage force"
 msgstr "Forzar almacenamiento"
 
-msgctxt "field:lims.countersample.storage_revert.empty,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.countersample.storage_revert.result,fraction_domain:"
 msgid "Fractions domain"
 msgstr "Dominio para Fracciones"
@@ -1566,10 +986,6 @@ msgstr "Dominio para Fracciones"
 msgctxt "field:lims.countersample.storage_revert.result,fractions:"
 msgid "Fractions"
 msgstr "Fracciones"
-
-msgctxt "field:lims.countersample.storage_revert.result,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.countersample.storage_revert.result,location_destination:"
 msgid "Destination Location"
@@ -1586,10 +1002,6 @@ msgstr "Fecha desde"
 msgctxt "field:lims.countersample.storage_revert.start,date_to:"
 msgid "Date to"
 msgstr "Fecha hasta"
-
-msgctxt "field:lims.countersample.storage_revert.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.countersample.storage_revert.start,location_origin:"
 msgid "Origin Location"
@@ -1610,10 +1022,6 @@ msgstr "Dominio para Equipo"
 msgctxt "field:lims.create_sample.service,divide:"
 msgid "Divide"
 msgstr "Dividir"
-
-msgctxt "field:lims.create_sample.service,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.create_sample.service,laboratory:"
 msgid "Laboratory"
@@ -1662,10 +1070,6 @@ msgstr "Estado del envase"
 msgctxt "field:lims.create_sample.start,fraction_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
-
-msgctxt "field:lims.create_sample.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.create_sample.start,labels:"
 msgid "Labels"
@@ -1783,29 +1187,13 @@ msgctxt "field:lims.divide_reports.detail,analysis_origin:"
 msgid "Analysis origin"
 msgstr "Análisis origen"
 
-msgctxt "field:lims.divide_reports.detail,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.divide_reports.detail,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.divide_reports.detail,detail_id:"
 msgid "Detail ID"
 msgstr "ID Detalle"
 
-msgctxt "field:lims.divide_reports.detail,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.divide_reports.detail,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
-
-msgctxt "field:lims.divide_reports.detail,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.divide_reports.detail,report_grouper:"
 msgid "Report Grouper"
@@ -1814,14 +1202,6 @@ msgstr "Agrupador de informe"
 msgctxt "field:lims.divide_reports.detail,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
-
-msgctxt "field:lims.divide_reports.detail,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.divide_reports.detail,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.divide_reports.process,analysis:"
 msgid "Analysis"
@@ -1835,17 +1215,9 @@ msgctxt "field:lims.divide_reports.process,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
 
-msgctxt "field:lims.divide_reports.process,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.divide_reports.process,service:"
 msgid "Service"
 msgstr "Servicio"
-
-msgctxt "field:lims.divide_reports.result,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.divide_reports.result,index:"
 msgid "Index"
@@ -1891,14 +1263,6 @@ msgctxt "field:lims.entry,create_date2:"
 msgid "Create Date"
 msgstr "Fecha de creación"
 
-msgctxt "field:lims.entry,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.entry,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.entry,date2:"
 msgid "Date"
 msgstr "Fecha"
@@ -1918,10 +1282,6 @@ msgstr "Informe en inglés"
 msgctxt "field:lims.entry,icon:"
 msgid "Icon"
 msgstr "Icono"
-
-msgctxt "field:lims.entry,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.entry,invoice_comments:"
 msgid "Invoice comments"
@@ -1971,10 +1331,6 @@ msgctxt "field:lims.entry,pending_reason:"
 msgid "Pending reason"
 msgstr "Razón de la espera"
 
-msgctxt "field:lims.entry,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.entry,report_comments:"
 msgid "Report comments"
 msgstr "Observaciones informe"
@@ -2007,53 +1363,13 @@ msgctxt "field:lims.entry,transfer_comments:"
 msgid "Transfer comments"
 msgstr "Observaciones traslados"
 
-msgctxt "field:lims.entry,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.entry,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.entry.acknowledgment_contacts,contact:"
 msgid "Contact"
 msgstr "Contacto"
 
-msgctxt "field:lims.entry.acknowledgment_contacts,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.entry.acknowledgment_contacts,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.entry.acknowledgment_contacts,entry:"
 msgid "Entry"
 msgstr "Ingreso"
-
-msgctxt "field:lims.entry.acknowledgment_contacts,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.entry.acknowledgment_contacts,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.entry.acknowledgment_contacts,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.entry.acknowledgment_contacts,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.entry.change_invoice_party.error,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.entry.change_invoice_party.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.entry.change_invoice_party.start,invoice_party:"
 msgid "Invoice party"
@@ -2095,14 +1411,6 @@ msgctxt "field:lims.entry.detail.analysis,create_date2:"
 msgid "Create Date"
 msgstr "Fecha de creación"
 
-msgctxt "field:lims.entry.detail.analysis,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.entry.detail.analysis,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.entry.detail.analysis,device:"
 msgid "Device"
 msgstr "Equipo"
@@ -2114,10 +1422,6 @@ msgstr "Ingreso"
 msgctxt "field:lims.entry.detail.analysis,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
-
-msgctxt "field:lims.entry.detail.analysis,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.entry.detail.analysis,laboratory:"
 msgid "Laboratory"
@@ -2134,10 +1438,6 @@ msgstr "Entidad"
 msgctxt "field:lims.entry.detail.analysis,plannable:"
 msgid "Plannable"
 msgstr "Planificable"
-
-msgctxt "field:lims.entry.detail.analysis,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.entry.detail.analysis,report:"
 msgid "Report"
@@ -2167,14 +1467,6 @@ msgctxt "field:lims.entry.detail.analysis,state:"
 msgid "State"
 msgstr "Estado"
 
-msgctxt "field:lims.entry.detail.analysis,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.entry.detail.analysis,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.entry.duplicate_sample.start,date:"
 msgid "Date"
 msgstr "Fecha de ingreso"
@@ -2182,10 +1474,6 @@ msgstr "Fecha de ingreso"
 msgctxt "field:lims.entry.duplicate_sample.start,entry:"
 msgid "Entry"
 msgstr "Ingreso"
-
-msgctxt "field:lims.entry.duplicate_sample.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.entry.duplicate_sample.start,labels:"
 msgid "Labels"
@@ -2199,65 +1487,17 @@ msgctxt "field:lims.entry.invoice_contacts,contact:"
 msgid "Contact"
 msgstr "Contacto"
 
-msgctxt "field:lims.entry.invoice_contacts,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.entry.invoice_contacts,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.entry.invoice_contacts,entry:"
 msgid "Entry"
 msgstr "Ingreso"
-
-msgctxt "field:lims.entry.invoice_contacts,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.entry.invoice_contacts,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.entry.invoice_contacts,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.entry.invoice_contacts,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.entry.report_contacts,contact:"
 msgid "Contact"
 msgstr "Contacto"
 
-msgctxt "field:lims.entry.report_contacts,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.entry.report_contacts,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.entry.report_contacts,entry:"
 msgid "Entry"
 msgstr "Ingreso"
-
-msgctxt "field:lims.entry.report_contacts,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.entry.report_contacts,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.entry.report_contacts,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.entry.report_contacts,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.entry.suspension.reason,by_default:"
 msgid "By default"
@@ -2267,81 +1507,25 @@ msgctxt "field:lims.entry.suspension.reason,code:"
 msgid "Code"
 msgstr "Código"
 
-msgctxt "field:lims.entry.suspension.reason,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.entry.suspension.reason,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.entry.suspension.reason,description:"
 msgid "Description"
 msgstr "Descripción"
-
-msgctxt "field:lims.entry.suspension.reason,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.entry.suspension.reason,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.entry.suspension.reason,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.entry.suspension.reason,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.formula,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.formula,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.formula,formula:"
 msgid "Formula"
 msgstr "Fórmula"
 
-msgctxt "field:lims.formula,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.formula,name:"
 msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.formula,rec_name:"
-msgid "Record Name"
 msgstr "Nombre"
 
 msgctxt "field:lims.formula,variables:"
 msgid "Variables"
 msgstr "Variables"
 
-msgctxt "field:lims.formula,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.formula,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.formula.variable,constant:"
 msgid "Constant"
 msgstr "Constante"
-
-msgctxt "field:lims.formula.variable,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.formula.variable,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.formula.variable,description:"
 msgid "Description"
@@ -2355,25 +1539,9 @@ msgctxt "field:lims.formula.variable,fraction_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
 
-msgctxt "field:lims.formula.variable,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.formula.variable,number:"
 msgid "Number"
 msgstr "Número"
-
-msgctxt "field:lims.formula.variable,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.formula.variable,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.formula.variable,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.fraction,analysis_domain:"
 msgid "Analysis domain"
@@ -2455,14 +1623,6 @@ msgctxt "field:lims.fraction,create_date2:"
 msgid "Create Date"
 msgstr "Fecha de creación"
 
-msgctxt "field:lims.fraction,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.fraction,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.fraction,current_location:"
 msgid "Current Location"
 msgstr "Ubicación actual"
@@ -2503,10 +1663,6 @@ msgctxt "field:lims.fraction,icon:"
 msgid "Icon"
 msgstr "Icono"
 
-msgctxt "field:lims.fraction,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.fraction,label:"
 msgid "Label"
 msgstr "Rótulo"
@@ -2542,10 +1698,6 @@ msgstr "Entidad"
 msgctxt "field:lims.fraction,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
-
-msgctxt "field:lims.fraction,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.fraction,rm_matrix:"
 msgid "Matrix"
@@ -2619,18 +1771,6 @@ msgctxt "field:lims.fraction,weight_uom:"
 msgid "Weight UoM"
 msgstr "UdM Peso"
 
-msgctxt "field:lims.fraction,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.fraction,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.fraction.discharge.empty,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.fraction.discharge.result,discharge_date:"
 msgid "Discharge date"
 msgstr "Fecha de descarte"
@@ -2642,10 +1782,6 @@ msgstr "Dominio para Fracciones"
 msgctxt "field:lims.fraction.discharge.result,fractions:"
 msgid "Fractions"
 msgstr "Fracciones"
-
-msgctxt "field:lims.fraction.discharge.result,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.fraction.discharge.result,location_destination:"
 msgid "Destination Location"
@@ -2667,17 +1803,9 @@ msgctxt "field:lims.fraction.discharge.start,discharge_force:"
 msgid "Discharge force"
 msgstr "Forzar descarte"
 
-msgctxt "field:lims.fraction.discharge.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.fraction.discharge.start,location_origin:"
 msgid "Origin Location"
 msgstr "Ubicación origen"
-
-msgctxt "field:lims.fraction.discharge_revert.empty,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.fraction.discharge_revert.result,fraction_domain:"
 msgid "Fractions domain"
@@ -2686,10 +1814,6 @@ msgstr "Dominio para Fracciones"
 msgctxt "field:lims.fraction.discharge_revert.result,fractions:"
 msgid "Fractions"
 msgstr "Fracciones"
-
-msgctxt "field:lims.fraction.discharge_revert.result,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.fraction.discharge_revert.result,location_destination:"
 msgid "Destination Location"
@@ -2707,21 +1831,9 @@ msgctxt "field:lims.fraction.discharge_revert.start,date_to:"
 msgid "Date to"
 msgstr "Fecha hasta"
 
-msgctxt "field:lims.fraction.discharge_revert.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.fraction.discharge_revert.start,location_origin:"
 msgid "Origin Location"
 msgstr "Ubicación origen"
-
-msgctxt "field:lims.fraction.reagent,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.fraction.reagent,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.fraction.reagent,default_uom:"
 msgid "Default UOM"
@@ -2730,10 +1842,6 @@ msgstr "UdM por defecto"
 msgctxt "field:lims.fraction.reagent,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
-
-msgctxt "field:lims.fraction.reagent,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.fraction.reagent,lot:"
 msgid "Lot"
@@ -2751,18 +1859,6 @@ msgctxt "field:lims.fraction.reagent,reagent_domain:"
 msgid "Reagent domain"
 msgstr "Dominio para Reactivo"
 
-msgctxt "field:lims.fraction.reagent,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.fraction.reagent,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.fraction.reagent,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.fraction.type,cie_fraction_type:"
 msgid "Available for Blind Samples"
 msgstr "Disponible para Muestras ciegas"
@@ -2774,14 +1870,6 @@ msgstr "Código"
 msgctxt "field:lims.fraction.type,control_charts:"
 msgid "Available for Control Charts"
 msgstr "Disponible para Cartas de control"
-
-msgctxt "field:lims.fraction.type,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.fraction.type,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.fraction.type,default_fraction_state:"
 msgid "Default Fraction state"
@@ -2799,10 +1887,6 @@ msgctxt "field:lims.fraction.type,description:"
 msgid "Description"
 msgstr "Descripción"
 
-msgctxt "field:lims.fraction.type,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.fraction.type,max_storage_time:"
 msgid "Maximum storage time (in months)"
 msgstr "Tiempo máximo de almacenamiento (en meses)"
@@ -2810,10 +1894,6 @@ msgstr "Tiempo máximo de almacenamiento (en meses)"
 msgctxt "field:lims.fraction.type,plannable:"
 msgid "Plannable"
 msgstr "Planificable"
-
-msgctxt "field:lims.fraction.type,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.fraction.type,report:"
 msgid "Available for Results Report"
@@ -2823,30 +1903,9 @@ msgctxt "field:lims.fraction.type,requalify:"
 msgid "Requalify"
 msgstr "Recualificar"
 
-msgctxt "field:lims.fraction.type,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.fraction.type,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.fractions_by_locations.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.fractions_by_locations.start,location:"
 msgid "Location"
 msgstr "Ubicación"
-
-msgctxt ""
-"field:lims.generate_results_report.aut.excluded_notebook,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.generate_results_report.aut.excluded_notebook,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.generate_results_report.aut.excluded_notebook,date:"
 msgid "Date"
@@ -2860,10 +1919,6 @@ msgctxt ""
 "field:lims.generate_results_report.aut.excluded_notebook,fraction_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
-
-msgctxt "field:lims.generate_results_report.aut.excluded_notebook,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.generate_results_report.aut.excluded_notebook,label:"
 msgid "Label"
@@ -2890,35 +1945,9 @@ msgctxt ""
 msgid "Product type"
 msgstr "Tipo de producto"
 
-msgctxt "field:lims.generate_results_report.aut.excluded_notebook,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.generate_results_report.aut.excluded_notebook,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
-
-msgctxt "field:lims.generate_results_report.aut.excluded_notebook,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.generate_results_report.aut.excluded_notebook,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt ""
-"field:lims.generate_results_report.aut.excluded_notebook-line,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt ""
-"field:lims.generate_results_report.aut.excluded_notebook-line,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.generate_results_report.aut.excluded_notebook-line,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.generate_results_report.aut.excluded_notebook-line,line:"
 msgid "Notebook Line"
@@ -2928,29 +1957,6 @@ msgctxt ""
 "field:lims.generate_results_report.aut.excluded_notebook-line,notebook:"
 msgid "Notebook"
 msgstr "Cuaderno"
-
-msgctxt ""
-"field:lims.generate_results_report.aut.excluded_notebook-line,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt ""
-"field:lims.generate_results_report.aut.excluded_notebook-line,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt ""
-"field:lims.generate_results_report.aut.excluded_notebook-line,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.generate_results_report.aut.notebook,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.generate_results_report.aut.notebook,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.generate_results_report.aut.notebook,date:"
 msgid "Date"
@@ -2963,10 +1969,6 @@ msgstr "Fracción"
 msgctxt "field:lims.generate_results_report.aut.notebook,fraction_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
-
-msgctxt "field:lims.generate_results_report.aut.notebook,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.generate_results_report.aut.notebook,label:"
 msgid "Label"
@@ -2992,33 +1994,9 @@ msgctxt "field:lims.generate_results_report.aut.notebook,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
-msgctxt "field:lims.generate_results_report.aut.notebook,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.generate_results_report.aut.notebook,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
-
-msgctxt "field:lims.generate_results_report.aut.notebook,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.generate_results_report.aut.notebook,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.generate_results_report.aut.notebook-line,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.generate_results_report.aut.notebook-line,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.generate_results_report.aut.notebook-line,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.generate_results_report.aut.notebook-line,line:"
 msgid "Notebook Line"
@@ -3028,29 +2006,9 @@ msgctxt "field:lims.generate_results_report.aut.notebook-line,notebook:"
 msgid "Notebook"
 msgstr "Cuaderno"
 
-msgctxt "field:lims.generate_results_report.aut.notebook-line,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.generate_results_report.aut.notebook-line,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.generate_results_report.aut.notebook-line,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.generate_results_report.empty,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.generate_results_report.result_aut,excluded_notebooks:"
 msgid "Excluded Fractions"
 msgstr "Fracciones excluidas"
-
-msgctxt "field:lims.generate_results_report.result_aut,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.generate_results_report.result_aut,notebook_lines:"
 msgid "Results"
@@ -3067,10 +2025,6 @@ msgstr "Detalles de informes"
 msgctxt "field:lims.generate_results_report.result_man,cie_fraction_type:"
 msgid "QA"
 msgstr "QA"
-
-msgctxt "field:lims.generate_results_report.result_man,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.generate_results_report.result_man,laboratory:"
 msgid "Laboratory"
@@ -3128,10 +2082,6 @@ msgctxt "field:lims.generate_results_report.start,generation_type:"
 msgid "Generation type"
 msgstr "Tipo de generación"
 
-msgctxt "field:lims.generate_results_report.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.generate_results_report.start,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
@@ -3139,10 +2089,6 @@ msgstr "Laboratorio"
 msgctxt "field:lims.generate_results_report.start,party:"
 msgid "Party"
 msgstr "Entidad"
-
-msgctxt "field:lims.lab.device,active:"
-msgid "Active"
-msgstr "Activo"
 
 msgctxt "field:lims.lab.device,code:"
 msgid "Code"
@@ -3152,14 +2098,6 @@ msgctxt "field:lims.lab.device,corrections:"
 msgid "Corrections"
 msgstr "Correcciones"
 
-msgctxt "field:lims.lab.device,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.lab.device,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.lab.device,description:"
 msgid "Description"
 msgstr "Descripción"
@@ -3168,37 +2106,13 @@ msgctxt "field:lims.lab.device,device_type:"
 msgid "Device type"
 msgstr "Tipo de equipo"
 
-msgctxt "field:lims.lab.device,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.lab.device,laboratories:"
 msgid "Laboratories"
 msgstr "Laboratorios"
 
-msgctxt "field:lims.lab.device,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.lab.device,serial_number:"
 msgid "Serial number"
 msgstr "Número de serie"
-
-msgctxt "field:lims.lab.device,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.lab.device,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.lab.device.correction,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.lab.device.correction,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.lab.device.correction,device:"
 msgid "Device"
@@ -3208,14 +2122,6 @@ msgctxt "field:lims.lab.device.correction,formula:"
 msgid "Correction Formula"
 msgstr "Fórmula de corrección"
 
-msgctxt "field:lims.lab.device.correction,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.lab.device.correction,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.lab.device.correction,result_from:"
 msgid "From"
 msgstr "Desde"
@@ -3224,29 +2130,9 @@ msgctxt "field:lims.lab.device.correction,result_to:"
 msgid "To"
 msgstr "Hasta"
 
-msgctxt "field:lims.lab.device.correction,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.lab.device.correction,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.lab.device.laboratory,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.lab.device.laboratory,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.lab.device.laboratory,device:"
 msgid "Device"
 msgstr "Equipo"
-
-msgctxt "field:lims.lab.device.laboratory,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.lab.device.laboratory,laboratory:"
 msgid "Laboratory"
@@ -3256,18 +2142,6 @@ msgctxt "field:lims.lab.device.laboratory,physically_here:"
 msgid "Physically here"
 msgstr "Físicamente aquí"
 
-msgctxt "field:lims.lab.device.laboratory,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.lab.device.laboratory,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.lab.device.laboratory,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.lab.device.relate_analysis.start,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
@@ -3275,10 +2149,6 @@ msgstr "Análisis"
 msgctxt "field:lims.lab.device.relate_analysis.start,analysis_domain:"
 msgid "Analysis domain"
 msgstr "Dominio para Análisis"
-
-msgctxt "field:lims.lab.device.relate_analysis.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.lab.device.relate_analysis.start,laboratory:"
 msgid "Laboratory"
@@ -3292,81 +2162,25 @@ msgctxt "field:lims.lab.device.type,code:"
 msgid "Code"
 msgstr "Código"
 
-msgctxt "field:lims.lab.device.type,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.lab.device.type,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.lab.device.type,description:"
 msgid "Description"
 msgstr "Descripción"
-
-msgctxt "field:lims.lab.device.type,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.lab.device.type,methods:"
 msgid "Methods"
 msgstr "Métodos"
 
-msgctxt "field:lims.lab.device.type,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.lab.device.type,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.lab.device.type,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.lab.device.type-lab.method,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.lab.device.type-lab.method,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.lab.device.type-lab.method,device_type:"
 msgid "Device type"
 msgstr "Tipo de equipo"
-
-msgctxt "field:lims.lab.device.type-lab.method,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.lab.device.type-lab.method,method:"
 msgid "Method"
 msgstr "Método"
 
-msgctxt "field:lims.lab.device.type-lab.method,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.lab.device.type-lab.method,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.lab.device.type-lab.method,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.lab.method,code:"
 msgid "Code"
 msgstr "Código"
-
-msgctxt "field:lims.lab.method,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.lab.method,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.lab.method,deprecated_since:"
 msgid "Deprecated since"
@@ -3376,10 +2190,6 @@ msgctxt "field:lims.lab.method,determination:"
 msgid "Determination"
 msgstr "Determinación"
 
-msgctxt "field:lims.lab.method,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.lab.method,name:"
 msgid "Name"
 msgstr "Nombre"
@@ -3387,10 +2197,6 @@ msgstr "Nombre"
 msgctxt "field:lims.lab.method,pnt:"
 msgid "PNT"
 msgstr "PNT"
-
-msgctxt "field:lims.lab.method,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.lab.method,reference:"
 msgid "Reference"
@@ -3412,26 +2218,6 @@ msgctxt "field:lims.lab.method,supervised_requalification:"
 msgid "Supervised requalification"
 msgstr "Recualificación supervisada"
 
-msgctxt "field:lims.lab.method,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.lab.method,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.lab.method.results_waiting,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.lab.method.results_waiting,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.lab.method.results_waiting,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.lab.method.results_waiting,method:"
 msgid "Method"
 msgstr "Método"
@@ -3440,37 +2226,13 @@ msgctxt "field:lims.lab.method.results_waiting,party:"
 msgid "Party"
 msgstr "Entidad"
 
-msgctxt "field:lims.lab.method.results_waiting,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.lab.method.results_waiting,results_estimated_waiting:"
 msgid "Estimated number of days for results"
 msgstr "Cantidad estimada de días para resultados"
 
-msgctxt "field:lims.lab.method.results_waiting,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.lab.method.results_waiting,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.lab.professional.method,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.lab.professional.method,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.lab.professional.method,determination:"
 msgid "Determination"
 msgstr "Determinación"
-
-msgctxt "field:lims.lab.professional.method,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.lab.professional.method,method:"
 msgid "Method"
@@ -3479,10 +2241,6 @@ msgstr "Método"
 msgctxt "field:lims.lab.professional.method,professional:"
 msgid "Professional"
 msgstr "Profesional"
-
-msgctxt "field:lims.lab.professional.method,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.lab.professional.method,requalification_history:"
 msgid "Trainings/Qualifications/Requalifications"
@@ -3496,33 +2254,13 @@ msgctxt "field:lims.lab.professional.method,type:"
 msgid "Type"
 msgstr "Tipo"
 
-msgctxt "field:lims.lab.professional.method,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.lab.professional.method,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.lab.professional.method.requalification,controls:"
 msgid "Controls"
 msgstr "Controles"
 
-msgctxt "field:lims.lab.professional.method.requalification,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.lab.professional.method.requalification,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.lab.professional.method.requalification,date:"
 msgid "Date"
 msgstr "Fecha"
-
-msgctxt "field:lims.lab.professional.method.requalification,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt ""
 "field:lims.lab.professional.method.requalification,last_execution_date:"
@@ -3534,10 +2272,6 @@ msgctxt ""
 msgid "Professional Method"
 msgstr "Método de Profesional"
 
-msgctxt "field:lims.lab.professional.method.requalification,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.lab.professional.method.requalification,supervisors:"
 msgid "Supervisors"
 msgstr "Supervisores"
@@ -3546,64 +2280,14 @@ msgctxt "field:lims.lab.professional.method.requalification,type:"
 msgid "Type"
 msgstr "Tipo"
 
-msgctxt "field:lims.lab.professional.method.requalification,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.lab.professional.method.requalification,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.lab.professional.method.requalification.control,control:"
 msgid "Control"
 msgstr "Control"
 
 msgctxt ""
-"field:lims.lab.professional.method.requalification.control,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt ""
-"field:lims.lab.professional.method.requalification.control,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.lab.professional.method.requalification.control,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt ""
 "field:lims.lab.professional.method.requalification.control,method_requalification:"
 msgid "Professional method requalification"
 msgstr "Recualificación de Método de Profesional"
-
-msgctxt "field:lims.lab.professional.method.requalification.control,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt ""
-"field:lims.lab.professional.method.requalification.control,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt ""
-"field:lims.lab.professional.method.requalification.control,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt ""
-"field:lims.lab.professional.method.requalification.supervisor,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt ""
-"field:lims.lab.professional.method.requalification.supervisor,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.lab.professional.method.requalification.supervisor,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt ""
 "field:lims.lab.professional.method.requalification.supervisor,method_requalification:"
@@ -3611,36 +2295,13 @@ msgid "Professional method requalification"
 msgstr "Recualificación de Método de Profesional"
 
 msgctxt ""
-"field:lims.lab.professional.method.requalification.supervisor,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt ""
 "field:lims.lab.professional.method.requalification.supervisor,supervisor:"
 msgid "Supervisor"
 msgstr "Supervisor"
 
-msgctxt ""
-"field:lims.lab.professional.method.requalification.supervisor,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt ""
-"field:lims.lab.professional.method.requalification.supervisor,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.lab.workyear,code:"
 msgid "Code"
 msgstr "Código"
-
-msgctxt "field:lims.lab.workyear,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.lab.workyear,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.lab.workyear,default_entry_control:"
 msgid "Default entry control"
@@ -3653,14 +2314,6 @@ msgstr "Fecha de finalización"
 msgctxt "field:lims.lab.workyear,entry_sequence:"
 msgid "Entry Sequence"
 msgstr "Secuencia de ingresos"
-
-msgctxt "field:lims.lab.workyear,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.lab.workyear,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.lab.workyear,results_report_sequence:"
 msgid "Results Report Sequence"
@@ -3682,37 +2335,13 @@ msgctxt "field:lims.lab.workyear,start_date:"
 msgid "Start date"
 msgstr "Fecha de inicio"
 
-msgctxt "field:lims.lab.workyear,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.lab.workyear,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.lab.workyear.sequence,company:"
 msgid "Company"
 msgstr "Empresa"
 
-msgctxt "field:lims.lab.workyear.sequence,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.lab.workyear.sequence,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.lab.workyear.sequence,entry_sequence:"
 msgid "Entry Sequence"
 msgstr "Secuencia de ingresos"
-
-msgctxt "field:lims.lab.workyear.sequence,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.lab.workyear.sequence,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.lab.workyear.sequence,results_report_sequence:"
 msgid "Results Report Sequence"
@@ -3730,25 +2359,9 @@ msgctxt "field:lims.lab.workyear.sequence,workyear:"
 msgid "Work Year"
 msgstr "Año laboral"
 
-msgctxt "field:lims.lab.workyear.sequence,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.lab.workyear.sequence,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.laboratory,code:"
 msgid "Code"
 msgstr "Código"
-
-msgctxt "field:lims.laboratory,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.laboratory,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.laboratory,cv_corrections:"
 msgid "CV Corrections"
@@ -3770,14 +2383,6 @@ msgctxt "field:lims.laboratory,headquarters:"
 msgid "Headquarters"
 msgstr "Sede"
 
-msgctxt "field:lims.laboratory,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.laboratory,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.laboratory,related_location:"
 msgid "Related location"
 msgstr "Ubicación relacionada"
@@ -3786,29 +2391,9 @@ msgctxt "field:lims.laboratory,section:"
 msgid "Section"
 msgstr "Sección"
 
-msgctxt "field:lims.laboratory,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.laboratory,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.laboratory.cv_correction,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.laboratory.cv_correction,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.laboratory.cv_correction,fraction_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
-
-msgctxt "field:lims.laboratory.cv_correction,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.laboratory.cv_correction,laboratory:"
 msgid "Laboratory"
@@ -3830,33 +2415,9 @@ msgctxt "field:lims.laboratory.cv_correction,min_cv_corr_fact:"
 msgid "Correction factor for Minimum CV"
 msgstr "Factor de corrección para CV Mínimo"
 
-msgctxt "field:lims.laboratory.cv_correction,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.laboratory.cv_correction,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.laboratory.cv_correction,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.laboratory.professional,code:"
 msgid "Code"
 msgstr "Código"
-
-msgctxt "field:lims.laboratory.professional,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.laboratory.professional,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.laboratory.professional,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.laboratory.professional,methods:"
 msgid "Methods"
@@ -3866,10 +2427,6 @@ msgctxt "field:lims.laboratory.professional,party:"
 msgid "Party"
 msgstr "Entidad"
 
-msgctxt "field:lims.laboratory.professional,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.laboratory.professional,role:"
 msgid "Signature role"
 msgstr "Rol de firma"
@@ -3878,61 +2435,17 @@ msgctxt "field:lims.laboratory.professional,signature:"
 msgid "Signature"
 msgstr "Firma"
 
-msgctxt "field:lims.laboratory.professional,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.laboratory.professional,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.matrix,code:"
 msgid "Code"
 msgstr "Código"
-
-msgctxt "field:lims.matrix,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.matrix,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.matrix,description:"
 msgid "Description"
 msgstr "Descripción"
 
-msgctxt "field:lims.matrix,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.matrix,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.matrix,restricted_entry:"
 msgid "Restricted entry"
 msgstr "Ingreso restringido"
-
-msgctxt "field:lims.matrix,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.matrix,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.matrix.variety,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.matrix.variety,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.matrix.variety,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.matrix.variety,matrix:"
 msgid "Matrix"
@@ -3942,29 +2455,9 @@ msgctxt "field:lims.matrix.variety,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
-msgctxt "field:lims.matrix.variety,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.matrix.variety,variety:"
 msgid "Variety"
 msgstr "Variedad"
-
-msgctxt "field:lims.matrix.variety,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.matrix.variety,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.notebook,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.notebook,current_location:"
 msgid "Current Location"
@@ -3998,10 +2491,6 @@ msgctxt "field:lims.notebook,icon:"
 msgid "Icon"
 msgstr "Icono"
 
-msgctxt "field:lims.notebook,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook,label:"
 msgid "Label"
 msgstr "Rótulo"
@@ -4030,25 +2519,9 @@ msgctxt "field:lims.notebook,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
-msgctxt "field:lims.notebook,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.notebook,shared:"
 msgid "Shared"
 msgstr "Compartida"
-
-msgctxt "field:lims.notebook,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.notebook.accept_lines.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.notebook.add_internal_relations.start,analysis:"
 msgid "Internal relations"
@@ -4057,26 +2530,6 @@ msgstr "Relaciones internas"
 msgctxt "field:lims.notebook.add_internal_relations.start,analysis_domain:"
 msgid "Internal relations domain"
 msgstr "Dominio para Relaciones internas"
-
-msgctxt "field:lims.notebook.add_internal_relations.start,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.notebook.initial_concentration_calc.start,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.notebook.internal_relations_calc_1.relation,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook.internal_relations_calc_1.relation,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.notebook.internal_relations_calc_1.relation,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt ""
 "field:lims.notebook.internal_relations_calc_1.relation,internal_relation:"
@@ -4087,10 +2540,6 @@ msgctxt "field:lims.notebook.internal_relations_calc_1.relation,notebook:"
 msgid "Laboratory notebook"
 msgstr "Cuaderno de laboratorio"
 
-msgctxt "field:lims.notebook.internal_relations_calc_1.relation,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.notebook.internal_relations_calc_1.relation,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
@@ -4099,41 +2548,13 @@ msgctxt "field:lims.notebook.internal_relations_calc_1.relation,variables:"
 msgid "Variables"
 msgstr "Variables"
 
-msgctxt "field:lims.notebook.internal_relations_calc_1.relation,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.internal_relations_calc_1.relation,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.notebook.internal_relations_calc_1.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook.internal_relations_calc_1.variable,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
 
-msgctxt "field:lims.notebook.internal_relations_calc_1.variable,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook.internal_relations_calc_1.variable,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.notebook.internal_relations_calc_1.variable,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook.internal_relations_calc_1.variable,line:"
 msgid "Line"
 msgstr "Línea"
-
-msgctxt "field:lims.notebook.internal_relations_calc_1.variable,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.notebook.internal_relations_calc_1.variable,relation:"
 msgid "Relation"
@@ -4146,18 +2567,6 @@ msgstr "Repetición"
 msgctxt "field:lims.notebook.internal_relations_calc_1.variable,use:"
 msgid "Use"
 msgstr "Usar"
-
-msgctxt "field:lims.notebook.internal_relations_calc_1.variable,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.internal_relations_calc_1.variable,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.notebook.internal_relations_calc_2.process,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt ""
 "field:lims.notebook.internal_relations_calc_2.process,internal_relation:"
@@ -4172,18 +2581,6 @@ msgctxt "field:lims.notebook.internal_relations_calc_2.process,variables:"
 msgid "Variables"
 msgstr "Variables"
 
-msgctxt "field:lims.notebook.internal_relations_calc_2.relation,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook.internal_relations_calc_2.relation,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.notebook.internal_relations_calc_2.relation,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt ""
 "field:lims.notebook.internal_relations_calc_2.relation,internal_relation:"
 msgid "Internal relation"
@@ -4193,10 +2590,6 @@ msgctxt "field:lims.notebook.internal_relations_calc_2.relation,notebook:"
 msgid "Laboratory notebook"
 msgstr "Cuaderno de laboratorio"
 
-msgctxt "field:lims.notebook.internal_relations_calc_2.relation,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.notebook.internal_relations_calc_2.relation,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
@@ -4204,18 +2597,6 @@ msgstr "ID Sesión"
 msgctxt "field:lims.notebook.internal_relations_calc_2.relation,variables:"
 msgid "Variables"
 msgstr "Variables"
-
-msgctxt "field:lims.notebook.internal_relations_calc_2.relation,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.internal_relations_calc_2.relation,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.notebook.internal_relations_calc_2.result,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.notebook.internal_relations_calc_2.result,index:"
 msgid "Index"
@@ -4228,10 +2609,6 @@ msgstr "Relación"
 msgctxt "field:lims.notebook.internal_relations_calc_2.result,total:"
 msgid "Total"
 msgstr "Total"
-
-msgctxt "field:lims.notebook.internal_relations_calc_2.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.notebook.internal_relations_calc_2.variable,analysis:"
 msgid "Analysis"
@@ -4247,14 +2624,6 @@ msgctxt ""
 msgid "Converted result modifier"
 msgstr "Modificador de resultado convertido"
 
-msgctxt "field:lims.notebook.internal_relations_calc_2.variable,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook.internal_relations_calc_2.variable,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt ""
 "field:lims.notebook.internal_relations_calc_2.variable,final_concentration:"
 msgid "Final concentration"
@@ -4263,10 +2632,6 @@ msgstr "Concentración final"
 msgctxt "field:lims.notebook.internal_relations_calc_2.variable,final_unit:"
 msgid "Final unit"
 msgstr "Unidad final"
-
-msgctxt "field:lims.notebook.internal_relations_calc_2.variable,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt ""
 "field:lims.notebook.internal_relations_calc_2.variable,initial_concentration:"
@@ -4280,10 +2645,6 @@ msgstr "Unidad inicial"
 msgctxt "field:lims.notebook.internal_relations_calc_2.variable,line:"
 msgid "Line"
 msgstr "Línea"
-
-msgctxt "field:lims.notebook.internal_relations_calc_2.variable,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.notebook.internal_relations_calc_2.variable,relation:"
 msgid "Relation"
@@ -4305,18 +2666,6 @@ msgstr "Modificador de resultado"
 msgctxt "field:lims.notebook.internal_relations_calc_2.variable,use:"
 msgid "Use"
 msgstr "Usar"
-
-msgctxt "field:lims.notebook.internal_relations_calc_2.variable,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.internal_relations_calc_2.variable,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.notebook.limits_validation.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.notebook.line,acceptance_date:"
 msgid "Acceptance date"
@@ -4382,14 +2731,6 @@ msgctxt "field:lims.notebook.line,converted_result_modifier:"
 msgid "Converted result modifier"
 msgstr "Modificador de resultado convertido"
 
-msgctxt "field:lims.notebook.line,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook.line,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.notebook.line,date2:"
 msgid "Date"
 msgstr "Fecha"
@@ -4449,10 +2790,6 @@ msgstr "Tipo de fracción"
 msgctxt "field:lims.notebook.line,icon:"
 msgid "Icon"
 msgstr "Icono"
-
-msgctxt "field:lims.notebook.line,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.notebook.line,initial_concentration:"
 msgid "Initial concentration"
@@ -4530,10 +2867,6 @@ msgctxt "field:lims.notebook.line,quantification_limit:"
 msgid "Quantification limit"
 msgstr "Límite de cuantificación"
 
-msgctxt "field:lims.notebook.line,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.notebook.line,reference:"
 msgid "Reference"
 msgstr "Referencia"
@@ -4606,57 +2939,13 @@ msgctxt "field:lims.notebook.line,verification:"
 msgid "Verification"
 msgstr "Verificación"
 
-msgctxt "field:lims.notebook.line,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.line,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.notebook.line-fraction,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook.line-fraction,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.notebook.line-fraction,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
 
-msgctxt "field:lims.notebook.line-fraction,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook.line-fraction,notebook_line:"
 msgid "Notebook Line"
 msgstr "Línea de cuaderno"
-
-msgctxt "field:lims.notebook.line-fraction,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.notebook.line-fraction,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.line-fraction,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.notebook.line-laboratory.professional,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook.line-laboratory.professional,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.notebook.line-laboratory.professional,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.notebook.line-laboratory.professional,notebook_line:"
 msgid "Notebook Line"
@@ -4665,18 +2954,6 @@ msgstr "Línea de cuaderno"
 msgctxt "field:lims.notebook.line-laboratory.professional,professional:"
 msgid "Laboratory professional"
 msgstr "Profesional de laboratorio"
-
-msgctxt "field:lims.notebook.line-laboratory.professional,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.notebook.line-laboratory.professional,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.line-laboratory.professional,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.notebook.line.all_fields,acceptance_date:"
 msgid "Acceptance date"
@@ -4730,14 +3007,6 @@ msgctxt "field:lims.notebook.line.all_fields,converted_result_modifier:"
 msgid "Converted result modifier"
 msgstr "Modificador de resultado convertido"
 
-msgctxt "field:lims.notebook.line.all_fields,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook.line.all_fields,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.notebook.line.all_fields,date:"
 msgid "Date"
 msgstr "Fecha de ingreso"
@@ -4781,10 +3050,6 @@ msgstr "Fracción"
 msgctxt "field:lims.notebook.line.all_fields,fraction_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
-
-msgctxt "field:lims.notebook.line.all_fields,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.notebook.line.all_fields,initial_concentration:"
 msgid "Initial concentration"
@@ -4850,10 +3115,6 @@ msgctxt "field:lims.notebook.line.all_fields,quantification_limit:"
 msgid "Quantification limit"
 msgstr "Límite de cuantificación"
 
-msgctxt "field:lims.notebook.line.all_fields,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.notebook.line.all_fields,reference:"
 msgid "Reference"
 msgstr "Referencia"
@@ -4918,26 +3179,6 @@ msgctxt "field:lims.notebook.line.all_fields,verification:"
 msgid "Verification"
 msgstr "Verificación"
 
-msgctxt "field:lims.notebook.line.all_fields,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.line.all_fields,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.notebook.line.professional,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook.line.professional,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.notebook.line.professional,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook.line.professional,notebook_line:"
 msgid "Notebook Line"
 msgstr "Línea de cuaderno"
@@ -4945,18 +3186,6 @@ msgstr "Línea de cuaderno"
 msgctxt "field:lims.notebook.line.professional,professional:"
 msgid "Laboratory professional"
 msgstr "Profesional de laboratorio"
-
-msgctxt "field:lims.notebook.line.professional,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.notebook.line.professional,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.line.professional,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.notebook.line.repeat_analysis.start,analysis:"
 msgid "Analysis"
@@ -4966,10 +3195,6 @@ msgctxt "field:lims.notebook.line.repeat_analysis.start,analysis_domain:"
 msgid "Analysis domain"
 msgstr "Dominio para Análisis"
 
-msgctxt "field:lims.notebook.line.repeat_analysis.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook.load_results_formula.action,chromatogram:"
 msgid "Chromatogram"
 msgstr "Cromatograma"
@@ -4978,14 +3203,6 @@ msgctxt "field:lims.notebook.load_results_formula.action,comments:"
 msgid "Comments"
 msgstr "Observaciones"
 
-msgctxt "field:lims.notebook.load_results_formula.action,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook.load_results_formula.action,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.notebook.load_results_formula.action,end_date:"
 msgid "End date"
 msgstr "Fecha de finalización"
@@ -4993,10 +3210,6 @@ msgstr "Fecha de finalización"
 msgctxt "field:lims.notebook.load_results_formula.action,formula:"
 msgid "Formula"
 msgstr "Fórmula"
-
-msgctxt "field:lims.notebook.load_results_formula.action,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt ""
 "field:lims.notebook.load_results_formula.action,initial_concentration:"
@@ -5010,10 +3223,6 @@ msgstr "Línea"
 msgctxt "field:lims.notebook.load_results_formula.action,professional:"
 msgid "Laboratory professional"
 msgstr "Profesional de laboratorio"
-
-msgctxt "field:lims.notebook.load_results_formula.action,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.notebook.load_results_formula.action,result:"
 msgid "Result"
@@ -5031,38 +3240,6 @@ msgctxt "field:lims.notebook.load_results_formula.action,variables:"
 msgid "Variables"
 msgstr "Variables"
 
-msgctxt "field:lims.notebook.load_results_formula.action,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.load_results_formula.action,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.notebook.load_results_formula.beginning,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.notebook.load_results_formula.confirm,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.notebook.load_results_formula.empty,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.notebook.load_results_formula.line,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook.load_results_formula.line,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.notebook.load_results_formula.line,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook.load_results_formula.line,index:"
 msgid "Index"
 msgstr "Índice"
@@ -5071,21 +3248,9 @@ msgctxt "field:lims.notebook.load_results_formula.line,line:"
 msgid "Line"
 msgstr "Línea"
 
-msgctxt "field:lims.notebook.load_results_formula.line,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.notebook.load_results_formula.line,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
-
-msgctxt "field:lims.notebook.load_results_formula.line,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.load_results_formula.line,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.notebook.load_results_formula.process,chromatogram:"
 msgid "Chromatogram"
@@ -5122,10 +3287,6 @@ msgstr "Fórmula"
 msgctxt "field:lims.notebook.load_results_formula.process,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
-
-msgctxt "field:lims.notebook.load_results_formula.process,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt ""
 "field:lims.notebook.load_results_formula.process,initial_concentration:"
@@ -5169,10 +3330,6 @@ msgctxt "field:lims.notebook.load_results_formula.process,variables:"
 msgid "Variables"
 msgstr "Variables"
 
-msgctxt "field:lims.notebook.load_results_formula.result,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook.load_results_formula.result,index:"
 msgid "Index"
 msgstr "Índice"
@@ -5185,10 +3342,6 @@ msgctxt "field:lims.notebook.load_results_formula.result,total:"
 msgid "Total"
 msgstr "Total"
 
-msgctxt "field:lims.notebook.load_results_formula.sit1,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook.load_results_formula.sit1,msg:"
 msgid "Message"
 msgstr "Mensaje"
@@ -5196,22 +3349,6 @@ msgstr "Mensaje"
 msgctxt "field:lims.notebook.load_results_formula.sit2,details:"
 msgid "Supervisors"
 msgstr "Supervisores"
-
-msgctxt "field:lims.notebook.load_results_formula.sit2,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.notebook.load_results_formula.sit2.detail,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook.load_results_formula.sit2.detail,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.notebook.load_results_formula.sit2.detail,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.notebook.load_results_formula.sit2.detail,lines:"
 msgid "Lines"
@@ -5224,10 +3361,6 @@ msgstr "Método"
 msgctxt "field:lims.notebook.load_results_formula.sit2.detail,professional:"
 msgid "Professional"
 msgstr "Profesional"
-
-msgctxt "field:lims.notebook.load_results_formula.sit2.detail,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.notebook.load_results_formula.sit2.detail,session_id:"
 msgid "Session ID"
@@ -5242,28 +3375,6 @@ msgctxt ""
 msgid "Supervisor domain"
 msgstr "Dominio para Supervisor"
 
-msgctxt "field:lims.notebook.load_results_formula.sit2.detail,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.load_results_formula.sit2.detail,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt ""
-"field:lims.notebook.load_results_formula.sit2.detail.line,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt ""
-"field:lims.notebook.load_results_formula.sit2.detail.line,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.notebook.load_results_formula.sit2.detail.line,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt ""
 "field:lims.notebook.load_results_formula.sit2.detail.line,load_results:"
 msgid "Load Results"
@@ -5274,26 +3385,9 @@ msgctxt ""
 msgid "Notebook Line"
 msgstr "Línea de cuaderno"
 
-msgctxt "field:lims.notebook.load_results_formula.sit2.detail.line,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt ""
-"field:lims.notebook.load_results_formula.sit2.detail.line,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.load_results_formula.sit2.detail.line,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.notebook.load_results_formula.start,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
-
-msgctxt "field:lims.notebook.load_results_formula.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.notebook.load_results_formula.start,method:"
 msgid "Method"
@@ -5307,45 +3401,17 @@ msgctxt "field:lims.notebook.load_results_formula.variable,action:"
 msgid "Action"
 msgstr "Acción"
 
-msgctxt "field:lims.notebook.load_results_formula.variable,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook.load_results_formula.variable,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.notebook.load_results_formula.variable,description:"
 msgid "Description"
 msgstr "Descripción"
-
-msgctxt "field:lims.notebook.load_results_formula.variable,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.notebook.load_results_formula.variable,number:"
 msgid "Number"
 msgstr "Número"
 
-msgctxt "field:lims.notebook.load_results_formula.variable,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.notebook.load_results_formula.variable,value:"
 msgid "Value"
 msgstr "Valor"
-
-msgctxt "field:lims.notebook.load_results_formula.variable,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.load_results_formula.variable,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.notebook.load_results_manual.empty,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.notebook.load_results_manual.line,chromatogram:"
 msgid "Chromatogram"
@@ -5354,14 +3420,6 @@ msgstr "Cromatograma"
 msgctxt "field:lims.notebook.load_results_manual.line,comments:"
 msgid "Comments"
 msgstr "Observaciones"
-
-msgctxt "field:lims.notebook.load_results_manual.line,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook.load_results_manual.line,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.notebook.load_results_manual.line,end_date:"
 msgid "End date"
@@ -5375,10 +3433,6 @@ msgctxt "field:lims.notebook.load_results_manual.line,fraction_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
 
-msgctxt "field:lims.notebook.load_results_manual.line,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook.load_results_manual.line,initial_unit:"
 msgid "Initial unit"
 msgstr "Unidad inicial"
@@ -5390,10 +3444,6 @@ msgstr "Análisis"
 msgctxt "field:lims.notebook.load_results_manual.line,literal_result:"
 msgid "Literal result"
 msgstr "Resultado textual"
-
-msgctxt "field:lims.notebook.load_results_manual.line,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.notebook.load_results_manual.line,repetition:"
 msgid "Repetition"
@@ -5411,18 +3461,6 @@ msgctxt "field:lims.notebook.load_results_manual.line,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
 
-msgctxt "field:lims.notebook.load_results_manual.line,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.load_results_manual.line,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.notebook.load_results_manual.result,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook.load_results_manual.result,lines:"
 msgid "Lines"
 msgstr "Líneas"
@@ -5439,17 +3477,9 @@ msgctxt "field:lims.notebook.load_results_manual.result,start_date:"
 msgid "Start date"
 msgstr "Fecha de inicio"
 
-msgctxt "field:lims.notebook.load_results_manual.sit1,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook.load_results_manual.sit1,msg:"
 msgid "Message"
 msgstr "Mensaje"
-
-msgctxt "field:lims.notebook.load_results_manual.sit2,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.notebook.load_results_manual.sit2,lines:"
 msgid "Lines"
@@ -5463,10 +3493,6 @@ msgctxt "field:lims.notebook.load_results_manual.sit2,supervisor_domain:"
 msgid "Supervisor domain"
 msgstr "Dominio para Supervisor"
 
-msgctxt "field:lims.notebook.load_results_manual.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook.load_results_manual.start,method:"
 msgid "Method"
 msgstr "Método"
@@ -5478,10 +3504,6 @@ msgstr "Fecha de inicio"
 msgctxt "field:lims.notebook.precision_control.start,factor:"
 msgid "Factor"
 msgstr "Factor"
-
-msgctxt "field:lims.notebook.precision_control.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.notebook.precision_control.start,matrix:"
 msgid "Matrix"
@@ -5499,21 +3521,9 @@ msgctxt "field:lims.notebook.precision_control.start,range_type:"
 msgid "Origin"
 msgstr "Origen"
 
-msgctxt "field:lims.notebook.results_conversion.start,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.notebook.results_verification.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook.results_verification.start,range_type:"
 msgid "Origin"
 msgstr "Origen"
-
-msgctxt "field:lims.notebook.uncertainty_calc.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.notebook.uncertainty_calc.start,range_type:"
 msgid "Origin"
@@ -5523,53 +3533,13 @@ msgctxt "field:lims.notebook.view,columns:"
 msgid "Columns"
 msgstr "Columnas"
 
-msgctxt "field:lims.notebook.view,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook.view,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.notebook.view,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook.view,name:"
 msgid "Name"
 msgstr "Nombre"
 
-msgctxt "field:lims.notebook.view,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.notebook.view,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.view,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.notebook.view.column,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.notebook.view.column,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.notebook.view.column,field:"
 msgid "Field"
 msgstr "Campo"
-
-msgctxt "field:lims.notebook.view.column,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.notebook.view.column,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.notebook.view.column,sequence:"
 msgid "Sequence"
@@ -5579,29 +3549,9 @@ msgctxt "field:lims.notebook.view.column,view:"
 msgid "View"
 msgstr "Vista"
 
-msgctxt "field:lims.notebook.view.column,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.notebook.view.column,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.objective_description,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.objective_description,create_uid:"
-msgid "Create User"
-msgstr "Usuario creción"
-
 msgctxt "field:lims.objective_description,description:"
 msgid "Description"
 msgstr "Descripción"
-
-msgctxt "field:lims.objective_description,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.objective_description,matrix:"
 msgid "Matrix"
@@ -5611,89 +3561,25 @@ msgctxt "field:lims.objective_description,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
-msgctxt "field:lims.objective_description,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.objective_description,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.objective_description,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.packaging.integrity,code:"
 msgid "Code"
 msgstr "Código"
-
-msgctxt "field:lims.packaging.integrity,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.packaging.integrity,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.packaging.integrity,description:"
 msgid "Description"
 msgstr "Descripción"
 
-msgctxt "field:lims.packaging.integrity,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.packaging.integrity,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.packaging.integrity,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.packaging.integrity,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.packaging.type,code:"
 msgid "Code"
 msgstr "Código"
-
-msgctxt "field:lims.packaging.type,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.packaging.type,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.packaging.type,description:"
 msgid "Description"
 msgstr "Descripción"
 
-msgctxt "field:lims.packaging.type,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.packaging.type,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.packaging.type,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.packaging.type,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.pending_services_unplanned.start,end_date:"
 msgid "End Date"
 msgstr "Fecha hasta la confirmación del servicio"
-
-msgctxt "field:lims.pending_services_unplanned.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.pending_services_unplanned.start,include_method:"
 msgid "Include method"
@@ -5727,14 +3613,6 @@ msgctxt "field:lims.planification,controls:"
 msgid "Controls"
 msgstr "Controles"
 
-msgctxt "field:lims.planification,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.planification,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.planification,date:"
 msgid "Date"
 msgstr "Fecha"
@@ -5751,10 +3629,6 @@ msgctxt "field:lims.planification,details:"
 msgid "Fractions to plan"
 msgstr "Fracciones a planificar"
 
-msgctxt "field:lims.planification,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.planification,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
@@ -5762,10 +3636,6 @@ msgstr "Laboratorio"
 msgctxt "field:lims.planification,method_domain:"
 msgid "Method domain"
 msgstr "Dominio para Método"
-
-msgctxt "field:lims.planification,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.planification,start_date:"
 msgid "Start date"
@@ -5787,77 +3657,21 @@ msgctxt "field:lims.planification,waiting_process:"
 msgid "Waiting process"
 msgstr "Esperando procesamiento"
 
-msgctxt "field:lims.planification,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.planification,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.planification-analysis,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
-
-msgctxt "field:lims.planification-analysis,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.planification-analysis,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.planification-analysis,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification-analysis,planification:"
 msgid "Planification"
 msgstr "Planificación"
 
-msgctxt "field:lims.planification-analysis,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.planification-analysis,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.planification-analysis,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.planification-fraction,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.planification-fraction,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.planification-fraction,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
 
-msgctxt "field:lims.planification-fraction,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.planification-fraction,planification:"
 msgid "Planification"
 msgstr "Planificación"
-
-msgctxt "field:lims.planification-fraction,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.planification-fraction,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.planification-fraction,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.planification.add_analysis.start,analysis:"
 msgid "Analysis/Sets/Groups"
@@ -5874,10 +3688,6 @@ msgstr "Fecha desde"
 msgctxt "field:lims.planification.add_analysis.start,date_to:"
 msgid "Date to"
 msgstr "Fecha hasta"
-
-msgctxt "field:lims.planification.add_analysis.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.add_analysis.start,laboratory:"
 msgid "Laboratory"
@@ -5899,10 +3709,6 @@ msgstr "Nivel de concentración invisible"
 msgctxt "field:lims.planification.add_fraction_bre.start,fraction_domain:"
 msgid "Fraction domain"
 msgstr "Dominio para Fracción"
-
-msgctxt "field:lims.planification.add_fraction_bre.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.add_fraction_bre.start,label:"
 msgid "Label"
@@ -5953,10 +3759,6 @@ msgctxt "field:lims.planification.add_fraction_con.start,generate_repetition:"
 msgid "Generate repetition"
 msgstr "Generar repetición"
 
-msgctxt "field:lims.planification.add_fraction_con.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.planification.add_fraction_con.start,label:"
 msgid "Label"
 msgstr "Rótulo"
@@ -5985,10 +3787,6 @@ msgstr "Nivel de concentración invisible"
 msgctxt "field:lims.planification.add_fraction_mrt.start,fraction_domain:"
 msgid "Fraction domain"
 msgstr "Dominio para Fracción"
-
-msgctxt "field:lims.planification.add_fraction_mrt.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.add_fraction_mrt.start,label:"
 msgid "Label"
@@ -6039,10 +3837,6 @@ msgstr "Nivel de concentración invisible"
 msgctxt "field:lims.planification.add_fraction_rm_bmz.start,fraction_domain:"
 msgid "Fraction domain"
 msgstr "Dominio para Fracción"
-
-msgctxt "field:lims.planification.add_fraction_rm_bmz.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.add_fraction_rm_bmz.start,label:"
 msgid "Label"
@@ -6104,10 +3898,6 @@ msgctxt ""
 msgid "Concentration level invisible"
 msgstr "Nivel de concentración invisible"
 
-msgctxt "field:lims.planification.create_fraction_con.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.planification.create_fraction_con.start,label:"
 msgid "Label"
 msgstr "Rótulo"
@@ -6145,14 +3935,6 @@ msgctxt "field:lims.planification.detail,comments:"
 msgid "Comments"
 msgstr "Observaciones"
 
-msgctxt "field:lims.planification.detail,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.planification.detail,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.planification.detail,details:"
 msgid "Planification detail"
 msgstr "Detalle de planificación"
@@ -6168,10 +3950,6 @@ msgstr "Tipo de fracción"
 msgctxt "field:lims.planification.detail,icon:"
 msgid "Icon"
 msgstr "Icono"
-
-msgctxt "field:lims.planification.detail,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.detail,label:"
 msgid "Label"
@@ -6193,10 +3971,6 @@ msgctxt "field:lims.planification.detail,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
-msgctxt "field:lims.planification.detail,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.planification.detail,report_date:"
 msgid "Date agreed for result"
 msgstr "Fecha pactada de resultado"
@@ -6209,29 +3983,9 @@ msgctxt "field:lims.planification.detail,urgent:"
 msgid "Urgent"
 msgstr "Urgente"
 
-msgctxt "field:lims.planification.detail,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.planification.detail,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.planification.qualification.action,action:"
 msgid "Action"
 msgstr "Acción"
-
-msgctxt "field:lims.planification.qualification.action,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.planification.qualification.action,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.planification.qualification.action,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.qualification.action,method:"
 msgid "Method"
@@ -6241,33 +3995,9 @@ msgctxt "field:lims.planification.qualification.action,professional:"
 msgid "Professional"
 msgstr "Profesional"
 
-msgctxt "field:lims.planification.qualification.action,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.planification.qualification.action,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
-
-msgctxt "field:lims.planification.qualification.action,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.planification.qualification.action,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.planification.qualification.situation,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.planification.qualification.situation,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.planification.qualification.situation,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.qualification.situation,method:"
 msgid "Method"
@@ -6277,10 +4007,6 @@ msgctxt "field:lims.planification.qualification.situation,professional:"
 msgid "Professional"
 msgstr "Profesional"
 
-msgctxt "field:lims.planification.qualification.situation,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.planification.qualification.situation,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
@@ -6288,18 +4014,6 @@ msgstr "ID Sesión"
 msgctxt "field:lims.planification.qualification.situation,situation:"
 msgid "Situation"
 msgstr "Situación"
-
-msgctxt "field:lims.planification.qualification.situation,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.planification.qualification.situation,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.planification.qualification.situation.2,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.qualification.situation.2,method:"
 msgid "Method"
@@ -6309,10 +4023,6 @@ msgctxt "field:lims.planification.qualification.situation.2,professional:"
 msgid "Professional"
 msgstr "Profesional"
 
-msgctxt "field:lims.planification.qualification.situation.3,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.planification.qualification.situation.3,method:"
 msgid "Method"
 msgstr "Método"
@@ -6321,17 +4031,9 @@ msgctxt "field:lims.planification.qualification.situation.3,professional:"
 msgid "Professional"
 msgstr "Profesional"
 
-msgctxt "field:lims.planification.qualification.situation.4,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.planification.qualification.situation.4,methods:"
 msgid "Methods"
 msgstr "Métodos"
-
-msgctxt "field:lims.planification.qualification.situations,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.qualification.situations,index:"
 msgid "Index"
@@ -6345,14 +4047,6 @@ msgctxt "field:lims.planification.qualification.situations,total:"
 msgid "Total"
 msgstr "Total"
 
-msgctxt "field:lims.planification.relate_technicians.detail1,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.planification.relate_technicians.detail1,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.planification.relate_technicians.detail1,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
@@ -6361,17 +4055,9 @@ msgctxt "field:lims.planification.relate_technicians.detail1,fraction_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
 
-msgctxt "field:lims.planification.relate_technicians.detail1,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.planification.relate_technicians.detail1,label:"
 msgid "Label"
 msgstr "Rótulo"
-
-msgctxt "field:lims.planification.relate_technicians.detail1,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt ""
 "field:lims.planification.relate_technicians.detail1,service_analysis:"
@@ -6382,89 +4068,33 @@ msgctxt "field:lims.planification.relate_technicians.detail1,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
 
-msgctxt "field:lims.planification.relate_technicians.detail1,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.planification.relate_technicians.detail1,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.planification.relate_technicians.detail2,analysis_origin:"
 msgid "Analysis origin"
 msgstr "Análisis origen"
-
-msgctxt "field:lims.planification.relate_technicians.detail2,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.planification.relate_technicians.detail2,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.planification.relate_technicians.detail2,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
 
-msgctxt "field:lims.planification.relate_technicians.detail2,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.planification.relate_technicians.detail2,method:"
 msgid "Method"
 msgstr "Método"
-
-msgctxt "field:lims.planification.relate_technicians.detail2,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.planification.relate_technicians.detail2,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
 
-msgctxt "field:lims.planification.relate_technicians.detail2,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.planification.relate_technicians.detail2,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.planification.relate_technicians.detail3,analysis_origin:"
 msgid "Analysis origin"
 msgstr "Análisis origen"
-
-msgctxt "field:lims.planification.relate_technicians.detail3,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.planification.relate_technicians.detail3,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.planification.relate_technicians.detail3,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
 
-msgctxt "field:lims.planification.relate_technicians.detail3,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.planification.relate_technicians.detail3,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.planification.relate_technicians.detail3,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
-
-msgctxt "field:lims.planification.relate_technicians.detail3,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.planification.relate_technicians.detail3,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.planification.relate_technicians.result,details1:"
 msgid "Fractions to plan"
@@ -6494,10 +4124,6 @@ msgctxt "field:lims.planification.relate_technicians.result,grouping:"
 msgid "Grouping"
 msgstr "Agrupación"
 
-msgctxt "field:lims.planification.relate_technicians.result,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.planification.relate_technicians.result,technicians:"
 msgid "Technicians"
 msgstr "Técnicos"
@@ -6515,14 +4141,6 @@ msgctxt "field:lims.planification.relate_technicians.start,grouping:"
 msgid "Grouping"
 msgstr "Agrupación"
 
-msgctxt "field:lims.planification.relate_technicians.start,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.planification.release_fraction.empty,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.planification.release_fraction.result,fractions:"
 msgid "Fractions"
 msgstr "Fracciones"
@@ -6531,10 +4149,6 @@ msgctxt "field:lims.planification.release_fraction.result,fractions_domain:"
 msgid "Fractions domain"
 msgstr "Dominio para Fracciones"
 
-msgctxt "field:lims.planification.release_fraction.result,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.planification.release_fraction.start,date_from:"
 msgid "Date from"
 msgstr "Fecha desde"
@@ -6542,10 +4156,6 @@ msgstr "Fecha desde"
 msgctxt "field:lims.planification.release_fraction.start,date_to:"
 msgid "Date to"
 msgstr "Fecha hasta"
-
-msgctxt "field:lims.planification.release_fraction.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.release_fraction.start,laboratory:"
 msgid "Laboratory"
@@ -6558,14 +4168,6 @@ msgstr "Controles"
 msgctxt "field:lims.planification.remove_control.start,controls_domain:"
 msgid "Controls domain"
 msgstr "Dominio para Controles"
-
-msgctxt "field:lims.planification.remove_control.start,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.planification.replace_technician.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.replace_technician.start,planification:"
 msgid "Planification"
@@ -6598,21 +4200,9 @@ msgctxt "field:lims.planification.search_fractions.detail,create_date2:"
 msgid "Create Date"
 msgstr "Fecha de creación"
 
-msgctxt "field:lims.planification.search_fractions.detail,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.planification.search_fractions.detail,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.planification.search_fractions.detail,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
-
-msgctxt "field:lims.planification.search_fractions.detail,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.search_fractions.detail,label:"
 msgid "Label"
@@ -6629,10 +4219,6 @@ msgstr "Prioridad"
 msgctxt "field:lims.planification.search_fractions.detail,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
-
-msgctxt "field:lims.planification.search_fractions.detail,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.planification.search_fractions.detail,repetition:"
 msgid "Repetition"
@@ -6658,14 +4244,6 @@ msgctxt "field:lims.planification.search_fractions.detail,urgent:"
 msgid "Urgent"
 msgstr "Urgente"
 
-msgctxt "field:lims.planification.search_fractions.detail,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.planification.search_fractions.detail,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.planification.search_fractions.next,details:"
 msgid "Fractions to plan"
 msgstr "Fracciones a planificar"
@@ -6673,10 +4251,6 @@ msgstr "Fracciones a planificar"
 msgctxt "field:lims.planification.search_fractions.next,details_domain:"
 msgid "Fractions domain"
 msgstr "Dominio para Fracciones"
-
-msgctxt "field:lims.planification.search_fractions.next,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.search_planned_fractions.next,details:"
 msgid "Fractions to replan"
@@ -6686,10 +4260,6 @@ msgctxt ""
 "field:lims.planification.search_planned_fractions.next,details_domain:"
 msgid "Fractions domain"
 msgstr "Dominio para Fracciones"
-
-msgctxt "field:lims.planification.search_planned_fractions.next,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.search_planned_fractions.start,analysis:"
 msgid "Analysis/Sets/Groups"
@@ -6708,29 +4278,13 @@ msgctxt "field:lims.planification.search_planned_fractions.start,date_to:"
 msgid "Date to"
 msgstr "Fecha hasta"
 
-msgctxt "field:lims.planification.search_planned_fractions.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.planification.search_planned_fractions.start,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
 
-msgctxt "field:lims.planification.service_detail,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.planification.service_detail,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.planification.service_detail,detail:"
 msgid "Planification"
 msgstr "Planificación"
-
-msgctxt "field:lims.planification.service_detail,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.service_detail,is_control:"
 msgid "Is Control"
@@ -6752,10 +4306,6 @@ msgctxt "field:lims.planification.service_detail,planned_service:"
 msgid "Planned service"
 msgstr "Servicio planificado"
 
-msgctxt "field:lims.planification.service_detail,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.planification.service_detail,repetition:"
 msgid "Repetition"
 msgstr "Repetición"
@@ -6764,32 +4314,10 @@ msgctxt "field:lims.planification.service_detail,staff_responsible:"
 msgid "Laboratory professionals"
 msgstr "Profesionales de laboratorio"
 
-msgctxt "field:lims.planification.service_detail,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.planification.service_detail,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt ""
-"field:lims.planification.service_detail-laboratory.professional,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt ""
-"field:lims.planification.service_detail-laboratory.professional,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt ""
 "field:lims.planification.service_detail-laboratory.professional,detail:"
 msgid "Planification detail"
 msgstr "Detalle de planificación"
-
-msgctxt "field:lims.planification.service_detail-laboratory.professional,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt ""
 "field:lims.planification.service_detail-"
@@ -6797,36 +4325,9 @@ msgctxt ""
 msgid "Laboratory professional"
 msgstr "Profesional de laboratorio"
 
-msgctxt ""
-"field:lims.planification.service_detail-laboratory.professional,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt ""
-"field:lims.planification.service_detail-laboratory.professional,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt ""
-"field:lims.planification.service_detail-laboratory.professional,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.planification.technician,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.planification.technician,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.planification.technician,details:"
 msgid "Fractions to plan"
 msgstr "Fracciones a planificar"
-
-msgctxt "field:lims.planification.technician,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.technician,laboratory_professional:"
 msgid "Laboratory professional"
@@ -6836,18 +4337,6 @@ msgctxt "field:lims.planification.technician,planification:"
 msgid "Planification"
 msgstr "Planificación"
 
-msgctxt "field:lims.planification.technician,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.planification.technician,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.planification.technician,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.planification.technician.detail,analysis_origin:"
 msgid "Analysis origin"
 msgstr "Análisis origen"
@@ -6856,21 +4345,9 @@ msgctxt "field:lims.planification.technician.detail,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
 
-msgctxt "field:lims.planification.technician.detail,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.planification.technician.detail,method:"
 msgid "Method"
 msgstr "Método"
-
-msgctxt "field:lims.planification.unlink_technicians.detail1,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.planification.unlink_technicians.detail1,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.planification.unlink_technicians.detail1,fraction:"
 msgid "Fraction"
@@ -6880,17 +4357,9 @@ msgctxt "field:lims.planification.unlink_technicians.detail1,fraction_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
 
-msgctxt "field:lims.planification.unlink_technicians.detail1,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.planification.unlink_technicians.detail1,label:"
 msgid "Label"
 msgstr "Rótulo"
-
-msgctxt "field:lims.planification.unlink_technicians.detail1,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt ""
 "field:lims.planification.unlink_technicians.detail1,service_analysis:"
@@ -6901,14 +4370,6 @@ msgctxt "field:lims.planification.unlink_technicians.detail1,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
 
-msgctxt "field:lims.planification.unlink_technicians.detail1,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.planification.unlink_technicians.detail1,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.planification.unlink_technicians.start,details1:"
 msgid "Assigned fractions"
 msgstr "Fracciones asignadas"
@@ -6916,10 +4377,6 @@ msgstr "Fracciones asignadas"
 msgctxt "field:lims.planification.unlink_technicians.start,details1_domain:"
 msgid "Fractions domain"
 msgstr "Dominio para Fracciones"
-
-msgctxt "field:lims.planification.unlink_technicians.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.planification.unlink_technicians.start,technicians:"
 msgid "Technicians"
@@ -6938,10 +4395,6 @@ msgctxt "field:lims.print_analysis_checked_pending_inform.start,date_to:"
 msgid "Date to"
 msgstr "Fecha hasta"
 
-msgctxt "field:lims.print_analysis_checked_pending_inform.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.print_analysis_checked_pending_inform.start,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
@@ -6957,10 +4410,6 @@ msgstr "Fecha desde"
 msgctxt "field:lims.print_analysis_pending_inform.start,date_to:"
 msgid "Date to"
 msgstr "Fecha hasta"
-
-msgctxt "field:lims.print_analysis_pending_inform.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt ""
 "field:lims.print_analysis_pending_inform.start,include_comments_of_fraction:"
@@ -6983,73 +4432,21 @@ msgctxt "field:lims.print_blind_sample_report.start,date_to:"
 msgid "Date to"
 msgstr "Fecha hasta"
 
-msgctxt "field:lims.print_blind_sample_report.start,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.printer,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.printer,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.printer,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.printer,name:"
 msgid "Name"
 msgstr "Nombre"
-
-msgctxt "field:lims.printer,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.printer,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.printer,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.product.type,code:"
 msgid "Code"
 msgstr "Código"
 
-msgctxt "field:lims.product.type,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.product.type,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.product.type,description:"
 msgid "Description"
 msgstr "Descripción"
 
-msgctxt "field:lims.product.type,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.product.type,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.product.type,restricted_entry:"
 msgid "Restricted entry"
 msgstr "Ingreso restringido"
-
-msgctxt "field:lims.product.type,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.product.type,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.range,analysis:"
 msgid "Analysis"
@@ -7058,14 +4455,6 @@ msgstr "Análisis"
 msgctxt "field:lims.range,concentration:"
 msgid "Concentration"
 msgstr "Concentración"
-
-msgctxt "field:lims.range,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.range,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.range,factor:"
 msgid "Factor"
@@ -7082,10 +4471,6 @@ msgstr "Coef. de var. de nivel alto"
 msgctxt "field:lims.range,high_level_value:"
 msgid "High level value"
 msgstr "Valor nivel alto"
-
-msgctxt "field:lims.range,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.range,low_level:"
 msgid "Low level"
@@ -7139,10 +4524,6 @@ msgctxt "field:lims.range,range_type:"
 msgid "Origin"
 msgstr "Origen"
 
-msgctxt "field:lims.range,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.range,reference:"
 msgid "Reference"
 msgstr "Referencia"
@@ -7150,14 +4531,6 @@ msgstr "Referencia"
 msgctxt "field:lims.range,uom:"
 msgid "UoM"
 msgstr "UdM"
-
-msgctxt "field:lims.range,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.range,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.range.type,by_default:"
 msgid "By default"
@@ -7167,24 +4540,8 @@ msgctxt "field:lims.range.type,code:"
 msgid "Code"
 msgstr "Código"
 
-msgctxt "field:lims.range.type,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.range.type,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.range.type,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.range.type,name:"
 msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.range.type,rec_name:"
-msgid "Record Name"
 msgstr "Nombre"
 
 msgctxt "field:lims.range.type,resultrange_comments:"
@@ -7199,14 +4556,6 @@ msgctxt "field:lims.range.type,use:"
 msgid "Use"
 msgstr "Uso"
 
-msgctxt "field:lims.range.type,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.range.type,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.relate_analysis.start,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
@@ -7214,10 +4563,6 @@ msgstr "Análisis"
 msgctxt "field:lims.relate_analysis.start,analysis_domain:"
 msgid "Analysis domain"
 msgstr "Dominio para Análisis"
-
-msgctxt "field:lims.relate_analysis.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.results_report,attachments:"
 msgid "Attachments"
@@ -7231,14 +4576,6 @@ msgctxt "field:lims.results_report,create_date2:"
 msgid "Create Date"
 msgstr "Fecha de creación"
 
-msgctxt "field:lims.results_report,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.results_report,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.results_report,english_report:"
 msgid "English report"
 msgstr "Informe en inglés"
@@ -7246,10 +4583,6 @@ msgstr "Informe en inglés"
 msgctxt "field:lims.results_report,generation_type:"
 msgid "Generation type"
 msgstr "Tipo de generación"
-
-msgctxt "field:lims.results_report,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.results_report,notebook:"
 msgid "Laboratory notebook"
@@ -7262,10 +4595,6 @@ msgstr "Número"
 msgctxt "field:lims.results_report,party:"
 msgid "Party"
 msgstr "Entidad"
-
-msgctxt "field:lims.results_report,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.results_report,report_cache:"
 msgid "Report cache"
@@ -7311,29 +4640,9 @@ msgctxt "field:lims.results_report,write_date2:"
 msgid "Write Date"
 msgstr "Fecha de modificación"
 
-msgctxt "field:lims.results_report,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.results_report,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.results_report.version,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.results_report.version,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.results_report.version,details:"
 msgid "Detail lines"
 msgstr "Líneas de detalle"
-
-msgctxt "field:lims.results_report.version,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.results_report.version,laboratory:"
 msgid "Laboratory"
@@ -7343,10 +4652,6 @@ msgctxt "field:lims.results_report.version,number:"
 msgid "Number"
 msgstr "Número"
 
-msgctxt "field:lims.results_report.version,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.results_report.version,report_type:"
 msgid "Report type"
 msgstr "Tipo de informe"
@@ -7354,14 +4659,6 @@ msgstr "Tipo de informe"
 msgctxt "field:lims.results_report.version,results_report:"
 msgid "Results Report"
 msgstr "Informe de resultados"
-
-msgctxt "field:lims.results_report.version,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.results_report.version,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.results_report.version.detail,annulment_date:"
 msgid "Annulment date"
@@ -7387,14 +4684,6 @@ msgctxt "field:lims.results_report.version.detail,create_date2:"
 msgid "Create Date"
 msgstr "Fecha de creación"
 
-msgctxt "field:lims.results_report.version.detail,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.results_report.version.detail,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.results_report.version.detail,date:"
 msgid "Date"
 msgstr "Fecha"
@@ -7411,10 +4700,6 @@ msgctxt "field:lims.results_report.version.detail,icon:"
 msgid "Icon"
 msgstr "Icono"
 
-msgctxt "field:lims.results_report.version.detail,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.results_report.version.detail,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
@@ -7430,10 +4715,6 @@ msgstr "Versión"
 msgctxt "field:lims.results_report.version.detail,party:"
 msgid "Party"
 msgstr "Entidad"
-
-msgctxt "field:lims.results_report.version.detail,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.results_report.version.detail,report_cache:"
 msgid "Report cache"
@@ -7531,14 +4812,6 @@ msgctxt "field:lims.results_report.version.detail,write_date2:"
 msgid "Write Date"
 msgstr "Fecha de modificación"
 
-msgctxt "field:lims.results_report.version.detail,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.results_report.version.detail,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.results_report.version.detail.line,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
@@ -7560,14 +4833,6 @@ msgctxt ""
 msgid "Converted result modifier"
 msgstr "Modificador de resultado convertido"
 
-msgctxt "field:lims.results_report.version.detail.line,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.results_report.version.detail.line,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.results_report.version.detail.line,device:"
 msgid "Device"
 msgstr "Equipo"
@@ -7579,10 +4844,6 @@ msgstr "Fecha de finalización"
 msgctxt "field:lims.results_report.version.detail.line,final_unit:"
 msgid "Final unit"
 msgstr "Unidad final"
-
-msgctxt "field:lims.results_report.version.detail.line,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.results_report.version.detail.line,initial_unit:"
 msgid "Initial unit"
@@ -7624,10 +4885,6 @@ msgctxt "field:lims.results_report.version.detail.line,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
-msgctxt "field:lims.results_report.version.detail.line,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.results_report.version.detail.line,repetition:"
 msgid "Repetition"
 msgstr "Repetición"
@@ -7656,14 +4913,6 @@ msgctxt "field:lims.results_report.version.detail.line,urgent:"
 msgid "Urgent"
 msgstr "Urgente"
 
-msgctxt "field:lims.results_report.version.detail.line,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.results_report.version.detail.line,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.results_report_annulation.start,annulment_reason:"
 msgid "Annulment reason"
 msgstr "Motivo de anulación"
@@ -7671,10 +4920,6 @@ msgstr "Motivo de anulación"
 msgctxt "field:lims.results_report_annulation.start,annulment_reason_print:"
 msgid "Print annulment reason in next version"
 msgstr "Imprimir motivo de anulación en próxima versión"
-
-msgctxt "field:lims.results_report_annulation.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.sample,analysis_domain:"
 msgid "Analysis domain"
@@ -7695,14 +4940,6 @@ msgstr "Confirmado"
 msgctxt "field:lims.sample,create_date2:"
 msgid "Create Date"
 msgstr "Fecha de creación"
-
-msgctxt "field:lims.sample,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.sample,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.sample,date2:"
 msgid "Date"
@@ -7731,10 +4968,6 @@ msgstr "Informe de resultados"
 msgctxt "field:lims.sample,icon:"
 msgid "Icon"
 msgstr "Icono"
-
-msgctxt "field:lims.sample,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.sample,label:"
 msgid "Label"
@@ -7800,10 +5033,6 @@ msgctxt "field:lims.sample,product_type_view:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
-msgctxt "field:lims.sample,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.sample,report_comments:"
 msgid "Report comments"
 msgstr "Observaciones informe"
@@ -7840,14 +5069,6 @@ msgctxt "field:lims.sample,variety:"
 msgid "Variety"
 msgstr "Variedad"
 
-msgctxt "field:lims.sample,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.sample,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.sample,zone:"
 msgid "Zone"
 msgstr "Zona"
@@ -7855,10 +5076,6 @@ msgstr "Zona"
 msgctxt "field:lims.sample.duplicate.start,date:"
 msgid "Date"
 msgstr "Fecha de ingreso"
-
-msgctxt "field:lims.sample.duplicate.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.sample.duplicate.start,labels:"
 msgid "Labels"
@@ -7872,10 +5089,6 @@ msgctxt "field:lims.sample.edit_service.start,analysis_domain:"
 msgid "Analysis domain"
 msgstr "Dominio para Análisis"
 
-msgctxt "field:lims.sample.edit_service.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.sample.edit_service.start,matrix:"
 msgid "Matrix"
 msgstr "Matriz"
@@ -7888,18 +5101,6 @@ msgctxt "field:lims.sample.edit_service.start,services:"
 msgid "Services"
 msgstr "Servicios"
 
-msgctxt "field:lims.sample.producer,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.sample.producer,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.sample.producer,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.sample.producer,name:"
 msgid "Name"
 msgstr "Nombre"
@@ -7908,29 +5109,9 @@ msgctxt "field:lims.sample.producer,party:"
 msgid "Party"
 msgstr "Entidad"
 
-msgctxt "field:lims.sample.producer,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.sample.producer,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.sample.producer,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.scope_version.add_typifications.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.scope_version.add_typifications.start,typifications:"
 msgid "Typifications"
 msgstr "Tipificaciones"
-
-msgctxt "field:lims.scope_version.remove_typifications.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.scope_version.remove_typifications.start,typifications:"
 msgid "Typifications"
@@ -7977,14 +5158,6 @@ msgctxt "field:lims.service,create_date2:"
 msgid "Create Date"
 msgstr "Fecha de creación"
 
-msgctxt "field:lims.service,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.service,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.service,device:"
 msgid "Device"
 msgstr "Equipo"
@@ -8020,10 +5193,6 @@ msgstr "Informe de resultados"
 msgctxt "field:lims.service,icon:"
 msgid "Icon"
 msgstr "Icono"
-
-msgctxt "field:lims.service,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.service,laboratory:"
 msgid "Laboratory"
@@ -8069,10 +5238,6 @@ msgctxt "field:lims.service,priority:"
 msgid "Priority"
 msgstr "Prioridad"
 
-msgctxt "field:lims.service,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.service,report_date:"
 msgid "Date agreed for result"
 msgstr "Fecha pactada de resultado"
@@ -8089,57 +5254,17 @@ msgctxt "field:lims.service,urgent:"
 msgid "Urgent"
 msgstr "Urgente"
 
-msgctxt "field:lims.service,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.service,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.technical.scope,certification_type:"
 msgid "Certification type"
 msgstr "Tipo de certificación"
-
-msgctxt "field:lims.technical.scope,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.technical.scope,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.technical.scope,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.technical.scope,party:"
 msgid "Party"
 msgstr "Entidad"
 
-msgctxt "field:lims.technical.scope,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.technical.scope,versions:"
 msgid "Versions"
 msgstr "Versiones"
-
-msgctxt "field:lims.technical.scope,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.technical.scope,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.technical.scope.version,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.technical.scope.version,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.technical.scope.version,date:"
 msgid "Date"
@@ -8149,17 +5274,9 @@ msgctxt "field:lims.technical.scope.version,expiration_date:"
 msgid "Expiration date"
 msgstr "Fecha de expiración"
 
-msgctxt "field:lims.technical.scope.version,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.technical.scope.version,number:"
 msgid "Number"
 msgstr "Número"
-
-msgctxt "field:lims.technical.scope.version,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.technical.scope.version,technical_scope:"
 msgid "Technical scope"
@@ -8173,30 +5290,6 @@ msgctxt "field:lims.technical.scope.version,version_lines:"
 msgid "Typifications"
 msgstr "Tipificaciones"
 
-msgctxt "field:lims.technical.scope.version,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.technical.scope.version,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.technical.scope.version.line,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.technical.scope.version.line,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.technical.scope.version.line,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.technical.scope.version.line,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.technical.scope.version.line,typification:"
 msgid "Typification"
 msgstr "Tipificación"
@@ -8204,14 +5297,6 @@ msgstr "Tipificación"
 msgctxt "field:lims.technical.scope.version.line,version:"
 msgid "Technical scope version"
 msgstr "Versión de alcance técnico"
-
-msgctxt "field:lims.technical.scope.version.line,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.technical.scope.version.line,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.typification,additional:"
 msgid "Additional analysis"
@@ -8245,14 +5330,6 @@ msgctxt "field:lims.typification,comments:"
 msgid "Comments"
 msgstr "Observaciones"
 
-msgctxt "field:lims.typification,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.typification,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.typification,default_repetitions:"
 msgid "Default repetitions"
 msgstr "Repeticiones por defecto"
@@ -8268,10 +5345,6 @@ msgstr "UdM final"
 msgctxt "field:lims.typification,final_concentration:"
 msgid "Final concentration"
 msgstr "Concentración final"
-
-msgctxt "field:lims.typification,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.typification,initial_concentration:"
 msgid "Initial concentration"
@@ -8305,10 +5378,6 @@ msgctxt "field:lims.typification,quantification_limit:"
 msgid "Quantification limit"
 msgstr "Límite de cuantificación"
 
-msgctxt "field:lims.typification,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.typification,report:"
 msgid "Report"
 msgstr "Informar"
@@ -8341,61 +5410,17 @@ msgctxt "field:lims.typification,valid_view:"
 msgid "Active"
 msgstr "Activo"
 
-msgctxt "field:lims.typification,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.typification,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.typification-analysis,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
-
-msgctxt "field:lims.typification-analysis,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.typification-analysis,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.typification-analysis,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.typification-analysis,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.typification-analysis,typification:"
 msgid "Typification"
 msgstr "Tipificación"
 
-msgctxt "field:lims.typification-analysis,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.typification-analysis,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.typification.calculated,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
-
-msgctxt "field:lims.typification.calculated,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.typification.calculated,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.typification.calculated,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.typification.calculated,matrix:"
 msgid "Matrix"
@@ -8405,18 +5430,6 @@ msgctxt "field:lims.typification.calculated,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
-msgctxt "field:lims.typification.calculated,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.typification.calculated,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.typification.calculated,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.typification.calculated.copy.start,destination_matrix:"
 msgid "Matrix"
 msgstr "Matriz"
@@ -8425,10 +5438,6 @@ msgctxt ""
 "field:lims.typification.calculated.copy.start,destination_product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
-
-msgctxt "field:lims.typification.calculated.copy.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.typification.calculated.copy.start,origin_analysis:"
 msgid "Set/Group"
@@ -8446,18 +5455,6 @@ msgctxt "field:lims.typification.calculated.readonly,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
 
-msgctxt "field:lims.typification.calculated.readonly,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.typification.calculated.readonly,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.typification.calculated.readonly,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.typification.calculated.readonly,matrix:"
 msgid "Matrix"
 msgstr "Matriz"
@@ -8465,18 +5462,6 @@ msgstr "Matriz"
 msgctxt "field:lims.typification.calculated.readonly,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
-
-msgctxt "field:lims.typification.calculated.readonly,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.typification.calculated.readonly,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.typification.calculated.readonly,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.typification.copy.start,action:"
 msgid "Action"
@@ -8493,10 +5478,6 @@ msgstr "Método"
 msgctxt "field:lims.typification.copy.start,destination_product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
-
-msgctxt "field:lims.typification.copy.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.typification.copy.start,origin_analysis:"
 msgid "Analysis"
@@ -8518,18 +5499,6 @@ msgctxt "field:lims.typification.readonly,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
 
-msgctxt "field:lims.typification.readonly,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.typification.readonly,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.typification.readonly,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.typification.readonly,matrix:"
 msgid "Matrix"
 msgstr "Matriz"
@@ -8542,29 +5511,9 @@ msgctxt "field:lims.typification.readonly,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
-msgctxt "field:lims.typification.readonly,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.typification.readonly,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.typification.readonly,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.uom.conversion,conversion_formula:"
 msgid "Conversion formula"
 msgstr "Fórmula de conversión"
-
-msgctxt "field:lims.uom.conversion,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.uom.conversion,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.uom.conversion,final_uom:"
 msgid "Final UoM"
@@ -8574,10 +5523,6 @@ msgctxt "field:lims.uom.conversion,final_uom_volume:"
 msgid "Volume involved in Final UoM"
 msgstr "Volumen implicado en UdM final"
 
-msgctxt "field:lims.uom.conversion,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.uom.conversion,initial_uom:"
 msgid "Initial UoM"
 msgstr "UdM Inicial"
@@ -8586,149 +5531,41 @@ msgctxt "field:lims.uom.conversion,initial_uom_volume:"
 msgid "Volume involved in Initial UoM"
 msgstr "Volumen implicado en UdM inicial"
 
-msgctxt "field:lims.uom.conversion,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.uom.conversion,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.uom.conversion,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.user-laboratory,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.user-laboratory,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.user-laboratory,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.user-laboratory,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
-
-msgctxt "field:lims.user-laboratory,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.user-laboratory,user:"
 msgid "User"
 msgstr "Usuario"
 
-msgctxt "field:lims.user-laboratory,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.user-laboratory,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.user.role,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.user.role,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.user.role,groups:"
 msgid "Groups"
 msgstr "Grupos"
-
-msgctxt "field:lims.user.role,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.user.role,name:"
 msgid "Name"
 msgstr "Nombre"
 
-msgctxt "field:lims.user.role,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.user.role,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.user.role,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.user.role-res.group,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.user.role-res.group,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.user.role-res.group,group:"
 msgid "Group"
 msgstr "Grupo"
-
-msgctxt "field:lims.user.role-res.group,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.user.role-res.group,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.user.role-res.group,role:"
 msgid "Role"
 msgstr "Rol"
 
-msgctxt "field:lims.user.role-res.group,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.user.role-res.group,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.variety,code:"
 msgid "Code"
 msgstr "Código"
-
-msgctxt "field:lims.variety,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.variety,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.variety,description:"
 msgid "Description"
 msgstr "Descripción"
 
-msgctxt "field:lims.variety,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.variety,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.variety,varieties:"
 msgid "Product Type - Matrix"
 msgstr "Tipo de producto - Matriz"
-
-msgctxt "field:lims.variety,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.variety,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.volume.conversion,brix:"
 msgid "Brix"
@@ -8738,14 +5575,6 @@ msgctxt "field:lims.volume.conversion,brix_digits:"
 msgid "Brix digits"
 msgstr "Dígitos de Brix"
 
-msgctxt "field:lims.volume.conversion,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.volume.conversion,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.volume.conversion,density:"
 msgid "Density"
 msgstr "Densidad"
@@ -8753,14 +5582,6 @@ msgstr "Densidad"
 msgctxt "field:lims.volume.conversion,density_digits:"
 msgid "Density digits"
 msgstr "Dígitos de Densidad"
-
-msgctxt "field:lims.volume.conversion,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.volume.conversion,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.volume.conversion,soluble_solids:"
 msgid "Soluble solids"
@@ -8770,49 +5591,17 @@ msgctxt "field:lims.volume.conversion,soluble_solids_digits:"
 msgid "Soluble solids digits"
 msgstr "Dígitos de Sólidos solubles"
 
-msgctxt "field:lims.volume.conversion,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.volume.conversion,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.zone,code:"
 msgid "Code"
 msgstr "Código"
-
-msgctxt "field:lims.zone,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.zone,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.zone,description:"
 msgid "Description"
 msgstr "Descripción"
 
-msgctxt "field:lims.zone,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.zone,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.zone,restricted_entry:"
 msgid "Restricted entry"
 msgstr "Ingreso restringido"
-
-msgctxt "field:lims.zone,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.zone,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:party.address,acknowledgment_contact:"
 msgid "Acknowledgment contact"
@@ -8922,14 +5711,6 @@ msgctxt "field:stock.move,fraction_readonly:"
 msgid "Fraction Read Only"
 msgstr "Fracción solo lectura"
 
-msgctxt "field:user.department,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:user.department,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:user.department,default:"
 msgid "By default"
 msgstr "Por defecto"
@@ -8938,37 +5719,13 @@ msgctxt "field:user.department,department:"
 msgid "Department"
 msgstr "Departamento"
 
-msgctxt "field:user.department,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:user.department,rec_name:"
-msgid "Record Name"
-msgstr "Nombre del registro"
-
 msgctxt "field:user.department,user:"
 msgid "User"
 msgstr "Usuario"
 
-msgctxt "field:user.department,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:user.department,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "help:lims.analysis.device,active:"
-msgid "Uncheck to exclude from future use."
-msgstr "Desmarcar para excluir de uso en el futuro."
-
 msgctxt "help:lims.configuration,mail_ack_subject:"
 msgid "In the text will be added suffix with the entry report number"
 msgstr "En el texto se añadirá sufijo con el número de ingreso del informe"
-
-msgctxt "help:lims.lab.device,active:"
-msgid "Uncheck to exclude from future use."
-msgstr "Desmarcar para excluir de uso en el futuro."
 
 msgctxt "help:lims.lab.device.correction,formula:"
 msgid "Correction formula based on the given value (X)"
