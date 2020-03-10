@@ -169,6 +169,8 @@
             id="lims_lab_device_type_menu" sequence="40"/>
         <menuitem parent="lims_config_laboratory" action="act_lims_lab_device_list"
             id="lims_lab_device_menu" sequence="50"/>
+        <menuitem action="act_notebook_rule_list" id="menu_notebook_rule_list"
+            parent="lims_config_laboratory" sequence="60"/>
 
         <record model="ir.model.access" id="access_configuration">
             <field name="model" search="[('model', '=', 'lims.configuration')]"/>
