@@ -283,10 +283,6 @@
             <field name="act_window" ref="act_notebook_rule_list"/>
         </record>
 
-        <menuitem action="act_notebook_rule_list"
-            id="menu_notebook_rule_list"
-            parent="lims_config_laboratory" sequence="60"/>
-
 <!-- Notebook Rule Condition -->
 
         <record model="ir.ui.view" id="notebook_rule_condition_view_form">
