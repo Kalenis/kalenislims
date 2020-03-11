@@ -134,10 +134,6 @@ msgctxt "field:lims.interface.column,type_:"
 msgid "Field Type"
 msgstr "Tipo de campo"
 
-msgctxt "field:lims.interface.compilation,data:"
-msgid "Data"
-msgstr "Datos"
-
 msgctxt "field:lims.interface.compilation,date_time:"
 msgid "Date"
 msgstr "Fecha"
@@ -165,10 +161,6 @@ msgstr "Estado"
 msgctxt "field:lims.interface.compilation,table:"
 msgid "Table"
 msgstr "Tabla"
-
-msgctxt "field:lims.interface.compilation,table_name:"
-msgid "Table name"
-msgstr "Nombre de tabla"
 
 msgctxt "field:lims.interface.compilation.origin,compilation:"
 msgid "Compilation"

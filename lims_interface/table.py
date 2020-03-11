@@ -79,6 +79,8 @@ class TableField(ModelSQL, ModelView):
     type = fields.Selection([(None, '')] + FIELD_TYPE_SELECTION,
         'Field Type', required=False)
     help = fields.Text('Help')
+    transfer_field = fields.Boolean('Is a transfer field')
+    related_line_field = fields.Many2One('ir.model.field', 'Related Field')
     related_model = fields.Many2One('ir.model', 'Related Model')
     formula = fields.Char('On Change With Formula')
     inputs = fields.Function(fields.Char('On Change With Inputs'),

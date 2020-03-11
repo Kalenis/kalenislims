@@ -4,7 +4,6 @@
     <field name="date_time" widget="time" string="Time"/>
     <field name="interface"/>
     <field name="revision"/>
-    <field name="table_name"/>
     <field name="device"/>
     <field name="state"/>
 </tree>

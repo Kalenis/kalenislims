@@ -8,10 +8,9 @@
         <label name="revision"/>
         <field name="revision"/>
     </group>
-    <label name="table_name"/>
-    <field name="table_name"/>
     <label name="device"/>
     <field name="device"/>
+    <field name="table" invisible="1" />
     <button name="view_data" string="View data" colspan="4"/>
     <notebook>
         <page string="Origins" id="origins">

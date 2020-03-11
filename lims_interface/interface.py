@@ -298,6 +298,8 @@ class Interface(Workflow, ModelSQL, ModelView):
                         string=column.name,
                         type=column.type_,
                         help=column.expression,
+                        transfer_field=column.transfer_field,
+                        related_line_field=column.related_line_field,
                         related_model=column.related_model,
                         formula=(column.expression if column.expression and
                             column.expression.startswith('=') else None),
@@ -588,11 +590,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
     revision = fields.Integer('Revision', states={
             'readonly': Eval('state') != 'draft',
             }, depends=['state'])
-    table_name = fields.Char('Table name')
-    table = fields.Function(fields.Many2One('lims.interface.table',
-        'Table'), 'get_table')
+    table = fields.Many2One('lims.interface.table', 'Table')
     device = fields.Many2One('lims.lab.device', 'Device')
-    data = fields.One2Many('lims.interface.data', 'compilation', 'Data')
     origins = fields.One2Many('lims.interface.compilation.origin',
        'compilation', 'Origins')
     state = fields.Selection([
@@ -643,17 +642,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
     def default_state():
         return 'draft'
 
-    def get_table(self, name):
-        Table = Pool().get('lims.interface.table')
-        if not self.interface or not self.revision:
-            return None
-        table_name = ('lims_interface_table_data_%d_%d' % (
-            self.interface.id, self.revision))
-        table_id = Table.search([('name', '=', table_name)])
-        return table_id[0] if table_id else None
-
-    @fields.depends('interface', 'revision')
+    @fields.depends('interface', 'table', 'revision')
     def on_change_interface(self):
+        self.table = self.interface.table if self.interface else None
         self.revision = self.interface.revision if self.interface else None
 
     @classmethod
@@ -699,7 +690,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
         delimiter = separator[self.interface.field_separator]
         first_row = self.interface.first_row - 1
         with Transaction().set_context(
-                lims_interface_table=self.interface.table):
+                lims_interface_table=self.table):
             imported_files = []
             for origin in self.origins:
                 if origin.imported:
@@ -759,7 +750,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
         schema_keys = list(schema.keys())
         first_row = self.interface.first_row
         with Transaction().set_context(
-                lims_interface_table=self.interface.table):
+                lims_interface_table=self.table):
             imported_files = []
             for origin in self.origins:
                 if origin.imported:
@@ -910,6 +901,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
     def validate_(cls, compilations):
         pool = Pool()
         Data = pool.get('lims.interface.data')
+        Field = pool.get('lims.interface.table.field')
 
         for c in compilations:
             nbl_alias = None
@@ -919,14 +911,17 @@ class Compilation(Workflow, ModelSQL, ModelView):
                 raise UserError(gettext(
                     'lims_interface.no_notebook_line_field_defined'))
             result_fields = {}
-            for column in c.interface.columns:
-                if column.transfer_field:
-                    result_fields[column.alias] = {
-                        'type': column.type_,
-                        'field_name': column.related_line_field.name,
-                        }
+            fields = Field.search([
+                ('table', '=', c.table),
+                ('transfer_field', '=', True)
+                ])
+            for field in fields:
+                result_fields[field.name] = {
+                    'type': field.type,
+                    'field_name': field.related_line_field.name,
+                    }
             with Transaction().set_context(
-                    lims_interface_table=c.interface.table):
+                    lims_interface_table=c.table):
                 lines = Data.search([
                     ('compilation', '=', c.id)
                     ])
@@ -947,6 +942,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
     def confirm(cls, compilations):
         pool = Pool()
         Data = pool.get('lims.interface.data')
+        Field = pool.get('lims.interface.table.field')
         NotebookLine = pool.get('lims.notebook.line')
 
         for c in compilations:
@@ -954,14 +950,17 @@ class Compilation(Workflow, ModelSQL, ModelView):
             if c.interface.notebook_line_field:
                 nbl_alias = c.interface.notebook_line_field.alias
             result_fields = {}
-            for column in c.interface.columns:
-                if column.transfer_field:
-                    result_fields[column.alias] = {
-                        'type': column.type_,
-                        'field_name': column.related_line_field.name,
-                        }
+            fields = Field.search([
+                ('table', '=', c.table),
+                ('transfer_field', '=', True)
+                ])
+            for field in fields:
+                result_fields[field.name] = {
+                    'type': field.type,
+                    'field_name': field.related_line_field.name,
+                    }
             with Transaction().set_context(
-                    lims_interface_table=c.interface.table):
+                    lims_interface_table=c.table):
                 lines = Data.search([
                     ('compilation', '=', c.id)
                     ])
