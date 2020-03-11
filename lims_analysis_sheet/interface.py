@@ -721,9 +721,6 @@ class Compilation(metaclass=PoolMeta):
         cls.interface.states['readonly'] = Bool(Eval('analysis_sheet'))
         if 'analysis_sheet' not in cls.interface.depends:
             cls.interface.depends.append('analysis_sheet')
-        cls.table_name.states['readonly'] = Bool(Eval('analysis_sheet'))
-        if 'analysis_sheet' not in cls.table_name.depends:
-            cls.table_name.depends.append('analysis_sheet')
         cls.revision.states['readonly'] = Or(Bool(Eval('analysis_sheet')),
             Eval('state') != 'draft')
         if 'analysis_sheet' not in cls.revision.depends:
