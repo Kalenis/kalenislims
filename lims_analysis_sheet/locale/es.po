@@ -62,6 +62,14 @@ msgctxt "field:lims.analysis_sheet,urgent:"
 msgid "Urgent"
 msgstr "Urgente"
 
+msgctxt "field:lims.analysis_sheet.add_fraction_con.start,fraction_domain:"
+msgid "Fraction domain"
+msgstr "Dominio para Fracción"
+
+msgctxt "field:lims.analysis_sheet.add_fraction_con.start,original_fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
 msgctxt "field:lims.analysis_sheet.export_file.start,file:"
 msgid "File"
 msgstr "Archivo"
@@ -183,6 +191,10 @@ msgctxt "model:ir.action,name:report_analysis_sheet"
 msgid "Analysis Sheet Report"
 msgstr "Informe de Hoja de análisis"
 
+msgctxt "model:ir.action,name:wiz_analysis_sheet_add_fraction_con"
+msgid "Add Fraction Control"
+msgstr "01) Añadir fracción Control"
+
 msgctxt "model:ir.action,name:wiz_analysis_sheet_export_file"
 msgid "Export Analysis Sheet File"
 msgstr "Exportar Hoja de análisis"
@@ -238,6 +250,10 @@ msgstr "Plantillas de Hoja de análisis"
 msgctxt "model:lims.analysis_sheet,name:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
+
+msgctxt "model:lims.analysis_sheet.add_fraction_con.start,name:"
+msgid "Add Fraction Control"
+msgstr "Añadir fracción Control"
 
 msgctxt "model:lims.analysis_sheet.export_file.start,name:"
 msgid "Export Analysis Sheet File"
@@ -546,6 +562,14 @@ msgstr "Análisis"
 msgctxt "view:lims.template.analysis_sheet:"
 msgid "Comments"
 msgstr "Observaciones"
+
+msgctxt "wizard_button:lims.analysis_sheet.add_fraction_con,start,add:"
+msgid "Add"
+msgstr "Añadir"
+
+msgctxt "wizard_button:lims.analysis_sheet.add_fraction_con,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:lims.analysis_sheet.export_file,start,end:"
 msgid "Close"
