@@ -21,5 +21,34 @@
             <field name="action" ref="wiz_analysis_sheet_add_fraction_con"/>
         </record>
 
+<!-- Wizard Repeat Analysis -->
+
+        <record model="ir.ui.view" id="analysis_sheet_repeat_analysis_start_form">
+            <field name="model">lims.analysis_sheet.repeat_analysis.start</field>
+            <field name="type">form</field>
+            <field name="name">analysis_sheet_repeat_analysis_start_form</field>
+        </record>
+        <record model="ir.ui.view" id="analysis_sheet_repeat_analysis_start_line_list">
+            <field name="model">lims.analysis_sheet.repeat_analysis.start.line</field>
+            <field name="type">tree</field>
+            <field name="name">analysis_sheet_repeat_analysis_start_line_list</field>
+        </record>
+        <record model="ir.ui.view" id="analysis_sheet_repeat_analysis_start_line_form">
+            <field name="model">lims.analysis_sheet.repeat_analysis.start.line</field>
+            <field name="type">form</field>
+            <field name="name">analysis_sheet_repeat_analysis_start_line_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_analysis_sheet_repeat_analysis">
+            <field name="name">Repeat Analysis</field>
+            <field name="wiz_name">lims.analysis_sheet.repeat_analysis</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_analysis_sheet_repeat_analysis_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.analysis_sheet,-1</field>
+            <field name="action" ref="wiz_analysis_sheet_repeat_analysis"/>
+        </record>
+
     </data>
 </tryton>

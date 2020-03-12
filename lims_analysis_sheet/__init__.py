@@ -27,6 +27,8 @@ def register():
         planification.RelateTechniciansDetail4,
         notebook.NotebookLine,
         notebook.AddFractionControlStart,
+        notebook.RepeatAnalysisStart,
+        notebook.RepeatAnalysisStartLine,
         module='lims_analysis_sheet', type_='model')
     Pool.register(
         interface.OpenAnalysisSheetData,
@@ -34,6 +36,7 @@ def register():
         planification.SearchAnalysisSheet,
         planification.RelateTechnicians,
         notebook.AddFractionControl,
+        notebook.RepeatAnalysis,
         module='lims_analysis_sheet', type_='wizard')
     Pool.register(
         interface.AnalysisSheetReport,

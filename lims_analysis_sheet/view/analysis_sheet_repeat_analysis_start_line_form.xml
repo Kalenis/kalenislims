@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form col="6">
+    <label name="fraction"/>
+    <field name="fraction"/>
+    <label name="analysis"/>
+    <field name="analysis"/>
+    <label name="repetition"/>
+    <field name="repetition"/>
+</form>
