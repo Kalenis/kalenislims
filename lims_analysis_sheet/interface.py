@@ -514,6 +514,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def get_new_compilation(self):
         Compilation = Pool().get('lims.interface.compilation')
         compilation = Compilation(
+            table=self.template.interface.table.id,
             interface=self.template.interface.id,
             revision=self.template.interface.revision,
             )
