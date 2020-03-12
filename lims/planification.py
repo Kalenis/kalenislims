@@ -2480,8 +2480,12 @@ class AddFractionRMBMZ(Wizard):
         if not workyear.default_entry_control:
             raise UserError(gettext('lims.msg_no_entry_control'))
 
-        laboratory = self.start.planification.laboratory
         entry = Entry(workyear.default_entry_control.id)
+        if not entry.party.entry_zone:
+            raise UserError(gettext('lims.msg_no_party_zone',
+                party=entry.party.rec_name))
+
+        laboratory = self.start.planification.laboratory
         obj_description = self._get_obj_description(self.start)
 
         # new sample
@@ -2909,8 +2913,12 @@ class AddFractionBRE(Wizard):
         if not workyear.default_entry_control:
             raise UserError(gettext('lims.msg_no_entry_control'))
 
-        laboratory = self.start.planification.laboratory
         entry = Entry(workyear.default_entry_control.id)
+        if not entry.party.entry_zone:
+            raise UserError(gettext('lims.msg_no_party_zone',
+                party=entry.party.rec_name))
+
+        laboratory = self.start.planification.laboratory
         obj_description = self._get_obj_description(self.start)
 
         # new sample
@@ -3268,8 +3276,12 @@ class AddFractionMRT(Wizard):
         if not workyear.default_entry_control:
             raise UserError(gettext('lims.msg_no_entry_control'))
 
-        laboratory = self.start.planification.laboratory
         entry = Entry(workyear.default_entry_control.id)
+        if not entry.party.entry_zone:
+            raise UserError(gettext('lims.msg_no_party_zone',
+                party=entry.party.rec_name))
+
+        laboratory = self.start.planification.laboratory
         obj_description = self._get_obj_description(self.start)
 
         # new sample
@@ -4461,8 +4473,12 @@ class CreateFractionControl(Wizard):
         if not workyear.default_entry_control:
             raise UserError(gettext('lims.msg_no_entry_control'))
 
-        laboratory = self.start.laboratory
         entry = Entry(workyear.default_entry_control.id)
+        if not entry.party.entry_zone:
+            raise UserError(gettext('lims.msg_no_party_zone',
+                party=entry.party.rec_name))
+
+        laboratory = self.start.laboratory
         obj_description = self._get_obj_description(self.start)
 
         # new sample

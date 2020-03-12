@@ -6927,6 +6927,10 @@ msgctxt "model:ir.message,text:msg_no_mrt_fraction_type"
 msgid "There is no MRT fraction type configured"
 msgstr "No hay configurado ningún tipo de fracción MRT"
 
+msgctxt "model:ir.message,text:msg_no_party_zone"
+msgid "Party \"%(party)s\" does not have a Zone configured"
+msgstr "La entidad «%(party)s» no tiene configurada una Zona"
+
 msgctxt "model:ir.message,text:msg_no_rm_default_configuration"
 msgid "Missing default configuration for RM fraction type"
 msgstr "Falta la configuración por defecto para el tipo de fracción RM"
