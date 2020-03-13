@@ -82,6 +82,7 @@ class TableField(ModelSQL, ModelView):
     transfer_field = fields.Boolean('Is a transfer field')
     related_line_field = fields.Many2One('ir.model.field', 'Related Field')
     related_model = fields.Many2One('ir.model', 'Related Model')
+    domain = fields.Char('Domain Value')
     formula = fields.Char('On Change With Formula')
     inputs = fields.Function(fields.Char('On Change With Inputs'),
         'get_inputs')

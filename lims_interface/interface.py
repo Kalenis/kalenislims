@@ -330,6 +330,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                         string=column.name,
                         type=column.type_,
                         help=column.expression,
+                        domain=column.domain,
                         transfer_field=column.transfer_field,
                         related_line_field=column.related_line_field,
                         related_model=column.related_model,
@@ -449,6 +450,7 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         }, depends=['is_fixed_value'])
     expression_icon = fields.Function(fields.Char('Expression Icon'),
         'on_change_with_expression_icon')
+    domain = fields.Char('Domain Value')
     type_ = fields.Selection([
         (None, ''),
         ('char', 'Text (single-line)'),

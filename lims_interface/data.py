@@ -189,6 +189,7 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
                     field.related_model else None),
                 'readonly': bool(field.formula),
                 'help': field.help,
+                'domain': field.domain,
                 }
             if field.inputs:
                 res[field.name]['on_change_with'] = field.inputs.split()
