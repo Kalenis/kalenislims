@@ -171,6 +171,10 @@ msgctxt "field:lims.template.analysis_sheet,comments:"
 msgid "Comments"
 msgstr "Observaciones"
 
+msgctxt "field:lims.template.analysis_sheet,controls_required:"
+msgid "Requires Controls"
+msgstr "Requiere controles"
+
 msgctxt "field:lims.template.analysis_sheet,interface:"
 msgid "Device Interface"
 msgstr "Interfaz"
@@ -246,6 +250,10 @@ msgstr "Buscar Hojas de ensayos"
 msgctxt "model:ir.message,text:msg_sheet_compilation_unique"
 msgid "Compilation already in use by another Analysis Sheet"
 msgstr "La Compilación ya está en uso para otra Hoja de análisis"
+
+msgctxt "model:ir.message,text:msg_sheet_not_controls"
+msgid "Controls are required for this Analysis Sheet"
+msgstr "Se requieren Controles para esta Hoja de análisis"
 
 msgctxt "model:ir.message,text:msg_sheet_not_lines"
 msgid "The analysis sheet has no data"
