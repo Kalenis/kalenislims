@@ -90,10 +90,11 @@ class AddFractionControl(Wizard):
                     Analysis.get_included_analysis_analysis(
                         t_analysis.analysis.id))
 
+        controls_allowed = sheet.template.controls_allowed or ['0']
         stored_fractions_ids = Fraction.get_stored_fractions()
 
         notebook_lines = NotebookLine.search([
-            ('notebook.fraction.special_type', '=', 'con'),
+            ('notebook.fraction.special_type', 'in', controls_allowed),
             ('notebook.fraction.id', 'in', stored_fractions_ids),
             ('analysis', 'in', t_analysis_ids),
             ('result', 'in', (None, '')),

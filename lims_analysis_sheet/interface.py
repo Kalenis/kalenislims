@@ -40,6 +40,20 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
             ('report_name', 'ilike', 'lims.analysis_sheet.report%%'),
             ])
     controls_required = fields.Boolean('Requires Controls')
+    controls_allowed = fields.MultiSelection([
+        ('con', 'Control'),
+        ('bmz', 'BMZ'),
+        ('rm', 'RM'),
+        ('bre', 'BRE'),
+        ('mrt', 'MRT'),
+        ('coi', 'COI'),
+        ('mrc', 'MRC'),
+        ('sla', 'SLA'),
+        ('itc', 'ITC'),
+        ('itl', 'ITL'),
+        ], 'Controls allowed', sort=False,
+        states={'required': Bool(Eval('controls_required'))},
+        depends=['controls_required'])
 
     @staticmethod
     def default_report():
@@ -519,6 +533,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         for s in sheets:
             if not s.template.controls_required:
                 continue
+            controls_allowed = s.template.controls_allowed
 
             nl_field = (s.template.interface.notebook_line_field and
                 s.template.interface.notebook_line_field.alias or None)
@@ -530,7 +545,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 lines = Data.search([('compilation', '=', s.compilation.id)])
                 for line in lines:
                     nl = getattr(line, nl_field)
-                    if nl and nl.fraction.special_type == 'con':
+                    if nl and nl.fraction.special_type in controls_allowed:
                         ok = True
                         break
                 if not ok:

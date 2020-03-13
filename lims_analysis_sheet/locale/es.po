@@ -171,6 +171,10 @@ msgctxt "field:lims.template.analysis_sheet,comments:"
 msgid "Comments"
 msgstr "Observaciones"
 
+msgctxt "field:lims.template.analysis_sheet,controls_allowed:"
+msgid "Controls allowed"
+msgstr "Controles habilitados"
+
 msgctxt "field:lims.template.analysis_sheet,controls_required:"
 msgid "Requires Controls"
 msgstr "Requiere controles"
@@ -571,6 +575,46 @@ msgctxt "selection:lims.planification.relate_technicians.start,grouping:"
 msgid "Analysis sheet"
 msgstr "Hoja de análisis"
 
+msgctxt "selection:lims.template.analysis_sheet,controls_allowed:"
+msgid "BMZ"
+msgstr "BMZ"
+
+msgctxt "selection:lims.template.analysis_sheet,controls_allowed:"
+msgid "BRE"
+msgstr "BRE"
+
+msgctxt "selection:lims.template.analysis_sheet,controls_allowed:"
+msgid "COI"
+msgstr "COI"
+
+msgctxt "selection:lims.template.analysis_sheet,controls_allowed:"
+msgid "Control"
+msgstr "Control"
+
+msgctxt "selection:lims.template.analysis_sheet,controls_allowed:"
+msgid "ITC"
+msgstr "ITC"
+
+msgctxt "selection:lims.template.analysis_sheet,controls_allowed:"
+msgid "ITL"
+msgstr "ITL"
+
+msgctxt "selection:lims.template.analysis_sheet,controls_allowed:"
+msgid "MRC"
+msgstr "MRC"
+
+msgctxt "selection:lims.template.analysis_sheet,controls_allowed:"
+msgid "MRT"
+msgstr "MRT"
+
+msgctxt "selection:lims.template.analysis_sheet,controls_allowed:"
+msgid "RM"
+msgstr "RM"
+
+msgctxt "selection:lims.template.analysis_sheet,controls_allowed:"
+msgid "SLA"
+msgstr "SLA"
+
 msgctxt "view:lims.analysis_sheet:"
 msgid "%"
 msgstr "%"
@@ -614,6 +658,10 @@ msgstr "Análisis"
 msgctxt "view:lims.template.analysis_sheet:"
 msgid "Comments"
 msgstr "Observaciones"
+
+msgctxt "view:lims.template.analysis_sheet:"
+msgid "Controls"
+msgstr "Controles"
 
 msgctxt "wizard_button:lims.analysis_sheet.add_fraction_con,start,add:"
 msgid "Add"
