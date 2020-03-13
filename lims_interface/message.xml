@@ -3,6 +3,24 @@
         <record model="ir.message" id="invalid_alias">
             <field name="text">Invalid symbol "%(symbol)s" in column "%(name)s".</field>
         </record>
+        <record model="ir.message" id="invalid_fixed_value">
+            <field name="text">The fixed value "%(value)s" in "%(name)s" is invalid according to its type.</field>
+        </record>
+        <record model="ir.message" id="invalid_fixed_value_type">
+            <field name="text">The field type in "%(name)s" is not valid for fixed values.</field>
+        </record>
+        <record model="ir.message" id="invalid_fixed_value_boolean">
+            <field name="text">In "%(name)s" fixed value use 0 for False, and any other integer for True.</field>
+        </record>
+        <record model="ir.message" id="invalid_fixed_value_date">
+            <field name="text">The date fixed value in "%(name)s" is not valid. Check locale format and configure the template language.</field>
+        </record>
+        <record model="ir.message" id="invalid_fixed_value_many2one_id">
+            <field name="text">The fixed value in "%(name)s" should be the id of a valid resource of the model picked in 'Related model'. You can get the 'id' browsing the model and right clicking on the resource.</field>
+        </record>
+        <record model="ir.message" id="invalid_fixed_value_many2one">
+            <field name="text">The resource set as fixed value in "%(name)s" is not valid or it does not exist.</field>
+        </record>
         <record model="ir.message" id="duplicated_origin_file">
             <field name="text">File "%(file_name)s" already exists as origin.</field>
         </record>
