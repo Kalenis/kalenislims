@@ -12,19 +12,20 @@ __all__ = ['FormulaParser']
 
 class FormulaParser(Model):
     'Formula Parser'
+    __slots__ = ('_string', '_index', '_vars')
 
     def __init__(self, string, vars={}, id=None, **kwargs):
-        self.string = string
-        self.index = 0
-        self.vars = {
+        self._string = string
+        self._index = 0
+        self._vars = {
             'pi': 3.141592653589793,
             'e': 2.718281828459045,
             }
         for var in list(vars.keys()):
-            if self.vars.get(var) is not None:
+            if self._vars.get(var) is not None:
                 raise UserError(gettext(
                     'lims.msg_variable_redefine', variable=var))
-            self.vars[var] = vars[var]
+            self._vars[var] = vars[var]
         super(FormulaParser, self).__init__(id, **kwargs)
 
     def getValue(self):
@@ -32,19 +33,19 @@ class FormulaParser(Model):
         self.skipWhitespace()
         if self.hasNext():
             raise UserError(gettext('lims.msg_unexpected_character',
-                character=self.peek(), index=str(self.index)))
+                character=self.peek(), index=str(self._index)))
         return value
 
     def peek(self):
-        return self.string[self.index:self.index + 1]
+        return self._string[self._index:self._index + 1]
 
     def hasNext(self):
-        return self.index < len(self.string)
+        return self._index < len(self._string)
 
     def skipWhitespace(self):
         while self.hasNext():
             if self.peek() in ' \t\n\r':
-                self.index += 1
+                self._index += 1
             else:
                 return
 
@@ -57,10 +58,10 @@ class FormulaParser(Model):
             self.skipWhitespace()
             char = self.peek()
             if char == '+':
-                self.index += 1
+                self._index += 1
                 values.append(self.parseMultiplication())
             elif char == '-':
-                self.index += 1
+                self._index += 1
                 values.append(-1 * self.parseMultiplication())
             else:
                 break
@@ -72,11 +73,11 @@ class FormulaParser(Model):
             self.skipWhitespace()
             char = self.peek()
             if char == '*':
-                self.index += 1
+                self._index += 1
                 values.append(self.parsePower())
             elif char == '/':
-                # div_index = self.index
-                self.index += 1
+                # div_index = self._index
+                self._index += 1
                 denominator = self.parsePower()
                 if denominator == 0:
                     # raise UserError(gettext(
@@ -96,7 +97,7 @@ class FormulaParser(Model):
             self.skipWhitespace()
             char = self.peek()
             if char == '^':
-                self.index += 1
+                self._index += 1
                 values.append(self.parseParenthesis())
             else:
                 break
@@ -109,13 +110,13 @@ class FormulaParser(Model):
         self.skipWhitespace()
         char = self.peek()
         if char == '(':
-            self.index += 1
+            self._index += 1
             value = self.parseExpression()
             self.skipWhitespace()
             if self.peek() != ')':
                 raise UserError(gettext(
-                    'lims.msg_closing_parenthesis', index=str(self.index)))
-            self.index += 1
+                    'lims.msg_closing_parenthesis', index=str(self._index)))
+            self._index += 1
             return value
         else:
             return self.parseNegative()
@@ -124,7 +125,7 @@ class FormulaParser(Model):
         self.skipWhitespace()
         char = self.peek()
         if char == '-':
-            self.index += 1
+            self._index += 1
             return -1 * self.parseParenthesis()
         else:
             return self.parseValue()
@@ -144,11 +145,11 @@ class FormulaParser(Model):
             char = self.peek()
             if char.lower() in '_abcdefghijklmnopqrstuvwxyz0123456789':
                 var += char
-                self.index += 1
+                self._index += 1
             else:
                 break
 
-        value = self.vars.get(var, None)
+        value = self._vars.get(var, None)
         if value is None:
             raise UserError(gettext(
                 'lims.msg_unrecognized_variable', variable=var))
@@ -171,20 +172,20 @@ class FormulaParser(Model):
             if char == '.':
                 if decimal_found:
                     raise UserError(gettext(
-                        'lims.msg_extra_period', index=str(self.index)))
+                        'lims.msg_extra_period', index=str(self._index)))
                 decimal_found = True
                 strValue += '.'
             elif char in '0123456789':
                 strValue += char
             else:
                 break
-            self.index += 1
+            self._index += 1
 
         if len(strValue) == 0:
             if char == '':
                 raise UserError(gettext('lims.msg_unexpected_end'))
             else:
                 raise UserError(gettext('lims.msg_number_expected',
-                    index=str(self.index), character=char))
+                    index=str(self._index), character=char))
 
         return float(strValue)
