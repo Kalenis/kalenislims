@@ -106,6 +106,38 @@ def convert_to_symbol(text):
     return symbol
 
 
+def str2date(value, lang=None):
+    Lang = Pool().get('ir.lang')
+    if lang is None:
+        lang = Lang.get()
+    try:
+        return datetime.strptime(value, lang.date)
+    except Exception:
+        return datetime.strptime(value, '%Y/%m/%d')
+
+
+def get_model_resource(model_name, value, field_name):
+    Model = Pool().get(model_name)
+    rec_name = Model._rec_name
+    if rec_name not in Model._fields:
+        rec_name = 'id'
+        try:
+            value = int(value)
+        except:
+            raise UserError(gettext(
+                'lims_interface.invalid_fixed_value_many2one_id',
+                name=field_name))
+    resource = Model.search([rec_name, '=', value])
+    if not resource or len(resource) > 1:
+        if 'code' in Model._fields:
+            resource = Model.search(['code', '=', value])
+        if not resource or len(resource) > 1:
+            raise UserError(gettext(
+                'lims_interface.invalid_fixed_value_many2one',
+                name=field_name))
+    return resource
+
+
 class Interface(Workflow, ModelSQL, ModelView):
     'Interface'
     __name__ = 'lims.interface'
@@ -412,7 +444,9 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         states={'readonly': Eval('interface_state') != 'draft'},
         depends=['interface_state'])
     evaluation_order = fields.Integer('Evaluation order')
-    expression = fields.Char('Formula')
+    expression = fields.Char('Formula', states={
+        'readonly': Bool(Eval('is_fixed_value')),
+        }, depends=['is_fixed_value'])
     expression_icon = fields.Function(fields.Char('Expression Icon'),
         'on_change_with_expression_icon')
     type_ = fields.Selection([
@@ -439,6 +473,13 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
             'required': Eval('type_') == 'many2one',
             'invisible': Eval('type_') != 'many2one',
         }, depends=['type_'])
+    is_fixed_value = fields.Boolean('Is a fixed value',
+        help='Check to define a fixed value for this column')
+    fixed_value = fields.Char('Fixed value',
+        states={
+            'required': Bool(Eval('is_fixed_value')),
+            'invisible': Not(Eval('is_fixed_value')),
+        }, depends=['is_fixed_value'])
     source_start = fields.Integer('Field start',
         states={
             'required': Eval('_parent_interface',
@@ -455,14 +496,18 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         })
     source_column = fields.Integer('Column',
         states={
+            'readonly': Bool(Eval('is_fixed_value')),
             'invisible': Eval('_parent_interface',
                 {}).get('template_type') == 'txt',
-        }, help='Mapped column in source file')
+        }, depends=['is_fixed_value'],
+        help='Mapped column in source file')
     singleton = fields.Boolean('Is a singleton value',
         states={
+            'readonly': Bool(Eval('is_fixed_value')),
             'invisible': Eval('_parent_interface',
                 {}).get('template_type') == 'txt',
-        }, help='Is a fixed value (column:row) in source file')
+        }, depends=['is_fixed_value'],
+        help='Is a fixed value (column:row) in source file')
     source_row = fields.Integer('Row',
         states={
             'required': Bool(Eval('singleton')),
@@ -493,6 +538,14 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
                 'in an interface.')
             ]
 
+    @fields.depends('is_fixed_value', 'expression', 'singleton',
+        'source_column')
+    def on_change_is_fixed_value(self):
+        if self.is_fixed_value:
+            self.expression = None
+            self.singleton = False
+            self.source_column = None
+
     @fields.depends('name', 'alias', 'interface',
         '_parent_interface.columns', 'evaluation_order')
     def on_change_name(self):
@@ -510,12 +563,48 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
     def validate(cls, columns):
         for column in columns:
             column.check_alias()
+            column.check_fix_value()
 
     def check_alias(self):
         for symbol in self.alias:
             if symbol not in VALID_SYMBOLS:
                 raise UserError(gettext('lims_interface.invalid_alias',
                     symbol=symbol, name=self.name))
+
+    def check_fix_value(self):
+        if self.is_fixed_value:
+            if self.type_ in [
+                    'datetime', 'time', 'timestamp', 'timedelta',
+                    'icon', 'image', 'binary', 'reference',
+                    ]:
+                raise UserError(gettext(
+                    'lims_interface.invalid_fixed_value_type',
+                    name=self.name))
+            if self.type_ == 'boolean':
+                try:
+                    int(self.fixed_value)
+                except:
+                    raise UserError(gettext(
+                        'lims_interface.invalid_fixed_value_boolean',
+                        name=self.name))
+            elif self.type_ == 'date':
+                try:
+                    str2date(self.fixed_value, self.interface.language)
+                except:
+                    raise UserError(gettext(
+                        'lims_interface.invalid_fixed_value_date',
+                        name=self.name))
+            elif self.type_ == 'many2one':
+                get_model_resource(
+                    self.related_model.model, self.fixed_value, self.name)
+            else:
+                ftype = FIELD_TYPE_PYTHON[self.type_]
+                try:
+                    ftype(self.fixed_value)
+                except:
+                    raise UserError(gettext(
+                        'lims_interface.invalid_fixed_value',
+                        value=self.fixed_value, name=self.name))
 
     def formula_error(self):
         if not self.expression:
@@ -708,17 +797,29 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         continue
                     line = {'compilation': self.id}
                     for k in schema_keys:
-                        col = schema[k]['col']
-                        if not row[col - 1] or not str(row[col - 1]).strip():
-                            line[k] = None
-                            continue
+                        value = None
+                        if schema[k]['is_fixed_value']:
+                            value = schema[k]['fixed_value']
+                        else:
+                            col = schema[k]['col']
+                            if not row[col - 1] or \
+                                    not str(row[col - 1]).strip():
+                                line[k] = None
+                                continue
+                            value = row[col - 1]
+
                         if schema[k]['type'] == 'integer':
-                            line[k] = int(row[col - 1])
+                            line[k] = int(value)
                         elif schema[k]['type'] == 'float':
-                            line[k] = float(row[col - 1])
+                            line[k] = float(value)
                         elif schema[k]['type'] == 'date':
-                            line[k] = self.str2date(
-                                str(row[col - 1]), self.interface.language)
+                            line[k] = str2date(value, self.interface.language)
+                        elif schema[k]['type'] == 'many2one' and \
+                                schema[k]['is_fixed_value']:
+                            resource = get_model_resource(
+                                schema[k]['model_name'],
+                                value, schema[k]['field_name'])
+                            line[k] = resource[0].id
                         else:
                             line[k] = str(row[col - 1])
 
@@ -763,23 +864,38 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     for i in range(first_row, max_row):
                         line = {'compilation': self.id}
                         for k in schema_keys:
-                            col = schema[k]['col']
-                            row = i
-                            if schema[k]['singleton']:
-                                row = schema[k]['row']
-                            value = sheet.cell(row=row, column=col).value
-                            if value is None:
-                                line[k] = None
-                                continue
+                            value = None
+                            if schema[k]['is_fixed_value']:
+                                value = schema[k]['fixed_value']
+                            else:
+                                col = schema[k]['col']
+                                row = i
+                                if schema[k]['singleton']:
+                                    row = schema[k]['row']
+                                value = sheet.cell(row=row, column=col).value
+                                if value is None:
+                                    line[k] = None
+                                    continue
+
                             if schema[k]['type'] == 'integer':
                                 line[k] = int(value)
                             elif schema[k]['type'] == 'float':
                                 line[k] = float(value)
                             elif schema[k]['type'] == 'date':
-                                if isinstance(value, datetime):
-                                    line[k] = value
+                                if schema[k]['is_fixed_value']:
+                                    line[k] = str2date(
+                                        value, self.interface.language)
                                 else:
-                                    line[k] = None
+                                    if isinstance(value, datetime):
+                                        line[k] = value
+                                    else:
+                                        line[k] = None
+                            elif schema[k]['type'] == 'many2one' and \
+                                    schema[k]['is_fixed_value']:
+                                resource = get_model_resource(
+                                    schema[k]['model_name'],
+                                    value, schema[k]['field_name'])
+                                line[k] = resource[0].id
                             else:
                                 line[k] = str(value)
 
@@ -807,17 +923,28 @@ class Compilation(Workflow, ModelSQL, ModelView):
         schema = {}
         formula_fields = {}
         for column in self.interface.columns:
-            if column.source_column:
+            if column.source_column or column.is_fixed_value:
                 schema[column.alias] = {
                     'col': column.source_column,
                     'type': column.type_,
                     'singleton': False,
+                    'is_fixed_value': False,
                     }
                 if column.singleton:
                     schema[column.alias].update({
                         'singleton': True,
                         'row': column.source_row,
                         })
+                if column.is_fixed_value:
+                    schema[column.alias].update({
+                        'is_fixed_value': True,
+                        'fixed_value': column.fixed_value,
+                        })
+                    if column.type_ == 'many2one':
+                        schema[column.alias].update({
+                            'field_name': column.name,
+                            'model_name': column.related_model.model,
+                            })
             if column.expression:
                 formula_fields[column.alias] = {
                     'type': column.type_,
@@ -884,16 +1011,6 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     if nb_line:
                         return nb_line[0]
         return None
-
-    @staticmethod
-    def str2date(value, lang=None):
-        Lang = Pool().get('ir.lang')
-        if lang is None:
-            lang = Lang.get()
-        try:
-            return datetime.strptime(value, lang.date)
-        except Exception:
-            return datetime.strptime(value, '%Y/%m/%d')
 
     @classmethod
     @ModelView.button

@@ -11,4 +11,5 @@
     <field name="source_row"/>
     <field name="source_start"/>
     <field name="source_end"/>
+    <field name="is_fixed_value"/>
 </tree>
