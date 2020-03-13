@@ -563,7 +563,7 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
     def validate(cls, columns):
         for column in columns:
             column.check_alias()
-            column.check_fix_value()
+            column.check_fixed_value()
 
     def check_alias(self):
         for symbol in self.alias:
@@ -571,7 +571,7 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
                 raise UserError(gettext('lims_interface.invalid_alias',
                     symbol=symbol, name=self.name))
 
-    def check_fix_value(self):
+    def check_fixed_value(self):
         if self.is_fixed_value:
             if self.type_ in [
                     'datetime', 'time', 'timestamp', 'timedelta',
