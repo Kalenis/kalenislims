@@ -7,9 +7,11 @@ from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
+from trytond.modules.lims.formula_parser import FormulaParser
 
 __all__ = ['NotebookLine', 'AddFractionControlStart', 'AddFractionControl',
-    'RepeatAnalysisStart', 'RepeatAnalysisStartLine', 'RepeatAnalysis']
+    'RepeatAnalysisStart', 'RepeatAnalysisStartLine', 'RepeatAnalysis',
+    'InternalRelationsCalc']
 
 
 class NotebookLine(metaclass=PoolMeta):
@@ -313,3 +315,177 @@ class RepeatAnalysis(Wizard):
                 #})
 
         return 'end'
+
+
+class InternalRelationsCalc(Wizard):
+    'Internal Relations Calculation'
+    __name__ = 'lims.analysis_sheet.internal_relations_calc'
+
+    start_state = 'check'
+    check = StateTransition()
+    calcuate = StateTransition()
+
+    def transition_check(self):
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
+
+        sheet_id = Transaction().context['active_id']
+        sheet = AnalysisSheet(sheet_id)
+
+        if sheet.state in ('active', 'validated'):
+            return 'calcuate'
+
+        return 'end'
+
+    def transition_calcuate(self):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        ModelField = pool.get('ir.model.field')
+        Column = pool.get('lims.interface.column')
+        Data = pool.get('lims.interface.data')
+
+        sheet_id = Transaction().context['active_id']
+        sheet = AnalysisSheet(sheet_id)
+
+        nl_field = (sheet.template.interface.notebook_line_field and
+            sheet.template.interface.notebook_line_field.alias or None)
+        if not nl_field:
+            return 'end'
+
+        nl_result_field, = ModelField.search([
+            ('model.model', '=', 'lims.notebook.line'),
+            ('name', '=', 'result'),
+            ])
+        result_column = Column.search([
+            ('interface', '=', sheet.template.interface),
+            ('transfer_field', '=', True),
+            ('related_line_field', '=', nl_result_field)
+            ])
+        if not result_column:
+            return 'end'
+
+        result_field = result_column[0].alias
+        relations = {}
+        notebooks = {}
+        with Transaction().set_context(
+                lims_interface_table=sheet.compilation.table.id):
+            lines = Data.search([('compilation', '=', sheet.compilation.id)])
+            for line in lines:
+                notebook_line = getattr(line, nl_field)
+                if not notebook_line:
+                    continue
+                if notebook_line.notebook.id not in notebooks:
+                    notebooks[notebook_line.notebook.id] = {}
+                notebooks[notebook_line.notebook.id][
+                    notebook_line.analysis.code] = getattr(line, result_field)
+                if notebook_line.analysis.behavior == 'internal_relation':
+                    relations[line] = notebook_line
+
+            if not relations:
+                return 'end'
+
+            for s_line, n_line in relations.items():
+                result = self._get_relation_result(n_line.analysis.code,
+                    notebooks[n_line.notebook.id])
+                if result is not None:
+                    s_line.set_result(str(result), result_field)
+
+        return 'end'
+
+    def _get_relation_result(self, analysis_code, vars, round_=False):
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+
+        internal_relations = Analysis.search([
+            ('code', '=', analysis_code),
+            ])
+        if not internal_relations:
+            return None
+        formula = internal_relations[0].result_formula
+        if not formula:
+            return None
+        for i in (' ', '\t', '\n', '\r'):
+            formula = formula.replace(i, '')
+        variables = self._get_variables(formula, vars)
+        if not variables:
+            return None
+
+        parser = FormulaParser(formula, variables)
+        value = parser.getValue()
+
+        if int(value) == value:
+            res = int(value)
+        else:
+            epsilon = 0.0000000001
+            if int(value + epsilon) != int(value):
+                res = int(value + epsilon)
+            elif int(value - epsilon) != int(value):
+                res = int(value)
+            else:
+                res = float(value)
+        if not round_:
+            return res
+        decimals = 4
+        return round(res, decimals)
+
+    def _get_analysis_result(self, analysis_code, vars):
+        try:
+            res = float(vars[analysis_code])
+        except (TypeError, ValueError):
+            return None
+        decimals = 4
+        return round(res, decimals)
+
+    def _get_variables(self, formula, vars):
+        pool = Pool()
+        VolumeConversion = pool.get('lims.volume.conversion')
+
+        variables = {}
+        for prefix in ('A', 'D', 'T', 'Y', 'R'):
+            while True:
+                idx = formula.find(prefix)
+                if idx >= 0:
+                    var = formula[idx:idx + 5]
+                    variables[var] = None
+                    formula = formula.replace(var, '_')
+                else:
+                    break
+        for var in variables.keys():
+            if var[0] == 'A':
+                analysis_code = var[1:]
+                result = self._get_analysis_result(analysis_code, vars)
+                if result is not None:
+                    variables[var] = result
+            elif var[0] == 'D':
+                analysis_code = var[1:]
+                result = self._get_analysis_result(analysis_code, vars)
+                if result is not None:
+                    result = VolumeConversion.brixToDensity(result)
+                    if result is not None:
+                        variables[var] = result
+            elif var[0] == 'T':
+                analysis_code = var[1:]
+                result = self._get_analysis_result(analysis_code, vars)
+                if result is not None:
+                    result = VolumeConversion.brixToSolubleSolids(result)
+                    if result is not None:
+                        variables[var] = result
+            elif var[0] == 'R':
+                analysis_code = var[1:]
+                result = self._get_relation_result(analysis_code, vars,
+                    round_=True)
+                if result is not None:
+                    result = VolumeConversion.brixToSolubleSolids(result)
+                    if result is not None:
+                        variables[var] = result
+            elif var[0] == 'Y':
+                analysis_code = var[1:]
+                result = self._get_relation_result(analysis_code, vars,
+                    round_=True)
+                if result is not None:
+                    result = VolumeConversion.brixToDensity(result)
+                    if result is not None:
+                        variables[var] = result
+        for var in variables.values():
+            if var is None:
+                return None
+        return variables

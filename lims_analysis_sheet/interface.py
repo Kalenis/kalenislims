@@ -2,6 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from io import StringIO
+import sql
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateView, StateAction, Button
@@ -14,7 +15,7 @@ from trytond.i18n import gettext
 
 __all__ = ['TemplateAnalysisSheet', 'TemplateAnalysisSheetAnalysis',
     'AnalysisSheet', 'OpenAnalysisSheetData', 'AnalysisSheetReport',
-    'Compilation', 'Column', 'ExportAnalysisSheetFileStart',
+    'Compilation', 'Column', 'Data', 'ExportAnalysisSheetFileStart',
     'ExportAnalysisSheetFile']
 
 
@@ -746,3 +747,32 @@ class Column(metaclass=PoolMeta):
 
     destination_column = fields.Integer('Destination Column',
         help='Mapped column in batch file')
+
+
+class Data(metaclass=PoolMeta):
+    __name__ = 'lims.interface.data'
+
+    def set_result(self, result, result_field=None):
+        pool = Pool()
+        cursor = Transaction().connection.cursor()
+        ModelField = pool.get('ir.model.field')
+        Column = pool.get('lims.interface.column')
+
+        if not result_field:
+            nl_result_field, = ModelField.search([
+                ('model.model', '=', 'lims.notebook.line'),
+                ('name', '=', 'result'),
+                ])
+            result_column = Column.search([
+                ('interface', '=', self.compilation.interface),
+                ('transfer_field', '=', True),
+                ('related_line_field', '=', nl_result_field)
+                ])
+            if not result_column:
+                return
+            result_field = result_column[0].alias
+
+        table = self.get_sql_table()
+        query = table.update([sql.Column(table, result_field)], [result],
+            where=(table.id == self.id))
+        cursor.execute(*query)

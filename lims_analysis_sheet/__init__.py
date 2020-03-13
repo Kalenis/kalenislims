@@ -18,6 +18,7 @@ def register():
         interface.AnalysisSheet,
         interface.Compilation,
         interface.Column,
+        interface.Data,
         interface.ExportAnalysisSheetFileStart,
         planification.Planification,
         planification.SearchAnalysisSheetStart,
@@ -37,6 +38,7 @@ def register():
         planification.RelateTechnicians,
         notebook.AddFractionControl,
         notebook.RepeatAnalysis,
+        notebook.InternalRelationsCalc,
         module='lims_analysis_sheet', type_='wizard')
     Pool.register(
         interface.AnalysisSheetReport,

@@ -227,6 +227,10 @@ msgctxt "model:ir.action,name:wiz_analysis_sheet_export_file"
 msgid "Export Analysis Sheet File"
 msgstr "Exportar Hoja de análisis"
 
+msgctxt "model:ir.action,name:wiz_analysis_sheet_internal_relations_calc"
+msgid "Internal Relations Calculation"
+msgstr "03) Cálculo de relaciones internas"
+
 msgctxt "model:ir.action,name:wiz_analysis_sheet_open_data"
 msgid "Open Analysis Sheet Data"
 msgstr "Abrir datos de Hoja de análisis"
