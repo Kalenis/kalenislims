@@ -19,6 +19,10 @@
         <field name="expression" xexpand="1"/>
         <image name="expression_icon" xexpand="0" size="30"/>
     </group>
+    <group id="domain_value" colspan="4" col="4">
+        <label name="domain"/>
+        <field name="domain" colspan="3" widget="pyson"/>
+    </group>
     <group id="fixed_value_field" colspan="4" col="4">
         <label name="is_fixed_value"/>
         <field name="is_fixed_value" xexpand="0"/>
