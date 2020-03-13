@@ -39,6 +39,7 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
             ('model', '=', 'lims.analysis_sheet'),
             ('report_name', 'ilike', 'lims.analysis_sheet.report%%'),
             ])
+    controls_required = fields.Boolean('Requires Controls')
 
     @staticmethod
     def default_report():
@@ -271,7 +272,6 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def get_urgent(cls, sheets, name):
         pool = Pool()
         Data = pool.get('lims.interface.data')
-        NotebookLine = pool.get('lims.notebook.line')
 
         result = {}
         for s in sheets:
@@ -285,7 +285,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 lines = Data.search([('compilation', '=', s.compilation.id)])
                 for line in lines:
                     nl = getattr(line, nl_field)
-                    if nl and NotebookLine(nl).service.urgent:
+                    if nl and nl.service.urgent:
                         result[s.id] = True
                         break
         return result
@@ -294,7 +294,6 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def get_samples_qty(cls, sheets, name):
         pool = Pool()
         Data = pool.get('lims.interface.data')
-        NotebookLine = pool.get('lims.notebook.line')
 
         result = {}
         for s in sheets:
@@ -310,7 +309,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 for line in lines:
                     nl = getattr(line, nl_field)
                     if nl:
-                        samples.append(NotebookLine(nl).fraction.id)
+                        samples.append(nl.fraction.id)
                 result[s.id] = len(list(set(samples)))
         return result
 
@@ -318,7 +317,6 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def get_incomplete_sample(cls, sheets, name):
         pool = Pool()
         Data = pool.get('lims.interface.data')
-        NotebookLine = pool.get('lims.notebook.line')
 
         result = {}
         for s in sheets:
@@ -335,7 +333,6 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     nl = getattr(line, nl_field)
                     if not nl:
                         continue
-                    nl = NotebookLine(nl)
                     if nl.fraction.id not in samples:
                         samples[nl.fraction.id] = []
                     samples[nl.fraction.id].append(nl.analysis.id)
@@ -469,6 +466,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def validate_(cls, sheets):
         Compilation = Pool().get('lims.interface.compilation')
         cls.check_results(sheets)
+        cls.check_controls(sheets)
         Compilation.validate_([s.compilation for s in sheets])
 
     @classmethod
@@ -477,6 +475,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def confirm(cls, sheets):
         Compilation = Pool().get('lims.interface.compilation')
         cls.check_results(sheets)
+        cls.check_controls(sheets)
         Compilation.confirm([s.compilation for s in sheets])
 
     @classmethod
@@ -511,6 +510,32 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     if not getattr(line, result_field):
                         raise UserError(gettext(
                             'lims_analysis_sheet.msg_sheet_not_results'))
+
+    @classmethod
+    def check_controls(cls, sheets):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+
+        for s in sheets:
+            if not s.template.controls_required:
+                continue
+
+            nl_field = (s.template.interface.notebook_line_field and
+                s.template.interface.notebook_line_field.alias or None)
+            if not nl_field:
+                continue
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                ok = False
+                lines = Data.search([('compilation', '=', s.compilation.id)])
+                for line in lines:
+                    nl = getattr(line, nl_field)
+                    if nl and nl.fraction.special_type == 'con':
+                        ok = True
+                        break
+                if not ok:
+                    raise UserError(gettext(
+                        'lims_analysis_sheet.msg_sheet_not_controls'))
 
     def get_new_compilation(self):
         Compilation = Pool().get('lims.interface.compilation')
