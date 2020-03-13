@@ -12,6 +12,9 @@
         <page string="Analysis" id="analysis">
             <field name="analysis" colspan="4"/>
         </page>
+        <page string="Controls" id="controls">
+            <field name="controls_allowed" colspan="4"/>
+        </page>
         <page string="Comments" id="comments">
             <field name="comments" colspan="4"/>
         </page>
