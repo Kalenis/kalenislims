@@ -812,6 +812,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
                             line[k] = int(value)
                         elif schema[k]['type'] == 'float':
                             line[k] = float(value)
+                        elif schema[k]['type'] == 'boolean' and \
+                                schema[k]['is_fixed_value']:
+                            line[k] = bool(value)
                         elif schema[k]['type'] == 'date':
                             line[k] = str2date(value, self.interface.language)
                         elif schema[k]['type'] == 'many2one' and \
@@ -881,6 +884,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
                                 line[k] = int(value)
                             elif schema[k]['type'] == 'float':
                                 line[k] = float(value)
+                            elif schema[k]['type'] == 'boolean' and \
+                                    schema[k]['is_fixed_value']:
+                                line[k] = bool(value)
                             elif schema[k]['type'] == 'date':
                                 if schema[k]['is_fixed_value']:
                                     line[k] = str2date(
