@@ -250,7 +250,7 @@ class Equipment(ModelSQL, ModelView):
             power = self.template.power
             for type in self.template.component_types:
                 value = Component(**Component.default_get(
-                    list(Component._fields.keys())))
+                    list(Component._fields.keys()), with_rec_name=False))
                 value.type = type.id
                 components.append(value)
         self.model = model
