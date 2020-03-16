@@ -57,7 +57,8 @@ class AdministrativeTaskTemplate(ModelSQL, ModelView):
 
         new_tasks = []
         for record in records:
-            value = AdministrativeTask.default_get(default_fields)
+            value = AdministrativeTask.default_get(default_fields,
+                with_rec_name=False)
             value.update({
                 'type': type,
                 'description': template.description,
