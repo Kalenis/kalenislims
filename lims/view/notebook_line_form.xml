@@ -30,8 +30,9 @@
     <field name="final_concentration"/>
     <label name="planification"/>
     <field name="planification"/>
-    <field name="controls" colspan="4"/>
-    <field name="laboratory_professionals" colspan="4"/>
+    <newline/>
+    <field name="laboratory_professionals" colspan="2"/>
+    <field name="controls" colspan="2"/>
     <label name="initial_unit"/>
     <field name="initial_unit"/>
     <label name="final_unit"/>
