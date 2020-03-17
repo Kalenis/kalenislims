@@ -655,10 +655,10 @@ class NotebookRule(ModelSQL, ModelView):
             ('notebook', '=', line.notebook),
             ('analysis', '=', self.target_analysis),
             ], order=[('repetition', 'DESC')], limit=1)
-        if existing_line:
-            self._exec_add_repetition(existing_line[0])
-        else:
+        if not existing_line:
             self._exec_add_service(line, typification[0])
+        #else:
+            #self._exec_add_repetition(existing_line[0])
 
     def _exec_add_repetition(self, line):
         pool = Pool()
