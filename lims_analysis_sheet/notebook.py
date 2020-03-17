@@ -431,7 +431,7 @@ class InternalRelationsCalc(Wizard):
     def _get_analysis_result(self, analysis_code, vars):
         try:
             res = float(vars[analysis_code])
-        except (TypeError, ValueError):
+        except (KeyError, TypeError, ValueError):
             return None
         decimals = 4
         return round(res, decimals)
