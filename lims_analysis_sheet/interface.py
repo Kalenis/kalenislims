@@ -12,6 +12,8 @@ from trytond.transaction import Transaction
 from trytond.report import Report
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
+from trytond.modules.lims_interface.interface import str2date, \
+    get_model_resource
 
 __all__ = ['TemplateAnalysisSheet', 'TemplateAnalysisSheetAnalysis',
     'AnalysisSheet', 'OpenAnalysisSheetData', 'AnalysisSheetReport',
@@ -609,11 +611,28 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         if not interface.notebook_line_field:
             return
 
+        fixed_values = {}
+        schema, _ = self.compilation._get_schema()
+        for k in list(schema.keys()):
+            if schema[k]['is_fixed_value']:
+                value = schema[k]['fixed_value']
+                if schema[k]['type'] == 'boolean':
+                    fixed_values[k] = bool(value)
+                elif schema[k]['type'] == 'date':
+                    fixed_values[k] = str2date(value, interface.language)
+                elif schema[k]['type'] == 'many2one':
+                    resource = get_model_resource(schema[k]['model_name'],
+                        value, schema[k]['field_name'])
+                    fixed_values[k] = resource and resource[0].id
+                else:
+                    fixed_values[k] = value
+
         with Transaction().set_context(
                 lims_interface_table=self.compilation.table.id):
             data = []
             for nl in lines:
                 line = {'compilation': self.compilation.id}
+                line.update(fixed_values)
                 line[interface.notebook_line_field.alias] = nl.id
                 if interface.analysis_field:
                     if interface.analysis_field.type_ == 'many2one':
