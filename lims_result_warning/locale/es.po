@@ -2,9 +2,9 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "field:lims.notebook.line,warn_result:"
-msgid "Warn Result"
-msgstr "Advertir resultado"
+msgctxt "field:lims.notebook.line,result_warning:"
+msgid "Result Warning"
+msgstr "Advertencia de resultado"
 
 msgctxt "model:ir.message,text:lbl_result_warning"
 msgid "Result Warning"
