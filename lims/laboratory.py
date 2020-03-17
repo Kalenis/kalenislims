@@ -630,20 +630,20 @@ class NotebookRule(ModelSQL, ModelView):
                 return False
         return True
 
-    def exec_action(self, notebook):
+    def exec_action(self, line):
         if self.action == 'add':
-            self._exec_add(notebook)
+            self._exec_add(line)
         elif self.action == 'edit':
-            self._exec_edit(notebook)
+            self._exec_edit(line)
 
-    def _exec_add(self, notebook):
+    def _exec_add(self, line):
         pool = Pool()
         Typification = pool.get('lims.typification')
         NotebookLine = pool.get('lims.notebook.line')
 
         typification = Typification.search([
-            ('product_type', '=', notebook.product_type),
-            ('matrix', '=', notebook.matrix),
+            ('product_type', '=', line.product_type),
+            ('matrix', '=', line.matrix),
             ('analysis', '=', self.target_analysis),
             ('by_default', '=', True),
             ('valid', '=', True),
@@ -652,13 +652,13 @@ class NotebookRule(ModelSQL, ModelView):
             return
 
         existing_line = NotebookLine.search([
-            ('notebook', '=', notebook),
+            ('notebook', '=', line.notebook),
             ('analysis', '=', self.target_analysis),
             ], order=[('repetition', 'DESC')], limit=1)
         if existing_line:
             self._exec_add_repetition(existing_line[0])
         else:
-            self._exec_add_service(notebook, typification[0])
+            self._exec_add_service(line, typification[0])
 
     def _exec_add_repetition(self, line):
         pool = Pool()
@@ -698,7 +698,7 @@ class NotebookRule(ModelSQL, ModelView):
                 'state': 'unplanned',
                 })
 
-    def _exec_add_service(self, notebook, typification):
+    def _exec_add_service(self, line, typification):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         AnalysisLaboratory = pool.get('lims.analysis-laboratory')
@@ -728,7 +728,7 @@ class NotebookRule(ModelSQL, ModelView):
         device_id = devices and devices[0] or None
 
         service_create = [{
-            'fraction': notebook.fraction.id,
+            'fraction': line.fraction.id,
             'analysis': self.target_analysis.id,
             'urgent': True,
             'laboratory': laboratory_id,
@@ -744,28 +744,32 @@ class NotebookRule(ModelSQL, ModelView):
             ('service', '=', new_service.id)])
         if analysis_detail:
             EntryDetailAnalysis.create_notebook_lines(analysis_detail,
-                notebook.fraction)
+                line.fraction)
             EntryDetailAnalysis.write(analysis_detail, {
                 'state': 'unplanned',
                 })
 
-    def _exec_edit(self, notebook):
-        NotebookLine = Pool().get('lims.notebook.line')
+    def _exec_edit(self, line):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
 
-        target_line = NotebookLine.search([
-            ('notebook', '=', notebook),
-            ('analysis', '=', self.target_analysis),
-            ], order=[('repetition', 'DESC')], limit=1)
-        if not target_line:
-            return
-        line = target_line[0]
+        if line.analysis == self.target_analysis:
+            notebook_line = NotebookLine(line.id)
+        else:
+            target_line = NotebookLine.search([
+                ('notebook', '=', line.notebook),
+                ('analysis', '=', self.target_analysis),
+                ], order=[('repetition', 'DESC')], limit=1)
+            if not target_line:
+                return
+            notebook_line = target_line[0]
 
-        if line.accepted or line.annulled:
+        if notebook_line.accepted or notebook_line.annulled:
             return
 
         try:
-            setattr(line, self.target_field.name, self.value)
-            line.save()
+            setattr(notebook_line, self.target_field.name, self.value)
+            notebook_line.save()
         except Exception as e:
             return
 

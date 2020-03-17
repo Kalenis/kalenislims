@@ -5009,7 +5009,7 @@ class NotebookEvaluateRules(Wizard):
                 ])
             for rule in rules:
                 if rule.eval_condition(line):
-                    rule.exec_action(line.notebook)
+                    rule.exec_action(line)
 
 
 class NotebookLineEvaluateRules(NotebookEvaluateRules):
