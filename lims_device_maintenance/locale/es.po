@@ -14,14 +14,6 @@ msgctxt "field:lims.lab.device.maintenance,comments:"
 msgid "Comments"
 msgstr "Observaciones"
 
-msgctxt "field:lims.lab.device.maintenance,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.lab.device.maintenance,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.lab.device.maintenance,date:"
 msgid "Date"
 msgstr "Fecha"
@@ -30,17 +22,9 @@ msgctxt "field:lims.lab.device.maintenance,device:"
 msgid "Device"
 msgstr "Equipo"
 
-msgctxt "field:lims.lab.device.maintenance,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.lab.device.maintenance,notice_date:"
 msgid "Notice Date"
 msgstr "Fecha de aviso"
-
-msgctxt "field:lims.lab.device.maintenance,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.lab.device.maintenance,responsible:"
 msgid "Responsible User"
@@ -50,53 +34,17 @@ msgctxt "field:lims.lab.device.maintenance,state:"
 msgid "State"
 msgstr "Estado"
 
-msgctxt "field:lims.lab.device.maintenance,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.lab.device.maintenance,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.lab.device.maintenance.activity,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.lab.device.maintenance.activity,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.lab.device.maintenance.activity,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.lab.device.maintenance.activity,name:"
 msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.lab.device.maintenance.activity,rec_name:"
-msgid "Record Name"
 msgstr "Nombre"
 
 msgctxt "field:lims.lab.device.maintenance.activity,type:"
 msgid "Type"
 msgstr "Tipo"
 
-msgctxt "field:lims.lab.device.maintenance.activity,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.lab.device.maintenance.activity,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.lab.device.maintenance.generate.start,end_date:"
 msgid "End Date"
 msgstr "Fecha de finalización"
-
-msgctxt "field:lims.lab.device.maintenance.generate.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.lab.device.maintenance.generate.start,maintenances:"
 msgid "Maintenances"
@@ -110,14 +58,6 @@ msgctxt "field:lims.lab.device.maintenance.program,activity:"
 msgid "Activity"
 msgstr "Actividad"
 
-msgctxt "field:lims.lab.device.maintenance.program,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.lab.device.maintenance.program,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.lab.device.maintenance.program,device:"
 msgid "Device"
 msgstr "Equipo"
@@ -126,57 +66,17 @@ msgctxt "field:lims.lab.device.maintenance.program,frequency:"
 msgid "Frequency"
 msgstr "Frecuencia"
 
-msgctxt "field:lims.lab.device.maintenance.program,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.lab.device.maintenance.program,notice_days:"
 msgid "Days to notify"
 msgstr "Días para el aviso"
-
-msgctxt "field:lims.lab.device.maintenance.program,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.lab.device.maintenance.program,responsible:"
 msgid "Responsible User"
 msgstr "Usuario responsable"
 
-msgctxt "field:lims.lab.device.maintenance.program,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.lab.device.maintenance.program,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.lab.device.maintenance.type,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.lab.device.maintenance.type,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.lab.device.maintenance.type,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.lab.device.maintenance.type,name:"
 msgid "Name"
 msgstr "Nombre"
-
-msgctxt "field:lims.lab.device.maintenance.type,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.lab.device.maintenance.type,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.lab.device.maintenance.type,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "model:ir.action,name:act_lab_device_maintenance_activity_list"
 msgid "Device Maintenance Activities"

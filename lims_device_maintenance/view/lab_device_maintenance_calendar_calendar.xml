@@ -1,0 +1,5 @@
+<calendar dtstart="date" dtend="date" mode="month">
+    <field name="device"/>
+    <field name="activity"/>
+    <field name="responsible"/>
+</calendar>
