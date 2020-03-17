@@ -11,7 +11,7 @@ __all__ = ['NotebookLine']
 class NotebookLine(metaclass=PoolMeta):
     __name__ = 'lims.notebook.line'
 
-    warn_result = fields.Boolean('Warn Result')
+    result_warning = fields.Char('Result Warning')
 
     @classmethod
     def write(cls, *args):
@@ -19,16 +19,17 @@ class NotebookLine(metaclass=PoolMeta):
         super(NotebookLine, cls).write(*args)
         actions = iter(args)
         for lines, vals in zip(actions, actions):
-            if vals.get('warn_result', False):
+            if vals.get('result_warning', False):
                 TaskTemplate.create_tasks('result_warning',
-                    cls._for_task_result_warning(lines))
+                    cls._for_task_result_warning(lines),
+                    description=vals.get('result_warning'))
 
     @classmethod
     def _for_task_result_warning(cls, lines):
         AdministrativeTask = Pool().get('lims.administrative.task')
         res = []
         for line in lines:
-            if not line.warn_result:
+            if not line.result_warning:
                 continue
             if AdministrativeTask.search([
                     ('type', '=', 'result_warning'),
