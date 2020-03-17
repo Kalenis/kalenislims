@@ -14,14 +14,6 @@ msgctxt "field:lims.administrative.task,comments:"
 msgid "Comments"
 msgstr "Observaciones"
 
-msgctxt "field:lims.administrative.task,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.administrative.task,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.administrative.task,date:"
 msgid "Create Date"
 msgstr "Fecha de creación"
@@ -38,10 +30,6 @@ msgctxt "field:lims.administrative.task,icon:"
 msgid "Icon"
 msgstr "Icono"
 
-msgctxt "field:lims.administrative.task,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.administrative.task,number:"
 msgid "Number"
 msgstr "Número"
@@ -53,10 +41,6 @@ msgstr "Operación origen"
 msgctxt "field:lims.administrative.task,priority:"
 msgid "Priority"
 msgstr "Prioridad"
-
-msgctxt "field:lims.administrative.task,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.administrative.task,rejection_reason:"
 msgid "Rejection/Stand By Reason"
@@ -74,86 +58,26 @@ msgctxt "field:lims.administrative.task,type:"
 msgid "Type"
 msgstr "Tipo"
 
-msgctxt "field:lims.administrative.task,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.administrative.task,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.administrative.task.configuration,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.administrative.task.configuration,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt ""
 "field:lims.administrative.task.configuration,email_responsible_subject:"
 msgid "Subject of the task assignment email"
 msgstr "Asunto del email de asignación de tareas"
 
-msgctxt "field:lims.administrative.task.configuration,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.administrative.task.configuration,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.administrative.task.configuration,task_sequence:"
 msgid "Task Sequence"
 msgstr "Secuencia de Tarea"
-
-msgctxt "field:lims.administrative.task.configuration,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.administrative.task.configuration,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.administrative.task.configuration.sequence,company:"
 msgid "Company"
 msgstr "Empresa"
 
-msgctxt "field:lims.administrative.task.configuration.sequence,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.administrative.task.configuration.sequence,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.administrative.task.configuration.sequence,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.administrative.task.configuration.sequence,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.administrative.task.configuration.sequence,task_sequence:"
 msgid "Task Sequence"
 msgstr "Secuencia de Tarea"
 
-msgctxt "field:lims.administrative.task.configuration.sequence,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.administrative.task.configuration.sequence,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.administrative.task.edit.start,expiration_date:"
 msgid "Expiration Date"
 msgstr "Fecha de vencimiento"
-
-msgctxt "field:lims.administrative.task.edit.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.administrative.task.edit.start,priority:"
 msgid "Priority"
@@ -163,14 +87,6 @@ msgctxt "field:lims.administrative.task.edit.start,responsible:"
 msgid "Responsible User"
 msgstr "Usuario responsable"
 
-msgctxt "field:lims.administrative.task.template,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.administrative.task.template,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.administrative.task.template,description:"
 msgid "Description"
 msgstr "Descripción"
@@ -179,14 +95,6 @@ msgctxt "field:lims.administrative.task.template,expiration_days:"
 msgid "Days to Expiration"
 msgstr "Días para el vencimiento"
 
-msgctxt "field:lims.administrative.task.template,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.administrative.task.template,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.administrative.task.template,responsible:"
 msgid "Responsible User"
 msgstr "Usuario responsable"
@@ -194,22 +102,6 @@ msgstr "Usuario responsable"
 msgctxt "field:lims.administrative.task.template,type:"
 msgid "Type"
 msgstr "Tipo"
-
-msgctxt "field:lims.administrative.task.template,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.administrative.task.template,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.component,missing_data:"
-msgid "Missing data"
-msgstr "Falta información"
-
-msgctxt "field:party.party,complete_file:"
-msgid "Complete File"
-msgstr "Ficha completa"
 
 msgctxt "field:res.user,superior:"
 msgid "Responsible Superior"
