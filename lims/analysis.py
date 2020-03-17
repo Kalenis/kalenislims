@@ -2265,7 +2265,6 @@ class CreateAnalysisProduct(Wizard):
         try:
             template.salable = True
             template.sale_uom = uom
-            template.accounts_category = True
             template.account_category = config_.analysis_product_category.id
         except AttributeError:
             pass
