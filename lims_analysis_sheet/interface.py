@@ -440,7 +440,48 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('active')
     def activate(cls, sheets):
-        Compilation = Pool().get('lims.interface.compilation')
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        Data = pool.get('lims.interface.data')
+        NotebookLine = pool.get('lims.notebook.line')
+        Compilation = pool.get('lims.interface.compilation')
+
+        for s in sheets:
+            nl_field = (s.template.interface.notebook_line_field and
+                s.template.interface.notebook_line_field.alias or None)
+            if not nl_field:
+                continue
+
+            t_analysis_ids = []
+            for t_analysis in s.template.analysis:
+                if t_analysis.analysis.type == 'analysis':
+                    t_analysis_ids.append(t_analysis.analysis.id)
+                else:
+                    t_analysis_ids.extend(
+                        Analysis.get_included_analysis_analysis(
+                            t_analysis.analysis.id))
+
+            notebooks_ids = []
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                lines = Data.search([('compilation', '=', s.compilation.id)])
+                for line in lines:
+                    nl = getattr(line, nl_field)
+                    if nl:
+                        notebooks_ids.append(nl.notebook.id)
+            if notebooks_ids:
+                clause = [
+                    ('notebook', 'in', notebooks_ids),
+                    ('analysis', 'in', t_analysis_ids),
+                    ('analysis.behavior', '=', 'internal_relation'),
+                    ('result', 'in', (None, '')),
+                    ('end_date', '=', None),
+                    ('annulment_date', '=', None),
+                    ]
+                notebook_lines = NotebookLine.search(clause)
+                if notebook_lines:
+                    s.create_lines(notebook_lines)
+
         Compilation.activate([s.compilation for s in sheets])
 
     @classmethod
