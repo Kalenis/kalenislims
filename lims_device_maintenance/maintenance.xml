@@ -117,6 +117,11 @@
             <field name="type">tree</field>
             <field name="name">lab_device_maintenance_calendar_list</field>
         </record>
+        <record model="ir.ui.view" id="lab_device_maintenance_calendar_view_calendar">
+            <field name="model">lims.lab.device.maintenance</field>
+            <field name="type">calendar</field>
+            <field name="name">lab_device_maintenance_calendar_calendar</field>
+        </record>
 
         <record model="ir.action.act_window"
             id="act_lab_device_maintenance_calendar_list">
@@ -124,15 +129,21 @@
             <field name="res_model">lims.lab.device.maintenance</field>
         </record>
         <record model="ir.action.act_window.view"
-            id="act_lab_device_maintenance_calendar_view_list">
+            id="act_lab_device_maintenance_calendar_view_calendar">
             <field name="sequence" eval="10"/>
-            <field name="view" ref="lab_device_maintenance_calendar_view_list"/>
+            <field name="view" ref="lab_device_maintenance_calendar_view_calendar"/>
             <field name="act_window" ref="act_lab_device_maintenance_calendar_list"/>
         </record>
         <record model="ir.action.act_window.view"
             id="act_lab_device_maintenance_calendar_view_form">
             <field name="sequence" eval="20"/>
             <field name="view" ref="lab_device_maintenance_calendar_view_form"/>
+            <field name="act_window" ref="act_lab_device_maintenance_calendar_list"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_lab_device_maintenance_calendar_view_list">
+            <field name="sequence" eval="30"/>
+            <field name="view" ref="lab_device_maintenance_calendar_view_list"/>
             <field name="act_window" ref="act_lab_device_maintenance_calendar_list"/>
         </record>
 
