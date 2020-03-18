@@ -123,7 +123,7 @@ def get_model_resource(model_name, value, field_name):
         rec_name = 'id'
         try:
             value = int(value)
-        except:
+        except Exception:
             raise UserError(gettext(
                 'lims_interface.invalid_fixed_value_many2one_id',
                 name=field_name))
@@ -222,13 +222,6 @@ class Interface(Workflow, ModelSQL, ModelView):
     repetition_field = fields.Many2One('lims.interface.column',
         'Repetition field',
         domain=[('interface', '=', Eval('id'))],
-        states={
-            'readonly': Eval('state') != 'draft',
-            }, depends=['state', 'id'])
-    notebook_line_field = fields.Many2One('lims.interface.column',
-        'Notebook line field',
-        domain=[('interface', '=', Eval('id')),
-            ('related_model.model', '=', 'lims.notebook.line')],
         states={
             'readonly': Eval('state') != 'draft',
             }, depends=['state', 'id'])
@@ -375,9 +368,9 @@ class Interface(Workflow, ModelSQL, ModelView):
         current_icon = None
         for line in self.table.fields_:
             if line.type in ('datetime', 'timestamp'):
-                fields.append('<field name="%s" widget="date"/>\n' %
+                fields.append('<field name="%s" widget="date"/>' %
                     line.name)
-                fields.append('<field name="%s" widget="time"/>\n' %
+                fields.append('<field name="%s" widget="time"/>' %
                     line.name)
                 continue
             if line.type == 'icon':
@@ -390,12 +383,14 @@ class Interface(Workflow, ModelSQL, ModelView):
             if line.type == 'image':
                 attributes.append('widget="image"')
 
-            fields.append('<field name="%s" %s/>\n' % (line.name,
+            fields.append('<field name="%s" %s/>' % (line.name,
                     ' '.join(attributes)))
+
+        fields.append('<field name="notebook_line"/>')
 
         xml = ('<?xml version="1.0"?>\n'
             '<tree sequence="sequence" editable="bottom">\n'
-            '%s'
+            '%s\n'
             '</tree>') % ('\n'.join(fields))
         return {
             'type': 'tree',
@@ -413,7 +408,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                     '</group>' % (line.name, line.name))
                 continue
             if line.type == 'icon':
-                fields.append('<image name="%s"/>\n' %
+                fields.append('<image name="%s"/>' %
                         (line.name))
                 continue
 
@@ -421,12 +416,15 @@ class Interface(Workflow, ModelSQL, ModelView):
             if line.type == 'image':
                 attributes.append('widget="image"')
 
-            fields.append('<field name="%s" %s/>\n' % (line.name,
+            fields.append('<field name="%s" %s/>' % (line.name,
                     ' '.join(attributes)))
+
+        fields.append('<label name="notebook_line"/>')
+        fields.append('<field name="notebook_line"/>')
 
         xml = ('<?xml version="1.0"?>\n'
             '<form>\n'
-            '%s'
+            '%s\n'
             '</form>') % '\n'.join(fields)
         return {
             'type': 'form',
@@ -585,14 +583,14 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
             if self.type_ == 'boolean':
                 try:
                     int(self.fixed_value)
-                except:
+                except Exception:
                     raise UserError(gettext(
                         'lims_interface.invalid_fixed_value_boolean',
                         name=self.name))
             elif self.type_ == 'date':
                 try:
                     str2date(self.fixed_value, self.interface.language)
-                except:
+                except Exception:
                     raise UserError(gettext(
                         'lims_interface.invalid_fixed_value_date',
                         name=self.name))
@@ -603,7 +601,7 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
                 ftype = FIELD_TYPE_PYTHON[self.type_]
                 try:
                     ftype(self.fixed_value)
-                except:
+                except Exception:
                     raise UserError(gettext(
                         'lims_interface.invalid_fixed_value',
                         value=self.fixed_value, name=self.name))
@@ -834,9 +832,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         line[field[0]] = self._get_formula_value(field, line)
 
                     nb_line = self._get_notebook_line(line)
-                    if nb_line and self.interface.notebook_line_field:
-                        nbl_alias = self.interface.notebook_line_field.alias
-                        line[nbl_alias] = nb_line.id
+                    if nb_line:
+                        line['notebook_line'] = nb_line.id
                     data.append(line)
                     count += 1
                 imported_files.append(origin)
@@ -914,10 +911,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                                 field, line)
 
                         nb_line = self._get_notebook_line(line)
-                        if nb_line and self.interface.notebook_line_field:
-                            nbl_alias = \
-                                self.interface.notebook_line_field.alias
-                            line[nbl_alias] = nb_line.id
+                        if nb_line:
+                            line['notebook_line'] = nb_line.id
                         data.append(line)
 
                 imported_files.append(origin)
@@ -993,8 +988,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
 
         if (self.interface.analysis_field and
                 self.interface.fraction_field and
-                self.interface.repetition_field and
-                self.interface.notebook_line_field):
+                self.interface.repetition_field):
             analysis_value = line[self.interface.analysis_field.alias]
             fraction_value = line[self.interface.fraction_field.alias]
             repetition_value = line[self.interface.repetition_field.alias]
@@ -1029,12 +1023,6 @@ class Compilation(Workflow, ModelSQL, ModelView):
         Field = pool.get('lims.interface.table.field')
 
         for c in compilations:
-            nbl_alias = None
-            if c.interface.notebook_line_field:
-                nbl_alias = c.interface.notebook_line_field.alias
-            if not nbl_alias:
-                raise UserError(gettext(
-                    'lims_interface.no_notebook_line_field_defined'))
             result_fields = {}
             fields = Field.search([
                 ('table', '=', c.table),
@@ -1051,8 +1039,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     ('compilation', '=', c.id)
                     ])
                 for l in lines:
-                    nbl_id = getattr(l, nbl_alias)
-                    print('*** nbl_id: ', nbl_id)
+                    nb_line = l.notebook_line
+                    print('*** nb_line:', nb_line)
                     if result_fields:
                         for res in result_fields:
                             # TODO: check values and correct type
@@ -1071,9 +1059,6 @@ class Compilation(Workflow, ModelSQL, ModelView):
         NotebookLine = pool.get('lims.notebook.line')
 
         for c in compilations:
-            nbl_alias = None
-            if c.interface.notebook_line_field:
-                nbl_alias = c.interface.notebook_line_field.alias
             result_fields = {}
             fields = Field.search([
                 ('table', '=', c.table),
@@ -1090,15 +1075,14 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     ('compilation', '=', c.id)
                     ])
                 for l in lines:
-                    nbl_id = getattr(l, nbl_alias)
-                    if nbl_id and result_fields:
-                        nbl = NotebookLine.browse([nbl_id])
+                    nb_line = l.notebook_line
+                    if nb_line and result_fields:
                         data = {}
                         for res in result_fields:
                             value = getattr(l, res)
                             data[result_fields[res]['field_name']] = value
-                        if nbl and data:
-                            NotebookLine.write(nbl, data)
+                        if data:
+                            NotebookLine.write(nb_line, data)
 
 
 class CompilationOrigin(ModelSQL, ModelView):

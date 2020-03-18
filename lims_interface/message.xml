@@ -24,8 +24,5 @@
         <record model="ir.message" id="duplicated_origin_file">
             <field name="text">File "%(file_name)s" already exists as origin.</field>
         </record>
-        <record model="ir.message" id="no_notebook_line_field_defined">
-            <field name="text">No field was defined for the Notebook line in the device interface.</field>
-        </record>
     </data>
 </tryton>

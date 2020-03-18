@@ -21,8 +21,6 @@
                 <label name="repetition_field"/>
                 <field name="repetition_field"/>
             </group>
-            <label name="notebook_line_field"/>
-            <field name="notebook_line_field"/>
         </page>
         <page id="template" string="Template">
             <label name="template_type"/>

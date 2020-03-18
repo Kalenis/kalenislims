@@ -71,6 +71,10 @@ class Adapter:
         obj = fields.Integer('Sequence')
         obj.name = 'sequence'
         res['sequence'] = obj
+        obj = fields.Many2One('lims.notebook.line', 'Notebook Line')
+        obj.name = 'notebook_line'
+        obj.readonly = True
+        res['notebook_line'] = obj
 
         return res
 
@@ -101,6 +105,8 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
 
     compilation = fields.Many2One('lims.interface.compilation', 'Compilation',
         required=True, ondelete='CASCADE')
+    notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
+        readonly=True)
 
     @classmethod
     def __setup__(cls):
@@ -179,6 +185,7 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
     def fields_get(cls, fields_names=None):
         Model = Pool().get('ir.model')
         res = super(Data, cls).fields_get(fields_names)
+
         table = cls.get_table()
         for field in table.fields_:
             res[field.name] = {
@@ -220,7 +227,8 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
 
         fields_names = [
             'compilation',
-            'sequence'
+            'sequence',
+            'notebook_line',
             ]
         for field in table.fields_:
             fields_names.append(field.name)
@@ -356,6 +364,7 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
         records = cls.read([x.id for x in records if x.id])
         for record in records:
             del record['id']
+            del record['notebook_line']
         return cls.create(records)
 
     @classmethod
