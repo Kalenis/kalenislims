@@ -238,17 +238,12 @@ class RepeatAnalysis(Wizard):
         sheet_id = Transaction().context['active_id']
         sheet = AnalysisSheet(sheet_id)
 
-        nl_field = (sheet.template.interface.notebook_line_field and
-            sheet.template.interface.notebook_line_field.alias or None)
-        if not nl_field:
-            return defaults
-
         to_create = []
         with Transaction().set_context(
                 lims_interface_table=sheet.compilation.table.id):
             lines = Data.search([('compilation', '=', sheet.compilation.id)])
             for line in lines:
-                nl = getattr(line, nl_field)
+                nl = line.notebook_line
                 if not nl:
                     continue
                 to_create.append({
@@ -348,11 +343,6 @@ class InternalRelationsCalc(Wizard):
         sheet_id = Transaction().context['active_id']
         sheet = AnalysisSheet(sheet_id)
 
-        nl_field = (sheet.template.interface.notebook_line_field and
-            sheet.template.interface.notebook_line_field.alias or None)
-        if not nl_field:
-            return 'end'
-
         nl_result_field, = ModelField.search([
             ('model.model', '=', 'lims.notebook.line'),
             ('name', '=', 'result'),
@@ -372,15 +362,15 @@ class InternalRelationsCalc(Wizard):
                 lims_interface_table=sheet.compilation.table.id):
             lines = Data.search([('compilation', '=', sheet.compilation.id)])
             for line in lines:
-                notebook_line = getattr(line, nl_field)
-                if not notebook_line:
+                nl = line.notebook_line
+                if not nl:
                     continue
-                if notebook_line.notebook.id not in notebooks:
-                    notebooks[notebook_line.notebook.id] = {}
-                notebooks[notebook_line.notebook.id][
-                    notebook_line.analysis.code] = getattr(line, result_field)
-                if notebook_line.analysis.behavior == 'internal_relation':
-                    relations[line] = notebook_line
+                if nl.notebook.id not in notebooks:
+                    notebooks[nl.notebook.id] = {}
+                notebooks[nl.notebook.id][
+                    nl.analysis.code] = getattr(line, result_field)
+                if nl.analysis.behavior == 'internal_relation':
+                    relations[line] = nl
             if not relations:
                 return 'end'
 
@@ -545,11 +535,6 @@ class ResultsVerification(Wizard):
         sheet_id = Transaction().context['active_id']
         sheet = AnalysisSheet(sheet_id)
 
-        nl_field = (sheet.template.interface.notebook_line_field and
-            sheet.template.interface.notebook_line_field.alias or None)
-        if not nl_field:
-            return 'end'
-
         nl_result_field, = ModelField.search([
             ('model.model', '=', 'lims.notebook.line'),
             ('name', '=', 'result'),
@@ -581,10 +566,10 @@ class ResultsVerification(Wizard):
                 lims_interface_table=sheet.compilation.table.id):
             lines = Data.search([('compilation', '=', sheet.compilation.id)])
             for line in lines:
-                notebook_line = getattr(line, nl_field)
-                if not notebook_line:
+                nl = line.notebook_line
+                if not nl:
                     continue
-                notebook_lines[line] = notebook_line
+                notebook_lines[line] = nl
             if not notebook_lines:
                 return 'end'
 
