@@ -292,15 +292,11 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         result = {}
         for s in sheets:
             result[s.id] = False
-            nl_field = (s.template.interface.notebook_line_field and
-                s.template.interface.notebook_line_field.alias or None)
-            if not nl_field:
-                continue
             with Transaction().set_context(
                     lims_interface_table=s.compilation.table.id):
                 lines = Data.search([('compilation', '=', s.compilation.id)])
                 for line in lines:
-                    nl = getattr(line, nl_field)
+                    nl = line.notebook_line
                     if nl and nl.service.urgent:
                         result[s.id] = True
                         break
@@ -314,16 +310,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         result = {}
         for s in sheets:
             result[s.id] = 0
-            nl_field = (s.template.interface.notebook_line_field and
-                s.template.interface.notebook_line_field.alias or None)
-            if not nl_field:
-                continue
             with Transaction().set_context(
                     lims_interface_table=s.compilation.table.id):
                 samples = []
                 lines = Data.search([('compilation', '=', s.compilation.id)])
                 for line in lines:
-                    nl = getattr(line, nl_field)
+                    nl = line.notebook_line
                     if nl:
                         samples.append(nl.fraction.id)
                 result[s.id] = len(list(set(samples)))
@@ -337,16 +329,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         result = {}
         for s in sheets:
             result[s.id] = False
-            nl_field = (s.template.interface.notebook_line_field and
-                s.template.interface.notebook_line_field.alias or None)
-            if not nl_field:
-                continue
             with Transaction().set_context(
                     lims_interface_table=s.compilation.table.id):
                 samples = {}
                 lines = Data.search([('compilation', '=', s.compilation.id)])
                 for line in lines:
-                    nl = getattr(line, nl_field)
+                    nl = line.notebook_line
                     if not nl:
                         continue
                     if nl.fraction.id not in samples:
@@ -449,11 +437,6 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         Compilation = pool.get('lims.interface.compilation')
 
         for s in sheets:
-            nl_field = (s.template.interface.notebook_line_field and
-                s.template.interface.notebook_line_field.alias or None)
-            if not nl_field:
-                continue
-
             t_analysis_ids = []
             for t_analysis in s.template.analysis:
                 if t_analysis.analysis.type == 'analysis':
@@ -468,7 +451,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     lims_interface_table=s.compilation.table.id):
                 lines = Data.search([('compilation', '=', s.compilation.id)])
                 for line in lines:
-                    nl = getattr(line, nl_field)
+                    nl = line.notebook_line
                     if nl:
                         notebooks_ids.append(nl.notebook.id)
             if notebooks_ids:
@@ -578,16 +561,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 continue
             controls_allowed = s.template.controls_allowed
 
-            nl_field = (s.template.interface.notebook_line_field and
-                s.template.interface.notebook_line_field.alias or None)
-            if not nl_field:
-                continue
             with Transaction().set_context(
                     lims_interface_table=s.compilation.table.id):
                 ok = False
                 lines = Data.search([('compilation', '=', s.compilation.id)])
                 for line in lines:
-                    nl = getattr(line, nl_field)
+                    nl = line.notebook_line
                     if nl and nl.fraction.special_type in controls_allowed:
                         ok = True
                         break
@@ -608,8 +587,6 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         Data = Pool().get('lims.interface.data')
 
         interface = self.template.interface
-        if not interface.notebook_line_field:
-            return
 
         fixed_values = {}
         schema, _ = self.compilation._get_schema()
@@ -633,7 +610,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             for nl in lines:
                 line = {'compilation': self.compilation.id}
                 line.update(fixed_values)
-                line[interface.notebook_line_field.alias] = nl.id
+                line['notebook_line'] = nl.id
                 if interface.analysis_field:
                     if interface.analysis_field.type_ == 'many2one':
                         line[interface.analysis_field.alias] = nl.analysis.id
