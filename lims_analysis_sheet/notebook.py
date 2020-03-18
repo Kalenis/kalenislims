@@ -7,11 +7,12 @@ from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
+from trytond.i18n import gettext
 from trytond.modules.lims.formula_parser import FormulaParser
 
 __all__ = ['NotebookLine', 'AddFractionControlStart', 'AddFractionControl',
     'RepeatAnalysisStart', 'RepeatAnalysisStartLine', 'RepeatAnalysis',
-    'InternalRelationsCalc']
+    'InternalRelationsCalc', 'ResultsVerificationStart', 'ResultsVerification']
 
 
 class NotebookLine(metaclass=PoolMeta):
@@ -380,7 +381,6 @@ class InternalRelationsCalc(Wizard):
                     notebook_line.analysis.code] = getattr(line, result_field)
                 if notebook_line.analysis.behavior == 'internal_relation':
                     relations[line] = notebook_line
-
             if not relations:
                 return 'end'
 
@@ -388,8 +388,7 @@ class InternalRelationsCalc(Wizard):
                 result = self._get_relation_result(n_line.analysis.code,
                     notebooks[n_line.notebook.id])
                 if result is not None:
-                    s_line.set_result(str(result), result_field)
-
+                    s_line.set_field(str(result), result_field)
         return 'end'
 
     def _get_relation_result(self, analysis_code, vars, round_=False):
@@ -490,3 +489,223 @@ class InternalRelationsCalc(Wizard):
             if var is None:
                 return None
         return variables
+
+
+class ResultsVerificationStart(ModelView):
+    'Results Verification'
+    __name__ = 'lims.analysis_sheet.results_verification.start'
+
+    range_type = fields.Many2One('lims.range.type', 'Origin', required=True,
+        domain=[('use', '=', 'results_verification')])
+
+
+class ResultsVerification(Wizard):
+    'Results Verification'
+    __name__ = 'lims.analysis_sheet.results_verification'
+
+    start_state = 'check'
+    check = StateTransition()
+    start = StateView('lims.analysis_sheet.results_verification.start',
+        'lims_analysis_sheet.analysis_sheet_results_verification_start_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Ok', 'verify', 'tryton-ok', default=True),
+            ])
+    verify = StateTransition()
+
+    def transition_check(self):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+
+        sheet_id = Transaction().context['active_id']
+        sheet = AnalysisSheet(sheet_id)
+
+        if sheet.state in ('active', 'validated'):
+            return 'start'
+        return 'end'
+
+    def default_start(self, fields):
+        RangeType = Pool().get('lims.range.type')
+
+        default = {}
+        default_range_type = RangeType.search([
+            ('use', '=', 'results_verification'),
+            ('by_default', '=', True),
+            ])
+        if default_range_type:
+            default['range_type'] = default_range_type[0].id
+        return default
+
+    def transition_verify(self):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        ModelField = pool.get('ir.model.field')
+        Column = pool.get('lims.interface.column')
+        Data = pool.get('lims.interface.data')
+
+        sheet_id = Transaction().context['active_id']
+        sheet = AnalysisSheet(sheet_id)
+
+        nl_field = (sheet.template.interface.notebook_line_field and
+            sheet.template.interface.notebook_line_field.alias or None)
+        if not nl_field:
+            return 'end'
+
+        nl_result_field, = ModelField.search([
+            ('model.model', '=', 'lims.notebook.line'),
+            ('name', '=', 'result'),
+            ])
+        result_column = Column.search([
+            ('interface', '=', sheet.template.interface),
+            ('transfer_field', '=', True),
+            ('related_line_field', '=', nl_result_field)
+            ])
+        if not result_column:
+            return 'end'
+
+        nl_verification_field, = ModelField.search([
+            ('model.model', '=', 'lims.notebook.line'),
+            ('name', '=', 'verification'),
+            ])
+        verification_column = Column.search([
+            ('interface', '=', sheet.template.interface),
+            ('transfer_field', '=', True),
+            ('related_line_field', '=', nl_verification_field)
+            ])
+        if not verification_column:
+            return 'end'
+
+        result_field = result_column[0].alias
+        verification_field = verification_column[0].alias
+        notebook_lines = {}
+        with Transaction().set_context(
+                lims_interface_table=sheet.compilation.table.id):
+            lines = Data.search([('compilation', '=', sheet.compilation.id)])
+            for line in lines:
+                notebook_line = getattr(line, nl_field)
+                if not notebook_line:
+                    continue
+                notebook_lines[line] = notebook_line
+            if not notebook_lines:
+                return 'end'
+
+            for s_line, n_line in notebook_lines.items():
+                verification = self._get_result_verification(
+                    getattr(s_line, result_field), n_line)
+                if verification is not None:
+                    s_line.set_field(str(verification), verification_field)
+        return 'end'
+
+    def _get_result_verification(self, result, notebook_line):
+        pool = Pool()
+        Range = pool.get('lims.range')
+        UomConversion = pool.get('lims.uom.conversion')
+        VolumeConversion = pool.get('lims.volume.conversion')
+
+        try:
+            result = float(result)
+        except (TypeError, ValueError):
+            return None
+
+        iu = notebook_line.initial_unit
+        if not iu:
+            return None
+        try:
+            ic = float(notebook_line.initial_concentration)
+        except (TypeError, ValueError):
+            return None
+
+        ranges = Range.search([
+            ('range_type', '=', self.start.range_type),
+            ('analysis', '=', notebook_line.analysis.id),
+            ('product_type', '=', notebook_line.product_type.id),
+            ('matrix', '=', notebook_line.matrix.id),
+            ])
+        if not ranges:
+            return None
+        fu = ranges[0].uom
+        try:
+            fc = float(ranges[0].concentration)
+        except (TypeError, ValueError):
+            return None
+
+        if fu and fu.rec_name != '-':
+            converted_result = None
+            if (iu == fu and ic == fc):
+                converted_result = result
+            elif (iu != fu and ic == fc):
+                formula = UomConversion.get_conversion_formula(iu,
+                    fu)
+                if not formula:
+                    return None
+                variables = self._get_variables(formula, notebook_line)
+                parser = FormulaParser(formula, variables)
+                formula_result = parser.getValue()
+                converted_result = result * formula_result
+            elif (iu == fu and ic != fc):
+                converted_result = result * (fc / ic)
+            else:
+                formula = None
+                conversions = UomConversion.search([
+                    ('initial_uom', '=', iu),
+                    ('final_uom', '=', fu),
+                    ])
+                if conversions:
+                    formula = conversions[0].conversion_formula
+                if not formula:
+                    return None
+                variables = self._get_variables(formula, notebook_line)
+                parser = FormulaParser(formula, variables)
+                formula_result = parser.getValue()
+                if (conversions[0].initial_uom_volume and
+                        conversions[0].final_uom_volume):
+                    d_ic = VolumeConversion.brixToDensity(ic)
+                    d_fc = VolumeConversion.brixToDensity(fc)
+                    converted_result = (result * (fc / ic) *
+                        (d_fc / d_ic) * formula_result)
+                else:
+                    converted_result = (result * (fc / ic) *
+                        formula_result)
+            result = float(converted_result)
+
+        return self._verificate_result(result, ranges[0])
+
+    def _get_variables(self, formula, notebook_line):
+        pool = Pool()
+        VolumeConversion = pool.get('lims.volume.conversion')
+
+        variables = {}
+        for var in ('DI',):
+            while True:
+                idx = formula.find(var)
+                if idx >= 0:
+                    variables[var] = 0
+                    formula = formula.replace(var, '_')
+                else:
+                    break
+        for var in variables.keys():
+            if var == 'DI':
+                ic = float(notebook_line.final_concentration)
+                result = VolumeConversion.brixToDensity(ic)
+                if result:
+                    variables[var] = result
+        return variables
+
+    def _verificate_result(self, result, range_):
+        if range_.min95 and range_.max95:
+            if result < range_.min:
+                return gettext('lims.msg_out')
+            elif result < range_.min95:
+                return gettext('lims.msg_ok*')
+            elif result <= range_.max95:
+                return gettext('lims.msg_ok')
+            elif result <= range_.max:
+                return gettext('lims.msg_ok*')
+            else:
+                return gettext('lims.msg_out')
+        else:
+            if (range_.min and result < range_.min):
+                return gettext('lims.msg_out')
+            elif (range_.max and result <= range_.max):
+                return gettext('lims.msg_ok')
+            else:
+                return gettext('lims.msg_out')

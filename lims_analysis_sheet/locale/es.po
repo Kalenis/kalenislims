@@ -102,6 +102,10 @@ msgctxt "field:lims.analysis_sheet.repeat_analysis.start.line,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
 
+msgctxt "field:lims.analysis_sheet.results_verification.start,range_type:"
+msgid "Origin"
+msgstr "Origen"
+
 msgctxt "field:lims.configuration,analysis_sheet_sequence:"
 msgid "Analysis Sheet Sequence"
 msgstr "Secuencia de Hoja de análisis"
@@ -247,6 +251,10 @@ msgctxt "model:ir.action,name:wiz_analysis_sheet_repeat_analysis"
 msgid "Repeat Analysis"
 msgstr "02) Repetir análisis"
 
+msgctxt "model:ir.action,name:wiz_analysis_sheet_results_verification"
+msgid "Results Verification"
+msgstr "04) Verificación de resultados"
+
 msgctxt "model:ir.action,name:wiz_search_analysis_sheet"
 msgid "Search Analysis Sheets"
 msgstr "Buscar Hojas de ensayos"
@@ -314,6 +322,10 @@ msgstr "Repetir análisis"
 msgctxt "model:lims.analysis_sheet.repeat_analysis.start.line,name:"
 msgid "Analysis Sheet Line"
 msgstr "Línea de Hoja de análisis"
+
+msgctxt "model:lims.analysis_sheet.results_verification.start,name:"
+msgid "Results Verification"
+msgstr "Verificación de resultados"
 
 msgctxt "model:lims.planification.relate_technicians.detail4,name:"
 msgid "Fraction Detail"
@@ -682,6 +694,14 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.analysis_sheet.repeat_analysis,start,repeat:"
 msgid "Repeat"
 msgstr "Repetir"
+
+msgctxt "wizard_button:lims.analysis_sheet.results_verification,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.analysis_sheet.results_verification,start,verify:"
+msgid "Ok"
+msgstr "Aceptar"
 
 msgctxt "wizard_button:lims.planification.search_analysis_sheet,next,add:"
 msgid "Add"

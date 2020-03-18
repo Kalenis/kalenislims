@@ -30,6 +30,7 @@ def register():
         notebook.AddFractionControlStart,
         notebook.RepeatAnalysisStart,
         notebook.RepeatAnalysisStartLine,
+        notebook.ResultsVerificationStart,
         module='lims_analysis_sheet', type_='model')
     Pool.register(
         interface.OpenAnalysisSheetData,
@@ -39,6 +40,7 @@ def register():
         notebook.AddFractionControl,
         notebook.RepeatAnalysis,
         notebook.InternalRelationsCalc,
+        notebook.ResultsVerification,
         module='lims_analysis_sheet', type_='wizard')
     Pool.register(
         interface.AnalysisSheetReport,
