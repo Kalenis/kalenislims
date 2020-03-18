@@ -63,5 +63,23 @@
             <field name="action" ref="wiz_analysis_sheet_internal_relations_calc"/>
         </record>
 
+<!-- Wizard Results Verification -->
+
+        <record model="ir.ui.view" id="analysis_sheet_results_verification_start_form">
+            <field name="model">lims.analysis_sheet.results_verification.start</field>
+            <field name="type">form</field>
+            <field name="name">analysis_sheet_results_verification_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_analysis_sheet_results_verification">
+            <field name="name">Results Verification</field>
+            <field name="wiz_name">lims.analysis_sheet.results_verification</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_analysis_sheet_results_verification_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.analysis_sheet,-1</field>
+            <field name="action" ref="wiz_analysis_sheet_results_verification"/>
+        </record>
+
     </data>
 </tryton>
