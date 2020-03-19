@@ -1,4 +1,6 @@
 <?xml version="1.0"?>
 <form>
     <field name="lines" colspan="4"/>
+    <label name="annul"/>
+    <field name="annul"/>
 </form>
