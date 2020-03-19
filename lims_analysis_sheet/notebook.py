@@ -155,6 +155,7 @@ class RepeatAnalysisStart(ModelView):
     lines_domain = fields.One2Many(
         'lims.analysis_sheet.repeat_analysis.start.line', None,
         'Lines domain')
+    annul = fields.Boolean('Annul current lines')
 
 
 class RepeatAnalysisStartLine(ModelSQL, ModelView):
@@ -233,7 +234,7 @@ class RepeatAnalysis(Wizard):
         RepeatAnalysisStartLine = pool.get(
             'lims.analysis_sheet.repeat_analysis.start.line')
 
-        defaults = {}
+        defaults = {'annul': False}
 
         sheet_id = Transaction().context['active_id']
         sheet = AnalysisSheet(sheet_id)
@@ -259,12 +260,14 @@ class RepeatAnalysis(Wizard):
         AnalysisSheet = pool.get('lims.analysis_sheet')
         NotebookLine = pool.get('lims.notebook.line')
         #EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Data = pool.get('lims.interface.data')
 
         sheet_id = Transaction().context['active_id']
         sheet = AnalysisSheet(sheet_id)
 
         to_create = []
         #details_to_update = []
+        to_annul = []
 
         for sheet_line in self.start.lines:
             nline_to_repeat = sheet_line.line
@@ -298,6 +301,8 @@ class RepeatAnalysis(Wizard):
                 }
             to_create.append(defaults)
             #details_to_update.append(detail_id)
+            if self.start.annul:
+                to_annul.append(nline_to_repeat.id)
 
         notebook_lines = NotebookLine.create(to_create)
         if notebook_lines:
@@ -310,6 +315,16 @@ class RepeatAnalysis(Wizard):
             #EntryDetailAnalysis.write(details, {
                 #'state': 'unplanned',
                 #})
+
+        if to_annul:
+            with Transaction().set_context(
+                    lims_interface_table=sheet.compilation.table.id):
+                lines = Data.search([
+                    ('compilation', '=', sheet.compilation.id),
+                    ('notebook_line', 'in', to_annul),
+                    ])
+                for line in lines:
+                    line.set_field('true', 'annulled')
 
         return 'end'
 

@@ -74,6 +74,10 @@ msgctxt "field:lims.analysis_sheet.export_file.start,file:"
 msgid "File"
 msgstr "Archivo"
 
+msgctxt "field:lims.analysis_sheet.repeat_analysis.start,annul:"
+msgid "Annul current lines"
+msgstr "Anular líneas actuales"
+
 msgctxt "field:lims.analysis_sheet.repeat_analysis.start,lines:"
 msgid "Lines"
 msgstr "Líneas"
