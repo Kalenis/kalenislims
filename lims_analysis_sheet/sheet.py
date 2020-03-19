@@ -352,7 +352,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def get_completion_percentage(cls, sheets, name):
         pool = Pool()
         ModelField = pool.get('ir.model.field')
-        Column = pool.get('lims.interface.column')
+        Field = pool.get('lims.interface.table.field')
         Data = pool.get('lims.interface.data')
 
         nl_result_field, = ModelField.search([
@@ -363,14 +363,14 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         result = {}
         for s in sheets:
             result[s.id] = 0
-            result_column = Column.search([
-                ('interface', '=', s.template.interface),
+            result_column = Field.search([
+                ('table', '=', s.compilation.table.id),
                 ('transfer_field', '=', True),
-                ('related_line_field', '=', nl_result_field)
+                ('related_line_field', '=', nl_result_field),
                 ])
             if not result_column:
                 continue
-            result_field = result_column[0].alias
+            result_field = result_column[0].name
             with Transaction().set_context(
                     lims_interface_table=s.compilation.table.id):
                 lines = Data.search([('compilation', '=', s.compilation.id)])
@@ -520,7 +520,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def check_results(cls, sheets):
         pool = Pool()
         ModelField = pool.get('ir.model.field')
-        Column = pool.get('lims.interface.column')
+        Field = pool.get('lims.interface.table.field')
         Data = pool.get('lims.interface.data')
 
         nl_result_field, = ModelField.search([
@@ -529,15 +529,15 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             ])
 
         for s in sheets:
-            result_column = Column.search([
-                ('interface', '=', s.template.interface),
+            result_column = Field.search([
+                ('table', '=', s.compilation.table.id),
                 ('transfer_field', '=', True),
-                ('related_line_field', '=', nl_result_field)
+                ('related_line_field', '=', nl_result_field),
                 ])
             if not result_column:
                 raise UserError(gettext(
                     'lims_analysis_sheet.msg_template_not_result_field'))
-            result_field = result_column[0].alias
+            result_field = result_column[0].name
             with Transaction().set_context(
                     lims_interface_table=s.compilation.table.id):
                 lines = Data.search([('compilation', '=', s.compilation.id)])
@@ -691,6 +691,7 @@ class ExportAnalysisSheetFile(Wizard):
             return
         sheet = AnalysisSheet(sheet_id)
 
+        # TODO: use lims.interface.table.field
         columns = Column.search([
             ('interface', '=', sheet.template.interface),
             ('destination_column', '!=', None),

@@ -1002,11 +1002,11 @@ class Compilation(Workflow, ModelSQL, ModelView):
             repetition_value = line[self.interface.repetition_field.alias]
 
             fraction = Fraction.search([
-                ('number', '=', fraction_value)
+                ('number', '=', fraction_value),
                 ])
             if fraction and repetition_value is not None:
                 nb = Notebook.search([
-                    ('fraction', '=', fraction[0].id)
+                    ('fraction', '=', fraction[0].id),
                     ])
                 analysis = Analysis.search([
                     ('code', '=', analysis_value),
@@ -1034,7 +1034,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
             result_fields = {}
             fields = Field.search([
                 ('table', '=', c.table),
-                ('transfer_field', '=', True)
+                ('transfer_field', '=', True),
                 ])
             for field in fields:
                 result_fields[field.name] = {
@@ -1044,7 +1044,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
             with Transaction().set_context(
                     lims_interface_table=c.table):
                 lines = Data.search([
-                    ('compilation', '=', c.id)
+                    ('compilation', '=', c.id),
                     ])
                 for l in lines:
                     nb_line = l.notebook_line
@@ -1070,7 +1070,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
             result_fields = {}
             fields = Field.search([
                 ('table', '=', c.table),
-                ('transfer_field', '=', True)
+                ('transfer_field', '=', True),
                 ])
             for field in fields:
                 result_fields[field.name] = {
@@ -1080,7 +1080,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
             with Transaction().set_context(
                     lims_interface_table=c.table):
                 lines = Data.search([
-                    ('compilation', '=', c.id)
+                    ('compilation', '=', c.id),
                     ])
                 for l in lines:
                     nb_line = l.notebook_line
