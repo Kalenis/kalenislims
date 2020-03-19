@@ -122,6 +122,10 @@ msgctxt "field:lims.interface.compilation,analysis_sheet:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
 
+msgctxt "field:lims.interface.data,annulled:"
+msgid "Annulled"
+msgstr "Anulado"
+
 msgctxt "field:lims.planification.relate_technicians.detail4,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
