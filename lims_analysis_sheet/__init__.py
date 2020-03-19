@@ -4,6 +4,7 @@
 
 from trytond.pool import Pool
 from . import configuration
+from . import sheet
 from . import interface
 from . import planification
 from . import notebook
@@ -13,13 +14,15 @@ def register():
     Pool.register(
         configuration.Configuration,
         configuration.ConfigurationSequence,
-        interface.TemplateAnalysisSheet,
-        interface.TemplateAnalysisSheetAnalysis,
-        interface.AnalysisSheet,
+        sheet.TemplateAnalysisSheet,
+        sheet.TemplateAnalysisSheetAnalysis,
+        sheet.AnalysisSheet,
+        sheet.ExportAnalysisSheetFileStart,
         interface.Compilation,
         interface.Column,
+        interface.Interface,
+        interface.Table,
         interface.Data,
-        interface.ExportAnalysisSheetFileStart,
         planification.Planification,
         planification.SearchAnalysisSheetStart,
         planification.SearchAnalysisSheetNext,
@@ -33,8 +36,8 @@ def register():
         notebook.ResultsVerificationStart,
         module='lims_analysis_sheet', type_='model')
     Pool.register(
-        interface.OpenAnalysisSheetData,
-        interface.ExportAnalysisSheetFile,
+        sheet.OpenAnalysisSheetData,
+        sheet.ExportAnalysisSheetFile,
         planification.SearchAnalysisSheet,
         planification.RelateTechnicians,
         notebook.AddFractionControl,
@@ -43,5 +46,5 @@ def register():
         notebook.ResultsVerification,
         module='lims_analysis_sheet', type_='wizard')
     Pool.register(
-        interface.AnalysisSheetReport,
+        sheet.AnalysisSheetReport,
         module='lims_analysis_sheet', type_='report')
