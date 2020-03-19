@@ -337,7 +337,7 @@ class InternalRelationsCalc(Wizard):
         pool = Pool()
         AnalysisSheet = pool.get('lims.analysis_sheet')
         ModelField = pool.get('ir.model.field')
-        Column = pool.get('lims.interface.column')
+        Field = pool.get('lims.interface.table.field')
         Data = pool.get('lims.interface.data')
 
         sheet_id = Transaction().context['active_id']
@@ -347,15 +347,15 @@ class InternalRelationsCalc(Wizard):
             ('model.model', '=', 'lims.notebook.line'),
             ('name', '=', 'result'),
             ])
-        result_column = Column.search([
-            ('interface', '=', sheet.template.interface),
+        result_column = Field.search([
+            ('table', '=', sheet.compilation.table.id),
             ('transfer_field', '=', True),
-            ('related_line_field', '=', nl_result_field)
+            ('related_line_field', '=', nl_result_field),
             ])
         if not result_column:
             return 'end'
 
-        result_field = result_column[0].alias
+        result_field = result_column[0].name
         relations = {}
         notebooks = {}
         with Transaction().set_context(
@@ -529,7 +529,7 @@ class ResultsVerification(Wizard):
         pool = Pool()
         AnalysisSheet = pool.get('lims.analysis_sheet')
         ModelField = pool.get('ir.model.field')
-        Column = pool.get('lims.interface.column')
+        Field = pool.get('lims.interface.table.field')
         Data = pool.get('lims.interface.data')
 
         sheet_id = Transaction().context['active_id']
@@ -539,10 +539,10 @@ class ResultsVerification(Wizard):
             ('model.model', '=', 'lims.notebook.line'),
             ('name', '=', 'result'),
             ])
-        result_column = Column.search([
-            ('interface', '=', sheet.template.interface),
+        result_column = Field.search([
+            ('table', '=', sheet.compilation.table.id),
             ('transfer_field', '=', True),
-            ('related_line_field', '=', nl_result_field)
+            ('related_line_field', '=', nl_result_field),
             ])
         if not result_column:
             return 'end'
@@ -551,16 +551,16 @@ class ResultsVerification(Wizard):
             ('model.model', '=', 'lims.notebook.line'),
             ('name', '=', 'verification'),
             ])
-        verification_column = Column.search([
-            ('interface', '=', sheet.template.interface),
+        verification_column = Field.search([
+            ('table', '=', sheet.compilation.table.id),
             ('transfer_field', '=', True),
-            ('related_line_field', '=', nl_verification_field)
+            ('related_line_field', '=', nl_verification_field),
             ])
         if not verification_column:
             return 'end'
 
-        result_field = result_column[0].alias
-        verification_field = verification_column[0].alias
+        result_field = result_column[0].name
+        verification_field = verification_column[0].name
         notebook_lines = {}
         with Transaction().set_context(
                 lims_interface_table=sheet.compilation.table.id):
