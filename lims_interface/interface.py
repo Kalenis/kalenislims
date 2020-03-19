@@ -364,6 +364,17 @@ class Interface(Workflow, ModelSQL, ModelView):
             View.save(to_save)
 
     def get_tree_view(self):
+        fields = self._get_fields_tree_view()
+        xml = ('<?xml version="1.0"?>\n'
+            '<tree sequence="sequence" editable="bottom">\n'
+            '%s\n'
+            '</tree>') % ('\n'.join(fields))
+        return {
+            'type': 'tree',
+            'arch': xml,
+            }
+
+    def _get_fields_tree_view(self):
         fields = []
         current_icon = None
         for line in self.table.fields_:
@@ -373,9 +384,11 @@ class Interface(Workflow, ModelSQL, ModelView):
                 fields.append('<field name="%s" widget="time"/>' %
                     line.name)
                 continue
+
             if line.type == 'icon':
                 current_icon = line.name
                 continue
+
             attributes = []
             if current_icon:
                 attributes.append('icon="%s"' % current_icon)
@@ -387,17 +400,20 @@ class Interface(Workflow, ModelSQL, ModelView):
                     ' '.join(attributes)))
 
         fields.append('<field name="notebook_line"/>')
+        return fields
 
+    def get_form_view(self):
+        fields = self._get_fields_form_view()
         xml = ('<?xml version="1.0"?>\n'
-            '<tree sequence="sequence" editable="bottom">\n'
+            '<form>\n'
             '%s\n'
-            '</tree>') % ('\n'.join(fields))
+            '</form>') % '\n'.join(fields)
         return {
-            'type': 'tree',
+            'type': 'form',
             'arch': xml,
             }
 
-    def get_form_view(self):
+    def _get_fields_form_view(self):
         fields = []
         for line in self.table.fields_:
             fields.append('<label name="%s"/>' % line.name)
@@ -407,9 +423,9 @@ class Interface(Workflow, ModelSQL, ModelView):
                     '<field name="%s" widget="time"/>'
                     '</group>' % (line.name, line.name))
                 continue
+
             if line.type == 'icon':
-                fields.append('<image name="%s"/>' %
-                        (line.name))
+                fields.append('<image name="%s"/>' % line.name)
                 continue
 
             attributes = []
@@ -421,15 +437,7 @@ class Interface(Workflow, ModelSQL, ModelView):
 
         fields.append('<label name="notebook_line"/>')
         fields.append('<field name="notebook_line"/>')
-
-        xml = ('<?xml version="1.0"?>\n'
-            '<form>\n'
-            '%s\n'
-            '</form>') % '\n'.join(fields)
-        return {
-            'type': 'form',
-            'arch': xml,
-            }
+        return fields
 
 
 class Column(sequence_ordered(), ModelSQL, ModelView):
