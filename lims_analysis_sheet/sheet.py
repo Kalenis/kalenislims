@@ -545,7 +545,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     raise UserError(gettext(
                         'lims_analysis_sheet.msg_sheet_not_lines'))
                 for line in lines:
-                    if not getattr(line, result_field):
+                    if not getattr(line, result_field) and not line.annulled:
                         raise UserError(gettext(
                             'lims_analysis_sheet.msg_sheet_not_results'))
 

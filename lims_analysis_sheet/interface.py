@@ -2,6 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import sql
+from datetime import datetime
 
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
@@ -43,6 +44,30 @@ class Compilation(metaclass=PoolMeta):
             #Bool(Eval('analysis_sheet')))
         #cls._buttons['collect']['invisible'] = Or(Eval('state') != 'active',
             #Bool(Eval('analysis_sheet')))
+
+    @classmethod
+    def confirm(cls, compilations):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        super(Compilation, cls).confirm(compilations)
+
+        lines_to_write = []
+        for c in compilations:
+            with Transaction().set_context(
+                    lims_interface_table=c.table.id):
+                lines = Data.search([('compilation', '=', c.id)])
+                for line in lines:
+                    if line.annulled and line.notebook_line:
+                        lines_to_write.append(line.notebook_line)
+        if lines_to_write:
+            NotebookLine.write(lines_to_write, {
+                'result_modifier': 'na',
+                'annulled': True,
+                'annulment_date': datetime.now(),
+                'report': False,
+                })
 
 
 class Column(metaclass=PoolMeta):
