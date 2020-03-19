@@ -642,8 +642,7 @@ class NotebookLine(ModelSQL, ModelView):
         return [('service.fraction.sample.' + name,) + tuple(clause[1:])]
 
     def get_rec_name(self, name):
-        if self.analysis:
-            return self.analysis.rec_name
+        return '%s / %s' % (self.notebook.rec_name, self.analysis.rec_name)
 
     @classmethod
     def search_rec_name(cls, name, clause):
