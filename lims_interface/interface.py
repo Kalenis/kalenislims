@@ -1090,7 +1090,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
                             value = getattr(l, res)
                             data[result_fields[res]['field_name']] = value
                         if data:
-                            NotebookLine.write(nb_line, data)
+                            NotebookLine.write([nb_line], data)
 
 
 class CompilationOrigin(ModelSQL, ModelView):
