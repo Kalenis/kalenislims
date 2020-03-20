@@ -665,13 +665,14 @@ class NotebookRule(ModelSQL, ModelView):
         NotebookLine = pool.get('lims.notebook.line')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
+        repetition = self._get_line_last_repetition(line)
         line_create = [{
             'notebook': line.notebook.id,
             'analysis_detail': line.analysis_detail.id,
             'service': line.service.id,
             'analysis': self.target_analysis.id,
             'analysis_origin': line.analysis_origin,
-            'repetition': line.repetition + 1,
+            'repetition': repetition + 1,
             'laboratory': line.laboratory.id,
             'method': line.method.id,
             'device': line.device.id if line.device else None,
@@ -772,6 +773,14 @@ class NotebookRule(ModelSQL, ModelView):
             notebook_line.save()
         except Exception as e:
             return
+
+    def _get_line_last_repetition(self, line):
+        NotebookLine = Pool().get('lims.notebook.line')
+        lines = NotebookLine.search([
+            ('notebook', '=', line.notebook),
+            ('analysis', '=', line.analysis),
+            ], order=[('repetition', 'DESC')], limit=1)
+        return lines and lines[0].repetition or 0
 
 
 class NotebookRuleCondition(ModelSQL, ModelView):
