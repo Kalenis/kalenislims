@@ -8,6 +8,7 @@ from . import sheet
 from . import interface
 from . import planification
 from . import notebook
+from . import laboratory
 
 
 def register():
@@ -34,6 +35,8 @@ def register():
         notebook.RepeatAnalysisStart,
         notebook.RepeatAnalysisStartLine,
         notebook.ResultsVerificationStart,
+        laboratory.NotebookRule,
+        laboratory.NotebookRuleCondition,
         module='lims_analysis_sheet', type_='model')
     Pool.register(
         sheet.OpenAnalysisSheetData,
@@ -44,6 +47,7 @@ def register():
         notebook.RepeatAnalysis,
         notebook.InternalRelationsCalc,
         notebook.ResultsVerification,
+        notebook.EvaluateRules,
         module='lims_analysis_sheet', type_='wizard')
     Pool.register(
         sheet.AnalysisSheetReport,

@@ -175,6 +175,10 @@ msgctxt ""
 msgid "Templates domain"
 msgstr "Dominio para Plantillas"
 
+msgctxt "field:lims.rule,analysis_sheet:"
+msgid "For use in Analysis Sheets"
+msgstr "Para uso en Hojas de análisis"
+
 msgctxt "field:lims.template.analysis_sheet,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
@@ -242,6 +246,10 @@ msgstr "Informe de Hoja de análisis"
 msgctxt "model:ir.action,name:wiz_analysis_sheet_add_fraction_con"
 msgid "Add Fraction Control"
 msgstr "01) Añadir fracción Control"
+
+msgctxt "model:ir.action,name:wiz_analysis_sheet_evaluate_rules"
+msgid "Evaluate Rules"
+msgstr "05) Evaluar Reglas de cuaderno"
 
 msgctxt "model:ir.action,name:wiz_analysis_sheet_export_file"
 msgid "Export Analysis Sheet File"

@@ -12,7 +12,8 @@ from trytond.modules.lims.formula_parser import FormulaParser
 
 __all__ = ['NotebookLine', 'AddFractionControlStart', 'AddFractionControl',
     'RepeatAnalysisStart', 'RepeatAnalysisStartLine', 'RepeatAnalysis',
-    'InternalRelationsCalc', 'ResultsVerificationStart', 'ResultsVerification']
+    'InternalRelationsCalc', 'ResultsVerificationStart', 'ResultsVerification',
+    'EvaluateRules']
 
 
 class NotebookLine(metaclass=PoolMeta):
@@ -257,18 +258,18 @@ class RepeatAnalysis(Wizard):
 
     def transition_repeat(self):
         pool = Pool()
+        Date = pool.get('ir.date')
         AnalysisSheet = pool.get('lims.analysis_sheet')
         NotebookLine = pool.get('lims.notebook.line')
-        #EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Data = pool.get('lims.interface.data')
 
         sheet_id = Transaction().context['active_id']
         sheet = AnalysisSheet(sheet_id)
 
         to_create = []
-        #details_to_update = []
         to_annul = []
 
+        date = Date.today()
         for sheet_line in self.start.lines:
             nline_to_repeat = sheet_line.line
             detail_id = nline_to_repeat.analysis_detail.id
@@ -298,23 +299,15 @@ class RepeatAnalysis(Wizard):
                     nline_to_repeat.final_unit else None),
                 'detection_limit': nline_to_repeat.detection_limit,
                 'quantification_limit': nline_to_repeat.quantification_limit,
+                'start_date': date,
                 }
             to_create.append(defaults)
-            #details_to_update.append(detail_id)
             if self.start.annul:
                 to_annul.append(nline_to_repeat.id)
 
         notebook_lines = NotebookLine.create(to_create)
         if notebook_lines:
             sheet.create_lines(notebook_lines)
-
-        #details = EntryDetailAnalysis.search([
-            #('id', 'in', details_to_update),
-            #])
-        #if details:
-            #EntryDetailAnalysis.write(details, {
-                #'state': 'unplanned',
-                #})
 
         if to_annul:
             with Transaction().set_context(
@@ -709,3 +702,46 @@ class ResultsVerification(Wizard):
                 return gettext('lims.msg_ok')
             else:
                 return gettext('lims.msg_out')
+
+
+class EvaluateRules(Wizard):
+    'Evaluate Rules'
+    __name__ = 'lims.analysis_sheet.evaluate_rules'
+
+    start_state = 'check'
+    check = StateTransition()
+    evaluate = StateTransition()
+
+    def transition_check(self):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+
+        sheet_id = Transaction().context['active_id']
+        sheet = AnalysisSheet(sheet_id)
+
+        if sheet.state in ('active', 'validated'):
+            return 'evaluate'
+        return 'end'
+
+    def transition_evaluate(self):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+        NotebookRule = pool.get('lims.rule')
+
+        sheet_id = Transaction().context['active_id']
+        sheet = AnalysisSheet(sheet_id)
+
+        with Transaction().set_context(
+                lims_interface_table=sheet.compilation.table.id,
+                lims_interface_compilation=sheet.compilation.id,
+                lims_analysis_sheet=sheet.id):
+            lines = Data.search([('compilation', '=', sheet.compilation.id)])
+            for line in lines:
+                rules = NotebookRule.search([
+                    ('analysis', '=', line.notebook_line.analysis),
+                    ])
+                for rule in rules:
+                    if rule.eval_sheet_condition(line):
+                        rule.exec_sheet_action(line)
+        return 'end'
