@@ -62,13 +62,35 @@ msgctxt "field:lims.analysis_sheet,urgent:"
 msgid "Urgent"
 msgstr "Urgente"
 
+msgctxt "field:lims.analysis_sheet.add_fraction_con.start,analysis_sheet:"
+msgid "Analysis Sheet"
+msgstr "Hoja de análisis"
+
+msgctxt ""
+"field:lims.analysis_sheet.add_fraction_con.start,concentration_level:"
+msgid "Concentration level"
+msgstr "Nivel de concentración"
+
+msgctxt ""
+"field:lims.analysis_sheet.add_fraction_con.start,concentration_level_invisible:"
+msgid "Concentration level invisible"
+msgstr "Nivel de concentración invisible"
+
 msgctxt "field:lims.analysis_sheet.add_fraction_con.start,fraction_domain:"
 msgid "Fraction domain"
 msgstr "Dominio para Fracción"
 
+msgctxt "field:lims.analysis_sheet.add_fraction_con.start,label:"
+msgid "Label"
+msgstr "Rótulo"
+
 msgctxt "field:lims.analysis_sheet.add_fraction_con.start,original_fraction:"
-msgid "Fraction"
-msgstr "Fracción"
+msgid "Original fraction"
+msgstr "Fracción original"
+
+msgctxt "field:lims.analysis_sheet.add_fraction_con.start,type:"
+msgid "Control type"
+msgstr "Tipo de Control"
 
 msgctxt "field:lims.analysis_sheet.export_file.start,file:"
 msgid "File"
@@ -594,6 +616,30 @@ msgstr "Borrador"
 msgctxt "selection:lims.analysis_sheet,state:"
 msgid "Validated"
 msgstr "Validada"
+
+msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
+msgid "COI"
+msgstr "COI"
+
+msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
+msgid "Existing CON"
+msgstr "CON Existente"
+
+msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
+msgid "ITC"
+msgstr "ITC"
+
+msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
+msgid "ITL"
+msgstr "ITL"
+
+msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
+msgid "MRC"
+msgstr "MRC"
+
+msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
+msgid "SLA"
+msgstr "SLA"
 
 msgctxt "selection:lims.planification.relate_technicians.result,grouping:"
 msgid "Analysis sheet"
