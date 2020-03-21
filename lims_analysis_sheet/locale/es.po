@@ -62,33 +62,40 @@ msgctxt "field:lims.analysis_sheet,urgent:"
 msgid "Urgent"
 msgstr "Urgente"
 
-msgctxt "field:lims.analysis_sheet.add_fraction_con.start,analysis_sheet:"
+msgctxt "field:lims.analysis_sheet.add_control.start,analysis_sheet:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
 
-msgctxt ""
-"field:lims.analysis_sheet.add_fraction_con.start,concentration_level:"
+msgctxt "field:lims.analysis_sheet.add_control.start,con_type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.analysis_sheet.add_control.start,concentration_level:"
 msgid "Concentration level"
 msgstr "Nivel de concentración"
 
 msgctxt ""
-"field:lims.analysis_sheet.add_fraction_con.start,concentration_level_invisible:"
+"field:lims.analysis_sheet.add_control.start,concentration_level_invisible:"
 msgid "Concentration level invisible"
 msgstr "Nivel de concentración invisible"
 
-msgctxt "field:lims.analysis_sheet.add_fraction_con.start,fraction_domain:"
+msgctxt "field:lims.analysis_sheet.add_control.start,fraction_domain:"
 msgid "Fraction domain"
 msgstr "Dominio para Fracción"
 
-msgctxt "field:lims.analysis_sheet.add_fraction_con.start,label:"
+msgctxt "field:lims.analysis_sheet.add_control.start,label:"
 msgid "Label"
 msgstr "Rótulo"
 
-msgctxt "field:lims.analysis_sheet.add_fraction_con.start,original_fraction:"
-msgid "Original fraction"
-msgstr "Fracción original"
+msgctxt "field:lims.analysis_sheet.add_control.start,original_fraction:"
+msgid "Original/Reference Fraction"
+msgstr "Fracción original/referencia"
 
-msgctxt "field:lims.analysis_sheet.add_fraction_con.start,type:"
+msgctxt "field:lims.analysis_sheet.add_control.start,rm_bmz_type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.analysis_sheet.add_control.start,type:"
 msgid "Control type"
 msgstr "Tipo de Control"
 
@@ -265,9 +272,9 @@ msgctxt "model:ir.action,name:report_analysis_sheet"
 msgid "Analysis Sheet Report"
 msgstr "Informe de Hoja de análisis"
 
-msgctxt "model:ir.action,name:wiz_analysis_sheet_add_fraction_con"
-msgid "Add Fraction Control"
-msgstr "01) Añadir fracción Control"
+msgctxt "model:ir.action,name:wiz_analysis_sheet_add_control"
+msgid "Add Controls"
+msgstr "01) Añadir Controles"
 
 msgctxt "model:ir.action,name:wiz_analysis_sheet_evaluate_rules"
 msgid "Evaluate Rules"
@@ -345,9 +352,9 @@ msgctxt "model:lims.analysis_sheet,name:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
 
-msgctxt "model:lims.analysis_sheet.add_fraction_con.start,name:"
-msgid "Add Fraction Control"
-msgstr "Añadir fracción Control"
+msgctxt "model:lims.analysis_sheet.add_control.start,name:"
+msgid "Add Controls"
+msgstr "Añadir Controles"
 
 msgctxt "model:lims.analysis_sheet.export_file.start,name:"
 msgid "Export Analysis Sheet File"
@@ -617,29 +624,49 @@ msgctxt "selection:lims.analysis_sheet,state:"
 msgid "Validated"
 msgstr "Validada"
 
-msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
+msgctxt "selection:lims.analysis_sheet.add_control.start,con_type:"
 msgid "COI"
 msgstr "COI"
 
-msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
-msgid "Existing CON"
-msgstr "CON Existente"
+msgctxt "selection:lims.analysis_sheet.add_control.start,con_type:"
+msgid "Existing"
+msgstr "Existente"
 
-msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
+msgctxt "selection:lims.analysis_sheet.add_control.start,con_type:"
 msgid "ITC"
 msgstr "ITC"
 
-msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
+msgctxt "selection:lims.analysis_sheet.add_control.start,con_type:"
 msgid "ITL"
 msgstr "ITL"
 
-msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
+msgctxt "selection:lims.analysis_sheet.add_control.start,con_type:"
 msgid "MRC"
 msgstr "MRC"
 
-msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
+msgctxt "selection:lims.analysis_sheet.add_control.start,con_type:"
 msgid "SLA"
 msgstr "SLA"
+
+msgctxt "selection:lims.analysis_sheet.add_control.start,rm_bmz_type:"
+msgid "Existing"
+msgstr "Existente"
+
+msgctxt "selection:lims.analysis_sheet.add_control.start,rm_bmz_type:"
+msgid "SLA"
+msgstr "SLA"
+
+msgctxt "selection:lims.analysis_sheet.add_control.start,type:"
+msgid "BMZ"
+msgstr "BMZ"
+
+msgctxt "selection:lims.analysis_sheet.add_control.start,type:"
+msgid "CON"
+msgstr "CON"
+
+msgctxt "selection:lims.analysis_sheet.add_control.start,type:"
+msgid "RM"
+msgstr "RM"
 
 msgctxt "selection:lims.planification.relate_technicians.result,grouping:"
 msgid "Analysis sheet"
@@ -737,11 +764,11 @@ msgctxt "view:lims.template.analysis_sheet:"
 msgid "Controls"
 msgstr "Controles"
 
-msgctxt "wizard_button:lims.analysis_sheet.add_fraction_con,start,add:"
+msgctxt "wizard_button:lims.analysis_sheet.add_control,start,add:"
 msgid "Add"
 msgstr "Añadir"
 
-msgctxt "wizard_button:lims.analysis_sheet.add_fraction_con,start,end:"
+msgctxt "wizard_button:lims.analysis_sheet.add_control,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 

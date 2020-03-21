@@ -2,23 +2,23 @@
 <tryton>
     <data>
 
-<!-- Wizard Add Fraction Control -->
+<!-- Wizard Add Control -->
 
-        <record model="ir.ui.view" id="analysis_sheet_add_fraction_con_start_form">
-            <field name="model">lims.analysis_sheet.add_fraction_con.start</field>
+        <record model="ir.ui.view" id="analysis_sheet_add_control_start_form">
+            <field name="model">lims.analysis_sheet.add_control.start</field>
             <field name="type">form</field>
-            <field name="name">analysis_sheet_add_fraction_con_start_form</field>
+            <field name="name">analysis_sheet_add_control_start_form</field>
         </record>
 
-        <record model="ir.action.wizard" id="wiz_analysis_sheet_add_fraction_con">
-            <field name="name">Add Fraction Control</field>
-            <field name="wiz_name">lims.analysis_sheet.add_fraction_con</field>
+        <record model="ir.action.wizard" id="wiz_analysis_sheet_add_control">
+            <field name="name">Add Controls</field>
+            <field name="wiz_name">lims.analysis_sheet.add_control</field>
         </record>
 
-        <record model="ir.action.keyword" id="wiz_analysis_sheet_add_fraction_con_keyword">
+        <record model="ir.action.keyword" id="wiz_analysis_sheet_add_control_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.analysis_sheet,-1</field>
-            <field name="action" ref="wiz_analysis_sheet_add_fraction_con"/>
+            <field name="action" ref="wiz_analysis_sheet_add_control"/>
         </record>
 
 <!-- Wizard Repeat Analysis -->
