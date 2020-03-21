@@ -1,5 +1,13 @@
 <?xml version="1.0"?>
 <form>
+    <label name="type"/>
+    <field name="type"/>
     <label name="original_fraction"/>
     <field name="original_fraction"/>
+    <label name="label"/>
+    <field name="label"/>
+    <label name="concentration_level"/>
+    <field name="concentration_level"/>
+    <field name="analysis_sheet" invisible="1"/>
+    <field name="fraction_domain" invisible="1"/>
 </form>
