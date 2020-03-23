@@ -73,6 +73,7 @@ class NotebookRule(metaclass=PoolMeta):
             'service': notebook_line.service.id,
             'analysis': self.target_analysis.id,
             'analysis_origin': notebook_line.analysis_origin,
+            'urgent': True,
             'repetition': repetition + 1,
             'laboratory': notebook_line.laboratory.id,
             'method': notebook_line.method.id,

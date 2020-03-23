@@ -476,6 +476,7 @@ class RepeatAnalysisStart(ModelView):
         'lims.analysis_sheet.repeat_analysis.start.line', None,
         'Lines domain')
     annul = fields.Boolean('Annul current lines')
+    urgent = fields.Boolean('Urgent repetition')
 
 
 class RepeatAnalysisStartLine(ModelSQL, ModelView):
@@ -554,7 +555,10 @@ class RepeatAnalysis(Wizard):
         RepeatAnalysisStartLine = pool.get(
             'lims.analysis_sheet.repeat_analysis.start.line')
 
-        defaults = {'annul': False}
+        defaults = {
+            'annul': False,
+            'urgent': False,
+            }
 
         sheet_id = Transaction().context['active_id']
         sheet = AnalysisSheet(sheet_id)
@@ -598,6 +602,7 @@ class RepeatAnalysis(Wizard):
                 'service': nline_to_repeat.service.id,
                 'analysis': nline_to_repeat.analysis.id,
                 'analysis_origin': nline_to_repeat.analysis_origin,
+                'urgent': self.start.urgent,
                 'repetition': nline_to_repeat.repetition + 1,
                 'laboratory': nline_to_repeat.laboratory.id,
                 'method': nline_to_repeat.method.id,

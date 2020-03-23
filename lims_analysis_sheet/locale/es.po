@@ -115,6 +115,10 @@ msgctxt "field:lims.analysis_sheet.repeat_analysis.start,lines_domain:"
 msgid "Lines domain"
 msgstr "Dominio para Líneas"
 
+msgctxt "field:lims.analysis_sheet.repeat_analysis.start,urgent:"
+msgid "Urgent repetition"
+msgstr "Repetición urgente"
+
 msgctxt "field:lims.analysis_sheet.repeat_analysis.start.line,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
