@@ -1,12 +1,18 @@
+# -*- coding: utf-8 -*-
+# This file is part of lims_interface module for Tryton.
+# The COPYRIGHT file at the top level of this repository contains
+# the full copyright notices and license terms.
 import sql
 import formulas
 import schedula
+
 from trytond.model import ModelSQL, ModelView, fields, sequence_ordered
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.tools import cursor_dict
 from trytond.pyson import PYSONEncoder
 from trytond.rpc import RPC
+from trytond.exceptions import UserError
 from .interface import FIELD_TYPE_TRYTON, FIELD_TYPE_CAST
 
 __all__ = ['ModelAccess', 'Data']
@@ -138,7 +144,7 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
             try:
                 value = ast(*inputs)
             except schedula.utils.exc.DispatcherError as e:
-                self.raise_user_error(e.args[0] % e.args[1:])
+                raise UserError(e.args[0] % e.args[1:])
 
             if isinstance(value, list):
                 value = str(value)
@@ -166,7 +172,7 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
             try:
                 value = ast(*inputs)
             except schedula.utils.exc.DispatcherError as e:
-                self.raise_user_error(e.args[0] % e.args[1:])
+                raise UserError(e.args[0] % e.args[1:])
 
             if isinstance(value, list):
                 value = str(value)
