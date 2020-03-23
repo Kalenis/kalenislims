@@ -711,12 +711,24 @@ class PlanificationDetail(ModelSQL, ModelView):
 
     @classmethod
     def set_urgent(cls, details, name, value):
-        Service = Pool().get('lims.service')
+        pool = Pool()
+        Service = pool.get('lims.service')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        services_to_write = []
+        notebook_lines_to_write = []
         for d in details:
             if d.fraction and d.service_analysis:
                 for service in d.fraction.services:
                     if service.analysis == d.service_analysis:
-                        Service.write([service], {'urgent': value})
+                        services_to_write.append(service)
+            for sd in d.details:
+                notebook_lines_to_write.append(sd.notebook_line)
+
+        if services_to_write:
+            Service.write(services_to_write, {'urgent': value})
+        if notebook_lines_to_write and value:
+            NotebookLine.write(notebook_lines_to_write, {'urgent': value})
 
     def get_icon(self, name):
         if self.comments:
@@ -1968,6 +1980,7 @@ class AddFractionControl(Wizard):
                 'service': nline.service.id,
                 'analysis': analysis_id,
                 'analysis_origin': nline.analysis_origin,
+                'urgent': nline.urgent,
                 'repetition': nline.repetition + 1,
                 'laboratory': nline.laboratory.id,
                 'method': nline.method.id,
@@ -2636,6 +2649,7 @@ class AddFractionRMBMZ(Wizard):
                     'service': nline.service.id,
                     'analysis': nline.analysis.id,
                     'analysis_origin': nline.analysis_origin,
+                    'urgent': nline.urgent,
                     'repetition': nline.repetition + i,
                     'laboratory': nline.laboratory.id,
                     'method': nline.method.id,
@@ -3427,6 +3441,7 @@ class AddFractionMRT(Wizard):
                     'service': nline.service.id,
                     'analysis': nline.analysis.id,
                     'analysis_origin': nline.analysis_origin,
+                    'urgent': nline.urgent,
                     'repetition': nline.repetition + i,
                     'laboratory': nline.laboratory.id,
                     'method': nline.method.id,
@@ -5576,8 +5591,8 @@ class PlanificationSequenceReport(Report):
                             'matrix': matrix,
                             'fraction_type': fraction_type,
                             'analysis_origin': analysis_origin,
-                            'priority': priority,
                             'urgent': urgent,
+                            'priority': priority,
                             'report_date': report_date,
                             'trace_report': trace_report,
                             'comments': comments,

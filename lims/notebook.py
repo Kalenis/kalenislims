@@ -6,6 +6,8 @@ import operator
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from sql import Literal, Join
+
+from trytond import backend
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     StateReport, Button
@@ -363,8 +365,7 @@ class NotebookLine(ModelSQL, ModelView):
         readonly=True)
     planification = fields.Many2One('lims.planification', 'Planification',
         readonly=True)
-    urgent = fields.Function(fields.Boolean('Urgent'), 'get_service_field',
-        searcher='search_service_field')
+    urgent = fields.Boolean('Urgent')
     priority = fields.Function(fields.Integer('Priority'),
         'get_service_field', searcher='search_service_field')
     report_date = fields.Function(fields.Date('Date agreed for result'),
@@ -401,6 +402,23 @@ class NotebookLine(ModelSQL, ModelView):
         'get_planning_comments')
     controls = fields.Many2Many('lims.notebook.line-fraction',
         'notebook_line', 'fraction', 'Controls')
+
+    @classmethod
+    def __register__(cls, module_name):
+        TableHandler = backend.get('TableHandler')
+        tablehandler = TableHandler(cls, module_name)
+
+        urgent_exist = tablehandler.column_exist('urgent')
+
+        super(NotebookLine, cls).__register__(module_name)
+
+        if not urgent_exist:
+            cursor = Transaction().connection.cursor()
+            Service = Pool().get('lims.service')
+            cursor.execute('UPDATE "' + cls._table + '" nl '
+                'SET urgent = srv.urgent FROM '
+                '"' + Service._table + '" srv '
+                'WHERE srv.id = nl.service')
 
     @classmethod
     def __setup__(cls):
@@ -1057,7 +1075,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
             line.device,
             line.service,
             line.analysis_origin,
-            service.urgent,
+            line.urgent,
             service.priority,
             service.report_date,
             line.initial_concentration,
@@ -3858,6 +3876,7 @@ class NotebookLineRepeatAnalysis(Wizard):
                 'service': nline_to_repeat.service.id,
                 'analysis': analysis_id,
                 'analysis_origin': nline_to_repeat.analysis_origin,
+                'urgent': nline_to_repeat.urgent,
                 'repetition': nline_to_repeat.repetition + 1,
                 'laboratory': nline_to_repeat.laboratory.id,
                 'method': nline_to_repeat.method.id,

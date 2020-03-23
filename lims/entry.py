@@ -7,6 +7,7 @@ from datetime import datetime
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
+
 from trytond import backend
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateReport, \
@@ -920,6 +921,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                     'service': detail.service.id,
                     'analysis': detail.analysis.id,
                     'analysis_origin': detail.analysis_origin,
+                    'urgent': detail.service.urgent,
                     'repetition': i,
                     'laboratory': detail.laboratory.id,
                     'method': detail.method.id,
