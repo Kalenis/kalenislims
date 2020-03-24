@@ -15,8 +15,8 @@ from trytond.modules.lims.formula_parser import FormulaParser
 
 __all__ = ['NotebookLine', 'AddControlStart', 'AddControl', 'LineAddControl',
     'RepeatAnalysisStart', 'RepeatAnalysisStartLine', 'RepeatAnalysis',
-    'InternalRelationsCalc', 'ResultsVerificationStart', 'ResultsVerification',
-    'EvaluateRules']
+    'LineRepeatAnalysis', 'InternalRelationsCalc', 'ResultsVerificationStart',
+    'ResultsVerification', 'EvaluateRules']
 
 
 class NotebookLine(metaclass=PoolMeta):
@@ -494,6 +494,7 @@ class RepeatAnalysisStart(ModelView):
     'Repeat Analysis'
     __name__ = 'lims.analysis_sheet.repeat_analysis.start'
 
+    analysis_sheet = fields.Many2One('lims.analysis_sheet', 'Analysis Sheet')
     lines = fields.Many2Many(
         'lims.analysis_sheet.repeat_analysis.start.line', None, None,
         'Lines', required=True, domain=[('id', 'in', Eval('lines_domain'))],
@@ -582,6 +583,7 @@ class RepeatAnalysis(Wizard):
             'lims.analysis_sheet.repeat_analysis.start.line')
 
         defaults = {
+            'analysis_sheet': Transaction().context['active_id'],
             'annul': False,
             'urgent': False,
             }
@@ -601,6 +603,7 @@ class RepeatAnalysis(Wizard):
                     'session_id': self._session_id,
                     'line': nl,
                     })
+
         lines = RepeatAnalysisStartLine.create(to_create)
         defaults['lines_domain'] = [l.id for l in lines]
         return defaults
@@ -608,12 +611,10 @@ class RepeatAnalysis(Wizard):
     def transition_repeat(self):
         pool = Pool()
         Date = pool.get('ir.date')
-        AnalysisSheet = pool.get('lims.analysis_sheet')
         NotebookLine = pool.get('lims.notebook.line')
         Data = pool.get('lims.interface.data')
 
-        sheet_id = Transaction().context['active_id']
-        sheet = AnalysisSheet(sheet_id)
+        sheet = self.start.analysis_sheet
 
         to_create = []
         to_annul = []
@@ -670,6 +671,62 @@ class RepeatAnalysis(Wizard):
                     line.set_field('true', 'annulled')
 
         return 'end'
+
+
+class LineRepeatAnalysis(RepeatAnalysis):
+    'Repeat Analysis'
+    __name__ = 'lims.analysis_sheet_data.repeat_analysis'
+
+    def transition_check(self):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+
+        sheet_id = Transaction().context['lims_analysis_sheet']
+        sheet = AnalysisSheet(sheet_id)
+
+        if sheet.state in ('active', 'validated'):
+            return 'start'
+        return 'end'
+
+    def default_start(self, fields):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+        RepeatAnalysisStartLine = pool.get(
+            'lims.analysis_sheet.repeat_analysis.start.line')
+
+        defaults = {
+            'analysis_sheet': Transaction().context['lims_analysis_sheet'],
+            'annul': False,
+            'urgent': False,
+            }
+
+        sheet_id = Transaction().context['lims_analysis_sheet']
+        sheet = AnalysisSheet(sheet_id)
+
+        to_create = []
+        selected_lines = []
+        with Transaction().set_context(
+                lims_interface_table=sheet.compilation.table.id):
+            lines = Data.search([('compilation', '=', sheet.compilation.id)])
+            for line in lines:
+                nl = line.notebook_line
+                if not nl:
+                    continue
+                to_create.append({
+                    'session_id': self._session_id,
+                    'line': nl,
+                    })
+                if line.id in Transaction().context['active_ids']:
+                    selected_lines.append(line.notebook_line)
+
+        lines = RepeatAnalysisStartLine.create(to_create)
+        defaults['lines_domain'] = [l.id for l in lines]
+        defaults['lines'] = [l.id for l in lines if l.line in selected_lines]
+        return defaults
+
+    def end(self):
+        return 'reload'
 
 
 class InternalRelationsCalc(Wizard):

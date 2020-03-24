@@ -46,6 +46,7 @@ def register():
         notebook.AddControl,
         notebook.LineAddControl,
         notebook.RepeatAnalysis,
+        notebook.LineRepeatAnalysis,
         notebook.InternalRelationsCalc,
         notebook.ResultsVerification,
         notebook.EvaluateRules,
