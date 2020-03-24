@@ -13,7 +13,7 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.modules.lims.formula_parser import FormulaParser
 
-__all__ = ['NotebookLine', 'AddControlStart', 'AddControl',
+__all__ = ['NotebookLine', 'AddControlStart', 'AddControl', 'LineAddControl',
     'RepeatAnalysisStart', 'RepeatAnalysisStartLine', 'RepeatAnalysis',
     'InternalRelationsCalc', 'ResultsVerificationStart', 'ResultsVerification',
     'EvaluateRules']
@@ -315,8 +315,8 @@ class AddControl(Wizard):
             'services': [],
             }
         if self.start.type == 'con':
-            fraction_default['con_type'] = self.start.con_type,
-            fraction_default['con_original_fraction'] = original_fraction.id,
+            fraction_default['con_type'] = self.start.con_type
+            fraction_default['con_original_fraction'] = original_fraction.id
         elif self.start.type == 'rm':
             fraction_default['rm_type'] = 'sla'
             fraction_default['rm_product_type'] = new_sample.product_type.id
@@ -462,6 +462,32 @@ class AddControl(Wizard):
         if notebook_lines:
             sheet.create_lines(notebook_lines)
         return 'end'
+
+
+class LineAddControl(AddControl):
+    'Add Controls'
+    __name__ = 'lims.analysis_sheet_data.add_control'
+
+    def transition_check(self):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+
+        sheet_id = Transaction().context['lims_analysis_sheet']
+        sheet = AnalysisSheet(sheet_id)
+
+        if sheet.state in ('active', 'validated'):
+            return 'start'
+        return 'end'
+
+    def default_start(self, fields):
+        defaults = {
+            'analysis_sheet': Transaction().context['lims_analysis_sheet'],
+            'concentration_level_invisible': True,
+            }
+        return defaults
+
+    def end(self):
+        return 'reload'
 
 
 class RepeatAnalysisStart(ModelView):

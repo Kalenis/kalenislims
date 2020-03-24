@@ -21,6 +21,19 @@
             <field name="action" ref="wiz_analysis_sheet_add_control"/>
         </record>
 
+<!-- Wizard Add Control (from Data) -->
+
+        <record model="ir.action.wizard" id="wiz_analysis_sheet_data_add_control">
+            <field name="name">Add Controls</field>
+            <field name="wiz_name">lims.analysis_sheet_data.add_control</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_analysis_sheet_data_add_control_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.interface.data,-1</field>
+            <field name="action" ref="wiz_analysis_sheet_data_add_control"/>
+        </record>
+
 <!-- Wizard Repeat Analysis -->
 
         <record model="ir.ui.view" id="analysis_sheet_repeat_analysis_start_form">

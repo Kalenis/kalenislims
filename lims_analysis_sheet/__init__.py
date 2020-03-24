@@ -44,6 +44,7 @@ def register():
         planification.SearchAnalysisSheet,
         planification.RelateTechnicians,
         notebook.AddControl,
+        notebook.LineAddControl,
         notebook.RepeatAnalysis,
         notebook.InternalRelationsCalc,
         notebook.ResultsVerification,

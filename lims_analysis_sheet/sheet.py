@@ -639,6 +639,7 @@ class OpenAnalysisSheetData(Wizard):
         AnalysisSheet = Pool().get('lims.analysis_sheet')
 
         context = {
+            'lims_analysis_sheet': None,
             'lims_interface_compilation': None,
             'lims_interface_table': None,
             }
@@ -648,6 +649,7 @@ class OpenAnalysisSheetData(Wizard):
         sheet_id = Transaction().context.get('active_id', None)
         if sheet_id:
             sheet = AnalysisSheet(sheet_id)
+            context['lims_analysis_sheet'] = sheet.id
             context['lims_interface_compilation'] = sheet.compilation.id
             context['lims_interface_table'] = sheet.compilation.table.id
             domain = [('compilation', '=', sheet.compilation.id)]
