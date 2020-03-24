@@ -284,6 +284,10 @@ msgctxt "model:ir.action,name:wiz_analysis_sheet_data_add_control"
 msgid "Add Controls"
 msgstr "01) Añadir Controles"
 
+msgctxt "model:ir.action,name:wiz_analysis_sheet_data_evaluate_rules"
+msgid "Evaluate Rules"
+msgstr "05) Evaluar Reglas de cuaderno"
+
 msgctxt "model:ir.action,name:wiz_analysis_sheet_data_internal_relations_calc"
 msgid "Internal Relations Calculation"
 msgstr "03) Cálculo de relaciones internas"

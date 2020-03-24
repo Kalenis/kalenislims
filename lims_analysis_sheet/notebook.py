@@ -17,7 +17,7 @@ __all__ = ['NotebookLine', 'AddControlStart', 'AddControl', 'LineAddControl',
     'RepeatAnalysisStart', 'RepeatAnalysisStartLine', 'RepeatAnalysis',
     'LineRepeatAnalysis', 'InternalRelationsCalc', 'LineInternalRelationsCalc',
     'ResultsVerificationStart', 'ResultsVerification',
-    'LineResultsVerification', 'EvaluateRules']
+    'LineResultsVerification', 'EvaluateRules', 'LineEvaluateRules']
 
 
 class NotebookLine(metaclass=PoolMeta):
@@ -1129,11 +1129,13 @@ class EvaluateRules(Wizard):
     check = StateTransition()
     evaluate = StateTransition()
 
-    def transition_check(self):
-        pool = Pool()
-        AnalysisSheet = pool.get('lims.analysis_sheet')
+    def _get_analysis_sheet_id(self):
+        return Transaction().context['active_id']
 
-        sheet_id = Transaction().context['active_id']
+    def transition_check(self):
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
+
+        sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
 
         if sheet.state in ('active', 'validated'):
@@ -1146,7 +1148,7 @@ class EvaluateRules(Wizard):
         Data = pool.get('lims.interface.data')
         NotebookRule = pool.get('lims.rule')
 
-        sheet_id = Transaction().context['active_id']
+        sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
 
         with Transaction().set_context(
@@ -1162,3 +1164,14 @@ class EvaluateRules(Wizard):
                     if rule.eval_sheet_condition(line):
                         rule.exec_sheet_action(line)
         return 'end'
+
+
+class LineEvaluateRules(EvaluateRules):
+    'Evaluate Rules'
+    __name__ = 'lims.analysis_sheet_data.evaluate_rules'
+
+    def _get_analysis_sheet_id(self):
+        return Transaction().context['lims_analysis_sheet']
+
+    def end(self):
+        return 'reload'
