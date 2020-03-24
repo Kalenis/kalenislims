@@ -67,10 +67,9 @@ class Adapter:
                 obj = fields.Binary(field.string)
             obj.name = field.name
             res[field.name] = obj
-        if 'id' not in res:
-            obj = fields.Integer('ID')
-            obj.name = 'id'
-            res[field.name] = obj
+        obj = fields.Integer('ID')
+        obj.name = 'id'
+        res['id'] = obj
         obj = fields.Many2One('lims.interface.compilation', 'Compilation')
         obj.name = 'compilation'
         res['compilation'] = obj
