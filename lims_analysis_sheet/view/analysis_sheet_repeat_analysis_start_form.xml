@@ -5,5 +5,4 @@
     <field name="annul"/>
     <label name="urgent"/>
     <field name="urgent"/>
-    <field name="analysis_sheet" invisible="1"/>
 </form>

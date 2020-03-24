@@ -89,6 +89,19 @@
             <field name="action" ref="wiz_analysis_sheet_internal_relations_calc"/>
         </record>
 
+<!-- Wizard Internal Relations Calculation (from Data) -->
+
+        <record model="ir.action.wizard" id="wiz_analysis_sheet_data_internal_relations_calc">
+            <field name="name">Internal Relations Calculation</field>
+            <field name="wiz_name">lims.analysis_sheet_data.internal_relations_calc</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_analysis_sheet_data_internal_relations_calc_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.interface.data,-1</field>
+            <field name="action" ref="wiz_analysis_sheet_data_internal_relations_calc"/>
+        </record>
+
 <!-- Wizard Results Verification -->
 
         <record model="ir.ui.view" id="analysis_sheet_results_verification_start_form">

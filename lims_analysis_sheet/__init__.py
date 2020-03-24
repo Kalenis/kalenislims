@@ -48,6 +48,7 @@ def register():
         notebook.RepeatAnalysis,
         notebook.LineRepeatAnalysis,
         notebook.InternalRelationsCalc,
+        notebook.LineInternalRelationsCalc,
         notebook.ResultsVerification,
         notebook.EvaluateRules,
         module='lims_analysis_sheet', type_='wizard')
