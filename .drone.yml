@@ -1,7 +1,3 @@
-clone:
-    hg:
-        image: plugins/hg
-
 pipeline:
     tox:
         image: ${IMAGE}
