@@ -66,6 +66,10 @@ msgctxt "field:lims.lab.device.maintenance.program,frequency:"
 msgid "Frequency"
 msgstr "Frecuencia"
 
+msgctxt "field:lims.lab.device.maintenance.program,latest_date:"
+msgid "Latest scheduled date"
+msgstr "Última fecha programada"
+
 msgctxt "field:lims.lab.device.maintenance.program,notice_days:"
 msgid "Days to notify"
 msgstr "Días para el aviso"

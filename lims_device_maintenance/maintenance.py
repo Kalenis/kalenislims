@@ -57,6 +57,8 @@ class LabDeviceMaintenanceProgram(ModelSQL, ModelView):
         ], 'Frequency', required=True, sort=False)
     responsible = fields.Many2One('res.user', 'Responsible User')
     notice_days = fields.Integer('Days to notify')
+    latest_date = fields.Function(fields.Date('Latest scheduled date'),
+        'get_latest_date')
 
     @classmethod
     def __setup__(cls):
@@ -67,6 +69,20 @@ class LabDeviceMaintenanceProgram(ModelSQL, ModelView):
 
     def get_rec_name(self, name):
         return '%s - %s' % (self.activity.rec_name, self.device.description)
+
+    @classmethod
+    def get_latest_date(cls, programs, name):
+        Maintenance = Pool().get('lims.lab.device.maintenance')
+        result = {}
+        for p in programs:
+            latest_maintenance = Maintenance.search([
+                ('device', '=', p.device),
+                ('activity', '=', p.activity),
+                ('state', '=', 'pending'),
+                ], order=[('date', 'DESC')], limit=1)
+            result[p.id] = (latest_maintenance and
+                latest_maintenance[0].date or None)
+        return result
 
     @classmethod
     @ModelView.button_action(
