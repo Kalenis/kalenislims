@@ -235,14 +235,14 @@ class AddControl(Wizard):
         return Transaction().context['active_id']
 
     def transition_check(self):
-        pool = Pool()
-        AnalysisSheet = pool.get('lims.analysis_sheet')
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
 
         sheet_id = self._get_analysis_sheet_id()
-        sheet = AnalysisSheet(sheet_id)
+        if sheet_id:
+            sheet = AnalysisSheet(sheet_id)
+            if sheet.state in ('active', 'validated'):
+                return 'start'
 
-        if sheet.state in ('active', 'validated'):
-            return 'start'
         return 'end'
 
     def default_start(self, fields):
@@ -473,7 +473,7 @@ class LineAddControl(AddControl):
     __name__ = 'lims.analysis_sheet_data.add_control'
 
     def _get_analysis_sheet_id(self):
-        return Transaction().context['lims_analysis_sheet']
+        return Transaction().context.get('lims_analysis_sheet', None)
 
     def end(self):
         return 'reload'
@@ -556,14 +556,14 @@ class RepeatAnalysis(Wizard):
         return Transaction().context['active_id']
 
     def transition_check(self):
-        pool = Pool()
-        AnalysisSheet = pool.get('lims.analysis_sheet')
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
 
         sheet_id = self._get_analysis_sheet_id()
-        sheet = AnalysisSheet(sheet_id)
+        if sheet_id:
+            sheet = AnalysisSheet(sheet_id)
+            if sheet.state in ('active', 'validated'):
+                return 'start'
 
-        if sheet.state in ('active', 'validated'):
-            return 'start'
         return 'end'
 
     def default_start(self, fields):
@@ -670,7 +670,7 @@ class LineRepeatAnalysis(RepeatAnalysis):
     __name__ = 'lims.analysis_sheet_data.repeat_analysis'
 
     def _get_analysis_sheet_id(self):
-        return Transaction().context['lims_analysis_sheet']
+        return Transaction().context.get('lims_analysis_sheet', None)
 
     def default_start(self, fields):
         pool = Pool()
@@ -727,10 +727,10 @@ class InternalRelationsCalc(Wizard):
         AnalysisSheet = Pool().get('lims.analysis_sheet')
 
         sheet_id = self._get_analysis_sheet_id()
-        sheet = AnalysisSheet(sheet_id)
-
-        if sheet.state in ('active', 'validated'):
-            return 'calcuate'
+        if sheet_id:
+            sheet = AnalysisSheet(sheet_id)
+            if sheet.state in ('active', 'validated'):
+                return 'start'
 
         return 'end'
 
@@ -887,7 +887,7 @@ class LineInternalRelationsCalc(InternalRelationsCalc):
     __name__ = 'lims.analysis_sheet_data.internal_relations_calc'
 
     def _get_analysis_sheet_id(self):
-        return Transaction().context['lims_analysis_sheet']
+        return Transaction().context.get('lims_analysis_sheet', None)
 
     def end(self):
         return 'reload'
@@ -921,10 +921,11 @@ class ResultsVerification(Wizard):
         AnalysisSheet = Pool().get('lims.analysis_sheet')
 
         sheet_id = self._get_analysis_sheet_id()
-        sheet = AnalysisSheet(sheet_id)
+        if sheet_id:
+            sheet = AnalysisSheet(sheet_id)
+            if sheet.state in ('active', 'validated'):
+                return 'start'
 
-        if sheet.state in ('active', 'validated'):
-            return 'start'
         return 'end'
 
     def default_start(self, fields):
@@ -1115,7 +1116,7 @@ class LineResultsVerification(ResultsVerification):
     __name__ = 'lims.analysis_sheet_data.results_verification'
 
     def _get_analysis_sheet_id(self):
-        return Transaction().context['lims_analysis_sheet']
+        return Transaction().context.get('lims_analysis_sheet', None)
 
     def end(self):
         return 'reload'
@@ -1136,10 +1137,11 @@ class EvaluateRules(Wizard):
         AnalysisSheet = Pool().get('lims.analysis_sheet')
 
         sheet_id = self._get_analysis_sheet_id()
-        sheet = AnalysisSheet(sheet_id)
+        if sheet_id:
+            sheet = AnalysisSheet(sheet_id)
+            if sheet.state in ('active', 'validated'):
+                return 'start'
 
-        if sheet.state in ('active', 'validated'):
-            return 'evaluate'
         return 'end'
 
     def transition_evaluate(self):
@@ -1171,7 +1173,7 @@ class LineEvaluateRules(EvaluateRules):
     __name__ = 'lims.analysis_sheet_data.evaluate_rules'
 
     def _get_analysis_sheet_id(self):
-        return Transaction().context['lims_analysis_sheet']
+        return Transaction().context.get('lims_analysis_sheet', None)
 
     def end(self):
         return 'reload'
