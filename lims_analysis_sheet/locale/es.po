@@ -292,6 +292,10 @@ msgctxt "model:ir.action,name:wiz_analysis_sheet_data_repeat_analysis"
 msgid "Repeat Analysis"
 msgstr "02) Repetir análisis"
 
+msgctxt "model:ir.action,name:wiz_analysis_sheet_data_results_verification"
+msgid "Results Verification"
+msgstr "04) Verificación de resultados"
+
 msgctxt "model:ir.action,name:wiz_analysis_sheet_evaluate_rules"
 msgid "Evaluate Rules"
 msgstr "05) Evaluar Reglas de cuaderno"
@@ -823,6 +827,16 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.analysis_sheet_data.repeat_analysis,start,repeat:"
 msgid "Repeat"
 msgstr "Repetir"
+
+msgctxt ""
+"wizard_button:lims.analysis_sheet_data.results_verification,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt ""
+"wizard_button:lims.analysis_sheet_data.results_verification,start,verify:"
+msgid "Ok"
+msgstr "Aceptar"
 
 msgctxt "wizard_button:lims.planification.search_analysis_sheet,next,add:"
 msgid "Add"

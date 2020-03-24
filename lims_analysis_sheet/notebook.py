@@ -16,7 +16,8 @@ from trytond.modules.lims.formula_parser import FormulaParser
 __all__ = ['NotebookLine', 'AddControlStart', 'AddControl', 'LineAddControl',
     'RepeatAnalysisStart', 'RepeatAnalysisStartLine', 'RepeatAnalysis',
     'LineRepeatAnalysis', 'InternalRelationsCalc', 'LineInternalRelationsCalc',
-    'ResultsVerificationStart', 'ResultsVerification', 'EvaluateRules']
+    'ResultsVerificationStart', 'ResultsVerification',
+    'LineResultsVerification', 'EvaluateRules']
 
 
 class NotebookLine(metaclass=PoolMeta):
@@ -913,11 +914,13 @@ class ResultsVerification(Wizard):
             ])
     verify = StateTransition()
 
-    def transition_check(self):
-        pool = Pool()
-        AnalysisSheet = pool.get('lims.analysis_sheet')
+    def _get_analysis_sheet_id(self):
+        return Transaction().context['active_id']
 
-        sheet_id = Transaction().context['active_id']
+    def transition_check(self):
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
+
+        sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
 
         if sheet.state in ('active', 'validated'):
@@ -943,7 +946,7 @@ class ResultsVerification(Wizard):
         Field = pool.get('lims.interface.table.field')
         Data = pool.get('lims.interface.data')
 
-        sheet_id = Transaction().context['active_id']
+        sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
 
         nl_result_field, = ModelField.search([
@@ -1105,6 +1108,17 @@ class ResultsVerification(Wizard):
                 return gettext('lims.msg_ok')
             else:
                 return gettext('lims.msg_out')
+
+
+class LineResultsVerification(ResultsVerification):
+    'Results Verification'
+    __name__ = 'lims.analysis_sheet_data.results_verification'
+
+    def _get_analysis_sheet_id(self):
+        return Transaction().context['lims_analysis_sheet']
+
+    def end(self):
+        return 'reload'
 
 
 class EvaluateRules(Wizard):

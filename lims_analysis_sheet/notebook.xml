@@ -120,6 +120,18 @@
             <field name="action" ref="wiz_analysis_sheet_results_verification"/>
         </record>
 
+<!-- Wizard Results Verification (from Data) -->
+
+        <record model="ir.action.wizard" id="wiz_analysis_sheet_data_results_verification">
+            <field name="name">Results Verification</field>
+            <field name="wiz_name">lims.analysis_sheet_data.results_verification</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_analysis_sheet_data_results_verification_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.interface.data,-1</field>
+            <field name="action" ref="wiz_analysis_sheet_data_results_verification"/>
+        </record>
+
 <!-- Wizard Evaluate Rules -->
 
         <record model="ir.action.wizard" id="wiz_analysis_sheet_evaluate_rules">

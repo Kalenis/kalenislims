@@ -50,6 +50,7 @@ def register():
         notebook.InternalRelationsCalc,
         notebook.LineInternalRelationsCalc,
         notebook.ResultsVerification,
+        notebook.LineResultsVerification,
         notebook.EvaluateRules,
         module='lims_analysis_sheet', type_='wizard')
     Pool.register(
