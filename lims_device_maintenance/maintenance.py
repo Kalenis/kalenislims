@@ -101,7 +101,7 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super(LabDeviceMaintenance, cls).__setup__()
-        cls._order.insert(0, ('date', 'ASC'))
+        cls._order.insert(0, ('date', 'DESC'))
         cls._transitions |= set((
             ('draft', 'pending'),
             ('pending', 'done'),

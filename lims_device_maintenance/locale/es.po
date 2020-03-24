@@ -86,6 +86,10 @@ msgctxt "model:ir.action,name:act_lab_device_maintenance_calendar_list"
 msgid "Device Maintenance Calendar"
 msgstr "Calendario de mantenimiento de Equipo"
 
+msgctxt "model:ir.action,name:act_lab_device_maintenance_calendar_related"
+msgid "Maintenance Calendar"
+msgstr "Calendario de mantenimiento"
+
 msgctxt "model:ir.action,name:act_lab_device_maintenance_type_list"
 msgid "Device Maintenance Types"
 msgstr "Tipos de mantenimiento de Equipo"
