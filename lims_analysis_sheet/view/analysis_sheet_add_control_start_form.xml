@@ -2,6 +2,10 @@
 <form>
     <label name="type"/>
     <field name="type"/>
+    <group id="type" colspan="2" col="-1">
+        <field name="con_type"/>
+        <field name="rm_bmz_type"/>
+    </group>
     <label name="original_fraction"/>
     <field name="original_fraction"/>
     <label name="label"/>

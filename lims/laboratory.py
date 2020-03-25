@@ -672,6 +672,7 @@ class NotebookRule(ModelSQL, ModelView):
             'service': line.service.id,
             'analysis': self.target_analysis.id,
             'analysis_origin': line.analysis_origin,
+            'urgent': True,
             'repetition': repetition + 1,
             'laboratory': line.laboratory.id,
             'method': line.method.id,
