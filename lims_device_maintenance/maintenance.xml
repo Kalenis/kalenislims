@@ -10,6 +10,22 @@
             <field name="name">lab_device_form</field>
         </record>
 
+<!-- Laboratory Device - Related -->
+
+        <record model="ir.action.act_window"
+            id="act_lab_device_maintenance_calendar_related">
+            <field name="name">Maintenance Calendar</field>
+            <field name="res_model">lims.lab.device.maintenance</field>
+            <field name="domain" eval="[('device', 'in', Eval('active_ids'))]"
+                pyson="1"/>
+        </record>
+        <record model="ir.action.keyword"
+            id="act_lab_device_maintenance_calendar_related_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.lab.device,-1</field>
+            <field name="action" ref="act_lab_device_maintenance_calendar_related"/>
+        </record>
+
 <!-- Device Maintenance Type -->
 
         <record model="ir.ui.view" id="lab_device_maintenance_type_view_form">
@@ -85,13 +101,6 @@
             <field name="name">lab_device_maintenance_program_list</field>
         </record>
 
-<!-- Device Maintenance Program Buttons -->
-
-        <record model="ir.model.button" id="device_maintenance_program_generate_maintenance_button">
-            <field name="name">generate_maintenance</field>
-            <field name="model" search="[('model', '=', 'lims.lab.device.maintenance.program')]"/>
-        </record>
-
 <!-- Wizard Generate Device Maintenance Calendar -->
 
         <record model="ir.ui.view"
@@ -103,6 +112,11 @@
         <record model="ir.action.wizard" id="wizard_device_generate_maintenance_calendar">
             <field name="name">Generate Maintenance Calendar</field>
             <field name="wiz_name">lims.lab.device.maintenance.generate</field>
+        </record>
+        <record model="ir.action.keyword" id="wizard_device_generate_maintenance_calendar_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.lab.device,-1</field>
+            <field name="action" ref="wizard_device_generate_maintenance_calendar"/>
         </record>
 
 <!-- Device Maintenance Calendar -->

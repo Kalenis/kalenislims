@@ -3,4 +3,6 @@
     <field name="lines" colspan="4"/>
     <label name="annul"/>
     <field name="annul"/>
+    <label name="urgent"/>
+    <field name="urgent"/>
 </form>

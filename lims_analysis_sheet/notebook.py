@@ -2,21 +2,30 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from datetime import datetime
+<<<<<<< HEAD
 from dateutil.relativedelta import relativedelta
+=======
+#from dateutil.relativedelta import relativedelta
+>>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool, PoolMeta
+<<<<<<< HEAD
 from trytond.pyson import Eval, Bool
+=======
+from trytond.pyson import Eval, Bool, Or, And
+>>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.modules.lims.formula_parser import FormulaParser
 
-__all__ = ['NotebookLine', 'AddFractionControlStart', 'AddFractionControl',
+__all__ = ['NotebookLine', 'AddControlStart', 'AddControl', 'LineAddControl',
     'RepeatAnalysisStart', 'RepeatAnalysisStartLine', 'RepeatAnalysis',
-    'InternalRelationsCalc', 'ResultsVerificationStart', 'ResultsVerification',
-    'EvaluateRules']
+    'LineRepeatAnalysis', 'InternalRelationsCalc', 'LineInternalRelationsCalc',
+    'ResultsVerificationStart', 'ResultsVerification',
+    'LineResultsVerification', 'EvaluateRules', 'LineEvaluateRules']
 
 
 class NotebookLine(metaclass=PoolMeta):
@@ -35,6 +44,7 @@ class NotebookLine(metaclass=PoolMeta):
         return template and template[0] or None
 
 
+<<<<<<< HEAD
 class AddFractionControlStart(ModelView):
     'Add Fraction Control'
     __name__ = 'lims.analysis_sheet.add_fraction_con.start'
@@ -42,17 +52,50 @@ class AddFractionControlStart(ModelView):
     analysis_sheet = fields.Many2One('lims.analysis_sheet', 'Analysis Sheet')
     type = fields.Selection([
         ('exist', 'Existing CON'),
+=======
+class AddControlStart(ModelView):
+    'Add Controls'
+    __name__ = 'lims.analysis_sheet.add_control.start'
+
+    analysis_sheet = fields.Many2One('lims.analysis_sheet', 'Analysis Sheet')
+    type = fields.Selection([
+        ('con', 'CON'),
+        ('rm', 'RM'),
+        ('bmz', 'BMZ'),
+        ], 'Control type', sort=False, required=True)
+    con_type = fields.Selection([
+        ('exist', 'Existing'),
+>>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
         ('coi', 'COI'),
         ('mrc', 'MRC'),
         ('sla', 'SLA'),
         ('itc', 'ITC'),
         ('itl', 'ITL'),
+<<<<<<< HEAD
         ], 'Control type', sort=False, required=True)
     original_fraction = fields.Many2One('lims.fraction', 'Original fraction',
+=======
+        ], 'Type', sort=False,
+        depends=['type'], states={
+            'required': Eval('type') == 'con',
+            'invisible': Eval('type') != 'con',
+            })
+    rm_bmz_type = fields.Selection([
+        ('exist', 'Existing'),
+        ('sla', 'SLA'),
+        ], 'Type', sort=False,
+        depends=['type'], states={
+            'required': Eval('type').in_(['rm', 'bmz']),
+            'invisible': ~Eval('type').in_(['rm', 'bmz']),
+            })
+    original_fraction = fields.Many2One('lims.fraction',
+        'Original/Reference Fraction',
+>>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
         required=True, domain=[('id', 'in', Eval('fraction_domain'))],
         depends=['fraction_domain'])
     fraction_domain = fields.Function(fields.One2Many('lims.fraction',
         None, 'Fraction domain'), 'on_change_with_fraction_domain')
+<<<<<<< HEAD
     label = fields.Char('Label', depends=['type'],
         states={'readonly': Eval('type') == 'exist'})
     concentration_level = fields.Many2One('lims.concentration.level',
@@ -63,6 +106,41 @@ class AddFractionControlStart(ModelView):
         'Concentration level invisible')
 
     @fields.depends('type', 'analysis_sheet',
+=======
+    label = fields.Char('Label', depends=['type', 'con_type'],
+        states={'readonly': Or(
+            And(Eval('type') == 'con',
+                Eval('con_type') == 'exist'),
+            And(Eval('type').in_(['rm', 'bmz']),
+                Eval('rm_bmz_type') == 'exist')),
+            })
+    concentration_level = fields.Many2One('lims.concentration.level',
+        'Concentration level',
+        states={'invisible': Bool(Eval('concentration_level_invisible'))},
+        depends=['concentration_level_invisible'])
+    concentration_level_invisible = fields.Boolean(
+        'Concentration level invisible')
+
+    @fields.depends('type')
+    def on_change_with_concentration_level_invisible(self, name=None):
+        Config = Pool().get('lims.configuration')
+        config = Config(1)
+        if self.type == 'con':
+            if (config.con_fraction_type and
+                    config.con_fraction_type.control_charts):
+                return False
+        elif self.type == 'rm':
+            if (config.rm_fraction_type and
+                    config.rm_fraction_type.control_charts):
+                return False
+        elif self.type == 'bmz':
+            if (config.bmz_fraction_type and
+                    config.bmz_fraction_type.control_charts):
+                return False
+        return True
+
+    @fields.depends('type', 'con_type', 'rm_bmz_type', 'analysis_sheet',
+>>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
         '_parent_analysis_sheet.template')
     def on_change_with_fraction_domain(self, name=None):
         cursor = Transaction().connection.cursor()
@@ -71,6 +149,7 @@ class AddFractionControlStart(ModelView):
         Fraction = pool.get('lims.fraction')
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
+<<<<<<< HEAD
 
         if not self.type:
             return []
@@ -132,33 +211,142 @@ class AddFractionControlStart(ModelView):
                     self.concentration_level.description + ')')
         label += ' ' + str(Date.today())
         return label
+=======
+>>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
+
+        if not self.type:
+            return []
+
+        special_type = ''
+        existing = False
+        if self.type == 'con':
+            if not self.con_type:
+                return []
+            special_type = 'con' if self.con_type == 'exist' else self.con_type
+            existing = (self.con_type == 'exist')
+
+        elif self.type == 'rm':
+            if not self.rm_bmz_type or self.rm_bmz_type == 'noref':
+                return []
+            special_type = 'sla' if self.rm_bmz_type == 'sla' else self.type
+            existing = (self.rm_bmz_type == 'exist')
+
+        elif self.type == 'bmz':
+            if not self.rm_bmz_type or self.rm_bmz_type == 'noref':
+                return []
+            special_type = 'sla' if self.rm_bmz_type == 'sla' else self.type
+            existing = (self.rm_bmz_type == 'exist')
+
+        controls_allowed = (self.analysis_sheet.template.controls_allowed or
+            ['0'])
+        if special_type not in controls_allowed:
+            return []
+
+        t_analysis_ids = []
+        for t_analysis in self.analysis_sheet.template.analysis:
+            if t_analysis.analysis.type == 'analysis':
+                t_analysis_ids.append(t_analysis.analysis.id)
+            else:
+                t_analysis_ids.extend(
+                    Analysis.get_included_analysis_analysis(
+                        t_analysis.analysis.id))
+
+        stored_fractions_ids = Fraction.get_stored_fractions()
+
+        clause = [
+            ('notebook.fraction.special_type', '=', special_type),
+            ('notebook.fraction.id', 'in', stored_fractions_ids),
+            ('analysis', 'in', t_analysis_ids),
+            ]
+        if existing:
+            #deadline = datetime.now() - relativedelta(days=5)
+            clause.extend([
+                ('result', 'in', (None, '')),
+                ('end_date', '=', None),
+                ('annulment_date', '=', None),
+                #('notebook.fraction.sample.date2', '>=', deadline),
+                ])
+        notebook_lines = NotebookLine.search(clause)
+        if not notebook_lines:
+            return []
+
+        notebook_lines_ids = ', '.join(str(nl.id) for nl in notebook_lines)
+        cursor.execute('SELECT DISTINCT(n.fraction) '
+            'FROM "' + Notebook._table + '" n '
+                'INNER JOIN "' + NotebookLine._table + '" nl '
+                'ON nl.notebook = n.id '
+            'WHERE nl.id IN (' + notebook_lines_ids + ')')
+        return [x[0] for x in cursor.fetchall()]
+
+    @fields.depends('type', 'con_type', 'rm_bmz_type', 'original_fraction',
+        'concentration_level', '_parent_original_fraction.label',
+        '_parent_concentration_level.description')
+    def on_change_with_label(self, name=None):
+        Date = Pool().get('ir.date')
+
+        if self.type == 'con':
+            if self.con_type == 'exist':
+                return ''
+            label = ''
+            if self.original_fraction:
+                label += '%s' % self.original_fraction.label
+            if self.concentration_level:
+                label += ' (%s)' % self.concentration_level.description
+
+        elif self.type == 'rm':
+            if self.rm_bmz_type == 'exist':
+                return ''
+            label = 'RM'
+            if self.concentration_level:
+                label += ' (%s)' % self.concentration_level.description
+            if self.rm_bmz_type == 'sla':
+                if self.original_fraction:
+                    label += ' %s' % self.original_fraction.label
+
+        elif self.type == 'bmz':
+            if self.rm_bmz_type == 'exist':
+                return ''
+            label = 'BMZ'
+            if self.rm_bmz_type == 'sla':
+                if self.original_fraction:
+                    label += ' %s' % self.original_fraction.label
+
+        else:
+            return ''
+
+        label += ' %s' % str(Date.today())
+        return label
 
 
-class AddFractionControl(Wizard):
-    'Add Fraction Control'
-    __name__ = 'lims.analysis_sheet.add_fraction_con'
+class AddControl(Wizard):
+    'Add Controls'
+    __name__ = 'lims.analysis_sheet.add_control'
 
     start_state = 'check'
     check = StateTransition()
-    start = StateView('lims.analysis_sheet.add_fraction_con.start',
-        'lims_analysis_sheet.analysis_sheet_add_fraction_con_start_form', [
+    start = StateView('lims.analysis_sheet.add_control.start',
+        'lims_analysis_sheet.analysis_sheet_add_control_start_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
             Button('Add', 'add', 'tryton-ok', default=True),
             ])
     add = StateTransition()
 
+    def _get_analysis_sheet_id(self):
+        return Transaction().context['active_id']
+
     def transition_check(self):
-        pool = Pool()
-        AnalysisSheet = pool.get('lims.analysis_sheet')
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
 
-        sheet_id = Transaction().context['active_id']
-        sheet = AnalysisSheet(sheet_id)
+        sheet_id = self._get_analysis_sheet_id()
+        if sheet_id:
+            sheet = AnalysisSheet(sheet_id)
+            if sheet.state in ('active', 'validated'):
+                return 'start'
 
-        if sheet.state in ('active', 'validated'):
-            return 'start'
         return 'end'
 
     def default_start(self, fields):
+<<<<<<< HEAD
         Config = Pool().get('lims.configuration')
         config = Config(1)
         defaults = {
@@ -168,11 +356,24 @@ class AddFractionControl(Wizard):
         if (config.con_fraction_type and
                 config.con_fraction_type.control_charts):
             defaults['concentration_level_invisible'] = False
+=======
+        defaults = {
+            'analysis_sheet': self._get_analysis_sheet_id(),
+            'concentration_level_invisible': True,
+            }
+>>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
         return defaults
 
     def transition_add(self):
         fraction = self.start.original_fraction
+<<<<<<< HEAD
         if self.start.type != 'exist':
+=======
+        if ((self.start.type == 'con' and
+                self.start.con_type != 'exist') or
+                (self.start.type in ('rm', 'bmz') and
+                self.start.rm_bmz_type != 'exist')):
+>>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
             fraction = self.create_control()
         self.add_to_analysis_sheet(fraction)
         return 'end'
@@ -190,9 +391,24 @@ class AddFractionControl(Wizard):
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
         config = Config(1)
+<<<<<<< HEAD
         fraction_type = config.con_fraction_type
         if not fraction_type:
             raise UserError(gettext('lims.msg_no_con_fraction_type'))
+=======
+        if self.start.type == 'con':
+            if not config.con_fraction_type:
+                raise UserError(gettext('lims.msg_no_con_fraction_type'))
+            fraction_type = config.con_fraction_type
+        elif self.start.type == 'rm':
+            if not config.rm_fraction_type:
+                raise UserError(gettext('lims.msg_no_rm_fraction_type'))
+            fraction_type = config.rm_fraction_type
+        elif self.start.type == 'bmz':
+            if not config.bmz_fraction_type:
+                raise UserError(gettext('lims.msg_no_bmz_fraction_type'))
+            fraction_type = config.bmz_fraction_type
+>>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
 
         if (fraction_type.control_charts and not
                 self.start.concentration_level):
@@ -218,6 +434,7 @@ class AddFractionControl(Wizard):
             })
 
         # new fraction
+<<<<<<< HEAD
         new_fraction, = Fraction.copy([original_fraction], default={
             'sample': new_sample.id,
             'type': fraction_type.id,
@@ -225,6 +442,30 @@ class AddFractionControl(Wizard):
             'con_type': self.start.type,
             'con_original_fraction': original_fraction.id,
             })
+=======
+        fraction_default = {
+            'sample': new_sample.id,
+            'type': fraction_type.id,
+            'con_type': '',
+            'services': [],
+            }
+        if self.start.type == 'con':
+            fraction_default['con_type'] = self.start.con_type
+            fraction_default['con_original_fraction'] = original_fraction.id
+        elif self.start.type == 'rm':
+            fraction_default['rm_type'] = 'sla'
+            fraction_default['rm_product_type'] = new_sample.product_type.id
+            fraction_default['rm_matrix'] = new_sample.matrix.id
+            fraction_default['rm_original_fraction'] = original_fraction.id
+        elif self.start.type == 'bmz':
+            fraction_default['bmz_type'] = 'sla'
+            fraction_default['bmz_product_type'] = new_sample.product_type.id
+            fraction_default['bmz_matrix'] = new_sample.matrix.id
+            fraction_default['bmz_original_fraction'] = original_fraction.id
+
+        new_fraction, = Fraction.copy([original_fraction],
+            default=fraction_default)
+>>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
 
         # new services
         t_analysis_ids = []
@@ -292,6 +533,24 @@ class AddFractionControl(Wizard):
                     }
                 NotebookLine.write(notebook_lines, defaults)
 
+<<<<<<< HEAD
+=======
+        if self.start.type == 'rm':
+            notebook_lines = NotebookLine.search([
+                ('notebook.fraction', '=', new_fraction.id),
+                ])
+            if notebook_lines:
+                defaults = {
+                    'final_concentration': None,
+                    'final_unit': None,
+                    'detection_limit': None,
+                    'quantification_limit': None,
+                    }
+                if config.rm_start_uom:
+                    defaults['initial_unit'] = config.rm_start_uom.id
+                NotebookLine.write(notebook_lines, defaults)
+
+>>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
         return new_fraction
 
     def _get_obj_description(self, sample):
@@ -329,7 +588,14 @@ class AddFractionControl(Wizard):
             ('notebook.fraction.id', '=', fraction.id),
             ('analysis', 'in', t_analysis_ids),
             ]
+<<<<<<< HEAD
         if self.start.type == 'exist':
+=======
+        if ((self.start.type == 'con' and
+                self.start.con_type == 'exist') or
+                (self.start.type in ('rm', 'bmz') and
+                self.start.rm_bmz_type == 'exist')):
+>>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
             clause.extend([
                 ('result', 'in', (None, '')),
                 ('end_date', '=', None),
@@ -339,6 +605,17 @@ class AddFractionControl(Wizard):
         if notebook_lines:
             sheet.create_lines(notebook_lines)
         return 'end'
+
+
+class LineAddControl(AddControl):
+    'Add Controls'
+    __name__ = 'lims.analysis_sheet_data.add_control'
+
+    def _get_analysis_sheet_id(self):
+        return Transaction().context.get('lims_analysis_sheet', None)
+
+    def end(self):
+        return 'reload'
 
 
 class RepeatAnalysisStart(ModelView):
@@ -353,6 +630,7 @@ class RepeatAnalysisStart(ModelView):
         'lims.analysis_sheet.repeat_analysis.start.line', None,
         'Lines domain')
     annul = fields.Boolean('Annul current lines')
+    urgent = fields.Boolean('Urgent repetition')
 
 
 class RepeatAnalysisStartLine(ModelSQL, ModelView):
@@ -413,15 +691,18 @@ class RepeatAnalysis(Wizard):
             ])
     repeat = StateTransition()
 
+    def _get_analysis_sheet_id(self):
+        return Transaction().context['active_id']
+
     def transition_check(self):
-        pool = Pool()
-        AnalysisSheet = pool.get('lims.analysis_sheet')
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
 
-        sheet_id = Transaction().context['active_id']
-        sheet = AnalysisSheet(sheet_id)
+        sheet_id = self._get_analysis_sheet_id()
+        if sheet_id:
+            sheet = AnalysisSheet(sheet_id)
+            if sheet.state in ('active', 'validated'):
+                return 'start'
 
-        if sheet.state in ('active', 'validated'):
-            return 'start'
         return 'end'
 
     def default_start(self, fields):
@@ -431,9 +712,12 @@ class RepeatAnalysis(Wizard):
         RepeatAnalysisStartLine = pool.get(
             'lims.analysis_sheet.repeat_analysis.start.line')
 
-        defaults = {'annul': False}
+        defaults = {
+            'annul': False,
+            'urgent': False,
+            }
 
-        sheet_id = Transaction().context['active_id']
+        sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
 
         to_create = []
@@ -448,18 +732,19 @@ class RepeatAnalysis(Wizard):
                     'session_id': self._session_id,
                     'line': nl,
                     })
+
         lines = RepeatAnalysisStartLine.create(to_create)
         defaults['lines_domain'] = [l.id for l in lines]
         return defaults
 
     def transition_repeat(self):
         pool = Pool()
-        Date = pool.get('ir.date')
         AnalysisSheet = pool.get('lims.analysis_sheet')
+        Date = pool.get('ir.date')
         NotebookLine = pool.get('lims.notebook.line')
         Data = pool.get('lims.interface.data')
 
-        sheet_id = Transaction().context['active_id']
+        sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
 
         to_create = []
@@ -475,6 +760,7 @@ class RepeatAnalysis(Wizard):
                 'service': nline_to_repeat.service.id,
                 'analysis': nline_to_repeat.analysis.id,
                 'analysis_origin': nline_to_repeat.analysis_origin,
+                'urgent': self.start.urgent,
                 'repetition': nline_to_repeat.repetition + 1,
                 'laboratory': nline_to_repeat.laboratory.id,
                 'method': nline_to_repeat.method.id,
@@ -518,6 +804,53 @@ class RepeatAnalysis(Wizard):
         return 'end'
 
 
+class LineRepeatAnalysis(RepeatAnalysis):
+    'Repeat Analysis'
+    __name__ = 'lims.analysis_sheet_data.repeat_analysis'
+
+    def _get_analysis_sheet_id(self):
+        return Transaction().context.get('lims_analysis_sheet', None)
+
+    def default_start(self, fields):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+        RepeatAnalysisStartLine = pool.get(
+            'lims.analysis_sheet.repeat_analysis.start.line')
+
+        defaults = {
+            'annul': False,
+            'urgent': False,
+            }
+
+        sheet_id = self._get_analysis_sheet_id()
+        sheet = AnalysisSheet(sheet_id)
+
+        to_create = []
+        selected_lines = []
+        with Transaction().set_context(
+                lims_interface_table=sheet.compilation.table.id):
+            lines = Data.search([('compilation', '=', sheet.compilation.id)])
+            for line in lines:
+                nl = line.notebook_line
+                if not nl:
+                    continue
+                to_create.append({
+                    'session_id': self._session_id,
+                    'line': nl,
+                    })
+                if line.id in Transaction().context['active_ids']:
+                    selected_lines.append(line.notebook_line)
+
+        lines = RepeatAnalysisStartLine.create(to_create)
+        defaults['lines_domain'] = [l.id for l in lines]
+        defaults['lines'] = [l.id for l in lines if l.line in selected_lines]
+        return defaults
+
+    def end(self):
+        return 'reload'
+
+
 class InternalRelationsCalc(Wizard):
     'Internal Relations Calculation'
     __name__ = 'lims.analysis_sheet.internal_relations_calc'
@@ -526,14 +859,17 @@ class InternalRelationsCalc(Wizard):
     check = StateTransition()
     calcuate = StateTransition()
 
+    def _get_analysis_sheet_id(self):
+        return Transaction().context['active_id']
+
     def transition_check(self):
         AnalysisSheet = Pool().get('lims.analysis_sheet')
 
-        sheet_id = Transaction().context['active_id']
-        sheet = AnalysisSheet(sheet_id)
-
-        if sheet.state in ('active', 'validated'):
-            return 'calcuate'
+        sheet_id = self._get_analysis_sheet_id()
+        if sheet_id:
+            sheet = AnalysisSheet(sheet_id)
+            if sheet.state in ('active', 'validated'):
+                return 'start'
 
         return 'end'
 
@@ -544,7 +880,7 @@ class InternalRelationsCalc(Wizard):
         Field = pool.get('lims.interface.table.field')
         Data = pool.get('lims.interface.data')
 
-        sheet_id = Transaction().context['active_id']
+        sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
 
         nl_result_field, = ModelField.search([
@@ -685,6 +1021,17 @@ class InternalRelationsCalc(Wizard):
         return variables
 
 
+class LineInternalRelationsCalc(InternalRelationsCalc):
+    'Internal Relations Calculation'
+    __name__ = 'lims.analysis_sheet_data.internal_relations_calc'
+
+    def _get_analysis_sheet_id(self):
+        return Transaction().context.get('lims_analysis_sheet', None)
+
+    def end(self):
+        return 'reload'
+
+
 class ResultsVerificationStart(ModelView):
     'Results Verification'
     __name__ = 'lims.analysis_sheet.results_verification.start'
@@ -706,15 +1053,18 @@ class ResultsVerification(Wizard):
             ])
     verify = StateTransition()
 
+    def _get_analysis_sheet_id(self):
+        return Transaction().context['active_id']
+
     def transition_check(self):
-        pool = Pool()
-        AnalysisSheet = pool.get('lims.analysis_sheet')
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
 
-        sheet_id = Transaction().context['active_id']
-        sheet = AnalysisSheet(sheet_id)
+        sheet_id = self._get_analysis_sheet_id()
+        if sheet_id:
+            sheet = AnalysisSheet(sheet_id)
+            if sheet.state in ('active', 'validated'):
+                return 'start'
 
-        if sheet.state in ('active', 'validated'):
-            return 'start'
         return 'end'
 
     def default_start(self, fields):
@@ -736,7 +1086,7 @@ class ResultsVerification(Wizard):
         Field = pool.get('lims.interface.table.field')
         Data = pool.get('lims.interface.data')
 
-        sheet_id = Transaction().context['active_id']
+        sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
 
         nl_result_field, = ModelField.search([
@@ -900,6 +1250,17 @@ class ResultsVerification(Wizard):
                 return gettext('lims.msg_out')
 
 
+class LineResultsVerification(ResultsVerification):
+    'Results Verification'
+    __name__ = 'lims.analysis_sheet_data.results_verification'
+
+    def _get_analysis_sheet_id(self):
+        return Transaction().context.get('lims_analysis_sheet', None)
+
+    def end(self):
+        return 'reload'
+
+
 class EvaluateRules(Wizard):
     'Evaluate Rules'
     __name__ = 'lims.analysis_sheet.evaluate_rules'
@@ -908,15 +1269,18 @@ class EvaluateRules(Wizard):
     check = StateTransition()
     evaluate = StateTransition()
 
+    def _get_analysis_sheet_id(self):
+        return Transaction().context['active_id']
+
     def transition_check(self):
-        pool = Pool()
-        AnalysisSheet = pool.get('lims.analysis_sheet')
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
 
-        sheet_id = Transaction().context['active_id']
-        sheet = AnalysisSheet(sheet_id)
+        sheet_id = self._get_analysis_sheet_id()
+        if sheet_id:
+            sheet = AnalysisSheet(sheet_id)
+            if sheet.state in ('active', 'validated'):
+                return 'start'
 
-        if sheet.state in ('active', 'validated'):
-            return 'evaluate'
         return 'end'
 
     def transition_evaluate(self):
@@ -925,7 +1289,7 @@ class EvaluateRules(Wizard):
         Data = pool.get('lims.interface.data')
         NotebookRule = pool.get('lims.rule')
 
-        sheet_id = Transaction().context['active_id']
+        sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
 
         with Transaction().set_context(
@@ -941,3 +1305,14 @@ class EvaluateRules(Wizard):
                     if rule.eval_sheet_condition(line):
                         rule.exec_sheet_action(line)
         return 'end'
+
+
+class LineEvaluateRules(EvaluateRules):
+    'Evaluate Rules'
+    __name__ = 'lims.analysis_sheet_data.evaluate_rules'
+
+    def _get_analysis_sheet_id(self):
+        return Transaction().context.get('lims_analysis_sheet', None)
+
+    def end(self):
+        return 'reload'

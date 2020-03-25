@@ -974,7 +974,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
         try:
             value = ast(*inputs)
         except schedula.utils.exc.DispatcherError as e:
-            self.raise_user_error(e.args[0] % e.args[1:])
+            raise UserError(e.args[0] % e.args[1:])
 
         if isinstance(value, list):
             value = str(value)

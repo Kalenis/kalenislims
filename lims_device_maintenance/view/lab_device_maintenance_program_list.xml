@@ -4,5 +4,5 @@
     <field name="frequency"/>
     <field name="responsible"/>
     <field name="notice_days"/>
-    <button name="generate_maintenance" string="Generate Calendar"/>
+    <field name="latest_date"/>
 </tree>
