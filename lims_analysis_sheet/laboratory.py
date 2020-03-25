@@ -231,7 +231,7 @@ class NotebookRuleCondition(metaclass=PoolMeta):
             'lt': operator.lt,
             'le': operator.le,
             }
-        result = operator_func[self.condition](value, self.value)
+        result = operator_func[self.condition](str(value), self.value)
         return result
 
     def check_field(self):
