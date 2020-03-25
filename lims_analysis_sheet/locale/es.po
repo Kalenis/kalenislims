@@ -62,14 +62,6 @@ msgctxt "field:lims.analysis_sheet,urgent:"
 msgid "Urgent"
 msgstr "Urgente"
 
-<<<<<<< HEAD
-msgctxt "field:lims.analysis_sheet.add_fraction_con.start,analysis_sheet:"
-msgid "Analysis Sheet"
-msgstr "Hoja de análisis"
-
-msgctxt ""
-"field:lims.analysis_sheet.add_fraction_con.start,concentration_level:"
-=======
 msgctxt "field:lims.analysis_sheet.add_control.start,analysis_sheet:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
@@ -79,30 +71,10 @@ msgid "Type"
 msgstr "Tipo"
 
 msgctxt "field:lims.analysis_sheet.add_control.start,concentration_level:"
->>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
 msgid "Concentration level"
 msgstr "Nivel de concentración"
 
 msgctxt ""
-<<<<<<< HEAD
-"field:lims.analysis_sheet.add_fraction_con.start,concentration_level_invisible:"
-msgid "Concentration level invisible"
-msgstr "Nivel de concentración invisible"
-
-msgctxt "field:lims.analysis_sheet.add_fraction_con.start,fraction_domain:"
-msgid "Fraction domain"
-msgstr "Dominio para Fracción"
-
-msgctxt "field:lims.analysis_sheet.add_fraction_con.start,label:"
-msgid "Label"
-msgstr "Rótulo"
-
-msgctxt "field:lims.analysis_sheet.add_fraction_con.start,original_fraction:"
-msgid "Original fraction"
-msgstr "Fracción original"
-
-msgctxt "field:lims.analysis_sheet.add_fraction_con.start,type:"
-=======
 "field:lims.analysis_sheet.add_control.start,concentration_level_invisible:"
 msgid "Concentration level invisible"
 msgstr "Nivel de concentración invisible"
@@ -124,7 +96,6 @@ msgid "Type"
 msgstr "Tipo"
 
 msgctxt "field:lims.analysis_sheet.add_control.start,type:"
->>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
 msgid "Control type"
 msgstr "Tipo de Control"
 
@@ -677,32 +648,6 @@ msgctxt "selection:lims.analysis_sheet,state:"
 msgid "Validated"
 msgstr "Validada"
 
-<<<<<<< HEAD
-msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
-msgid "COI"
-msgstr "COI"
-
-msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
-msgid "Existing CON"
-msgstr "CON Existente"
-
-msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
-msgid "ITC"
-msgstr "ITC"
-
-msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
-msgid "ITL"
-msgstr "ITL"
-
-msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
-msgid "MRC"
-msgstr "MRC"
-
-msgctxt "selection:lims.analysis_sheet.add_fraction_con.start,type:"
-msgid "SLA"
-msgstr "SLA"
-
-=======
 msgctxt "selection:lims.analysis_sheet.add_control.start,con_type:"
 msgid "COI"
 msgstr "COI"
@@ -747,7 +692,6 @@ msgctxt "selection:lims.analysis_sheet.add_control.start,type:"
 msgid "RM"
 msgstr "RM"
 
->>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
 msgctxt "selection:lims.planification.relate_technicians.result,grouping:"
 msgid "Analysis sheet"
 msgstr "Hoja de análisis"
