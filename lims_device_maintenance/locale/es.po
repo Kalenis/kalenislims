@@ -46,6 +46,16 @@ msgctxt "field:lims.lab.device.maintenance.generate.start,end_date:"
 msgid "End Date"
 msgstr "Fecha de finalización"
 
+msgctxt ""
+"field:lims.lab.device.maintenance.generate.start,maintenance_program:"
+msgid "Maintenance Program"
+msgstr "Programa de mantenimiento"
+
+msgctxt ""
+"field:lims.lab.device.maintenance.generate.start,maintenance_program_domain:"
+msgid "Maintenance Program domain"
+msgstr "Dominio para Programa de mantenimiento"
+
 msgctxt "field:lims.lab.device.maintenance.generate.start,maintenances:"
 msgid "Maintenances"
 msgstr "Mantenimientos"
@@ -189,10 +199,6 @@ msgstr "Semanal"
 msgctxt "selection:lims.lab.device.maintenance.program,frequency:"
 msgid "Yearly"
 msgstr "Anual"
-
-msgctxt "view:lims.lab.device.maintenance.program:"
-msgid "Generate Calendar"
-msgstr "Generar Calendario"
 
 msgctxt "view:lims.lab.device.maintenance:"
 msgid "Comments"

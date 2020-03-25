@@ -5,5 +5,4 @@
     <field name="responsible"/>
     <field name="notice_days"/>
     <field name="latest_date"/>
-    <button name="generate_maintenance" string="Generate Calendar"/>
 </tree>

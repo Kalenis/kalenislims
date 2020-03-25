@@ -4,4 +4,5 @@
     <field name="start_date"/>
     <label name="end_date"/>
     <field name="end_date"/>
+    <field name="maintenance_program" colspan="4"/>
 </form>

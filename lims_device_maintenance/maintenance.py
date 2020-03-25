@@ -60,13 +60,6 @@ class LabDeviceMaintenanceProgram(ModelSQL, ModelView):
     latest_date = fields.Function(fields.Date('Latest scheduled date'),
         'get_latest_date')
 
-    @classmethod
-    def __setup__(cls):
-        super(LabDeviceMaintenanceProgram, cls).__setup__()
-        cls._buttons.update({
-            'generate_maintenance': {},
-            })
-
     def get_rec_name(self, name):
         return '%s - %s' % (self.activity.rec_name, self.device.description)
 
@@ -83,12 +76,6 @@ class LabDeviceMaintenanceProgram(ModelSQL, ModelView):
             result[p.id] = (latest_maintenance and
                 latest_maintenance[0].date or None)
         return result
-
-    @classmethod
-    @ModelView.button_action(
-        'lims_device_maintenance.wizard_device_generate_maintenance_calendar')
-    def generate_maintenance(cls, programs):
-        pass
 
 
 class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
@@ -209,6 +196,14 @@ class LabDeviceGenerateMaintenanceStart(ModelView):
 
     start_date = fields.Date('Start Date', required=True)
     end_date = fields.Date('End Date', required=True)
+    maintenance_program = fields.Many2Many(
+        'lims.lab.device.maintenance.program', None, None,
+        'Maintenance Program', required=True,
+        domain=[('id', 'in', Eval('maintenance_program_domain'))],
+        depends=['maintenance_program_domain'])
+    maintenance_program_domain = fields.One2Many(
+        'lims.lab.device.maintenance.program',
+        None, 'Maintenance Program domain')
     maintenances = fields.One2Many('lims.lab.device.maintenance',
         None, 'Maintenances')
 
@@ -225,23 +220,41 @@ class LabDeviceGenerateMaintenance(Wizard):
             ])
     generate = StateTransition()
     open = StateAction(
-        'lims_device_maintenance.act_lab_device_maintenance_calendar_list')
+        'lims_device_maintenance.act_lab_device_maintenance_calendar_related')
 
     def default_start(self, fields):
-        Date = Pool().get('ir.date')
-        today = Date.today()
-        return {
-            'start_date': today,
-            'end_date': today,
-            }
-
-    def transition_generate(self):
         pool = Pool()
         MaintenanceProgram = pool.get('lims.lab.device.maintenance.program')
-        Maintenance = pool.get('lims.lab.device.maintenance')
+        Date = pool.get('ir.date')
 
-        program = MaintenanceProgram(Transaction().context['active_id'])
+        device_id = Transaction().context['active_id']
+        programs = MaintenanceProgram.search([
+            ('device', '=', device_id),
+            ])
+        today = Date.today()
+        defaults = {
+            'start_date': today,
+            'end_date': today,
+            'maintenance_program_domain': [p.id for p in programs],
+            }
+        return defaults
 
+    def transition_generate(self):
+        Maintenance = Pool().get('lims.lab.device.maintenance')
+
+        new_maintenances = []
+        for program in self.start.maintenance_program:
+            new_maintenances.extend(self._get_new_maintenances(program))
+
+        maintenances = Maintenance.create(new_maintenances)
+        if maintenances:
+            Maintenance.pending(maintenances)
+            self.start.maintenances = maintenances
+            return 'open'
+
+        return 'end'
+
+    def _get_new_maintenances(self, program):
         new_maintenances = []
         for date in self._get_dates(self.start.start_date,
                 program.frequency, self.start.end_date):
@@ -257,13 +270,7 @@ class LabDeviceGenerateMaintenance(Wizard):
                 maintenance['notice_date'] = (date +
                     relativedelta.relativedelta(days=-program.notice_days))
             new_maintenances.append(maintenance)
-
-        maintenances = Maintenance.create(new_maintenances)
-        if maintenances:
-            Maintenance.pending(maintenances)
-            self.start.maintenances = maintenances
-            return 'open'
-        return 'end'
+        return new_maintenances
 
     def _get_dates(self, start_date, frequency, end_date):
         dates = []

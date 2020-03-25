@@ -14,6 +14,4 @@
         <label name="latest_date"/>
         <field name="latest_date"/>
     </group>
-    <button name="generate_maintenance" colspan="4"
-        string="Generate Calendar"/>
 </form>
