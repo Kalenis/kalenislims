@@ -2,20 +2,12 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from datetime import datetime
-<<<<<<< HEAD
-from dateutil.relativedelta import relativedelta
-=======
 #from dateutil.relativedelta import relativedelta
->>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool, PoolMeta
-<<<<<<< HEAD
-from trytond.pyson import Eval, Bool
-=======
 from trytond.pyson import Eval, Bool, Or, And
->>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
@@ -44,15 +36,6 @@ class NotebookLine(metaclass=PoolMeta):
         return template and template[0] or None
 
 
-<<<<<<< HEAD
-class AddFractionControlStart(ModelView):
-    'Add Fraction Control'
-    __name__ = 'lims.analysis_sheet.add_fraction_con.start'
-
-    analysis_sheet = fields.Many2One('lims.analysis_sheet', 'Analysis Sheet')
-    type = fields.Selection([
-        ('exist', 'Existing CON'),
-=======
 class AddControlStart(ModelView):
     'Add Controls'
     __name__ = 'lims.analysis_sheet.add_control.start'
@@ -65,16 +48,11 @@ class AddControlStart(ModelView):
         ], 'Control type', sort=False, required=True)
     con_type = fields.Selection([
         ('exist', 'Existing'),
->>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
         ('coi', 'COI'),
         ('mrc', 'MRC'),
         ('sla', 'SLA'),
         ('itc', 'ITC'),
         ('itl', 'ITL'),
-<<<<<<< HEAD
-        ], 'Control type', sort=False, required=True)
-    original_fraction = fields.Many2One('lims.fraction', 'Original fraction',
-=======
         ], 'Type', sort=False,
         depends=['type'], states={
             'required': Eval('type') == 'con',
@@ -90,23 +68,10 @@ class AddControlStart(ModelView):
             })
     original_fraction = fields.Many2One('lims.fraction',
         'Original/Reference Fraction',
->>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
         required=True, domain=[('id', 'in', Eval('fraction_domain'))],
         depends=['fraction_domain'])
     fraction_domain = fields.Function(fields.One2Many('lims.fraction',
         None, 'Fraction domain'), 'on_change_with_fraction_domain')
-<<<<<<< HEAD
-    label = fields.Char('Label', depends=['type'],
-        states={'readonly': Eval('type') == 'exist'})
-    concentration_level = fields.Many2One('lims.concentration.level',
-        'Concentration level', states={
-            'invisible': Bool(Eval('concentration_level_invisible')),
-            }, depends=['concentration_level_invisible'])
-    concentration_level_invisible = fields.Boolean(
-        'Concentration level invisible')
-
-    @fields.depends('type', 'analysis_sheet',
-=======
     label = fields.Char('Label', depends=['type', 'con_type'],
         states={'readonly': Or(
             And(Eval('type') == 'con',
@@ -140,7 +105,6 @@ class AddControlStart(ModelView):
         return True
 
     @fields.depends('type', 'con_type', 'rm_bmz_type', 'analysis_sheet',
->>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
         '_parent_analysis_sheet.template')
     def on_change_with_fraction_domain(self, name=None):
         cursor = Transaction().connection.cursor()
@@ -149,70 +113,6 @@ class AddControlStart(ModelView):
         Fraction = pool.get('lims.fraction')
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
-<<<<<<< HEAD
-
-        if not self.type:
-            return []
-
-        controls_allowed = (self.analysis_sheet.template.controls_allowed or
-            ['0'])
-        special_type = 'con' if self.type == 'exist' else self.type
-        if special_type not in controls_allowed:
-            return []
-
-        t_analysis_ids = []
-        for t_analysis in self.analysis_sheet.template.analysis:
-            if t_analysis.analysis.type == 'analysis':
-                t_analysis_ids.append(t_analysis.analysis.id)
-            else:
-                t_analysis_ids.extend(
-                    Analysis.get_included_analysis_analysis(
-                        t_analysis.analysis.id))
-
-        stored_fractions_ids = Fraction.get_stored_fractions()
-
-        clause = [
-            ('notebook.fraction.special_type', '=', special_type),
-            ('notebook.fraction.id', 'in', stored_fractions_ids),
-            ('analysis', 'in', t_analysis_ids),
-            ]
-        if self.type == 'exist':
-            deadline = datetime.now() - relativedelta(days=5)
-            clause.extend([
-                ('result', 'in', (None, '')),
-                ('end_date', '=', None),
-                ('annulment_date', '=', None),
-                ('notebook.fraction.sample.date2', '>=', deadline),
-                ])
-        notebook_lines = NotebookLine.search(clause)
-        if not notebook_lines:
-            return []
-
-        notebook_lines_ids = ', '.join(str(nl.id) for nl in notebook_lines)
-        cursor.execute('SELECT DISTINCT(n.fraction) '
-            'FROM "' + Notebook._table + '" n '
-                'INNER JOIN "' + NotebookLine._table + '" nl '
-                'ON nl.notebook = n.id '
-            'WHERE nl.id IN (' + notebook_lines_ids + ')')
-        return [x[0] for x in cursor.fetchall()]
-
-    @fields.depends('type', 'original_fraction', 'concentration_level',
-        '_parent_original_fraction.label',
-        '_parent_concentration_level.description')
-    def on_change_with_label(self, name=None):
-        Date = Pool().get('ir.date')
-        if self.type == 'exist':
-            return ''
-        label = ''
-        if self.original_fraction:
-            label += self.original_fraction.label
-        if self.concentration_level:
-            label += (' (' +
-                    self.concentration_level.description + ')')
-        label += ' ' + str(Date.today())
-        return label
-=======
->>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
 
         if not self.type:
             return []
@@ -346,34 +246,18 @@ class AddControl(Wizard):
         return 'end'
 
     def default_start(self, fields):
-<<<<<<< HEAD
-        Config = Pool().get('lims.configuration')
-        config = Config(1)
-        defaults = {
-            'analysis_sheet': Transaction().context['active_id'],
-            'concentration_level_invisible': True,
-            }
-        if (config.con_fraction_type and
-                config.con_fraction_type.control_charts):
-            defaults['concentration_level_invisible'] = False
-=======
         defaults = {
             'analysis_sheet': self._get_analysis_sheet_id(),
             'concentration_level_invisible': True,
             }
->>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
         return defaults
 
     def transition_add(self):
         fraction = self.start.original_fraction
-<<<<<<< HEAD
-        if self.start.type != 'exist':
-=======
         if ((self.start.type == 'con' and
                 self.start.con_type != 'exist') or
                 (self.start.type in ('rm', 'bmz') and
                 self.start.rm_bmz_type != 'exist')):
->>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
             fraction = self.create_control()
         self.add_to_analysis_sheet(fraction)
         return 'end'
@@ -391,11 +275,6 @@ class AddControl(Wizard):
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
         config = Config(1)
-<<<<<<< HEAD
-        fraction_type = config.con_fraction_type
-        if not fraction_type:
-            raise UserError(gettext('lims.msg_no_con_fraction_type'))
-=======
         if self.start.type == 'con':
             if not config.con_fraction_type:
                 raise UserError(gettext('lims.msg_no_con_fraction_type'))
@@ -408,7 +287,6 @@ class AddControl(Wizard):
             if not config.bmz_fraction_type:
                 raise UserError(gettext('lims.msg_no_bmz_fraction_type'))
             fraction_type = config.bmz_fraction_type
->>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
 
         if (fraction_type.control_charts and not
                 self.start.concentration_level):
@@ -434,15 +312,6 @@ class AddControl(Wizard):
             })
 
         # new fraction
-<<<<<<< HEAD
-        new_fraction, = Fraction.copy([original_fraction], default={
-            'sample': new_sample.id,
-            'type': fraction_type.id,
-            'services': [],
-            'con_type': self.start.type,
-            'con_original_fraction': original_fraction.id,
-            })
-=======
         fraction_default = {
             'sample': new_sample.id,
             'type': fraction_type.id,
@@ -465,7 +334,6 @@ class AddControl(Wizard):
 
         new_fraction, = Fraction.copy([original_fraction],
             default=fraction_default)
->>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
 
         # new services
         t_analysis_ids = []
@@ -533,8 +401,6 @@ class AddControl(Wizard):
                     }
                 NotebookLine.write(notebook_lines, defaults)
 
-<<<<<<< HEAD
-=======
         if self.start.type == 'rm':
             notebook_lines = NotebookLine.search([
                 ('notebook.fraction', '=', new_fraction.id),
@@ -550,7 +416,6 @@ class AddControl(Wizard):
                     defaults['initial_unit'] = config.rm_start_uom.id
                 NotebookLine.write(notebook_lines, defaults)
 
->>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
         return new_fraction
 
     def _get_obj_description(self, sample):
@@ -588,14 +453,10 @@ class AddControl(Wizard):
             ('notebook.fraction.id', '=', fraction.id),
             ('analysis', 'in', t_analysis_ids),
             ]
-<<<<<<< HEAD
-        if self.start.type == 'exist':
-=======
         if ((self.start.type == 'con' and
                 self.start.con_type == 'exist') or
                 (self.start.type in ('rm', 'bmz') and
                 self.start.rm_bmz_type == 'exist')):
->>>>>>> c98a6d3887866fa9e368810ef49482f4dc84b599
             clause.extend([
                 ('result', 'in', (None, '')),
                 ('end_date', '=', None),
