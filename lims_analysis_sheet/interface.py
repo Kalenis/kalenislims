@@ -6,7 +6,7 @@ from datetime import datetime
 
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval, Bool, Or
+from trytond.pyson import Eval, Bool, Or, And
 from trytond.transaction import Transaction
 from trytond.modules.lims_interface.data import Adapter
 
@@ -73,12 +73,68 @@ class Compilation(metaclass=PoolMeta):
 class Column(metaclass=PoolMeta):
     __name__ = 'lims.interface.column'
 
-    destination_column = fields.Integer('Destination Column',
+    destination_column = fields.Integer('Column',
+        states={
+            'invisible': Eval('_parent_interface', {}).get(
+                'export_template_type') == 'txt',
+            },
         help='Mapped column in batch file')
+    destination_start = fields.Integer('Field start',
+        states={
+            'required': Eval('_parent_interface', {}).get(
+                'export_template_type') == 'txt',
+            'invisible': Eval('_parent_interface', {}).get(
+                'export_template_type') != 'txt',
+            })
+    destination_end = fields.Integer('Field end',
+        states={
+            'required': Eval('_parent_interface', {}).get(
+                'export_template_type') == 'txt',
+            'invisible': Eval('_parent_interface', {}).get(
+                'export_template_type') != 'txt',
+            })
 
 
 class Interface(metaclass=PoolMeta):
     __name__ = 'lims.interface'
+
+    export_file_type = fields.Selection([
+        (None, ''),
+        ('excel', 'Excel'),
+        ('csv', 'Comma Separated Values'),
+        ('txt', 'Text File'),
+        ], 'File Type', sort=False)
+    export_field_separator = fields.Selection([
+        ('comma', 'Comma (,)'),
+        ('colon', 'Colon (:)'),
+        ('semicolon', 'Semicolon (;)'),
+        ('tab', 'Tab'),
+        ('space', 'Space'),
+        ('other', 'Other'),
+        ], 'Field separator', sort=False,
+        states={
+            'required': Eval('export_file_type') == 'csv',
+            'invisible': Eval('export_file_type') != 'csv',
+            },
+        depends=['export_file_type'])
+    export_field_separator_other = fields.Char('Other',
+        states={
+            'required': And(
+                Eval('export_file_type') == 'csv',
+                Eval('export_field_separator') == 'other'),
+            'invisible': Or(
+                Eval('export_file_type') != 'csv',
+                Eval('export_field_separator') != 'other'),
+            },
+        depends=['export_file_type', 'export_field_separator'])
+
+    @staticmethod
+    def default_export_template_type():
+        return 'csv'
+
+    @staticmethod
+    def default_export_field_separator():
+        return 'semicolon'
 
     def _get_fields_tree_view(self):
         fields = super(Interface, self)._get_fields_tree_view()

@@ -20,7 +20,7 @@ msgstr "Controlador"
 
 msgctxt "field:lims.interface,field_separator:"
 msgid "Field separator"
-msgstr "Campo separador"
+msgstr "Separador de campos"
 
 msgctxt "field:lims.interface,field_separator_other:"
 msgid "Other"

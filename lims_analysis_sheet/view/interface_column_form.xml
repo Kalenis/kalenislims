@@ -3,7 +3,13 @@
     <xpath expr="/form/group[@id='storage_field']"
         position="after">
         <separator id="export" colspan="4" string="Export"/>
-        <label name="destination_column"/>
-        <field name="destination_column"/>
+        <group id="export_spreadsheet" colspan="4" col="4">
+            <label name="destination_column"/>
+            <field name="destination_column"/>
+        </group>
+        <label name="destination_start"/>
+        <field name="destination_start"/>
+        <label name="destination_end"/>
+        <field name="destination_end"/>
     </xpath>
 </data>
