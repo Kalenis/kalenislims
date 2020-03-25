@@ -4,13 +4,13 @@
     <field name="activity"/>
     <label name="frequency"/>
     <field name="frequency"/>
-    <group id="responsible" colspan="2" cols="4">
+    <group id="responsible" colspan="2" col="4">
         <label name="responsible"/>
         <field name="responsible"/>
         <label name="notice_days"/>
         <field name="notice_days" xexpand="0"/>
     </group>
-    <group id="latest_date" colspan="2" cols="2">
+    <group id="latest_date" colspan="2" col="2">
         <label name="latest_date"/>
         <field name="latest_date"/>
     </group>
