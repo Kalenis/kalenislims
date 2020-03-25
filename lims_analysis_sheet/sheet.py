@@ -683,17 +683,24 @@ class ExportAnalysisSheetFile(Wizard):
             'file': cast(file_) if file_ else None,
             }
 
-    def get_file(self, sheet_id, sep=';', newline='\n'):
-        pool = Pool()
-        Column = pool.get('lims.interface.column')
-        AnalysisSheet = pool.get('lims.analysis_sheet')
-        Data = pool.get('lims.interface.data')
+    def get_file(self, sheet_id):
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
 
         if not sheet_id:
             return
-        sheet = AnalysisSheet(sheet_id)
 
-        # TODO: use lims.interface.table.field
+        sheet = AnalysisSheet(sheet_id)
+        file_type = sheet.template.interface.export_file_type
+        if not file_type:
+            return
+
+        return getattr(self, 'export_%s' % file_type)(sheet)
+
+    def export_csv(self, sheet, newline='\n'):
+        pool = Pool()
+        Column = pool.get('lims.interface.column')
+        Data = pool.get('lims.interface.data')
+
         columns = Column.search([
             ('interface', '=', sheet.template.interface),
             ('destination_column', '!=', None),
@@ -701,6 +708,16 @@ class ExportAnalysisSheetFile(Wizard):
         if not columns:
             return
         cols = [c.alias for c in columns]
+
+        separator = {
+            'comma': ',',
+            'colon': ':',
+            'semicolon': ';',
+            'tab': '\t',
+            'space': ' ',
+            'other': sheet.template.interface.export_field_separator_other,
+            }
+        delimiter = separator[sheet.template.interface.export_field_separator]
 
         file_ = StringIO(newline=newline)
         with Transaction().set_context(
@@ -713,13 +730,20 @@ class ExportAnalysisSheetFile(Wizard):
                 entry = ''
                 for field in cols:
                     if entry:
-                        entry += sep
-                    entry += str(getattr(line, field))
+                        entry += delimiter
+                    entry += str(getattr(line, field) or '')
                 entry += newline
                 file_.write(entry)
 
-        if file_:
-            return str(file_.getvalue()).encode('utf-8')
+        if not file_:
+            return
+
+        return str(file_.getvalue()).encode('utf-8')
+
+    def export_txt(self, sheet):
+        return
+
+    def export_excel(self, sheet):
         return
 
 

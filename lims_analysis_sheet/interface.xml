@@ -2,6 +2,14 @@
 <tryton>
     <data>
 
+<!-- Interface -->
+
+        <record model="ir.ui.view" id="interface_view_form">
+            <field name="model">lims.interface</field>
+            <field name="inherit" ref="lims_interface.lims_interface_view_form"/>
+            <field name="name">interface_form</field>
+        </record>
+
 <!-- Interface Column -->
 
         <record model="ir.ui.view" id="interface_column_view_form">

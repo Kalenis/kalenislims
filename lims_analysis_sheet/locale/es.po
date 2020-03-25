@@ -155,9 +155,29 @@ msgctxt "field:lims.configuration.sequence,analysis_sheet_sequence:"
 msgid "Analysis Sheet Sequence"
 msgstr "Secuencia de Hoja de análisis"
 
+msgctxt "field:lims.interface,export_field_separator:"
+msgid "Field separator"
+msgstr "Separador de campos"
+
+msgctxt "field:lims.interface,export_field_separator_other:"
+msgid "Other"
+msgstr "Otro"
+
+msgctxt "field:lims.interface,export_file_type:"
+msgid "File Type"
+msgstr "Tipo de archivo"
+
 msgctxt "field:lims.interface.column,destination_column:"
-msgid "Destination Column"
-msgstr "Columna destino"
+msgid "Column"
+msgstr "Columna"
+
+msgctxt "field:lims.interface.column,destination_end:"
+msgid "Field end"
+msgstr "Campo fin"
+
+msgctxt "field:lims.interface.column,destination_start:"
+msgid "Field start"
+msgstr "Campo inicio"
 
 msgctxt "field:lims.interface.compilation,analysis_sheet:"
 msgid "Analysis Sheet"
@@ -696,6 +716,42 @@ msgctxt "selection:lims.analysis_sheet.add_control.start,type:"
 msgid "RM"
 msgstr "RM"
 
+msgctxt "selection:lims.interface,export_field_separator:"
+msgid "Colon (:)"
+msgstr "Dos puntos (:)"
+
+msgctxt "selection:lims.interface,export_field_separator:"
+msgid "Comma (,)"
+msgstr "Coma (,)"
+
+msgctxt "selection:lims.interface,export_field_separator:"
+msgid "Other"
+msgstr "Otro"
+
+msgctxt "selection:lims.interface,export_field_separator:"
+msgid "Semicolon (;)"
+msgstr "Punto y coma (;)"
+
+msgctxt "selection:lims.interface,export_field_separator:"
+msgid "Space"
+msgstr "Espacio"
+
+msgctxt "selection:lims.interface,export_field_separator:"
+msgid "Tab"
+msgstr "Tabulador"
+
+msgctxt "selection:lims.interface,export_file_type:"
+msgid "Comma Separated Values"
+msgstr "Valores separados por coma (.csv)"
+
+msgctxt "selection:lims.interface,export_file_type:"
+msgid "Excel"
+msgstr "Excel"
+
+msgctxt "selection:lims.interface,export_file_type:"
+msgid "Text File"
+msgstr "Archivo de texto"
+
 msgctxt "selection:lims.planification.relate_technicians.result,grouping:"
 msgid "Analysis sheet"
 msgstr "Hoja de análisis"
@@ -773,6 +829,10 @@ msgid "View data"
 msgstr "Ver datos"
 
 msgctxt "view:lims.interface.column:"
+msgid "Export"
+msgstr "Exportación"
+
+msgctxt "view:lims.interface:"
 msgid "Export"
 msgstr "Exportación"
 
