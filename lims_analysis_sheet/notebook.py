@@ -756,7 +756,7 @@ class InternalRelationsCalc(Wizard):
         if sheet_id:
             sheet = AnalysisSheet(sheet_id)
             if sheet.state in ('active', 'validated'):
-                return 'start'
+                return 'calcuate'
 
         return 'end'
 
@@ -1166,7 +1166,7 @@ class EvaluateRules(Wizard):
         if sheet_id:
             sheet = AnalysisSheet(sheet_id)
             if sheet.state in ('active', 'validated'):
-                return 'start'
+                return 'evaluate'
 
         return 'end'
 
