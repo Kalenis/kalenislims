@@ -91,6 +91,10 @@ msgctxt "field:lims.analysis_sheet.add_control.start,original_fraction:"
 msgid "Original/Reference Fraction"
 msgstr "Fracción original/referencia"
 
+msgctxt "field:lims.analysis_sheet.add_control.start,quantity:"
+msgid "Quantity"
+msgstr "Cantidad"
+
 msgctxt "field:lims.analysis_sheet.add_control.start,rm_bmz_type:"
 msgid "Type"
 msgstr "Tipo"

@@ -72,7 +72,7 @@ class AddControlStart(ModelView):
         depends=['fraction_domain'])
     fraction_domain = fields.Function(fields.One2Many('lims.fraction',
         None, 'Fraction domain'), 'on_change_with_fraction_domain')
-    label = fields.Char('Label', depends=['type', 'con_type'],
+    label = fields.Char('Label', depends=['type', 'con_type', 'rm_bmz_type'],
         states={'readonly': Or(
             And(Eval('type') == 'con',
                 Eval('con_type') == 'exist'),
@@ -85,6 +85,14 @@ class AddControlStart(ModelView):
         depends=['concentration_level_invisible'])
     concentration_level_invisible = fields.Boolean(
         'Concentration level invisible')
+    quantity = fields.Integer('Quantity', required=True,
+        depends=['type', 'con_type', 'rm_bmz_type'],
+        states={'readonly': Or(
+            And(Eval('type') == 'con',
+                Eval('con_type') == 'exist'),
+            And(Eval('type').in_(['rm', 'bmz']),
+                Eval('rm_bmz_type') == 'exist')),
+            })
 
     @fields.depends('type')
     def on_change_with_concentration_level_invisible(self, name=None):
@@ -217,6 +225,13 @@ class AddControlStart(ModelView):
         label += ' %s' % str(Date.today())
         return label
 
+    @fields.depends('type', 'con_type', 'rm_bmz_type', 'quantity')
+    def on_change_with_quantity(self, name=None):
+        if ((self.type == 'con' and self.con_type == 'exist') or
+                (self.type in ('rm', 'bmz') and self.rm_bmz_type == 'exist')):
+            return 1
+        return self.quantity
+
 
 class AddControl(Wizard):
     'Add Controls'
@@ -249,17 +264,18 @@ class AddControl(Wizard):
         defaults = {
             'analysis_sheet': self._get_analysis_sheet_id(),
             'concentration_level_invisible': True,
+            'quantity': 1,
             }
         return defaults
 
     def transition_add(self):
-        fraction = self.start.original_fraction
+        fractions = [self.start.original_fraction]
         if ((self.start.type == 'con' and
                 self.start.con_type != 'exist') or
                 (self.start.type in ('rm', 'bmz') and
                 self.start.rm_bmz_type != 'exist')):
-            fraction = self.create_control()
-        self.add_to_analysis_sheet(fraction)
+            fractions = self.create_control()
+        self.add_to_analysis_sheet(fractions)
         return 'end'
 
     def create_control(self):
@@ -302,20 +318,16 @@ class AddControl(Wizard):
         original_sample = Sample(original_fraction.sample.id)
         obj_description = self._get_obj_description(original_sample)
 
-        # new sample
-        new_sample, = Sample.copy([original_sample], default={
+        sample_default = {
             'entry': entry.id,
             'date': datetime.now(),
             'label': self.start.label,
             'obj_description': obj_description,
             'fractions': [],
-            })
+            }
 
-        # new fraction
         fraction_default = {
-            'sample': new_sample.id,
             'type': fraction_type.id,
-            'con_type': '',
             'services': [],
             }
         if self.start.type == 'con':
@@ -323,19 +335,17 @@ class AddControl(Wizard):
             fraction_default['con_original_fraction'] = original_fraction.id
         elif self.start.type == 'rm':
             fraction_default['rm_type'] = 'sla'
-            fraction_default['rm_product_type'] = new_sample.product_type.id
-            fraction_default['rm_matrix'] = new_sample.matrix.id
+            fraction_default['rm_product_type'] = (
+                original_sample.product_type.id)
+            fraction_default['rm_matrix'] = original_sample.matrix.id
             fraction_default['rm_original_fraction'] = original_fraction.id
         elif self.start.type == 'bmz':
             fraction_default['bmz_type'] = 'sla'
-            fraction_default['bmz_product_type'] = new_sample.product_type.id
-            fraction_default['bmz_matrix'] = new_sample.matrix.id
+            fraction_default['bmz_product_type'] = (
+                original_sample.product_type.id)
+            fraction_default['bmz_matrix'] = original_sample.matrix.id
             fraction_default['bmz_original_fraction'] = original_fraction.id
 
-        new_fraction, = Fraction.copy([original_fraction],
-            default=fraction_default)
-
-        # new services
         t_analysis_ids = []
         for t_analysis in self.start.analysis_sheet.template.analysis:
             if t_analysis.analysis.type == 'analysis':
@@ -345,78 +355,94 @@ class AddControl(Wizard):
                     Analysis.get_included_analysis_analysis(
                         t_analysis.analysis.id))
 
+        original_services = []
         services = Service.search([
             ('fraction', '=', original_fraction),
             ])
         for service in services:
-            if not Analysis.is_typified(service.analysis,
-                    new_sample.product_type, new_sample.matrix):
-                continue
+            if Analysis.is_typified(service.analysis,
+                    original_sample.product_type, original_sample.matrix):
+                original_services.append(service)
 
-            method_id = service.method and service.method.id or None
-            device_id = service.device and service.device.id or None
-            if service.analysis.type == 'analysis':
-                original_lines = NotebookLine.search([
-                    ('notebook.fraction', '=', original_fraction.id),
-                    ('analysis', '=', service.analysis.id),
-                    ('repetition', '=', 0),
-                    ], limit=1)
-                original_line = original_lines[0] if original_lines else None
-                if original_line:
-                    method_id = original_line.method.id
-                    if original_line.device:
-                        device_id = original_line.device.id
+        res = []
+        for i in range(0, self.start.quantity):
 
-            new_service, = Service.copy([service], default={
-                'fraction': new_fraction.id,
-                'method': method_id,
-                'device': device_id,
-                })
+            # new sample
+            new_sample, = Sample.copy([original_sample],
+                default=sample_default)
 
-            # delete services/details not related to template
-            to_delete = EntryDetailAnalysis.search([
-                ('service', '=', new_service.id),
-                ('analysis', 'not in', t_analysis_ids),
-                ])
-            if to_delete:
-                with Transaction().set_user(0, set_context=True):
-                    EntryDetailAnalysis.delete(to_delete)
-            if EntryDetailAnalysis.search_count([
+            # new fraction
+            new_fraction, = Fraction.copy([original_fraction],
+                default={**fraction_default, 'sample': new_sample.id})
+
+            # new services
+            for service in original_services:
+                method_id = service.method and service.method.id or None
+                device_id = service.device and service.device.id or None
+                if service.analysis.type == 'analysis':
+                    original_lines = NotebookLine.search([
+                        ('notebook.fraction', '=', original_fraction.id),
+                        ('analysis', '=', service.analysis.id),
+                        ('repetition', '=', 0),
+                        ], limit=1)
+                    original_line = (original_lines and
+                        original_lines[0] or None)
+                    if original_line:
+                        method_id = original_line.method.id
+                        if original_line.device:
+                            device_id = original_line.device.id
+                service_default = {
+                    'fraction': new_fraction.id,
+                    'method': method_id,
+                    'device': device_id,
+                    }
+                new_service, = Service.copy([service], default=service_default)
+
+                # delete services/details not related to template
+                to_delete = EntryDetailAnalysis.search([
                     ('service', '=', new_service.id),
-                    ]) == 0:
-                with Transaction().set_user(0, set_context=True):
-                    Service.delete([new_service])
+                    ('analysis', 'not in', t_analysis_ids),
+                    ])
+                if to_delete:
+                    with Transaction().set_user(0, set_context=True):
+                        EntryDetailAnalysis.delete(to_delete)
+                if EntryDetailAnalysis.search_count([
+                        ('service', '=', new_service.id),
+                        ]) == 0:
+                    with Transaction().set_user(0, set_context=True):
+                        Service.delete([new_service])
 
-        # confirm fraction: new notebook and stock move
-        Fraction.confirm([new_fraction])
+            # confirm fraction: new notebook and stock move
+            Fraction.confirm([new_fraction])
 
-        # Edit notebook lines
-        if fraction_type.control_charts:
-            notebook_lines = NotebookLine.search([
-                ('notebook.fraction', '=', new_fraction.id),
-                ])
-            if notebook_lines:
-                defaults = {
-                    'concentration_level': self.start.concentration_level.id,
-                    }
-                NotebookLine.write(notebook_lines, defaults)
+            # Edit notebook lines
+            if fraction_type.control_charts:
+                notebook_lines = NotebookLine.search([
+                    ('notebook.fraction', '=', new_fraction.id),
+                    ])
+                if notebook_lines:
+                    NotebookLine.write(notebook_lines, {
+                        'concentration_level': (
+                            self.start.concentration_level.id),
+                        })
 
-        if self.start.type == 'rm':
-            notebook_lines = NotebookLine.search([
-                ('notebook.fraction', '=', new_fraction.id),
-                ])
-            if notebook_lines:
-                defaults = {
-                    'final_concentration': None,
-                    'final_unit': None,
-                    'detection_limit': None,
-                    'quantification_limit': None,
-                    }
-                if config.rm_start_uom:
-                    defaults['initial_unit'] = config.rm_start_uom.id
-                NotebookLine.write(notebook_lines, defaults)
+            if self.start.type == 'rm':
+                notebook_lines = NotebookLine.search([
+                    ('notebook.fraction', '=', new_fraction.id),
+                    ])
+                if notebook_lines:
+                    defaults = {
+                        'final_concentration': None,
+                        'final_unit': None,
+                        'detection_limit': None,
+                        'quantification_limit': None,
+                        }
+                    if config.rm_start_uom:
+                        defaults['initial_unit'] = config.rm_start_uom.id
+                    NotebookLine.write(notebook_lines, defaults)
+            res.append(new_fraction)
 
-        return new_fraction
+        return res
 
     def _get_obj_description(self, sample):
         cursor = Transaction().connection.cursor()
@@ -433,7 +459,7 @@ class AddControl(Wizard):
         res = cursor.fetchone()
         return res and res[0] or None
 
-    def add_to_analysis_sheet(self, fraction):
+    def add_to_analysis_sheet(self, fractions):
         pool = Pool()
         Analysis = pool.get('lims.analysis')
         NotebookLine = pool.get('lims.notebook.line')
@@ -450,7 +476,7 @@ class AddControl(Wizard):
                         t_analysis.analysis.id))
 
         clause = [
-            ('notebook.fraction.id', '=', fraction.id),
+            ('notebook.fraction', 'in', [f.id for f in fractions]),
             ('analysis', 'in', t_analysis_ids),
             ]
         if ((self.start.type == 'con' and
