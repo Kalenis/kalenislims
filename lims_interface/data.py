@@ -131,6 +131,16 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
         # search()
         return cls.get_sql_table()
 
+    def __init__(self, id=None, **kwargs):
+        kwargs = {}
+        super(Data, self).__init__(id, **kwargs)
+
+    def __getattr__(self, name):
+        try:
+            return super(Data, self).__getattr__(name)
+        except AttributeError:
+            pass
+
     def on_change_with(self, fieldnames):
         table = self.get_table()
         res = {}
