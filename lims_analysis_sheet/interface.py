@@ -129,7 +129,7 @@ class Interface(metaclass=PoolMeta):
         depends=['export_file_type', 'export_field_separator'])
 
     @staticmethod
-    def default_export_template_type():
+    def default_export_file_type():
         return 'csv'
 
     @staticmethod
