@@ -19,9 +19,7 @@
     <field name="zone"/>
     <field name="trace_report"/>
     <field name="urgent"/>
-    <field name="completion_percentage" factor="100">
-        <suffix name="completion_percentage" string="%"/>
-    </field>
+    <field name="completion_percentage" widget="progressbar"/>
     <field name="confirmed" tree_invisible="1" />
     <field name="has_results_report" tree_invisible="1" />
 </tree>
