@@ -3707,7 +3707,7 @@ class SearchFractionsDetail(ModelSQL, ModelView):
     repetition = fields.Boolean('Repetition', readonly=True)
     report_date = fields.Function(fields.Date('Date agreed for result'),
         'get_service_field')
-    completion_percentage = fields.Function(fields.Float('Complete',
+    completion_percentage = fields.Function(fields.Numeric('Complete',
         digits=(1, 4)), 'get_completion_percentage')
     session_id = fields.Integer('Session ID')
 
