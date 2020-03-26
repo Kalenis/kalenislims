@@ -9,8 +9,13 @@ from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Bool, Or, And
 from trytond.transaction import Transaction
 from trytond.modules.lims_interface.data import Adapter
+from trytond.modules.lims_interface.interface import FUNCTIONS
+from .function import custom_functions
 
 __all__ = ['Compilation', 'Column', 'Interface', 'Table', 'Data']
+
+
+FUNCTIONS.update(custom_functions)
 
 
 class Compilation(metaclass=PoolMeta):
