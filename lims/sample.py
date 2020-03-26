@@ -7,6 +7,8 @@ import logging
 import operator
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from decimal import Decimal
+
 from trytond.model import ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
@@ -2327,7 +2329,7 @@ class Sample(ModelSQL, ModelView):
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
     urgent = fields.Function(fields.Boolean('Urgent'), 'get_urgent',
         searcher='search_urgent')
-    completion_percentage = fields.Function(fields.Float('Complete',
+    completion_percentage = fields.Function(fields.Numeric('Complete',
         digits=(1, 4), domain=[
             ('completion_percentage', '>=', 0),
             ('completion_percentage', '<=', 1),
@@ -2793,6 +2795,9 @@ class Sample(ModelSQL, ModelView):
         Fraction = pool.get('lims.fraction')
         FractionType = pool.get('lims.fraction.type')
 
+        _ZERO = Decimal(0)
+        digits = Sample.completion_percentage.digits[1]
+
         cursor.execute('SELECT nl.notebook, nl.analysis, nl.accepted '
             'FROM "' + NotebookLine._table + '" nl '
                 'INNER JOIN "' + EntryDetailAnalysis._table + '" d '
@@ -2811,7 +2816,7 @@ class Sample(ModelSQL, ModelView):
         notebook_lines = cursor.fetchall()
         total = len(notebook_lines)
         if not total:
-            return 0
+            return _ZERO
 
         oks, to_check = [], []
         for line in notebook_lines:
@@ -2823,13 +2828,15 @@ class Sample(ModelSQL, ModelView):
 
         accepted = len(oks)
         if not accepted:
-            return 0
+            return _ZERO
 
         for key in to_check:
             if key in oks:
                 total -= 1
 
-        return round(accepted / total, 4)
+        return Decimal(
+            Decimal(accepted) / Decimal(total)
+            ).quantize(Decimal(str(10 ** -digits)))
 
 
 class DuplicateSampleStart(ModelView):

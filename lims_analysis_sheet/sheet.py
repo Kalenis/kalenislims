@@ -2,6 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from io import StringIO
+from decimal import Decimal
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateView, StateAction, Button
@@ -210,7 +211,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         readonly=True)
     incomplete_sample = fields.Function(fields.Boolean('Incomplete sample'),
         'get_incomplete_sample')
-    completion_percentage = fields.Function(fields.Float('Complete',
+    completion_percentage = fields.Function(fields.Numeric('Complete',
         digits=(1, 4), domain=[
             ('completion_percentage', '>=', 0),
             ('completion_percentage', '<=', 1),
@@ -359,10 +360,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             ('model.model', '=', 'lims.notebook.line'),
             ('name', '=', 'result'),
             ])
+        _ZERO = Decimal(0)
+        digits = cls.completion_percentage.digits[1]
 
         result = {}
         for s in sheets:
-            result[s.id] = 0
+            result[s.id] = _ZERO
             result_column = Field.search([
                 ('table', '=', s.compilation.table.id),
                 ('transfer_field', '=', True),
@@ -377,11 +380,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 total = len(lines)
                 if not total:
                     continue
-                results = 0
+                results = _ZERO
                 for line in lines:
                     if getattr(line, result_field):
                         results += 1
-                result[s.id] = round(results / total, 4)
+                result[s.id] = Decimal(results / Decimal(total)
+                    ).quantize(Decimal(str(10 ** -digits)))
         return result
 
     @classmethod
