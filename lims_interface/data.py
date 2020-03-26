@@ -132,8 +132,14 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
         return cls.get_sql_table()
 
     def __init__(self, id=None, **kwargs):
-        kwargs = {}
+        kwargs_copy = kwargs.copy()
+        for kw in kwargs_copy:
+            kwargs.pop(kw, None)
+
         super(Data, self).__init__(id, **kwargs)
+        self._values = {}
+        for kw in kwargs_copy:
+            self._values[kw] = kwargs_copy[kw]
 
     def __getattr__(self, name):
         try:
