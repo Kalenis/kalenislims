@@ -51,56 +51,9 @@ class NotebookRule(metaclass=PoolMeta):
             return
 
         existing_line = self._get_existing_line(
-            Transaction().context.get('lims_interface_compilation'),
             line.notebook_line.notebook.id, self.target_analysis.id)
         if not existing_line:
             self._exec_sheet_add_service(line, typification[0])
-        #else:
-            #self._exec_sheet_add_repetition(existing_line)
-
-    def _exec_sheet_add_repetition(self, line):
-        pool = Pool()
-        Date = pool.get('ir.date')
-        NotebookLine = pool.get('lims.notebook.line')
-        AnalysisSheet = pool.get('lims.analysis_sheet')
-
-        date = Date.today()
-        notebook_line = line.notebook_line
-        repetition = self._get_line_last_repetition(notebook_line)
-        line_create = [{
-            'notebook': notebook_line.notebook.id,
-            'analysis_detail': notebook_line.analysis_detail.id,
-            'service': notebook_line.service.id,
-            'analysis': self.target_analysis.id,
-            'analysis_origin': notebook_line.analysis_origin,
-            'urgent': True,
-            'repetition': repetition + 1,
-            'laboratory': notebook_line.laboratory.id,
-            'method': notebook_line.method.id,
-            'device': (notebook_line.device and
-                notebook_line.device.id or None),
-            'initial_concentration': notebook_line.initial_concentration,
-            'decimals': notebook_line.decimals,
-            'report': notebook_line.report,
-            'concentration_level': (notebook_line.concentration_level and
-                notebook_line.concentration_level.id or None),
-            'results_estimated_waiting': (
-                notebook_line.results_estimated_waiting),
-            'department': notebook_line.department,
-            'final_concentration': notebook_line.final_concentration,
-            'initial_unit': (notebook_line.initial_unit and
-                notebook_line.initial_unit.id or None),
-            'final_unit': (notebook_line.final_unit and
-                notebook_line.final_unit.id or None),
-            'detection_limit': notebook_line.detection_limit,
-            'quantification_limit': notebook_line.quantification_limit,
-            'start_date': date,
-            }]
-        notebook_lines = NotebookLine.create(line_create)
-        if notebook_lines:
-            sheet = AnalysisSheet(
-                Transaction().context.get('lims_analysis_sheet'))
-            sheet.create_lines(notebook_lines)
 
     def _exec_sheet_add_service(self, line, typification):
         cursor = Transaction().connection.cursor()
@@ -179,8 +132,8 @@ class NotebookRule(metaclass=PoolMeta):
             sheet_line = Data(line.id)
         else:
             sheet_line = self._get_existing_line(
-                Transaction().context.get('lims_interface_compilation'),
-                line.notebook_line.notebook.id, self.target_analysis.id)
+                line.notebook_line.notebook.id, self.target_analysis.id,
+                Transaction().context.get('lims_interface_compilation'))
             if not sheet_line:
                 return
 
@@ -192,7 +145,8 @@ class NotebookRule(metaclass=PoolMeta):
         except Exception as e:
             return
 
-    def _get_existing_line(self, compilation_id, notebook_id, analysis_id):
+    def _get_existing_line(self, notebook_id, analysis_id,
+            compilation_id=None):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
         Data = pool.get('lims.interface.data')
@@ -202,6 +156,9 @@ class NotebookRule(metaclass=PoolMeta):
             ('analysis', '=', analysis_id),
             ])
         nl_ids = [nl.id for nl in notebook_lines]
+        if not compilation_id:
+            return bool(len(nl_ids))
+
         existing_line = Data.search([
             ('compilation', '=', compilation_id),
             ('notebook_line', 'in', nl_ids),
@@ -231,7 +188,12 @@ class NotebookRuleCondition(metaclass=PoolMeta):
             'lt': operator.lt,
             'le': operator.le,
             }
-        result = operator_func[self.condition](str(value), self.value)
+        try:
+            result = operator_func[self.condition](
+                float(value), float(self.value))
+        except (TypeError, ValueError):
+            result = (value and operator_func[self.condition](
+                str(value), str(self.value)) or False)
         return result
 
     def check_field(self):
