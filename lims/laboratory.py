@@ -604,17 +604,24 @@ class NotebookRule(ModelSQL, ModelView):
             'invisible': Eval('action') != 'edit',
             })
 
-    @staticmethod
-    def default_target_field_domain():
-        ModelField = Pool().get('ir.model.field')
-        _field_list = ['end_date', 'method', 'device', 'initial_concentration',
+    @classmethod
+    def _target_fields(cls):
+        field_list = [
+            'end_date', 'method', 'device', 'initial_concentration',
             'final_concentration', 'initial_unit', 'final_unit',
             'result_modifier', 'result', 'converted_result_modifier',
             'converted_result', 'detection_limit', 'quantification_limit',
             'dilution_factor', 'chromatogram', 'comments',
             'theoretical_concentration', 'concentration_level', 'decimals',
             'backup', 'reference', 'literal_result', 'rm_correction_formula',
-            'report', 'uncertainty', 'verification', ]
+            'report', 'uncertainty', 'verification',
+            ]
+        return field_list
+
+    @classmethod
+    def default_target_field_domain(cls):
+        ModelField = Pool().get('ir.model.field')
+        _field_list = cls._target_fields()
         fields = ModelField.search([
             ('model.model', '=', 'lims.notebook.line'),
             ('name', 'in', _field_list),
