@@ -29,7 +29,14 @@
         <label name="fixed_value"/>
         <field name="fixed_value"/>
     </group>
-    <separator id="import" colspan="4" string="Import"/>
+    <separator id="storage" colspan="4" string="Storage:"/>
+    <group id="storage_field" colspan="4" col="4">
+        <label name="transfer_field"/>
+        <field name="transfer_field" xexpand="0"/>
+        <label name="related_line_field"/>
+        <field name="related_line_field"/>
+    </group>
+    <separator id="import" colspan="4" string="Import:"/>
     <group id="import_spreadsheet" colspan="4" col="6">
         <label name="singleton"/>
         <field name="singleton"/>
@@ -42,11 +49,4 @@
     <field name="source_start"/>
     <label name="source_end"/>
     <field name="source_end"/>
-    <separator id="storage" colspan="4" string="Storage"/>
-    <group id="storage_field" colspan="4" col="4">
-        <label name="transfer_field"/>
-        <field name="transfer_field" xexpand="0"/>
-        <label name="related_line_field"/>
-        <field name="related_line_field"/>
-    </group>
 </form>

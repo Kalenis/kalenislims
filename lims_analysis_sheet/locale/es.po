@@ -801,10 +801,6 @@ msgid "SLA"
 msgstr "SLA"
 
 msgctxt "view:lims.analysis_sheet:"
-msgid "%"
-msgstr "%"
-
-msgctxt "view:lims.analysis_sheet:"
 msgid "Activate"
 msgstr "Activar"
 
@@ -829,8 +825,8 @@ msgid "View data"
 msgstr "Ver datos"
 
 msgctxt "view:lims.interface.column:"
-msgid "Export"
-msgstr "Exportación"
+msgid "Export:"
+msgstr "Exportación:"
 
 msgctxt "view:lims.interface:"
 msgid "Export"
