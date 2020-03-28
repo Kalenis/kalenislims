@@ -37,8 +37,7 @@ class NotebookRule(metaclass=PoolMeta):
             self._exec_sheet_edit(line)
 
     def _exec_sheet_add(self, line):
-        pool = Pool()
-        Typification = pool.get('lims.typification')
+        Typification = Pool().get('lims.typification')
 
         typification = Typification.search([
             ('product_type', '=', line.notebook_line.product_type),
@@ -107,11 +106,13 @@ class NotebookRule(metaclass=PoolMeta):
                 line.notebook_line.fraction)
             notebook_lines = NotebookLine.search([
                 ('analysis_detail', 'in', [d.id for d in analysis_detail])])
+            sheet = AnalysisSheet(Transaction().context.get(
+                'lims_analysis_sheet'))
+            notebook_lines = [nl for nl in notebook_lines if
+                nl.get_analysis_sheet_template() == sheet.template.id]
             if notebook_lines:
                 date = Date.today()
                 NotebookLine.write(notebook_lines, {'start_date': date})
-                sheet = AnalysisSheet(
-                    Transaction().context.get('lims_analysis_sheet'))
                 sheet.create_lines(notebook_lines)
 
     def _exec_sheet_edit(self, line):
