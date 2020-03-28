@@ -195,9 +195,9 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         readonly=True)
     professional = fields.Many2One('lims.laboratory.professional',
         'Professional', required=True, readonly=True)
-    urgent = fields.Function(fields.Boolean('Urgent'), 'get_urgent')
+    urgent = fields.Function(fields.Boolean('Urgent'), 'get_fields')
     samples_qty = fields.Function(fields.Integer('Samples Qty.'),
-        'get_samples_qty')
+        'get_fields')
     number = fields.Char('Number', readonly=True)
     date = fields.Function(fields.DateTime('Date'), 'get_date',
         searcher='search_date')
@@ -210,13 +210,13 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     planification = fields.Many2One('lims.planification', 'Planification',
         readonly=True)
     incomplete_sample = fields.Function(fields.Boolean('Incomplete sample'),
-        'get_incomplete_sample')
+        'get_fields')
     completion_percentage = fields.Function(fields.Numeric('Complete',
         digits=(1, 4), domain=[
             ('completion_percentage', '>=', 0),
             ('completion_percentage', '<=', 1),
             ]),
-        'get_completion_percentage')
+        'get_fields')
     report_cache = fields.Binary('Report', readonly=True,
         file_id='report_cache_id', store_prefix='analysis_sheet')
     report_cache_id = fields.Char('Report ID', readonly=True)
@@ -283,96 +283,74 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         return field.convert_order('date_time', compilation_tables,
             Compilation)
 
-    def get_urgent(self, name):
-        pool = Pool()
-        Data = pool.get('lims.interface.data')
-
-        result = False
-        with Transaction().set_context(
-                lims_interface_table=self.compilation.table.id):
-            lines = Data.search([('compilation', '=', self.compilation.id)])
-            for line in lines:
-                nl = line.notebook_line
-                if nl and nl.urgent:
-                    result = True
-                    break
-            return result
-
-    def get_samples_qty(self, name):
-        pool = Pool()
-        Data = pool.get('lims.interface.data')
-
-        with Transaction().set_context(
-                lims_interface_table=self.compilation.table.id):
-            samples = []
-            lines = Data.search([('compilation', '=', self.compilation.id)])
-            for line in lines:
-                nl = line.notebook_line
-                if nl:
-                    samples.append(nl.fraction.id)
-            return len(list(set(samples)))
-
-    def get_incomplete_sample(self, name):
-        pool = Pool()
-        Data = pool.get('lims.interface.data')
-
-        result = False
-        with Transaction().set_context(
-                lims_interface_table=self.compilation.table.id):
-            samples = {}
-            lines = Data.search([('compilation', '=', self.compilation.id)])
-            for line in lines:
-                nl = line.notebook_line
-                if not nl:
-                    continue
-                if nl.fraction.id not in samples:
-                    samples[nl.fraction.id] = []
-                samples[nl.fraction.id].append(nl.analysis.id)
-
-            template_analysis = [ta.analysis.id
-                for ta in self.template.analysis]
-
-            for k, v in samples.items():
-                if not all(x in v for x in template_analysis):
-                    result = True
-                    break
-            return result
-
-    def get_completion_percentage(self, name):
+    @classmethod
+    def get_fields(cls, sheets, names):
         pool = Pool()
         ModelField = pool.get('ir.model.field')
         Field = pool.get('lims.interface.table.field')
         Data = pool.get('lims.interface.data')
 
-        _ZERO = Decimal(0)
         nl_result_field, = ModelField.search([
             ('model.model', '=', 'lims.notebook.line'),
             ('name', '=', 'result'),
             ])
-        result_column = Field.search([
-            ('table', '=', self.compilation.table.id),
-            ('transfer_field', '=', True),
-            ('related_line_field', '=', nl_result_field),
-            ])
-        if not result_column:
-            return _ZERO
+        _ZERO = Decimal(0)
+        digits = cls.completion_percentage.digits[1]
 
-        result_field = result_column[0].name
-        digits = AnalysisSheet.completion_percentage.digits[1]
-        result = _ZERO
-        with Transaction().set_context(
-                lims_interface_table=self.compilation.table.id):
-            lines = Data.search([('compilation', '=', self.compilation.id)])
-            total = len(lines)
-            if not total:
-                return _ZERO
-            results = _ZERO
-            for line in lines:
-                if getattr(line, result_field):
-                    results += 1
-            result = Decimal(results / Decimal(total)
-                ).quantize(Decimal(str(10 ** -digits)))
-            return result
+        result = {
+            'urgent': {},
+            'samples_qty': {},
+            'incomplete_sample': {},
+            'completion_percentage': {},
+            }
+        for s in sheets:
+            result['urgent'][s.id] = False
+
+            result_column = Field.search([
+                ('table', '=', s.compilation.table.id),
+                ('transfer_field', '=', True),
+                ('related_line_field', '=', nl_result_field),
+                ])
+            result_field = result_column and result_column[0].name or None
+
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                lines = Data.search([('compilation', '=', s.compilation.id)])
+                total = len(lines)
+                results = _ZERO
+                samples = {}
+                for line in lines:
+                    nl = line.notebook_line
+                    if not nl:
+                        continue
+
+                    if nl.urgent:
+                        result['urgent'][s.id] = True
+
+                    if nl.fraction.id not in samples:
+                        samples[nl.fraction.id] = []
+                    samples[nl.fraction.id].append(nl.analysis.id)
+
+                    if result_field and getattr(line, result_field):
+                        results += 1
+
+                result['samples_qty'][s.id] = len(samples)
+
+                result['incomplete_sample'][s.id] = False
+                template_analysis = [ta.analysis.id
+                    for ta in s.template.analysis]
+                for k, v in samples.items():
+                    if not all(x in v for x in template_analysis):
+                        result['incomplete_sample'][s.id] = True
+                        break
+
+                result['completion_percentage'][s.id] = _ZERO
+                if total and results:
+                    result['completion_percentage'][s.id] = Decimal(
+                        results / Decimal(total)
+                        ).quantize(Decimal(str(10 ** -digits)))
+
+        return result
 
     @classmethod
     def create(cls, vlist):

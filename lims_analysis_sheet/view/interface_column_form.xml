@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <data>
-    <xpath expr="/form/group[@id='storage_field']"
+    <xpath expr="/form/field[@name='source_end']"
         position="after">
-        <separator id="export" colspan="4" string="Export"/>
+        <separator id="export" colspan="4" string="Export:"/>
         <group id="export_spreadsheet" colspan="4" col="4">
             <label name="destination_column"/>
             <field name="destination_column"/>

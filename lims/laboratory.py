@@ -664,48 +664,6 @@ class NotebookRule(ModelSQL, ModelView):
             ], order=[('repetition', 'DESC')], limit=1)
         if not existing_line:
             self._exec_add_service(line, typification[0])
-        #else:
-            #self._exec_add_repetition(existing_line[0])
-
-    def _exec_add_repetition(self, line):
-        pool = Pool()
-        NotebookLine = pool.get('lims.notebook.line')
-        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
-
-        repetition = self._get_line_last_repetition(line)
-        line_create = [{
-            'notebook': line.notebook.id,
-            'analysis_detail': line.analysis_detail.id,
-            'service': line.service.id,
-            'analysis': self.target_analysis.id,
-            'analysis_origin': line.analysis_origin,
-            'urgent': True,
-            'repetition': repetition + 1,
-            'laboratory': line.laboratory.id,
-            'method': line.method.id,
-            'device': line.device.id if line.device else None,
-            'initial_concentration': line.initial_concentration,
-            'decimals': line.decimals,
-            'report': line.report,
-            'concentration_level': (line.concentration_level and
-                line.concentration_level.id or None),
-            'results_estimated_waiting': line.results_estimated_waiting,
-            'department': line.department,
-            'final_concentration': line.final_concentration,
-            'initial_unit': line.initial_unit and line.initial_unit.id or None,
-            'final_unit': line.final_unit and line.final_unit.id or None,
-            'detection_limit': line.detection_limit,
-            'quantification_limit': line.quantification_limit,
-            }]
-        NotebookLine.create(line_create)
-
-        details = EntryDetailAnalysis.search([
-            ('id', 'in', [line.analysis_detail.id]),
-            ])
-        if details:
-            EntryDetailAnalysis.write(details, {
-                'state': 'unplanned',
-                })
 
     def _exec_add_service(self, line, typification):
         cursor = Transaction().connection.cursor()
@@ -829,7 +787,12 @@ class NotebookRuleCondition(ModelSQL, ModelView):
             'lt': operator.lt,
             'le': operator.le,
             }
-        result = operator_func[self.condition](str(value), self.value)
+        try:
+            result = operator_func[self.condition](
+                float(value), float(self.value))
+        except (TypeError, ValueError):
+            result = (value and operator_func[self.condition](
+                str(value), str(self.value)) or False)
         return result
 
     @classmethod

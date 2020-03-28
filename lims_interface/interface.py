@@ -481,9 +481,9 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
             'required': Eval('type_') == 'many2one',
             'invisible': Eval('type_') != 'many2one',
         }, depends=['type_'])
-    is_fixed_value = fields.Boolean('Is a fixed value',
-        help='Check to define a fixed value for this column')
-    fixed_value = fields.Char('Fixed value',
+    is_fixed_value = fields.Boolean('Has a default value',
+        help='Check to define a default value for this column')
+    fixed_value = fields.Char('Default value',
         states={
             'required': Bool(Eval('is_fixed_value')),
             'invisible': Not(Eval('is_fixed_value')),
