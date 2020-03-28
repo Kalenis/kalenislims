@@ -378,7 +378,11 @@ msgstr "La plantilla «%(template)s» no tiene informe asociado"
 
 msgctxt "model:ir.message,text:msg_template_not_result_field"
 msgid "The template does not have a column for the result field"
-msgstr "La plantilla no tiene una columna para el campo resultado"
+msgstr "La plantilla no tiene una columna para el campo Resultado"
+
+msgctxt "model:ir.message,text:msg_template_not_verification_field"
+msgid "The template does not have a column for the verification field"
+msgstr "La plantilla no tiene una columna para el campo Verificación"
 
 msgctxt "model:ir.sequence,name:seq_analysis_sheet"
 msgid "Analysis Sheet"
