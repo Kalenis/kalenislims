@@ -37,7 +37,7 @@ minor_version = int(minor_version)
 
 # TODO: check new openpyxl versions, v.3 seems to be buggy in PyPI
 requires = ['pytz', 'xlrd', 'xlutils', 'PyPDF2', 'unidecode', 'formulas',
-    'openpyxl==2.6.4']
+    'openpyxl==2.6.4', 'pandas']
 packages = []
 package_dir = {}
 package_data = {}
