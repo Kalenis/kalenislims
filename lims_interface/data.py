@@ -247,7 +247,6 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
             assert(view.id)
 
         fields_names = [
-            'compilation',
             'sequence',
             'notebook_line',
             ]
@@ -290,9 +289,45 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
         if not ids:
             return []
 
+        def read_related(field_name, Target, rows, fields):
+            target_ids = []
+            for row in rows:
+                value = row[field_name]
+                if value is not None:
+                    target_ids.append(value)
+            return Target.read(target_ids, fields)
+
+        def add_related(field_name, rows, targets):
+            key = field_name + '.'
+            for row in rows:
+                value = row[field_name]
+                if isinstance(value, str):
+                    value = int(value.split(',', 1)[1])
+                if value is not None and value >= 0:
+                    row[key] = targets[value]
+                else:
+                    row[key] = None
+
         cursor = Transaction().connection.cursor()
         cursor.execute(*sql_table.select(where=sql_table.id.in_(ids)))
         fetchall = list(cursor_dict(cursor))
+
+        fields_related = {
+            'notebook_line': 'lims.notebook.line'
+            }
+        for f in table.fields_:
+            if f.related_model is not None:
+                fields_related[f.name] = f.related_model.model
+
+        for field in fields_related:
+            Target = Pool().get(fields_related[field])
+            if Target:
+                targets = read_related(
+                    field, Target, fetchall, ['id', 'rec_name'])
+                targets = {t['id']: t for t in targets}
+            else:
+                targets = {}
+            add_related(field, fetchall, targets)
 
         to_cast = {}
         for field in table.fields_:

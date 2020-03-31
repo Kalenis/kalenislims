@@ -780,7 +780,8 @@ class InternalRelationsCalc(Wizard):
             ('related_line_field', '=', nl_result_field),
             ])
         if not result_column:
-            return 'end'
+            raise UserError(gettext(
+                'lims_analysis_sheet.msg_template_not_result_field'))
 
         result_field = result_column[0].name
         relations = {}
@@ -986,7 +987,8 @@ class ResultsVerification(Wizard):
             ('related_line_field', '=', nl_result_field),
             ])
         if not result_column:
-            return 'end'
+            raise UserError(gettext(
+                'lims_analysis_sheet.msg_template_not_result_field'))
 
         nl_verification_field, = ModelField.search([
             ('model.model', '=', 'lims.notebook.line'),
@@ -998,7 +1000,8 @@ class ResultsVerification(Wizard):
             ('related_line_field', '=', nl_verification_field),
             ])
         if not verification_column:
-            return 'end'
+            raise UserError(gettext(
+                'lims_analysis_sheet.msg_template_not_verification_field'))
 
         result_field = result_column[0].name
         verification_field = verification_column[0].name

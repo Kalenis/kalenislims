@@ -22,5 +22,8 @@
         <record model="ir.message" id="msg_template_not_result_field">
             <field name="text">The template does not have a column for the result field</field>
         </record>
+        <record model="ir.message" id="msg_template_not_verification_field">
+            <field name="text">The template does not have a column for the verification field</field>
+        </record>
     </data>
 </tryton>
