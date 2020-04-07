@@ -247,6 +247,7 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
             assert(view.id)
 
         fields_names = [
+            'compilation',
             'sequence',
             'notebook_line',
             ]
@@ -321,6 +322,7 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
         fetchall = list(cursor_dict(cursor))
 
         fields_related = {
+            'compilation': 'lims.interface.compilation',
             'notebook_line': 'lims.notebook.line'
             }
         for f in table.fields_:
