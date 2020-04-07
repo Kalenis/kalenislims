@@ -230,7 +230,7 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
                 for model in Model.search([]):
                     selection.append((model.model, model.name))
                 res[field.name]['selection'] = selection
-            if field.type == 'timestamp':
+            if field.type in ['datetime', 'timestamp']:
                 res[field.name]['format'] = PYSONEncoder().encode(
                     '%H:%M:%S.%f')
         return res
