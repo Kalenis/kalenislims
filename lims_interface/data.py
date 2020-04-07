@@ -230,7 +230,7 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
                 for model in Model.search([]):
                     selection.append((model.model, model.name))
                 res[field.name]['selection'] = selection
-            if field.type == 'timestamp':
+            if field.type in ['datetime', 'timestamp']:
                 res[field.name]['format'] = PYSONEncoder().encode(
                     '%H:%M:%S.%f')
         return res
@@ -247,6 +247,7 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
             assert(view.id)
 
         fields_names = [
+            'compilation',
             'sequence',
             'notebook_line',
             ]
@@ -298,6 +299,10 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
             return Target.read(target_ids, fields)
 
         def add_related(field_name, rows, targets):
+            '''
+            Adds 'id' and 'rec_name' of many2one/related_model fields
+            Also adds 'rec_name' for the rows
+            '''
             key = field_name + '.'
             for row in rows:
                 value = row[field_name]
@@ -305,14 +310,19 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
                     value = int(value.split(',', 1)[1])
                 if value is not None and value >= 0:
                     row[key] = targets[value]
+                    if 'rec_name' in targets[value]:
+                        row['rec_name'] = targets[value]['rec_name']
                 else:
                     row[key] = None
+                if 'rec_name' not in row:
+                    row['rec_name'] = str(row['id'])
 
         cursor = Transaction().connection.cursor()
         cursor.execute(*sql_table.select(where=sql_table.id.in_(ids)))
         fetchall = list(cursor_dict(cursor))
 
         fields_related = {
+            'compilation': 'lims.interface.compilation',
             'notebook_line': 'lims.notebook.line'
             }
         for f in table.fields_:

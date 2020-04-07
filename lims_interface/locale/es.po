@@ -679,7 +679,7 @@ msgstr "Orígenes"
 
 msgctxt "view:lims.interface.compilation:"
 msgid "Time"
-msgstr "Tiempo"
+msgstr "Hora"
 
 msgctxt "view:lims.interface.compilation:"
 msgid "Validate"
