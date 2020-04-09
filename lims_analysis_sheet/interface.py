@@ -227,3 +227,11 @@ class Data(metaclass=PoolMeta):
             fields_names = []
         fields_names.append('annulled')
         return super(Data, cls).fields_get(fields_names)
+
+    @classmethod
+    def delete(cls, records):
+        NotebookLine = Pool().get('lims.notebook.line')
+        notebook_lines = [x.notebook_line for x in records
+            if x.notebook_line]
+        NotebookLine.write(notebook_lines, {'start_date': None})
+        super(Data, cls).delete(records)
