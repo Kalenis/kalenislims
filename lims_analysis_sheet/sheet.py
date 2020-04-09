@@ -7,7 +7,7 @@ from decimal import Decimal
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateView, StateAction, Button
 from trytond.pool import Pool
-from trytond.pyson import PYSONEncoder, Eval, Bool
+from trytond.pyson import PYSONEncoder, Eval, Bool, If
 from trytond.transaction import Transaction
 from trytond.report import Report
 from trytond.exceptions import UserError
@@ -234,26 +234,37 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         cls._transitions |= set((
             ('draft', 'active'),
             ('active', 'validated'),
+            ('validated', 'active'),
             ('validated', 'done'),
             ))
         cls._buttons.update({
             'activate': {
-                'invisible': Eval('state') != 'draft',
+                'invisible': ~Eval('state').in_(['draft', 'validated']),
+                'icon': If(Eval('state') == 'draft', 'tryton-forward',
+                    'tryton-back'),
+                'depends': ['state'],
                 },
             'view_data': {
                 'invisible': Eval('state') == 'draft',
+                'depends': ['state'],
                 },
             'export_file': {
                 'invisible': Eval('state') == 'draft',
+                'depends': ['state'],
                 },
             'print_report': {
                 'invisible': Eval('state') == 'draft',
+                'depends': ['state'],
                 },
             'validate_': {
                 'invisible': Eval('state') != 'active',
+                'icon': 'tryton-forward',
+                'depends': ['state'],
                 },
             'confirm': {
                 'invisible': Eval('state') != 'validated',
+                'icon': 'tryton-ok',
+                'depends': ['state'],
                 },
             })
 

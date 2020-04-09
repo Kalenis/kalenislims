@@ -58,21 +58,24 @@ class Compilation(metaclass=PoolMeta):
 
         super(Compilation, cls).confirm(compilations)
 
-        lines_to_write = []
+        now = datetime.now()
+        today = now.date()
         for c in compilations:
-            with Transaction().set_context(
-                    lims_interface_table=c.table.id):
+            with Transaction().set_context(lims_interface_table=c.table.id):
                 lines = Data.search([('compilation', '=', c.id)])
                 for line in lines:
-                    if line.annulled and line.notebook_line:
-                        lines_to_write.append(line.notebook_line)
-        if lines_to_write:
-            NotebookLine.write(lines_to_write, {
-                'result_modifier': 'na',
-                'annulled': True,
-                'annulment_date': datetime.now(),
-                'report': False,
-                })
+                    nb_line = line.notebook_line
+                    if not nb_line:
+                        continue
+                    data = {'end_date': today}
+                    if line.annulled:
+                        data.update({
+                            'result_modifier': 'na',
+                            'annulled': True,
+                            'annulment_date': now,
+                            'report': False,
+                            })
+                    NotebookLine.write([nb_line], data)
 
 
 class Column(metaclass=PoolMeta):
