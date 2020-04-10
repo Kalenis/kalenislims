@@ -77,6 +77,18 @@ class Compilation(metaclass=PoolMeta):
                             })
                     NotebookLine.write([nb_line], data)
 
+    def collect_csv(self, create_new_lines=True):
+        new_lines = create_new_lines
+        if self.analysis_sheet:
+            new_lines = False
+        super(Compilation, self).collect_csv(create_new_lines=new_lines)
+
+    def collect_excel(self, create_new_lines=True):
+        new_lines = create_new_lines
+        if self.analysis_sheet:
+            new_lines = False
+        super(Compilation, self).collect_excel(create_new_lines=new_lines)
+
 
 class Column(metaclass=PoolMeta):
     __name__ = 'lims.interface.column'

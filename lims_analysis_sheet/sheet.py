@@ -593,13 +593,13 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         line[interface.analysis_field.alias] = nl.analysis.id
                     else:
                         line[interface.analysis_field.alias] = (
-                            nl.analysis.rec_name)
+                            nl.analysis.code)
                 if interface.fraction_field:
                     if interface.fraction_field.type_ == 'many2one':
                         line[interface.fraction_field.alias] = nl.fraction.id
                     else:
                         line[interface.fraction_field.alias] = (
-                            nl.fraction.rec_name)
+                            nl.fraction.number)
                 if interface.repetition_field:
                     line[interface.repetition_field.alias] = nl.repetition
                 data.append(line)
@@ -710,7 +710,8 @@ class ExportAnalysisSheetFile(Wizard):
                 for field in cols:
                     if entry:
                         entry += delimiter
-                    entry += str(getattr(line, field) or '')
+                    val = getattr(line, field)
+                    entry += str(val if val is not None else '')
                 entry += newline
                 file_.write(entry)
 
