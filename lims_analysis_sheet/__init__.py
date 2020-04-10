@@ -41,6 +41,7 @@ def register():
     Pool.register(
         sheet.OpenAnalysisSheetData,
         sheet.ExportAnalysisSheetFile,
+        sheet.PrintAnalysisSheetReport,
         planification.SearchAnalysisSheet,
         planification.RelateTechnicians,
         notebook.AddControl,

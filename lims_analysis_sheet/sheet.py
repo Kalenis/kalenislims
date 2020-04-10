@@ -6,7 +6,8 @@ from decimal import Decimal
 from datetime import datetime
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
-from trytond.wizard import Wizard, StateView, StateAction, Button
+from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
+    Button
 from trytond.pool import Pool
 from trytond.pyson import PYSONEncoder, Eval, Bool, If
 from trytond.transaction import Transaction
@@ -17,8 +18,9 @@ from trytond.modules.lims_interface.interface import str2date, \
     get_model_resource
 
 __all__ = ['TemplateAnalysisSheet', 'TemplateAnalysisSheetAnalysis',
-    'AnalysisSheet', 'OpenAnalysisSheetData', 'AnalysisSheetReport',
-    'ExportAnalysisSheetFileStart', 'ExportAnalysisSheetFile']
+    'AnalysisSheet', 'OpenAnalysisSheetData', 'PrintAnalysisSheetReport',
+    'AnalysisSheetReport', 'ExportAnalysisSheetFileStart',
+    'ExportAnalysisSheetFile']
 
 
 class TemplateAnalysisSheet(ModelSQL, ModelView):
@@ -253,10 +255,6 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 'invisible': Eval('state') == 'draft',
                 'depends': ['state'],
                 },
-            'print_report': {
-                'invisible': Eval('state') == 'draft',
-                'depends': ['state'],
-                },
             'validate_': {
                 'invisible': Eval('state') != 'active',
                 'icon': 'tryton-forward',
@@ -458,25 +456,6 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         'lims_analysis_sheet.wiz_analysis_sheet_export_file')
     def export_file(cls, sheets):
         pass
-
-    @classmethod
-    @ModelView.button_action(
-        'lims_analysis_sheet.report_analysis_sheet')
-    def print_report(cls, sheets):
-        pool = Pool()
-        for s in sheets:
-            if not s.template.report:
-                raise UserError(gettext(
-                    'lims_analysis_sheet.msg_template_not_report',
-                    template=s.template.rec_name))
-            report_name = s.template.report.report_name
-            AnalysisSheetReport = pool.get(report_name, type='report')
-            result = AnalysisSheetReport.execute([s.id],
-                {'execute': True, 'id': s.id})
-            cls.write([s], {
-                'report_format': result[0],
-                'report_cache': result[1],
-                })
 
     @classmethod
     @ModelView.button
@@ -758,6 +737,50 @@ class ExportAnalysisSheetFile(Wizard):
         return
 
 
+class PrintAnalysisSheetReport(Wizard):
+    'Analysis Sheet Report'
+    __name__ = 'lims.analysis_sheet.print_report'
+
+    start = StateTransition()
+    print_ = StateAction('lims_analysis_sheet.report_analysis_sheet')
+
+    def _get_analysis_sheet_id(self):
+        return Transaction().context.get('active_id', None)
+
+    def transition_start(self):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+
+        sheet_id = self._get_analysis_sheet_id()
+        if not sheet_id:
+            return 'end'
+
+        sheet = AnalysisSheet(sheet_id)
+        if sheet.state == 'draft':
+            return 'end'
+
+        if not sheet.template.report:
+            raise UserError(gettext(
+                'lims_analysis_sheet.msg_template_not_report',
+                template=sheet.template.rec_name))
+
+        report_name = sheet.template.report.report_name
+        AnalysisSheetReport = pool.get(report_name, type='report')
+        result = AnalysisSheetReport.execute([sheet.id],
+            {'execute': True, 'id': sheet.id})
+        AnalysisSheet.write([sheet], {
+            'report_format': result[0],
+            'report_cache': result[1],
+            })
+        return 'print_'
+
+    def do_print_(self, action):
+        data = {
+            'id': self._get_analysis_sheet_id(),
+            }
+        return action, data
+
+
 class AnalysisSheetReport(Report):
     'Analysis Sheet Report'
     __name__ = 'lims.analysis_sheet.report'
@@ -766,7 +789,7 @@ class AnalysisSheetReport(Report):
     def execute(cls, ids, data):
         AnalysisSheet = Pool().get('lims.analysis_sheet')
 
-        sheet = AnalysisSheet(ids[0])
+        sheet = AnalysisSheet(data.get('id'))
         if data.get('execute') or not sheet.report_cache:
             return super(AnalysisSheetReport, cls).execute(ids, data)
         return (sheet.report_format, sheet.report_cache, False, sheet.number)

@@ -324,6 +324,10 @@ msgctxt "model:ir.action,name:wiz_analysis_sheet_open_data"
 msgid "Open Analysis Sheet Data"
 msgstr "Abrir datos de Hoja de análisis"
 
+msgctxt "model:ir.action,name:wiz_analysis_sheet_print_report"
+msgid "Analysis Sheet Report"
+msgstr "Informe de Hoja de análisis"
+
 msgctxt "model:ir.action,name:wiz_analysis_sheet_repeat_analysis"
 msgid "Repeat Analysis"
 msgstr "02) Repetir análisis"
@@ -799,10 +803,6 @@ msgstr "Confirmar"
 msgctxt "view:lims.analysis_sheet:"
 msgid "Export file"
 msgstr "Exportar archivo"
-
-msgctxt "view:lims.analysis_sheet:"
-msgid "Print report"
-msgstr "Imprimir informe"
 
 msgctxt "view:lims.analysis_sheet:"
 msgid "Validate"
