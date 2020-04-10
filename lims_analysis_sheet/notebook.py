@@ -545,9 +545,6 @@ class RepeatAnalysisStartLine(ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super(RepeatAnalysisStartLine, cls).__setup__()
-        cls._order.insert(0, ('fraction', 'ASC'))
-        cls._order.insert(1, ('analysis', 'ASC'))
-        cls._order.insert(2, ('repetition', 'ASC'))
 
     @classmethod
     def get_line_field(cls, lines, names):
