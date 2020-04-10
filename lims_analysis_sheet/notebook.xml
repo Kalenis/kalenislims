@@ -2,6 +2,14 @@
 <tryton>
     <data>
 
+<!-- Notebook Line -->
+
+        <record model="ir.ui.view" id="notebook_line_view_form">
+            <field name="model">lims.notebook.line</field>
+            <field name="inherit" ref="lims.lims_notebook_line_view_form"/>
+            <field name="name">notebook_line_form</field>
+        </record>
+
 <!-- Wizard Add Control -->
 
         <record model="ir.ui.view" id="analysis_sheet_add_control_start_form">

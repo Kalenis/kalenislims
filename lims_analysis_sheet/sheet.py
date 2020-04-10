@@ -3,6 +3,7 @@
 # the full copyright notices and license terms.
 from io import StringIO
 from decimal import Decimal
+from datetime import datetime
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateView, StateAction, Button
@@ -494,6 +495,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         cls.check_results(sheets)
         cls.check_controls(sheets)
         Compilation.confirm([s.compilation for s in sheets])
+        cls.confirm_compilations(sheets)
 
     @classmethod
     def check_results(cls, sheets):
@@ -550,6 +552,35 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 if not ok:
                     raise UserError(gettext(
                         'lims_analysis_sheet.msg_sheet_not_controls'))
+
+    @classmethod
+    def confirm_compilations(cls, sheets):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        now = datetime.now()
+        today = now.date()
+        for s in sheets:
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                lines = Data.search([('compilation', '=', s.compilation.id)])
+                for line in lines:
+                    nb_line = line.notebook_line
+                    if not nb_line:
+                        continue
+                    data = {
+                        'end_date': today,
+                        'analysis_sheet': s.id,
+                        }
+                    if line.annulled:
+                        data.update({
+                            'result_modifier': 'na',
+                            'annulled': True,
+                            'annulment_date': now,
+                            'report': False,
+                            })
+                    NotebookLine.write([nb_line], data)
 
     def get_new_compilation(self):
         Compilation = Pool().get('lims.interface.compilation')

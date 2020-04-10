@@ -23,6 +23,9 @@ __all__ = ['NotebookLine', 'AddControlStart', 'AddControl', 'LineAddControl',
 class NotebookLine(metaclass=PoolMeta):
     __name__ = 'lims.notebook.line'
 
+    analysis_sheet = fields.Many2One('lims.analysis_sheet', 'Analysis Sheet',
+        readonly=True)
+
     def get_analysis_sheet_template(self):
         cursor = Transaction().connection.cursor()
         TemplateAnalysis = Pool().get('lims.template.analysis_sheet.analysis')
