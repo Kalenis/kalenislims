@@ -801,10 +801,6 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 msgctxt "view:lims.analysis_sheet:"
-msgid "Export file"
-msgstr "Exportar archivo"
-
-msgctxt "view:lims.analysis_sheet:"
 msgid "Validate"
 msgstr "Validar"
 
@@ -844,7 +840,7 @@ msgctxt "wizard_button:lims.analysis_sheet.add_control,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
-msgctxt "wizard_button:lims.analysis_sheet.export_file,start,end:"
+msgctxt "wizard_button:lims.analysis_sheet.export_file,export_,end:"
 msgid "Close"
 msgstr "Cerrar"
 

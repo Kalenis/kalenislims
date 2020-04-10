@@ -251,10 +251,6 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 'invisible': Eval('state') == 'draft',
                 'depends': ['state'],
                 },
-            'export_file': {
-                'invisible': Eval('state') == 'draft',
-                'depends': ['state'],
-                },
             'validate_': {
                 'invisible': Eval('state') != 'active',
                 'icon': 'tryton-forward',
@@ -449,12 +445,6 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     @ModelView.button_action(
         'lims_analysis_sheet.wiz_analysis_sheet_open_data')
     def view_data(cls, sheets):
-        pass
-
-    @classmethod
-    @ModelView.button_action(
-        'lims_analysis_sheet.wiz_analysis_sheet_export_file')
-    def export_file(cls, sheets):
         pass
 
     @classmethod
@@ -660,29 +650,43 @@ class ExportAnalysisSheetFile(Wizard):
     'Export Analysis Sheet File'
     __name__ = 'lims.analysis_sheet.export_file'
 
-    start = StateView('lims.analysis_sheet.export_file.start',
+    start = StateTransition()
+    export_ = StateView('lims.analysis_sheet.export_file.start',
         'lims_analysis_sheet.analysis_sheet_export_start_view_form', [
             Button('Close', 'end', 'tryton-close'),
             ])
 
-    def default_start(self, fields):
-        file_ = self.get_file(Transaction().context.get('active_id', None))
-        cast = self.start.__class__.file.cast
+    def _get_analysis_sheet_id(self):
+        return Transaction().context.get('active_id', None)
+
+    def transition_start(self):
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
+
+        sheet_id = self._get_analysis_sheet_id()
+        if not sheet_id:
+            return 'end'
+
+        sheet = AnalysisSheet(sheet_id)
+        if sheet.state == 'draft':
+            return 'end'
+
+        file_type = sheet.template.interface.export_file_type
+        if not file_type:
+            return 'end'
+
+        return 'export_'
+
+    def default_export_(self, fields):
+        file_ = self.get_file(self._get_analysis_sheet_id())
+        cast = self.export_.__class__.file.cast
         return {
             'file': cast(file_) if file_ else None,
             }
 
     def get_file(self, sheet_id):
         AnalysisSheet = Pool().get('lims.analysis_sheet')
-
-        if not sheet_id:
-            return
-
         sheet = AnalysisSheet(sheet_id)
         file_type = sheet.template.interface.export_file_type
-        if not file_type:
-            return
-
         return getattr(self, 'export_%s' % file_type)(sheet)
 
     def export_csv(self, sheet, newline='\n'):
