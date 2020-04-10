@@ -16,9 +16,10 @@
         <label name="samples_qty"/>
         <field name="samples_qty"/>
         <label name="completion_percentage"/>
-        <field name="completion_percentage" factor="100">
-            <suffix name="completion_percentage" string="%"/>
-        </field>
+        <group col="2" id="completion_percentage">
+            <field name="completion_percentage" factor="100" xexpand="0"/>
+            <label name="completion_percentage" string="%" xalign="0.0" xexpand="1"/>
+        </group>
     </group>
     <label name="compilation"/>
     <field name="compilation"/>
