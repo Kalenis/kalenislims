@@ -44,15 +44,10 @@ def register():
         planification.SearchAnalysisSheet,
         planification.RelateTechnicians,
         notebook.AddControl,
-        notebook.LineAddControl,
         notebook.RepeatAnalysis,
-        notebook.LineRepeatAnalysis,
         notebook.InternalRelationsCalc,
-        notebook.LineInternalRelationsCalc,
         notebook.ResultsVerification,
-        notebook.LineResultsVerification,
         notebook.EvaluateRules,
-        notebook.LineEvaluateRules,
         module='lims_analysis_sheet', type_='wizard')
     Pool.register(
         sheet.AnalysisSheetReport,
