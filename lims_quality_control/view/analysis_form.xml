@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/form/notebook/page[@id='laboratories']" position="before">
+        <page id="quality" string="Quality">
+            <label name="quality_type"/>
+            <field name="quality_type"/>
+            <label name="quality_uom"/>
+            <field name="quality_uom"/>
+            <field name="quality_possible_values" colspan="4"/>
+        </page>
+    </xpath>
+</data>

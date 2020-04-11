@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+        <record model="ir.ui.view" id="lims_configuration_view">
+            <field name="model">lims.configuration</field>
+            <field name="inherit" ref="lims.lims_configuration_view"/>
+            <field name="name">configuration_form</field>
+        </record>
+
+        <record model="ir.action.act_window.domain" id="act_lims_analysis_list_domain_quantitative">
+            <field name="name">Quantitative</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain"
+                eval="[('quality_type', '=', 'quantitative')]"
+                pyson="1"/>
+            <field name="act_window" ref="lims.act_lims_analysis_list"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_lims_analysis_list_domain_qualitative">
+            <field name="name">Qualitative</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain"
+                eval="[('quality_type', '=', 'qualitative')]"
+                pyson="1"/>
+            <field name="act_window" ref="lims.act_lims_analysis_list"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_lims_analysis_list_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="9999"/>
+            <field name="domain"></field>
+            <field name="act_window" ref="lims.act_lims_analysis_list"/>
+        </record>
+
+        <record model="ir.ui.view" id="quality_typification_view_form">
+            <field name="model">lims.typification</field>
+            <field name="type">form</field>
+            <field name="name">quality_typification_form</field>
+        </record>
+        <record model="ir.ui.view" id="quality_typification_view_list">
+            <field name="model">lims.typification</field>
+            <field name="type">tree</field>
+            <field name="name">quality_typification_list</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_typification_view_form">
+            <field name="model">lims.typification</field>
+            <field name="inherit" ref="lims.lims_typification_view_form"/>
+            <field name="name">typification_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_typification_view_list">
+            <field name="model">lims.typification</field>
+            <field name="inherit" ref="lims.lims_typification_view_list"/>
+            <field name="name">typification_list</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_analysis_view_form">
+            <field name="model">lims.analysis</field>
+            <field name="inherit" ref="lims.lims_analysis_view_form"/>
+            <field name="name">analysis_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_analysis_view_list">
+            <field name="model">lims.analysis</field>
+            <field name="inherit" ref="lims.lims_analysis_view_list"/>
+            <field name="name">analysis_list</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_lab_method_view_form">
+            <field name="model">lims.lab.method</field>
+            <field name="inherit" ref="lims.lims_lab_method_view_form"/>
+            <field name="name">method_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_notebook_load_results_manual_result_line_view_list">
+            <field name="model">lims.notebook.load_results_manual.line</field>
+            <field name="inherit" ref="lims.lims_notebook_load_results_manual_result_line_view_list"/>
+            <field name="name">notebook_load_results_manual_result_line_list</field>
+        </record>
+
+    </data>
+</tryton>

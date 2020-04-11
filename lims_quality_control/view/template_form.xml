@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='general']/group[@id='checkboxes']"
+        position="after">
+        <label name="product_type"/>
+        <field name="product_type"/>
+        <label name="matrix"/>
+        <field name="matrix"/>
+    </xpath>
+</data>

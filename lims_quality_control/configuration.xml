@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+        <record model="ir.ui.view" id="quality_configuration_form_view">
+            <field name="model">lims.quality.configuration</field>
+            <field name="type">form</field>
+            <field name="name">quality_configuration_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_quality_configuration">
+            <field name="name">Quality Configuration</field>
+            <field name="res_model">lims.quality.configuration</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_quality_configuration_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="quality_configuration_form_view"/>
+            <field name="act_window" ref="act_quality_configuration"/>
+        </record>
+
+        <record model="ir.model.access" id="access_quality_configuration">
+            <field name="model"
+                search="[('model', '=', 'lims.quality.configuration')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access"
+            id="access_quality_configuration_admin">
+            <field name="model"
+                search="[('model', '=', 'lims.quality.configuration')]"/>
+            <field name="group" ref="group_quality_control_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <menuitem id="menu_quality_configuration"
+            action="act_quality_configuration"
+            parent="menu_configuration" sequence="0"
+            icon="tryton-list"/>
+    </data>
+</tryton>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="number"/>
+    <field name="company"/>
+    <field name="template"/>
+    <field name="lot"/>
+    <field name="product"/>
+    <field name="sample"/>
+    <field name="countersample"/>
+    <field name="state"/>
+    <field name="test_date" widget="date"/>
+    <field name="test_date" widget="time" string="Test Time"/>
+</tree>

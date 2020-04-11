@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/tree/field[@name='code']" position="before">
+        <field name="quality_type"/>
+    </xpath>
+</data>
