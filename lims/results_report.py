@@ -2239,9 +2239,14 @@ class ResultReport(Report):
         report_context['print_date'] = get_print_date()
         report_context['party'] = (
             report.report_version.results_report.party.rec_name)
-        party_address = (
-            report.report_version.results_report.party.address_get(
-                type='invoice'))
+        try:
+            party_address = (
+                report.report_version.results_report.party.address_get(
+                    type='invoice'))
+        except AttributeError:
+            party_address = (
+                report.report_version.results_report.party.address_get())
+
         report_context['party_address'] = party_address.full_address.replace(
             '\n', ' - ')
 
@@ -2254,7 +2259,7 @@ class ResultReport(Report):
 
         report_context['signer'] = ''
         report_context['signer_role'] = ''
-        report_context['signature'] = ''
+        report_context['signature'] = None
         report_context['headquarters'] = report.laboratory.headquarters
 
         if report.signer:
