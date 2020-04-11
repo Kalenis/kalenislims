@@ -2,6 +2,14 @@
 <tryton>
     <data>
 
+<!-- Notebook Line -->
+
+        <record model="ir.ui.view" id="notebook_line_view_form">
+            <field name="model">lims.notebook.line</field>
+            <field name="inherit" ref="lims.lims_notebook_line_view_form"/>
+            <field name="name">notebook_line_form</field>
+        </record>
+
 <!-- Wizard Add Control -->
 
         <record model="ir.ui.view" id="analysis_sheet_add_control_start_form">
@@ -17,21 +25,8 @@
 
         <record model="ir.action.keyword" id="wiz_analysis_sheet_add_control_keyword">
             <field name="keyword">form_action</field>
-            <field name="model">lims.analysis_sheet,-1</field>
-            <field name="action" ref="wiz_analysis_sheet_add_control"/>
-        </record>
-
-<!-- Wizard Add Control (from Data) -->
-
-        <record model="ir.action.wizard" id="wiz_analysis_sheet_data_add_control">
-            <field name="name">Add Controls</field>
-            <field name="wiz_name">lims.analysis_sheet_data.add_control</field>
-        </record>
-
-        <record model="ir.action.keyword" id="wiz_analysis_sheet_data_add_control_keyword">
-            <field name="keyword">form_action</field>
             <field name="model">lims.interface.data,-1</field>
-            <field name="action" ref="wiz_analysis_sheet_data_add_control"/>
+            <field name="action" ref="wiz_analysis_sheet_add_control"/>
         </record>
 
 <!-- Wizard Repeat Analysis -->
@@ -59,21 +54,8 @@
 
         <record model="ir.action.keyword" id="wiz_analysis_sheet_repeat_analysis_keyword">
             <field name="keyword">form_action</field>
-            <field name="model">lims.analysis_sheet,-1</field>
-            <field name="action" ref="wiz_analysis_sheet_repeat_analysis"/>
-        </record>
-
-<!-- Wizard Repeat Analysis (from Data) -->
-
-        <record model="ir.action.wizard" id="wiz_analysis_sheet_data_repeat_analysis">
-            <field name="name">Repeat Analysis</field>
-            <field name="wiz_name">lims.analysis_sheet_data.repeat_analysis</field>
-        </record>
-
-        <record model="ir.action.keyword" id="wiz_analysis_sheet_data_repeat_analysis_keyword">
-            <field name="keyword">form_action</field>
             <field name="model">lims.interface.data,-1</field>
-            <field name="action" ref="wiz_analysis_sheet_data_repeat_analysis"/>
+            <field name="action" ref="wiz_analysis_sheet_repeat_analysis"/>
         </record>
 
 <!-- Wizard Internal Relations Calculation -->
@@ -85,21 +67,8 @@
 
         <record model="ir.action.keyword" id="wiz_analysis_sheet_internal_relations_calc_keyword">
             <field name="keyword">form_action</field>
-            <field name="model">lims.analysis_sheet,-1</field>
-            <field name="action" ref="wiz_analysis_sheet_internal_relations_calc"/>
-        </record>
-
-<!-- Wizard Internal Relations Calculation (from Data) -->
-
-        <record model="ir.action.wizard" id="wiz_analysis_sheet_data_internal_relations_calc">
-            <field name="name">Internal Relations Calculation</field>
-            <field name="wiz_name">lims.analysis_sheet_data.internal_relations_calc</field>
-        </record>
-
-        <record model="ir.action.keyword" id="wiz_analysis_sheet_data_internal_relations_calc_keyword">
-            <field name="keyword">form_action</field>
             <field name="model">lims.interface.data,-1</field>
-            <field name="action" ref="wiz_analysis_sheet_data_internal_relations_calc"/>
+            <field name="action" ref="wiz_analysis_sheet_internal_relations_calc"/>
         </record>
 
 <!-- Wizard Results Verification -->
@@ -114,22 +83,11 @@
             <field name="name">Results Verification</field>
             <field name="wiz_name">lims.analysis_sheet.results_verification</field>
         </record>
+
         <record model="ir.action.keyword" id="wiz_analysis_sheet_results_verification_keyword">
             <field name="keyword">form_action</field>
-            <field name="model">lims.analysis_sheet,-1</field>
-            <field name="action" ref="wiz_analysis_sheet_results_verification"/>
-        </record>
-
-<!-- Wizard Results Verification (from Data) -->
-
-        <record model="ir.action.wizard" id="wiz_analysis_sheet_data_results_verification">
-            <field name="name">Results Verification</field>
-            <field name="wiz_name">lims.analysis_sheet_data.results_verification</field>
-        </record>
-        <record model="ir.action.keyword" id="wiz_analysis_sheet_data_results_verification_keyword">
-            <field name="keyword">form_action</field>
             <field name="model">lims.interface.data,-1</field>
-            <field name="action" ref="wiz_analysis_sheet_data_results_verification"/>
+            <field name="action" ref="wiz_analysis_sheet_results_verification"/>
         </record>
 
 <!-- Wizard Evaluate Rules -->
@@ -138,22 +96,11 @@
             <field name="name">Evaluate Rules</field>
             <field name="wiz_name">lims.analysis_sheet.evaluate_rules</field>
         </record>
+
         <record model="ir.action.keyword" id="wiz_analysis_sheet_evaluate_rules_keyword">
             <field name="keyword">form_action</field>
-            <field name="model">lims.analysis_sheet,-1</field>
-            <field name="action" ref="wiz_analysis_sheet_evaluate_rules"/>
-        </record>
-
-<!-- Wizard Evaluate Rules (from Data) -->
-
-        <record model="ir.action.wizard" id="wiz_analysis_sheet_data_evaluate_rules">
-            <field name="name">Evaluate Rules</field>
-            <field name="wiz_name">lims.analysis_sheet_data.evaluate_rules</field>
-        </record>
-        <record model="ir.action.keyword" id="wiz_analysis_sheet_data_evaluate_rules_keyword">
-            <field name="keyword">form_action</field>
             <field name="model">lims.interface.data,-1</field>
-            <field name="action" ref="wiz_analysis_sheet_data_evaluate_rules"/>
+            <field name="action" ref="wiz_analysis_sheet_evaluate_rules"/>
         </record>
 
     </data>

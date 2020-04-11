@@ -2,7 +2,6 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import sql
-from datetime import datetime
 
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
@@ -50,29 +49,17 @@ class Compilation(metaclass=PoolMeta):
         #cls._buttons['collect']['invisible'] = Or(Eval('state') != 'active',
             #Bool(Eval('analysis_sheet')))
 
-    @classmethod
-    def confirm(cls, compilations):
-        pool = Pool()
-        Data = pool.get('lims.interface.data')
-        NotebookLine = pool.get('lims.notebook.line')
+    def collect_csv(self, create_new_lines=True):
+        new_lines = create_new_lines
+        if self.analysis_sheet:
+            new_lines = False
+        super(Compilation, self).collect_csv(create_new_lines=new_lines)
 
-        super(Compilation, cls).confirm(compilations)
-
-        lines_to_write = []
-        for c in compilations:
-            with Transaction().set_context(
-                    lims_interface_table=c.table.id):
-                lines = Data.search([('compilation', '=', c.id)])
-                for line in lines:
-                    if line.annulled and line.notebook_line:
-                        lines_to_write.append(line.notebook_line)
-        if lines_to_write:
-            NotebookLine.write(lines_to_write, {
-                'result_modifier': 'na',
-                'annulled': True,
-                'annulment_date': datetime.now(),
-                'report': False,
-                })
+    def collect_excel(self, create_new_lines=True):
+        new_lines = create_new_lines
+        if self.analysis_sheet:
+            new_lines = False
+        super(Compilation, self).collect_excel(create_new_lines=new_lines)
 
 
 class Column(metaclass=PoolMeta):
@@ -224,3 +211,11 @@ class Data(metaclass=PoolMeta):
             fields_names = []
         fields_names.append('annulled')
         return super(Data, cls).fields_get(fields_names)
+
+    @classmethod
+    def delete(cls, records):
+        NotebookLine = Pool().get('lims.notebook.line')
+        notebook_lines = [x.notebook_line for x in records
+            if x.notebook_line]
+        NotebookLine.write(notebook_lines, {'start_date': None})
+        super(Data, cls).delete(records)

@@ -187,6 +187,10 @@ msgctxt "field:lims.interface.data,annulled:"
 msgid "Annulled"
 msgstr "Anulado"
 
+msgctxt "field:lims.notebook.line,analysis_sheet:"
+msgid "Analysis Sheet"
+msgstr "Hoja de análisis"
+
 msgctxt "field:lims.planification.relate_technicians.detail4,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
@@ -304,26 +308,6 @@ msgctxt "model:ir.action,name:wiz_analysis_sheet_add_control"
 msgid "Add Controls"
 msgstr "01) Añadir Controles"
 
-msgctxt "model:ir.action,name:wiz_analysis_sheet_data_add_control"
-msgid "Add Controls"
-msgstr "01) Añadir Controles"
-
-msgctxt "model:ir.action,name:wiz_analysis_sheet_data_evaluate_rules"
-msgid "Evaluate Rules"
-msgstr "05) Evaluar Reglas de cuaderno"
-
-msgctxt "model:ir.action,name:wiz_analysis_sheet_data_internal_relations_calc"
-msgid "Internal Relations Calculation"
-msgstr "03) Cálculo de relaciones internas"
-
-msgctxt "model:ir.action,name:wiz_analysis_sheet_data_repeat_analysis"
-msgid "Repeat Analysis"
-msgstr "02) Repetir análisis"
-
-msgctxt "model:ir.action,name:wiz_analysis_sheet_data_results_verification"
-msgid "Results Verification"
-msgstr "04) Verificación de resultados"
-
 msgctxt "model:ir.action,name:wiz_analysis_sheet_evaluate_rules"
 msgid "Evaluate Rules"
 msgstr "05) Evaluar Reglas de cuaderno"
@@ -339,6 +323,10 @@ msgstr "03) Cálculo de relaciones internas"
 msgctxt "model:ir.action,name:wiz_analysis_sheet_open_data"
 msgid "Open Analysis Sheet Data"
 msgstr "Abrir datos de Hoja de análisis"
+
+msgctxt "model:ir.action,name:wiz_analysis_sheet_print_report"
+msgid "Analysis Sheet Report"
+msgstr "Informe de Hoja de análisis"
 
 msgctxt "model:ir.action,name:wiz_analysis_sheet_repeat_analysis"
 msgid "Repeat Analysis"
@@ -813,14 +801,6 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 msgctxt "view:lims.analysis_sheet:"
-msgid "Export file"
-msgstr "Exportar archivo"
-
-msgctxt "view:lims.analysis_sheet:"
-msgid "Print report"
-msgstr "Imprimir informe"
-
-msgctxt "view:lims.analysis_sheet:"
 msgid "Validate"
 msgstr "Validar"
 
@@ -860,7 +840,7 @@ msgctxt "wizard_button:lims.analysis_sheet.add_control,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
-msgctxt "wizard_button:lims.analysis_sheet.export_file,start,end:"
+msgctxt "wizard_button:lims.analysis_sheet.export_file,export_,end:"
 msgid "Close"
 msgstr "Cerrar"
 
@@ -877,32 +857,6 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 msgctxt "wizard_button:lims.analysis_sheet.results_verification,start,verify:"
-msgid "Ok"
-msgstr "Aceptar"
-
-msgctxt "wizard_button:lims.analysis_sheet_data.add_control,start,add:"
-msgid "Add"
-msgstr "Añadir"
-
-msgctxt "wizard_button:lims.analysis_sheet_data.add_control,start,end:"
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgctxt "wizard_button:lims.analysis_sheet_data.repeat_analysis,start,end:"
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgctxt "wizard_button:lims.analysis_sheet_data.repeat_analysis,start,repeat:"
-msgid "Repeat"
-msgstr "Repetir"
-
-msgctxt ""
-"wizard_button:lims.analysis_sheet_data.results_verification,start,end:"
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgctxt ""
-"wizard_button:lims.analysis_sheet_data.results_verification,start,verify:"
 msgid "Ok"
 msgstr "Aceptar"
 

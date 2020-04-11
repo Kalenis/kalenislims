@@ -705,26 +705,33 @@ class Compilation(Workflow, ModelSQL, ModelView):
             ('draft', 'active'),
             ('active', 'draft'),
             ('active', 'validated'),
+            ('validated', 'active'),
             ('validated', 'done'),
             ))
         cls._buttons.update({
             'view_data': {
                 'invisible': Eval('state') == 'draft',
+                'depends': ['state'],
                 },
             'draft': {
                 'invisible': Eval('state') != 'active',
+                'depends': ['state'],
                 },
             'activate': {
-                'invisible': Eval('state') != 'draft',
+                'invisible': ~Eval('state').in_(['draft', 'validated']),
+                'depends': ['state'],
                 },
             'collect': {
                 'invisible': Eval('state') != 'active',
+                'depends': ['state'],
                 },
             'validate_': {
                 'invisible': Eval('state') != 'active',
+                'depends': ['state'],
                 },
             'confirm': {
                 'invisible': Eval('state') != 'validated',
+                'depends': ['state'],
                 },
             })
 
@@ -768,12 +775,14 @@ class Compilation(Workflow, ModelSQL, ModelView):
             if c.interface.kind == 'template':
                 getattr(c, 'collect_%s' % c.interface.template_type)()
 
-    def collect_csv(self):
+    def collect_csv(self, create_new_lines=True):
         pool = Pool()
         Origin = pool.get('lims.interface.compilation.origin')
         Data = pool.get('lims.interface.data')
 
-        data = []
+        data_create = []
+        data_write = []
+
         schema, formula_fields = self._get_schema()
         schema_keys = list(schema.keys())
         separator = {
@@ -839,24 +848,36 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     for field in f_fields:
                         line[field[0]] = self._get_formula_value(field, line)
 
-                    nb_line = self._get_notebook_line(line)
-                    if nb_line:
-                        line['notebook_line'] = nb_line.id
-                    data.append(line)
+                    line['notebook_line'] = self._get_notebook_line(line)
+                    line_id = self._get_compilation_line_id(line)
+                    if line_id:
+                        line['id'] = line_id
+                        data_write.append(line)
+                    else:
+                        data_create.append(line)
                     count += 1
                 imported_files.append(origin)
 
             if imported_files:
                 Origin.write(imported_files, {'imported': True})
-            if data:
-                Data.create(data)
 
-    def collect_excel(self):
+            if data_create and create_new_lines:
+                Data.create(data_create)
+            for data in data_write:
+                data_line = Data(data['id'])
+                del data['id']
+                del data['notebook_line']
+                del data['compilation']
+                Data.write([data_line], data)
+
+    def collect_excel(self, create_new_lines=True):
         pool = Pool()
         Origin = pool.get('lims.interface.compilation.origin')
         Data = pool.get('lims.interface.data')
 
-        data = []
+        data_create = []
+        data_write = []
+
         schema, formula_fields = self._get_schema()
         schema_keys = list(schema.keys())
         first_row = self.interface.first_row
@@ -918,17 +939,26 @@ class Compilation(Workflow, ModelSQL, ModelView):
                             line[field[0]] = self._get_formula_value(
                                 field, line)
 
-                        nb_line = self._get_notebook_line(line)
-                        if nb_line:
-                            line['notebook_line'] = nb_line.id
-                        data.append(line)
-
+                        line['notebook_line'] = self._get_notebook_line(line)
+                        line_id = self._get_compilation_line_id(line)
+                        if line_id:
+                            line['id'] = line_id
+                            data_write.append(line)
+                        else:
+                            data_create.append(line)
                 imported_files.append(origin)
 
             if imported_files:
                 Origin.write(imported_files, {'imported': True})
-            if data:
-                Data.create(data)
+
+            if data_create and create_new_lines:
+                Data.create(data_create)
+            for data in data_write:
+                data_line = Data(data['id'])
+                del data['id']
+                del data['notebook_line']
+                del data['compilation']
+                Data.write([data_line], data)
 
     def _get_schema(self):
         schema = {}
@@ -988,39 +1018,58 @@ class Compilation(Workflow, ModelSQL, ModelView):
         return value
 
     def _get_notebook_line(self, line):
-        pool = Pool()
-        Fraction = pool.get('lims.fraction')
-        Analysis = pool.get('lims.analysis')
-        Notebook = pool.get('lims.notebook')
-        NotebookLine = pool.get('lims.notebook.line')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        if (self.interface.analysis_field and
-                self.interface.fraction_field and
-                self.interface.repetition_field):
-            analysis_value = line[self.interface.analysis_field.alias]
-            fraction_value = line[self.interface.fraction_field.alias]
-            repetition_value = line[self.interface.repetition_field.alias]
+        if (not self.interface.fraction_field or
+                not self.interface.analysis_field or
+                not self.interface.repetition_field):
+            return None
 
-            fraction = Fraction.search([
-                ('number', '=', fraction_value),
-                ])
-            if fraction and repetition_value is not None:
-                nb = Notebook.search([
-                    ('fraction', '=', fraction[0].id),
-                    ])
-                analysis = Analysis.search([
-                    ('code', '=', analysis_value),
-                    ('automatic_acquisition', '=', True),
-                    ])
-                if nb and analysis:
-                    nb_line = NotebookLine.search([
-                        ('notebook', '=', nb[0].id),
-                        ('analysis', '=', analysis[0].id),
-                        ('repetition', '=', repetition_value),
-                        ])
-                    if nb_line:
-                        return nb_line[0]
+        fraction_value = line[self.interface.fraction_field.alias]
+        analysis_value = line[self.interface.analysis_field.alias]
+        repetition_value = line[self.interface.repetition_field.alias]
+        if (fraction_value is None or
+                analysis_value is None or
+                repetition_value is None):
+            return None
+
+        nb_line = NotebookLine.search([
+            ('notebook.fraction.number', '=', fraction_value),
+            ('analysis.code', '=', analysis_value),
+            ('analysis.automatic_acquisition', '=', True),
+            ('repetition', '=', repetition_value),
+            ])
+        if nb_line:
+            return nb_line[0].id
         return None
+
+    def _get_compilation_line_id(self, line):
+        Data = Pool().get('lims.interface.data')
+
+        clause = [('compilation', '=', line['compilation'])]
+        if line.get('notebook_line'):
+            clause.append(('notebook_line', '=', line['notebook_line']))
+
+        else:
+            sub_clause = [('id', '=', -1)]
+            fraction_field = self.interface.fraction_field
+            analysis_field = self.interface.analysis_field
+            repetition_field = self.interface.repetition_field
+            if (fraction_field and analysis_field and repetition_field):
+                fraction_value = line[fraction_field.alias]
+                analysis_value = line[analysis_field.alias]
+                repetition_value = line[repetition_field.alias]
+                if (fraction_value is not None and
+                        analysis_value is not None and
+                        repetition_value is not None):
+                    sub_clause = [
+                        (fraction_field.alias, '=', fraction_value),
+                        (analysis_field.alias, '=', analysis_value),
+                        (repetition_field.alias, '=', repetition_value),
+                        ]
+            clause.extend(sub_clause)
+        line = Data.search(clause)
+        return line and line[0].id or None
 
     @classmethod
     @ModelView.button
@@ -1031,31 +1080,30 @@ class Compilation(Workflow, ModelSQL, ModelView):
         Field = pool.get('lims.interface.table.field')
 
         for c in compilations:
-            result_fields = {}
-            fields = Field.search([
+            fields = {}
+            columns = Field.search([
                 ('table', '=', c.table),
                 ('transfer_field', '=', True),
                 ])
-            for field in fields:
-                result_fields[field.name] = {
-                    'type': field.type,
-                    'field_name': field.related_line_field.name,
+            for column in columns:
+                fields[column.name] = {
+                    'type': column.type,
+                    'field_name': column.related_line_field.name,
                     }
-            with Transaction().set_context(
-                    lims_interface_table=c.table):
-                lines = Data.search([
-                    ('compilation', '=', c.id),
-                    ])
-                for l in lines:
-                    nb_line = l.notebook_line
-                    print('*** nb_line:', nb_line)
-                    if result_fields:
-                        for res in result_fields:
-                            # TODO: check values and correct type
-                            value = getattr(l, res)
-                            print('RES: ', res, ': ', value, ' - ',
-                                  result_fields[res]['type'],
-                                  result_fields[res]['field_name'])
+            if not fields:
+                continue
+            with Transaction().set_context(lims_interface_table=c.table):
+                lines = Data.search([('compilation', '=', c.id)])
+                for line in lines:
+                    nb_line = line.notebook_line
+                    if not nb_line:
+                        continue
+                    print('## nb_line:', nb_line.id)
+                    for alias, field in fields.items():
+                        # TODO: check values and correct type
+                        value = getattr(line, alias)
+                        print(' * Field:', alias, ':', value, ' - ',
+                            field['field_name'])
 
     @classmethod
     @ModelView.button
@@ -1067,30 +1115,26 @@ class Compilation(Workflow, ModelSQL, ModelView):
         NotebookLine = pool.get('lims.notebook.line')
 
         for c in compilations:
-            result_fields = {}
-            fields = Field.search([
-                ('table', '=', c.table),
+            fields = {}
+            columns = Field.search([
+                ('table', '=', c.table.id),
                 ('transfer_field', '=', True),
                 ])
-            for field in fields:
-                result_fields[field.name] = {
-                    'type': field.type,
-                    'field_name': field.related_line_field.name,
-                    }
-            with Transaction().set_context(
-                    lims_interface_table=c.table):
-                lines = Data.search([
-                    ('compilation', '=', c.id),
-                    ])
-                for l in lines:
-                    nb_line = l.notebook_line
-                    if nb_line and result_fields:
-                        data = {}
-                        for res in result_fields:
-                            value = getattr(l, res)
-                            data[result_fields[res]['field_name']] = value
-                        if data:
-                            NotebookLine.write([nb_line], data)
+            for column in columns:
+                fields[column.name] = column.related_line_field.name
+            if not fields:
+                continue
+            with Transaction().set_context(lims_interface_table=c.table):
+                lines = Data.search([('compilation', '=', c.id)])
+                for line in lines:
+                    nb_line = line.notebook_line
+                    if not nb_line:
+                        continue
+                    data = {}
+                    for alias, nl_field in fields.items():
+                        data[nl_field] = getattr(line, alias)
+                    if data:
+                        NotebookLine.write([nb_line], data)
 
 
 class CompilationOrigin(ModelSQL, ModelView):

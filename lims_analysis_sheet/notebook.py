@@ -13,15 +13,17 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.modules.lims.formula_parser import FormulaParser
 
-__all__ = ['NotebookLine', 'AddControlStart', 'AddControl', 'LineAddControl',
+__all__ = ['NotebookLine', 'AddControlStart', 'AddControl',
     'RepeatAnalysisStart', 'RepeatAnalysisStartLine', 'RepeatAnalysis',
-    'LineRepeatAnalysis', 'InternalRelationsCalc', 'LineInternalRelationsCalc',
-    'ResultsVerificationStart', 'ResultsVerification',
-    'LineResultsVerification', 'EvaluateRules', 'LineEvaluateRules']
+    'InternalRelationsCalc', 'ResultsVerificationStart', 'ResultsVerification',
+    'EvaluateRules']
 
 
 class NotebookLine(metaclass=PoolMeta):
     __name__ = 'lims.notebook.line'
+
+    analysis_sheet = fields.Many2One('lims.analysis_sheet', 'Analysis Sheet',
+        readonly=True)
 
     def get_analysis_sheet_template(self):
         cursor = Transaction().connection.cursor()
@@ -247,7 +249,7 @@ class AddControl(Wizard):
     add = StateTransition()
 
     def _get_analysis_sheet_id(self):
-        return Transaction().context['active_id']
+        return Transaction().context.get('lims_analysis_sheet', None)
 
     def transition_check(self):
         AnalysisSheet = Pool().get('lims.analysis_sheet')
@@ -493,14 +495,6 @@ class AddControl(Wizard):
             sheet.create_lines(notebook_lines)
         return 'end'
 
-
-class LineAddControl(AddControl):
-    'Add Controls'
-    __name__ = 'lims.analysis_sheet_data.add_control'
-
-    def _get_analysis_sheet_id(self):
-        return Transaction().context.get('lims_analysis_sheet', None)
-
     def end(self):
         return 'reload'
 
@@ -542,9 +536,6 @@ class RepeatAnalysisStartLine(ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super(RepeatAnalysisStartLine, cls).__setup__()
-        cls._order.insert(0, ('fraction', 'ASC'))
-        cls._order.insert(1, ('analysis', 'ASC'))
-        cls._order.insert(2, ('repetition', 'ASC'))
 
     @classmethod
     def get_line_field(cls, lines, names):
@@ -579,7 +570,7 @@ class RepeatAnalysis(Wizard):
     repeat = StateTransition()
 
     def _get_analysis_sheet_id(self):
-        return Transaction().context['active_id']
+        return Transaction().context.get('lims_analysis_sheet', None)
 
     def transition_check(self):
         AnalysisSheet = Pool().get('lims.analysis_sheet')
@@ -608,6 +599,7 @@ class RepeatAnalysis(Wizard):
         sheet = AnalysisSheet(sheet_id)
 
         to_create = []
+        selected_lines = []
         with Transaction().set_context(
                 lims_interface_table=sheet.compilation.table.id):
             lines = Data.search([('compilation', '=', sheet.compilation.id)])
@@ -619,9 +611,12 @@ class RepeatAnalysis(Wizard):
                     'session_id': self._session_id,
                     'line': nl,
                     })
+                if line.id in Transaction().context['active_ids']:
+                    selected_lines.append(line.notebook_line)
 
         lines = RepeatAnalysisStartLine.create(to_create)
         defaults['lines_domain'] = [l.id for l in lines]
+        defaults['lines'] = [l.id for l in lines if l.line in selected_lines]
         return defaults
 
     def transition_repeat(self):
@@ -690,50 +685,6 @@ class RepeatAnalysis(Wizard):
 
         return 'end'
 
-
-class LineRepeatAnalysis(RepeatAnalysis):
-    'Repeat Analysis'
-    __name__ = 'lims.analysis_sheet_data.repeat_analysis'
-
-    def _get_analysis_sheet_id(self):
-        return Transaction().context.get('lims_analysis_sheet', None)
-
-    def default_start(self, fields):
-        pool = Pool()
-        AnalysisSheet = pool.get('lims.analysis_sheet')
-        Data = pool.get('lims.interface.data')
-        RepeatAnalysisStartLine = pool.get(
-            'lims.analysis_sheet.repeat_analysis.start.line')
-
-        defaults = {
-            'annul': False,
-            'urgent': False,
-            }
-
-        sheet_id = self._get_analysis_sheet_id()
-        sheet = AnalysisSheet(sheet_id)
-
-        to_create = []
-        selected_lines = []
-        with Transaction().set_context(
-                lims_interface_table=sheet.compilation.table.id):
-            lines = Data.search([('compilation', '=', sheet.compilation.id)])
-            for line in lines:
-                nl = line.notebook_line
-                if not nl:
-                    continue
-                to_create.append({
-                    'session_id': self._session_id,
-                    'line': nl,
-                    })
-                if line.id in Transaction().context['active_ids']:
-                    selected_lines.append(line.notebook_line)
-
-        lines = RepeatAnalysisStartLine.create(to_create)
-        defaults['lines_domain'] = [l.id for l in lines]
-        defaults['lines'] = [l.id for l in lines if l.line in selected_lines]
-        return defaults
-
     def end(self):
         return 'reload'
 
@@ -747,7 +698,7 @@ class InternalRelationsCalc(Wizard):
     calcuate = StateTransition()
 
     def _get_analysis_sheet_id(self):
-        return Transaction().context['active_id']
+        return Transaction().context.get('lims_analysis_sheet', None)
 
     def transition_check(self):
         AnalysisSheet = Pool().get('lims.analysis_sheet')
@@ -908,14 +859,6 @@ class InternalRelationsCalc(Wizard):
                 return None
         return variables
 
-
-class LineInternalRelationsCalc(InternalRelationsCalc):
-    'Internal Relations Calculation'
-    __name__ = 'lims.analysis_sheet_data.internal_relations_calc'
-
-    def _get_analysis_sheet_id(self):
-        return Transaction().context.get('lims_analysis_sheet', None)
-
     def end(self):
         return 'reload'
 
@@ -942,7 +885,7 @@ class ResultsVerification(Wizard):
     verify = StateTransition()
 
     def _get_analysis_sheet_id(self):
-        return Transaction().context['active_id']
+        return Transaction().context.get('lims_analysis_sheet', None)
 
     def transition_check(self):
         AnalysisSheet = Pool().get('lims.analysis_sheet')
@@ -1139,14 +1082,6 @@ class ResultsVerification(Wizard):
             else:
                 return gettext('lims.msg_out')
 
-
-class LineResultsVerification(ResultsVerification):
-    'Results Verification'
-    __name__ = 'lims.analysis_sheet_data.results_verification'
-
-    def _get_analysis_sheet_id(self):
-        return Transaction().context.get('lims_analysis_sheet', None)
-
     def end(self):
         return 'reload'
 
@@ -1160,7 +1095,7 @@ class EvaluateRules(Wizard):
     evaluate = StateTransition()
 
     def _get_analysis_sheet_id(self):
-        return Transaction().context['active_id']
+        return Transaction().context.get('lims_analysis_sheet', None)
 
     def transition_check(self):
         AnalysisSheet = Pool().get('lims.analysis_sheet')
@@ -1195,14 +1130,6 @@ class EvaluateRules(Wizard):
                     if rule.eval_sheet_condition(line):
                         rule.exec_sheet_action(line)
         return 'end'
-
-
-class LineEvaluateRules(EvaluateRules):
-    'Evaluate Rules'
-    __name__ = 'lims.analysis_sheet_data.evaluate_rules'
-
-    def _get_analysis_sheet_id(self):
-        return Transaction().context.get('lims_analysis_sheet', None)
 
     def end(self):
         return 'reload'
