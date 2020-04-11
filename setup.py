@@ -36,8 +36,8 @@ major_version = int(major_version)
 minor_version = int(minor_version)
 
 # TODO: check new openpyxl versions, v.3 seems to be buggy in PyPI
-requires = ['pytz', 'xlrd', 'xlutils', 'PyPDF2', 'unidecode', 'formulas',
-    'openpyxl==2.6.4', 'pandas']
+requires = ['Click', 'formulas', 'openpyxl==2.6.4', 'pandas', 'psycopg2',
+    'PyPDF2', 'pytz', 'unidecode', 'xlrd', 'xlutils']
 packages = []
 package_dir = {}
 package_data = {}
@@ -75,6 +75,7 @@ for name in os.listdir('.'):
     if data:
         package_data[subpackage] = data
 requires.append(get_require_version('trytond'))
+requires.append(get_require_version('proteus'))
 
 tests_require = [get_require_version('proteus')]
 dependency_links = []
@@ -82,16 +83,20 @@ dependency_links = []
 if __name__ == '__main__':
     setup(name='kalenis_lims',
         version=version,
-        description='Kalenis LIMS & ERP',
+        description='Kalenis LIMS',
         long_description=read('README.md'),
         author='Kalenis',
         author_email='info@kalenislims.com',
         url='http://www.kalenislims.com/',
-        download_url='https://bitbucket.org/kalenis/kalenislims',
+        download_url='https://github.com/Kalenis/kalenislims',
         keywords='',
         package_dir=package_dir,
         packages=packages,
         package_data=package_data,
+        py_modules=['kalenis_cli'],
+        data_files={
+            "kalenis.conf.dist": ["kalenis.conf.dist"]
+            },
         classifiers=[
             'Development Status :: 5 - Production/Stable',
             'Environment :: Plugins',
@@ -119,6 +124,9 @@ if __name__ == '__main__':
         dependency_links=dependency_links,
         zip_safe=False,
         entry_points="""
+        [console_scripts]
+        kalenis-cli = kalenis_cli:cli
+
         [trytond.modules]
         %s
         """ % '\n'.join(module_entry_points),
