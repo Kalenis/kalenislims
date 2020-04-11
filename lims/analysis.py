@@ -108,11 +108,21 @@ class Typification(ModelSQL, ModelView):
         cls._order.insert(2, ('analysis', 'ASC'))
         cls._order.insert(3, ('method', 'ASC'))
         t = cls.__table__()
-        cls._sql_constraints += [
-            ('product_matrix_analysis_method_uniq',
-                Unique(t, t.product_type, t.matrix, t.analysis, t.method),
-                'lims.msg_typification_unique_id'),
-            ]
+
+        # Add unique index if quality control module is not installed
+        Module = Pool().get('ir.module')
+        cursor = Transaction().connection.cursor()
+        cursor.execute('SELECT state '
+            'FROM "' + Module._table + '" '
+            'WHERE name = %s ',
+            ('lims_quality_control', ))
+        res = cursor.fetchall()
+        if res[0][0] == 'not activated':
+            cls._sql_constraints += [
+                ('product_matrix_analysis_method_uniq',
+                    Unique(t, t.product_type, t.matrix, t.analysis, t.method),
+                    'lims.msg_typification_unique_id'),
+                ]
 
     @staticmethod
     def default_limit_digits():
