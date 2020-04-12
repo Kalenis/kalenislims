@@ -74,7 +74,6 @@ for name in os.listdir('.'):
         data.append(data_pattern)
     if data:
         package_data[subpackage] = data
-packages.append('.')
 requires.append(get_require_version('trytond'))
 requires.append(get_require_version('proteus'))
 
@@ -91,11 +90,13 @@ if __name__ == '__main__':
         url='http://www.kalenislims.com/',
         download_url='https://github.com/Kalenis/kalenislims',
         keywords='',
-        include_package_data=True,
         package_dir=package_dir,
         packages=packages,
         package_data=package_data,
         py_modules=['kalenis_cli'],
+        data_files=[
+            ('/kalenis_lims', ['kalenis.conf.dist'])
+            ],
         classifiers=[
             'Development Status :: 5 - Production/Stable',
             'Environment :: Plugins',

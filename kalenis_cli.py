@@ -23,7 +23,8 @@ def get_config():
     Path(cfg_dir).mkdir(exist_ok=True)
     cfg_file = os.path.join(cfg_dir, 'kalenis.conf')
     if not os.path.isfile(cfg_file):
-        source = pkg_resources.resource_filename(__name__, 'kalenis.conf.dist')
+        source = pkg_resources.resource_filename(
+            __name__, '/kalenis_lims/kalenis.conf.dist')
         copyfile(source, cfg_file)
     return cfg_file
 
