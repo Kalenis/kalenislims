@@ -36,8 +36,8 @@ major_version = int(major_version)
 minor_version = int(minor_version)
 
 # TODO: check new openpyxl versions, v.3 seems to be buggy in PyPI
-requires = ['Click', 'formulas', 'openpyxl==2.6.4', 'pandas', 'psycopg2',
-    'PyPDF2', 'pytz', 'unidecode', 'xlrd', 'xlutils']
+requires = ['appdirs', 'Click', 'formulas', 'openpyxl==2.6.4', 'pandas',
+    'psycopg2', 'PyPDF2', 'pytz', 'unidecode', 'xlrd', 'xlutils']
 packages = []
 package_dir = {}
 package_data = {}
@@ -74,6 +74,7 @@ for name in os.listdir('.'):
         data.append(data_pattern)
     if data:
         package_data[subpackage] = data
+packages.append('.')
 requires.append(get_require_version('trytond'))
 requires.append(get_require_version('proteus'))
 
@@ -90,13 +91,11 @@ if __name__ == '__main__':
         url='http://www.kalenislims.com/',
         download_url='https://github.com/Kalenis/kalenislims',
         keywords='',
+        include_package_data=True,
         package_dir=package_dir,
         packages=packages,
         package_data=package_data,
         py_modules=['kalenis_cli'],
-        data_files={
-            "kalenis.conf.dist": ["kalenis.conf.dist"]
-            },
         classifiers=[
             'Development Status :: 5 - Production/Stable',
             'Environment :: Plugins',
