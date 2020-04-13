@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<tryton>
+    <data grouped="1">
+        <record model="ir.message" id="msg_delete_template">
+            <field name="text">Template "%(template)s" can not be deleted.</field>
+        </record>
+        <record model="ir.message" id="msg_delete_test">
+            <field name="text">Test "%(test)s" can not be deleted.</field>
+        </record>
+        <record model="ir.message" id="msg_no_entry_quality">
+            <field name="text">No default entry for quality control.</field>
+        </record>
+        <record model="ir.message" id="msg_no_qc_fraction_type">
+            <field name="text">No quality control fraction type defined.</field>
+        </record>
+        <record model="ir.message" id="msg_no_qc_default_configuration">
+            <field name="text">Missing package type or fraction state for qc fraction type.</field>
+        </record>
+        <record model="ir.message" id="msg_sample_used">
+            <field name="text">Sample already used for a test.</field>
+        </record>
+        <record model="ir.message" id="msg_missing_accepted_lines">
+            <field name="text">There are lines without accepted.</field>
+        </record>
+        <record model="ir.message" id="msg_missing_results_report">
+            <field name="text">There are lines without results report.</field>
+        </record>
+        <record model="ir.message" id="msg_missing_countersample">
+            <field name="text">Missing countersample.</field>
+        </record>
+        <record model="ir.message" id="msg_records_not_selected">
+            <field name="text">Records are not selected.</field>
+        </record>
+        <record model="ir.message" id="msg_not_test_sample">
+            <field name="text">Sample must be already used for a test.</field>
+        </record>
+        <record model="ir.message" id="msg_has_countersample">
+            <field name="text">Sample already has a countersample.</field>
+        </record>
+        <record model="ir.message" id="msg_can_not_print_test">
+            <field name="text">Test is not finished.</field>
+        </record>
+        <record model="ir.message" id="msg_missing_template_lines">
+            <field name="text">Template does not have lines.</field>
+        </record>
+        <record model="ir.message" id="msg_template_not_draft">
+            <field name="text">Template is not in draft state.</field>
+        </record>
+    </data>
+</tryton>

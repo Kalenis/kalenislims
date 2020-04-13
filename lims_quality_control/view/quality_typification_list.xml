@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="quality_template"/>
+    <field name="quality_test_report"/>
+    <field name="quality_order"/>
+    <field name="analysis"/>
+    <field name="method_view"/>
+    <field name="valid_value"/>
+    <field name="quality_min"/>
+    <field name="quality_max"/>
+    <field name="calc_decimals"/>
+    <field name="initial_concentration"/>
+    <field name="start_uom"/>
+    <field name="final_concentration"/>
+    <field name="end_uom"/>
+    <field name="default_repetitions"/>
+    <field name="technical_scope_versions"/>
+    <field name="comments"/>
+    <field name="additional"/>
+    <field name="additionals"/>
+    <field name="by_default"/>
+    <field name="report"/>
+    <field name="check_result_limits"/>
+    <field name="report_type"/>
+    <field name="report_result_type"/>
+    <field name="valid_view"/>
+</tree>

@@ -3,6 +3,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import logging
+import pandas as pd
 from io import BytesIO
 from math import sqrt
 
@@ -23,14 +24,6 @@ __all__ = ['RangeType', 'Range', 'ControlTendency', 'ControlTendencyDetail',
     'MeansDeviationsCalcResult2', 'MeansDeviationsCalc',
     'TendenciesAnalysisStart', 'TendenciesAnalysisResult',
     'TendenciesAnalysis', 'PrintControlChart', 'ControlChartReport']
-
-CAN_PLOT = False
-try:
-    import pandas as pd
-    CAN_PLOT = True
-except ImportError:
-    logging.getLogger(__name__).warning(
-        'Unable to import pandas. Plotting disabled.', exc_info=True)
 
 
 class RangeType(ModelSQL, ModelView):
@@ -1283,9 +1276,6 @@ class ControlChartReport(Report):
 
     @classmethod
     def _get_plot(cls, columns, records):
-        if not CAN_PLOT:
-            return None
-
         index = columns
         cols = []
         ds = {}

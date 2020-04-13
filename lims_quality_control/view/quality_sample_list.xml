@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="number" icon="icon"/>
+    <field name="lot"/>
+    <field name="product"/>
+    <field name="date" widget="date"/>
+    <field name="date" widget="time" string="Time"/>
+    <field name="create_date2" widget="date"/>
+    <field name="create_date2" widget="time" string="Time"/>
+    <field name="quality_test"/>
+    <field name="confirmed" tree_invisible="1" />
+    <field name="has_results_report" tree_invisible="1" />
+    <field name="countersample"/>
+    <field name="countersample_original_sample"/>
+</tree>

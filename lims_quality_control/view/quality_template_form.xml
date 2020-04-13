@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<form>
+    <group id="name" colspan="2">
+        <label name="name"/>
+        <field name="name" xexpand="1"/>
+        <label name="revision"/>
+        <field name="revision" xexpand="0"/>
+    </group>
+    <label name="product"/>
+    <field name="product"/>
+    <group id="dates" colspan="2" col="4">
+        <label name="start_date"/>
+        <field name="start_date"/>
+        <label name="end_date"/>
+        <field name="end_date"/>
+    </group>
+    <group id="checkboxes" colspan="2" col="-1">
+        <label name="countersample_required"/>
+        <field name="countersample_required"/>
+        <label name="range_validate"/>
+        <field name="range_validate"/>
+        <label name="range_type"/>
+        <field name="range_type"/>
+    </group>
+    <label name="company"/>
+    <field name="company"/>
+    <notebook colspan="4">
+        <page name="lines">
+            <field name="lines" colspan="4" mode="tree,form"
+                view_ids="lims_quality_control.quality_typification_view_list,lims_quality_control.quality_typification_view_form"/>
+        </page>
+        <page string="Comments" id="comments">
+            <field name="comments" colspan="4"/>
+        </page>
+    </notebook>
+    <group col="5" colspan="4" id="state">
+        <label name="state"/>
+        <field name="state"/>
+        <group col="3" id="buttons">
+            <button name="draft"/>
+            <button name="active"/>
+            <button name="not_active"/>
+        </group>
+    </group>
+</form>

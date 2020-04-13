@@ -1,0 +1,5 @@
+[database]
+uri = postgresql://localhost:5432
+
+[web]
+listen = *:8000

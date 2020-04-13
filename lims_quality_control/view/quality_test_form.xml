@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<form>
+    <group col="6" colspan="4" id="header_data">
+        <label name="number"/>
+        <field name="number"/>
+        <label name="test_date"/>
+        <field name="test_date"/>
+    </group>
+    <label name="template"/>
+    <field name="template"/>
+    <label name="lot"/>
+    <field name="lot"/>
+    <label name="product"/>
+    <field name="product"/>
+    <label name="sample"/>
+    <field name="sample"/>
+    <label name="company"/>
+    <field name="company"/>
+    <label name="countersample"/>
+    <field name="countersample"/>
+    <notebook colspan="4">
+        <page name="lines">
+            <field name="lines" colspan="4"/>
+        </page>
+        <page string="Comments" id="comments">
+            <field name="comments" colspan="4"/>
+        </page>
+    </notebook>
+    <group col="7" colspan="4" id="state">
+        <label name="state"/>
+        <field name="state"/>
+        <label name="confirmed_date"/>
+        <field name="confirmed_date"/>
+        <label name="success"/>
+        <field name="success"/>
+        <group col="3" id="buttons">
+            <button name="confirm"/>
+            <button name="manager_validate"/>
+        </group>
+    </group>
+</form>

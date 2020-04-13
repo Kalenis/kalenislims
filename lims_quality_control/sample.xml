@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+        <record model="ir.ui.view" id="lims_workyear_view_form">
+            <field name="model">lims.lab.workyear</field>
+            <field name="inherit" ref="lims.lims_workyear_view_form"/>
+            <field name="name">workyear_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_sample_view_form">
+            <field name="model">lims.sample</field>
+            <field name="inherit" ref="lims.lims_sample_view_form"/>
+            <field name="name">sample_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_sample_view_list">
+            <field name="model">lims.sample</field>
+            <field name="inherit" ref="lims.lims_sample_view_list"/>
+            <field name="name">sample_list</field>
+        </record>
+
+        <record model="ir.ui.view" id="quality_sample_view_form">
+            <field name="model">lims.sample</field>
+            <field name="type">form</field>
+            <field name="name">quality_sample_form</field>
+        </record>
+        <record model="ir.ui.view" id="quality_sample_view_list">
+            <field name="model">lims.sample</field>
+            <field name="type">tree</field>
+            <field name="name">quality_sample_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_sample_list">
+            <field name="name">Samples</field>
+            <field name="res_model">lims.sample</field>
+            <field name="domain" eval="[('quality', '=', True)]" pyson="1"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_sample_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="quality_sample_view_list"/>
+            <field name="act_window" ref="act_lims_sample_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_sample_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="quality_sample_view_form"/>
+            <field name="act_window" ref="act_lims_sample_list"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_lims_sample_list_domain_pending">
+            <field name="name">Pending</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain"
+                eval="[('test_state', '=', 'pending')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_sample_list"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_lims_sample_list_domain_done">
+            <field name="name">Done</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain"
+                eval="[('test_state', '=', 'done')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_sample_list"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_lims_sample_list_domain_countersample">
+            <field name="name">Countersample</field>
+            <field name="sequence" eval="30"/>
+            <field name="domain"
+                eval="[('test_state', '=', 'countersample')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_sample_list"/>
+        </record>
+
+        <menuitem parent="menu_quality_control" action="act_lims_sample_list"
+            id="lims_sample_menu" sequence="30"/>
+
+        <record model="ir.ui.view" id="sample_attribute_view_list">
+            <field name="model">lims.quality.sample.attribute</field>
+            <field name="type">tree</field>
+            <field name="name">sample_attribute_list</field>
+        </record>
+        <record model="ir.ui.view" id="sample_attribute_view_form">
+            <field name="model">lims.quality.sample.attribute</field>
+            <field name="type">form</field>
+            <field name="name">sample_attribute_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_sample_attribute">
+            <field name="name">Quality Sample Attributes</field>
+            <field name="res_model">lims.quality.sample.attribute</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_sample_attribute_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="sample_attribute_view_list"/>
+            <field name="act_window" ref="act_sample_attribute"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_sample_attribute_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="sample_attribute_view_form"/>
+            <field name="act_window" ref="act_sample_attribute"/>
+        </record>
+
+        <menuitem action="act_sample_attribute" id="menu_sample_attribute"
+            parent="menu_configuration" sequence="70"/>
+
+        <record model="ir.ui.view" id="lims_take_sample_start_view_form">
+            <field name="model">lims.take.sample.start</field>
+            <field name="type">form</field>
+            <field name="name">take_sample_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_take_sample">
+            <field name="name">Take Sample</field>
+            <field name="wiz_name">lims.take.sample</field>
+            <field name="model">stock.lot</field>
+        </record>
+        <record model="ir.action.keyword" id="lims_take_sample_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">stock.lot,-1</field>
+            <field name="action" ref="wiz_lims_take_sample"/>
+        </record>
+
+        <record model="ir.ui.view" id="lims_countersample_create_start_view_form">
+            <field name="model">lims.countersample.create.start</field>
+            <field name="type">form</field>
+            <field name="name">countersample_create_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_countersample_create">
+            <field name="name">Countersample Create</field>
+            <field name="wiz_name">lims.countersample.create</field>
+            <field name="model">lims.sample</field>
+        </record>
+        <record model="ir.action.keyword" id="lims_countersample_create_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.sample,-1</field>
+            <field name="action" ref="wiz_lims_countersample_create"/>
+        </record>
+
+        <record model="ir.action.report" id="report_sample_labels">
+            <field name="name">Sample Labels</field>
+            <field name="model">lims.sample</field>
+            <field name="report_name">lims.sample.labels.report</field>
+            <field name="report">lims/report/entry_labels_report.fodt</field>
+            <field name="extension">pdf</field>
+        </record>
+        <record model="ir.action.keyword" id="report_sample_labels_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.sample,-1</field>
+            <field name="action" ref="report_sample_labels"/>
+        </record>
+
+    </data>
+</tryton>

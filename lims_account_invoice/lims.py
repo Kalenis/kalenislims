@@ -136,9 +136,6 @@ class Service(metaclass=PoolMeta):
             'unit_price': Decimal('1.00'),
             'taxes': taxes_to_add,
             'account': account_revenue,
-            'analytic_distribution': (
-                product.template.analytic_distribution and
-                product.template.analytic_distribution.id or None),
             }
 
     @classmethod

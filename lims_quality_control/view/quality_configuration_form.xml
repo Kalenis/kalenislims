@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<form>
+    <label name="sample_location"/>
+    <field name="sample_location"/>
+    <label name="quality_sequence"/>
+    <field name="quality_sequence"/>
+    <field name="attributes" colspan="4"/>
+</form>

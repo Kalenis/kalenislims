@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/tree/field[@name='product_type']" position="before">
+        <field name="quality"/>
+    </xpath>
+</data>

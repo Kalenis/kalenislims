@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<form>
+    <label name="number"/>
+    <field name="number"/>
+    <label name="lot"/>
+    <field name="lot"/>
+    <label name="product"/>
+    <field name="product"/>
+    <label name="quality_test"/>
+    <field name="quality_test"/>
+    <label name="countersample"/>
+    <field name="countersample"/>
+    <label name="countersample_original_sample"/>
+    <field name="countersample_original_sample"/>
+    <notebook>
+        <page string="General" id="general">
+            <label name="date"/>
+            <field name="date"/>
+            <field name="fractions" colspan="4"/>
+        </page>
+        <page string="Attributes" id="attributes">
+            <field name="attributes" colspan="4"/>
+        </page>
+        <page string="Comments" id="comments">
+            <separator string="Report comments" colspan="4" id="report_comments"/>
+            <field name="report_comments" colspan="4"/>
+            <separator string="Comments" colspan="4" id="comments"/>
+            <field name="comments" colspan="4"/>
+        </page>
+    </notebook>
+</form>

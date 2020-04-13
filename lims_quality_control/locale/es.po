@@ -1,0 +1,1226 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:lims.analysis,quality_possible_values:"
+msgid "Possible Values"
+msgstr "Valores Posibles"
+
+msgctxt "field:lims.analysis,quality_type:"
+msgid "Quality Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.analysis,quality_uom:"
+msgid "Quality UoM"
+msgstr "UdM"
+
+msgctxt "field:lims.configuration,qc_fraction_type:"
+msgid "QC fraction type"
+msgstr "Tipo de fracción de QC"
+
+msgctxt "field:lims.countersample.create.start,countersamples:"
+msgid "Countersamples"
+msgstr "Contramuestras"
+
+msgctxt "field:lims.countersample.create.start,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:lims.countersample.create.start,location:"
+msgid "Location"
+msgstr "Ubicación Destino"
+
+msgctxt "field:lims.create.quality.test.start,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:lims.create.quality.test.start,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:lims.create.quality.test.start,product:"
+msgid "Product"
+msgstr "Producto"
+
+msgctxt "field:lims.create.quality.test.start,template:"
+msgid "Template"
+msgstr "Plantilla"
+
+msgctxt "field:lims.create.quality.test.start,test_created:"
+msgid "Test created"
+msgstr "Prueba creada"
+
+msgctxt "field:lims.lab.method,specification:"
+msgid "Specification"
+msgstr "Especificación"
+
+msgctxt "field:lims.lab.workyear,default_entry_quality:"
+msgid "Default entry quality"
+msgstr "Ingreso para calidad por defecto"
+
+msgctxt "field:lims.notebook.line,qualitative_value:"
+msgid "Qualitative Value"
+msgstr "Resultado Cualitativo"
+
+msgctxt "field:lims.notebook.line,quality_max:"
+msgid "Max"
+msgstr "Máximo"
+
+msgctxt "field:lims.notebook.line,quality_min:"
+msgid "Min"
+msgstr "Mínimo"
+
+msgctxt "field:lims.notebook.line,quality_test:"
+msgid "Quality Test"
+msgstr "Prueba"
+
+msgctxt "field:lims.notebook.line,quality_test_report:"
+msgid "Quality Test Report"
+msgstr "Informar en Prueba"
+
+msgctxt "field:lims.notebook.line,success:"
+msgid "Success"
+msgstr "Válido"
+
+msgctxt "field:lims.notebook.line,success_icon:"
+msgid "Success Icon"
+msgstr ""
+
+msgctxt "field:lims.notebook.line,test_value:"
+msgid "Test Value"
+msgstr "Valor de Prueba"
+
+msgctxt "field:lims.notebook.line,typification:"
+msgid "Typification"
+msgstr "Tipificación"
+
+msgctxt "field:lims.notebook.line,value:"
+msgid "Value"
+msgstr "Valor"
+
+msgctxt "field:lims.notebook.load_results_manual.line,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:lims.notebook.load_results_manual.line,qualitative_value:"
+msgid "Qualitative Value"
+msgstr "Resultado Cualitativo"
+
+msgctxt "field:lims.quality.configuration,attributes:"
+msgid "Attributes"
+msgstr "Atributos"
+
+msgctxt "field:lims.quality.configuration,create_date:"
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+msgctxt "field:lims.quality.configuration,create_uid:"
+msgid "Create User"
+msgstr "Usuario decreación"
+
+msgctxt "field:lims.quality.configuration,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:lims.quality.configuration,quality_sequence:"
+msgid "Quality Sequence"
+msgstr "Secuencia de Calidad"
+
+msgctxt "field:lims.quality.configuration,rec_name:"
+msgid "Record Name"
+msgstr "Nombre registro"
+
+msgctxt "field:lims.quality.configuration,sample_location:"
+msgid "Sample Location"
+msgstr "Ubicación para muestras"
+
+msgctxt "field:lims.quality.configuration,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.quality.configuration,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.quality.configuration.line,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:lims.quality.configuration.line,configuration:"
+msgid "Configuration"
+msgstr "Configuración"
+
+msgctxt "field:lims.quality.configuration.line,create_date:"
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+msgctxt "field:lims.quality.configuration.line,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
+msgctxt "field:lims.quality.configuration.line,document:"
+msgid "Document"
+msgstr "Documento"
+
+msgctxt "field:lims.quality.configuration.line,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:lims.quality.configuration.line,quality_sequence:"
+msgid "Quality Sequence"
+msgstr "Secuencia para Pruebas de Calidad"
+
+msgctxt "field:lims.quality.configuration.line,rec_name:"
+msgid "Record Name"
+msgstr "Nombre registro"
+
+msgctxt "field:lims.quality.configuration.line,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.quality.configuration.line,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.quality.qualitative.value,active:"
+msgid "Active"
+msgstr "Activo"
+
+msgctxt "field:lims.quality.qualitative.value,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:lims.quality.qualitative.value,create_date:"
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+msgctxt "field:lims.quality.qualitative.value,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
+msgctxt "field:lims.quality.qualitative.value,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:lims.quality.qualitative.value,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.quality.qualitative.value,rec_name:"
+msgid "Record Name"
+msgstr "Nombre registro"
+
+msgctxt "field:lims.quality.qualitative.value,typification:"
+msgid "Typification"
+msgstr "Tipificación"
+
+msgctxt "field:lims.quality.qualitative.value,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.quality.qualitative.value,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.quality.sample.attribute,create_date:"
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+msgctxt "field:lims.quality.sample.attribute,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
+msgctxt "field:lims.quality.sample.attribute,digits:"
+msgid "Digits"
+msgstr "Dígitos"
+
+msgctxt "field:lims.quality.sample.attribute,domain:"
+msgid "Domain"
+msgstr "Dominio"
+
+msgctxt "field:lims.quality.sample.attribute,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:lims.quality.sample.attribute,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.quality.sample.attribute,rec_name:"
+msgid "Record Name"
+msgstr "Nombre registro"
+
+msgctxt "field:lims.quality.sample.attribute,selection:"
+msgid "Selection"
+msgstr "Selección"
+
+msgctxt "field:lims.quality.sample.attribute,selection_json:"
+msgid "Selection JSON"
+msgstr "Selección JSON"
+
+msgctxt "field:lims.quality.sample.attribute,selection_sorted:"
+msgid "Selection Sorted"
+msgstr "Selección ordenada"
+
+msgctxt "field:lims.quality.sample.attribute,sets:"
+msgid "Sets"
+msgstr "Conjuntos"
+
+msgctxt "field:lims.quality.sample.attribute,string:"
+msgid "String"
+msgstr "Etiqueta"
+
+msgctxt "field:lims.quality.sample.attribute,type_:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.quality.sample.attribute,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.quality.sample.attribute,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt ""
+"field:lims.quality.sample.attribute-lims.quality.configuration,attribute:"
+msgid "Attribute"
+msgstr "Atributo"
+
+msgctxt ""
+"field:lims.quality.sample.attribute-"
+"lims.quality.configuration,configuration:"
+msgid "Set"
+msgstr "Set"
+
+msgctxt ""
+"field:lims.quality.sample.attribute-lims.quality.configuration,create_date:"
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+msgctxt ""
+"field:lims.quality.sample.attribute-lims.quality.configuration,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
+msgctxt "field:lims.quality.sample.attribute-lims.quality.configuration,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt ""
+"field:lims.quality.sample.attribute-lims.quality.configuration,rec_name:"
+msgid "Record Name"
+msgstr "Nombre registro"
+
+msgctxt ""
+"field:lims.quality.sample.attribute-lims.quality.configuration,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt ""
+"field:lims.quality.sample.attribute-lims.quality.configuration,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.quality.template,comments:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "field:lims.quality.template,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:lims.quality.template,countersample_required:"
+msgid "Countersample Required"
+msgstr "Contramuestra requerida"
+
+msgctxt "field:lims.quality.template,create_date:"
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+msgctxt "field:lims.quality.template,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
+msgctxt "field:lims.quality.template,document:"
+msgid "Document"
+msgstr "Documento"
+
+msgctxt "field:lims.quality.template,end_date:"
+msgid "End Date"
+msgstr "Fecha Vencimiento"
+
+msgctxt "field:lims.quality.template,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:lims.quality.template,lines:"
+msgid "Lines"
+msgstr "Líneas"
+
+msgctxt "field:lims.quality.template,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.quality.template,product:"
+msgid "Product"
+msgstr "Producto"
+
+msgctxt "field:lims.quality.template,range_type:"
+msgid "Range Type"
+msgstr "Tipo de rango"
+
+msgctxt "field:lims.quality.template,range_validate:"
+msgid "Ranges Validate"
+msgstr "Validar contra rangos"
+
+msgctxt "field:lims.quality.template,rec_name:"
+msgid "Record Name"
+msgstr "Nombre registro"
+
+msgctxt "field:lims.quality.template,revision:"
+msgid "Revision"
+msgstr "Versión"
+
+msgctxt "field:lims.quality.template,start_date:"
+msgid "Start Date"
+msgstr "Fecha Inicio"
+
+msgctxt "field:lims.quality.template,state:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:lims.quality.template,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.quality.template,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.quality.test,comments:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "field:lims.quality.test,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:lims.quality.test,confirmed_date:"
+msgid "Confirmed Date"
+msgstr "Fecha Confirmación"
+
+msgctxt "field:lims.quality.test,countersample:"
+msgid "Countersample"
+msgstr "Contramuestra"
+
+msgctxt "field:lims.quality.test,create_date:"
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+msgctxt "field:lims.quality.test,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
+msgctxt "field:lims.quality.test,document:"
+msgid "Document"
+msgstr "Documento"
+
+msgctxt "field:lims.quality.test,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:lims.quality.test,lines:"
+msgid "Lines"
+msgstr "Líneas"
+
+msgctxt "field:lims.quality.test,lot:"
+msgid "Lot"
+msgstr "Lote"
+
+msgctxt "field:lims.quality.test,number:"
+msgid "Number"
+msgstr "Número"
+
+msgctxt "field:lims.quality.test,product:"
+msgid "Product"
+msgstr "Producto"
+
+msgctxt "field:lims.quality.test,rec_name:"
+msgid "Record Name"
+msgstr "Nombre registro"
+
+msgctxt "field:lims.quality.test,sample:"
+msgid "Sample"
+msgstr "Muestra "
+
+msgctxt "field:lims.quality.test,state:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:lims.quality.test,success:"
+msgid "Success"
+msgstr "Válido"
+
+msgctxt "field:lims.quality.test,template:"
+msgid "Template"
+msgstr "Plantilla"
+
+msgctxt "field:lims.quality.test,test_date:"
+msgid "Date"
+msgstr "Fecha de recepción"
+
+msgctxt "field:lims.quality.test,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:lims.quality.test,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:lims.sample,attributes:"
+msgid "Attributes"
+msgstr "Atributos"
+
+msgctxt "field:lims.sample,countersample:"
+msgid "Countersample"
+msgstr "Contramuestra"
+
+msgctxt "field:lims.sample,countersample_original_sample:"
+msgid "Countersample Original sample"
+msgstr "Muestra Origen"
+
+msgctxt "field:lims.sample,countersamples:"
+msgid "Countersamples"
+msgstr "Contramuestras"
+
+msgctxt "field:lims.sample,lot:"
+msgid "Lot"
+msgstr "Lote"
+
+msgctxt "field:lims.sample,product:"
+msgid "Product"
+msgstr "Producto"
+
+msgctxt "field:lims.sample,quality:"
+msgid "Quality"
+msgstr "Calidad"
+
+msgctxt "field:lims.sample,quality_test:"
+msgid "Test"
+msgstr "Prueba"
+
+msgctxt "field:lims.sample,test_state:"
+msgid "Test State"
+msgstr "Estado de Prueba"
+
+msgctxt "field:lims.take.sample.start,attributes:"
+msgid "Attributes"
+msgstr "Atributos"
+
+msgctxt "field:lims.take.sample.start,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:lims.take.sample.start,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:lims.take.sample.start,label:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "field:lims.template.add.service.start,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:lims.template.add.service.start,service:"
+msgid "Service"
+msgstr "Servicio"
+
+msgctxt "field:lims.typification,quality:"
+msgid "Quality"
+msgstr "Calidad"
+
+msgctxt "field:lims.typification,quality_max:"
+msgid "Max"
+msgstr "Máximo"
+
+msgctxt "field:lims.typification,quality_min:"
+msgid "Min"
+msgstr "Mínimo"
+
+msgctxt "field:lims.typification,quality_order:"
+msgid "Quality Order"
+msgstr "Orden"
+
+msgctxt "field:lims.typification,quality_possible_values:"
+msgid "Possible Values"
+msgstr "Valores Posibles"
+
+msgctxt "field:lims.typification,quality_template:"
+msgid "Quality Template"
+msgstr "Plantilla"
+
+msgctxt "field:lims.typification,quality_test_report:"
+msgid "Quality Test Report"
+msgstr "Informar en Prueba"
+
+msgctxt "field:lims.typification,quality_type:"
+msgid "Quality Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.typification,specification:"
+msgid "Specification"
+msgstr "Especificación"
+
+msgctxt "field:lims.typification,valid_value:"
+msgid "Valid Value"
+msgstr "Valor Válido"
+
+msgctxt "field:lims.typification,valid_value_domain:"
+msgid "Valid Value domain"
+msgstr ""
+
+msgctxt "field:product.template,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:product.template,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "help:lims.quality.sample.attribute,selection:"
+msgid "A couple of key and label separated by \":\" per line"
+msgstr "Clave y valor separados por \\\":\\\" en cada línea."
+
+msgctxt "help:lims.quality.sample.attribute,selection_sorted:"
+msgid "If the selection must be sorted on label"
+msgstr ""
+
+msgctxt "model:ir.action,name:"
+msgid "Quality Configuration Line"
+msgstr "Línea de Configuración"
+
+msgctxt "model:ir.action,name:act_lims_sample_list"
+msgid "Samples"
+msgstr "Muestras"
+
+msgctxt "model:ir.action,name:act_quality_configuration"
+msgid "Quality Configuration"
+msgstr "Configuración"
+
+msgctxt "model:ir.action,name:act_quality_qualitative_value"
+msgid "Quality Value"
+msgstr "Valor"
+
+msgctxt "model:ir.action,name:act_quality_template"
+msgid "Quality Template"
+msgstr "Plantilla"
+
+msgctxt "model:ir.action,name:act_quality_test"
+msgid "Quality Test"
+msgstr "Prueba"
+
+msgctxt "model:ir.action,name:act_sample_attribute"
+msgid "Quality Sample Attributes"
+msgstr "Atributos"
+
+msgctxt "model:ir.action,name:report_sample_labels"
+msgid "Sample Labels"
+msgstr "Etiquetas de muestra (Laser)"
+
+msgctxt "model:ir.action,name:report_test"
+msgid "Test Report"
+msgstr "Informe"
+
+msgctxt "model:ir.action,name:wiz_lims_countersample_create"
+msgid "Countersample Create"
+msgstr "Crear Contramuestra"
+
+msgctxt "model:ir.action,name:wiz_lims_create_quality_test"
+msgid "Create Quality Test"
+msgstr "Crear Prueba de Calidad"
+
+msgctxt "model:ir.action,name:wiz_lims_take_sample"
+msgid "Take Sample"
+msgstr "Tomar Muestra"
+
+msgctxt "model:ir.action,name:wiz_lims_template_add_service"
+msgid "Add Service"
+msgstr "Añadir Servicio"
+
+msgctxt "model:ir.action,name:wiz_lims_test_results_report"
+msgid "Test Results Reports"
+msgstr "Informes de Resultados"
+
+msgctxt "model:ir.action,name:wiz_print_test"
+msgid "Test Report"
+msgstr "Informe"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_analysis_list_domain_all"
+msgid "All"
+msgstr "Todos"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_analysis_list_domain_qualitative"
+msgid "Qualitative"
+msgstr "Cualitativo"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_analysis_list_domain_quantitative"
+msgid "Quantitative"
+msgstr "Cuantitativo"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_sample_list_domain_countersample"
+msgid "Countersample"
+msgstr "Contramuestra"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_sample_list_domain_done"
+msgid "Done"
+msgstr "Realizado"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_sample_list_domain_pending"
+msgid "Pending"
+msgstr "Pendiente"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_quality_template_domain_active"
+msgid "Active"
+msgstr "Activa"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_quality_template_domain_all"
+msgid "All"
+msgstr "Todas"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_quality_template_domain_draft"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_quality_template_domain_not_active"
+msgid "Not Active"
+msgstr "Desactivada"
+
+msgctxt "model:ir.action.act_window.domain,name:act_quality_test_domain_all"
+msgid "All"
+msgstr "Todos"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_quality_test_domain_confirmed"
+msgid "Confirmed"
+msgstr "Confirmado"
+
+msgctxt "model:ir.action.act_window.domain,name:act_quality_test_domain_draft"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_quality_test_domain_failed"
+msgid "Failed"
+msgstr "Fallido"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_quality_test_domain_successful"
+msgid "Successful"
+msgstr "Válido"
+
+msgctxt "model:ir.message,text:msg_can_not_print_test"
+msgid "Test is not finished."
+msgstr "La prueba no fue finalizada"
+
+msgctxt "model:ir.message,text:msg_delete_template"
+msgid "Template \"%(template)s\" can not be deleted."
+msgstr "La plantilla \"%(template)s\" no puede ser eliminada."
+
+msgctxt "model:ir.message,text:msg_delete_test"
+msgid "Test \"%(test)s\" can not be deleted."
+msgstr "Ls prueba \"%(test)s\" no puede ser eliminada."
+
+msgctxt "model:ir.message,text:msg_has_countersample"
+msgid "Sample already has a countersample."
+msgstr "La muestra ya posee una contramuestra"
+
+msgctxt "model:ir.message,text:msg_missing_accepted_lines"
+msgid "There are lines without accepted."
+msgstr "Existen líneas no aceptadas"
+
+msgctxt "model:ir.message,text:msg_missing_countersample"
+msgid "Missing countersample."
+msgstr "Falta contramuestra"
+
+msgctxt "model:ir.message,text:msg_missing_results_report"
+msgid "There are lines without results report."
+msgstr "Existen líneas sin informe de resultados"
+
+msgctxt "model:ir.message,text:msg_missing_template_lines"
+msgid "Template does not have lines."
+msgstr "La plantilla no posee líneas"
+
+msgctxt "model:ir.message,text:msg_no_entry_quality"
+msgid "No default entry for quality control."
+msgstr "No hay ingreso por defecto para control de calidad"
+
+msgctxt "model:ir.message,text:msg_no_qc_default_configuration"
+msgid "Missing package type or fraction state for qc fraction type."
+msgstr "Falta definir el tipo de paquete o estado para la fracción de calidad"
+
+msgctxt "model:ir.message,text:msg_no_qc_fraction_type"
+msgid "No quality control fraction type defined."
+msgstr "No se ha definido el tipo de fracción de calidad"
+
+msgctxt "model:ir.message,text:msg_not_test_sample"
+msgid "Sample must be already used for a test."
+msgstr "La muestra debe estar asociada a un test"
+
+msgctxt "model:ir.message,text:msg_records_not_selected"
+msgid "Records are not selected."
+msgstr "No hay registros seleccionados"
+
+msgctxt "model:ir.message,text:msg_sample_used"
+msgid "Sample already used for a test."
+msgstr "La muestra ya fue usada en una prueba"
+
+msgctxt "model:ir.message,text:msg_template_not_draft"
+msgid "Template is not in draft state."
+msgstr "La plantilla no se encuentra en estado borrador"
+
+msgctxt "model:ir.model.button,confirm:quality_apply_templates_button"
+msgid ""
+"Applying templates will remove any data already introduced in the test. Are "
+"you sure you want to apply templates?"
+msgstr ""
+
+msgctxt "model:ir.model.button,string:quality_apply_templates_button"
+msgid "Apply Templates"
+msgstr ""
+
+msgctxt "model:ir.model.button,string:quality_confirm_button"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "model:ir.model.button,string:quality_draft_button"
+msgid "Reset to Draft"
+msgstr "Restaurar a borrador"
+
+msgctxt "model:ir.model.button,string:quality_manager_validate_button"
+msgid "Validate"
+msgstr "Validar"
+
+msgctxt "model:ir.model.button,string:quality_template_active_button"
+msgid "Activate"
+msgstr "Activar"
+
+msgctxt "model:ir.model.button,string:quality_template_draft_button"
+msgid "Reset to Draft"
+msgstr "Restaurar a borrador"
+
+msgctxt "model:ir.model.button,string:quality_template_not_active_button"
+msgid "Deactivate"
+msgstr "Desactivar"
+
+msgctxt "model:ir.rule.group,name:"
+msgid "User in company"
+msgstr "Usuario en empresa"
+
+msgctxt "model:ir.rule.group,name:rule_group_quality_template"
+msgid "User in company"
+msgstr "Usuario en empresa"
+
+msgctxt "model:ir.rule.group,name:rule_group_quality_test"
+msgid "User in company"
+msgstr "Usuario en empresa"
+
+msgctxt "model:ir.sequence,name:sequence_quality"
+msgid "Quality Control"
+msgstr "Control de Calidad"
+
+msgctxt "model:ir.sequence.type,name:sequence_type_quality"
+msgid "Quality Control"
+msgstr "Control de Calidad"
+
+msgctxt "model:ir.ui.menu,name:lims_sample_menu"
+msgid "Samples"
+msgstr "Muestras"
+
+msgctxt "model:ir.ui.menu,name:menu_configuration"
+msgid "Configuration"
+msgstr "Configuración"
+
+msgctxt "model:ir.ui.menu,name:menu_quality_configuration"
+msgid "Quality Configuration"
+msgstr "Configuración"
+
+msgctxt "model:ir.ui.menu,name:menu_quality_control"
+msgid "Quality Control"
+msgstr "Control de Calidad"
+
+msgctxt "model:ir.ui.menu,name:menu_quality_template"
+msgid "Templates"
+msgstr "Plantillas"
+
+msgctxt "model:ir.ui.menu,name:menu_quality_test"
+msgid "Tests"
+msgstr "Pruebas"
+
+msgctxt "model:ir.ui.menu,name:menu_sample_attribute"
+msgid "Quality Sample Attributes"
+msgstr "Atributos"
+
+msgctxt "model:lims.countersample.create.start,name:"
+msgid "Countersample Create Start"
+msgstr ""
+
+msgctxt "model:lims.create.quality.test.start,name:"
+msgid "Create Quality Test Start"
+msgstr ""
+
+msgctxt "model:lims.quality.configuration,name:"
+msgid "Quality configuration"
+msgstr "Configuración"
+
+msgctxt "model:lims.quality.configuration.line,name:"
+msgid "Quality Configuration Model"
+msgstr ""
+
+msgctxt "model:lims.quality.qualitative.value,name:"
+msgid "Quality Value"
+msgstr "Valor"
+
+msgctxt "model:lims.quality.sample.attribute,name:"
+msgid "Sample Attribute"
+msgstr "Atributo de Muestra"
+
+msgctxt "model:lims.quality.sample.attribute-lims.quality.configuration,name:"
+msgid "Sample Attribute - Set"
+msgstr ""
+
+msgctxt "model:lims.quality.template,name:"
+msgid "Quality Template"
+msgstr "Plantilla"
+
+msgctxt "model:lims.quality.test,name:"
+msgid "Quality Test"
+msgstr "Prueba"
+
+msgctxt "model:lims.take.sample.start,name:"
+msgid "Take Sample Start"
+msgstr ""
+
+msgctxt "model:lims.template.add.service.start,name:"
+msgid "Template Add Service Start"
+msgstr ""
+
+msgctxt "model:res.group,name:group_quality_control"
+msgid "LIMS Quality Control"
+msgstr "Control de Calidad"
+
+msgctxt "model:res.group,name:group_quality_control_admin"
+msgid "LIMS Quality Control Administration"
+msgstr "Administración de Control de Calidad"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "-"
+msgstr "-"
+
+msgctxt "report:lims.quality.control.report:"
+msgid ":"
+msgstr ":"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "Analysts:"
+msgstr "Analistas"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "COUNTERSAMPLE"
+msgstr "CONTRAMUESTRA"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "LOT:"
+msgstr "LOTE:"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "Min-Max"
+msgstr "Min-Max"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "PRODUCT"
+msgstr "PRODUCTO"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "Quality Test Report"
+msgstr "Informe de Prueba de Calidad"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "RESULTS"
+msgstr "RESULTADOS"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "Result"
+msgstr "Resultado"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "Result:"
+msgstr "Resultado:"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "SAMPLE"
+msgstr "MUESTRA"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "Signature"
+msgstr "Firma"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "Specification"
+msgstr "Especificación"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "TEST"
+msgstr "PRUEBA"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "Valid"
+msgstr "Válido"
+
+msgctxt "report:lims.quality.control.report:"
+msgid "_____________________________"
+msgstr "_____________________________"
+
+msgctxt "report:lims.sample.labels.report:"
+msgid "*"
+msgstr "*"
+
+msgctxt "report:lims.sample.labels.report:"
+msgid "-"
+msgstr "-"
+
+msgctxt "report:lims.sample.labels.report:"
+msgid "C"
+msgstr "C"
+
+msgctxt "report:lims.sample.labels.report:"
+msgid "F"
+msgstr "F"
+
+msgctxt "selection:lims.analysis,quality_type:"
+msgid "Qualitative"
+msgstr "Cualitativo"
+
+msgctxt "selection:lims.analysis,quality_type:"
+msgid "Quantitative"
+msgstr "Cuantitativo"
+
+msgctxt "selection:lims.quality.sample.attribute,type_:"
+msgid "Boolean"
+msgstr "Booleano"
+
+msgctxt "selection:lims.quality.sample.attribute,type_:"
+msgid "Char"
+msgstr "Texto"
+
+msgctxt "selection:lims.quality.sample.attribute,type_:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "selection:lims.quality.sample.attribute,type_:"
+msgid "DateTime"
+msgstr "Fecha/Hora"
+
+msgctxt "selection:lims.quality.sample.attribute,type_:"
+msgid "Float"
+msgstr "Número coma flotante"
+
+msgctxt "selection:lims.quality.sample.attribute,type_:"
+msgid "Integer"
+msgstr "Entero"
+
+msgctxt "selection:lims.quality.sample.attribute,type_:"
+msgid "Numeric"
+msgstr "Númerico"
+
+msgctxt "selection:lims.quality.sample.attribute,type_:"
+msgid "Selection"
+msgstr "Selección"
+
+msgctxt "selection:lims.quality.template,state:"
+msgid "Active"
+msgstr "Activo"
+
+msgctxt "selection:lims.quality.template,state:"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "selection:lims.quality.template,state:"
+msgid "Not Active"
+msgstr "Desactivado"
+
+msgctxt "selection:lims.quality.test,state:"
+msgid "Confirmed"
+msgstr "Confirmado"
+
+msgctxt "selection:lims.quality.test,state:"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "selection:lims.quality.test,state:"
+msgid "Failed"
+msgstr "Fallido"
+
+msgctxt "selection:lims.quality.test,state:"
+msgid "Successful"
+msgstr "Válido"
+
+msgctxt "selection:lims.sample,test_state:"
+msgid "Countersample"
+msgstr "Contramuestra"
+
+msgctxt "selection:lims.sample,test_state:"
+msgid "Done"
+msgstr "Realizado"
+
+msgctxt "selection:lims.sample,test_state:"
+msgid "Pending"
+msgstr "Pendiente"
+
+msgctxt "selection:lims.typification,quality_type:"
+msgid "Qualitative"
+msgstr "Cualitativo"
+
+msgctxt "selection:lims.typification,quality_type:"
+msgid "Quantitative"
+msgstr "Cuantitativo"
+
+msgctxt "view:lims.analysis:"
+msgid "Quality"
+msgstr "Calidad"
+
+msgctxt "view:lims.lab.method:"
+msgid "Results Waiting"
+msgstr ""
+
+msgctxt "view:lims.lab.method:"
+msgid "Specification"
+msgstr "Especificación"
+
+msgctxt "view:lims.quality.template:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "view:lims.quality.test:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "view:lims.quality.test:"
+msgid "Test Time"
+msgstr ""
+
+msgctxt "view:lims.sample:"
+msgid "Attributes"
+msgstr "Atributos"
+
+msgctxt "view:lims.sample:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "view:lims.sample:"
+msgid "General"
+msgstr "General"
+
+msgctxt "view:lims.sample:"
+msgid "Quality"
+msgstr "Calidad"
+
+msgctxt "view:lims.sample:"
+msgid "Report comments"
+msgstr "Observaciones informe"
+
+msgctxt "view:lims.sample:"
+msgid "Time"
+msgstr "Tiempo"
+
+msgctxt "view:lims.typification:"
+msgid "Additional analysis"
+msgstr "Análisis adicionales"
+
+msgctxt "view:lims.typification:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "view:lims.typification:"
+msgid "Specification"
+msgstr "Especificación"
+
+msgctxt "view:lims.typification:"
+msgid "Technical scope versions"
+msgstr "Versiones de alcance técnico"
+
+msgctxt "wizard_button:lims.countersample.create,ask,create_:"
+msgid "Create"
+msgstr "Crear"
+
+msgctxt "wizard_button:lims.countersample.create,ask,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.countersample.create,location,create_:"
+msgid "Create"
+msgstr "Crear"
+
+msgctxt "wizard_button:lims.countersample.create,location,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.countersample.create,start,create:"
+msgid "Create"
+msgstr "Crear"
+
+msgctxt "wizard_button:lims.countersample.create,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.create.quality.test,ask,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.create.quality.test,ask,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.create.quality.test,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.create.quality.test,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.take.sample,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.take.sample,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.template.add.service,ask,add:"
+msgid "Add"
+msgstr "Añadir"
+
+msgctxt "wizard_button:lims.template.add.service,ask,end:"
+msgid "Cancel"
+msgstr "Cancelar"
