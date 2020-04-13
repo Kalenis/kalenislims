@@ -117,7 +117,7 @@ class Typification(ModelSQL, ModelView):
             'WHERE name = %s ',
             ('lims_quality_control', ))
         res = cursor.fetchall()
-        if res[0][0] == 'not activated':
+        if res and res[0][0] == 'not activated':
             cls._sql_constraints += [
                 ('product_matrix_analysis_method_uniq',
                     Unique(t, t.product_type, t.matrix, t.analysis, t.method),
