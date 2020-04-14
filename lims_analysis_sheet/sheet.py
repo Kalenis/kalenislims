@@ -593,7 +593,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         line[interface.analysis_field.alias] = nl.analysis.id
                     else:
                         line[interface.analysis_field.alias] = (
-                            nl.analysis.code)
+                            nl.analysis.rec_name)
                 if interface.fraction_field:
                     if interface.fraction_field.type_ == 'many2one':
                         line[interface.fraction_field.alias] = nl.fraction.id

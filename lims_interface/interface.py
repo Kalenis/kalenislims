@@ -1035,7 +1035,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
 
         nb_line = NotebookLine.search([
             ('notebook.fraction.number', '=', fraction_value),
-            ('analysis.code', '=', analysis_value),
+            ('analysis.code', '=', analysis_value.split(' ')[0]),
             ('analysis.automatic_acquisition', '=', True),
             ('repetition', '=', repetition_value),
             ])
