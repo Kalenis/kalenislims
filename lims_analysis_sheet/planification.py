@@ -1,6 +1,7 @@
 # This file is part of lims_analysis_sheet module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+from datetime import datetime
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, Button
@@ -57,10 +58,13 @@ class Planification(metaclass=PoolMeta):
                 analysis_sheets[key] = []
             analysis_sheets[key].append(nl)
 
+        date_time = datetime.combine(self.start_date, self.create_date.time())
+
         for key, values in analysis_sheets.items():
             sheet = AnalysisSheet()
             sheet.template = key[0]
-            sheet.compilation = sheet.get_new_compilation()
+            sheet.compilation = sheet.get_new_compilation(
+                {'date_time': date_time})
             sheet.professional = key[1]
             sheet.laboratory = self.laboratory.id
             sheet.planification = self.id

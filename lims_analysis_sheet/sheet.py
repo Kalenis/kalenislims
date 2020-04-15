@@ -551,13 +551,15 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                             })
                     NotebookLine.write([nb_line], data)
 
-    def get_new_compilation(self):
+    def get_new_compilation(self, defaults={}):
         Compilation = Pool().get('lims.interface.compilation')
         compilation = Compilation(
             table=self.template.interface.table.id,
             interface=self.template.interface.id,
             revision=self.template.interface.revision,
             )
+        for field, value in defaults.items():
+            setattr(compilation, field, value)
         return compilation
 
     def create_lines(self, lines):
