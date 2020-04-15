@@ -1,4 +1,4 @@
-<calendar dtstart="date" dtend="date" mode="month">
+<calendar dtstart="date" dtend="date" mode="month" background_color="color">
     <field name="device"/>
     <field name="activity"/>
     <field name="responsible"/>

@@ -100,6 +100,7 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
         ('discarded', 'Discarded'),
         ], 'State', select=True, readonly=True, required=True)
     comments = fields.Text('Comments')
+    color = fields.Function(fields.Char('Color'), 'get_color')
 
     @classmethod
     def __setup__(cls):
@@ -128,6 +129,11 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
 
     def get_rec_name(self, name):
         return '%s - %s' % (self.activity.rec_name, self.device.description)
+
+    def get_color(self, name):
+        if self.state in ('done', 'discarded'):
+            return 'lightgray'
+        return 'lightblue'
 
     @classmethod
     def delete(cls, maintenances):
