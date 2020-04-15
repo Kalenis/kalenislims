@@ -20,7 +20,8 @@ from trytond.modules.lims_interface.interface import str2date, \
 __all__ = ['TemplateAnalysisSheet', 'TemplateAnalysisSheetAnalysis',
     'AnalysisSheet', 'OpenAnalysisSheetData', 'PrintAnalysisSheetReport',
     'AnalysisSheetReport', 'ExportAnalysisSheetFileStart',
-    'ExportAnalysisSheetFile']
+    'ExportAnalysisSheetFile', 'ImportAnalysisSheetFileStart',
+    'ImportAnalysisSheetFile']
 
 
 class TemplateAnalysisSheet(ModelSQL, ModelView):
@@ -849,3 +850,59 @@ class AnalysisSheetReport(Report):
         report_context['rows'] = rows
 
         return report_context
+
+
+class ImportAnalysisSheetFileStart(ModelView):
+    'Import Analysis Sheet File'
+    __name__ = 'lims.analysis_sheet.import_file.start'
+
+    origin_file = fields.Binary('Origin File', filename='file_name',
+        required=True)
+    file_name = fields.Char('Name')
+
+
+class ImportAnalysisSheetFile(Wizard):
+    'Import Analysis Sheet File'
+    __name__ = 'lims.analysis_sheet.import_file'
+
+    start = StateTransition()
+    ask_file = StateView('lims.analysis_sheet.import_file.start',
+        'lims_analysis_sheet.analysis_sheet_import_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Collect', 'collect', 'tryton-ok', default=True),
+            ])
+    collect = StateTransition()
+
+    def _get_analysis_sheet_id(self):
+        return Transaction().context.get('active_id', None)
+
+    def transition_start(self):
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
+
+        sheet_id = self._get_analysis_sheet_id()
+        if not sheet_id:
+            return 'end'
+
+        sheet = AnalysisSheet(sheet_id)
+        if sheet.state != 'active':
+            return 'end'
+
+        return 'ask_file'
+
+    def transition_collect(self):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        CompilationOrigin = pool.get('lims.interface.compilation.origin')
+
+        sheet_id = self._get_analysis_sheet_id()
+        sheet = AnalysisSheet(sheet_id)
+
+        origin = CompilationOrigin(
+            compilation=sheet.compilation.id,
+            origin_file=self.ask_file.origin_file,
+            file_name=self.ask_file.file_name,
+            )
+        origin.save()
+
+        sheet.compilation.collect([sheet.compilation])
+        return 'end'

@@ -147,5 +147,22 @@
             <field name="report">lims_analysis_sheet/report/analysis_sheet.fods</field>
         </record>
 
+<!-- Wizard Import Analysis Sheet File -->
+
+        <record model="ir.ui.view" id="analysis_sheet_import_start_view_form">
+            <field name="model">lims.analysis_sheet.import_file.start</field>
+            <field name="type">form</field>
+            <field name="name">analysis_sheet_import_form</field>
+        </record>
+        <record model="ir.action.wizard" id="wiz_analysis_sheet_import_file">
+            <field name="name">Import Analysis Sheet File</field>
+            <field name="wiz_name">lims.analysis_sheet.import_file</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_analysis_sheet_import_file_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.analysis_sheet,-1</field>
+            <field name="action" ref="wiz_analysis_sheet_import_file"/>
+        </record>
+
     </data>
 </tryton>
