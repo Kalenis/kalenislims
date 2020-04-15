@@ -10,6 +10,10 @@ msgctxt "field:lims.lab.device.maintenance,activity:"
 msgid "Activity"
 msgstr "Actividad"
 
+msgctxt "field:lims.lab.device.maintenance,color:"
+msgid "Color"
+msgstr "Color"
+
 msgctxt "field:lims.lab.device.maintenance,comments:"
 msgid "Comments"
 msgstr "Observaciones"
@@ -104,6 +108,10 @@ msgctxt "model:ir.action,name:act_lab_device_maintenance_calendar_related"
 msgid "Maintenance Calendar"
 msgstr "Calendario de mantenimiento"
 
+msgctxt "model:ir.action,name:act_lab_device_maintenance_program_list"
+msgid "Device Maintenance Programs"
+msgstr "Programas de mantenimiento de Equipo"
+
 msgctxt "model:ir.action,name:act_lab_device_maintenance_type_list"
 msgid "Device Maintenance Types"
 msgstr "Tipos de mantenimiento de Equipo"
@@ -139,6 +147,10 @@ msgstr "Configuración"
 msgctxt "model:ir.ui.menu,name:menu_device_maintenance_device"
 msgid "Devices"
 msgstr "Equipos"
+
+msgctxt "model:ir.ui.menu,name:menu_device_maintenance_program"
+msgid "Maintenance Programs"
+msgstr "Programas de mantenimiento"
 
 msgctxt "model:ir.ui.menu,name:menu_device_maintenance_type"
 msgid "Maintenance Types"

@@ -20,7 +20,8 @@ from trytond.modules.lims_interface.interface import str2date, \
 __all__ = ['TemplateAnalysisSheet', 'TemplateAnalysisSheetAnalysis',
     'AnalysisSheet', 'OpenAnalysisSheetData', 'PrintAnalysisSheetReport',
     'AnalysisSheetReport', 'ExportAnalysisSheetFileStart',
-    'ExportAnalysisSheetFile']
+    'ExportAnalysisSheetFile', 'ImportAnalysisSheetFileStart',
+    'ImportAnalysisSheetFile']
 
 
 class TemplateAnalysisSheet(ModelSQL, ModelView):
@@ -551,13 +552,15 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                             })
                     NotebookLine.write([nb_line], data)
 
-    def get_new_compilation(self):
+    def get_new_compilation(self, defaults={}):
         Compilation = Pool().get('lims.interface.compilation')
         compilation = Compilation(
             table=self.template.interface.table.id,
             interface=self.template.interface.id,
             revision=self.template.interface.revision,
             )
+        for field, value in defaults.items():
+            setattr(compilation, field, value)
         return compilation
 
     def create_lines(self, lines):
@@ -593,7 +596,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         line[interface.analysis_field.alias] = nl.analysis.id
                     else:
                         line[interface.analysis_field.alias] = (
-                            nl.analysis.code)
+                            nl.analysis.rec_name)
                 if interface.fraction_field:
                     if interface.fraction_field.type_ == 'many2one':
                         line[interface.fraction_field.alias] = nl.fraction.id
@@ -657,7 +660,8 @@ class ExportAnalysisSheetFile(Wizard):
             ])
 
     def _get_analysis_sheet_id(self):
-        return Transaction().context.get('active_id', None)
+        return Transaction().context.get('lims_analysis_sheet',
+            Transaction().context.get('active_id', None))
 
     def transition_start(self):
         AnalysisSheet = Pool().get('lims.analysis_sheet')
@@ -749,7 +753,8 @@ class PrintAnalysisSheetReport(Wizard):
     print_ = StateAction('lims_analysis_sheet.report_analysis_sheet')
 
     def _get_analysis_sheet_id(self):
-        return Transaction().context.get('active_id', None)
+        return Transaction().context.get('lims_analysis_sheet',
+            Transaction().context.get('active_id', None))
 
     def transition_start(self):
         pool = Pool()
@@ -847,3 +852,60 @@ class AnalysisSheetReport(Report):
         report_context['rows'] = rows
 
         return report_context
+
+
+class ImportAnalysisSheetFileStart(ModelView):
+    'Import Analysis Sheet File'
+    __name__ = 'lims.analysis_sheet.import_file.start'
+
+    origin_file = fields.Binary('Origin File', filename='file_name',
+        required=True)
+    file_name = fields.Char('Name')
+
+
+class ImportAnalysisSheetFile(Wizard):
+    'Import Analysis Sheet File'
+    __name__ = 'lims.analysis_sheet.import_file'
+
+    start = StateTransition()
+    ask_file = StateView('lims.analysis_sheet.import_file.start',
+        'lims_analysis_sheet.analysis_sheet_import_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Collect', 'collect', 'tryton-ok', default=True),
+            ])
+    collect = StateTransition()
+
+    def _get_analysis_sheet_id(self):
+        return Transaction().context.get('lims_analysis_sheet',
+            Transaction().context.get('active_id', None))
+
+    def transition_start(self):
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
+
+        sheet_id = self._get_analysis_sheet_id()
+        if not sheet_id:
+            return 'end'
+
+        sheet = AnalysisSheet(sheet_id)
+        if sheet.state != 'active':
+            return 'end'
+
+        return 'ask_file'
+
+    def transition_collect(self):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        CompilationOrigin = pool.get('lims.interface.compilation.origin')
+
+        sheet_id = self._get_analysis_sheet_id()
+        sheet = AnalysisSheet(sheet_id)
+
+        origin = CompilationOrigin(
+            compilation=sheet.compilation.id,
+            origin_file=self.ask_file.origin_file,
+            file_name=self.ask_file.file_name,
+            )
+        origin.save()
+
+        sheet.compilation.collect([sheet.compilation])
+        return 'end'

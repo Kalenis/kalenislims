@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <form>
+    <label name="device"/>
+    <field name="device" colspan="3"/>
     <label name="activity"/>
     <field name="activity"/>
     <label name="frequency"/>

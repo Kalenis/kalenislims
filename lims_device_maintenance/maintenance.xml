@@ -90,15 +90,33 @@
 
 <!-- Device Maintenance Program -->
 
-        <record model="ir.ui.view" id="lims_lab_device_maintenance_program_view_form">
+        <record model="ir.ui.view" id="lab_device_maintenance_program_view_form">
             <field name="model">lims.lab.device.maintenance.program</field>
             <field name="type">form</field>
             <field name="name">lab_device_maintenance_program_form</field>
         </record>
-        <record model="ir.ui.view" id="lims_lab_device_maintenance_program_view_list">
+        <record model="ir.ui.view" id="lab_device_maintenance_program_view_list">
             <field name="model">lims.lab.device.maintenance.program</field>
             <field name="type">tree</field>
             <field name="name">lab_device_maintenance_program_list</field>
+        </record>
+
+        <record model="ir.action.act_window"
+            id="act_lab_device_maintenance_program_list">
+            <field name="name">Device Maintenance Programs</field>
+            <field name="res_model">lims.lab.device.maintenance.program</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_lab_device_maintenance_program_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lab_device_maintenance_program_view_list"/>
+            <field name="act_window" ref="act_lab_device_maintenance_program_list"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_lab_device_maintenance_program_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lab_device_maintenance_program_view_form"/>
+            <field name="act_window" ref="act_lab_device_maintenance_program_list"/>
         </record>
 
 <!-- Wizard Generate Device Maintenance Calendar -->
@@ -201,10 +219,14 @@
         <menuitem action="lims.act_lims_lab_device_list"
             id="menu_device_maintenance_device"
             parent="menu_device_maintenance" sequence="20"/>
+        <menuitem name="Maintenance Programs"
+            action="act_lab_device_maintenance_program_list"
+            id="menu_device_maintenance_program"
+            parent="menu_device_maintenance" sequence="30"/>
         <menuitem name="Calendar"
             action="act_lab_device_maintenance_calendar_list"
             id="menu_device_maintenance_calendar"
-            parent="menu_device_maintenance" sequence="30"/>
+            parent="menu_device_maintenance" sequence="40"/>
 
     </data>
 </tryton>

@@ -107,6 +107,14 @@ msgctxt "field:lims.analysis_sheet.export_file.start,file:"
 msgid "File"
 msgstr "Archivo"
 
+msgctxt "field:lims.analysis_sheet.import_file.start,file_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.analysis_sheet.import_file.start,origin_file:"
+msgid "Origin File"
+msgstr "Archivo origen"
+
 msgctxt "field:lims.analysis_sheet.repeat_analysis.start,annul:"
 msgid "Annul current lines"
 msgstr "Anular líneas actuales"
@@ -316,6 +324,10 @@ msgctxt "model:ir.action,name:wiz_analysis_sheet_export_file"
 msgid "Export Analysis Sheet File"
 msgstr "Exportar Hoja de análisis"
 
+msgctxt "model:ir.action,name:wiz_analysis_sheet_import_file"
+msgid "Import Analysis Sheet File"
+msgstr "Importar archivo de datos"
+
 msgctxt "model:ir.action,name:wiz_analysis_sheet_internal_relations_calc"
 msgid "Internal Relations Calculation"
 msgstr "03) Cálculo de relaciones internas"
@@ -399,6 +411,10 @@ msgstr "Añadir Controles"
 msgctxt "model:lims.analysis_sheet.export_file.start,name:"
 msgid "Export Analysis Sheet File"
 msgstr "Exportar Hoja de análisis"
+
+msgctxt "model:lims.analysis_sheet.import_file.start,name:"
+msgid "Import Analysis Sheet File"
+msgstr "Importar archivo de datos"
 
 msgctxt "model:lims.analysis_sheet.repeat_analysis.start,name:"
 msgid "Repeat Analysis"
@@ -843,6 +859,14 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.analysis_sheet.export_file,export_,end:"
 msgid "Close"
 msgstr "Cerrar"
+
+msgctxt "wizard_button:lims.analysis_sheet.import_file,ask_file,collect:"
+msgid "Collect"
+msgstr "Importar datos"
+
+msgctxt "wizard_button:lims.analysis_sheet.import_file,ask_file,end:"
+msgid "Cancel"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:lims.analysis_sheet.repeat_analysis,start,end:"
 msgid "Cancel"

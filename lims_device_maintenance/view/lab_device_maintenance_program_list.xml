@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <tree>
+    <field name="device"/>
     <field name="activity"/>
     <field name="frequency"/>
     <field name="responsible"/>
