@@ -660,7 +660,8 @@ class ExportAnalysisSheetFile(Wizard):
             ])
 
     def _get_analysis_sheet_id(self):
-        return Transaction().context.get('active_id', None)
+        return Transaction().context.get('lims_analysis_sheet',
+            Transaction().context.get('active_id', None))
 
     def transition_start(self):
         AnalysisSheet = Pool().get('lims.analysis_sheet')
@@ -752,7 +753,8 @@ class PrintAnalysisSheetReport(Wizard):
     print_ = StateAction('lims_analysis_sheet.report_analysis_sheet')
 
     def _get_analysis_sheet_id(self):
-        return Transaction().context.get('active_id', None)
+        return Transaction().context.get('lims_analysis_sheet',
+            Transaction().context.get('active_id', None))
 
     def transition_start(self):
         pool = Pool()
@@ -874,7 +876,8 @@ class ImportAnalysisSheetFile(Wizard):
     collect = StateTransition()
 
     def _get_analysis_sheet_id(self):
-        return Transaction().context.get('active_id', None)
+        return Transaction().context.get('lims_analysis_sheet',
+            Transaction().context.get('active_id', None))
 
     def transition_start(self):
         AnalysisSheet = Pool().get('lims.analysis_sheet')

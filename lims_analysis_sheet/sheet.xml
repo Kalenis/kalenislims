@@ -122,9 +122,16 @@
             <field name="name">Export Analysis Sheet File</field>
             <field name="wiz_name">lims.analysis_sheet.export_file</field>
         </record>
-        <record model="ir.action.keyword" id="wiz_analysis_sheet_export_file_keyword">
+        <record model="ir.action.keyword"
+            id="wiz_analysis_sheet_export_file_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.analysis_sheet,-1</field>
+            <field name="action" ref="wiz_analysis_sheet_export_file"/>
+        </record>
+        <record model="ir.action.keyword"
+            id="wiz_analysis_sheet_data_export_file_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.interface.data,-1</field>
             <field name="action" ref="wiz_analysis_sheet_export_file"/>
         </record>
 
@@ -134,9 +141,16 @@
             <field name="name">Analysis Sheet Report</field>
             <field name="wiz_name">lims.analysis_sheet.print_report</field>
         </record>
-        <record model="ir.action.keyword" id="wiz_analysis_sheet_print_report_keyword">
+        <record model="ir.action.keyword"
+            id="wiz_analysis_sheet_print_report_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.analysis_sheet,-1</field>
+            <field name="action" ref="wiz_analysis_sheet_print_report"/>
+        </record>
+        <record model="ir.action.keyword"
+            id="wiz_analysis_sheet_data_print_report_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.interface.data,-1</field>
             <field name="action" ref="wiz_analysis_sheet_print_report"/>
         </record>
 
@@ -158,9 +172,16 @@
             <field name="name">Import Analysis Sheet File</field>
             <field name="wiz_name">lims.analysis_sheet.import_file</field>
         </record>
-        <record model="ir.action.keyword" id="wiz_analysis_sheet_import_file_keyword">
+        <record model="ir.action.keyword"
+            id="wiz_analysis_sheet_import_file_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.analysis_sheet,-1</field>
+            <field name="action" ref="wiz_analysis_sheet_import_file"/>
+        </record>
+        <record model="ir.action.keyword"
+            id="wiz_analysis_sheet_data_import_file_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.interface.data,-1</field>
             <field name="action" ref="wiz_analysis_sheet_import_file"/>
         </record>
 
