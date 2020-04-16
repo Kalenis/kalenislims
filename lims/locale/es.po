@@ -1247,6 +1247,10 @@ msgctxt "field:lims.entry,acknowledgment_contacts:"
 msgid "Acknowledgment contacts"
 msgstr "Contactos acuse de recibo"
 
+msgctxt "field:lims.entry,block_entry_confirmation:"
+msgid "Block Entry Confirmation"
+msgstr "Bloquear ingreso de muestras"
+
 msgctxt "field:lims.entry,carrier:"
 msgid "Carrier"
 msgstr "Transportista"
@@ -5678,6 +5682,10 @@ msgstr "Contacto informe"
 msgctxt "field:party.address,report_contact_default:"
 msgid "Report contact by default"
 msgstr "Contacto informe por defecto"
+
+msgctxt "field:party.party,block_entry_confirmation:"
+msgid "Block Entry Confirmation"
+msgstr "Bloquear ingreso de muestras"
 
 msgctxt "field:party.party,email_report:"
 msgid "Email report"
@@ -12796,10 +12804,6 @@ msgstr "Motivo de anulación"
 msgctxt "view:lims.sample.duplicate.start:"
 msgid "Labels"
 msgstr "Rótulos"
-
-msgctxt "view:lims.sample:"
-msgid "%"
-msgstr "%"
 
 msgctxt "view:lims.sample:"
 msgid "Comments"

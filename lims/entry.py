@@ -123,6 +123,8 @@ class Entry(Workflow, ModelSQL, ModelView):
         ('sent', 'Sent'),
         ], 'Result cron', sort=False, readonly=True)
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
+    block_entry_confirmation = fields.Function(fields.Boolean(
+        'Block Entry Confirmation'), 'get_block_entry_confirmation')
 
     @classmethod
     def __setup__(cls):
@@ -137,12 +139,16 @@ class Entry(Workflow, ModelSQL, ModelView):
         cls._buttons.update({
             'create_sample': {
                 'invisible': ~Eval('state').in_(['draft']),
+                'depends': ['state'],
                 },
             'confirm': {
                 'invisible': ~Eval('state').in_(['draft', 'pending']),
+                'readonly': Bool(Eval('block_entry_confirmation')),
+                'depends': ['state', 'block_entry_confirmation'],
                 },
             'on_hold': {
                 'invisible': ~Eval('state').in_(['draft']),
+                'depends': ['state'],
                 },
             })
 
@@ -634,6 +640,10 @@ class Entry(Workflow, ModelSQL, ModelView):
         if not self.confirmed:
             return 'lims-red'
         return 'lims-white'
+
+    def get_block_entry_confirmation(self, name=None):
+        return (self.invoice_party and
+            self.invoice_party.block_entry_confirmation or False)
 
 
 class EntryInvoiceContact(ModelSQL, ModelView):
