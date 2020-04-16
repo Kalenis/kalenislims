@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <tree>
     <field name="number" icon="icon"/>
+    <field name="completion_percentage" widget="progressbar"/>
     <field name="date" widget="date"/>
     <field name="date" widget="time" string="Time"/>
     <field name="create_date2" widget="date"/>
@@ -19,7 +20,6 @@
     <field name="zone"/>
     <field name="trace_report"/>
     <field name="urgent"/>
-    <field name="completion_percentage" widget="progressbar"/>
     <field name="confirmed" tree_invisible="1" />
     <field name="has_results_report" tree_invisible="1" />
 </tree>

@@ -10,6 +10,7 @@
     <field name="kind"/>
     <notebook>
         <page id="columns" string="Columns">
+            <button name="copy_columns" string="Copy Columns" colspan="4"/>
             <field name="columns" colspan="4"/>
         </page>
         <page id="fields" string="Fields">

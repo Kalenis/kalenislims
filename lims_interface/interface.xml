@@ -41,6 +41,10 @@
             <field name="string">Activate</field>
             <field name="model" search="[('model', '=', 'lims.interface')]"/>
         </record>
+        <record model="ir.model.button" id="button_interface_copy_columns">
+            <field name="name">copy_columns</field>
+            <field name="model" search="[('model', '=', 'lims.interface')]"/>
+        </record>
 
         <!-- Column -->
         <record model="ir.ui.view" id="lims_interface_column_view_form">
@@ -52,6 +56,17 @@
             <field name="model">lims.interface.column</field>
             <field name="type">tree</field>
             <field name="name">interface_column_list</field>
+        </record>
+
+        <!-- Wizard Copy Interface Column -->
+        <record model="ir.ui.view" id="interface_copy_column_start_view_form">
+            <field name="model">lims.interface.copy_column.start</field>
+            <field name="type">form</field>
+            <field name="name">interface_copy_column_form</field>
+        </record>
+        <record model="ir.action.wizard" id="wiz_interface_copy_column">
+            <field name="name">Copy Interface Column</field>
+            <field name="wiz_name">lims.interface.copy_column</field>
         </record>
 
         <!-- Compilation -->
