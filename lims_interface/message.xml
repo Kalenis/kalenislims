@@ -24,5 +24,8 @@
         <record model="ir.message" id="duplicated_origin_file">
             <field name="text">File "%(file_name)s" already exists as origin.</field>
         </record>
+        <record model="ir.message" id="msg_interface_column_alias_unique">
+            <field name="text">There cannot be two columns with the same alias in an interface.</field>
+        </record>
     </data>
 </tryton>

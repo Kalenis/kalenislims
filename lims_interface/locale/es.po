@@ -190,6 +190,10 @@ msgctxt "field:lims.interface.compilation.origin,origin_file_id:"
 msgid "Origin File ID"
 msgstr "ID de archivo origen"
 
+msgctxt "field:lims.interface.copy_column.start,origin_interface:"
+msgid "Origin Interface"
+msgstr "Interfaz origen"
+
 msgctxt "field:lims.interface.data,compilation:"
 msgid "Compilation"
 msgstr "Compilación"
@@ -302,6 +306,10 @@ msgctxt "model:ir.action,name:act_open_compilation_data"
 msgid "Compilation Data"
 msgstr "Datos"
 
+msgctxt "model:ir.action,name:wiz_interface_copy_column"
+msgid "Copy Interface Column"
+msgstr "Copiar columna"
+
 msgctxt "model:ir.message,text:duplicated_origin_file"
 msgid "File \"%(file_name)s\" already exists as origin."
 msgstr "El archivo \"%(file_name)s\" ya existe como origen de datos."
@@ -351,6 +359,10 @@ msgstr ""
 msgctxt "model:ir.message,text:invalid_fixed_value_type"
 msgid "The field type in \"%(name)s\" is not valid for fixed values."
 msgstr "El Tipo de campo en \"%(name)s\" no es válido para valores fijos."
+
+msgctxt "model:ir.message,text:msg_interface_column_alias_unique"
+msgid "There cannot be two columns with the same alias in an interface."
+msgstr "No puede haber dos columnas con el mismo alias en una interfaz."
 
 msgctxt "model:ir.model.button,string:lims_interface_activate_button"
 msgid "Activate"
@@ -412,6 +424,10 @@ msgstr "Compilación desde interfaz"
 msgctxt "model:lims.interface.compilation.origin,name:"
 msgid "Compilation Origin"
 msgstr "Origen de datos"
+
+msgctxt "model:lims.interface.copy_column.start,name:"
+msgid "Copy Interface Column"
+msgstr "Copiar columna"
 
 msgctxt "model:lims.interface.data,name:"
 msgid "Lims Interface Data"
@@ -702,6 +718,10 @@ msgid "Controller"
 msgstr "Controlador"
 
 msgctxt "view:lims.interface:"
+msgid "Copy Columns"
+msgstr "Copiar columnas"
+
+msgctxt "view:lims.interface:"
 msgid "Draft"
 msgstr "Borrador"
 
@@ -712,3 +732,11 @@ msgstr "Campos"
 msgctxt "view:lims.interface:"
 msgid "Template"
 msgstr "Plantilla"
+
+msgctxt "wizard_button:lims.interface.copy_column,ask,copy:"
+msgid "Copy"
+msgstr "Copiar"
+
+msgctxt "wizard_button:lims.interface.copy_column,ask,end:"
+msgid "Cancel"
+msgstr "Cancelar"

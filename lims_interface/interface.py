@@ -17,6 +17,7 @@ from dateutil import relativedelta
 from trytond.config import config
 from trytond.model import (Workflow, ModelView, ModelSQL, fields,
     sequence_ordered, Unique)
+from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool
 from trytond.transaction import Transaction
 from trytond.pyson import Eval, Bool, Not, And, Or
@@ -25,7 +26,8 @@ from trytond.exceptions import UserError
 from .function import custom_functions
 
 
-__all__ = ['Interface', 'Column', 'Compilation', 'CompilationOrigin']
+__all__ = ['Interface', 'Column', 'CopyInterfaceColumnStart',
+    'CopyInterfaceColumn', 'Compilation', 'CompilationOrigin']
 
 
 FUNCTIONS = formulas.get_functions()
@@ -249,6 +251,9 @@ class Interface(Workflow, ModelSQL, ModelView):
                 'icon': 'tryton-ok',
                 'invisible': Eval('state') != 'draft',
                 },
+            'copy_columns': {
+                'invisible': Eval('state') != 'draft',
+                },
             })
 
     @classmethod
@@ -439,6 +444,11 @@ class Interface(Workflow, ModelSQL, ModelView):
         fields.append('<field name="notebook_line"/>')
         return fields
 
+    @classmethod
+    @ModelView.button_action('lims_interface.wiz_interface_copy_column')
+    def copy_columns(cls, interfaces):
+        pass
+
 
 class Column(sequence_ordered(), ModelSQL, ModelView):
     'Column'
@@ -542,8 +552,7 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         cls._sql_constraints += [
             ('interface_alias_uniq',
                 Unique(t, t.interface, sql.Column(t, 'alias')),
-                'There cannot be two columns with the same alias '
-                'in an interface.')
+                'lims_interface.msg_interface_column_alias_unique')
             ]
 
     @fields.depends('is_fixed_value', 'expression', 'singleton',
@@ -675,6 +684,75 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         if error[0] == 'warning':
             return 'lims-yellow'
         return 'lims-red'
+
+
+class CopyInterfaceColumnStart(ModelView):
+    'Copy Interface Column'
+    __name__ = 'lims.interface.copy_column.start'
+
+    origin_interface = fields.Many2One('lims.interface', 'Origin Interface',
+        required=True)
+
+
+class CopyInterfaceColumn(Wizard):
+    'Copy Interface Column'
+    __name__ = 'lims.interface.copy_column'
+
+    start = StateTransition()
+    ask = StateView('lims.interface.copy_column.start',
+        'lims_interface.interface_copy_column_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Copy', 'copy', 'tryton-ok', default=True),
+            ])
+    copy = StateTransition()
+
+    def transition_start(self):
+        Interface = Pool().get('lims.interface')
+        interface_id = Transaction().context.get('active_id', None)
+        if not interface_id:
+            return 'end'
+        interface = Interface(interface_id)
+        if interface.state != 'draft':
+            return 'end'
+        return 'ask'
+
+    def transition_copy(self):
+        Column = Pool().get('lims.interface.column')
+
+        interface_id = Transaction().context.get('active_id', None)
+        count = Column.search_count([('interface', '=', interface_id)])
+
+        new_columns = []
+        origin_columns = Column.search([
+            ('interface', '=', self.ask.origin_interface.id),
+            ], order=[('evaluation_order', 'ASC')])
+        for origin in origin_columns:
+            count += 1
+            column = self._get_column(origin)
+            column['interface'] = interface_id
+            column['evaluation_order'] = count
+            new_columns.append(column)
+
+        if new_columns:
+            Column.create(new_columns)
+        return 'end'
+
+    def _get_column(self, origin):
+        res = {
+            'name': origin.name,
+            'alias': origin.alias,
+            'expression': origin.expression,
+            'domain': origin.domain,
+            'type_': origin.type_,
+            'related_model': (origin.related_model and
+                origin.related_model or None),
+            'is_fixed_value': origin.is_fixed_value,
+            'fixed_value': origin.fixed_value,
+            'transfer_field': origin.transfer_field,
+            'related_line_field': (origin.related_line_field and
+                origin.related_line_field.id or None),
+            }
+        return res
 
 
 class Compilation(Workflow, ModelSQL, ModelView):

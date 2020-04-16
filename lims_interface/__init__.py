@@ -12,6 +12,7 @@ def register():
     Pool.register(
         interface.Interface,
         interface.Column,
+        interface.CopyInterfaceColumnStart,
         interface.Compilation,
         interface.CompilationOrigin,
         table.Table,
@@ -20,3 +21,6 @@ def register():
         data.ModelAccess,
         data.Data,
         module='lims_interface', type_='model')
+    Pool.register(
+        interface.CopyInterfaceColumn,
+        module='lims_interface', type_='wizard')
