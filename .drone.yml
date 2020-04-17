@@ -19,6 +19,6 @@ services:
 
 matrix:
     include:
-        - IMAGE: python:3.7
+        - IMAGE: kalenis/kalenis-lims-test:3.7
           TOXENV: py37
           DATABASE: postgresql

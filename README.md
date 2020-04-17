@@ -14,7 +14,7 @@ These instructions will get you a copy of the project up and running.
 
 Execute:
 
-    pip install kalenislims
+    pip install kalenis-lims
 
 
 Once installed you have to setup the server with this command:
