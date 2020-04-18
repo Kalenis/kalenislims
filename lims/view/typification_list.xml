@@ -6,6 +6,8 @@
     <field name="method_view"/>
     <field name="detection_limit"/>
     <field name="quantification_limit"/>
+    <field name="lower_limit"/>
+    <field name="upper_limit"/>
     <field name="initial_concentration"/>
     <field name="start_uom"/>
     <field name="final_concentration"/>

@@ -45,6 +45,10 @@
     <field name="detection_limit"/>
     <label name="quantification_limit"/>
     <field name="quantification_limit"/>
+    <label name="lower_limit"/>
+    <field name="lower_limit"/>
+    <label name="upper_limit"/>
+    <field name="upper_limit"/>
     <label name="dilution_factor"/>
     <field name="dilution_factor"/>
     <label name="chromatogram"/>

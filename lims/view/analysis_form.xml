@@ -8,10 +8,6 @@
     <field name="type"/>
     <label name="behavior"/>
     <field name="behavior"/>
-    <label name="start_date"/>
-    <field name="start_date"/>
-    <label name="end_date"/>
-    <field name="end_date"/>
     <label name="result_formula"/>
     <field name="result_formula"/>
     <label name="converted_result_formula"/>
@@ -24,10 +20,14 @@
     <field name="formula"/>
     <label name="planning_legend"/>
     <field name="planning_legend"/>
-    <label name="automatic_acquisition" />
-    <field name="automatic_acquisition" xexpand="0"/>
-    <label name="disable_as_individual"/>
-    <field name="disable_as_individual" xexpand="0"/>
+    <group id="automatic_acquisition" colspan="2" col="2">
+        <label name="automatic_acquisition" />
+        <field name="automatic_acquisition" xexpand="0"/>
+    </group>
+    <group id="disable_as_individual" colspan="2" col="2">
+        <label name="disable_as_individual"/>
+        <field name="disable_as_individual" xexpand="0"/>
+    </group>
 
     <notebook>
         <page string="Laboratories" id="laboratories" >
@@ -55,10 +55,14 @@
             <field name="comments" colspan="4"/>
         </page>
     </notebook>
-    <group colspan="3" id="buttons">
+    <group id="buttons" colspan="4" col="8">
         <label name="state"/>
         <field name="state"/>
         <button name="activate" string="Activate"/>
         <button name="disable" string="Disable"/>
+        <label name="start_date"/>
+        <field name="start_date"/>
+        <label name="end_date"/>
+        <field name="end_date"/>
     </group>
 </form>

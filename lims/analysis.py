@@ -57,6 +57,10 @@ class Typification(ModelSQL, ModelView):
         digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
     quantification_limit = fields.Float('Quantification limit',
         digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
+    lower_limit = fields.Float('Lower limit allowed',
+        digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
+    upper_limit = fields.Float('Upper limit allowed',
+        digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
     limit_digits = fields.Integer('Limit digits')
     check_result_limits = fields.Boolean(
         'Validate limits directly on the result')
@@ -274,9 +278,12 @@ class Typification(ModelSQL, ModelView):
             t.check_default()
 
     def check_limits(self):
+        if (self.lower_limit and self.upper_limit and
+                self.upper_limit <= self.lower_limit):
+            raise UserError(gettext('lims.msg_invalid_limits_allowed'))
         if (self.detection_limit and
                 self.quantification_limit <= self.detection_limit):
-            raise UserError(gettext('lims.msg_limits'))
+            raise UserError(gettext('lims.msg_invalid_limits'))
 
     def check_default(self):
         if self.by_default:
@@ -412,8 +419,8 @@ class Typification(ModelSQL, ModelView):
                     cls.delete_typification_calculated(typifications)
 
             fields_check = ('detection_limit', 'quantification_limit',
-                'initial_concentration', 'final_concentration', 'start_uom',
-                'end_uom', 'calc_decimals')
+                'lower_limit', 'upper_limit', 'initial_concentration',
+                'final_concentration', 'start_uom', 'end_uom', 'calc_decimals')
             for field in fields_check:
                 if field in vals:
                     cls.update_laboratory_notebook(typifications)
@@ -422,6 +429,9 @@ class Typification(ModelSQL, ModelView):
     @classmethod
     def update_laboratory_notebook(cls, typifications):
         NotebookLine = Pool().get('lims.notebook.line')
+
+        def _str_value(val=None):
+            return str(val) if val is not None else None
 
         for typification in typifications:
             if not typification.valid:
@@ -439,16 +449,20 @@ class Typification(ModelSQL, ModelView):
                 ])
             if notebook_lines:
                 NotebookLine.write(notebook_lines, {
-                    'detection_limit': str(
+                    'detection_limit': _str_value(
                         typification.detection_limit),
-                    'quantification_limit': str(
+                    'quantification_limit': _str_value(
                         typification.quantification_limit),
-                    'initial_concentration': str(
-                        typification.initial_concentration or ''),
-                    'final_concentration': str(
-                        typification.final_concentration or ''),
-                    'initial_unit': typification.start_uom,
-                    'final_unit': typification.end_uom,
+                    'lower_limit': _str_value(typification.lower_limit),
+                    'upper_limit': _str_value(typification.upper_limit),
+                    'initial_concentration': _str_value(
+                        typification.initial_concentration),
+                    'final_concentration': _str_value(
+                        typification.final_concentration),
+                    'initial_unit': (typification.start_uom and
+                        typification.start_uom.id or None),
+                    'final_unit': (typification.end_uom and
+                        typification.end_uom.id or None),
                     'decimals': typification.calc_decimals,
                     })
 

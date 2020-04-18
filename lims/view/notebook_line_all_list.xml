@@ -29,6 +29,8 @@
     <field name="converted_result"/>
     <field name="detection_limit"/>
     <field name="quantification_limit"/>
+    <field name="lower_limit"/>
+    <field name="upper_limit"/>
     <field name="dilution_factor"/>
     <field name="chromatogram"/>
     <field name="comments"/>

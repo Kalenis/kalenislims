@@ -1993,6 +1993,8 @@ class AddFractionControl(Wizard):
                     nline.final_unit else None),
                 'detection_limit': nline.detection_limit,
                 'quantification_limit': nline.quantification_limit,
+                'lower_limit': nline.lower_limit,
+                'upper_limit': nline.upper_limit,
                 'decimals': nline.decimals,
                 'report': nline.report,
                 'concentration_level': (nline.concentration_level.id if
@@ -2424,6 +2426,8 @@ class AddFractionRMBMZ(Wizard):
                     'final_unit': None,
                     'detection_limit': None,
                     'quantification_limit': None,
+                    'lower_limit': None,
+                    'upper_limit': None,
                     }
                 if config.rm_start_uom:
                     defaults['initial_unit'] = config.rm_start_uom.id
@@ -2600,6 +2604,8 @@ class AddFractionRMBMZ(Wizard):
                     'final_unit': None,
                     'detection_limit': None,
                     'quantification_limit': None,
+                    'lower_limit': None,
+                    'upper_limit': None,
                     }
                 if config.rm_start_uom:
                     defaults['initial_unit'] = config.rm_start_uom.id
@@ -2662,6 +2668,8 @@ class AddFractionRMBMZ(Wizard):
                         nline.final_unit else None),
                     'detection_limit': nline.detection_limit,
                     'quantification_limit': nline.quantification_limit,
+                    'lower_limit': nline.lower_limit,
+                    'upper_limit': nline.upper_limit,
                     'decimals': nline.decimals,
                     'report': nline.report,
                     'concentration_level': (nline.concentration_level.id if
@@ -3454,6 +3462,8 @@ class AddFractionMRT(Wizard):
                         nline.final_unit else None),
                     'detection_limit': nline.detection_limit,
                     'quantification_limit': nline.quantification_limit,
+                    'lower_limit': nline.lower_limit,
+                    'upper_limit': nline.upper_limit,
                     'decimals': nline.decimals,
                     'report': nline.report,
                     'concentration_level': (nline.concentration_level.id if

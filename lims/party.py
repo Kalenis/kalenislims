@@ -27,6 +27,7 @@ class Party(metaclass=PoolMeta):
         states={'required': Bool(Eval('is_lab_professional'))},
         depends=['is_lab_professional'])
     entry_zone = fields.Many2One('lims.zone', 'Entry Zone')
+    block_entry_confirmation = fields.Boolean('Block Entry Confirmation')
 
     @classmethod
     def __setup__(cls):

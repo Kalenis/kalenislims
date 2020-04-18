@@ -285,6 +285,9 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
         Notebook = pool.get('lims.notebook')
         Company = pool.get('company.company')
 
+        def _str_value(val=None):
+            return str(val) if val is not None else None
+
         lines_create = []
 
         template_id = None
@@ -294,7 +297,7 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
             query = 'SELECT default_repetitions, ' \
                     'initial_concentration, final_concentration, start_uom, ' \
                     'end_uom, detection_limit, quantification_limit, ' \
-                    'calc_decimals, report, id ' \
+                    'lower_limit, upper_limit, calc_decimals, report, id ' \
                 'FROM "' + Typification._table + '" ' \
                 'WHERE product_type = %s ' \
                     'AND matrix = %s ' \
@@ -316,14 +319,16 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
                 else None)
             if typification:
                 repetitions = typification[0]
-                initial_concentration = str(typification[1] or '')
-                final_concentration = str(typification[2] or '')
-                initial_unit = typification[3]
-                final_unit = typification[4]
-                detection_limit = str(typification[5])
-                quantification_limit = str(typification[6])
-                decimals = typification[7]
-                report = typification[8]
+                initial_concentration = _str_value(typification[1])
+                final_concentration = _str_value(typification[2])
+                initial_unit = typification[3] or None
+                final_unit = typification[4] or None
+                detection_limit = _str_value(typification[5])
+                quantification_limit = _str_value(typification[6])
+                lower_limit = _str_value(typification[7])
+                upper_limit = _str_value(typification[8])
+                decimals = typification[9]
+                report = typification[10]
             else:
                 repetitions = 0
                 initial_concentration = None
@@ -332,6 +337,8 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
                 final_unit = None
                 detection_limit = None
                 quantification_limit = None
+                lower_limit = None
+                upper_limit = None
                 decimals = 2
                 report = False
 
@@ -380,7 +387,7 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
                     'department': department,
                     }
                 if template_id:
-                    quality_typification = Typification(typification[9])
+                    quality_typification = Typification(typification[11])
                     notebook_line['typification'] = quality_typification.id
                     notebook_line['test_value'] = \
                         quality_typification.valid_value.id \

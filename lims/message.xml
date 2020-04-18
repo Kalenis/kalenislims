@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 <tryton>
     <data grouped="1">
-        <record model="ir.message" id="msg_limits">
+        <record model="ir.message" id="msg_invalid_limits_allowed">
+            <field name="text">Upper limit allowed must be greater than Lower limit allowed</field>
+        </record>
+        <record model="ir.message" id="msg_invalid_limits">
             <field name="text">Quantification limit must be greater than Detection limit</field>
         </record>
         <record model="ir.message" id="msg_default_typification">
@@ -9,6 +12,9 @@
         </record>
         <record model="ir.message" id="msg_not_default_typification">
             <field name="text">This typification should be the default</field>
+        </record>
+        <record model="ir.message" id="msg_error_limits_allowed">
+            <field name="text">The value of line "%(line)s" is outside the allowed limits</field>
         </record>
         <record model="ir.message" id="msg_description_uniq">
             <field name="text">Analysis description must be unique</field>
