@@ -332,6 +332,10 @@ class NotebookLine(ModelSQL, ModelView):
         states={'readonly': Bool(Eval('accepted'))}, depends=['accepted'])
     quantification_limit = fields.Char('Quantification limit',
         states={'readonly': Bool(Eval('accepted'))}, depends=['accepted'])
+    lower_limit = fields.Char('Lower limit allowed',
+        states={'readonly': Bool(Eval('accepted'))}, depends=['accepted'])
+    upper_limit = fields.Char('Upper limit allowed',
+        states={'readonly': Bool(Eval('accepted'))}, depends=['accepted'])
     check_result_limits = fields.Function(fields.Boolean(
         'Validate limits directly on the result'), 'get_typification_field')
     chromatogram = fields.Char('Chromatogram')
@@ -375,6 +379,8 @@ class NotebookLine(ModelSQL, ModelView):
     fraction_type = fields.Function(fields.Many2One('lims.fraction.type',
         'Fraction type'), 'get_fraction_field',
         searcher='search_fraction_field')
+    sample = fields.Function(fields.Many2One('lims.sample', 'Sample'),
+        'get_fraction_field', searcher='search_fraction_field')
     party = fields.Function(fields.Many2One('party.party', 'Party'),
         'get_fraction_field', searcher='search_fraction_field')
     product_type = fields.Function(fields.Many2One('lims.product.type',
@@ -988,6 +994,8 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     converted_result = fields.Char('Converted result', readonly=True)
     detection_limit = fields.Char('Detection limit', readonly=True)
     quantification_limit = fields.Char('Quantification limit', readonly=True)
+    lower_limit = fields.Char('Lower limit allowed', readonly=True)
+    upper_limit = fields.Char('Upper limit allowed', readonly=True)
     chromatogram = fields.Char('Chromatogram', readonly=True)
     professionals = fields.Function(fields.One2Many(
         'lims.notebook.line.professional', None,
@@ -1091,6 +1099,8 @@ class NotebookLineAllFields(ModelSQL, ModelView):
             line.converted_result,
             line.detection_limit,
             line.quantification_limit,
+            line.lower_limit,
+            line.upper_limit,
             line.dilution_factor,
             line.chromatogram,
             line.comments,
@@ -1552,6 +1562,11 @@ class NotebookLimitsValidation(Wizard):
             except (TypeError, ValueError):
                 continue
 
+            ll = (notebook_line.lower_limit and
+                float(notebook_line.lower_limit) or None)
+            ul = (notebook_line.upper_limit and
+                float(notebook_line.upper_limit) or None)
+
             if (notebook_line.result and (
                     notebook_line.check_result_limits or
                     not notebook_line.converted_result)):
@@ -1561,6 +1576,9 @@ class NotebookLimitsValidation(Wizard):
                     value = float(notebook_line.result)
                 except ValueError:
                     continue
+                if (ll and value < ll) or (ul and value > ul):
+                    raise UserError(gettext('lims.msg_error_limits_allowed',
+                        line=notebook_line.rec_name))
                 if dl < value and value < ql:
                     notebook_line.result = str(ql)
                     notebook_line.result_modifier = 'low'
@@ -1589,6 +1607,9 @@ class NotebookLimitsValidation(Wizard):
                     value = float(notebook_line.converted_result)
                 except ValueError:
                     continue
+                if (ll and value < ll) or (ul and value > ul):
+                    raise UserError(gettext('lims.msg_error_limits_allowed',
+                        line=notebook_line.rec_name))
                 if dl < value and value < ql:
                     notebook_line.converted_result = str(ql)
                     notebook_line.converted_result_modifier = 'low'
@@ -3900,6 +3921,8 @@ class NotebookLineRepeatAnalysis(Wizard):
                 defaults['final_unit'] = None
                 defaults['detection_limit'] = None
                 defaults['quantification_limit'] = None
+                defaults['lower_limit'] = None
+                defaults['upper_limit'] = None
             else:
                 defaults['final_concentration'] = (
                     nline_to_repeat.final_concentration)
@@ -3910,6 +3933,8 @@ class NotebookLineRepeatAnalysis(Wizard):
                 defaults['detection_limit'] = nline_to_repeat.detection_limit
                 defaults['quantification_limit'] = (
                     nline_to_repeat.quantification_limit)
+                defaults['lower_limit'] = nline_to_repeat.lower_limit
+                defaults['upper_limit'] = nline_to_repeat.upper_limit
             to_create.append(defaults)
             details_to_update.append(detail_id)
 

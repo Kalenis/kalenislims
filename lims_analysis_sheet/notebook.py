@@ -438,6 +438,8 @@ class AddControl(Wizard):
                         'final_unit': None,
                         'detection_limit': None,
                         'quantification_limit': None,
+                        'lower_limit': None,
+                        'upper_limit': None,
                         }
                     if config.rm_start_uom:
                         defaults['initial_unit'] = config.rm_start_uom.id
@@ -663,6 +665,8 @@ class RepeatAnalysis(Wizard):
                     nline_to_repeat.final_unit else None),
                 'detection_limit': nline_to_repeat.detection_limit,
                 'quantification_limit': nline_to_repeat.quantification_limit,
+                'lower_limit': nline_to_repeat.lower_limit,
+                'upper_limit': nline_to_repeat.upper_limit,
                 'start_date': date,
                 }
             to_create.append(defaults)

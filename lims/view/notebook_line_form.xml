@@ -49,6 +49,10 @@
     <field name="detection_limit"/>
     <label name="quantification_limit"/>
     <field name="quantification_limit"/>
+    <label name="lower_limit"/>
+    <field name="lower_limit"/>
+    <label name="upper_limit"/>
+    <field name="upper_limit"/>
     <group col="2" colspan="2" id="check_result_limits">
         <label name="check_result_limits"/>
         <field name="check_result_limits"/>
