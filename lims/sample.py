@@ -2335,6 +2335,8 @@ class Sample(ModelSQL, ModelView):
             ('completion_percentage', '<=', 1),
             ]),
         'get_completion_percentage')
+    department = fields.Function(fields.Many2One('company.department',
+        'Department'), 'get_department', searcher='search_department')
 
     @classmethod
     def __setup__(cls):
@@ -2837,6 +2839,18 @@ class Sample(ModelSQL, ModelView):
         return Decimal(
             Decimal(accepted) / Decimal(total)
             ).quantize(Decimal(str(10 ** -digits)))
+
+    @classmethod
+    def get_department(cls, samples, name):
+        result = {}
+        for s in samples:
+            field = getattr(s.product_type, name, None)
+            result[s.id] = field.id if field else None
+        return result
+
+    @classmethod
+    def search_department(cls, name, clause):
+        return [('product_type.' + name,) + tuple(clause[1:])]
 
 
 class DuplicateSampleStart(ModelView):

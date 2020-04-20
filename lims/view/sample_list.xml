@@ -20,6 +20,7 @@
     <field name="zone"/>
     <field name="trace_report"/>
     <field name="urgent"/>
+    <field name="department"/>
     <field name="confirmed" tree_invisible="1" />
     <field name="has_results_report" tree_invisible="1" />
 </tree>

@@ -656,6 +656,7 @@ class ProductType(ModelSQL, ModelView):
     code = fields.Char('Code', required=True)
     description = fields.Char('Description', required=True)
     restricted_entry = fields.Boolean('Restricted entry')
+    department = fields.Many2One('company.department', 'Department')
 
     @classmethod
     def __setup__(cls):

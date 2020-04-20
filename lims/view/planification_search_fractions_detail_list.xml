@@ -12,4 +12,5 @@
     <field name="report_date"/>
     <field name="create_date2" widget="date"/>
     <field name="completion_percentage" widget="progressbar"/>
+    <field name="department"/>
 </tree>

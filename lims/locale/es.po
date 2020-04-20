@@ -4224,6 +4224,10 @@ msgctxt "field:lims.planification.search_fractions.detail,create_date2:"
 msgid "Create Date"
 msgstr "Fecha de creación"
 
+msgctxt "field:lims.planification.search_fractions.detail,department:"
+msgid "Department"
+msgstr "Departamento"
+
 msgctxt "field:lims.planification.search_fractions.detail,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
@@ -4463,6 +4467,10 @@ msgstr "Nombre"
 msgctxt "field:lims.product.type,code:"
 msgid "Code"
 msgstr "Código"
+
+msgctxt "field:lims.product.type,department:"
+msgid "Department"
+msgstr "Departamento"
 
 msgctxt "field:lims.product.type,description:"
 msgid "Description"
@@ -5020,6 +5028,10 @@ msgstr "Fecha"
 msgctxt "field:lims.sample,date:"
 msgid "Date"
 msgstr "Fecha de ingreso"
+
+msgctxt "field:lims.sample,department:"
+msgid "Department"
+msgstr "Departamento"
 
 msgctxt "field:lims.sample,entry:"
 msgid "Entry"

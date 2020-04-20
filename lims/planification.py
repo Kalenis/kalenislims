@@ -3719,6 +3719,8 @@ class SearchFractionsDetail(ModelSQL, ModelView):
         'get_service_field')
     completion_percentage = fields.Function(fields.Numeric('Complete',
         digits=(1, 4)), 'get_completion_percentage')
+    department = fields.Function(fields.Many2One('company.department',
+        'Department'), 'get_department', searcher='search_department')
     session_id = fields.Integer('Session ID')
 
     @classmethod
@@ -3780,6 +3782,18 @@ class SearchFractionsDetail(ModelSQL, ModelView):
         for d in details:
             result[d.id] = getattr(d.fraction.sample, name, None)
         return result
+
+    @classmethod
+    def get_department(cls, details, name):
+        result = {}
+        for d in details:
+            field = getattr(d.product_type, name, None)
+            result[d.id] = field.id if field else None
+        return result
+
+    @classmethod
+    def search_department(cls, name, clause):
+        return [('product_type.' + name,) + tuple(clause[1:])]
 
 
 class SearchFractions(Wizard):

@@ -3,4 +3,5 @@
     <field name="code"/>
     <field name="description"/>
     <field name="restricted_entry"/>
+    <field name="department"/>
 </tree>

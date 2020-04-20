@@ -6,4 +6,6 @@
     <field name="description"/>
     <label name="restricted_entry"/>
     <field name="restricted_entry"/>
+    <label name="department"/>
+    <field name="department"/>
 </form>

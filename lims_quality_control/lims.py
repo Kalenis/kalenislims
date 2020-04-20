@@ -282,6 +282,7 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
         Method = pool.get('lims.lab.method')
         WaitingTime = pool.get('lims.lab.method.results_waiting')
         AnalysisLaboratory = pool.get('lims.analysis-laboratory')
+        ProductType = pool.get('lims.product.type')
         Notebook = pool.get('lims.notebook')
         Company = pool.get('company.company')
 
@@ -342,6 +343,7 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
                 decimals = 2
                 report = False
 
+            results_estimated_waiting = None
             cursor.execute('SELECT results_estimated_waiting '
                 'FROM "' + WaitingTime._table + '" '
                 'WHERE method = %s '
@@ -355,15 +357,25 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
                     'FROM "' + Method._table + '" '
                     'WHERE id = %s', (detail.method.id,))
                 res = cursor.fetchone()
-                results_estimated_waiting = res and res[0] or None
+                if res:
+                    results_estimated_waiting = res[0]
 
+            department = None
             cursor.execute('SELECT department '
                 'FROM "' + AnalysisLaboratory._table + '" '
                 'WHERE analysis = %s '
                     'AND laboratory = %s',
                     (detail.analysis.id, detail.laboratory.id))
             res = cursor.fetchone()
-            department = res and res[0] or None
+            if res and res[0]:
+                department = res[0]
+            else:
+                cursor.execute('SELECT department '
+                    'FROM "' + ProductType._table + '" '
+                    'WHERE id = %s', (fraction.product_type.id,))
+                res = cursor.fetchone()
+                if res and res[0]:
+                    department = res[0]
 
             for i in range(0, repetitions + 1):
                 notebook_line = {
