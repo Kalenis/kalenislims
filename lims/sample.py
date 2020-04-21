@@ -313,7 +313,27 @@ class Service(ModelSQL, ModelView):
         'on_change_with_analysis_type', searcher='search_analysis_field')
     urgent = fields.Boolean('Urgent')
     priority = fields.Integer('Priority')
-    report_date = fields.Date('Date agreed for result')
+    estimated_waiting_laboratory = fields.Integer(
+        'Number of days for Laboratory',
+        states={'readonly': Or(
+            Bool(Eval('context', {}).get('readonly', True)),
+            ~Eval('report_date_readonly'))},
+        depends=['report_date_readonly'])
+    estimated_waiting_report = fields.Integer(
+        'Number of days for Reporting',
+        states={'readonly': Or(
+            Bool(Eval('context', {}).get('readonly', True)),
+            ~Eval('report_date_readonly'))},
+        depends=['report_date_readonly'])
+    laboratory_date = fields.Date('Laboratory deadline',
+        states={'readonly': True})
+    report_date = fields.Date('Date agreed for result',
+        states={'readonly': Or(
+            Bool(Eval('context', {}).get('readonly', True)),
+            Bool(Eval('report_date_readonly')))},
+        depends=['report_date_readonly'])
+    report_date_readonly = fields.Function(fields.Boolean(
+        'Report deadline Readonly'), 'get_report_date_readonly')
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         domain=[('id', 'in', Eval('laboratory_domain'))],
         states={
@@ -830,6 +850,10 @@ class Service(ModelSQL, ModelView):
                 Laboratory(laboratory), True)
             if len(devices) == 1:
                 device = devices[0]
+            self.estimated_waiting_laboratory = (
+                self.analysis.estimated_waiting_laboratory)
+            self.estimated_waiting_report = (
+                self.analysis.estimated_waiting_report)
         self.laboratory = laboratory
         self.method = method
         self.device = device
@@ -909,6 +933,37 @@ class Service(ModelSQL, ModelView):
         if self.fraction:
             result = self.get_fraction_field((self,), ('party',))
             return result['party'][self.id]
+        return None
+
+    @staticmethod
+    def default_report_date_readonly():
+        return True
+
+    @classmethod
+    def get_report_date_readonly(cls, services, name):
+        readonly = cls.default_report_date_readonly()
+        result = {}
+        for s in services:
+            result[s.id] = readonly
+        return result
+
+    @fields.depends('estimated_waiting_laboratory')
+    def on_change_with_laboratory_date(self, name=None):
+        if self.estimated_waiting_laboratory:
+            date_ = Pool().get('ir.date').today()
+            date_ += relativedelta(days=self.estimated_waiting_laboratory)
+            return date_
+        return None
+
+    @fields.depends('estimated_waiting_laboratory', 'estimated_waiting_report')
+    def on_change_with_report_date(self, name=None):
+        if self.estimated_waiting_laboratory or self.estimated_waiting_report:
+            date_ = Pool().get('ir.date').today()
+            if self.estimated_waiting_laboratory:
+                date_ += relativedelta(days=self.estimated_waiting_laboratory)
+            if self.estimated_waiting_report:
+                date_ += relativedelta(days=self.estimated_waiting_report)
+            return date_
         return None
 
     @fields.depends('analysis', 'laboratory',
@@ -3069,6 +3124,11 @@ class ManageServices(Wizard):
             'analysis': service.analysis.id,
             'urgent': service.urgent,
             'priority': service.priority,
+            'estimated_waiting_laboratory': (
+                service.estimated_waiting_laboratory),
+            'estimated_waiting_report': (
+                service.estimated_waiting_report),
+            'laboratory_date': service.laboratory_date,
             'report_date': service.report_date,
             'laboratory': (service.laboratory.id if service.laboratory
                 else None),
@@ -3178,7 +3238,8 @@ class ManageServices(Wizard):
 
     def _get_comparison_fields(self):
         return ('analysis', 'laboratory', 'method', 'device', 'urgent',
-            'priority', 'report_date', 'comments', 'divide')
+            'priority', 'estimated_waiting_laboratory',
+            'estimated_waiting_report', 'report_date', 'comments', 'divide')
 
 
 class CompleteServices(Wizard):
@@ -3295,6 +3356,11 @@ class EditSampleService(Wizard):
                     'device': s.device and s.device.id or None,
                     'urgent': s.urgent,
                     'priority': s.priority,
+                    'estimated_waiting_laboratory': (
+                        s.estimated_waiting_laboratory),
+                    'estimated_waiting_report': (
+                        s.estimated_waiting_report),
+                    'laboratory_date': s.laboratory_date,
                     'report_date': s.report_date,
                     'divide': s.divide,
                     })
@@ -3342,6 +3408,11 @@ class EditSampleService(Wizard):
             'device': service.device.id if service.device else None,
             'urgent': service.urgent,
             'priority': service.priority,
+            'estimated_waiting_laboratory': (
+                service.estimated_waiting_laboratory),
+            'estimated_waiting_report': (
+                service.estimated_waiting_report),
+            'laboratory_date': service.laboratory_date,
             'report_date': service.report_date,
             'divide': service.divide,
             }]
@@ -4738,7 +4809,20 @@ class CreateSampleService(ModelView):
         None, None, 'Device domain')
     urgent = fields.Boolean('Urgent')
     priority = fields.Integer('Priority')
-    report_date = fields.Date('Date agreed for result')
+    estimated_waiting_laboratory = fields.Integer(
+        'Number of days for Laboratory',
+        states={'readonly': ~Eval('report_date_readonly')},
+        depends=['report_date_readonly'])
+    estimated_waiting_report = fields.Integer(
+        'Number of days for Reporting',
+        states={'readonly': ~Eval('report_date_readonly')},
+        depends=['report_date_readonly'])
+    laboratory_date = fields.Function(fields.Date('Laboratory deadline'),
+        'on_change_with_laboratory_date')
+    report_date = fields.Date('Date agreed for result',
+        states={'readonly': Bool(Eval('report_date_readonly'))},
+        depends=['report_date_readonly'])
+    report_date_readonly = fields.Boolean('Report deadline Readonly')
     divide = fields.Boolean('Divide')
 
     @staticmethod
@@ -4752,6 +4836,10 @@ class CreateSampleService(ModelView):
     @staticmethod
     def default_divide():
         return False
+
+    @staticmethod
+    def default_report_date_readonly():
+        return True
 
     @fields.depends('analysis')
     def on_change_analysis(self):
@@ -4770,17 +4858,19 @@ class CreateSampleService(ModelView):
             laboratory_domain = self._get_laboratory_domain(analysis_id)
             if len(laboratory_domain) == 1:
                 laboratory_id = laboratory_domain[0]
-
             method_domain = self._get_method_domain(analysis_id,
                 product_type_id, matrix_id)
             if len(method_domain) == 1:
                 method_id = method_domain[0]
-
             if laboratory_id:
                 device_domain = self._get_device_domain(analysis_id,
                     laboratory_id)
                 if len(device_domain) == 1:
                     device_id = device_domain[0]
+            self.estimated_waiting_laboratory = (
+                self.analysis.estimated_waiting_laboratory)
+            self.estimated_waiting_report = (
+                self.analysis.estimated_waiting_report)
 
         self.laboratory_domain = laboratory_domain
         self.laboratory = laboratory_id
@@ -4852,6 +4942,26 @@ class CreateSampleService(ModelView):
         if not res:
             return []
         return [x[0] for x in res]
+
+    @fields.depends('analysis', 'estimated_waiting_laboratory')
+    def on_change_with_laboratory_date(self, name=None):
+        if self.estimated_waiting_laboratory:
+            date_ = Pool().get('ir.date').today()
+            date_ += relativedelta(days=self.estimated_waiting_laboratory)
+            return date_
+        return None
+
+    @fields.depends('analysis', 'estimated_waiting_laboratory',
+        'estimated_waiting_report')
+    def on_change_with_report_date(self, name=None):
+        if self.estimated_waiting_laboratory or self.estimated_waiting_report:
+            date_ = Pool().get('ir.date').today()
+            if self.estimated_waiting_laboratory:
+                date_ += relativedelta(days=self.estimated_waiting_laboratory)
+            if self.estimated_waiting_report:
+                date_ += relativedelta(days=self.estimated_waiting_report)
+            return date_
+        return None
 
 
 class CreateSample(Wizard):
@@ -4960,6 +5070,11 @@ class CreateSample(Wizard):
                 'device': service.device.id if service.device else None,
                 'urgent': service.urgent,
                 'priority': service.priority,
+                'estimated_waiting_laboratory': (
+                    service.estimated_waiting_laboratory),
+                'estimated_waiting_report': (
+                    service.estimated_waiting_report),
+                'laboratory_date': service.laboratory_date,
                 'report_date': service.report_date,
                 'divide': service.divide,
                 }

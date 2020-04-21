@@ -652,6 +652,8 @@ class PlanificationDetail(ModelSQL, ModelView):
     urgent = fields.Function(fields.Boolean('Urgent'), 'get_service_field',
         setter='set_urgent')
     priority = fields.Function(fields.Integer('Priority'), 'get_service_field')
+    laboratory_date = fields.Function(fields.Date('Laboratory deadline'),
+        'get_service_field')
     report_date = fields.Function(fields.Date('Date agreed for result'),
         'get_service_field')
     comments = fields.Function(fields.Text('Comments'), 'get_fraction_field')
@@ -3715,6 +3717,8 @@ class SearchFractionsDetail(ModelSQL, ModelView):
     urgent = fields.Function(fields.Boolean('Urgent'), 'get_service_field')
     priority = fields.Function(fields.Integer('Priority'), 'get_service_field')
     repetition = fields.Boolean('Repetition', readonly=True)
+    laboratory_date = fields.Function(fields.Date('Laboratory deadline'),
+        'get_service_field')
     report_date = fields.Function(fields.Date('Date agreed for result'),
         'get_service_field')
     completion_percentage = fields.Function(fields.Numeric('Complete',

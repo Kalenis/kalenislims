@@ -11,10 +11,10 @@
     <field name="analysis_type"/>
     <field name="urgent"/>
     <field name="priority"/>
+    <field name="confirmation_date"/>
     <field name="report_date"/>
     <field name="divide"/>
     <field name="comments"/>
-    <field name="confirmation_date"/>
     <field name="confirmed" tree_invisible="1" />
     <field name="has_results_report" tree_invisible="1" />
 </tree>

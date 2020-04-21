@@ -8,12 +8,28 @@
     <field name="method"/>
     <label name="device"/>
     <field name="device"/>
-    <label name="urgent"/>
-    <field name="urgent"/>
-    <label name="priority"/>
-    <field name="priority"/>
-    <label name="report_date"/>
-    <field name="report_date"/>
+    <group id="priority" colspan="2" col="4">
+        <label name="urgent"/>
+        <field name="urgent"/>
+        <label name="priority"/>
+        <field name="priority"/>
+    </group>
     <label name="divide"/>
     <field name="divide"/>
+    <group id="estimated_waiting_laboratory" colspan="2" col="2">
+        <label name="estimated_waiting_laboratory"/>
+        <field name="estimated_waiting_laboratory"/>
+    </group>
+    <group id="estimated_waiting_report" colspan="2" col="2">
+        <label name="estimated_waiting_report"/>
+        <field name="estimated_waiting_report"/>
+    </group>
+    <group id="laboratory_date" colspan="2" col="2">
+        <label name="laboratory_date"/>
+        <field name="laboratory_date"/>
+    </group>
+    <group id="report_date" colspan="2" col="2">
+        <label name="report_date"/>
+        <field name="report_date"/>
+    </group>
 </form>

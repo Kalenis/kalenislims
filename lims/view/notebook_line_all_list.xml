@@ -18,6 +18,7 @@
     <field name="analysis_origin"/>
     <field name="urgent"/>
     <field name="priority"/>
+    <field name="laboratory_date"/>
     <field name="report_date"/>
     <field name="initial_concentration"/>
     <field name="final_concentration"/>

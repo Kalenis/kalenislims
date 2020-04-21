@@ -8,6 +8,7 @@
     <field name="matrix"/>
     <field name="urgent"/>
     <field name="priority"/>
+    <field name="laboratory_date"/>
     <field name="report_date"/>
     <field name="comments" tree_invisible="1"/>
 </tree>

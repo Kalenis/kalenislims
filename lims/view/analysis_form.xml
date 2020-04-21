@@ -54,6 +54,12 @@
         <page string="Warnings/Comments" id="comments" >
             <field name="comments" colspan="4"/>
         </page>
+        <page id="times" string="Times">
+            <label name="estimated_waiting_laboratory"/>
+            <field name="estimated_waiting_laboratory"/>
+            <label name="estimated_waiting_report"/>
+            <field name="estimated_waiting_report"/>
+        </page>
     </notebook>
     <group id="buttons" colspan="4" col="8">
         <label name="state"/>

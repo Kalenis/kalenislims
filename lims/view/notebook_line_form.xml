@@ -18,10 +18,14 @@
     <field name="service"/>
     <label name="analysis_origin"/>
     <field name="analysis_origin"/>
-    <label name="urgent"/>
-    <field name="urgent"/>
-    <label name="priority"/>
-    <field name="priority"/>
+    <group id="priority" colspan="2" col="4">
+        <label name="urgent"/>
+        <field name="urgent"/>
+        <label name="priority"/>
+        <field name="priority"/>
+    </group>
+    <label name="laboratory_date"/>
+    <field name="laboratory_date"/>
     <label name="report_date"/>
     <field name="report_date"/>
     <label name="initial_concentration"/>
@@ -37,10 +41,14 @@
     <field name="initial_unit"/>
     <label name="final_unit"/>
     <field name="final_unit"/>
-    <label name="result_modifier"/>
-    <field name="result_modifier"/>
-    <label name="converted_result_modifier"/>
-    <field name="converted_result_modifier"/>
+    <group id="result_modifier" colspan="2" col="2">
+        <label name="result_modifier"/>
+        <field name="result_modifier"/>
+    </group>
+    <group id="converted_result_modifier" colspan="2" col="2">
+        <label name="converted_result_modifier"/>
+        <field name="converted_result_modifier"/>
+    </group>
     <label name="result"/>
     <field name="result"/>
     <label name="converted_result"/>
@@ -96,10 +104,14 @@
     <field name="annulment_date"/>
     <label name="results_report"/>
     <field name="results_report"/>
-    <label name="results_estimated_waiting"/>
-    <field name="results_estimated_waiting"/>
-    <label name="results_estimated_date"/>
-    <field name="results_estimated_date"/>
+    <group id="results_estimated_waiting" colspan="2" col="2">
+        <label name="results_estimated_waiting"/>
+        <field name="results_estimated_waiting"/>
+    </group>
+    <group id="results_estimated_date" colspan="2" col="2">
+        <label name="results_estimated_date"/>
+        <field name="results_estimated_date"/>
+    </group>
     <label name="department"/>
     <field name="department"/>
 </form>

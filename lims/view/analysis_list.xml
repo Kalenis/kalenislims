@@ -7,8 +7,6 @@
     <field name="methods"/>
     <field name="devices"/>
     <field name="included_analysis"/>
-    <field name="start_date"/>
-    <field name="end_date"/>
     <field name="behavior"/>
     <field name="result_formula"/>
     <field name="converted_result_formula"/>
@@ -16,5 +14,9 @@
     <field name="formula"/>
     <field name="order"/>
     <field name="disable_as_individual"/>
+    <field name="estimated_waiting_laboratory"/>
+    <field name="estimated_waiting_report"/>
     <field name="state"/>
+    <field name="start_date"/>
+    <field name="end_date"/>
 </tree>

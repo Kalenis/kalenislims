@@ -912,6 +912,12 @@ class Analysis(Workflow, ModelSQL, ModelView):
     comments = fields.Text('Warnings/Comments')
     pending_fractions = fields.Function(fields.Integer('Pending fractions'),
         'get_pending_fractions', searcher='search_pending_fractions')
+    estimated_waiting_laboratory = fields.Integer(
+        'Number of days for Laboratory',
+        help='Estimated number of days needed to perform the analysis')
+    estimated_waiting_report = fields.Integer('Number of days for Reporting',
+        help='Estimated number of days needed to report the result of the '
+            'analysis')
 
     @classmethod
     def __setup__(cls):

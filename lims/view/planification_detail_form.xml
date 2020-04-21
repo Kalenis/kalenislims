@@ -14,11 +14,13 @@
     <field name="matrix"/>
     <field name="details" colspan="2"/>
     <field name="comments" colspan="2"/>
-    <group col="6" colspan="4" id="priority">
+    <group id="priority" colspan="8" col="4">
         <label name="urgent"/>
         <field name="urgent"/>
         <label name="priority"/>
         <field name="priority"/>
+        <label name="laboratory_date"/>
+        <field name="laboratory_date"/>
         <label name="report_date"/>
         <field name="report_date"/>
     </group>

@@ -16,7 +16,12 @@
     <field name="deprecated_since"/>
     <label name="pnt"/>
     <field name="pnt"/>
-    <label name="results_estimated_waiting"/>
-    <field name="results_estimated_waiting"/>
-    <field name="results_waiting" colspan="4"/>
+    <notebook>
+        <page id="times" string="Times">
+            <label name="results_estimated_waiting"/>
+            <field name="results_estimated_waiting"/>
+            <newline/>
+            <field name="results_waiting" colspan="4"/>
+        </page>
+    </notebook>
 </form>

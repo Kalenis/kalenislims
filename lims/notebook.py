@@ -372,8 +372,6 @@ class NotebookLine(ModelSQL, ModelView):
     urgent = fields.Boolean('Urgent')
     priority = fields.Function(fields.Integer('Priority'),
         'get_service_field', searcher='search_service_field')
-    report_date = fields.Function(fields.Date('Date agreed for result'),
-        'get_service_field', searcher='search_service_field')
     fraction = fields.Function(fields.Many2One('lims.fraction', 'Fraction'),
         'get_service_field', searcher='search_service_field')
     fraction_type = fields.Function(fields.Many2One('lims.fraction.type',
@@ -401,6 +399,10 @@ class NotebookLine(ModelSQL, ModelView):
         'Estimated number of days for results', states={'readonly': True})
     results_estimated_date = fields.Function(fields.Date(
         'Estimated date of result'), 'get_results_estimated_date')
+    laboratory_date = fields.Function(fields.Date('Laboratory deadline'),
+        'get_service_field', searcher='search_service_field')
+    report_date = fields.Function(fields.Date('Date agreed for result'),
+        'get_service_field', searcher='search_service_field')
     department = fields.Many2One('company.department', 'Department',
         readonly=True)
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
@@ -957,7 +959,6 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     analysis_origin = fields.Char('Analysis origin', readonly=True)
     urgent = fields.Boolean('Urgent', readonly=True)
     priority = fields.Integer('Priority', readonly=True)
-    report_date = fields.Date('Date agreed for result', readonly=True)
     initial_concentration = fields.Char('Initial concentration', readonly=True)
     final_concentration = fields.Char('Final concentration', readonly=True)
     laboratory_professionals = fields.Function(fields.Many2Many(
@@ -1025,9 +1026,11 @@ class NotebookLineAllFields(ModelSQL, ModelView):
         readonly=True)
     confirmation_date = fields.Date('Confirmation date', readonly=True)
     results_estimated_waiting = fields.Integer(
-        'Estimated number of days for results')
+        'Estimated number of days for results', readonly=True)
     results_estimated_date = fields.Function(fields.Date(
         'Estimated date of result'), 'get_line_field')
+    laboratory_date = fields.Date('Laboratory deadline', readonly=True)
+    report_date = fields.Date('Date agreed for result', readonly=True)
     department = fields.Many2One('company.department', 'Department',
         readonly=True)
 
@@ -1088,7 +1091,6 @@ class NotebookLineAllFields(ModelSQL, ModelView):
             line.analysis_origin,
             line.urgent,
             service.priority,
-            service.report_date,
             line.initial_concentration,
             line.final_concentration,
             line.initial_unit,
@@ -1122,6 +1124,8 @@ class NotebookLineAllFields(ModelSQL, ModelView):
             line.planification,
             detail.confirmation_date,
             line.results_estimated_waiting,
+            service.laboratory_date,
+            service.report_date,
             line.department,
             ]
         where = Literal(True)

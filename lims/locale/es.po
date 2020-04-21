@@ -82,6 +82,14 @@ msgctxt "field:lims.analysis,end_date:"
 msgid "Leaving date"
 msgstr "Fecha de baja"
 
+msgctxt "field:lims.analysis,estimated_waiting_laboratory:"
+msgid "Number of days for Laboratory"
+msgstr "Cantidad de días en Laboratorio"
+
+msgctxt "field:lims.analysis,estimated_waiting_report:"
+msgid "Number of days for Reporting"
+msgstr "Cantidad de días para Informar"
+
 msgctxt "field:lims.analysis,formula:"
 msgid "Formula"
 msgstr "Fórmula"
@@ -1023,9 +1031,21 @@ msgctxt "field:lims.create_sample.service,divide:"
 msgid "Divide"
 msgstr "Dividir"
 
+msgctxt "field:lims.create_sample.service,estimated_waiting_laboratory:"
+msgid "Number of days for Laboratory"
+msgstr "Cantidad de días en Laboratorio"
+
+msgctxt "field:lims.create_sample.service,estimated_waiting_report:"
+msgid "Number of days for Reporting"
+msgstr "Cantidad de días para Informar"
+
 msgctxt "field:lims.create_sample.service,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
+
+msgctxt "field:lims.create_sample.service,laboratory_date:"
+msgid "Laboratory deadline"
+msgstr "Fecha límite Laboratorio"
 
 msgctxt "field:lims.create_sample.service,laboratory_domain:"
 msgid "Laboratory domain"
@@ -1046,6 +1066,10 @@ msgstr "Prioridad"
 msgctxt "field:lims.create_sample.service,report_date:"
 msgid "Date agreed for result"
 msgstr "Fecha pactada de resultado"
+
+msgctxt "field:lims.create_sample.service,report_date_readonly:"
+msgid "Report deadline Readonly"
+msgstr "Fecha límite Informe sólo lectura"
 
 msgctxt "field:lims.create_sample.service,urgent:"
 msgid "Urgent"
@@ -2811,6 +2835,10 @@ msgctxt "field:lims.notebook.line,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
 
+msgctxt "field:lims.notebook.line,laboratory_date:"
+msgid "Laboratory deadline"
+msgstr "Fecha límite Laboratorio"
+
 msgctxt "field:lims.notebook.line,laboratory_professionals:"
 msgid "Preparation professionals"
 msgstr "Profesionales de preparación"
@@ -3082,6 +3110,10 @@ msgstr "Rótulo"
 msgctxt "field:lims.notebook.line.all_fields,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
+
+msgctxt "field:lims.notebook.line.all_fields,laboratory_date:"
+msgid "Laboratory deadline"
+msgstr "Fecha límite Laboratorio"
 
 msgctxt "field:lims.notebook.line.all_fields,laboratory_professionals:"
 msgid "Preparation professionals"
@@ -3979,6 +4011,10 @@ msgctxt "field:lims.planification.detail,label:"
 msgid "Label"
 msgstr "Rótulo"
 
+msgctxt "field:lims.planification.detail,laboratory_date:"
+msgid "Laboratory deadline"
+msgstr "Fecha límite Laboratorio"
+
 msgctxt "field:lims.planification.detail,matrix:"
 msgid "Matrix"
 msgstr "Matriz"
@@ -4235,6 +4271,10 @@ msgstr "Fracción"
 msgctxt "field:lims.planification.search_fractions.detail,label:"
 msgid "Label"
 msgstr "Rótulo"
+
+msgctxt "field:lims.planification.search_fractions.detail,laboratory_date:"
+msgid "Laboratory deadline"
+msgstr "Fecha límite Laboratorio"
 
 msgctxt "field:lims.planification.search_fractions.detail,matrix:"
 msgid "Matrix"
@@ -5262,6 +5302,14 @@ msgctxt "field:lims.service,entry:"
 msgid "Entry"
 msgstr "Ingreso"
 
+msgctxt "field:lims.service,estimated_waiting_laboratory:"
+msgid "Number of days for Laboratory"
+msgstr "Cantidad de días en Laboratorio"
+
+msgctxt "field:lims.service,estimated_waiting_report:"
+msgid "Number of days for Reporting"
+msgstr "Cantidad de días para Informar"
+
 msgctxt "field:lims.service,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
@@ -5281,6 +5329,10 @@ msgstr "Icono"
 msgctxt "field:lims.service,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
+
+msgctxt "field:lims.service,laboratory_date:"
+msgid "Laboratory deadline"
+msgstr "Fecha límite Laboratorio"
 
 msgctxt "field:lims.service,laboratory_domain:"
 msgid "Laboratory domain"
@@ -5325,6 +5377,10 @@ msgstr "Prioridad"
 msgctxt "field:lims.service,report_date:"
 msgid "Date agreed for result"
 msgstr "Fecha pactada de resultado"
+
+msgctxt "field:lims.service,report_date_readonly:"
+msgid "Report deadline Readonly"
+msgstr "Fecha límite Informe sólo lectura"
 
 msgctxt "field:lims.service,sample:"
 msgid "Sample"
@@ -5818,6 +5874,15 @@ msgstr "Departamento"
 msgctxt "field:user.department,user:"
 msgid "User"
 msgstr "Usuario"
+
+msgctxt "help:lims.analysis,estimated_waiting_laboratory:"
+msgid "Estimated number of days needed to perform the analysis"
+msgstr "Cantidad estimada de días necesarios para realizar el análisis"
+
+msgctxt "help:lims.analysis,estimated_waiting_report:"
+msgid "Estimated number of days needed to report the result of the analysis"
+msgstr ""
+"Cantidad estimada de días necesarios para informar el resultado del análisis"
 
 msgctxt "help:lims.configuration,mail_ack_subject:"
 msgid "In the text will be added suffix with the entry report number"
@@ -11767,6 +11832,10 @@ msgid "Relate analysis"
 msgstr "Relacionar análisis"
 
 msgctxt "view:lims.analysis:"
+msgid "Times"
+msgstr "Tiempos"
+
+msgctxt "view:lims.analysis:"
 msgid "Warnings/Comments"
 msgstr "Advertencias/Observaciones"
 
@@ -12219,12 +12288,8 @@ msgid "Laboratories"
 msgstr "Laboratorios"
 
 msgctxt "view:lims.lab.method:"
-msgid "Method"
-msgstr "Método"
-
-msgctxt "view:lims.lab.method:"
-msgid "Methods"
-msgstr "Métodos"
+msgid "Times"
+msgstr "Tiempos"
 
 msgctxt "view:lims.lab.professional.method.requalification.control:"
 msgid "Control"
