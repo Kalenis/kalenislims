@@ -36,18 +36,30 @@ class Compilation(metaclass=PoolMeta):
         if 'analysis_sheet' not in cls.revision.depends:
             cls.revision.depends.append('analysis_sheet')
 
-        cls._buttons['draft']['invisible'] = Or(Eval('state') != 'active',
+        cls._buttons['view_data']['invisible'] = Or(
+            Eval('state') == 'draft',
             Bool(Eval('analysis_sheet')))
-        cls._buttons['activate']['invisible'] = Or(Eval('state') != 'draft',
+        cls._buttons['view_data']['depends'].append('analysis_sheet')
+        cls._buttons['draft']['invisible'] = Or(
+            Eval('state') != 'active',
             Bool(Eval('analysis_sheet')))
-        cls._buttons['validate_']['invisible'] = Or(Eval('state') != 'active',
+        cls._buttons['draft']['depends'].append('analysis_sheet')
+        cls._buttons['activate']['invisible'] = Or(
+            ~Eval('state').in_(['draft', 'validated']),
             Bool(Eval('analysis_sheet')))
-        cls._buttons['confirm']['invisible'] = Or(Eval('state') != 'validated',
+        cls._buttons['activate']['depends'].append('analysis_sheet')
+        cls._buttons['collect']['invisible'] = Or(
+            Eval('state') != 'active',
             Bool(Eval('analysis_sheet')))
-        #cls._buttons['view_data']['invisible'] = Or(Eval('state') == 'draft',
-            #Bool(Eval('analysis_sheet')))
-        #cls._buttons['collect']['invisible'] = Or(Eval('state') != 'active',
-            #Bool(Eval('analysis_sheet')))
+        cls._buttons['collect']['depends'].append('analysis_sheet')
+        cls._buttons['validate_']['invisible'] = Or(
+            Eval('state') != 'active',
+            Bool(Eval('analysis_sheet')))
+        cls._buttons['validate_']['depends'].append('analysis_sheet')
+        cls._buttons['confirm']['invisible'] = Or(
+            Eval('state') != 'validated',
+            Bool(Eval('analysis_sheet')))
+        cls._buttons['confirm']['depends'].append('analysis_sheet')
 
     def collect_csv(self, create_new_lines=True):
         new_lines = create_new_lines
