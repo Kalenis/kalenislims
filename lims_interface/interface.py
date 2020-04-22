@@ -1214,6 +1214,15 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     if data:
                         NotebookLine.write([nb_line], data)
 
+    @classmethod
+    def delete(cls, compilations):
+        Data = Pool().get('lims.interface.data')
+        for c in compilations:
+            with Transaction().set_context(lims_interface_table=c.table):
+                lines = Data.search([('compilation', '=', c.id)])
+                Data.delete(lines)
+        super(Compilation, cls).delete(compilations)
+
 
 class CompilationOrigin(ModelSQL, ModelView):
     'Compilation Origin'
