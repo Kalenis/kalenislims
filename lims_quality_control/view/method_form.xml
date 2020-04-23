@@ -1,13 +1,8 @@
 <?xml version="1.0"?>
 <data>
-    <xpath expr="/form/field[@name='results_waiting']" position="replace">
-        <notebook>
-            <page id="specification" string="Specification">
-                <field name="specification" colspan="4"/>
-            </page>
-            <page id="results_waiting" string="Results Waiting">
-                <field name="results_waiting" colspan="4"/>
-            </page>
-        </notebook>
+    <xpath expr="/form/notebook/page[@id='times']" position="before">
+        <page id="specification" string="Specification">
+            <field name="specification" colspan="4"/>
+        </page>
     </xpath>
 </data>
