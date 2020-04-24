@@ -49,7 +49,7 @@ def register():
         planification.RelateTechnicians,
         notebook.AddControl,
         notebook.RepeatAnalysis,
-        notebook.InternalRelationsCalc,
+        notebook.CalculateExpressions,
         notebook.ResultsVerification,
         notebook.EvaluateRules,
         module='lims_analysis_sheet', type_='wizard')

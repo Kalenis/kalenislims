@@ -1,6 +1,8 @@
 # This file is part of lims_analysis_sheet module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import formulas
+import schedula
 from datetime import datetime
 #from dateutil.relativedelta import relativedelta
 
@@ -15,7 +17,7 @@ from trytond.modules.lims.formula_parser import FormulaParser
 
 __all__ = ['NotebookLine', 'AddControlStart', 'AddControl',
     'RepeatAnalysisStart', 'RepeatAnalysisStartLine', 'RepeatAnalysis',
-    'InternalRelationsCalc', 'ResultsVerificationStart', 'ResultsVerification',
+    'CalculateExpressions', 'ResultsVerificationStart', 'ResultsVerification',
     'EvaluateRules']
 
 
@@ -693,9 +695,9 @@ class RepeatAnalysis(Wizard):
         return 'reload'
 
 
-class InternalRelationsCalc(Wizard):
-    'Internal Relations Calculation'
-    __name__ = 'lims.analysis_sheet.internal_relations_calc'
+class CalculateExpressions(Wizard):
+    'Calculate Expressions'
+    __name__ = 'lims.analysis_sheet.calculate_expressions'
 
     start_state = 'check'
     check = StateTransition()
@@ -718,29 +720,25 @@ class InternalRelationsCalc(Wizard):
     def transition_calcuate(self):
         pool = Pool()
         AnalysisSheet = pool.get('lims.analysis_sheet')
-        ModelField = pool.get('ir.model.field')
-        Field = pool.get('lims.interface.table.field')
         Data = pool.get('lims.interface.data')
 
         sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
 
-        nl_result_field, = ModelField.search([
-            ('model.model', '=', 'lims.notebook.line'),
-            ('name', '=', 'result'),
-            ])
-        result_column = Field.search([
-            ('table', '=', sheet.compilation.table.id),
-            ('transfer_field', '=', True),
-            ('related_line_field', '=', nl_result_field),
-            ])
-        if not result_column:
-            raise UserError(gettext(
-                'lims_analysis_sheet.msg_template_not_result_field'))
+        expressions = {}
+        for t_analysis in sheet.template.analysis:
+            if not t_analysis.expressions:
+                continue
+            if t_analysis.analysis.id not in expressions:
+                expressions[t_analysis.analysis.id] = {}
+            for expression in t_analysis.expressions:
+                expressions[t_analysis.analysis.id][
+                    expression.column.alias] = expression.expression
+        if not expressions:
+            return 'end'
 
-        result_field = result_column[0].name
-        relations = {}
-        notebooks = {}
+        parser = formulas.Parser()
+
         with Transaction().set_context(
                 lims_interface_table=sheet.compilation.table.id):
             lines = Data.search([('compilation', '=', sheet.compilation.id)])
@@ -748,120 +746,34 @@ class InternalRelationsCalc(Wizard):
                 nl = line.notebook_line
                 if not nl:
                     continue
-                if nl.notebook.id not in notebooks:
-                    notebooks[nl.notebook.id] = {}
-                notebooks[nl.notebook.id][
-                    nl.analysis.code] = getattr(line, result_field)
-                if nl.analysis.behavior == 'internal_relation':
-                    relations[line] = nl
-            if not relations:
-                return 'end'
+                if nl.analysis.id not in expressions:
+                    continue
 
-            for s_line, n_line in relations.items():
-                result = self._get_relation_result(n_line.analysis.code,
-                    notebooks[n_line.notebook.id])
-                if result is not None:
-                    s_line.set_field(str(result), result_field)
+                with Transaction().set_context(
+                        lims_analysis_notebook=nl.notebook.id):
+                    for alias, formula in expressions[nl.analysis.id].items():
+                        if not formula:
+                            continue
+                        ast = parser.ast(formula)[1].compile()
+                        inputs = (' '.join([x for x in ast.inputs])).lower()
+                        inputs = [getattr(line, x) for x in inputs.split()]
+                        try:
+                            value = ast(*inputs)
+                        except schedula.utils.exc.DispatcherError as e:
+                            raise UserError(e.args[0] % e.args[1:])
+
+                        if isinstance(value, list):
+                            value = str(value)
+                        elif (not isinstance(value, str) and
+                                not isinstance(value, int) and
+                                not isinstance(value, float) and
+                                not isinstance(value, type(None))):
+                            value = value.tolist()
+                        if isinstance(value, formulas.tokens.operand.XlError):
+                            value = None
+                        line.set_field(str(value or ''), alias)
+
         return 'end'
-
-    def _get_relation_result(self, analysis_code, vars, round_=False):
-        pool = Pool()
-        Analysis = pool.get('lims.analysis')
-
-        internal_relations = Analysis.search([
-            ('code', '=', analysis_code),
-            ])
-        if not internal_relations:
-            return None
-        formula = internal_relations[0].result_formula
-        if not formula:
-            return None
-        for i in (' ', '\t', '\n', '\r'):
-            formula = formula.replace(i, '')
-        variables = self._get_variables(formula, vars)
-        if not variables:
-            return None
-
-        parser = FormulaParser(formula, variables)
-        value = parser.getValue()
-
-        if int(value) == value:
-            res = int(value)
-        else:
-            epsilon = 0.0000000001
-            if int(value + epsilon) != int(value):
-                res = int(value + epsilon)
-            elif int(value - epsilon) != int(value):
-                res = int(value)
-            else:
-                res = float(value)
-        if not round_:
-            return res
-        decimals = 4
-        return round(res, decimals)
-
-    def _get_analysis_result(self, analysis_code, vars):
-        try:
-            res = float(vars[analysis_code])
-        except (KeyError, TypeError, ValueError):
-            return None
-        decimals = 4
-        return round(res, decimals)
-
-    def _get_variables(self, formula, vars):
-        pool = Pool()
-        VolumeConversion = pool.get('lims.volume.conversion')
-
-        variables = {}
-        for prefix in ('A', 'D', 'T', 'Y', 'R'):
-            while True:
-                idx = formula.find(prefix)
-                if idx >= 0:
-                    var = formula[idx:idx + 5]
-                    variables[var] = None
-                    formula = formula.replace(var, '_')
-                else:
-                    break
-        for var in variables.keys():
-            if var[0] == 'A':
-                analysis_code = var[1:]
-                result = self._get_analysis_result(analysis_code, vars)
-                if result is not None:
-                    variables[var] = result
-            elif var[0] == 'D':
-                analysis_code = var[1:]
-                result = self._get_analysis_result(analysis_code, vars)
-                if result is not None:
-                    result = VolumeConversion.brixToDensity(result)
-                    if result is not None:
-                        variables[var] = result
-            elif var[0] == 'T':
-                analysis_code = var[1:]
-                result = self._get_analysis_result(analysis_code, vars)
-                if result is not None:
-                    result = VolumeConversion.brixToSolubleSolids(result)
-                    if result is not None:
-                        variables[var] = result
-            elif var[0] == 'R':
-                analysis_code = var[1:]
-                result = self._get_relation_result(analysis_code, vars,
-                    round_=True)
-                if result is not None:
-                    result = VolumeConversion.brixToSolubleSolids(result)
-                    if result is not None:
-                        variables[var] = result
-            elif var[0] == 'Y':
-                analysis_code = var[1:]
-                result = self._get_relation_result(analysis_code, vars,
-                    round_=True)
-                if result is not None:
-                    result = VolumeConversion.brixToDensity(result)
-                    if result is not None:
-                        variables[var] = result
-        for var in variables.values():
-            if var is None:
-                return None
-        return variables
 
     def end(self):
         return 'reload'

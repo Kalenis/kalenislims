@@ -58,17 +58,17 @@
             <field name="action" ref="wiz_analysis_sheet_repeat_analysis"/>
         </record>
 
-<!-- Wizard Internal Relations Calculation -->
+<!-- Wizard Calculate Expressions -->
 
-        <record model="ir.action.wizard" id="wiz_analysis_sheet_internal_relations_calc">
-            <field name="name">Internal Relations Calculation</field>
-            <field name="wiz_name">lims.analysis_sheet.internal_relations_calc</field>
+        <record model="ir.action.wizard" id="wiz_analysis_sheet_calculate_expressions">
+            <field name="name">Calculate Expressions</field>
+            <field name="wiz_name">lims.analysis_sheet.calculate_expressions</field>
         </record>
 
-        <record model="ir.action.keyword" id="wiz_analysis_sheet_internal_relations_calc_keyword">
+        <record model="ir.action.keyword" id="wiz_analysis_sheet_calculate_expressions_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.interface.data,-1</field>
-            <field name="action" ref="wiz_analysis_sheet_internal_relations_calc"/>
+            <field name="action" ref="wiz_analysis_sheet_calculate_expressions"/>
         </record>
 
 <!-- Wizard Results Verification -->
