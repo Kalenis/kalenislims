@@ -265,6 +265,10 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
     @classmethod
     def search(cls, domain, offset=0, limit=None, order=None, count=False,
             query=False):
+        # Clean transaction cache
+        for cache in Transaction().cache.values():
+            if cls.__name__ in cache:
+                del cache[cls.__name__]
         if not cls.get_table():
             return super(Data, cls).search(domain, offset, limit, order, count,
                 query)
