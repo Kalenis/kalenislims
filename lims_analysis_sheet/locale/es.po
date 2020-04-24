@@ -284,6 +284,10 @@ msgctxt "field:lims.template.analysis_sheet.analysis,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
 
+msgctxt "field:lims.template.analysis_sheet.analysis,expressions:"
+msgid "Special formulas"
+msgstr "Fórmulas especiales"
+
 msgctxt "field:lims.template.analysis_sheet.analysis,method:"
 msgid "Method"
 msgstr "Método"
@@ -291,6 +295,18 @@ msgstr "Método"
 msgctxt "field:lims.template.analysis_sheet.analysis,template:"
 msgid "Template"
 msgstr "Plantilla"
+
+msgctxt "field:lims.template.analysis_sheet.analysis.expression,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:lims.template.analysis_sheet.analysis.expression,column:"
+msgid "Column"
+msgstr "Columna"
+
+msgctxt "field:lims.template.analysis_sheet.analysis.expression,expression:"
+msgid "Formula"
+msgstr "Fórmula"
 
 msgctxt "help:lims.interface.column,destination_column:"
 msgid "Mapped column in batch file"
@@ -447,6 +463,10 @@ msgstr "Plantilla de Hoja de análisis"
 msgctxt "model:lims.template.analysis_sheet.analysis,name:"
 msgid "Template Analysis"
 msgstr "Análisis de Plantilla"
+
+msgctxt "model:lims.template.analysis_sheet.analysis.expression,name:"
+msgid "Special Formula"
+msgstr "Fórmula especial"
 
 msgctxt "report:lims.analysis_sheet.report:"
 msgid "("

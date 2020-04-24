@@ -54,6 +54,19 @@
             <field name="name">template_analysis_list</field>
         </record>
 
+<!-- Special Formula -->
+
+        <record model="ir.ui.view" id="template_analysis_expression_view_form">
+            <field name="model">lims.template.analysis_sheet.analysis.expression</field>
+            <field name="type">form</field>
+            <field name="name">template_analysis_expression_form</field>
+        </record>
+        <record model="ir.ui.view" id="template_analysis_expression_view_list">
+            <field name="model">lims.template.analysis_sheet.analysis.expression</field>
+            <field name="type">tree</field>
+            <field name="name">template_analysis_expression_list</field>
+        </record>
+
 <!-- Analysis Sheet -->
 
         <record model="ir.ui.view" id="analysis_sheet_view_form">

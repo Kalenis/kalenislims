@@ -18,7 +18,8 @@ from trytond.modules.lims_interface.interface import str2date, \
     get_model_resource
 
 __all__ = ['TemplateAnalysisSheet', 'TemplateAnalysisSheetAnalysis',
-    'AnalysisSheet', 'OpenAnalysisSheetData', 'PrintAnalysisSheetReport',
+    'TemplateAnalysisSheetAnalysisExpression', 'AnalysisSheet',
+    'OpenAnalysisSheetData', 'PrintAnalysisSheetReport',
     'AnalysisSheetReport', 'ExportAnalysisSheetFileStart',
     'ExportAnalysisSheetFile', 'ImportAnalysisSheetFileStart',
     'ImportAnalysisSheetFile']
@@ -35,7 +36,9 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
         states={'readonly': Bool(Eval('interface'))})
     name = fields.Char('Name', required=True)
     analysis = fields.One2Many('lims.template.analysis_sheet.analysis',
-        'template', 'Analysis', required=True)
+        'template', 'Analysis', required=True,
+        context={'interface_id': Eval('interface')},
+        depends=['interface'])
     comments = fields.Text('Comments')
     pending_fractions = fields.Function(fields.Integer('Pending fractions'),
         'get_pending_fractions')
@@ -165,6 +168,9 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
     analysis = fields.Many2One('lims.analysis', 'Analysis',
         required=True, select=True)
     method = fields.Many2One('lims.lab.method', 'Method')
+    expressions = fields.One2Many(
+        'lims.template.analysis_sheet.analysis.expression',
+        'analysis', 'Special formulas')
 
     @classmethod
     def validate(cls, template_analysis):
@@ -184,6 +190,24 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
             raise UserError(gettext(
                 'lims_analysis_sheet.msg_template_analysis_unique',
                 analysis=self.analysis.rec_name))
+
+
+class TemplateAnalysisSheetAnalysisExpression(ModelSQL, ModelView):
+    'Special Formula'
+    __name__ = 'lims.template.analysis_sheet.analysis.expression'
+
+    analysis = fields.Many2One('lims.template.analysis_sheet.analysis',
+        'Analysis', required=True, ondelete='CASCADE', select=True)
+    column = fields.Many2One('lims.interface.column', 'Column',
+        domain=['OR', ('id', '=', Eval('column')),
+            ('interface', '=', Eval('context', {}).get('interface_id'))],
+        required=True)
+    expression = fields.Char('Formula')
+
+    @fields.depends('column')
+    def on_change_with_expression(self, name=None):
+        if self.column:
+            return self.column.expression
 
 
 class AnalysisSheet(Workflow, ModelSQL, ModelView):

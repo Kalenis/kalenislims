@@ -17,6 +17,7 @@ def register():
         configuration.ConfigurationSequence,
         sheet.TemplateAnalysisSheet,
         sheet.TemplateAnalysisSheetAnalysis,
+        sheet.TemplateAnalysisSheetAnalysisExpression,
         sheet.AnalysisSheet,
         sheet.ExportAnalysisSheetFileStart,
         sheet.ImportAnalysisSheetFileStart,
