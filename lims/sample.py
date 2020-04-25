@@ -1856,6 +1856,7 @@ class Fraction(ModelSQL, ModelView):
         pool = Pool()
         Config = pool.get('lims.configuration')
         Service = pool.get('lims.service')
+        Company = pool.get('company.company')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Move = pool.get('stock.move')
 
@@ -1866,6 +1867,11 @@ class Fraction(ModelSQL, ModelView):
         stock_moves_to_create = []
         for fraction in fractions:
             services = Service.search([('fraction', '=', fraction.id)])
+            if not services:
+                companies = Company.search([])
+                if fraction.party.id not in [c.party.id for c in companies]:
+                    raise UserError(gettext(
+                        'lims.msg_not_services', fraction=fraction.rec_name))
             Service.copy_analysis_comments(services)
             Service.set_confirmation_date(services)
             fraction.create_laboratory_notebook()
@@ -4611,11 +4617,14 @@ class CreateSampleStart(ModelView):
     analysis_domain = fields.Function(fields.Many2Many('lims.analysis',
         None, None, 'Analysis domain'), 'on_change_with_analysis_domain')
     services = fields.One2Many('lims.create_sample.service', None, 'Services',
-        required=True, depends=['analysis_domain', 'product_type', 'matrix'],
+        states={'required': ~Eval('without_services')},
         context={
             'analysis_domain': Eval('analysis_domain'),
             'product_type': Eval('product_type'), 'matrix': Eval('matrix'),
-            })
+            },
+        depends=['analysis_domain', 'product_type', 'matrix',
+            'without_services'])
+    without_services = fields.Boolean('Without services')
 
     @staticmethod
     def default_date():
@@ -4654,6 +4663,10 @@ class CreateSampleStart(ModelView):
         if not res:
             return []
         return [x[0] for x in res]
+
+    @staticmethod
+    def default_without_services():
+        return False
 
     @fields.depends('product_type', 'matrix', 'matrix_domain')
     def on_change_product_type(self):
@@ -5061,24 +5074,25 @@ class CreateSample(Wizard):
 
         # services data
         services_defaults = []
-        for service in self.start.services:
-            service_defaults = {
-                'analysis': service.analysis.id,
-                'laboratory': (service.laboratory.id if service.laboratory
-                    else None),
-                'method': service.method.id if service.method else None,
-                'device': service.device.id if service.device else None,
-                'urgent': service.urgent,
-                'priority': service.priority,
-                'estimated_waiting_laboratory': (
-                    service.estimated_waiting_laboratory),
-                'estimated_waiting_report': (
-                    service.estimated_waiting_report),
-                'laboratory_date': service.laboratory_date,
-                'report_date': service.report_date,
-                'divide': service.divide,
-                }
-            services_defaults.append(service_defaults)
+        if hasattr(self.start, 'services'):
+            for service in self.start.services:
+                service_defaults = {
+                    'analysis': service.analysis.id,
+                    'laboratory': (service.laboratory.id if service.laboratory
+                        else None),
+                    'method': service.method.id if service.method else None,
+                    'device': service.device.id if service.device else None,
+                    'urgent': service.urgent,
+                    'priority': service.priority,
+                    'estimated_waiting_laboratory': (
+                        service.estimated_waiting_laboratory),
+                    'estimated_waiting_report': (
+                        service.estimated_waiting_report),
+                    'laboratory_date': service.laboratory_date,
+                    'report_date': service.report_date,
+                    'divide': service.divide,
+                    }
+                services_defaults.append(service_defaults)
 
         # samples data
         samples_defaults = []
@@ -5097,8 +5111,9 @@ class CreateSample(Wizard):
                 'shared': shared,
                 'package_type': self.start.package_type.id,
                 'fraction_state': self.start.fraction_state.id,
-                'services': [('create', services_defaults)],
                 }
+            if services_defaults:
+                fraction_defaults['services'] = [('create', services_defaults)]
 
             sample_defaults = {
                 'entry': entry_id,

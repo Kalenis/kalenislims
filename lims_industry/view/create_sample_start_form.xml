@@ -3,7 +3,6 @@
     <xpath
         expr="/form/notebook/page[@id='general']/group[@id='trace_report']"
         position="after">
-        <newline/>
         <group id="oil_fields" colspan="4" col="10">
             <label name="oil_added"/>
             <field name="oil_added"/>

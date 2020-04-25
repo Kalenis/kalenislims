@@ -40,13 +40,14 @@
                 <label name="storage_time"/>
                 <field name="storage_time"/>
             </group>
-            <group col="4" colspan="2" id="trace_report">
+            <group id="trace_report" colspan="4" col="6">
                 <label name="trace_report"/>
                 <field name="trace_report"/>
                 <label name="shared"/>
                 <field name="shared"/>
+                <label name="without_services"/>
+                <field name="without_services"/>
             </group>
-            <newline/>
             <group id="labels" string="Labels" col="1" colspan="2" yexpand="1" yfill="1">
                 <field name="labels" colspan="2"/>
             </group>

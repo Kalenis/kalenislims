@@ -1199,6 +1199,10 @@ msgctxt "field:lims.create_sample.start,weight_uom:"
 msgid "Weight UoM"
 msgstr "UdM Peso"
 
+msgctxt "field:lims.create_sample.start,without_services:"
+msgid "Without services"
+msgstr "Sin servicios"
+
 msgctxt "field:lims.create_sample.start,zone:"
 msgid "Zone"
 msgstr "Zona"

@@ -67,7 +67,8 @@ class CreateSample(metaclass=PoolMeta):
         samples_defaults = super(CreateSample,
             self)._get_samples_defaults(entry_id)
 
-        if not hasattr(self.start, 'sale_lines'):
+        if (not hasattr(self.start, 'sale_lines') or
+                not hasattr(self.start, 'services')):
             return samples_defaults
 
         analysis = [s.analysis.id for s in self.start.services]

@@ -863,7 +863,6 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         AnalysisLaboratory = pool.get('lims.analysis-laboratory')
         ProductType = pool.get('lims.product.type')
         Notebook = pool.get('lims.notebook')
-        Company = pool.get('company.company')
 
         def _str_value(val=None):
             return str(val) if val is not None else None
@@ -969,12 +968,6 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                     'department': department,
                     }
                 lines_create.append(notebook_line)
-
-        if not lines_create:
-            companies = Company.search([])
-            if fraction.party.id not in [c.party.id for c in companies]:
-                raise UserError(gettext(
-                    'lims.msg_not_services', fraction=fraction.rec_name))
 
         with Transaction().set_user(0):
             notebook = Notebook.search([
