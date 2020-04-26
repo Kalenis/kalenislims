@@ -96,6 +96,17 @@ this repository contains the full copyright notices and license terms. -->
             <field name="group" ref="group_lims_conf_laboratory_admin"/>
         </record>
 
+        <record model="res.group" id="group_lims_conf_report_readonly">
+            <field name="name">Lims Configuration Results Report Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_conf_report_admin">
+            <field name="name">Lims Configuration Results Report Admin</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_conf_report_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_conf_report_admin"/>
+        </record>
+
         <record model="res.group" id="group_lims_conf_base_tables_readonly">
             <field name="name">Lims Configuration Base Tables Read Only</field>
         </record>

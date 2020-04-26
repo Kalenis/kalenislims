@@ -170,6 +170,10 @@
         <menuitem action="act_notebook_rule_list" id="menu_notebook_rule_list"
             parent="lims_config_laboratory" sequence="60"/>
 
+        <!-- Configuration / Results Report -->
+        <menuitem name="Results Report" parent="lims_config"
+            id="lims_config_report" sequence="50"/>
+
         <!-- Configuration / Base Tables -->
         <menuitem name="Base Tables" parent="lims_config"
             id="lims_config_base_tables" sequence="70"/>
@@ -262,6 +266,35 @@
         <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_laboratory_admin">
             <field name="menu" ref="lims_config_laboratory"/>
             <field name="group" ref="group_lims_conf_laboratory_admin"/>
+        </record>
+
+        <!-- Results Report -->
+
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_report_readonly">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_report_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_report_admin">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_report_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_report_readonly">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_report_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_report_admin">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_report_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_report_readonly">
+            <field name="menu" ref="lims_config_report"/>
+            <field name="group" ref="group_lims_conf_report_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_report_admin">
+            <field name="menu" ref="lims_config_report"/>
+            <field name="group" ref="group_lims_conf_report_admin"/>
         </record>
 
         <!-- Base Tables -->

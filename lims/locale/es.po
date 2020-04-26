@@ -7520,6 +7520,10 @@ msgctxt "model:ir.ui.menu,name:lims_config_laboratory"
 msgid "Laboratory"
 msgstr "Laboratorio"
 
+msgctxt "model:ir.ui.menu,name:lims_config_report"
+msgid "Results Report"
+msgstr "Informe de resultados"
+
 msgctxt "model:ir.ui.menu,name:lims_configuration_menu"
 msgid "Configuration"
 msgstr "Configuración"
@@ -8760,6 +8764,14 @@ msgstr "Lims Configuración Laboratorio Admin"
 msgctxt "model:res.group,name:group_lims_conf_laboratory_readonly"
 msgid "Lims Configuration Laboratory Read Only"
 msgstr "Lims Configuración Laboratorio Sólo lectura"
+
+msgctxt "model:res.group,name:group_lims_conf_report_admin"
+msgid "Lims Configuration Results Report Admin"
+msgstr "Lims Configuración Informe de Resultados Admin"
+
+msgctxt "model:res.group,name:group_lims_conf_report_readonly"
+msgid "Lims Configuration Results Report Read Only"
+msgstr "Lims Configuración Informe de Resultados Sólo lectura"
 
 msgctxt "model:res.group,name:group_lims_control"
 msgid "Lims Control Charts"
