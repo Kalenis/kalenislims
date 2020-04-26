@@ -12028,6 +12028,10 @@ msgid "Labels"
 msgstr "Rótulos"
 
 msgctxt "view:lims.create_sample.start:"
+msgid "Report"
+msgstr "Informe"
+
+msgctxt "view:lims.create_sample.start:"
 msgid "Report comments"
 msgstr "Observaciones informe"
 
@@ -12942,6 +12946,10 @@ msgstr "Observaciones"
 msgctxt "view:lims.sample:"
 msgid "General"
 msgstr "General"
+
+msgctxt "view:lims.sample:"
+msgid "Report"
+msgstr "Informe"
 
 msgctxt "view:lims.sample:"
 msgid "Report comments"

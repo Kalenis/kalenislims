@@ -1,16 +1,12 @@
 <?xml version="1.0"?>
 <data>
     <xpath
-        expr="/form/group[@id='checkboxes']/field[@name='active']"
-        position="after">
-        <label name="block_entry_confirmation"/>
-        <field name="block_entry_confirmation" xexpand="0" width="25"/>
-    </xpath>
-    <xpath
         expr="/form/notebook/page[@id='stock']"
         position="after">
         <page string="Lims" id="lims">
-            <group id="lims_checkboxes" colspan="4" col="10">
+            <group id="lims_checkboxes" colspan="4" col="8">
+                <label name="block_entry_confirmation"/>
+                <field name="block_entry_confirmation"/>
                 <label name="email_report"/>
                 <field name="email_report"/>
                 <label name="single_sending_report"/>
@@ -21,13 +17,13 @@
                 <field name="no_acknowledgment_of_receipt"/>
             </group>
             <field name="sample_producers" colspan="4"/>
-            <group id="lims_party_footer" colspan="4">
+            <label name="entry_zone"/>
+            <field name="entry_zone"/>
+            <group id="lims_party_footer" colspan="2" col="4">
+                <label name="is_lab_professional"/>
+                <field name="is_lab_professional" xexpand="0" width="25"/>
                 <label name="lims_user"/>
                 <field name="lims_user"/>
-                <label name="is_lab_professional"/>
-                <field name="is_lab_professional"/>
-                <label name="entry_zone"/>
-                <field name="entry_zone"/>
             </group>
         </page>
     </xpath>

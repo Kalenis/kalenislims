@@ -20,12 +20,10 @@
         <label name="repetition"/>
         <field name="repetition"/>
     </group>
-    <group id="dates" colspan="2" col="6">
-        <label name="create_date2"/>
-        <field name="create_date2" widget="date"/>
-        <label name="laboratory_date"/>
-        <field name="laboratory_date"/>
-        <label name="report_date"/>
-        <field name="report_date"/>
-    </group>
+    <label name="create_date2"/>
+    <field name="create_date2" widget="date"/>
+    <label name="laboratory_date"/>
+    <field name="laboratory_date"/>
+    <label name="report_date"/>
+    <field name="report_date"/>
 </form>

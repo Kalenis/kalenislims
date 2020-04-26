@@ -75,9 +75,11 @@
             <label name="size_uom"/>
             <field name="size_uom"/>
         </page>
-        <page id="comments" string="Comments">
+        <page id="report" string="Report">
             <separator string="Report comments" colspan="4" id="report_comments"/>
             <field name="report_comments" colspan="4"/>
+        </page>
+        <page id="comments" string="Comments">
             <separator string="Comments" colspan="4" id="comments"/>
             <field name="comments" colspan="4"/>
         </page>

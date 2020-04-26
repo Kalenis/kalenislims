@@ -5,9 +5,13 @@
         position="inside">
         <label name="no_send_invoice"/>
         <field name="no_send_invoice"/>
+    </xpath>
+    <xpath
+        expr="/form/notebook/page[@id='lims']/group[@id='lims_checkboxes']"
+        position="after">
         <label name="commercial_item"/>
-        <field name="commercial_item" colspan="4"/>
+        <field name="commercial_item"/>
         <label name="commercial_zone"/>
-        <field name="commercial_zone" colspan="4"/>
+        <field name="commercial_zone"/>
     </xpath>
 </data>

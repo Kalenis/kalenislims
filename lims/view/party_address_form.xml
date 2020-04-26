@@ -6,19 +6,25 @@
         <newline/>
         <label name="email"/>
         <field name="email"/>
-        <group col="12" colspan="6" id="entry_contacts">
-            <label name="report_contact"/>
-            <field name="report_contact"/>
-            <label name="report_contact_default"/>
-            <field name="report_contact_default"/>
-            <label name="acknowledgment_contact"/>
-            <field name="acknowledgment_contact"/>
-            <label name="acknowledgment_contact_default"/>
-            <field name="acknowledgment_contact_default"/>
-            <label name="invoice_contact"/>
-            <field name="invoice_contact"/>
-            <label name="invoice_contact_default"/>
-            <field name="invoice_contact_default"/>
+        <group id="entry_contacts" colspan="6" col="3">
+            <group id="report_contact" colspan="1" col="2">
+                <label name="report_contact"/>
+                <field name="report_contact"/>
+                <label name="report_contact_default"/>
+                <field name="report_contact_default"/>
+            </group>
+            <group id="acknowledgment_contact" colspan="1" col="2">
+                <label name="acknowledgment_contact"/>
+                <field name="acknowledgment_contact"/>
+                <label name="acknowledgment_contact_default"/>
+                <field name="acknowledgment_contact_default"/>
+            </group>
+            <group id="invoice_contact" colspan="1" col="2">
+                <label name="invoice_contact"/>
+                <field name="invoice_contact"/>
+                <label name="invoice_contact_default"/>
+                <field name="invoice_contact_default"/>
+            </group>
         </group>
     </xpath>
 </data>

@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <form>
     <label name="report_version"/>
-    <field name="report_version" colspan="3"/>
+    <field name="report_version"/>
+    <label name="party"/>
+    <field name="party"/>
     <label name="laboratory"/>
     <field name="laboratory"/>
     <label name="number"/>
@@ -27,8 +29,6 @@
     <newline/>
     <label name="signer"/>
     <field name="signer"/>
-    <label name="party"/>
-    <field name="party"/>
     <label name="create_date2"/>
     <field name="create_date2"/>
     <label name="write_date2"/>

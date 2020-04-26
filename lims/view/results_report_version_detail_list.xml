@@ -5,9 +5,10 @@
     <field name="number"/>
     <field name="state"/>
     <field name="valid"/>
+    <field name="party"/>
     <field name="report_type"/>
     <field name="report_result_type"/>
-    <field name="party"/>
+    <field name="signer"/>
     <field name="cie_fraction_type"/>
     <field name="resultrange_origin"/>
     <field name="create_date2" widget="date"/>
