@@ -154,9 +154,7 @@
         <menuitem parent="lims_config_base" action="act_printer_list"
             id="lims_printer_menu" sequence="30"/>
 
-        <menuitem name="Base Tables" parent="lims_config"
-            id="lims_config_base_tables" sequence="70"/>
-
+        <!-- Configuration / Laboratory -->
         <menuitem name="Laboratory" parent="lims_config"
             id="lims_config_laboratory" sequence="40"/>
         <menuitem parent="lims_config_laboratory" action="act_lims_laboratory_list"
@@ -171,6 +169,10 @@
             id="lims_lab_device_menu" sequence="50"/>
         <menuitem action="act_notebook_rule_list" id="menu_notebook_rule_list"
             parent="lims_config_laboratory" sequence="60"/>
+
+        <!-- Configuration / Base Tables -->
+        <menuitem name="Base Tables" parent="lims_config"
+            id="lims_config_base_tables" sequence="70"/>
 
         <record model="ir.model.access" id="access_configuration">
             <field name="model" search="[('model', '=', 'lims.configuration')]"/>
@@ -204,6 +206,8 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
+        <!-- Base -->
+
         <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_base_readonly">
             <field name="menu" ref="lims_laboratory"/>
             <field name="group" ref="group_lims_conf_base_readonly"/>
@@ -231,6 +235,37 @@
             <field name="group" ref="group_lims_conf_base_admin"/>
         </record>
 
+        <!-- Laboratory -->
+
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_laboratory_readonly">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_laboratory_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_laboratory_admin">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_laboratory_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_laboratory_readonly">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_laboratory_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_laboratory_admin">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_laboratory_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_laboratory_readonly">
+            <field name="menu" ref="lims_config_laboratory"/>
+            <field name="group" ref="group_lims_conf_laboratory_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_laboratory_admin">
+            <field name="menu" ref="lims_config_laboratory"/>
+            <field name="group" ref="group_lims_conf_laboratory_admin"/>
+        </record>
+
+        <!-- Base Tables -->
+
         <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_base_tables_readonly">
             <field name="menu" ref="lims_laboratory"/>
             <field name="group" ref="group_lims_conf_base_tables_readonly"/>
@@ -256,24 +291,6 @@
         <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_base_tables_admin">
             <field name="menu" ref="lims_config_base_tables"/>
             <field name="group" ref="group_lims_conf_base_tables_admin"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_laboratory_readonly">
-            <field name="menu" ref="lims_config"/>
-            <field name="group" ref="group_lims_conf_laboratory_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_laboratory_admin">
-            <field name="menu" ref="lims_config"/>
-            <field name="group" ref="group_lims_conf_laboratory_admin"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_laboratory_readonly">
-            <field name="menu" ref="lims_config_laboratory"/>
-            <field name="group" ref="group_lims_conf_laboratory_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_laboratory_admin">
-            <field name="menu" ref="lims_config_laboratory"/>
-            <field name="group" ref="group_lims_conf_laboratory_admin"/>
         </record>
 
     </data>

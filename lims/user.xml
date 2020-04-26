@@ -178,8 +178,6 @@ this repository contains the full copyright notices and license terms. -->
             <field name="group" ref="group_lims_control"/>
         </record>
 
-<!-- Groups -->
-
         <record model="res.group" id="group_lims_blind_sample_readonly">
             <field name="name">Lims Blind Samples Read Only</field>
         </record>
