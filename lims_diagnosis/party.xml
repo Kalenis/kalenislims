@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Diagnostician -->
+
+        <record model="ir.ui.view" id="diagnostician_view_form">
+            <field name="model">lims.diagnostician</field>
+            <field name="type">form</field>
+            <field name="name">diagnostician_form</field>
+        </record>
+        <record model="ir.ui.view" id="diagnostician_view_list">
+            <field name="model">lims.diagnostician</field>
+            <field name="type">tree</field>
+            <field name="name">diagnostician_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_diagnostician_list">
+            <field name="name">Diagnosticians</field>
+            <field name="res_model">lims.diagnostician</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_diagnostician_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="diagnostician_view_list"/>
+            <field name="act_window" ref="act_diagnostician_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_diagnostician_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="diagnostician_view_form"/>
+            <field name="act_window" ref="act_diagnostician_list"/>
+        </record>
+
+        <menuitem action="act_diagnostician_list"
+            id="menu_diagnostician_list"
+            parent="lims.lims_config_report" sequence="30"/>
+
+<!-- Party -->
+
+        <record model="ir.ui.view" id="party_view_form">
+            <field name="model">party.party</field>
+            <field name="inherit" ref="party.party_view_form"/>
+            <field name="name">party_party_form</field>
+        </record>
+
+    </data>
+</tryton>

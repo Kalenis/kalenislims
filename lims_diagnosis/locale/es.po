@@ -1,0 +1,63 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:lims.analysis,diagnostician:"
+msgid "Diagnostician"
+msgstr "Diagnosticador"
+
+msgctxt "field:lims.analysis,not_block_diagnosis:"
+msgid "Does not block diagnosis"
+msgstr "No bloquea diagnóstico"
+
+msgctxt "field:lims.create_sample.start,diagnostician:"
+msgid "Diagnostician"
+msgstr "Diagnosticador"
+
+msgctxt "field:lims.diagnostician,party:"
+msgid "Party"
+msgstr "Entidad"
+
+msgctxt "field:lims.notebook.line,diagnosis_warning:"
+msgid "Diagnosis Warning"
+msgstr "Advertencia de diagnóstico"
+
+msgctxt "field:lims.product.type,diagnostician:"
+msgid "Diagnostician"
+msgstr "Diagnosticador"
+
+msgctxt "field:lims.results_report.version.detail,diagnostician:"
+msgid "Diagnostician"
+msgstr "Diagnosticador"
+
+msgctxt "field:lims.sample,diagnosis_warning:"
+msgid "Diagnosis Warning"
+msgstr "Advertencia de diagnóstico"
+
+msgctxt "field:lims.sample,diagnostician:"
+msgid "Diagnostician"
+msgstr "Diagnosticador"
+
+msgctxt "field:party.party,diagnostician:"
+msgid "Diagnostician"
+msgstr "Diagnosticador"
+
+msgctxt "help:lims.analysis,not_block_diagnosis:"
+msgid "This analysis is not necessary to begin diagnosing the sample"
+msgstr "Este análisis no es necesario para comenzar a diagnosticar la muestra"
+
+msgctxt "model:ir.action,name:act_diagnostician_list"
+msgid "Diagnosticians"
+msgstr "Diagnosticadores"
+
+msgctxt "model:ir.ui.menu,name:menu_diagnostician_list"
+msgid "Diagnosticians"
+msgstr "Diagnosticadores"
+
+msgctxt "model:lims.diagnostician,name:"
+msgid "Diagnostician"
+msgstr "Diagnosticador"
+
+msgctxt "view:lims.analysis:"
+msgid "Diagnosis"
+msgstr "Diagnóstico"

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/tree/field[@name='signer']" position="after">
+        <field name="diagnostician"/>
+    </xpath>
+</data>
