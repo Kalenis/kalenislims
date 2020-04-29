@@ -6,15 +6,11 @@
     <field name="party"/>
     <label name="laboratory"/>
     <field name="laboratory"/>
-    <label name="number"/>
-    <field name="number"/>
-    <group col="6" colspan="4" id="fields_group">
-        <label name="state"/>
-        <field name="state"/>
-        <label name="valid"/>
-        <field name="valid"/>
+    <group id="number" colspan="2" col="4">
+        <label name="number"/>
+        <field name="number"/>
         <label name="english_report"/>
-        <field name="english_report"/>
+        <field name="english_report" xexpand="0"/>
     </group>
     <label name="report_type_forced"/>
     <field name="report_type_forced"/>
@@ -50,7 +46,13 @@
         </page>
     </notebook>
     <field name="notebook_lines" colspan="4"/>
-    <group colspan="4" id="buttons">
+    <group id="state" colspan="2" col="4">
+        <label name="state"/>
+        <field name="state"/>
+        <label name="valid"/>
+        <field name="valid"/>
+    </group>
+    <group id="buttons" colspan="2" col="3">
         <button name="revise" string="Revised"/>
         <button name="revise_all_lang" string="Revised for all languages"/>
         <button name="annul" string="Annulled"/>
