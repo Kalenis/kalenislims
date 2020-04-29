@@ -8,6 +8,8 @@ from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
+from trytond.modules.lims_interface.interface import FUNCTIONS
+from .function import custom_functions
 
 __all__ = ['Configuration', 'Method', 'Analysis', 'Typification',
     'NotebookLine', 'EntryDetailAnalysis', 'ResultReport',
@@ -17,6 +19,7 @@ _PROOF_TYPES = [
     ('qualitative', 'Qualitative'),
     ('quantitative', 'Quantitative')
     ]
+FUNCTIONS.update(custom_functions)
 
 
 class Configuration(metaclass=PoolMeta):
