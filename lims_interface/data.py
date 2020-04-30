@@ -5,6 +5,7 @@
 import sql
 import formulas
 import schedula
+from itertools import chain
 
 from trytond.model import ModelSQL, ModelView, fields, sequence_ordered
 from trytond.pool import Pool, PoolMeta
@@ -170,6 +171,10 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
                 value = value.tolist()
             if isinstance(value, formulas.tokens.operand.XlError):
                 value = None
+            elif isinstance(value, list):
+                for x in chain(*value):
+                    if isinstance(x, formulas.tokens.operand.XlError):
+                        value = None
             res[field.name] = value
         return res
 
@@ -198,6 +203,10 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
                 value = value.tolist()
             if isinstance(value, formulas.tokens.operand.XlError):
                 value = None
+            elif isinstance(value, list):
+                for x in chain(*value):
+                    if isinstance(x, formulas.tokens.operand.XlError):
+                        value = None
             return value
 
         setattr(cls, fn_name, fn)

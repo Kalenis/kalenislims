@@ -13,6 +13,7 @@ from openpyxl import load_workbook
 from decimal import Decimal
 from datetime import datetime, date, time
 from dateutil import relativedelta
+from itertools import chain
 
 from trytond.config import config
 from trytond.model import (Workflow, ModelView, ModelSQL, fields,
@@ -1093,6 +1094,10 @@ class Compilation(Workflow, ModelSQL, ModelView):
             value = value.tolist()
         if isinstance(value, formulas.tokens.operand.XlError):
             value = None
+        elif isinstance(value, list):
+            for x in chain(*value):
+                if isinstance(x, formulas.tokens.operand.XlError):
+                    value = None
         return value
 
     def _get_notebook_line(self, line):

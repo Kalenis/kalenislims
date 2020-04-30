@@ -4,6 +4,7 @@
 import formulas
 import schedula
 from datetime import datetime
+from itertools import chain
 #from dateutil.relativedelta import relativedelta
 
 from trytond.model import ModelSQL, ModelView, fields
@@ -771,6 +772,11 @@ class CalculateExpressions(Wizard):
                             value = value.tolist()
                         if isinstance(value, formulas.tokens.operand.XlError):
                             value = None
+                        elif isinstance(value, list):
+                            for x in chain(*value):
+                                if isinstance(
+                                        x, formulas.tokens.operand.XlError):
+                                    value = None
                         line.set_field(str(value or ''), alias)
 
         return 'end'
