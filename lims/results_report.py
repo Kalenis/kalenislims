@@ -2212,9 +2212,10 @@ class ResultReport(Report):
         report_context = super(ResultReport, cls).get_context(
                 records, data)
 
-        lang_code = data.get('alt_lang',
-            report_context['user'].language and
-            report_context['user'].language.code or 'en')
+        if data.get('alt_lang'):
+            lang_code = data['alt_lang']
+        else:
+            lang_code = report_context['user'].language.code
         report_context['alt_lang'] = lang_code
 
         with Transaction().set_context(language=lang_code):
