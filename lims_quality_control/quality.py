@@ -320,6 +320,7 @@ class QualityTest(Workflow, ModelSQL, ModelView):
                     raise UserError(gettext(
                         'lims_quality_control.msg_missing_results_report'))
             if (test.template.countersample_required and
+                    test.sample.test_state != 'countersample' and
                     not test.sample.countersamples):
                 raise UserError(gettext(
                     'lims_quality_control.msg_missing_countersample'))
