@@ -433,7 +433,8 @@ class Lot(metaclass=PoolMeta):
             if not values.get('category'):
                 product = Product(values['product'])
                 lot_category_id = None
-                if (product.purchasable and not product.salable):
+                if (hasattr(product, 'purchasable') and
+                        product.purchasable and not product.salable):
                     lot_category_id = (config.lot_category_input_prod.id
                         if config.lot_category_input_prod else None)
                 elif (not product.purchasable and product.salable):
