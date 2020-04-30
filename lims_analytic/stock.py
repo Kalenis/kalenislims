@@ -126,6 +126,8 @@ class Move(metaclass=PoolMeta):
         date = self.effective_date or Date.today()
         period_id = Period.find(self.company.id, date=date)
         period = Period(period_id)
+        if not hasattr(period.fiscalyear, 'account_stock_method'):
+            return
         if not period.fiscalyear.account_stock_method:
             return
 
