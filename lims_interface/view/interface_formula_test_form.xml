@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<form>
+    <label name="expression_column"/>
+    <field name="expression_column"/>
+    <newline/>
+    <group id="expression" colspan="4" col="3">
+        <label name="expression"/>
+        <field name="expression" xexpand="1"/>
+        <image name="expression_icon" xexpand="0" size="30"/>
+    </group>
+    <field name="variables" colspan="4"/>
+    <label name="result"/>
+    <field name="result"/>
+</form>

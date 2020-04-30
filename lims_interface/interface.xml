@@ -146,6 +146,27 @@
             <field name="name">compilation_origin_list</field>
         </record>
 
+        <!-- Wizard Test Formula -->
+        <record model="ir.ui.view" id="interface_formula_test_view_form">
+            <field name="model">lims.interface.formula.test</field>
+            <field name="type">form</field>
+            <field name="name">interface_formula_test_form</field>
+        </record>
+        <record model="ir.ui.view" id="interface_formula_test_variable_view_list">
+            <field name="model">lims.interface.formula.test.variable</field>
+            <field name="type">tree</field>
+            <field name="name">interface_formula_test_variable_list</field>
+        </record>
+        <record model="ir.action.wizard" id="wiz_interface_formula_test">
+            <field name="name">Test Formula</field>
+            <field name="wiz_name">lims.interface.formula.test</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_interface_formula_test_keyword1">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.interface,-1</field>
+            <field name="action" ref="wiz_interface_formula_test"/>
+        </record>
+
     <!-- Menu -->
 
         <!-- Configuration / Laboratory / Interfaces -->

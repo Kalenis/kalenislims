@@ -15,6 +15,8 @@ def register():
         interface.CopyInterfaceColumnStart,
         interface.Compilation,
         interface.CompilationOrigin,
+        interface.TestFormulaView,
+        interface.TestFormulaViewVariable,
         table.Table,
         table.TableField,
         table.TableView,
@@ -23,4 +25,5 @@ def register():
         module='lims_interface', type_='model')
     Pool.register(
         interface.CopyInterfaceColumn,
+        interface.TestFormula,
         module='lims_interface', type_='wizard')

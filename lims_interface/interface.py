@@ -28,7 +28,8 @@ from .function import custom_functions
 
 
 __all__ = ['Interface', 'Column', 'CopyInterfaceColumnStart',
-    'CopyInterfaceColumn', 'Compilation', 'CompilationOrigin']
+    'CopyInterfaceColumn', 'Compilation', 'CompilationOrigin',
+    'TestFormulaView', 'TestFormulaViewVariable', 'TestFormula']
 
 
 FUNCTIONS = formulas.get_functions()
@@ -1275,3 +1276,169 @@ class CompilationOrigin(ModelSQL, ModelView):
                     raise UserError(gettext(
                         'lims_interface.duplicated_origin_file',
                         file_name=self.file_name))
+
+
+class TestFormulaView(ModelView):
+    'Test Formula'
+    __name__ = 'lims.interface.formula.test'
+    expression_column = fields.Many2One('lims.interface.column',
+        'Formula Column', required=True,
+        domain=[('id', 'in', Eval('expression_column_domain'))],
+        depends=['expression_column_domain'])
+    expression_column_domain = fields.Function(fields.Many2Many(
+        'lims.interface.column', None, None, 'Expression column domain'),
+        'on_change_with_expression_column_domain')
+    expression = fields.Char('Formula', required=True)
+    expression_icon = fields.Function(fields.Char('Expression Icon'),
+        'on_change_with_expression_icon')
+    variables = fields.One2Many('lims.interface.formula.test.variable',
+        None, 'Variables')
+    result = fields.Char('Result', readonly=True)
+
+    def formula_error(self):
+        if not self.expression:
+            return
+        if not self.expression.startswith('='):
+            return
+        parser = formulas.Parser()
+        try:
+            builder = parser.ast(self.expression)[1]
+            # Find missing methods:
+            # https://github.com/vinci1it2000/formulas/issues/19#issuecomment-429793111
+            missing_methods = [k for k, v in builder.dsp.function_nodes.items()
+                if v['function'] is formulas.functions.not_implemented]
+            if missing_methods:
+                # When there are two occurrences of the same missing method,
+                # the function name returned looks like this:
+                #
+                # Sample formula: A(x) + A(y)
+                # missing_methods: ['A', 'A<0>']
+                #
+                # So in the line below we remove the '<0>' suffix
+                missing_methods = {x.split('<')[0] for x in missing_methods}
+                if len(missing_methods) == 1:
+                    msg = 'Unknown method: '
+                else:
+                    msg = 'Unknown methods: '
+                msg += (', '.join(missing_methods))
+                return ('error', msg)
+
+            ast = builder.compile()
+            missing = (set([x.lower() for x in ast.inputs]) -
+                self.previous_formulas())
+            if not missing:
+                return
+            return ('warning', 'Referenced alias "%s" not found. Ensure it is '
+                'declared before this formula.' % ', '.join(missing))
+        except formulas.errors.FormulaError as error:
+            msg = error.msg.replace('\n', ' ')
+            if error.args[1:]:
+                msg = msg % error.args[1:]
+            return ('error', msg)
+
+    @fields.depends()
+    def on_change_with_expression_column_domain(self, name=None):
+        InterfaceColumn = Pool().get('lims.interface.column')
+        columns = InterfaceColumn.search([
+            ('interface', '=', Transaction().context.get('active_id')),
+            ('expression', '!=', ''),
+        ])
+        return [x.id for x in columns]
+
+    @fields.depends('expression_column', 'variables')
+    def on_change_expression_column(self):
+        self.expression = None
+        self.variables = []
+        if not self.expression_column:
+            return
+
+        self.expression = self.expression_column.expression
+        variables = []
+        parser = formulas.Parser()
+        ast = parser.ast(self.expression)[1].compile()
+        inputs = (' '.join([x for x in ast.inputs])
+            ).lower().split()
+        for input_ in inputs:
+            variables.append({'variable': input_})
+        self.variables = variables
+
+    @fields.depends('expression_column', 'expression', 'variables')
+    def on_change_with_result(self):
+        if not self.expression_column or not self.expression:
+            return None
+
+        parser = formulas.Parser()
+        try:
+            ast = parser.ast(self.expression)[1].compile()
+        except Exception:
+            return None
+
+        inputs = []
+        for variable in self.variables:
+            try:
+                input_value = float(variable.value)
+            except ValueError:
+                input_value = variable.value
+            inputs.append(input_value)
+        try:
+            value = ast(*inputs)
+        except schedula.utils.exc.DispatcherError as e:
+            raise UserError(e.args[0] % e.args[1:])
+
+        if isinstance(value, list):
+            value = str(value)
+        elif (not isinstance(value, str) and
+                not isinstance(value, int) and
+                not isinstance(value, float) and
+                not isinstance(value, type(None))):
+            value = value.tolist()
+        if isinstance(value, formulas.tokens.operand.XlError):
+            value = None
+        elif isinstance(value, list):
+            for x in chain(*value):
+                if isinstance(x, formulas.tokens.operand.XlError):
+                    value = None
+
+        self.result = value
+        return self._changed_values.get('result', [])
+
+    @fields.depends('expression')
+    def on_change_with_expression_icon(self, name=None):
+        print('entreeeeeeeee')
+        if not self.expression:
+            return ''
+        if not self.expression.startswith('='):
+            return ''
+        error = self.formula_error()
+        if not error:
+            return 'lims-green'
+        if error[0] == 'warning':
+            return 'lims-yellow'
+        return 'lims-red'
+
+
+class TestFormulaViewVariable(ModelView):
+    'Test Formula'
+    __name__ = 'lims.interface.formula.test.variable'
+    variable = fields.Char('Variable', readonly=True)
+    value = fields.Text('Value')
+
+
+class TestFormula(Wizard):
+    'Test Formula'
+    __name__ = 'lims.interface.formula.test'
+    start_state = 'test'
+    test = StateView('lims.interface.formula.test',
+        'lims_interface.interface_formula_test_view_form',
+        [Button('Close', 'end', 'tryton-close', default=True)])
+
+    def default_test(self, fields):
+        InterfaceColumn = Pool().get('lims.interface.column')
+        columns = InterfaceColumn.search([
+            ('interface', '=', Transaction().context.get('active_id')),
+            ('expression', '!=', ''),
+        ])
+        default = {
+            'expression_column_domain': [x.id for x in columns],
+        }
+        return default

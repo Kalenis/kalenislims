@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<tree editable="top">
+    <field name="variable"/>
+    <field name="value"/>
+</tree>
