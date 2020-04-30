@@ -539,6 +539,9 @@ class ShipmentIn(metaclass=PoolMeta):
         if not move:
             return None
 
+        if not incoming_move.origin:
+            return None
+
         move.label_quantity = move.quantity
         move.origin_purchase_currency = \
             incoming_move.origin.purchase.currency.id
