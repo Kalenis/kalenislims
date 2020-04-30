@@ -362,7 +362,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         samples[nl.fraction.id] = []
                     samples[nl.fraction.id].append(nl.analysis.id)
 
-                    if result_field and getattr(line, result_field):
+                    if (result_field and getattr(line, result_field) and
+                            s.state != 'draft'):
                         results += 1
 
                 result['samples_qty'][s.id] = len(samples)
