@@ -7,6 +7,10 @@ import re
 from configparser import ConfigParser
 from setuptools import setup
 
+MODULE2PREFIX = {
+    'html_report': 'trytonspain',
+    }
+
 
 def kalenis_test_suite():
     from trytond.tests.test_tryton import modules_suite
@@ -21,6 +25,8 @@ def read(fname):
 
 
 def get_require_version(name):
+    if name in LINKS:
+        return '%s @ %s' % (name, LINKS[name])
     if minor_version % 2:
         require = '%s >= %s.%s.dev0, < %s.%s'
     else:
@@ -38,6 +44,14 @@ minor_version = int(minor_version)
 # TODO: check new openpyxl versions, v.3 seems to be buggy in PyPI
 requires = ['appdirs', 'Click', 'formulas', 'openpyxl==2.6.4', 'pandas',
     'psycopg2', 'PyPDF2', 'pytz', 'unidecode', 'xlrd', 'xlutils']
+
+LINKS = {
+    'trytonspain_html_report': ('https://github.com/Kalenis/'
+        'trytond-html_report/tarball/master#egg='
+        'trytonspain_html_report-%s.%s' %
+        (major_version, minor_version)),
+    }
+
 packages = []
 package_dir = {}
 package_data = {}
@@ -57,7 +71,9 @@ for name in os.listdir('.'):
         if re.match(r'^lims*', dep):
             continue
         if not re.match(r'(ir|res)(\W|$)', dep):
-            requires.append(get_require_version('trytond_%s' % dep))
+            module_name = '%s_%s' % (MODULE2PREFIX.get(dep, 'trytond'), dep)
+            requires.append(get_require_version(module_name))
+
     package = 'trytond.modules.%s' % name
     package_dir[package] = os.path.join('.', name)
     packages.append(package)
@@ -70,7 +86,8 @@ for name in os.listdir('.'):
     subpackage = package
     for data_pattern in (info.get('xml', []) + ['tryton.cfg', 'view/*.xml',
                 'locale/*.po', 'locale/override/*.po', 'report/*.fodt',
-                'report/*.fods', 'icons/*.svg', 'tests/*.rst']):
+                'report/*.fods', 'report/*.html', 'icons/*.svg',
+                'tests/*.rst']):
         data.append(data_pattern)
     if data:
         package_data[subpackage] = data
@@ -78,7 +95,7 @@ requires.append(get_require_version('trytond'))
 requires.append(get_require_version('proteus'))
 
 tests_require = [get_require_version('proteus')]
-dependency_links = []
+dependency_links = list(LINKS.values())
 
 if __name__ == '__main__':
     setup(name='kalenis_lims',
