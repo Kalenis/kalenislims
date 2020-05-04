@@ -5,6 +5,7 @@
 from trytond.pool import Pool
 from . import party
 from . import analysis
+from . import html_template
 from . import sample
 from . import results_report
 from . import notebook
@@ -17,6 +18,8 @@ def register():
         party.Party,
         analysis.Analysis,
         analysis.ProductType,
+        html_template.DiagnosisTemplate,
+        html_template.ReportTemplate,
         sample.Sample,
         sample.CreateSampleStart,
         results_report.ResultsReportVersionDetail,

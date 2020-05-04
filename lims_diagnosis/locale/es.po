@@ -14,6 +14,14 @@ msgctxt "field:lims.create_sample.start,diagnostician:"
 msgid "Diagnostician"
 msgstr "Diagnosticador"
 
+msgctxt "field:lims.diagnosis.template,content:"
+msgid "Content"
+msgstr "Contenido"
+
+msgctxt "field:lims.diagnosis.template,name:"
+msgid "Name"
+msgstr "Nombre"
+
 msgctxt "field:lims.diagnostician,party:"
 msgid "Party"
 msgstr "Entidad"
@@ -25,6 +33,14 @@ msgstr "Advertencia de diagnóstico"
 msgctxt "field:lims.product.type,diagnostician:"
 msgid "Diagnostician"
 msgstr "Diagnosticador"
+
+msgctxt "field:lims.result_report.template,diagnosis_template:"
+msgid "Diagnosis Template"
+msgstr "Plantilla de Diagnóstico"
+
+msgctxt "field:lims.results_report.version.detail,diagnosis_template:"
+msgid "Diagnosis Template"
+msgstr "Plantilla de Diagnóstico"
 
 msgctxt "field:lims.results_report.version.detail,diagnostician:"
 msgid "Diagnostician"
@@ -50,9 +66,21 @@ msgctxt "model:ir.action,name:act_diagnostician_list"
 msgid "Diagnosticians"
 msgstr "Diagnosticadores"
 
+msgctxt "model:ir.action,name:act_html_diagnosis_template_list"
+msgid "Diagnosis Templates"
+msgstr "Plantillas de Diagnóstico"
+
 msgctxt "model:ir.ui.menu,name:menu_diagnostician_list"
 msgid "Diagnosticians"
 msgstr "Diagnosticadores"
+
+msgctxt "model:ir.ui.menu,name:menu_html_diagnosis_template_list"
+msgid "Diagnosis Templates"
+msgstr "Plantillas de Diagnóstico"
+
+msgctxt "model:lims.diagnosis.template,name:"
+msgid "Diagnosis Template"
+msgstr "Plantilla de Diagnóstico"
 
 msgctxt "model:lims.diagnostician,name:"
 msgid "Diagnostician"
@@ -61,3 +89,7 @@ msgstr "Diagnosticador"
 msgctxt "view:lims.analysis:"
 msgid "Diagnosis"
 msgstr "Diagnóstico"
+
+msgctxt "view:lims.diagnosis.template:"
+msgid "Content"
+msgstr "Contenido"
