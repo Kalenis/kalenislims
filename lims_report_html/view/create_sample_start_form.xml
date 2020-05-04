@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='report']/separator[@id='report_comments']"
+        position="before">
+        <label name="result_template"/>
+        <field name="result_template"/>
+        <label name="resultrange_origin"/>
+        <field name="resultrange_origin"/>
+    </xpath>
+</data>

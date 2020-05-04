@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Results Report Template -->
+
+        <record model="ir.ui.view" id="template_view_form">
+            <field name="model">lims.result_report.template</field>
+            <field name="type">form</field>
+            <field name="name">template_form</field>
+        </record>
+        <record model="ir.ui.view" id="template_view_list">
+            <field name="model">lims.result_report.template</field>
+            <field name="type">tree</field>
+            <field name="name">template_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_html_template_list">
+            <field name="name">Results Report Templates</field>
+            <field name="res_model">lims.result_report.template</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_html_template_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="template_view_list"/>
+            <field name="act_window" ref="act_html_template_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_html_template_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="template_view_form"/>
+            <field name="act_window" ref="act_html_template_list"/>
+        </record>
+
+        <menuitem action="act_html_template_list"
+            id="menu_html_template_list"
+            parent="lims.lims_config_report" sequence="10"/>
+
+    </data>
+</tryton>

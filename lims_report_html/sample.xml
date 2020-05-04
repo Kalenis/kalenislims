@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Sample -->
+
+        <record model="ir.ui.view" id="sample_view_form">
+            <field name="model">lims.sample</field>
+            <field name="inherit" ref="lims.lims_sample_view_form"/>
+            <field name="name">sample_form</field>
+        </record>
+
+<!-- Wizard Create Sample -->
+
+        <record model="ir.ui.view" id="create_sample_start_view_form">
+            <field name="model">lims.create_sample.start</field>
+            <field name="inherit" ref="lims.lims_create_sample_start_view_form"/>
+            <field name="name">create_sample_start_form</field>
+        </record>
+
+    </data>
+</tryton>

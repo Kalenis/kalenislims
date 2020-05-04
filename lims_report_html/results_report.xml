@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Results Report Version Detail -->
+
+        <record model="ir.ui.view" id="results_report_version_detail_view_list">
+            <field name="model">lims.results_report.version.detail</field>
+            <field name="inherit" ref="lims.lims_results_report_version_detail_view_list"/>
+            <field name="name">results_report_version_detail_list</field>
+        </record>
+        <record model="ir.ui.view" id="results_report_version_detail_view_form">
+            <field name="model">lims.results_report.version.detail</field>
+            <field name="inherit" ref="lims.lims_results_report_version_detail_view_form"/>
+            <field name="name">results_report_version_detail_form</field>
+        </record>
+
+<!-- Results Report -->
+
+        <record model="ir.action.report" id="lims.report_results_report">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record model="ir.action.report" id="report_results_report">
+            <field name="name">Results Report</field>
+            <field name="model">lims.results_report.version.detail</field>
+            <field name="report_name">lims.result_report</field>
+            <field name="report">lims_report_html/report/results_report.html</field>
+            <field name="extension">pdf</field>
+            <field name="template_extension">results</field>
+        </record>
+        <record model="ir.action.keyword" id="report_results_report_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.results_report.version.detail,-1</field>
+            <field name="action" ref="report_results_report"/>
+        </record>
+
+    </data>
+</tryton>

@@ -1,0 +1,55 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:lims.create_sample.start,result_template:"
+msgid "Report Template"
+msgstr "Plantilla de Informe"
+
+msgctxt "field:lims.create_sample.start,resultrange_origin:"
+msgid "Comparison range"
+msgstr "Rango de comparación"
+
+msgctxt "field:lims.result_report.template,content:"
+msgid "Content"
+msgstr "Contenido"
+
+msgctxt "field:lims.result_report.template,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.results_report.version.detail,template:"
+msgid "Report Template"
+msgstr "Plantilla de Informe"
+
+msgctxt "field:lims.sample,result_template:"
+msgid "Report Template"
+msgstr "Plantilla de Informe"
+
+msgctxt "field:lims.sample,resultrange_origin:"
+msgid "Comparison range"
+msgstr "Rango de comparación"
+
+msgctxt "model:ir.action,name:act_html_template_list"
+msgid "Results Report Templates"
+msgstr "Plantillas de Informe de resultados"
+
+msgctxt "model:ir.action,name:report_results_report"
+msgid "Results Report"
+msgstr "Informe de resultados"
+
+msgctxt "model:ir.message,text:msg_no_template"
+msgid "The report has no template"
+msgstr "El informe no tiene ninguna plantilla"
+
+msgctxt "model:ir.ui.menu,name:menu_html_template_list"
+msgid "Results Report Templates"
+msgstr "Plantillas de Informe"
+
+msgctxt "model:lims.result_report.template,name:"
+msgid "Results Report Template"
+msgstr "Plantilla de Informe de resultados"
+
+msgctxt "view:lims.result_report.template:"
+msgid "Content"
+msgstr "Contenido"
