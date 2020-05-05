@@ -3,7 +3,7 @@
 # the full copyright notices and license terms.
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from trytond.model import fields, ModelView, ModelSQL, DictSchemaMixin
+from trytond.model import fields, ModelView
 from trytond.wizard import Wizard, StateView, StateTransition, StateAction, \
     Button
 from trytond.pool import Pool, PoolMeta
@@ -13,35 +13,14 @@ from trytond.report import Report
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['LabWorkYear', 'SampleAttribute', 'SampleAttributeAttributeSet',
-    'Sample', 'TakeSampleStart', 'TakeSample', 'CountersampleCreateStart',
-    'CountersampleCreate', 'SampleLabels']
+__all__ = ['LabWorkYear', 'Sample', 'TakeSampleStart', 'TakeSample',
+    'CountersampleCreateStart', 'CountersampleCreate', 'SampleLabels']
 
 
 class LabWorkYear(metaclass=PoolMeta):
     __name__ = 'lims.lab.workyear'
     default_entry_quality = fields.Many2One('lims.entry',
         'Default entry quality')
-
-
-class SampleAttribute(DictSchemaMixin, ModelSQL, ModelView):
-    'Sample Attribute'
-    __name__ = 'lims.quality.sample.attribute'
-
-    sets = fields.Many2Many(
-        'lims.quality.sample.attribute-lims.quality.configuration',
-        'attribute', 'configuration', 'Sets')
-
-
-class SampleAttributeAttributeSet(ModelSQL):
-    'Sample Attribute - Set'
-    __name__ = 'lims.quality.sample.attribute-lims.quality.configuration'
-    _table = 'lims_sample_attribute_quality_configuration'
-
-    attribute = fields.Many2One('lims.quality.sample.attribute', 'Attribute',
-        required=True, ondelete='CASCADE', select=True)
-    configuration = fields.Many2One('lims.quality.configuration', 'Set',
-        required=True, ondelete='CASCADE', select=True)
 
 
 class Sample(metaclass=PoolMeta):
@@ -53,7 +32,6 @@ class Sample(metaclass=PoolMeta):
         ('done', 'Done'),
         ('countersample', 'Countersample'),
         ], 'Test State', readonly=True)
-    attributes = fields.Dict('lims.quality.sample.attribute', 'Attributes')
     product = fields.Function(fields.Many2One('product.product',
         'Product'), 'on_change_with_product', searcher='search_product')
     quality_test = fields.Many2One('lims.quality.test', 'Test', readonly=True)
@@ -90,7 +68,7 @@ class TakeSampleStart(ModelView):
 
     date = fields.Date('Date', required=True)
     label = fields.Char('Label', required=True)
-    attributes = fields.Dict('lims.quality.sample.attribute', 'Attributes')
+    attributes = fields.Dict('lims.sample.attribute', 'Attributes')
 
     @staticmethod
     def default_date():

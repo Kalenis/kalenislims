@@ -73,37 +73,6 @@
         <menuitem parent="menu_quality_control" action="act_lims_sample_list"
             id="lims_sample_menu" sequence="30"/>
 
-        <record model="ir.ui.view" id="sample_attribute_view_list">
-            <field name="model">lims.quality.sample.attribute</field>
-            <field name="type">tree</field>
-            <field name="name">sample_attribute_list</field>
-        </record>
-        <record model="ir.ui.view" id="sample_attribute_view_form">
-            <field name="model">lims.quality.sample.attribute</field>
-            <field name="type">form</field>
-            <field name="name">sample_attribute_form</field>
-        </record>
-
-        <record model="ir.action.act_window" id="act_sample_attribute">
-            <field name="name">Quality Sample Attributes</field>
-            <field name="res_model">lims.quality.sample.attribute</field>
-        </record>
-        <record model="ir.action.act_window.view"
-            id="act_sample_attribute_view_list">
-            <field name="sequence" eval="10"/>
-            <field name="view" ref="sample_attribute_view_list"/>
-            <field name="act_window" ref="act_sample_attribute"/>
-        </record>
-        <record model="ir.action.act_window.view"
-            id="act_sample_attribute_view_form">
-            <field name="sequence" eval="20"/>
-            <field name="view" ref="sample_attribute_view_form"/>
-            <field name="act_window" ref="act_sample_attribute"/>
-        </record>
-
-        <menuitem action="act_sample_attribute" id="menu_sample_attribute"
-            parent="menu_configuration" sequence="70"/>
-
         <record model="ir.ui.view" id="lims_take_sample_start_view_form">
             <field name="model">lims.take.sample.start</field>
             <field name="type">form</field>

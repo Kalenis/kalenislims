@@ -9,7 +9,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal
 
-from trytond.model import ModelView, ModelSQL, fields, Unique
+from trytond.model import ModelView, ModelSQL, fields, Unique, DictSchemaMixin
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
 from trytond.pool import Pool
@@ -20,8 +20,8 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
 __all__ = ['Zone', 'Variety', 'MatrixVariety', 'PackagingIntegrity',
-    'PackagingType', 'FractionType', 'SampleProducer', 'Service',
-    'Fraction', 'Sample', 'DuplicateSampleStart', 'DuplicateSample',
+    'PackagingType', 'FractionType', 'SampleProducer', 'SampleAttribute',
+    'Service', 'Fraction', 'Sample', 'DuplicateSampleStart', 'DuplicateSample',
     'DuplicateSampleFromEntryStart', 'DuplicateSampleFromEntry',
     'ManageServices', 'CompleteServices', 'EditSampleServiceStart',
     'EditSampleService', 'FractionsByLocationsStart', 'FractionsByLocations',
@@ -264,6 +264,11 @@ class SampleProducer(ModelSQL, ModelView):
 
     party = fields.Many2One('party.party', 'Party', required=True)
     name = fields.Char('Name', required=True)
+
+
+class SampleAttribute(DictSchemaMixin, ModelSQL, ModelView):
+    'Sample Attribute'
+    __name__ = 'lims.sample.attribute'
 
 
 class Service(ModelSQL, ModelView):
@@ -2398,6 +2403,7 @@ class Sample(ModelSQL, ModelView):
         'get_completion_percentage')
     department = fields.Function(fields.Many2One('company.department',
         'Department'), 'get_department', searcher='search_department')
+    attributes = fields.Dict('lims.sample.attribute', 'Attributes')
 
     @classmethod
     def __setup__(cls):
@@ -4625,6 +4631,7 @@ class CreateSampleStart(ModelView):
         depends=['analysis_domain', 'product_type', 'matrix',
             'without_services'])
     without_services = fields.Boolean('Without services')
+    attributes = fields.Dict('lims.sample.attribute', 'Attributes')
 
     @staticmethod
     def default_date():
@@ -5071,6 +5078,8 @@ class CreateSample(Wizard):
             getattr(self.start, 'report_comments') or None)
         comments = (hasattr(self.start, 'comments') and
             getattr(self.start, 'comments') or None)
+        attributes = (hasattr(self.start, 'attributes') and
+            getattr(self.start, 'attributes') or None)
 
         # services data
         services_defaults = []
@@ -5138,6 +5147,7 @@ class CreateSample(Wizard):
                 'variety': variety_id,
                 'label': label,
                 'fractions': [('create', [fraction_defaults])],
+                'attributes': attributes,
                 }
 
             samples_defaults.append(sample_defaults)

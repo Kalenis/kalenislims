@@ -76,6 +76,7 @@ def register():
         sample.Zone,
         sample.Variety,
         sample.SampleProducer,
+        sample.SampleAttribute,
         sample.Sample,
         sample.Fraction,
         sample.Service,

@@ -4,7 +4,6 @@
         <page string="Quality" id="quality">
             <label name="lot"/>
             <field name="lot"/>
-            <field name="attributes" colspan="4"/>
         </page>
     </xpath>
 </data>

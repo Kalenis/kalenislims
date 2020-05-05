@@ -106,10 +106,6 @@ msgctxt "field:lims.notebook.load_results_manual.line,qualitative_value:"
 msgid "Qualitative Value"
 msgstr "Resultado Cualitativo"
 
-msgctxt "field:lims.quality.configuration,attributes:"
-msgid "Attributes"
-msgstr "Atributos"
-
 msgctxt "field:lims.quality.configuration,create_date:"
 msgid "Create Date"
 msgstr "Fecha de Creación"
@@ -219,106 +215,6 @@ msgid "Write Date"
 msgstr "Fecha modificación"
 
 msgctxt "field:lims.quality.qualitative.value,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.quality.sample.attribute,create_date:"
-msgid "Create Date"
-msgstr "Fecha de Creación"
-
-msgctxt "field:lims.quality.sample.attribute,create_uid:"
-msgid "Create User"
-msgstr "Usuario de creación"
-
-msgctxt "field:lims.quality.sample.attribute,digits:"
-msgid "Digits"
-msgstr "Dígitos"
-
-msgctxt "field:lims.quality.sample.attribute,domain:"
-msgid "Domain"
-msgstr "Dominio"
-
-msgctxt "field:lims.quality.sample.attribute,id:"
-msgid "ID"
-msgstr "Identificador"
-
-msgctxt "field:lims.quality.sample.attribute,name:"
-msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.quality.sample.attribute,rec_name:"
-msgid "Record Name"
-msgstr "Nombre registro"
-
-msgctxt "field:lims.quality.sample.attribute,selection:"
-msgid "Selection"
-msgstr "Selección"
-
-msgctxt "field:lims.quality.sample.attribute,selection_json:"
-msgid "Selection JSON"
-msgstr "Selección JSON"
-
-msgctxt "field:lims.quality.sample.attribute,selection_sorted:"
-msgid "Selection Sorted"
-msgstr "Selección ordenada"
-
-msgctxt "field:lims.quality.sample.attribute,sets:"
-msgid "Sets"
-msgstr "Conjuntos"
-
-msgctxt "field:lims.quality.sample.attribute,string:"
-msgid "String"
-msgstr "Etiqueta"
-
-msgctxt "field:lims.quality.sample.attribute,type_:"
-msgid "Type"
-msgstr "Tipo"
-
-msgctxt "field:lims.quality.sample.attribute,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.quality.sample.attribute,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt ""
-"field:lims.quality.sample.attribute-lims.quality.configuration,attribute:"
-msgid "Attribute"
-msgstr "Atributo"
-
-msgctxt ""
-"field:lims.quality.sample.attribute-"
-"lims.quality.configuration,configuration:"
-msgid "Set"
-msgstr "Set"
-
-msgctxt ""
-"field:lims.quality.sample.attribute-lims.quality.configuration,create_date:"
-msgid "Create Date"
-msgstr "Fecha de Creación"
-
-msgctxt ""
-"field:lims.quality.sample.attribute-lims.quality.configuration,create_uid:"
-msgid "Create User"
-msgstr "Usuario de creación"
-
-msgctxt "field:lims.quality.sample.attribute-lims.quality.configuration,id:"
-msgid "ID"
-msgstr "Identificador"
-
-msgctxt ""
-"field:lims.quality.sample.attribute-lims.quality.configuration,rec_name:"
-msgid "Record Name"
-msgstr "Nombre registro"
-
-msgctxt ""
-"field:lims.quality.sample.attribute-lims.quality.configuration,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt ""
-"field:lims.quality.sample.attribute-lims.quality.configuration,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
 
@@ -478,10 +374,6 @@ msgctxt "field:lims.quality.test,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
 
-msgctxt "field:lims.sample,attributes:"
-msgid "Attributes"
-msgstr "Atributos"
-
 msgctxt "field:lims.sample,countersample:"
 msgid "Countersample"
 msgstr "Contramuestra"
@@ -590,14 +482,6 @@ msgctxt "field:product.template,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
-msgctxt "help:lims.quality.sample.attribute,selection:"
-msgid "A couple of key and label separated by \":\" per line"
-msgstr "Clave y valor separados por \\\":\\\" en cada línea."
-
-msgctxt "help:lims.quality.sample.attribute,selection_sorted:"
-msgid "If the selection must be sorted on label"
-msgstr ""
-
 msgctxt "model:ir.action,name:"
 msgid "Quality Configuration Line"
 msgstr "Línea de Configuración"
@@ -621,10 +505,6 @@ msgstr "Plantilla"
 msgctxt "model:ir.action,name:act_quality_test"
 msgid "Quality Test"
 msgstr "Prueba"
-
-msgctxt "model:ir.action,name:act_sample_attribute"
-msgid "Quality Sample Attributes"
-msgstr "Atributos"
 
 msgctxt "model:ir.action,name:report_sample_labels"
 msgid "Sample Labels"
@@ -869,10 +749,6 @@ msgctxt "model:ir.ui.menu,name:menu_quality_test"
 msgid "Tests"
 msgstr "Pruebas"
 
-msgctxt "model:ir.ui.menu,name:menu_sample_attribute"
-msgid "Quality Sample Attributes"
-msgstr "Atributos"
-
 msgctxt "model:lims.countersample.create.start,name:"
 msgid "Countersample Create Start"
 msgstr ""
@@ -892,14 +768,6 @@ msgstr ""
 msgctxt "model:lims.quality.qualitative.value,name:"
 msgid "Quality Value"
 msgstr "Valor"
-
-msgctxt "model:lims.quality.sample.attribute,name:"
-msgid "Sample Attribute"
-msgstr "Atributo de Muestra"
-
-msgctxt "model:lims.quality.sample.attribute-lims.quality.configuration,name:"
-msgid "Sample Attribute - Set"
-msgstr ""
 
 msgctxt "model:lims.quality.template,name:"
 msgid "Quality Template"
@@ -1025,38 +893,6 @@ msgctxt "selection:lims.analysis,quality_type:"
 msgid "Quantitative"
 msgstr "Cuantitativo"
 
-msgctxt "selection:lims.quality.sample.attribute,type_:"
-msgid "Boolean"
-msgstr "Booleano"
-
-msgctxt "selection:lims.quality.sample.attribute,type_:"
-msgid "Char"
-msgstr "Texto"
-
-msgctxt "selection:lims.quality.sample.attribute,type_:"
-msgid "Date"
-msgstr "Fecha"
-
-msgctxt "selection:lims.quality.sample.attribute,type_:"
-msgid "DateTime"
-msgstr "Fecha/Hora"
-
-msgctxt "selection:lims.quality.sample.attribute,type_:"
-msgid "Float"
-msgstr "Número coma flotante"
-
-msgctxt "selection:lims.quality.sample.attribute,type_:"
-msgid "Integer"
-msgstr "Entero"
-
-msgctxt "selection:lims.quality.sample.attribute,type_:"
-msgid "Numeric"
-msgstr "Númerico"
-
-msgctxt "selection:lims.quality.sample.attribute,type_:"
-msgid "Selection"
-msgstr "Selección"
-
 msgctxt "selection:lims.quality.template,state:"
 msgid "Active"
 msgstr "Activo"
@@ -1128,10 +964,6 @@ msgstr "Observaciones"
 msgctxt "view:lims.quality.test:"
 msgid "Test Time"
 msgstr ""
-
-msgctxt "view:lims.sample:"
-msgid "Attributes"
-msgstr "Atributos"
 
 msgctxt "view:lims.sample:"
 msgid "Comments"

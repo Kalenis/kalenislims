@@ -214,10 +214,6 @@ msgctxt "field:lims.component.type,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
 
-msgctxt "field:lims.create_sample.start,attributes:"
-msgid "Attributes"
-msgstr "Atributos"
-
 msgctxt "field:lims.create_sample.start,attributes_domain:"
 msgid "Attributes domain"
 msgstr "Dominio para Atributos"
@@ -566,10 +562,6 @@ msgctxt "field:lims.product.type,attribute_set:"
 msgid "Attribute Set"
 msgstr "Conjunto de atributos"
 
-msgctxt "field:lims.sample,attributes:"
-msgid "Attributes"
-msgstr "Atributos"
-
 msgctxt "field:lims.sample,attributes_domain:"
 msgid "Attributes domain"
 msgstr "Dominio para Atributos"
@@ -649,66 +641,6 @@ msgstr "ID Foto muestra"
 msgctxt "field:lims.sample,sampling_type:"
 msgid "Sampling Type"
 msgstr "Muestreo"
-
-msgctxt "field:lims.sample.attribute,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.sample.attribute,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.sample.attribute,digits:"
-msgid "Digits"
-msgstr "Dígitos"
-
-msgctxt "field:lims.sample.attribute,domain:"
-msgid "Domain"
-msgstr "Dominio"
-
-msgctxt "field:lims.sample.attribute,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.sample.attribute,name:"
-msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.sample.attribute,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.sample.attribute,selection:"
-msgid "Selection"
-msgstr "Selección"
-
-msgctxt "field:lims.sample.attribute,selection_json:"
-msgid "Selection JSON"
-msgstr "Selección JSON"
-
-msgctxt "field:lims.sample.attribute,selection_sorted:"
-msgid "Selection Sorted"
-msgstr "Selección Ordenada"
-
-msgctxt "field:lims.sample.attribute,sets:"
-msgid "Sets"
-msgstr "Conjuntos"
-
-msgctxt "field:lims.sample.attribute,string:"
-msgid "String"
-msgstr "Etiqueta"
-
-msgctxt "field:lims.sample.attribute,type_:"
-msgid "Type"
-msgstr "Tipo"
-
-msgctxt "field:lims.sample.attribute,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.sample.attribute,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.sample.attribute-attribute.set,attribute:"
 msgid "Attribute"
@@ -866,14 +798,6 @@ msgctxt "field:party.party,plants:"
 msgid "Plants"
 msgstr "Plantas"
 
-msgctxt "help:lims.sample.attribute,selection:"
-msgid "A couple of key and label separated by \":\" per line"
-msgstr "Por cada lína una clave y una etiqueta separadas por \":\""
-
-msgctxt "help:lims.sample.attribute,selection_sorted:"
-msgid "If the selection must be sorted on label"
-msgstr "Si la selección debe ordenarse por la etiqueta"
-
 msgctxt "model:ir.action,name:act_brand"
 msgid "Brands"
 msgstr "Marcas"
@@ -917,10 +841,6 @@ msgstr "Tipos de equipo"
 msgctxt "model:ir.action,name:act_plant"
 msgid "Plants"
 msgstr "Plantas"
-
-msgctxt "model:ir.action,name:act_sample_attribute"
-msgid "Sample Attributes"
-msgstr "Atributos de muestra"
 
 msgctxt "model:ir.action,name:act_sample_attribute_set"
 msgid "Sample Attributes Sets"
@@ -1022,10 +942,6 @@ msgctxt "model:ir.ui.menu,name:menu_plant"
 msgid "Plants"
 msgstr "Plantas"
 
-msgctxt "model:ir.ui.menu,name:menu_sample_attribute"
-msgid "Sample Attributes"
-msgstr "Atributos de muestra"
-
 msgctxt "model:ir.ui.menu,name:menu_sample_attribute_set"
 msgid "Sample Attributes Sets"
 msgstr "Conjuntos de Atributos de muestra"
@@ -1074,10 +990,6 @@ msgctxt "model:lims.plant,name:"
 msgid "Plant"
 msgstr "Planta"
 
-msgctxt "model:lims.sample.attribute,name:"
-msgid "Sample Attribute"
-msgstr "Atributo de muestra"
-
 msgctxt "model:lims.sample.attribute-attribute.set,name:"
 msgid "Sample Attribute - Set"
 msgstr "Atributo de muestra - Conjunto"
@@ -1093,38 +1005,6 @@ msgstr "Modificar muestras"
 msgctxt "model:lims.sampling.type,name:"
 msgid "Sampling Type"
 msgstr "Muestreo"
-
-msgctxt "selection:lims.sample.attribute,type_:"
-msgid "Boolean"
-msgstr "Boolean"
-
-msgctxt "selection:lims.sample.attribute,type_:"
-msgid "Char"
-msgstr "Char"
-
-msgctxt "selection:lims.sample.attribute,type_:"
-msgid "Date"
-msgstr "Date"
-
-msgctxt "selection:lims.sample.attribute,type_:"
-msgid "DateTime"
-msgstr "DateTime"
-
-msgctxt "selection:lims.sample.attribute,type_:"
-msgid "Float"
-msgstr "Float"
-
-msgctxt "selection:lims.sample.attribute,type_:"
-msgid "Integer"
-msgstr "Integer"
-
-msgctxt "selection:lims.sample.attribute,type_:"
-msgid "Numeric"
-msgstr "Numeric"
-
-msgctxt "selection:lims.sample.attribute,type_:"
-msgid "Selection"
-msgstr "Selección"
 
 msgctxt "view:lims.create_sample.start:"
 msgid "Industry"

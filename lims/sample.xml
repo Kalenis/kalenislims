@@ -92,6 +92,39 @@
             <field name="act_window" ref="act_lims_fraction_type_list"/>
         </record>
 
+<!-- Sample Attribute -->
+
+        <record model="ir.ui.view" id="sample_attribute_view_list">
+            <field name="model">lims.sample.attribute</field>
+            <field name="type">tree</field>
+            <field name="name">sample_attribute_list</field>
+        </record>
+        <record model="ir.ui.view" id="sample_attribute_view_form">
+            <field name="model">lims.sample.attribute</field>
+            <field name="type">form</field>
+            <field name="name">sample_attribute_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_sample_attribute">
+            <field name="name">Sample Attributes</field>
+            <field name="res_model">lims.sample.attribute</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_sample_attribute_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="sample_attribute_view_list"/>
+            <field name="act_window" ref="act_sample_attribute"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_sample_attribute_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="sample_attribute_view_form"/>
+            <field name="act_window" ref="act_sample_attribute"/>
+        </record>
+
+        <menuitem action="act_sample_attribute" id="menu_sample_attribute"
+            parent="lims_config_entry" sequence="70"/>
+
 <!-- Service -->
 
         <record model="ir.ui.view" id="lims_service_view_form">

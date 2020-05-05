@@ -48,7 +48,6 @@
     <xpath expr="/form/notebook/page[@id='general']"
         position="after">
         <page id="industry" string="Industry">
-            <field name="attributes" colspan="2"/>
             <group id="ind_operational_detail" colspan="2" col="1">
                 <separator id="ind_operational_detail"
                     string="Operational detail"/>

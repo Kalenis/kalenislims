@@ -2,7 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond.model import ModelSQL, ModelView, DictSchemaMixin, fields
+from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import PoolMeta
 
 __all__ = ['SampleAttributeSet', 'SampleAttribute',
@@ -19,8 +19,7 @@ class SampleAttributeSet(ModelSQL, ModelView):
         'attribute_set', 'attribute', 'Attributes')
 
 
-class SampleAttribute(DictSchemaMixin, ModelSQL, ModelView):
-    'Sample Attribute'
+class SampleAttribute(metaclass=PoolMeta):
     __name__ = 'lims.sample.attribute'
 
     sets = fields.Many2Many('lims.sample.attribute-attribute.set',

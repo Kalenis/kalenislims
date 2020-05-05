@@ -40,9 +40,6 @@ class Sample(metaclass=PoolMeta):
     ind_work_environment = fields.Text('Work environment')
     ind_analysis_reason = fields.Text('Reason for analysis')
     missing_data = fields.Boolean('Missing data')
-    attributes = fields.Dict('lims.sample.attribute', 'Attributes',
-        domain=[('id', 'in', Eval('attributes_domain'))],
-        depends=['attributes_domain'])
     attributes_domain = fields.Function(fields.Many2Many(
         'lims.sample.attribute', None, None, 'Attributes domain'),
         'on_change_with_attributes_domain')
@@ -67,6 +64,9 @@ class Sample(metaclass=PoolMeta):
         cls.matrix.states['readonly'] = Bool(Eval('comercial_product'))
         if 'comercial_product' not in cls.matrix.depends:
             cls.matrix.depends.append('comercial_product')
+        cls.attributes.domain = [('id', 'in', Eval('attributes_domain'))]
+        if 'attributes_domain' not in cls.attributes.depends:
+            cls.attributes.depends.append('attributes_domain')
 
     @fields.depends('component')
     def on_change_component(self):
@@ -171,9 +171,6 @@ class CreateSampleStart(metaclass=PoolMeta):
     ind_work_environment = fields.Text('Work environment')
     ind_analysis_reason = fields.Text('Reason for analysis')
     missing_data = fields.Boolean('Missing data')
-    attributes = fields.Dict('lims.sample.attribute', 'Attributes',
-        domain=[('id', 'in', Eval('attributes_domain'))],
-        depends=['attributes_domain'])
     attributes_domain = fields.Function(fields.Many2Many(
         'lims.sample.attribute', None, None, 'Attributes domain'),
         'on_change_with_attributes_domain')
@@ -196,6 +193,9 @@ class CreateSampleStart(metaclass=PoolMeta):
         cls.matrix.states['readonly'] = Bool(Eval('comercial_product'))
         if 'comercial_product' not in cls.matrix.depends:
             cls.matrix.depends.append('comercial_product')
+        cls.attributes.domain = [('id', 'in', Eval('attributes_domain'))]
+        if 'attributes_domain' not in cls.attributes.depends:
+            cls.attributes.depends.append('attributes_domain')
 
     @fields.depends('fraction_type')
     def on_change_with_ind_required(self, name=None):
@@ -293,8 +293,6 @@ class CreateSample(metaclass=PoolMeta):
             'ind_analysis_reason') or None)
         missing_data = (hasattr(self.start, 'missing_data') and
             getattr(self.start, 'missing_data') or False)
-        attributes = (hasattr(self.start, 'attributes') and
-            getattr(self.start, 'attributes') or None)
         sample_photo = (hasattr(self.start, 'sample_photo') and
             getattr(self.start, 'sample_photo') or None)
         label_photo = (hasattr(self.start, 'label_photo') and
@@ -321,7 +319,6 @@ class CreateSample(metaclass=PoolMeta):
             sample_defaults['ind_work_environment'] = ind_work_environment
             sample_defaults['ind_analysis_reason'] = ind_analysis_reason
             sample_defaults['missing_data'] = missing_data
-            sample_defaults['attributes'] = attributes
             sample_defaults['sample_photo'] = sample_photo
             sample_defaults['label_photo'] = label_photo
             sample_defaults['oil_added'] = oil_added

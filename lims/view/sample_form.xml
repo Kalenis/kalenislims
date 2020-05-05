@@ -48,6 +48,9 @@
             <field name="variety"/>
             <field name="fractions" colspan="4"/>
         </page>
+        <page string="Attributes" id="attributes">
+            <field name="attributes" colspan="4"/>
+        </page>
         <page string="Report" id="report">
             <separator string="Report comments" colspan="4" id="report_comments"/>
             <field name="report_comments" colspan="4"/>
