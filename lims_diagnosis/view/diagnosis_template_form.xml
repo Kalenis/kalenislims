@@ -6,5 +6,8 @@
 <!--            <field name="content" colspan="4" widget="html"/>-->
             <field name="content" colspan="4"/>
         </page>
+        <page id="diagnosis_states" string="States">
+            <field name="diagnosis_states" colspan="4"/>
+        </page>
     </notebook>
 </form>

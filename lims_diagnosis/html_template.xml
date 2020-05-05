@@ -2,7 +2,7 @@
 <tryton>
     <data>
 
-<!-- Results Report Template -->
+<!-- Diagnosis Template -->
 
         <record model="ir.ui.view" id="diagnosis_template_view_form">
             <field name="model">lims.diagnosis.template</field>
@@ -36,6 +36,40 @@
         <menuitem action="act_html_diagnosis_template_list"
             id="menu_html_diagnosis_template_list"
             parent="lims.lims_config_report" sequence="20"/>
+
+<!-- Diagnosis State -->
+
+        <record model="ir.ui.view" id="diagnosis_state_view_form">
+            <field name="model">lims.diagnosis.state</field>
+            <field name="type">form</field>
+            <field name="name">diagnosis_state_form</field>
+        </record>
+        <record model="ir.ui.view" id="diagnosis_state_view_list">
+            <field name="model">lims.diagnosis.state</field>
+            <field name="type">tree</field>
+            <field name="name">diagnosis_state_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_diagnosis_state_list">
+            <field name="name">Diagnosis States</field>
+            <field name="res_model">lims.diagnosis.state</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_diagnosis_state_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="diagnosis_state_view_list"/>
+            <field name="act_window" ref="act_diagnosis_state_list"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_diagnosis_state_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="diagnosis_state_view_form"/>
+            <field name="act_window" ref="act_diagnosis_state_list"/>
+        </record>
+
+        <menuitem action="act_diagnosis_state_list"
+            id="menu_diagnosis_state_list"
+            parent="menu_html_diagnosis_template_list" sequence="10"/>
 
 <!-- Results Report Template -->
 

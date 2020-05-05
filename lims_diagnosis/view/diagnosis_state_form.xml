@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form>
+    <label name="name"/>
+    <field name="name"/>
+    <label name="string"/>
+    <field name="string"/>
+    <separator id="selection" colspan="4" string="Options"/>
+    <field name="selection" colspan="4"/>
+</form>

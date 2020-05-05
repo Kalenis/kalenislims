@@ -18,9 +18,21 @@ msgctxt "field:lims.diagnosis.template,content:"
 msgid "Content"
 msgstr "Contenido"
 
+msgctxt "field:lims.diagnosis.template,diagnosis_states:"
+msgid "States"
+msgstr "Estados"
+
 msgctxt "field:lims.diagnosis.template,name:"
 msgid "Name"
 msgstr "Nombre"
+
+msgctxt "field:lims.diagnosis.template-diagnosis.state,state:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:lims.diagnosis.template-diagnosis.state,template:"
+msgid "Template"
+msgstr "Plantilla"
 
 msgctxt "field:lims.diagnostician,party:"
 msgid "Party"
@@ -62,6 +74,10 @@ msgctxt "help:lims.analysis,not_block_diagnosis:"
 msgid "This analysis is not necessary to begin diagnosing the sample"
 msgstr "Este análisis no es necesario para comenzar a diagnosticar la muestra"
 
+msgctxt "model:ir.action,name:act_diagnosis_state_list"
+msgid "Diagnosis States"
+msgstr "Estados de Diagnóstico"
+
 msgctxt "model:ir.action,name:act_diagnostician_list"
 msgid "Diagnosticians"
 msgstr "Diagnosticadores"
@@ -69,6 +85,10 @@ msgstr "Diagnosticadores"
 msgctxt "model:ir.action,name:act_html_diagnosis_template_list"
 msgid "Diagnosis Templates"
 msgstr "Plantillas de Diagnóstico"
+
+msgctxt "model:ir.ui.menu,name:menu_diagnosis_state_list"
+msgid "Diagnosis States"
+msgstr "Estados de Diagnóstico"
 
 msgctxt "model:ir.ui.menu,name:menu_diagnostician_list"
 msgid "Diagnosticians"
@@ -78,9 +98,17 @@ msgctxt "model:ir.ui.menu,name:menu_html_diagnosis_template_list"
 msgid "Diagnosis Templates"
 msgstr "Plantillas de Diagnóstico"
 
+msgctxt "model:lims.diagnosis.state,name:"
+msgid "Diagnosis State"
+msgstr "Estado de Diagnóstico"
+
 msgctxt "model:lims.diagnosis.template,name:"
 msgid "Diagnosis Template"
 msgstr "Plantilla de Diagnóstico"
+
+msgctxt "model:lims.diagnosis.template-diagnosis.state,name:"
+msgid "Diagnosis Template - State"
+msgstr "Plantilla de Diagnóstico - Estado"
 
 msgctxt "model:lims.diagnostician,name:"
 msgid "Diagnostician"
@@ -90,6 +118,14 @@ msgctxt "view:lims.analysis:"
 msgid "Diagnosis"
 msgstr "Diagnóstico"
 
+msgctxt "view:lims.diagnosis.state:"
+msgid "Options"
+msgstr "Opciones"
+
 msgctxt "view:lims.diagnosis.template:"
 msgid "Content"
 msgstr "Contenido"
+
+msgctxt "view:lims.diagnosis.template:"
+msgid "States"
+msgstr "Estados"
