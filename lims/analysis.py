@@ -1555,6 +1555,15 @@ class AnalysisIncluded(ModelSQL, ModelView):
         depends=['laboratory_domain', 'analysis_type'])
     laboratory_domain = fields.Function(fields.Many2Many('lims.laboratory',
         None, None, 'Laboratory domain'), 'on_change_with_laboratory_domain')
+    method = fields.Many2One('lims.lab.method', 'Method',
+        domain=[('id', 'in', Eval('method_domain'))],
+        states={
+            'invisible': Eval('analysis_type').in_(['set', 'group']),
+            },
+        depends=['method_domain', 'analysis_type'])
+    method_domain = fields.Function(fields.Many2Many('lims.lab.method',
+        None, None, 'Method domain'),
+        'on_change_with_method_domain')
 
     @classmethod
     def validate(cls, included_analysis):
@@ -1690,6 +1699,13 @@ class AnalysisIncluded(ModelSQL, ModelView):
         if not laboratories and self.laboratory:
             laboratories = [self.laboratory.id]
         return laboratories
+
+    @fields.depends('included_analysis', '_parent_included_analysis.methods')
+    def on_change_with_method_domain(self, name=None):
+        methods = []
+        if self.included_analysis and self.included_analysis.methods:
+            methods = [m.id for m in self.included_analysis.methods]
+        return methods
 
     @classmethod
     def create(cls, vlist):

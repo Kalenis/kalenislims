@@ -3,4 +3,5 @@
     <field name="included_analysis"/>
     <field name="analysis_type"/>
     <field name="laboratory"/>
+    <field name="method"/>
 </tree>

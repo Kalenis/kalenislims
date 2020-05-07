@@ -6,4 +6,7 @@
     <field name="analysis_type"/>
     <label name="laboratory"/>
     <field name="laboratory"/>
+    <label name="method"/>
+    <field name="method"/>
+    <field name="method_domain" invisible="1"/>
 </form>

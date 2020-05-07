@@ -591,15 +591,20 @@ class Service(ModelSQL, ModelView):
 
                     laboratory_id = included.laboratory.id
 
-                    typifications = Typification.search([
-                        ('product_type', '=', service_context['product_type']),
-                        ('matrix', '=', service_context['matrix']),
-                        ('analysis', '=', included.included_analysis),
-                        ('by_default', '=', True),
-                        ('valid', '=', True),
-                        ])
-                    method_id = (typifications[0].method.id if typifications
-                        else None)
+                    method_id = (included.method.id
+                        if included.method else None)
+
+                    if not method_id:
+                        typifications = Typification.search([
+                            ('product_type', '=',
+                                service_context['product_type']),
+                            ('matrix', '=', service_context['matrix']),
+                            ('analysis', '=', included.included_analysis),
+                            ('by_default', '=', True),
+                            ('valid', '=', True),
+                            ])
+                        method_id = (typifications[0].method.id
+                            if typifications else None)
 
                     device_id = None
                     if included.included_analysis.devices:

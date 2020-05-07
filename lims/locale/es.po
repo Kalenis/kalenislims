@@ -254,6 +254,14 @@ msgctxt "field:lims.analysis.included,laboratory_domain:"
 msgid "Laboratory domain"
 msgstr "Dominio para Laboratorio"
 
+msgctxt "field:lims.analysis.included,method:"
+msgid "Method"
+msgstr "Método"
+
+msgctxt "field:lims.analysis.included,method_domain:"
+msgid "Method domain"
+msgstr "Dominio para Método"
+
 msgctxt "field:lims.blind_sample,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
