@@ -3677,16 +3677,18 @@ class CountersampleStorage(Wizard):
     def _get_line_reported(self, nl, date_from, date_to):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        ReportVersionDetailLine = pool.get(
-            'lims.results_report.version.detail.line')
-        ReportVersionDetail = pool.get('lims.results_report.version.detail')
-        ReportVersion = pool.get('lims.results_report.version')
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
 
         cursor.execute('SELECT rvdl.id '
-            'FROM "' + ReportVersionDetailLine._table + '" rvdl '
-                'INNER JOIN "' + ReportVersionDetail._table + '" rvd '
-                'ON rvd.id = rvdl.report_version_detail '
-                'INNER JOIN "' + ReportVersion._table + '" rv '
+            'FROM "' + ResultsLine._table + '" rvdl '
+                'INNER JOIN "' + ResultsSample._table + '" rvds '
+                'ON rvds.id = rvdl.detail_sample '
+                'INNER JOIN "' + ResultsDetail._table + '" rvd '
+                'ON rvd.id = rvds.version_detail '
+                'INNER JOIN "' + ResultsVersion._table + '" rv '
                 'ON rv.id = rvd.report_version '
             'WHERE rvdl.notebook_line = %s '
                 'AND rv.results_report = %s '
@@ -5320,16 +5322,18 @@ class CountersampleStorageReport(Report):
     def _get_line_reported(cls, nl, date_from, date_to):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        ReportVersionDetailLine = pool.get(
-            'lims.results_report.version.detail.line')
-        ReportVersionDetail = pool.get('lims.results_report.version.detail')
-        ReportVersion = pool.get('lims.results_report.version')
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
 
         cursor.execute('SELECT rvdl.id '
-            'FROM "' + ReportVersionDetailLine._table + '" rvdl '
-                'INNER JOIN "' + ReportVersionDetail._table + '" rvd '
-                'ON rvd.id = rvdl.report_version_detail '
-                'INNER JOIN "' + ReportVersion._table + '" rv '
+            'FROM "' + ResultsLine._table + '" rvdl '
+                'INNER JOIN "' + ResultsSample._table + '" rvds '
+                'ON rvds.id = rvdl.detail_sample '
+                'INNER JOIN "' + ResultsDetail._table + '" rvd '
+                'ON rvd.id = rvds.version_detail '
+                'INNER JOIN "' + ResultsVersion._table + '" rv '
                 'ON rv.id = rvd.report_version '
             'WHERE rvdl.notebook_line = %s '
                 'AND rv.results_report = %s '

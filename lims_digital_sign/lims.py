@@ -115,13 +115,12 @@ class ResultsReport(metaclass=PoolMeta):
         :return: list of details
         '''
         pool = Pool()
-        ResultsReportVersionDetail = pool.get(
-            'lims.results_report.version.detail')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
 
         format_field = 'report_format'
         if english_report:
             format_field = 'report_format_eng'
-        details = ResultsReportVersionDetail.search([
+        details = ResultsDetail.search([
             ('report_version.results_report.id', '=', self.id),
             ('valid', '=', True),
             (format_field, '=', 'pdf'),
@@ -267,14 +266,13 @@ class ResultsReport(metaclass=PoolMeta):
         return subject, body
 
     def _get_sample_list(self, language):
-        ResultsReportVersionDetailLine = Pool().get(
-            'lims.results_report.version.detail.line')
+        ResultsLine = Pool().get('lims.results_report.version.detail.line')
 
         with Transaction().set_context(language=language):
-            lines = ResultsReportVersionDetailLine.search([
-                ('report_version_detail.report_version.results_report.id',
-                    '=', self.id),
-                ('report_version_detail.valid', '=', True),
+            lines = ResultsLine.search([
+                ('detail_sample.version_detail.report_version.'
+                    'results_report.id', '=', self.id),
+                ('detail_sample.version_detail.valid', '=', True),
                 ])
         if not lines:
             return []
@@ -393,11 +391,10 @@ class ResultsReportAnnulation(metaclass=PoolMeta):
         logging.getLogger('lims_digital_sign').info(
                 'transition_annul():INHERIT')
 
-        ResultsReportVersionDetail = Pool().get(
-            'lims.results_report.version.detail')
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
 
         # Check if the detail was annulled
-        detail_annulled = ResultsReportVersionDetail.search([
+        detail_annulled = ResultsDetail.search([
             ('id', 'in', Transaction().context['active_ids']),
             ('state', '=', 'annulled'),
             ])
@@ -407,7 +404,7 @@ class ResultsReportAnnulation(metaclass=PoolMeta):
         # Check if the report is not longer valid details
         if detail_annulled:
             results_report = detail_annulled[0].report_version.results_report
-            detail_valid = ResultsReportVersionDetail.search([
+            detail_valid = ResultsDetail.search([
                 ('report_version.results_report.id', '=', results_report.id),
                 ('state', '!=', 'annulled'),
                 ('valid', '=', True),

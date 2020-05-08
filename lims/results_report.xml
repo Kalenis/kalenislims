@@ -120,6 +120,19 @@
             <field name="rule_group" ref="rule_group_results_report_version_detail"/>
         </record>
 
+<!-- Results Report Version Detail Sample -->
+
+        <record model="ir.ui.view" id="lims_results_report_version_detail_sample_view_list">
+            <field name="model">lims.results_report.version.detail.sample</field>
+            <field name="type">tree</field>
+            <field name="name">results_report_version_detail_sample_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_results_report_version_detail_sample_view_form">
+            <field name="model">lims.results_report.version.detail.sample</field>
+            <field name="type">form</field>
+            <field name="name">results_report_version_detail_sample_form</field>
+        </record>
+
 <!-- Results Report Version Detail Line -->
 
         <record model="ir.ui.view" id="lims_results_report_version_detail_line_view_list">

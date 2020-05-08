@@ -778,15 +778,14 @@ class NotebookLine(ModelSQL, ModelView):
                 else:
                     self.acceptance_date = datetime.now()
         else:
-            ResultsReportVersionDetailLine = Pool().get(
-                'lims.results_report.version.detail.line')
-            report_lines = ResultsReportVersionDetailLine.search([
+            ResultsLine = Pool().get('lims.results_report.version.detail.line')
+            report_lines = ResultsLine.search([
                 ('notebook_line', '=', self.id),
-                ('report_version_detail.state', '!=', 'annulled'),
+                ('detail_sample.version_detail.state', '!=', 'annulled'),
                 ])
             if report_lines:
                 self.accepted = True
-                report_detail = report_lines[0].report_version_detail
+                report_detail = report_lines[0].version_detail
                 self.not_accepted_message = gettext('lims.msg_accepted_1',
                     report=report_detail.report_version.results_report.number)
             else:
@@ -4085,16 +4084,15 @@ class NotebookLineUnacceptLines(Wizard):
     def lines_unaccept(self, notebook_lines):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
-        ResultsReportVersionDetailLine = pool.get(
-            'lims.results_report.version.detail.line')
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
 
         lines_to_write = []
         for notebook_line in notebook_lines:
             if not notebook_line.accepted:
                 continue
-            report_lines = ResultsReportVersionDetailLine.search([
+            report_lines = ResultsLine.search([
                 ('notebook_line', '=', notebook_line.id),
-                ('report_version_detail.state', '!=', 'annulled'),
+                ('detail_sample.version_detail.state', '!=', 'annulled'),
                 ])
             if report_lines:
                 continue

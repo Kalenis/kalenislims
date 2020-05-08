@@ -71,9 +71,8 @@ class ResultReport(metaclass=PoolMeta):
 
     @classmethod
     def get_result_report_template(cls, action, detail_id):
-        ResultsReportVersionDetail = Pool().get(
-            'lims.results_report.version.detail')
-        detail = ResultsReportVersionDetail(detail_id)
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
+        detail = ResultsDetail(detail_id)
         content = detail.template and detail.template.content
         if not content:
             content = (action.report_content and

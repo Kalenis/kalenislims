@@ -90,6 +90,7 @@ def register():
         control_tendency.RangeType,
         results_report.ResultsReportVersion,
         results_report.ResultsReportVersionDetail,
+        results_report.ResultsReportVersionDetailSample,
         results_report.ResultsReportVersionDetailLine,
         certification.AnalysisFamily,
         certification.AnalysisFamilyCertificant,

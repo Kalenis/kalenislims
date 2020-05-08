@@ -4792,10 +4792,6 @@ msgctxt "field:lims.results_report.version.detail,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
 
-msgctxt "field:lims.results_report.version.detail,notebook_lines:"
-msgid "Lines"
-msgstr "Líneas"
-
 msgctxt "field:lims.results_report.version.detail,number:"
 msgid "Version"
 msgstr "Versión"
@@ -4880,6 +4876,10 @@ msgctxt "field:lims.results_report.version.detail,resultrange_origin:"
 msgid "Origin"
 msgstr "Origen"
 
+msgctxt "field:lims.results_report.version.detail,samples:"
+msgid "Samples"
+msgstr "Muestras"
+
 msgctxt "field:lims.results_report.version.detail,signer:"
 msgid "Signer"
 msgstr "Firmante"
@@ -4920,6 +4920,10 @@ msgctxt ""
 "field:lims.results_report.version.detail.line,converted_result_modifier:"
 msgid "Converted result modifier"
 msgstr "Modificador de resultado convertido"
+
+msgctxt "field:lims.results_report.version.detail.line,detail_sample:"
+msgid "Sample Detail"
+msgstr "Muestra"
 
 msgctxt "field:lims.results_report.version.detail.line,device:"
 msgid "Device"
@@ -4981,10 +4985,6 @@ msgctxt "field:lims.results_report.version.detail.line,report_date:"
 msgid "Date agreed for result"
 msgstr "Fecha pactada de resultado"
 
-msgctxt "field:lims.results_report.version.detail.line,report_version_detail:"
-msgid "Report Detail"
-msgstr "Detalle de informe"
-
 msgctxt "field:lims.results_report.version.detail.line,result:"
 msgid "Result"
 msgstr "Resultado"
@@ -5000,6 +5000,26 @@ msgstr "Fecha de inicio"
 msgctxt "field:lims.results_report.version.detail.line,urgent:"
 msgid "Urgent"
 msgstr "Urgente"
+
+msgctxt "field:lims.results_report.version.detail.sample,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.results_report.version.detail.sample,notebook:"
+msgid "Notebook"
+msgstr "Cuaderno"
+
+msgctxt "field:lims.results_report.version.detail.sample,notebook_lines:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:lims.results_report.version.detail.sample,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.results_report.version.detail.sample,version_detail:"
+msgid "Report Detail"
+msgstr "Detalle de informe"
 
 msgctxt "field:lims.results_report_annulation.start,annulment_reason:"
 msgid "Annulment reason"
@@ -8628,6 +8648,10 @@ msgstr "Detalle de versión de informe de resultados"
 msgctxt "model:lims.results_report.version.detail.line,name:"
 msgid "Results Report Version Detail Line"
 msgstr "Línea de detalle de versión de informe de resultados"
+
+msgctxt "model:lims.results_report.version.detail.sample,name:"
+msgid "Results Report Version Detail Sample"
+msgstr "Muestra de detalle de versión de informe de resultados"
 
 msgctxt "model:lims.results_report_annulation.start,name:"
 msgid "Report Annulation"
@@ -12942,6 +12966,10 @@ msgstr "Revisado"
 msgctxt "view:lims.results_report.version.detail:"
 msgid "Revised for all languages"
 msgstr "Revisado para todos los idiomas"
+
+msgctxt "view:lims.results_report.version.detail:"
+msgid "Samples"
+msgstr "Muestras"
 
 msgctxt "view:lims.results_report.version.detail:"
 msgid "Time"

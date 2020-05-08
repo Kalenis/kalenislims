@@ -30,13 +30,16 @@
     <label name="write_date2"/>
     <field name="write_date2"/>
     <notebook>
-        <page string="Comments" id="comments">
+        <page id="samples" string="Samples">
+            <field name="samples" colspan="4"/>
+        </page>
+        <page id="comments" string="Comments">
             <field name="comments" colspan="4"/>
         </page>
-        <page string="Fraction comments" id="fraction_comments">
+        <page id="fraction_comments" string="Fraction comments">
             <field name="fraction_comments" colspan="4"/>
         </page>
-        <page string="Annulation" id="annulation">
+        <page id="annulation" string="Annulation">
             <label name="annulment_date"/>
             <field name="annulment_date"/>
             <label name="annulment_reason_print"/>
@@ -45,7 +48,6 @@
             <field name="annulment_reason" colspan="4"/>
         </page>
     </notebook>
-    <field name="notebook_lines" colspan="4"/>
     <group id="state" colspan="2" col="4">
         <label name="state"/>
         <field name="state"/>
@@ -58,5 +60,5 @@
         <button name="annul" string="Annulled"/>
     </group>
     <field name="report_cache" colspan="4" invisible="1"/>
-    <field name="report_cache_eng" colspan="4"  invisible="1"/>
+    <field name="report_cache_eng" colspan="4" invisible="1"/>
 </form>

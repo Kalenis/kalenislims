@@ -18,9 +18,9 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
 __all__ = ['ResultsReport', 'ResultsReportVersion',
-    'ResultsReportVersionDetail', 'ResultsReportVersionDetailLine',
-    'DivideReportsResult', 'DivideReportsDetail',
-    'DivideReportsProcess', 'DivideReports',
+    'ResultsReportVersionDetail', 'ResultsReportVersionDetailSample',
+    'ResultsReportVersionDetailLine', 'DivideReportsResult',
+    'DivideReportsDetail', 'DivideReportsProcess', 'DivideReports',
     'GenerateResultsReportStart', 'GenerateResultsReportEmpty',
     'GenerateResultsReportResultAut', 'GenerateResultsReportResultMan',
     'GenerateResultsReportResultAutNotebook',
@@ -50,7 +50,7 @@ class ResultsReport(ModelSQL, ModelView):
 
     number = fields.Char('Number', select=True, readonly=True)
     versions = fields.One2Many('lims.results_report.version',
-        'results_report', 'Laboratories')
+        'results_report', 'Laboratories', readonly=True)
     report_grouper = fields.Integer('Report Grouper')
     generation_type = fields.Char('Generation type')
     cie_fraction_type = fields.Boolean('QA', readonly=True)
@@ -189,7 +189,7 @@ class ResultsReportVersion(ModelSQL, ModelView):
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         required=True, readonly=True)
     details = fields.One2Many('lims.results_report.version.detail',
-        'report_version', 'Detail lines')
+        'report_version', 'Detail lines', readonly=True)
     report_type = fields.Function(fields.Char('Report type'),
         'get_report_type')
 
@@ -199,9 +199,8 @@ class ResultsReportVersion(ModelSQL, ModelView):
         cls._order.insert(0, ('number', 'DESC'))
 
     def get_report_type(self, name):
-        ResultsReportVersionDetail = Pool().get(
-            'lims.results_report.version.detail')
-        valid_detail = ResultsReportVersionDetail.search([
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
+        valid_detail = ResultsDetail.search([
             ('report_version.id', '=', self.id),
             ], order=[('id', 'DESC')], limit=1)
         if valid_detail:
@@ -251,8 +250,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         ('revised', 'Revised'),
         ('annulled', 'Annulled'),
         ], 'State', readonly=True)
-    notebook_lines = fields.One2Many('lims.results_report.version.detail.line',
-        'report_version_detail', 'Lines', depends=['state'],
+    samples = fields.One2Many('lims.results_report.version.detail.sample',
+        'version_detail', 'Samples', depends=['state'],
         states={'readonly': Eval('state') != 'draft'})
     report_section = fields.Function(fields.Char('Section'),
         'get_report_section')
@@ -423,10 +422,12 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         cursor = Transaction().connection.cursor()
 
         cursor.execute('SELECT COUNT(*), t.report_type '
-            'FROM lims_results_report_version_detail_l d, '
+            'FROM lims_results_report_version_detail_sample sd, '
+            'lims_results_report_version_detail_l d, '
             'lims_notebook_line l, lims_typification t, '
             'lims_notebook n, lims_fraction f, lims_sample s '
-            'WHERE d.report_version_detail = %s '
+            'WHERE sd.version_detail = %s '
+                'AND d.detail_sample = sd.id '
                 'AND d.notebook_line = l.id '
                 'AND s.product_type = t.product_type '
                 'AND s.matrix = t.matrix '
@@ -458,10 +459,12 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         cursor = Transaction().connection.cursor()
 
         cursor.execute('SELECT COUNT(*), t.report_result_type '
-            'FROM lims_results_report_version_detail_l d, '
+            'FROM lims_results_report_version_detail_sample sd, '
+            'lims_results_report_version_detail_l d, '
             'lims_notebook_line l, lims_typification t, '
             'lims_notebook n, lims_fraction f, lims_sample s '
-            'WHERE d.report_version_detail = %s '
+            'WHERE sd.version_detail = %s '
+                'AND d.detail_sample = sd.id '
                 'AND d.notebook_line = l.id '
                 'AND s.product_type = t.product_type '
                 'AND s.matrix = t.matrix '
@@ -521,8 +524,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     @classmethod
     @ModelView.button
     def revise(cls, details):
-        ResultsReportVersionDetailLine = Pool().get(
-            'lims.results_report.version.detail.line')
+        ResultsLine = Pool().get('lims.results_report.version.detail.line')
 
         cls.revise_notebook_lines(details)
         for detail in details:
@@ -536,23 +538,27 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                 ])
             if valid_details:
                 vd_ids = []
-                notebook_lines = []
+                samples = []
                 for vd in valid_details:
                     vd_ids.append(vd.id)
-                    for nline in vd.notebook_lines:
-                        notebook_lines.append({
-                            'notebook_line': nline.notebook_line.id,
+                    for sample in vd.samples:
+                        notebook_lines = [
+                            {'notebook_line': nline.notebook_line.id}
+                            for nline in sample.notebook_lines]
+                        samples.append({
+                            'notebook': sample.notebook.id,
+                            'notebook_lines': [('create', notebook_lines)],
                             })
-                if notebook_lines:
-                    defaults['notebook_lines'] = [('create', notebook_lines)]
+                if samples:
+                    defaults['samples'] = [('create', samples)]
 
                 cls.write(valid_details, {
                     'valid': False,
                     })
-                old_lines = ResultsReportVersionDetailLine.search([
-                    ('report_version_detail.id', 'in', vd_ids),
+                old_lines = ResultsLine.search([
+                    ('detail_sample.version_detail.id', 'in', vd_ids),
                     ])
-                ResultsReportVersionDetailLine.delete(old_lines)
+                ResultsLine.delete(old_lines)
 
             cls.write([detail], defaults)
             detail.generate_report()
@@ -566,9 +572,10 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         for detail in details:
             revised_lines = []
             revised_entry_details = []
-            for nline in detail.notebook_lines:
-                revised_lines.append(nline.notebook_line.id)
-                revised_entry_details.append(
+            for sample in detail.samples:
+                for nline in sample.notebook_lines:
+                    revised_lines.append(nline.notebook_line.id)
+                    revised_entry_details.append(
                         nline.notebook_line.analysis_detail.id)
 
             notebook_lines = NotebookLine.search([
@@ -601,9 +608,10 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         for detail in details:
             annulled_lines = []
             annulled_entry_details = []
-            for nline in detail.notebook_lines:
-                annulled_lines.append(nline.notebook_line.id)
-                annulled_entry_details.append(
+            for sample in detail.samples:
+                for nline in sample.notebook_lines:
+                    annulled_lines.append(nline.notebook_line.id)
+                    annulled_entry_details.append(
                         nline.notebook_line.analysis_detail.id)
 
             notebook_lines = NotebookLine.search([
@@ -784,19 +792,53 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         return 'lims-white'
 
 
+class ResultsReportVersionDetailSample(ModelSQL, ModelView):
+    'Results Report Version Detail Sample'
+    __name__ = 'lims.results_report.version.detail.sample'
+
+    version_detail = fields.Many2One('lims.results_report.version.detail',
+        'Report Detail', required=True, ondelete='CASCADE', select=True)
+    notebook = fields.Many2One('lims.notebook', 'Notebook', required=True,
+            readonly=True)
+    notebook_lines = fields.One2Many('lims.results_report.version.detail.line',
+        'detail_sample', 'Analysis')
+    product_type = fields.Function(fields.Many2One('lims.product.type',
+        'Product type'), 'get_notebook_field')
+    matrix = fields.Function(fields.Many2One('lims.matrix', 'Matrix'),
+        'get_notebook_field')
+
+    @classmethod
+    def get_notebook_field(cls, samples, names):
+        result = {}
+        for name in names:
+            result[name] = {}
+            if name in ('product_type', 'matrix'):
+                for s in samples:
+                    field = getattr(s.notebook, name, None)
+                    result[name][s.id] = field.id if field else None
+            else:
+                for s in samples:
+                    result[name][s.id] = getattr(s.notebook, name, None)
+        return result
+
+
 class ResultsReportVersionDetailLine(ModelSQL, ModelView):
     'Results Report Version Detail Line'
     __name__ = 'lims.results_report.version.detail.line'
     _table = 'lims_results_report_version_detail_l'
 
-    report_version_detail = fields.Many2One(
-        'lims.results_report.version.detail', 'Report Detail',
+    detail_sample = fields.Many2One(
+        'lims.results_report.version.detail.sample', 'Sample Detail',
         required=True, ondelete='CASCADE', select=True)
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
-        required=True, select=True)
+        required=True, readonly=True, select=True)
+    party = fields.Function(fields.Many2One('party.party', 'Party'),
+        'get_nline_field')
     notebook = fields.Function(fields.Many2One('lims.notebook',
         'Laboratory notebook'), 'get_nline_field')
-    party = fields.Function(fields.Many2One('party.party', 'Party'),
+    product_type = fields.Function(fields.Many2One('lims.product.type',
+        'Product type'), 'get_nline_field')
+    matrix = fields.Function(fields.Many2One('lims.matrix', 'Matrix'),
         'get_nline_field')
     analysis = fields.Function(fields.Many2One('lims.analysis', 'Analysis'),
         'get_nline_field')
@@ -848,10 +890,41 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         'get_nline_field')
     literal_result = fields.Function(fields.Char('Literal result'),
         'get_nline_field')
-    product_type = fields.Function(fields.Many2One('lims.product.type',
-        'Product type'), 'get_nline_field')
-    matrix = fields.Function(fields.Many2One('lims.matrix', 'Matrix'),
-        'get_nline_field')
+
+    @classmethod
+    def __register__(cls, module_name):
+        table = cls.__table_handler__(module_name)
+        super(ResultsReportVersionDetailLine, cls).__register__(module_name)
+        if table.column_exist('report_version_detail'):
+            cls._migrate_lines()
+            table.drop_column('report_version_detail')
+
+    @classmethod
+    def _migrate_lines(cls):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        cursor.execute('SELECT '
+                'DISTINCT(dl.report_version_detail, nl.notebook) '
+            'FROM "' + cls._table + '" dl '
+                'INNER JOIN "' + NotebookLine._table + '" nl '
+                'ON dl.notebook_line = nl.id')
+        for x in cursor.fetchall():
+            r = x[0].split(',')
+            detail_sample = ResultsSample(
+                version_detail=int(r[0][1:]),
+                notebook=int(r[1][:-1]))
+            detail_sample.save()
+            cursor.execute('UPDATE "' + cls._table + '" dl '
+                'SET detail_sample = %s '
+                'FROM "' + NotebookLine._table + '" nl '
+                'WHERE dl.notebook_line = nl.id '
+                    'AND dl.report_version_detail = %s '
+                    'AND nl.notebook = %s',
+                (detail_sample.id, detail_sample.version_detail.id,
+                 detail_sample.notebook.id))
 
     @classmethod
     def get_nline_field(cls, details, names):
@@ -1206,15 +1279,14 @@ class GenerateResultsReportResultMan(ModelView):
     @fields.depends('report', 'laboratory')
     def on_change_with_report_type(self, name=None):
         if self.report:
-            ResultsReportVersion = Pool().get(
-                'lims.results_report.version')
-            version = ResultsReportVersion.search([
+            ResultsVersion = Pool().get('lims.results_report.version')
+            version = ResultsVersion.search([
                 ('results_report.id', '=', self.report.id),
                 ('laboratory.id', '=', self.laboratory.id),
                 ], limit=1)
             if version:
                 return version[0].report_type
-            version = ResultsReportVersion.search([
+            version = ResultsVersion.search([
                 ('results_report.id', '=', self.report.id),
                 ], order=[('id', 'DESC')], limit=1)
             if version:
@@ -1279,8 +1351,7 @@ class GenerateResultsReport(Wizard):
     def _get_notebook_lines(self, generation_type, excluded_notebooks=[]):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        ResultsReportVersionDetailLine = pool.get(
-            'lims.results_report.version.detail.line')
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
         NotebookLine = pool.get('lims.notebook.line')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
@@ -1296,8 +1367,8 @@ class GenerateResultsReport(Wizard):
             clause.append(('notebook.party', '=', self.start.party.id))
 
         draft_lines_ids = []
-        draft_lines = ResultsReportVersionDetailLine.search([
-            ('report_version_detail.state', '=', 'draft'),
+        draft_lines = ResultsLine.search([
+            ('detail_sample.version_detail.state', '=', 'draft'),
             ])
         if draft_lines:
             draft_lines_ids = [dl.notebook_line.id for dl in draft_lines]
@@ -1509,8 +1580,6 @@ class GenerateResultsReport(Wizard):
         return self._generate_man()
 
     def _generate_aut(self):
-        NotebookLine = Pool().get('lims.notebook.line')
-
         notebooks = {}
         for line in self.result_aut.notebook_lines:
             if line.notebook.id not in notebooks:
@@ -1520,20 +1589,24 @@ class GenerateResultsReport(Wizard):
                     'divided_report': line.notebook.divided_report,
                     'english_report': (
                         line.notebook.fraction.entry.english_report),
-                    'notebook_lines': [],
                     'cie_fraction_type': (
                         line.notebook.fraction.cie_fraction_type),
+                    'lines': [],
                     }
-            notebooks[line.notebook.id]['notebook_lines'].append({
-                'notebook_line': line.id,
-                })
+            notebooks[line.notebook.id]['lines'].append(line)
 
         reports_details = []
         for notebook in notebooks.values():
             if not notebook['divided_report']:
+                notebook_lines = [{'notebook_line': line.id}
+                    for line in notebook['lines']]
+                samples = [{
+                    'notebook': notebook['notebook'],
+                    'notebook_lines': [('create', notebook_lines)],
+                    }]
                 details = {
-                    'notebook_lines': [('create', notebook['notebook_lines'])],
                     'signer': self.start.laboratory.default_signer.id,
+                    'samples': [('create', samples)],
                     }
                 versions = {
                     'laboratory': self.start.laboratory.id,
@@ -1549,21 +1622,26 @@ class GenerateResultsReport(Wizard):
                     'versions': [('create', [versions])],
                     }
                 report_detail = self._get_results_report(reports, versions,
-                    details)
+                    details, samples)
                 reports_details.extend(report_detail)
             else:
                 grouped_reports = {}
-                for line in notebook['notebook_lines']:
-                    nline = NotebookLine(line['notebook_line'])
-                    report_grouper = nline.analysis_detail.report_grouper
+                for line in notebook['lines']:
+                    report_grouper = line.analysis_detail.report_grouper
                     if report_grouper not in grouped_reports:
                         grouped_reports[report_grouper] = []
                     grouped_reports[report_grouper].append(line)
 
-                for grouper, notebook_lines in grouped_reports.items():
-                    details = {
+                for grouper, nlines in grouped_reports.items():
+                    notebook_lines = [{'notebook_line': line.id}
+                        for line in nlines]
+                    samples = [{
+                        'notebook': notebook['notebook'],
                         'notebook_lines': [('create', notebook_lines)],
+                        }]
+                    details = {
                         'signer': self.start.laboratory.default_signer.id,
+                        'samples': [('create', samples)],
                         }
                     versions = {
                         'laboratory': self.start.laboratory.id,
@@ -1579,7 +1657,7 @@ class GenerateResultsReport(Wizard):
                         'versions': [('create', [versions])],
                         }
                     report_detail = self._get_results_report(reports, versions,
-                        details)
+                        details, samples)
                     reports_details.extend(report_detail)
 
         self.result_aut.reports_details = reports_details
@@ -1587,125 +1665,179 @@ class GenerateResultsReport(Wizard):
 
     def _generate_man(self):
         pool = Pool()
-        NotebookLine = pool.get('lims.notebook.line')
-        ResultsReportVersion = pool.get('lims.results_report.version')
-        ResultsReportVersionDetail = pool.get(
-            'lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
 
         if self.result_man.report:  # Result report selected
             report_type_forced = self.result_man.report_type
             if report_type_forced == 'polisample':  # Polisample report
-                notebook_lines = []
-                for line in self.result_man.notebook_lines:
-                    notebook_lines.append({
-                        'notebook_line': line.id,
-                        })
 
+                notebooks = {}
+                for line in self.result_man.notebook_lines:
+                    if line.notebook.id not in notebooks:
+                        notebooks[line.notebook.id] = {
+                            'notebook': line.notebook.id,
+                            'lines': [],
+                            }
+                    notebooks[line.notebook.id]['lines'].append(line)
+
+                samples = []
+                for notebook in notebooks.values():
+                    notebook_lines = [{'notebook_line': line.id}
+                        for line in notebook['lines']]
+                    samples.append({
+                        'notebook': notebook['notebook'],
+                        'notebook_lines': [('create', notebook_lines)],
+                        })
                 details = {
-                    'notebook_lines': [('create', notebook_lines)],
                     'report_type_forced': 'polisample',
                     'signer': self.start.laboratory.default_signer.id,
+                    'samples': [('create', samples)],
                     }
-                actual_version = ResultsReportVersion.search([
+                actual_version = ResultsVersion.search([
                     ('results_report', '=', self.result_man.report.id),
                     ('laboratory', '=', self.start.laboratory.id),
                     ], limit=1)
                 if not actual_version:
-                    version, = ResultsReportVersion.create([{
+                    version, = ResultsVersion.create([{
                         'results_report': self.result_man.report.id,
                         'laboratory': self.start.laboratory.id,
                         'details': [('create', [details])],
                         }])
                     reports_details = [d.id for d in version.details]
                 else:
-                    draft_detail = ResultsReportVersionDetail.search([
-                        ('report_version', '=', actual_version[0].id),
+                    actual_version = actual_version[0]
+                    draft_detail = ResultsDetail.search([
+                        ('report_version', '=', actual_version.id),
                         ('state', '=', 'draft'),
                         ], limit=1)
                     if not draft_detail:
-                        details['report_version'] = actual_version[0].id
-                        valid_detail = ResultsReportVersionDetail.search([
-                            ('report_version', '=', actual_version[0].id),
+                        details['report_version'] = actual_version.id
+                        valid_detail = ResultsDetail.search([
+                            ('report_version', '=', actual_version.id),
                             ('valid', '=', True),
                             ], limit=1)
                         if valid_detail:
+                            valid_detail = valid_detail[0]
                             details['report_type_forced'] = (
-                                valid_detail[0].report_type_forced)
+                                valid_detail.report_type_forced)
                             details['report_result_type_forced'] = (
-                                valid_detail[0].report_result_type_forced)
-                            if valid_detail[0].signer:
-                                details['signer'] = valid_detail[0].signer.id
-                            if valid_detail[0].resultrange_origin:
+                                valid_detail.report_result_type_forced)
+                            if valid_detail.signer:
+                                details['signer'] = valid_detail.signer.id
+                            if valid_detail.resultrange_origin:
                                 details['resultrange_origin'] = (
-                                    valid_detail[0].resultrange_origin.id)
+                                    valid_detail.resultrange_origin.id)
                             details['comments'] = str(
-                                valid_detail[0].comments or '')
-                        detail, = ResultsReportVersionDetail.create([
-                            details])
+                                valid_detail.comments or '')
+                        detail, = ResultsDetail.create([details])
                         reports_details = [detail.id]
                     else:
+                        draft_detail = draft_detail[0]
+                        for sample in samples:
+                            existing_sample = ResultsSample.search([
+                                ('version_detail', '=', draft_detail.id),
+                                ('notebook', '=', sample['notebook']),
+                                ], limit=1)
+                            if not existing_sample:
+                                sample['version_detail'] = draft_detail.id
+                                ResultsSample.create([sample])
+                            else:
+                                del sample['notebook']
+                                ResultsSample.write(existing_sample, sample)
+
                         del details['signer']
-                        ResultsReportVersionDetail.write(draft_detail,
-                            details)
-                        reports_details = [draft_detail[0].id]
+                        del details['samples']
+                        ResultsDetail.write([draft_detail], details)
+                        reports_details = [draft_detail.id]
+
             else:  # Normal report
-                notebook_lines = []
+
+                notebooks = {}
                 for line in self.result_man.notebook_lines:
-                    notebook_lines.append({
-                        'notebook_line': line.id,
+                    if line.notebook.id not in notebooks:
+                        notebooks[line.notebook.id] = {
+                            'notebook': line.notebook.id,
+                            'lines': [],
+                            }
+                    notebooks[line.notebook.id]['lines'].append(line)
+
+                samples = []
+                for notebook in notebooks.values():
+                    notebook_lines = [{'notebook_line': line.id}
+                        for line in notebook['lines']]
+                    samples.append({
+                        'notebook': notebook['notebook'],
+                        'notebook_lines': [('create', notebook_lines)],
                         })
                 details = {
-                    'notebook_lines': [('create', notebook_lines)],
                     'signer': self.start.laboratory.default_signer.id,
+                    'samples': [('create', samples)],
                     }
-
-                actual_version = ResultsReportVersion.search([
+                actual_version = ResultsVersion.search([
                     ('results_report', '=', self.result_man.report.id),
                     ('laboratory', '=', self.start.laboratory.id),
                     ], limit=1)
                 if not actual_version:
-                    version, = ResultsReportVersion.create([{
+                    version, = ResultsVersion.create([{
                         'results_report': self.result_man.report.id,
                         'laboratory': self.start.laboratory.id,
                         'details': [('create', [details])],
                         }])
                     reports_details = [d.id for d in version.details]
                 else:
-                    draft_detail = ResultsReportVersionDetail.search([
-                        ('report_version', '=', actual_version[0].id),
+                    actual_version = actual_version[0]
+                    draft_detail = ResultsDetail.search([
+                        ('report_version', '=', actual_version.id),
                         ('state', '=', 'draft'),
                         ], limit=1)
                     if not draft_detail:
-                        details['report_version'] = actual_version[0].id
-                        valid_detail = ResultsReportVersionDetail.search([
-                            ('report_version', '=', actual_version[0].id),
+                        details['report_version'] = actual_version.id
+                        valid_detail = ResultsDetail.search([
+                            ('report_version', '=', actual_version.id),
                             ('valid', '=', True),
                             ], limit=1)
                         if valid_detail:
+                            valid_detail = valid_detail[0]
                             details['report_type_forced'] = (
-                                valid_detail[0].report_type_forced)
+                                valid_detail.report_type_forced)
                             details['report_result_type_forced'] = (
-                                valid_detail[0].report_result_type_forced)
-                            if valid_detail[0].signer:
-                                details['signer'] = valid_detail[0].signer.id
-                            if valid_detail[0].resultrange_origin:
+                                valid_detail.report_result_type_forced)
+                            if valid_detail.signer:
+                                details['signer'] = valid_detail.signer.id
+                            if valid_detail.resultrange_origin:
                                 details['resultrange_origin'] = (
-                                    valid_detail[0].resultrange_origin.id)
+                                    valid_detail.resultrange_origin.id)
                             details['comments'] = str(
-                                valid_detail[0].comments or '')
-                        detail, = ResultsReportVersionDetail.create([
-                            details])
+                                valid_detail.comments or '')
+                        detail, = ResultsDetail.create([details])
                         reports_details = [detail.id]
                     else:
-                        del details['signer']
-                        ResultsReportVersionDetail.write(draft_detail,
-                            details)
-                        reports_details = [draft_detail[0].id]
+                        draft_detail = draft_detail[0]
+                        for sample in samples:
+                            existing_sample = ResultsSample.search([
+                                ('version_detail', '=', draft_detail.id),
+                                ('notebook', '=', sample['notebook']),
+                                ], limit=1)
+                            if not existing_sample:
+                                sample['version_detail'] = draft_detail.id
+                                ResultsSample.create([sample])
+                            else:
+                                del sample['notebook']
+                                ResultsSample.write(existing_sample, sample)
+
+                        #del details['signer']
+                        #del details['samples']
+                        #ResultsDetail.write([draft_detail], details)
+                        reports_details = [draft_detail.id]
+
             self.result_man.reports_details = reports_details
 
         else:  # Not Result report selected
             report_type_forced = self.result_man.report_type_forced
             if report_type_forced == 'polisample':  # Polisample report
+
                 parties = {}
                 for line in self.result_man.notebook_lines:
                     key = (line.notebook.party.id,
@@ -1715,29 +1847,43 @@ class GenerateResultsReport(Wizard):
                             'party': line.notebook.party.id,
                             'english_report': (
                                 line.notebook.fraction.entry.english_report),
-                            'notebook_lines': [],
                             'cie_fraction_type': (
                                 line.notebook.fraction.cie_fraction_type),
+                            'lines': [],
                             }
-                    parties[key]['notebook_lines'].append({
-                        'notebook_line': line.id,
-                        })
+                    parties[key]['lines'].append(line)
 
                 reports_details = []
                 for party in parties.values():
                     grouped_reports = {}
-                    for line in party['notebook_lines']:
-                        nline = NotebookLine(line['notebook_line'])
-                        report_grouper = nline.analysis_detail.report_grouper
+                    for line in party['lines']:
+                        report_grouper = line.analysis_detail.report_grouper
                         if report_grouper not in grouped_reports:
                             grouped_reports[report_grouper] = []
                         grouped_reports[report_grouper].append(line)
 
-                    for grouper, notebook_lines in grouped_reports.items():
+                    for grouper, nlines in grouped_reports.items():
+                        notebooks = {}
+                        for line in nlines:
+                            if line.notebook.id not in notebooks:
+                                notebooks[line.notebook.id] = {
+                                    'notebook': line.notebook.id,
+                                    'lines': [],
+                                    }
+                            notebooks[line.notebook.id]['lines'].append(line)
+
+                        samples = []
+                        for notebook in notebooks.values():
+                            notebook_lines = [{'notebook_line': line.id}
+                                for line in notebook['lines']]
+                            samples.append({
+                                'notebook': notebook['notebook'],
+                                'notebook_lines': [('create', notebook_lines)],
+                                })
                         details = {
-                            'notebook_lines': [('create', notebook_lines)],
                             'report_type_forced': report_type_forced,
                             'signer': self.start.laboratory.default_signer.id,
+                            'samples': [('create', samples)],
                             }
                         versions = {
                             'laboratory': self.start.laboratory.id,
@@ -1753,9 +1899,11 @@ class GenerateResultsReport(Wizard):
                             'versions': [('create', [versions])],
                             }
                         report_detail = self._get_results_report(reports,
-                            versions, details, append=False)
+                            versions, details, samples, append=False)
                         reports_details.extend(report_detail)
+
             else:  # Normal report
+
                 notebooks = {}
                 for line in self.result_man.notebook_lines:
                     if line.notebook.id not in notebooks:
@@ -1765,22 +1913,25 @@ class GenerateResultsReport(Wizard):
                             'divided_report': line.notebook.divided_report,
                             'english_report': (
                                 line.notebook.fraction.entry.english_report),
-                            'notebook_lines': [],
                             'cie_fraction_type': (
                                 line.notebook.fraction.cie_fraction_type),
+                            'lines': [],
                             }
-                    notebooks[line.notebook.id]['notebook_lines'].append({
-                        'notebook_line': line.id,
-                        })
+                    notebooks[line.notebook.id]['lines'].append(line)
 
                 reports_details = []
                 for notebook in notebooks.values():
                     if not notebook['divided_report']:
+                        notebook_lines = [{'notebook_line': line.id}
+                            for line in notebook['lines']]
+                        samples = [{
+                            'notebook': notebook['notebook'],
+                            'notebook_lines': [('create', notebook_lines)],
+                            }]
                         details = {
-                            'notebook_lines': [('create',
-                                notebook['notebook_lines'])],
                             'report_type_forced': report_type_forced,
                             'signer': self.start.laboratory.default_signer.id,
+                            'samples': [('create', samples)],
                             }
                         versions = {
                             'laboratory': self.start.laboratory.id,
@@ -1796,25 +1947,29 @@ class GenerateResultsReport(Wizard):
                             'versions': [('create', [versions])],
                             }
                         report_detail = self._get_results_report(reports,
-                            versions, details, append=False)
+                            versions, details, samples, append=False)
                         reports_details.extend(report_detail)
                     else:
                         grouped_reports = {}
-                        for line in notebook['notebook_lines']:
-                            nline = NotebookLine(line['notebook_line'])
+                        for line in notebook['lines']:
                             report_grouper = (
-                                nline.analysis_detail.report_grouper)
+                                line.analysis_detail.report_grouper)
                             if report_grouper not in grouped_reports:
                                 grouped_reports[report_grouper] = []
                             grouped_reports[report_grouper].append(line)
 
-                        for grouper, notebook_lines in \
-                                grouped_reports.items():
-                            details = {
+                        for grouper, nlines in grouped_reports.items():
+                            notebook_lines = [{'notebook_line': line.id}
+                                for line in nlines]
+                            samples = [{
+                                'notebook': notebook['notebook'],
                                 'notebook_lines': [('create', notebook_lines)],
+                                }]
+                            details = {
                                 'report_type_forced': report_type_forced,
                                 'signer': (
                                     self.start.laboratory.default_signer.id),
+                                'samples': [('create', samples)],
                                 }
                             versions = {
                                 'laboratory': self.start.laboratory.id,
@@ -1831,17 +1986,19 @@ class GenerateResultsReport(Wizard):
                                 'versions': [('create', [versions])],
                                 }
                             report_detail = self._get_results_report(reports,
-                                versions, details, append=False)
+                                versions, details, samples, append=False)
                             reports_details.extend(report_detail)
+
             self.result_man.reports_details = reports_details
         return 'open'
 
-    def _get_results_report(self, reports, versions, details, append=True):
+    def _get_results_report(self, reports, versions, details, samples,
+            append=True):
         pool = Pool()
         ResultsReport = pool.get('lims.results_report')
-        ResultsReportVersion = pool.get('lims.results_report.version')
-        ResultsReportVersionDetail = pool.get(
-            'lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
 
         if not append:
             report, = ResultsReport.create([reports])
@@ -1860,49 +2017,63 @@ class GenerateResultsReport(Wizard):
             reports_details = [d.id for d in report.versions[0].details]
             return reports_details
 
-        actual_version = ResultsReportVersion.search([
-            ('results_report', '=', actual_report[0].id),
+        actual_report = actual_report[0]
+        actual_version = ResultsVersion.search([
+            ('results_report', '=', actual_report.id),
             ('laboratory', '=', self.start.laboratory.id),
             ], limit=1)
         if not actual_version:
-            version, = ResultsReportVersion.create([{
-                'results_report': actual_report[0].id,
+            version, = ResultsVersion.create([{
+                'results_report': actual_report.id,
                 'laboratory': self.start.laboratory.id,
                 'details': [('create', [details])],
                 }])
             reports_details = [d.id for d in version.details]
-        else:
-            draft_detail = ResultsReportVersionDetail.search([
-                ('report_version', '=', actual_version[0].id),
-                ('state', '=', 'draft'),
+            return reports_details
+
+        actual_version = actual_version[0]
+        draft_detail = ResultsDetail.search([
+            ('report_version', '=', actual_version.id),
+            ('state', '=', 'draft'),
+            ], limit=1)
+        if not draft_detail:
+            details['report_version'] = actual_version.id
+            valid_detail = ResultsDetail.search([
+                ('report_version', '=', actual_version.id),
+                ('valid', '=', True),
                 ], limit=1)
-            if not draft_detail:
-                details['report_version'] = actual_version[0].id
-                valid_detail = ResultsReportVersionDetail.search([
-                    ('report_version', '=', actual_version[0].id),
-                    ('valid', '=', True),
-                    ], limit=1)
-                if valid_detail:
-                    if details.get('report_type_forced') != 'none':
-                        details['report_type_forced'] = (
-                            valid_detail[0].report_type_forced)
-                    details['report_result_type_forced'] = (
-                        valid_detail[0].report_result_type_forced)
-                    if valid_detail[0].signer:
-                        details['signer'] = valid_detail[0].signer.id
-                    if valid_detail[0].resultrange_origin:
-                        details['resultrange_origin'] = (
-                            valid_detail[0].resultrange_origin.id)
-                    details['comments'] = str(
-                        valid_detail[0].comments or '')
-                detail, = ResultsReportVersionDetail.create([details])
-                reports_details = [detail.id]
+            if valid_detail:
+                valid_detail = valid_detail[0]
+                if details.get('report_type_forced') != 'none':
+                    details['report_type_forced'] = (
+                        valid_detail.report_type_forced)
+                details['report_result_type_forced'] = (
+                    valid_detail.report_result_type_forced)
+                if valid_detail.signer:
+                    details['signer'] = valid_detail.signer.id
+                if valid_detail.resultrange_origin:
+                    details['resultrange_origin'] = (
+                        valid_detail.resultrange_origin.id)
+                details['comments'] = str(
+                    valid_detail.comments or '')
+            detail, = ResultsDetail.create([details])
+            reports_details = [detail.id]
+            return reports_details
+
+        draft_detail = draft_detail[0]
+        for sample in samples:
+            existing_sample = ResultsSample.search([
+                ('version_detail', '=', draft_detail.id),
+                ('notebook', '=', sample['notebook']),
+                ], limit=1)
+            if not existing_sample:
+                sample['version_detail'] = draft_detail.id
+                ResultsSample.create([sample])
             else:
-                if 'report_type_forced' in details:
-                    del details['report_type_forced']
-                del details['signer']
-                ResultsReportVersionDetail.write(draft_detail, details)
-                reports_details = [draft_detail[0].id]
+                del sample['notebook']
+                ResultsSample.write(existing_sample, sample)
+
+        reports_details = [draft_detail.id]
         return reports_details
 
     def do_open(self, action):
@@ -1929,8 +2100,7 @@ class PrintResultsReport(Wizard):
     def transition_start(self):
         pool = Pool()
         ResultsReport = pool.get('lims.results_report')
-        ResultsReportVersionDetail = pool.get(
-            'lims.results_report.version.detail')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
 
         for active_id in Transaction().context['active_ids']:
             results_report = ResultsReport(active_id)
@@ -1938,7 +2108,7 @@ class PrintResultsReport(Wizard):
             if results_report.english_report:
                 format_field = 'report_format_eng'
             with Transaction().set_user(0):
-                details = ResultsReportVersionDetail.search([
+                details = ResultsDetail.search([
                     ('report_version.results_report.id', '=',
                         results_report.id),
                     ('valid', '=', True),
@@ -2123,15 +2293,14 @@ class ResultsReportAnnulation(Wizard):
     annul = StateTransition()
 
     def transition_annul(self):
-        ResultsReportVersionDetail = Pool().get(
-            'lims.results_report.version.detail')
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
 
-        details = ResultsReportVersionDetail.search([
+        details = ResultsDetail.search([
             ('id', 'in', Transaction().context['active_ids']),
             ])
         if details:
-            ResultsReportVersionDetail.annul_notebook_lines(details)
-            ResultsReportVersionDetail.write(details, {
+            ResultsDetail.annul_notebook_lines(details)
+            ResultsDetail.write(details, {
                 'state': 'annulled',
                 'valid': False,
                 'report_cache': None,
@@ -2155,11 +2324,11 @@ class ResultReport(Report):
 
     @classmethod
     def execute(cls, ids, data):
-        ResultsReport = Pool().get('lims.results_report.version.detail')
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
         if len(ids) > 1:
             raise UserError(gettext('lims.msg_multiple_reports'))
 
-        results_report = ResultsReport(ids[0])
+        results_report = ResultsDetail(ids[0])
         if results_report.state == 'annulled':
             raise UserError(gettext('lims.msg_annulled_report'))
 
@@ -2203,8 +2372,8 @@ class ResultReport(Report):
     def get_context(cls, records, data):
         pool = Pool()
         Company = pool.get('company.company')
-        ResultsReport = pool.get('lims.results_report.version.detail')
-        ResultsReportLine = pool.get('lims.results_report.version.detail.line')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
         NotebookLine = pool.get('lims.notebook.line')
         Sample = pool.get('lims.sample')
         RangeType = pool.get('lims.range.type')
@@ -2220,9 +2389,9 @@ class ResultReport(Report):
 
         with Transaction().set_context(language=lang_code):
             if 'id' in data:
-                report = ResultsReport(data['id'])
+                report = ResultsDetail(data['id'])
             else:
-                report = ResultsReport(records[0].id)
+                report = ResultsDetail(records[0].id)
 
         company = Company(Transaction().context.get('company'))
         report_context['company'] = company
@@ -2300,12 +2469,12 @@ class ResultReport(Report):
         fractions = {}
         methods = {}
         pnt_methods = {}
-        notebook_lines = ResultsReportLine.search([
-            ('report_version_detail.report_version.id', '=',
+        notebook_lines = ResultsLine.search([
+            ('detail_sample.version_detail.report_version.id', '=',
                 report.report_version.id), ['OR',
-                ('report_version_detail.id', '=', report.id),
-                ('report_version_detail.valid', '=', True)],
-            ], order=[('report_version_detail', 'ASC')])
+                ('detail_sample.version_detail.id', '=', report.id),
+                ('detail_sample.version_detail.valid', '=', True)],
+            ], order=[('detail_sample', 'ASC')])
         if not notebook_lines:
             raise UserError(gettext('lims.msg_empty_report'))
 
@@ -2713,7 +2882,7 @@ class ResultReport(Report):
         report_context['annulment_reason'] = ''
         if report.number != '1':
             with Transaction().set_context(language=lang_code):
-                prev_report = ResultsReport.search([
+                prev_report = ResultsDetail.search([
                     ('report_version', '=', report.report_version.id),
                     ('number', '=', str(int(report.number) - 1)),
                     ])
@@ -3039,11 +3208,11 @@ class ResultReportTranscription(ResultReport):
 
     @classmethod
     def execute(cls, ids, data):
-        ResultsReport = Pool().get('lims.results_report.version.detail')
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
         if len(ids) > 1:
             raise UserError(gettext('lims.msg_multiple_reports'))
 
-        results_report = ResultsReport(ids[0])
+        results_report = ResultsDetail(ids[0])
         if results_report.state == 'annulled':
             raise UserError(gettext('lims.msg_annulled_report'))
 
@@ -3090,8 +3259,7 @@ class GlobalResultReport(Report):
 
     @classmethod
     def execute(cls, ids, data):
-        ResultsReport = Pool().get(
-            'lims.results_report')
+        ResultsReport = Pool().get('lims.results_report')
 
         result = super(GlobalResultReport, cls).execute(ids, data)
 
