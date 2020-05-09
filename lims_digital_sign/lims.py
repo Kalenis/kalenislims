@@ -41,15 +41,15 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
 
     @classmethod
     @ModelView.button
-    def revise(cls, details):
-        super(ResultsReportVersionDetail, cls).revise(details)
+    def release(cls, details):
+        super(ResultsReportVersionDetail, cls).release(details)
         for detail in details:
             detail.unsign()
 
     @classmethod
     @ModelView.button
-    def revise_all_lang(cls, details):
-        super(ResultsReportVersionDetail, cls).revise_all_lang(details)
+    def release_all_lang(cls, details):
+        super(ResultsReportVersionDetail, cls).release_all_lang(details)
         for detail in details:
             detail.unsign()
 

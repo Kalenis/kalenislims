@@ -248,6 +248,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('revised', 'Revised'),
+        ('released', 'Released'),
         ('annulled', 'Annulled'),
         ], 'State', readonly=True)
     samples = fields.One2Many('lims.results_report.version.detail.sample',
@@ -347,12 +348,14 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         cls._order.insert(1, ('number', 'DESC'))
         cls._buttons.update({
             'revise': {
-                'invisible': (Eval('state') != 'draft'),
+                'invisible': Eval('state') != 'draft',
+                'depends': ['state'],
                 },
-            'annul': {
-                'invisible': Or(Eval('state') != 'revised', ~Eval('valid')),
+            'release': {
+                'invisible': Eval('state') != 'revised',
+                'depends': ['state'],
                 },
-            'revise_all_lang': {
+            'release_all_lang': {
                 'invisible': Not(If(Bool(Eval('english_report')),
                     Bool(And(
                         ~Bool(Eval('report_cache_eng')),
@@ -363,8 +366,24 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                         Bool(Eval('report_cache_eng')),
                         )),
                     )),
+                'depends': ['english_report', 'report_cache',
+                    'report_cache_eng'],
+                },
+            'annul': {
+                'invisible': Or(Eval('state') != 'released', ~Eval('valid')),
+                'depends': ['state', 'valid'],
                 },
             })
+
+    @classmethod
+    def __register__(cls, module_name):
+        cursor = Transaction().connection.cursor()
+        super(ResultsReportVersionDetail, cls).__register__(module_name)
+        cursor.execute('UPDATE "' + cls._table + '" '
+            'SET state = \'released\' '
+            'WHERE state = \'revised\' '
+                'AND (report_cache_id IS NOT NULL OR '
+                'report_cache_eng_id IS NOT NULL)')
 
     @staticmethod
     def default_report_type_forced():
@@ -524,12 +543,16 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     @classmethod
     @ModelView.button
     def revise(cls, details):
-        ResultsLine = Pool().get('lims.results_report.version.detail.line')
+        cls.write(details, {'state': 'revised'})
 
-        cls.revise_notebook_lines(details)
+    @classmethod
+    @ModelView.button
+    def release(cls, details):
+        ResultsLine = Pool().get('lims.results_report.version.detail.line')
+        cls.link_notebook_lines(details)
         for detail in details:
             defaults = {
-                'state': 'revised',
+                'state': 'released',
                 'valid': True,
                 }
             valid_details = cls.search([
@@ -564,22 +587,22 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
             detail.generate_report()
 
     @classmethod
-    def revise_notebook_lines(cls, details):
+    def link_notebook_lines(cls, details):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
         for detail in details:
-            revised_lines = []
-            revised_entry_details = []
+            linked_lines = []
+            linked_entry_details = []
             for sample in detail.samples:
                 for nline in sample.notebook_lines:
-                    revised_lines.append(nline.notebook_line.id)
-                    revised_entry_details.append(
+                    linked_lines.append(nline.notebook_line.id)
+                    linked_entry_details.append(
                         nline.notebook_line.analysis_detail.id)
 
             notebook_lines = NotebookLine.search([
-                ('id', 'in', revised_lines),
+                ('id', 'in', linked_lines),
                 ])
             if notebook_lines:
                 NotebookLine.write(notebook_lines, {
@@ -587,7 +610,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                     })
 
             entry_details = EntryDetailAnalysis.search([
-                ('id', 'in', revised_entry_details),
+                ('id', 'in', linked_entry_details),
                 ])
             if entry_details:
                 EntryDetailAnalysis.write(entry_details, {
@@ -595,46 +618,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                     })
 
     @classmethod
-    @ModelView.button_action('lims.wiz_lims_results_report_annulation')
-    def annul(cls, details):
-        pass
-
-    @classmethod
-    def annul_notebook_lines(cls, details):
-        pool = Pool()
-        NotebookLine = pool.get('lims.notebook.line')
-        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
-
-        for detail in details:
-            annulled_lines = []
-            annulled_entry_details = []
-            for sample in detail.samples:
-                for nline in sample.notebook_lines:
-                    annulled_lines.append(nline.notebook_line.id)
-                    annulled_entry_details.append(
-                        nline.notebook_line.analysis_detail.id)
-
-            notebook_lines = NotebookLine.search([
-                ('id', 'in', annulled_lines),
-                ('results_report', '=',
-                    detail.report_version.results_report.id),
-                ])
-            if notebook_lines:
-                NotebookLine.write(notebook_lines, {
-                    'results_report': None,
-                    })
-
-            entry_details = EntryDetailAnalysis.search([
-                ('id', 'in', annulled_entry_details),
-                ])
-            if entry_details:
-                EntryDetailAnalysis.write(entry_details, {
-                    'state': 'done',
-                    })
-
-    @classmethod
     @ModelView.button
-    def revise_all_lang(cls, details):
+    def release_all_lang(cls, details):
         for detail in details:
             detail.generate_report()
 
@@ -650,6 +635,44 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         ResultReportTranscription.execute([self.id], {
             'english_report': self.english_report,
             })
+
+    @classmethod
+    @ModelView.button_action('lims.wiz_lims_results_report_annulation')
+    def annul(cls, details):
+        pass
+
+    @classmethod
+    def unlink_notebook_lines(cls, details):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        for detail in details:
+            unlinked_lines = []
+            unlinked_entry_details = []
+            for sample in detail.samples:
+                for nline in sample.notebook_lines:
+                    unlinked_lines.append(nline.notebook_line.id)
+                    unlinked_entry_details.append(
+                        nline.notebook_line.analysis_detail.id)
+
+            notebook_lines = NotebookLine.search([
+                ('id', 'in', unlinked_lines),
+                ('results_report', '=',
+                    detail.report_version.results_report.id),
+                ])
+            if notebook_lines:
+                NotebookLine.write(notebook_lines, {
+                    'results_report': None,
+                    })
+
+            entry_details = EntryDetailAnalysis.search([
+                ('id', 'in', unlinked_entry_details),
+                ])
+            if entry_details:
+                EntryDetailAnalysis.write(entry_details, {
+                    'state': 'done',
+                    })
 
     def get_date(self, name):
         pool = Pool()
@@ -2299,7 +2322,7 @@ class ResultsReportAnnulation(Wizard):
             ('id', 'in', Transaction().context['active_ids']),
             ])
         if details:
-            ResultsDetail.annul_notebook_lines(details)
+            ResultsDetail.unlink_notebook_lines(details)
             ResultsDetail.write(details, {
                 'state': 'annulled',
                 'valid': False,
@@ -2383,8 +2406,10 @@ class ResultReport(Report):
 
         if data.get('alt_lang'):
             lang_code = data['alt_lang']
-        else:
+        elif report_context['user'].language:
             lang_code = report_context['user'].language.code
+        else:
+            lang_code = None
         report_context['alt_lang'] = lang_code
 
         with Transaction().set_context(language=lang_code):

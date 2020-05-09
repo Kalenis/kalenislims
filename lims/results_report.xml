@@ -405,8 +405,29 @@
             <field name="name">revise</field>
             <field name="model" search="[('model', '=', 'lims.results_report.version.detail')]"/>
         </record>
-        <record model="ir.model.button-res.group" id="results_report_version_detail_revise_button_group_lims_laboratory_reports">
+        <record model="ir.model.button-res.group"
+            id="results_report_version_detail_revise_button_group_lims_laboratory_reports">
             <field name="button" ref="results_report_version_detail_revise_button"/>
+            <field name="group" ref="group_lims_laboratory_reports"/>
+        </record>
+
+        <record model="ir.model.button" id="results_report_version_detail_release_button">
+            <field name="name">release</field>
+            <field name="model" search="[('model', '=', 'lims.results_report.version.detail')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="results_report_version_detail_release_button_group_lims_laboratory_reports">
+            <field name="button" ref="results_report_version_detail_release_button"/>
+            <field name="group" ref="group_lims_laboratory_reports"/>
+        </record>
+
+        <record model="ir.model.button" id="results_report_version_detail_release_all_lang_button">
+            <field name="name">release_all_lang</field>
+            <field name="model" search="[('model', '=', 'lims.results_report.version.detail')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="results_report_version_detail_release_all_lang_button_group_lims_laboratory_reports">
+            <field name="button" ref="results_report_version_detail_release_all_lang_button"/>
             <field name="group" ref="group_lims_laboratory_reports"/>
         </record>
 
@@ -414,17 +435,9 @@
             <field name="name">annul</field>
             <field name="model" search="[('model', '=', 'lims.results_report.version.detail')]"/>
         </record>
-        <record model="ir.model.button-res.group" id="results_report_version_detail_annul_button_group_lims_laboratory_reports">
+        <record model="ir.model.button-res.group"
+            id="results_report_version_detail_annul_button_group_lims_laboratory_reports">
             <field name="button" ref="results_report_version_detail_annul_button"/>
-            <field name="group" ref="group_lims_laboratory_reports"/>
-        </record>
-
-        <record model="ir.model.button" id="results_report_version_detail_revise_all_lang_button">
-            <field name="name">revise_all_lang</field>
-            <field name="model" search="[('model', '=', 'lims.results_report.version.detail')]"/>
-        </record>
-        <record model="ir.model.button-res.group" id="results_report_version_detail_revise_all_lang_button_group_lims_laboratory_reports">
-            <field name="button" ref="results_report_version_detail_revise_all_lang_button"/>
             <field name="group" ref="group_lims_laboratory_reports"/>
         </record>
 

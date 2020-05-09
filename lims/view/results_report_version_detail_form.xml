@@ -54,10 +54,11 @@
         <label name="valid"/>
         <field name="valid"/>
     </group>
-    <group id="buttons" colspan="2" col="3">
+    <group id="buttons" colspan="2" col="4">
         <button name="revise" string="Revised"/>
-        <button name="revise_all_lang" string="Revised for all languages"/>
-        <button name="annul" string="Annulled"/>
+        <button name="release" string="Release"/>
+        <button name="release_all_lang" string="Release for all languages"/>
+        <button name="annul" string="Annull"/>
     </group>
     <field name="report_cache" colspan="4" invisible="1"/>
     <field name="report_cache_eng" colspan="4" invisible="1"/>

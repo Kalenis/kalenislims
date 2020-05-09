@@ -11685,6 +11685,10 @@ msgid "Draft"
 msgstr "Borrador"
 
 msgctxt "selection:lims.results_report.version.detail,state:"
+msgid "Released"
+msgstr "Publicado"
+
+msgctxt "selection:lims.results_report.version.detail,state:"
 msgid "Revised"
 msgstr "Revisado"
 
@@ -12944,8 +12948,8 @@ msgid "Annulation"
 msgstr "Anulación"
 
 msgctxt "view:lims.results_report.version.detail:"
-msgid "Annulled"
-msgstr "Anulado"
+msgid "Annull"
+msgstr "Anular"
 
 msgctxt "view:lims.results_report.version.detail:"
 msgid "Annulment reason"
@@ -12960,12 +12964,16 @@ msgid "Fraction comments"
 msgstr "Observaciones de la fracción"
 
 msgctxt "view:lims.results_report.version.detail:"
-msgid "Revised"
-msgstr "Revisado"
+msgid "Release"
+msgstr "Publicar"
 
 msgctxt "view:lims.results_report.version.detail:"
-msgid "Revised for all languages"
-msgstr "Revisado para todos los idiomas"
+msgid "Release for all languages"
+msgstr "Publicar para todos los idiomas"
+
+msgctxt "view:lims.results_report.version.detail:"
+msgid "Revised"
+msgstr "Revisado"
 
 msgctxt "view:lims.results_report.version.detail:"
 msgid "Samples"

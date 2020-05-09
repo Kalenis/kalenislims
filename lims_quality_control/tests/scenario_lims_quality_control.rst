@@ -354,7 +354,7 @@ Create Planification::
     >>> planification.state
     'confirmed'
 
-Add results and check success in lines:
+Add results and check success in lines::
 
     >>> quantitavive_results = {
     ...     typification_1: '6.0',
@@ -382,7 +382,7 @@ Add results and check success in lines:
     True
     False
 
-Create results report:
+Create results report::
 
     >>> generate_results_report = Wizard('lims.generate_results_report')
     >>> generate_results_report.form.date_from = today
@@ -392,9 +392,12 @@ Create results report:
     >>> generate_results_report.execute('search')
     >>> generate_results_report.execute('generate')
     >>> results_report_version, = generate_results_report.actions[0]
-    >>> _ = results_report_version.click('revise')
+    >>> results_report_version.click('revise')
     >>> results_report_version.state
     'revised'
+    >>> results_report_version.click('release')
+    >>> results_report_version.state
+    'released'
 
 Validate "failed" Test::
 
@@ -467,7 +470,7 @@ Create second Planification::
     >>> planification.state
     'confirmed'
 
-Add results and check success in lines:
+Add results and check success in lines::
 
     >>> quantitavive_results = {
     ...     typification_1: '5.0',
@@ -495,7 +498,7 @@ Add results and check success in lines:
     True
     True
 
-Create second results report:
+Create second results report::
 
     >>> generate_results_report = Wizard('lims.generate_results_report')
     >>> generate_results_report.form.date_from = today
@@ -505,9 +508,12 @@ Create second results report:
     >>> generate_results_report.execute('search')
     >>> generate_results_report.execute('generate')
     >>> results_report_version, = generate_results_report.actions[0]
-    >>> _ = results_report_version.click('revise')
+    >>> results_report_version.click('revise')
     >>> results_report_version.state
     'revised'
+    >>> results_report_version.click('release')
+    >>> results_report_version.state
+    'released'
 
 Validate "success" Test::
 
