@@ -15,5 +15,15 @@
             <field name="name">results_report_version_detail_form</field>
         </record>
 
+        <record model="ir.model.button" id="results_report_version_detail_diagnose_button">
+            <field name="name">diagnose</field>
+            <field name="model" search="[('model', '=', 'lims.results_report.version.detail')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="results_report_version_detail_diagnose_button_group_lims_laboratory_reports">
+            <field name="button" ref="results_report_version_detail_diagnose_button"/>
+            <field name="group" ref="lims.group_lims_laboratory_reports"/>
+        </record>
+
     </data>
 </tryton>

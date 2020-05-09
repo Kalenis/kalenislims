@@ -114,6 +114,10 @@ msgctxt "model:lims.diagnostician,name:"
 msgid "Diagnostician"
 msgstr "Diagnosticador"
 
+msgctxt "selection:lims.results_report.version.detail,state:"
+msgid "Diagnosed"
+msgstr "Diagnosticado"
+
 msgctxt "view:lims.analysis:"
 msgid "Diagnosis"
 msgstr "Diagnóstico"
@@ -129,3 +133,7 @@ msgstr "Contenido"
 msgctxt "view:lims.diagnosis.template:"
 msgid "States"
 msgstr "Estados"
+
+msgctxt "view:lims.results_report.version.detail:"
+msgid "Diagnosed"
+msgstr "Diagnosticado"

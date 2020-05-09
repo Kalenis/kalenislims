@@ -8,4 +8,7 @@
         <label name="diagnostician"/>
         <field name="diagnostician"/>
     </xpath>
+    <xpath expr="/form/group[@id='buttons']" position="inside">
+        <button name="diagnose" string="Diagnosed"/>
+    </xpath>
 </data>
