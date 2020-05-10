@@ -206,23 +206,32 @@ class SaleLine(metaclass=PoolMeta):
     product_type = fields.Many2One('lims.product.type', 'Product type',
         domain=['OR', ('id', '=', Eval('product_type')),
             ('id', 'in', Eval('product_type_domain'))],
-        states={'readonly': Eval('sale_state') != 'draft'},
-        depends=['product_type_domain', 'sale_state'])
+        states={
+            'readonly': Eval('sale_state') != 'draft',
+            'invisible': Eval('type') != 'line',
+            },
+        depends=['product_type_domain', 'sale_state', 'type'])
     product_type_domain = fields.Function(fields.Many2Many('lims.product.type',
         None, None, 'Product type domain'),
         'on_change_with_product_type_domain')
     matrix = fields.Many2One('lims.matrix', 'Matrix',
         domain=['OR', ('id', '=', Eval('matrix')),
             ('id', 'in', Eval('matrix_domain'))],
-        states={'readonly': Eval('sale_state') != 'draft'},
-        depends=['matrix_domain', 'sale_state'])
+        states={
+            'readonly': Eval('sale_state') != 'draft',
+            'invisible': Eval('type') != 'line',
+            },
+        depends=['matrix_domain', 'sale_state', 'type'])
     matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
         None, None, 'Matrix domain'), 'on_change_with_matrix_domain')
     analysis = fields.Many2One('lims.analysis', 'Service',
         domain=['OR', ('id', '=', Eval('analysis')),
             ('id', 'in', Eval('analysis_domain'))],
-        states={'readonly': Eval('sale_state') != 'draft'},
-        depends=['analysis_domain', 'sale_state'])
+        states={
+            'readonly': Eval('sale_state') != 'draft',
+            'invisible': Eval('type') != 'line',
+            },
+        depends=['analysis_domain', 'sale_state', 'type'])
     analysis_domain = fields.Function(fields.Many2Many('lims.analysis',
         None, None, 'Analysis domain'), 'on_change_with_analysis_domain')
     method = fields.Many2One('lims.lab.method', 'Method',
