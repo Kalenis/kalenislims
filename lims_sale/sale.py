@@ -501,16 +501,25 @@ class SaleLoadAnalysis(Wizard):
 
         sale_id = Transaction().context['active_id']
 
-        sale_services = {}
-        for analysis in self.start.analysis.all_included_analysis:
-            if not analysis.product:
-                continue
-            sale_services[analysis.id] = {
-                'quantity': 1,
-                'unit': analysis.product.default_uom.id,
-                'product': analysis.product.id,
-                'description': analysis.rec_name,
-                }
+        def get_sale_services(analysis, sale_services={}):
+            if analysis.included_analysis:
+                for ia in analysis.included_analysis:
+                    if not ia.included_analysis.product:
+                        continue
+                    if ia.included_analysis.id not in sale_services.keys():
+                        sale_services[ia.included_analysis.id] = {
+                            'quantity': 1,
+                            'unit':
+                                ia.included_analysis.product.default_uom.id,
+                            'product': ia.included_analysis.product.id,
+                            'method': ia.method.id if ia.method else None,
+                            'description': ia.included_analysis.rec_name,
+                            }
+                        sale_services = get_sale_services(
+                            ia.included_analysis, sale_services)
+            return sale_services
+
+        sale_services = get_sale_services(self.start.analysis)
 
         sale_lines = []
         for service in sale_services.values():
@@ -518,6 +527,7 @@ class SaleLoadAnalysis(Wizard):
                 quantity=service['quantity'],
                 unit=service['unit'],
                 product=service['product'],
+                method=service['method'],
                 sale=sale_id,
                 )
             sale_line.on_change_product()
