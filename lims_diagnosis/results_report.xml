@@ -25,5 +25,13 @@
             <field name="group" ref="lims.group_lims_laboratory_reports"/>
         </record>
 
+<!-- Results Report Version Detail Sample -->
+
+        <record model="ir.ui.view" id="results_report_version_detail_sample_view_form">
+            <field name="model">lims.results_report.version.detail.sample</field>
+            <field name="inherit" ref="lims.lims_results_report_version_detail_sample_view_form"/>
+            <field name="name">results_report_version_detail_sample_form</field>
+        </record>
+
     </data>
 </tryton>

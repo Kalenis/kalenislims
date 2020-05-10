@@ -1,10 +1,16 @@
 <?xml version="1.0"?>
-<form col="6">
-    <label name="notebook"/>
-    <field name="notebook"/>
-    <label name="product_type"/>
-    <field name="product_type"/>
-    <label name="matrix"/>
-    <field name="matrix"/>
-    <field name="notebook_lines" colspan="6"/>
+<form>
+    <group id="notebook" colspan="4" col="6">
+        <label name="notebook"/>
+        <field name="notebook"/>
+        <label name="product_type"/>
+        <field name="product_type"/>
+        <label name="matrix"/>
+        <field name="matrix"/>
+    </group>
+    <notebook>
+        <page id="lines" string="Lines">
+            <field name="notebook_lines"/>
+        </page>
+    </notebook>
 </form>

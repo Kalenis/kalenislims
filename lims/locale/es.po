@@ -12943,6 +12943,10 @@ msgctxt "view:lims.results_report.version.detail.line:"
 msgid "Lines"
 msgstr "Líneas"
 
+msgctxt "view:lims.results_report.version.detail.sample:"
+msgid "Lines"
+msgstr "Líneas"
+
 msgctxt "view:lims.results_report.version.detail:"
 msgid "Annulation"
 msgstr "Anulación"

@@ -58,6 +58,19 @@ msgctxt "field:lims.results_report.version.detail,diagnostician:"
 msgid "Diagnostician"
 msgstr "Diagnosticador"
 
+msgctxt "field:lims.results_report.version.detail.sample,diagnosis:"
+msgid "Diagnosis"
+msgstr "Diagnóstico"
+
+msgctxt "field:lims.results_report.version.detail.sample,diagnosis_states:"
+msgid "States"
+msgstr "Estados"
+
+msgctxt ""
+"field:lims.results_report.version.detail.sample,diagnosis_states_domain:"
+msgid "States domain"
+msgstr "Dominio para Estados"
+
 msgctxt "field:lims.sample,diagnosis_warning:"
 msgid "Diagnosis Warning"
 msgstr "Advertencia de diagnóstico"
@@ -133,6 +146,10 @@ msgstr "Contenido"
 msgctxt "view:lims.diagnosis.template:"
 msgid "States"
 msgstr "Estados"
+
+msgctxt "view:lims.results_report.version.detail.sample:"
+msgid "Diagnosis"
+msgstr "Diagnóstico"
 
 msgctxt "view:lims.results_report.version.detail:"
 msgid "Diagnosed"
