@@ -115,6 +115,10 @@ msgctxt "field:lims.analysis_sheet.import_file.start,origin_file:"
 msgid "Origin File"
 msgstr "Archivo origen"
 
+msgctxt "field:lims.analysis_sheet.print_report.ask,print_expression_column:"
+msgid "Print formula column"
+msgstr "Incluir columnas con fórmulas"
+
 msgctxt "field:lims.analysis_sheet.repeat_analysis.start,annul:"
 msgid "Annul current lines"
 msgstr "Anular líneas actuales"
@@ -431,6 +435,10 @@ msgstr "Exportar Hoja de análisis"
 msgctxt "model:lims.analysis_sheet.import_file.start,name:"
 msgid "Import Analysis Sheet File"
 msgstr "Importar archivo de datos"
+
+msgctxt "model:lims.analysis_sheet.print_report.ask,name:"
+msgid "Analysis Sheet Report"
+msgstr "Informe de Hoja de análisis"
 
 msgctxt "model:lims.analysis_sheet.repeat_analysis.start,name:"
 msgid "Repeat Analysis"
@@ -887,6 +895,14 @@ msgstr "Importar datos"
 msgctxt "wizard_button:lims.analysis_sheet.import_file,ask_file,end:"
 msgid "Cancel"
 msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.analysis_sheet.print_report,ask,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.analysis_sheet.print_report,ask,print_:"
+msgid "Print"
+msgstr "Imprimir"
 
 msgctxt "wizard_button:lims.analysis_sheet.repeat_analysis,start,end:"
 msgid "Cancel"

@@ -150,6 +150,11 @@
 
 <!-- Analysis Sheet Report -->
 
+        <record model="ir.ui.view" id="analysis_sheet_print_report_ask_view_form">
+            <field name="model">lims.analysis_sheet.print_report.ask</field>
+            <field name="type">form</field>
+            <field name="name">analysis_sheet_print_report_ask_form</field>
+        </record>
         <record model="ir.action.wizard" id="wiz_analysis_sheet_print_report">
             <field name="name">Analysis Sheet Report</field>
             <field name="wiz_name">lims.analysis_sheet.print_report</field>

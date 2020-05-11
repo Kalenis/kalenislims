@@ -19,6 +19,7 @@ def register():
         sheet.TemplateAnalysisSheetAnalysis,
         sheet.TemplateAnalysisSheetAnalysisExpression,
         sheet.AnalysisSheet,
+        sheet.PrintAnalysisSheetReportAsk,
         sheet.ExportAnalysisSheetFileStart,
         sheet.ImportAnalysisSheetFileStart,
         interface.Compilation,

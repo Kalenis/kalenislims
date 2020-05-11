@@ -19,10 +19,10 @@ from trytond.modules.lims_interface.interface import str2date, \
 
 __all__ = ['TemplateAnalysisSheet', 'TemplateAnalysisSheetAnalysis',
     'TemplateAnalysisSheetAnalysisExpression', 'AnalysisSheet',
-    'OpenAnalysisSheetData', 'PrintAnalysisSheetReport',
-    'AnalysisSheetReport', 'ExportAnalysisSheetFileStart',
-    'ExportAnalysisSheetFile', 'ImportAnalysisSheetFileStart',
-    'ImportAnalysisSheetFile']
+    'OpenAnalysisSheetData', 'PrintAnalysisSheetReportAsk',
+    'PrintAnalysisSheetReport', 'AnalysisSheetReport',
+    'ExportAnalysisSheetFileStart', 'ExportAnalysisSheetFile',
+    'ImportAnalysisSheetFileStart', 'ImportAnalysisSheetFile']
 
 
 class TemplateAnalysisSheet(ModelSQL, ModelView):
@@ -770,11 +770,23 @@ class ExportAnalysisSheetFile(Wizard):
         return
 
 
+class PrintAnalysisSheetReportAsk(ModelView):
+    'Analysis Sheet Report'
+    __name__ = 'lims.analysis_sheet.print_report.ask'
+
+    print_expression_column = fields.Boolean('Print formula column')
+
+
 class PrintAnalysisSheetReport(Wizard):
     'Analysis Sheet Report'
     __name__ = 'lims.analysis_sheet.print_report'
 
     start = StateTransition()
+    ask = StateView('lims.analysis_sheet.print_report.ask',
+        'lims_analysis_sheet.analysis_sheet_print_report_ask_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Print', 'print_', 'tryton-ok', default=True),
+            ])
     print_ = StateAction('lims_analysis_sheet.report_analysis_sheet')
 
     def _get_analysis_sheet_id(self):
@@ -798,17 +810,24 @@ class PrintAnalysisSheetReport(Wizard):
                 'lims_analysis_sheet.msg_template_not_report',
                 template=sheet.template.rec_name))
 
+        return 'ask'
+
+    def do_print_(self, action):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+
+        sheet = AnalysisSheet(self._get_analysis_sheet_id())
+
         report_name = sheet.template.report.report_name
         AnalysisSheetReport = pool.get(report_name, type='report')
         result = AnalysisSheetReport.execute([sheet.id],
-            {'execute': True, 'id': sheet.id})
+            {'execute': True, 'id': sheet.id,
+                'print_expression_column': self.ask.print_expression_column})
         AnalysisSheet.write([sheet], {
             'report_format': result[0],
             'report_cache': result[1],
             })
-        return 'print_'
 
-    def do_print_(self, action):
         data = {
             'id': self._get_analysis_sheet_id(),
             }
@@ -843,6 +862,7 @@ class AnalysisSheetReport(Report):
             cls).get_context(records, data)
 
         sheet = AnalysisSheet(data.get('id'))
+        print_expression_column = data.get('print_expression_column')
         report_context['sheet'] = sheet
 
         limit = 20
@@ -853,6 +873,8 @@ class AnalysisSheetReport(Report):
         i = 0
         fields = Field.search([('table', '=', sheet.compilation.table.id)])
         for field in fields:
+            if not print_expression_column and field.formula:
+                continue
             alias.append(field.name)
             columns[i] = field.string
             i += 1
