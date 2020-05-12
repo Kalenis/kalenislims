@@ -598,7 +598,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         for k in list(schema.keys()):
             if schema[k]['is_fixed_value']:
                 value = schema[k]['fixed_value']
-                if '.' in value:
+                if value.startswith('='):
                     continue
                 if schema[k]['type'] == 'boolean':
                     fixed_values[k] = bool(value)
@@ -619,9 +619,9 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 line.update(fixed_values)
 
                 for k in list(schema.keys()):
-                    if (schema[k]['is_fixed_value'] and '.' in schema[k][
-                            'fixed_value']):
-                        path = schema[k]['fixed_value'].split('.')
+                    if (schema[k]['is_fixed_value'] and schema[k][
+                            'fixed_value']).startswith('='):
+                        path = schema[k]['fixed_value'][1:].split('.')
                         field = path.pop(0)
                         try:
                             value = getattr(nl, field)

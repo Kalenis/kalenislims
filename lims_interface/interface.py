@@ -121,7 +121,7 @@ def str2date(value, lang=None):
 
 
 def get_model_resource(model_name, value, field_name):
-    if '.' in value:
+    if value.startswith('='):
         return None
     Model = Pool().get(model_name)
     rec_name = Model._rec_name
