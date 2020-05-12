@@ -598,6 +598,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         for k in list(schema.keys()):
             if schema[k]['is_fixed_value']:
                 value = schema[k]['fixed_value']
+                if '.' in value:
+                    continue
                 if schema[k]['type'] == 'boolean':
                     fixed_values[k] = bool(value)
                 elif schema[k]['type'] == 'date':
@@ -615,6 +617,20 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             for nl in lines:
                 line = {'compilation': self.compilation.id}
                 line.update(fixed_values)
+
+                for k in list(schema.keys()):
+                    if (schema[k]['is_fixed_value'] and '.' in schema[k][
+                            'fixed_value']):
+                        path = schema[k]['fixed_value'].split('.')
+                        field = path.pop(0)
+                        try:
+                            value = getattr(nl, field)
+                            while path:
+                                field = path.pop(0)
+                                value = getattr(value, field)
+                        except AttributeError:
+                            value = None
+                        line[k] = value
                 line['notebook_line'] = nl.id
                 if interface.analysis_field:
                     if interface.analysis_field.type_ == 'many2one':
