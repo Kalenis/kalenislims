@@ -34,14 +34,60 @@ class ResultReport(metaclass=PoolMeta):
 
     @classmethod
     def execute(cls, ids, data):
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
+        if len(ids) > 1:
+            raise UserError(gettext('lims.msg_multiple_reports'))
+
+        results_report = ResultsDetail(ids[0])
+        if results_report.state == 'annulled':
+            raise UserError(gettext('lims.msg_annulled_report'))
+
+        if data is None:
+            data = {}
+        current_data = data.copy()
+        current_data['alt_lang'] = None
+        result_orig = cls.execute_html_results_report(ids, current_data)
+        current_data['alt_lang'] = 'en'
+        result_eng = cls.execute_html_results_report(ids, current_data)
+
+        save = False
+        if results_report.english_report:
+            if results_report.report_cache_eng:
+                result = (results_report.report_format_eng,
+                    results_report.report_cache_eng) + result_eng[2:]
+            else:
+                result = result_eng
+                if ('english_report' in current_data and
+                        current_data['english_report']):
+                    results_report.report_format_eng, \
+                        results_report.report_cache_eng = result_eng[:2]
+                    save = True
+        else:
+            if results_report.report_cache:
+                result = (results_report.report_format,
+                    results_report.report_cache) + result_orig[2:]
+            else:
+                result = result_orig
+                if ('english_report' in current_data and
+                        not current_data['english_report']):
+                    results_report.report_format, \
+                        results_report.report_cache = result_orig[:2]
+                    save = True
+        if save:
+            results_report.save()
+
+        return result
+
+    @classmethod
+    def execute_html_results_report(cls, ids, data):
         cls.check_access()
         action, model = cls.get_action(data)
 
-        records = []
         with Transaction().set_context(html_report=action.id):
+            records = []
             if model:
                 records = cls._get_dual_records(ids, model, data)
-            oext, content = cls._execute_html_result_report(records, data,
+            oext, content = cls._execute_html_results_report(records, data,
                 action)
             if not isinstance(content, str):
                 content = bytearray(content) if bytes == str else bytes(
@@ -51,12 +97,12 @@ class ResultReport(metaclass=PoolMeta):
             action)
 
     @classmethod
-    def _execute_html_result_report(cls, records, data, action):
+    def _execute_html_results_report(cls, records, data, action):
         documents = []
         for record in records:
-            template = cls.get_result_report_template(action, record.raw.id)
-            content = cls.render_template_jinja(action, template,
-            record=record, records=[record], data=data)
+            template = cls.get_results_report_template(action, record.raw.id)
+            content = cls.render_results_report_template(action, template,
+                record=record, records=[record], data=data)
             if action.extension == 'pdf':
                 documents.append(PdfGenerator(content).render_html())
             else:
@@ -70,7 +116,7 @@ class ResultReport(metaclass=PoolMeta):
         return action.extension, document
 
     @classmethod
-    def get_result_report_template(cls, action, detail_id):
+    def get_results_report_template(cls, action, detail_id):
         ResultsDetail = Pool().get('lims.results_report.version.detail')
         detail = ResultsDetail(detail_id)
         content = detail.template and detail.template.content
@@ -80,3 +126,16 @@ class ResultReport(metaclass=PoolMeta):
             if not content:
                 raise UserError(gettext('lims_report_html.msg_no_template'))
         return content
+
+    @classmethod
+    def render_results_report_template(cls, action, template_string,
+            record=None, records=None, data=None):
+        env = cls.get_environment()
+        report_template = env.from_string(template_string)
+        context = cls.get_context(records, data)
+        context.update({
+            'report': action,
+            })
+        res = report_template.render(**context)
+        # print('TEMPLATE:\n', res)
+        return res
