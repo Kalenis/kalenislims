@@ -1,17 +1,21 @@
 # This file is part of lims_analysis_sheet module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-from datetime import datetime
+from datetime import datetime, time
+from collections import defaultdict
+from sql import Column, Literal
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval, Equal, Bool
+from trytond.pyson import Eval, Equal, Bool, If
 from trytond.transaction import Transaction
 
 __all__ = ['Planification', 'SearchAnalysisSheetStart',
     'SearchAnalysisSheetNext', 'SearchAnalysisSheet', 'RelateTechniciansStart',
-    'RelateTechniciansResult', 'RelateTechniciansDetail4', 'RelateTechnicians']
+    'RelateTechniciansResult', 'RelateTechniciansDetail4', 'RelateTechnicians',
+    'PlanificationProfessional', 'PlanificationProfessionalContext',
+    'PlanificationProfessionalLine']
 
 
 class Planification(metaclass=PoolMeta):
@@ -598,3 +602,229 @@ class RelateTechnicians(metaclass=PoolMeta):
                 details.append(x[0])
 
         return PlanificationServiceDetail.browse(details)
+
+
+class PlanificationProfessional(ModelSQL, ModelView):
+    'Planification Professional'
+    __name__ = 'lims.planification.professional'
+
+    name = fields.Char('Name')
+    sheets_queue = fields.Function(fields.Integer('# Sheets in queue'),
+        'get_professional')
+    sheets_process = fields.Function(fields.Integer('# Sheets in process'),
+        'get_professional')
+    samples_qty = fields.Function(fields.Integer('# Samples'),
+        'get_professional')
+
+    @classmethod
+    def __setup__(cls):
+        super(PlanificationProfessional, cls).__setup__()
+        cls._order.insert(0, ('name', 'ASC'))
+
+    @classmethod
+    def table_query(cls):
+        pool = Pool()
+        Professional = pool.get('lims.laboratory.professional')
+        Party = pool.get('party.party')
+        professional = Professional.__table__()
+        party = Party.__table__()
+        columns = []
+        for fname, field in cls._fields.items():
+            if hasattr(field, 'set'):
+                continue
+            if fname == 'name':
+                column = Column(party, 'name').as_(fname)
+            else:
+                column = Column(professional, fname).as_(fname)
+            columns.append(column)
+        return professional.join(
+            party, condition=professional.party == party.id).select(*columns)
+
+    @classmethod
+    def get_professional(cls, records, name):
+        pool = Pool()
+        Sheet = pool.get('lims.analysis_sheet')
+
+        res = defaultdict(int)
+        clause = [('state', 'in', ['draft', 'active'])]
+
+        context = Transaction().context
+        if context.get('laboratory'):
+            clause.append(('laboratory', '=', context.get('laboratory')))
+        if context.get('from_date'):
+            clause.append(('date', '>=', datetime.combine(
+                context.get('from_date'), time(0, 0))))
+        if context.get('to_date'):
+            clause.append(('date', '<=', datetime.combine(
+                context.get('to_date'), time(23, 59))))
+
+        sheets = Sheet.search(clause)
+        for sheet in sheets:
+            if name == 'sheets_queue' and sheet.state == 'draft':
+                res[sheet.professional.id] += 1
+            if name == 'sheets_process' and sheet.state == 'active':
+                res[sheet.professional.id] += 1
+            if name == 'samples_qty':
+                res[sheet.professional.id] += sheet.samples_qty
+        return res
+
+    def get_rec_name(self, name):
+        return self.name
+
+
+class PlanificationProfessionalContext(ModelView):
+    'Planification Professional Context'
+    __name__ = 'lims.planification.professional.context'
+    laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
+    from_date = fields.Date("From Date",
+        domain=[
+            If(Eval('to_date') & Eval('from_date'),
+                ('from_date', '<=', Eval('to_date')),
+                ()),
+            ],
+        depends=['to_date'])
+    to_date = fields.Date("To Date",
+        domain=[
+            If(Eval('from_date') & Eval('to_date'),
+                ('to_date', '>=', Eval('from_date')),
+                ()),
+            ],
+        depends=['from_date'])
+
+    @classmethod
+    def default_laboratory(cls):
+        return Transaction().context.get('laboratory')
+
+    @classmethod
+    def default_from_date(cls):
+        return Transaction().context.get('from_date')
+
+    @classmethod
+    def default_to_date(cls):
+        return Transaction().context.get('to_date')
+
+
+class PlanificationProfessionalLine(ModelSQL, ModelView):
+    'Planification Professional Line'
+    __name__ = 'lims.planification.professional.line'
+
+    template = fields.Many2One('lims.template.analysis_sheet', 'Template')
+    laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
+    professional = fields.Many2One('lims.laboratory.professional',
+        'Professional')
+    date = fields.DateTime('Date')
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('active', 'Active'),
+        ('validated', 'Validated'),
+        ('done', 'Done'),
+        ], 'State')
+    samples_qty = fields.Function(fields.Integer('# Samples'),
+        'get_samples_qty')
+
+    @classmethod
+    def __setup__(cls):
+        super(PlanificationProfessionalLine, cls).__setup__()
+        cls._order.insert(0, ('date', 'ASC'))
+
+    @classmethod
+    def table_query(cls):
+        pool = Pool()
+        Sheet = pool.get('lims.analysis_sheet')
+        Compilation = pool.get('lims.interface.compilation')
+        sheet = Sheet.__table__()
+        compilation = Compilation.__table__()
+
+        context = Transaction().context
+        where = Literal(True)
+        if context.get('laboratory'):
+            where &= sheet.laboratory == context.get('laboratory')
+        if context.get('from_date'):
+            where &= compilation.date_time >= datetime.combine(
+                context.get('from_date'), time(0, 0))
+        if context.get('to_date'):
+            where &= compilation.date_time <= datetime.combine(
+                context.get('to_date'), time(23, 59))
+
+        columns = []
+        for fname, field in cls._fields.items():
+            if hasattr(field, 'set'):
+                continue
+            if fname == 'date':
+                column = Column(compilation, 'date_time').as_(fname)
+            else:
+                column = Column(sheet, fname).as_(fname)
+            columns.append(column)
+        return sheet.join(compilation,
+            condition=sheet.compilation == compilation.id).select(*columns,
+            where=where)
+
+    def get_samples_qty(self, name):
+        pool = Pool()
+        Sheet = pool.get('lims.analysis_sheet')
+
+        sheet = Sheet(self.id)
+        return sheet.samples_qty
+
+
+class PlanificationProfessionalSample(ModelSQL, ModelView):
+    'Planification Professional Sample'
+    __name__ = 'lims.planification.professional.sample'
+
+    template = fields.Many2One('lims.template.analysis_sheet', 'Template')
+    laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
+    professional = fields.Many2One('lims.laboratory.professional',
+        'Professional')
+    date = fields.DateTime('Date')
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('active', 'Active'),
+        ('validated', 'Validated'),
+        ('done', 'Done'),
+        ], 'State')
+    samples_qty = fields.Function(fields.Integer('# Samples'),
+        'get_samples_qty')
+
+    @classmethod
+    def __setup__(cls):
+        super(PlanificationProfessionalLine, cls).__setup__()
+        cls._order.insert(0, ('date', 'ASC'))
+
+    @classmethod
+    def table_query(cls):
+        pool = Pool()
+        Sheet = pool.get('lims.analysis_sheet')
+        Compilation = pool.get('lims.interface.compilation')
+        sheet = Sheet.__table__()
+        compilation = Compilation.__table__()
+
+        context = Transaction().context
+        where = Literal(True)
+        if context.get('laboratory'):
+            where &= sheet.laboratory == context.get('laboratory')
+        if context.get('from_date'):
+            where &= compilation.date_time >= datetime.combine(
+                context.get('from_date'), time(0, 0))
+        if context.get('to_date'):
+            where &= compilation.date_time <= datetime.combine(
+                context.get('to_date'), time(23, 59))
+
+        columns = []
+        for fname, field in cls._fields.items():
+            if hasattr(field, 'set'):
+                continue
+            if fname == 'date':
+                column = Column(compilation, 'date_time').as_(fname)
+            else:
+                column = Column(sheet, fname).as_(fname)
+            columns.append(column)
+        return sheet.join(compilation,
+            condition=sheet.compilation == compilation.id).select(*columns,
+            where=where)
+
+    def get_samples_qty(self, name):
+        pool = Pool()
+        Sheet = pool.get('lims.analysis_sheet')
+
+        sheet = Sheet(self.id)
+        return sheet.samples_qty

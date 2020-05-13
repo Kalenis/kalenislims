@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="laboratory" expand="1"/>
+    <field name="template" expand="1"/>
+    <field name="date" widget="date"/>
+    <field name="state"/>
+    <field name="samples_qty"/>
+</tree>

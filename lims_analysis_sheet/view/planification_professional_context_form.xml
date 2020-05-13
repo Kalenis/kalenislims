@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form col="6">
+    <label name="from_date"/>
+    <field name="from_date"/>
+    <label name="to_date"/>
+    <field name="to_date"/>
+    <label name="laboratory"/>
+    <field name="laboratory" widget="selection"/>
+</form>

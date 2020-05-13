@@ -58,5 +58,59 @@
             <field name="name">planification_relate_technicians_detail4_list</field>
         </record>
 
+<!-- Planification Professional -->
+
+        <record model="ir.ui.view" id="planification_professional_view_list">
+            <field name="model">lims.planification.professional</field>
+            <field name="type">tree</field>
+            <field name="name">planification_professional_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_planification_professional_form">
+            <field name="name">Planifications by Professional</field>
+            <field name="res_model">lims.planification.professional</field>
+            <field name="context_model">lims.planification.professional.context</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_planification_professional_form_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="planification_professional_view_list"/>
+            <field name="act_window" ref="act_planification_professional_form"/>
+        </record>
+        <menuitem parent="lims.lims_planification_menu" action="act_planification_professional_form"
+            id="menu_planification_professional" name="Planifications by Professional"
+            sequence="5"/>
+
+        <record model="ir.ui.view" id="planification_professional_line_view_list">
+            <field name="model">lims.planification.professional.line</field>
+            <field name="type">tree</field>
+            <field name="name">planification_professional_line_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_planification_professional_line_form">
+            <field name="name">Planifications by Professional - Sheets</field>
+            <field name="res_model">lims.planification.professional.line</field>
+            <field name="context_model">lims.planification.professional.context</field>
+            <field name="domain" eval="[('professional', 'in', Eval('active_ids', [])), ('state', 'in', ['draft', 'active'])]"
+                pyson="1"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_planification_professional_line_form_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="planification_professional_line_view_list"/>
+            <field name="act_window" ref="act_planification_professional_line_form"/>
+        </record>
+        <record model="ir.action.keyword" id="act_planification_professional_line_form_keyword">
+            <field name="keyword">tree_open</field>
+            <field name="model">lims.planification.professional,-1</field>
+            <field name="action" ref="act_planification_professional_line_form"/>
+        </record>
+
+        <record model="ir.ui.view" id="planification_professional_context_view_form">
+            <field name="model">lims.planification.professional.context</field>
+            <field name="type">form</field>
+            <field name="name">planification_professional_context_form</field>
+        </record>
+
     </data>
 </tryton>

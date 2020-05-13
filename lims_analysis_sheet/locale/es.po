@@ -203,6 +203,62 @@ msgctxt "field:lims.notebook.line,analysis_sheet:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
 
+msgctxt "field:lims.planification.professional,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.planification.professional,samples:"
+msgid "# Samples"
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.planification.professional,samples_qty:"
+msgid "# Samples"
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.planification.professional,sheets_process:"
+msgid "# Sheets in process"
+msgstr "Cant. Hojas en Proceso"
+
+msgctxt "field:lims.planification.professional,sheets_queue:"
+msgid "# Sheets in queue"
+msgstr "Cant. Hojas en Cola"
+
+msgctxt "field:lims.planification.professional.context,from_date:"
+msgid "From Date"
+msgstr "Desde la fecha"
+
+msgctxt "field:lims.planification.professional.context,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
+msgctxt "field:lims.planification.professional.context,to_date:"
+msgid "To Date"
+msgstr "Hasta la fecha"
+
+msgctxt "field:lims.planification.professional.line,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:lims.planification.professional.line,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
+msgctxt "field:lims.planification.professional.line,professional:"
+msgid "Professional"
+msgstr "Profesional"
+
+msgctxt "field:lims.planification.professional.line,samples_qty:"
+msgid "# Samples"
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.planification.professional.line,state:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:lims.planification.professional.line,template:"
+msgid "Template"
+msgstr "Plantilla"
+
 msgctxt "field:lims.planification.relate_technicians.detail4,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
@@ -324,6 +380,14 @@ msgctxt "model:ir.action,name:act_analysis_sheet_list"
 msgid "Analysis Sheets"
 msgstr "Hojas de análisis"
 
+msgctxt "model:ir.action,name:act_planification_professional_form"
+msgid "Planifications by Professional"
+msgstr "Planificaciones por Profesional"
+
+msgctxt "model:ir.action,name:act_planification_professional_line_form"
+msgid "Planifications by Professional - Sheets"
+msgstr "Planificaciones por Profesional - Hojas"
+
 msgctxt "model:ir.action,name:act_template_analysis_sheet_list"
 msgid "Analysis Sheet Templates"
 msgstr "Plantillas de Hoja de análisis"
@@ -416,6 +480,10 @@ msgctxt "model:ir.ui.menu,name:menu_analysis_sheet_list"
 msgid "Analysis Sheets"
 msgstr "Hojas de análisis"
 
+msgctxt "model:ir.ui.menu,name:menu_planification_professional"
+msgid "Planifications by Professional"
+msgstr "Planificaciones por Profesional"
+
 msgctxt "model:ir.ui.menu,name:menu_template_analysis_sheet_list"
 msgid "Analysis Sheet Templates"
 msgstr "Plantillas de Hoja de análisis"
@@ -451,6 +519,18 @@ msgstr "Línea de Hoja de análisis"
 msgctxt "model:lims.analysis_sheet.results_verification.start,name:"
 msgid "Results Verification"
 msgstr "Verificación de resultados"
+
+msgctxt "model:lims.planification.professional,name:"
+msgid "Planification Professional"
+msgstr "Planificaciones por Profesional"
+
+msgctxt "model:lims.planification.professional.context,name:"
+msgid "Planification Professional Context"
+msgstr "Planificaciones por Profesional Contexto"
+
+msgctxt "model:lims.planification.professional.line,name:"
+msgid "Planification Professional Line"
+msgstr "Planificaciones por Profesional Línea"
 
 msgctxt "model:lims.planification.relate_technicians.detail4,name:"
 msgid "Fraction Detail"
@@ -787,6 +867,22 @@ msgstr "Excel"
 msgctxt "selection:lims.interface,export_file_type:"
 msgid "Text File"
 msgstr "Archivo de texto"
+
+msgctxt "selection:lims.planification.professional.line,state:"
+msgid "Active"
+msgstr "Activo"
+
+msgctxt "selection:lims.planification.professional.line,state:"
+msgid "Done"
+msgstr "Realizado"
+
+msgctxt "selection:lims.planification.professional.line,state:"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "selection:lims.planification.professional.line,state:"
+msgid "Validated"
+msgstr "Validada"
 
 msgctxt "selection:lims.planification.relate_technicians.result,grouping:"
 msgid "Analysis sheet"
