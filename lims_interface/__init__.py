@@ -17,6 +17,8 @@ def register():
         interface.CompilationOrigin,
         interface.TestFormulaView,
         interface.TestFormulaViewVariable,
+        interface.Variable,
+        interface.VariableValue,
         table.Table,
         table.TableField,
         table.TableView,

@@ -29,7 +29,8 @@ from .function import custom_functions
 
 __all__ = ['Interface', 'Column', 'CopyInterfaceColumnStart',
     'CopyInterfaceColumn', 'Compilation', 'CompilationOrigin',
-    'TestFormulaView', 'TestFormulaViewVariable', 'TestFormula']
+    'TestFormulaView', 'TestFormulaViewVariable', 'TestFormula',
+    'Variable', 'VariableValue']
 
 
 FUNCTIONS = formulas.get_functions()
@@ -1444,3 +1445,55 @@ class TestFormula(Wizard):
             'expression_column_domain': [x.id for x in columns],
         }
         return default
+
+
+class Variable(ModelSQL, ModelView):
+    'Interface Variable'
+    __name__ = 'lims.interface.variable'
+
+    name = fields.Char('Name', required=True)
+    values = fields.One2Many('lims.interface.variable.value',
+        'variable', 'Values', required=True)
+
+
+class VariableValue(ModelSQL, ModelView):
+    'Interface Variable Value'
+    __name__ = 'lims.interface.variable.value'
+
+    variable = fields.Many2One('lims.interface.variable', 'Variable',
+        required=True, ondelete='CASCADE', select=True)
+    name = fields.Function(fields.Char('Name'), 'get_name',
+        searcher='search_name')
+    value = fields.Char('Value', required=True)
+    analysis = fields.Many2One('lims.analysis', 'Analysis', required=True)
+    product_type = fields.Many2One('lims.product.type', 'Product type')
+    matrix = fields.Many2One('lims.matrix', 'Matrix')
+    method = fields.Many2One('lims.lab.method', 'Method')
+
+    @classmethod
+    def get_name(cls, values, name):
+        result = {}
+        for v in values:
+            result[v.id] = v.variable.name
+        return result
+
+    @classmethod
+    def search_name(cls, name, clause):
+        return [('variable.name',) + tuple(clause[1:])]
+
+    @classmethod
+    def get_value(cls, name, analysis, product_type=None, matrix=None,
+            method=None):
+        if not name or not analysis:
+            return None
+        clause = [
+            ('variable.name', '=', name),
+            ('analysis', '=', analysis),
+            ('product_type', '=', product_type),
+            ('matrix', '=', matrix),
+            ('method', '=', method),
+            ]
+        res = cls.search(clause, limit=1)
+        if res:
+            return res[0].value
+        return None

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="value"/>
+    <field name="analysis"/>
+    <field name="product_type"/>
+    <field name="matrix"/>
+    <field name="method"/>
+</tree>

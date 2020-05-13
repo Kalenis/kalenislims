@@ -314,6 +314,42 @@ msgctxt "field:lims.interface.table.view,type:"
 msgid "Type"
 msgstr "Tipo"
 
+msgctxt "field:lims.interface.variable,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.interface.variable,values:"
+msgid "Values"
+msgstr "Valores"
+
+msgctxt "field:lims.interface.variable.value,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:lims.interface.variable.value,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.interface.variable.value,method:"
+msgid "Method"
+msgstr "Método"
+
+msgctxt "field:lims.interface.variable.value,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.interface.variable.value,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.interface.variable.value,value:"
+msgid "Value"
+msgstr "Valor"
+
+msgctxt "field:lims.interface.variable.value,variable:"
+msgid "Variable"
+msgstr "Variable"
+
 msgctxt "help:lims.interface.column,is_fixed_value:"
 msgid "Check to define a default value for this column"
 msgstr "Marque para definir un valor por defecto en esta columna"
@@ -329,6 +365,10 @@ msgstr "Columna correspondiente en el archivo de origen"
 msgctxt "help:lims.interface.column,transfer_field:"
 msgid "Check if value have to be transferred to notebook line"
 msgstr "Marcar si se debe trasladar el dato a la línea de cuaderno"
+
+msgctxt "model:ir.action,name:act_interface_variable_list"
+msgid "Interface Variables"
+msgstr "Variables de Interfaz"
 
 msgctxt "model:ir.action,name:act_lims_interface_compilation_list"
 msgid "Interface Compilations"
@@ -449,6 +489,10 @@ msgctxt "model:ir.ui.menu,name:lims_interface_menu"
 msgid "Interfaces"
 msgstr "Interfaces"
 
+msgctxt "model:ir.ui.menu,name:lims_interface_variable_menu"
+msgid "Interface Variables"
+msgstr "Variables"
+
 msgctxt "model:lims.interface,name:"
 msgid "Interface"
 msgstr "Interfaz"
@@ -492,6 +536,14 @@ msgstr "Campo de Tabla de interfaz"
 msgctxt "model:lims.interface.table.view,name:"
 msgid "Interface Table View"
 msgstr "Vista de Tabla de interfaz"
+
+msgctxt "model:lims.interface.variable,name:"
+msgid "Interface Variable"
+msgstr "Variable de Interfaz"
+
+msgctxt "model:lims.interface.variable.value,name:"
+msgid "Interface Variable Value"
+msgstr "Valor de Variable de Interfaz"
 
 msgctxt "selection:lims.interface,charset:"
 msgid "ISO-8859"
