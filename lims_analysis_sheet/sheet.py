@@ -620,7 +620,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
                 for k in list(schema.keys()):
                     if (schema[k]['is_fixed_value'] and schema[k][
-                            'fixed_value']).startswith('='):
+                            'fixed_value'].startswith('=')):
                         path = schema[k]['fixed_value'][1:].split('.')
                         field = path.pop(0)
                         try:
