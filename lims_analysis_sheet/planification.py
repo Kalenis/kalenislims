@@ -1,6 +1,7 @@
 # This file is part of lims_analysis_sheet module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import operator
 from datetime import datetime, time
 from collections import defaultdict
 from sql import Column, Literal
@@ -15,9 +16,10 @@ from trytond.transaction import Transaction
 __all__ = ['Planification', 'SearchAnalysisSheetStart',
     'SearchAnalysisSheetNext', 'SearchAnalysisSheet', 'RelateTechniciansStart',
     'RelateTechniciansResult', 'RelateTechniciansDetail4', 'RelateTechnicians',
-    'PlanificationProfessional', 'PlanificationProfessionalContext',
-    'PlanificationProfessionalLine', 'OpenSheetSample', 'PlanificationPending',
-    'PlanificationPendingContext', 'OpenPendingSample']
+    'LaboratoryProfessional', 'PlanificationProfessional',
+    'PlanificationProfessionalContext', 'PlanificationProfessionalLine',
+    'OpenSheetSample', 'PlanificationPending', 'PlanificationPendingContext',
+    'OpenPendingSample']
 
 
 class Planification(metaclass=PoolMeta):
@@ -606,41 +608,15 @@ class RelateTechnicians(metaclass=PoolMeta):
         return PlanificationServiceDetail.browse(details)
 
 
-class PlanificationProfessional(ModelSQL, ModelView):
-    'Planification Professional'
-    __name__ = 'lims.planification.professional'
+class LaboratoryProfessional(metaclass=PoolMeta):
+    __name__ = 'lims.laboratory.professional'
 
-    name = fields.Char('Name')
     sheets_queue = fields.Function(fields.Integer('# Sheets in queue'),
         'get_professional')
     sheets_process = fields.Function(fields.Integer('# Sheets in process'),
         'get_professional')
     samples_qty = fields.Function(fields.Integer('# Samples'),
         'get_professional')
-
-    @classmethod
-    def __setup__(cls):
-        super(PlanificationProfessional, cls).__setup__()
-        cls._order.insert(0, ('name', 'ASC'))
-
-    @classmethod
-    def table_query(cls):
-        pool = Pool()
-        Professional = pool.get('lims.laboratory.professional')
-        Party = pool.get('party.party')
-        professional = Professional.__table__()
-        party = Party.__table__()
-        columns = []
-        for fname, field in cls._fields.items():
-            if hasattr(field, 'set'):
-                continue
-            if fname == 'name':
-                column = Column(party, 'name').as_(fname)
-            else:
-                column = Column(professional, fname).as_(fname)
-            columns.append(column)
-        return professional.join(
-            party, condition=professional.party == party.id).select(*columns)
 
     @classmethod
     def get_professional(cls, records, name):
@@ -669,6 +645,74 @@ class PlanificationProfessional(ModelSQL, ModelView):
             if name == 'samples_qty':
                 res[sheet.professional.id] += sheet.samples_qty
         return res
+
+
+class PlanificationProfessional(ModelSQL, ModelView):
+    'Planification Professional'
+    __name__ = 'lims.planification.professional'
+
+    name = fields.Char('Name')
+    sheets_queue = fields.Function(fields.Integer('# Sheets in queue'),
+        'get_professional', searcher='search_professional')
+    sheets_process = fields.Function(fields.Integer('# Sheets in process'),
+        'get_professional', searcher='search_professional')
+    samples_qty = fields.Function(fields.Integer('# Samples'),
+        'get_professional', searcher='search_professional')
+
+    @classmethod
+    def __setup__(cls):
+        super(PlanificationProfessional, cls).__setup__()
+        cls._order.insert(0, ('name', 'ASC'))
+
+    @classmethod
+    def table_query(cls):
+        pool = Pool()
+        Professional = pool.get('lims.laboratory.professional')
+        Party = pool.get('party.party')
+        professional = Professional.__table__()
+        party = Party.__table__()
+        columns = []
+        for fname, field in cls._fields.items():
+            if hasattr(field, 'set'):
+                continue
+            if fname == 'name':
+                column = Column(party, 'name').as_(fname)
+            else:
+                column = Column(professional, fname).as_(fname)
+            columns.append(column)
+        return professional.join(
+            party, condition=professional.party == party.id).select(*columns)
+
+    @classmethod
+    def get_professional(cls, records, name):
+        pool = Pool()
+        Professional = pool.get('lims.laboratory.professional')
+
+        professionals = Professional.browse(records)
+        return {p.id: getattr(p, name) for p in professionals}
+
+    @classmethod
+    def search_professional(cls, name, domain):
+        pool = Pool()
+        Professional = pool.get('lims.laboratory.professional')
+
+        professionals = Professional.search([], order=[])
+
+        _, operator_, operand = domain
+        operator_ = {
+            '=': operator.eq,
+            '>=': operator.ge,
+            '>': operator.gt,
+            '<=': operator.le,
+            '<': operator.lt,
+            '!=': operator.ne,
+            'in': lambda v, l: v in l,
+            'not in': lambda v, l: v not in l,
+            }.get(operator_, lambda v, l: False)
+
+        ids = [p.id for p in professionals
+            if operator_(getattr(p, name), operand)]
+        return [('id', 'in', ids)]
 
     def get_rec_name(self, name):
         return self.name
@@ -900,7 +944,8 @@ class PlanificationPending(ModelSQL, ModelView):
             columns.append(Column(template, fname).as_(fname))
         return template.select(*columns, where=where)
 
-    def get_samples_qty(self, name):
+    @classmethod
+    def get_samples_qty(cls, records, name):
         pool = Pool()
         Template = pool.get('lims.template.analysis_sheet')
 
@@ -908,8 +953,8 @@ class PlanificationPending(ModelSQL, ModelView):
         with Transaction().set_context(
                 date_from=context.get('date_from') or datetime.min,
                 date_to=context.get('date_to') or datetime.max):
-            template = Template(self.id)
-        return template.pending_fractions
+            templates = Template.browse(records)
+        return {t.id: getattr(t, 'pending_fractions') for t in templates}
 
     def get_rec_name(self, name):
         return self.name

@@ -33,6 +33,7 @@ def register():
         planification.RelateTechniciansStart,
         planification.RelateTechniciansResult,
         planification.RelateTechniciansDetail4,
+        planification.LaboratoryProfessional,
         planification.PlanificationProfessional,
         planification.PlanificationProfessionalContext,
         planification.PlanificationProfessionalLine,
