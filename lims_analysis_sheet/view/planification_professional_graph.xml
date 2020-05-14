@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<graph>
+    <x>
+        <field name="name"/>
+    </x>
+    <y>
+        <field name="sheets_queue"/>
+        <field name="sheets_process"/>
+        <field name="samples_qty"/>
+    </y>
+</graph>
