@@ -430,11 +430,11 @@ msgstr "Muestras Pendientes de Planificar"
 
 msgctxt "model:ir.action,name:act_planification_professional_form"
 msgid "Planifications by Professional"
-msgstr "Planificaciones por Profesional"
+msgstr "Tareas por Profesional"
 
 msgctxt "model:ir.action,name:act_planification_professional_line_form"
 msgid "Planifications by Professional - Sheets"
-msgstr "Planificaciones por Profesional - Hojas"
+msgstr "Tareas por Profesional - Hojas"
 
 msgctxt "model:ir.action,name:act_template_analysis_sheet_list"
 msgid "Analysis Sheet Templates"
@@ -559,7 +559,7 @@ msgstr "Muestras Pendientes de Planificar"
 
 msgctxt "model:ir.ui.menu,name:menu_planification_professional"
 msgid "Planifications by Professional"
-msgstr "Planificaciones por Profesional"
+msgstr "Tareas por Profesional"
 
 msgctxt "model:ir.ui.menu,name:menu_template_analysis_sheet_list"
 msgid "Analysis Sheet Templates"
@@ -607,15 +607,15 @@ msgstr "Planificaciones Pendientes Contexto"
 
 msgctxt "model:lims.planification.professional,name:"
 msgid "Planification Professional"
-msgstr "Planificaciones por Profesional"
+msgstr "Tareas por Profesional"
 
 msgctxt "model:lims.planification.professional.context,name:"
 msgid "Planification Professional Context"
-msgstr "Planificaciones por Profesional Contexto"
+msgstr "Tareas por Profesional Contexto"
 
 msgctxt "model:lims.planification.professional.line,name:"
 msgid "Planification Professional Line"
-msgstr "Planificaciones por Profesional Línea"
+msgstr "Tareas por Profesional Línea"
 
 msgctxt "model:lims.planification.relate_technicians.detail4,name:"
 msgid "Fraction Detail"
