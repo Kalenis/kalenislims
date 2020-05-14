@@ -16,10 +16,15 @@ custom_functions['CONCAT'] = concat
 
 
 def get_variable(notebook_line, variable):
-    VariableValue = Pool().get('lims.interface.variable.value')
+    pool = Pool()
+    NotebookLine = pool.get('lims.notebook.line')
+    VariableValue = pool.get('lims.interface.variable.value')
 
     if not notebook_line or not variable:
         return None
+
+    if isinstance(notebook_line, int):
+        notebook_line = NotebookLine(notebook_line)
 
     analysis = notebook_line.analysis
     product_type = notebook_line.product_type
