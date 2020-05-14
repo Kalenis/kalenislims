@@ -199,6 +199,18 @@ msgctxt "field:lims.interface.data,annulled:"
 msgid "Annulled"
 msgstr "Anulado"
 
+msgctxt "field:lims.laboratory.professional,samples_qty:"
+msgid "# Samples"
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.laboratory.professional,sheets_process:"
+msgid "# Sheets in process"
+msgstr "Cant. Hojas en Proceso"
+
+msgctxt "field:lims.laboratory.professional,sheets_queue:"
+msgid "# Sheets in queue"
+msgstr "Cant. Hojas en Cola"
+
 msgctxt "field:lims.notebook.line,analysis_sheet:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
@@ -254,6 +266,10 @@ msgstr "Laboratorio"
 msgctxt "field:lims.planification.professional.context,to_date:"
 msgid "To Date"
 msgstr "Hasta la fecha"
+
+msgctxt "field:lims.planification.professional.line,completion_percentage:"
+msgid "Complete"
+msgstr "Completo"
 
 msgctxt "field:lims.planification.professional.line,date:"
 msgid "Date"
@@ -467,6 +483,31 @@ msgstr "04) Verificación de resultados"
 msgctxt "model:ir.action,name:wiz_search_analysis_sheet"
 msgid "Search Analysis Sheets"
 msgstr "Buscar Hojas de ensayos"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_analysis_sheet_list_domain_active"
+msgid "Active"
+msgstr "Activa"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_analysis_sheet_list_domain_all"
+msgid "All"
+msgstr "Todas"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_analysis_sheet_list_domain_done"
+msgid "Done"
+msgstr "Realizada"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_analysis_sheet_list_domain_draft"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_analysis_sheet_list_domain_validated"
+msgid "Validated"
+msgstr "Validada"
 
 msgctxt "model:ir.message,text:msg_sheet_compilation_unique"
 msgid "Compilation already in use by another Analysis Sheet"

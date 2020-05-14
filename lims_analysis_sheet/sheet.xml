@@ -96,6 +96,47 @@
             <field name="view" ref="analysis_sheet_view_form"/>
             <field name="act_window" ref="act_analysis_sheet_list"/>
         </record>
+        <record model="ir.action.act_window.domain"
+                id="act_analysis_sheet_list_domain_draft">
+            <field name="name">Draft</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain"
+                eval="[('state', '=', 'draft')]" pyson="1"/>
+            <field name="count" eval="True"/>
+            <field name="act_window" ref="act_analysis_sheet_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+                id="act_analysis_sheet_list_domain_active">
+            <field name="name">Active</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain"
+                eval="[('state', '=', 'active')]" pyson="1"/>
+            <field name="count" eval="True"/>
+            <field name="act_window" ref="act_analysis_sheet_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+                id="act_analysis_sheet_list_domain_validated">
+            <field name="name">Validated</field>
+            <field name="sequence" eval="30"/>
+            <field name="domain"
+                eval="[('state', '=', 'validated')]" pyson="1"/>
+            <field name="count" eval="True"/>
+            <field name="act_window" ref="act_analysis_sheet_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+                id="act_analysis_sheet_list_domain_done">
+            <field name="name">Done</field>
+            <field name="sequence" eval="40"/>
+            <field name="domain"
+                eval="[('state', '=', 'done')]" pyson="1"/>
+            <field name="act_window" ref="act_analysis_sheet_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+                id="act_analysis_sheet_list_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="9999"/>
+            <field name="act_window" ref="act_analysis_sheet_list"/>
+        </record>
 
         <menuitem action="act_analysis_sheet_list" id="menu_analysis_sheet_list"
             parent="lims.lims_laboratory_results" sequence="35"/>

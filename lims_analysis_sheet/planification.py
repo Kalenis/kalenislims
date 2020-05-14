@@ -766,7 +766,13 @@ class PlanificationProfessionalLine(ModelSQL, ModelView):
         ('done', 'Done'),
         ], 'State')
     samples_qty = fields.Function(fields.Integer('# Samples'),
-        'get_samples_qty')
+        'get_fields')
+    completion_percentage = fields.Function(fields.Numeric('Complete',
+        digits=(1, 4), domain=[
+            ('completion_percentage', '>=', 0),
+            ('completion_percentage', '<=', 1),
+            ]),
+        'get_fields')
 
     @classmethod
     def __setup__(cls):
@@ -805,12 +811,13 @@ class PlanificationProfessionalLine(ModelSQL, ModelView):
             condition=sheet.compilation == compilation.id).select(*columns,
             where=where)
 
-    def get_samples_qty(self, name):
+    @classmethod
+    def get_fields(cls, records, name):
         pool = Pool()
         Sheet = pool.get('lims.analysis_sheet')
 
-        sheet = Sheet(self.id)
-        return sheet.samples_qty
+        sheets = Sheet.browse(records)
+        return {s.id: getattr(s, name) for s in sheets}
 
 
 class OpenSheetSample(Wizard):

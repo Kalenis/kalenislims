@@ -90,7 +90,7 @@
         </record>
         <menuitem parent="lims.lims_planification_menu" action="act_planification_professional_form"
             id="menu_planification_professional" name="Planifications by Professional"
-            sequence="5"/>
+            sequence="30"/>
 
         <record model="ir.ui.view" id="planification_professional_line_view_list">
             <field name="model">lims.planification.professional.line</field>
@@ -165,7 +165,7 @@
         </record>
         <menuitem parent="lims.lims_planification_menu" action="act_planification_pending_form"
             id="menu_planification_pending" name="Samples Pending Planning"
-            sequence="5"/>
+            sequence="40"/>
 
         <record model="ir.action.wizard" id="act_open_pending_sample">
             <field name="name">Open Pending Sample</field>
