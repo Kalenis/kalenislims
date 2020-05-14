@@ -1494,6 +1494,10 @@ class VariableValue(ModelSQL, ModelView):
             ('method', '=', method),
             ]
         res = cls.search(clause, limit=1)
-        if res:
-            return res[0].value
-        return None
+        if not res:
+            return None
+        try:
+            val = float(res[0].value)
+        except (TypeError, ValueError):
+            val = res[0].value
+        return val
