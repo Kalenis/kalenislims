@@ -203,6 +203,26 @@ msgctxt "field:lims.notebook.line,analysis_sheet:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
 
+msgctxt "field:lims.planification.pending,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.planification.pending,samples_qty:"
+msgid "# Samples"
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.planification.pending.context,date_from:"
+msgid "From Date"
+msgstr "Desde la fecha"
+
+msgctxt "field:lims.planification.pending.context,date_to:"
+msgid "To Date"
+msgstr "Hasta la fecha"
+
+msgctxt "field:lims.planification.pending.context,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
 msgctxt "field:lims.planification.professional,name:"
 msgid "Name"
 msgstr "Nombre"
@@ -380,6 +400,18 @@ msgctxt "model:ir.action,name:act_analysis_sheet_list"
 msgid "Analysis Sheets"
 msgstr "Hojas de análisis"
 
+msgctxt "model:ir.action,name:act_open_pending_sample"
+msgid "Open Pending Sample"
+msgstr "Abrir Muestras Pendientes"
+
+msgctxt "model:ir.action,name:act_open_sheet_sample"
+msgid "Open Sheet Sample"
+msgstr "Abrir Muestras de hoja"
+
+msgctxt "model:ir.action,name:act_planification_pending_form"
+msgid "Samples Pending Planning"
+msgstr "Muestras Pendientes de Planificar"
+
 msgctxt "model:ir.action,name:act_planification_professional_form"
 msgid "Planifications by Professional"
 msgstr "Planificaciones por Profesional"
@@ -480,6 +512,10 @@ msgctxt "model:ir.ui.menu,name:menu_analysis_sheet_list"
 msgid "Analysis Sheets"
 msgstr "Hojas de análisis"
 
+msgctxt "model:ir.ui.menu,name:menu_planification_pending"
+msgid "Samples Pending Planning"
+msgstr "Muestras Pendientes de Planificar"
+
 msgctxt "model:ir.ui.menu,name:menu_planification_professional"
 msgid "Planifications by Professional"
 msgstr "Planificaciones por Profesional"
@@ -519,6 +555,14 @@ msgstr "Línea de Hoja de análisis"
 msgctxt "model:lims.analysis_sheet.results_verification.start,name:"
 msgid "Results Verification"
 msgstr "Verificación de resultados"
+
+msgctxt "model:lims.planification.pending,name:"
+msgid "Planification Pending"
+msgstr "Muestras Pendientes de Planificar"
+
+msgctxt "model:lims.planification.pending.context,name:"
+msgid "Planification Pending Context"
+msgstr "Planificaciones Pendientes Contexto"
 
 msgctxt "model:lims.planification.professional,name:"
 msgid "Planification Professional"

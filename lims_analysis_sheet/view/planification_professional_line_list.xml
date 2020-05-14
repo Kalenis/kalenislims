@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<tree>
+<tree keyword_open="1">
     <field name="laboratory" expand="1"/>
     <field name="template" expand="1"/>
     <field name="date" widget="date"/>

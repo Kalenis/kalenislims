@@ -106,10 +106,59 @@
             <field name="action" ref="act_planification_professional_line_form"/>
         </record>
 
+        <record model="ir.action.wizard" id="act_open_sheet_sample">
+            <field name="name">Open Sheet Sample</field>
+            <field name="wiz_name">lims.planification.professional.open_sheet_sample</field>
+        </record>
+        <record model="ir.action.keyword" id="act_open_sheet_sample_keyword">
+            <field name="keyword">tree_open</field>
+            <field name="model">lims.planification.professional.line,-1</field>
+            <field name="action" ref="act_open_sheet_sample"/>
+        </record>
+
         <record model="ir.ui.view" id="planification_professional_context_view_form">
             <field name="model">lims.planification.professional.context</field>
             <field name="type">form</field>
             <field name="name">planification_professional_context_form</field>
+        </record>
+
+<!-- Planification Pending -->
+
+        <record model="ir.ui.view" id="planification_pending_view_list">
+            <field name="model">lims.planification.pending</field>
+            <field name="type">tree</field>
+            <field name="name">planification_pending_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_planification_pending_form">
+            <field name="name">Samples Pending Planning</field>
+            <field name="res_model">lims.planification.pending</field>
+            <field name="context_model">lims.planification.pending.context</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_planification_pending_form_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="planification_pending_view_list"/>
+            <field name="act_window" ref="act_planification_pending_form"/>
+        </record>
+        <menuitem parent="lims.lims_planification_menu" action="act_planification_pending_form"
+            id="menu_planification_pending" name="Samples Pending Planning"
+            sequence="5"/>
+
+        <record model="ir.action.wizard" id="act_open_pending_sample">
+            <field name="name">Open Pending Sample</field>
+            <field name="wiz_name">lims.planification.pending.open_pending_sample</field>
+        </record>
+        <record model="ir.action.keyword" id="act_open_pending_sample_keyword">
+            <field name="keyword">tree_open</field>
+            <field name="model">lims.planification.pending,-1</field>
+            <field name="action" ref="act_open_pending_sample"/>
+        </record>
+
+        <record model="ir.ui.view" id="planification_pending_context_view_form">
+            <field name="model">lims.planification.pending.context</field>
+            <field name="type">form</field>
+            <field name="name">planification_pending_context_form</field>
         </record>
 
     </data>

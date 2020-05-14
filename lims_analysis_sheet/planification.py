@@ -6,16 +6,18 @@ from collections import defaultdict
 from sql import Column, Literal
 
 from trytond.model import ModelView, ModelSQL, fields
-from trytond.wizard import Wizard, StateTransition, StateView, Button
+from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
+    Button
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval, Equal, Bool, If
+from trytond.pyson import Eval, Equal, Bool, If, PYSONEncoder
 from trytond.transaction import Transaction
 
 __all__ = ['Planification', 'SearchAnalysisSheetStart',
     'SearchAnalysisSheetNext', 'SearchAnalysisSheet', 'RelateTechniciansStart',
     'RelateTechniciansResult', 'RelateTechniciansDetail4', 'RelateTechnicians',
     'PlanificationProfessional', 'PlanificationProfessionalContext',
-    'PlanificationProfessionalLine']
+    'PlanificationProfessionalLine', 'OpenSheetSample', 'PlanificationPending',
+    'PlanificationPendingContext', 'OpenPendingSample']
 
 
 class Planification(metaclass=PoolMeta):
@@ -767,64 +769,268 @@ class PlanificationProfessionalLine(ModelSQL, ModelView):
         return sheet.samples_qty
 
 
-class PlanificationProfessionalSample(ModelSQL, ModelView):
-    'Planification Professional Sample'
-    __name__ = 'lims.planification.professional.sample'
+class OpenSheetSample(Wizard):
+    'Open Sheet Sample'
+    __name__ = 'lims.planification.professional.open_sheet_sample'
+    start_state = 'open_'
+    open_ = StateAction('lims.act_lims_sample_list')
 
-    template = fields.Many2One('lims.template.analysis_sheet', 'Template')
-    laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
-    professional = fields.Many2One('lims.laboratory.professional',
-        'Professional')
-    date = fields.DateTime('Date')
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('active', 'Active'),
-        ('validated', 'Validated'),
-        ('done', 'Done'),
-        ], 'State')
+    def do_open_(self, action):
+        pool = Pool()
+        Sheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+
+        sheet = Sheet(Transaction().context['active_id'])
+
+        with Transaction().set_context(
+                lims_interface_table=sheet.compilation.table.id):
+            lines = Data.search([('compilation', '=', sheet.compilation.id)])
+            samples = []
+            for line in lines:
+                nl = line.notebook_line
+                if not nl:
+                    continue
+                if nl.sample.id not in samples:
+                    samples.append(nl.sample.id)
+
+        action['pyson_domain'] = [
+            ('id', 'in', samples),
+            ]
+        action['pyson_domain'] = PYSONEncoder().encode(action['pyson_domain'])
+        return action, {}
+
+
+class PlanificationPending(ModelSQL, ModelView):
+    'Planification Pending'
+    __name__ = 'lims.planification.pending'
+
+    name = fields.Char('Name')
     samples_qty = fields.Function(fields.Integer('# Samples'),
         'get_samples_qty')
 
     @classmethod
     def __setup__(cls):
-        super(PlanificationProfessionalLine, cls).__setup__()
-        cls._order.insert(0, ('date', 'ASC'))
+        super(PlanificationPending, cls).__setup__()
+        cls._order.insert(0, ('name', 'ASC'))
 
     @classmethod
     def table_query(cls):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
-        Sheet = pool.get('lims.analysis_sheet')
-        Compilation = pool.get('lims.interface.compilation')
-        sheet = Sheet.__table__()
-        compilation = Compilation.__table__()
+        PlanificationServiceDetail = pool.get(
+            'lims.planification.service_detail')
+        PlanificationDetail = pool.get('lims.planification.detail')
+        Planification = pool.get('lims.planification')
+        NotebookLine = pool.get('lims.notebook.line')
+        Notebook = pool.get('lims.notebook')
+        Fraction = pool.get('lims.fraction')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Analysis = pool.get('lims.analysis')
+        TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
+        Template = pool.get('lims.template.analysis_sheet')
+        template = Template.__table__()
 
         context = Transaction().context
-        where = Literal(True)
-        if context.get('laboratory'):
-            where &= sheet.laboratory == context.get('laboratory')
-        if context.get('from_date'):
-            where &= compilation.date_time >= datetime.combine(
-                context.get('from_date'), time(0, 0))
-        if context.get('to_date'):
-            where &= compilation.date_time <= datetime.combine(
-                context.get('to_date'), time(23, 59))
 
+        cursor.execute('SELECT nl.id '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + PlanificationServiceDetail._table +
+                '" psd ON psd.notebook_line = nl.id '
+                'INNER JOIN "' + PlanificationDetail._table + '" pd '
+                'ON psd.detail = pd.id '
+                'INNER JOIN "' + Planification._table + '" p '
+                'ON pd.planification = p.id '
+            'WHERE p.state = \'preplanned\' ')
+        preplanned_lines = [x[0] for x in cursor.fetchall()]
+        preplanned_lines_ids = ', '.join(str(x)
+            for x in [0] + preplanned_lines)
+
+        sql_select = 'SELECT nl.analysis, nl.method '
+        sql_from = (
+            'FROM "' + NotebookLine._table + '" nl '
+            'INNER JOIN "' + Analysis._table + '" nla '
+            'ON nla.id = nl.analysis '
+            'INNER JOIN "' + Notebook._table + '" nb '
+            'ON nb.id = nl.notebook '
+            'INNER JOIN "' + Fraction._table + '" frc '
+            'ON frc.id = nb.fraction '
+            'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
+            'ON ad.id = nl.analysis_detail ')
+        sql_where = (
+            'WHERE ad.plannable = TRUE '
+            'AND nl.start_date IS NULL '
+            'AND nl.annulled = FALSE '
+            'AND nl.id NOT IN (' + preplanned_lines_ids + ') '
+            'AND nla.behavior != \'internal_relation\' ')
+        params = []
+
+        if context.get('laboratory'):
+            sql_where += 'AND nl.laboratory = %s '
+            params.append(context.get('laboratory'))
+        if context.get('date_from'):
+            sql_where += 'AND ad.confirmation_date::date >= %s::date '
+            params.append(context.get('date_from'))
+        if context.get('date_to'):
+            sql_where += 'AND ad.confirmation_date::date <= %s::date '
+            params.append(context.get('date_to'))
+
+        with Transaction().set_user(0):
+            cursor.execute(sql_select + sql_from + sql_where, tuple(params))
+        notebook_lines = cursor.fetchall()
+
+        result = []
+        for nl in notebook_lines:
+            cursor.execute('SELECT template '
+                'FROM "' + TemplateAnalysis._table + '" '
+                'WHERE analysis = %s '
+                'AND (method = %s OR method IS NULL)',
+                (nl[0], nl[1]))
+            template_id = cursor.fetchone()
+            if template_id:
+                result.append(template_id[0])
+        template_ids = list(set(result))
+
+        where = (template.id.in_(template_ids))
+        if not template_ids:
+            where = (template.id == -1)
         columns = []
         for fname, field in cls._fields.items():
             if hasattr(field, 'set'):
                 continue
-            if fname == 'date':
-                column = Column(compilation, 'date_time').as_(fname)
-            else:
-                column = Column(sheet, fname).as_(fname)
-            columns.append(column)
-        return sheet.join(compilation,
-            condition=sheet.compilation == compilation.id).select(*columns,
-            where=where)
+            columns.append(Column(template, fname).as_(fname))
+        return template.select(*columns, where=where)
 
     def get_samples_qty(self, name):
         pool = Pool()
-        Sheet = pool.get('lims.analysis_sheet')
+        Template = pool.get('lims.template.analysis_sheet')
 
-        sheet = Sheet(self.id)
-        return sheet.samples_qty
+        context = Transaction().context
+        with Transaction().set_context(
+                date_from=context.get('date_from') or datetime.min,
+                date_to=context.get('date_to') or datetime.max):
+            template = Template(self.id)
+        return template.pending_fractions
+
+    def get_rec_name(self, name):
+        return self.name
+
+
+class PlanificationPendingContext(ModelView):
+    'Planification Pending Context'
+    __name__ = 'lims.planification.pending.context'
+    laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
+    date_from = fields.Date("From Date",
+        domain=[
+            If(Eval('date_to') & Eval('date_from'),
+                ('date_from', '<=', Eval('date_to')),
+                ()),
+            ],
+        depends=['date_to'])
+    date_to = fields.Date("To Date",
+        domain=[
+            If(Eval('date_from') & Eval('date_to'),
+                ('date_to', '>=', Eval('date_from')),
+                ()),
+            ],
+        depends=['date_from'])
+
+    @classmethod
+    def default_laboratory(cls):
+        return Transaction().context.get('laboratory')
+
+    @classmethod
+    def default_date_from(cls):
+        return Transaction().context.get('date_from')
+
+    @classmethod
+    def default_date_to(cls):
+        return Transaction().context.get('date_to')
+
+
+class OpenPendingSample(Wizard):
+    'Open Pending Sample'
+    __name__ = 'lims.planification.pending.open_pending_sample'
+    start_state = 'open_'
+    open_ = StateAction('lims.act_lims_sample_list')
+
+    def do_open_(self, action):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Template = pool.get('lims.template.analysis_sheet')
+        PlanificationServiceDetail = pool.get(
+            'lims.planification.service_detail')
+        PlanificationDetail = pool.get('lims.planification.detail')
+        Planification = pool.get('lims.planification')
+        NotebookLine = pool.get('lims.notebook.line')
+        Notebook = pool.get('lims.notebook')
+        Fraction = pool.get('lims.fraction')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Analysis = pool.get('lims.analysis')
+
+        context = Transaction().context
+        template = Template(context['active_id'])
+        template_analysis = {}
+        for analysis in template.analysis:
+            template_analysis[analysis.analysis.id] = (analysis.method.id
+                if analysis.method else None)
+
+        cursor.execute('SELECT nl.id '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + PlanificationServiceDetail._table +
+                '" psd ON psd.notebook_line = nl.id '
+                'INNER JOIN "' + PlanificationDetail._table + '" pd '
+                'ON psd.detail = pd.id '
+                'INNER JOIN "' + Planification._table + '" p '
+                'ON pd.planification = p.id '
+            'WHERE p.state = \'preplanned\' ')
+        preplanned_lines = [x[0] for x in cursor.fetchall()]
+        preplanned_lines_ids = ', '.join(str(x)
+            for x in [0] + preplanned_lines)
+
+        analysis_ids = ', '.join(str(x) for x in template_analysis.keys())
+        sql_select = 'SELECT nl.analysis, nl.method, frc.sample '
+        sql_from = (
+            'FROM "' + NotebookLine._table + '" nl '
+            'INNER JOIN "' + Analysis._table + '" nla '
+            'ON nla.id = nl.analysis '
+            'INNER JOIN "' + Notebook._table + '" nb '
+            'ON nb.id = nl.notebook '
+            'INNER JOIN "' + Fraction._table + '" frc '
+            'ON frc.id = nb.fraction '
+            'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
+            'ON ad.id = nl.analysis_detail ')
+        sql_where = (
+            'WHERE ad.plannable = TRUE '
+            'AND nl.start_date IS NULL '
+            'AND nl.analysis IN (' + analysis_ids + ') '
+            'AND nl.annulled = FALSE '
+            'AND nl.id NOT IN (' + preplanned_lines_ids + ') '
+            'AND nla.behavior != \'internal_relation\' ')
+        params = []
+
+        if context.get('laboratory'):
+            sql_where += 'AND nl.laboratory = %s '
+            params.append(context.get('laboratory'))
+        if context.get('date_from'):
+            sql_where += 'AND ad.confirmation_date::date >= %s::date '
+            params.append(context.get('date_from'))
+        if context.get('date_to'):
+            sql_where += 'AND ad.confirmation_date::date <= %s::date '
+            params.append(context.get('date_to'))
+
+        with Transaction().set_user(0):
+            cursor.execute(sql_select + sql_from + sql_where, tuple(params))
+        notebook_lines = cursor.fetchall()
+
+        result = []
+        for nl in notebook_lines:
+            if (not template_analysis[nl[0]] or (template_analysis[
+                    nl[0]] and template_analysis[nl[0]] == nl[1])):
+                result.append(nl[2])
+        samples = list(set(result))
+
+        action['pyson_domain'] = [
+            ('id', 'in', samples),
+            ]
+        action['pyson_domain'] = PYSONEncoder().encode(action['pyson_domain'])
+        return action, {}
