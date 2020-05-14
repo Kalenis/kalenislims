@@ -61,6 +61,21 @@
             <field name="act_window" ref="act_lims_planification_list"/>
         </record>
 
+        <record model="ir.action.act_window" id="act_lims_planification_form">
+            <field name="name">New Planification</field>
+            <field name="res_model">lims.planification</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_planification_form_view_form">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_planification_view_form"/>
+            <field name="act_window" ref="act_lims_planification_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_planification_form_view_list">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_planification_view_list"/>
+            <field name="act_window" ref="act_lims_planification_form"/>
+        </record>
+
         <record model="ir.action.act_window.domain"
             id="act_lims_planification_list_domain_draft">
             <field name="name">Draft</field>
@@ -68,6 +83,7 @@
             <field name="domain"
                 eval="[('state', '=', 'draft')]"
                 pyson="1"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_lims_planification_list"/>
         </record>
         <record model="ir.action.act_window.domain"
@@ -77,6 +93,7 @@
             <field name="domain"
                 eval="[('state', '=', 'preplanned')]"
                 pyson="1"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_lims_planification_list"/>
         </record>
         <record model="ir.action.act_window.domain"
@@ -765,14 +782,18 @@
             <field name="wiz_name">lims.load_services</field>
         </record>
 
-        <menuitem parent="lims_laboratory" action="act_lims_planification_list"
-            id="lims_planification_menu" sequence="20"
+        <menuitem parent="lims_laboratory" name="Planifications"
+            id="lims_planification_menu" sequence="15"
             icon="lims-planification"/>
+        <menuitem parent="lims_planification_menu" action="act_lims_planification_form"
+            id="lims_planification_form_menu" sequence="10" icon="tryton-form"/>
+        <menuitem parent="lims_planification_menu" action="act_lims_planification_list"
+            id="lims_planification_list_menu" sequence="20" icon="tryton-list"/>
         <menuitem parent="lims_planification_menu" action="wiz_lims_create_fraction_con"
-            id="lims_create_fraction_con_menu" sequence="10"
+            id="lims_create_fraction_con_menu" sequence="100"
             icon="lims-create_fraction_con"/>
         <menuitem parent="lims_planification_menu" action="wiz_lims_release_fraction"
-            id="lims_release_fraction_menu" sequence="20"
+            id="lims_release_fraction_menu" sequence="110"
             icon="lims-release_fraction"/>
 
         <menuitem parent="lims_laboratory_professional_menu"

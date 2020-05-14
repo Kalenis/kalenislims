@@ -6140,6 +6140,10 @@ msgctxt "model:ir.action,name:act_lims_packaging_type_list"
 msgid "Packaging Types"
 msgstr "Tipos de envase"
 
+msgctxt "model:ir.action,name:act_lims_planification_form"
+msgid "New Planification"
+msgstr "Nueva Planificación"
+
 msgctxt "model:ir.action,name:act_lims_planification_list"
 msgid "Planifications"
 msgstr "Planificaciones"
@@ -6699,6 +6703,31 @@ msgctxt ""
 "model:ir.action.act_window.domain,name:act_lims_planification_list_domain_preplanned"
 msgid "Pre-Planned"
 msgstr "Pre-Planificado"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_results_report_version_detail_domain_all"
+msgid "All"
+msgstr "Todos"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_results_report_version_detail_domain_annulled"
+msgid "Annulled"
+msgstr "Anulado"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_results_report_version_detail_domain_draft"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_results_report_version_detail_domain_released"
+msgid "Released"
+msgstr "Publicado"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_results_report_version_detail_domain_revised"
+msgid "Revised"
+msgstr "Revisado"
 
 msgctxt "model:ir.message,text:msg_abs"
 msgid "Absence"
@@ -7699,6 +7728,14 @@ msgstr "Estados de envase"
 msgctxt "model:ir.ui.menu,name:lims_packaging_type_menu"
 msgid "Packaging Types"
 msgstr "Tipos de envase"
+
+msgctxt "model:ir.ui.menu,name:lims_planification_form_menu"
+msgid "New Planification"
+msgstr "Nueva Planificación"
+
+msgctxt "model:ir.ui.menu,name:lims_planification_list_menu"
+msgid "Planifications"
+msgstr "Planificaciones"
 
 msgctxt "model:ir.ui.menu,name:lims_planification_menu"
 msgid "Planifications"

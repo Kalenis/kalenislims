@@ -107,6 +107,46 @@
             <field name="view" ref="lims_results_report_version_detail_view_form"/>
             <field name="act_window" ref="act_lims_results_report_version_detail"/>
         </record>
+        <record model="ir.action.act_window.domain"
+                id="act_lims_results_report_version_detail_domain_draft">
+            <field name="name">Draft</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain"
+                eval="[('state', '=', 'draft')]" pyson="1"/>
+            <field name="count" eval="True"/>
+            <field name="act_window" ref="act_lims_results_report_version_detail"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+                id="act_lims_results_report_version_detail_domain_revised">
+            <field name="name">Revised</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain"
+                eval="[('state', '=', 'revised')]" pyson="1"/>
+            <field name="count" eval="True"/>
+            <field name="act_window" ref="act_lims_results_report_version_detail"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+                id="act_lims_results_report_version_detail_domain_released">
+            <field name="name">Released</field>
+            <field name="sequence" eval="30"/>
+            <field name="domain"
+                eval="[('state', '=', 'released')]" pyson="1"/>
+            <field name="act_window" ref="act_lims_results_report_version_detail"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+                id="act_lims_results_report_version_detail_domain_annulled">
+            <field name="name">Annulled</field>
+            <field name="sequence" eval="40"/>
+            <field name="domain"
+                eval="[('state', '=', 'annulled')]" pyson="1"/>
+            <field name="act_window" ref="act_lims_results_report_version_detail"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+                id="act_lims_results_report_version_detail_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="9999"/>
+            <field name="act_window" ref="act_lims_results_report_version_detail"/>
+        </record>
 
         <record model="ir.rule.group" id="rule_group_results_report_version_detail">
             <field name="name">User in laboratory</field>
