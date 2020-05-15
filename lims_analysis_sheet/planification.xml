@@ -112,16 +112,16 @@
         </record>
         <record model="ir.action.act_window.view"
             id="act_planification_professional_line_form_view1">
-            <field name="sequence" eval="20"/>
+            <field name="sequence" eval="10"/>
             <field name="view" ref="planification_professional_line_view_list"/>
             <field name="act_window" ref="act_planification_professional_line_form"/>
         </record>
-        <record model="ir.action.act_window.view"
+        <!-- <record model="ir.action.act_window.view"
             id="act_planification_professional_line_form_view2">
-            <field name="sequence" eval="10"/>
+            <field name="sequence" eval="20"/>
             <field name="view" ref="planification_professional_line_view_calendar"/>
             <field name="act_window" ref="act_planification_professional_line_form"/>
-        </record>
+        </record> -->
         <record model="ir.action.keyword" id="act_planification_professional_line_form_keyword">
             <field name="keyword">tree_open</field>
             <field name="model">lims.planification.professional,-1</field>
