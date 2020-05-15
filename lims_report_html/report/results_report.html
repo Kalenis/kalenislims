@@ -1,9 +1,1230 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>{{ _('Results Report') }}</title>
+        <title>{% block title %}{{ _('Results Report') }}{% endblock %}</title>
+
+        {% block stylesheets %}
+        <link rel="stylesheet" href="{{ 'lims_report_html/report/stylesheet/results_report.css'|modulepath }}">
+        {% endblock stylesheets %}
+
+        {% block custom_style %}
+        <style type="text/css">
+        </style>
+        {% endblock custom_style %}
     </head>
     <body>
+        {% block body %}
+        <div class="container {% if not first %}page-break{% endif %}">
+
+            {% block report_header %}
+            <table style="width:100%;">
+                <tr>
+                    <td style="width:50%;">
+                        {% if company.logo %}
+                        <!-- COMPANY LOGO -->
+                        {% endif %}
+                    </td>
+                    <td style="width:50%;">
+                        {% if enac == 'True' %}
+                        <!-- ENAC LOGO -->
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+            {% endblock report_header %}
+
+            {% block report_body %}
+            <p class="text-left">{{ enac_label }}</p>
+            <table style="width:100%; border:1px solid #000000;">
+
+                <tr>
+                    <td style="width:100%;">
+                        <table style="width:100%;">
+                            <tr>
+                                <td colspan="2" style="width:100%;">
+                                    <h1 class="text-center">{{ _('Results Report') }}</h1>
+                                    <p class="text-center">{{ replace_number }}</p>
+                                    <hr/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%;">
+                                    <p>{{ _('Date') }}: {{ print_date|render}}</p>
+                                </td>
+                                <td style="width:50%;">
+                                    <p class="text-right">{{ _('REPORT Nº') }}: {{ number }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="width:100%;">
+                                    <p>{{ _('REQUESTED BY') }}: {{ party }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="width:100%;">
+                                    <p>{{ _('ADDRESS') }}: {{ party_address }}</p>
+                                    <hr/>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width:100%;">
+                        <table style="width:100%;">
+                            <tr>
+                                <td colspan="2" style="width:100%;">
+                                    <h2>{{ _('RECEIVED SAMPLE') }}</h2>
+                                </td>
+                            </tr>
+                            {% if report_type == 'normal' %}
+                            <tr>
+                                <td colspan="2" style="width:100%;">
+                                    <p>{{ _('LABEL') }}: {{ sample_label }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="width:100%;">
+                                    <p>{{ _('CUSTOMER DESCRIPTION') }}: {{ sample_client_description }}</p>
+                                </td>
+                            </tr>
+                            {% if report_section == 'for' %}
+                            <tr>
+                                <td colspan="2" style="width:100%;">
+                                    <p>{{ _('FORMULATION TYPES') }}: {{ sample_prodct_type }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="width:100%;">
+                                    <p>{{ _('ACTIVE INGREDIENT') }}: {{ sample_matrix }}</p>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% endif %}
+                            <tr>
+                                <td colspan="2" style="width:100%;">
+                                    <p>{{ _('PRODUCER COMPANY') }}: {{ sample_producer }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%;">
+                                    <p>{{ _('CONFIRMATION SAMPLE RECEPTION') }}: {{ sample_confirmation_date|render }}</p>
+                                </td>
+                                <td style="width:50%;">
+                                    <p>{{ _('CONTAINER') }}: {{ sample_packages_quantity }} {{ sample_package_type }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%;">
+                                    <p>{{ _('BEGINNING OF THE ANALYSIS') }}: {{ min_start_date|render }}</p>
+                                </td>
+                                <td style="width:50%;">
+                                    <p>{{ _('SAMPLE PRESENTATION') }}: {{ sample_package_state }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%;">
+                                    <p>{{ _('END OF ANALYSIS') }}: {{ max_end_date|render }}</p>
+                                </td>
+                                <td style="width:50%;">
+                                    {% if report_type == 'normal' %}
+                                    <p>{{ _('CODE OF THE SAMPLE') }}: {{ sample_number }}</p>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% if report_section == 'rp' and (stp_project == 'True' or stp_polisample_project == 'True') %}
+                            <tr>
+                                <td colspan="2" style="width:100%;">
+                                    <p>{{ _('STUDY PLAN N°') }}: {{ stp_code }}</p>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% if report_type == 'normal' and report_section == 'rp' and stp_project == 'True' %}
+                            <tr>
+                                <td colspan="2" style="width:100%;">
+                                    <p>{{ _('APPLICATION DATES') }}: {% if stp_application_date %}{{ stp_application_date|render }}{% endif %}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%;">
+                                    <p>{{ _('SAMPLING DATE') }}: {% if stp_sampling_date %}{{ stp_sampling_date|render }}{% endif %}</p>
+                                </td>
+                                <td style="width:50%;">
+                                    <p>{{ _('TREATMENT') }}: {{ stp_treatment }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%;">
+                                    <p>{{ _('ZONE') }}: {{ stp_zone }}</p>
+                                </td>
+                                <td style="width:50%;">
+                                    <p>{{ _('DOSE') }}: {{ stp_dosis }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%;">
+                                    <p>{{ _('DAYS AFTER TREATMENT (DAT)') }}: {{ stp_after_application_days }}</p>
+                                </td>
+                                <td style="width:50%;">
+                                    <p>{{ _('REPETITION') }}: {{ stp_repetition }}</p>
+                                </td>
+                            </tr>
+                            {% if stp_z_senasa_protocol %}
+                            <tr>
+                                <td colspan="2" style="width:100%;">
+                                    <p>{{ _('SENASA PROTOCOL N°') }}: {{ stp_z_senasa_protocol }}</p>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% endif %}
+                            <tr>
+                                <td colspan="2" style="width:100%;">
+                                    <hr/>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width:100%;">
+                        <table style="width:100%;">
+                            <tr>
+                                <td style="width:100%;">
+                                    <h2>{{ _('RESULTS') }}</h2>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:100%;">
+                                    {% for fraction in fractions %}
+
+                                    <!-- MONOSAMPLE -->
+                                    {% if report_type == 'normal' %}
+
+                                    {% if report_section in ('amb', 'sq') and report_result_type == 'result' %}
+                                    {% for conc in fraction.concentrations.values() %}
+                                    <p>{{ conc.label }}</p>
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:62%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p class="text-center"><b>{{ _('Result') }}</b></p>
+                                                </td>
+                                                <td style="width:14%;">
+                                                    <p class="text-center"><b>{{ _('Unit') }}</b></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p></p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.initial_unit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.detection_limit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% if report_section == 'for' and report_result_type in ('result', 'both') %}
+                                    {% for conc in fraction.concentrations.values() %}
+                                    <p>{{ conc.label }}</p>
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:62%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p class="text-center"><b>{{ _('Result') }}</b></p>
+                                                </td>
+                                                <td style="width:14%;">
+                                                    <p class="text-center"><b>{{ _('Detection Limit') }}</b></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p class="text-center"><b>{{ _('Unit') }}</b></p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.detection_limit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.initial_unit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% if report_section in ('amb', 'sq') and report_result_type == 'result_range' %}
+                                    {% for conc in fraction.concentrations.values() %}
+                                    <p>{{ conc.label }}</p>
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:47%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p class="text-center"><b>{{ _('Result') }}</b></p>
+                                                </td>
+                                                <td style="width:14%;">
+                                                    <p class="text-center"><b>{{ _('Unit') }}</b></p>
+                                                </td>
+                                                <td style="width:15%;">
+                                                    <p class="text-center">{{ range_title }}</p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p></p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.initial_unit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.reference }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.detection_limit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% if report_section == 'for' and report_result_type == 'result_range' %}
+                                    {% for conc in fraction.concentrations.values() %}
+                                    <p>{{ conc.label }}</p>
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:47%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p class="text-center"><b>{{ _('Result') }}</b></p>
+                                                </td>
+                                                <td style="width:14%;">
+                                                    <p class="text-center"><b>{{ _('Detection Limit') }}</b></p>
+                                                </td>
+                                                <td style="width:15%;">
+                                                    <p class="text-center"><b>{{ _('Unit') }}</b></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p class="text-center">{{ range_title }}</p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.detection_limit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.initial_unit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.reference }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% if report_section in ('amb', 'sq') and report_result_type == 'both' %}
+                                    {% for conc in fraction.concentrations.values() %}
+                                    <p>{{ conc.label }}</p>
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:39%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td colspan="2" style="width:24%;">
+                                                    <p class="text-center"><b>{{ _('Result') }}</b></p>
+                                                </td>
+                                                <td colspan="2" style="width:24%;">
+                                                    <p class="text-center">{{ conc.unit_label }}</p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p></p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-left">{{ line.initial_unit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.converted_result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-left">{{ line.final_unit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.detection_limit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% if report_section == 'mi' and report_result_type in ('result', 'both') %}
+                                    {% for conc in fraction.concentrations.values() %}
+                                    <p>{{ conc.label }}</p>
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:74%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td colspan="2" style="width:24%;">
+                                                    <p class="text-center"><b>{{ _('Result') }}</b></p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-left">{{ line.initial_unit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% if report_section == 'mi' and report_result_type == 'result_range' %}
+                                    {% for conc in fraction.concentrations.values() %}
+                                    <p>{{ conc.label }}</p>
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:58%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td colspan="2" style="width:24%;">
+                                                    <p class="text-center"><b>{{ _('Result') }}</b></p>
+                                                </td>
+                                                <td style="width:16%;">
+                                                    <p class="text-center">{{ range_title }}</p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-left">{{ line.initial_unit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.reference }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% if report_section == 'rp' and report_result_type in ('result', 'both') %}
+                                    {% for conc in fraction.concentrations.values() %}
+                                    <p>{{ conc.label }}</p>
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:51%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td style="width:14%;">
+                                                    <p class="text-right"><b>{{ _('Result') }}</b></p>
+                                                    <p class="text-right"><b>({{ initial_unit }})</b></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p class="text-center"><b>{{ _('Detection Limit') }}</b></p>
+                                                    <p class="text-center"><b>({{ initial_unit }})</b></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p class="text-center"><b>{{ _('Method') }}</b></p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-left">{{ line.initial_unit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.detection_limit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.pnt }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% if report_section == 'rp' and report_result_type == 'result_range' %}
+                                    {% for conc in fraction.concentrations.values() %}
+                                    <p>{{ conc.label }}</p>
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:35%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td style="width:14%;">
+                                                    <p class="text-right"><b>{{ _('Result') }}</b></p>
+                                                    <p class="text-right"><b>({{ initial_unit }})</b></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p class="text-center"><b>{{ _('Detection Limit') }}</b></p>
+                                                    <p class="text-center"><b>({{ initial_unit }})</b></p>
+                                                </td>
+                                                <td style="width:16%;">
+                                                    <p class="text-center">{{ range_title }}</p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p class="text-center"><b>{{ _('Method') }}</b></p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-left">{{ line.initial_unit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.detection_limit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.reference }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.pnt }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% endif %} <!-- END MONOSAMPLE -->
+
+                                    <!-- POLISAMPLE -->
+                                    {% if report_type == 'polisample' %}
+
+                                    {% if report_section in ('amb', 'sq') %}
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td style="width:100%;">
+                                                <p>{{ _('CUSTOMER DESCRIPTION') }}: {{ fraction.client_description }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:100%;">
+                                                <p>{{ _('LABEL') }}: {{ fraction.label }}</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    {% for conc in fraction.concentrations.values() %}
+                                    <p>{{ conc.label }}</p>
+                                    {% if report_result_type in ('result', 'both') %}
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:73%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td style="width:14%;">
+                                                    <p class="text-center"><b>{{ _('Result') }}</b></p>
+                                                    <p class="text-center"><b>({{ initial_unit }})</b></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p></p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.detection_limit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endif %}
+                                    {% if report_result_type == 'result_range' %}
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:57%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td style="width:14%;">
+                                                    <p class="text-center"><b>{{ _('Result') }}</b></p>
+                                                    <p class="text-center"><b>({{ initial_unit }})</b></p>
+                                                </td>
+                                                <td style="width:16%;">
+                                                    <p class="text-center">{{ range_title }}</p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p></p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.reference }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.detection_limit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% if report_section == 'for' %}
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td style="width:100%;">
+                                                <p>{{ _('CUSTOMER DESCRIPTION') }}: {{ fraction.client_description }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:100%;">
+                                                <p>{{ _('LABEL') }}: {{ fraction.label }}</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    {% for conc in fraction.concentrations.values() %}
+                                    <p>{{ conc.label }}</p>
+                                    {% if report_result_type in ('result', 'both') %}
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:73%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td style="width:14%;">
+                                                    <p class="text-center"><b>{{ _('Result') }}</b></p>
+                                                    <p class="text-center"><b>({{ initial_unit }})</b></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p class="text-center"><b>{{ _('Detection Limit') }}</b></p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.detection_limit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endif %}
+                                    {% if report_result_type == 'result_range' %}
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:57%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td style="width:14%;">
+                                                    <p class="text-center"><b>{{ _('Result') }}</b></p>
+                                                    <p class="text-center"><b>({{ initial_unit }})</b></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p class="text-center"><b>{{ _('Detection Limit') }}</b></p>
+                                                </td>
+                                                <td style="width:16%;">
+                                                    <p class="text-center">{{ range_title }}</p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.detection_limit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.reference }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% if report_section == 'mi' %}
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td style="width:100%;">
+                                                <p>{{ _('CUSTOMER DESCRIPTION') }}: {{ fraction.client_description }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:100%;">
+                                                <p>{{ _('LABEL') }}: {{ fraction.label }}</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    {% for conc in fraction.concentrations.values() %}
+                                    <p>{{ conc.label }}</p>
+                                    {% if report_result_type in ('result', 'both') %}
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:74%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td colspan="2" style="width:24%;">
+                                                    <p class="text-center"><b>{{ _('Result') }} ({{ initial_unit }})</b></p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p></p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endif %}
+                                    {% if report_result_type == 'result_range' %}
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:57%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td colspan="2" style="width:25%;">
+                                                    <p class="text-center"><b>{{ _('Result') }} ({{ initial_unit }})</b></p>
+                                                </td>
+                                                <td style="width:16%;">
+                                                    <p class="text-center">{{ range_title }}</p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p></p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.reference }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% if report_section == 'rp' %}
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td colspan="2" style="width:100%;">
+                                                <p>{{ _('CODE OF THE SAMPLE') }}: {{ fraction.number }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="width:100%;">
+                                                <p>{{ _('LABEL') }}: {{ fraction.label }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="width:100%;">
+                                                <p>{{ _('CUSTOMER DESCRIPTION') }}: {{ fraction.client_description }}</p>
+                                            </td>
+                                        </tr>
+                                        {% if stp_polisample_project == 'True' and fraction.stp_variety %}
+                                        <tr>
+                                            <td colspan="2" style="width:100%;">
+                                                <p>{{ _('CUSTOMER VARIETY') }}: {{ fraction.stp_variety }}</p>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% if sample_producer %}
+                                        <tr>
+                                            <td colspan="2" style="width:100%;">
+                                                <p>{{ _('PRODUCER COMPANY') }}: {{ sample_producer }}</p>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% if stp_polisample_project == 'True' %}
+                                        {% if fraction.stp_application_date %}
+                                        <tr>
+                                            <td colspan="2" style="width:100%;">
+                                                <p>{{ _('APPLICATION DATES') }}: {{ fraction.stp_application_date|render }}</p>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% if fraction.stp_sampling_date or fraction.stp_treatment %}
+                                        <tr>
+                                            <td style="width:50%;">
+                                                <p>{% if fraction.stp_sampling_date %}{{ _('SAMPLING DATE') }}: {{ fraction.stp_sampling_date|render }}{% endif %}</p>
+                                            </td>
+                                            <td style="width:50%;">
+                                                <p>{% if fraction.stp_treatment %}{{ _('TREATMENT') }}: {{ fraction.stp_treatment }}{% endif %}</p>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% if fraction.stp_zone or fraction.stp_dosis %}
+                                        <tr>
+                                            <td style="width:50%;">
+                                                <p>{% if fraction.stp_zone %}{{ _('ZONE') }}: {{ fraction.stp_zone }}{% endif %}</p>
+                                            </td>
+                                            <td style="width:50%;">
+                                                <p>{% if fraction.stp_dosis %}{{ _('DOSE') }}: {{ fraction.stp_dosis }}{% endif %}</p>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% if fraction.stp_after_application_days or fraction.stp_repetition %}
+                                        <tr>
+                                            <td style="width:50%;">
+                                                <p>{% if fraction.stp_after_application_days %}{{ _('DAYS AFTER TREATMENT (DAT)') }}: {{ fraction.stp_after_application_days }}{% endif %}</p>
+                                            </td>
+                                            <td style="width:50%;">
+                                                <p>{% if fraction.stp_repetition %}{{ _('REPETITION') }}: {{ fraction.stp_repetition }}{% endif %}</p>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% endif %}
+                                    </table>
+                                    {% for conc in fraction.concentrations.values() %}
+                                    <p>{{ conc.label }}</p>
+                                    {% if report_result_type in ('result', 'both') %}
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:59%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td style="width:14%;">
+                                                    <p class="text-right"><b>{{ _('Result') }}</b></p>
+                                                    <p class="text-right"><b>({{ initial_unit }})</b></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p></p>
+                                                </td>
+                                                <td style="width:14%;">
+                                                    <p class="text-center"><b>{{ _('Detection Limit') }}</b></p>
+                                                    <p class="text-center"><b>({{ initial_unit }})</b></p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-left">{{ line.initial_unit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.detection_limit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endif %}
+                                    {% if report_result_type == 'result_range' %}
+                                    <table style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <td style="width:43%;">
+                                                    <p class="text-left"><b>{{ _('Analysis') }}</b></p>
+                                                </td>
+                                                <td style="width:14%;">
+                                                    <p class="text-right"><b>{{ _('Result') }}</b></p>
+                                                    <p class="text-right"><b>({{ initial_unit }})</b></p>
+                                                </td>
+                                                <td style="width:11%;">
+                                                    <p></p>
+                                                </td>
+                                                <td style="width:14%;">
+                                                    <p class="text-center"><b>{{ _('Detection Limit') }}</b></p>
+                                                    <p class="text-center"><b>({{ initial_unit }})</b></p>
+                                                </td>
+                                                <td style="width:16%;">
+                                                    <p class="text-center">{{ range_title }}</p>
+                                                </td>
+                                                <td style="width:2%;">
+                                                    <p></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for line in conc.lines %}
+                                            <tr>
+                                                <td>
+                                                    <p>{% if (enac == 'True' and line.acredited == 'False') %}* {% else %}  {% endif %}{{ line.analysis }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-right">{{ line.result }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-left">{{ line.initial_unit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.detection_limit }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.reference }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-center">{{ line.corrected }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% endif %} <!-- END POLISAMPLE -->
+
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                {% if comments or tas_project == 'True' %}
+                <tr>
+                    <td style="width:100%;">
+                        <table style="width:100%;">
+                            <tr>
+                                <td style="width:100%;">
+                                    <hr/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:100%;">
+                                    <h2>{{ _('OBSERVATIONS') }}</h2>
+                                    {% if comments %}
+                                    {% for line in comments.split('\n') %}
+                                    <p>{{ line }}</p>
+                                    {% endfor %}
+                                    {% endif %}
+                                    {% if tas_project == 'True' %}
+                                    <p>{{ _('For the SAT NRO') }}: {{ tas_code }}</p>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                {% endif %}
+
+                <tr>
+                    <td style="width:100%;">
+                        <table style="width:100%;">
+                            <tr>
+                                <td style="width:100%;">
+                                    <hr/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:100%;">
+                                    <h2>{{ _('METHODS') }}</h2>
+                                    {% if report_section in ('amb', 'for', 'mi', 'sq') %}
+                                    {% for method in methods %}
+                                    <p>{{ method.analysis }}: {{ method.method }}</p>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% if report_section == 'rp' %}
+                                    {% for method in pnt_methods %}
+                                    <p>{{ method.pnt }}: {{ method.method }}</p>
+                                    {% endfor %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width:100%;">
+                        <hr/>
+                        <p class="text-center">{{ signer }}</p>
+                        <p class="text-center">{{ signer_role }}</p>
+                    </td>
+                </tr>
+            </table>
+            {% endblock report_body %}
+
+            {% block report_footer %}
+            <table style="width:100%;">
+                <tr>
+                    <td style="width:100%;">
+                        <p class="text-center">The results only refer to the analyzed samples. This report must not be partially reproduced without the written approval of {{ company.party.rec_name }}.</p>
+                    </td>
+                </tr>
+            </table>
+            {% endblock report_footer %}
+
+        </div>
+        {% endblock body %}
     </body>
 </html>

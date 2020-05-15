@@ -104,7 +104,8 @@ class ResultReport(metaclass=PoolMeta):
             content = cls.render_results_report_template(action, template,
                 record=record, records=[record], data=data)
             if action.extension == 'pdf':
-                documents.append(PdfGenerator(content).render_html())
+                documents.append(PdfGenerator(content, side_margin=1,
+                    extra_vertical_margin=30).render_html())
             else:
                 documents.append(content)
         if action.extension == 'pdf':
