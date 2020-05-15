@@ -2,7 +2,7 @@
 <data>
     <xpath expr="/form/notebook/page[@id='lines']" position="after">
         <page id="diagnosis" string="Diagnosis">
-<!--            <field name="diagnosis" colspan="4" widget="html"/>-->
+            <field name="diagnosis" colspan="4" widget="html"/>
             <field name="diagnosis" colspan="4"/>
             <field name="diagnosis_states"/>
             <field name="diagnosis_states_domain" colspan="4" invisible="1"/>

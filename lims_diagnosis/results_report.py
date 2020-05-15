@@ -3,10 +3,11 @@
 # the full copyright notices and license terms.
 
 from trytond.model import ModelView, fields
-from trytond.pool import PoolMeta
+from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 
-__all__ = ['ResultsReportVersionDetail', 'ResultsReportVersionDetailSample']
+__all__ = ['ResultsReportVersionDetail', 'ResultsReportVersionDetailSample',
+    'ResultReport']
 
 
 class ResultsReportVersionDetail(metaclass=PoolMeta):
@@ -73,3 +74,38 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
             return [s.id for s in
                 self.version_detail.diagnosis_template.diagnosis_states]
         return []
+
+
+class ResultReport(metaclass=PoolMeta):
+    __name__ = 'lims.result_report'
+
+    @classmethod
+    def get_results_report_template(cls, action, detail_id):
+        content = super(ResultReport, cls).get_results_report_template(
+            action, detail_id)
+        signature = 'show_diagnosis_content'
+        diagnosis_content = (
+            '{%% macro %s(sample) %%}\n%s\n{%% endmacro %%}' % (
+                signature, '{{ sample.diagnosis }}'))
+        return '%s\n\n%s' % (diagnosis_content, content)
+
+    @classmethod
+    def get_context(cls, records, data):
+        ResultsSample = Pool().get('lims.results_report.version.detail.sample')
+
+        report_context = super(ResultReport, cls).get_context(records, data)
+
+        if 'id' in data:
+            report_id = data['id']
+        else:
+            report_id = records[0].id
+        for fraction in report_context['fractions']:
+            detail_sample = ResultsSample.search([
+                ('version_detail', '=', report_id),
+                ('notebook.fraction.sample.number', '=', fraction['fraction']),
+                ], limit=1)
+            if not detail_sample:
+                fraction['diagnosis'] = ''
+                continue
+            fraction['diagnosis'] = detail_sample[0].diagnosis
+        return report_context

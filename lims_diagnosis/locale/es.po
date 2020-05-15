@@ -99,6 +99,10 @@ msgctxt "model:ir.action,name:act_html_diagnosis_template_list"
 msgid "Diagnosis Templates"
 msgstr "Plantillas de Diagnóstico"
 
+msgctxt "model:ir.message,text:missing_diagnosis_signature"
+msgid "Signature missing for diagnosis: %(signature)s"
+msgstr "Falta la firma para el diagnóstico: %(signature)s"
+
 msgctxt "model:ir.ui.menu,name:menu_diagnosis_state_list"
 msgid "Diagnosis States"
 msgstr "Estados de Diagnóstico"

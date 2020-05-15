@@ -4,6 +4,8 @@
 
 from trytond.model import ModelSQL, ModelView, fields, DictSchemaMixin
 from trytond.pool import PoolMeta
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['DiagnosisState', 'DiagnosisTemplate', 'DiagnosisTemplateState',
     'ReportTemplate']
@@ -45,3 +47,17 @@ class ReportTemplate(metaclass=PoolMeta):
 
     diagnosis_template = fields.Many2One('lims.diagnosis.template',
         'Diagnosis Template')
+
+    @classmethod
+    def validate(cls, templates):
+        for template in templates:
+            template.check_diagnosis_macro()
+
+    def check_diagnosis_macro(self):
+        if not self.diagnosis_template:
+            return
+        signature = 'show_diagnosis_content'
+        if str(self.content).find(signature) == -1:
+            raise UserError(gettext(
+                'lims_diagnosis.missing_diagnosis_signature',
+                signature=signature))
