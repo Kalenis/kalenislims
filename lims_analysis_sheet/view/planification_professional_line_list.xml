@@ -2,7 +2,7 @@
 <tree keyword_open="1">
     <field name="laboratory" expand="1"/>
     <field name="template" expand="1"/>
-    <field name="date" widget="date"/>
+    <field name="date"/>
     <field name="state"/>
     <field name="samples_qty"/>
     <field name="completion_percentage" widget="progressbar"/>

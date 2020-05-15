@@ -4,7 +4,7 @@
 import operator
 from datetime import datetime, time
 from collections import defaultdict
-from sql import Column, Literal
+from sql import Column, Literal, Cast
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
@@ -758,7 +758,7 @@ class PlanificationProfessionalLine(ModelSQL, ModelView):
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
     professional = fields.Many2One('lims.laboratory.professional',
         'Professional')
-    date = fields.DateTime('Date')
+    date = fields.Date('Date')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('active', 'Active'),
@@ -773,6 +773,7 @@ class PlanificationProfessionalLine(ModelSQL, ModelView):
             ('completion_percentage', '<=', 1),
             ]),
         'get_fields')
+    color = fields.Function(fields.Char('Color'), 'get_color')
 
     @classmethod
     def __setup__(cls):
@@ -803,7 +804,7 @@ class PlanificationProfessionalLine(ModelSQL, ModelView):
             if hasattr(field, 'set'):
                 continue
             if fname == 'date':
-                column = Column(compilation, 'date_time').as_(fname)
+                column = Cast(compilation.date_time, 'date').as_(fname)
             else:
                 column = Column(sheet, fname).as_(fname)
             columns.append(column)
@@ -818,6 +819,9 @@ class PlanificationProfessionalLine(ModelSQL, ModelView):
 
         sheets = Sheet.browse(records)
         return {s.id: getattr(s, name) for s in sheets}
+
+    def get_color(self, name):
+        return 'lightblue'
 
 
 class OpenSheetSample(Wizard):
