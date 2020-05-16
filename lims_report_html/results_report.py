@@ -1,6 +1,7 @@
 # This file is part of lims_report_html module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+from base64 import b64encode
 
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
@@ -136,7 +137,15 @@ class ResultReport(metaclass=PoolMeta):
         context = cls.get_context(records, data)
         context.update({
             'report': action,
+            'get_image': cls.get_image,
             })
         res = report_template.render(**context)
         # print('TEMPLATE:\n', res)
         return res
+
+    @classmethod
+    def get_image(cls, image):
+        if not image:
+            return ''
+        b64_image = b64encode(image).decode()
+        return 'data:image/png;base64,%s' % b64_image

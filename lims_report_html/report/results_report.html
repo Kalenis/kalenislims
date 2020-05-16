@@ -20,14 +20,9 @@
             {% block report_header %}
             <table style="width:100%;">
                 <tr>
-                    <td style="width:50%;">
+                    <td style="width:100%;">
                         {% if company.logo %}
-                        <!-- COMPANY LOGO -->
-                        {% endif %}
-                    </td>
-                    <td style="width:50%;">
-                        {% if enac == 'True' %}
-                        <!-- ENAC LOGO -->
+                        <img src="{{ get_image(company.logo) }}" alt="{{ company.party.rec_name }}" style="width:300px; height:75px"/>
                         {% endif %}
                     </td>
                 </tr>
@@ -1207,6 +1202,7 @@
                 <tr>
                     <td style="width:100%;">
                         <hr/>
+                        <p class="text-center"><img src="{{ get_image(signature) }}" alt="signature" style="width:100px; height:100px;"/></p>
                         <p class="text-center">{{ signer }}</p>
                         <p class="text-center">{{ signer_role }}</p>
                     </td>
