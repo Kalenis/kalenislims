@@ -1,17 +1,21 @@
 <?xml version="1.0"?>
 <form>
-    <label name="report_version"/>
-    <field name="report_version"/>
-    <label name="party"/>
-    <field name="party"/>
-    <label name="laboratory"/>
-    <field name="laboratory"/>
     <group id="number" colspan="2" col="4">
+        <label name="report_version"/>
+        <field name="report_version"/>
         <label name="number"/>
-        <field name="number"/>
+        <field name="number" xexpand="0"/>
+    </group>
+    <group id="type" colspan="2" col="4">
+        <label name="type"/>
+        <field name="type"/>
         <label name="english_report"/>
         <field name="english_report" xexpand="0"/>
     </group>
+    <label name="laboratory"/>
+    <field name="laboratory"/>
+    <label name="party"/>
+    <field name="party"/>
     <label name="report_type_forced"/>
     <field name="report_type_forced"/>
     <label name="report_result_type_forced"/>
@@ -20,11 +24,11 @@
     <field name="report_type"/>
     <label name="report_result_type"/>
     <field name="report_result_type"/>
+    <label name="signer"/>
+    <field name="signer"/>
     <label name="resultrange_origin"/>
     <field name="resultrange_origin" widget="selection"/>
     <newline/>
-    <label name="signer"/>
-    <field name="signer"/>
     <label name="create_date2"/>
     <field name="create_date2"/>
     <label name="write_date2"/>

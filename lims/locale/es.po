@@ -4892,6 +4892,10 @@ msgctxt "field:lims.results_report.version.detail,state:"
 msgid "State"
 msgstr "Estado"
 
+msgctxt "field:lims.results_report.version.detail,type:"
+msgid "Type"
+msgstr "Tipo"
+
 msgctxt "field:lims.results_report.version.detail,valid:"
 msgid "Active"
 msgstr "Activo"
@@ -11728,6 +11732,22 @@ msgstr "Publicado"
 msgctxt "selection:lims.results_report.version.detail,state:"
 msgid "Revised"
 msgstr "Revisado"
+
+msgctxt "selection:lims.results_report.version.detail,type:"
+msgid "Complementary"
+msgstr "Complementario"
+
+msgctxt "selection:lims.results_report.version.detail,type:"
+msgid "Corrective"
+msgstr "Rectificativo"
+
+msgctxt "selection:lims.results_report.version.detail,type:"
+msgid "Final"
+msgstr "Final"
+
+msgctxt "selection:lims.results_report.version.detail,type:"
+msgid "Preliminary"
+msgstr "Preliminar"
 
 msgctxt ""
 "selection:lims.results_report.version.detail.line,converted_result_modifier:"

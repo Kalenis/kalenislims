@@ -5,6 +5,7 @@
     <field name="number"/>
     <field name="state"/>
     <field name="valid"/>
+    <field name="type"/>
     <field name="party"/>
     <field name="report_type"/>
     <field name="report_result_type"/>

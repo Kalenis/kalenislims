@@ -251,9 +251,53 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         ('released', 'Released'),
         ('annulled', 'Annulled'),
         ], 'State', readonly=True)
+    type = fields.Selection([
+        ('preliminary', 'Preliminary'),
+        ('final', 'Final'),
+        ('complementary', 'Complementary'),
+        ('corrective', 'Corrective'),
+        ], 'Type', readonly=True)
     samples = fields.One2Many('lims.results_report.version.detail.sample',
         'version_detail', 'Samples', depends=['state'],
         states={'readonly': Eval('state') != 'draft'})
+    party = fields.Function(fields.Many2One('party.party', 'Party'),
+       'get_report_field', searcher='search_report_field')
+    signer = fields.Many2One('lims.laboratory.professional', 'Signer',
+        states={'readonly': Eval('state') != 'draft'},
+        domain=[('id', 'in', Eval('signer_domain'))],
+        depends=['state', 'signer_domain'])
+    signer_domain = fields.Function(fields.Many2Many(
+        'lims.laboratory.professional', None, None, 'Signer domain'),
+        'on_change_with_signer_domain')
+    resultrange_origin = fields.Many2One('lims.range.type', 'Origin',
+        domain=[('use', '=', 'result_range')],
+        depends=['report_result_type', 'state'], states={
+            'invisible': Not(Eval('report_result_type').in_([
+                'result_range', 'both_range'])),
+            'required': Eval('report_result_type').in_([
+                'result_range', 'both_range']),
+            'readonly': Eval('state') != 'draft',
+            })
+    annulment_reason = fields.Text('Annulment reason', translate=True,
+        states={'readonly': Eval('state') != 'annulled'}, depends=['state'])
+    annulment_date = fields.DateTime('Annulment date', readonly=True)
+    annulment_reason_print = fields.Boolean('Print annulment reason',
+        states={'readonly': Eval('state') != 'annulled'}, depends=['state'])
+    comments = fields.Text('Comments', translate=True, depends=['state'],
+        states={'readonly': ~Eval('state').in_(['draft', 'revised'])})
+    fraction_comments = fields.Function(fields.Text('Fraction comments'),
+        'get_fraction_comments')
+    cie_fraction_type = fields.Function(fields.Boolean('QA'),
+       'get_report_field', searcher='search_report_field')
+    date = fields.Function(fields.Date('Date'), 'get_date',
+        searcher='search_date')
+    create_date2 = fields.Function(fields.DateTime('Create Date'),
+       'get_create_date2', searcher='search_create_date2')
+    write_date2 = fields.Function(fields.DateTime('Write Date'),
+       'get_write_date2', searcher='search_write_date2')
+    icon = fields.Function(fields.Char('Icon'), 'get_icon')
+
+    # Report format
     report_section = fields.Function(fields.Char('Section'),
         'get_report_section')
     report_type_forced = fields.Selection([
@@ -282,15 +326,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         ], 'Result type', sort=False), 'on_change_with_report_result_type')
     english_report = fields.Function(fields.Boolean('English report'),
         'get_report_field', searcher='search_report_field')
-    signer = fields.Many2One('lims.laboratory.professional', 'Signer',
-        states={'readonly': Eval('state') != 'draft'},
-        domain=[('id', 'in', Eval('signer_domain'))],
-        depends=['state', 'signer_domain'])
-    signer_domain = fields.Function(fields.Many2Many(
-        'lims.laboratory.professional', None, None, 'Signer domain'),
-        'on_change_with_signer_domain')
-    comments = fields.Text('Comments', translate=True, depends=['state'],
-        states={'readonly': ~Eval('state').in_(['draft', 'revised'])})
+
+    # PDF Report Cache
     report_cache = fields.Binary('Report cache', readonly=True,
         file_id='report_cache_id', store_prefix='results_report')
     report_cache_id = fields.Char('Report cache id', readonly=True)
@@ -299,6 +336,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         file_id='report_cache_eng_id', store_prefix='results_report')
     report_cache_eng_id = fields.Char('Report cache id', readonly=True)
     report_format_eng = fields.Char('Report format', readonly=True)
+
+    # ODT Report Cache
     report_cache_odt = fields.Binary('Transcription Report cache',
         readonly=True, file_id='report_cache_odt_id',
         store_prefix='results_report')
@@ -313,33 +352,6 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         readonly=True)
     report_format_odt_eng = fields.Char('Transcription Report format',
         readonly=True)
-    annulment_reason = fields.Text('Annulment reason', translate=True,
-        states={'readonly': Eval('state') != 'annulled'}, depends=['state'])
-    annulment_date = fields.DateTime('Annulment date', readonly=True)
-    annulment_reason_print = fields.Boolean('Print annulment reason',
-        states={'readonly': Eval('state') != 'annulled'}, depends=['state'])
-    date = fields.Function(fields.Date('Date'), 'get_date',
-        searcher='search_date')
-    party = fields.Function(fields.Many2One('party.party', 'Party'),
-       'get_report_field', searcher='search_report_field')
-    cie_fraction_type = fields.Function(fields.Boolean('QA'),
-       'get_report_field', searcher='search_report_field')
-    create_date2 = fields.Function(fields.DateTime('Create Date'),
-       'get_create_date2', searcher='search_create_date2')
-    write_date2 = fields.Function(fields.DateTime('Write Date'),
-       'get_write_date2', searcher='search_write_date2')
-    resultrange_origin = fields.Many2One('lims.range.type', 'Origin',
-        domain=[('use', '=', 'result_range')],
-        depends=['report_result_type', 'state'], states={
-            'invisible': Not(Eval('report_result_type').in_([
-                'result_range', 'both_range'])),
-            'required': Eval('report_result_type').in_([
-                'result_range', 'both_range']),
-            'readonly': Eval('state') != 'draft',
-            })
-    fraction_comments = fields.Function(fields.Text('Fraction comments'),
-        'get_fraction_comments')
-    icon = fields.Function(fields.Char("Icon"), 'get_icon')
 
     @classmethod
     def __setup__(cls):
@@ -386,16 +398,28 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                 'report_cache_eng_id IS NOT NULL)')
 
     @staticmethod
+    def default_valid():
+        return False
+
+    @staticmethod
+    def default_state():
+        return 'draft'
+
+    @staticmethod
+    def default_type():
+        return 'final'
+
+    @staticmethod
+    def default_annulment_reason_print():
+        return True
+
+    @staticmethod
     def default_report_type_forced():
         return 'none'
 
     @staticmethod
     def default_report_result_type_forced():
         return 'none'
-
-    @staticmethod
-    def default_annulment_reason_print():
-        return True
 
     @classmethod
     def get_next_number(cls, report_version_id, d_count):
@@ -416,14 +440,6 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
             d_count[key] += 1
             values['number'] = cls.get_next_number(key, d_count[key])
         return super(ResultsReportVersionDetail, cls).create(vlist)
-
-    @staticmethod
-    def default_valid():
-        return False
-
-    @staticmethod
-    def default_state():
-        return 'draft'
 
     def get_report_section(self, name):
         if self.laboratory:
