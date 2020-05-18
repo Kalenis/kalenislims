@@ -301,6 +301,7 @@ def register():
         control_tendency.TendenciesAnalysis,
         results_report.DivideReports,
         results_report.GenerateResultsReport,
+        results_report.OpenSamplesPendingReporting,
         results_report.PrintResultsReport,
         certification.DuplicateAnalysisFamily,
         results_report.ServiceResultsReport,

@@ -228,6 +228,55 @@
             <field name="perm_delete" eval="False"/>
         </record>
 
+<!-- Samples Pending Reporting -->
+
+        <record model="ir.ui.view" id="lims_samples_pending_reporting_view_list">
+            <field name="model">lims.notebook</field>
+            <field name="type">tree</field>
+            <field name="name">samples_pending_reporting_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_samples_pending_reporting_view_form">
+            <field name="model">lims.notebook</field>
+            <field name="type">form</field>
+            <field name="name">samples_pending_reporting_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_samples_pending_reporting">
+            <field name="name">Samples Pending Reporting</field>
+            <field name="res_model">lims.notebook</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_lims_samples_pending_reporting_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_samples_pending_reporting_view_list"/>
+            <field name="act_window" ref="act_lims_samples_pending_reporting"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_lims_samples_pending_reporting_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_samples_pending_reporting_view_form"/>
+            <field name="act_window" ref="act_lims_samples_pending_reporting"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_lims_samples_pending_reporting_domain_complete">
+            <field name="name">Complete</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain" eval="[('state', '=', 'complete')]" pyson="1"/>
+            <field name="act_window" ref="act_lims_samples_pending_reporting"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_lims_samples_pending_reporting_domain_in_progress">
+            <field name="name">In progress</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain" eval="[('state', '=', 'in_progress')]" pyson="1"/>
+            <field name="act_window" ref="act_lims_samples_pending_reporting"/>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_samples_pending_reporting">
+            <field name="name">Samples Pending Reporting</field>
+            <field name="wiz_name">lims.samples_pending_reporting</field>
+        </record>
+
 <!-- Wizard Generate Results Reports -->
 
         <record model="ir.ui.view" id="lims_generate_results_report_start_view_form">
@@ -402,6 +451,8 @@
         <menuitem parent="lims_laboratory_reports" action="act_lims_results_report"
             id="lims_results_report_menu" sequence="10"
             icon="lims-laboratory_reports"/>
+        <menuitem parent="lims_laboratory_reports" action="wiz_lims_samples_pending_reporting"
+            id="lims_samples_pending_reporting_menu" sequence="15"/>
         <menuitem parent="lims_laboratory_reports" action="wiz_lims_generate_results_report"
             id="lims_generate_results_report_menu" sequence="20"
             icon="lims-generate_results_report"/>
@@ -505,6 +556,11 @@
         </record>
         <record model="ir.ui.menu-res.group" id="menu_results_report_group_laboratory_reports">
             <field name="menu" ref="lims_results_report_menu"/>
+            <field name="group" ref="group_lims_laboratory_reports"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_samples_pending_reporting_group_laboratory_reports">
+            <field name="menu" ref="lims_samples_pending_reporting_menu"/>
             <field name="group" ref="group_lims_laboratory_reports"/>
         </record>
 

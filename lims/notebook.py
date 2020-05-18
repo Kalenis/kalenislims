@@ -97,6 +97,12 @@ class Notebook(ModelSQL, ModelView):
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
     obj_description = fields.Function(fields.Char('Objective description',
         translate=True), 'get_obj_description')
+    completion_percentage = fields.Function(fields.Numeric('Complete',
+        digits=(1, 4)), 'get_sample_field')
+    department = fields.Function(fields.Many2One('company.department',
+        'Department'), 'get_department', searcher='search_department')
+    state = fields.Function(fields.Char('State'), 'get_state',
+        searcher='search_state')
 
     @classmethod
     def __setup__(cls):
@@ -116,7 +122,8 @@ class Notebook(ModelSQL, ModelView):
         result = {}
         for name in names:
             result[name] = {}
-            if name in ('label', 'date', 'date2'):
+            if name in ('label', 'date', 'date2', 'completion_percentage',
+                    'department'):
                 for n in notebooks:
                     result[name][n.id] = getattr(n.fraction.sample, name, None)
             else:
@@ -249,6 +256,219 @@ class Notebook(ModelSQL, ModelView):
         if self.fraction_comments:
             return 'lims-blue'
         return 'lims-white'
+
+    @classmethod
+    def get_department(cls, notebooks, name):
+        result = {}
+        for n in notebooks:
+            field = getattr(n.fraction.sample.product_type, name, None)
+            result[n.id] = field.id if field else None
+        return result
+
+    @classmethod
+    def search_department(cls, name, clause):
+        return [('fraction.sample.product_type.' + name,) + tuple(clause[1:])]
+
+    @classmethod
+    def get_state(cls, notebooks, name=None):
+        result = {}
+        for n in notebooks:
+            result[n.id] = cls._get_notebook_state(n.id)
+        return result
+
+    @classmethod
+    def _get_notebook_state(cls, notebook_id):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        NotebookLine = pool.get('lims.notebook.line')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        draft_samples = ResultsSample.search_count([
+            ('version_detail.state', '=', 'draft'),
+            ('notebook', '=', notebook_id),
+            ])
+        if draft_samples > 0:
+            return ''
+
+        clause = [
+            ('notebook', '=', notebook_id),
+            ('notebook.fraction.type.report', '=', True),
+            ('report', '=', True),
+            ('annulled', '=', False),
+            ('accepted', '=', True),
+            ('results_report', '=', None),
+            ]
+        excluded_notebooks = cls._get_excluded_notebooks([notebook_id])
+        if excluded_notebooks:
+            for n_id, grouper in excluded_notebooks:
+                cursor.execute('SELECT nl.id '
+                    'FROM "' + NotebookLine._table + '" nl '
+                        'INNER JOIN "' + EntryDetailAnalysis._table + '" d '
+                        'ON d.id = nl.analysis_detail '
+                    'WHERE nl.notebook = %s AND d.report_grouper = %s',
+                    (n_id, grouper))
+                excluded_notebook_lines = [x[0] for x in cursor.fetchall()]
+                clause.append(('id', 'not in', excluded_notebook_lines))
+        if NotebookLine.search_count(clause) > 0:
+            return 'complete'
+
+        clause = [
+            ('notebook', '=', notebook_id),
+            ('notebook.fraction.type.report', '=', True),
+            ('report', '=', True),
+            ('annulled', '=', False),
+            ('results_report', '=', None),
+            ['OR',
+                ('result', 'not in', [None, '']),
+                ('literal_result', 'not in', [None, '']),
+                ('result_modifier', 'in', [
+                    'd', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre', 'na']),
+                ],
+            ]
+        if NotebookLine.search_count(clause) > 0:
+            return 'in_progress'
+
+        return ''
+
+    @classmethod
+    def search_state(cls, name, domain=None):
+        if domain[2] == 'complete':
+            notebooks_ids = cls._get_notebooks_complete()
+            return [('id', 'in', notebooks_ids)]
+        if domain[2] == 'in_progress':
+            notebooks_ids = cls._get_notebooks_in_progress()
+            return [('id', 'in', notebooks_ids)]
+        return [('id', '=', -1)]
+
+    @classmethod
+    def _get_notebooks_complete(cls):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        NotebookLine = pool.get('lims.notebook.line')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        draft_notebooks_ids = []
+        draft_samples = ResultsSample.search([
+            ('version_detail.state', '=', 'draft'),
+            ])
+        if draft_samples:
+            draft_notebooks_ids = [ds.notebook.id for ds in draft_samples]
+
+        clause = [
+            ('notebook', 'not in', draft_notebooks_ids),
+            ('notebook.fraction.type.report', '=', True),
+            ('report', '=', True),
+            ('annulled', '=', False),
+            ('accepted', '=', True),
+            ('results_report', '=', None),
+            ]
+        lines = NotebookLine.search(clause)
+        notebooks_ids = [nl.notebook.id for nl in lines]
+
+        excluded_notebooks = cls._get_excluded_notebooks(notebooks_ids)
+        if excluded_notebooks:
+            for n_id, grouper in excluded_notebooks:
+                cursor.execute('SELECT nl.id '
+                    'FROM "' + NotebookLine._table + '" nl '
+                        'INNER JOIN "' + EntryDetailAnalysis._table + '" d '
+                        'ON d.id = nl.analysis_detail '
+                    'WHERE nl.notebook = %s AND d.report_grouper = %s',
+                    (n_id, grouper))
+                excluded_notebook_lines = [x[0] for x in cursor.fetchall()]
+                clause.append(('id', 'not in', excluded_notebook_lines))
+            lines = NotebookLine.search(clause)
+            notebooks_ids = [nl.notebook.id for nl in lines]
+        return notebooks_ids
+
+    @classmethod
+    def _get_excluded_notebooks(cls, notebooks_ids):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Notebook = pool.get('lims.notebook')
+        Fraction = pool.get('lims.fraction')
+        Sample = pool.get('lims.sample')
+        Entry = pool.get('lims.entry')
+        FractionType = pool.get('lims.fraction.type')
+
+        notebooks_ids = '\', \''.join(str(n) for n in notebooks_ids + [0])
+
+        cursor.execute('SELECT nl.notebook, nl.analysis, nl.accepted, '
+                'd.report_grouper '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + EntryDetailAnalysis._table + '" d '
+                'ON d.id = nl.analysis_detail '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON n.id = nl.notebook '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + Sample._table + '" s '
+                'ON s.id = f.sample '
+                'INNER JOIN "' + Entry._table + '" e '
+                'ON e.id = s.entry '
+                'INNER JOIN "' + FractionType._table + '" ft '
+                'ON ft.id = f.type '
+            'WHERE ft.report = TRUE '
+                'AND nl.report = TRUE '
+                'AND nl.annulled = FALSE '
+                'AND n.id IN (\'' + notebooks_ids + '\')')
+        notebook_lines = cursor.fetchall()
+
+        # Check accepted repetitions
+        to_check = []
+        oks = []
+        accepted_notebooks = []
+        for line in notebook_lines:
+            key = (line[0], line[1], line[3])
+            if not line[2]:
+                to_check.append(key)
+            else:
+                oks.append(key)
+                accepted_notebooks.append(line[0])
+
+        to_check = list(set(to_check) - set(oks))
+        accepted_notebooks = list(set(accepted_notebooks))
+
+        excluded_notebooks = set()
+        for n_id, a_id, grouper in to_check:
+            if n_id not in accepted_notebooks:
+                continue
+            key = (n_id, grouper)
+            excluded_notebooks.add(key)
+        return excluded_notebooks
+
+    @classmethod
+    def _get_notebooks_in_progress(cls):
+        pool = Pool()
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        draft_notebooks_ids = []
+        draft_samples = ResultsSample.search([
+            ('version_detail.state', '=', 'draft'),
+            ])
+        if draft_samples:
+            draft_notebooks_ids = [ds.notebook.id for ds in draft_samples]
+
+        clause = [
+            ('notebook', 'not in', draft_notebooks_ids),
+            ('notebook.fraction.type.report', '=', True),
+            ('report', '=', True),
+            ('annulled', '=', False),
+            ('results_report', '=', None),
+            ['OR',
+                ('result', 'not in', [None, '']),
+                ('literal_result', 'not in', [None, '']),
+                ('result_modifier', 'in', [
+                    'd', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre', 'na']),
+                ],
+            ]
+        lines = NotebookLine.search(clause)
+        notebooks_ids = [nl.notebook.id for nl in lines]
+        return notebooks_ids
 
 
 class NotebookLine(ModelSQL, ModelView):

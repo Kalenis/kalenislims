@@ -27,8 +27,9 @@ __all__ = ['ResultsReport', 'ResultsReportVersion',
     'GenerateResultsReportResultAutNotebookLine',
     'GenerateResultsReportResultAutExcludedNotebook',
     'GenerateResultsReportResultAutExcludedNotebookLine',
-    'GenerateResultsReport', 'PrintResultsReport', 'ServiceResultsReport',
-    'FractionResultsReport', 'SampleResultsReport', 'ResultsReportSample',
+    'GenerateResultsReport', 'OpenSamplesPendingReporting',
+    'PrintResultsReport', 'ServiceResultsReport', 'FractionResultsReport',
+    'SampleResultsReport', 'ResultsReportSample',
     'ResultsReportAnnulationStart', 'ResultsReportAnnulation', 'ResultReport',
     'GlobalResultReport', 'ResultReportTranscription']
 
@@ -2127,6 +2128,20 @@ class GenerateResultsReport(Wizard):
                 ])
             self.result_man.reports_details = None
         return action, {}
+
+
+class OpenSamplesPendingReporting(Wizard):
+    'Samples Pending Reporting'
+    __name__ = 'lims.samples_pending_reporting'
+
+    start = StateAction('lims.act_lims_samples_pending_reporting')
+
+    def do_start(self, action):
+        data = {}
+        return action, data
+
+    def transition_start(self):
+        return 'end'
 
 
 class PrintResultsReport(Wizard):
