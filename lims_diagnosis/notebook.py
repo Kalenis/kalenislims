@@ -5,7 +5,16 @@
 from trytond.model import fields
 from trytond.pool import PoolMeta
 
-__all__ = ['NotebookLine']
+__all__ = ['Notebook', 'NotebookLine']
+
+
+class Notebook(metaclass=PoolMeta):
+    __name__ = 'lims.notebook'
+
+    diagnostician = fields.Function(fields.Many2One('lims.diagnostician',
+        'Diagnostician'), 'get_sample_field')
+    diagnosis_warning = fields.Function(fields.Boolean('Diagnosis Warning'),
+        'get_sample_field')
 
 
 class NotebookLine(metaclass=PoolMeta):

@@ -38,6 +38,14 @@ msgctxt "field:lims.diagnostician,party:"
 msgid "Party"
 msgstr "Entidad"
 
+msgctxt "field:lims.notebook,diagnosis_warning:"
+msgid "Diagnosis Warning"
+msgstr "Advertencia de diagnóstico"
+
+msgctxt "field:lims.notebook,diagnostician:"
+msgid "Diagnostician"
+msgstr "Diagnosticador"
+
 msgctxt "field:lims.notebook.line,diagnosis_warning:"
 msgid "Diagnosis Warning"
 msgstr "Advertencia de diagnóstico"

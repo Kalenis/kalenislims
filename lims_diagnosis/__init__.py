@@ -26,6 +26,7 @@ def register():
         sample.CreateSampleStart,
         results_report.ResultsReportVersionDetail,
         results_report.ResultsReportVersionDetailSample,
+        notebook.Notebook,
         notebook.NotebookLine,
         laboratory.NotebookRule,
         module='lims_diagnosis', type_='model')

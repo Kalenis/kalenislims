@@ -122,14 +122,13 @@ class Notebook(ModelSQL, ModelView):
         result = {}
         for name in names:
             result[name] = {}
-            if name in ('label', 'date', 'date2', 'completion_percentage',
-                    'department'):
-                for n in notebooks:
-                    result[name][n.id] = getattr(n.fraction.sample, name, None)
-            else:
+            if cls._fields[name]._type == 'many2one':
                 for n in notebooks:
                     field = getattr(n.fraction.sample, name, None)
                     result[name][n.id] = field.id if field else None
+            else:
+                for n in notebooks:
+                    result[name][n.id] = getattr(n.fraction.sample, name, None)
         return result
 
     @classmethod
