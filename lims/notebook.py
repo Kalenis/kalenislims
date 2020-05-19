@@ -470,6 +470,18 @@ class Notebook(ModelSQL, ModelView):
         notebooks_ids = [nl.notebook.id for nl in lines]
         return notebooks_ids
 
+    @classmethod
+    def view_toolbar_get(cls):
+        if not Transaction().context.get('samples_pending_reporting', False):
+            return super(Notebook, cls).view_toolbar_get()
+        result = {
+            'print': [],
+            'action': [],
+            'relate': [],
+            'exports': [],
+            }
+        return result
+
 
 class NotebookLine(ModelSQL, ModelView):
     'Laboratory Notebook Line'

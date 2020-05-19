@@ -2137,8 +2137,9 @@ class OpenSamplesPendingReporting(Wizard):
     start = StateAction('lims.act_lims_samples_pending_reporting')
 
     def do_start(self, action):
-        data = {}
-        return action, data
+        context = {'samples_pending_reporting': True}
+        action['pyson_context'] = PYSONEncoder().encode(context)
+        return action, {}
 
     def transition_start(self):
         return 'end'
