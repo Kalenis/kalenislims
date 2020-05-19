@@ -22,6 +22,10 @@
                 <label name="repetition_field"/>
                 <field name="repetition_field"/>
             </group>
+            <group id="grouped_repetitions" colspan="2" col="2">
+                <label name="grouped_repetitions"/>
+                <field name="grouped_repetitions" xexpand="0"/>
+            </group>
         </page>
         <page id="template" string="Template">
             <label name="template_type"/>

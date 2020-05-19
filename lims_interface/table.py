@@ -9,7 +9,8 @@ from trytond.model import ModelSQL, ModelView, fields
 from trytond.transaction import Transaction
 from .interface import FIELD_TYPE_SQL, FIELD_TYPE_SELECTION
 
-__all__ = ['Table', 'TableField', 'TableView']
+__all__ = ['Table', 'TableField', 'TableGroupedField', 'TableView',
+    'TableGroupedView']
 
 
 class ModelEmulation:
@@ -25,8 +26,12 @@ class Table(ModelSQL, ModelView):
     name = fields.Char('Name', required=True)
     fields_ = fields.One2Many('lims.interface.table.field', 'table',
         'Fields')
+    grouped_fields_ = fields.One2Many('lims.interface.table.grouped_field',
+        'table', 'Grouped Fields')
     views = fields.One2Many('lims.interface.table.view', 'table',
         'Views')
+    grouped_views = fields.One2Many('lims.interface.table.grouped_view',
+        'table', 'Grouped Views')
 
     def create_table(self):
         TableHandler = backend.get('TableHandler')
@@ -90,7 +95,37 @@ class TableField(ModelSQL, ModelView):
     inputs = fields.Function(fields.Char('On Change With Inputs'),
         'get_inputs')
 
-    def get_inputs(self, name):
+    def get_inputs(self, name=None):
+        if not self.formula:
+            return
+        parser = formulas.Parser()
+        ast = parser.ast(self.formula)[1].compile()
+        return (' '.join([x for x in ast.inputs])).lower()
+
+    def get_ast(self):
+        parser = formulas.Parser()
+        ast = parser.ast(self.formula)[1].compile()
+        return ast
+
+
+class TableGroupedField(ModelSQL, ModelView):
+    'Interface Table Grouped Field'
+    __name__ = 'lims.interface.table.grouped_field'
+
+    table = fields.Many2One('lims.interface.table', 'Table',
+        required=True, ondelete='CASCADE')
+    name = fields.Char('Name', required=True)
+    string = fields.Char('String', required=True)
+    type = fields.Selection([(None, '')] + FIELD_TYPE_SELECTION,
+        'Field Type', required=False)
+    help = fields.Text('Help')
+    related_model = fields.Many2One('ir.model', 'Related Model')
+    domain = fields.Char('Domain Value')
+    formula = fields.Char('On Change With Formula')
+    inputs = fields.Function(fields.Char('On Change With Inputs'),
+        'get_inputs')
+
+    def get_inputs(self, name=None):
         if not self.formula:
             return
         parser = formulas.Parser()
@@ -106,6 +141,18 @@ class TableField(ModelSQL, ModelView):
 class TableView(ModelSQL, ModelView):
     'Interface Table View'
     __name__ = 'lims.interface.table.view'
+
+    table = fields.Many2One('lims.interface.table', 'Table',
+        required=True, ondelete='CASCADE')
+    type = fields.Char('Type')
+    arch = fields.Text('Arch')
+    field_names = fields.Char('Fields')
+    field_childs = fields.Char('Field Childs')
+
+
+class TableGroupedView(ModelSQL, ModelView):
+    'Interface Table Grouped View'
+    __name__ = 'lims.interface.table.grouped_view'
 
     table = fields.Many2One('lims.interface.table', 'Table',
         required=True, ondelete='CASCADE')

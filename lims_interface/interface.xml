@@ -127,6 +127,7 @@
             <field name="model" search="[('model', '=', 'lims.interface.compilation')]"/>
         </record>
 
+        <!-- Compilation Data -->
         <record model="ir.action.act_window" id="act_open_compilation_data">
             <field name="name">Compilation Data</field>
             <field name="res_model">lims.interface.data</field>

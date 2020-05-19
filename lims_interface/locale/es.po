@@ -34,6 +34,10 @@ msgctxt "field:lims.interface,fraction_field:"
 msgid "Fraction field"
 msgstr "Campo Fracción"
 
+msgctxt "field:lims.interface,grouped_repetitions:"
+msgid "Repetitions of grouped columns"
+msgstr "Repeticiones de columnas agrupadas"
+
 msgctxt "field:lims.interface,kind:"
 msgid "Kind"
 msgstr "Tipo"
@@ -89,6 +93,10 @@ msgstr "Icono"
 msgctxt "field:lims.interface.column,fixed_value:"
 msgid "Default value"
 msgstr "Valor por defecto"
+
+msgctxt "field:lims.interface.column,grouped:"
+msgid "Grouped column"
+msgstr "Columna agrupada"
 
 msgctxt "field:lims.interface.column,interface:"
 msgid "Interface"
@@ -210,17 +218,13 @@ msgctxt "field:lims.interface.formula.test,expression_column:"
 msgid "Formula Column"
 msgstr "Columna de Fórmula"
 
+msgctxt "field:lims.interface.formula.test,expression_column_domain:"
+msgid "Formula column domain"
+msgstr "Dominio para Columna de Fórmula"
+
 msgctxt "field:lims.interface.formula.test,expression_icon:"
 msgid "Expression Icon"
 msgstr "Icono"
-
-msgctxt "field:lims.interface.formula.test,formula:"
-msgid "Formula"
-msgstr "Fórmula"
-
-msgctxt "field:lims.interface.formula.test,formula_column:"
-msgid "Formula Column"
-msgstr "Columna de Fórmula"
 
 msgctxt "field:lims.interface.formula.test,result:"
 msgid "Result"
@@ -241,6 +245,14 @@ msgstr "Variable"
 msgctxt "field:lims.interface.table,fields_:"
 msgid "Fields"
 msgstr "Campos"
+
+msgctxt "field:lims.interface.table,grouped_fields_:"
+msgid "Grouped Fields"
+msgstr "Campos agrupados"
+
+msgctxt "field:lims.interface.table,grouped_views:"
+msgid "Grouped Views"
+msgstr "Vistas agrupadas"
 
 msgctxt "field:lims.interface.table,name:"
 msgid "Name"
@@ -280,7 +292,7 @@ msgstr "Modelo relacionado"
 
 msgctxt "field:lims.interface.table.field,string:"
 msgid "String"
-msgstr "Cadena"
+msgstr "Etiqueta"
 
 msgctxt "field:lims.interface.table.field,table:"
 msgid "Table"
@@ -293,6 +305,62 @@ msgstr "Trasladar dato a registro"
 msgctxt "field:lims.interface.table.field,type:"
 msgid "Field Type"
 msgstr "Tipo de campo"
+
+msgctxt "field:lims.interface.table.grouped_field,domain:"
+msgid "Domain Value"
+msgstr "Dominio"
+
+msgctxt "field:lims.interface.table.grouped_field,formula:"
+msgid "On Change With Formula"
+msgstr "Fórmula de cálculo"
+
+msgctxt "field:lims.interface.table.grouped_field,help:"
+msgid "Help"
+msgstr "Ayuda"
+
+msgctxt "field:lims.interface.table.grouped_field,inputs:"
+msgid "On Change With Inputs"
+msgstr "Valores de entrada"
+
+msgctxt "field:lims.interface.table.grouped_field,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.interface.table.grouped_field,related_model:"
+msgid "Related Model"
+msgstr "Modelo relacionado"
+
+msgctxt "field:lims.interface.table.grouped_field,string:"
+msgid "String"
+msgstr "Etiqueta"
+
+msgctxt "field:lims.interface.table.grouped_field,table:"
+msgid "Table"
+msgstr "Tabla"
+
+msgctxt "field:lims.interface.table.grouped_field,type:"
+msgid "Field Type"
+msgstr "Tipo de campo"
+
+msgctxt "field:lims.interface.table.grouped_view,arch:"
+msgid "Arch"
+msgstr "Arch"
+
+msgctxt "field:lims.interface.table.grouped_view,field_childs:"
+msgid "Field Childs"
+msgstr "Hijos"
+
+msgctxt "field:lims.interface.table.grouped_view,field_names:"
+msgid "Fields"
+msgstr "Campos"
+
+msgctxt "field:lims.interface.table.grouped_view,table:"
+msgid "Table"
+msgstr "Tabla"
+
+msgctxt "field:lims.interface.table.grouped_view,type:"
+msgid "Type"
+msgstr "Tipo"
 
 msgctxt "field:lims.interface.table.view,arch:"
 msgid "Arch"
@@ -349,6 +417,14 @@ msgstr "Valor"
 msgctxt "field:lims.interface.variable.value,variable:"
 msgid "Variable"
 msgstr "Variable"
+
+msgctxt "help:lims.interface.column,expression:"
+msgid ""
+"In grouped columns the suffix _XX will be replaced by the corresponding "
+"repetition"
+msgstr ""
+"En columnas agrupadas el sufijo _XX será reemplazado por la repetición "
+"correspondiente"
 
 msgctxt "help:lims.interface.column,is_fixed_value:"
 msgid "Check to define a default value for this column"
@@ -525,6 +601,10 @@ msgctxt "model:lims.interface.formula.test.variable,name:"
 msgid "Test Formula"
 msgstr "Probar Fórmula"
 
+msgctxt "model:lims.interface.grouped_data,name:"
+msgid "Grouped Data"
+msgstr "Datos agrupados"
+
 msgctxt "model:lims.interface.table,name:"
 msgid "Interface Table"
 msgstr "Tabla de interfaz"
@@ -532,6 +612,14 @@ msgstr "Tabla de interfaz"
 msgctxt "model:lims.interface.table.field,name:"
 msgid "Interface Table Field"
 msgstr "Campo de Tabla de interfaz"
+
+msgctxt "model:lims.interface.table.grouped_field,name:"
+msgid "Interface Table Grouped Field"
+msgstr "Campo agrupado de Tabla de interfaz"
+
+msgctxt "model:lims.interface.table.grouped_view,name:"
+msgid "Interface Table Grouped View"
+msgstr "Vista agrupada de Tabla de interfaz"
 
 msgctxt "model:lims.interface.table.view,name:"
 msgid "Interface Table View"
@@ -762,6 +850,70 @@ msgid "Time Interval"
 msgstr "Intervalo de tiempo"
 
 msgctxt "selection:lims.interface.table.field,type:"
+msgid "Timestamp"
+msgstr "Timestamp"
+
+msgctxt "selection:lims.interface.table.grouped_field,type:"
+msgid "Boolean"
+msgstr "Booleano"
+
+msgctxt "selection:lims.interface.table.grouped_field,type:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "selection:lims.interface.table.grouped_field,type:"
+msgid "Date Time"
+msgstr "Fecha y hora"
+
+msgctxt "selection:lims.interface.table.grouped_field,type:"
+msgid "File"
+msgstr "Archivo"
+
+msgctxt "selection:lims.interface.table.grouped_field,type:"
+msgid "Float"
+msgstr "Float"
+
+msgctxt "selection:lims.interface.table.grouped_field,type:"
+msgid "Icon"
+msgstr "Icono"
+
+msgctxt "selection:lims.interface.table.grouped_field,type:"
+msgid "Image"
+msgstr "Imagen"
+
+msgctxt "selection:lims.interface.table.grouped_field,type:"
+msgid "Integer"
+msgstr "Entero"
+
+msgctxt "selection:lims.interface.table.grouped_field,type:"
+msgid "Link To Kalenis"
+msgstr "Enlace a Kalenis"
+
+msgctxt "selection:lims.interface.table.grouped_field,type:"
+msgid "Numeric"
+msgstr "Numérico"
+
+msgctxt "selection:lims.interface.table.grouped_field,type:"
+msgid "Reference"
+msgstr "Referencia"
+
+msgctxt "selection:lims.interface.table.grouped_field,type:"
+msgid "Text (multi-line)"
+msgstr "Texto (multi-línea)"
+
+msgctxt "selection:lims.interface.table.grouped_field,type:"
+msgid "Text (single-line)"
+msgstr "Texto (línea simple)"
+
+msgctxt "selection:lims.interface.table.grouped_field,type:"
+msgid "Time"
+msgstr "Tiempo"
+
+msgctxt "selection:lims.interface.table.grouped_field,type:"
+msgid "Time Interval"
+msgstr "Intervalo de tiempo"
+
+msgctxt "selection:lims.interface.table.grouped_field,type:"
 msgid "Timestamp"
 msgstr "Timestamp"
 

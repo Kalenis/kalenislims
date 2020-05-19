@@ -23,7 +23,9 @@
         <label name="domain"/>
         <field name="domain" colspan="3" widget="pyson"/>
     </group>
-    <group id="fixed_value_field" colspan="4" col="4">
+    <group id="fixed_value_field" colspan="4" col="6">
+        <label name="grouped"/>
+        <field name="grouped"/>
         <label name="is_fixed_value"/>
         <field name="is_fixed_value" xexpand="0"/>
         <label name="fixed_value"/>

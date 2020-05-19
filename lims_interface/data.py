@@ -16,7 +16,7 @@ from trytond.rpc import RPC
 from trytond.exceptions import UserError
 from .interface import FIELD_TYPE_TRYTON, FIELD_TYPE_CAST
 
-__all__ = ['ModelAccess', 'Data']
+__all__ = ['ModelAccess', 'Data', 'GroupedData']
 
 
 class Adapter:
@@ -85,6 +85,64 @@ class Adapter:
         return res
 
 
+class GroupedAdapter:
+    def __getattr__(self, name):
+        fields = self.get_fields()
+        return getattr(fields, name)
+
+    def __contains__(self, key):
+        fields = self.get_fields()
+        return fields.__contains__(key)
+
+    def __iter__(self):
+        fields = self.get_fields()
+        return fields.__iter__()
+
+    def __getitem__(self, name):
+        fields = self.get_fields()
+        return fields.__getitem__(name)
+
+    def get_fields(self):
+        GroupedData = Pool().get('lims.interface.grouped_data')
+        table = GroupedData.get_table()
+        if not table:
+            return GroupedData._previous_fields
+        res = {}
+        for field in table.grouped_fields_:
+            if field.type == 'char':
+                obj = fields.Char(field.string)
+            elif field.type == 'multiline':
+                obj = fields.Text(field.string)
+            elif field.type == 'integer':
+                obj = fields.Integer(field.string)
+            elif field.type == 'float':
+                obj = fields.Float(field.string)
+            elif field.type == 'boolean':
+                obj = fields.Boolean(field.string)
+            elif field.type == 'numeric':
+                obj = fields.Numeric(field.string)
+            elif field.type == 'date':
+                obj = fields.Date(field.string)
+            elif field.type == 'datetime':
+                obj = fields.DateTime(field.string)
+            elif field.type == 'timestamp':
+                obj = fields.Timestamp(field.string)
+            elif field.type == 'many2one':
+                obj = fields.Many2One(field.related_model.model, field.string)
+            elif field.type in ('binary', 'icon'):
+                obj = fields.Binary(field.string)
+            obj.name = field.name
+            res[field.name] = obj
+        obj = fields.Integer('ID')
+        obj.name = 'id'
+        res['id'] = obj
+        obj = fields.Integer('Iteration')
+        obj.name = 'iteration'
+        obj.readonly = True
+        res['iteration'] = obj
+        return res
+
+
 class ModelAccess(metaclass=PoolMeta):
     __name__ = 'ir.model.access'
 
@@ -99,7 +157,8 @@ class ModelAccess(metaclass=PoolMeta):
         because the fields do not exist in the Model. If super() used
         Model._fields[fieldname] we would not be forced to override the method.
         '''
-        if model_name == 'lims.interface.data':
+        if model_name in ('lims.interface.data',
+                'lims.interface.grouped_data'):
             return True
         return super(ModelAccess, cls).check_relation(model_name, field_name,
             mode)
@@ -136,7 +195,6 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
         kwargs_copy = kwargs.copy()
         for kw in kwargs_copy:
             kwargs.pop(kw, None)
-
         super(Data, self).__init__(id, **kwargs)
         self._values = {}
         for kw in kwargs_copy:
@@ -482,3 +540,178 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
         if table:
             return sql.Table(table.name)
         return super(Data, cls).__table__()
+
+
+class GroupedData(ModelView):
+    'Grouped Data'
+    __name__ = 'lims.interface.grouped_data'
+
+    iteration = fields.Integer('Iteration', readonly=True)
+
+    @classmethod
+    def __setup__(cls):
+        super(GroupedData, cls).__setup__()
+        cls.__rpc__['fields_view_get'].cache = None
+        cls.__rpc__['default_get'].cache = None
+
+    @classmethod
+    def __post_setup__(cls):
+        super(GroupedData, cls).__post_setup__()
+        cls._previous_fields = cls._fields
+        cls._fields = GroupedAdapter()
+
+    def __init__(self, id=None, **kwargs):
+        kwargs_copy = kwargs.copy()
+        for kw in kwargs_copy:
+            kwargs.pop(kw, None)
+        super(GroupedData, self).__init__(id, **kwargs)
+        self._values = {}
+        for kw in kwargs_copy:
+            self._values[kw] = kwargs_copy[kw]
+
+    def __getattr__(self, name):
+        try:
+            return super(GroupedData, self).__getattr__(name)
+        except AttributeError:
+            pass
+
+    def on_change_with(self, fieldnames):
+        table = self.get_table()
+        res = {}
+        for field in table.grouped_fields_:
+            if field.name not in fieldnames:
+                continue
+            ast = field.get_ast()
+            inputs = field.inputs.split()
+            inputs = [getattr(self, x) for x in inputs]
+            try:
+                value = ast(*inputs)
+            except schedula.utils.exc.DispatcherError as e:
+                raise UserError(e.args[0] % e.args[1:])
+
+            if isinstance(value, list):
+                value = str(value)
+            elif (not isinstance(value, str) and
+                    not isinstance(value, int) and
+                    not isinstance(value, float) and
+                    not isinstance(value, type(None))):
+                value = value.tolist()
+            if isinstance(value, formulas.tokens.operand.XlError):
+                value = None
+            elif isinstance(value, list):
+                for x in chain(*value):
+                    if isinstance(x, formulas.tokens.operand.XlError):
+                        value = None
+            res[field.name] = value
+        return res
+
+    @classmethod
+    def add_on_change_with_method(cls, field):
+        """
+        Dynamically add 'on_change_with_<field>' methods.
+        """
+        fn_name = 'on_change_with_' + field.name
+
+        def fn(self):
+            ast = field.get_ast()
+            inputs = field.get_inputs().split()
+            inputs = [getattr(self, x) for x in inputs]
+            try:
+                value = ast(*inputs)
+            except schedula.utils.exc.DispatcherError as e:
+                raise UserError(e.args[0] % e.args[1:])
+
+            if isinstance(value, list):
+                value = str(value)
+            elif (not isinstance(value, str) and
+                    not isinstance(value, int) and
+                    not isinstance(value, float) and
+                    not isinstance(value, type(None))):
+                value = value.tolist()
+            if isinstance(value, formulas.tokens.operand.XlError):
+                value = None
+            elif isinstance(value, list):
+                for x in chain(*value):
+                    if isinstance(x, formulas.tokens.operand.XlError):
+                        value = None
+            return value
+
+        setattr(cls, fn_name, fn)
+
+    @classmethod
+    def fields_get(cls, fields_names=None):
+        Model = Pool().get('ir.model')
+        res = super(GroupedData, cls).fields_get(fields_names)
+
+        table = cls.get_table()
+        for field in table.grouped_fields_:
+            res[field.name] = {
+                'name': field.name,
+                'string': field.string,
+                'type': FIELD_TYPE_TRYTON[field.type],
+                'relation': (field.related_model.model if
+                    field.related_model else None),
+                'readonly': bool(field.formula),
+                'help': field.help,
+                'domain': field.domain,
+                }
+            if field.inputs:
+                res[field.name]['on_change_with'] = field.inputs.split()
+                cls.add_on_change_with_method(field)
+                cls.__rpc__[
+                    'on_change_with_%s' % (field.name)] = RPC(instantiate=0)
+
+            if field.type == 'reference':
+                selection = []
+                for model in Model.search([]):
+                    selection.append((model.model, model.name))
+                res[field.name]['selection'] = selection
+            if field.type in ['datetime', 'timestamp']:
+                res[field.name]['format'] = PYSONEncoder().encode(
+                    '%H:%M:%S.%f')
+        return res
+
+    @classmethod
+    def fields_view_get(cls, view_id=None, view_type='form'):
+        table = cls.get_table()
+        for view in table.grouped_views:
+            if view.type == view_type:
+                break
+        assert(view.id)
+
+        fields_names = [
+            'iteration',
+            ]
+        for field in table.grouped_fields_:
+            fields_names.append(field.name)
+        res = {
+            'type': view.type,
+            'view_id': view_id,
+            'field_childs': None,
+            'arch': view.arch,
+            'fields': cls.fields_get(fields_names),
+            }
+        return res
+
+    @classmethod
+    def get_compilation(cls):
+        Compilation = Pool().get('lims.interface.compilation')
+        compilation_id = Transaction().context.get(
+            'lims_interface_compilation')
+        if compilation_id:
+            return Compilation(compilation_id)
+
+    @classmethod
+    def get_table(cls):
+        Table = Pool().get('lims.interface.table')
+        table = Transaction().context.get('lims_interface_table')
+        if Pool().test:
+            # Tryton default tests try to get data using '1' as active_id
+            # We prevent the tests from failing by returning no table
+            return
+        if not table:
+            compilation = cls.get_compilation()
+            if compilation:
+                table = compilation.table
+        if table:
+            return Table(table)

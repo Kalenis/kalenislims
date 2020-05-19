@@ -21,9 +21,12 @@ def register():
         interface.VariableValue,
         table.Table,
         table.TableField,
+        table.TableGroupedField,
         table.TableView,
+        table.TableGroupedView,
         data.ModelAccess,
         data.Data,
+        data.GroupedData,
         module='lims_interface', type_='model')
     Pool.register(
         interface.CopyInterfaceColumn,
