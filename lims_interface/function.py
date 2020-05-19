@@ -8,6 +8,13 @@ from trytond.pool import Pool
 custom_functions = {}
 
 
+def to_str(value):
+    return value and str(value) or ''
+
+
+custom_functions['STR'] = to_str
+
+
 def concat(*args):
     return ''.join([a if isinstance(a, str) else '' for a in args])
 
