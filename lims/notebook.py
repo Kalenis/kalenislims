@@ -3,6 +3,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import operator
+from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from sql import Literal, Join
@@ -473,13 +474,52 @@ class Notebook(ModelSQL, ModelView):
     def view_toolbar_get(cls):
         if not Transaction().context.get('samples_pending_reporting', False):
             return super(Notebook, cls).view_toolbar_get()
+
+        # Samples Pending Reporting uses specific keywords
+        prints = cls.get_samples_pending_reporting_keyword('form_print')
+        actions = cls.get_samples_pending_reporting_keyword('form_action')
+        relates = cls.get_samples_pending_reporting_keyword('form_relate')
         result = {
-            'print': [],
-            'action': [],
-            'relate': [],
+            'print': prints,
+            'action': actions,
+            'relate': relates,
             'exports': [],
             }
         return result
+
+    @classmethod
+    def get_samples_pending_reporting_keyword(cls, keyword):
+        """
+        Method copied from ActionKeyword. It search for specific keywords
+        for Samples Pending Reporting: lims.notebook,-2
+        """
+        pool = Pool()
+        ActionKeyword = pool.get('ir.action.keyword')
+        Action = pool.get('ir.action')
+
+        key = (keyword, ('lims.notebook', -2))
+        keywords = ActionKeyword._get_keyword_cache.get(key)
+        if keywords is not None:
+            return keywords
+
+        clause = [
+            ('keyword', '=', keyword),
+            ('model', '=', 'lims.notebook,-2'),
+            ('action.active', '=', True),
+            ]
+        action_keywords = ActionKeyword.search(clause, order=[])
+        types = defaultdict(list)
+        for action_keyword in action_keywords:
+            type_ = action_keyword.action.type
+            types[type_].append(action_keyword.action.id)
+        keywords = []
+        for type_, action_ids in types.items():
+            for value in Action.get_action_values(type_, action_ids):
+                value['keyword'] = keyword
+                keywords.append(value)
+        keywords.sort(key=operator.itemgetter('name'))
+        ActionKeyword._get_keyword_cache.set(key, keywords)
+        return keywords
 
 
 class NotebookLine(ModelSQL, ModelView):
