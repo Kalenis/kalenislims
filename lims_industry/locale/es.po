@@ -6,49 +6,13 @@ msgctxt "field:lims.analysis,ind_volume:"
 msgid "Required volume"
 msgstr "Volumen requerido"
 
-msgctxt "field:lims.brand,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.brand,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.brand,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.brand,name:"
 msgid "Name"
 msgstr "Nombre"
 
-msgctxt "field:lims.brand,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.brand,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.brand,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.comercial.product,brand:"
 msgid "Brand"
 msgstr "Marca"
-
-msgctxt "field:lims.comercial.product,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.comercial.product,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.comercial.product,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.comercial.product,matrix:"
 msgid "Base/Matrix"
@@ -58,45 +22,9 @@ msgctxt "field:lims.comercial.product,name:"
 msgid "Name"
 msgstr "Nombre"
 
-msgctxt "field:lims.comercial.product,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.comercial.product,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.comercial.product,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.comercial.product.brand,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.comercial.product.brand,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.comercial.product.brand,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.comercial.product.brand,name:"
 msgid "Name"
 msgstr "Nombre"
-
-msgctxt "field:lims.comercial.product.brand,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.comercial.product.brand,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.comercial.product.brand,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.component,brand:"
 msgid "Brand"
@@ -110,14 +38,6 @@ msgctxt "field:lims.component,comercial_product:"
 msgid "Comercial product"
 msgstr "Producto comercial"
 
-msgctxt "field:lims.component,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.component,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.component,customer_description:"
 msgid "Customer description"
 msgstr "Descripción del cliente"
@@ -125,10 +45,6 @@ msgstr "Descripción del cliente"
 msgctxt "field:lims.component,equipment:"
 msgid "Equipment"
 msgstr "Equipo"
-
-msgctxt "field:lims.component,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.component,internal_id:"
 msgid "Internal ID Code"
@@ -158,10 +74,6 @@ msgctxt "field:lims.component,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
-msgctxt "field:lims.component,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.component,serial_number:"
 msgid "Serial number"
 msgstr "Número de serie"
@@ -170,29 +82,9 @@ msgctxt "field:lims.component,type:"
 msgid "Type"
 msgstr "Tipo"
 
-msgctxt "field:lims.component,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.component,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.component,year_manufacturing:"
 msgid "Year of manufacturing"
 msgstr "Año de fabricación"
-
-msgctxt "field:lims.component.type,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.component.type,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.component.type,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.component.type,name:"
 msgid "Name"
@@ -201,18 +93,6 @@ msgstr "Nombre"
 msgctxt "field:lims.component.type,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
-
-msgctxt "field:lims.component.type,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.component.type,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.component.type,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.create_sample.start,attributes_domain:"
 msgid "Attributes domain"
@@ -306,18 +186,6 @@ msgctxt "field:lims.equipment,contacts:"
 msgid "Contacts"
 msgstr "Contactos"
 
-msgctxt "field:lims.equipment,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.equipment,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.equipment,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.equipment,internal_id:"
 msgid "Internal ID Code"
 msgstr "Código ID interno"
@@ -358,10 +226,6 @@ msgctxt "field:lims.equipment,power:"
 msgid "Power"
 msgstr "Potencia"
 
-msgctxt "field:lims.equipment,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.equipment,serial_number:"
 msgid "Serial number"
 msgstr "Número de serie"
@@ -369,14 +233,6 @@ msgstr "Número de serie"
 msgctxt "field:lims.equipment,template:"
 msgid "Template"
 msgstr "Plantilla"
-
-msgctxt "field:lims.equipment,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.equipment,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.equipment,year_manufacturing:"
 msgid "Year of manufacturing"
@@ -390,18 +246,6 @@ msgctxt "field:lims.equipment.template,component_types:"
 msgid "Component types"
 msgstr "Tipos de componente"
 
-msgctxt "field:lims.equipment.template,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.equipment.template,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.equipment.template,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.equipment.template,model:"
 msgid "Model"
 msgstr "Modelo"
@@ -410,37 +254,9 @@ msgctxt "field:lims.equipment.template,power:"
 msgid "Power"
 msgstr "Potencia"
 
-msgctxt "field:lims.equipment.template,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.equipment.template,type:"
 msgid "Type"
 msgstr "Tipo"
-
-msgctxt "field:lims.equipment.template,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.equipment.template,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.equipment.template-component.type,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.equipment.template-component.type,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.equipment.template-component.type,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.equipment.template-component.type,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.equipment.template-component.type,template:"
 msgid "Template"
@@ -450,41 +266,21 @@ msgctxt "field:lims.equipment.template-component.type,type:"
 msgid "Type"
 msgstr "Tipo"
 
-msgctxt "field:lims.equipment.template-component.type,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.equipment.template-component.type,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.equipment.type,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.equipment.type,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.equipment.type,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.equipment.type,name:"
 msgid "Name"
 msgstr "Nombre"
 
-msgctxt "field:lims.equipment.type,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
+msgctxt "field:lims.notebook,component:"
+msgid "Component"
+msgstr "Componente"
 
-msgctxt "field:lims.equipment.type,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
+msgctxt "field:lims.notebook,equipment:"
+msgid "Equipment"
+msgstr "Equipo"
 
-msgctxt "field:lims.equipment.type,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
+msgctxt "field:lims.notebook,plant:"
+msgid "Plant"
+msgstr "Planta"
 
 msgctxt "field:lims.plant,city:"
 msgid "City"
@@ -498,21 +294,9 @@ msgctxt "field:lims.plant,country:"
 msgid "Country"
 msgstr "País"
 
-msgctxt "field:lims.plant,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.plant,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.plant,equipments:"
 msgid "Equipments"
 msgstr "Equipos"
-
-msgctxt "field:lims.plant,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.plant,invoice_party:"
 msgid "Invoice Party"
@@ -534,10 +318,6 @@ msgctxt "field:lims.plant,party:"
 msgid "Party"
 msgstr "Tercero"
 
-msgctxt "field:lims.plant,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.plant,street:"
 msgid "Street"
 msgstr "Calle"
@@ -545,14 +325,6 @@ msgstr "Calle"
 msgctxt "field:lims.plant,subdivision:"
 msgid "Subdivision"
 msgstr "Subdivisión"
-
-msgctxt "field:lims.plant,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.plant,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.plant,zip:"
 msgid "Zip"
@@ -630,6 +402,10 @@ msgctxt "field:lims.sample,oil_added:"
 msgid "Liters Oil added"
 msgstr "Litros aceite agregado"
 
+msgctxt "field:lims.sample,plant:"
+msgid "Plant"
+msgstr "Planta"
+
 msgctxt "field:lims.sample,sample_photo:"
 msgid "Sample Photo"
 msgstr "Foto muestra"
@@ -642,6 +418,10 @@ msgctxt "field:lims.sample,sampling_type:"
 msgid "Sampling Type"
 msgstr "Muestreo"
 
+msgctxt "field:lims.sample.attribute,sets:"
+msgid "Sets"
+msgstr "Conjuntos"
+
 msgctxt "field:lims.sample.attribute-attribute.set,attribute:"
 msgid "Attribute"
 msgstr "Atributo"
@@ -650,61 +430,13 @@ msgctxt "field:lims.sample.attribute-attribute.set,attribute_set:"
 msgid "Set"
 msgstr "Conjunto"
 
-msgctxt "field:lims.sample.attribute-attribute.set,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.sample.attribute-attribute.set,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.sample.attribute-attribute.set,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.sample.attribute-attribute.set,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.sample.attribute-attribute.set,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.sample.attribute-attribute.set,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.sample.attribute.set,attributes:"
 msgid "Attributes"
 msgstr "Atributos"
 
-msgctxt "field:lims.sample.attribute.set,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.sample.attribute.set,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.sample.attribute.set,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.sample.attribute.set,name:"
 msgid "Name"
 msgstr "Nombre"
-
-msgctxt "field:lims.sample.attribute.set,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.sample.attribute.set,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.sample.attribute.set,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.sample.edit.start,component:"
 msgid "Component"
@@ -714,10 +446,6 @@ msgctxt "field:lims.sample.edit.start,equipment:"
 msgid "Equipment"
 msgstr "Equipo"
 
-msgctxt "field:lims.sample.edit.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.sample.edit.start,party:"
 msgid "Party"
 msgstr "Tercero"
@@ -726,37 +454,13 @@ msgctxt "field:lims.sample.edit.start,plant:"
 msgid "Plant"
 msgstr "Planta"
 
-msgctxt "field:lims.sampling.type,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.sampling.type,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.sampling.type,description:"
 msgid "Description"
 msgstr "Descripción"
 
-msgctxt "field:lims.sampling.type,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.sampling.type,name:"
 msgid "Name"
 msgstr "Nombre"
-
-msgctxt "field:lims.sampling.type,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.sampling.type,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.sampling.type,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:party.address,administrative_contact:"
 msgid "Administrative contact"

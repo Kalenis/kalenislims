@@ -6,6 +6,7 @@ from trytond.pool import Pool
 from . import industry
 from . import analysis
 from . import sample
+from . import notebook
 from . import party
 from . import task
 
@@ -32,6 +33,7 @@ def register():
         sample.Sample,
         sample.CreateSampleStart,
         sample.EditSampleStart,
+        notebook.Notebook,
         party.Party,
         party.Address,
         task.AdministrativeTaskTemplate,

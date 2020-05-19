@@ -26,6 +26,8 @@ class Entry(metaclass=PoolMeta):
 class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
 
+    plant = fields.Function(fields.Many2One('lims.plant', 'Plant'),
+        'get_plant')
     equipment = fields.Many2One('lims.equipment', 'Equipment',
         domain=[('party', '=', Eval('party'))], depends=['party'])
     component = fields.Many2One('lims.component', 'Component',
@@ -141,6 +143,13 @@ class Sample(metaclass=PoolMeta):
                 continue
             res.append(sample)
         return res
+
+    @classmethod
+    def get_plant(cls, samples, name):
+        result = {}
+        for s in samples:
+            result[s.id] = s.equipment and s.equipment.plant.id or None
+        return result
 
 
 class CreateSampleStart(metaclass=PoolMeta):

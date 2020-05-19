@@ -41,5 +41,18 @@
             <field name="action" ref="wiz_edit_sample"/>
         </record>
 
+<!-- Samples Pending Reporting -->
+
+        <record model="ir.ui.view" id="samples_pending_reporting_view_list">
+            <field name="model">lims.notebook</field>
+            <field name="inherit" ref="lims.lims_samples_pending_reporting_view_list"/>
+            <field name="name">samples_pending_reporting_list</field>
+        </record>
+        <record model="ir.ui.view" id="samples_pending_reporting_view_form">
+            <field name="model">lims.notebook</field>
+            <field name="inherit" ref="lims.lims_samples_pending_reporting_view_form"/>
+            <field name="name">samples_pending_reporting_form</field>
+        </record>
+
     </data>
 </tryton>
