@@ -103,6 +103,10 @@ msgctxt "field:lims.analysis_sheet.add_control.start,type:"
 msgid "Control type"
 msgstr "Tipo de Control"
 
+msgctxt "field:lims.analysis_sheet.edit_grouped_data.start,data:"
+msgid "Data"
+msgstr "Datos"
+
 msgctxt "field:lims.analysis_sheet.export_file.start,file:"
 msgid "File"
 msgstr "Archivo"
@@ -452,6 +456,10 @@ msgctxt "model:ir.action,name:wiz_analysis_sheet_calculate_expressions"
 msgid "Calculate Expressions"
 msgstr "03) Calcular fórmulas"
 
+msgctxt "model:ir.action,name:wiz_analysis_sheet_edit_grouped_data"
+msgid "Edit Grouped Data"
+msgstr "Editar datos agrupados"
+
 msgctxt "model:ir.action,name:wiz_analysis_sheet_evaluate_rules"
 msgid "Evaluate Rules"
 msgstr "05) Evaluar Reglas de cuaderno"
@@ -572,6 +580,10 @@ msgstr "Hoja de análisis"
 msgctxt "model:lims.analysis_sheet.add_control.start,name:"
 msgid "Add Controls"
 msgstr "Añadir Controles"
+
+msgctxt "model:lims.analysis_sheet.edit_grouped_data.start,name:"
+msgid "Edit Grouped Data"
+msgstr "Editar datos agrupados"
 
 msgctxt "model:lims.analysis_sheet.export_file.start,name:"
 msgid "Export Analysis Sheet File"
@@ -1064,6 +1076,14 @@ msgstr "Añadir"
 msgctxt "wizard_button:lims.analysis_sheet.add_control,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.analysis_sheet.edit_grouped_data,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.analysis_sheet.edit_grouped_data,start,save:"
+msgid "Save"
+msgstr "Guardar"
 
 msgctxt "wizard_button:lims.analysis_sheet.export_file,export_,end:"
 msgid "Close"

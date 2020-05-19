@@ -19,7 +19,7 @@ from trytond.modules.lims.formula_parser import FormulaParser
 __all__ = ['NotebookLine', 'AddControlStart', 'AddControl',
     'RepeatAnalysisStart', 'RepeatAnalysisStartLine', 'RepeatAnalysis',
     'CalculateExpressions', 'ResultsVerificationStart', 'ResultsVerification',
-    'EvaluateRules']
+    'EvaluateRules', 'EditGroupedDataStart', 'EditGroupedData']
 
 
 class NotebookLine(metaclass=PoolMeta):
@@ -1055,3 +1055,108 @@ class EvaluateRules(Wizard):
 
     def end(self):
         return 'reload'
+
+
+class EditGroupedDataStart(ModelView):
+    'Edit Grouped Data'
+    __name__ = 'lims.analysis_sheet.edit_grouped_data.start'
+
+    data = fields.One2Many('lims.interface.grouped_data', None, 'Data')
+
+
+class EditGroupedData(Wizard):
+    'Edit Grouped Data'
+    __name__ = 'lims.analysis_sheet.edit_grouped_data'
+
+    start_state = 'check'
+    check = StateTransition()
+    start = StateView('lims.analysis_sheet.edit_grouped_data.start',
+        'lims_analysis_sheet.analysis_sheet_edit_grouped_data_start_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Save', 'save', 'tryton-save', default=True),
+            ])
+    save = StateTransition()
+
+    def _get_analysis_sheet_id(self):
+        return Transaction().context.get('lims_analysis_sheet', None)
+
+    def transition_check(self):
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
+
+        sheet_id = self._get_analysis_sheet_id()
+        if sheet_id:
+            sheet = AnalysisSheet(sheet_id)
+            if (sheet.state in ('active', 'validated') and
+                    (sheet.template.interface.grouped_repetitions or 1) > 1):
+                return 'start'
+
+        return 'end'
+
+    def default_start(self, fields):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+
+        line_id = Transaction().context.get('active_id', None)
+        sheet_id = self._get_analysis_sheet_id()
+        sheet = AnalysisSheet(sheet_id)
+        grouped_fields = [f for f in sheet.compilation.table.grouped_fields_]
+        reps = (sheet.template.interface.grouped_repetitions or 1) + 1
+
+        data = []
+        with Transaction().set_context(
+                lims_interface_table=sheet.compilation.table.id):
+            line = Data.search([('id', '=', line_id)])[0]
+            for rep in range(1, reps):
+                record = {'iteration': rep}
+                for field in grouped_fields:
+                    #if bool(field.formula):
+                        #continue
+                    val = getattr(line, '%s_%s' % (field.name, str(rep)))
+                    if field.type == 'many2one':
+                        record[field.name] = val and val.id or None
+                    else:
+                        record[field.name] = val
+                data.append(record)
+
+        defaults = {
+            'data': data,
+            }
+        return defaults
+
+    def transition_save(self):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+
+        line_id = Transaction().context.get('active_id', None)
+        sheet_id = self._get_analysis_sheet_id()
+        sheet = AnalysisSheet(sheet_id)
+        grouped_fields = [f for f in sheet.compilation.table.grouped_fields_]
+
+        with Transaction().set_context(
+                lims_interface_table=sheet.compilation.table.id):
+            line = Data.search([('id', '=', line_id)])[0]
+            res = {}
+            for data in self.start.data:
+                for field in grouped_fields:
+                    field_name = '%s_%s' % (field.name, str(data.iteration))
+                    value = getattr(data, field.name)
+
+                    if isinstance(value, list):
+                        value = str(value)
+                    elif (not isinstance(value, str) and
+                            not isinstance(value, int) and
+                            not isinstance(value, float) and
+                            not isinstance(value, type(None))):
+                        value = value.tolist()
+                    if isinstance(value, formulas.tokens.operand.XlError):
+                        value = None
+                    elif isinstance(value, list):
+                        for x in chain(*value):
+                            if isinstance(x, formulas.tokens.operand.XlError):
+                                value = None
+                    res[field_name] = value
+
+            Data.write([line], res)
+        return 'end'
