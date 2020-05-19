@@ -26,12 +26,14 @@ def register():
         sample.CreateSampleStart,
         results_report.ResultsReportVersionDetail,
         results_report.ResultsReportVersionDetailSample,
+        results_report.ChangeSampleDiagnosticianStart,
         notebook.Notebook,
         notebook.NotebookLine,
         laboratory.NotebookRule,
         module='lims_diagnosis', type_='model')
     Pool.register(
         sample.CreateSample,
+        results_report.ChangeSampleDiagnostician,
         module='lims_diagnosis', type_='wizard')
     Pool.register(
         results_report.ResultReport,

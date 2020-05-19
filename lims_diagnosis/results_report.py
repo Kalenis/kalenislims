@@ -3,11 +3,14 @@
 # the full copyright notices and license terms.
 
 from trytond.model import ModelView, fields
+from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
+from trytond.transaction import Transaction
 
 __all__ = ['ResultsReportVersionDetail', 'ResultsReportVersionDetailSample',
-    'ResultReport']
+    'ResultReport', 'ChangeSampleDiagnosticianStart',
+    'ChangeSampleDiagnostician']
 
 
 class ResultsReportVersionDetail(metaclass=PoolMeta):
@@ -109,3 +112,35 @@ class ResultReport(metaclass=PoolMeta):
                 continue
             fraction['diagnosis'] = detail_sample[0].diagnosis
         return report_context
+
+
+class ChangeSampleDiagnosticianStart(ModelView):
+    'Change Sample Diagnostician'
+    __name__ = 'lims.notebook.change_diagnostician.start'
+
+    diagnostician = fields.Many2One('lims.diagnostician', 'Diagnostician',
+        required=True)
+
+
+class ChangeSampleDiagnostician(Wizard):
+    'Change Sample Diagnostician'
+    __name__ = 'lims.notebook.change_diagnostician'
+
+    start = StateView('lims.notebook.change_diagnostician.start',
+        'lims_diagnosis.notebook_change_diagnostician_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Change', 'change', 'tryton-ok', default=True),
+            ])
+    change = StateTransition()
+
+    def transition_change(self):
+        pool = Pool()
+        Notebook = pool.get('lims.notebook')
+        Sample = pool.get('lims.sample')
+
+        samples_ids = set()
+        for notebook in Notebook.browse(Transaction().context['active_ids']):
+            samples_ids.add(notebook.fraction.sample.id)
+        samples = Sample.browse(list(samples_ids))
+        Sample.write(samples, {'diagnostician': self.start.diagnostician.id})
+        return 'end'

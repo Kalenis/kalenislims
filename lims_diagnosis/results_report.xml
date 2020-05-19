@@ -33,5 +33,23 @@
             <field name="name">results_report_version_detail_sample_form</field>
         </record>
 
+<!-- Wizard Change Sample Diagnostician -->
+
+        <record model="ir.ui.view" id="notebook_change_diagnostician_view_form">
+            <field name="model">lims.notebook.change_diagnostician.start</field>
+            <field name="type">form</field>
+            <field name="name">notebook_change_diagnostician_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_notebook_change_diagnostician">
+            <field name="name">Change Sample Diagnostician</field>
+            <field name="wiz_name">lims.notebook.change_diagnostician</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_notebook_change_diagnostician_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.notebook,-2</field>
+            <field name="action" ref="wiz_notebook_change_diagnostician"/>
+        </record>
+
     </data>
 </tryton>
