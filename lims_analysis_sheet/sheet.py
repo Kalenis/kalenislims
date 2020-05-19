@@ -185,6 +185,8 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
             ]
         if self.method:
             clause.append(('method', '=', self.method.id))
+        else:
+            clause.append(('method', '=', None))
         duplicated = self.search(clause)
         if duplicated:
             raise UserError(gettext(
