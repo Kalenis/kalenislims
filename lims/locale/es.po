@@ -4772,6 +4772,10 @@ msgctxt "field:lims.results_report.version.detail,annulment_reason_print:"
 msgid "Print annulment reason"
 msgstr "Imprimir motivo de anulación"
 
+msgctxt "field:lims.results_report.version.detail,annulment_uid:"
+msgid "Annulment user"
+msgstr "Usuario de anulación"
+
 msgctxt "field:lims.results_report.version.detail,cie_fraction_type:"
 msgid "QA"
 msgstr "QA"
@@ -4811,6 +4815,14 @@ msgstr "Versión"
 msgctxt "field:lims.results_report.version.detail,party:"
 msgid "Party"
 msgstr "Entidad"
+
+msgctxt "field:lims.results_report.version.detail,release_date:"
+msgid "Release date"
+msgstr "Fecha de publicación"
+
+msgctxt "field:lims.results_report.version.detail,release_uid:"
+msgid "Release user"
+msgstr "Usuario de publicación"
 
 msgctxt "field:lims.results_report.version.detail,report_cache:"
 msgid "Report cache"
@@ -4887,6 +4899,14 @@ msgstr "Informe"
 msgctxt "field:lims.results_report.version.detail,resultrange_origin:"
 msgid "Origin"
 msgstr "Origen"
+
+msgctxt "field:lims.results_report.version.detail,revision_date:"
+msgid "Revision date"
+msgstr "Fecha de revisión"
+
+msgctxt "field:lims.results_report.version.detail,revision_uid:"
+msgid "Revision user"
+msgstr "Usuario de revisión"
 
 msgctxt "field:lims.results_report.version.detail,samples:"
 msgid "Samples"
@@ -13053,6 +13073,10 @@ msgstr "Motivo de anulación"
 msgctxt "view:lims.results_report.version.detail:"
 msgid "Comments"
 msgstr "Observaciones"
+
+msgctxt "view:lims.results_report.version.detail:"
+msgid "Dates"
+msgstr "Fechas"
 
 msgctxt "view:lims.results_report.version.detail:"
 msgid "Draft"

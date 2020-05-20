@@ -279,11 +279,6 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                 'result_range', 'both_range']),
             'readonly': Eval('state') != 'draft',
             })
-    annulment_reason = fields.Text('Annulment reason', translate=True,
-        states={'readonly': Eval('state') != 'annulled'}, depends=['state'])
-    annulment_date = fields.DateTime('Annulment date', readonly=True)
-    annulment_reason_print = fields.Boolean('Print annulment reason',
-        states={'readonly': Eval('state') != 'annulled'}, depends=['state'])
     comments = fields.Text('Comments', translate=True, depends=['state'],
         states={'readonly': ~Eval('state').in_(['draft', 'revised'])})
     fraction_comments = fields.Function(fields.Text('Fraction comments'),
@@ -297,6 +292,19 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     write_date2 = fields.Function(fields.DateTime('Write Date'),
        'get_write_date2', searcher='search_write_date2')
     icon = fields.Function(fields.Char('Icon'), 'get_icon')
+
+    # State changes
+    revision_uid = fields.Many2One('res.user', 'Revision user', readonly=True)
+    revision_date = fields.DateTime('Revision date', readonly=True)
+    release_uid = fields.Many2One('res.user', 'Release user', readonly=True)
+    release_date = fields.DateTime('Release date', readonly=True)
+    annulment_uid = fields.Many2One('res.user', 'Annulment user',
+        readonly=True)
+    annulment_date = fields.DateTime('Annulment date', readonly=True)
+    annulment_reason = fields.Text('Annulment reason', translate=True,
+        states={'readonly': Eval('state') != 'annulled'}, depends=['state'])
+    annulment_reason_print = fields.Boolean('Print annulment reason',
+        states={'readonly': Eval('state') != 'annulled'}, depends=['state'])
 
     # Report format
     report_section = fields.Function(fields.Char('Section'),
@@ -569,7 +577,11 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     @classmethod
     @ModelView.button
     def revise(cls, details):
-        cls.write(details, {'state': 'revised'})
+        cls.write(details, {
+            'state': 'revised',
+            'revision_uid': int(Transaction().user),
+            'revision_date': datetime.now(),
+            })
 
     @classmethod
     @ModelView.button
@@ -580,6 +592,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
             defaults = {
                 'state': 'released',
                 'valid': True,
+                'release_uid': int(Transaction().user),
+                'release_date': datetime.now(),
                 }
             valid_details = cls.search([
                 ('report_version', '=', detail.report_version.id),
@@ -2371,8 +2385,9 @@ class ResultsReportAnnulation(Wizard):
                 'report_format': None,
                 'report_cache_eng': None,
                 'report_format_eng': None,
-                'annulment_reason': self.start.annulment_reason,
+                'annulment_uid': int(Transaction().user),
                 'annulment_date': datetime.now(),
+                'annulment_reason': self.start.annulment_reason,
                 })
         return 'end'
 

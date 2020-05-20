@@ -28,11 +28,6 @@
     <field name="signer"/>
     <label name="resultrange_origin"/>
     <field name="resultrange_origin" widget="selection"/>
-    <newline/>
-    <label name="create_date2"/>
-    <field name="create_date2"/>
-    <label name="write_date2"/>
-    <field name="write_date2"/>
     <notebook>
         <page id="samples" string="Samples">
             <field name="samples" colspan="4"/>
@@ -50,6 +45,18 @@
             <field name="annulment_reason_print"/>
             <separator string="Annulment reason" colspan="4" id="annulment_reason"/>
             <field name="annulment_reason" colspan="4"/>
+        </page>
+        <page id="dates" string="Dates">
+            <label name="create_date2"/>
+            <field name="create_date2"/>
+            <label name="write_date2"/>
+            <field name="write_date2"/>
+            <label name="revision_date"/>
+            <field name="revision_date"/>
+            <label name="release_date"/>
+            <field name="release_date"/>
+            <label name="annulment_date"/>
+            <field name="annulment_date"/>
         </page>
     </notebook>
     <group id="state" colspan="2" col="4">
