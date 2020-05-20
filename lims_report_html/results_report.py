@@ -87,7 +87,8 @@ class ResultReport(metaclass=PoolMeta):
         with Transaction().set_context(html_report=action.id):
             records = []
             if model:
-                records = cls._get_dual_records(ids, model, data)
+                records = cls._get_records(ids, model, data)
+                #records = cls._get_dual_records(ids, model, data)
             oext, content = cls._execute_html_results_report(records, data,
                 action)
             if not isinstance(content, str):
@@ -101,7 +102,7 @@ class ResultReport(metaclass=PoolMeta):
     def _execute_html_results_report(cls, records, data, action):
         documents = []
         for record in records:
-            template = cls.get_results_report_template(action, record.raw.id)
+            template = cls.get_results_report_template(action, record.id)
             content = cls.render_results_report_template(action, template,
                 record=record, records=[record], data=data)
             if action.extension == 'pdf':
