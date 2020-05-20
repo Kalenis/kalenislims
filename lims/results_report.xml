@@ -445,19 +445,24 @@
             <field name="extension">pdf</field>
         </record>
 
-        <menuitem name="Results reports" parent="lims_laboratory"
-            id="lims_laboratory_reports" sequence="50"
+        <menuitem name="Results reports"
+            id="lims_laboratory_reports"
+            parent="lims_laboratory" sequence="50"
             icon="lims-laboratory_reports"/>
-        <menuitem parent="lims_laboratory_reports" action="act_lims_results_report"
-            id="lims_results_report_menu" sequence="10"
+        <menuitem action="act_lims_results_report"
+            id="lims_results_report_menu"
+            parent="lims_laboratory_reports" sequence="10"
             icon="lims-laboratory_reports"/>
-        <menuitem parent="lims_laboratory_reports" action="wiz_lims_samples_pending_reporting"
-            id="lims_samples_pending_reporting_menu" sequence="15"/>
-        <menuitem parent="lims_laboratory_reports" action="wiz_lims_generate_results_report"
-            id="lims_generate_results_report_menu" sequence="20"
+        <menuitem action="wiz_lims_samples_pending_reporting"
+            id="lims_samples_pending_reporting_menu"
+            parent="lims_laboratory_reports" sequence="20"
             icon="lims-generate_results_report"/>
-        <menuitem parent="lims_laboratory_reports" action="act_lims_results_report_version_detail"
-            id="lims_results_report_version_detail_menu" sequence="30"
+        <menuitem action="wiz_lims_generate_results_report"
+            id="lims_generate_results_report_menu"
+            parent="lims_samples_pending_reporting_menu" sequence="10"/>
+        <menuitem action="act_lims_results_report_version_detail"
+            id="lims_results_report_version_detail_menu"
+            parent="lims_laboratory_reports" sequence="30"
             icon="lims-results_report_version_detail"/>
 
         <record model="ir.model.access" id="access_results_report">
