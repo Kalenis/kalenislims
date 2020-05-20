@@ -13055,6 +13055,10 @@ msgid "Comments"
 msgstr "Observaciones"
 
 msgctxt "view:lims.results_report.version.detail:"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "view:lims.results_report.version.detail:"
 msgid "Fraction comments"
 msgstr "Observaciones de la fracción"
 

@@ -360,6 +360,10 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         cls._order.insert(0, ('report_version', 'DESC'))
         cls._order.insert(1, ('number', 'DESC'))
         cls._buttons.update({
+            'draft': {
+                'invisible': Eval('state') != 'revised',
+                'depends': ['state'],
+                },
             'revise': {
                 'invisible': Eval('state') != 'draft',
                 'depends': ['state'],
@@ -556,6 +560,11 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         if not professionals:
             return []
         return [p.id for p in professionals]
+
+    @classmethod
+    @ModelView.button
+    def draft(cls, details):
+        cls.write(details, {'state': 'draft'})
 
     @classmethod
     @ModelView.button

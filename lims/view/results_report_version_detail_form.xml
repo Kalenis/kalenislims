@@ -59,6 +59,7 @@
         <field name="valid"/>
     </group>
     <group id="buttons" colspan="2" col="4">
+        <button name="draft" string="Draft"/>
         <button name="revise" string="Revised"/>
         <button name="release" string="Release"/>
         <button name="release_all_lang" string="Release for all languages"/>

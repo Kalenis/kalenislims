@@ -492,6 +492,16 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
+        <record model="ir.model.button" id="results_report_version_detail_draft_button">
+            <field name="name">draft</field>
+            <field name="model" search="[('model', '=', 'lims.results_report.version.detail')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="results_report_version_detail_draft_button_group_lims_laboratory_reports">
+            <field name="button" ref="results_report_version_detail_draft_button"/>
+            <field name="group" ref="group_lims_laboratory_reports"/>
+        </record>
+
         <record model="ir.model.button" id="results_report_version_detail_revise_button">
             <field name="name">revise</field>
             <field name="model" search="[('model', '=', 'lims.results_report.version.detail')]"/>
