@@ -285,8 +285,9 @@ class Notebook(ModelSQL, ModelView):
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
         draft_samples = ResultsSample.search_count([
-            ('version_detail.state', '=', 'draft'),
             ('notebook', '=', notebook_id),
+            ('version_detail.state', 'in', ['draft', 'revised']),
+            ('version_detail.type', '!=', 'preliminary'),
             ])
         if draft_samples > 0:
             return ''
@@ -351,7 +352,8 @@ class Notebook(ModelSQL, ModelView):
 
         draft_notebooks_ids = []
         draft_samples = ResultsSample.search([
-            ('version_detail.state', '=', 'draft'),
+            ('version_detail.state', 'in', ['draft', 'revised']),
+            ('version_detail.type', '!=', 'preliminary'),
             ])
         if draft_samples:
             draft_notebooks_ids = [ds.notebook.id for ds in draft_samples]
@@ -448,7 +450,8 @@ class Notebook(ModelSQL, ModelView):
 
         draft_notebooks_ids = []
         draft_samples = ResultsSample.search([
-            ('version_detail.state', '=', 'draft'),
+            ('version_detail.state', 'in', ['draft', 'revised']),
+            ('version_detail.type', '!=', 'preliminary'),
             ])
         if draft_samples:
             draft_notebooks_ids = [ds.notebook.id for ds in draft_samples]

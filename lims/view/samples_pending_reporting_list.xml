@@ -5,6 +5,8 @@
     <field name="product_type"/>
     <field name="matrix"/>
     <field name="completion_percentage" widget="progressbar"/>
-    <field name="department"/>
     <field name="date2" widget="date"/>
+    <field name="label"/>
+    <field name="fraction_type"/>
+    <field name="department"/>
 </tree>
