@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/tree/field[@name='comments']" position="after">
+        <field name="precedent1_result"/>
+        <field name="precedent2_result"/>
+        <field name="precedent3_result"/>
+    </xpath>
+</data>

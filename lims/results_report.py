@@ -875,7 +875,7 @@ class ResultsReportVersionDetailSample(ModelSQL, ModelView):
         result = {}
         for name in names:
             result[name] = {}
-            if name in ('product_type', 'matrix'):
+            if cls._fields[name]._type == 'many2one':
                 for s in samples:
                     field = getattr(s.notebook, name, None)
                     result[name][s.id] = field.id if field else None
@@ -994,9 +994,7 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         result = {}
         for name in names:
             result[name] = {}
-            if name in ('notebook', 'party', 'analysis', 'laboratory',
-                    'method', 'device', 'initial_unit', 'final_unit',
-                    'product_type', 'matrix'):
+            if cls._fields[name]._type == 'many2one':
                 for d in details:
                     field = getattr(d.notebook_line, name, None)
                     result[name][d.id] = field.id if field else None

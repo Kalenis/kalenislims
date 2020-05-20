@@ -12,8 +12,8 @@ class Notebook(metaclass=PoolMeta):
     __name__ = 'lims.notebook'
 
     plant = fields.Function(fields.Many2One('lims.plant', 'Plant'),
-        'get_sample_field')
+        'get_sample_field', searcher='search_sample_field')
     equipment = fields.Function(fields.Many2One('lims.equipment', 'Equipment'),
-        'get_sample_field')
+        'get_sample_field', searcher='search_sample_field')
     component = fields.Function(fields.Many2One('lims.component', 'Component'),
-        'get_sample_field')
+        'get_sample_field', searcher='search_sample_field')

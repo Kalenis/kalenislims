@@ -7,6 +7,7 @@ from . import industry
 from . import analysis
 from . import sample
 from . import notebook
+from . import results_report
 from . import party
 from . import task
 
@@ -34,6 +35,8 @@ def register():
         sample.CreateSampleStart,
         sample.EditSampleStart,
         notebook.Notebook,
+        results_report.ResultsReportVersionDetailSample,
+        results_report.ResultsReportVersionDetailLine,
         party.Party,
         party.Address,
         task.AdministrativeTaskTemplate,

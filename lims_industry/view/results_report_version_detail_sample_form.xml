@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/form/field[@name='matrix']" position="after">
+        <label name="plant"/>
+        <field name="plant"/>
+        <label name="equipment"/>
+        <field name="equipment"/>
+        <label name="component"/>
+        <field name="component"/>
+    </xpath>
+    <xpath expr="/form/notebook/page[@id='lines']" position="after">
+        <page id="precedents" col="6" string="Precedents">
+            <label name="precedent1"/>
+            <field name="precedent1"/>
+            <label name="precedent2"/>
+            <field name="precedent2"/>
+            <label name="precedent3"/>
+            <field name="precedent3"/>
+        </page>
+    </xpath>
+</data>
