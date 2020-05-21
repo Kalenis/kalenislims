@@ -304,14 +304,13 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
 
     @classmethod
     def fields_view_get(cls, view_id=None, view_type='form'):
+        if Pool().test:
+            return
         table = cls.get_table()
-        view = cls.get_table_view()
-
-        if not view:
-            for view in table.views:
-                if view.type == view_type:
-                    break
-            assert(view.id)
+        for view in table.views:
+            if view.type == view_type:
+                break
+        assert(view.id)
 
         fields_names = [
             'compilation',
@@ -513,13 +512,6 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
             return Compilation(compilation_id)
 
     @classmethod
-    def get_table_view(cls):
-        TableView = Pool().get('lims.interface.table.view')
-        table_view_id = Transaction().context.get('lims_interface_table_view')
-        if table_view_id:
-            return TableView(table_view_id)
-
-    @classmethod
     def get_table(cls):
         Table = Pool().get('lims.interface.table')
         table = Transaction().context.get('lims_interface_table')
@@ -673,6 +665,8 @@ class GroupedData(ModelView):
 
     @classmethod
     def fields_view_get(cls, view_id=None, view_type='form'):
+        if Pool().test:
+            return
         table = cls.get_table()
         for view in table.grouped_views:
             if view.type == view_type:

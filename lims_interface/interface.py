@@ -1562,7 +1562,6 @@ class TestFormulaView(ModelView):
 
     @fields.depends('expression')
     def on_change_with_expression_icon(self, name=None):
-        print('entreeeeeeeee')
         if not self.expression:
             return ''
         if not self.expression.startswith('='):
