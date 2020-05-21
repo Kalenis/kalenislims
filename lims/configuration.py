@@ -290,6 +290,11 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         'Process Planifications in Background')
     invoice_party_relation_type = fields.Many2One('party.relation.type',
         'Invoice Party Relation Type')
+    samples_in_progress = fields.Selection([
+        ('result', 'With results'),
+        ('accepted', 'With accepted results'),
+        ], 'Samples in progress',
+        help='Samples allowed for preliminary reports')
 
     @staticmethod
     def default_brix_digits():
@@ -322,6 +327,10 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     @staticmethod
     def default_planification_process_background():
         return False
+
+    @staticmethod
+    def default_samples_in_progress():
+        return 'result'
 
     def get_reagents(self):
         res = []

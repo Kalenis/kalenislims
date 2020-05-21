@@ -272,35 +272,46 @@ class Notebook(ModelSQL, ModelView):
     @classmethod
     def get_state(cls, notebooks, name=None):
         result = {}
+        laboratory_id = Transaction().context.get(
+            'samples_pending_reporting_laboratory', None)
+        if not laboratory_id:
+            for n in notebooks:
+                result[n.id] = None
+            return result
         for n in notebooks:
-            result[n.id] = cls._get_notebook_state(n.id)
+            result[n.id] = cls._get_notebook_state(n.id, laboratory_id)
         return result
 
     @classmethod
-    def _get_notebook_state(cls, notebook_id):
+    def _get_notebook_state(cls, notebook_id, laboratory_id):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
         NotebookLine = pool.get('lims.notebook.line')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
-        draft_samples = ResultsSample.search_count([
-            ('notebook', '=', notebook_id),
-            ('version_detail.state', 'in', ['draft', 'revised']),
-            ('version_detail.type', '!=', 'preliminary'),
+        draft_lines_ids = []
+        draft_lines = ResultsLine.search([
+            ('detail_sample.notebook', '=', notebook_id),
+            ('detail_sample.version_detail.laboratory', '=', laboratory_id),
+            ('detail_sample.version_detail.state', 'in', ['draft', 'revised']),
+            ('detail_sample.version_detail.type', '!=', 'preliminary'),
             ])
-        if draft_samples > 0:
-            return ''
+        if draft_lines:
+            draft_lines_ids = [dl.notebook_line.id for dl in draft_lines]
 
         clause = [
             ('notebook', '=', notebook_id),
+            ('laboratory', '=', laboratory_id),
             ('notebook.fraction.type.report', '=', True),
             ('report', '=', True),
             ('annulled', '=', False),
-            ('accepted', '=', True),
             ('results_report', '=', None),
+            ('id', 'not in', draft_lines_ids),
+            ('accepted', '=', True),
             ]
-        excluded_notebooks = cls._get_excluded_notebooks([notebook_id])
+        excluded_notebooks = cls._get_excluded_notebooks([notebook_id],
+            laboratory_id)
         if excluded_notebooks:
             for n_id, grouper in excluded_notebooks:
                 cursor.execute('SELECT nl.id '
@@ -316,21 +327,18 @@ class Notebook(ModelSQL, ModelView):
 
         clause = [
             ('notebook', '=', notebook_id),
+            ('laboratory', '=', laboratory_id),
             ('notebook.fraction.type.report', '=', True),
             ('report', '=', True),
             ('annulled', '=', False),
             ('results_report', '=', None),
-            ['OR',
-                ('result', 'not in', [None, '']),
-                ('literal_result', 'not in', [None, '']),
-                ('result_modifier', 'in', [
-                    'd', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre', 'na']),
-                ],
+            ('id', 'not in', draft_lines_ids),
             ]
+        clause.extend(cls._get_samples_in_progress_clause())
         if NotebookLine.search_count(clause) > 0:
             return 'in_progress'
 
-        return ''
+        return None
 
     @classmethod
     def search_state(cls, name, domain=None):
@@ -346,30 +354,38 @@ class Notebook(ModelSQL, ModelView):
     def _get_notebooks_complete(cls):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
         NotebookLine = pool.get('lims.notebook.line')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
-        draft_notebooks_ids = []
-        draft_samples = ResultsSample.search([
-            ('version_detail.state', 'in', ['draft', 'revised']),
-            ('version_detail.type', '!=', 'preliminary'),
+        laboratory_id = Transaction().context.get(
+            'samples_pending_reporting_laboratory', None)
+        if not laboratory_id:
+            return []
+
+        draft_lines_ids = []
+        draft_lines = ResultsLine.search([
+            ('detail_sample.version_detail.laboratory', '=', laboratory_id),
+            ('detail_sample.version_detail.state', 'in', ['draft', 'revised']),
+            ('detail_sample.version_detail.type', '!=', 'preliminary'),
             ])
-        if draft_samples:
-            draft_notebooks_ids = [ds.notebook.id for ds in draft_samples]
+        if draft_lines:
+            draft_lines_ids = [dl.notebook_line.id for dl in draft_lines]
 
         clause = [
-            ('notebook', 'not in', draft_notebooks_ids),
+            ('laboratory', '=', laboratory_id),
             ('notebook.fraction.type.report', '=', True),
             ('report', '=', True),
             ('annulled', '=', False),
-            ('accepted', '=', True),
             ('results_report', '=', None),
+            ('id', 'not in', draft_lines_ids),
+            ('accepted', '=', True),
             ]
         lines = NotebookLine.search(clause)
         notebooks_ids = [nl.notebook.id for nl in lines]
 
-        excluded_notebooks = cls._get_excluded_notebooks(notebooks_ids)
+        excluded_notebooks = cls._get_excluded_notebooks(notebooks_ids,
+            laboratory_id)
         if excluded_notebooks:
             for n_id, grouper in excluded_notebooks:
                 cursor.execute('SELECT nl.id '
@@ -385,7 +401,7 @@ class Notebook(ModelSQL, ModelView):
         return notebooks_ids
 
     @classmethod
-    def _get_excluded_notebooks(cls, notebooks_ids):
+    def _get_excluded_notebooks(cls, notebooks_ids, laboratory_id):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
@@ -413,10 +429,12 @@ class Notebook(ModelSQL, ModelView):
                 'ON e.id = s.entry '
                 'INNER JOIN "' + FractionType._table + '" ft '
                 'ON ft.id = f.type '
-            'WHERE ft.report = TRUE '
+            'WHERE nl.laboratory = %s '
+                'AND ft.report = TRUE '
                 'AND nl.report = TRUE '
                 'AND nl.annulled = FALSE '
-                'AND n.id IN (\'' + notebooks_ids + '\')')
+                'AND n.id IN (\'' + notebooks_ids + '\')',
+            (laboratory_id,))
         notebook_lines = cursor.fetchall()
 
         # Check accepted repetitions
@@ -445,33 +463,51 @@ class Notebook(ModelSQL, ModelView):
     @classmethod
     def _get_notebooks_in_progress(cls):
         pool = Pool()
-        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
         NotebookLine = pool.get('lims.notebook.line')
 
-        draft_notebooks_ids = []
-        draft_samples = ResultsSample.search([
-            ('version_detail.state', 'in', ['draft', 'revised']),
-            ('version_detail.type', '!=', 'preliminary'),
+        laboratory_id = Transaction().context.get(
+            'samples_pending_reporting_laboratory', None)
+        if not laboratory_id:
+            return []
+
+        draft_lines_ids = []
+        draft_lines = ResultsLine.search([
+            ('detail_sample.version_detail.laboratory', '=', laboratory_id),
+            ('detail_sample.version_detail.state', 'in', ['draft', 'revised']),
+            ('detail_sample.version_detail.type', '!=', 'preliminary'),
             ])
-        if draft_samples:
-            draft_notebooks_ids = [ds.notebook.id for ds in draft_samples]
+        if draft_lines:
+            draft_lines_ids = [dl.notebook_line.id for dl in draft_lines]
 
         clause = [
-            ('notebook', 'not in', draft_notebooks_ids),
+            ('laboratory', '=', laboratory_id),
             ('notebook.fraction.type.report', '=', True),
             ('report', '=', True),
             ('annulled', '=', False),
             ('results_report', '=', None),
-            ['OR',
+            ('id', 'not in', draft_lines_ids),
+            ]
+        clause.extend(cls._get_samples_in_progress_clause())
+        lines = NotebookLine.search(clause)
+        notebooks_ids = [nl.notebook.id for nl in lines]
+        return notebooks_ids
+
+    @classmethod
+    def _get_samples_in_progress_clause(cls):
+        Config = Pool().get('lims.configuration')
+        samples_in_progress = Config(1).samples_in_progress
+        clause = []
+        if samples_in_progress == 'accepted':
+            clause = [('accepted', '=', True)]
+        elif samples_in_progress == 'result':
+            clause = [['OR',
                 ('result', 'not in', [None, '']),
                 ('literal_result', 'not in', [None, '']),
                 ('result_modifier', 'in', [
                     'd', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre', 'na']),
-                ],
-            ]
-        lines = NotebookLine.search(clause)
-        notebooks_ids = [nl.notebook.id for nl in lines]
-        return notebooks_ids
+                ]]
+        return clause
 
     @classmethod
     def view_toolbar_get(cls):

@@ -172,6 +172,7 @@ def register():
         results_report.GenerateResultsReportResultAutExcludedNotebook,
         results_report.GenerateResultsReportResultAutExcludedNotebookLine,
         results_report.GenerateResultsReportResultMan,
+        results_report.OpenSamplesPendingReportingStart,
         certification.DuplicateAnalysisFamilyStart,
         results_report.ResultsReportAnnulationStart,
         sample.CountersampleStorageStart,

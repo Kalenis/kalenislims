@@ -459,6 +459,10 @@ msgctxt "field:lims.configuration,rm_start_uom:"
 msgid "RM Start UoM"
 msgstr "UdM inicial RM"
 
+msgctxt "field:lims.configuration,samples_in_progress:"
+msgid "Samples in progress"
+msgstr "Muestras en curso"
+
 msgctxt "field:lims.configuration,sla_fraction_type:"
 msgid "SLA fraction type"
 msgstr "Tipo de fracción SLA"
@@ -5309,6 +5313,10 @@ msgctxt "field:lims.sample.producer,party:"
 msgid "Party"
 msgstr "Entidad"
 
+msgctxt "field:lims.samples_pending_reporting.start,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
 msgctxt "field:lims.scope_version.add_typifications.start,typifications:"
 msgid "Typifications"
 msgstr "Tipificaciones"
@@ -5963,6 +5971,10 @@ msgstr ""
 msgctxt "help:lims.configuration,mail_ack_subject:"
 msgid "In the text will be added suffix with the entry report number"
 msgstr "En el texto se añadirá sufijo con el número de ingreso del informe"
+
+msgctxt "help:lims.configuration,samples_in_progress:"
+msgid "Samples allowed for preliminary reports"
+msgstr "Muestras permitidas para informes preliminares"
 
 msgctxt "help:lims.lab.device.correction,formula:"
 msgid "Correction formula based on the given value (X)"
@@ -8780,6 +8792,10 @@ msgctxt "model:lims.sample.producer,name:"
 msgid "Sample Producer"
 msgstr "Productor de muestra"
 
+msgctxt "model:lims.samples_pending_reporting.start,name:"
+msgid "Samples Pending Reporting"
+msgstr "Muestras pendientes de informar"
+
 msgctxt "model:lims.scope_version.add_typifications.start,name:"
 msgid "Add Typifications"
 msgstr "Agregar tipificaciones"
@@ -11047,6 +11063,14 @@ msgstr "Grupo"
 msgctxt "selection:lims.analysis.included,analysis_type:"
 msgid "Set"
 msgstr "Set"
+
+msgctxt "selection:lims.configuration,samples_in_progress:"
+msgid "With accepted results"
+msgstr "Con resultados aceptados"
+
+msgctxt "selection:lims.configuration,samples_in_progress:"
+msgid "With results"
+msgstr "Con resultados"
 
 msgctxt "selection:lims.entry,result_cron:"
 msgid "Failed to print"
@@ -14084,6 +14108,14 @@ msgstr "Confirmar"
 msgctxt "wizard_button:lims.sample.edit_service,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.samples_pending_reporting,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.samples_pending_reporting,start,open_:"
+msgid "Open"
+msgstr "Abrir"
 
 msgctxt "wizard_button:lims.scope_version.add_typifications,start,add:"
 msgid "Add"

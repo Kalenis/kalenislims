@@ -20,6 +20,8 @@
             <field name="entry_confirm_background"/>
             <label name="planification_process_background"/>
             <field name="planification_process_background"/>
+            <label name="samples_in_progress"/>
+            <field name="samples_in_progress"/>
             <field name="microbiology_laboratories" colspan="4"/>
         </page>
         <page string="Fraction Types" id="fraction_type">

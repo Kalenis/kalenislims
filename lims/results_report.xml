@@ -272,6 +272,14 @@
             <field name="act_window" ref="act_lims_samples_pending_reporting"/>
         </record>
 
+<!-- Wizard Open Samples Pending Reporting -->
+
+        <record model="ir.ui.view" id="open_samples_pending_reporting_view_form">
+            <field name="model">lims.samples_pending_reporting.start</field>
+            <field name="type">form</field>
+            <field name="name">open_samples_pending_reporting_form</field>
+        </record>
+
         <record model="ir.action.wizard" id="wiz_lims_samples_pending_reporting">
             <field name="name">Samples Pending Reporting</field>
             <field name="wiz_name">lims.samples_pending_reporting</field>

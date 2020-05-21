@@ -27,11 +27,12 @@ __all__ = ['ResultsReport', 'ResultsReportVersion',
     'GenerateResultsReportResultAutNotebookLine',
     'GenerateResultsReportResultAutExcludedNotebook',
     'GenerateResultsReportResultAutExcludedNotebookLine',
-    'GenerateResultsReport', 'OpenSamplesPendingReporting',
-    'PrintResultsReport', 'ServiceResultsReport', 'FractionResultsReport',
-    'SampleResultsReport', 'ResultsReportSample',
-    'ResultsReportAnnulationStart', 'ResultsReportAnnulation', 'ResultReport',
-    'GlobalResultReport', 'ResultReportTranscription']
+    'GenerateResultsReport', 'OpenSamplesPendingReportingStart',
+    'OpenSamplesPendingReporting', 'PrintResultsReport',
+    'ServiceResultsReport', 'FractionResultsReport', 'SampleResultsReport',
+    'ResultsReportSample', 'ResultsReportAnnulationStart',
+    'ResultsReportAnnulation', 'ResultReport', 'GlobalResultReport',
+    'ResultReportTranscription']
 
 
 def get_print_date():
@@ -2151,18 +2152,42 @@ class GenerateResultsReport(Wizard):
         return action, {}
 
 
+class OpenSamplesPendingReportingStart(ModelView):
+    'Samples Pending Reporting'
+    __name__ = 'lims.samples_pending_reporting.start'
+
+    laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
+        required=True)
+
+    @staticmethod
+    def default_laboratory():
+        return Transaction().context.get('laboratory', None)
+
+
 class OpenSamplesPendingReporting(Wizard):
     'Samples Pending Reporting'
     __name__ = 'lims.samples_pending_reporting'
 
-    start = StateAction('lims.act_lims_samples_pending_reporting')
+    start = StateView('lims.samples_pending_reporting.start',
+        'lims.open_samples_pending_reporting_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Open', 'open_', 'tryton-ok', default=True),
+            ])
+    open_ = StateAction('lims.act_lims_samples_pending_reporting')
 
-    def do_start(self, action):
-        context = {'samples_pending_reporting': True}
-        action['pyson_context'] = PYSONEncoder().encode(context)
+    def do_open_(self, action):
+        laboratory = self.start.laboratory
+        action['pyson_context'] = PYSONEncoder().encode({
+            'samples_pending_reporting': True,
+            'samples_pending_reporting_laboratory': laboratory.id,
+            })
+        action['pyson_domain'] = PYSONEncoder().encode([
+            ('lines.laboratory', '=', laboratory.id),
+            ])
+        action['name'] += ' (%s)' % laboratory.rec_name
         return action, {}
 
-    def transition_start(self):
+    def transition_open_(self):
         return 'end'
 
 
