@@ -1083,8 +1083,9 @@ class EditGroupedData(Wizard):
     def transition_check(self):
         AnalysisSheet = Pool().get('lims.analysis_sheet')
 
+        line_id = Transaction().context.get('active_id', None)
         sheet_id = self._get_analysis_sheet_id()
-        if sheet_id:
+        if line_id and sheet_id:
             sheet = AnalysisSheet(sheet_id)
             if (sheet.state in ('active', 'validated') and
                     (sheet.template.interface.grouped_repetitions or 1) > 1):
