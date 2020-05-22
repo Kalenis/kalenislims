@@ -30,6 +30,18 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         domain=[('component', '=', Eval('component'))],
         depends=['component'])
 
+    @classmethod
+    def _get_sample_copy(cls, sample):
+        sample_default = super(ResultsReportVersionDetailSample,
+            cls)._get_sample_copy(sample)
+        sample_default['precedent1'] = (sample.precedent1 and
+            sample.precedent1 or None)
+        sample_default['precedent2'] = (sample.precedent2 and
+            sample.precedent2 or None)
+        sample_default['precedent3'] = (sample.precedent3 and
+            sample.precedent3 or None)
+        return sample_default
+
 
 class ResultsReportVersionDetailLine(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail.line'
@@ -91,6 +103,7 @@ class ResultsReportVersionDetailLine(metaclass=PoolMeta):
                 res = round(float(result), decimals)
                 if decimals == 0:
                     res = int(res)
+                res = str(res)
             else:
                 res = ''
 

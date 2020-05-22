@@ -2591,6 +2591,38 @@ msgctxt "field:lims.notebook.add_internal_relations.start,analysis_domain:"
 msgid "Internal relations domain"
 msgstr "Dominio para Relaciones internas"
 
+msgctxt "field:lims.notebook.generate_results_report.start,corrective:"
+msgid "Corrective"
+msgstr "Rectificativo"
+
+msgctxt "field:lims.notebook.generate_results_report.start,notebooks:"
+msgid "Samples"
+msgstr "Muestras"
+
+msgctxt "field:lims.notebook.generate_results_report.start,preliminary:"
+msgid "Preliminary"
+msgstr "Preliminar"
+
+msgctxt "field:lims.notebook.generate_results_report.start,report:"
+msgid "Target Report"
+msgstr "Informe destino"
+
+msgctxt "field:lims.notebook.generate_results_report.start,report_domain:"
+msgid "Target Report domain"
+msgstr "Dominio para Informe destino"
+
+msgctxt "field:lims.notebook.generate_results_report.start,report_readonly:"
+msgid "Target Report readonly"
+msgstr "Informe destino sólo lectura"
+
+msgctxt "field:lims.notebook.generate_results_report.start,reports_created:"
+msgid "Reports created"
+msgstr "Informes creados"
+
+msgctxt "field:lims.notebook.generate_results_report.start,type:"
+msgid "Type"
+msgstr "Tipo"
+
 msgctxt ""
 "field:lims.notebook.internal_relations_calc_1.relation,internal_relation:"
 msgid "Internal relation"
@@ -4684,6 +4716,10 @@ msgctxt "field:lims.results_report,english_report:"
 msgid "English report"
 msgstr "Informe en inglés"
 
+msgctxt "field:lims.results_report,entry:"
+msgid "Entry"
+msgstr "Ingreso"
+
 msgctxt "field:lims.results_report,generation_type:"
 msgid "Generation type"
 msgstr "Tipo de generación"
@@ -6691,6 +6727,10 @@ msgctxt "model:ir.action,name:wiz_notebook_evaluate_rules"
 msgid "Evaluate Rules"
 msgstr "10) Evaluar Reglas de cuaderno"
 
+msgctxt "model:ir.action,name:wiz_notebook_generate_results_report"
+msgid "Generate Results Report"
+msgstr "Generar informe de resultados"
+
 msgctxt "model:ir.action,name:wiz_notebook_line_evaluate_rules"
 msgid "Evaluate Rules"
 msgstr "10) Evaluar Reglas de cuaderno"
@@ -8382,6 +8422,10 @@ msgstr "Agregar relaciones internas"
 msgctxt "model:lims.notebook.evaluate_rules.start,name:"
 msgid "Evaluate Rules"
 msgstr "Evaluar Reglas de cuaderno"
+
+msgctxt "model:lims.notebook.generate_results_report.start,name:"
+msgid "Generate Results Report"
+msgstr "Generar informe de resultados"
 
 msgctxt "model:lims.notebook.initial_concentration_calc.start,name:"
 msgid "Initial Concentration Calculation"
@@ -11263,6 +11307,22 @@ msgctxt "selection:lims.laboratory,section:"
 msgid "Microbiology"
 msgstr "Microbiología"
 
+msgctxt "selection:lims.notebook.generate_results_report.start,type:"
+msgid "Complementary"
+msgstr "Complementario"
+
+msgctxt "selection:lims.notebook.generate_results_report.start,type:"
+msgid "Corrective"
+msgstr "Rectificativo"
+
+msgctxt "selection:lims.notebook.generate_results_report.start,type:"
+msgid "Final"
+msgstr "Final"
+
+msgctxt "selection:lims.notebook.generate_results_report.start,type:"
+msgid "Preliminary"
+msgstr "Preliminar"
+
 msgctxt ""
 "selection:lims.notebook.internal_relations_calc_2.variable,converted_result_modifier:"
 msgid "<"
@@ -13609,6 +13669,14 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.notebook.evaluate_rules,start,ok:"
 msgid "Ok"
 msgstr "Aceptar"
+
+msgctxt "wizard_button:lims.notebook.generate_results_report,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.notebook.generate_results_report,start,generate:"
+msgid "Generate"
+msgstr "Generar"
 
 msgctxt "wizard_button:lims.notebook.initial_concentration_calc,start,end:"
 msgid "Cancel"

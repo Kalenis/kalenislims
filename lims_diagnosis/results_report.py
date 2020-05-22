@@ -56,6 +56,16 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             for sample in self.samples:
                 sample.diagnosis = content
 
+    @classmethod
+    def _get_detail_copy(cls, detail):
+        detail_default = super(ResultsReportVersionDetail,
+            cls)._get_detail_copy(detail)
+        if detail.diagnostician:
+            detail_default['diagnostician'] = detail.diagnostician.id
+        if detail.diagnosis_template:
+            detail_default['diagnosis_template'] = detail.diagnosis_template.id
+        return detail_default
+
 
 class ResultsReportVersionDetailSample(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail.sample'
@@ -77,6 +87,14 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
             return [s.id for s in
                 self.version_detail.diagnosis_template.diagnosis_states]
         return []
+
+    @classmethod
+    def _get_sample_copy(cls, sample):
+        sample_default = super(ResultsReportVersionDetailSample,
+            cls)._get_sample_copy(sample)
+        sample_default['diagnosis'] = sample.diagnosis
+        sample_default['diagnosis_states'] = sample.diagnosis_states
+        return sample_default
 
 
 class ResultReport(metaclass=PoolMeta):

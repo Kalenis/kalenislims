@@ -29,6 +29,14 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         if 'required' in cls.resultrange_origin.states:
             del cls.resultrange_origin.states['required']
 
+    @classmethod
+    def _get_detail_copy(cls, detail):
+        detail_default = super(ResultsReportVersionDetail,
+            cls)._get_detail_copy(detail)
+        if detail.template:
+            detail_default['template'] = detail.template.id
+        return detail_default
+
 
 class ResultReport(metaclass=PoolMeta):
     __name__ = 'lims.result_report'
