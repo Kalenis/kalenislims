@@ -1,6 +1,7 @@
 # This file is part of lims_report_html module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+from lxml import html as lxml_html
 from base64 import b64encode
 
 from trytond.model import fields
@@ -141,6 +142,7 @@ class ResultReport(metaclass=PoolMeta):
     @classmethod
     def render_results_report_template(cls, action, template_string,
             record=None, records=None, data=None):
+        template_string = cls.parse_images(template_string)
         env = cls.get_environment()
         report_template = env.from_string(template_string)
         context = cls.get_context(records, data)
@@ -151,6 +153,25 @@ class ResultReport(metaclass=PoolMeta):
         res = report_template.render(**context)
         # print('TEMPLATE:\n', res)
         return res
+
+    @classmethod
+    def parse_images(cls, template_string):
+        Attachment = Pool().get('ir.attachment')
+        root = lxml_html.fromstring(template_string)
+        for elem in root.iter('img'):
+            # get image from attachments
+            if 'id' in elem.attrib:
+                img = Attachment.search([('id', '=', int(elem.attrib['id']))])
+                if img:
+                    elem.attrib['src'] = cls.get_image(img[0].data)
+            # set width and height in style attribute
+            style = elem.attrib.get('style', '')
+            if 'width' in elem.attrib:
+                style += ' width: %spx;' % str(elem.attrib['width'])
+            if 'height' in elem.attrib:
+                style += ' height: %spx;' % str(elem.attrib['height'])
+            elem.attrib['style'] = style
+        return lxml_html.tostring(root).decode()
 
     @classmethod
     def get_image(cls, image):
