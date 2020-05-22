@@ -15,6 +15,16 @@
             <field name="name">results_report_version_detail_form</field>
         </record>
 
+        <record model="ir.action.act_window.domain"
+                id="act_lims_results_report_version_detail_domain_diagnosed">
+            <field name="name">Diagnosed</field>
+            <field name="sequence" eval="15"/>
+            <field name="domain"
+                eval="[('state', '=', 'diagnosed')]" pyson="1"/>
+            <field name="count" eval="True"/>
+            <field name="act_window" ref="lims.act_lims_results_report_version_detail"/>
+        </record>
+
         <record model="ir.model.button" id="results_report_version_detail_diagnose_button">
             <field name="name">diagnose</field>
             <field name="model" search="[('model', '=', 'lims.results_report.version.detail')]"/>

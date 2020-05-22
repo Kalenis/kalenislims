@@ -115,6 +115,11 @@ msgctxt "model:ir.action,name:wiz_notebook_change_diagnostician"
 msgid "Change Sample Diagnostician"
 msgstr "Cambiar Diagnosticador"
 
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_results_report_version_detail_domain_diagnosed"
+msgid "Diagnosed"
+msgstr "Diagnosticado"
+
 msgctxt "model:ir.message,text:missing_diagnosis_signature"
 msgid "Signature missing for diagnosis: %(signature)s"
 msgstr "Falta la firma para el diagnóstico: %(signature)s"
