@@ -5013,6 +5013,10 @@ msgctxt "field:lims.results_report.version.detail.line,final_unit:"
 msgid "Final unit"
 msgstr "Unidad final"
 
+msgctxt "field:lims.results_report.version.detail.line,hide:"
+msgid "Hide in Report"
+msgstr "Ocultar en informe"
+
 msgctxt "field:lims.results_report.version.detail.line,initial_unit:"
 msgid "Initial unit"
 msgstr "Unidad inicial"

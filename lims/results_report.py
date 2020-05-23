@@ -950,6 +950,7 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         required=True, ondelete='CASCADE', select=True)
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
         required=True, readonly=True, select=True)
+    hide = fields.Boolean('Hide in Report')
     party = fields.Function(fields.Many2One('party.party', 'Party'),
         'get_nline_field')
     notebook = fields.Function(fields.Many2One('lims.notebook',
@@ -1043,6 +1044,10 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
                     'AND nl.notebook = %s',
                 (detail_sample.id, detail_sample.version_detail.id,
                  detail_sample.notebook.id))
+
+    @staticmethod
+    def default_hide():
+        return False
 
     @classmethod
     def get_nline_field(cls, details, names):
@@ -3080,6 +3085,7 @@ class ResultReport(Report):
         methods = {}
         pnt_methods = {}
         notebook_lines = ResultsLine.search([
+            ('hide', '=', False),
             ('detail_sample.version_detail.report_version.id', '=',
                 report.report_version.id), ['OR',
                 ('detail_sample.version_detail.id', '=', report.id),

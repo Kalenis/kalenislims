@@ -2,4 +2,6 @@
 <form>
     <label name="notebook_line"/>
     <field name="notebook_line"/>
+    <label name="hide"/>
+    <field name="hide" xexpand="0"/>
 </form>
