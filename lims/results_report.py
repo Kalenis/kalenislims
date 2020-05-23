@@ -477,8 +477,10 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
             return self.laboratory.section
         return None
 
-    @fields.depends('report_type_forced')
+    @fields.depends('samples', 'report_type_forced')
     def on_change_with_report_type(self, name=None):
+        if len(self.samples) > 1:
+            return 'polisample'
         if self.report_type_forced != 'none':
             return self.report_type_forced
         report_type = {
@@ -614,7 +616,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                 ])
             for vd in valid_details:
                 for valid_sample in vd.samples:
-                    sample_default = ResultsSample._get_sample_copy(
+                    sample_default = ResultsSample._get_fields_from_sample(
                         valid_sample)
                     existing_sample = ResultsSample.search([
                         ('version_detail', '=', detail.id),
@@ -876,7 +878,16 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         return 'lims-white'
 
     @classmethod
-    def _get_detail_copy(cls, detail):
+    def _get_fields_from_samples(cls, samples):
+        detail_default = {}
+        if len(samples) > 1:
+            detail_default['report_type_forced'] = 'polisample'
+        else:
+            detail_default['report_type_forced'] = 'normal'
+        return detail_default
+
+    @classmethod
+    def _get_fields_from_detail(cls, detail):
         detail_default = {}
         detail_default['report_type_forced'] = detail.report_type_forced
         detail_default['report_result_type_forced'] = (
@@ -919,7 +930,7 @@ class ResultsReportVersionDetailSample(ModelSQL, ModelView):
         return result
 
     @classmethod
-    def _get_sample_copy(cls, sample):
+    def _get_fields_from_sample(cls, sample):
         sample_default = {}
         notebook_lines = [
             {'notebook_line': nline.notebook_line.id}
@@ -2317,6 +2328,9 @@ class GenerateReport(Wizard):
         ResultsReport = pool.get('lims.results_report')
         ResultsDetail = pool.get('lims.results_report.version.detail')
 
+        laboratory_id = Transaction().context.get(
+            'samples_pending_reporting_laboratory', None)
+
         res = {
             'notebooks': [],
             'report_readonly': False,
@@ -2329,24 +2343,41 @@ class GenerateReport(Wizard):
         party = None
         report_grouper = None
         cie_fraction_type = None
+        current_report = None
 
         for notebook in Notebook.browse(Transaction().context['active_ids']):
             res['notebooks'].append(notebook.id)
             if not res['report_readonly']:
+                # same party
                 if not party:
                     party = notebook.party.id
                 elif party != notebook.party.id:
                     res['report_readonly'] = True
+                # same report_grouper
                 for line in notebook.lines:
                     if not report_grouper:
                         report_grouper = line.analysis_detail.report_grouper
                     elif report_grouper != line.analysis_detail.report_grouper:
                         res['report_readonly'] = True
                         break
+                # same cie_fraction_type
                 if cie_fraction_type is None:
                     cie_fraction_type = notebook.fraction.cie_fraction_type
                 elif cie_fraction_type != notebook.fraction.cie_fraction_type:
                     res['report_readonly'] = True
+                # same current_report
+                existing_detail = ResultsDetail.search([
+                    ('laboratory', '=', laboratory_id),
+                    ('state', '!=', 'annulled'),
+                    ('samples.notebook', '=', notebook.id),
+                    ], limit=1)
+                if existing_detail:
+                    existing_report = (
+                        existing_detail[0].report_version.results_report)
+                    if not current_report:
+                        current_report = existing_report.id
+                    elif current_report != existing_report.id:
+                        res['report_readonly'] = True
 
             if notebook.state != 'complete':
                 res['preliminary'] = True
@@ -2354,8 +2385,6 @@ class GenerateReport(Wizard):
 
         if not res['report_readonly']:
             if res['preliminary']:
-                laboratory_id = Transaction().context.get(
-                    'samples_pending_reporting_laboratory', None)
                 last_detail = ResultsDetail.search([
                     ('party', '=', party),
                     ('laboratory', '=', laboratory_id),
@@ -2364,11 +2393,15 @@ class GenerateReport(Wizard):
                     res['report_domain'] = [
                         last_detail[0].report_version.results_report.id]
             else:
-                reports = ResultsReport.search([
-                    ('party', '=', party),
-                    ('report_grouper', '=', report_grouper),
-                    ('cie_fraction_type', '=', cie_fraction_type),
-                    ])
+                if current_report:
+                    clause = [('id', '=', current_report)]
+                else:
+                    clause = [
+                        ('party', '=', party),
+                        ('report_grouper', '=', report_grouper),
+                        ('cie_fraction_type', '=', cie_fraction_type),
+                        ]
+                reports = ResultsReport.search(clause)
                 if reports:
                     res['report_domain'] = [r.id for r in reports]
         return res
@@ -2400,11 +2433,11 @@ class GenerateReport(Wizard):
                     'notebook_lines': [('create', notebook_lines)],
                     })
             details = {
-                'report_type_forced': 'polisample',
                 'type': self.start.type,
                 'signer': signer,
                 'samples': [('create', samples)],
                 }
+            details.update(ResultsDetail._get_fields_from_samples(samples))
             actual_version = ResultsVersion.search([
                 ('results_report', '=', self.start.report.id),
                 ('laboratory', '=', laboratory_id),
@@ -2430,7 +2463,7 @@ class GenerateReport(Wizard):
                         ], limit=1)
                     if valid_detail:
                         valid_detail = valid_detail[0]
-                        details.update(ResultsDetail._get_detail_copy(
+                        details.update(ResultsDetail._get_fields_from_detail(
                             valid_detail))
                     detail, = ResultsDetail.create([details])
                     reports_details = [detail.id]
@@ -2503,11 +2536,12 @@ class GenerateReport(Wizard):
                             'notebook_lines': [('create', notebook_lines)],
                             })
                     details = {
-                        'report_type_forced': 'polisample',
                         'type': self.start.type,
                         'signer': signer,
                         'samples': [('create', samples)],
                         }
+                    details.update(ResultsDetail._get_fields_from_samples(
+                        samples))
                     versions = {
                         'laboratory': laboratory_id,
                         'details': [('create', [details])],
@@ -2627,7 +2661,8 @@ class GenerateReport(Wizard):
                 ], limit=1)
             if valid_detail:
                 valid_detail = valid_detail[0]
-                details.update(ResultsDetail._get_detail_copy(valid_detail))
+                details.update(ResultsDetail._get_fields_from_detail(
+                    valid_detail))
             detail, = ResultsDetail.create([details])
             reports_details = [detail.id]
             return reports_details

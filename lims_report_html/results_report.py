@@ -33,9 +33,24 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             del cls.resultrange_origin.states['required']
 
     @classmethod
-    def _get_detail_copy(cls, detail):
+    def _get_fields_from_samples(cls, samples):
+        Notebook = Pool().get('lims.notebook')
         detail_default = super(ResultsReportVersionDetail,
-            cls)._get_detail_copy(detail)
+            cls)._get_fields_from_samples(samples)
+        for sample in samples:
+            notebook = Notebook(sample['notebook'])
+            result_template = notebook.fraction.sample.result_template
+            if result_template:
+                detail_default['template'] = result_template.id
+            resultrange_origin = notebook.fraction.sample.resultrange_origin
+            if resultrange_origin:
+                detail_default['resultrange_origin'] = resultrange_origin.id
+        return detail_default
+
+    @classmethod
+    def _get_fields_from_detail(cls, detail):
+        detail_default = super(ResultsReportVersionDetail,
+            cls)._get_fields_from_detail(detail)
         if detail.template:
             detail_default['template'] = detail.template.id
         return detail_default
