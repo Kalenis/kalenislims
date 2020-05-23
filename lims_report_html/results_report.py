@@ -142,7 +142,6 @@ class ResultReport(metaclass=PoolMeta):
     @classmethod
     def render_results_report_template(cls, action, template_string,
             record=None, records=None, data=None):
-        template_string = cls.parse_images(template_string)
         env = cls.get_environment()
         report_template = env.from_string(template_string)
         context = cls.get_context(records, data)
@@ -151,6 +150,7 @@ class ResultReport(metaclass=PoolMeta):
             'get_image': cls.get_image,
             })
         res = report_template.render(**context)
+        res = cls.parse_images(res)
         # print('TEMPLATE:\n', res)
         return res
 
