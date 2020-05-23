@@ -102,13 +102,13 @@ class ResultReport(metaclass=PoolMeta):
 
     @classmethod
     def get_results_report_template(cls, action, detail_id):
-        content = super(ResultReport, cls).get_results_report_template(
-            action, detail_id)
+        content, template_id = super(ResultReport,
+            cls).get_results_report_template(action, detail_id)
         signature = 'show_diagnosis_content'
         diagnosis_content = (
             '{%% macro %s(sample) %%}\n%s\n{%% endmacro %%}' % (
                 signature, '{{ sample.diagnosis }}'))
-        return '%s\n\n%s' % (diagnosis_content, content)
+        return '%s\n\n%s' % (diagnosis_content, content), template_id
 
     @classmethod
     def get_context(cls, records, data):

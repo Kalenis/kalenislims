@@ -1,8 +1,10 @@
 # This file is part of lims_report_html module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import os
 from lxml import html as lxml_html
 from base64 import b64encode
+from babel.support import Translations as BabelTranslations
 
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
@@ -93,16 +95,12 @@ class ResultReport(metaclass=PoolMeta):
         cls.check_access()
         action, model = cls.get_action(data)
 
-        with Transaction().set_context(html_report=action.id):
-            records = []
-            if model:
-                records = cls._get_records(ids, model, data)
-                #records = cls._get_dual_records(ids, model, data)
-            oext, content = cls._execute_html_results_report(records, data,
-                action)
-            if not isinstance(content, str):
-                content = bytearray(content) if bytes == str else bytes(
-                    content)
+        records = []
+        if model:
+            records = cls._get_records(ids, model, data)
+        oext, content = cls._execute_html_results_report(records, data, action)
+        if not isinstance(content, str):
+            content = bytearray(content) if bytes == str else bytes(content)
 
         return oext, content, cls.get_direct_print(action), cls.get_name(
             action)
@@ -111,9 +109,17 @@ class ResultReport(metaclass=PoolMeta):
     def _execute_html_results_report(cls, records, data, action):
         documents = []
         for record in records:
-            template = cls.get_results_report_template(action, record.id)
-            content = cls.render_results_report_template(action, template,
-                record=record, records=[record], data=data)
+            template_content, template_id = cls.get_results_report_template(
+                action, record.id)
+            context = Transaction().context
+            context['template'] = template_id
+            if not template_id:
+                context['default_translations'] = os.path.join(
+                    os.path.dirname(__file__), 'report', 'translations')
+            with Transaction().set_context(**context):
+                content = cls.render_results_report_template(action,
+                    template_content, record=record, records=[record],
+                    data=data)
             if action.extension == 'pdf':
                 documents.append(PdfGenerator(content, side_margin=1,
                     extra_vertical_margin=30).render_html())
@@ -130,19 +136,33 @@ class ResultReport(metaclass=PoolMeta):
     @classmethod
     def get_results_report_template(cls, action, detail_id):
         ResultsDetail = Pool().get('lims.results_report.version.detail')
+        content, template_id = None, None
         detail = ResultsDetail(detail_id)
-        content = detail.template and detail.template.content
+        if detail.template:
+            content = detail.template.content
+            template_id = detail.template
         if not content:
             content = (action.report_content and
                 action.report_content.decode('utf-8'))
             if not content:
                 raise UserError(gettext('lims_report_html.msg_no_template'))
-        return content
+        return content, template_id
 
     @classmethod
     def render_results_report_template(cls, action, template_string,
             record=None, records=None, data=None):
-        env = cls.get_environment()
+        User = Pool().get('res.user')
+        user = User(Transaction().user)
+
+        if data and data.get('alt_lang'):
+            locale = data['alt_lang']
+        elif user.language:
+            locale = user.language.code
+        else:
+            locale = Transaction().language
+        with Transaction().set_context(locale=locale):
+            env = cls.get_results_report_environment()
+
         report_template = env.from_string(template_string)
         context = cls.get_context(records, data)
         context.update({
@@ -153,6 +173,16 @@ class ResultReport(metaclass=PoolMeta):
         res = cls.parse_images(res)
         # print('TEMPLATE:\n', res)
         return res
+
+    @classmethod
+    def get_results_report_environment(cls):
+        env = cls.get_environment()
+
+        context = Transaction().context
+        locale = context.get('locale').split('_')[0]
+        translations = TemplateTranslations(locale)
+        env.install_gettext_translations(translations)
+        return env
 
     @classmethod
     def parse_images(cls, template_string):
@@ -179,3 +209,47 @@ class ResultReport(metaclass=PoolMeta):
             return ''
         b64_image = b64encode(image).decode()
         return 'data:image/png;base64,%s' % b64_image
+
+
+class TemplateTranslations:
+
+    def __init__(self, lang='en'):
+        self.cache = {}
+        self.env = None
+        self.current = None
+        self.language = lang
+        self.template = None
+        self.set_language(lang)
+
+    def set_language(self, lang='en'):
+        self.language = lang
+        if lang in self.cache:
+            self.current = self.cache[lang]
+            return
+        context = Transaction().context
+        if context.get('default_translations'):
+            default_translations = context['default_translations']
+            if os.path.isdir(default_translations):
+                self.current = BabelTranslations.load(
+                    dirname=default_translations, locales=[lang])
+                self.cache[lang] = self.current
+        else:
+            self.template = context.get('template', -1)
+
+    def ugettext(self, message):
+        ReportTemplate = Pool().get('lims.result_report.template')
+        if self.current:
+            return self.current.ugettext(message)
+        elif self.template:
+            return ReportTemplate.gettext(self.template, message,
+                self.language)
+        return message
+
+    def ngettext(self, singular, plural, n):
+        ReportTemplate = Pool().get('lims.result_report.template')
+        if self.current:
+            return self.current.ugettext(singular, plural, n)
+        elif self.template:
+            return ReportTemplate.gettext(self.template, singular,
+                self.language)
+        return singular

@@ -13,6 +13,7 @@ def register():
     Pool.register(
         action.ActionReport,
         html_template.ReportTemplate,
+        html_template.ReportTemplateTranslation,
         sample.Sample,
         sample.CreateSampleStart,
         results_report.ResultsReportVersionDetail,

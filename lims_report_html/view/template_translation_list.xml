@@ -1,0 +1,6 @@
+<tree editable="top">
+    <field name="template"/>
+    <field name="lang"/>
+    <field name="src"/>
+    <field name="value"/>
+</tree>

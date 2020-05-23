@@ -6,5 +6,8 @@
             <field name="content" colspan="4" widget="html"/>
             <field name="content" colspan="4"/>
         </page>
+        <page id="translations" string="Translations">
+            <field name="translations" colspan="4"/>
+        </page>
     </notebook>
 </form>

@@ -18,6 +18,26 @@ msgctxt "field:lims.result_report.template,name:"
 msgid "Name"
 msgstr "Nombre"
 
+msgctxt "field:lims.result_report.template,translations:"
+msgid "Translations"
+msgstr "Traducciones"
+
+msgctxt "field:lims.result_report.template.translation,lang:"
+msgid "Language"
+msgstr "Idioma"
+
+msgctxt "field:lims.result_report.template.translation,src:"
+msgid "Source"
+msgstr "Original"
+
+msgctxt "field:lims.result_report.template.translation,template:"
+msgid "Template"
+msgstr "Plantilla"
+
+msgctxt "field:lims.result_report.template.translation,value:"
+msgid "Translation Value"
+msgstr "Traducción"
+
 msgctxt "field:lims.results_report.version.detail,template:"
 msgid "Report Template"
 msgstr "Plantilla de Informe"
@@ -50,6 +70,14 @@ msgctxt "model:lims.result_report.template,name:"
 msgid "Results Report Template"
 msgstr "Plantilla de Informe de resultados"
 
+msgctxt "model:lims.result_report.template.translation,name:"
+msgid "Results Report Template Translation"
+msgstr "Traducción de Plantilla de Informe de resultados"
+
 msgctxt "view:lims.result_report.template:"
 msgid "Content"
 msgstr "Contenido"
+
+msgctxt "view:lims.result_report.template:"
+msgid "Translations"
+msgstr "Traducciones"

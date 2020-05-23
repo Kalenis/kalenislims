@@ -1,0 +1,12 @@
+<form>
+    <label name="template"/>
+    <field name="template"/>
+    <label name="lang"/>
+    <field name="lang"/>
+    <group id="src_value" colspan="4" col="2" yexpand="1" yfill="1">
+        <separator name="src"/>
+        <separator name="value"/>
+        <field name="src"/>
+        <field name="value"/>
+    </group>
+</form>

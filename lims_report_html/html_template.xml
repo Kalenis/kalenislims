@@ -34,5 +34,18 @@
             id="menu_html_template_list"
             parent="lims.lims_config_report" sequence="10"/>
 
+<!-- Results Report Template Translation -->
+
+        <record model="ir.ui.view" id="template_translation_view_form">
+            <field name="model">lims.result_report.template.translation</field>
+            <field name="type">form</field>
+            <field name="name">template_translation_form</field>
+        </record>
+        <record model="ir.ui.view" id="template_translation_view_list">
+            <field name="model">lims.result_report.template.translation</field>
+            <field name="type">tree</field>
+            <field name="name">template_translation_list</field>
+        </record>
+
     </data>
 </tryton>

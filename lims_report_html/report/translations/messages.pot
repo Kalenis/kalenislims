@@ -1,0 +1,113 @@
+msgid "ACTIVE INGREDIENT"
+msgstr ""
+
+msgid "ADDRESS"
+msgstr ""
+
+msgid "APPLICATION DATES"
+msgstr ""
+
+msgid "Analysis"
+msgstr ""
+
+msgid "BEGINNING OF THE ANALYSIS"
+msgstr ""
+
+msgid "CODE OF THE SAMPLE"
+msgstr ""
+
+msgid "CONFIRMATION SAMPLE RECEPTION"
+msgstr ""
+
+msgid "CONTAINER"
+msgstr ""
+
+msgid "CUSTOMER DESCRIPTION"
+msgstr ""
+
+msgid "DAYS AFTER TREATMENT (DAT)"
+msgstr ""
+
+msgid "DOSE"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Detection Limit"
+msgstr ""
+
+msgid "END OF ANALYSIS"
+msgstr ""
+
+msgid "FORMULATION TYPES"
+msgstr ""
+
+msgid "For the SAT NRO"
+msgstr ""
+
+msgid "LABEL"
+msgstr ""
+
+msgid "METHODS"
+msgstr ""
+
+msgid "Method"
+msgstr ""
+
+msgid "OBSERVATIONS"
+msgstr ""
+
+msgid "PRODUCER COMPANY"
+msgstr ""
+
+msgid "RECEIVED SAMPLE"
+msgstr ""
+
+msgid "REPETITION"
+msgstr ""
+
+msgid "REPORT Nº"
+msgstr ""
+
+msgid "REQUESTED BY"
+msgstr ""
+
+msgid "RESULTS"
+msgstr ""
+
+msgid "Result"
+msgstr ""
+
+msgid "Results Report"
+msgstr ""
+
+msgid "SAMPLE PRESENTATION"
+msgstr ""
+
+msgid "SAMPLING DATE"
+msgstr ""
+
+msgid "SENASA PROTOCOL N°"
+msgstr ""
+
+msgid "STUDY PLAN N°"
+msgstr ""
+
+msgid "TREATMENT"
+msgstr ""
+
+msgid ""
+"The results only refer to the analyzed samples. This report must not be "
+"partially reproduced without the written approval of"
+msgstr ""
+
+msgid "Unit"
+msgstr ""
+
+msgid "VARIETY"
+msgstr ""
+
+msgid "ZONE"
+msgstr ""
+

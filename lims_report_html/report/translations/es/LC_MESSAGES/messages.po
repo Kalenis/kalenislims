@@ -1,0 +1,115 @@
+msgid "ACTIVE INGREDIENT"
+msgstr "PRINCIPIO ACTIVO"
+
+msgid "ADDRESS"
+msgstr "DIRECCIÓN"
+
+msgid "APPLICATION DATES"
+msgstr "FECHA/S DE APLICACIÓN"
+
+msgid "Analysis"
+msgstr "Análisis"
+
+msgid "BEGINNING OF THE ANALYSIS"
+msgstr "FECHA INICIO DE ANÁLISIS"
+
+msgid "CODE OF THE SAMPLE"
+msgstr "CÓDIGO DE LA MUESTRA"
+
+msgid "CONFIRMATION SAMPLE RECEPTION"
+msgstr "CONFIRMACIÓN INGRESO DE LA MUESTRA"
+
+msgid "CONTAINER"
+msgstr "ENVASE"
+
+msgid "CUSTOMER DESCRIPTION"
+msgstr "DESCRIPCIÓN DEL CLIENTE"
+
+msgid "DAYS AFTER TREATMENT (DAT)"
+msgstr "DÍAS DESPUÉS DE APLICADO"
+
+msgid "DOSE"
+msgstr "DOSIS"
+
+msgid "Date"
+msgstr "Fecha"
+
+msgid "Detection Limit"
+msgstr "Límite de Detección"
+
+msgid "END OF ANALYSIS"
+msgstr "FECHA FINALIZACIÓN DE ANÁLISIS"
+
+msgid "FORMULATION TYPES"
+msgstr "TIPO DE FORMULACIÓN ARMONIZADA"
+
+msgid "For the SAT NRO"
+msgstr "Correspondiente al SAT NRO"
+
+msgid "LABEL"
+msgstr "RÓTULO"
+
+msgid "METHODS"
+msgstr "MÉTODOS"
+
+msgid "Method"
+msgstr "Método"
+
+msgid "OBSERVATIONS"
+msgstr "OBSERVACIONES"
+
+msgid "PRODUCER COMPANY"
+msgstr "EMPRESA PRODUCTORA"
+
+msgid "RECEIVED SAMPLE"
+msgstr "MUESTRA RECIBIDA"
+
+msgid "REPETITION"
+msgstr "REPETICIÓN"
+
+msgid "REPORT Nº"
+msgstr "INFORME Nº"
+
+msgid "REQUESTED BY"
+msgstr "SOLICITADO POR"
+
+msgid "RESULTS"
+msgstr "RESULTADOS"
+
+msgid "Result"
+msgstr "Resultado"
+
+msgid "Results Report"
+msgstr "Informe de resultados"
+
+msgid "SAMPLE PRESENTATION"
+msgstr "PRESENTACIÓN DE LA MUESTRA"
+
+msgid "SAMPLING DATE"
+msgstr "FECHA DE MUESTREO"
+
+msgid "SENASA PROTOCOL N°"
+msgstr "PROTOCOLO SENASA N°"
+
+msgid "STUDY PLAN N°"
+msgstr "PLAN DE ESTUDIO N°"
+
+msgid "TREATMENT"
+msgstr "TRATAMIENTO"
+
+msgid ""
+"The results only refer to the analyzed samples. This report must not be "
+"partially reproduced without the written approval of"
+msgstr ""
+"Los resultados corresponden exclusivamente a las muestras analizadas. El "
+"informe no debe reproducirse parcialmente sin la aprobación escrita de"
+
+msgid "Unit"
+msgstr "Unidad"
+
+msgid "VARIETY"
+msgstr "VARIEDAD"
+
+msgid "ZONE"
+msgstr "ZONA"
+

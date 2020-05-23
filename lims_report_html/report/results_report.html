@@ -981,7 +981,7 @@
                                         {% if stp_polisample_project == 'True' and fraction.stp_variety %}
                                         <tr>
                                             <td colspan="2" style="width:100%;">
-                                                <p>{{ _('CUSTOMER VARIETY') }}: {{ fraction.stp_variety }}</p>
+                                                <p>{{ _('VARIETY') }}: {{ fraction.stp_variety }}</p>
                                             </td>
                                         </tr>
                                         {% endif %}
@@ -1216,7 +1216,7 @@
             <table style="width:100%;">
                 <tr>
                     <td style="width:100%;">
-                        <p class="text-center">The results only refer to the analyzed samples. This report must not be partially reproduced without the written approval of {{ company.party.rec_name }}.</p>
+                        <p class="text-center">{{ _('The results only refer to the analyzed samples. This report must not be partially reproduced without the written approval of') }} {{ company.party.rec_name }}.</p>
                     </td>
                 </tr>
             </table>
