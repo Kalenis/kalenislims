@@ -9,8 +9,8 @@ from trytond.pyson import Eval
 from trytond.transaction import Transaction
 
 __all__ = ['ResultsReportVersionDetail', 'ResultsReportVersionDetailSample',
-    'ResultReport', 'ChangeSampleDiagnosticianStart',
-    'ChangeSampleDiagnostician']
+    'ResultsReportVersionDetailLine', 'ResultReport',
+    'ChangeSampleDiagnosticianStart', 'ChangeSampleDiagnostician']
 
 
 class ResultsReportVersionDetail(metaclass=PoolMeta):
@@ -93,6 +93,8 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
     diagnosis_states_domain = fields.Function(fields.Many2Many(
         'lims.diagnosis.state', None, None, 'States domain'),
         'on_change_with_diagnosis_states_domain')
+    diagnosis_warning = fields.Function(fields.Boolean('Diagnosis Warning'),
+        'get_notebook_field')
 
     @fields.depends('version_detail',
         '_parent_version_detail.diagnosis_template')
@@ -111,6 +113,13 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         sample_default['diagnosis'] = sample.diagnosis
         sample_default['diagnosis_states'] = sample.diagnosis_states
         return sample_default
+
+
+class ResultsReportVersionDetailLine(metaclass=PoolMeta):
+    __name__ = 'lims.results_report.version.detail.line'
+
+    diagnosis_warning = fields.Function(fields.Boolean('Diagnosis Warning'),
+        'get_nline_field')
 
 
 class ResultReport(metaclass=PoolMeta):

@@ -70,6 +70,10 @@ msgctxt "field:lims.results_report.version.detail,diagnostician:"
 msgid "Diagnostician"
 msgstr "Diagnosticador"
 
+msgctxt "field:lims.results_report.version.detail.line,diagnosis_warning:"
+msgid "Diagnosis Warning"
+msgstr "Advertencia de diagnóstico"
+
 msgctxt "field:lims.results_report.version.detail.sample,diagnosis:"
 msgid "Diagnosis"
 msgstr "Diagnóstico"
@@ -83,7 +87,7 @@ msgctxt ""
 msgid "States domain"
 msgstr "Dominio para Estados"
 
-msgctxt "field:lims.sample,diagnosis_warning:"
+msgctxt "field:lims.results_report.version.detail.sample,diagnosis_warning:"
 msgid "Diagnosis Warning"
 msgstr "Advertencia de diagnóstico"
 

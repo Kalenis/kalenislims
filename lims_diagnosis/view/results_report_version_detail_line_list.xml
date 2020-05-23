@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/tree/field[@name='comments']" position="before">
+        <field name="diagnosis_warning"/>
+    </xpath>
+</data>

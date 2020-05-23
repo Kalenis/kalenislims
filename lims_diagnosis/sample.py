@@ -3,7 +3,7 @@
 # the full copyright notices and license terms.
 
 from trytond.model import fields
-from trytond.pool import Pool, PoolMeta
+from trytond.pool import PoolMeta
 
 __all__ = ['Sample', 'CreateSampleStart', 'CreateSample']
 
@@ -12,25 +12,6 @@ class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
 
     diagnostician = fields.Many2One('lims.diagnostician', 'Diagnostician')
-    diagnosis_warning = fields.Function(fields.Boolean('Diagnosis Warning'),
-        'get_diagnosis_warning')
-
-    @classmethod
-    def get_diagnosis_warning(cls, samples, name):
-        pool = Pool()
-        NotebookLine = pool.get('lims.notebook.line')
-
-        result = {}
-        for s in samples:
-            lines = NotebookLine.search_count([
-                ('sample', '=', s.id),
-                ('diagnosis_warning', '=', True),
-                ])
-            if lines > 0:
-                result[s.id] = True
-            else:
-                result[s.id] = False
-        return result
 
     @classmethod
     def create(cls, vlist):

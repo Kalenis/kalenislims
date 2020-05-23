@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/tree/field[@name='matrix']" position="after">
+        <field name="diagnosis_warning"/>
+    </xpath>
+</data>

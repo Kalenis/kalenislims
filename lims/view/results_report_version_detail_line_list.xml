@@ -18,6 +18,6 @@
     <field name="converted_result"/>
     <field name="final_unit"/>
     <field name="literal_result"/>
-    <field name="hide"/>
     <field name="comments"/>
+    <field name="hide"/>
 </tree>

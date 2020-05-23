@@ -26,6 +26,7 @@ def register():
         sample.CreateSampleStart,
         results_report.ResultsReportVersionDetail,
         results_report.ResultsReportVersionDetailSample,
+        results_report.ResultsReportVersionDetailLine,
         results_report.ChangeSampleDiagnosticianStart,
         notebook.Notebook,
         notebook.NotebookLine,
