@@ -38,4 +38,4 @@ def register():
         module='lims_diagnosis', type_='wizard')
     Pool.register(
         results_report.ResultReport,
-        module='lims_report_html', type_='report')
+        module='lims_diagnosis', type_='report')
