@@ -4992,11 +4992,6 @@ msgctxt "field:lims.results_report.version.detail.line,converted_result:"
 msgid "Converted result"
 msgstr "Resultado convertido"
 
-msgctxt ""
-"field:lims.results_report.version.detail.line,converted_result_modifier:"
-msgid "Converted result modifier"
-msgstr "Modificador de resultado convertido"
-
 msgctxt "field:lims.results_report.version.detail.line,detail_sample:"
 msgid "Sample Detail"
 msgstr "Muestra"
@@ -5009,53 +5004,21 @@ msgctxt "field:lims.results_report.version.detail.line,end_date:"
 msgid "End date"
 msgstr "Fecha de finalización"
 
-msgctxt "field:lims.results_report.version.detail.line,final_unit:"
-msgid "Final unit"
-msgstr "Unidad final"
-
 msgctxt "field:lims.results_report.version.detail.line,hide:"
 msgid "Hide in Report"
 msgstr "Ocultar en informe"
-
-msgctxt "field:lims.results_report.version.detail.line,initial_unit:"
-msgid "Initial unit"
-msgstr "Unidad inicial"
-
-msgctxt "field:lims.results_report.version.detail.line,laboratory:"
-msgid "Laboratory"
-msgstr "Laboratorio"
-
-msgctxt "field:lims.results_report.version.detail.line,literal_result:"
-msgid "Literal result"
-msgstr "Resultado textual"
-
-msgctxt "field:lims.results_report.version.detail.line,matrix:"
-msgid "Matrix"
-msgstr "Matriz"
 
 msgctxt "field:lims.results_report.version.detail.line,method:"
 msgid "Method"
 msgstr "Método"
 
-msgctxt "field:lims.results_report.version.detail.line,notebook:"
-msgid "Laboratory notebook"
-msgstr "Cuaderno de laboratorio"
-
 msgctxt "field:lims.results_report.version.detail.line,notebook_line:"
 msgid "Notebook Line"
 msgstr "Línea de cuaderno"
 
-msgctxt "field:lims.results_report.version.detail.line,party:"
-msgid "Party"
-msgstr "Entidad"
-
 msgctxt "field:lims.results_report.version.detail.line,priority:"
 msgid "Priority"
 msgstr "Prioridad"
-
-msgctxt "field:lims.results_report.version.detail.line,product_type:"
-msgid "Product type"
-msgstr "Tipo de producto"
 
 msgctxt "field:lims.results_report.version.detail.line,repetition:"
 msgid "Repetition"
@@ -5068,10 +5031,6 @@ msgstr "Fecha pactada de resultado"
 msgctxt "field:lims.results_report.version.detail.line,result:"
 msgid "Result"
 msgstr "Resultado"
-
-msgctxt "field:lims.results_report.version.detail.line,result_modifier:"
-msgid "Result modifier"
-msgstr "Modificador de resultado"
 
 msgctxt "field:lims.results_report.version.detail.line,start_date:"
 msgid "Start date"
@@ -11890,81 +11849,6 @@ msgstr "Final"
 msgctxt "selection:lims.results_report.version.detail,type:"
 msgid "Preliminary"
 msgstr "Preliminar"
-
-msgctxt ""
-"selection:lims.results_report.version.detail.line,converted_result_modifier:"
-msgid "<"
-msgstr "<"
-
-msgctxt ""
-"selection:lims.results_report.version.detail.line,converted_result_modifier:"
-msgid "="
-msgstr "="
-
-msgctxt ""
-"selection:lims.results_report.version.detail.line,converted_result_modifier:"
-msgid "Negative"
-msgstr "Negativo"
-
-msgctxt ""
-"selection:lims.results_report.version.detail.line,converted_result_modifier:"
-msgid "Positive"
-msgstr "Positivo"
-
-msgctxt ""
-"selection:lims.results_report.version.detail.line,converted_result_modifier:"
-msgid "na"
-msgstr "na"
-
-msgctxt ""
-"selection:lims.results_report.version.detail.line,converted_result_modifier:"
-msgid "nd"
-msgstr "nd"
-
-msgctxt ""
-"selection:lims.results_report.version.detail.line,converted_result_modifier:"
-msgid "ni"
-msgstr "ni"
-
-msgctxt "selection:lims.results_report.version.detail.line,result_modifier:"
-msgid "<"
-msgstr "<"
-
-msgctxt "selection:lims.results_report.version.detail.line,result_modifier:"
-msgid "="
-msgstr "="
-
-msgctxt "selection:lims.results_report.version.detail.line,result_modifier:"
-msgid "Absence"
-msgstr "Ausencia"
-
-msgctxt "selection:lims.results_report.version.detail.line,result_modifier:"
-msgid "Detected"
-msgstr "Detectado"
-
-msgctxt "selection:lims.results_report.version.detail.line,result_modifier:"
-msgid "Negative"
-msgstr "Negativo"
-
-msgctxt "selection:lims.results_report.version.detail.line,result_modifier:"
-msgid "Positive"
-msgstr "Positivo"
-
-msgctxt "selection:lims.results_report.version.detail.line,result_modifier:"
-msgid "Presence"
-msgstr "Presencia"
-
-msgctxt "selection:lims.results_report.version.detail.line,result_modifier:"
-msgid "na"
-msgstr "na"
-
-msgctxt "selection:lims.results_report.version.detail.line,result_modifier:"
-msgid "nd"
-msgstr "nd"
-
-msgctxt "selection:lims.results_report.version.detail.line,result_modifier:"
-msgid "ni"
-msgstr "ni"
 
 msgctxt "selection:lims.rule,action:"
 msgid "Add Analysis"

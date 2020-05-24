@@ -951,13 +951,7 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
         required=True, readonly=True, select=True)
     hide = fields.Boolean('Hide in Report')
-    party = fields.Function(fields.Many2One('party.party', 'Party'),
-        'get_nline_field')
-    notebook = fields.Function(fields.Many2One('lims.notebook',
-        'Laboratory notebook'), 'get_nline_field')
-    product_type = fields.Function(fields.Many2One('lims.product.type',
-        'Product type'), 'get_nline_field')
-    matrix = fields.Function(fields.Many2One('lims.matrix', 'Matrix'),
+    analysis_origin = fields.Function(fields.Char('Analysis origin'),
         'get_nline_field')
     analysis = fields.Function(fields.Many2One('lims.analysis', 'Analysis'),
         'get_nline_field')
@@ -965,49 +959,18 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         'get_nline_field')
     start_date = fields.Function(fields.Date('Start date'), 'get_nline_field')
     end_date = fields.Function(fields.Date('End date'), 'get_nline_field')
-    laboratory = fields.Function(fields.Many2One('lims.laboratory',
-        'Laboratory'), 'get_nline_field')
     method = fields.Function(fields.Many2One('lims.lab.method', 'Method'),
         'get_nline_field')
     device = fields.Function(fields.Many2One('lims.lab.device', 'Device'),
-        'get_nline_field')
-    analysis_origin = fields.Function(fields.Char('Analysis origin'),
         'get_nline_field')
     urgent = fields.Function(fields.Boolean('Urgent'), 'get_nline_field')
     priority = fields.Function(fields.Integer('Priority'), 'get_nline_field')
     report_date = fields.Function(fields.Date('Date agreed for result'),
         'get_nline_field')
-    result_modifier = fields.Function(fields.Selection([
-        ('eq', '='),
-        ('low', '<'),
-        ('d', 'Detected'),
-        ('nd', 'nd'),
-        ('na', 'na'),
-        ('pos', 'Positive'),
-        ('neg', 'Negative'),
-        ('ni', 'ni'),
-        ('abs', 'Absence'),
-        ('pre', 'Presence'),
-        ], 'Result modifier'), 'get_nline_field')
-    converted_result_modifier = fields.Function(fields.Selection([
-        ('eq', '='),
-        ('low', '<'),
-        ('nd', 'nd'),
-        ('na', 'na'),
-        ('pos', 'Positive'),
-        ('neg', 'Negative'),
-        ('ni', 'ni'),
-        ], 'Converted result modifier'), 'get_nline_field')
-    result = fields.Function(fields.Char('Result'), 'get_nline_field')
+    result = fields.Function(fields.Char('Result'), 'get_result')
     converted_result = fields.Function(fields.Char('Converted result'),
-        'get_nline_field')
-    initial_unit = fields.Function(fields.Many2One('product.uom',
-        'Initial unit'), 'get_nline_field')
-    final_unit = fields.Function(fields.Many2One('product.uom',
-        'Final unit'), 'get_nline_field')
+        'get_converted_result')
     comments = fields.Function(fields.Text('Entry comments'),
-        'get_nline_field')
-    literal_result = fields.Function(fields.Char('Literal result'),
         'get_nline_field')
 
     @classmethod
@@ -1062,6 +1025,114 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
                 for d in details:
                     result[name][d.id] = getattr(d.notebook_line, name, None)
         return result
+
+    @classmethod
+    def get_result(cls, details, name):
+        result = {}
+        for d in details:
+            result[d.id] = cls._get_result(d.notebook_line)
+        return result
+
+    @classmethod
+    def _get_result(cls, notebook_line):
+        literal_result = notebook_line.literal_result
+        result = notebook_line.result
+        decimals = notebook_line.decimals
+        result_modifier = notebook_line.result_modifier
+        initial_unit = notebook_line.initial_unit
+
+        res, unit = '', None
+        if literal_result:
+            res = literal_result
+        else:
+            if result:
+                res = round(float(result), decimals)
+                if decimals == 0:
+                    res = int(res)
+                res = str(res)
+            else:
+                res = ''
+
+            if result_modifier == 'eq':
+                res = res
+                unit = initial_unit and initial_unit.rec_name or None
+            elif result_modifier == 'low':
+                res = gettext('lims.msg_quantification_limit', loq=res)
+                unit = initial_unit and initial_unit.rec_name or None
+            elif result_modifier == 'd':
+                res = gettext('lims.msg_d')
+                unit = initial_unit and initial_unit.rec_name or None
+            elif result_modifier == 'nd':
+                res = gettext('lims.msg_nd')
+                unit = initial_unit and initial_unit.rec_name or None
+            elif result_modifier == 'ni':
+                res = ''
+            elif result_modifier == 'pos':
+                res = gettext('lims.msg_pos')
+            elif result_modifier == 'neg':
+                res = gettext('lims.msg_neg')
+            elif result_modifier == 'pre':
+                res = gettext('lims.msg_pre')
+            elif result_modifier == 'abs':
+                res = gettext('lims.msg_abs')
+            else:
+                res = result_modifier
+        if unit:
+            return '%s %s' % (res, unit)
+        return res
+
+    @classmethod
+    def get_converted_result(cls, details, name):
+        result = {}
+        for d in details:
+            result[d.id] = cls._get_converted_result(d.notebook_line)
+        return result
+
+    @classmethod
+    def _get_converted_result(cls, notebook_line):
+        literal_result = notebook_line.literal_result
+        result = notebook_line.converted_result
+        decimals = notebook_line.decimals
+        result_modifier = notebook_line.converted_result_modifier
+        final_unit = notebook_line.final_unit
+
+        res, unit = '', None
+        if not notebook_line.literal_result:
+            if result:
+                res = round(float(result), decimals)
+                if decimals == 0:
+                    res = int(res)
+                res = str(res)
+            else:
+                res = ''
+
+            if result_modifier == 'eq':
+                res = res
+                unit = final_unit and final_unit.rec_name or None
+            elif result_modifier == 'low':
+                res = gettext('lims.msg_quantification_limit', loq=res)
+                unit = final_unit and final_unit.rec_name or None
+            elif result_modifier == 'd':
+                res = gettext('lims.msg_d')
+                unit = final_unit and final_unit.rec_name or None
+            elif result_modifier == 'nd':
+                res = gettext('lims.msg_nd')
+                unit = final_unit and final_unit.rec_name or None
+            elif result_modifier == 'ni':
+                res = ''
+            elif result_modifier == 'pos':
+                res = gettext('lims.msg_pos')
+            elif result_modifier == 'neg':
+                res = gettext('lims.msg_neg')
+            elif result_modifier == 'pre':
+                res = gettext('lims.msg_pre')
+            elif result_modifier == 'abs':
+                res = gettext('lims.msg_abs')
+            else:
+                res = result_modifier
+        if unit:
+            return '%s %s' % (res, unit)
+        return res
 
 
 class DivideReportsResult(ModelView):

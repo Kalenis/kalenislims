@@ -74,9 +74,7 @@ class ResultsReportVersionDetailLine(metaclass=PoolMeta):
 
     @classmethod
     def _get_precedent_result(cls, precedent, line):
-        pool = Pool()
-        NotebookLine = pool.get('lims.notebook.line')
-
+        NotebookLine = Pool().get('lims.notebook.line')
         if not precedent:
             return None
         precedent_line = NotebookLine.search([
@@ -87,44 +85,3 @@ class ResultsReportVersionDetailLine(metaclass=PoolMeta):
         if not precedent_line:
             return None
         return cls._get_result(precedent_line[0])
-
-    @classmethod
-    def _get_result(cls, notebook_line):
-        literal_result = notebook_line.literal_result
-        result = notebook_line.result
-        decimals = notebook_line.decimals
-        result_modifier = notebook_line.result_modifier
-
-        res = ''
-        if literal_result:
-            res = literal_result
-        else:
-            if result:
-                res = round(float(result), decimals)
-                if decimals == 0:
-                    res = int(res)
-                res = str(res)
-            else:
-                res = ''
-
-            if result_modifier == 'eq':
-                res = res
-            elif result_modifier == 'low':
-                res = gettext('lims.msg_quantification_limit', loq=res)
-            elif result_modifier == 'd':
-                res = gettext('lims.msg_d')
-            elif result_modifier == 'nd':
-                res = gettext('lims.msg_nd')
-            elif result_modifier == 'ni':
-                res = ''
-            elif result_modifier == 'pos':
-                res = gettext('lims.msg_pos')
-            elif result_modifier == 'neg':
-                res = gettext('lims.msg_neg')
-            elif result_modifier == 'pre':
-                res = gettext('lims.msg_pre')
-            elif result_modifier == 'abs':
-                res = gettext('lims.msg_abs')
-            else:
-                res = result_modifier
-        return res
