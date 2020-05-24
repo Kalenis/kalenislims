@@ -362,13 +362,28 @@ msgctxt "field:lims.results_report.version.detail.sample,precedent1:"
 msgid "Precedent 1"
 msgstr "Antecedente 1"
 
+msgctxt ""
+"field:lims.results_report.version.detail.sample,precedent1_diagnosis:"
+msgid "Diagnosis Precedent 1"
+msgstr "Diagnóstico Antecedente 1"
+
 msgctxt "field:lims.results_report.version.detail.sample,precedent2:"
 msgid "Precedent 2"
 msgstr "Antecedente 2"
 
+msgctxt ""
+"field:lims.results_report.version.detail.sample,precedent2_diagnosis:"
+msgid "Diagnosis Precedent 2"
+msgstr "Diagnóstico Antecedente 2"
+
 msgctxt "field:lims.results_report.version.detail.sample,precedent3:"
 msgid "Precedent 3"
 msgstr "Antecedente 3"
+
+msgctxt ""
+"field:lims.results_report.version.detail.sample,precedent3_diagnosis:"
+msgid "Diagnosis Precedent 3"
+msgstr "Diagnóstico Antecedente 3"
 
 msgctxt "field:lims.sample,attributes_domain:"
 msgid "Attributes domain"

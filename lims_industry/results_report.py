@@ -5,7 +5,6 @@
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
-from trytond.i18n import gettext
 
 __all__ = ['ResultsReportVersionDetailSample',
     'ResultsReportVersionDetailLine']
@@ -29,6 +28,58 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
     precedent3 = fields.Many2One('lims.notebook', 'Precedent 3',
         domain=[('component', '=', Eval('component'))],
         depends=['component'])
+    precedent1_diagnosis = fields.Function(fields.Text(
+        'Diagnosis Precedent 1'), 'get_precedent_diagnosis')
+    precedent2_diagnosis = fields.Function(fields.Text(
+        'Diagnosis Precedent 2'), 'get_precedent_diagnosis')
+    precedent3_diagnosis = fields.Function(fields.Text(
+        'Diagnosis Precedent 3'), 'get_precedent_diagnosis')
+
+    @classmethod
+    def view_attributes(cls):
+        missing_diagnosis = True if 'diagnosis' not in cls._fields else False
+        return [
+            ('//group[@id="diagnosis"]', 'states', {
+                'invisible': missing_diagnosis,
+                }),
+            ]
+
+    @classmethod
+    def get_precedent_diagnosis(cls, samples, names):
+        result = {}
+        missing_diagnosis = True if 'diagnosis' not in cls._fields else False
+        if missing_diagnosis:
+            for name in names:
+                result[name] = {}
+                for s in samples:
+                    result[name][s.id] = None
+        else:
+            for name in names:
+                result[name] = {}
+                if name == 'precedent1_diagnosis':
+                    for s in samples:
+                        result[name][s.id] = cls._get_precedent_diagnosis(
+                            s.precedent1)
+                elif name == 'precedent2_diagnosis':
+                    for s in samples:
+                        result[name][s.id] = cls._get_precedent_diagnosis(
+                            s.precedent2)
+                else:  # name == 'precedent3_diagnosis':
+                    for s in samples:
+                        result[name][s.id] = cls._get_precedent_diagnosis(
+                            s.precedent3)
+        return result
+
+    @classmethod
+    def _get_precedent_diagnosis(cls, precedent):
+        if not precedent:
+            return None
+        precedent_sample = cls.search([
+            ('notebook', '=', precedent),
+            ])
+        if not precedent_sample:
+            return None
+        return precedent_sample[0].diagnosis
 
     @classmethod
     def _get_sample_copy(cls, sample):

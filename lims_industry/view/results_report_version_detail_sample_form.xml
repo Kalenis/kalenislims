@@ -16,6 +16,17 @@
             <field name="precedent2"/>
             <label name="precedent3"/>
             <field name="precedent3"/>
+            <group id="diagnosis" colspan="6" col="3" yexpand="1" yfill="1">
+                <separator name="precedent1_diagnosis"/>
+                <separator name="precedent2_diagnosis"/>
+                <separator name="precedent3_diagnosis"/>
+                <field name="precedent1_diagnosis" widget="html"/>
+                <field name="precedent2_diagnosis" widget="html"/>
+                <field name="precedent3_diagnosis" widget="html"/>
+                <field name="precedent1_diagnosis"/>
+                <field name="precedent2_diagnosis"/>
+                <field name="precedent3_diagnosis"/>
+            </group>
         </page>
     </xpath>
 </data>
