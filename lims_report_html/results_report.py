@@ -209,6 +209,10 @@ class ResultReport(metaclass=PoolMeta):
                 img = Attachment.search([('id', '=', int(elem.attrib['id']))])
                 if img:
                     elem.attrib['src'] = cls.get_image(img[0].data)
+            # get image from TinyMCE widget
+            elif 'data-mce-src' in elem.attrib:
+                elem.attrib['src'] = elem.attrib['data-mce-src']
+                del elem.attrib['data-mce-src']
             # set width and height in style attribute
             style = elem.attrib.get('style', '')
             if 'width' in elem.attrib:
