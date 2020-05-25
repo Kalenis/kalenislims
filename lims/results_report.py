@@ -18,14 +18,15 @@ from trytond.rpc import RPC
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from .configuration import get_print_date
+from .notebook import NotebookLineRepeatAnalysis
 
 __all__ = ['ResultsReport', 'ResultsReportVersion',
     'ResultsReportVersionDetail', 'ResultsReportVersionDetailSample',
-    'ResultsReportVersionDetailLine', 'DivideReportsResult',
-    'DivideReportsDetail', 'DivideReportsProcess', 'DivideReports',
-    'GenerateResultsReportStart', 'GenerateResultsReportEmpty',
-    'GenerateResultsReportResultAut', 'GenerateResultsReportResultMan',
-    'GenerateResultsReportResultAutNotebook',
+    'ResultsReportVersionDetailLine', 'ResultsLineRepeatAnalysis',
+    'DivideReportsResult', 'DivideReportsDetail', 'DivideReportsProcess',
+    'DivideReports', 'GenerateResultsReportStart',
+    'GenerateResultsReportEmpty', 'GenerateResultsReportResultAut',
+    'GenerateResultsReportResultMan', 'GenerateResultsReportResultAutNotebook',
     'GenerateResultsReportResultAutNotebookLine',
     'GenerateResultsReportResultAutExcludedNotebook',
     'GenerateResultsReportResultAutExcludedNotebookLine',
@@ -1081,7 +1082,6 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
 
     @classmethod
     def _get_converted_result(cls, notebook_line):
-        literal_result = notebook_line.literal_result
         result = notebook_line.converted_result
         decimals = notebook_line.decimals
         result_modifier = notebook_line.converted_result_modifier
@@ -1124,6 +1124,16 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         if unit:
             return '%s %s' % (res, unit)
         return res
+
+
+class ResultsLineRepeatAnalysis(NotebookLineRepeatAnalysis):
+    'Repeat Analysis'
+    __name__ = 'lims.results_report.version.detail.line.repeat_analysis'
+
+    def _get_notebook_line_id(self):
+        ResultsLine = Pool().get('lims.results_report.version.detail.line')
+        line = ResultsLine(Transaction().context['active_id'])
+        return line.notebook_line.id
 
 
 class DivideReportsResult(ModelView):

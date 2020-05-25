@@ -6706,6 +6706,11 @@ msgctxt "model:ir.action,name:wiz_print_analysis_pending_inform"
 msgid "Pending analysis Unchecked"
 msgstr "Análisis pendientes sin tildar"
 
+msgctxt ""
+"model:ir.action,name:wiz_results_report_version_detail_line_repeat_analysis"
+msgid "Repeat Analysis"
+msgstr "Repetir análisis"
+
 msgctxt "model:ir.action,name:wizard_device_relate_analysis"
 msgid "Relate Analysis to Device"
 msgstr "Relacionar análisis a equipo"
@@ -14040,6 +14045,16 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.relate_analysis,start,relate:"
 msgid "Relate"
 msgstr "Relacionar"
+
+msgctxt ""
+"wizard_button:lims.results_report.version.detail.line.repeat_analysis,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt ""
+"wizard_button:lims.results_report.version.detail.line.repeat_analysis,start,repeat:"
+msgid "Repeat"
+msgstr "Repetir"
 
 msgctxt "wizard_button:lims.results_report_annulation,start,annul:"
 msgid "Annul"

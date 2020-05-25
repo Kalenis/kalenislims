@@ -301,6 +301,7 @@ def register():
         notebook.NotebookLineEvaluateRules,
         control_tendency.MeansDeviationsCalc,
         control_tendency.TendenciesAnalysis,
+        results_report.ResultsLineRepeatAnalysis,
         results_report.DivideReports,
         results_report.GenerateResultsReport,
         results_report.OpenSamplesPendingReporting,

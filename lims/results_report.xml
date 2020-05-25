@@ -432,6 +432,20 @@
             <field name="wiz_name">lims.results_report_annulation</field>
         </record>
 
+<!-- Wizard Repeat Analysis -->
+
+        <record model="ir.action.wizard"
+            id="wiz_results_report_version_detail_line_repeat_analysis">
+            <field name="name">Repeat Analysis</field>
+            <field name="wiz_name">lims.results_report.version.detail.line.repeat_analysis</field>
+        </record>
+        <record model="ir.action.keyword"
+            id="wiz_results_report_version_detail_line_repeat_analysis_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.results_report.version.detail.line,-1</field>
+            <field name="action" ref="wiz_results_report_version_detail_line_repeat_analysis"/>
+        </record>
+
 <!-- Results Report -->
 
         <record model="ir.action.report" id="report_results_report">

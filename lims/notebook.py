@@ -4143,12 +4143,16 @@ class NotebookLineRepeatAnalysis(Wizard):
             ])
     repeat = StateTransition()
 
+    def _get_notebook_line_id(self):
+        return Transaction().context.get('active_id', None)
+
     def default_start(self, fields):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
         Analysis = pool.get('lims.analysis')
 
-        notebook_line = NotebookLine(Transaction().context['active_id'])
+        line_id = self._get_notebook_line_id()
+        notebook_line = NotebookLine(line_id)
 
         analysis_origin = notebook_line.analysis_origin
         analysis_origin_list = analysis_origin.split(' > ')
@@ -4183,7 +4187,8 @@ class NotebookLineRepeatAnalysis(Wizard):
             analysis_to_repeat = Analysis.get_included_analysis_analysis(
                 analysis.id)
 
-        notebook_line = NotebookLine(Transaction().context['active_id'])
+        line_id = self._get_notebook_line_id()
+        notebook_line = NotebookLine(line_id)
         notebook = Notebook(notebook_line.notebook.id)
 
         rm_type = (notebook.fraction.special_type == 'rm')
