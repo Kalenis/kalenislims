@@ -2,6 +2,7 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+from datetime import datetime
 
 from trytond.model import ModelSingleton, ModelView, ModelSQL, fields
 from trytond.pyson import Eval
@@ -20,6 +21,16 @@ __all__ = ['NotebookView', 'NotebookViewColumn', 'UserRole', 'UserRoleGroup',
 sequence_names = [
     'entry_sequence', 'sample_sequence', 'service_sequence',
     'results_report_sequence']
+
+
+def get_print_date():
+    Company = Pool().get('company.company')
+
+    date = datetime.now()
+    company_id = Transaction().context.get('company')
+    if company_id:
+        date = Company(company_id).convert_timezone_datetime(date)
+    return date
 
 
 class NotebookView(ModelSQL, ModelView):

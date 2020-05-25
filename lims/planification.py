@@ -15,7 +15,7 @@ from trytond.transaction import Transaction
 from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
-from .results_report import get_print_date
+from .configuration import get_print_date
 
 __all__ = ['Planification', 'PlanificationTechnician',
     'PlanificationTechnicianDetail', 'PlanificationDetail',

@@ -17,6 +17,7 @@ from trytond.report import Report
 from trytond.rpc import RPC
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
+from .configuration import get_print_date
 
 __all__ = ['ResultsReport', 'ResultsReportVersion',
     'ResultsReportVersionDetail', 'ResultsReportVersionDetailSample',
@@ -34,16 +35,6 @@ __all__ = ['ResultsReport', 'ResultsReportVersion',
     'SampleResultsReport', 'ResultsReportSample',
     'ResultsReportAnnulationStart', 'ResultsReportAnnulation', 'ResultReport',
     'GlobalResultReport', 'ResultReportTranscription']
-
-
-def get_print_date():
-    Company = Pool().get('company.company')
-
-    date = datetime.now()
-    company_id = Transaction().context.get('company')
-    if company_id:
-        date = Company(company_id).convert_timezone_datetime(date)
-    return date
 
 
 class ResultsReport(ModelSQL, ModelView):

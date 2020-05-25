@@ -18,8 +18,8 @@ from trytond.transaction import Transaction
 from trytond.report import Report
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
+from .configuration import get_print_date
 from .formula_parser import FormulaParser
-from .results_report import get_print_date
 
 __all__ = ['Notebook', 'NotebookLine', 'NotebookLineAllFields',
     'NotebookLineLaboratoryProfessional',
