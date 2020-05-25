@@ -96,6 +96,18 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
     diagnosis_warning = fields.Function(fields.Boolean('Diagnosis Warning'),
         'get_notebook_field')
 
+    @classmethod
+    def create(cls, vlist):
+        samples = super(ResultsReportVersionDetailSample, cls).create(vlist)
+        for sample in samples:
+            if sample.diagnosis:
+                continue
+            version = sample.version_detail
+            if version.template and version.template.diagnosis_template:
+                sample.diagnosis = version.template.diagnosis_template.content
+                sample.save()
+        return samples
+
     @fields.depends('version_detail',
         '_parent_version_detail.diagnosis_template')
     def on_change_with_diagnosis_states_domain(self, name=None):
