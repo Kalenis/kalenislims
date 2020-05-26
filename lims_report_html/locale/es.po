@@ -10,6 +10,14 @@ msgctxt "field:lims.create_sample.start,resultrange_origin:"
 msgid "Comparison range"
 msgstr "Rango de comparación"
 
+msgctxt "field:lims.notebook,result_template:"
+msgid "Report Template"
+msgstr "Plantilla de Informe"
+
+msgctxt "field:lims.notebook,resultrange_origin:"
+msgid "Comparison range"
+msgstr "Rango de comparación"
+
 msgctxt "field:lims.result_report.template,content:"
 msgid "Content"
 msgstr "Contenido"

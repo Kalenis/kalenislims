@@ -7,6 +7,7 @@ from . import action
 from . import html_template
 from . import sample
 from . import results_report
+from . import notebook
 
 
 def register():
@@ -17,6 +18,7 @@ def register():
         sample.Sample,
         sample.CreateSampleStart,
         results_report.ResultsReportVersionDetail,
+        notebook.Notebook,
         module='lims_report_html', type_='model')
     Pool.register(
         action.ReportTranslationSet,

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/tree/field[@name='department']" position="after">
+        <field name="result_template"/>
+    </xpath>
+</data>
