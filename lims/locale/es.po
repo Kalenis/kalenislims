@@ -2507,6 +2507,10 @@ msgctxt "field:lims.matrix.variety,variety:"
 msgid "Variety"
 msgstr "Variedad"
 
+msgctxt "field:lims.notebook,acceptance_pending:"
+msgid "Pending acceptance"
+msgstr "Pendiente de aceptación"
+
 msgctxt "field:lims.notebook,completion_percentage:"
 msgid "Complete"
 msgstr "Completo"

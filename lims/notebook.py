@@ -104,6 +104,8 @@ class Notebook(ModelSQL, ModelView):
         'Department'), 'get_department', searcher='search_department')
     state = fields.Function(fields.Char('State'), 'get_state',
         searcher='search_state')
+    acceptance_pending = fields.Function(fields.Boolean('Pending acceptance'),
+        'get_acceptance_pending', searcher='search_acceptance_pending')
 
     @classmethod
     def __setup__(cls):
@@ -559,6 +561,53 @@ class Notebook(ModelSQL, ModelView):
         keywords.sort(key=operator.itemgetter('name'))
         ActionKeyword._get_keyword_cache.set(key, keywords)
         return keywords
+
+    @classmethod
+    def get_acceptance_pending(cls, notebooks, name=None):
+        NotebookLine = Pool().get('lims.notebook.line')
+        clause = [
+            ('notebook.fraction.type.report', '=', True),
+            ('report', '=', True),
+            ('annulled', '=', False),
+            ('accepted', '=', False),
+            ['OR',
+                ('result', 'not in', [None, '']),
+                ('literal_result', 'not in', [None, '']),
+                ('result_modifier', 'in', [
+                    'd', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre', 'na']),
+                ],
+            ]
+        result = {}
+        for n in notebooks:
+            result[n.id] = False
+            if NotebookLine.search_count(
+                    clause + [('notebook', '=', n.id)]) > 0:
+                result[n.id] = True
+        return result
+
+    @classmethod
+    def search_acceptance_pending(cls, name, domain=None):
+        NotebookLine = Pool().get('lims.notebook.line')
+        clause = [
+            ('notebook.fraction.type.report', '=', True),
+            ('report', '=', True),
+            ('annulled', '=', False),
+            ('accepted', '=', False),
+            ['OR',
+                ('result', 'not in', [None, '']),
+                ('literal_result', 'not in', [None, '']),
+                ('result_modifier', 'in', [
+                    'd', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre', 'na']),
+                ],
+            ]
+        lines = NotebookLine.search(clause)
+        notebooks_ids = [nl.notebook.id for nl in lines]
+        field, op, operand = domain
+        if (op, operand) in (('=', True), ('!=', False)):
+            return [('id', 'in', notebooks_ids)]
+        elif (op, operand) in (('=', False), ('!=', True)):
+            return [('id', 'not in', notebooks_ids)]
+        return []
 
 
 class NotebookLine(ModelSQL, ModelView):

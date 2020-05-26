@@ -11,5 +11,6 @@
     <field name="date" widget="time" string="Time"/>
     <field name="shared"/>
     <field name="current_location"/>
+    <field name="acceptance_pending"/>
     <field name="fraction_comments" tree_invisible="1"/>
 </tree>
