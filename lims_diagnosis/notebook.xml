@@ -10,5 +10,13 @@
             <field name="name">notebook_line_form</field>
         </record>
 
+<!-- Wizard Repeat Analysis -->
+
+        <record model="ir.ui.view" id="notebook_line_repeat_analysis_start_view_form">
+            <field name="model">lims.notebook.line.repeat_analysis.start</field>
+            <field name="inherit" ref="lims.lims_notebook_line_repeat_analysis_start_view_form"/>
+            <field name="name">notebook_line_repeat_analysis_form</field>
+        </record>
+
     </data>
 </tryton>

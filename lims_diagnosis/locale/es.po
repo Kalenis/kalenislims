@@ -54,6 +54,18 @@ msgctxt "field:lims.notebook.line,diagnosis_warning:"
 msgid "Diagnosis Warning"
 msgstr "Advertencia de diagnóstico"
 
+msgctxt "field:lims.notebook.line,notify_acceptance:"
+msgid "Notify acceptace"
+msgstr "Notificar aceptación"
+
+msgctxt "field:lims.notebook.line,notify_acceptance_user:"
+msgid "Notification User"
+msgstr "Usuario Notificación"
+
+msgctxt "field:lims.notebook.line.repeat_analysis.start,notify_acceptance:"
+msgid "Notify acceptace"
+msgstr "Notificar aceptación"
+
 msgctxt "field:lims.product.type,diagnostician:"
 msgid "Diagnostician"
 msgstr "Diagnosticador"
@@ -103,6 +115,10 @@ msgctxt "help:lims.analysis,not_block_diagnosis:"
 msgid "This analysis is not necessary to begin diagnosing the sample"
 msgstr "Este análisis no es necesario para comenzar a diagnosticar la muestra"
 
+msgctxt "help:lims.notebook.line.repeat_analysis.start,notify_acceptance:"
+msgid "Notify when analysis is ready"
+msgstr "Notificar cuando el análisis esté terminado"
+
 msgctxt "model:ir.action,name:act_diagnosis_state_list"
 msgid "Diagnosis States"
 msgstr "Estados de Diagnóstico"
@@ -123,6 +139,10 @@ msgctxt ""
 "model:ir.action.act_window.domain,name:act_lims_results_report_version_detail_domain_diagnosed"
 msgid "Diagnosed"
 msgstr "Diagnosticado"
+
+msgctxt "model:ir.message,text:lbl_line_acceptance"
+msgid "Notebook Line Acceptance"
+msgstr "Aceptación de Línea de cuaderno"
 
 msgctxt "model:ir.message,text:missing_diagnosis_signature"
 msgid "Signature missing for diagnosis: %(signature)s"

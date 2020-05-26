@@ -10,6 +10,7 @@ from . import sample
 from . import results_report
 from . import notebook
 from . import laboratory
+from . import task
 
 
 def register():
@@ -30,11 +31,15 @@ def register():
         results_report.ChangeSampleDiagnosticianStart,
         notebook.Notebook,
         notebook.NotebookLine,
+        notebook.NotebookLineRepeatAnalysisStart,
         laboratory.NotebookRule,
+        task.AdministrativeTaskTemplate,
+        task.AdministrativeTask,
         module='lims_diagnosis', type_='model')
     Pool.register(
         sample.CreateSample,
         results_report.ChangeSampleDiagnostician,
+        notebook.NotebookLineRepeatAnalysis,
         module='lims_diagnosis', type_='wizard')
     Pool.register(
         results_report.ResultReport,

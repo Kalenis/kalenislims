@@ -4261,27 +4261,7 @@ class NotebookLineRepeatAnalysis(Wizard):
                 if nline.repetition > nline_to_repeat.repetition:
                     nline_to_repeat = nline
 
-            detail_id = nline_to_repeat.analysis_detail.id
-            defaults = {
-                'analysis_detail': detail_id,
-                'service': nline_to_repeat.service.id,
-                'analysis': analysis_id,
-                'analysis_origin': nline_to_repeat.analysis_origin,
-                'urgent': nline_to_repeat.urgent,
-                'repetition': nline_to_repeat.repetition + 1,
-                'laboratory': nline_to_repeat.laboratory.id,
-                'method': nline_to_repeat.method.id,
-                'device': (nline_to_repeat.device.id if nline_to_repeat.device
-                    else None),
-                'initial_concentration': nline_to_repeat.initial_concentration,
-                'decimals': nline_to_repeat.decimals,
-                'report': nline_to_repeat.report,
-                'concentration_level': (nline_to_repeat.concentration_level.id
-                    if nline_to_repeat.concentration_level else None),
-                'results_estimated_waiting': (
-                    nline_to_repeat.results_estimated_waiting),
-                'department': nline_to_repeat.department,
-                }
+            defaults = self._get_repetition_defaults(nline_to_repeat)
             if rm_type:
                 defaults['final_concentration'] = None
                 defaults['initial_unit'] = rm_start_uom
@@ -4290,20 +4270,8 @@ class NotebookLineRepeatAnalysis(Wizard):
                 defaults['quantification_limit'] = None
                 defaults['lower_limit'] = None
                 defaults['upper_limit'] = None
-            else:
-                defaults['final_concentration'] = (
-                    nline_to_repeat.final_concentration)
-                defaults['initial_unit'] = (nline_to_repeat.initial_unit.id if
-                    nline_to_repeat.initial_unit else None)
-                defaults['final_unit'] = (nline_to_repeat.final_unit.id if
-                    nline_to_repeat.final_unit else None)
-                defaults['detection_limit'] = nline_to_repeat.detection_limit
-                defaults['quantification_limit'] = (
-                    nline_to_repeat.quantification_limit)
-                defaults['lower_limit'] = nline_to_repeat.lower_limit
-                defaults['upper_limit'] = nline_to_repeat.upper_limit
             to_create.append(defaults)
-            details_to_update.append(detail_id)
+            details_to_update.append(nline_to_repeat.analysis_detail.id)
 
         Notebook.write([notebook], {
             'lines': [('create', to_create)],
@@ -4318,6 +4286,36 @@ class NotebookLineRepeatAnalysis(Wizard):
                 })
 
         return 'end'
+
+    def _get_repetition_defaults(self, line):
+        defaults = {
+            'analysis_detail': line.analysis_detail.id,
+            'service': line.service.id,
+            'analysis': line.analysis.id,
+            'analysis_origin': line.analysis_origin,
+            'urgent': line.urgent,
+            'repetition': line.repetition + 1,
+            'laboratory': line.laboratory.id,
+            'method': line.method.id,
+            'device': line.device.id if line.device else None,
+            'decimals': line.decimals,
+            'report': line.report,
+            'results_estimated_waiting': (
+                line.results_estimated_waiting),
+            'department': line.department,
+            'concentration_level': (line.concentration_level.id
+                if line.concentration_level else None),
+            'initial_concentration': line.initial_concentration,
+            'final_concentration': line.final_concentration,
+            'initial_unit': (line.initial_unit.id
+                if line.initial_unit else None),
+            'final_unit': line.final_unit.id if line.final_unit else None,
+            'detection_limit': line.detection_limit,
+            'quantification_limit': line.quantification_limit,
+            'lower_limit': line.lower_limit,
+            'upper_limit': line.upper_limit,
+            }
+        return defaults
 
 
 class NotebookAcceptLinesStart(ModelView):
