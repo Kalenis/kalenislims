@@ -54,6 +54,7 @@ class ReportTemplate(metaclass=PoolMeta):
             template.check_diagnosis_macro()
 
     def check_diagnosis_macro(self):
+        return
         if not self.diagnosis_template:
             return
         signature = 'show_diagnosis_content'
