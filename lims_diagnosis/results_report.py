@@ -9,8 +9,8 @@ from trytond.pyson import Eval
 from trytond.transaction import Transaction
 
 __all__ = ['ResultsReportVersionDetail', 'ResultsReportVersionDetailSample',
-    'ResultsReportVersionDetailLine', 'ResultReport',
-    'ChangeSampleDiagnosticianStart', 'ChangeSampleDiagnostician']
+    'ResultsReportVersionDetailLine', 'ChangeSampleDiagnosticianStart',
+    'ChangeSampleDiagnostician']
 
 
 class ResultsReportVersionDetail(metaclass=PoolMeta):
@@ -54,7 +54,8 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         if self.diagnosis_template:
             content = self.diagnosis_template.content
             for sample in self.samples:
-                sample.diagnosis = content
+                if not sample.diagnosis:
+                    sample.diagnosis = content
 
     @classmethod
     def _get_fields_from_samples(cls, samples):
@@ -132,41 +133,6 @@ class ResultsReportVersionDetailLine(metaclass=PoolMeta):
 
     diagnosis_warning = fields.Function(fields.Boolean('Diagnosis Warning'),
         'get_nline_field')
-
-
-class ResultReport(metaclass=PoolMeta):
-    __name__ = 'lims.result_report'
-
-    @classmethod
-    def get_results_report_template(cls, action, detail_id):
-        content, template_id = super(ResultReport,
-            cls).get_results_report_template(action, detail_id)
-        signature = 'show_diagnosis_content'
-        diagnosis_content = (
-            '{%% macro %s(sample) %%}\n%s\n{%% endmacro %%}' % (
-                signature, '{{ sample.diagnosis }}'))
-        return '%s\n\n%s' % (diagnosis_content, content), template_id
-
-    @classmethod
-    def get_context(cls, records, data):
-        ResultsSample = Pool().get('lims.results_report.version.detail.sample')
-
-        report_context = super(ResultReport, cls).get_context(records, data)
-
-        if 'id' in data:
-            report_id = data['id']
-        else:
-            report_id = records[0].id
-        for fraction in report_context['fractions']:
-            detail_sample = ResultsSample.search([
-                ('version_detail', '=', report_id),
-                ('notebook.fraction.sample.number', '=', fraction['fraction']),
-                ], limit=1)
-            if not detail_sample:
-                fraction['diagnosis'] = ''
-                continue
-            fraction['diagnosis'] = detail_sample[0].diagnosis
-        return report_context
 
 
 class ChangeSampleDiagnosticianStart(ModelView):

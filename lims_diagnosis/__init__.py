@@ -41,6 +41,3 @@ def register():
         results_report.ChangeSampleDiagnostician,
         notebook.NotebookLineRepeatAnalysis,
         module='lims_diagnosis', type_='wizard')
-    Pool.register(
-        results_report.ResultReport,
-        module='lims_diagnosis', type_='report')
