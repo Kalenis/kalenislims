@@ -135,9 +135,11 @@ class ResultReport(metaclass=PoolMeta):
                 content = cls.render_results_report_template(action,
                     template_content, record=record, records=[record],
                     data=data)
+            stylesheets = cls.parse_stylesheets(template_content)
             if action.extension == 'pdf':
                 documents.append(PdfGenerator(content, side_margin=1,
-                    extra_vertical_margin=30).render_html())
+                    extra_vertical_margin=30,
+                    stylesheets=stylesheets).render_html())
             else:
                 documents.append(content)
         if action.extension == 'pdf':
@@ -228,6 +230,20 @@ class ResultReport(metaclass=PoolMeta):
             return ''
         b64_image = b64encode(image).decode()
         return 'data:image/png;base64,%s' % b64_image
+
+    @classmethod
+    def parse_stylesheets(cls, template_string):
+        Attachment = Pool().get('ir.attachment')
+        root = lxml_html.fromstring(template_string)
+        res = []
+        # get stylesheets from attachments
+        elems = root.xpath("//div[@id='tryton_styles_container']/div")
+        for elem in elems:
+            css = Attachment.search([('id', '=', int(elem.attrib['id']))])
+            if not css:
+                continue
+            res.append(css[0].data)
+        return res
 
 
 class TemplateTranslations:
