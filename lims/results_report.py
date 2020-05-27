@@ -3079,6 +3079,7 @@ class ResultReport(Report):
                 report = ResultsDetail(data['id'])
             else:
                 report = ResultsDetail(records[0].id)
+        report_context['obj'] = report
 
         company = Company(Transaction().context.get('company'))
         report_context['company'] = company
@@ -3195,6 +3196,7 @@ class ResultReport(Report):
             key = t_line.fraction.id
             if key not in fractions:
                 fractions[key] = {
+                    'obj': line.detail_sample,
                     'fraction': sample.number,
                     'date': sample.date2,
                     'client_description': (
@@ -3246,6 +3248,7 @@ class ResultReport(Report):
                             'lims.msg_not_done')
 
             record = {
+                'obj': line,
                 'order': t_line.analysis.order or 9999,
                 'acredited': cls.get_accreditation(
                     t_line.notebook.product_type,
