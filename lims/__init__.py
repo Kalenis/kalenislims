@@ -313,6 +313,7 @@ def register():
         results_report.SampleResultsReport,
         results_report.OpenResultsReportSample,
         results_report.OpenResultsDetailEntry,
+        results_report.OpenResultsDetailAttachment,
         results_report.ResultsReportAnnulation,
         sample.CountersampleStorage,
         sample.CountersampleStorageRevert,

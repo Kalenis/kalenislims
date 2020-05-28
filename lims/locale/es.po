@@ -6706,6 +6706,10 @@ msgctxt "model:ir.action,name:wiz_print_analysis_pending_inform"
 msgid "Pending analysis Unchecked"
 msgstr "Análisis pendientes sin tildar"
 
+msgctxt "model:ir.action,name:wiz_results_detail_open_attachment"
+msgid "Results Report Attachments"
+msgstr "Adjuntos del Informe de resultados"
+
 msgctxt "model:ir.action,name:wiz_results_detail_open_entry"
 msgid "Results Report Entries"
 msgstr "Ingresos del Informe de resultados"

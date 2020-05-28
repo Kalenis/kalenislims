@@ -34,8 +34,9 @@ __all__ = ['ResultsReport', 'ResultsReportVersion',
     'OpenSamplesPendingReporting', 'GenerateReportStart', 'GenerateReport',
     'PrintResultsReport', 'ServiceResultsReport', 'FractionResultsReport',
     'SampleResultsReport', 'OpenResultsReportSample', 'OpenResultsDetailEntry',
-    'ResultsReportAnnulationStart', 'ResultsReportAnnulation', 'ResultReport',
-    'GlobalResultReport', 'ResultReportTranscription']
+    'OpenResultsDetailAttachment', 'ResultsReportAnnulationStart',
+    'ResultsReportAnnulation', 'ResultReport', 'GlobalResultReport',
+    'ResultReportTranscription']
 
 
 class ResultsReport(ModelSQL, ModelView):
@@ -2975,6 +2976,49 @@ class OpenResultsDetailEntry(Wizard):
             '%s-%s' % (d.report_version.number, d.number)
             for d in details)
         return action, {}
+
+
+class OpenResultsDetailAttachment(Wizard):
+    'Results Report Attachment'
+    __name__ = 'lims.results_report.version.detail.open_attachment'
+
+    start = StateAction('ir.act_attachment_form')
+
+    def do_start(self, action):
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
+
+        active_ids = Transaction().context['active_ids']
+        details = ResultsDetail.browse(active_ids)
+
+        resources = self.get_resource(details)
+
+        action['pyson_domain'] = PYSONEncoder().encode([
+            ('resource', 'in', resources),
+            ])
+        action['name'] += ' (%s)' % ', '.join(
+            '%s-%s' % (d.report_version.number, d.number)
+            for d in details)
+        return action, {}
+
+    def get_resource(self, details):
+        res = []
+        for detail in details:
+            res.append(self._get_resource(detail))
+            for sample in detail.samples:
+                res.append(self._get_resource(sample))
+                res.append(self._get_resource(sample.notebook))
+                res.append(self._get_resource(sample.notebook.fraction))
+                res.append(self._get_resource(
+                    sample.notebook.fraction.sample))
+                res.append(self._get_resource(
+                    sample.notebook.fraction.sample.entry))
+                for line in sample.notebook_lines:
+                    res.append(self._get_resource(line))
+                    res.append(self._get_resource(line.notebook_line))
+        return res
+
+    def _get_resource(self, obj):
+        return '%s,%s' % (obj.__name__, obj.id)
 
 
 class ResultsReportAnnulationStart(ModelView):

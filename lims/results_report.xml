@@ -431,6 +431,18 @@
             <field name="action" ref="wiz_results_detail_open_entry"/>
         </record>
 
+<!-- Wizard Open Results Report Attachment -->
+
+        <record model="ir.action.wizard" id="wiz_results_detail_open_attachment">
+            <field name="name">Results Report Attachments</field>
+            <field name="wiz_name">lims.results_report.version.detail.open_attachment</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_results_detail_open_attachment_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.results_report.version.detail,-1</field>
+            <field name="action" ref="wiz_results_detail_open_attachment"/>
+        </record>
+
 <!-- Wizard Report Annulation -->
 
         <record model="ir.ui.view" id="lims_results_report_annulation_start_view_form">
