@@ -180,6 +180,5 @@ class OpenResultsDetailPrecedent(Wizard):
             ('id', 'in', results_report_ids),
             ])
         action['name'] = '%s (%s)' % (gettext('lims_industry.lbl_precedents'),
-            ', '.join('%s-%s' % (d.report_version.number, d.number)
-            for d in details))
+            ', '.join(d.rec_name for d in details))
         return action, {}

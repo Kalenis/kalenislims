@@ -36,7 +36,5 @@ class OpenResultsDetailSale(Wizard):
         action['pyson_domain'] = PYSONEncoder().encode([
             ('id', 'in', sale_ids),
             ])
-        action['name'] += ' (%s)' % ', '.join(
-            '%s-%s' % (d.report_version.number, d.number)
-            for d in details)
+        action['name'] += ' (%s)' % ', '.join(d.rec_name for d in details)
         return action, {}

@@ -465,6 +465,9 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
             values['number'] = cls.get_next_number(key, d_count[key])
         return super(ResultsReportVersionDetail, cls).create(vlist)
 
+    def get_rec_name(self, name):
+        return '%s-%s' % (self.report_version.number, self.number)
+
     def get_report_section(self, name):
         if self.laboratory:
             return self.laboratory.section
@@ -2972,9 +2975,7 @@ class OpenResultsDetailEntry(Wizard):
         action['pyson_domain'] = PYSONEncoder().encode([
             ('id', 'in', entries_ids),
             ])
-        action['name'] += ' (%s)' % ', '.join(
-            '%s-%s' % (d.report_version.number, d.number)
-            for d in details)
+        action['name'] += ' (%s)' % ', '.join(d.rec_name for d in details)
         return action, {}
 
 
@@ -2995,9 +2996,7 @@ class OpenResultsDetailAttachment(Wizard):
         action['pyson_domain'] = PYSONEncoder().encode([
             ('resource', 'in', resources),
             ])
-        action['name'] += ' (%s)' % ', '.join(
-            '%s-%s' % (d.report_version.number, d.number)
-            for d in details)
+        action['name'] += ' (%s)' % ', '.join(d.rec_name for d in details)
         return action, {}
 
     def get_resource(self, details):
@@ -3154,8 +3153,7 @@ class ResultReport(Report):
         company = Company(Transaction().context.get('company'))
         report_context['company'] = company
 
-        report_context['number'] = "%s-%s" % (report.report_version.number,
-            report.number)
+        report_context['number'] = report.rec_name
         report_context['replace_number'] = ''
         if report.number != '1':
             with Transaction().set_context(language=lang_code):
