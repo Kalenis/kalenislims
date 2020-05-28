@@ -4,8 +4,6 @@
 
 from trytond.model import ModelSQL, ModelView, fields, DictSchemaMixin
 from trytond.pool import PoolMeta
-from trytond.exceptions import UserError
-from trytond.i18n import gettext
 
 __all__ = ['DiagnosisState', 'DiagnosisTemplate', 'DiagnosisTemplateState',
     'ReportTemplate']

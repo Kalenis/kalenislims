@@ -53,9 +53,14 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     def on_change_diagnosis_template(self):
         if self.diagnosis_template:
             content = self.diagnosis_template.content
+            states = {}
+            for state in self.diagnosis_template.diagnosis_states:
+                states[state.name] = '*'
             for sample in self.samples:
                 if not sample.diagnosis:
                     sample.diagnosis = content
+                if not sample.diagnosis_states:
+                    sample.diagnosis_states = states
 
     @classmethod
     def _get_fields_from_samples(cls, samples):
@@ -101,11 +106,21 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
     def create(cls, vlist):
         samples = super(ResultsReportVersionDetailSample, cls).create(vlist)
         for sample in samples:
-            if sample.diagnosis:
+            template = sample.version_detail.template
+            if not template or not template.diagnosis_template:
                 continue
-            version = sample.version_detail
-            if version.template and version.template.diagnosis_template:
-                sample.diagnosis = version.template.diagnosis_template.content
+            save = False
+            if not sample.diagnosis:
+                content = template.diagnosis_template.content
+                sample.diagnosis = content
+                save = True
+            if not sample.diagnosis_states:
+                states = {}
+                for state in template.diagnosis_template.diagnosis_states:
+                    states[state.name] = '*'
+                sample.diagnosis_states = states
+                save = True
+            if save:
                 sample.save()
         return samples
 
