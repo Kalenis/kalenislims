@@ -14,22 +14,6 @@ msgctxt "field:lims.sample,sale_lines:"
 msgid "Quotes"
 msgstr "Presupuestos"
 
-msgctxt "field:lims.sample-sale.line,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.sample-sale.line,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.sample-sale.line,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.sample-sale.line,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.sample-sale.line,sale_line:"
 msgid "Sale Line"
 msgstr "Línea de venta"
@@ -37,14 +21,6 @@ msgstr "Línea de venta"
 msgctxt "field:lims.sample-sale.line,sample:"
 msgid "Sample"
 msgstr "Muestra"
-
-msgctxt "field:lims.sample-sale.line,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.sample-sale.line,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:party.party,internal_code:"
 msgid "Internal Code"
@@ -54,37 +30,13 @@ msgctxt "field:party.party,purchase_order_required:"
 msgid "Purchase order required"
 msgstr "Orden de compra requerida"
 
-msgctxt "field:sale.clause,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:sale.clause,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:sale.clause,description:"
 msgid "Description"
 msgstr "Descripción"
 
-msgctxt "field:sale.clause,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:sale.clause,name:"
 msgid "Name"
 msgstr "Nombre"
-
-msgctxt "field:sale.clause,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:sale.clause,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:sale.clause,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:sale.configuration,email_quotation_body:"
 msgid "Body of the quotation email"
@@ -162,10 +114,6 @@ msgctxt "field:sale.load_services.start,entry:"
 msgid "Entry"
 msgstr "Ingreso"
 
-msgctxt "field:sale.load_services.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:sale.load_services.start,party:"
 msgid "Party"
 msgstr "Entidad"
@@ -173,10 +121,6 @@ msgstr "Entidad"
 msgctxt "field:sale.load_set_group.start,analysis:"
 msgid "Set/Group"
 msgstr "Set/Grupo"
-
-msgctxt "field:sale.load_set_group.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:sale.sale,clauses:"
 msgid "Clauses"
@@ -206,37 +150,17 @@ msgctxt "field:sale.sale-sale.clause,clause:"
 msgid "Clause"
 msgstr "Cláusula"
 
-msgctxt "field:sale.sale-sale.clause,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:sale.sale-sale.clause,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:sale.sale-sale.clause,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:sale.sale-sale.clause,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:sale.sale-sale.clause,sale:"
 msgid "Sale"
 msgstr "Venta"
 
-msgctxt "field:sale.sale-sale.clause,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:sale.sale-sale.clause,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "model:ir.action,name:act_sale_clause"
 msgid "Clauses"
 msgstr "Cláusulas"
+
+msgctxt "model:ir.action,name:wiz_results_detail_open_sale"
+msgid "Results Report Sales"
+msgstr "Presupuestos del Informe de resultados"
 
 msgctxt "model:ir.action,name:wiz_sale_load_services"
 msgid "Load Services from Entry"

@@ -7,6 +7,7 @@ from . import configuration
 from . import party
 from . import sale
 from . import sample
+from . import results_report
 
 
 def register():
@@ -31,4 +32,5 @@ def register():
         sale.SaleLoadServices,
         sale.SaleLoadAnalysis,
         sample.CreateSample,
+        results_report.OpenResultsDetailSale,
         module='lims_sale', type_='wizard')
