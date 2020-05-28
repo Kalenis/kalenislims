@@ -207,9 +207,14 @@ class ResultReport(metaclass=PoolMeta):
     def get_results_report_filters(cls):
 
         @contextfilter
-        def subrender(context, value):
+        def subrender(context, value, subobj=None):
             _template = context.eval_ctx.environment.from_string(value)
-            result = _template.render(**context)
+            if subobj:
+                new_context = {'subobj': subobj}
+                new_context.update(context)
+            else:
+                new_context = context
+            result = _template.render(**new_context)
             if context.eval_ctx.autoescape:
                 result = Markup(result)
             return result
