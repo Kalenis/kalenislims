@@ -10,6 +10,9 @@
         <record model="ir.message" id="lbl_party_incomplete_file">
             <field name="text">Incomplete file in Party</field>
         </record>
+        <record model="ir.message" id="lbl_precedents">
+            <field name="text">Precedents</field>
+        </record>
         <record model="ir.message" id="lbl_sample_insufficient_volume">
             <field name="text">Insufficient volume in Sample</field>
         </record>

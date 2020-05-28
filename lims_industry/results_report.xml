@@ -18,5 +18,17 @@
             <field name="name">results_report_version_detail_line_list</field>
         </record>
 
+<!-- Wizard Open Results Report Precedent -->
+
+        <record model="ir.action.wizard" id="wiz_results_detail_open_precedent">
+            <field name="name">Results Report Precedents</field>
+            <field name="wiz_name">lims.results_report.version.detail.open_precedent</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_results_detail_open_precedent_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.results_report.version.detail,-1</field>
+            <field name="action" ref="wiz_results_detail_open_precedent"/>
+        </record>
+
     </data>
 </tryton>

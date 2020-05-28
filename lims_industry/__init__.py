@@ -45,4 +45,5 @@ def register():
     Pool.register(
         sample.CreateSample,
         sample.EditSample,
+        results_report.OpenResultsDetailPrecedent,
         module='lims_industry', type_='wizard')

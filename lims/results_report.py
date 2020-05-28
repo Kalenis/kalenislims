@@ -2957,7 +2957,7 @@ class OpenResultsDetailEntry(Wizard):
 
     def do_start(self, action):
         pool = Pool()
-        ResultsDetail = Pool().get('lims.results_report.version.detail')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
         ResultsSample = pool.get('lims.results_report.version.detail.sample')
 
         active_ids = Transaction().context['active_ids']

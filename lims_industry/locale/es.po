@@ -609,6 +609,10 @@ msgctxt "model:ir.action,name:wiz_edit_sample"
 msgid "Edit Samples"
 msgstr "Modificar muestras"
 
+msgctxt "model:ir.action,name:wiz_results_detail_open_precedent"
+msgid "Results Report Precedents"
+msgstr "Antecedentes del Informe de resultados"
+
 msgctxt "model:ir.message,text:lbl_component_missing_data"
 msgid "Missing data in Component"
 msgstr "Faltan datos en Componente"
@@ -620,6 +624,10 @@ msgstr "Faltan datos en Equipo"
 msgctxt "model:ir.message,text:lbl_party_incomplete_file"
 msgid "Incomplete file in Party"
 msgstr "Ficha incompleta en Tercero"
+
+msgctxt "model:ir.message,text:lbl_precedents"
+msgid "Precedents"
+msgstr "Antecedentes"
 
 msgctxt "model:ir.message,text:lbl_sample_insufficient_volume"
 msgid "Insufficient volume in Sample"

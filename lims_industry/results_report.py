@@ -3,11 +3,14 @@
 # the full copyright notices and license terms.
 
 from trytond.model import fields
+from trytond.wizard import Wizard, StateAction
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval
+from trytond.pyson import PYSONEncoder, Eval
+from trytond.transaction import Transaction
+from trytond.i18n import gettext
 
 __all__ = ['ResultsReportVersionDetailSample',
-    'ResultsReportVersionDetailLine']
+    'ResultsReportVersionDetailLine', 'OpenResultsDetailPrecedent']
 
 
 class ResultsReportVersionDetailSample(metaclass=PoolMeta):
@@ -136,3 +139,47 @@ class ResultsReportVersionDetailLine(metaclass=PoolMeta):
         if not precedent_line:
             return None
         return cls._get_result(precedent_line[0])
+
+
+class OpenResultsDetailPrecedent(Wizard):
+    'Results Report Precedent'
+    __name__ = 'lims.results_report.version.detail.open_precedent'
+
+    start = StateAction('lims.act_lims_results_report')
+
+    def do_start(self, action):
+        pool = Pool()
+        ResultsReport = pool.get('lims.results_report')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        Notebook = pool.get('lims.notebook')
+
+        active_ids = Transaction().context['active_ids']
+        details = ResultsDetail.browse(active_ids)
+
+        component_ids = []
+        samples = ResultsSample.search([
+            ('version_detail', 'in', active_ids),
+            ])
+        for s in samples:
+            if s.component:
+                component_ids.append(s.component.id)
+
+        notebooks = Notebook.search([
+            ('component', 'in', component_ids),
+            ])
+        notebook_ids = [n.id for n in notebooks]
+
+        reports = ResultsReport.search([
+            ('versions.details.samples.notebook', 'in', notebook_ids),
+            ('versions.details.id', 'not in', active_ids),
+            ])
+        results_report_ids = [r.id for r in reports]
+
+        action['pyson_domain'] = PYSONEncoder().encode([
+            ('id', 'in', results_report_ids),
+            ])
+        action['name'] = '%s (%s)' % (gettext('lims_industry.lbl_precedents'),
+            ', '.join('%s-%s' % (d.report_version.number, d.number)
+            for d in details))
+        return action, {}
