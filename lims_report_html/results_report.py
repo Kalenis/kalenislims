@@ -5,6 +5,7 @@ import os
 from lxml import html as lxml_html
 from base64 import b64encode
 from babel.support import Translations as BabelTranslations
+from jinja2 import contextfilter, Markup
 
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
@@ -194,12 +195,26 @@ class ResultReport(metaclass=PoolMeta):
     @classmethod
     def get_results_report_environment(cls):
         env = cls.get_environment()
+        env.filters.update(cls.get_results_report_filters())
 
         context = Transaction().context
         locale = context.get('locale').split('_')[0]
         translations = TemplateTranslations(locale)
         env.install_gettext_translations(translations)
         return env
+
+    @classmethod
+    def get_results_report_filters(cls):
+
+        @contextfilter
+        def subrender(context, value):
+            _template = context.eval_ctx.environment.from_string(value)
+            result = _template.render(**context)
+            if context.eval_ctx.autoescape:
+                result = Markup(result)
+            return result
+
+        return {'subrender': subrender}
 
     @classmethod
     def parse_images(cls, template_string):
