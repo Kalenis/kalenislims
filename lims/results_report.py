@@ -33,7 +33,7 @@ __all__ = ['ResultsReport', 'ResultsReportVersion',
     'GenerateResultsReport', 'OpenSamplesPendingReportingStart',
     'OpenSamplesPendingReporting', 'GenerateReportStart', 'GenerateReport',
     'PrintResultsReport', 'ServiceResultsReport', 'FractionResultsReport',
-    'SampleResultsReport', 'ResultsReportSample',
+    'SampleResultsReport', 'OpenResultsReportSample', 'OpenResultsDetailEntry',
     'ResultsReportAnnulationStart', 'ResultsReportAnnulation', 'ResultReport',
     'GlobalResultReport', 'ResultReportTranscription']
 
@@ -2922,32 +2922,58 @@ class SampleResultsReport(Wizard):
         return action, {}
 
 
-class ResultsReportSample(Wizard):
+class OpenResultsReportSample(Wizard):
     'Results Report Sample'
-    __name__ = 'lims.results_report.sample'
+    __name__ = 'lims.results_report.open_sample'
 
     start = StateAction('lims.act_lims_sample_list')
 
     def do_start(self, action):
         pool = Pool()
         ResultsReport = pool.get('lims.results_report')
-        NotebookLine = pool.get('lims.notebook.line')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
 
         active_ids = Transaction().context['active_ids']
         results_reports = ResultsReport.browse(active_ids)
 
-        samples_ids = []
-        lines = NotebookLine.search([
-            ('results_report', 'in', active_ids),
+        samples = ResultsSample.search([
+            ('version_detail.report_version.results_report', 'in', active_ids),
             ])
-        if lines:
-            samples_ids = [l.fraction.sample.id for l in lines]
+        samples_ids = [s.notebook.fraction.sample.id for s in samples]
 
         action['pyson_domain'] = PYSONEncoder().encode([
             ('id', 'in', samples_ids),
             ])
         action['name'] += ' (%s)' % ', '.join(
             r.rec_name for r in results_reports)
+        return action, {}
+
+
+class OpenResultsDetailEntry(Wizard):
+    'Results Report Entry'
+    __name__ = 'lims.results_report.version.detail.open_entry'
+
+    start = StateAction('lims.act_lims_entry_list')
+
+    def do_start(self, action):
+        pool = Pool()
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        active_ids = Transaction().context['active_ids']
+        details = ResultsDetail.browse(active_ids)
+
+        samples = ResultsSample.search([
+            ('version_detail', 'in', active_ids),
+            ])
+        entries_ids = [s.notebook.fraction.sample.entry.id for s in samples]
+
+        action['pyson_domain'] = PYSONEncoder().encode([
+            ('id', 'in', entries_ids),
+            ])
+        action['name'] += ' (%s)' % ', '.join(
+            '%s-%s' % (d.report_version.number, d.number)
+            for d in details)
         return action, {}
 
 

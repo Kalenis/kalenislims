@@ -407,16 +407,28 @@
             <field name="action" ref="wiz_lims_sample_results_report"/>
         </record>
 
-<!-- Wizard Results Report Sample -->
+<!-- Wizard Open Results Report Sample -->
 
-        <record model="ir.action.wizard" id="wiz_lims_results_report_sample">
+        <record model="ir.action.wizard" id="wiz_results_report_open_sample">
             <field name="name">Results Report Samples</field>
-            <field name="wiz_name">lims.results_report.sample</field>
+            <field name="wiz_name">lims.results_report.open_sample</field>
         </record>
-        <record model="ir.action.keyword" id="lims_results_report_sample_keyword">
+        <record model="ir.action.keyword" id="wiz_results_report_open_sample_keyword">
             <field name="keyword">form_relate</field>
             <field name="model">lims.results_report,-1</field>
-            <field name="action" ref="wiz_lims_results_report_sample"/>
+            <field name="action" ref="wiz_results_report_open_sample"/>
+        </record>
+
+<!-- Wizard Open Results Report Entry -->
+
+        <record model="ir.action.wizard" id="wiz_results_detail_open_entry">
+            <field name="name">Results Report Entries</field>
+            <field name="wiz_name">lims.results_report.version.detail.open_entry</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_results_detail_open_entry_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.results_report.version.detail,-1</field>
+            <field name="action" ref="wiz_results_detail_open_entry"/>
         </record>
 
 <!-- Wizard Report Annulation -->
