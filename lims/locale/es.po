@@ -5048,6 +5048,25 @@ msgctxt "field:lims.results_report.version.detail.line,urgent:"
 msgid "Urgent"
 msgstr "Urgente"
 
+msgctxt ""
+"field:lims.results_report.version.detail.new_version.start,corrective:"
+msgid "Corrective"
+msgstr "Rectificativo"
+
+msgctxt ""
+"field:lims.results_report.version.detail.new_version.start,preliminary:"
+msgid "Preliminary"
+msgstr "Preliminar"
+
+msgctxt ""
+"field:lims.results_report.version.detail.new_version.start,report_created:"
+msgid "Report created"
+msgstr "Informe creado"
+
+msgctxt "field:lims.results_report.version.detail.new_version.start,type:"
+msgid "Type"
+msgstr "Tipo"
+
 msgctxt "field:lims.results_report.version.detail.sample,matrix:"
 msgid "Matrix"
 msgstr "Matriz"
@@ -6726,6 +6745,10 @@ msgctxt ""
 "model:ir.action,name:wiz_results_report_version_detail_line_repeat_analysis"
 msgid "Repeat Analysis"
 msgstr "Repetir análisis"
+
+msgctxt "model:ir.action,name:wiz_results_report_version_detail_new_version"
+msgid "New Results Report Version"
+msgstr "Nueva versión de Informe de resultados"
 
 msgctxt "model:ir.action,name:wizard_device_relate_analysis"
 msgid "Relate Analysis to Device"
@@ -8783,6 +8806,10 @@ msgstr "Detalle de versión de informe de resultados"
 msgctxt "model:lims.results_report.version.detail.line,name:"
 msgid "Results Report Version Detail Line"
 msgstr "Línea de detalle de versión de informe de resultados"
+
+msgctxt "model:lims.results_report.version.detail.new_version.start,name:"
+msgid "New Results Report Version"
+msgstr "Nueva versión de Informe de resultados"
 
 msgctxt "model:lims.results_report.version.detail.sample,name:"
 msgid "Results Report Version Detail Sample"
@@ -11871,6 +11898,18 @@ msgctxt "selection:lims.results_report.version.detail,type:"
 msgid "Preliminary"
 msgstr "Preliminar"
 
+msgctxt "selection:lims.results_report.version.detail.new_version.start,type:"
+msgid "Complementary"
+msgstr "Complementario"
+
+msgctxt "selection:lims.results_report.version.detail.new_version.start,type:"
+msgid "Corrective"
+msgstr "Rectificativo"
+
+msgctxt "selection:lims.results_report.version.detail.new_version.start,type:"
+msgid "Preliminary"
+msgstr "Preliminar"
+
 msgctxt "selection:lims.rule,action:"
 msgid "Add Analysis"
 msgstr "Añadir análisis"
@@ -13088,6 +13127,10 @@ msgid "Fraction comments"
 msgstr "Observaciones de la fracción"
 
 msgctxt "view:lims.results_report.version.detail:"
+msgid "New Version"
+msgstr "Nueva versión"
+
+msgctxt "view:lims.results_report.version.detail:"
 msgid "Release"
 msgstr "Publicar"
 
@@ -14079,6 +14122,16 @@ msgctxt ""
 "wizard_button:lims.results_report.version.detail.line.repeat_analysis,start,repeat:"
 msgid "Repeat"
 msgstr "Repetir"
+
+msgctxt ""
+"wizard_button:lims.results_report.version.detail.new_version,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt ""
+"wizard_button:lims.results_report.version.detail.new_version,start,generate:"
+msgid "Generate"
+msgstr "Generar"
 
 msgctxt "wizard_button:lims.results_report_annulation,start,annul:"
 msgid "Annul"

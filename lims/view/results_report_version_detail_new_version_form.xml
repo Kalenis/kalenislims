@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<form>
+    <label name="type"/>
+    <field name="type"/>
+    <label name="corrective"/>
+    <field name="corrective" xexpand="0"/>
+    <group id="invisible" colspan="4" col="1">
+        <field name="preliminary" invisible="1"/>
+    </group>
+</form>

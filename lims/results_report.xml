@@ -456,6 +456,19 @@
             <field name="wiz_name">lims.results_report_annulation</field>
         </record>
 
+<!-- Wizard New Results Report Version -->
+
+        <record model="ir.ui.view" id="results_report_version_detail_new_version_start_form">
+            <field name="model">lims.results_report.version.detail.new_version.start</field>
+            <field name="type">form</field>
+            <field name="name">results_report_version_detail_new_version_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_results_report_version_detail_new_version">
+            <field name="name">New Results Report Version</field>
+            <field name="wiz_name">lims.results_report.version.detail.new_version</field>
+        </record>
+
 <!-- Wizard Repeat Analysis -->
 
         <record model="ir.action.wizard"

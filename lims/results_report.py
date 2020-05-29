@@ -35,7 +35,8 @@ __all__ = ['ResultsReport', 'ResultsReportVersion',
     'PrintResultsReport', 'ServiceResultsReport', 'FractionResultsReport',
     'SampleResultsReport', 'OpenResultsReportSample', 'OpenResultsDetailEntry',
     'OpenResultsDetailAttachment', 'ResultsReportAnnulationStart',
-    'ResultsReportAnnulation', 'ResultReport', 'GlobalResultReport',
+    'ResultsReportAnnulation', 'NewResultsReportVersionStart',
+    'NewResultsReportVersion', 'ResultReport', 'GlobalResultReport',
     'ResultReportTranscription']
 
 
@@ -409,6 +410,10 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                 'invisible': Or(Eval('state') != 'released', ~Eval('valid')),
                 'depends': ['state', 'valid'],
                 },
+            'new_version': {
+                'invisible': Or(Eval('state') != 'released', ~Eval('valid')),
+                'depends': ['state', 'valid'],
+                },
             })
 
     @classmethod
@@ -731,6 +736,12 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                 EntryDetailAnalysis.write(entry_details, {
                     'state': 'done',
                     })
+
+    @classmethod
+    @ModelView.button_action(
+        'lims.wiz_results_report_version_detail_new_version')
+    def new_version(cls, details):
+        pass
 
     def get_date(self, name):
         pool = Pool()
@@ -2357,8 +2368,8 @@ class GenerateReportStart(ModelView):
         ], 'Type', states={'readonly': True})
     preliminary = fields.Boolean('Preliminary')
     corrective = fields.Boolean('Corrective',
-        states={'readonly': ~Eval('type').in_(
-            ['complementary', 'corrective'])},
+        states={'invisible': ~Eval('type').in_([
+            'complementary', 'corrective'])},
         depends=['type'])
     reports_created = fields.One2Many('lims.results_report.version.detail',
         None, 'Reports created')
@@ -3019,6 +3030,82 @@ class ResultsReportAnnulation(Wizard):
                 'annulment_date': datetime.now(),
                 'annulment_reason': self.start.annulment_reason,
                 })
+        return 'end'
+
+
+class NewResultsReportVersionStart(ModelView):
+    'New Results Report Version'
+    __name__ = 'lims.results_report.version.detail.new_version.start'
+
+    type = fields.Selection([
+        ('preliminary', 'Preliminary'),
+        ('complementary', 'Complementary'),
+        ('corrective', 'Corrective'),
+        ], 'Type', states={'readonly': True})
+    preliminary = fields.Boolean('Preliminary')
+    corrective = fields.Boolean('Corrective',
+        states={'invisible': ~Eval('type').in_([
+            'complementary', 'corrective'])},
+        depends=['type'])
+    report_created = fields.Many2One('lims.results_report.version.detail',
+        'Report created')
+
+    @fields.depends('preliminary', 'corrective')
+    def on_change_with_type(self, name=None):
+        if self.preliminary:
+            return 'preliminary'
+        if self.corrective:
+            return 'corrective'
+        return 'complementary'
+
+
+class NewResultsReportVersion(Wizard):
+    'New Results Report Version'
+    __name__ = 'lims.results_report.version.detail.new_version'
+
+    start = StateView('lims.results_report.version.detail.new_version.start',
+        'lims.results_report_version_detail_new_version_start_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Generate', 'generate', 'tryton-ok', default=True),
+            ])
+    generate = StateTransition()
+    open_ = StateAction('lims.act_lims_results_report_version_detail')
+
+    def default_start(self, fields):
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
+
+        res = {
+            'type': 'complementary',
+            'preliminary': False,
+            'corrective': False,
+            }
+        valid_detail = ResultsDetail(Transaction().context['active_id'])
+        if valid_detail.type == 'preliminary':
+            res['preliminary'] = True
+            res['type'] = 'preliminary'
+        return res
+
+    def transition_generate(self):
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
+
+        valid_detail = ResultsDetail(Transaction().context['active_id'])
+        defaults = {
+            'report_version': valid_detail.report_version.id,
+            'type': self.start.type,
+            }
+        defaults.update(ResultsDetail._get_fields_from_detail(
+            valid_detail))
+        new_version, = ResultsDetail.create([defaults])
+        self.start.report_created = new_version
+        return 'open_'
+
+    def do_open_(self, action):
+        action['pyson_domain'] = PYSONEncoder().encode([
+            ('id', '=', self.start.report_created.id),
+            ])
+        return action, {}
+
+    def transition_open_(self):
         return 'end'
 
 

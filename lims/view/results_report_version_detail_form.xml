@@ -70,6 +70,7 @@
         <button name="revise" string="Revised"/>
         <button name="release" string="Release"/>
         <button name="release_all_lang" string="Release for all languages"/>
+        <button name="new_version" string="New Version"/>
         <button name="annul" string="Annull"/>
     </group>
     <field name="report_cache" colspan="4" invisible="1"/>
