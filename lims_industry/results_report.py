@@ -85,9 +85,9 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         return precedent_sample[0].diagnosis
 
     @classmethod
-    def _get_sample_copy(cls, sample):
+    def _get_fields_from_sample(cls, sample):
         sample_default = super(ResultsReportVersionDetailSample,
-            cls)._get_sample_copy(sample)
+            cls)._get_fields_from_sample(sample)
         sample_default['precedent1'] = (sample.precedent1 and
             sample.precedent1 or None)
         sample_default['precedent2'] = (sample.precedent2 and
