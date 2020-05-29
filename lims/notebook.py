@@ -104,6 +104,9 @@ class Notebook(ModelSQL, ModelView):
         'Department'), 'get_department', searcher='search_department')
     state = fields.Function(fields.Char('State'), 'get_state',
         searcher='search_state')
+    lines_pending_reporting = fields.Function(fields.One2Many(
+        'lims.notebook.line', 'notebook', 'Lines'),
+        'get_lines_pending_reporting')
     acceptance_pending = fields.Function(fields.Boolean('Pending acceptance'),
         'get_acceptance_pending', searcher='search_acceptance_pending')
 
@@ -561,6 +564,59 @@ class Notebook(ModelSQL, ModelView):
         keywords.sort(key=operator.itemgetter('name'))
         ActionKeyword._get_keyword_cache.set(key, keywords)
         return keywords
+
+    def get_lines_pending_reporting(self, name=None):
+        laboratory_id = Transaction().context.get(
+            'samples_pending_reporting_laboratory', None)
+        if not laboratory_id:
+            return []
+        lines = self._get_lines_for_reporting(laboratory_id, 'complete')
+        return [l.id for l in lines]
+
+    def _get_lines_for_reporting(self, laboratory_id, state):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
+        NotebookLine = pool.get('lims.notebook.line')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        draft_lines_ids = []
+        draft_lines = ResultsLine.search([
+            ('detail_sample.notebook', '=', self.id),
+            ('detail_sample.version_detail.laboratory', '=', laboratory_id),
+            ('detail_sample.version_detail.state', 'in', ['draft', 'revised']),
+            ('detail_sample.version_detail.type', '!=', 'preliminary'),
+            ])
+        if draft_lines:
+            draft_lines_ids = [dl.notebook_line.id for dl in draft_lines]
+
+        clause = [
+            ('notebook', '=', self.id),
+            ('laboratory', '=', laboratory_id),
+            ('notebook.fraction.type.report', '=', True),
+            ('report', '=', True),
+            ('annulled', '=', False),
+            ('results_report', '=', None),
+            ('id', 'not in', draft_lines_ids),
+            ]
+        if state == 'in_progress':
+            clause.extend(self._get_samples_in_progress_clause())
+        else:
+            clause.append(('accepted', '=', True))
+            excluded_notebooks = self._get_excluded_notebooks(
+                [self.id], laboratory_id)
+            if excluded_notebooks:
+                for n_id, grouper in excluded_notebooks:
+                    cursor.execute('SELECT nl.id '
+                        'FROM "' + NotebookLine._table + '" nl '
+                        'INNER JOIN "' + EntryDetailAnalysis._table + '" d '
+                        'ON d.id = nl.analysis_detail '
+                        'WHERE nl.notebook = %s AND d.report_grouper = %s',
+                        (n_id, grouper))
+                    excluded_notebook_lines = [x[0] for x in cursor.fetchall()]
+                    clause.append(('id', 'not in', excluded_notebook_lines))
+
+        return NotebookLine.search(clause)
 
     @classmethod
     def get_acceptance_pending(cls, notebooks, name=None):

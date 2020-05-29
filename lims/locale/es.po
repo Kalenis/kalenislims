@@ -2559,6 +2559,10 @@ msgctxt "field:lims.notebook,lines:"
 msgid "Lines"
 msgstr "Líneas"
 
+msgctxt "field:lims.notebook,lines_pending_reporting:"
+msgid "Lines"
+msgstr "Líneas"
+
 msgctxt "field:lims.notebook,matrix:"
 msgid "Matrix"
 msgstr "Matriz"
@@ -12728,12 +12732,20 @@ msgid "Laboratory Notebook Views"
 msgstr "Vistas de cuaderno de laboratorio"
 
 msgctxt "view:lims.notebook:"
+msgid "All Lines"
+msgstr "Todas las líneas"
+
+msgctxt "view:lims.notebook:"
 msgid "Fraction Comments"
 msgstr "Comentarios"
 
 msgctxt "view:lims.notebook:"
 msgid "Lines"
 msgstr "Líneas"
+
+msgctxt "view:lims.notebook:"
+msgid "Lines Pending Reporting"
+msgstr "Líneas pendientes de informar"
 
 msgctxt "view:lims.notebook:"
 msgid "Time"

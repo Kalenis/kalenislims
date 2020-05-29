@@ -2507,7 +2507,7 @@ class GenerateReport(Wizard):
         if self.start.report:  # Result report selected
             samples = []
             for notebook in self.start.notebooks:
-                lines = self._get_notebook_lines(notebook.id, laboratory_id,
+                lines = notebook._get_lines_for_reporting(laboratory_id,
                     state)
                 notebook_lines = [{'notebook_line': line.id} for line in lines]
                 samples.append({
@@ -2586,7 +2586,7 @@ class GenerateReport(Wizard):
                             notebook.fraction.entry.english_report),
                         'lines': [],
                         }
-                lines = self._get_notebook_lines(notebook.id, laboratory_id,
+                lines = notebook._get_lines_for_reporting(laboratory_id,
                     state)
                 parties[key]['lines'].extend(lines)
 
@@ -2645,52 +2645,6 @@ class GenerateReport(Wizard):
 
         self.start.reports_created = reports_created
         return 'open_'
-
-    def _get_notebook_lines(self, notebook_id, laboratory_id, state):
-        cursor = Transaction().connection.cursor()
-        pool = Pool()
-        ResultsLine = pool.get('lims.results_report.version.detail.line')
-        NotebookLine = pool.get('lims.notebook.line')
-        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
-        Notebook = pool.get('lims.notebook')
-
-        draft_lines_ids = []
-        draft_lines = ResultsLine.search([
-            ('detail_sample.notebook', '=', notebook_id),
-            ('detail_sample.version_detail.laboratory', '=', laboratory_id),
-            ('detail_sample.version_detail.state', 'in', ['draft', 'revised']),
-            ('detail_sample.version_detail.type', '!=', 'preliminary'),
-            ])
-        if draft_lines:
-            draft_lines_ids = [dl.notebook_line.id for dl in draft_lines]
-
-        clause = [
-            ('notebook', '=', notebook_id),
-            ('laboratory', '=', laboratory_id),
-            ('notebook.fraction.type.report', '=', True),
-            ('report', '=', True),
-            ('annulled', '=', False),
-            ('results_report', '=', None),
-            ('id', 'not in', draft_lines_ids),
-            ]
-        if state == 'in_progress':
-            clause.extend(Notebook._get_samples_in_progress_clause())
-        else:
-            clause.append(('accepted', '=', True))
-            excluded_notebooks = Notebook._get_excluded_notebooks(
-                [notebook_id], laboratory_id)
-            if excluded_notebooks:
-                for n_id, grouper in excluded_notebooks:
-                    cursor.execute('SELECT nl.id '
-                        'FROM "' + NotebookLine._table + '" nl '
-                        'INNER JOIN "' + EntryDetailAnalysis._table + '" d '
-                        'ON d.id = nl.analysis_detail '
-                        'WHERE nl.notebook = %s AND d.report_grouper = %s',
-                        (n_id, grouper))
-                    excluded_notebook_lines = [x[0] for x in cursor.fetchall()]
-                    clause.append(('id', 'not in', excluded_notebook_lines))
-
-        return NotebookLine.search(clause)
 
     def _get_results_report(self, laboratory_id, reports, versions, details,
             samples, append=True):
