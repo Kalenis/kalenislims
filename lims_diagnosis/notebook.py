@@ -61,6 +61,8 @@ class NotebookLine(metaclass=PoolMeta):
         AdministrativeTask = Pool().get('lims.administrative.task')
         res = []
         for line in lines:
+            if not line.notify_acceptance:
+                continue
             if AdministrativeTask.search([
                     ('type', '=', 'line_acceptance'),
                     ('origin', '=', '%s,%s' % (cls.__name__, line.id)),
