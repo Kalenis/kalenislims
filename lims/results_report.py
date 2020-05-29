@@ -928,9 +928,10 @@ class ResultsReportVersionDetailSample(ModelSQL, ModelView):
     @classmethod
     def _get_fields_from_sample(cls, sample):
         sample_default = {}
-        notebook_lines = [
-            {'notebook_line': nline.notebook_line.id}
-            for nline in sample.notebook_lines]
+        notebook_lines = [{
+            'notebook_line': nline.notebook_line.id,
+            'hide': nline.hide,
+            } for nline in sample.notebook_lines]
         if notebook_lines:
             sample_default['notebook_lines'] = [('create', notebook_lines)]
         return sample_default
