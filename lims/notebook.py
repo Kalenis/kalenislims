@@ -1200,7 +1200,7 @@ class NotebookLine(ModelSQL, ModelView):
                 ])
             if report_lines:
                 self.accepted = True
-                report_detail = report_lines[0].version_detail
+                report_detail = report_lines[0].detail_sample.version_detail
                 self.not_accepted_message = gettext('lims.msg_accepted_1',
                     report=report_detail.report_version.results_report.number)
             else:
