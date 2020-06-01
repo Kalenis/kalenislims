@@ -1152,6 +1152,7 @@ class NotebookLine(ModelSQL, ModelView):
         'converted_result', 'literal_result', 'result_modifier',
         'converted_result_modifier', 'end_date', 'acceptance_date')
     def on_change_accepted(self):
+        #ResultsLine = Pool().get('lims.results_report.version.detail.line')
         self.not_accepted_message = ''
         if self.accepted:
             if not self.report:
@@ -1193,18 +1194,18 @@ class NotebookLine(ModelSQL, ModelView):
                 else:
                     self.acceptance_date = datetime.now()
         else:
-            ResultsLine = Pool().get('lims.results_report.version.detail.line')
-            report_lines = ResultsLine.search([
-                ('notebook_line', '=', self.id),
-                ('detail_sample.version_detail.state', '!=', 'annulled'),
-                ])
-            if report_lines:
-                self.accepted = True
-                report_detail = report_lines[0].detail_sample.version_detail
-                self.not_accepted_message = gettext('lims.msg_accepted_1',
-                    report=report_detail.report_version.results_report.number)
-            else:
-                self.acceptance_date = None
+            #report_lines = ResultsLine.search([
+                #('notebook_line', '=', self.id),
+                #('detail_sample.version_detail.state', '!=', 'annulled'),
+                #])
+            #if report_lines:
+                #self.accepted = True
+                #report_detail = report_lines[0].detail_sample.version_detail
+                #self.not_accepted_message = gettext('lims.msg_accepted_1',
+                    #report=report_detail.report_version.results_report.number)
+            #else:
+                #self.acceptance_date = None
+            self.acceptance_date = None
 
     @fields.depends('result_modifier', 'annulled', 'annulment_date', 'report')
     def on_change_result_modifier(self):
