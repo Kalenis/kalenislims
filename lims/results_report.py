@@ -2783,7 +2783,7 @@ class PrintResultsReport(Wizard):
         return 'print_'
 
     def _get_global_report(self, details, english_report=False):
-        merger = PdfFileMerger()
+        merger = PdfFileMerger(strict=False)
         if english_report:
             for detail in details:
                 filedata = BytesIO(detail.report_cache_eng)
