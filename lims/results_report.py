@@ -610,26 +610,6 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         ResultsSample = Pool().get('lims.results_report.version.detail.sample')
         cls.link_notebook_lines(details)
         for detail in details:
-            # copy samples from previous valid version
-            valid_details = cls.search([
-                ('report_version', '=', detail.report_version.id),
-                ('valid', '=', True),
-                ])
-            for vd in valid_details:
-                for valid_sample in vd.samples:
-                    sample_default = ResultsSample._get_fields_from_sample(
-                        valid_sample)
-                    existing_sample = ResultsSample.search([
-                        ('version_detail', '=', detail.id),
-                        ('notebook', '=', valid_sample.notebook.id),
-                        ], limit=1)
-                    if not existing_sample:
-                        sample_default['version_detail'] = detail.id
-                        sample_default['notebook'] = valid_sample.notebook.id
-                        ResultsSample.create([sample_default])
-                    else:
-                        ResultsSample.write(existing_sample, sample_default)
-
             # delete samples from previous valid version
             old_samples = ResultsSample.search([
                 ('version_detail.report_version', '=',
@@ -638,9 +618,13 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                 ])
             ResultsSample.delete(old_samples)
 
-            cls.write(valid_details, {
-                'valid': False,
-                })
+            # invalidate previous valid version
+            valid_details = cls.search([
+                ('report_version', '=', detail.report_version.id),
+                ('valid', '=', True),
+                ])
+            cls.write(valid_details, {'valid': False})
+
             cls.write([detail], {
                 'state': 'released',
                 'valid': True,
@@ -679,6 +663,52 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                 EntryDetailAnalysis.write(entry_details, {
                     'state': 'reported',
                     })
+
+    @classmethod
+    def update_from_valid_version(cls, details):
+        ResultsSample = Pool().get('lims.results_report.version.detail.sample')
+
+        for detail in details:
+            valid_details = cls.search([
+                ('id', '!=', detail.id),
+                ('report_version', '=', detail.report_version.id),
+                ('valid', '=', True),
+                ], limit=1)
+            if not valid_details:
+                continue
+            valid_detail = valid_details[0]
+
+            detail_default = cls._get_fields_from_detail(valid_detail)
+            detail_default['comments'] = str(valid_detail.comments or '')
+            cls.write([detail], detail_default)
+
+            # copy samples from previous valid version
+            for valid_sample in valid_detail.samples:
+                sample_default = ResultsSample._get_fields_from_sample(
+                    valid_sample)
+                existing_sample = ResultsSample.search([
+                    ('version_detail', '=', detail.id),
+                    ('notebook', '=', valid_sample.notebook.id),
+                    ], limit=1)
+                if not existing_sample:
+                    sample_default['version_detail'] = detail.id
+                    sample_default['notebook'] = valid_sample.notebook.id
+                    ResultsSample.create([sample_default])
+                else:
+                    ResultsSample.write(existing_sample, sample_default)
+
+    @classmethod
+    def _get_fields_from_detail(cls, detail):
+        detail_default = {}
+        detail_default['report_type_forced'] = detail.report_type_forced
+        detail_default['report_result_type_forced'] = (
+            detail.report_result_type_forced)
+        if detail.signer:
+            detail_default['signer'] = detail.signer.id
+        if detail.resultrange_origin:
+            detail_default['resultrange_origin'] = detail.resultrange_origin.id
+        detail_default['comments'] = str(detail.comments or '')
+        return detail_default
 
     @classmethod
     @ModelView.button
@@ -891,19 +921,6 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
             detail_default['report_type_forced'] = 'polisample'
         else:
             detail_default['report_type_forced'] = 'normal'
-        return detail_default
-
-    @classmethod
-    def _get_fields_from_detail(cls, detail):
-        detail_default = {}
-        detail_default['report_type_forced'] = detail.report_type_forced
-        detail_default['report_result_type_forced'] = (
-            detail.report_result_type_forced)
-        if detail.signer:
-            detail_default['signer'] = detail.signer.id
-        if detail.resultrange_origin:
-            detail_default['resultrange_origin'] = detail.resultrange_origin.id
-        detail_default['comments'] = str(detail.comments or '')
         return detail_default
 
 
@@ -1926,24 +1943,8 @@ class GenerateResultsReport(Wizard):
                         ], limit=1)
                     if not draft_detail:
                         details['report_version'] = actual_version.id
-                        valid_detail = ResultsDetail.search([
-                            ('report_version', '=', actual_version.id),
-                            ('valid', '=', True),
-                            ], limit=1)
-                        if valid_detail:
-                            valid_detail = valid_detail[0]
-                            details['report_type_forced'] = (
-                                valid_detail.report_type_forced)
-                            details['report_result_type_forced'] = (
-                                valid_detail.report_result_type_forced)
-                            if valid_detail.signer:
-                                details['signer'] = valid_detail.signer.id
-                            if valid_detail.resultrange_origin:
-                                details['resultrange_origin'] = (
-                                    valid_detail.resultrange_origin.id)
-                            details['comments'] = str(
-                                valid_detail.comments or '')
                         detail, = ResultsDetail.create([details])
+                        ResultsDetail.update_from_valid_version([detail])
                         reports_details = [detail.id]
                     else:
                         draft_detail = draft_detail[0]
@@ -2006,24 +2007,8 @@ class GenerateResultsReport(Wizard):
                         ], limit=1)
                     if not draft_detail:
                         details['report_version'] = actual_version.id
-                        valid_detail = ResultsDetail.search([
-                            ('report_version', '=', actual_version.id),
-                            ('valid', '=', True),
-                            ], limit=1)
-                        if valid_detail:
-                            valid_detail = valid_detail[0]
-                            details['report_type_forced'] = (
-                                valid_detail.report_type_forced)
-                            details['report_result_type_forced'] = (
-                                valid_detail.report_result_type_forced)
-                            if valid_detail.signer:
-                                details['signer'] = valid_detail.signer.id
-                            if valid_detail.resultrange_origin:
-                                details['resultrange_origin'] = (
-                                    valid_detail.resultrange_origin.id)
-                            details['comments'] = str(
-                                valid_detail.comments or '')
                         detail, = ResultsDetail.create([details])
+                        ResultsDetail.update_from_valid_version([detail])
                         reports_details = [detail.id]
                     else:
                         draft_detail = draft_detail[0]
@@ -2256,25 +2241,8 @@ class GenerateResultsReport(Wizard):
             ], limit=1)
         if not draft_detail:
             details['report_version'] = actual_version.id
-            valid_detail = ResultsDetail.search([
-                ('report_version', '=', actual_version.id),
-                ('valid', '=', True),
-                ], limit=1)
-            if valid_detail:
-                valid_detail = valid_detail[0]
-                if details.get('report_type_forced') != 'none':
-                    details['report_type_forced'] = (
-                        valid_detail.report_type_forced)
-                details['report_result_type_forced'] = (
-                    valid_detail.report_result_type_forced)
-                if valid_detail.signer:
-                    details['signer'] = valid_detail.signer.id
-                if valid_detail.resultrange_origin:
-                    details['resultrange_origin'] = (
-                        valid_detail.resultrange_origin.id)
-                details['comments'] = str(
-                    valid_detail.comments or '')
             detail, = ResultsDetail.create([details])
+            ResultsDetail.update_from_valid_version([detail])
             reports_details = [detail.id]
             return reports_details
 
@@ -2550,15 +2518,8 @@ class GenerateReport(Wizard):
                     ], limit=1)
                 if not draft_detail:
                     details['report_version'] = actual_version.id
-                    valid_detail = ResultsDetail.search([
-                        ('report_version', '=', actual_version.id),
-                        ('valid', '=', True),
-                        ], limit=1)
-                    if valid_detail:
-                        valid_detail = valid_detail[0]
-                        details.update(ResultsDetail._get_fields_from_detail(
-                            valid_detail))
                     detail, = ResultsDetail.create([details])
+                    ResultsDetail.update_from_valid_version([detail])
                     reports_details = [detail.id]
                 else:
                     draft_detail = draft_detail[0]
@@ -2702,15 +2663,8 @@ class GenerateReport(Wizard):
             ], limit=1)
         if not draft_detail:
             details['report_version'] = actual_version.id
-            valid_detail = ResultsDetail.search([
-                ('report_version', '=', actual_version.id),
-                ('valid', '=', True),
-                ], limit=1)
-            if valid_detail:
-                valid_detail = valid_detail[0]
-                details.update(ResultsDetail._get_fields_from_detail(
-                    valid_detail))
             detail, = ResultsDetail.create([details])
+            ResultsDetail.update_from_valid_version([detail])
             reports_details = [detail.id]
             return reports_details
 
@@ -3093,9 +3047,8 @@ class NewResultsReportVersion(Wizard):
             'report_version': valid_detail.report_version.id,
             'type': self.start.type,
             }
-        defaults.update(ResultsDetail._get_fields_from_detail(
-            valid_detail))
         new_version, = ResultsDetail.create([defaults])
+        ResultsDetail.update_from_valid_version([new_version])
         self.start.report_created = new_version
         return 'open_'
 
@@ -3268,11 +3221,8 @@ class ResultReport(Report):
         methods = {}
         pnt_methods = {}
         notebook_lines = ResultsLine.search([
+            ('detail_sample.version_detail.id', '=', report.id),
             ('hide', '=', False),
-            ('detail_sample.version_detail.report_version.id', '=',
-                report.report_version.id), ['OR',
-                ('detail_sample.version_detail.id', '=', report.id),
-                ('detail_sample.version_detail.valid', '=', True)],
             ], order=[('detail_sample', 'ASC')])
         if not notebook_lines:
             raise UserError(gettext('lims.msg_empty_report'))
