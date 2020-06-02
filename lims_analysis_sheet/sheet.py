@@ -166,7 +166,7 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
     template = fields.Many2One('lims.template.analysis_sheet', 'Template',
         required=True, ondelete='CASCADE', select=True)
     analysis = fields.Many2One('lims.analysis', 'Analysis',
-        required=True, select=True)
+        required=True, select=True, domain=[('type', '=', 'analysis')])
     method = fields.Many2One('lims.lab.method', 'Method')
     expressions = fields.One2Many(
         'lims.template.analysis_sheet.analysis.expression',
@@ -431,20 +431,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     @Workflow.transition('active')
     def activate(cls, sheets):
         pool = Pool()
-        Analysis = pool.get('lims.analysis')
         Data = pool.get('lims.interface.data')
         NotebookLine = pool.get('lims.notebook.line')
         Compilation = pool.get('lims.interface.compilation')
 
         for s in sheets:
-            t_analysis_ids = []
-            for t_analysis in s.template.analysis:
-                if t_analysis.analysis.type == 'analysis':
-                    t_analysis_ids.append(t_analysis.analysis.id)
-                else:
-                    t_analysis_ids.extend(
-                        Analysis.get_included_analysis_analysis(
-                            t_analysis.analysis.id))
+            t_analysis_ids = [ta.analysis.id for ta in s.template.analysis]
 
             notebooks_ids = []
             with Transaction().set_context(

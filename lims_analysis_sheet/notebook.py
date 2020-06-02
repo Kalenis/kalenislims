@@ -122,7 +122,6 @@ class AddControlStart(ModelView):
     def on_change_with_fraction_domain(self, name=None):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        Analysis = pool.get('lims.analysis')
         Fraction = pool.get('lims.fraction')
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
@@ -155,14 +154,8 @@ class AddControlStart(ModelView):
         if special_type not in controls_allowed:
             return []
 
-        t_analysis_ids = []
-        for t_analysis in self.analysis_sheet.template.analysis:
-            if t_analysis.analysis.type == 'analysis':
-                t_analysis_ids.append(t_analysis.analysis.id)
-            else:
-                t_analysis_ids.extend(
-                    Analysis.get_included_analysis_analysis(
-                        t_analysis.analysis.id))
+        t_analysis_ids = [ta.analysis.id
+            for ta in self.analysis_sheet.template.analysis]
 
         stored_fractions_ids = Fraction.get_stored_fractions()
 
@@ -351,14 +344,8 @@ class AddControl(Wizard):
             fraction_default['bmz_matrix'] = original_sample.matrix.id
             fraction_default['bmz_original_fraction'] = original_fraction.id
 
-        t_analysis_ids = []
-        for t_analysis in self.start.analysis_sheet.template.analysis:
-            if t_analysis.analysis.type == 'analysis':
-                t_analysis_ids.append(t_analysis.analysis.id)
-            else:
-                t_analysis_ids.extend(
-                    Analysis.get_included_analysis_analysis(
-                        t_analysis.analysis.id))
+        t_analysis_ids = [ta.analysis.id
+            for ta in self.start.analysis_sheet.template.analysis]
 
         original_services = []
         services = Service.search([
@@ -467,20 +454,10 @@ class AddControl(Wizard):
         return res and res[0] or None
 
     def add_to_analysis_sheet(self, fractions):
-        pool = Pool()
-        Analysis = pool.get('lims.analysis')
-        NotebookLine = pool.get('lims.notebook.line')
+        NotebookLine = Pool().get('lims.notebook.line')
 
         sheet = self.start.analysis_sheet
-
-        t_analysis_ids = []
-        for t_analysis in sheet.template.analysis:
-            if t_analysis.analysis.type == 'analysis':
-                t_analysis_ids.append(t_analysis.analysis.id)
-            else:
-                t_analysis_ids.extend(
-                    Analysis.get_included_analysis_analysis(
-                        t_analysis.analysis.id))
+        t_analysis_ids = [ta.analysis.id for ta in sheet.template.analysis]
 
         clause = [
             ('notebook.fraction', 'in', [f.id for f in fractions]),
