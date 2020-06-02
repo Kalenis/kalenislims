@@ -3,7 +3,9 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from datetime import datetime
+from sql import Null
 
+from trytond import backend
 from trytond.model import ModelSingleton, ModelView, ModelSQL, fields
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
@@ -13,11 +15,10 @@ from trytond.modules.company.model import (
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['NotebookView', 'NotebookViewColumn', 'UserRole', 'UserRoleGroup',
-    'Printer', 'User', 'UserLaboratory', 'Configuration',
-    'ConfigurationLaboratory', 'ConfigurationSequence',
-    'ConfigurationProductCategory', 'LabWorkYear', 'LabWorkYearSequence',
-    'Cron', 'ModelDoc', 'Model']
+__all__ = ['NotebookView', 'NotebookViewColumn', 'Printer', 'User',
+    'UserLaboratory', 'Configuration', 'ConfigurationLaboratory',
+    'ConfigurationSequence', 'ConfigurationProductCategory', 'LabWorkYear',
+    'LabWorkYearSequence', 'Cron', 'ModelDoc', 'Model']
 sequence_names = [
     'entry_sequence', 'sample_sequence', 'service_sequence',
     'results_report_sequence']
@@ -58,74 +59,6 @@ class NotebookViewColumn(ModelSQL, ModelView):
         cls._order.insert(0, ('sequence', 'ASC'))
 
 
-class UserRole(ModelSQL, ModelView):
-    'User Role'
-    __name__ = 'lims.user.role'
-
-    name = fields.Char('Name', required=True)
-    groups = fields.Many2Many('lims.user.role-res.group',
-        'role', 'group', 'Groups')
-
-
-class UserRoleGroup(ModelSQL):
-    'User Role - Group'
-    __name__ = 'lims.user.role-res.group'
-
-    role = fields.Many2One('lims.user.role', 'Role',
-        ondelete='CASCADE', select=True, required=True)
-    group = fields.Many2One('res.group', 'Group',
-        ondelete='CASCADE', select=True, required=True)
-
-    @classmethod
-    def create(cls, vlist):
-        role_groups = super(UserRoleGroup, cls).create(vlist)
-        cls._create_user_groups(role_groups)
-        return role_groups
-
-    @classmethod
-    def _create_user_groups(cls, role_groups):
-        pool = Pool()
-        User = pool.get('res.user')
-        UserGroup = pool.get('res.user-res.group')
-
-        for role_group in role_groups:
-            users = User.search([
-                ('role', '=', role_group.role),
-                ])
-            for user in users:
-                if not UserGroup.search([
-                        ('user', '=', user),
-                        ('group', '=', role_group.group),
-                        ]):
-                    UserGroup.create([{
-                        'user': user,
-                        'group': role_group.group,
-                        }])
-
-    @classmethod
-    def delete(cls, role_groups):
-        cls._delete_user_groups(role_groups)
-        super(UserRoleGroup, cls).delete(role_groups)
-
-    @classmethod
-    def _delete_user_groups(cls, role_groups):
-        pool = Pool()
-        User = pool.get('res.user')
-        UserGroup = pool.get('res.user-res.group')
-
-        for role_group in role_groups:
-            users = User.search([
-                ('role', '=', role_group.role),
-                ])
-            if users:
-                user_groups = UserGroup.search([
-                    ('user', 'in', users),
-                    ('group', '=', role_group.group),
-                    ])
-                if user_groups:
-                    UserGroup.delete(user_groups)
-
-
 class Printer(ModelSQL, ModelView):
     'Printer'
     __name__ = 'lims.printer'
@@ -137,7 +70,6 @@ class User(metaclass=PoolMeta):
     __name__ = 'res.user'
 
     notebook_view = fields.Many2One('lims.notebook.view', 'Notebook view')
-    role = fields.Many2One('lims.user.role', 'Role')
     laboratories = fields.Many2Many('lims.user-laboratory',
         'user', 'laboratory', 'Laboratories')
     laboratory = fields.Many2One('lims.laboratory', 'Main Laboratory',
@@ -152,73 +84,46 @@ class User(metaclass=PoolMeta):
         cls._context_fields.insert(0, 'laboratories')
 
     @classmethod
-    def create(cls, vlist):
-        users = super(User, cls).create(vlist)
-        cls._create_user_groups(users)
-        return users
-
-    @classmethod
-    def _create_user_groups(cls, users):
+    def __register__(cls, module_name):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
-        RoleGroup = pool.get('lims.user.role-res.group')
-        UserGroup = pool.get('res.user-res.group')
+        Role = pool.get('res.role')
+        RoleGroup = pool.get('res.role-res.group')
+        UserRole = pool.get('res.user.role')
 
-        for user in users:
-            if user.role:
-                role_groups = RoleGroup.search([
-                    ('role', '=', user.role),
-                    ])
-                for role_group in role_groups:
-                    if not UserGroup.search([
-                            ('user', '=', user),
-                            ('group', '=', role_group.group),
-                            ]):
-                        UserGroup.create([{
-                            'user': user,
-                            'group': role_group.group,
-                            }])
+        super(User, cls).__register__(module_name)
 
-    @classmethod
-    def write(cls, *args):
-        actions = iter(args)
-        for users, vals in zip(actions, actions):
-            if 'role' in vals:
-                cls._update_user_groups(users, vals['role'])
-        super(User, cls).write(*args)
+        user_sql_table = cls.__table__()
+        user_table = cls.__table_handler__(module_name)
+        if user_table.column_exist('role'):
+            role = Role.__table__()
+            role_group = RoleGroup.__table__()
+            user_role = UserRole.__table__()
 
-    @classmethod
-    def _update_user_groups(cls, users, new_role=None):
-        pool = Pool()
-        RoleGroup = pool.get('lims.user.role-res.group')
-        UserGroup = pool.get('res.user-res.group')
+            cursor.execute('SELECT id, name '
+                'FROM lims_user_role')
+            for role_id, role_name in cursor.fetchall():
+                cursor.execute(*role.insert(
+                    [role.id, role.name],
+                    [[role_id, role_name]]))
 
-        for user in users:
-            # delete old groups
-            if user.role:
-                role_groups = RoleGroup.search([
-                    ('role', '=', user.role),
-                    ])
-                for role_group in role_groups:
-                    user_groups = UserGroup.search([
-                        ('user', '=', user),
-                        ('group', '=', role_group.group),
-                        ])
-                    if user_groups:
-                        UserGroup.delete(user_groups)
-            # create new groups
-            if new_role:
-                role_groups = RoleGroup.search([
-                    ('role', '=', new_role),
-                    ])
-                for role_group in role_groups:
-                    if not UserGroup.search([
-                            ('user', '=', user),
-                            ('group', '=', role_group.group),
-                            ]):
-                        UserGroup.create([{
-                            'user': user,
-                            'group': role_group.group,
-                            }])
+                cursor.execute('SELECT "group" '
+                    'FROM "lims_user_role-res_group" '
+                    'WHERE role = %s', (role_id, ))
+                for (group_id, ) in cursor.fetchall():
+                    cursor.execute(*role_group.insert(
+                        [role_group.role, role_group.group],
+                        [[role_id, group_id]]))
+
+            cursor.execute(*user_sql_table.select(
+                user_sql_table.id, user_sql_table.role,
+                where=user_sql_table.role != Null))
+            for user_id, role_id in cursor.fetchall():
+                cursor.execute(*user_role.insert(
+                    [user_role.user, user_role.role],
+                    [[user_id, role_id]]))
+
+            user_table.drop_column('role')
 
     def get_status_bar(self, name):
         status = self.name

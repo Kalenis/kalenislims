@@ -27,8 +27,6 @@ def register():
         department.UserDepartment,
         configuration.NotebookView,
         configuration.NotebookViewColumn,
-        configuration.UserRole,
-        configuration.UserRoleGroup,
         configuration.Printer,
         configuration.User,
         configuration.UserLaboratory,

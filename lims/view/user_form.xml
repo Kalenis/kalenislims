@@ -4,8 +4,6 @@
         expr="/form/notebook/page[@id='preferences']"
         position="after">
         <page string="LIMS" id="lims">
-            <label name="role"/>
-            <field name="role"/>
             <label name="notebook_view"/>
             <field name="notebook_view"/>
             <field name="departments" colspan="4"/>

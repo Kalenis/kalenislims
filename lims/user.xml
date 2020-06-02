@@ -4,34 +4,6 @@ this repository contains the full copyright notices and license terms. -->
 <tryton>
     <data>
 
-<!-- User Role -->
-
-        <record model="ir.ui.view" id="lims_user_role_view_form">
-            <field name="model">lims.user.role</field>
-            <field name="type">form</field>
-            <field name="name">user_role_form</field>
-        </record>
-        <record model="ir.ui.view" id="lims_user_role_view_list">
-            <field name="model">lims.user.role</field>
-            <field name="type">tree</field>
-            <field name="name">user_role_list</field>
-        </record>
-
-        <record model="ir.action.act_window" id="act_lims_user_role_list">
-            <field name="name">User Roles</field>
-            <field name="res_model">lims.user.role</field>
-        </record>
-        <record model="ir.action.act_window.view" id="act_lims_user_role_view_list">
-            <field name="sequence" eval="10"/>
-            <field name="view" ref="lims_user_role_view_list"/>
-            <field name="act_window" ref="act_lims_user_role_list"/>
-        </record>
-        <record model="ir.action.act_window.view" id="act_lims_user_role_view_form">
-            <field name="sequence" eval="20"/>
-            <field name="view" ref="lims_user_role_view_form"/>
-            <field name="act_window" ref="act_lims_user_role_list"/>
-        </record>
-
 <!-- User -->
 
         <record model="ir.ui.view" id="lims_user_view_form_preferences">
@@ -43,11 +15,6 @@ this repository contains the full copyright notices and license terms. -->
             <field name="model">res.user</field>
             <field name="inherit" ref="res.user_view_form"/>
             <field name="name">user_form</field>
-        </record>
-        <record model="ir.ui.view" id="lims_user_view_list">
-            <field name="model">res.user</field>
-            <field name="inherit" ref="res.user_view_tree"/>
-            <field name="name">user_list</field>
         </record>
 
 <!-- Groups -->
@@ -210,9 +177,6 @@ this repository contains the full copyright notices and license terms. -->
             <field name="user" ref="res.user_admin"/>
             <field name="group" ref="group_lims_planification"/>
         </record>
-
-        <menuitem parent="res.menu_res" action="act_lims_user_role_list"
-            id="lims_user_role_menu" sequence="5"/>
 
     </data>
 </tryton>
