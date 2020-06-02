@@ -47,6 +47,30 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
                 }),
             ]
 
+    @fields.depends('precedent1')
+    def on_change_with_precedent1_diagnosis(self, name=None):
+        if self.precedent1:
+            result = self.get_precedent_diagnosis((self,),
+                ('precedent1_diagnosis',))
+            return result['precedent1_diagnosis'][self.id]
+        return None
+
+    @fields.depends('precedent2')
+    def on_change_with_precedent2_diagnosis(self, name=None):
+        if self.precedent2:
+            result = self.get_precedent_diagnosis((self,),
+                ('precedent2_diagnosis',))
+            return result['precedent2_diagnosis'][self.id]
+        return None
+
+    @fields.depends('precedent3')
+    def on_change_with_precedent3_diagnosis(self, name=None):
+        if self.precedent3:
+            result = self.get_precedent_diagnosis((self,),
+                ('precedent3_diagnosis',))
+            return result['precedent3_diagnosis'][self.id]
+        return None
+
     @classmethod
     def get_precedent_diagnosis(cls, samples, names):
         result = {}
