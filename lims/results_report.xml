@@ -624,6 +624,16 @@
             <field name="group" ref="group_lims_laboratory_reports"/>
         </record>
 
+        <record model="ir.model.button" id="results_report_version_detail_new_version_button">
+            <field name="name">new_version</field>
+            <field name="model" search="[('model', '=', 'lims.results_report.version.detail')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="results_report_version_detail_new_version_button_group_lims_laboratory_reports">
+            <field name="button" ref="results_report_version_detail_new_version_button"/>
+            <field name="group" ref="group_lims_laboratory_reports"/>
+        </record>
+
         <record model="ir.ui.menu-res.group" id="menu_laboratory_group_laboratory_reports_readonly">
             <field name="menu" ref="lims_laboratory"/>
             <field name="group" ref="group_lims_laboratory_reports_readonly"/>
