@@ -7,7 +7,7 @@ import formulas
 import schedula
 from itertools import chain
 
-from trytond.model import ModelSQL, ModelView, fields, sequence_ordered
+from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.tools import cursor_dict
@@ -74,9 +74,6 @@ class Adapter:
         obj = fields.Many2One('lims.interface.compilation', 'Compilation')
         obj.name = 'compilation'
         res['compilation'] = obj
-        obj = fields.Integer('Sequence')
-        obj.name = 'sequence'
-        res['sequence'] = obj
         obj = fields.Many2One('lims.notebook.line', 'Notebook Line')
         obj.name = 'notebook_line'
         obj.readonly = True
@@ -164,7 +161,7 @@ class ModelAccess(metaclass=PoolMeta):
             mode)
 
 
-class Data(sequence_ordered(), ModelSQL, ModelView):
+class Data(ModelSQL, ModelView):
     'Lims Interface Data'
     __name__ = 'lims.interface.data'
 
@@ -314,7 +311,6 @@ class Data(sequence_ordered(), ModelSQL, ModelView):
 
         fields_names = [
             'compilation',
-            'sequence',
             'notebook_line',
             ]
         for field in table.fields_:

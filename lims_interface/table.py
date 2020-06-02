@@ -51,7 +51,6 @@ class Table(ModelSQL, ModelView):
                 ('create_date', fields.Timestamp),
                 ('write_date', fields.Timestamp),
                 ('compilation', fields.Integer),
-                ('sequence', fields.Integer),
                 ('notebook_line', fields.Integer),
                 ]:
             sql_type = field._sql_type

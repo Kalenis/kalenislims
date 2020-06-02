@@ -185,28 +185,6 @@ class Data(metaclass=PoolMeta):
         super(Data, cls).__post_setup__()
         cls._fields = NewAdapter()
 
-    @classmethod
-    def create(cls, vlist):
-        vlist = [x.copy() for x in vlist]
-        count = {}
-        for values in vlist:
-            if 'sequence' in values:
-                continue
-            if not values['compilation'] in count:
-                count[values['compilation']] = 0
-            count[values['compilation']] += 1
-            values['sequence'] = (
-                cls.get_last_sequence(values['compilation']) +
-                count[values['compilation']])
-        return super(Data, cls).create(vlist)
-
-    @classmethod
-    def get_last_sequence(cls, compilation_id):
-        last = cls.search([('compilation', '=', compilation_id)],
-            order=[('sequence', 'DESC')], limit=1)
-        sequence = last and last[0].sequence or 0
-        return sequence
-
     def set_field(self, value, field):
         cursor = Transaction().connection.cursor()
         try:

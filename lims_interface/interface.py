@@ -425,7 +425,7 @@ class Interface(Workflow, ModelSQL, ModelView):
     def get_tree_view(self):
         fields = self._get_fields_tree_view()
         xml = ('<?xml version="1.0"?>\n'
-            '<tree sequence="sequence" editable="bottom">\n'
+            '<tree editable="bottom">\n'
             '%s\n'
             '</tree>') % ('\n'.join(fields))
         return {
