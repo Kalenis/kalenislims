@@ -200,7 +200,10 @@ class Data(metaclass=PoolMeta):
         if not fields_names:
             fields_names = []
         fields_names.append('annulled')
-        return super(Data, cls).fields_get(fields_names)
+        res = super(Data, cls).fields_get(fields_names)
+        readonly = Transaction().context.get('lims_interface_readonly', False)
+        res['annulled']['readonly'] = bool(readonly)
+        return res
 
     @classmethod
     def delete(cls, records):

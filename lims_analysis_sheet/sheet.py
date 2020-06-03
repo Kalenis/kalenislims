@@ -659,6 +659,7 @@ class OpenAnalysisSheetData(Wizard):
             'lims_analysis_sheet': None,
             'lims_interface_compilation': None,
             'lims_interface_table': None,
+            'lims_interface_readonly': False,
             }
         domain = [('compilation', '=', None)]
         name = ''
@@ -666,9 +667,11 @@ class OpenAnalysisSheetData(Wizard):
         sheet_id = Transaction().context.get('active_id', None)
         if sheet_id:
             sheet = AnalysisSheet(sheet_id)
+            readonly = (sheet.state in ('validated', 'done'))
             context['lims_analysis_sheet'] = sheet.id
             context['lims_interface_compilation'] = sheet.compilation.id
             context['lims_interface_table'] = sheet.compilation.table.id
+            context['lims_interface_readonly'] = readonly
             domain = [('compilation', '=', sheet.compilation.id)]
             name = ' (%s - %s)' % (sheet.number, sheet.template.name)
         action['pyson_context'] = PYSONEncoder().encode(context)
