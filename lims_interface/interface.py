@@ -18,10 +18,11 @@ from itertools import chain
 from trytond.config import config
 from trytond.model import (Workflow, ModelView, ModelSQL, fields,
     sequence_ordered, Unique)
-from trytond.wizard import Wizard, StateTransition, StateView, Button
+from trytond.wizard import (Wizard, StateTransition, StateView, StateAction,
+    Button)
 from trytond.pool import Pool
+from trytond.pyson import PYSONEncoder, Eval, Bool, Not, And, Or
 from trytond.transaction import Transaction
-from trytond.pyson import Eval, Bool, Not, And, Or
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
 from .function import custom_functions
@@ -29,8 +30,8 @@ from .function import custom_functions
 
 __all__ = ['Interface', 'Column', 'CopyInterfaceColumnStart',
     'CopyInterfaceColumn', 'Compilation', 'CompilationOrigin',
-    'TestFormulaView', 'TestFormulaViewVariable', 'TestFormula',
-    'Variable', 'VariableValue']
+    'OpenCompilationData', 'TestFormulaView', 'TestFormulaViewVariable',
+    'TestFormula', 'Variable', 'VariableValue']
 
 
 FUNCTIONS = formulas.get_functions()
@@ -990,7 +991,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
         self.revision = self.interface.revision if self.interface else None
 
     @classmethod
-    @ModelView.button_action('lims_interface.act_open_compilation_data')
+    @ModelView.button_action('lims_interface.wiz_compilation_open_data')
     def view_data(cls, compilations):
         pass
 
@@ -1434,6 +1435,35 @@ class CompilationOrigin(ModelSQL, ModelView):
                     raise UserError(gettext(
                         'lims_interface.duplicated_origin_file',
                         file_name=self.file_name))
+
+
+class OpenCompilationData(Wizard):
+    'Open Compilation Data'
+    __name__ = 'lims.interface.compilation.open_data'
+
+    start = StateAction('lims_interface.act_open_compilation_data')
+
+    def do_start(self, action):
+        Compilation = Pool().get('lims.interface.compilation')
+
+        context = {
+            'lims_interface_compilation': None,
+            'lims_interface_table': None,
+            'lims_interface_readonly': False,
+            }
+        domain = [('compilation', '=', None)]
+
+        compilation_id = Transaction().context.get('active_id', None)
+        if compilation_id:
+            compilation = Compilation(compilation_id)
+            readonly = (compilation.state in ('validated', 'done'))
+            context['lims_interface_compilation'] = compilation.id
+            context['lims_interface_table'] = compilation.table.id
+            context['lims_interface_readonly'] = readonly
+            domain = [('compilation', '=', compilation.id)]
+        action['pyson_context'] = PYSONEncoder().encode(context)
+        action['pyson_domain'] = PYSONEncoder().encode(domain)
+        return action, {}
 
 
 class TestFormulaView(ModelView):

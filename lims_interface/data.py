@@ -272,6 +272,7 @@ class Data(ModelSQL, ModelView):
         res = super(Data, cls).fields_get(fields_names)
 
         table = cls.get_table()
+        readonly = Transaction().context.get('lims_interface_readonly', False)
         for field in table.fields_:
             res[field.name] = {
                 'name': field.name,
@@ -279,7 +280,7 @@ class Data(ModelSQL, ModelView):
                 'type': FIELD_TYPE_TRYTON[field.type],
                 'relation': (field.related_model.model if
                     field.related_model else None),
-                'readonly': bool(field.formula),
+                'readonly': bool(readonly or field.formula),
                 'help': field.help,
                 'domain': field.domain,
                 }
@@ -632,6 +633,7 @@ class GroupedData(ModelView):
         res = super(GroupedData, cls).fields_get(fields_names)
 
         table = cls.get_table()
+        readonly = Transaction().context.get('lims_interface_readonly', False)
         for field in table.grouped_fields_:
             res[field.name] = {
                 'name': field.name,
@@ -639,7 +641,7 @@ class GroupedData(ModelView):
                 'type': FIELD_TYPE_TRYTON[field.type],
                 'relation': (field.related_model.model if
                     field.related_model else None),
-                'readonly': bool(field.formula),
+                'readonly': bool(readonly or field.formula),
                 'help': field.help,
                 'domain': field.domain,
                 }

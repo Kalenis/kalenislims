@@ -462,6 +462,10 @@ msgctxt "model:ir.action,name:act_open_compilation_data"
 msgid "Compilation Data"
 msgstr "Datos"
 
+msgctxt "model:ir.action,name:wiz_compilation_open_data"
+msgid "Open Compilation Data"
+msgstr "Abrir datos"
+
 msgctxt "model:ir.action,name:wiz_interface_copy_column"
 msgid "Copy Interface Column"
 msgstr "Copiar columna"

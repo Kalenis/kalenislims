@@ -127,14 +127,6 @@
             <field name="model" search="[('model', '=', 'lims.interface.compilation')]"/>
         </record>
 
-        <!-- Compilation Data -->
-        <record model="ir.action.act_window" id="act_open_compilation_data">
-            <field name="name">Compilation Data</field>
-            <field name="res_model">lims.interface.data</field>
-            <field name="context" eval="{'lims_interface_compilation': Eval('active_id'), 'lims_interface_table': Eval('table')}" pyson="1"/>
-            <field name="domain" eval="[('compilation', '=', Eval('active_id'))]" pyson="1"/>
-        </record>
-
         <!-- Compilation Origin -->
         <record model="ir.ui.view" id="lims_interface_compilation_origin_view_form">
             <field name="model">lims.interface.compilation.origin</field>
@@ -145,6 +137,20 @@
             <field name="model">lims.interface.compilation.origin</field>
             <field name="type">tree</field>
             <field name="name">compilation_origin_list</field>
+        </record>
+
+        <!-- Wizard Open Compilation Data -->
+        <record model="ir.action.wizard" id="wiz_compilation_open_data">
+            <field name="name">Open Compilation Data</field>
+            <field name="wiz_name">lims.interface.compilation.open_data</field>
+        </record>
+
+        <!-- Compilation Data -->
+        <record model="ir.action.act_window" id="act_open_compilation_data">
+            <field name="name">Compilation Data</field>
+            <field name="res_model">lims.interface.data</field>
+            <field name="context" eval="{'lims_interface_compilation': Eval('active_id'), 'lims_interface_table': Eval('table')}" pyson="1"/>
+            <field name="domain" eval="[('compilation', '=', Eval('active_id'))]" pyson="1"/>
         </record>
 
         <!-- Wizard Test Formula -->

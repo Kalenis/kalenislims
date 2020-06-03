@@ -29,6 +29,7 @@ def register():
         data.GroupedData,
         module='lims_interface', type_='model')
     Pool.register(
+        interface.OpenCompilationData,
         interface.CopyInterfaceColumn,
         interface.TestFormula,
         module='lims_interface', type_='wizard')
