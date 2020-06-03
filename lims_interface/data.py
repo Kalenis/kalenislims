@@ -342,7 +342,7 @@ class Data(ModelSQL, ModelView):
             tables={None: (table, None)})
 
         select = table.select(table.id, where=expression, limit=limit,
-            offset=offset)
+            offset=offset, order_by=(table.id.asc,))
         if query:
             return select
         cursor.execute(*select)
