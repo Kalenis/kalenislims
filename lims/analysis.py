@@ -296,7 +296,7 @@ class Typification(ModelSQL, ModelView):
                 ('id', '!=', self.id),
                 ])
             if typifications:
-                raise UserError(gettext('lims.lims.msg_default_typification'))
+                raise UserError(gettext('lims.msg_default_typification'))
         else:
             if self.valid:
                 typifications = self.search([
