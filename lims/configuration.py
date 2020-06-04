@@ -5,7 +5,6 @@
 from datetime import datetime
 from sql import Null
 
-from trytond import backend
 from trytond.model import ModelSingleton, ModelView, ModelSQL, fields
 from trytond.pyson import Eval
 from trytond.transaction import Transaction

@@ -270,6 +270,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         ('complementary', 'Complementary'),
         ('corrective', 'Corrective'),
         ], 'Type', readonly=True)
+    type_string = type.translated('type')
     samples = fields.One2Many('lims.results_report.version.detail.sample',
         'version_detail', 'Samples', depends=['state'],
         states={'readonly': Eval('state') != 'draft'})
