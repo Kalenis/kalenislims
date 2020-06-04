@@ -996,8 +996,12 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
     report_date = fields.Function(fields.Date('Date agreed for result'),
         'get_nline_field')
     result = fields.Function(fields.Char('Result'), 'get_result')
+    initial_unit = fields.Function(fields.Many2One('product.uom',
+        'Initial unit'), 'get_nline_field')
     converted_result = fields.Function(fields.Char('Converted result'),
         'get_converted_result')
+    final_unit = fields.Function(fields.Many2One('product.uom',
+        'Final unit'), 'get_nline_field')
     comments = fields.Function(fields.Text('Entry comments'),
         'get_nline_field')
 
@@ -1071,9 +1075,8 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         result = notebook_line.result
         decimals = notebook_line.decimals
         result_modifier = notebook_line.result_modifier
-        initial_unit = notebook_line.initial_unit
 
-        res, unit = '', None
+        res = ''
         if literal_result:
             res = literal_result
         else:
@@ -1087,16 +1090,12 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
 
             if result_modifier == 'eq':
                 res = res
-                unit = initial_unit and initial_unit.rec_name or None
             elif result_modifier == 'low':
                 res = gettext('lims.msg_quantification_limit', loq=res)
-                unit = initial_unit and initial_unit.rec_name or None
             elif result_modifier == 'd':
                 res = gettext('lims.msg_d')
-                unit = initial_unit and initial_unit.rec_name or None
             elif result_modifier == 'nd':
                 res = gettext('lims.msg_nd')
-                unit = initial_unit and initial_unit.rec_name or None
             elif result_modifier == 'ni':
                 res = ''
             elif result_modifier == 'pos':
@@ -1109,8 +1108,6 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
                 res = gettext('lims.msg_abs')
             else:
                 res = result_modifier
-        if unit:
-            return '%s %s' % (res, unit)
         return res
 
     @classmethod
@@ -1125,9 +1122,8 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         result = notebook_line.converted_result
         decimals = notebook_line.decimals
         result_modifier = notebook_line.converted_result_modifier
-        final_unit = notebook_line.final_unit
 
-        res, unit = '', None
+        res = ''
         if not notebook_line.literal_result:
             if result:
                 res = round(float(result), decimals)
@@ -1139,16 +1135,12 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
 
             if result_modifier == 'eq':
                 res = res
-                unit = final_unit and final_unit.rec_name or None
             elif result_modifier == 'low':
                 res = gettext('lims.msg_quantification_limit', loq=res)
-                unit = final_unit and final_unit.rec_name or None
             elif result_modifier == 'd':
                 res = gettext('lims.msg_d')
-                unit = final_unit and final_unit.rec_name or None
             elif result_modifier == 'nd':
                 res = gettext('lims.msg_nd')
-                unit = final_unit and final_unit.rec_name or None
             elif result_modifier == 'ni':
                 res = ''
             elif result_modifier == 'pos':
@@ -1161,8 +1153,6 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
                 res = gettext('lims.msg_abs')
             else:
                 res = result_modifier
-        if unit:
-            return '%s %s' % (res, unit)
         return res
 
 

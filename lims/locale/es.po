@@ -5016,9 +5016,17 @@ msgctxt "field:lims.results_report.version.detail.line,end_date:"
 msgid "End date"
 msgstr "Fecha de finalización"
 
+msgctxt "field:lims.results_report.version.detail.line,final_unit:"
+msgid "Final unit"
+msgstr "Unidad final"
+
 msgctxt "field:lims.results_report.version.detail.line,hide:"
 msgid "Hide in Report"
 msgstr "Ocultar en informe"
+
+msgctxt "field:lims.results_report.version.detail.line,initial_unit:"
+msgid "Initial unit"
+msgstr "Unidad inicial"
 
 msgctxt "field:lims.results_report.version.detail.line,method:"
 msgid "Method"
