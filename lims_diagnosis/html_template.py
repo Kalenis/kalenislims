@@ -23,6 +23,7 @@ class DiagnosisTemplate(ModelSQL, ModelView):
 class DiagnosisState(DictSchemaMixin, ModelSQL, ModelView):
     'Diagnosis State'
     __name__ = 'lims.diagnosis.state'
+    _rec_name = 'name'
 
     @staticmethod
     def default_type_():
