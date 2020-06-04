@@ -679,7 +679,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
             valid_detail = valid_details[0]
 
             detail_default = cls._get_fields_from_detail(valid_detail)
-            detail_default['comments'] = str(valid_detail.comments or '')
+            if detail.type == 'final':
+                detail_default['type'] = 'complementary'
             cls.write([detail], detail_default)
 
             # copy samples from previous valid version
@@ -959,6 +960,7 @@ class ResultsReportVersionDetailSample(ModelSQL, ModelView):
         notebook_lines = [{
             'notebook_line': nline.notebook_line.id,
             'hide': nline.hide,
+            'corrected': nline.corrected,
             } for nline in sample.notebook_lines]
         if notebook_lines:
             sample_default['notebook_lines'] = [('create', notebook_lines)]
@@ -976,6 +978,7 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
         required=True, readonly=True, select=True)
     hide = fields.Boolean('Hide in Report')
+    corrected = fields.Boolean('Corrected')
     analysis_origin = fields.Function(fields.Char('Analysis origin'),
         'get_nline_field')
     analysis = fields.Function(fields.Many2One('lims.analysis', 'Analysis'),
@@ -1035,6 +1038,10 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
 
     @staticmethod
     def default_hide():
+        return False
+
+    @staticmethod
+    def default_corrected():
         return False
 
     @classmethod
@@ -2482,13 +2489,17 @@ class GenerateReport(Wizard):
 
         state = ('in_progress' if self.start.type == 'preliminary' else
             'complete')
+        corrected = self.start.corrective
 
         if self.start.report:  # Result report selected
             samples = []
             for notebook in self.start.notebooks:
                 lines = notebook._get_lines_for_reporting(laboratory_id,
                     state)
-                notebook_lines = [{'notebook_line': line.id} for line in lines]
+                notebook_lines = [{
+                    'notebook_line': line.id,
+                    'corrected': corrected,
+                    } for line in lines]
                 samples.append({
                     'notebook': notebook.id,
                     'notebook_lines': [('create', notebook_lines)],
@@ -2583,7 +2594,10 @@ class GenerateReport(Wizard):
 
                     samples = []
                     for notebook in notebooks.values():
-                        notebook_lines = [{'notebook_line': line.id}
+                        notebook_lines = [{
+                            'notebook_line': line.id,
+                            'corrected': corrected,
+                            }
                             for line in notebook['lines']]
                         samples.append({
                             'notebook': notebook['notebook'],

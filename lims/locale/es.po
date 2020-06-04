@@ -5000,6 +5000,10 @@ msgctxt "field:lims.results_report.version.detail.line,converted_result:"
 msgid "Converted result"
 msgstr "Resultado convertido"
 
+msgctxt "field:lims.results_report.version.detail.line,corrected:"
+msgid "Corrected"
+msgstr "Corregida"
+
 msgctxt "field:lims.results_report.version.detail.line,detail_sample:"
 msgid "Sample Detail"
 msgstr "Muestra"

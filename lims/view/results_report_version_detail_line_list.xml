@@ -14,5 +14,6 @@
     <field name="result"/>
     <field name="converted_result"/>
     <field name="comments"/>
+    <field name="corrected"/>
     <field name="hide"/>
 </tree>

@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
-<form>
+<form col="6">
     <label name="notebook_line"/>
     <field name="notebook_line"/>
+    <label name="corrected"/>
+    <field name="corrected" xexpand="0"/>
     <label name="hide"/>
     <field name="hide" xexpand="0"/>
 </form>
