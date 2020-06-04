@@ -120,6 +120,28 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
             sample.precedent3 or None)
         return sample_default
 
+    @classmethod
+    def create(cls, vlist):
+        samples = super(ResultsReportVersionDetailSample, cls).create(vlist)
+        for sample in samples:
+            if not sample.precedent1:
+                precedents = cls.get_default_precedents(sample)
+                if not precedents:
+                    continue
+                for i in range(0, min(3, len(precedents))):
+                    setattr(sample, 'precedent%s' % str(i + 1), precedents[i])
+                sample.save()
+        return samples
+
+    @staticmethod
+    def get_default_precedents(sample):
+        Notebook = Pool().get('lims.notebook')
+        precedents = Notebook.search([
+            ('id', '!=', sample.notebook.id),
+            ('component', '=', sample.component),
+            ], order=[('id', 'DESC')], limit=3)
+        return precedents
+
 
 class ResultsReportVersionDetailLine(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail.line'
