@@ -19,17 +19,17 @@
         <field name="expression" xexpand="1"/>
         <image name="expression_icon" xexpand="0" size="30"/>
     </group>
-    <group id="domain_value" colspan="4" col="4">
+    <group id="domain" colspan="4" col="4">
         <label name="domain"/>
         <field name="domain" colspan="3" widget="pyson"/>
     </group>
-    <group id="fixed_value_field" colspan="4" col="6">
+    <group id="default_value" colspan="4" col="6">
+        <label name="default_value"/>
+        <field name="default_value"/>
+        <label name="readonly"/>
+        <field name="readonly" xexpand="0"/>
         <label name="grouped"/>
-        <field name="grouped"/>
-        <label name="is_fixed_value"/>
-        <field name="is_fixed_value" xexpand="0"/>
-        <label name="fixed_value"/>
-        <field name="fixed_value"/>
+        <field name="grouped" xexpand="0"/>
     </group>
     <separator id="storage" colspan="4" string="Storage:"/>
     <group id="storage_field" colspan="4" col="4">

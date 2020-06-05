@@ -280,7 +280,7 @@ class Data(ModelSQL, ModelView):
                 'type': FIELD_TYPE_TRYTON[field.type],
                 'relation': (field.related_model.model if
                     field.related_model else None),
-                'readonly': bool(readonly or field.formula),
+                'readonly': bool(field.formula or field.readonly or readonly),
                 'help': field.help,
                 'domain': field.domain,
                 }
@@ -641,7 +641,7 @@ class GroupedData(ModelView):
                 'type': FIELD_TYPE_TRYTON[field.type],
                 'relation': (field.related_model.model if
                     field.related_model else None),
-                'readonly': bool(readonly or field.formula),
+                'readonly': bool(field.formula or field.readonly or readonly),
                 'help': field.help,
                 'domain': field.domain,
                 }

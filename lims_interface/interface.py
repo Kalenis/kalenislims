@@ -133,7 +133,7 @@ def get_model_resource(model_name, value, field_name):
             value = int(value)
         except Exception:
             raise UserError(gettext(
-                'lims_interface.invalid_fixed_value_many2one_id',
+                'lims_interface.invalid_default_value_many2one_id',
                 name=field_name))
     resource = Model.search([rec_name, '=', value])
     if not resource or len(resource) > 1:
@@ -141,7 +141,7 @@ def get_model_resource(model_name, value, field_name):
             resource = Model.search(['code', '=', value])
         if not resource or len(resource) > 1:
             raise UserError(gettext(
-                'lims_interface.invalid_fixed_value_many2one',
+                'lims_interface.invalid_default_value_many2one',
                 name=field_name))
     return resource
 
@@ -353,6 +353,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                                     column.expression and
                                     column.expression.startswith('=') else
                                     None),
+                                readonly=column.readonly,
                                 ))
                         continue
 
@@ -371,6 +372,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                                     expression and
                                     expression.startswith('=') else
                                     None),
+                                readonly=column.readonly,
                                 ))
 
                         expression = (column.expression and
@@ -386,6 +388,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                             related_model=column.related_model,
                             formula=(expression if expression and
                                 expression.startswith('=') else None),
+                            readonly=column.readonly,
                             ))
 
             table.fields_ = fields
@@ -618,9 +621,9 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         states={'readonly': Eval('interface_state') != 'draft'},
         depends=['interface_state'])
     evaluation_order = fields.Integer('Evaluation order')
-    expression = fields.Char('Formula', states={
-        'readonly': Bool(Eval('is_fixed_value')),
-        }, depends=['is_fixed_value'],
+    expression = fields.Char('Formula',
+        states={'readonly': Bool(Eval('default_value'))},
+        depends=['default_value'],
         help=('In grouped columns the suffix _XX will be replaced by the '
             'corresponding repetition'))
     expression_icon = fields.Function(fields.Char('Expression Icon'),
@@ -650,48 +653,44 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
             'required': Eval('type_') == 'many2one',
             'invisible': Eval('type_') != 'many2one',
         }, depends=['type_'])
-    is_fixed_value = fields.Boolean('Has a default value',
-        help='Check to define a default value for this column')
-    fixed_value = fields.Char('Default value',
-        states={
-            'required': Bool(Eval('is_fixed_value')),
-            'invisible': Not(Eval('is_fixed_value')),
-        }, depends=['is_fixed_value'])
+    default_value = fields.Char('Default value',
+        states={'readonly': Bool(Eval('expression'))},
+        depends=['expression'])
+    readonly = fields.Boolean('Read only')
     source_start = fields.Integer('Field start',
         states={
-            'required': Eval('_parent_interface',
-                {}).get('template_type') == 'txt',
-            'invisible': Eval('_parent_interface',
-                {}).get('template_type') != 'txt',
-        })
+            'required': Eval('_parent_interface', {}).get(
+                'template_type') == 'txt',
+            'invisible': Eval('_parent_interface', {}).get(
+                'template_type') != 'txt',
+            })
     source_end = fields.Integer('Field end',
         states={
-            'required': Eval('_parent_interface',
-                {}).get('template_type') == 'txt',
-            'invisible': Eval('_parent_interface',
-                {}).get('template_type') != 'txt',
-        })
+            'required': Eval('_parent_interface', {}).get(
+                'template_type') == 'txt',
+            'invisible': Eval('_parent_interface', {}).get(
+                'template_type') != 'txt',
+            })
     source_column = fields.Integer('Column',
-        states={
-            'readonly': Bool(Eval('is_fixed_value')),
-            'invisible': Eval('_parent_interface',
-                {}).get('template_type') == 'txt',
-        }, depends=['is_fixed_value'],
+        depends=['default_value'], states={
+            'readonly': Bool(Eval('default_value')),
+            'invisible': Eval('_parent_interface', {}).get(
+                'template_type') == 'txt',
+            },
         help='Mapped column in source file')
     singleton = fields.Boolean('Is a singleton value',
-        states={
-            'readonly': Bool(Eval('is_fixed_value')),
-            'invisible': Eval('_parent_interface',
-                {}).get('template_type') == 'txt',
-        }, depends=['is_fixed_value'],
+        depends=['default_value'], states={
+            'readonly': Bool(Eval('default_value')),
+            'invisible': Eval('_parent_interface', {}).get(
+                'template_type') == 'txt',
+            },
         help='Is a fixed value (column:row) in source file')
     source_row = fields.Integer('Row',
-        states={
+        depends=['singleton'], states={
             'required': Bool(Eval('singleton')),
             'invisible': Or(Not(Eval('singleton')),
-                Eval('_parent_interface',
-                     {}).get('template_type') == 'txt')
-        }, depends=['singleton'])
+                Eval('_parent_interface', {}).get('template_type') == 'txt'),
+            })
     transfer_field = fields.Boolean('Transfer field',
         help='Check if value have to be transferred to notebook line')
     related_line_field = fields.Many2One('ir.model.field', 'Related field',
@@ -714,10 +713,10 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
                 'lims_interface.msg_interface_column_alias_unique')
             ]
 
-    @fields.depends('is_fixed_value', 'expression', 'singleton',
+    @fields.depends('default_value', 'expression', 'singleton',
         'source_column')
-    def on_change_is_fixed_value(self):
-        if self.is_fixed_value:
+    def on_change_default_value(self):
+        if self.default_value:
             self.expression = None
             self.singleton = False
             self.source_column = None
@@ -739,7 +738,7 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
     def validate(cls, columns):
         for column in columns:
             column.check_alias()
-            column.check_fixed_value()
+            column.check_default_value()
 
     def check_alias(self):
         for symbol in self.alias:
@@ -747,40 +746,40 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
                 raise UserError(gettext('lims_interface.invalid_alias',
                     symbol=symbol, name=self.name))
 
-    def check_fixed_value(self):
-        if self.is_fixed_value:
+    def check_default_value(self):
+        if self.default_value:
             if self.type_ in [
                     'datetime', 'time', 'timestamp', 'timedelta',
                     'icon', 'image', 'binary', 'reference',
                     ]:
                 raise UserError(gettext(
-                    'lims_interface.invalid_fixed_value_type',
+                    'lims_interface.invalid_default_value_type',
                     name=self.name))
             if self.type_ == 'boolean':
                 try:
-                    int(self.fixed_value)
+                    int(self.default_value)
                 except Exception:
                     raise UserError(gettext(
-                        'lims_interface.invalid_fixed_value_boolean',
+                        'lims_interface.invalid_default_value_boolean',
                         name=self.name))
             elif self.type_ == 'date':
                 try:
-                    str2date(self.fixed_value, self.interface.language)
+                    str2date(self.default_value, self.interface.language)
                 except Exception:
                     raise UserError(gettext(
-                        'lims_interface.invalid_fixed_value_date',
+                        'lims_interface.invalid_default_value_date',
                         name=self.name))
             elif self.type_ == 'many2one':
                 get_model_resource(
-                    self.related_model.model, self.fixed_value, self.name)
+                    self.related_model.model, self.default_value, self.name)
             else:
                 ftype = FIELD_TYPE_PYTHON[self.type_]
                 try:
-                    ftype(self.fixed_value)
+                    ftype(self.default_value)
                 except Exception:
                     raise UserError(gettext(
-                        'lims_interface.invalid_fixed_value',
-                        value=self.fixed_value, name=self.name))
+                        'lims_interface.invalid_default_value',
+                        value=self.default_value, name=self.name))
 
     def formula_error(self):
         if not self.expression:
@@ -905,12 +904,12 @@ class CopyInterfaceColumn(Wizard):
             'type_': origin.type_,
             'related_model': (origin.related_model and
                 origin.related_model or None),
-            'is_fixed_value': origin.is_fixed_value,
-            'fixed_value': origin.fixed_value,
+            'default_value': origin.default_value,
+            'readonly': origin.readonly,
             'transfer_field': origin.transfer_field,
             'related_line_field': (origin.related_line_field and
                 origin.related_line_field.id or None),
-            'grouped': origin.fixed_value,
+            'grouped': origin.grouped,
             }
         return res
 
@@ -1054,12 +1053,12 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     line = {'compilation': self.id}
                     for k in schema_keys:
                         value = None
-                        if schema[k]['is_fixed_value']:
-                            value = schema[k]['fixed_value']
+                        if schema[k]['default_value'] is not None:
+                            value = schema[k]['default_value']
                         else:
                             col = schema[k]['col']
-                            if not row[col - 1] or \
-                                    not str(row[col - 1]).strip():
+                            if (not row[col - 1] or
+                                    not str(row[col - 1]).strip()):
                                 line[k] = None
                                 continue
                             value = row[col - 1]
@@ -1068,16 +1067,15 @@ class Compilation(Workflow, ModelSQL, ModelView):
                             line[k] = int(value)
                         elif schema[k]['type'] == 'float':
                             line[k] = float(value)
-                        elif schema[k]['type'] == 'boolean' and \
-                                schema[k]['is_fixed_value']:
+                        elif schema[k]['type'] == 'boolean':
                             line[k] = bool(value)
                         elif schema[k]['type'] == 'date':
                             line[k] = str2date(value, self.interface.language)
-                        elif schema[k]['type'] == 'many2one' and \
-                                schema[k]['is_fixed_value']:
+                        elif (schema[k]['type'] == 'many2one' and
+                                schema[k]['default_value']):
                             resource = get_model_resource(
-                                schema[k]['model_name'],
-                                value, schema[k]['field_name'])
+                                schema[k]['model_name'], value,
+                                schema[k]['field_name'])
                             line[k] = resource[0].id
                         else:
                             line[k] = str(row[col - 1])
@@ -1135,8 +1133,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         line = {'compilation': self.id}
                         for k in schema_keys:
                             value = None
-                            if schema[k]['is_fixed_value']:
-                                value = schema[k]['fixed_value']
+                            if schema[k]['default_value'] is not None:
+                                value = schema[k]['default_value']
                             else:
                                 col = schema[k]['col']
                                 row = i
@@ -1151,11 +1149,10 @@ class Compilation(Workflow, ModelSQL, ModelView):
                                 line[k] = int(value)
                             elif schema[k]['type'] == 'float':
                                 line[k] = float(value)
-                            elif schema[k]['type'] == 'boolean' and \
-                                    schema[k]['is_fixed_value']:
+                            elif schema[k]['type'] == 'boolean':
                                 line[k] = bool(value)
                             elif schema[k]['type'] == 'date':
-                                if schema[k]['is_fixed_value']:
+                                if schema[k]['default_value']:
                                     line[k] = str2date(
                                         value, self.interface.language)
                                 else:
@@ -1163,11 +1160,11 @@ class Compilation(Workflow, ModelSQL, ModelView):
                                         line[k] = value
                                     else:
                                         line[k] = None
-                            elif schema[k]['type'] == 'many2one' and \
-                                    schema[k]['is_fixed_value']:
+                            elif (schema[k]['type'] == 'many2one' and
+                                    schema[k]['default_value']):
                                 resource = get_model_resource(
-                                    schema[k]['model_name'],
-                                    value, schema[k]['field_name'])
+                                    schema[k]['model_name'], value,
+                                    schema[k]['field_name'])
                                 line[k] = resource[0].id
                             else:
                                 line[k] = str(value)
@@ -1203,22 +1200,21 @@ class Compilation(Workflow, ModelSQL, ModelView):
         schema = {}
         formula_fields = {}
         for column in self.interface.columns:
-            if column.source_column or column.is_fixed_value:
+            if column.source_column or column.default_value:
                 schema[column.alias] = {
                     'col': column.source_column,
                     'type': column.type_,
                     'singleton': False,
-                    'is_fixed_value': False,
+                    'default_value': None,
                     }
                 if column.singleton:
                     schema[column.alias].update({
                         'singleton': True,
                         'row': column.source_row,
                         })
-                if column.is_fixed_value:
+                if column.default_value is not None:
                     schema[column.alias].update({
-                        'is_fixed_value': True,
-                        'fixed_value': column.fixed_value,
+                        'default_value': column.default_value,
                         })
                     if column.type_ == 'many2one':
                         schema[column.alias].update({

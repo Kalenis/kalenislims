@@ -3,23 +3,23 @@
         <record model="ir.message" id="invalid_alias">
             <field name="text">Invalid symbol "%(symbol)s" in column "%(name)s".</field>
         </record>
-        <record model="ir.message" id="invalid_fixed_value">
-            <field name="text">The fixed value "%(value)s" in "%(name)s" is invalid according to its type.</field>
+        <record model="ir.message" id="invalid_default_value">
+            <field name="text">Default value "%(value)s" in "%(name)s" is invalid according to its type.</field>
         </record>
-        <record model="ir.message" id="invalid_fixed_value_type">
-            <field name="text">The field type in "%(name)s" is not valid for fixed values.</field>
+        <record model="ir.message" id="invalid_default_value_type">
+            <field name="text">The field type in "%(name)s" is not valid for default values.</field>
         </record>
-        <record model="ir.message" id="invalid_fixed_value_boolean">
-            <field name="text">In "%(name)s" fixed value use 0 for False, and any other integer for True.</field>
+        <record model="ir.message" id="invalid_default_value_boolean">
+            <field name="text">In "%(name)s" default value use 0 for False, and any other integer for True.</field>
         </record>
-        <record model="ir.message" id="invalid_fixed_value_date">
-            <field name="text">The date fixed value in "%(name)s" is not valid. Check locale format and configure the template language.</field>
+        <record model="ir.message" id="invalid_default_value_date">
+            <field name="text">Default date value in "%(name)s" is not valid. Check locale format and configure the template language.</field>
         </record>
-        <record model="ir.message" id="invalid_fixed_value_many2one_id">
-            <field name="text">The fixed value in "%(name)s" should be the id of a valid resource of the model picked in 'Related model'.</field>
+        <record model="ir.message" id="invalid_default_value_many2one_id">
+            <field name="text">Default value in "%(name)s" should be the id of a valid resource of the model picked in 'Related model'.</field>
         </record>
-        <record model="ir.message" id="invalid_fixed_value_many2one">
-            <field name="text">The resource set as fixed value in "%(name)s" is not valid or it does not exist.</field>
+        <record model="ir.message" id="invalid_default_value_many2one">
+            <field name="text">The resource set as default value in "%(name)s" is not valid or it does not exist.</field>
         </record>
         <record model="ir.message" id="duplicated_origin_file">
             <field name="text">File "%(file_name)s" already exists as origin.</field>
