@@ -5809,22 +5809,6 @@ msgctxt "field:lims.user-laboratory,user:"
 msgid "User"
 msgstr "Usuario"
 
-msgctxt "field:lims.user.role,groups:"
-msgid "Groups"
-msgstr "Grupos"
-
-msgctxt "field:lims.user.role,name:"
-msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.user.role-res.group,group:"
-msgid "Group"
-msgstr "Grupo"
-
-msgctxt "field:lims.user.role-res.group,role:"
-msgid "Role"
-msgstr "Rol"
-
 msgctxt "field:lims.variety,code:"
 msgid "Code"
 msgstr "Código"
@@ -5968,10 +5952,6 @@ msgstr "Vista de cuaderno de laboratorio"
 msgctxt "field:res.user,printer:"
 msgid "Printer"
 msgstr "Impresora"
-
-msgctxt "field:res.user,role:"
-msgid "Role"
-msgstr "Rol"
 
 msgctxt "field:stock.location,storage_time:"
 msgid "Storage time (in months)"
@@ -6313,10 +6293,6 @@ msgstr "Tipificaciones"
 msgctxt "model:ir.action,name:act_lims_uom_conversion_list"
 msgid "Uom Conversions"
 msgstr "Conversiones de UdM"
-
-msgctxt "model:ir.action,name:act_lims_user_role_list"
-msgid "User Roles"
-msgstr "Roles de usuarios"
 
 msgctxt "model:ir.action,name:act_lims_variety_list"
 msgid "Varieties"
@@ -7930,10 +7906,6 @@ msgctxt "model:ir.ui.menu,name:lims_uom_conversion_list_menu"
 msgid "Uom Conversions"
 msgstr "Conversiones de UdM"
 
-msgctxt "model:ir.ui.menu,name:lims_user_role_menu"
-msgid "User Roles"
-msgstr "Roles de usuarios"
-
 msgctxt "model:ir.ui.menu,name:lims_variety_menu"
 msgid "Varieties"
 msgstr "Variedades"
@@ -8922,14 +8894,6 @@ msgstr "Conversión de UdM"
 msgctxt "model:lims.user-laboratory,name:"
 msgid "User - Laboratory"
 msgstr "Usuario - Laboratorio"
-
-msgctxt "model:lims.user.role,name:"
-msgid "User Role"
-msgstr "Rol de usuario"
-
-msgctxt "model:lims.user.role-res.group,name:"
-msgid "User Role - Group"
-msgstr "Rol de usuario - Grupo"
 
 msgctxt "model:lims.variety,name:"
 msgid "Variety"
@@ -13301,14 +13265,6 @@ msgstr "Conversión de UdM"
 msgctxt "view:lims.uom.conversion:"
 msgid "Uom Conversions"
 msgstr "Conversiones de UdM"
-
-msgctxt "view:lims.user.role:"
-msgid "User Role"
-msgstr "Rol de usuario"
-
-msgctxt "view:lims.user.role:"
-msgid "User Roles"
-msgstr "Roles de usuario"
 
 msgctxt "view:lims.variety:"
 msgid "Varieties"
