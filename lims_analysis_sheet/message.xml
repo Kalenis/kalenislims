@@ -25,5 +25,8 @@
         <record model="ir.message" id="msg_template_not_verification_field">
             <field name="text">The template does not have a column for the verification field</field>
         </record>
+        <record model="ir.message" id="delete_done_sheet">
+            <field name="text">You cannot delete an Analysis Sheet in "Done" state</field>
+        </record>
     </data>
 </tryton>

@@ -422,6 +422,10 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     @classmethod
     def delete(cls, sheets):
         Compilation = Pool().get('lims.interface.compilation')
+        for s in sheets:
+            if s.state == 'done':
+                raise UserError(gettext(
+                    'lims_analysis_sheet.delete_done_sheet'))
         compilations = [s.compilation for s in sheets]
         super(AnalysisSheet, cls).delete(sheets)
         Compilation.delete(compilations)

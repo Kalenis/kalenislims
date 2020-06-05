@@ -517,6 +517,10 @@ msgctxt ""
 msgid "Validated"
 msgstr "Validada"
 
+msgctxt "model:ir.message,text:delete_done_sheet"
+msgid "You cannot delete an Analysis Sheet in \"Done\" state"
+msgstr "No puede eliminar una Hoja de análisis en estado \"Realizada\""
+
 msgctxt "model:ir.message,text:msg_sheet_compilation_unique"
 msgid "Compilation already in use by another Analysis Sheet"
 msgstr "La Compilación ya está en uso para otra Hoja de análisis"
