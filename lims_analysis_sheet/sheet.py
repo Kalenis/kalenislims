@@ -239,7 +239,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         ], 'State', required=True, readonly=True)
     planification = fields.Many2One('lims.planification', 'Planification',
         readonly=True)
-    incomplete_sample = fields.Function(fields.Boolean('Incomplete sample'),
+    partial_analysys = fields.Function(fields.Boolean('Partial analysis'),
         'get_fields')
     completion_percentage = fields.Function(fields.Numeric('Complete',
         digits=(1, 4), domain=[
@@ -333,7 +333,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         result = {
             'urgent': {},
             'samples_qty': {},
-            'incomplete_sample': {},
+            'partial_analysys': {},
             'completion_percentage': {},
             }
         for s in sheets:
@@ -370,12 +370,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
                 result['samples_qty'][s.id] = len(samples)
 
-                result['incomplete_sample'][s.id] = False
+                result['partial_analysys'][s.id] = False
                 template_analysis = [ta.analysis.id
                     for ta in s.template.analysis]
                 for k, v in samples.items():
                     if not all(x in v for x in template_analysis):
-                        result['incomplete_sample'][s.id] = True
+                        result['partial_analysys'][s.id] = True
                         break
 
                 result['completion_percentage'][s.id] = _ZERO

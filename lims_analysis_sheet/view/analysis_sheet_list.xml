@@ -11,5 +11,5 @@
     <field name="state"/>
     <button name="activate" string="Activate"/>
     <field name="number"/>
-    <field name="incomplete_sample"/>
+    <field name="partial_analysys"/>
 </tree>

@@ -14,10 +14,6 @@ msgctxt "field:lims.analysis_sheet,date:"
 msgid "Date"
 msgstr "Fecha"
 
-msgctxt "field:lims.analysis_sheet,incomplete_sample:"
-msgid "Incomplete sample"
-msgstr "Muestra incompleta"
-
 msgctxt "field:lims.analysis_sheet,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
@@ -25,6 +21,10 @@ msgstr "Laboratorio"
 msgctxt "field:lims.analysis_sheet,number:"
 msgid "Number"
 msgstr "Número"
+
+msgctxt "field:lims.analysis_sheet,partial_analysys:"
+msgid "Partial analysis"
+msgstr "Análisis parciales"
 
 msgctxt "field:lims.analysis_sheet,planification:"
 msgid "Planification"
