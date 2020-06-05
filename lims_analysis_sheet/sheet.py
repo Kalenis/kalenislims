@@ -587,35 +587,39 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
         interface = self.template.interface
 
-        fixed_values = {}
+        defaults = {}
         schema, _ = self.compilation._get_schema()
         for k in list(schema.keys()):
-            if schema[k]['is_fixed_value']:
-                value = schema[k]['fixed_value']
-                if value.startswith('='):
-                    continue
-                if schema[k]['type'] == 'boolean':
-                    fixed_values[k] = bool(value)
-                elif schema[k]['type'] == 'date':
-                    fixed_values[k] = str2date(value, interface.language)
-                elif schema[k]['type'] == 'many2one':
-                    resource = get_model_resource(schema[k]['model_name'],
-                        value, schema[k]['field_name'])
-                    fixed_values[k] = resource and resource[0].id
-                else:
-                    fixed_values[k] = value
+            if schema[k]['default_value'] is None:
+                continue
+            value = schema[k]['default_value']
+            if value.startswith('='):
+                continue
+            if schema[k]['type'] == 'boolean':
+                defaults[k] = bool(value)
+            elif schema[k]['type'] == 'date':
+                defaults[k] = str2date(value, interface.language)
+            elif schema[k]['type'] == 'many2one':
+                resource = get_model_resource(schema[k]['model_name'],
+                    value, schema[k]['field_name'])
+                defaults[k] = resource and resource[0].id
+            else:
+                defaults[k] = value
 
         with Transaction().set_context(
                 lims_interface_table=self.compilation.table.id):
             data = []
             for nl in lines:
-                line = {'compilation': self.compilation.id}
-                line.update(fixed_values)
+                line = {
+                    'compilation': self.compilation.id,
+                    'notebook_line': nl.id,
+                    }
+                line.update(defaults)
 
                 for k in list(schema.keys()):
-                    if (schema[k]['is_fixed_value'] and schema[k][
-                            'fixed_value'].startswith('=')):
-                        path = schema[k]['fixed_value'][1:].split('.')
+                    if (schema[k]['default_value'] is not None and
+                            schema[k]['default_value'].startswith('=')):
+                        path = schema[k]['default_value'][1:].split('.')
                         field = path.pop(0)
                         try:
                             value = getattr(nl, field)
@@ -625,7 +629,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         except AttributeError:
                             value = None
                         line[k] = value
-                line['notebook_line'] = nl.id
+
                 if interface.analysis_field:
                     if interface.analysis_field.type_ == 'many2one':
                         line[interface.analysis_field.alias] = nl.analysis.id
