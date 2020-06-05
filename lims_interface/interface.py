@@ -1379,6 +1379,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
     def delete(cls, compilations):
         Data = Pool().get('lims.interface.data')
         for c in compilations:
+            if c.state == 'done':
+                raise UserError(gettext(
+                    'lims_interface.delete_done_compilation'))
             with Transaction().set_context(lims_interface_table=c.table):
                 lines = Data.search([('compilation', '=', c.id)])
                 Data.delete(lines)

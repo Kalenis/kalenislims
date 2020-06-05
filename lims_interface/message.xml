@@ -27,5 +27,8 @@
         <record model="ir.message" id="msg_interface_column_alias_unique">
             <field name="text">There cannot be two columns with the same alias in an interface.</field>
         </record>
+        <record model="ir.message" id="delete_done_compilation">
+            <field name="text">You cannot delete a Compilation in "Done" state</field>
+        </record>
     </data>
 </tryton>

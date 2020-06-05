@@ -478,6 +478,10 @@ msgctxt "model:ir.action,name:wiz_interface_formula_test"
 msgid "Test Formula"
 msgstr "Probar Fórmula"
 
+msgctxt "model:ir.message,text:delete_done_compilation"
+msgid "You cannot delete a Compilation in \"Done\" state"
+msgstr "No puede eliminar una Compilación en estado \"Realizada\""
+
 msgctxt "model:ir.message,text:duplicated_origin_file"
 msgid "File \"%(file_name)s\" already exists as origin."
 msgstr "El archivo \"%(file_name)s\" ya existe como origen de datos."
