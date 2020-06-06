@@ -3,7 +3,7 @@
 # the full copyright notices and license terms.
 from io import StringIO
 from decimal import Decimal
-from datetime import datetime
+from datetime import datetime, date
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
@@ -95,8 +95,8 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
 
         res = dict((r.id, None) for r in records)
 
-        date_from = context.get('date_from') or None
-        date_to = context.get('date_to') or None
+        date_from = context.get('date_from') or str(date.min)
+        date_to = context.get('date_to') or str(date.max)
         if not (date_from and date_to):
             return res
 
@@ -109,9 +109,15 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
                 'INNER JOIN "' + Planification._table + '" p '
                 'ON pd.planification = p.id '
             'WHERE p.state = \'preplanned\'')
-        preplanned_lines = [x[0] for x in cursor.fetchall()]
-        preplanned_lines_ids = ', '.join(str(x)
-            for x in [0] + preplanned_lines)
+        planned_lines = [x[0] for x in cursor.fetchall()]
+        planned_lines_ids = ', '.join(str(x) for x in [0] + planned_lines)
+        preplanned_where = 'AND nl.id NOT IN (%s) ' % planned_lines_ids
+
+        dates_where = ''
+        dates_where += ('AND ad.confirmation_date::date >= \'%s\'::date ' %
+            date_from)
+        dates_where += ('AND ad.confirmation_date::date <= \'%s\'::date ' %
+            date_to)
 
         sql_select = 'SELECT nl.analysis, nl.method, frc.id '
         sql_from = (
@@ -128,10 +134,8 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
             'WHERE ad.plannable = TRUE '
             'AND nl.start_date IS NULL '
             'AND nl.annulled = FALSE '
-            'AND nl.id NOT IN (' + preplanned_lines_ids + ') '
-            'AND nla.behavior != \'internal_relation\' '
-            'AND ad.confirmation_date::date >= %s::date '
-            'AND ad.confirmation_date::date <= %s::date')
+            'AND nla.behavior != \'internal_relation\' ' +
+            preplanned_where + dates_where)
 
         with Transaction().set_user(0):
             cursor.execute(sql_select + sql_from + sql_where,

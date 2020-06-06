@@ -85,8 +85,8 @@ class SearchAnalysisSheetStart(ModelView):
     'Search Analysis Sheets'
     __name__ = 'lims.planification.search_analysis_sheet.start'
 
-    date_from = fields.Date('Date from', required=True, readonly=True)
-    date_to = fields.Date('Date to', required=True, readonly=True)
+    date_from = fields.Date('Date from', readonly=True)
+    date_to = fields.Date('Date to', readonly=True)
     templates = fields.Many2Many('lims.template.analysis_sheet',
         None, None, 'Templates', required=True,
         domain=[('id', 'in', Eval('templates_domain'))],
@@ -130,12 +130,11 @@ class SearchAnalysisSheet(Wizard):
 
     def default_start(self, fields):
         Planification = Pool().get('lims.planification')
-
         planification = Planification(Transaction().context['active_id'])
-        templates = self._get_templates(planification)
+        templates_domain = self._get_templates(planification)
         return {
             'templates': [],
-            'templates_domain': templates,
+            'templates_domain': templates_domain,
             'date_from': planification.date_from,
             'date_to': planification.date_to,
             }
@@ -165,9 +164,17 @@ class SearchAnalysisSheet(Wizard):
             'WHERE p.state = \'preplanned\' '
                 'OR p.id = %s',
             (str(planification.id),))
-        preplanned_lines = [x[0] for x in cursor.fetchall()]
-        preplanned_lines_ids = ', '.join(str(x)
-            for x in [0] + preplanned_lines)
+        planned_lines = [x[0] for x in cursor.fetchall()]
+        planned_lines_ids = ', '.join(str(x) for x in [0] + planned_lines)
+        preplanned_where = 'AND nl.id NOT IN (%s) ' % planned_lines_ids
+
+        dates_where = ''
+        if planification.date_from:
+            dates_where += ('AND ad.confirmation_date::date >= \'%s\'::date ' %
+                planification.date_from)
+        if planification.date_to:
+            dates_where += ('AND ad.confirmation_date::date <= \'%s\'::date ' %
+                planification.date_to)
 
         sql_select = 'SELECT nl.analysis, nl.method '
         sql_from = (
@@ -184,16 +191,13 @@ class SearchAnalysisSheet(Wizard):
             'WHERE ad.plannable = TRUE '
             'AND nl.start_date IS NULL '
             'AND nl.annulled = FALSE '
-            'AND nl.laboratory = %s '
-            'AND nl.id NOT IN (' + preplanned_lines_ids + ') '
-            'AND nla.behavior != \'internal_relation\' '
-            'AND ad.confirmation_date::date >= %s::date '
-            'AND ad.confirmation_date::date <= %s::date')
+            'AND nl.laboratory = %s ' +
+            'AND nla.behavior != \'internal_relation\' ' +
+            preplanned_where + dates_where)
 
         with Transaction().set_user(0):
             cursor.execute(sql_select + sql_from + sql_where,
-                (planification.laboratory.id, planification.date_from,
-                planification.date_to,))
+                (planification.laboratory.id,))
         notebook_lines = cursor.fetchall()
         if not notebook_lines:
             return []
@@ -306,14 +310,6 @@ class SearchAnalysisSheet(Wizard):
         Analysis = pool.get('lims.analysis')
         TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
 
-        planification_details = PlanificationServiceDetail.search(['OR',
-            ('planification.state', '=', 'preplanned'),
-            ('planification', '=', planification.id),
-            ])
-        planned_lines = [pd.notebook_line.id for pd in planification_details
-            if pd.notebook_line]
-        planned_lines_ids = ', '.join(str(x) for x in [0] + planned_lines)
-
         template_analysis = {}
         for template in self.start.templates:
             cursor.execute('SELECT analysis, method '
@@ -324,11 +320,26 @@ class SearchAnalysisSheet(Wizard):
                 template_analysis[res[0]] = res[1]
         if not template_analysis:
             return {}
-
         all_included_analysis_ids = ', '.join(str(x)
             for x in list(template_analysis.keys()))
-        service_where = ('AND ad.analysis IN (' +
-            all_included_analysis_ids + ') ')
+        service_where = 'AND ad.analysis IN (%s) ' % all_included_analysis_ids
+
+        planification_details = PlanificationServiceDetail.search(['OR',
+            ('planification.state', '=', 'preplanned'),
+            ('planification', '=', planification.id),
+            ])
+        planned_lines = [pd.notebook_line.id for pd in planification_details
+            if pd.notebook_line]
+        planned_lines_ids = ', '.join(str(x) for x in [0] + planned_lines)
+        preplanned_where = 'AND nl.id NOT IN (%s) ' % planned_lines_ids
+
+        dates_where = ''
+        if planification.date_from:
+            dates_where += ('AND ad.confirmation_date::date >= \'%s\'::date ' %
+                planification.date_from)
+        if planification.date_to:
+            dates_where += ('AND ad.confirmation_date::date <= \'%s\'::date ' %
+                planification.date_to)
 
         sql_select = ('SELECT nl.id, nb.fraction, srv.analysis' +
             ', nl.analysis, nl.method, nl.repetition != 0 ')
@@ -351,19 +362,15 @@ class SearchAnalysisSheet(Wizard):
             'AND nl.start_date IS NULL '
             'AND nl.annulled = FALSE '
             'AND nl.laboratory = %s '
-            'AND nl.id NOT IN (' + planned_lines_ids + ') '
-            'AND nla.behavior != \'internal_relation\' '
-            'AND ad.confirmation_date::date >= %s::date '
-            'AND ad.confirmation_date::date <= %s::date ' +
-            service_where + extra_where)
+            'AND nla.behavior != \'internal_relation\' ' +
+            preplanned_where + dates_where + service_where + extra_where)
 
         sql_order = (
             'ORDER BY nb.fraction ASC, srv.analysis ASC')
 
         with Transaction().set_user(0):
             cursor.execute(sql_select + sql_from + sql_where + sql_order,
-                (planification.laboratory.id, planification.date_from,
-                planification.date_to,))
+                (planification.laboratory.id,))
         notebook_lines = cursor.fetchall()
         if not notebook_lines:
             return {}
@@ -896,9 +903,10 @@ class PlanificationPending(ModelSQL, ModelView):
                 'INNER JOIN "' + Planification._table + '" p '
                 'ON pd.planification = p.id '
             'WHERE p.state = \'preplanned\' ')
-        preplanned_lines = [x[0] for x in cursor.fetchall()]
-        preplanned_lines_ids = ', '.join(str(x)
-            for x in [0] + preplanned_lines)
+        planned_lines = [x[0] for x in cursor.fetchall()]
+        planned_lines_ids = ', '.join(str(x)
+            for x in [0] + planned_lines)
+        preplanned_where = 'AND nl.id NOT IN (%s) ' % planned_lines_ids
 
         sql_select = 'SELECT nl.analysis, nl.method '
         sql_from = (
@@ -915,8 +923,8 @@ class PlanificationPending(ModelSQL, ModelView):
             'WHERE ad.plannable = TRUE '
             'AND nl.start_date IS NULL '
             'AND nl.annulled = FALSE '
-            'AND nl.id NOT IN (' + preplanned_lines_ids + ') '
-            'AND nla.behavior != \'internal_relation\' ')
+            'AND nla.behavior != \'internal_relation\' ' +
+            preplanned_where)
         params = []
 
         if context.get('laboratory'):
@@ -1039,9 +1047,10 @@ class OpenPendingSample(Wizard):
                 'INNER JOIN "' + Planification._table + '" p '
                 'ON pd.planification = p.id '
             'WHERE p.state = \'preplanned\' ')
-        preplanned_lines = [x[0] for x in cursor.fetchall()]
-        preplanned_lines_ids = ', '.join(str(x)
-            for x in [0] + preplanned_lines)
+        planned_lines = [x[0] for x in cursor.fetchall()]
+        planned_lines_ids = ', '.join(str(x)
+            for x in [0] + planned_lines)
+        preplanned_where = 'AND nl.id NOT IN (%s) ' % planned_lines_ids
 
         analysis_ids = ', '.join(str(x) for x in template_analysis.keys())
         sql_select = 'SELECT nl.analysis, nl.method, frc.sample '
@@ -1060,8 +1069,8 @@ class OpenPendingSample(Wizard):
             'AND nl.start_date IS NULL '
             'AND nl.analysis IN (' + analysis_ids + ') '
             'AND nl.annulled = FALSE '
-            'AND nl.id NOT IN (' + preplanned_lines_ids + ') '
-            'AND nla.behavior != \'internal_relation\' ')
+            'AND nla.behavior != \'internal_relation\' ' +
+            preplanned_where)
         params = []
 
         if context.get('laboratory'):

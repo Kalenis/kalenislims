@@ -74,9 +74,9 @@ class Planification(Workflow, ModelSQL, ModelView):
     technicians = fields.One2Many('lims.planification.technician',
         'planification', 'Technicians', depends=['method_domain',
         'technicians_domain'])
-    date_from = fields.Date('Date from', depends=['state'], required=True,
+    date_from = fields.Date('Date from', depends=['state'],
         states={'readonly': Not(Bool(Equal(Eval('state'), 'draft')))})
-    date_to = fields.Date('Date to', depends=['state'], required=True,
+    date_to = fields.Date('Date to', depends=['state'],
         states={'readonly': Not(Bool(Equal(Eval('state'), 'draft')))})
     start_date = fields.Date('Start date', depends=['state'],
         states={'readonly': Bool(Equal(Eval('state'), 'confirmed'))})
@@ -3609,8 +3609,8 @@ class AddAnalysisStart(ModelView):
     __name__ = 'lims.planification.add_analysis.start'
 
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
-    date_from = fields.Date('Date from', required=True, readonly=True)
-    date_to = fields.Date('Date to', required=True, readonly=True)
+    date_from = fields.Date('Date from', readonly=True)
+    date_to = fields.Date('Date to', readonly=True)
     analysis = fields.Many2Many('lims.analysis', None, None,
         'Analysis/Sets/Groups', required=True,
         domain=[('id', 'in', Eval('analysis_domain'))],
@@ -3634,10 +3634,7 @@ class AddAnalysis(Wizard):
     def default_start(self, fields):
         Planification = Pool().get('lims.planification')
         planification = Planification(Transaction().context['active_id'])
-        analysis_domain = AddAnalysis._get_analysis_domain(
-            planification.laboratory, planification.date_from,
-            planification.date_to)
-
+        analysis_domain = self._get_analysis_domain(planification)
         return {
             'laboratory': planification.laboratory.id,
             'analysis_domain': analysis_domain,
@@ -3646,19 +3643,16 @@ class AddAnalysis(Wizard):
             }
 
     @staticmethod
-    def _get_analysis_domain(laboratory, date_from, date_to):
+    def _get_analysis_domain(planification):
         pool = Pool()
         Planification = pool.get('lims.planification')
         Analysis = pool.get('lims.analysis')
 
-        if not laboratory:
-            return []
-
-        asg_list = Planification._get_analysis_domain(laboratory)
+        asg_list = Planification._get_analysis_domain(planification.laboratory)
 
         new_context = {}
-        new_context['date_from'] = date_from
-        new_context['date_to'] = date_to
+        new_context['date_from'] = planification.date_from
+        new_context['date_to'] = planification.date_to
         with Transaction().set_context(new_context):
             pending_fractions = Analysis.analysis_pending_fractions(asg_list)
         res = []
@@ -3926,6 +3920,15 @@ class SearchFractions(Wizard):
         planned_lines = [pd.notebook_line.id for pd in planification_details
             if pd.notebook_line]
         planned_lines_ids = ', '.join(str(x) for x in [0] + planned_lines)
+        preplanned_where = 'AND nl.id NOT IN (%s) ' % planned_lines_ids
+
+        dates_where = ''
+        if planification.date_from:
+            dates_where += ('AND ad.confirmation_date::date >= \'%s\'::date ' %
+                planification.date_from)
+        if planification.date_to:
+            dates_where += ('AND ad.confirmation_date::date <= \'%s\'::date ' %
+                planification.date_to)
 
         result = {}
         nlines_added = []
@@ -3937,8 +3940,8 @@ class SearchFractions(Wizard):
                 Analysis.get_included_analysis_analysis(analysis_id))
             all_included_analysis_ids = ', '.join(str(x)
                 for x in all_included_analysis)
-            service_where = ('AND ad.analysis IN (' +
-                all_included_analysis_ids + ') ')
+            service_where = ('AND ad.analysis IN (%s) ' %
+                all_included_analysis_ids)
 
             sql_select = (
                 'SELECT nl.id, nb.fraction, srv.analysis, nl.repetition != 0 ')
@@ -3961,19 +3964,15 @@ class SearchFractions(Wizard):
                 'AND nl.start_date IS NULL '
                 'AND nl.annulled = FALSE '
                 'AND nl.laboratory = %s '
-                'AND nl.id NOT IN (' + planned_lines_ids + ') '
-                'AND nla.behavior != \'internal_relation\' '
-                'AND ad.confirmation_date::date >= %s::date '
-                'AND ad.confirmation_date::date <= %s::date ' +
-                service_where + extra_where)
+                'AND nla.behavior != \'internal_relation\' ' +
+                preplanned_where + dates_where + service_where + extra_where)
 
             sql_order = (
                 'ORDER BY nb.fraction ASC, srv.analysis ASC')
 
             with Transaction().set_user(0):
                 cursor.execute(sql_select + sql_from + sql_where + sql_order,
-                    (planification.laboratory.id, planification.date_from,
-                    planification.date_to,))
+                    (planification.laboratory.id,))
             notebook_lines = cursor.fetchall()
             if not notebook_lines:
                 continue
@@ -4005,8 +4004,8 @@ class SearchPlannedFractionsStart(ModelView):
     __name__ = 'lims.planification.search_planned_fractions.start'
 
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
-    date_from = fields.Date('Date from', required=True)
-    date_to = fields.Date('Date to', required=True)
+    date_from = fields.Date('Date from')
+    date_to = fields.Date('Date to')
     analysis = fields.Many2Many('lims.planification-analysis',
         'planification', 'analysis', 'Analysis/Sets/Groups',
         domain=[('id', 'in', Eval('analysis_domain'))],
@@ -4073,7 +4072,6 @@ class SearchPlannedFractions(Wizard):
                 'repetition': v['repetition'],
                 })
         fractions_added = SearchFractionsDetail.create(to_create)
-
         self.next.details = fractions_added
         return 'next'
 
@@ -4136,6 +4134,14 @@ class SearchPlannedFractions(Wizard):
         Service = pool.get('lims.service')
         Analysis = pool.get('lims.analysis')
 
+        dates_where = ''
+        if self.start.date_from:
+            dates_where += ('AND ad.confirmation_date::date >= \'%s\'::date ' %
+                self.start.date_from)
+        if self.start.date_to:
+            dates_where += ('AND ad.confirmation_date::date <= \'%s\'::date ' %
+                self.start.date_to)
+
         result = {}
         nlines_added = []
         for a in self.start.analysis:
@@ -4146,13 +4152,15 @@ class SearchPlannedFractions(Wizard):
                 Analysis.get_included_analysis_analysis(analysis_id))
             all_included_analysis_ids = ', '.join(str(x)
                 for x in all_included_analysis)
-            service_where = ('AND ad.analysis IN (' +
-                all_included_analysis_ids + ') ')
+            service_where = ('AND ad.analysis IN (%s) ' %
+                all_included_analysis_ids)
 
             excluded_fractions = self.get_control_fractions_excluded(
                 self.start.laboratory.id, service_where)
             excluded_fractions_ids = ', '.join(str(x)
                 for x in [0] + excluded_fractions)
+            excluded_where = ('AND nb.fraction NOT IN (%s) ' %
+                excluded_fractions_ids)
 
             sql_select = (
                 'SELECT nl.id, nb.fraction, srv.analysis, nl.repetition != 0 ')
@@ -4175,19 +4183,15 @@ class SearchPlannedFractions(Wizard):
                 'AND nl.start_date IS NOT NULL '
                 'AND nl.end_date IS NULL '
                 'AND nl.laboratory = %s '
-                'AND nla.behavior != \'internal_relation\' '
-                'AND nb.fraction NOT IN (' + excluded_fractions_ids + ') '
-                'AND ad.confirmation_date::date >= %s::date '
-                'AND ad.confirmation_date::date <= %s::date ' +
-                service_where + extra_where)
+                'AND nla.behavior != \'internal_relation\' ' +
+                excluded_where + dates_where + service_where + extra_where)
 
             sql_order = (
                 'ORDER BY nb.fraction ASC, srv.analysis ASC')
 
             with Transaction().set_user(0):
                 cursor.execute(sql_select + sql_from + sql_where + sql_order,
-                    (self.start.laboratory.id, self.start.date_from,
-                    self.start.date_to,))
+                    (self.start.laboratory.id,))
             notebook_lines = cursor.fetchall()
             if notebook_lines:
                 if extra_where:

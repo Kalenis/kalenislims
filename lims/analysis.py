@@ -4,7 +4,7 @@
 # the full copyright notices and license terms.
 import logging
 import operator
-from datetime import datetime
+from datetime import datetime, date
 from decimal import Decimal
 from sql import Literal
 
@@ -1383,8 +1383,8 @@ class Analysis(Workflow, ModelSQL, ModelView):
     def get_pending_fractions(cls, records, name):
         context = Transaction().context
 
-        date_from = context.get('date_from') or None
-        date_to = context.get('date_to') or None
+        date_from = context.get('date_from') or str(date.min)
+        date_to = context.get('date_to') or str(date.max)
         calculate = context.get('calculate', True)
         if not (date_from and date_to) or not calculate:
             return dict((r.id, None) for r in records)
@@ -1399,8 +1399,8 @@ class Analysis(Workflow, ModelSQL, ModelView):
     def search_pending_fractions(cls, name, domain=None):
         context = Transaction().context
 
-        date_from = context.get('date_from') or None
-        date_to = context.get('date_to') or None
+        date_from = context.get('date_from') or str(date.min)
+        date_to = context.get('date_to') or str(date.max)
         calculate = context.get('calculate', True)
         if not (date_from and date_to) or not calculate:
             return []
@@ -1437,10 +1437,15 @@ class Analysis(Workflow, ModelSQL, ModelView):
         Service = pool.get('lims.service')
         Fraction = pool.get('lims.fraction')
 
-        date_from = context.get('date_from')
-        date_to = context.get('date_to')
+        date_from = context.get('date_from') or str(date.min)
+        date_to = context.get('date_to') or str(date.max)
 
-        preplanned_clause = ''
+        dates_where = ''
+        dates_where += ('AND srv.confirmation_date::date >= \'%s\'::date ' %
+            date_from)
+        dates_where += ('AND srv.confirmation_date::date <= \'%s\'::date ' %
+            date_to)
+
         cursor.execute('SELECT DISTINCT(nl.service) '
             'FROM "' + NotebookLine._table + '" nl '
                 'INNER JOIN "' + PlanificationServiceDetail._table +
@@ -1450,14 +1455,11 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 'INNER JOIN "' + Planification._table + '" p '
                 'ON pd.planification = p.id '
             'WHERE p.state = \'preplanned\'')
-        preplanned_services = [s[0] for s in cursor.fetchall()]
-        if preplanned_services:
-            preplanned_services_ids = ', '.join(str(s) for s in
-                    preplanned_services)
-            preplanned_clause = ('AND srv.id NOT IN (' +
-                preplanned_services_ids + ')')
+        planned_services = [s[0] for s in cursor.fetchall()]
+        planned_services_ids = ', '.join(
+            str(s) for s in [0] + planned_services)
+        preplanned_clause = 'AND srv.id NOT IN (%s) ' % planned_services_ids
 
-        not_planned_services_clause = 'AND id = 0'
         cursor.execute('SELECT DISTINCT(d.service) '
             'FROM "' + EntryDetailAnalysis._table + '" d '
                 'INNER JOIN "' + Analysis._table + '" a '
@@ -1466,11 +1468,10 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 'AND d.state IN (\'draft\', \'unplanned\') '
                 'AND a.behavior != \'internal_relation\'')
         not_planned_services = [s[0] for s in cursor.fetchall()]
-        if not_planned_services:
-            not_planned_services_ids = ', '.join(str(s) for s in
-                not_planned_services)
-            not_planned_services_clause = ('AND id IN (' +
-                not_planned_services_ids + ')')
+        not_planned_services_ids = ', '.join(
+            str(s) for s in [0] + not_planned_services)
+        not_planned_services_clause = ('AND id IN (%s) ' %
+            not_planned_services_ids)
 
         if analysis_ids:
             all_analysis_ids = analysis_ids
@@ -1486,11 +1487,9 @@ class Analysis(Workflow, ModelSQL, ModelView):
                     'INNER JOIN "' + Fraction._table + '" frc '
                     'ON frc.id = srv.fraction '
                 'WHERE srv.analysis = %s '
-                    'AND srv.confirmation_date::date >= %s::date '
-                    'AND srv.confirmation_date::date <= %s::date '
                     'AND frc.confirmed = TRUE ' +
-                    preplanned_clause,
-                (analysis_id, date_from, date_to))
+                    dates_where + preplanned_clause,
+                (analysis_id,))
             pending_services = [s[0] for s in cursor.fetchall()]
             if pending_services:
                 pending_services_ids = ', '.join(str(s) for s in
