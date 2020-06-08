@@ -335,10 +335,12 @@ class Interface(Workflow, ModelSQL, ModelView):
 
             reps = (interface.grouped_repetitions or 1) + 1
             for rep in range(1, reps):
+                pos = 0
                 for column in interface.columns:
                     if not column.type_:
                         continue
-                    position = column.evaluation_order * 1000 + rep
+                    pos += 1
+                    position = pos * 1000 + rep
                     if not column.grouped:
                         if rep == 1:
                             fields[position] = Field(
