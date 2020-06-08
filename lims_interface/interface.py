@@ -330,7 +330,7 @@ class Interface(Workflow, ModelSQL, ModelView):
             interface.revision += 1
             table = Table()
             table.name = interface.data_table_name
-            fields = []
+            fields = {}
             grouped_fields = []
 
             reps = (interface.grouped_repetitions or 1) + 1
@@ -338,9 +338,10 @@ class Interface(Workflow, ModelSQL, ModelView):
                 for column in interface.columns:
                     if not column.type_:
                         continue
+                    position = column.evaluation_order * 1000 + rep
                     if not column.grouped:
                         if rep == 1:
-                            fields.append(Field(
+                            fields[position] = Field(
                                 name=column.alias,
                                 string=column.name,
                                 type=column.type_,
@@ -355,7 +356,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                                     None),
                                 readonly=column.readonly,
                                 digits=column.digits,
-                                ))
+                                )
                         continue
 
                     else:  # column.grouped
@@ -379,7 +380,7 @@ class Interface(Workflow, ModelSQL, ModelView):
 
                         expression = (column.expression and
                             column.expression.replace('_XX', '_%s' % rep))
-                        fields.append(Field(
+                        fields[position] = Field(
                             name='%s_%s' % (column.alias, str(rep)),
                             string='%s (%s)' % (column.name, str(rep)),
                             type=column.type_,
@@ -392,9 +393,9 @@ class Interface(Workflow, ModelSQL, ModelView):
                                 expression.startswith('=') else None),
                             readonly=column.readonly,
                             digits=column.digits,
-                            ))
+                            )
 
-            table.fields_ = fields
+            table.fields_ = [fields[x] for x in sorted(fields.keys())]
             table.grouped_fields_ = grouped_fields
             table.create_table()
             table.save()
