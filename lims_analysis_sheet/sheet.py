@@ -138,8 +138,7 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
             preplanned_where + dates_where)
 
         with Transaction().set_user(0):
-            cursor.execute(sql_select + sql_from + sql_where,
-                (date_from, date_to,))
+            cursor.execute(sql_select + sql_from + sql_where)
         notebook_lines = cursor.fetchall()
         if not notebook_lines:
             return res

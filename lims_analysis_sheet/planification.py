@@ -191,7 +191,7 @@ class SearchAnalysisSheet(Wizard):
             'WHERE ad.plannable = TRUE '
             'AND nl.start_date IS NULL '
             'AND nl.annulled = FALSE '
-            'AND nl.laboratory = %s ' +
+            'AND nl.laboratory = %s '
             'AND nla.behavior != \'internal_relation\' ' +
             preplanned_where + dates_where)
 
@@ -317,7 +317,10 @@ class SearchAnalysisSheet(Wizard):
                 'WHERE template = %s',
                 (template.id,))
             for res in cursor.fetchall():
-                template_analysis[res[0]] = res[1]
+                if res[0] not in template_analysis:
+                    template_analysis[res[0]] = []
+                if res[1]:
+                    template_analysis[res[0]].append(res[1])
         if not template_analysis:
             return {}
         all_included_analysis_ids = ', '.join(str(x)
@@ -380,7 +383,7 @@ class SearchAnalysisSheet(Wizard):
         if extra_where:
             for nl in notebook_lines:
                 if (template_analysis[nl[3]] and
-                        template_analysis[nl[3]] != nl[4]):
+                        nl[4] not in template_analysis[nl[3]]):
                     continue
                 f_ = nl[1]
                 s_ = nl[2]
@@ -395,7 +398,7 @@ class SearchAnalysisSheet(Wizard):
         else:
             for nl in notebook_lines:
                 if (template_analysis[nl[3]] and
-                        template_analysis[nl[3]] != nl[4]):
+                        nl[4] not in template_analysis[nl[3]]):
                     continue
                 f_ = nl[1]
                 s_ = nl[2]
@@ -588,7 +591,10 @@ class RelateTechnicians(metaclass=PoolMeta):
                 'WHERE template = %s',
                 (detail.template and detail.template.id or None,))
             for res in cursor.fetchall():
-                template_analysis[res[0]] = res[1]
+                if res[0] not in template_analysis:
+                    template_analysis[res[0]] = []
+                if res[1]:
+                    template_analysis[res[0]].append(res[1])
             if not template_analysis:
                 continue
             all_included_analysis_ids = ', '.join(str(x)
@@ -608,7 +614,7 @@ class RelateTechnicians(metaclass=PoolMeta):
                 (planification_id, detail.fraction.id))
             for x in cursor.fetchall():
                 if (template_analysis[x[1]] and
-                        template_analysis[x[1]] != x[2]):
+                        x[2] not in template_analysis[x[1]]):
                     continue
                 details.append(x[0])
 
@@ -1035,8 +1041,11 @@ class OpenPendingSample(Wizard):
         template = Template(context['active_id'])
         template_analysis = {}
         for analysis in template.analysis:
-            template_analysis[analysis.analysis.id] = (analysis.method.id
-                if analysis.method else None)
+            if analysis.analysis.id not in template_analysis:
+                template_analysis[analysis.analysis.id] = []
+            if analysis.method:
+                template_analysis[analysis.analysis.id].append(
+                    analysis.method.id)
 
         cursor.execute('SELECT nl.id '
             'FROM "' + NotebookLine._table + '" nl '
@@ -1089,9 +1098,10 @@ class OpenPendingSample(Wizard):
 
         result = []
         for nl in notebook_lines:
-            if (not template_analysis[nl[0]] or (template_analysis[
-                    nl[0]] and template_analysis[nl[0]] == nl[1])):
-                result.append(nl[2])
+            if (template_analysis[nl[0]] and
+                    nl[1] not in template_analysis[nl[0]]):
+                continue
+            result.append(nl[2])
         samples = list(set(result))
 
         action['pyson_domain'] = [
