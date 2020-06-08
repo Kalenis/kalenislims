@@ -1137,4 +1137,8 @@ class EditGroupedData(Wizard):
                     res[field_name] = value
 
             Data.write([line], res)
+            Data.update_formulas([line])
         return 'end'
+
+    def end(self):
+        return 'reload'
