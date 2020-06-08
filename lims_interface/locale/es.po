@@ -78,6 +78,10 @@ msgctxt "field:lims.interface.column,default_value:"
 msgid "Default value"
 msgstr "Valor por defecto"
 
+msgctxt "field:lims.interface.column,digits:"
+msgid "Digits"
+msgstr "Dígitos"
+
 msgctxt "field:lims.interface.column,domain:"
 msgid "Domain Value"
 msgstr "Dominio"
@@ -266,6 +270,10 @@ msgctxt "field:lims.interface.table,views:"
 msgid "Views"
 msgstr "Vistas"
 
+msgctxt "field:lims.interface.table.field,digits:"
+msgid "Digits"
+msgstr "Dígitos"
+
 msgctxt "field:lims.interface.table.field,domain:"
 msgid "Domain Value"
 msgstr "Dominio"
@@ -313,6 +321,10 @@ msgstr "Trasladar dato a registro"
 msgctxt "field:lims.interface.table.field,type:"
 msgid "Field Type"
 msgstr "Tipo de campo"
+
+msgctxt "field:lims.interface.table.grouped_field,digits:"
+msgid "Digits"
+msgstr "Dígitos"
 
 msgctxt "field:lims.interface.table.grouped_field,domain:"
 msgid "Domain Value"

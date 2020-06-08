@@ -78,7 +78,6 @@ class Adapter:
         obj.name = 'notebook_line'
         obj.readonly = True
         res['notebook_line'] = obj
-
         return res
 
 
@@ -273,6 +272,7 @@ class Data(ModelSQL, ModelView):
 
         table = cls.get_table()
         readonly = Transaction().context.get('lims_interface_readonly', False)
+        encoder = PYSONEncoder()
         for field in table.fields_:
             res[field.name] = {
                 'name': field.name,
@@ -298,6 +298,8 @@ class Data(ModelSQL, ModelView):
             if field.type in ['datetime', 'timestamp']:
                 res[field.name]['format'] = PYSONEncoder().encode(
                     '%H:%M:%S.%f')
+            if field.type in ['float', 'numeric']:
+                res[field.name]['digits'] = encoder.encode((16, field.digits))
         return res
 
     @classmethod
@@ -634,6 +636,7 @@ class GroupedData(ModelView):
 
         table = cls.get_table()
         readonly = Transaction().context.get('lims_interface_readonly', False)
+        encoder = PYSONEncoder()
         for field in table.grouped_fields_:
             res[field.name] = {
                 'name': field.name,
@@ -659,6 +662,8 @@ class GroupedData(ModelView):
             if field.type in ['datetime', 'timestamp']:
                 res[field.name]['format'] = PYSONEncoder().encode(
                     '%H:%M:%S.%f')
+            if field.type in ['float', 'numeric']:
+                res[field.name]['digits'] = encoder.encode((16, field.digits))
         return res
 
     @classmethod

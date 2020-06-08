@@ -8,11 +8,13 @@
         <label name="evaluation_order"/>
         <field name="evaluation_order" xexpand="0"/>
     </group>
-    <group id="type" colspan="4" col="4">
+    <group id="type" colspan="4" col="6">
         <label name="type_"/>
         <field name="type_"/>
         <label name="related_model"/>
         <field name="related_model"/>
+        <label name="digits"/>
+        <field name="digits" xexpand="0"/>
     </group>
     <group id="expression" colspan="4" col="3">
         <label name="expression"/>

@@ -94,6 +94,7 @@ class TableField(ModelSQL, ModelView):
     inputs = fields.Function(fields.Char('On Change With Inputs'),
         'get_inputs')
     readonly = fields.Boolean('Read only')
+    digits = fields.Integer('Digits')
 
     def get_inputs(self, name=None):
         if not self.formula:
@@ -125,6 +126,7 @@ class TableGroupedField(ModelSQL, ModelView):
     inputs = fields.Function(fields.Char('On Change With Inputs'),
         'get_inputs')
     readonly = fields.Boolean('Read only')
+    digits = fields.Integer('Digits')
 
     def get_inputs(self, name=None):
         if not self.formula:

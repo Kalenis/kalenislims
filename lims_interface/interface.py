@@ -354,6 +354,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                                     column.expression.startswith('=') else
                                     None),
                                 readonly=column.readonly,
+                                digits=column.digits,
                                 ))
                         continue
 
@@ -373,6 +374,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                                     expression.startswith('=') else
                                     None),
                                 readonly=column.readonly,
+                                digits=column.digits,
                                 ))
 
                         expression = (column.expression and
@@ -389,6 +391,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                             formula=(expression if expression and
                                 expression.startswith('=') else None),
                             readonly=column.readonly,
+                            digits=column.digits,
                             ))
 
             table.fields_ = fields
@@ -657,6 +660,11 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         states={'readonly': Bool(Eval('expression'))},
         depends=['expression'])
     readonly = fields.Boolean('Read only')
+    digits = fields.Integer('Digits',
+        states={
+            'required': Eval('type_').in_(['float', 'numeric']),
+            'invisible': ~Eval('type_').in_(['float', 'numeric']),
+        }, depends=['type_'])
     source_start = fields.Integer('Field start',
         states={
             'required': Eval('_parent_interface', {}).get(
@@ -712,6 +720,10 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
                 Unique(t, t.interface, sql.Column(t, 'alias')),
                 'lims_interface.msg_interface_column_alias_unique')
             ]
+
+    @staticmethod
+    def default_digits():
+        return 2
 
     @fields.depends('default_value', 'expression', 'singleton',
         'source_column')
@@ -910,6 +922,7 @@ class CopyInterfaceColumn(Wizard):
             'related_line_field': (origin.related_line_field and
                 origin.related_line_field.id or None),
             'grouped': origin.grouped,
+            'digits': origin.digits,
             }
         return res
 
