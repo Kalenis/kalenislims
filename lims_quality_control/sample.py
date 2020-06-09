@@ -126,6 +126,11 @@ class TakeSample(Wizard):
                 'lims_quality_control.msg_no_entry_quality'))
 
         entry = Entry(workyear.default_entry_quality.id)
+        if not entry.party.entry_zone and config.zone_required:
+            raise UserError(gettext('lims.msg_no_party_zone',
+                party=entry.party.rec_name))
+        zone_id = entry.party.entry_zone and entry.party.entry_zone.id or None
+
         obj_description = self._get_obj_description(lot.product)
 
         # new sample
@@ -137,8 +142,7 @@ class TakeSample(Wizard):
             'date': datetime.now(),
             'product_type': lot.product.template.product_type.id,
             'matrix': lot.product.template.matrix.id,
-            'zone': (entry.party.entry_zone.id
-                if entry.party.entry_zone else None),
+            'zone': zone_id,
             'label': self.start.label,
             'obj_description': obj_description,
             'packages_quantity': 1,
@@ -244,7 +248,7 @@ class CountersampleCreate(Wizard):
                 'date': datetime.now(),
                 'product_type': sample.product_type.id,
                 'matrix': sample.matrix.id,
-                'zone': sample.zone.id if sample.zone else None,
+                'zone': sample.zone and sample.zone.id or None,
                 'label': sample.label,
                 'obj_description': sample.obj_description,
                 'packages_quantity': sample.packages_quantity,
