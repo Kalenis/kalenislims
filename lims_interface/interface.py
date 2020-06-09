@@ -334,15 +334,16 @@ class Interface(Workflow, ModelSQL, ModelView):
             grouped_fields = []
 
             reps = (interface.grouped_repetitions or 1) + 1
+            pos_group = 0
             for rep in range(1, reps):
                 pos = 0
                 for column in interface.columns:
                     if not column.type_:
                         continue
                     pos += 1
-                    position = pos * 1000 + rep
                     if not column.grouped:
                         if rep == 1:
+                            position = pos * 1000
                             fields[position] = Field(
                                 name=column.alias,
                                 string=column.name,
@@ -363,6 +364,8 @@ class Interface(Workflow, ModelSQL, ModelView):
 
                     else:  # column.grouped
                         if rep == 1:
+                            position = pos * 1000
+                            pos_group = position
                             expression = (column.expression and
                                 column.expression.replace('_XX', ''))
                             grouped_fields.append(GroupedField(
@@ -379,6 +382,9 @@ class Interface(Workflow, ModelSQL, ModelView):
                                 readonly=column.readonly,
                                 digits=column.digits,
                                 ))
+                        else:
+                            pos_group += 1
+                            position = pos_group
 
                         expression = (column.expression and
                             column.expression.replace('_XX', '_%s' % rep))
