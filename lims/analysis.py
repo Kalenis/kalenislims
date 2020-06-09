@@ -1046,6 +1046,23 @@ class Analysis(Workflow, ModelSQL, ModelView):
         return childs
 
     @classmethod
+    def get_included_analysis_method(cls, analysis_id):
+        cursor = Transaction().connection.cursor()
+        AnalysisIncluded = Pool().get('lims.analysis.included')
+
+        childs = []
+        cursor.execute('SELECT included_analysis, method '
+            'FROM "' + AnalysisIncluded._table + '" '
+            'WHERE analysis = %s', (analysis_id,))
+        included_analysis = cursor.fetchall()
+        if included_analysis:
+            for analysis in included_analysis:
+                if analysis not in childs:
+                    childs.append(analysis)
+                childs.extend(cls.get_included_analysis_method(analysis[0]))
+        return childs
+
+    @classmethod
     def get_parents_analysis(cls, analysis_id):
         cursor = Transaction().connection.cursor()
         pool = Pool()

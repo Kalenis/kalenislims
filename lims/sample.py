@@ -422,25 +422,26 @@ class Service(ModelSQL, ModelView):
             ('fraction', '=', fraction_id),
             ('id', '!=', self.id)
             ])
-        if services:
-            analysis_ids = []
-            for service in services:
-                if service.analysis:
-                    analysis_ids.append(service.analysis.id)
-                    analysis_ids.extend(Analysis.get_included_analysis(
-                        service.analysis.id))
+        if not services:
+            return
+        analysis = []
+        for service in services:
+            analysis.append((service.analysis.id,
+                service.method and service.method.id or None))
+            analysis.extend(Analysis.get_included_analysis_method(
+                service.analysis.id))
 
-            new_analysis_ids = [self.analysis.id]
-            new_analysis_ids.extend(Analysis.get_included_analysis(
-                self.analysis.id))
-            for a_id in new_analysis_ids:
-                if a_id in analysis_ids:
-                    analysis = Analysis(a_id)
-                    raise UserError(gettext(
-                        'lims.msg_duplicated_analysis_service',
-                        analysis=analysis.rec_name,
-                        fraction=self.fraction.rec_name,
-                        ))
+        new_analysis = [(self.analysis.id,
+            self.method and self.method.id or None)]
+        new_analysis.extend(Analysis.get_included_analysis_method(
+            self.analysis.id))
+        for a in new_analysis:
+            if a in analysis:
+                raise UserError(gettext(
+                    'lims.msg_duplicated_analysis_service',
+                    analysis=Analysis(a[0]).rec_name,
+                    fraction=self.fraction.rec_name,
+                    ))
 
     @classmethod
     def create(cls, vlist):
@@ -1991,23 +1992,23 @@ class Fraction(ModelSQL, ModelView):
     def on_change_services(self, name=None):
         Analysis = Pool().get('lims.analysis')
         self.duplicated_analysis_message = ''
-        if self.services:
-            analysis_ids = []
-            for service in self.services:
-                if service.analysis:
-                    new_analysis_ids = [service.analysis.id]
-                    new_analysis_ids.extend(Analysis.get_included_analysis(
-                        service.analysis.id))
-
-                    for a_id in new_analysis_ids:
-                        if a_id in analysis_ids:
-                            analysis = Analysis(a_id)
-                            self.duplicated_analysis_message = (
-                                gettext(
-                                    'lims.msg_duplicated_analysis_fraction',
-                                    analysis=analysis.rec_name))
-                            return
-                    analysis_ids.extend(new_analysis_ids)
+        if not self.services:
+            return
+        analysis = []
+        for service in self.services:
+            if not service.analysis:
+                continue
+            new_analysis = [(service.analysis.id,
+                service.method and service.method.id or None)]
+            new_analysis.extend(Analysis.get_included_analysis_method(
+                service.analysis.id))
+            for a in new_analysis:
+                if a in analysis:
+                    self.duplicated_analysis_message = gettext(
+                        'lims.msg_duplicated_analysis',
+                        analysis=Analysis(a[0]).rec_name)
+                    return
+            analysis.extend(new_analysis)
 
     def get_create_date2(self, name):
         return self.create_date.replace(microsecond=0)
