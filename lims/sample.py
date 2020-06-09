@@ -2370,7 +2370,11 @@ class Sample(ModelSQL, ModelView):
         domain=[('category.lims_only_available', '=', True)])
     restricted_entry = fields.Boolean('Restricted entry',
         states={'readonly': True})
-    zone = fields.Many2One('lims.zone', 'Zone', required=True)
+    zone = fields.Many2One('lims.zone', 'Zone',
+        states={'required': Bool(Eval('zone_required'))},
+        depends=['zone_required'])
+    zone_required = fields.Function(fields.Boolean('Zone required'),
+        'get_zone_required')
     trace_report = fields.Boolean('Trace report')
     fractions = fields.One2Many('lims.fraction', 'sample', 'Fractions',
         context={
@@ -2701,21 +2705,28 @@ class Sample(ModelSQL, ModelView):
             return Transaction().context.get('party')
         return None
 
-    @staticmethod
-    def default_zone():
-        Party = Pool().get('party.party')
-
-        if (Transaction().context.get('party', 0) > 0):
-            party = Party(Transaction().context.get('party'))
-            if party.entry_zone:
-                return party.entry_zone.id
-
     @fields.depends('entry', '_parent_entry.party')
     def on_change_with_party(self, name=None):
         if self.entry:
             result = self.get_entry_field((self,), ('party',))
             return result['party'][self.id]
         return None
+
+    @staticmethod
+    def default_zone_required():
+        Config = Pool().get('lims.configuration')
+        return Config(1).zone_required
+
+    def get_zone_required(self, name=None):
+        return self.default_zone_required()
+
+    @staticmethod
+    def default_zone():
+        Party = Pool().get('party.party')
+        if (Transaction().context.get('party', 0) > 0):
+            party = Party(Transaction().context.get('party'))
+            if party.entry_zone:
+                return party.entry_zone.id
 
     @classmethod
     def get_views_field(cls, samples, names):
@@ -4611,7 +4622,11 @@ class CreateSampleStart(ModelView):
         domain=[('category.lims_only_available', '=', True)])
     restricted_entry = fields.Boolean('Restricted entry',
         states={'readonly': True})
-    zone = fields.Many2One('lims.zone', 'Zone', required=True)
+    zone = fields.Many2One('lims.zone', 'Zone',
+        states={'required': Bool(Eval('zone_required'))},
+        depends=['zone_required'])
+    zone_required = fields.Function(fields.Boolean('Zone required'),
+        'get_zone_required')
     trace_report = fields.Boolean('Trace report')
     report_comments = fields.Text('Report comments', translate=True)
     comments = fields.Text('Comments')
@@ -4648,6 +4663,14 @@ class CreateSampleStart(ModelView):
     @staticmethod
     def default_restricted_entry():
         return False
+
+    @staticmethod
+    def default_zone_required():
+        Config = Pool().get('lims.configuration')
+        return Config(1).zone_required
+
+    def get_zone_required(self, name=None):
+        return self.default_zone_required()
 
     @staticmethod
     def default_zone():

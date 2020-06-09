@@ -471,6 +471,10 @@ msgctxt "field:lims.configuration,soluble_solids_digits:"
 msgid "Soluble solids digits"
 msgstr "Dígitos de Sólidos solubles"
 
+msgctxt "field:lims.configuration,zone_required:"
+msgid "Zone required"
+msgstr "Zona requerida"
+
 msgctxt "field:lims.configuration-laboratory,configuration:"
 msgid "Configuration"
 msgstr "Configuración"
@@ -1222,6 +1226,10 @@ msgstr "Sin servicios"
 msgctxt "field:lims.create_sample.start,zone:"
 msgid "Zone"
 msgstr "Zona"
+
+msgctxt "field:lims.create_sample.start,zone_required:"
+msgid "Zone required"
+msgstr "Zona requerida"
 
 msgctxt "field:lims.divide_reports.detail,analysis:"
 msgid "Analysis"
@@ -5314,6 +5322,10 @@ msgstr "Variedad"
 msgctxt "field:lims.sample,zone:"
 msgid "Zone"
 msgstr "Zona"
+
+msgctxt "field:lims.sample,zone_required:"
+msgid "Zone required"
+msgstr "Zona requerida"
 
 msgctxt "field:lims.sample.duplicate.start,date:"
 msgid "Date"

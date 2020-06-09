@@ -22,6 +22,8 @@
             <field name="planification_process_background"/>
             <label name="samples_in_progress"/>
             <field name="samples_in_progress"/>
+            <label name="zone_required"/>
+            <field name="zone_required"/>
             <field name="microbiology_laboratories" colspan="4"/>
         </page>
         <page string="Fraction Types" id="fraction_type">

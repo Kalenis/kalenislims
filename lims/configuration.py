@@ -210,6 +210,7 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         ('accepted', 'With accepted results'),
         ], 'Samples in progress',
         help='Samples allowed for preliminary reports')
+    zone_required = fields.Boolean('Zone required')
 
     @staticmethod
     def default_brix_digits():
@@ -246,6 +247,10 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     @staticmethod
     def default_samples_in_progress():
         return 'result'
+
+    @staticmethod
+    def default_zone_required():
+        return True
 
     def get_reagents(self):
         res = []

@@ -2500,9 +2500,10 @@ class AddFractionRMBMZ(Wizard):
             raise UserError(gettext('lims.msg_no_entry_control'))
 
         entry = Entry(workyear.default_entry_control.id)
-        if not entry.party.entry_zone:
+        if not entry.party.entry_zone and config.zone_required:
             raise UserError(gettext('lims.msg_no_party_zone',
                 party=entry.party.rec_name))
+        zone_id = entry.party.entry_zone and entry.party.entry_zone.id or None
 
         laboratory = self.start.planification.laboratory
         obj_description = self._get_obj_description(self.start)
@@ -2513,7 +2514,7 @@ class AddFractionRMBMZ(Wizard):
             'date': datetime.now(),
             'product_type': self.start.product_type.id,
             'matrix': self.start.matrix.id,
-            'zone': entry.party.entry_zone.id,
+            'zone': zone_id,
             'label': self.start.label,
             'obj_description': obj_description,
             'packages_quantity': 1,
@@ -2938,9 +2939,10 @@ class AddFractionBRE(Wizard):
             raise UserError(gettext('lims.msg_no_entry_control'))
 
         entry = Entry(workyear.default_entry_control.id)
-        if not entry.party.entry_zone:
+        if not entry.party.entry_zone and config.zone_required:
             raise UserError(gettext('lims.msg_no_party_zone',
                 party=entry.party.rec_name))
+        zone_id = entry.party.entry_zone and entry.party.entry_zone.id or None
 
         laboratory = self.start.planification.laboratory
         obj_description = self._get_obj_description(self.start)
@@ -2951,7 +2953,7 @@ class AddFractionBRE(Wizard):
             'date': datetime.now(),
             'product_type': self.start.product_type.id,
             'matrix': self.start.matrix.id,
-            'zone': entry.party.entry_zone.id,
+            'zone': zone_id,
             'label': self.start.label,
             'obj_description': obj_description,
             'packages_quantity': 1,
@@ -3301,9 +3303,10 @@ class AddFractionMRT(Wizard):
             raise UserError(gettext('lims.msg_no_entry_control'))
 
         entry = Entry(workyear.default_entry_control.id)
-        if not entry.party.entry_zone:
+        if not entry.party.entry_zone and config.zone_required:
             raise UserError(gettext('lims.msg_no_party_zone',
                 party=entry.party.rec_name))
+        zone_id = entry.party.entry_zone and entry.party.entry_zone.id or None
 
         laboratory = self.start.planification.laboratory
         obj_description = self._get_obj_description(self.start)
@@ -3314,7 +3317,7 @@ class AddFractionMRT(Wizard):
             'date': datetime.now(),
             'product_type': self.start.product_type.id,
             'matrix': self.start.matrix.id,
-            'zone': entry.party.entry_zone.id,
+            'zone': zone_id,
             'label': self.start.label,
             'obj_description': obj_description,
             'packages_quantity': 1,
@@ -4521,9 +4524,10 @@ class CreateFractionControl(Wizard):
             raise UserError(gettext('lims.msg_no_entry_control'))
 
         entry = Entry(workyear.default_entry_control.id)
-        if not entry.party.entry_zone:
+        if not entry.party.entry_zone and config.zone_required:
             raise UserError(gettext('lims.msg_no_party_zone',
                 party=entry.party.rec_name))
+        zone_id = entry.party.entry_zone and entry.party.entry_zone.id or None
 
         laboratory = self.start.laboratory
         obj_description = self._get_obj_description(self.start)
@@ -4534,7 +4538,7 @@ class CreateFractionControl(Wizard):
             'date': datetime.now(),
             'product_type': self.start.product_type.id,
             'matrix': self.start.matrix.id,
-            'zone': entry.party.entry_zone.id,
+            'zone': zone_id,
             'label': self.start.label,
             'obj_description': obj_description,
             'packages_quantity': 1,
