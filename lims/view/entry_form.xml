@@ -20,8 +20,10 @@
                 <label name="no_acknowledgment_of_receipt"/>
                 <field name="no_acknowledgment_of_receipt"/>
             </group>
-            <button name="create_sample" string="Create Samples"
-                colspan="4" icon="tryton-add"/>
+            <group id="create_sample_spacer" colspan="3">
+            </group>
+            <button name="create_sample" string="CREATE SAMPLES"
+                colspan="1" icon="tryton-add"/>
             <field name="samples" colspan="4"/>
         </page>
         <page string="Additional Information" id="additional_information">
@@ -55,7 +57,7 @@
     <group colspan="4" id="buttons">
         <label name="state"/>
         <field name="state"/>
+        <button name="on_hold" string="Administration pending" icon="tryton-log"/>
         <button name="confirm" string="Confirm" icon="tryton-ok"/>
-        <button name="on_hold" string="Administration pending" icon="tryton-forward"/>
     </group>
 </form>

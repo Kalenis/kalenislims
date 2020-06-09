@@ -12295,6 +12295,10 @@ msgid "Administration pending"
 msgstr "Pendiente por administración"
 
 msgctxt "view:lims.entry:"
+msgid "CREATE SAMPLES"
+msgstr "CREAR MUESTRAS"
+
+msgctxt "view:lims.entry:"
 msgid "Comments"
 msgstr "Observaciones"
 
@@ -12305,10 +12309,6 @@ msgstr "Confirmar"
 msgctxt "view:lims.entry:"
 msgid "Contacts"
 msgstr "Contactos"
-
-msgctxt "view:lims.entry:"
-msgid "Create Samples"
-msgstr "Crear muestras"
 
 msgctxt "view:lims.entry:"
 msgid "General"

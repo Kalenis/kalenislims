@@ -88,9 +88,8 @@ class Entry(Workflow, ModelSQL, ModelView):
     no_acknowledgment_of_receipt = fields.Boolean(
         'No acknowledgment of receipt')
     samples = fields.One2Many('lims.sample', 'entry', 'Samples',
-        context={
-            'entry': Eval('id'), 'party': Eval('party'),
-            }, depends=['party'])
+        readonly=True, context={'entry': Eval('id'), 'party': Eval('party')},
+        depends=['party'])
     invoice_comments = fields.Text('Invoice comments')
     report_comments = fields.Text('Report comments', translate=True)
     transfer_comments = fields.Text('Transfer comments')
