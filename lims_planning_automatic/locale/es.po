@@ -1,0 +1,16 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:lims.laboratory,automatic_planning:"
+msgid "Automatic Planning"
+msgstr "Planificación Automática"
+
+msgctxt "field:lims.planification,automatic:"
+msgid "Automatic"
+msgstr "Automática"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_planification_list_domain_automatic"
+msgid "Automatic"
+msgstr "Automática"
