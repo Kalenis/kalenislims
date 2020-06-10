@@ -3,7 +3,7 @@
     <group col="6" colspan="4" id="header_holder">
         <label name="laboratory"/>
         <field name="laboratory"/>
-        <group col="4" colspan="2" id="header_holder">
+        <group col="4" colspan="2" id="dates">
             <label name="start_date"/>
             <field name="start_date"/>
             <label name="date"/>
