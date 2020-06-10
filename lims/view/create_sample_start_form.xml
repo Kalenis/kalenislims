@@ -30,17 +30,9 @@
                 <label name="fraction_state"/>
                 <field name="fraction_state"/>
             </group>
-            <group col="4" colspan="2" id="zone">
-                <label name="zone"/>
-                <field name="zone"/>
-                <label name="restricted_entry"/>
-                <field name="restricted_entry" xexpand="0"/>
-            </group>
-            <group col="2" colspan="2" id="storage_time">
+            <group id="trace_report" colspan="4" col="-1">
                 <label name="storage_time"/>
                 <field name="storage_time"/>
-            </group>
-            <group id="trace_report" colspan="4" col="6">
                 <label name="trace_report"/>
                 <field name="trace_report"/>
                 <label name="shared"/>
@@ -66,6 +58,10 @@
                 <label name="obj_description_manual_eng"/>
                 <field name="obj_description_manual_eng"/>
             </group>
+            <label name="zone"/>
+            <field name="zone"/>
+            <label name="restricted_entry"/>
+            <field name="restricted_entry"/>
             <field name="attributes" colspan="4"/>
         </page>
         <page id="report" string="Report">
