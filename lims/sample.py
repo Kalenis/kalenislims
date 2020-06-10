@@ -1276,15 +1276,9 @@ class Fraction(ModelSQL, ModelView):
     storage_location = fields.Many2One('stock.location', 'Storage location',
         required=True, domain=[('type', '=', 'storage')])
     storage_time = fields.Integer('Storage time (in months)', required=True)
-    weight = fields.Float('Weight')
-    weight_uom = fields.Many2One('product.uom', 'Weight UoM',
-        domain=[('category.lims_only_available', '=', True)])
     packages_quantity = fields.Integer('Packages quantity', required=True)
     package_type = fields.Many2One('lims.packaging.type', 'Package type',
         required=True)
-    size = fields.Float('Size')
-    size_uom = fields.Many2One('product.uom', 'Size UoM',
-        domain=[('category.lims_only_available', '=', True)])
     expiry_date = fields.Date('Expiry date', states={'readonly': True})
     discharge_date = fields.Date('Discharge date')
     countersample_location = fields.Many2One('stock.location',
@@ -1745,30 +1739,6 @@ class Fraction(ModelSQL, ModelView):
         return None
 
     @staticmethod
-    def default_size():
-        return Transaction().context.get('size', None)
-
-    @fields.depends('sample', '_parent_sample.size')
-    def on_change_with_size(self, name=None):
-        if self.sample:
-            result = self.get_sample_field((self,), ('size',))
-            return result['size'][self.id]
-        return None
-
-    @staticmethod
-    def default_size_uom():
-        if Transaction().context.get('size_uom'):
-            return Transaction().context.get('size_uom')
-        return None
-
-    @fields.depends('sample', '_parent_sample.size_uom')
-    def on_change_with_size_uom(self, name=None):
-        if self.sample:
-            result = self.get_sample_field((self,), ('size_uom',))
-            return result['size_uom'][self.id]
-        return None
-
-    @staticmethod
     def default_fraction_state():
         if Transaction().context.get('fraction_state'):
             return Transaction().context.get('fraction_state')
@@ -1786,17 +1756,17 @@ class Fraction(ModelSQL, ModelView):
         result = {}
         for name in names:
             result[name] = {}
-            if name in ('label', 'size'):
-                for f in fractions:
-                    result[name][f.id] = getattr(f.sample, name, None)
-            elif name == 'fraction_state':
+            if name == 'fraction_state':
                 for f in fractions:
                     field = getattr(f.sample, 'package_state', None)
                     result[name][f.id] = field.id if field else None
-            else:
+            elif cls._fields[name]._type == 'many2one':
                 for f in fractions:
                     field = getattr(f.sample, name, None)
                     result[name][f.id] = field.id if field else None
+            else:
+                for f in fractions:
+                    result[name][f.id] = getattr(f.sample, name, None)
         return result
 
     @classmethod
@@ -2369,9 +2339,6 @@ class Sample(ModelSQL, ModelView):
         'Package state')
     package_type = fields.Many2One('lims.packaging.type', 'Package type')
     packages_quantity = fields.Integer('Packages quantity', required=True)
-    size = fields.Float('Size')
-    size_uom = fields.Many2One('product.uom', 'Size UoM',
-        domain=[('category.lims_only_available', '=', True)])
     restricted_entry = fields.Boolean('Restricted entry',
         states={'readonly': True})
     zone = fields.Many2One('lims.zone', 'Zone',
@@ -2387,8 +2354,7 @@ class Sample(ModelSQL, ModelView):
             'product_type': Eval('product_type'), 'matrix': Eval('matrix'),
             'sample': Eval('id'), 'entry': Eval('entry'),
             'party': Eval('party'), 'label': Eval('label'),
-            'package_type': Eval('package_type'), 'size': Eval('size'),
-            'size_uom': Eval('size_uom'),
+            'package_type': Eval('package_type'),
             'fraction_state': Eval('package_state'),
             },
         depends=['analysis_domain', 'typification_domain', 'entry',
@@ -4621,9 +4587,6 @@ class CreateSampleStart(ModelView):
     package_type = fields.Many2One('lims.packaging.type', 'Package type',
         required=True)
     packages_quantity = fields.Integer('Packages quantity', required=True)
-    size = fields.Float('Size')
-    size_uom = fields.Many2One('product.uom', 'Size UoM',
-        domain=[('category.lims_only_available', '=', True)])
     restricted_entry = fields.Boolean('Restricted entry',
         states={'readonly': True})
     zone = fields.Many2One('lims.zone', 'Zone',
@@ -4643,9 +4606,6 @@ class CreateSampleStart(ModelView):
     storage_location = fields.Many2One('stock.location', 'Storage location',
         required=True, domain=[('type', '=', 'storage')])
     storage_time = fields.Integer('Storage time (in months)', required=True)
-    weight = fields.Float('Weight')
-    weight_uom = fields.Many2One('product.uom', 'Weight UoM',
-        domain=[('category.lims_only_available', '=', True)])
     shared = fields.Boolean('Shared')
     analysis_domain = fields.Function(fields.Many2Many('lims.analysis',
         None, None, 'Analysis domain'), 'on_change_with_analysis_domain')
@@ -5083,12 +5043,6 @@ class CreateSample(Wizard):
         if (hasattr(self.start, 'producer') and
                 getattr(self.start, 'producer')):
             producer_id = getattr(self.start, 'producer').id
-        size = (hasattr(self.start, 'size') and
-            getattr(self.start, 'size') or None)
-        size_uom_id = None
-        if (hasattr(self.start, 'size_uom') and
-                getattr(self.start, 'size_uom')):
-            size_uom_id = getattr(self.start, 'size_uom').id
         zone_id = None
         if (hasattr(self.start, 'zone') and
                 getattr(self.start, 'zone')):
@@ -5099,12 +5053,6 @@ class CreateSample(Wizard):
         if (hasattr(self.start, 'variety') and
                 getattr(self.start, 'variety')):
             variety_id = getattr(self.start, 'variety').id
-        weight = (hasattr(self.start, 'weight') and
-            getattr(self.start, 'weight') or None)
-        weight_uom_id = None
-        if (hasattr(self.start, 'weight_uom') and
-                getattr(self.start, 'weight_uom')):
-            weight_uom_id = getattr(self.start, 'weight_uom').id
         shared = (hasattr(self.start, 'shared') and
             getattr(self.start, 'shared') or False)
         trace_report = (hasattr(self.start, 'trace_report') and
@@ -5147,11 +5095,7 @@ class CreateSample(Wizard):
                 'type': self.start.fraction_type.id,
                 'storage_location': self.start.storage_location.id,
                 'storage_time': self.start.storage_time,
-                'weight': weight,
-                'weight_uom': weight_uom_id,
                 'packages_quantity': self.start.packages_quantity,
-                'size': size,
-                'size_uom': size_uom_id,
                 'shared': shared,
                 'package_type': self.start.package_type.id,
                 'fraction_state': self.start.fraction_state.id,
@@ -5172,8 +5116,6 @@ class CreateSample(Wizard):
                 'package_state': self.start.fraction_state.id,
                 'package_type': self.start.package_type.id,
                 'packages_quantity': self.start.packages_quantity,
-                'size': size,
-                'size_uom': size_uom_id,
                 'restricted_entry': restricted_entry,
                 'zone': zone_id,
                 'trace_report': trace_report,

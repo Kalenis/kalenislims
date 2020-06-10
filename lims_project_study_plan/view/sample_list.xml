@@ -7,8 +7,6 @@
     <field name="label"/>
     <field name="package_type"/>
     <field name="packages_quantity"/>
-    <field name="size"/>
-    <field name="size_uom"/>
     <field name="application_date"/>
     <field name="sampling_date"/>
     <field name="treatment"/>

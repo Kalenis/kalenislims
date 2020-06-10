@@ -66,14 +66,6 @@
                 <label name="obj_description_manual_eng"/>
                 <field name="obj_description_manual_eng"/>
             </group>
-            <label name="weight"/>
-            <field name="weight"/>
-            <label name="weight_uom"/>
-            <field name="weight_uom"/>
-            <label name="size"/>
-            <field name="size"/>
-            <label name="size_uom"/>
-            <field name="size_uom"/>
             <field name="attributes" colspan="4"/>
         </page>
         <page id="report" string="Report">

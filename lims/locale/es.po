@@ -1187,14 +1187,6 @@ msgctxt "field:lims.create_sample.start,shared:"
 msgid "Shared"
 msgstr "Compartida"
 
-msgctxt "field:lims.create_sample.start,size:"
-msgid "Size"
-msgstr "Tamaño"
-
-msgctxt "field:lims.create_sample.start,size_uom:"
-msgid "Size UoM"
-msgstr "UdM Tamaño"
-
 msgctxt "field:lims.create_sample.start,storage_location:"
 msgid "Storage location"
 msgstr "Ubicación de almacenamiento"
@@ -1210,14 +1202,6 @@ msgstr "Informar traza"
 msgctxt "field:lims.create_sample.start,variety:"
 msgid "Variety"
 msgstr "Variedad"
-
-msgctxt "field:lims.create_sample.start,weight:"
-msgid "Weight"
-msgstr "Peso"
-
-msgctxt "field:lims.create_sample.start,weight_uom:"
-msgid "Weight UoM"
-msgstr "UdM Peso"
 
 msgctxt "field:lims.create_sample.start,without_services:"
 msgid "Without services"
@@ -1787,14 +1771,6 @@ msgctxt "field:lims.fraction,shared:"
 msgid "Shared"
 msgstr "Compartida"
 
-msgctxt "field:lims.fraction,size:"
-msgid "Size"
-msgstr "Tamaño"
-
-msgctxt "field:lims.fraction,size_uom:"
-msgid "Size UoM"
-msgstr "UdM Tamaño"
-
 msgctxt "field:lims.fraction,special_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
@@ -1818,14 +1794,6 @@ msgstr "Dominio para Tipificaciones"
 msgctxt "field:lims.fraction,waiting_confirmation:"
 msgid "Waiting confirmation"
 msgstr "Esperando confirmación"
-
-msgctxt "field:lims.fraction,weight:"
-msgid "Weight"
-msgstr "Peso"
-
-msgctxt "field:lims.fraction,weight_uom:"
-msgid "Weight UoM"
-msgstr "UdM Peso"
 
 msgctxt "field:lims.fraction.discharge.result,discharge_date:"
 msgid "Discharge date"
@@ -5302,14 +5270,6 @@ msgstr "Ingreso restringido"
 msgctxt "field:lims.sample,sample_client_description:"
 msgid "Product described by the client"
 msgstr "Producto descripto por el cliente"
-
-msgctxt "field:lims.sample,size:"
-msgid "Size"
-msgstr "Tamaño"
-
-msgctxt "field:lims.sample,size_uom:"
-msgid "Size UoM"
-msgstr "UdM Tamaño"
 
 msgctxt "field:lims.sample,trace_report:"
 msgid "Trace report"

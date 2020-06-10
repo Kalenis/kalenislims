@@ -30,14 +30,6 @@
             <field name="package_type"/>
             <label name="packages_quantity"/>
             <field name="packages_quantity"/>
-            <label name="weight"/>
-            <field name="weight"/>
-            <label name="weight_uom"/>
-            <field name="weight_uom"/>
-            <label name="size"/>
-            <field name="size"/>
-            <label name="size_uom"/>
-            <field name="size_uom"/>
             <label name="expiry_date"/>
             <field name="expiry_date"/>
             <label name="discharge_date"/>
