@@ -3705,6 +3705,14 @@ msgctxt "field:lims.packaging.integrity,description:"
 msgid "Description"
 msgstr "Descripción"
 
+msgctxt "field:lims.packaging.type,capacity:"
+msgid "Capacity"
+msgstr "Capacidad"
+
+msgctxt "field:lims.packaging.type,capacity_uom:"
+msgid "Capacity UoM"
+msgstr "UdM Capacidad"
+
 msgctxt "field:lims.packaging.type,code:"
 msgid "Code"
 msgstr "Código"

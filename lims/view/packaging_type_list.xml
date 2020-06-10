@@ -2,4 +2,6 @@
 <tree>
     <field name="code"/>
     <field name="description"/>
+    <field name="capacity"/>
+    <field name="capacity_uom"/>
 </tree>

@@ -4,4 +4,8 @@
     <field name="code"/>
     <label name="description"/>
     <field name="description"/>
+    <label name="capacity"/>
+    <field name="capacity"/>
+    <label name="capacity_uom"/>
+    <field name="capacity_uom"/>
 </form>

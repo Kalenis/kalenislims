@@ -166,6 +166,9 @@ class PackagingType(ModelSQL, ModelView):
 
     code = fields.Char('Code', required=True)
     description = fields.Char('Description', required=True, translate=True)
+    capacity = fields.Float('Capacity')
+    capacity_uom = fields.Many2One('product.uom', 'Capacity UoM',
+        domain=[('category.lims_only_available', '=', True)])
 
     @classmethod
     def __setup__(cls):
@@ -177,10 +180,11 @@ class PackagingType(ModelSQL, ModelView):
             ]
 
     def get_rec_name(self, name):
-        if self.code:
-            return self.code + ' - ' + self.description
-        else:
-            return self.description
+        rec_name = '%s - %s' % (self.code, self.description)
+        if self.capacity and self.capacity_uom:
+            rec_name += ' (%s %s)' % (
+                str(self.capacity), self.capacity_uom.symbol)
+        return rec_name
 
     @classmethod
     def search_rec_name(cls, name, clause):
