@@ -246,6 +246,13 @@ class CreateSampleStart(metaclass=PoolMeta):
     def on_change_label(self):
         self.labels = self.label
 
+    @fields.depends('packages_quantity', 'package_type')
+    def on_change_with_ind_volume(self, name=None):
+        if (self.packages_quantity and
+                self.package_type and self.package_type.capacity):
+            return (self.packages_quantity * self.package_type.capacity)
+        return None
+
 
 class CreateSample(metaclass=PoolMeta):
     __name__ = 'lims.create_sample'
