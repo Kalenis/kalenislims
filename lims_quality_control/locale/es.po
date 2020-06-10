@@ -274,6 +274,10 @@ msgctxt "field:lims.quality.template,rec_name:"
 msgid "Record Name"
 msgstr "Nombre registro"
 
+msgctxt "field:lims.quality.template,results_report_required:"
+msgid "Results Report Required"
+msgstr "Informe de resultados requerido"
+
 msgctxt "field:lims.quality.template,revision:"
 msgid "Revision"
 msgstr "Versión"

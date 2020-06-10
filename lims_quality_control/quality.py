@@ -56,6 +56,8 @@ class Template(Workflow, ModelSQL, ModelView):
         "Revision", required=True, readonly=True)
     countersample_required = fields.Boolean('Countersample Required',
         states=_STATES, depends=_DEPENDS)
+    results_report_required = fields.Boolean('Results Report Required',
+        states=_STATES, depends=_DEPENDS)
     range_validate = fields.Boolean('Ranges Validate',
         states=_STATES, depends=_DEPENDS)
     range_type = fields.Many2One('lims.range.type', 'Range Type',
@@ -314,11 +316,13 @@ class QualityTest(Workflow, ModelSQL, ModelView):
     @ModelView.button
     def manager_validate(cls, tests):
         for test in tests:
+            results_report_required = test.template.results_report_required
             for line in test.lines:
                 if not line.accepted:
                     raise UserError(gettext(
                         'lims_quality_control.msg_missing_accepted_lines'))
-                if line.report and not line.results_report:
+                if (results_report_required and
+                        line.report and not line.results_report):
                     raise UserError(gettext(
                         'lims_quality_control.msg_missing_results_report'))
             if (test.template.countersample_required and
