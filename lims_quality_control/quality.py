@@ -224,7 +224,7 @@ class QualityTest(Workflow, ModelSQL, ModelView):
         cls._buttons.update({
             'confirm': {
                 'invisible': (Eval('state') != 'draft'),
-                'icon': 'tryton-go-next',
+                'icon': 'tryton-forward',
                 },
             'manager_validate': {
                 'invisible': (Eval('state') != 'confirmed'),
@@ -233,6 +233,8 @@ class QualityTest(Workflow, ModelSQL, ModelView):
             })
 
     def get_success(self, name):
+        if not self.lines:
+            return False
         for line in self.lines:
             if not line.success:
                 return False

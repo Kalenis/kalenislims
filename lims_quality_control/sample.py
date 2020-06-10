@@ -26,7 +26,7 @@ class LabWorkYear(metaclass=PoolMeta):
 class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
     quality = fields.Boolean('Quality')
-    lot = fields.Many2One('stock.lot', 'Lot')
+    lot = fields.Many2One('stock.lot', 'Lot', readonly=True)
     test_state = fields.Selection([
         ('pending', 'Pending'),
         ('done', 'Done'),
