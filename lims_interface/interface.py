@@ -1253,10 +1253,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
 
     def _get_formula_value(self, field, line):
         parser = formulas.Parser()
-        ast = parser.ast(
-            field[1]['formula'])[1].compile()
-        inputs = (' '.join([x for x in ast.inputs])
-            ).lower().split()
+        ast = parser.ast(field[1]['formula'])[1].compile()
+        inputs = (' '.join([x for x in ast.inputs])).lower().split()
         inputs = [line[x] for x in inputs]
         try:
             value = ast(*inputs)
@@ -1565,8 +1563,7 @@ class TestFormulaView(ModelView):
         variables = []
         parser = formulas.Parser()
         ast = parser.ast(self.expression)[1].compile()
-        inputs = (' '.join([x for x in ast.inputs])
-            ).lower().split()
+        inputs = (' '.join([x for x in ast.inputs])).lower().split()
         for input_ in inputs:
             variables.append({'variable': input_})
         self.variables = variables

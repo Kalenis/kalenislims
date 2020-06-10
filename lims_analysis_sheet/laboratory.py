@@ -142,7 +142,7 @@ class NotebookRule(metaclass=PoolMeta):
             return
 
         try:
-            sheet_line.set_field(str(self.value), target_field)
+            Data.write([sheet_line], {target_field: str(self.value)})
         except Exception as e:
             return
 

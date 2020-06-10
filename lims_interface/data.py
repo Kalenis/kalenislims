@@ -202,36 +202,6 @@ class Data(ModelSQL, ModelView):
         except AttributeError:
             pass
 
-    def on_change_with(self, fieldnames):
-        table = self.get_table()
-        res = {}
-        for field in table.fields_:
-            if field.name not in fieldnames:
-                continue
-            ast = field.get_ast()
-            inputs = field.inputs.split()
-            inputs = [getattr(self, x) for x in inputs]
-            try:
-                value = ast(*inputs)
-            except schedula.utils.exc.DispatcherError as e:
-                raise UserError(e.args[0] % e.args[1:])
-
-            if isinstance(value, list):
-                value = str(value)
-            elif (not isinstance(value, str) and
-                    not isinstance(value, int) and
-                    not isinstance(value, float) and
-                    not isinstance(value, type(None))):
-                value = value.tolist()
-            if isinstance(value, formulas.tokens.operand.XlError):
-                value = None
-            elif isinstance(value, list):
-                for x in chain(*value):
-                    if isinstance(x, formulas.tokens.operand.XlError):
-                        value = None
-            res[field.name] = value
-        return res
-
     @classmethod
     def add_on_change_with_method(cls, field):
         """
@@ -425,8 +395,8 @@ class Data(ModelSQL, ModelView):
     @classmethod
     def create(cls, vlist):
         sql_table = cls.get_sql_table()
-
         cursor = Transaction().connection.cursor()
+
         ids = []
         for record in vlist:
             fields = []
@@ -444,46 +414,93 @@ class Data(ModelSQL, ModelView):
         return records
 
     @classmethod
-    def update_formulas(cls, records=None):
-        table = cls.get_table()
-        if not records:
-            records = cls.search([])
-
-        formula_fields = [x.name for x in table.fields_ if x.formula]
-        if not formula_fields:
-            return
-        actions = []
-        for record in records:
-            actions.append([record])
-            actions.append(record.on_change_with(formula_fields))
-        cls.write(*actions)
-
-    @classmethod
     def write(cls, *args):
-        table = cls.get_table()
-        formula_fields = [x.name for x in table.fields_ if x.formula]
-
-        table = cls.get_sql_table()
+        sql_table = cls.get_sql_table()
         cursor = Transaction().connection.cursor()
 
-        has_formulas = False
         all_records = []
         actions = iter(args)
-        for records, values in zip(actions, actions):
+        for records, vals in zip(actions, actions):
             all_records += records
             fields = []
-            to_update = []
-            for key, value in values.items():
-                fields.append(sql.Column(table, key))
-                to_update.append(value)
-                if key in formula_fields:
-                    has_formulas = True
-            query = table.update(fields, to_update,
-                where=table.id.in_([x.id for x in records]))
+            values = []
+            for key, value in vals.items():
+                fields.append(sql.Column(sql_table, key))
+                values.append(value)
+
+            query = sql_table.update(fields, values,
+                where=sql_table.id.in_([x.id for x in records]))
+            cursor.execute(*query)
+        cls.update_formulas(all_records)
+
+    @classmethod
+    def update_formulas(cls, records=None):
+        Column = Pool().get('lims.interface.column')
+        cursor = Transaction().connection.cursor()
+
+        table = cls.get_table()
+        sql_table = cls.get_sql_table()
+        compilation = cls.get_compilation()
+
+        interface = compilation and compilation.interface.id or None
+
+        formula_fields = []
+        for field in table.fields_:
+            if not field.formula:
+                continue
+            col = Column.search([
+                ('interface', '=', interface),
+                ('alias', '=', field.name),
+                ])
+            order = col and col[0].evaluation_order or 0
+            formula_fields.append({
+                'order': order,
+                'field': field,
+                })
+        if not formula_fields:
+            return
+
+        if not records:
+            records = cls.search([])
+        for record in records:
+            vals = {}
+            fields = []
+            values = []
+            for field in sorted(formula_fields, key=lambda x: x['order']):
+                field_name = field['field'].name
+                fields.append(sql.Column(sql_table, field_name))
+                value = record.get_formula_value(field['field'], vals)
+                values.append(value)
+                vals[field_name] = value
+
+            query = sql_table.update(fields, values,
+                where=(sql_table.id == record.id))
             cursor.execute(*query)
 
-        if not has_formulas and formula_fields:
-            cls.update_formulas(all_records)
+    def get_formula_value(self, field, vals={}):
+        ast = field.get_ast()
+        inputs = []
+        for x in field.inputs.split():
+            inputs.append(vals.get(x, getattr(self, x)))
+        try:
+            value = ast(*inputs)
+        except schedula.utils.exc.DispatcherError as e:
+            raise UserError(e.args[0] % e.args[1:])
+
+        if isinstance(value, list):
+            value = str(value)
+        elif (not isinstance(value, str) and
+                not isinstance(value, int) and
+                not isinstance(value, float) and
+                not isinstance(value, type(None))):
+            value = value.tolist()
+        if isinstance(value, formulas.tokens.operand.XlError):
+            value = None
+        elif isinstance(value, list):
+            for x in chain(*value):
+                if isinstance(x, formulas.tokens.operand.XlError):
+                    value = None
+        return value
 
     @classmethod
     def delete(cls, records):
@@ -565,36 +582,6 @@ class GroupedData(ModelView):
             return super(GroupedData, self).__getattr__(name)
         except AttributeError:
             pass
-
-    def on_change_with(self, fieldnames):
-        table = self.get_table()
-        res = {}
-        for field in table.grouped_fields_:
-            if field.name not in fieldnames:
-                continue
-            ast = field.get_ast()
-            inputs = field.inputs.split()
-            inputs = [getattr(self, x) for x in inputs]
-            try:
-                value = ast(*inputs)
-            except schedula.utils.exc.DispatcherError as e:
-                raise UserError(e.args[0] % e.args[1:])
-
-            if isinstance(value, list):
-                value = str(value)
-            elif (not isinstance(value, str) and
-                    not isinstance(value, int) and
-                    not isinstance(value, float) and
-                    not isinstance(value, type(None))):
-                value = value.tolist()
-            if isinstance(value, formulas.tokens.operand.XlError):
-                value = None
-            elif isinstance(value, list):
-                for x in chain(*value):
-                    if isinstance(x, formulas.tokens.operand.XlError):
-                        value = None
-            res[field.name] = value
-        return res
 
     @classmethod
     def add_on_change_with_method(cls, field):

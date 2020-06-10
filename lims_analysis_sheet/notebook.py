@@ -664,8 +664,7 @@ class RepeatAnalysis(Wizard):
                     ('compilation', '=', sheet.compilation.id),
                     ('notebook_line', 'in', to_annul),
                     ])
-                for line in lines:
-                    line.set_field('true', 'annulled')
+                Data.write(lines, {'annulled': True})
 
         return 'end'
 
@@ -751,10 +750,10 @@ class CalculateExpressions(Wizard):
                             value = None
                         elif isinstance(value, list):
                             for x in chain(*value):
-                                if isinstance(
-                                        x, formulas.tokens.operand.XlError):
+                                if isinstance(x,
+                                        formulas.tokens.operand.XlError):
                                     value = None
-                        line.set_field(str(value or ''), alias)
+                        Data.write([line], {alias: str(value or '')})
 
         return 'end'
 
@@ -863,7 +862,9 @@ class ResultsVerification(Wizard):
                 verification = self._get_result_verification(
                     getattr(s_line, result_field), n_line)
                 if verification is not None:
-                    s_line.set_field(str(verification), verification_field)
+                    Data.write([s_line],
+                        {verification_field: str(verification)})
+
         return 'end'
 
     def _get_result_verification(self, result, notebook_line):
@@ -1135,9 +1136,8 @@ class EditGroupedData(Wizard):
                             if isinstance(x, formulas.tokens.operand.XlError):
                                 value = None
                     res[field_name] = value
-
             Data.write([line], res)
-            Data.update_formulas([line])
+
         return 'end'
 
     def end(self):
