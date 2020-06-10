@@ -250,6 +250,10 @@ msgctxt "field:lims.interface.grouped_data,iteration:"
 msgid "Iteration"
 msgstr "Iteración"
 
+msgctxt "field:lims.interface.grouped_data,notebook_line:"
+msgid "Notebook Line"
+msgstr "Línea de cuaderno"
+
 msgctxt "field:lims.interface.table,fields_:"
 msgid "Fields"
 msgstr "Campos"

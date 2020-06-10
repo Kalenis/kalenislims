@@ -1087,10 +1087,11 @@ class EditGroupedData(Wizard):
                 lims_interface_table=sheet.compilation.table.id):
             line = Data.search([('id', '=', line_id)])[0]
             for rep in range(1, reps):
-                record = {'iteration': rep}
+                record = {
+                    'notebook_line': line.notebook_line.id,
+                    'iteration': rep,
+                    }
                 for field in grouped_fields:
-                    #if bool(field.formula):
-                        #continue
                     val = getattr(line, '%s_%s' % (field.name, str(rep)))
                     if field.type == 'many2one':
                         record[field.name] = val and val.id or None

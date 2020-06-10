@@ -132,6 +132,10 @@ class GroupedAdapter:
         obj = fields.Integer('ID')
         obj.name = 'id'
         res['id'] = obj
+        obj = fields.Many2One('lims.notebook.line', 'Notebook Line')
+        obj.name = 'notebook_line'
+        obj.readonly = True
+        res['notebook_line'] = obj
         obj = fields.Integer('Iteration')
         obj.name = 'iteration'
         obj.readonly = True
@@ -554,6 +558,8 @@ class GroupedData(ModelView):
     'Grouped Data'
     __name__ = 'lims.interface.grouped_data'
 
+    notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
+        readonly=True)
     iteration = fields.Integer('Iteration', readonly=True)
 
     @classmethod
@@ -664,6 +670,7 @@ class GroupedData(ModelView):
         assert(view.id)
 
         fields_names = [
+            'notebook_line',
             'iteration',
             ]
         for field in table.grouped_fields_:
