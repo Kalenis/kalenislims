@@ -98,9 +98,17 @@ msgctxt "field:lims.create_sample.start,attributes_domain:"
 msgid "Attributes domain"
 msgstr "Dominio para Atributos"
 
+msgctxt "field:lims.create_sample.start,changed_air_filter:"
+msgid "Did change Air Filter?"
+msgstr "Cambió filtro de aire?"
+
 msgctxt "field:lims.create_sample.start,changed_oil:"
 msgid "Did change Oil?"
 msgstr "Cambió aceite?"
+
+msgctxt "field:lims.create_sample.start,changed_oil_filter:"
+msgid "Did change Oil Filter?"
+msgstr "Cambió filtro de aceite?"
 
 msgctxt "field:lims.create_sample.start,comercial_product:"
 msgid "Comercial Product"
@@ -389,9 +397,17 @@ msgctxt "field:lims.sample,attributes_domain:"
 msgid "Attributes domain"
 msgstr "Dominio para Atributos"
 
+msgctxt "field:lims.sample,changed_air_filter:"
+msgid "Did change Air Filter?"
+msgstr "Cambió filtro de aire?"
+
 msgctxt "field:lims.sample,changed_oil:"
 msgid "Did change Oil?"
 msgstr "Cambió aceite?"
+
+msgctxt "field:lims.sample,changed_oil_filter:"
+msgid "Did change Oil Filter?"
+msgstr "Cambió filtro de aceite?"
 
 msgctxt "field:lims.sample,comercial_product:"
 msgid "Comercial Product"

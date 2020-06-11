@@ -56,6 +56,8 @@ class Sample(metaclass=PoolMeta):
     hours_component = fields.Integer('Hs. Component')
     hours_oil = fields.Integer('Hs. Oil')
     changed_oil = fields.Boolean('Did change Oil?')
+    changed_oil_filter = fields.Boolean('Did change Oil Filter?')
+    changed_air_filter = fields.Boolean('Did change Air Filter?')
 
     @classmethod
     def __setup__(cls):
@@ -190,6 +192,8 @@ class CreateSampleStart(metaclass=PoolMeta):
     hours_component = fields.Integer('Hs. Component')
     hours_oil = fields.Integer('Hs. Oil')
     changed_oil = fields.Boolean('Did change Oil?')
+    changed_oil_filter = fields.Boolean('Did change Oil Filter?')
+    changed_air_filter = fields.Boolean('Did change Air Filter?')
 
     @classmethod
     def __setup__(cls):
@@ -323,6 +327,10 @@ class CreateSample(metaclass=PoolMeta):
             getattr(self.start, 'hours_oil') or None)
         changed_oil = (hasattr(self.start, 'changed_oil') and
             getattr(self.start, 'changed_oil') or False)
+        changed_oil_filter = (hasattr(self.start, 'changed_oil_filter') and
+            getattr(self.start, 'changed_oil_filter') or False)
+        changed_air_filter = (hasattr(self.start, 'changed_air_filter') and
+            getattr(self.start, 'changed_air_filter') or False)
 
         for sample_defaults in samples_defaults:
             sample_defaults['equipment'] = equipment_id
@@ -342,6 +350,8 @@ class CreateSample(metaclass=PoolMeta):
             sample_defaults['hours_component'] = hours_component
             sample_defaults['hours_oil'] = hours_oil
             sample_defaults['changed_oil'] = changed_oil
+            sample_defaults['changed_oil_filter'] = changed_oil_filter
+            sample_defaults['changed_air_filter'] = changed_air_filter
 
         return samples_defaults
 
