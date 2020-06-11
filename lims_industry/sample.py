@@ -102,6 +102,12 @@ class Sample(metaclass=PoolMeta):
     @classmethod
     def _confirm_samples(cls, samples):
         TaskTemplate = Pool().get('lims.administrative.task.template')
+        for sample in samples:
+            if not sample.component or not sample.comercial_product:
+                continue
+            if sample.component.comercial_product != sample.comercial_product:
+                sample.component.comercial_product = sample.comercial_product
+                sample.component.save()
         TaskTemplate.create_tasks('sample_missing_data',
             cls._for_task_missing_data(samples))
         TaskTemplate.create_tasks('sample_insufficient_volume',
