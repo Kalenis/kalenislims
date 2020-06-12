@@ -153,6 +153,22 @@
             <field name="domain" eval="[('compilation', '=', Eval('active_id'))]" pyson="1"/>
         </record>
 
+        <record model="ir.model.access" id="access_data">
+            <field name="model" search="[('model', '=', 'lims.interface.data')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="access_grouped_data">
+            <field name="model" search="[('model', '=', 'lims.interface.grouped_data')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
         <!-- Wizard Test Formula -->
         <record model="ir.ui.view" id="interface_formula_test_view_form">
             <field name="model">lims.interface.formula.test</field>
