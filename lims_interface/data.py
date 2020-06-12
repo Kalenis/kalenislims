@@ -147,6 +147,15 @@ class ModelAccess(metaclass=PoolMeta):
     __name__ = 'ir.model.access'
 
     @classmethod
+    def get_access(cls, models):
+        access = super(ModelAccess, cls).get_access(models)
+        if Transaction().user != 0:
+            for m in ('lims.interface.data', 'lims.interface.grouped_data'):
+                if m in models:
+                    access[m]['create'] = False
+        return access
+
+    @classmethod
     def check_relation(cls, model_name, field_name, mode='read'):
         '''
         We must override check_relation and ensure that super() does not
