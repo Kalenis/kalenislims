@@ -3,6 +3,7 @@
 # the full copyright notices and license terms.
 import formulas
 import schedula
+from decimal import Decimal
 from datetime import datetime
 from itertools import chain
 #from dateutil.relativedelta import relativedelta
@@ -741,10 +742,8 @@ class CalculateExpressions(Wizard):
 
                         if isinstance(value, list):
                             value = str(value)
-                        elif (not isinstance(value, str) and
-                                not isinstance(value, int) and
-                                not isinstance(value, float) and
-                                not isinstance(value, type(None))):
+                        elif not isinstance(value,
+                                (str, int, float, Decimal, type(None))):
                             value = value.tolist()
                         if isinstance(value, formulas.tokens.operand.XlError):
                             value = None
@@ -1126,10 +1125,8 @@ class EditGroupedData(Wizard):
 
                     if isinstance(value, list):
                         value = str(value)
-                    elif (not isinstance(value, str) and
-                            not isinstance(value, int) and
-                            not isinstance(value, float) and
-                            not isinstance(value, type(None))):
+                    elif not isinstance(value,
+                            (str, int, float, Decimal, type(None))):
                         value = value.tolist()
                     if isinstance(value, formulas.tokens.operand.XlError):
                         value = None

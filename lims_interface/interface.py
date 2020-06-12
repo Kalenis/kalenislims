@@ -1089,6 +1089,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                             line[k] = int(value)
                         elif schema[k]['type'] == 'float':
                             line[k] = float(value)
+                        elif schema[k]['type'] == 'numeric':
+                            line[k] = Decimal(str(value))
                         elif schema[k]['type'] == 'boolean':
                             line[k] = bool(value)
                         elif schema[k]['type'] == 'date':
@@ -1171,6 +1173,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                                 line[k] = int(value)
                             elif schema[k]['type'] == 'float':
                                 line[k] = float(value)
+                            elif schema[k]['type'] == 'numeric':
+                                line[k] = Decimal(str(value))
                             elif schema[k]['type'] == 'boolean':
                                 line[k] = bool(value)
                             elif schema[k]['type'] == 'date':
@@ -1263,10 +1267,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
 
         if isinstance(value, list):
             value = str(value)
-        elif (not isinstance(value, str) and
-                not isinstance(value, int) and
-                not isinstance(value, float) and
-                not isinstance(value, type(None))):
+        elif not isinstance(value, (str, int, float, Decimal, type(None))):
             value = value.tolist()
         if isinstance(value, formulas.tokens.operand.XlError):
             value = None
@@ -1593,10 +1594,7 @@ class TestFormulaView(ModelView):
 
         if isinstance(value, list):
             value = str(value)
-        elif (not isinstance(value, str) and
-                not isinstance(value, int) and
-                not isinstance(value, float) and
-                not isinstance(value, type(None))):
+        elif not isinstance(value, (str, int, float, Decimal, type(None))):
             value = value.tolist()
         if isinstance(value, formulas.tokens.operand.XlError):
             value = None

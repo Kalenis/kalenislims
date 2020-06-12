@@ -5,6 +5,7 @@
 import sql
 import formulas
 import schedula
+from decimal import Decimal
 from itertools import chain
 
 from trytond.model import ModelSQL, ModelView, fields
@@ -233,10 +234,7 @@ class Data(ModelSQL, ModelView):
 
             if isinstance(value, list):
                 value = str(value)
-            elif (not isinstance(value, str) and
-                    not isinstance(value, int) and
-                    not isinstance(value, float) and
-                    not isinstance(value, type(None))):
+            elif not isinstance(value, (str, int, float, Decimal, type(None))):
                 value = value.tolist()
             if isinstance(value, formulas.tokens.operand.XlError):
                 value = None
@@ -502,10 +500,7 @@ class Data(ModelSQL, ModelView):
 
         if isinstance(value, list):
             value = str(value)
-        elif (not isinstance(value, str) and
-                not isinstance(value, int) and
-                not isinstance(value, float) and
-                not isinstance(value, type(None))):
+        elif not isinstance(value, (str, int, float, Decimal, type(None))):
             value = value.tolist()
         if isinstance(value, formulas.tokens.operand.XlError):
             value = None
@@ -616,10 +611,7 @@ class GroupedData(ModelView):
 
             if isinstance(value, list):
                 value = str(value)
-            elif (not isinstance(value, str) and
-                    not isinstance(value, int) and
-                    not isinstance(value, float) and
-                    not isinstance(value, type(None))):
+            elif not isinstance(value, (str, int, float, Decimal, type(None))):
                 value = value.tolist()
             if isinstance(value, formulas.tokens.operand.XlError):
                 value = None
