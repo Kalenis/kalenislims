@@ -613,6 +613,7 @@ class RepeatAnalysis(Wizard):
         sheet = AnalysisSheet(sheet_id)
 
         to_create = []
+        to_update = []
         to_annul = []
 
         date = Date.today()
@@ -651,12 +652,16 @@ class RepeatAnalysis(Wizard):
                 'start_date': date,
                 }
             to_create.append(defaults)
+            to_update.append(nline_to_repeat)
             if self.start.annul:
                 to_annul.append(nline_to_repeat.id)
 
         notebook_lines = NotebookLine.create(to_create)
         if notebook_lines:
             sheet.create_lines(notebook_lines)
+        NotebookLine.write(to_update, {
+            'report': False,
+            })
 
         if to_annul:
             with Transaction().set_context(
