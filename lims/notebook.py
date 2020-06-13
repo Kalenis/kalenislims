@@ -4304,6 +4304,7 @@ class NotebookLineRepeatAnalysis(Wizard):
                 else None)
 
         to_create = []
+        to_update = []
         details_to_update = []
         for analysis_id in analysis_to_repeat:
             nlines = NotebookLine.search([
@@ -4328,10 +4329,16 @@ class NotebookLineRepeatAnalysis(Wizard):
                 defaults['lower_limit'] = None
                 defaults['upper_limit'] = None
             to_create.append(defaults)
+            to_update.append(nline_to_repeat)
             details_to_update.append(nline_to_repeat.analysis_detail.id)
 
         Notebook.write([notebook], {
             'lines': [('create', to_create)],
+            })
+        NotebookLine.write(to_update, {
+            'accepted': False,
+            'acceptance_date': None,
+            'report': False,
             })
 
         details = EntryDetailAnalysis.search([
