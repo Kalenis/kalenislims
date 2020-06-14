@@ -81,12 +81,30 @@ class EquipmentType(ModelSQL, ModelView):
 
     name = fields.Char('Name', required=True)
 
+    @classmethod
+    def __setup__(cls):
+        super(EquipmentType, cls).__setup__()
+        t = cls.__table__()
+        cls._sql_constraints = [
+            ('name_unique', Unique(t, t.name),
+                'lims_industry.msg_equipment_type_name_unique'),
+            ]
+
 
 class Brand(ModelSQL, ModelView):
     'Brand'
     __name__ = 'lims.brand'
 
     name = fields.Char('Name', required=True)
+
+    @classmethod
+    def __setup__(cls):
+        super(Brand, cls).__setup__()
+        t = cls.__table__()
+        cls._sql_constraints = [
+            ('name_unique', Unique(t, t.name),
+                'lims_industry.msg_brand_name_unique'),
+            ]
 
 
 class ComponentType(ModelSQL, ModelView):
@@ -96,6 +114,15 @@ class ComponentType(ModelSQL, ModelView):
     name = fields.Char('Name', required=True)
     product_type = fields.Many2One('lims.product.type', 'Product type',
         required=True)
+
+    @classmethod
+    def __setup__(cls):
+        super(ComponentType, cls).__setup__()
+        t = cls.__table__()
+        cls._sql_constraints = [
+            ('name_unique', Unique(t, t.name),
+                'lims_industry.msg_component_type_name_unique'),
+            ]
 
 
 class EquipmentTemplate(ModelSQL, ModelView):
@@ -116,6 +143,11 @@ class EquipmentTemplate(ModelSQL, ModelView):
         cls._order.insert(0, ('type', 'ASC'))
         cls._order.insert(1, ('brand', 'ASC'))
         cls._order.insert(2, ('model', 'ASC'))
+        t = cls.__table__()
+        cls._sql_constraints = [
+            ('type_brand_model_unique', Unique(t, t.type, t.brand, t.model),
+                'lims_industry.msg_equipment_template_unique'),
+            ]
 
     def get_rec_name(self, name):
         res = '%s - %s' % (self.type.rec_name, self.brand.rec_name)

@@ -653,6 +653,14 @@ msgctxt "model:ir.message,text:lbl_sample_missing_data"
 msgid "Missing data in Sample"
 msgstr "Faltan datos en Muestra"
 
+msgctxt "model:ir.message,text:msg_brand_name_unique"
+msgid "There is already a brand with the same name"
+msgstr "Ya existe una marca con el mismo nombre"
+
+msgctxt "model:ir.message,text:msg_component_type_name_unique"
+msgid "There is already a component type with the same name"
+msgstr "Ya existe un tipo de componente con el mismo nombre"
+
 msgctxt "model:ir.message,text:msg_component_type_unique"
 msgid "A component of the same type already exists for the equipment"
 msgstr "Ya existe un componente del mismo tipo para el equipo"
@@ -660,6 +668,15 @@ msgstr "Ya existe un componente del mismo tipo para el equipo"
 msgctxt "model:ir.message,text:msg_equipment_name_unique"
 msgid "There is already an equipment with the same name for the plant"
 msgstr "Ya existe un equipo con el mismo nombre para la planta"
+
+msgctxt "model:ir.message,text:msg_equipment_template_unique"
+msgid ""
+"There is already a equipment template with the same type, brand and model"
+msgstr "Ya existe una plantilla de equipo con el mismo tipo, marca y modelo"
+
+msgctxt "model:ir.message,text:msg_equipment_type_name_unique"
+msgid "There is already a equipment type with the same name"
+msgstr "Ya existe un tipo de equipo con el mismo nombre"
 
 msgctxt "model:ir.message,text:msg_party_no_email"
 msgid "Party \"%(party)s\" has no Email"
