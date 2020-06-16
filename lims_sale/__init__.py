@@ -32,5 +32,6 @@ def register():
         sale.SaleLoadServices,
         sale.SaleLoadAnalysis,
         sample.CreateSample,
+        results_report.OpenSampleSale,
         results_report.OpenResultsDetailSale,
         module='lims_sale', type_='wizard')

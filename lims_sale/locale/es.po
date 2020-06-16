@@ -158,6 +158,10 @@ msgctxt "model:ir.action,name:act_sale_clause"
 msgid "Clauses"
 msgstr "Cláusulas"
 
+msgctxt "model:ir.action,name:wiz_notebook_open_sale"
+msgid "Sample Sale"
+msgstr "Presupuesto de la Muestra"
+
 msgctxt "model:ir.action,name:wiz_results_detail_open_sale"
 msgid "Results Report Sales"
 msgstr "Presupuestos del Informe de resultados"

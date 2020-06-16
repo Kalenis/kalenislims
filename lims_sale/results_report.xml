@@ -2,6 +2,18 @@
 <tryton>
     <data>
 
+<!-- Wizard Open Sample Sale -->
+
+        <record model="ir.action.wizard" id="wiz_notebook_open_sale">
+            <field name="name">Sample Sale</field>
+            <field name="wiz_name">lims.notebook.open_sale</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_notebook_open_sale_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.notebook,-2</field>
+            <field name="action" ref="wiz_notebook_open_sale"/>
+        </record>
+
 <!-- Wizard Open Results Report Sale -->
 
         <record model="ir.action.wizard" id="wiz_results_detail_open_sale">
