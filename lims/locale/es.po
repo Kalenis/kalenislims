@@ -6689,6 +6689,10 @@ msgctxt "model:ir.action,name:wiz_notebook_line_evaluate_rules"
 msgid "Evaluate Rules"
 msgstr "10) Evaluar Reglas de cuaderno"
 
+msgctxt "model:ir.action,name:wiz_notebook_open_entry"
+msgid "Sample Entry"
+msgstr "Ingreso de la Muestra"
+
 msgctxt "model:ir.action,name:wiz_print_analysis_checked_pending_inform"
 msgid "Analysis checked pending of inform"
 msgstr "Análisis tildados pendientes de informar"

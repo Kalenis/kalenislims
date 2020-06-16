@@ -32,12 +32,12 @@ __all__ = ['ResultsReport', 'ResultsReportVersion',
     'GenerateResultsReportResultAutExcludedNotebookLine',
     'GenerateResultsReport', 'OpenSamplesPendingReportingStart',
     'OpenSamplesPendingReporting', 'GenerateReportStart', 'GenerateReport',
-    'PrintResultsReport', 'ServiceResultsReport', 'FractionResultsReport',
-    'SampleResultsReport', 'OpenResultsReportSample', 'OpenResultsDetailEntry',
-    'OpenResultsDetailAttachment', 'ResultsReportAnnulationStart',
-    'ResultsReportAnnulation', 'NewResultsReportVersionStart',
-    'NewResultsReportVersion', 'ResultReport', 'GlobalResultReport',
-    'ResultReportTranscription']
+    'OpenSampleEntry', 'PrintResultsReport', 'ServiceResultsReport',
+    'FractionResultsReport', 'SampleResultsReport', 'OpenResultsReportSample',
+    'OpenResultsDetailEntry', 'OpenResultsDetailAttachment',
+    'ResultsReportAnnulationStart', 'ResultsReportAnnulation',
+    'NewResultsReportVersionStart', 'NewResultsReportVersion', 'ResultReport',
+    'GlobalResultReport', 'ResultReportTranscription']
 
 
 class ResultsReport(ModelSQL, ModelView):
@@ -2701,6 +2701,27 @@ class GenerateReport(Wizard):
 
     def end(self):
         return 'reload'
+
+
+class OpenSampleEntry(Wizard):
+    'Sample Entry'
+    __name__ = 'lims.notebook.open_entry'
+
+    start = StateAction('lims.act_lims_entry_list')
+
+    def do_start(self, action):
+        Notebook = Pool().get('lims.notebook')
+
+        active_ids = Transaction().context['active_ids']
+        notebooks = Notebook.browse(active_ids)
+
+        entries_ids = [n.fraction.sample.entry.id for n in notebooks]
+
+        action['pyson_domain'] = PYSONEncoder().encode([
+            ('id', 'in', entries_ids),
+            ])
+        action['name'] += ' (%s)' % ', '.join(n.rec_name for n in notebooks)
+        return action, {}
 
 
 class PrintResultsReport(Wizard):

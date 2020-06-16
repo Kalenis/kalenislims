@@ -305,6 +305,7 @@ def register():
         results_report.GenerateResultsReport,
         results_report.OpenSamplesPendingReporting,
         results_report.GenerateReport,
+        results_report.OpenSampleEntry,
         results_report.PrintResultsReport,
         certification.DuplicateAnalysisFamily,
         results_report.ServiceResultsReport,

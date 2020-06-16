@@ -303,6 +303,18 @@
             <field name="action" ref="wiz_notebook_generate_results_report"/>
         </record>
 
+<!-- Wizard Open Sample Entry -->
+
+        <record model="ir.action.wizard" id="wiz_notebook_open_entry">
+            <field name="name">Sample Entry</field>
+            <field name="wiz_name">lims.notebook.open_entry</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_notebook_open_entry_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.notebook,-2</field>
+            <field name="action" ref="wiz_notebook_open_entry"/>
+        </record>
+
 <!-- Wizard Generate Results Reports -->
 
         <record model="ir.ui.view" id="lims_generate_results_report_start_view_form">
