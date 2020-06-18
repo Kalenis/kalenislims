@@ -17,7 +17,7 @@ from trytond.i18n import gettext
 __all__ = ['NotebookView', 'NotebookViewColumn', 'Printer', 'User',
     'UserLaboratory', 'Configuration', 'ConfigurationLaboratory',
     'ConfigurationSequence', 'ConfigurationProductCategory', 'LabWorkYear',
-    'LabWorkYearSequence', 'Cron', 'ModelDoc', 'Model']
+    'LabWorkYearSequence', 'LabWorkYearHoliday', 'Cron', 'ModelDoc', 'Model']
 sequence_names = [
     'entry_sequence', 'sample_sequence', 'service_sequence',
     'results_report_sequence']
@@ -354,6 +354,17 @@ class LabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
         'workyear', 'Sequences')
     default_entry_control = fields.Many2One('lims.entry',
         'Default entry control')
+    workdays = fields.MultiSelection([
+        (0, 'Monday'),
+        (1, 'Tuesday'),
+        (2, 'Wednesday'),
+        (3, 'Thursday'),
+        (4, 'Friday'),
+        (5, 'Saturday'),
+        (6, 'Sunday'),
+        ], 'Working days', sort=False)
+    holidays = fields.One2Many('lims.lab.workyear.holiday', 'workyear',
+        'Holidays')
 
     @classmethod
     def __setup__(cls):
@@ -381,6 +392,10 @@ class LabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
     def default_service_sequence(cls, **pattern):
         return cls.multivalue_model(
             'service_sequence').default_service_sequence()
+
+    @staticmethod
+    def default_workdays():
+        return (0, 1, 2, 3, 4)
 
     @classmethod
     def validate(cls, years):
@@ -488,6 +503,21 @@ class LabWorkYearSequence(ModelSQL, CompanyValueMixin):
             return ModelData.get_id('lims.service', 'seq_service')
         except KeyError:
             return None
+
+
+class LabWorkYearHoliday(ModelSQL, ModelView):
+    'Work Year Holiday'
+    __name__ = 'lims.lab.workyear.holiday'
+
+    workyear = fields.Many2One('lims.lab.workyear', 'Work Year',
+        required=True, ondelete='CASCADE', select=True)
+    name = fields.Char('Name', required=True)
+    date = fields.Date('Date', required=True)
+
+    @classmethod
+    def __setup__(cls):
+        super(LabWorkYearHoliday, cls).__setup__()
+        cls._order.insert(0, ('date', 'ASC'))
 
 
 class Cron(metaclass=PoolMeta):

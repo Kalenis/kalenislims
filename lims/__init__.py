@@ -36,6 +36,7 @@ def register():
         configuration.ConfigurationProductCategory,
         configuration.LabWorkYear,
         configuration.LabWorkYearSequence,
+        configuration.LabWorkYearHoliday,
         configuration.Cron,
         configuration.ModelDoc,
         configuration.Model,

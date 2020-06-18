@@ -17,4 +17,8 @@
     <field name="service_sequence"/>
     <label name="results_report_sequence"/>
     <field name="results_report_sequence"/>
+    <newline/>
+    <separator name="workdays" colspan="4"/>
+    <field name="workdays" colspan="4"/>
+    <field name="holidays" colspan="4"/>
 </form>

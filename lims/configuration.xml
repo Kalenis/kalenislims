@@ -53,6 +53,19 @@
             <field name="act_window" ref="act_lims_workyear_list"/>
         </record>
 
+<!-- Work Year Holiday -->
+
+        <record model="ir.ui.view" id="lims_workyear_holiday_view_form">
+            <field name="model">lims.lab.workyear.holiday</field>
+            <field name="type">form</field>
+            <field name="name">workyear_holiday_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_workyear_holiday_view_list">
+            <field name="model">lims.lab.workyear.holiday</field>
+            <field name="type">tree</field>
+            <field name="name">workyear_holiday_list</field>
+        </record>
+
 <!-- Laboratory Notebook View -->
 
         <record model="ir.ui.view" id="lims_notebook_views_view_form">

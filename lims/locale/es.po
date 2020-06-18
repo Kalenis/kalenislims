@@ -2339,6 +2339,10 @@ msgctxt "field:lims.lab.workyear,entry_sequence:"
 msgid "Entry Sequence"
 msgstr "Secuencia de ingresos"
 
+msgctxt "field:lims.lab.workyear,holidays:"
+msgid "Holidays"
+msgstr "Feriados"
+
 msgctxt "field:lims.lab.workyear,results_report_sequence:"
 msgid "Results Report Sequence"
 msgstr "Secuencia de informes de resultados"
@@ -2358,6 +2362,22 @@ msgstr "Secuencia de servicios"
 msgctxt "field:lims.lab.workyear,start_date:"
 msgid "Start date"
 msgstr "Fecha de inicio"
+
+msgctxt "field:lims.lab.workyear,workdays:"
+msgid "Working days"
+msgstr "Días laborables"
+
+msgctxt "field:lims.lab.workyear.holiday,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:lims.lab.workyear.holiday,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.lab.workyear.holiday,workyear:"
+msgid "Work Year"
+msgstr "Año laboral"
 
 msgctxt "field:lims.lab.workyear.sequence,company:"
 msgid "Company"
@@ -8362,6 +8382,10 @@ msgctxt "model:lims.lab.workyear,name:"
 msgid "Work Year"
 msgstr "Año laboral"
 
+msgctxt "model:lims.lab.workyear.holiday,name:"
+msgid "Work Year Holiday"
+msgstr "Feriado de Año laboral"
+
 msgctxt "model:lims.lab.workyear.sequence,name:"
 msgid "Work Year Sequence"
 msgstr "Secuencia de años laborales"
@@ -11261,6 +11285,34 @@ msgstr "Recualificación"
 msgctxt "selection:lims.lab.professional.method.requalification,type:"
 msgid "Training"
 msgstr "Entrenamiento"
+
+msgctxt "selection:lims.lab.workyear,workdays:"
+msgid "Friday"
+msgstr "Viernes"
+
+msgctxt "selection:lims.lab.workyear,workdays:"
+msgid "Monday"
+msgstr "Lunes"
+
+msgctxt "selection:lims.lab.workyear,workdays:"
+msgid "Saturday"
+msgstr "Sábado"
+
+msgctxt "selection:lims.lab.workyear,workdays:"
+msgid "Sunday"
+msgstr "Domingo"
+
+msgctxt "selection:lims.lab.workyear,workdays:"
+msgid "Thursday"
+msgstr "Jueves"
+
+msgctxt "selection:lims.lab.workyear,workdays:"
+msgid "Tuesday"
+msgstr "Martes"
+
+msgctxt "selection:lims.lab.workyear,workdays:"
+msgid "Wednesday"
+msgstr "Miércoles"
 
 msgctxt "selection:lims.laboratory,section:"
 msgid "Agrochemical Residues"
