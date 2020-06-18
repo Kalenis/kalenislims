@@ -3,6 +3,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from datetime import datetime
+from dateutil import rrule
 from sql import Null
 
 from trytond.model import ModelSingleton, ModelView, ModelSQL, fields
@@ -448,6 +449,24 @@ class LabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
         sequence = getattr(self, type + '_sequence')
         if sequence:
             return sequence
+
+    def get_target_date(self, start_date, days):
+        total_days = days + 1  # plus 1 because start_date is included
+        ruleset = rrule.rruleset()
+
+        min_time = datetime.min.time()
+        for h in self.holidays:
+            ruleset.exdate(datetime.combine(h.date, min_time))
+
+        count = total_days
+        ruleset.rrule(rrule.rrule(rrule.DAILY, byweekday=self.workdays,
+            dtstart=start_date, count=count))
+        while(ruleset.count() < total_days):  # because holidays subtract days
+            count += 1
+            ruleset.rrule(rrule.rrule(rrule.DAILY, byweekday=self.workdays,
+                dtstart=start_date, count=count))
+
+        return ruleset[-1].date()
 
 
 class LabWorkYearSequence(ModelSQL, CompanyValueMixin):

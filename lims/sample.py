@@ -964,20 +964,31 @@ class Service(ModelSQL, ModelView):
 
     @fields.depends('estimated_waiting_laboratory')
     def on_change_with_laboratory_date(self, name=None):
+        pool = Pool()
+        LabWorkYear = pool.get('lims.lab.workyear')
+        Date = pool.get('ir.date')
         if self.estimated_waiting_laboratory:
-            date_ = Pool().get('ir.date').today()
-            date_ += relativedelta(days=self.estimated_waiting_laboratory)
+            date_ = Date.today()
+            workyear = LabWorkYear(LabWorkYear.find(date_))
+            date_ = workyear.get_target_date(date_,
+                self.estimated_waiting_laboratory)
             return date_
         return None
 
     @fields.depends('estimated_waiting_laboratory', 'estimated_waiting_report')
     def on_change_with_report_date(self, name=None):
+        pool = Pool()
+        LabWorkYear = pool.get('lims.lab.workyear')
+        Date = pool.get('ir.date')
         if self.estimated_waiting_laboratory or self.estimated_waiting_report:
-            date_ = Pool().get('ir.date').today()
+            date_ = Date.today()
+            workyear = LabWorkYear(LabWorkYear.find(date_))
             if self.estimated_waiting_laboratory:
-                date_ += relativedelta(days=self.estimated_waiting_laboratory)
+                date_ = workyear.get_target_date(date_,
+                    self.estimated_waiting_laboratory)
             if self.estimated_waiting_report:
-                date_ += relativedelta(days=self.estimated_waiting_report)
+                date_ = workyear.get_target_date(date_,
+                    self.estimated_waiting_report)
             return date_
         return None
 
@@ -4960,21 +4971,32 @@ class CreateSampleService(ModelView):
 
     @fields.depends('analysis', 'estimated_waiting_laboratory')
     def on_change_with_laboratory_date(self, name=None):
+        pool = Pool()
+        LabWorkYear = pool.get('lims.lab.workyear')
+        Date = pool.get('ir.date')
         if self.estimated_waiting_laboratory:
-            date_ = Pool().get('ir.date').today()
-            date_ += relativedelta(days=self.estimated_waiting_laboratory)
+            date_ = Date.today()
+            workyear = LabWorkYear(LabWorkYear.find(date_))
+            date_ = workyear.get_target_date(date_,
+                self.estimated_waiting_laboratory)
             return date_
         return None
 
     @fields.depends('analysis', 'estimated_waiting_laboratory',
         'estimated_waiting_report')
     def on_change_with_report_date(self, name=None):
+        pool = Pool()
+        LabWorkYear = pool.get('lims.lab.workyear')
+        Date = pool.get('ir.date')
         if self.estimated_waiting_laboratory or self.estimated_waiting_report:
-            date_ = Pool().get('ir.date').today()
+            date_ = Date.today()
+            workyear = LabWorkYear(LabWorkYear.find(date_))
             if self.estimated_waiting_laboratory:
-                date_ += relativedelta(days=self.estimated_waiting_laboratory)
+                date_ = workyear.get_target_date(date_,
+                    self.estimated_waiting_laboratory)
             if self.estimated_waiting_report:
-                date_ += relativedelta(days=self.estimated_waiting_report)
+                date_ = workyear.get_target_date(date_,
+                    self.estimated_waiting_report)
             return date_
         return None
 
