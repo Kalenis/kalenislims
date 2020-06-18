@@ -6018,6 +6018,10 @@ msgctxt "model:ir.action,name:act_add_typifications"
 msgid "Add Typifications"
 msgstr "Agregar tipificaciones"
 
+msgctxt "model:ir.action,name:act_attachment"
+msgid "Attachments"
+msgstr "Adjuntos"
+
 msgctxt "model:ir.action,name:act_company_department_list"
 msgid "Departments"
 msgstr "Departamentos"
@@ -11937,6 +11941,10 @@ msgstr "Copiar"
 msgctxt "selection:lims.typification.copy.start,action:"
 msgid "Move"
 msgstr "Mover"
+
+msgctxt "view:ir.attachment:"
+msgid "Last Modification Time"
+msgstr "Hora última modificación"
 
 msgctxt "view:lims.analysis-laboratory:"
 msgid "Analysis Laboratories"

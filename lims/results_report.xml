@@ -455,6 +455,29 @@
             <field name="action" ref="wiz_results_detail_open_attachment"/>
         </record>
 
+<!-- Attachments -->
+
+        <record model="ir.ui.view" id="attachment_view_list">
+            <field name="model">ir.attachment</field>
+            <field name="type">tree</field>
+            <field name="name">attachment_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_attachment">
+            <field name="name">Attachments</field>
+            <field name="res_model">ir.attachment</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_attachment_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="attachment_view_list"/>
+            <field name="act_window" ref="act_attachment"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_attachment_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="ir.attachment_view_form"/>
+            <field name="act_window" ref="act_attachment"/>
+        </record>
+
 <!-- Wizard Report Annulation -->
 
         <record model="ir.ui.view" id="lims_results_report_annulation_start_view_form">

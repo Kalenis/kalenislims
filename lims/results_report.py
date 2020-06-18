@@ -2929,7 +2929,7 @@ class OpenResultsDetailAttachment(Wizard):
     'Results Report Attachment'
     __name__ = 'lims.results_report.version.detail.open_attachment'
 
-    start = StateAction('ir.act_attachment_form')
+    start = StateAction('lims.act_attachment')
 
     def do_start(self, action):
         ResultsDetail = Pool().get('lims.results_report.version.detail')
