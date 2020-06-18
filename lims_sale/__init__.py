@@ -34,4 +34,5 @@ def register():
         sample.CreateSample,
         results_report.OpenSampleSale,
         results_report.OpenResultsDetailSale,
+        results_report.OpenResultsDetailAttachment,
         module='lims_sale', type_='wizard')

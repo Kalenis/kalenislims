@@ -3,7 +3,7 @@
 # the full copyright notices and license terms.
 
 from trytond.wizard import Wizard, StateAction
-from trytond.pool import Pool
+from trytond.pool import Pool, PoolMeta
 from trytond.pyson import PYSONEncoder
 from trytond.transaction import Transaction
 
@@ -63,3 +63,16 @@ class OpenResultsDetailSale(Wizard):
             ])
         action['name'] += ' (%s)' % ', '.join(d.rec_name for d in details)
         return action, {}
+
+
+class OpenResultsDetailAttachment(metaclass=PoolMeta):
+    __name__ = 'lims.results_report.version.detail.open_attachment'
+
+    def get_resource(self, details):
+        res = super(OpenResultsDetailAttachment, self).get_resource(details)
+        for detail in details:
+            for s in detail.samples:
+                if s.notebook.fraction.sample.sale_lines:
+                    for sale_line in s.notebook.fraction.sample.sale_lines:
+                        res.append(self._get_resource(sale_line.sale))
+        return res
