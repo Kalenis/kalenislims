@@ -23,10 +23,10 @@
     <label name="current_location"/>
     <field name="current_location"/>
     <notebook>
-        <page id="lines" string="Lines">
+        <page name="lines">
             <field name="lines" colspan="4"/>
         </page>
-        <page id="comments" string="Fraction Comments">
+        <page name="fraction_comments">
             <field name="fraction_comments"/>
         </page>
     </notebook>

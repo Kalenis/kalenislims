@@ -29,21 +29,22 @@
     <label name="resultrange_origin"/>
     <field name="resultrange_origin" widget="selection"/>
     <notebook>
-        <page id="samples" string="Samples">
+        <page name="samples">
             <field name="samples" colspan="4"/>
         </page>
-        <page id="comments" string="Comments">
+        <page name="comments">
             <field name="comments" colspan="4"/>
         </page>
-        <page id="fraction_comments" string="Fraction comments">
-            <field name="fraction_comments" colspan="4"/>
+        <page name="fractions_comments">
+            <field name="fractions_comments" colspan="4"/>
         </page>
         <page id="annulation" string="Annulation">
             <label name="annulment_date"/>
             <field name="annulment_date"/>
             <label name="annulment_reason_print"/>
             <field name="annulment_reason_print"/>
-            <separator string="Annulment reason" colspan="4" id="annulment_reason"/>
+            <separator id="annulment_reason" colspan="4"
+                string="Annulment reason"/>
             <field name="annulment_reason" colspan="4"/>
         </page>
         <page id="dates" string="Dates">

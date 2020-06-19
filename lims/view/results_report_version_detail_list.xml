@@ -16,5 +16,5 @@
     <field name="create_date2" widget="time" string="Time"/>
     <field name="write_date2" widget="date"/>
     <field name="write_date2" widget="time" string="Time"/>
-    <field name="fraction_comments" tree_invisible="1"/>
+    <field name="fractions_comments" tree_invisible="1"/>
 </tree>

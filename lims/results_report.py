@@ -294,8 +294,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
             })
     comments = fields.Text('Comments', translate=True, depends=['state'],
         states={'readonly': ~Eval('state').in_(['draft', 'revised'])})
-    fraction_comments = fields.Function(fields.Text('Fraction comments'),
-        'get_fraction_comments')
+    fractions_comments = fields.Function(fields.Text('Fractions comments'),
+        'get_fractions_comments')
     cie_fraction_type = fields.Function(fields.Boolean('QA'),
        'get_report_field', searcher='search_report_field')
     date = fields.Function(fields.Date('Date'), 'get_date',
@@ -900,7 +900,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                 raise UserError(gettext('lims.msg_delete_detail_not_draft'))
 
     @classmethod
-    def get_fraction_comments(cls, details, name):
+    def get_fractions_comments(cls, details, name):
         result = {}
         for d in details:
             comments = []
@@ -912,7 +912,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         return result
 
     def get_icon(self, name):
-        if self.fraction_comments:
+        if self.fractions_comments:
             return 'lims-blue'
         return 'lims-white'
 

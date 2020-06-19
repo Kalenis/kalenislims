@@ -20,7 +20,7 @@
         <label name="template"/>
         <field name="template"/>
     </xpath>
-    <xpath expr="/form/notebook/page[@id='comments']/field[@name='comments']"
+    <xpath expr="/form/notebook/page[@name='comments']/field[@name='comments']"
         position="replace">
         <field name="comments" colspan="4" widget="html"/>
     </xpath>
