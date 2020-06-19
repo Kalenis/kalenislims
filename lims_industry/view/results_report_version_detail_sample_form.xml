@@ -23,9 +23,6 @@
                 <field name="precedent1_diagnosis" widget="html"/>
                 <field name="precedent2_diagnosis" widget="html"/>
                 <field name="precedent3_diagnosis" widget="html"/>
-                <field name="precedent1_diagnosis"/>
-                <field name="precedent2_diagnosis"/>
-                <field name="precedent3_diagnosis"/>
             </group>
         </page>
     </xpath>

@@ -2,11 +2,10 @@
     <label name="name"/>
     <field name="name"/>
     <notebook>
-        <page id="content" string="Content">
+        <page name="content">
             <field name="content" colspan="4" widget="html"/>
-            <field name="content" colspan="4"/>
         </page>
-        <page id="diagnosis_states" string="States">
+        <page name="diagnosis_states">
             <field name="diagnosis_states" colspan="4"/>
         </page>
     </notebook>

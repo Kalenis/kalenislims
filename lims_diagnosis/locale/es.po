@@ -188,18 +188,6 @@ msgctxt "view:lims.diagnosis.state:"
 msgid "Options"
 msgstr "Opciones"
 
-msgctxt "view:lims.diagnosis.template:"
-msgid "Content"
-msgstr "Contenido"
-
-msgctxt "view:lims.diagnosis.template:"
-msgid "States"
-msgstr "Estados"
-
-msgctxt "view:lims.results_report.version.detail.sample:"
-msgid "Diagnosis"
-msgstr "Diagnóstico"
-
 msgctxt "view:lims.results_report.version.detail:"
 msgid "Diagnosed"
 msgstr "Diagnosticado"
