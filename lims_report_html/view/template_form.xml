@@ -1,12 +1,19 @@
 <form>
     <label name="name"/>
     <field name="name"/>
+    <label name="type"/>
+    <field name="type"/>
     <notebook>
-        <page id="content" string="Content">
+        <page name="content">
             <field name="content" colspan="4" widget="html"/>
-            <field name="content" colspan="4"/>
         </page>
-        <page id="translations" string="Translations">
+        <page id="header_footer" string="Header and Footer">
+            <label name="header"/>
+            <field name="header"/>
+            <label name="footer"/>
+            <field name="footer"/>
+        </page>
+        <page name="translations">
             <field name="translations" colspan="4"/>
         </page>
     </notebook>

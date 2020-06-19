@@ -22,8 +22,8 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail'
 
     template = fields.Many2One('lims.result_report.template',
-        'Report Template', depends=['state'],
-        states={'readonly': Eval('state') != 'draft'})
+        'Report Template', domain=[('type', '=', 'base')],
+        states={'readonly': Eval('state') != 'draft'}, depends=['state'])
 
     @classmethod
     def __setup__(cls):
@@ -125,8 +125,8 @@ class ResultReport(metaclass=PoolMeta):
     def _execute_html_results_report(cls, records, data, action):
         documents = []
         for record in records:
-            template_content, template_id = cls.get_results_report_template(
-                action, record.id)
+            template_id, tcontent, theader, tfooter = (
+                cls.get_results_report_template(action, record.id))
             context = Transaction().context
             context['template'] = template_id
             if not template_id:
@@ -134,12 +134,24 @@ class ResultReport(metaclass=PoolMeta):
                     os.path.dirname(__file__), 'report', 'translations')
             with Transaction().set_context(**context):
                 content = cls.render_results_report_template(action,
-                    template_content, record=record, records=[record],
+                    tcontent, record=record, records=[record],
                     data=data)
-            stylesheets = cls.parse_stylesheets(template_content)
+                header = theader and cls.render_results_report_template(action,
+                    theader, record=record, records=[record],
+                    data=data)
+                footer = tfooter and cls.render_results_report_template(action,
+                    tfooter, record=record, records=[record],
+                    data=data)
+
+            stylesheets = cls.parse_stylesheets(tcontent)
+            if theader:
+                stylesheets += cls.parse_stylesheets(theader)
+            if tfooter:
+                stylesheets += cls.parse_stylesheets(tfooter)
             if action.extension == 'pdf':
-                documents.append(PdfGenerator(content, side_margin=1,
-                    extra_vertical_margin=30,
+                documents.append(PdfGenerator(content,
+                    header_html=header, footer_html=footer,
+                    side_margin=1, extra_vertical_margin=30,
                     stylesheets=stylesheets).render_html())
             else:
                 documents.append(content)
@@ -154,17 +166,23 @@ class ResultReport(metaclass=PoolMeta):
     @classmethod
     def get_results_report_template(cls, action, detail_id):
         ResultsDetail = Pool().get('lims.results_report.version.detail')
-        content, template_id = None, None
+        template_id, content, header, footer = None, None, None, None
         detail = ResultsDetail(detail_id)
         if detail.template:
-            content = detail.template.content
             template_id = detail.template
+            content = '<body>%s</body>' % detail.template.content
+            header = (detail.template.header and
+                '<header id="header">%s</header>' %
+                    detail.template.header.content)
+            footer = (detail.template.footer and
+                '<footer id="footer">%s</footer>' %
+                    detail.template.footer.content)
         if not content:
             content = (action.report_content and
                 action.report_content.decode('utf-8'))
             if not content:
                 raise UserError(gettext('lims_report_html.msg_no_template'))
-        return content, template_id
+        return template_id, content, header, footer
 
     @classmethod
     def render_results_report_template(cls, action, template_string,

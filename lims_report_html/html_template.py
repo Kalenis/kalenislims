@@ -4,6 +4,7 @@
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import Pool
+from trytond.pyson import Eval
 from trytond.transaction import Transaction
 from trytond.cache import Cache
 
@@ -15,11 +16,31 @@ class ReportTemplate(ModelSQL, ModelView):
     __name__ = 'lims.result_report.template'
 
     name = fields.Char('Name', required=True)
+    type = fields.Selection([
+        ('base', 'Base'),
+        ('header', 'Header'),
+        ('footer', 'Footer'),
+        ], 'Type', required=True)
     content = fields.Text('Content', required=True)
+    header = fields.Many2One('lims.result_report.template', 'Header',
+        domain=[('type', '=', 'header')])
+    footer = fields.Many2One('lims.result_report.template', 'Footer',
+        domain=[('type', '=', 'footer')])
     translations = fields.One2Many('lims.result_report.template.translation',
         'template', 'Translations')
     _translation_cache = Cache('lims.result_report.template.translation',
         size_limit=10240, context=False)
+
+    @staticmethod
+    def default_type():
+        return 'base'
+
+    @classmethod
+    def view_attributes(cls):
+        return super(ReportTemplate, cls).view_attributes() + [
+            ('//page[@id="header_footer"]', 'states', {
+                'invisible': Eval('type') != 'base',
+                })]
 
     @classmethod
     def gettext(cls, *args, **variables):
@@ -29,8 +50,14 @@ class ReportTemplate(ModelSQL, ModelView):
         key = (template, src, lang)
         text = cls._translation_cache.get(key)
         if text is None:
+            template_ids = [template]
+            base = cls(template)
+            if base.header:
+                template_ids.append(base.header.id)
+            if base.footer:
+                template_ids.append(base.footer.id)
             translations = ReportTemplateTranslation.search([
-                ('template', '=', template),
+                ('template', 'in', template_ids),
                 ('src', '=', src),
                 ('lang', '=', lang),
                 ], limit=1)

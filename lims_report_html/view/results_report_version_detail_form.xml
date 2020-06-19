@@ -21,7 +21,7 @@
         <field name="template"/>
     </xpath>
     <xpath expr="/form/notebook/page[@id='comments']/field[@name='comments']"
-        position="before">
+        position="replace">
         <field name="comments" colspan="4" widget="html"/>
     </xpath>
 </data>
