@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<form>
+    <label name="notebook"/>
+    <field name="notebook"/>
+    <label name="notebook1"/>
+    <field name="notebook1"/>
+    <label name="notebook2"/>
+    <field name="notebook2"/>
+    <label name="notebook3"/>
+    <field name="notebook3"/>
+    <notebook>
+        <page name="lines">
+            <field name="lines"/>
+        </page>
+        <page id="diagnostics" string="Diagnostics">
+            <group id="diagnostics" colspan="4" col="2" yexpand="1" yfill="1">
+                <separator name="notebook"/>
+                <separator name="notebook1"/>
+                <field name="notebook_diagnosis" widget="html"/>
+                <field name="notebook1_diagnosis" widget="html"/>
+                <separator name="notebook2"/>
+                <separator name="notebook3"/>
+                <field name="notebook2_diagnosis" widget="html"/>
+                <field name="notebook3_diagnosis" widget="html"/>
+            </group>
+        </page>
+    </notebook>
+</form>

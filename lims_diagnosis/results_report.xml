@@ -74,5 +74,65 @@
             <field name="action" ref="wiz_notebook_change_diagnostician"/>
         </record>
 
+<!-- Wizard Open Samples Comparator -->
+
+        <record model="ir.ui.view" id="samples_comparator_ask_form">
+            <field name="model">lims.samples_comparator.ask</field>
+            <field name="type">form</field>
+            <field name="name">samples_comparator_ask_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_open_samples_comparator">
+            <field name="name">Samples Comparator</field>
+            <field name="wiz_name">lims.samples_comparator.open</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_open_samples_comparator_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.results_report.version.detail.sample,-1</field>
+            <field name="action" ref="wiz_open_samples_comparator"/>
+        </record>
+        <menuitem action="wiz_open_samples_comparator"
+            id="lims_open_samples_comparator_menu"
+            parent="lims.lims_results_report_version_detail_menu" sequence="10"/>
+
+<!-- Samples Comparator -->
+
+        <record model="ir.ui.view" id="samples_comparator_view_form">
+            <field name="model">lims.samples_comparator</field>
+            <field name="type">form</field>
+            <field name="name">samples_comparator_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_samples_comparator">
+            <field name="name">Samples Comparator</field>
+            <field name="res_model">lims.samples_comparator</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_samples_comparator_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="samples_comparator_view_form"/>
+            <field name="act_window" ref="act_samples_comparator"/>
+        </record>
+
+<!-- Samples Comparator Line -->
+
+        <record model="ir.ui.view" id="samples_comparator_line_view_list">
+            <field name="model">lims.samples_comparator.line</field>
+            <field name="type">tree</field>
+            <field name="name">samples_comparator_line_list</field>
+        </record>
+        <record model="ir.ui.view" id="samples_comparator_line_view_form">
+            <field name="model">lims.samples_comparator.line</field>
+            <field name="type">form</field>
+            <field name="name">samples_comparator_line_form</field>
+        </record>
+
+<!-- Cron -->
+
+        <record model="ir.cron" id="cron_samples_comparator_clean_records">
+            <field name="interval_number" eval="1"/>
+            <field name="interval_type">days</field>
+            <field name="method">lims.samples_comparator|clean_buffer</field>
+        </record>
+
     </data>
 </tryton>

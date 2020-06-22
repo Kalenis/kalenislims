@@ -933,13 +933,16 @@ class ResultsReportVersionDetailSample(ModelSQL, ModelView):
     version_detail = fields.Many2One('lims.results_report.version.detail',
         'Report Detail', required=True, ondelete='CASCADE', select=True)
     notebook = fields.Many2One('lims.notebook', 'Notebook', required=True,
-            readonly=True)
+        readonly=True)
     notebook_lines = fields.One2Many('lims.results_report.version.detail.line',
         'detail_sample', 'Analysis')
     product_type = fields.Function(fields.Many2One('lims.product.type',
         'Product type'), 'get_notebook_field')
     matrix = fields.Function(fields.Many2One('lims.matrix', 'Matrix'),
         'get_notebook_field')
+
+    def get_rec_name(self, name):
+        return self.notebook.rec_name
 
     @classmethod
     def get_notebook_field(cls, samples, names):

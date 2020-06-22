@@ -29,6 +29,10 @@ def register():
         results_report.ResultsReportVersionDetailSample,
         results_report.ResultsReportVersionDetailLine,
         results_report.ChangeSampleDiagnosticianStart,
+        results_report.OpenSamplesComparatorAsk,
+        results_report.SamplesComparator,
+        results_report.SamplesComparatorLine,
+        results_report.Cron,
         notebook.Notebook,
         notebook.NotebookLine,
         notebook.NotebookLineRepeatAnalysisStart,
@@ -39,5 +43,6 @@ def register():
     Pool.register(
         sample.CreateSample,
         results_report.ChangeSampleDiagnostician,
+        results_report.OpenSamplesComparator,
         notebook.NotebookLineRepeatAnalysis,
         module='lims_diagnosis', type_='wizard')

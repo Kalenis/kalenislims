@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<form>
+    <label name="analysis"/>
+    <field name="analysis"/>
+    <label name="repetition"/>
+    <field name="repetition"/>
+    <label name="result"/>
+    <field name="result"/>
+    <label name="initial_unit"/>
+    <field name="initial_unit"/>
+    <label name="converted_result"/>
+    <field name="converted_result"/>
+    <label name="final_unit"/>
+    <field name="final_unit"/>
+    <label name="notebook1_result"/>
+    <field name="notebook1_result"/>
+    <label name="notebook2_result"/>
+    <field name="notebook2_result"/>
+    <label name="notebook3_result"/>
+    <field name="notebook3_result"/>
+</form>

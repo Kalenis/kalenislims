@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="notebook_line" tree_invisible="1"/>
+    <field name="analysis"/>
+    <field name="repetition"/>
+    <field name="result"/>
+    <field name="initial_unit"/>
+    <field name="converted_result"/>
+    <field name="final_unit"/>
+    <field name="notebook1_result"/>
+    <field name="notebook2_result"/>
+    <field name="notebook3_result"/>
+</tree>

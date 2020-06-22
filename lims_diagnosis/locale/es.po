@@ -107,6 +107,90 @@ msgctxt "field:lims.sample,diagnostician:"
 msgid "Diagnostician"
 msgstr "Diagnosticador"
 
+msgctxt "field:lims.samples_comparator,lines:"
+msgid "Lines"
+msgstr "Líneas"
+
+msgctxt "field:lims.samples_comparator,notebook1:"
+msgid "Sample 1"
+msgstr "Muestra 1"
+
+msgctxt "field:lims.samples_comparator,notebook1_diagnosis:"
+msgid "Diagnosis 1"
+msgstr "Diagnóstico 1"
+
+msgctxt "field:lims.samples_comparator,notebook2:"
+msgid "Sample 2"
+msgstr "Muestra 2"
+
+msgctxt "field:lims.samples_comparator,notebook2_diagnosis:"
+msgid "Diagnosis 2"
+msgstr "Diagnóstico 2"
+
+msgctxt "field:lims.samples_comparator,notebook3:"
+msgid "Sample 3"
+msgstr "Muestra 3"
+
+msgctxt "field:lims.samples_comparator,notebook3_diagnosis:"
+msgid "Diagnosis 3"
+msgstr "Diagnóstico 3"
+
+msgctxt "field:lims.samples_comparator,notebook:"
+msgid "Sample"
+msgstr "Muestra"
+
+msgctxt "field:lims.samples_comparator,notebook_diagnosis:"
+msgid "Diagnosis"
+msgstr "Diagnóstico"
+
+msgctxt "field:lims.samples_comparator.ask,notebook:"
+msgid "Sample"
+msgstr "Muestra"
+
+msgctxt "field:lims.samples_comparator.line,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:lims.samples_comparator.line,converted_result:"
+msgid "Converted result"
+msgstr "Resultado convertido"
+
+msgctxt "field:lims.samples_comparator.line,final_unit:"
+msgid "Final unit"
+msgstr "Unidad final"
+
+msgctxt "field:lims.samples_comparator.line,initial_unit:"
+msgid "Initial unit"
+msgstr "Unidad inicial"
+
+msgctxt "field:lims.samples_comparator.line,notebook1_result:"
+msgid "Sample 1"
+msgstr "Muestra 1"
+
+msgctxt "field:lims.samples_comparator.line,notebook2_result:"
+msgid "Sample 2"
+msgstr "Muestra 2"
+
+msgctxt "field:lims.samples_comparator.line,notebook3_result:"
+msgid "Sample 3"
+msgstr "Muestra 3"
+
+msgctxt "field:lims.samples_comparator.line,notebook_line:"
+msgid "Notebook Line"
+msgstr "Línea de cuaderno"
+
+msgctxt "field:lims.samples_comparator.line,repetition:"
+msgid "Repetition"
+msgstr "Repetición"
+
+msgctxt "field:lims.samples_comparator.line,result:"
+msgid "Result"
+msgstr "Resultado"
+
+msgctxt "field:lims.samples_comparator.line,sample:"
+msgid "Sample"
+msgstr "Muestra"
+
 msgctxt "field:party.party,diagnostician:"
 msgid "Diagnostician"
 msgstr "Diagnosticador"
@@ -131,9 +215,17 @@ msgctxt "model:ir.action,name:act_html_diagnosis_template_list"
 msgid "Diagnosis Templates"
 msgstr "Plantillas de Diagnóstico"
 
+msgctxt "model:ir.action,name:act_samples_comparator"
+msgid "Samples Comparator"
+msgstr "Comparador de muestras"
+
 msgctxt "model:ir.action,name:wiz_notebook_change_diagnostician"
 msgid "Change Sample Diagnostician"
 msgstr "Cambiar Diagnosticador"
+
+msgctxt "model:ir.action,name:wiz_open_samples_comparator"
+msgid "Samples Comparator"
+msgstr "Comparador de muestras"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_lims_results_report_version_detail_domain_diagnosed"
@@ -143,6 +235,10 @@ msgstr "Diagnosticado"
 msgctxt "model:ir.message,text:lbl_line_acceptance"
 msgid "Notebook Line Acceptance"
 msgstr "Aceptación de Línea de cuaderno"
+
+msgctxt "model:ir.ui.menu,name:lims_open_samples_comparator_menu"
+msgid "Samples Comparator"
+msgstr "Comparador de muestras"
 
 msgctxt "model:ir.ui.menu,name:menu_diagnosis_state_list"
 msgid "Diagnosis States"
@@ -176,6 +272,22 @@ msgctxt "model:lims.notebook.change_diagnostician.start,name:"
 msgid "Change Sample Diagnostician"
 msgstr "Cambiar Diagnosticador"
 
+msgctxt "model:lims.samples_comparator,name:"
+msgid "Samples Comparator"
+msgstr "Comparador de muestras"
+
+msgctxt "model:lims.samples_comparator.ask,name:"
+msgid "Samples Comparator"
+msgstr "Comparador de muestras"
+
+msgctxt "model:lims.samples_comparator.line,name:"
+msgid "Samples Comparator Line"
+msgstr "Línea de Comparador de muestras"
+
+msgctxt "selection:ir.cron,method:"
+msgid "Delete Samples comparison records"
+msgstr "Eliminar registros de Comparación de muestras"
+
 msgctxt "selection:lims.results_report.version.detail,state:"
 msgid "Diagnosed"
 msgstr "Diagnosticado"
@@ -192,6 +304,10 @@ msgctxt "view:lims.results_report.version.detail:"
 msgid "Diagnosed"
 msgstr "Diagnosticado"
 
+msgctxt "view:lims.samples_comparator:"
+msgid "Diagnostics"
+msgstr "Diagnósticos"
+
 msgctxt "wizard_button:lims.notebook.change_diagnostician,start,change:"
 msgid "Change"
 msgstr "Cambiar"
@@ -199,3 +315,11 @@ msgstr "Cambiar"
 msgctxt "wizard_button:lims.notebook.change_diagnostician,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.samples_comparator.open,ask,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.samples_comparator.open,ask,open_:"
+msgid "Open"
+msgstr "Abrir"
