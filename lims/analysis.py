@@ -2119,7 +2119,6 @@ class CopyTypification(Wizard):
                 'valid': True,
                 'product_type': product_type_id,
                 'matrix': matrix_id,
-                'by_default': True,
                 }
             if method_id:
                 default['method'] = method_id
