@@ -4,6 +4,8 @@
 from io import StringIO
 from decimal import Decimal
 from datetime import datetime, date
+from sql import Table, Column, Literal, Null
+from sql.aggregate import Count
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
@@ -321,10 +323,11 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def get_fields(cls, sheets, names):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
         ModelField = pool.get('ir.model.field')
         Field = pool.get('lims.interface.table.field')
-        Data = pool.get('lims.interface.data')
+        notebook_line = pool.get('lims.notebook.line').__table__()
 
         nl_result_field, = ModelField.search([
             ('model.model', '=', 'lims.notebook.line'),
@@ -340,52 +343,59 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             'completion_percentage': {},
             }
         for s in sheets:
+            sql_table = Table(s.compilation.table.name)
+            sql_join = sql_table.join(notebook_line,
+                condition=sql_table.notebook_line == notebook_line.id)
+
+            cursor.execute(*sql_table.select(Count(Literal('*')),
+                where=sql_table.compilation == s.compilation.id))
+            total = cursor.fetchone()[0]
+
+            results = _ZERO
+            if s.state != 'draft':
+                result_column = Field.search([
+                    ('table', '=', s.compilation.table.id),
+                    ('transfer_field', '=', True),
+                    ('related_line_field', '=', nl_result_field),
+                    ])
+                result_field = result_column and result_column[0].name or None
+                if result_field:
+                    result_column = Column(sql_table, result_field)
+                    cursor.execute(*sql_table.select(Count(Literal('*')),
+                        where=(sql_table.compilation == s.compilation.id) &
+                            (result_column != Null)))
+                    results = cursor.fetchone()[0]
+
             result['urgent'][s.id] = False
+            cursor.execute(*sql_join.select(Count(Literal('*')),
+                where=(sql_table.compilation == s.compilation.id) &
+                    (notebook_line.urgent == Literal(True))))
+            if cursor.fetchone()[0] > 0:
+                result['urgent'][s.id] = True
 
-            result_column = Field.search([
-                ('table', '=', s.compilation.table.id),
-                ('transfer_field', '=', True),
-                ('related_line_field', '=', nl_result_field),
-                ])
-            result_field = result_column and result_column[0].name or None
+            samples = {}
+            cursor.execute(*sql_join.select(notebook_line.notebook,
+                notebook_line.analysis,
+                where=sql_table.compilation == s.compilation.id))
+            for x in cursor.fetchall():
+                if x[0] not in samples:
+                    samples[x[0]] = []
+                samples[x[0]].append(x[1])
+            result['samples_qty'][s.id] = len(samples)
 
-            with Transaction().set_context(
-                    lims_interface_table=s.compilation.table.id):
-                lines = Data.search([('compilation', '=', s.compilation.id)])
-                total = len(lines)
-                results = _ZERO
-                samples = {}
-                for line in lines:
-                    nl = line.notebook_line
-                    if not nl:
-                        continue
+            result['partial_analysys'][s.id] = False
+            template_analysis = [ta.analysis.id
+                for ta in s.template.analysis]
+            for k, v in samples.items():
+                if not all(x in v for x in template_analysis):
+                    result['partial_analysys'][s.id] = True
+                    break
 
-                    if nl.urgent:
-                        result['urgent'][s.id] = True
-
-                    if nl.fraction.id not in samples:
-                        samples[nl.fraction.id] = []
-                    samples[nl.fraction.id].append(nl.analysis.id)
-
-                    if (result_field and getattr(line, result_field) and
-                            s.state != 'draft'):
-                        results += 1
-
-                result['samples_qty'][s.id] = len(samples)
-
-                result['partial_analysys'][s.id] = False
-                template_analysis = [ta.analysis.id
-                    for ta in s.template.analysis]
-                for k, v in samples.items():
-                    if not all(x in v for x in template_analysis):
-                        result['partial_analysys'][s.id] = True
-                        break
-
-                result['completion_percentage'][s.id] = _ZERO
-                if total and results:
-                    result['completion_percentage'][s.id] = Decimal(
-                        results / Decimal(total)
-                        ).quantize(Decimal(str(10 ** -digits)))
+            result['completion_percentage'][s.id] = _ZERO
+            if total and results:
+                result['completion_percentage'][s.id] = Decimal(
+                    results / Decimal(total)
+                    ).quantize(Decimal(str(10 ** -digits)))
 
         return result
 
