@@ -1390,7 +1390,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     nb_line = line.notebook_line
                     if not nb_line:
                         continue
-                    data = {}
+                    data = {
+                        'compilation': c.id,
+                        }
                     for alias, nl_field in fields.items():
                         data[nl_field] = getattr(line, alias)
                     if data:

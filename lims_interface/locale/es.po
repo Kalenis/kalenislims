@@ -446,6 +446,10 @@ msgctxt "field:lims.interface.variable.value,variable:"
 msgid "Variable"
 msgstr "Variable"
 
+msgctxt "field:lims.notebook.line,compilation:"
+msgid "Compilation"
+msgstr "Compilación"
+
 msgctxt "help:lims.interface.column,expression:"
 msgid ""
 "In grouped columns the suffix _XX will be replaced by the corresponding "

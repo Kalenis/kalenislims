@@ -6,6 +6,7 @@ from trytond.pool import Pool
 from . import interface
 from . import table
 from . import data
+from . import notebook
 
 
 def register():
@@ -27,6 +28,7 @@ def register():
         data.ModelAccess,
         data.Data,
         data.GroupedData,
+        notebook.NotebookLine,
         module='lims_interface', type_='model')
     Pool.register(
         interface.OpenCompilationData,
