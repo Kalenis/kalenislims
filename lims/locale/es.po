@@ -1927,6 +1927,10 @@ msgctxt "field:lims.fraction.type,requalify:"
 msgid "Requalify"
 msgstr "Recualificar"
 
+msgctxt "field:lims.fraction.type,without_services:"
+msgid "Allows entries without services"
+msgstr "Permite ingresos sin servicios"
+
 msgctxt "field:lims.fractions_by_locations.start,location:"
 msgid "Location"
 msgstr "Ubicación"

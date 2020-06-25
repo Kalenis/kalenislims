@@ -210,11 +210,12 @@ class FractionType(ModelSQL, ModelView):
     control_charts = fields.Boolean('Available for Control Charts')
     report = fields.Boolean('Available for Results Report')
     plannable = fields.Boolean('Plannable', select=True)
+    cie_fraction_type = fields.Boolean('Available for Blind Samples')
+    without_services = fields.Boolean('Allows entries without services')
     default_package_type = fields.Many2One('lims.packaging.type',
         'Default Package type')
     default_fraction_state = fields.Many2One('lims.packaging.integrity',
         'Default Fraction state')
-    cie_fraction_type = fields.Boolean('Available for Blind Samples')
     default_storage_location = fields.Many2One('stock.location',
         'Default Storage location', domain=[('type', '=', 'storage')])
 
@@ -243,6 +244,14 @@ class FractionType(ModelSQL, ModelView):
     @staticmethod
     def default_plannable():
         return True
+
+    @staticmethod
+    def default_cie_fraction_type():
+        return False
+
+    @staticmethod
+    def default_without_services():
+        return False
 
     def get_rec_name(self, name):
         if self.code:
@@ -1863,7 +1872,7 @@ class Fraction(ModelSQL, ModelView):
         stock_moves_to_create = []
         for fraction in fractions:
             services = Service.search([('fraction', '=', fraction.id)])
-            if not services:
+            if not services and not fraction.type.without_services:
                 companies = Company.search([])
                 if fraction.party.id not in [c.party.id for c in companies]:
                     raise UserError(gettext(

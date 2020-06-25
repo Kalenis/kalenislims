@@ -24,4 +24,6 @@
     <field name="control_charts"/>
     <label name="report"/>
     <field name="report"/>
+    <label name="without_services"/>
+    <field name="without_services"/>
 </form>
