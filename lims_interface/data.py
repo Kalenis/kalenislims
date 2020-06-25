@@ -2,7 +2,9 @@
 # This file is part of lims_interface module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-import sql
+from sql import (Table, Column as SqlColumn, Literal,
+    Desc, Asc, NullsFirst, NullsLast)
+from sql.aggregate import Count
 import formulas
 import schedula
 from decimal import Decimal
@@ -15,6 +17,7 @@ from trytond.tools import cursor_dict
 from trytond.pyson import PYSONEncoder
 from trytond.rpc import RPC
 from trytond.exceptions import UserError
+from trytond.model.modelsql import convert_from
 from .interface import FIELD_TYPE_TRYTON, FIELD_TYPE_CAST
 
 __all__ = ['ModelAccess', 'Data', 'GroupedData']
@@ -255,6 +258,7 @@ class Data(ModelSQL, ModelView):
                 'readonly': bool(field.formula or field.readonly or readonly),
                 'help': field.help,
                 'domain': field.domain,
+                'sortable': True,
                 }
             if field.inputs:
                 res[field.name]['on_change_with'] = field.inputs.split()
@@ -302,23 +306,62 @@ class Data(ModelSQL, ModelView):
     @classmethod
     def search(cls, domain, offset=0, limit=None, order=None, count=False,
             query=False):
+        cursor = Transaction().connection.cursor()
+
         # Clean transaction cache
         for cache in Transaction().cache.values():
             if cls.__name__ in cache:
                 del cache[cls.__name__]
+
         if not cls.get_table():
             return super(Data, cls).search(domain, offset, limit, order, count,
                 query)
-        table = cls.get_sql_table()
-        cursor = Transaction().connection.cursor()
-        # Get domain clauses
-        tables, expression = cls.search_domain(domain,
-            tables={None: (table, None)})
 
-        select = table.select(table.id, where=expression, limit=limit,
-            offset=offset, order_by=(table.id.asc,))
+        # Get domain clauses
+        sql_table = cls.get_sql_table()
+        tables, expression = cls.search_domain(domain,
+            tables={None: (sql_table, None)})
+
+        # Get order by
+        order_by = []
+        order_types = {
+            'DESC': Desc,
+            'ASC': Asc,
+            }
+        null_ordering_types = {
+            'NULLS FIRST': NullsFirst,
+            'NULLS LAST': NullsLast,
+            None: lambda _: _
+            }
+        if order is None or order is False:
+            order = cls._order
+        for oexpr, otype in order:
+            fname, _, extra_expr = oexpr.partition('.')
+            field = cls._fields[fname]
+            otype = otype.upper()
+            try:
+                otype, null_ordering = otype.split(' ', 1)
+            except ValueError:
+                null_ordering = None
+            Order = order_types[otype]
+            NullOrdering = null_ordering_types[null_ordering]
+            forder = field.convert_order(oexpr, tables, cls)
+            order_by.extend((NullOrdering(Order(o)) for o in forder))
+
+        main_table, _ = tables[None]
+        table = convert_from(None, tables)
+
+        if count:
+            cursor.execute(*table.select(Count(Literal('*')),
+                    where=expression, limit=limit, offset=offset))
+            return cursor.fetchone()[0]
+
+        columns = [main_table.id]
+        select = table.select(*columns,
+            where=expression, order_by=order_by, limit=limit, offset=offset)
         if query:
             return select
+
         cursor.execute(*select)
         res = [x[0] for x in cursor.fetchall()]
         return cls.browse(res)
@@ -404,7 +447,7 @@ class Data(ModelSQL, ModelView):
             fields = []
             values = []
             for key, value in record.items():
-                fields.append(sql.Column(sql_table, key))
+                fields.append(SqlColumn(sql_table, key))
                 values.append(value)
 
             query = sql_table.insert(fields, values=[values],
@@ -427,7 +470,7 @@ class Data(ModelSQL, ModelView):
             fields = []
             values = []
             for key, value in vals.items():
-                fields.append(sql.Column(sql_table, key))
+                fields.append(SqlColumn(sql_table, key))
                 values.append(value)
 
             query = sql_table.update(fields, values,
@@ -470,7 +513,7 @@ class Data(ModelSQL, ModelView):
             values = []
             for field in sorted(formula_fields, key=lambda x: x['order']):
                 field_name = field['field'].name
-                fields.append(sql.Column(sql_table, field_name))
+                fields.append(SqlColumn(sql_table, field_name))
                 value = record.get_formula_value(field['field'], vals)
                 values.append(value)
                 vals[field_name] = value
@@ -545,7 +588,7 @@ class Data(ModelSQL, ModelView):
     def get_sql_table(cls):
         table = cls.get_table()
         if table:
-            return sql.Table(table.name)
+            return Table(table.name)
         return super(Data, cls).__table__()
 
 
