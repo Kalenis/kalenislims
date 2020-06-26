@@ -1076,6 +1076,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     for k in schema_keys:
                         value = None
                         if schema[k]['default_value'] is not None:
+                            if not create_new_lines:
+                                continue
                             value = schema[k]['default_value']
                         else:
                             col = schema[k]['col']
@@ -1158,6 +1160,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         for k in schema_keys:
                             value = None
                             if schema[k]['default_value'] is not None:
+                                if not create_new_lines:
+                                    continue
                                 value = schema[k]['default_value']
                             else:
                                 col = schema[k]['col']
