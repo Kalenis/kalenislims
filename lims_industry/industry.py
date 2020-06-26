@@ -239,6 +239,10 @@ class Equipment(ModelSQL, ModelView):
             res.append(equipment)
         return res
 
+   def get_rec_name(self, name):
+        res = '%s [%s]' % (self.name, self.plant.name)
+        return res
+
     @fields.depends('plant', '_parent_plant.party')
     def on_change_with_party(self, name=None):
         return self.get_party([self], name)[self.id]
@@ -370,6 +374,8 @@ class Component(ModelSQL, ModelView):
             res += ' - ' + self.brand.rec_name
         if self.model:
             res += ' - ' + self.model
+        if self.customer_description:
+            res += ' [' + self.customer_description + ']'
         return res
 
     @classmethod
@@ -421,3 +427,7 @@ class ComercialProduct(ModelSQL, ModelView):
     brand = fields.Many2One('lims.comercial.product.brand', 'Brand',
         required=True)
     matrix = fields.Many2One('lims.matrix', 'Base/Matrix', required=True)
+
+    def get_rec_name(self, name):
+        res = '%s %s' % (self.brand.name, self.name)
+        return res
