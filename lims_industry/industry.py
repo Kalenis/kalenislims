@@ -239,7 +239,7 @@ class Equipment(ModelSQL, ModelView):
             res.append(equipment)
         return res
 
-   def get_rec_name(self, name):
+    def get_rec_name(self, name):
         res = '%s [%s]' % (self.name, self.plant.name)
         return res
 
