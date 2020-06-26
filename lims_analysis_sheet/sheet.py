@@ -990,3 +990,6 @@ class ImportAnalysisSheetFile(Wizard):
 
         sheet.compilation.collect([sheet.compilation])
         return 'end'
+
+    def end(self):
+        return 'reload'
