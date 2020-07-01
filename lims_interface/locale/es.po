@@ -498,6 +498,10 @@ msgctxt "model:ir.action,name:wiz_interface_formula_test"
 msgid "Test Formula"
 msgstr "Probar Fórmula"
 
+msgctxt "model:ir.action,name:wiz_referral_open_compilation"
+msgid "Interface Compilations"
+msgstr "Compilaciones desde interfaz"
+
 msgctxt "model:ir.message,text:delete_done_compilation"
 msgid "You cannot delete a Compilation in \"Done\" state"
 msgstr "No puede eliminar una Compilación en estado \"Realizada\""

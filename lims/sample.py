@@ -5592,7 +5592,6 @@ class ReferService(Wizard):
         default['services'] = self._get_services()
         return default
 
-
     def _get_services(self):
         EntryDetailAnalysis = Pool().get('lims.entry.detail.analysis')
         details = EntryDetailAnalysis.search([

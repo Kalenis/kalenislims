@@ -7,6 +7,7 @@ from . import interface
 from . import table
 from . import data
 from . import notebook
+from . import sample
 
 
 def register():
@@ -34,4 +35,5 @@ def register():
         interface.OpenCompilationData,
         interface.CopyInterfaceColumn,
         interface.TestFormula,
+        sample.OpenReferralCompilation,
         module='lims_interface', type_='wizard')
