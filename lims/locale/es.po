@@ -1479,6 +1479,18 @@ msgctxt "field:lims.entry.detail.analysis,plannable:"
 msgid "Plannable"
 msgstr "Planificable"
 
+msgctxt "field:lims.entry.detail.analysis,referable:"
+msgid "Referred by default"
+msgstr "Derivado por defecto"
+
+msgctxt "field:lims.entry.detail.analysis,referral:"
+msgid "Referral"
+msgstr "Derivación"
+
+msgctxt "field:lims.entry.detail.analysis,referral_date:"
+msgid "Referral date"
+msgstr "Fecha Derivación"
+
 msgctxt "field:lims.entry.detail.analysis,report:"
 msgid "Report"
 msgstr "Informar"
@@ -2979,6 +2991,10 @@ msgctxt "field:lims.notebook.line,reference:"
 msgid "Reference"
 msgstr "Referencia"
 
+msgctxt "field:lims.notebook.line,referral:"
+msgid "Referral"
+msgstr "Derivación"
+
 msgctxt "field:lims.notebook.line,repetition:"
 msgid "Repetition"
 msgstr "Repetición"
@@ -3242,6 +3258,10 @@ msgstr "Límite de cuantificación"
 msgctxt "field:lims.notebook.line.all_fields,reference:"
 msgid "Reference"
 msgstr "Referencia"
+
+msgctxt "field:lims.notebook.line.all_fields,referral:"
+msgid "Referral"
+msgstr "Derivación"
 
 msgctxt "field:lims.notebook.line.all_fields,repetition:"
 msgid "Repetition"
@@ -4708,6 +4728,38 @@ msgctxt "field:lims.range.type,use:"
 msgid "Use"
 msgstr "Uso"
 
+msgctxt "field:lims.referral,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:lims.referral,laboratory:"
+msgid "Destination Laboratory"
+msgstr "Laboratorio destino"
+
+msgctxt "field:lims.referral,services:"
+msgid "Services"
+msgstr "Servicios"
+
+msgctxt "field:lims.referral,state:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:lims.referral.service.start,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:lims.referral.service.start,laboratory:"
+msgid "Destination Laboratory"
+msgstr "Laboratorio destino"
+
+msgctxt "field:lims.referral.service.start,referral:"
+msgid "Referral"
+msgstr "Derivación"
+
+msgctxt "field:lims.referral.service.start,services:"
+msgid "Services"
+msgstr "Servicios"
+
 msgctxt "field:lims.relate_analysis.start,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
@@ -5648,6 +5700,10 @@ msgctxt "field:lims.typification,quantification_limit:"
 msgid "Quantification limit"
 msgstr "Límite de cuantificación"
 
+msgctxt "field:lims.typification,referable:"
+msgid "Referred by default"
+msgstr "Derivado por defecto"
+
 msgctxt "field:lims.typification,report:"
 msgid "Report"
 msgstr "Informar"
@@ -5784,6 +5840,10 @@ msgstr "Método"
 msgctxt "field:lims.typification.readonly,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
+
+msgctxt "field:lims.typification.set_referable.start,referable:"
+msgid "Referred by default"
+msgstr "Derivado por defecto"
 
 msgctxt "field:lims.uom.conversion,conversion_formula:"
 msgid "Conversion formula"
@@ -6338,6 +6398,14 @@ msgctxt "model:ir.action,name:act_printer_list"
 msgid "Printers"
 msgstr "Impresoras"
 
+msgctxt "model:ir.action,name:act_referral_form"
+msgid "New Referral"
+msgstr "Nueva Derivación"
+
+msgctxt "model:ir.action,name:act_referral_list"
+msgid "Referrals"
+msgstr "Derivaciones"
+
 msgctxt "model:ir.action,name:act_remove_typifications"
 msgid "Remove Typifications"
 msgstr "Quitar tipificaciones"
@@ -6345,6 +6413,14 @@ msgstr "Quitar tipificaciones"
 msgctxt "model:ir.action,name:act_sample_attribute"
 msgid "Sample Attributes"
 msgstr "Atributos de Muestra"
+
+msgctxt "model:ir.action,name:act_service_pending_referral_list"
+msgid "Services Pending Referral"
+msgstr "Servicios pendientes de derivar"
+
+msgctxt "model:ir.action,name:act_service_referred_pending_result_list"
+msgid "Referred Services Pending Result"
+msgstr "Servicios derivados pendientes de resultado"
 
 msgctxt "model:ir.action,name:print_entry_acknowledgment"
 msgid "Acknowledgment of Samples Receipt"
@@ -6413,6 +6489,10 @@ msgstr "Planilla de trabajos a realizar por análisis"
 msgctxt "model:ir.action,name:report_planification_worksheet_method"
 msgid "Worksheet by Method"
 msgstr "Planilla de trabajos a realizar por método"
+
+msgctxt "model:ir.action,name:report_referral"
+msgid "Referral Report"
+msgstr "Informe de Derivación"
 
 msgctxt "model:ir.action,name:report_results_report"
 msgid "Results Report"
@@ -6729,6 +6809,10 @@ msgctxt "model:ir.action,name:wiz_print_analysis_pending_inform"
 msgid "Pending analysis Unchecked"
 msgstr "Análisis pendientes sin tildar"
 
+msgctxt "model:ir.action,name:wiz_referral_service"
+msgid "Refer Service"
+msgstr "Derivar Servicio"
+
 msgctxt "model:ir.action,name:wiz_results_detail_open_attachment"
 msgid "Results Report Attachments"
 msgstr "Adjuntos del Informe de resultados"
@@ -6749,6 +6833,10 @@ msgstr "Repetir análisis"
 msgctxt "model:ir.action,name:wiz_results_report_version_detail_new_version"
 msgid "New Results Report Version"
 msgstr "Nueva versión de Informe de resultados"
+
+msgctxt "model:ir.action,name:wiz_set_typification_referable"
+msgid "Set Typification as Referable"
+msgstr "Establecer como derivable"
 
 msgctxt "model:ir.action,name:wizard_device_relate_analysis"
 msgid "Relate Analysis to Device"
@@ -7934,6 +8022,14 @@ msgctxt "model:ir.ui.menu,name:lims_zone_menu"
 msgid "Zones/Regions"
 msgstr "Zonas/Regiones"
 
+msgctxt "model:ir.ui.menu,name:menu_act_service_referred_pending_result_list"
+msgid "Referred Services Pending Result"
+msgstr "Servicios derivados pendientes de resultado"
+
+msgctxt "model:ir.ui.menu,name:menu_entry_board_referrals"
+msgid "Referrals"
+msgstr "Derivaciones"
+
 msgctxt "model:ir.ui.menu,name:menu_notebook_rule_list"
 msgid "Notebook Rules"
 msgstr "Reglas de cuaderno"
@@ -7946,9 +8042,21 @@ msgctxt "model:ir.ui.menu,name:menu_print_analysis_pending_inform"
 msgid "Pending analysis Unchecked"
 msgstr "Análisis pendientes sin tildar"
 
+msgctxt "model:ir.ui.menu,name:menu_referral_form"
+msgid "New Referral"
+msgstr "Nueva Derivación"
+
+msgctxt "model:ir.ui.menu,name:menu_referral_list"
+msgid "Referrals"
+msgstr "Derivaciones"
+
 msgctxt "model:ir.ui.menu,name:menu_sample_attribute"
 msgid "Sample Attributes"
 msgstr "Atributos de Muestra"
+
+msgctxt "model:ir.ui.menu,name:menu_service_pending_referral_list"
+msgid "Services Pending Referral"
+msgstr "Servicios pendientes de derivar"
 
 msgctxt "model:lims.analysis,name:"
 msgid "Analysis/Set/Group"
@@ -8787,6 +8895,14 @@ msgctxt "model:lims.range.type,name:"
 msgid "Origins"
 msgstr "Orígenes"
 
+msgctxt "model:lims.referral,name:"
+msgid "Referral of Services"
+msgstr "Derivación de Servicios"
+
+msgctxt "model:lims.referral.service.start,name:"
+msgid "Refer Service"
+msgstr "Derivar Servicio"
+
 msgctxt "model:lims.relate_analysis.start,name:"
 msgid "Relate Analysis"
 msgstr "Relacionar análisis"
@@ -8902,6 +9018,10 @@ msgstr "Copiar/Mover tipificación"
 msgctxt "model:lims.typification.readonly,name:"
 msgid "Typification"
 msgstr "Tipificación"
+
+msgctxt "model:lims.typification.set_referable.start,name:"
+msgid "Set Typification as Referable"
+msgstr "Establecer tipificación como derivable"
 
 msgctxt "model:lims.uom.conversion,name:"
 msgid "Uom Conversion"
@@ -10675,6 +10795,98 @@ msgctxt "report:lims.planification.worksheet_method.report:"
 msgid "of"
 msgstr "de"
 
+msgctxt "report:lims.referral.report:"
+msgid "("
+msgstr "("
+
+msgctxt "report:lims.referral.report:"
+msgid ")"
+msgstr ")"
+
+msgctxt "report:lims.referral.report:"
+msgid ","
+msgstr ","
+
+msgctxt "report:lims.referral.report:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.referral.report:"
+msgid "/for"
+msgstr ""
+
+msgctxt "report:lims.referral.report:"
+msgid "00/00/0000"
+msgstr ""
+
+msgctxt "report:lims.referral.report:"
+msgid "00:00:00"
+msgstr ""
+
+msgctxt "report:lims.referral.report:"
+msgid "???"
+msgstr ""
+
+msgctxt "report:lims.referral.report:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "report:lims.referral.report:"
+msgid "Date:"
+msgstr "Fecha:"
+
+msgctxt "report:lims.referral.report:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "report:lims.referral.report:"
+msgid "Laboratory:"
+msgstr "Laboratorio:"
+
+msgctxt "report:lims.referral.report:"
+msgid "Method"
+msgstr "Método"
+
+msgctxt "report:lims.referral.report:"
+msgid "Página"
+msgstr ""
+
+msgctxt "report:lims.referral.report:"
+msgid "Referral of Services"
+msgstr "Derivación de Servicios"
+
+msgctxt "report:lims.referral.report:"
+msgid "for each=\"line in record.services\""
+msgstr ""
+
+msgctxt "report:lims.referral.report:"
+msgid "for each=\"record in records\""
+msgstr ""
+
+msgctxt "report:lims.referral.report:"
+msgid "format_date(record.date, user.language)"
+msgstr ""
+
+msgctxt "report:lims.referral.report:"
+msgid "line.analysis.code"
+msgstr ""
+
+msgctxt "report:lims.referral.report:"
+msgid "line.analysis.description"
+msgstr ""
+
+msgctxt "report:lims.referral.report:"
+msgid "line.fraction.rec_name"
+msgstr ""
+
+msgctxt "report:lims.referral.report:"
+msgid "line.method.code"
+msgstr ""
+
+msgctxt "report:lims.referral.report:"
+msgid "record.laboratory.name"
+msgstr ""
+
 msgctxt "report:lims.result_report.transcription:"
 msgid "("
 msgstr "("
@@ -11170,6 +11382,10 @@ msgstr "Borrador"
 msgctxt "selection:lims.entry.detail.analysis,state:"
 msgid "Planned"
 msgstr "Planificado"
+
+msgctxt "selection:lims.entry.detail.analysis,state:"
+msgid "Referred"
+msgstr "Derivado"
 
 msgctxt "selection:lims.entry.detail.analysis,state:"
 msgid "Reported"
@@ -11824,6 +12040,18 @@ msgstr "Verificación de resultados"
 msgctxt "selection:lims.range.type,use:"
 msgid "Uncertainty calculation"
 msgstr "Cálculo de incertidumbre"
+
+msgctxt "selection:lims.referral,state:"
+msgid "Done"
+msgstr "Realizado"
+
+msgctxt "selection:lims.referral,state:"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "selection:lims.referral,state:"
+msgid "Sent"
+msgstr "Enviado"
 
 msgctxt "selection:lims.results_report.version.detail,report_result_type:"
 msgid "Both"
@@ -13098,6 +13326,10 @@ msgctxt "view:lims.range:"
 msgid "Ranges"
 msgstr "Rangos"
 
+msgctxt "view:lims.referral:"
+msgid "Send"
+msgstr "Enviar"
+
 msgctxt "view:lims.relate_analysis.start:"
 msgid "Relate Analysis"
 msgstr "Relacionar análisis"
@@ -14101,6 +14333,14 @@ msgctxt "wizard_button:lims.print_blind_sample_report,start,print_:"
 msgid "Print"
 msgstr "Imprimir"
 
+msgctxt "wizard_button:lims.referral.service,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.referral.service,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
 msgctxt "wizard_button:lims.relate_analysis,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
@@ -14190,5 +14430,13 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 msgctxt "wizard_button:lims.typification.copy,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.typification.set_referable,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.typification.set_referable,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"

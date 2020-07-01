@@ -366,6 +366,30 @@
             <field name="group" ref="group_lims_conf_base_tables_admin"/>
         </record>
 
+<!-- Wizard Set Typification as Referable -->
+
+        <record model="ir.ui.view" id="set_typification_referable_start_form">
+            <field name="model">lims.typification.set_referable.start</field>
+            <field name="type">form</field>
+            <field name="name">typification_set_referable_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_set_typification_referable">
+            <field name="name">Set Typification as Referable</field>
+            <field name="wiz_name">lims.typification.set_referable</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_set_typification_referable_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.typification,-1</field>
+            <field name="action" ref="wiz_set_typification_referable"/>
+        </record>
+
+        <record model="ir.action-res.group"
+            id="wiz_set_typification_referable-group_conf_base_tables_admin">
+            <field name="action" ref="wiz_set_typification_referable"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+        </record>
+
 <!-- Wizard Relate Analysis -->
 
         <record model="ir.ui.view" id="lims_relate_analysis_start_view_form">

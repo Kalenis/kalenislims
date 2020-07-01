@@ -92,10 +92,12 @@
     <field name="annulled"/>
     <label name="annulment_date"/>
     <field name="annulment_date"/>
-    <label name="results_report"/>
-    <field name="results_report"/>
     <label name="planification"/>
     <field name="planification"/>
+    <label name="referral"/>
+    <field name="referral"/>
+    <label name="results_report"/>
+    <field name="results_report"/>
     <group id="results_estimated_waiting" colspan="2" col="2">
         <label name="results_estimated_waiting"/>
         <field name="results_estimated_waiting"/>

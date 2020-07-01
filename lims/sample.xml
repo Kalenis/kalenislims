@@ -728,28 +728,189 @@
             <field name="action" ref="wiz_lims_countersample_discharge_print"/>
         </record>
 
-        <menuitem parent="lims_config_base_tables" action="act_lims_fraction_type_list"
-            id="lims_fraction_type_menu" sequence="70"/>
+<!-- Referral of Services -->
 
-        <menuitem parent="lims_config_entry" action="act_lims_packaging_type_list"
-            id="lims_packaging_type_menu" sequence="10"/>
-        <menuitem parent="lims_config_entry" action="act_lims_packaging_integrity_list"
-            id="lims_packaging_integrity_menu" sequence="20"/>
-        <menuitem parent="lims_config_entry" action="act_lims_variety_list"
-            id="lims_variety_menu" sequence="30"/>
-        <menuitem parent="lims_config_entry" action="act_lims_zone_list"
-            id="lims_zone_menu" sequence="40"/>
+        <record model="ir.ui.view" id="referral_service_line_view_list">
+            <field name="model">lims.entry.detail.analysis</field>
+            <field name="type">tree</field>
+            <field name="name">referral_service_line_list</field>
+        </record>
 
-        <menuitem parent="lims_entry_board_menu" action="act_lims_sample_list"
-            id="lims_sample_menu" sequence="30"/>
-        <menuitem parent="lims_entry_board_menu" action="act_lims_fraction_list"
-            id="lims_fraction_menu" sequence="40"/>
-        <menuitem parent="lims_fraction_menu" action="wizard_fractions_by_locations"
-            id="lims_fractions_by_locations_menu" sequence="10"/>
-        <menuitem parent="lims_entry_board_menu" action="act_lims_service_list"
-            id="lims_service_menu" sequence="50"/>
-        <menuitem parent="lims_entry_board_menu" action="act_lims_entry_detail_analysis_list"
-            id="lims_entry_detail_analysis_menu" sequence="60"/>
+        <record model="ir.ui.view" id="referral_view_form">
+            <field name="model">lims.referral</field>
+            <field name="type">form</field>
+            <field name="name">referral_form</field>
+        </record>
+        <record model="ir.ui.view" id="referral_view_list">
+            <field name="model">lims.referral</field>
+            <field name="type">tree</field>
+            <field name="name">referral_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_referral_list">
+            <field name="name">Referrals</field>
+            <field name="res_model">lims.referral</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_referral_list_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="referral_view_list"/>
+            <field name="act_window" ref="act_referral_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_referral_list_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="referral_view_form"/>
+            <field name="act_window" ref="act_referral_list"/>
+        </record>
+
+        <record model="ir.action.act_window" id="act_referral_form">
+            <field name="name">New Referral</field>
+            <field name="res_model">lims.referral</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_referral_form_view_form">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="referral_view_form"/>
+            <field name="act_window" ref="act_referral_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_referral_form_view_list">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="act_referral_list"/>
+            <field name="act_window" ref="act_referral_form"/>
+        </record>
+
+        <record model="ir.model.button" id="button_referral_send">
+            <field name="name">send</field>
+            <field name="model" search="[('model', '=', 'lims.referral')]"/>
+        </record>
+
+<!-- Referral of Services Report -->
+
+        <record model="ir.action.report" id="report_referral">
+            <field name="name">Referral Report</field>
+            <field name="model">lims.referral</field>
+            <field name="report_name">lims.referral.report</field>
+            <field name="report">lims/report/referral.fods</field>
+        </record>
+        <record model="ir.action.keyword" id="key_report_referral">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.referral,-1</field>
+            <field name="action" ref="report_referral"/>
+        </record>
+
+<!-- Services Pending Referral -->
+
+        <record model="ir.action.act_window" id="act_service_pending_referral_list">
+            <field name="name">Services Pending Referral</field>
+            <field name="res_model">lims.entry.detail.analysis</field>
+            <field name="domain"
+                eval="[('referable', '=', True), ('referral', '=', None), ('state', '=', 'unplanned')]"
+                pyson="1"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_service_pending_referral_list_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="referral_service_line_view_list"/>
+            <field name="act_window" ref="act_service_pending_referral_list"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_service_pending_referral_list_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_entry_detail_analysis_view_form"/>
+            <field name="act_window" ref="act_service_pending_referral_list"/>
+        </record>
+
+<!-- Referred Services Pending Result -->
+
+        <record model="ir.action.act_window" id="act_service_referred_pending_result_list">
+            <field name="name">Referred Services Pending Result</field>
+            <field name="res_model">lims.entry.detail.analysis</field>
+            <field name="domain"
+                eval="[('referral', '!=', None), ('state', '=', 'referred')]"
+                pyson="1"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_service_referred_pending_result_list_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="referral_service_line_view_list"/>
+            <field name="act_window" ref="act_service_referred_pending_result_list"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_service_referred_pending_result_list_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_entry_detail_analysis_view_form"/>
+            <field name="act_window" ref="act_service_referred_pending_result_list"/>
+        </record>
+
+<!-- Wizard Refer Service -->
+
+        <record model="ir.ui.view" id="referral_service_start_form">
+            <field name="model">lims.referral.service.start</field>
+            <field name="type">form</field>
+            <field name="name">referral_service_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_referral_service">
+            <field name="name">Refer Service</field>
+            <field name="wiz_name">lims.referral.service</field>
+        </record>
+        <record model="ir.action.keyword" id="key_wiz_referral_service">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.entry.detail.analysis,-1</field>
+            <field name="action" ref="wiz_referral_service"/>
+        </record>
+
+<!-- Menu items -->
+
+        <menuitem action="act_lims_fraction_type_list"
+            id="lims_fraction_type_menu"
+            parent="lims_config_base_tables" sequence="70"/>
+
+        <menuitem action="act_lims_packaging_type_list"
+            id="lims_packaging_type_menu"
+            parent="lims_config_entry" sequence="10"/>
+        <menuitem action="act_lims_packaging_integrity_list"
+            id="lims_packaging_integrity_menu"
+            parent="lims_config_entry" sequence="20"/>
+        <menuitem action="act_lims_variety_list"
+            id="lims_variety_menu"
+            parent="lims_config_entry" sequence="30"/>
+        <menuitem action="act_lims_zone_list"
+            id="lims_zone_menu"
+            parent="lims_config_entry" sequence="40"/>
+
+        <menuitem action="act_lims_sample_list"
+            id="lims_sample_menu"
+            parent="lims_entry_board_menu" sequence="30"/>
+        <menuitem action="act_lims_fraction_list"
+            id="lims_fraction_menu"
+            parent="lims_entry_board_menu" sequence="40"/>
+        <menuitem action="wizard_fractions_by_locations"
+            id="lims_fractions_by_locations_menu"
+            parent="lims_fraction_menu" sequence="10"/>
+        <menuitem action="act_lims_service_list"
+            id="lims_service_menu"
+            parent="lims_entry_board_menu" sequence="50"/>
+        <menuitem action="act_lims_entry_detail_analysis_list"
+            id="lims_entry_detail_analysis_menu"
+            parent="lims_entry_board_menu" sequence="60"/>
+        <menuitem name="Referrals"
+            id="menu_entry_board_referrals"
+            parent="lims_entry_board_menu" sequence="70"/>
+        <menuitem action="act_referral_form"
+            id="menu_referral_form"
+            parent="menu_entry_board_referrals" sequence="10"
+            icon="tryton-form"/>
+        <menuitem action="act_referral_list"
+            id="menu_referral_list"
+            parent="menu_entry_board_referrals" sequence="20"
+            icon="tryton-list"/>
+        <menuitem action="act_service_pending_referral_list"
+            id="menu_service_pending_referral_list"
+            parent="menu_entry_board_referrals" sequence="30"
+            icon="tryton-list"/>
+        <menuitem action="act_service_referred_pending_result_list"
+            id="menu_act_service_referred_pending_result_list"
+            parent="menu_entry_board_referrals" sequence="40"
+            icon="tryton-list"/>
 
         <record model="ir.model.access" id="access_packaging_type">
             <field name="model" search="[('model', '=', 'lims.packaging.type')]"/>

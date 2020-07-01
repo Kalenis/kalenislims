@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form>
+    <label name="laboratory"/>
+    <field name="laboratory"/>
+    <label name="date"/>
+    <field name="date"/>
+    <field name="services" colspan="4"
+        view_ids="lims.referral_service_line_view_list,lims.lims_entry_detail_analysis_view_form"/>
+</form>

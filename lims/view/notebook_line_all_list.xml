@@ -51,6 +51,7 @@
     <field name="annulment_date" widget="date"/>
     <field name="results_report"/>
     <field name="planification"/>
+    <field name="referral"/>
     <field name="confirmation_date"/>
     <field name="results_estimated_waiting"/>
     <field name="results_estimated_date"/>

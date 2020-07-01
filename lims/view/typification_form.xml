@@ -10,8 +10,12 @@
     <field name="method"/>
     <label name="default_repetitions"/>
     <field name="default_repetitions"/>
-    <label name="limit_digits"/>
-    <field name="limit_digits"/>
+    <group id="limits" colspan="2" col="4">
+        <label name="check_result_limits"/>
+        <field name="check_result_limits"/>
+        <label name="limit_digits"/>
+        <field name="limit_digits"/>
+    </group>
     <label name="detection_limit"/>
     <field name="detection_limit"/>
     <label name="quantification_limit"/>
@@ -46,8 +50,8 @@
     <group col="8" colspan="4" id="checkboxes">
         <label name="report"/>
         <field name="report"/>
-        <label name="check_result_limits"/>
-        <field name="check_result_limits"/>
+        <label name="referable"/>
+        <field name="referable"/>
         <label name="by_default"/>
         <field name="by_default"/>
         <label name="valid"/>

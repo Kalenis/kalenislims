@@ -825,6 +825,8 @@ class NotebookLine(ModelSQL, ModelView):
         'get_planning_comments')
     controls = fields.Many2Many('lims.notebook.line-fraction',
         'notebook_line', 'fraction', 'Controls')
+    referral = fields.Function(fields.Many2One('lims.referral', 'Referral'),
+        'get_detail_field', searcher='search_detail_field')
 
     @classmethod
     def __register__(cls, module_name):
@@ -1012,6 +1014,25 @@ class NotebookLine(ModelSQL, ModelView):
                 field = getattr(nl, field_name, None)
                 result[name][nl.id] = field.id if field else None
         return result
+
+    @classmethod
+    def get_detail_field(cls, notebook_lines, names):
+        result = {}
+        for name in names:
+            result[name] = {}
+            if cls._fields[name]._type == 'many2one':
+                for nl in notebook_lines:
+                    field = getattr(nl.analysis_detail, name, None)
+                    result[name][nl.id] = field.id if field else None
+            else:
+                for nl in notebook_lines:
+                    result[name][nl.id] = getattr(nl.analysis_detail,
+                        name, None)
+        return result
+
+    @classmethod
+    def search_detail_field(cls, name, clause):
+        return [('analysis_detail.' + name,) + tuple(clause[1:])]
 
     @classmethod
     def get_service_field(cls, notebook_lines, names):
@@ -1448,6 +1469,8 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     report_date = fields.Date('Date agreed for result', readonly=True)
     department = fields.Many2One('company.department', 'Department',
         readonly=True)
+    referral = fields.Function(fields.Many2One('lims.referral', 'Referral'),
+        'get_line_field', searcher='search_line_field')
 
     @classmethod
     def __setup__(cls):

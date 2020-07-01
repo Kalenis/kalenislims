@@ -38,7 +38,8 @@ __all__ = ['Zone', 'Variety', 'MatrixVariety', 'PackagingIntegrity',
     'CreateSampleStart', 'CreateSampleService', 'CreateSample',
     'CountersampleStoragePrintStart', 'CountersampleStoragePrint',
     'CountersampleStorageReport', 'CountersampleDischargePrintStart',
-    'CountersampleDischargePrint', 'CountersampleDischargeReport']
+    'CountersampleDischargePrint', 'CountersampleDischargeReport',
+    'Referral', 'ReferralReport', 'ReferServiceStart', 'ReferService']
 
 
 class Zone(ModelSQL, ModelView):
@@ -5483,3 +5484,162 @@ class CountersampleDischargeReport(Report):
             result.append('%s (%s)' % (results_report.rec_name,
                 results_report.create_date2.strftime("%d/%m/%Y")))
         return ' '.join(result)
+
+
+class Referral(ModelSQL, ModelView):
+    'Referral of Services'
+    __name__ = 'lims.referral'
+
+    _states = {'readonly': Eval('state') != 'draft'}
+    _depends = ['state']
+
+    date = fields.Date('Date', required=True,
+        states=_states, depends=_depends)
+    laboratory = fields.Many2One('party.party', 'Destination Laboratory',
+        required=True, states=_states, depends=_depends)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('sent', 'Sent'),
+        ('done', 'Done'),
+        ], 'State', required=True, readonly=True)
+    services = fields.One2Many('lims.entry.detail.analysis',
+        'referral', 'Services',
+        states=_states, depends=_depends,
+        add_remove=[
+            ('state', '=', 'unplanned'),
+            ('referral', '=', None),
+            ])
+
+    @classmethod
+    def __setup__(cls):
+        super(Referral, cls).__setup__()
+        cls._order.insert(0, ('date', 'DESC'))
+        cls._buttons.update({
+            'send': {
+                'invisible': Eval('state') != 'draft',
+                'depends': ['state'],
+                },
+            })
+
+    @staticmethod
+    def default_date():
+        Date = Pool().get('ir.date')
+        return Date.today()
+
+    @staticmethod
+    def default_state():
+        return 'draft'
+
+    def get_rec_name(self, name):
+        return self.laboratory.name
+
+    @classmethod
+    def search_rec_name(cls, name, clause):
+        return [('laboratory',) + tuple(clause[1:])]
+
+    @classmethod
+    @ModelView.button
+    def send(cls, referrals):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        for referral in referrals:
+            details = [s for s in referral.services]
+            lines = NotebookLine.search([
+                ('analysis_detail', 'in', details),
+                ])
+            NotebookLine.write(lines, {'start_date': referral.date})
+            EntryDetailAnalysis.write(details, {'state': 'referred'})
+
+        cls.write(referrals, {'state': 'sent'})
+
+
+class ReferralReport(Report):
+    'Referral of Services Report'
+    __name__ = 'lims.referral.report'
+
+
+class ReferServiceStart(ModelView):
+    'Refer Service'
+    __name__ = 'lims.referral.service.start'
+
+    date = fields.Date('Date', required=True)
+    laboratory = fields.Many2One('party.party', 'Destination Laboratory',
+        required=True)
+    services = fields.Many2Many('lims.entry.detail.analysis',
+        None, None, 'Services', readonly=True)
+    referral = fields.Many2One('lims.referral', 'Referral')
+
+
+class ReferService(Wizard):
+    'Refer Service'
+    __name__ = 'lims.referral.service'
+
+    start = StateView('lims.referral.service.start',
+        'lims.referral_service_start_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Confirm', 'confirm', 'tryton-ok', default=True),
+            ])
+    confirm = StateTransition()
+    open_ = StateAction('lims.act_referral_list')
+
+    def default_start(self, fields):
+        Date = Pool().get('ir.date')
+        default = {}
+        default['date'] = Date.today()
+        default['laboratory'] = None
+        default['services'] = self._get_services()
+        return default
+
+
+    def _get_services(self):
+        EntryDetailAnalysis = Pool().get('lims.entry.detail.analysis')
+        details = EntryDetailAnalysis.search([
+            ('id', 'in', Transaction().context['active_ids']),
+            ('referable', '=', True),
+            ('referral', '=', None),
+            ('state', '=', 'unplanned'),
+            ])
+        return [d.id for d in details]
+
+    def transition_confirm(self):
+        EntryDetailAnalysis = Pool().get('lims.entry.detail.analysis')
+
+        if not self.start.services:
+            return 'end'
+
+        referral = self._get_referral()
+
+        EntryDetailAnalysis.write([s for s in self.start.services], {
+            'referral': referral.id,
+            })
+        self.start.referral = referral
+        return 'open_'
+
+    def _get_referral(self):
+        Referral = Pool().get('lims.referral')
+
+        referrals = Referral.search([
+            ('laboratory', '=', self.start.laboratory.id),
+            ('date', '=', self.start.date),
+            ('state', '=', 'draft'),
+            ], limit=1)
+        if referrals:
+            return referrals[0]
+
+        referrals = Referral.create([{
+            'laboratory': self.start.laboratory.id,
+            'date': self.start.date,
+            'state': 'draft',
+            }])
+        return referrals[0]
+
+    def do_open_(self, action):
+        action['pyson_domain'] = PYSONEncoder().encode([
+            ('id', '=', self.start.referral.id),
+            ])
+        return action, {}
+
+    def transition_open_(self):
+        return 'end'

@@ -8,6 +8,7 @@
     <field name="quantification_limit"/>
     <field name="lower_limit"/>
     <field name="upper_limit"/>
+    <field name="check_result_limits"/>
     <field name="initial_concentration"/>
     <field name="start_uom"/>
     <field name="final_concentration"/>
@@ -17,11 +18,10 @@
     <field name="comments"/>
     <field name="additional"/>
     <field name="additionals"/>
-    <field name="by_default"/>
-    <field name="calc_decimals"/>
     <field name="report"/>
-    <field name="check_result_limits"/>
     <field name="report_type"/>
     <field name="report_result_type"/>
+    <field name="referable"/>
+    <field name="by_default"/>
     <field name="valid_view"/>
 </tree>

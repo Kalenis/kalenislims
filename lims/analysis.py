@@ -24,7 +24,8 @@ __all__ = ['ProductType', 'Matrix', 'ObjectiveDescription', 'Formula',
     'CalculatedTypificationReadOnly', 'AnalysisIncluded', 'AnalysisLaboratory',
     'AnalysisLabMethod', 'AnalysisDevice', 'CopyTypificationStart',
     'CopyTypification', 'CopyCalculatedTypificationStart',
-    'CopyCalculatedTypification', 'RelateAnalysisStart', 'RelateAnalysis',
+    'CopyCalculatedTypification', 'SetTypificationReferableStart',
+    'SetTypificationReferable', 'RelateAnalysisStart', 'RelateAnalysis',
     'CreateAnalysisProduct', 'OpenTypifications', 'AddTypificationsStart',
     'AddTypifications', 'RemoveTypificationsStart', 'RemoveTypifications']
 
@@ -96,6 +97,7 @@ class Typification(ModelSQL, ModelView):
         ('result', 'Result'),
         ('both', 'Both'),
         ], 'Result type', sort=False)
+    referable = fields.Boolean('Referred by default')
     valid = fields.Boolean('Active', depends=['valid_readonly'],
         states={'readonly': Bool(Eval('valid_readonly'))})
     valid_view = fields.Function(fields.Boolean('Active'),
@@ -171,6 +173,10 @@ class Typification(ModelSQL, ModelView):
     @staticmethod
     def default_quantification_limit():
         return 0.00
+
+    @staticmethod
+    def default_referable():
+        return False
 
     @classmethod
     def get_views_field(cls, typifications, names):
@@ -2218,6 +2224,34 @@ class CopyCalculatedTypification(Wizard):
                 'by_default': True,
                 }
             Typification.copy(to_copy_2, default=default)
+        return 'end'
+
+
+class SetTypificationReferableStart(ModelView):
+    'Set Typification as Referable'
+    __name__ = 'lims.typification.set_referable.start'
+
+    referable = fields.Boolean('Referred by default')
+
+
+class SetTypificationReferable(Wizard):
+    'Set Typification as Referable'
+    __name__ = 'lims.typification.set_referable'
+
+    start = StateView('lims.typification.set_referable.start',
+        'lims.set_typification_referable_start_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Confirm', 'confirm', 'tryton-ok', default=True),
+            ])
+    confirm = StateTransition()
+
+    def transition_confirm(self):
+        Typification = Pool().get('lims.typification')
+        active_ids = Transaction().context['active_ids']
+        typifications = Typification.browse(active_ids)
+        Typification.write(typifications, {
+            'referable': self.start.referable,
+            })
         return 'end'
 
 

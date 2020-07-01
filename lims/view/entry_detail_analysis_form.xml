@@ -37,12 +37,22 @@
     <field name="analysis_origin"/>
     <label name="state"/>
     <field name="state"/>
-    <label name="report_grouper"/>
-    <field name="report_grouper"/>
     <label name="confirmation_date"/>
     <field name="confirmation_date"/>
-    <label name="report"/>
-    <field name="report"/>
+    <group id="report" colspan="2" col="4">
+        <label name="report_grouper"/>
+        <field name="report_grouper"/>
+        <label name="report"/>
+        <field name="report"/>
+    </group>
     <label name="results_report"/>
     <field name="results_report"/>
+    <group id="referable" colspan="4" col="6">
+        <label name="referable"/>
+        <field name="referable"/>
+        <label name="referral"/>
+        <field name="referral"/>
+        <label name="referral_date"/>
+        <field name="referral_date"/>
+    </group>
 </form>

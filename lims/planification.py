@@ -4774,7 +4774,7 @@ class ReleaseFraction(Wizard):
 
     def _unlink_fractions(self):
         pool = Pool()
-        PlanificationServiceDetail = Pool().get(
+        PlanificationServiceDetail = pool.get(
             'lims.planification.service_detail')
         PlanificationDetail = pool.get('lims.planification.detail')
 
@@ -6337,6 +6337,7 @@ class PendingServicesUnplannedSpreadsheet(Report):
 
         report_context = super(PendingServicesUnplannedSpreadsheet,
                 cls).get_context(records, data)
+
         report_context['company'] = report_context['user'].company
         report_context['start_date'] = (data['start_date']
             if data['start_date'] else '')

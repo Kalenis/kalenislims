@@ -786,6 +786,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         ('draft', 'Draft'),
         ('unplanned', 'Unplanned'),
         ('planned', 'Planned'),
+        ('referred', 'Referred'),
         ('done', 'Done'),
         ('reported', 'Reported'),
         ], 'State', readonly=True)
@@ -794,6 +795,12 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     cie_fraction_type = fields.Function(fields.Boolean('Blind Sample'),
         'get_cie_fraction_type')
     plannable = fields.Boolean('Plannable', readonly=True, select=True)
+    referable = fields.Boolean('Referred by default', readonly=True,
+        select=True)
+    referral = fields.Many2One('lims.referral', 'Referral',
+        states={'readonly': True})
+    referral_date = fields.Function(fields.Date('Referral date'),
+        'get_referral_date', searcher='search_referral_date')
 
     @classmethod
     def __register__(cls, module_name):
@@ -824,12 +831,61 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         super(EntryDetailAnalysis, cls).__setup__()
         cls._order.insert(0, ('service', 'DESC'))
 
+    @staticmethod
+    def default_fraction():
+        if (Transaction().context.get('fraction', 0) > 0):
+            return Transaction().context.get('fraction')
+        return None
+
+    @staticmethod
+    def default_sample():
+        if (Transaction().context.get('sample', 0) > 0):
+            return Transaction().context.get('sample')
+        return None
+
+    @staticmethod
+    def default_entry():
+        if (Transaction().context.get('entry', 0) > 0):
+            return Transaction().context.get('entry')
+        return None
+
+    @staticmethod
+    def default_party():
+        if (Transaction().context.get('party', 0) > 0):
+            return Transaction().context.get('party')
+        return None
+
+    @staticmethod
+    def default_state():
+        return 'draft'
+
+    @staticmethod
+    def default_report():
+        return True
+
+    @staticmethod
+    def default_report_grouper():
+        return 0
+
+    @staticmethod
+    def default_referable():
+        return False
+
+    @classmethod
+    def view_attributes(cls):
+        return super(EntryDetailAnalysis, cls).view_attributes() + [
+            ('//group[@id="cie"]', 'states', {
+                    'invisible': ~Eval('cie_fraction_type'),
+                    })]
+
     @classmethod
     def create(cls, vlist):
         vlist = [x.copy() for x in vlist]
         for values in vlist:
             values['plannable'] = cls._get_plannable(values)
-        return super(EntryDetailAnalysis, cls).create(vlist)
+        details = super(EntryDetailAnalysis, cls).create(vlist)
+        cls._set_referable(details)
+        return details
 
     @classmethod
     def copy(cls, details, default=None):
@@ -988,38 +1044,6 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
             return self.service.id
         return None
 
-    @staticmethod
-    def default_fraction():
-        if (Transaction().context.get('fraction', 0) > 0):
-            return Transaction().context.get('fraction')
-        return None
-
-    @staticmethod
-    def default_sample():
-        if (Transaction().context.get('sample', 0) > 0):
-            return Transaction().context.get('sample')
-        return None
-
-    @staticmethod
-    def default_entry():
-        if (Transaction().context.get('entry', 0) > 0):
-            return Transaction().context.get('entry')
-        return None
-
-    @staticmethod
-    def default_party():
-        if (Transaction().context.get('party', 0) > 0):
-            return Transaction().context.get('party')
-        return None
-
-    @staticmethod
-    def default_report_grouper():
-        return 0
-
-    @staticmethod
-    def default_report():
-        return True
-
     @fields.depends('analysis', '_parent_analysis.type')
     def on_change_with_analysis_type(self, name=None):
         if self.analysis:
@@ -1098,10 +1122,6 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
             result[d.id] = value[0] if value else None
         return result
 
-    @staticmethod
-    def default_state():
-        return 'draft'
-
     def get_cie_fraction_type(self, name=None):
         if (self.service and self.service.fraction and
                 self.service.fraction.cie_fraction_type and
@@ -1109,12 +1129,12 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
             return True
         return False
 
+    def get_referral_date(self, name=None):
+        return self.referral and self.referral.date or None
+
     @classmethod
-    def view_attributes(cls):
-        return super(EntryDetailAnalysis, cls).view_attributes() + [
-            ('//group[@id="cie"]', 'states', {
-                    'invisible': ~Eval('cie_fraction_type'),
-                    })]
+    def search_referral_date(cls, name, clause):
+        return [('referral.date',) + tuple(clause[1:])]
 
     @classmethod
     def write(cls, *args):
@@ -1131,6 +1151,8 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                     if (detail.service and detail.service.fraction and
                             detail.service.fraction.confirmed):
                         detail.update_cie_data()
+            if vals.get('state'):
+                cls.update_referrals(details)
 
     def update_cie_data(self):
         pool = Pool()
@@ -1157,6 +1179,53 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         if not service_id:
             return False
         return Service(service_id).fraction.type.plannable
+
+    @classmethod
+    def _set_referable(cls, details):
+        cursor = Transaction().connection.cursor()
+        Typification = Pool().get('lims.typification')
+
+        details_to_write = []
+        for detail in details:
+            cursor.execute('SELECT referable '
+                'FROM "' + Typification._table + '" '
+                'WHERE product_type = %s '
+                    'AND matrix = %s '
+                    'AND analysis = %s '
+                    'AND method = %s '
+                    'AND valid',
+                (detail.fraction.product_type.id, detail.fraction.matrix.id,
+                    detail.analysis.id, detail.method.id))
+            typifications = cursor.fetchall()
+            typification = (typifications[0] if len(typifications) == 1
+                else None)
+            if typification and typification[0]:
+                details_to_write.append(detail)
+
+        if details_to_write:
+            cls.write(details_to_write, {
+                'referable': True,
+                'plannable': False,
+                })
+
+    @classmethod
+    def update_referrals(cls, details):
+        Referral = Pool().get('lims.referral')
+
+        referral_ids = [d.referral.id for d in details if d.referral]
+        if not referral_ids:
+            return
+
+        referrals = Referral.search([
+            ('state', '=', 'sent'),
+            ('id', 'in', referral_ids),
+            ])
+        for referral in referrals:
+            if cls.search_count([
+                    ('referral', '=', referral.id),
+                    ('state', '=', 'referred'),
+                    ]) == 0:
+                Referral.write([referral], {'state': 'done'})
 
 
 class ForwardAcknowledgmentOfReceipt(Wizard):
