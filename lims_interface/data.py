@@ -210,6 +210,33 @@ class Data(ModelSQL, ModelView):
         except AttributeError:
             pass
 
+    def on_change_with(self, fieldnames):
+        table = self.get_table()
+        res = {}
+        for field in table.fields_:
+            if field.name not in fieldnames:
+                continue
+            ast = field.get_ast()
+            inputs = field.inputs.split()
+            inputs = [getattr(self, x) for x in inputs]
+            try:
+                value = ast(*inputs)
+            except schedula.utils.exc.DispatcherError as e:
+                raise UserError(e.args[0] % e.args[1:])
+
+            if isinstance(value, list):
+                value = str(value)
+            elif not isinstance(value, (str, int, float, Decimal, type(None))):
+                value = value.tolist()
+            if isinstance(value, formulas.tokens.operand.XlError):
+                value = None
+            elif isinstance(value, list):
+                for x in chain(*value):
+                    if isinstance(x, formulas.tokens.operand.XlError):
+                        value = None
+            res[field.name] = value
+        return res
+
     @classmethod
     def add_on_change_with_method(cls, field):
         """
@@ -263,8 +290,8 @@ class Data(ModelSQL, ModelView):
             if field.inputs:
                 res[field.name]['on_change_with'] = field.inputs.split()
                 cls.add_on_change_with_method(field)
-                cls.__rpc__[
-                    'on_change_with_%s' % (field.name)] = RPC(instantiate=0)
+                func_name = '%s_%s' % ('on_change_with', field.name)
+                cls.__rpc__.setdefault(func_name, RPC(instantiate=0))
 
             if field.type == 'reference':
                 selection = []
@@ -627,6 +654,33 @@ class GroupedData(ModelView):
         except AttributeError:
             pass
 
+    def on_change_with(self, fieldnames):
+        table = self.get_table()
+        res = {}
+        for field in table.grouped_fields_:
+            if field.name not in fieldnames:
+                continue
+            ast = field.get_ast()
+            inputs = field.get_inputs().split()
+            inputs = [getattr(self, x) for x in inputs]
+            try:
+                value = ast(*inputs)
+            except schedula.utils.exc.DispatcherError as e:
+                raise UserError(e.args[0] % e.args[1:])
+
+            if isinstance(value, list):
+                value = str(value)
+            elif not isinstance(value, (str, int, float, Decimal, type(None))):
+                value = value.tolist()
+            if isinstance(value, formulas.tokens.operand.XlError):
+                value = None
+            elif isinstance(value, list):
+                for x in chain(*value):
+                    if isinstance(x, formulas.tokens.operand.XlError):
+                        value = None
+            res[field.name] = value
+        return res
+
     @classmethod
     def add_on_change_with_method(cls, field):
         """
@@ -679,8 +733,8 @@ class GroupedData(ModelView):
             if field.inputs:
                 res[field.name]['on_change_with'] = field.inputs.split()
                 cls.add_on_change_with_method(field)
-                cls.__rpc__[
-                    'on_change_with_%s' % (field.name)] = RPC(instantiate=0)
+                func_name = '%s_%s' % ('on_change_with', field.name)
+                cls.__rpc__.setdefault(func_name, RPC(instantiate=0))
 
             if field.type == 'reference':
                 selection = []
