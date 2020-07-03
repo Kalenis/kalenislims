@@ -17,8 +17,7 @@ class Plant(ModelSQL, ModelView):
     __name__ = 'lims.plant'
 
     party = fields.Many2One('party.party', 'Party', required=True,
-        ondelete='CASCADE', select=True,
-        states={'readonly': Eval('id', 0) > 0}, depends=['id'])
+        ondelete='CASCADE', select=True)
     name = fields.Char('Name', required=True)
     street = fields.Char('Street', required=True)
     zip = fields.Char('Zip', required=True)
