@@ -277,9 +277,12 @@ class CreateSample(metaclass=PoolMeta):
 
     def default_start(self, fields):
         defaults = super(CreateSample, self).default_start(fields)
-        for field in ('equipment', 'storage_location'):
+        for field in ('storage_location', 'equipment'):
             if (hasattr(self.start, field) and getattr(self.start, field)):
                 defaults[field] = getattr(self.start, field).id
+        for field in ('hours_equipment',):
+            if (hasattr(self.start, field) and getattr(self.start, field)):
+                defaults[field] = getattr(self.start, field)
         return defaults
 
     def _get_samples_defaults(self, entry_id):
