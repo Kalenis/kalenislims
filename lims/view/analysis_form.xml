@@ -46,11 +46,6 @@
                 <button name="relate_analysis" string="Relate analysis"/>
              </group>
         </page>
-        <page string="Microbiology" id="microbiology" >
-            <label name="gender_species"/>
-            <field name="gender_species" widget="richtext" colspan="3"/>
-            <field name="microbiology" invisible="1"/>
-        </page>
         <page string="Warnings/Comments" id="comments" >
             <field name="comments" colspan="4"/>
         </page>
