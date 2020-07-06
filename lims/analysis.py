@@ -1601,16 +1601,22 @@ class AnalysisIncluded(ModelSQL, ModelView):
             ('analysis', '=', analysis_id),
             ('id', '!=', self.id)
             ])
-        if included:
-            analysis_ids = []
-            for ai in included:
-                if ai.included_analysis:
-                    analysis_ids.append(ai.included_analysis.id)
-                    analysis_ids.extend(Analysis.get_included_analysis(
-                        ai.included_analysis.id))
-            if self.included_analysis.id in analysis_ids:
-                raise UserError(gettext('lims.msg_duplicated_analysis',
-                    analysis=self.included_analysis.rec_name))
+        if not included:
+            return
+        analysis = []
+        for ai in included:
+            if not ai.included_analysis:
+                continue
+            analysis.append((ai.included_analysis.id,
+                ai.method and ai.method.id or None))
+            analysis.extend(Analysis.get_included_analysis_method(
+                ai.included_analysis.id))
+
+        new_analysis = (self.included_analysis.id,
+            self.method and self.method.id or None)
+        if new_analysis in analysis:
+            raise UserError(gettext('lims.msg_duplicated_analysis',
+                analysis=self.included_analysis.rec_name))
 
     @fields.depends('included_analysis', 'analysis', 'laboratory',
         '_parent_analysis.type', '_parent_analysis.laboratories')
