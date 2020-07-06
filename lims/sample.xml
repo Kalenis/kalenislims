@@ -773,7 +773,7 @@
         </record>
         <record model="ir.action.act_window.view" id="act_referral_form_view_list">
             <field name="sequence" eval="20"/>
-            <field name="view" ref="act_referral_list"/>
+            <field name="view" ref="referral_view_list"/>
             <field name="act_window" ref="act_referral_form"/>
         </record>
 
