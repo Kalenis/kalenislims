@@ -1549,7 +1549,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
         ondelete='CASCADE', select=True)
     included_analysis = fields.Many2One('lims.analysis', 'Included analysis',
-        required=True, depends=['analysis_domain'],
+        required=True, select=True, depends=['analysis_domain'],
         domain=['OR', ('id', '=', Eval('included_analysis')),
             ('id', 'in', Eval('analysis_domain'))])
     analysis_domain = fields.Function(fields.Many2Many('lims.analysis',
@@ -1743,12 +1743,15 @@ class AnalysisIncluded(ModelSQL, ModelView):
         Typification = pool.get('lims.typification')
         CalculatedTypification = pool.get('lims.typification.calculated')
 
+        sets_groups = set()
         for included in included_analysis:
             if included.analysis.state != 'active':
                 continue
-            sets_groups_ids = [included.analysis.id]
-            sets_groups_ids.extend(Analysis.get_parents_analysis(
-                included.analysis.id))
+            sets_groups.add(included.analysis.id)
+
+        for set_group in sets_groups:
+            sets_groups_ids = [set_group]
+            sets_groups_ids.extend(Analysis.get_parents_analysis(set_group))
             for set_group_id in sets_groups_ids:
 
                 ia = Analysis.get_included_analysis_analysis(
@@ -1837,10 +1840,12 @@ class AnalysisIncluded(ModelSQL, ModelView):
         Typification = pool.get('lims.typification')
         CalculatedTypification = pool.get('lims.typification.calculated')
 
+        sets_groups = set()
         deleted_analysis = []
         for included in included_analysis:
             if included.analysis.state != 'active':
                 continue
+            sets_groups.add(included.analysis.id)
             if included.included_analysis.type == 'analysis':
                 deleted_analysis.append(included.included_analysis.id)
             else:
@@ -1848,12 +1853,9 @@ class AnalysisIncluded(ModelSQL, ModelView):
                     Analysis.get_included_analysis_analysis(
                         included.included_analysis.id))
 
-        for included in included_analysis:
-            if included.analysis.state != 'active':
-                continue
-            sets_groups_ids = [included.analysis.id]
-            sets_groups_ids.extend(Analysis.get_parents_analysis(
-                included.analysis.id))
+        for set_group in sets_groups:
+            sets_groups_ids = [set_group]
+            sets_groups_ids.extend(Analysis.get_parents_analysis(set_group))
             for set_group_id in sets_groups_ids:
                 typified = True
 
