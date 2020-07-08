@@ -810,6 +810,14 @@ msgctxt "model:lims.sampling.type,name:"
 msgid "Sampling Type"
 msgstr "Muestreo"
 
+msgctxt "selection:lims.trend.chart,filter:"
+msgid "Same Component"
+msgstr "Mismo Componente"
+
+msgctxt "selection:lims.trend.chart,x_axis:"
+msgid "Hs. Component"
+msgstr "Hs. Componente"
+
 msgctxt "view:lims.create_sample.start:"
 msgid "Industry"
 msgstr "Industria"

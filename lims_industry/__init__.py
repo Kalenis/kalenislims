@@ -10,6 +10,7 @@ from . import notebook
 from . import results_report
 from . import party
 from . import task
+from . import control_tendency
 
 
 def register():
@@ -42,9 +43,11 @@ def register():
         party.Address,
         task.AdministrativeTaskTemplate,
         task.AdministrativeTask,
+        control_tendency.TrendChart,
         module='lims_industry', type_='model')
     Pool.register(
         sample.CreateSample,
         sample.EditSample,
         results_report.OpenResultsDetailPrecedent,
+        control_tendency.OpenTrendChart,
         module='lims_industry', type_='wizard')
