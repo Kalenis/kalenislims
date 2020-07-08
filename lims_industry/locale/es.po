@@ -278,6 +278,10 @@ msgctxt "field:lims.equipment.type,name:"
 msgid "Name"
 msgstr "Nombre"
 
+msgctxt "field:lims.fraction,hours_component:"
+msgid "Hs. Component"
+msgstr "Hs. Componente"
+
 msgctxt "field:lims.notebook,component:"
 msgid "Component"
 msgstr "Componente"
@@ -285,6 +289,10 @@ msgstr "Componente"
 msgctxt "field:lims.notebook,equipment:"
 msgid "Equipment"
 msgstr "Equipo"
+
+msgctxt "field:lims.notebook,hours_component:"
+msgid "Hs. Component"
+msgstr "Hs. Componente"
 
 msgctxt "field:lims.notebook,plant:"
 msgid "Plant"

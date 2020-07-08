@@ -32,6 +32,7 @@ def register():
         analysis.Analysis,
         sample.Entry,
         sample.Sample,
+        sample.Fraction,
         sample.CreateSampleStart,
         sample.EditSampleStart,
         notebook.Notebook,

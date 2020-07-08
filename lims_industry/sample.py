@@ -8,7 +8,7 @@ from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Bool
 from trytond.transaction import Transaction
 
-__all__ = ['Entry', 'Sample', 'CreateSampleStart', 'CreateSample',
+__all__ = ['Entry', 'Sample', 'Fraction', 'CreateSampleStart', 'CreateSample',
     'EditSampleStart', 'EditSample']
 
 
@@ -158,6 +158,30 @@ class Sample(metaclass=PoolMeta):
         for s in samples:
             result[s.id] = s.equipment and s.equipment.plant.id or None
         return result
+
+
+class Fraction(metaclass=PoolMeta):
+    __name__ = 'lims.fraction'
+
+    hours_component = fields.Function(fields.Integer('Hs. Component'),
+        'get_sample_field', searcher='search_sample_field')
+
+    def _order_sample_field(name):
+        def order_field(tables):
+            pool = Pool()
+            Sample = pool.get('lims.sample')
+            field = Sample._fields[name]
+            table, _ = tables[None]
+            sample_tables = tables.get('sample')
+            if sample_tables is None:
+                sample = Sample.__table__()
+                sample_tables = {
+                    None: (sample, sample.id == table.sample),
+                    }
+                tables['sample'] = sample_tables
+            return field.convert_order(name, sample_tables, Sample)
+        return staticmethod(order_field)
+    order_hours_component = _order_sample_field('hours_component')
 
 
 class CreateSampleStart(metaclass=PoolMeta):
