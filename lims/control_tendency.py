@@ -22,7 +22,9 @@ __all__ = ['RangeType', 'Range', 'ControlTendency', 'ControlTendencyDetail',
     'ControlResultLine', 'ControlResultLineDetail',
     'MeansDeviationsCalcResult2', 'MeansDeviationsCalc',
     'TendenciesAnalysisStart', 'TendenciesAnalysisResult',
-    'TendenciesAnalysis', 'PrintControlChart', 'ControlChartReport']
+    'TendenciesAnalysis', 'PrintControlChart', 'ControlChartReport',
+    'TrendChart', 'TrendChartAnalysis', 'TrendChartAnalysis2',
+    'OpenTrendChartStart', 'OpenTrendChart', 'TrendChartData']
 
 
 class RangeType(ModelSQL, ModelView):
@@ -1318,3 +1320,379 @@ class ControlChartReport(Report):
             return image
         except TypeError:
             return output.getvalue()
+
+
+class TrendChart(ModelSQL, ModelView):
+    'Trend Chart'
+    __name__ = 'lims.trend.chart'
+
+    name = fields.Char('Name', required=True)
+    analysis = fields.One2Many('lims.trend.chart.analysis', 'chart',
+        'Analysis')
+    uom = fields.Many2One('product.uom', 'UoM',
+        domain=[('category.lims_only_available', '=', True)])
+    analysis_y2 = fields.One2Many('lims.trend.chart.analysis2', 'chart',
+        'Analysis (Y2)')
+    uom_y2 = fields.Many2One('product.uom', 'UoM (Y2)',
+        domain=[('category.lims_only_available', '=', True)])
+    quantity = fields.Integer('Qty. of Precedents', required=True)
+    filter = fields.Selection([
+        ('any', 'Any Sample'),
+        ('party', 'Same Party'),
+        ('sample_producer', 'Same Sample Producer'),
+        ], 'Precedents Filter', sort=False, required=True)
+    x_axis = fields.Selection([
+        ('date', 'Date'),
+        ], 'X Axis', sort=False, required=True)
+    x_axis_string = x_axis.translated('x_axis')
+    active = fields.Boolean('Active', help='Check to include in future use')
+
+    @classmethod
+    def default_active(cls):
+        return False
+
+    @staticmethod
+    def default_filter():
+        return 'any'
+
+    @staticmethod
+    def default_x_axis():
+        return 'date'
+
+    @classmethod
+    def validate(cls, charts):
+        super(TrendChart, cls).validate(charts)
+        for chart in charts:
+            chart.check_analysis_qty()
+            chart.check_uom()
+
+    def check_analysis_qty(self):
+        limit = 10
+        if (len(self.analysis) + len(self.analysis_y2)) > limit:
+            raise UserError(gettext('lims.msg_trend_chart_analysis_qty',
+                qty=limit))
+
+    def check_uom(self):
+        cursor = Transaction().connection.cursor()
+        Typification = Pool().get('lims.typification')
+
+        def _check_uom(analysis_ids):
+            uoms = []
+            for a_id in analysis_ids:
+                cursor.execute('SELECT DISTINCT(t.start_uom) '
+                    'FROM "' + Typification._table + '" t '
+                    'WHERE t.analysis = %s', (str(a_id),))
+                typifications = cursor.fetchall()
+                if not typifications:
+                    raise UserError(gettext(
+                        'lims.msg_trend_chart_analysis_uom'))
+                analysis_uoms = [x[0] for x in typifications]
+                if not uoms:
+                    uoms = analysis_uoms
+                ok = False
+                for a_uom in analysis_uoms:
+                    if a_uom in uoms:
+                        ok = True
+                        break
+                if not ok:
+                    raise UserError(gettext(
+                        'lims.msg_trend_chart_analysis_uom'))
+            return uoms
+
+        uoms = _check_uom(a.analysis.id for a in self.analysis)
+        if self.uom and self.uom.id not in uoms:
+            raise UserError(gettext('lims.msg_trend_chart_analysis_uom'))
+        uoms = _check_uom(a.analysis.id for a in self.analysis_y2)
+        if self.uom_y2 and self.uom_y2.id not in uoms:
+            raise UserError(gettext('lims.msg_trend_chart_analysis_uom'))
+
+    def get_tree_view(self):
+        fields = []
+        definition = {}
+
+        fields.append('<field name="x_axis"/>')
+        definition['x_axis'] = {
+            'name': 'x_axis',
+            'string': self.x_axis_string,
+            'type': 'char',
+            'readonly': True,
+            'help': None,
+            }
+
+        i = 1
+        for analysis in self.analysis:
+            name = 'analysis%s' % str(i)
+            fields.append('<field name="%s"/>' % name)
+            definition[name] = {
+                'name': name,
+                'string': analysis.analysis.description,
+                'type': 'char',
+                'readonly': True,
+                'help': None,
+                }
+            i += 1
+        for analysis in self.analysis_y2:
+            name = 'analysis%s' % str(i)
+            fields.append('<field name="%s"/>' % name)
+            definition[name] = {
+                'name': name,
+                'string': analysis.analysis.description,
+                'type': 'char',
+                'readonly': True,
+                'help': None,
+                }
+            i += 1
+
+        xml = ('<?xml version="1.0"?>\n'
+            '<tree>\n'
+            '%s\n'
+            '</tree>') % ('\n'.join(fields))
+        res = {
+            'type': 'tree',
+            'arch': xml,
+            'fields': definition,
+            }
+        return res
+
+    def get_graph_view(self):
+        fields = []
+        definition = {}
+
+        definition['x_axis'] = {
+            'name': 'x_axis',
+            'string': self.x_axis_string,
+            'type': 'char',
+            'readonly': True,
+            'help': None,
+            }
+
+        i = 1
+        for analysis in self.analysis:
+            name = 'analysis%s' % str(i)
+            fields.append('<field name="%s"/>' % name)
+            definition[name] = {
+                'name': name,
+                'string': analysis.analysis.description,
+                'type': 'char',
+                'readonly': True,
+                'help': None,
+                }
+            i += 1
+        for analysis in self.analysis_y2:
+            name = 'analysis%s' % str(i)
+            fields.append('<field name="%s" axis="1"/>' % name)
+            definition[name] = {
+                'name': name,
+                'string': analysis.analysis.description,
+                'type': 'char',
+                'readonly': True,
+                'help': None,
+                }
+            i += 1
+
+        xml = ('<?xml version="1.0"?>\n'
+            '<graph string="%s" type="line" legend="1">\n'
+            '<x><field name="x_axis"/></x>\n'
+            '<y>\n''%s\n''</y>\n'
+            '</graph>') % (self.name, '\n'.join(fields))
+        res = {
+            'type': 'graph',
+            'arch': xml,
+            'fields': definition,
+            }
+        return res
+
+    @classmethod
+    def clean(cls):
+        TrendChartData = Pool().get('lims.trend.chart.data')
+        to_delete = cls.search([('active', '=', False)])
+        cls.delete(to_delete)
+        to_delete = TrendChartData.search([])
+        TrendChartData.delete(to_delete)
+
+
+class TrendChartAnalysis(ModelSQL, ModelView):
+    'Trend Chart Analysis'
+    __name__ = 'lims.trend.chart.analysis'
+
+    chart = fields.Many2One('lims.trend.chart', 'Trend Chart',
+        ondelete='CASCADE', select=True, required=True)
+    analysis = fields.Many2One('lims.analysis', 'Analysis', required=True)
+    order = fields.Integer('Order')
+
+    @classmethod
+    def __setup__(cls):
+        super(TrendChartAnalysis, cls).__setup__()
+        cls._order.insert(0, ('order', 'ASC'))
+
+
+class TrendChartAnalysis2(ModelSQL, ModelView):
+    'Trend Chart Analysis'
+    __name__ = 'lims.trend.chart.analysis2'
+
+    chart = fields.Many2One('lims.trend.chart', 'Trend Chart',
+        ondelete='CASCADE', select=True, required=True)
+    analysis = fields.Many2One('lims.analysis', 'Analysis', required=True)
+    order = fields.Integer('Order')
+
+    @classmethod
+    def __setup__(cls):
+        super(TrendChartAnalysis2, cls).__setup__()
+        cls._order.insert(0, ('order', 'ASC'))
+
+
+class OpenTrendChartStart(ModelView):
+    'Open Trend Chart'
+    __name__ = 'lims.trend.chart.open.start'
+
+    chart = fields.Many2One('lims.trend.chart', 'Trend Chart', required=True)
+    notebook = fields.Many2One('lims.notebook', 'Sample', required=True)
+
+
+class OpenTrendChart(Wizard):
+    'Open Trend Chart'
+    __name__ = 'lims.trend.chart.open'
+
+    start = StateView('lims.trend.chart.open.start',
+        'lims.trend_chart_open_start_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Open', 'compute', 'tryton-ok', default=True),
+            ])
+    compute = StateTransition()
+    open = StateAction('lims.act_trend_chart_data')
+
+    def default_start(self, fields):
+        chart_id = None
+        if Transaction().context['active_model'] == 'lims.trend.chart':
+            chart_id = Transaction().context.get('active_id')
+        defaults = {'chart': chart_id}
+        return defaults
+
+    def transition_compute(self):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        TrendChartData = pool.get('lims.trend.chart.data')
+        Notebook = pool.get('lims.notebook')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        session_id = self._session_id
+        cursor.execute('DELETE FROM "' + TrendChartData._table + '" '
+            'WHERE session_id = \'%s\'', (session_id,))
+
+        chart = self.start.chart
+        clause = self._get_clause()
+        order = self._get_order()
+
+        records = []
+        notebooks = Notebook.search(clause, order=order, limit=chart.quantity)
+        notebooks.reverse()
+        for notebook in notebooks:
+            record = {
+                'session_id': session_id,
+                'x_axis': self._get_x_axis(notebook),
+                }
+            i = 1
+            for a in chart.analysis:
+                line = NotebookLine.search([
+                    ('notebook', '=', notebook),
+                    ('analysis', '=', a.analysis),
+                    ('accepted', '=', True),
+                    ])
+                if line:
+                    record['analysis%s' % str(i)] = line[0].result
+                i += 1
+            for a in chart.analysis_y2:
+                line = NotebookLine.search([
+                    ('notebook', '=', notebook),
+                    ('analysis', '=', a.analysis),
+                    ('accepted', '=', True),
+                    ])
+                if line:
+                    record['analysis%s' % str(i)] = line[0].result
+                i += 1
+            records.append(record)
+        TrendChartData.create(records)
+        return 'open'
+
+    def _get_clause(self):
+        chart = self.start.chart
+        notebook = self.start.notebook
+        clause = [
+            ('product_type', '=', notebook.product_type),
+            ('matrix', '=', notebook.matrix),
+            ]
+
+        if chart.filter == 'party':
+            clause.append(('party', '=', notebook.party))
+        elif chart.filter == 'sample_producer':
+            clause.append(('fraction.sample.producer', '=',
+                notebook.fraction.sample.producer))
+
+        if chart.x_axis == 'date':
+            clause.append(('date', '<=', notebook.date))
+        return clause
+
+    def _get_order(self):
+        chart = self.start.chart
+        if chart.x_axis == 'date':
+            return [('date', 'DESC')]
+        return []
+
+    def _get_x_axis(self, notebook):
+        chart = self.start.chart
+        if chart.x_axis == 'date':
+            return notebook.date2
+        return notebook.rec_name
+
+    def do_open(self, action):
+        context = {'chart_id': self.start.chart.id}
+        domain = [('session_id', '=', self._session_id)]
+        action['pyson_context'] = PYSONEncoder().encode(context)
+        action['pyson_domain'] = PYSONEncoder().encode(domain)
+        action['views'] = [(None, 'graph'), (None, 'tree')]
+        action['name'] += ' - %s' % self.start.chart.name
+        return action, {}
+
+
+class TrendChartData(ModelSQL, ModelView):
+    'Trend Chart'
+    __name__ = 'lims.trend.chart.data'
+
+    session_id = fields.Integer('Session ID')
+    x_axis = fields.Char('X Axis')
+    analysis1 = fields.Char('Analysis 1')
+    analysis2 = fields.Char('Analysis 2')
+    analysis3 = fields.Char('Analysis 3')
+    analysis4 = fields.Char('Analysis 4')
+    analysis5 = fields.Char('Analysis 5')
+    analysis6 = fields.Char('Analysis 6')
+    analysis7 = fields.Char('Analysis 7')
+    analysis8 = fields.Char('Analysis 8')
+    analysis9 = fields.Char('Analysis 9')
+    analysis10 = fields.Char('Analysis 10')
+
+    @classmethod
+    def __setup__(cls):
+        super(TrendChartData, cls).__setup__()
+        cls.__rpc__['fields_view_get'].cache = None
+
+    @classmethod
+    def fields_view_get(cls, view_id=None, view_type='form', level=None):
+        if Pool().test:
+            return
+        TrendChart = Pool().get('lims.trend.chart')
+
+        chart_id = Transaction().context.get('chart_id', None)
+        if not chart_id:
+            return
+
+        chart = TrendChart(chart_id)
+        view_info = getattr(chart, 'get_%s_view' % view_type)()
+        res = {
+            'view_id': view_id,
+            'type': view_info['type'],
+            'arch': view_info['arch'],
+            'fields': view_info['fields'],
+            'field_childs': None,
+            }
+        return res

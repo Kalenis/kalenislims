@@ -264,26 +264,115 @@
             <field name="action" ref="wiz_control_chart_print"/>
         </record>
 
-        <menuitem parent="lims_config_base_tables" action="act_lims_range_type_list"
-            id="lims_range_type_list_menu" sequence="80"/>
-        <menuitem parent="lims_config_base_tables" action="act_lims_range_list"
-            id="lims_range_list_menu" sequence="90"/>
+<!-- Trend Charts -->
 
-        <menuitem name="Control Charts" parent="lims_laboratory"
-            id="lims_laboratory_control" sequence="60"
+        <record model="ir.ui.view" id="trend_chart_view_list">
+            <field name="model">lims.trend.chart</field>
+            <field name="type">tree</field>
+            <field name="name">trend_chart_list</field>
+        </record>
+        <record model="ir.ui.view" id="trend_chart_view_form">
+            <field name="model">lims.trend.chart</field>
+            <field name="type">form</field>
+            <field name="name">trend_chart_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_trend_chart_list">
+            <field name="name">Trend Charts</field>
+            <field name="res_model">lims.trend.chart</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_trend_chart_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="trend_chart_view_list"/>
+            <field name="act_window" ref="act_lims_range_type_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_trend_chart_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="trend_chart_view_form"/>
+            <field name="act_window" ref="act_lims_range_type_list"/>
+        </record>
+
+<!-- Trend Chart Analysis -->
+
+        <record model="ir.ui.view" id="trend_chart_analysis_view_list">
+            <field name="model">lims.trend.chart.analysis</field>
+            <field name="type">tree</field>
+            <field name="name">trend_chart_analysis_list</field>
+        </record>
+        <record model="ir.ui.view" id="trend_chart_analysis_view_form">
+            <field name="model">lims.trend.chart.analysis</field>
+            <field name="type">form</field>
+            <field name="name">trend_chart_analysis_form</field>
+        </record>
+
+<!-- Wizard Open Trend Chart -->
+
+        <record model="ir.ui.view" id="trend_chart_open_start_form">
+            <field name="model">lims.trend.chart.open.start</field>
+            <field name="type">form</field>
+            <field name="name">trend_chart_open_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_trend_chart_open">
+            <field name="name">Trend Chart</field>
+            <field name="wiz_name">lims.trend.chart.open</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_trend_chart_open_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.trend.chart,-1</field>
+            <field name="action" ref="wiz_trend_chart_open"/>
+        </record>
+
+<!-- Trend Chart Data -->
+
+        <record model="ir.action.act_window" id="act_trend_chart_data">
+            <field name="name">Trend Chart</field>
+            <field name="res_model">lims.trend.chart.data</field>
+        </record>
+
+<!-- Cron Trend Chart Clean -->
+
+        <record model="ir.cron" id="cron_trend_chart_clean">
+            <field name="interval_number" eval="1"/>
+            <field name="interval_type">days</field>
+            <field name="method">lims.trend.chart|clean</field>
+        </record>
+
+<!-- Menu items -->
+
+        <menuitem action="act_lims_range_type_list"
+            id="lims_range_type_list_menu"
+            parent="lims_config_base_tables" sequence="80"/>
+        <menuitem action="act_lims_range_list"
+            id="lims_range_list_menu"
+            parent="lims_config_base_tables" sequence="90"/>
+
+        <menuitem name="Control Charts"
+            id="lims_laboratory_control"
+            parent="lims_laboratory" sequence="60"
             icon="lims-laboratory_control"/>
-        <menuitem parent="lims_laboratory_control" action="act_lims_control_tendency"
-            id="lims_control_tendency_menu" sequence="10"
+        <menuitem action="act_lims_control_tendency"
+            id="lims_control_tendency_menu"
+            parent="lims_laboratory_control" sequence="10"
             icon="lims-tendencies"/>
-        <menuitem parent="lims_laboratory_control" action="act_lims_concentration_level"
-            id="lims_concentration_level_menu" sequence="20"
+        <menuitem action="act_lims_concentration_level"
+            id="lims_concentration_level_menu"
+            parent="lims_laboratory_control" sequence="20"
             icon="lims-concentration_level"/>
-        <menuitem parent="lims_laboratory_control" action="wiz_lims_control_means_deviations_calc"
-            id="lims_control_means_deviations_calc_menu" sequence="30"
+        <menuitem action="wiz_lims_control_means_deviations_calc"
+            id="lims_control_means_deviations_calc_menu"
+            parent="lims_laboratory_control" sequence="30"
             icon="lims-control_means_deviations_calc"/>
-        <menuitem parent="lims_laboratory_control" action="wiz_lims_control_tendencies_analysis"
-            id="lims_control_tendencies_analysis_menu" sequence="40"
+        <menuitem action="wiz_lims_control_tendencies_analysis"
+            id="lims_control_tendencies_analysis_menu"
+            parent="lims_laboratory_control" sequence="40"
             icon="lims-tendencies_analysis"/>
+
+        <menuitem action="act_trend_chart_list"
+            id="menu_trend_chart_list"
+            parent="lims_laboratory" sequence="70"
+            icon="tryton-graph"/>
 
         <record model="ir.model.access" id="access_range_type">
             <field name="model" search="[('model', '=', 'lims.range.type')]"/>

@@ -5620,6 +5620,122 @@ msgctxt "field:lims.technical.scope.version.line,version:"
 msgid "Technical scope version"
 msgstr "Versión de alcance técnico"
 
+msgctxt "field:lims.trend.chart,active:"
+msgid "Active"
+msgstr "Activo"
+
+msgctxt "field:lims.trend.chart,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:lims.trend.chart,analysis_y2:"
+msgid "Analysis (Y2)"
+msgstr "Análisis (Y2)"
+
+msgctxt "field:lims.trend.chart,filter:"
+msgid "Precedents Filter"
+msgstr "Filtro de antecedentes"
+
+msgctxt "field:lims.trend.chart,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.trend.chart,quantity:"
+msgid "Qty. of Precedents"
+msgstr "Cant. de antecedentes"
+
+msgctxt "field:lims.trend.chart,uom:"
+msgid "UoM"
+msgstr "UdM"
+
+msgctxt "field:lims.trend.chart,uom_y2:"
+msgid "UoM (Y2)"
+msgstr "UdM (Y2)"
+
+msgctxt "field:lims.trend.chart,x_axis:"
+msgid "X Axis"
+msgstr "Eje X"
+
+msgctxt "field:lims.trend.chart.analysis,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:lims.trend.chart.analysis,chart:"
+msgid "Trend Chart"
+msgstr "Gráfico de tendencia"
+
+msgctxt "field:lims.trend.chart.analysis,order:"
+msgid "Order"
+msgstr "Orden"
+
+msgctxt "field:lims.trend.chart.analysis2,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:lims.trend.chart.analysis2,chart:"
+msgid "Trend Chart"
+msgstr "Gráfico de tendencia"
+
+msgctxt "field:lims.trend.chart.analysis2,order:"
+msgid "Order"
+msgstr "Orden"
+
+msgctxt "field:lims.trend.chart.data,analysis10:"
+msgid "Analysis 10"
+msgstr "Análisis 10"
+
+msgctxt "field:lims.trend.chart.data,analysis1:"
+msgid "Analysis 1"
+msgstr "Análisis 1"
+
+msgctxt "field:lims.trend.chart.data,analysis2:"
+msgid "Analysis 2"
+msgstr "Análisis 2"
+
+msgctxt "field:lims.trend.chart.data,analysis3:"
+msgid "Analysis 3"
+msgstr "Análisis 3"
+
+msgctxt "field:lims.trend.chart.data,analysis4:"
+msgid "Analysis 4"
+msgstr "Análisis 4"
+
+msgctxt "field:lims.trend.chart.data,analysis5:"
+msgid "Analysis 5"
+msgstr "Análisis 5"
+
+msgctxt "field:lims.trend.chart.data,analysis6:"
+msgid "Analysis 6"
+msgstr "Análisis 6"
+
+msgctxt "field:lims.trend.chart.data,analysis7:"
+msgid "Analysis 7"
+msgstr "Análisis 7"
+
+msgctxt "field:lims.trend.chart.data,analysis8:"
+msgid "Analysis 8"
+msgstr "Análisis 8"
+
+msgctxt "field:lims.trend.chart.data,analysis9:"
+msgid "Analysis 9"
+msgstr "Análisis 9"
+
+msgctxt "field:lims.trend.chart.data,session_id:"
+msgid "Session ID"
+msgstr "ID Sesión"
+
+msgctxt "field:lims.trend.chart.data,x_axis:"
+msgid "X Axis"
+msgstr "Eje X"
+
+msgctxt "field:lims.trend.chart.open.start,chart:"
+msgid "Trend Chart"
+msgstr "Gráfico de tendencia"
+
+msgctxt "field:lims.trend.chart.open.start,notebook:"
+msgid "Sample"
+msgstr "Muestra"
+
 msgctxt "field:lims.typification,additional:"
 msgid "Additional analysis"
 msgstr "Análisis adicional"
@@ -6086,6 +6202,10 @@ msgstr ""
 "Nombre interno del campo. Se permiten relaciones, como "
 "\"notebook.product_type.code\""
 
+msgctxt "help:lims.trend.chart,active:"
+msgid "Check to include in future use"
+msgstr "Marcar para usar en el futuro."
+
 msgctxt "help:lims.typification.copy.start,action:"
 msgid "If choose <Move>, the origin typifications will be deactivated"
 msgstr "Si elije <Mover>, las tipificaciones origen serán desactivadas"
@@ -6425,6 +6545,14 @@ msgstr "Servicios pendientes de derivar"
 msgctxt "model:ir.action,name:act_service_referred_pending_result_list"
 msgid "Referred Services Pending Result"
 msgstr "Servicios derivados pendientes de resultado"
+
+msgctxt "model:ir.action,name:act_trend_chart_data"
+msgid "Trend Chart"
+msgstr "Gráfico de tendencia"
+
+msgctxt "model:ir.action,name:act_trend_chart_list"
+msgid "Trend Charts"
+msgstr "Gráficos de tendencia"
 
 msgctxt "model:ir.action,name:print_entry_acknowledgment"
 msgid "Acknowledgment of Samples Receipt"
@@ -6841,6 +6969,10 @@ msgstr "Nueva versión de Informe de resultados"
 msgctxt "model:ir.action,name:wiz_set_typification_referable"
 msgid "Set Typification as Referable"
 msgstr "Establecer como derivable"
+
+msgctxt "model:ir.action,name:wiz_trend_chart_open"
+msgid "Trend Chart"
+msgstr "Gráfico de tendencia"
 
 msgctxt "model:ir.action,name:wizard_device_relate_analysis"
 msgid "Relate Analysis to Device"
@@ -7586,6 +7718,14 @@ msgctxt "model:ir.message,text:msg_suspension_reason_unique_id"
 msgid "Suspension reason code must be unique"
 msgstr "El código del motivo de suspensión debe ser único"
 
+msgctxt "model:ir.message,text:msg_trend_chart_analysis_qty"
+msgid "You can not exceed the quantity of %(qty)s analysis"
+msgstr "No puede exceder la cantidad de %(qty)s análisis"
+
+msgctxt "model:ir.message,text:msg_trend_chart_analysis_uom"
+msgid "Not all analysis share the same UoM"
+msgstr "No todos los análisis comparten la misma UdM"
+
 msgctxt "model:ir.message,text:msg_typificated_method"
 msgid "You can not delete method \"%(method)s\" because is typificated"
 msgstr "No puede eliminar el método «%(method)s» porque está tipificado"
@@ -8061,6 +8201,10 @@ msgstr "Atributos de Muestra"
 msgctxt "model:ir.ui.menu,name:menu_service_pending_referral_list"
 msgid "Services Pending Referral"
 msgstr "Servicios pendientes de derivar"
+
+msgctxt "model:ir.ui.menu,name:menu_trend_chart_list"
+msgid "Trend Charts"
+msgstr "Gráficos de tendencia"
 
 msgctxt "model:lims.analysis,name:"
 msgid "Analysis/Set/Group"
@@ -8994,6 +9138,26 @@ msgstr "Versión de alcance técnico"
 msgctxt "model:lims.technical.scope.version.line,name:"
 msgid "Technical Scope Version Line"
 msgstr "Línea de versión de alcance técnico"
+
+msgctxt "model:lims.trend.chart,name:"
+msgid "Trend Chart"
+msgstr "Gráfico de tendencia"
+
+msgctxt "model:lims.trend.chart.analysis,name:"
+msgid "Trend Chart Analysis"
+msgstr "Análisis de Gráfico de tendencia"
+
+msgctxt "model:lims.trend.chart.analysis2,name:"
+msgid "Trend Chart Analysis"
+msgstr "Análisis de Gráfico de tendencia"
+
+msgctxt "model:lims.trend.chart.data,name:"
+msgid "Trend Chart"
+msgstr "Gráfico de tendencia"
+
+msgctxt "model:lims.trend.chart.open.start,name:"
+msgid "Open Trend Chart"
+msgstr "Abrir Gráfico de tendencia"
 
 msgctxt "model:lims.typification,name:"
 msgid "Typification"
@@ -11264,6 +11428,10 @@ msgid "Lims Acknowledgment of Receipt (Samples)"
 msgstr "Acuse de recibo (Muestras)"
 
 msgctxt "selection:ir.cron,method:"
+msgid "Lims Clean Inactive Trend Charts"
+msgstr "Limpiar Gráficos de tendencia inactivos"
+
+msgctxt "selection:ir.cron,method:"
 msgid "Lims Confirm Waiting Entries"
 msgstr "Confirmar ingresos en espera"
 
@@ -12205,6 +12373,22 @@ msgstr "Grupo"
 msgctxt "selection:lims.service,analysis_type:"
 msgid "Set"
 msgstr "Set"
+
+msgctxt "selection:lims.trend.chart,filter:"
+msgid "Any Sample"
+msgstr "Cualquier muestra"
+
+msgctxt "selection:lims.trend.chart,filter:"
+msgid "Same Party"
+msgstr "Misma Entidad"
+
+msgctxt "selection:lims.trend.chart,filter:"
+msgid "Same Sample Producer"
+msgstr "Mismo Productor de muestra"
+
+msgctxt "selection:lims.trend.chart,x_axis:"
+msgid "Date"
+msgstr "Fecha"
 
 msgctxt "selection:lims.typification,report_result_type:"
 msgid "Both"
@@ -14420,6 +14604,14 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.scope_version.remove_typifications,start,remove:"
 msgid "Remove"
 msgstr "Quitar"
+
+msgctxt "wizard_button:lims.trend.chart.open,start,compute:"
+msgid "Open"
+msgstr "Abrir"
+
+msgctxt "wizard_button:lims.trend.chart.open,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:lims.typification.calculated.copy,start,confirm:"
 msgid "Confirm"

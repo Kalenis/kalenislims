@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="name"/>
+    <field name="quantity"/>
+    <field name="filter"/>
+    <field name="x_axis"/>
+    <field name="analysis"/>
+    <field name="uom"/>
+    <field name="analysis_y2"/>
+    <field name="uom_y2"/>
+</tree>

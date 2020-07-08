@@ -552,6 +552,8 @@ class Cron(metaclass=PoolMeta):
                     "Lims Confirm Waiting Entries"),
                 ('lims.planification|process_waiting_planifications',
                     "Lims Process Waiting Planification"),
+                ('lims.trend.chart|clean',
+                    "Lims Clean Inactive Trend Charts"),
                 ])
 
 

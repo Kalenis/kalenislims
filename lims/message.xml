@@ -496,5 +496,11 @@
         <record model="ir.message" id="msg_concentration_level_code_unique_id">
             <field name="text">Concentration level code must be unique</field>
         </record>
+        <record model="ir.message" id="msg_trend_chart_analysis_qty">
+            <field name="text">You can not exceed the quantity of %(qty)s analysis</field>
+        </record>
+        <record model="ir.message" id="msg_trend_chart_analysis_uom">
+            <field name="text">Not all analysis share the same UoM</field>
+        </record>
     </data>
 </tryton>

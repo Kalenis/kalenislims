@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<form>
+    <field name="chart" colspan="4" invisible="1"/>
+    <label name="notebook"/>
+    <field name="notebook"/>
+</form>

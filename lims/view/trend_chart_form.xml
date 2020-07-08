@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<form>
+    <group id="name" colspan="4">
+        <label name="name"/>
+        <field name="name" xexpand="1"/>
+        <label name="active"/>
+        <field name="active" xexpand="0" width="25"/>
+    </group>
+    <group id="filters" colspan="4" col="6">
+        <label name="quantity"/>
+        <field name="quantity"/>
+        <label name="filter"/>
+        <field name="filter"/>
+        <label name="x_axis"/>
+        <field name="x_axis"/>
+    </group>
+    <field name="analysis" colspan="4"/>
+    <label name="uom"/>
+    <field name="uom"/>
+    <group id="analysis_y2" colspan="4" expandable="0">
+        <field name="analysis_y2" colspan="4"
+            view_ids="lims.trend_chart_analysis_view_list,lims.trend_chart_analysis_view_form"/>
+        <label name="uom_y2"/>
+        <field name="uom_y2"/>
+    </group>
+</form>
