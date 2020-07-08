@@ -43,7 +43,8 @@ minor_version = int(minor_version)
 
 # TODO: check new openpyxl versions, v.3 seems to be buggy in PyPI
 requires = ['appdirs', 'Click', 'formulas', 'openpyxl==2.6.4', 'pandas',
-    'psycopg2', 'PyPDF2', 'pytz', 'unidecode', 'xlrd', 'xlutils']
+    'psycopg2', 'PyPDF2', 'pytz', 'unidecode', 'xlrd', 'xlutils',
+    'matplotlib']
 
 LINKS = {
     'trytonspain_html_report': ('https://github.com/Kalenis/'

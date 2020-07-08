@@ -314,7 +314,7 @@
         </record>
 
         <record model="ir.action.wizard" id="wiz_trend_chart_open">
-            <field name="name">Trend Chart</field>
+            <field name="name">Open Trend Chart</field>
             <field name="wiz_name">lims.trend.chart.open</field>
         </record>
 
@@ -329,6 +329,26 @@
         <record model="ir.action.act_window" id="act_trend_chart_data">
             <field name="name">Trend Chart</field>
             <field name="res_model">lims.trend.chart.data</field>
+        </record>
+
+<!-- Wizard Download Trend Chart -->
+
+        <record model="ir.action.wizard" id="wiz_trend_chart_download">
+            <field name="name">Download Trend Chart</field>
+            <field name="wiz_name">lims.trend.chart.download</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_trend_chart_download_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.trend.chart.data,-1</field>
+            <field name="action" ref="wiz_trend_chart_download"/>
+        </record>
+
+        <record model="ir.action.report" id="report_trend_chart">
+            <field name="name">Trend Chart</field>
+            <field name="report_name">lims.trend.chart.report</field>
+            <field name="report">lims/report/trend_chart_report.fodt</field>
+            <field name="extension">pdf</field>
         </record>
 
 <!-- Cron Trend Chart Clean -->

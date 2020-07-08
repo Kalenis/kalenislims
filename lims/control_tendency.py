@@ -7,8 +7,8 @@ from io import BytesIO
 from math import sqrt
 
 from trytond.model import ModelView, ModelSQL, fields
-from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
-    Button
+from trytond.wizard import (Wizard, StateTransition, StateView, StateAction,
+    StateReport, Button)
 from trytond.pyson import PYSONEncoder, Eval, Bool
 from trytond.pool import Pool
 from trytond.transaction import Transaction
@@ -24,7 +24,8 @@ __all__ = ['RangeType', 'Range', 'ControlTendency', 'ControlTendencyDetail',
     'TendenciesAnalysisStart', 'TendenciesAnalysisResult',
     'TendenciesAnalysis', 'PrintControlChart', 'ControlChartReport',
     'TrendChart', 'TrendChartAnalysis', 'TrendChartAnalysis2',
-    'OpenTrendChartStart', 'OpenTrendChart', 'TrendChartData']
+    'OpenTrendChartStart', 'OpenTrendChart', 'TrendChartData',
+    'DownloadTrendChart', 'TrendChartReport']
 
 
 class RangeType(ModelSQL, ModelView):
@@ -1286,6 +1287,7 @@ class ControlChartReport(Report):
         df = pd.DataFrame(ds, index=index)
         df = df.reindex(cols, axis=1)
 
+        output = BytesIO()
         try:
             ax = df[[gettext('lims.msg_ucl'),
                 ]].plot(kind='line', color='red', rot=45, fontsize=7,
@@ -1312,7 +1314,6 @@ class ControlChartReport(Report):
                 ]].plot(kind='line', color='blue', rot=45, fontsize=7,
                     figsize=(10, 7.5), marker='o', linestyle='-', ax=ax)
 
-            output = BytesIO()
             ax.legend(loc='center left', bbox_to_anchor=(1.0, 0.5))
             ax.get_figure().savefig(output, bbox_inches='tight', dpi=300)
             image = output.getvalue()
@@ -1328,7 +1329,7 @@ class TrendChart(ModelSQL, ModelView):
 
     name = fields.Char('Name', required=True)
     analysis = fields.One2Many('lims.trend.chart.analysis', 'chart',
-        'Analysis')
+        'Analysis', required=True)
     uom = fields.Many2One('product.uom', 'UoM',
         domain=[('category.lims_only_available', '=', True)])
     analysis_y2 = fields.One2Many('lims.trend.chart.analysis2', 'chart',
@@ -1502,6 +1503,62 @@ class TrendChart(ModelSQL, ModelView):
             }
         return res
 
+    def get_plot(self, session_id):
+        TrendChartData = Pool().get('lims.trend.chart.data')
+
+        index = []
+        cols, cols_y2 = {}, {}
+        ds, ds2 = {}, {}
+
+        i = 1
+        for analysis in self.analysis:
+            name = 'analysis%s' % str(i)
+            cols[name] = analysis.analysis.description
+            ds[cols[name]] = []
+            i += 1
+        for analysis in self.analysis_y2:
+            name = 'analysis%s' % str(i)
+            cols_y2[name] = analysis.analysis.description
+            ds2[cols_y2[name]] = []
+            i += 1
+
+        records = TrendChartData.search([
+            ('session_id', '=', session_id),
+            ])
+        for r in records:
+            index.append(r.x_axis)
+            for a_name, a_description in cols.items():
+                ds[a_description].append(float(getattr(r, a_name) or 0))
+            for a_name, a_description in cols_y2.items():
+                ds2[a_description].append(float(getattr(r, a_name) or 0))
+
+        df = pd.DataFrame(ds, index=index)
+        df = df.reindex(cols.values(), axis=1)
+        if ds2:
+            df2 = pd.DataFrame(ds2, index=index)
+            df2 = df2.reindex(cols_y2.values(), axis=1)
+
+        output = BytesIO()
+        try:
+            ax = df.plot(kind='line', rot=45, fontsize=7,
+                figsize=(10, 7.5), marker='o', linestyle='-')
+            ax.set_xlabel(self.x_axis_string)
+            if self.uom:
+                ax.set_ylabel(self.uom.symbol)
+            if ds2:
+                ax = df2.plot(kind='line', rot=45, fontsize=7,
+                    figsize=(10, 7.5), marker='o', linestyle='-',
+                    secondary_y=True, ax=ax)
+                if self.uom_y2:
+                    ax.set_ylabel(self.uom_y2.symbol)
+
+            ax.get_figure().savefig(output, bbox_inches='tight', dpi=300)
+            image = output.getvalue()
+            output.close()
+            return image
+        except (TypeError, ModuleNotFoundError):
+            return output.getvalue()
+
     @classmethod
     def clean(cls):
         TrendChartData = Pool().get('lims.trend.chart.data')
@@ -1645,13 +1702,19 @@ class OpenTrendChart(Wizard):
         return notebook.rec_name
 
     def do_open(self, action):
-        context = {'chart_id': self.start.chart.id}
+        context = {
+            'chart_id': self.start.chart.id,
+            'session_id': self._session_id,
+            }
         domain = [('session_id', '=', self._session_id)]
         action['pyson_context'] = PYSONEncoder().encode(context)
         action['pyson_domain'] = PYSONEncoder().encode(domain)
         action['views'] = [(None, 'graph'), (None, 'tree')]
         action['name'] += ' - %s' % self.start.chart.name
         return action, {}
+
+    def transition_open(self):
+        return 'end'
 
 
 class TrendChartData(ModelSQL, ModelView):
@@ -1696,3 +1759,48 @@ class TrendChartData(ModelSQL, ModelView):
             'field_childs': None,
             }
         return res
+
+
+class DownloadTrendChart(Wizard):
+    'Download Trend Chart'
+    __name__ = 'lims.trend.chart.download'
+
+    start = StateTransition()
+    open = StateReport('lims.trend.chart.report')
+
+    def transition_start(self):
+        context = Transaction().context
+        print('context', context)
+        if context.get('chart_id') and context.get('session_id'):
+            return 'open'
+        return 'end'
+
+    def do_open(self, action):
+        context = Transaction().context
+        data = {
+            'chart_id': context.get('chart_id'),
+            'session_id': context.get('session_id'),
+            }
+        return action, data
+
+    def transition_open(self):
+        return 'end'
+
+
+class TrendChartReport(Report):
+    'Trend Chart'
+    __name__ = 'lims.trend.chart.report'
+
+    @classmethod
+    def get_context(cls, reports, data):
+        TrendChart = Pool().get('lims.trend.chart')
+
+        report_context = super(TrendChartReport, cls).get_context(
+            reports, data)
+
+        chart_id = data.get('chart_id')
+        chart = TrendChart(chart_id)
+
+        report_context['title'] = chart.name
+        report_context['plot'] = chart.get_plot(data.get('session_id'))
+        return report_context

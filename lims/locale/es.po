@@ -6634,6 +6634,10 @@ msgctxt "model:ir.action,name:report_results_report_transcription"
 msgid "Transcription Results Report"
 msgstr "Transcripción Informe de resultados"
 
+msgctxt "model:ir.action,name:report_trend_chart"
+msgid "Trend Chart"
+msgstr "Gráfico de tendencia"
+
 msgctxt "model:ir.action,name:wiz_change_results_estimated_waiting"
 msgid "Change Estimated Days For Results"
 msgstr "Cambiar Días estimados para resultados"
@@ -6970,9 +6974,13 @@ msgctxt "model:ir.action,name:wiz_set_typification_referable"
 msgid "Set Typification as Referable"
 msgstr "Establecer como derivable"
 
+msgctxt "model:ir.action,name:wiz_trend_chart_download"
+msgid "Download Trend Chart"
+msgstr "Descargar Gráfico de tendencia"
+
 msgctxt "model:ir.action,name:wiz_trend_chart_open"
-msgid "Trend Chart"
-msgstr "Gráfico de tendencia"
+msgid "Open Trend Chart"
+msgstr "Abrir Gráfico de tendencia"
 
 msgctxt "model:ir.action,name:wizard_device_relate_analysis"
 msgid "Relate Analysis to Device"
@@ -11423,6 +11431,10 @@ msgctxt "report:lims.result_report:"
 msgid "· Page:"
 msgstr "· Página:"
 
+msgctxt "report:lims.trend.chart.report:"
+msgid "Trend Chart"
+msgstr "Gráfico de tendencia"
+
 msgctxt "selection:ir.cron,method:"
 msgid "Lims Acknowledgment of Receipt (Samples)"
 msgstr "Acuse de recibo (Muestras)"
@@ -12477,10 +12489,6 @@ msgstr "Laboratorios"
 msgctxt "view:lims.analysis:"
 msgid "Methods"
 msgstr "Métodos"
-
-msgctxt "view:lims.analysis:"
-msgid "Microbiology"
-msgstr "Microbiología"
 
 msgctxt "view:lims.analysis:"
 msgid "Relate analysis"
