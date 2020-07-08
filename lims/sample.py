@@ -1292,6 +1292,8 @@ class Fraction(ModelSQL, ModelView):
         searcher='search_sample_field')
     label = fields.Function(fields.Char('Label'), 'get_sample_field',
         searcher='search_sample_field')
+    date = fields.Function(fields.DateTime('Date'), 'get_sample_field',
+        searcher='search_sample_field')
     type = fields.Many2One('lims.fraction.type', 'Fraction type',
         required=True, select=True)
     storage_location = fields.Many2One('stock.location', 'Storage location',
@@ -1793,6 +1795,23 @@ class Fraction(ModelSQL, ModelView):
     @classmethod
     def search_sample_field(cls, name, clause):
         return [('sample.' + name,) + tuple(clause[1:])]
+
+    def _order_sample_field(name):
+        def order_field(tables):
+            pool = Pool()
+            Sample = pool.get('lims.sample')
+            field = Sample._fields[name]
+            table, _ = tables[None]
+            sample_tables = tables.get('sample')
+            if sample_tables is None:
+                sample = Sample.__table__()
+                sample_tables = {
+                    None: (sample, sample.id == table.sample),
+                    }
+                tables['sample'] = sample_tables
+            return field.convert_order(name, sample_tables, Sample)
+        return staticmethod(order_field)
+    order_date = _order_sample_field('date')
 
     @classmethod
     def get_entry_state(cls, fractions, name):

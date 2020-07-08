@@ -1679,6 +1679,10 @@ msgctxt "field:lims.fraction,current_location:"
 msgid "Current Location"
 msgstr "Ubicación actual"
 
+msgctxt "field:lims.fraction,date:"
+msgid "Date"
+msgstr "Fecha"
+
 msgctxt "field:lims.fraction,discharge_date:"
 msgid "Discharge date"
 msgstr "Fecha de descarte"
