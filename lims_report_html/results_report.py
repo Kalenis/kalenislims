@@ -7,7 +7,7 @@ from base64 import b64encode
 from babel.support import Translations as BabelTranslations
 from jinja2 import contextfilter, Markup
 
-from trytond.model import fields
+from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
@@ -15,7 +15,9 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.modules.html_report.generator import PdfGenerator
 
-__all__ = ['ResultsReportVersionDetail', 'ResultReport']
+__all__ = ['ResultsReportVersionDetail',
+    'ResultsReportVersionDetailTrendChart',
+    'ResultsReportVersionDetailSample', 'ResultReport']
 
 
 class ResultsReportVersionDetail(metaclass=PoolMeta):
@@ -24,6 +26,13 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     template = fields.Many2One('lims.result_report.template',
         'Report Template', domain=[('type', '=', 'base')],
         states={'readonly': Eval('state') != 'draft'}, depends=['state'])
+    trend_charts = fields.One2Many(
+        'lims.results_report.version.detail.trend.chart',
+        'version_detail', 'Trend Charts')
+    charts_x_row = fields.Selection([
+        ('1', '1'),
+        ('2', '2'),
+        ], 'Charts per Row')
 
     @classmethod
     def __setup__(cls):
@@ -32,6 +41,19 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             del cls.resultrange_origin.states['invisible']
         if 'required' in cls.resultrange_origin.states:
             del cls.resultrange_origin.states['required']
+
+    @staticmethod
+    def default_charts_x_row():
+        return '1'
+
+    @fields.depends('template', '_parent_template.trend_charts')
+    def on_change_template(self):
+        if self.template and self.template.trend_charts:
+            self.trend_charts = [{
+                'chart': c.chart.id,
+                'order': c.order,
+                } for c in self.template.trend_charts]
+            self.charts_x_row = self.template.charts_x_row
 
     @classmethod
     def _get_fields_from_samples(cls, samples):
@@ -43,6 +65,13 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             result_template = notebook.fraction.sample.result_template
             if result_template:
                 detail_default['template'] = result_template.id
+                if result_template.trend_charts:
+                    detail_default['trend_charts'] = [('create', [{
+                        'chart': c.chart.id,
+                        'order': c.order,
+                        } for c in result_template.trend_charts])]
+                    detail_default['charts_x_row'] = (
+                        result_template.charts_x_row)
             resultrange_origin = notebook.fraction.sample.resultrange_origin
             if resultrange_origin:
                 detail_default['resultrange_origin'] = resultrange_origin.id
@@ -54,7 +83,80 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             cls)._get_fields_from_detail(detail)
         if detail.template:
             detail_default['template'] = detail.template.id
+        if detail.trend_charts:
+            detail_default['trend_charts'] = [('create', [{
+                'chart': c.chart.id,
+                'order': c.order,
+                } for c in detail.trend_charts])]
+            detail_default['charts_x_row'] = detail.charts_x_row
         return detail_default
+
+
+class ResultsReportVersionDetailTrendChart(ModelSQL, ModelView):
+    'Results Report Version Detail Trend Chart'
+    __name__ = 'lims.results_report.version.detail.trend.chart'
+    _order_name = 'order'
+
+    version_detail = fields.Many2One('lims.results_report.version.detail',
+        'Report Detail', ondelete='CASCADE', select=True, required=True)
+    chart = fields.Many2One('lims.trend.chart', 'Trend Chart',
+        required=True, domain=[('active', '=', True)])
+    order = fields.Integer('Order')
+
+
+class ResultsReportVersionDetailSample(metaclass=PoolMeta):
+    __name__ = 'lims.results_report.version.detail.sample'
+
+    trend_charts = fields.Function(fields.Text('Trend Charts'),
+        'get_trend_charts')
+
+    def get_trend_charts(self, name):
+        pool = Pool()
+        OpenTrendChart = pool.get('lims.trend.chart.open', type='wizard')
+        ResultReport = pool.get('lims.result_report', type='report')
+
+        if not self.version_detail.trend_charts:
+            return ''
+
+        charts = []
+        for tc in self.version_detail.trend_charts:
+            session_id, _, _ = OpenTrendChart.create()
+            open_chart = OpenTrendChart(session_id)
+            open_chart.start.chart = tc.chart
+            open_chart.start.notebook = self.notebook
+            open_chart.transition_compute()
+            plot = tc.chart.get_plot(session_id)
+            charts.append(plot)
+
+        div_row = '<div>'
+        charts_x_row = int(self.version_detail.charts_x_row) or 1
+        if charts_x_row == 1:
+            div_col = '<div style="float:left; width:100%;">'
+        elif charts_x_row == 2:
+            div_col = '<div style="float:left; width:50%;">'
+        end_div = '</div>'
+
+        content = '<div>'
+        count = 0
+        for chart in charts:
+            if count == 0:
+                content += div_row
+
+            content += div_col
+            content += ('<img src="' +
+                ResultReport.get_image(chart) +
+                '" alt="" style="width:100%;">')
+            content += end_div
+
+            count += 1
+            if count == charts_x_row:
+                content += end_div
+                count = 0
+        if count != 0:
+            content += end_div
+
+        content += end_div
+        return content
 
 
 class ResultReport(metaclass=PoolMeta):

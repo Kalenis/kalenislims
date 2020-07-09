@@ -16,5 +16,10 @@
         <page name="translations">
             <field name="translations" colspan="4"/>
         </page>
+        <page name="trend_charts">
+            <field name="trend_charts" colspan="4"/>
+            <label name="charts_x_row"/>
+            <field name="charts_x_row"/>
+        </page>
     </notebook>
 </form>

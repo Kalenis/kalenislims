@@ -48,6 +48,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     @fields.depends('template', '_parent_template.diagnosis_template',
         methods=['on_change_diagnosis_template'])
     def on_change_template(self):
+        super(ResultsReportVersionDetail, self).on_change_template()
         if self.template and self.template.diagnosis_template:
             self.diagnosis_template = self.template.diagnosis_template
             self.on_change_diagnosis_template()

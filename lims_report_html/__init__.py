@@ -15,9 +15,12 @@ def register():
         action.ActionReport,
         html_template.ReportTemplate,
         html_template.ReportTemplateTranslation,
+        html_template.ReportTemplateTrendChart,
         sample.Sample,
         sample.CreateSampleStart,
         results_report.ResultsReportVersionDetail,
+        results_report.ResultsReportVersionDetailTrendChart,
+        results_report.ResultsReportVersionDetailSample,
         notebook.Notebook,
         module='lims_report_html', type_='model')
     Pool.register(

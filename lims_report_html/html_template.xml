@@ -47,5 +47,18 @@
             <field name="name">template_translation_list</field>
         </record>
 
+<!-- Results Report Template Trend Chart -->
+
+        <record model="ir.ui.view" id="template_trend_chart_view_form">
+            <field name="model">lims.result_report.template.trend.chart</field>
+            <field name="type">form</field>
+            <field name="name">template_trend_chart_form</field>
+        </record>
+        <record model="ir.ui.view" id="template_trend_chart_view_list">
+            <field name="model">lims.result_report.template.trend.chart</field>
+            <field name="type">tree</field>
+            <field name="name">template_trend_chart_list</field>
+        </record>
+
     </data>
 </tryton>

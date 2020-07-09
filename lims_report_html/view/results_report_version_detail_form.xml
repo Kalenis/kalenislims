@@ -24,4 +24,11 @@
         position="replace">
         <field name="comments" colspan="4" widget="html"/>
     </xpath>
+    <xpath expr="/form/notebook/page[@name='comments']" position="after">
+        <page name="trend_charts">
+            <field name="trend_charts" colspan="4"/>
+            <label name="charts_x_row"/>
+            <field name="charts_x_row"/>
+        </page>
+    </xpath>
 </data>

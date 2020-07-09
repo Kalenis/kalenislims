@@ -8,7 +8,8 @@ from trytond.pyson import Eval
 from trytond.transaction import Transaction
 from trytond.cache import Cache
 
-__all__ = ['ReportTemplate', 'ReportTemplateTranslation']
+__all__ = ['ReportTemplate', 'ReportTemplateTranslation',
+    'ReportTemplateTrendChart']
 
 
 class ReportTemplate(ModelSQL, ModelView):
@@ -30,10 +31,20 @@ class ReportTemplate(ModelSQL, ModelView):
         'template', 'Translations')
     _translation_cache = Cache('lims.result_report.template.translation',
         size_limit=10240, context=False)
+    trend_charts = fields.One2Many('lims.result_report.template.trend.chart',
+        'template', 'Trend Charts')
+    charts_x_row = fields.Selection([
+        ('1', '1'),
+        ('2', '2'),
+        ], 'Charts per Row')
 
     @staticmethod
     def default_type():
         return 'base'
+
+    @staticmethod
+    def default_charts_x_row():
+        return '1'
 
     @classmethod
     def view_attributes(cls):
@@ -113,3 +124,15 @@ class ReportTemplateTranslation(ModelSQL, ModelView):
         Template = Pool().get('lims.result_report.template')
         Template._translation_cache.clear()
         return super(ReportTemplateTranslation, cls).delete(translations)
+
+
+class ReportTemplateTrendChart(ModelSQL, ModelView):
+    'Results Report Template Trend Chart'
+    __name__ = 'lims.result_report.template.trend.chart'
+    _order_name = 'order'
+
+    template = fields.Many2One('lims.result_report.template', 'Template',
+        ondelete='CASCADE', select=True, required=True)
+    chart = fields.Many2One('lims.trend.chart', 'Trend Chart',
+        required=True, domain=[('active', '=', True)])
+    order = fields.Integer('Order')
