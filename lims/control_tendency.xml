@@ -292,6 +292,26 @@
             <field name="act_window" ref="act_lims_range_type_list"/>
         </record>
 
+        <record model="ir.model.field.access"
+            id="access_trend_chart_active">
+            <field name="field"
+                search="[('name', '=', 'active'), ('model.model', '=', 'lims.trend.chart')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_trend_chart_active_group_lims_trend_chart_admin">
+            <field name="field"
+                search="[('name', '=', 'active'), ('model.model', '=', 'lims.trend.chart')]"/>
+            <field name="group" ref="group_lims_trend_chart_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
 <!-- Trend Chart Analysis -->
 
         <record model="ir.ui.view" id="trend_chart_analysis_view_list">
@@ -467,6 +487,28 @@
         <record model="ir.ui.menu-res.group" id="menu_control_tendency_group_control">
             <field name="menu" ref="lims_control_tendency_menu"/>
             <field name="group" ref="group_lims_control"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_group_lims_trend_chart">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_trend_chart"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_group_lims_trend_chart_admin">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_trend_chart_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_trend_chart_list_group_lims_trend_chart">
+            <field name="menu" ref="menu_trend_chart_list"/>
+            <field name="group" ref="group_lims_trend_chart"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_trend_chart_list_group_lims_trend_chart_admin">
+            <field name="menu" ref="menu_trend_chart_list"/>
+            <field name="group" ref="group_lims_trend_chart_admin"/>
         </record>
 
         <record model="ir.ui.menu-res.group" id="menu_concentration_level_group_control_readonly">

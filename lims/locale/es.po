@@ -9335,6 +9335,14 @@ msgctxt "model:res.group,name:group_lims_planification_readonly"
 msgid "Lims Planification Read Only"
 msgstr "Lims Planificación Sólo lectura"
 
+msgctxt "model:res.group,name:group_lims_trend_chart"
+msgid "Lims Trend Charts"
+msgstr "Lims Gráficos de tendencia"
+
+msgctxt "model:res.group,name:group_lims_trend_chart_admin"
+msgid "Lims Trend Charts Admin"
+msgstr "Lims Gráficos de tendencia Admin"
+
 msgctxt "model:user.department,name:"
 msgid "User Department"
 msgstr "Usuario Departamento"

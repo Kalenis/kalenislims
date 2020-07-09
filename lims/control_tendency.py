@@ -1620,7 +1620,7 @@ class OpenTrendChart(Wizard):
 
     def default_start(self, fields):
         chart_id = None
-        if Transaction().context['active_model'] == 'lims.trend.chart':
+        if Transaction().context.get('active_model') == 'lims.trend.chart':
             chart_id = Transaction().context.get('active_id')
         defaults = {'chart': chart_id}
         return defaults
@@ -1669,7 +1669,10 @@ class OpenTrendChart(Wizard):
                 i += 1
             records.append(record)
         TrendChartData.create(records)
-        return 'open'
+
+        if Transaction().context.get('active_model') == 'lims.trend.chart':
+            return 'open'
+        return 'end'
 
     def _get_clause(self):
         chart = self.start.chart

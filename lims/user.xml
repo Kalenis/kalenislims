@@ -156,6 +156,17 @@ this repository contains the full copyright notices and license terms. -->
             <field name="group" ref="group_lims_control"/>
         </record>
 
+        <record model="res.group" id="group_lims_trend_chart">
+            <field name="name">Lims Trend Charts</field>
+        </record>
+        <record model="res.group" id="group_lims_trend_chart_admin">
+            <field name="name">Lims Trend Charts Admin</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_trend_chart_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_trend_chart_admin"/>
+        </record>
+
         <record model="res.group" id="group_lims_blind_sample_readonly">
             <field name="name">Lims Blind Samples Read Only</field>
         </record>
