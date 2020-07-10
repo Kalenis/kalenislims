@@ -415,6 +415,24 @@
             <field name="action" ref="wiz_lims_create_analysis_product"/>
         </record>
 
+<!-- Wizard Open Analysis Not Typified -->
+
+        <record model="ir.ui.view" id="analysis_open_not_typified_start_form">
+            <field name="model">lims.analysis.open_not_typified.start</field>
+            <field name="type">form</field>
+            <field name="name">analysis_open_not_typified_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_analysis_open_not_typified">
+            <field name="name">Open Analysis Not Typified</field>
+            <field name="wiz_name">lims.analysis.open_not_typified</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_analysis_open_not_typified_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.analysis,-1</field>
+            <field name="action" ref="wiz_analysis_open_not_typified"/>
+        </record>
+
 <!-- Wizard Open Typifications -->
 
         <record model="ir.action.wizard" id="act_open_typifications">

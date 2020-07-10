@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
 <form>
-    <label name="code"/>
-    <field name="code"/>
-    <label name="description"/>
-    <field name="description"/>
+    <group id="description" colspan="4" col="4">
+        <label name="description"/>
+        <field name="description"/>
+        <label name="code"/>
+        <field name="code" xexpand="0"/>
+    </group>
     <label name="type"/>
     <field name="type"/>
     <label name="behavior"/>

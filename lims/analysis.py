@@ -26,7 +26,8 @@ __all__ = ['ProductType', 'Matrix', 'ObjectiveDescription', 'Formula',
     'CopyTypification', 'CopyCalculatedTypificationStart',
     'CopyCalculatedTypification', 'SetTypificationReferableStart',
     'SetTypificationReferable', 'RelateAnalysisStart', 'RelateAnalysis',
-    'CreateAnalysisProduct', 'OpenTypifications', 'AddTypificationsStart',
+    'CreateAnalysisProduct', 'OpenAnalysisNotTypifiedStart',
+    'OpenAnalysisNotTypified', 'OpenTypifications', 'AddTypificationsStart',
     'AddTypifications', 'RemoveTypificationsStart', 'RemoveTypifications']
 
 
@@ -2398,6 +2399,67 @@ class CreateAnalysisProduct(Wizard):
             template.save()
 
         return 'end'
+
+
+class OpenAnalysisNotTypifiedStart(ModelView):
+    'Open Analysis Not Typified'
+    __name__ = 'lims.analysis.open_not_typified.start'
+
+    analysis = fields.Many2One('lims.analysis', 'Set/Group', required=True,
+        domain=[('type', 'in', ['set', 'group'])])
+    product_type = fields.Many2One('lims.product.type', 'Product type',
+        required=True)
+    matrix = fields.Many2One('lims.matrix', 'Matrix', required=True)
+
+
+class OpenAnalysisNotTypified(Wizard):
+    'Open Analysis Not Typified'
+    __name__ = 'lims.analysis.open_not_typified'
+
+    start = StateView('lims.analysis.open_not_typified.start',
+        'lims.analysis_open_not_typified_start_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Open', 'open', 'tryton-ok', default=True),
+            ])
+    open = StateAction('lims.act_lims_analysis_list')
+
+    def default_start(self, fields):
+        Analysis = Pool().get('lims.analysis')
+        res = {}
+        active_id = Transaction().context['active_id']
+        if active_id:
+            analysis = Analysis()
+            if analysis.type in ('set', 'group'):
+                res['analysis'] = analysis.id
+        return res
+
+    def do_open(self, action):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        Typification = pool.get('lims.typification')
+
+        set_group_id = self.start.analysis.id
+        product_type_id = self.start.product_type.id
+        matrix_id = self.start.matrix.id
+
+        analysis_ids = []
+        ia = Analysis.get_included_analysis_analysis(set_group_id)
+        for a_id in ia:
+            cursor.execute('SELECT COUNT(*) '
+                'FROM "' + Typification._table + '" '
+                'WHERE valid '
+                    'AND analysis = %s '
+                    'AND product_type = %s '
+                    'AND matrix = %s',
+                (a_id, product_type_id, matrix_id))
+            typifications = cursor.fetchone()
+            if typifications[0] == 0:
+                analysis_ids.append(a_id)
+
+        action['pyson_domain'] = PYSONEncoder().encode([
+            ('id', 'in', analysis_ids)])
+        return action, {}
 
 
 class OpenTypifications(Wizard):

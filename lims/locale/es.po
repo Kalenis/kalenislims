@@ -262,6 +262,18 @@ msgctxt "field:lims.analysis.included,method_domain:"
 msgid "Method domain"
 msgstr "Dominio para Método"
 
+msgctxt "field:lims.analysis.open_not_typified.start,analysis:"
+msgid "Set/Group"
+msgstr "Set/Grupo"
+
+msgctxt "field:lims.analysis.open_not_typified.start,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.analysis.open_not_typified.start,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
 msgctxt "field:lims.blind_sample,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
@@ -6638,6 +6650,10 @@ msgctxt "model:ir.action,name:report_trend_chart"
 msgid "Trend Chart"
 msgstr "Gráfico de tendencia"
 
+msgctxt "model:ir.action,name:wiz_analysis_open_not_typified"
+msgid "Open Analysis Not Typified"
+msgstr "Abrir análisis sin tipificar"
+
 msgctxt "model:ir.action,name:wiz_change_results_estimated_waiting"
 msgid "Change Estimated Days For Results"
 msgstr "Cambiar Días estimados para resultados"
@@ -8245,6 +8261,10 @@ msgstr "Duplicar Familia de análisis"
 msgctxt "model:lims.analysis.included,name:"
 msgid "Included Analysis"
 msgstr "Análisis incluidos"
+
+msgctxt "model:lims.analysis.open_not_typified.start,name:"
+msgid "Open Analysis Not Typified"
+msgstr "Abrir análisis sin tipificar"
 
 msgctxt "model:lims.blind_sample,name:"
 msgid "Blind Sample"
@@ -13769,6 +13789,14 @@ msgstr "Duplicar"
 msgctxt "wizard_button:lims.analysis.family.duplicate,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.analysis.open_not_typified,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.analysis.open_not_typified,start,open:"
+msgid "Open"
+msgstr "Abrir"
 
 msgctxt "wizard_button:lims.change_results_estimated_waiting,start,change:"
 msgid "Change"
