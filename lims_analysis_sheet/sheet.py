@@ -24,7 +24,8 @@ __all__ = ['TemplateAnalysisSheet', 'TemplateAnalysisSheetAnalysis',
     'OpenAnalysisSheetData', 'PrintAnalysisSheetReportAsk',
     'PrintAnalysisSheetReport', 'AnalysisSheetReport',
     'ExportAnalysisSheetFileStart', 'ExportAnalysisSheetFile',
-    'ImportAnalysisSheetFileStart', 'ImportAnalysisSheetFile']
+    'ImportAnalysisSheetFileStart', 'ImportAnalysisSheetFile',
+    'OpenAnalysisSheetSample']
 
 
 class TemplateAnalysisSheet(ModelSQL, ModelView):
@@ -828,8 +829,7 @@ class PrintAnalysisSheetReport(Wizard):
             Transaction().context.get('active_id', None))
 
     def transition_start(self):
-        pool = Pool()
-        AnalysisSheet = pool.get('lims.analysis_sheet')
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
 
         sheet_id = self._get_analysis_sheet_id()
         if not sheet_id:
@@ -993,3 +993,40 @@ class ImportAnalysisSheetFile(Wizard):
 
     def end(self):
         return 'reload'
+
+
+class OpenAnalysisSheetSample(Wizard):
+    'Open Analysis Sheet Samples'
+    __name__ = 'lims.analysis_sheet.open_sample'
+
+    start = StateAction('lims.act_lims_notebook_list')
+
+    def _get_analysis_sheet_id(self):
+        return Transaction().context.get('lims_analysis_sheet',
+            Transaction().context.get('active_id', None))
+
+    def do_start(self, action):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        notebook_line = pool.get('lims.notebook.line').__table__()
+
+        sheet_id = self._get_analysis_sheet_id()
+        if not sheet_id:
+            return 'end'
+
+        sheet = AnalysisSheet(sheet_id)
+        sql_table = Table(sheet.compilation.table.name)
+        sql_join = sql_table.join(notebook_line,
+            condition=sql_table.notebook_line == notebook_line.id)
+        cursor.execute(*sql_join.select(notebook_line.notebook,
+            where=sql_table.compilation == sheet.compilation.id))
+
+        samples = set()
+        for x in cursor.fetchall():
+            samples.add(x[0])
+
+        domain = [('id', 'in', list(samples))]
+        action['pyson_domain'] = PYSONEncoder().encode(domain)
+        action['name'] += ' (%s - %s)' % (sheet.number, sheet.template.name)
+        return action, {}

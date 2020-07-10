@@ -244,5 +244,24 @@
             <field name="action" ref="wiz_analysis_sheet_import_file"/>
         </record>
 
+<!-- Wizard Open Analysis Sheet Samples -->
+
+        <record model="ir.action.wizard" id="wiz_analysis_sheet_open_sample">
+            <field name="name">Analysis Sheet Samples</field>
+            <field name="wiz_name">lims.analysis_sheet.open_sample</field>
+        </record>
+        <record model="ir.action.keyword"
+            id="wiz_analysis_sheet_open_sample_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.analysis_sheet,-1</field>
+            <field name="action" ref="wiz_analysis_sheet_open_sample"/>
+        </record>
+        <record model="ir.action.keyword"
+            id="wiz_analysis_sheet_data_open_sample_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.interface.data,-1</field>
+            <field name="action" ref="wiz_analysis_sheet_open_sample"/>
+        </record>
+
     </data>
 </tryton>

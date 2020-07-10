@@ -53,6 +53,7 @@ def register():
         sheet.ExportAnalysisSheetFile,
         sheet.PrintAnalysisSheetReport,
         sheet.ImportAnalysisSheetFile,
+        sheet.OpenAnalysisSheetSample,
         planification.SearchAnalysisSheet,
         planification.RelateTechnicians,
         planification.OpenSheetSample,

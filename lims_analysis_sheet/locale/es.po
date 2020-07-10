@@ -243,10 +243,6 @@ msgctxt "field:lims.planification.professional,name:"
 msgid "Name"
 msgstr "Nombre"
 
-msgctxt "field:lims.planification.professional,samples:"
-msgid "# Samples"
-msgstr "Cant. Muestras"
-
 msgctxt "field:lims.planification.professional,samples_qty:"
 msgid "# Samples"
 msgstr "Cant. Muestras"
@@ -270,6 +266,10 @@ msgstr "Laboratorio"
 msgctxt "field:lims.planification.professional.context,to_date:"
 msgid "To Date"
 msgstr "Hasta la fecha"
+
+msgctxt "field:lims.planification.professional.line,color:"
+msgid "Color"
+msgstr "Color"
 
 msgctxt "field:lims.planification.professional.line,completion_percentage:"
 msgid "Complete"
@@ -475,6 +475,10 @@ msgstr "Importar archivo de datos"
 msgctxt "model:ir.action,name:wiz_analysis_sheet_open_data"
 msgid "Open Analysis Sheet Data"
 msgstr "Abrir datos de Hoja de análisis"
+
+msgctxt "model:ir.action,name:wiz_analysis_sheet_open_sample"
+msgid "Analysis Sheet Samples"
+msgstr "Muestras de Hoja de análisis"
 
 msgctxt "model:ir.action,name:wiz_analysis_sheet_print_report"
 msgid "Analysis Sheet Report"
