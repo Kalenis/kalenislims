@@ -9,6 +9,18 @@ from trytond.transaction import Transaction
 custom_functions = {}
 
 
+def device_correction(device_id, value):
+    LabDevice = Pool().get('lims.lab.device')
+    if device_id and value:
+        device = LabDevice(device_id)
+        if device:
+            return device.get_correction(value)
+    return value
+
+
+custom_functions['DEVICE_CORRECTION'] = device_correction
+
+
 def _get_result_column():
     pool = Pool()
     ModelField = pool.get('ir.model.field')
@@ -31,18 +43,6 @@ def _get_result_column():
     return result_column[0].name
 
 
-def device_correction(device_id, value):
-    LabDevice = Pool().get('lims.lab.device')
-    if device_id and value:
-        device = LabDevice(device_id)
-        if device:
-            return device.get_correction(value)
-    return value
-
-
-custom_functions['DEVICE_CORRECTION'] = device_correction
-
-
 def get_analysis(analysis_code, alias=None):
     Data = Pool().get('lims.interface.data')
 
@@ -54,10 +54,6 @@ def get_analysis(analysis_code, alias=None):
     if not notebook_id:
         return None
 
-    alias = alias or _get_result_column()
-    if not alias:
-        return None
-
     target_line = None
     lines = Data.search([('compilation', '=', compilation_id)])
     for line in lines:
@@ -66,13 +62,47 @@ def get_analysis(analysis_code, alias=None):
                 line.notebook_line.analysis.code == analysis_code):
             target_line = line
             break
-
     if not target_line:
         return None
+
+    alias = alias or _get_result_column()
+    if not hasattr(target_line, alias):
+        return None
+
     return getattr(target_line, alias)
 
 
 custom_functions['A'] = get_analysis
+
+
+def get_nline_analysis(analysis_code, alias=None, notebook_line=None):
+    NotebookLine = Pool().get('lims.notebook.line')
+
+    notebook_id = Transaction().context.get('lims_analysis_notebook')
+    if not notebook_id:
+        if not notebook_line:
+            return None
+        if isinstance(notebook_line, int):
+            notebook_line = NotebookLine(notebook_line)
+        notebook_id = notebook_line.notebook.id
+
+    lines = NotebookLine.search([
+        ('notebook', '=', notebook_id),
+        ('analysis.code', '=', analysis_code),
+        ('annulled', '=', False),
+        ])
+    target_line = lines and lines[0] or None
+    if not target_line:
+        return None
+
+    alias = alias or 'result'
+    if not hasattr(target_line, alias):
+        return None
+
+    return getattr(target_line, alias)
+
+
+custom_functions['NL'] = get_nline_analysis
 
 
 def convert_brix_to_density(value=None):
