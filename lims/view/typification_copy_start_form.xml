@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<form>
+    <field name="action" colspan="4"/>
+    <group id="origin" colspan="2" col="2" yexpand="1" yfill="1"
+        string="Origin:">
+        <label name="origin_product_type"/>
+        <field name="origin_product_type"/>
+        <label name="origin_matrix"/>
+        <field name="origin_matrix"/>
+        <label name="origin_method"/>
+        <field name="origin_method"/>
+        <label name="origin_analysis"/>
+        <field name="origin_analysis"/>
+    </group>
+    <group id="destination" colspan="2" col="2" yexpand="1" yfill="1"
+        string="Destination:">
+        <label name="destination_product_type"/>
+        <field name="destination_product_type"/>
+        <label name="destination_matrix"/>
+        <field name="destination_matrix"/>
+        <field name="destination_matrices" colspan="2"/>
+        <label name="destination_method"/>
+        <field name="destination_method"/>
+    </group>
+</form>

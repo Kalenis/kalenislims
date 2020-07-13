@@ -323,7 +323,12 @@
         <record model="ir.ui.view" id="lims_copy_typification_start_view_form">
             <field name="model">lims.typification.copy.start</field>
             <field name="type">form</field>
-            <field name="name">typification_copy_form</field>
+            <field name="name">typification_copy_start_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_copy_typification_confirm_view_form">
+            <field name="model">lims.typification.copy.confirm</field>
+            <field name="type">form</field>
+            <field name="name">typification_copy_confirm_form</field>
         </record>
 
         <record model="ir.action.wizard" id="wiz_lims_copy_typification">

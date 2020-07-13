@@ -23,12 +23,13 @@ __all__ = ['ProductType', 'Matrix', 'ObjectiveDescription', 'Formula',
     'TypificationReadOnly', 'CalculatedTypification',
     'CalculatedTypificationReadOnly', 'AnalysisIncluded', 'AnalysisLaboratory',
     'AnalysisLabMethod', 'AnalysisDevice', 'CopyTypificationStart',
-    'CopyTypification', 'CopyCalculatedTypificationStart',
-    'CopyCalculatedTypification', 'SetTypificationReferableStart',
-    'SetTypificationReferable', 'RelateAnalysisStart', 'RelateAnalysis',
-    'CreateAnalysisProduct', 'OpenAnalysisNotTypifiedStart',
-    'OpenAnalysisNotTypified', 'OpenTypifications', 'AddTypificationsStart',
-    'AddTypifications', 'RemoveTypificationsStart', 'RemoveTypifications']
+    'CopyTypificationConfirm', 'CopyTypification',
+    'CopyCalculatedTypificationStart', 'CopyCalculatedTypification',
+    'SetTypificationReferableStart', 'SetTypificationReferable',
+    'RelateAnalysisStart', 'RelateAnalysis', 'CreateAnalysisProduct',
+    'OpenAnalysisNotTypifiedStart', 'OpenAnalysisNotTypified',
+    'OpenTypifications', 'AddTypificationsStart', 'AddTypifications',
+    'RemoveTypificationsStart', 'RemoveTypifications']
 
 
 class Typification(ModelSQL, ModelView):
@@ -87,7 +88,7 @@ class Typification(ModelSQL, ModelView):
     additionals_domain = fields.Function(fields.Many2Many('lims.analysis',
         None, None, 'Additional analysis domain'),
         'on_change_with_additionals_domain')
-    by_default = fields.Boolean('By default')
+    by_default = fields.Boolean('By default', select=True)
     calc_decimals = fields.Integer('Calculation decimals', required=True)
     report = fields.Boolean('Report')
     report_type = fields.Selection([
@@ -99,8 +100,9 @@ class Typification(ModelSQL, ModelView):
         ('both', 'Both'),
         ], 'Result type', sort=False)
     referable = fields.Boolean('Referred by default')
-    valid = fields.Boolean('Active', depends=['valid_readonly'],
-        states={'readonly': Bool(Eval('valid_readonly'))})
+    valid = fields.Boolean('Active', select=True,
+        states={'readonly': Bool(Eval('valid_readonly'))},
+        depends=['valid_readonly'])
     valid_view = fields.Function(fields.Boolean('Active'),
         'get_views_field', searcher='search_views_field')
     valid_readonly = fields.Function(fields.Boolean(
@@ -293,27 +295,32 @@ class Typification(ModelSQL, ModelView):
             raise UserError(gettext('lims.msg_invalid_limits'))
 
     def check_default(self):
+        cursor = Transaction().connection.cursor()
         if self.by_default:
-            typifications = self.search([
-                ('product_type', '=', self.product_type.id),
-                ('matrix', '=', self.matrix.id),
-                ('analysis', '=', self.analysis.id),
-                ('valid', '=', True),
-                ('by_default', '=', True),
-                ('id', '!=', self.id),
-                ])
-            if typifications:
+            cursor.execute('SELECT COUNT(*) '
+                'FROM "' + self._table + '" '
+                'WHERE id != %s '
+                    'AND product_type = %s '
+                    'AND matrix = %s '
+                    'AND analysis = %s '
+                    'AND valid '
+                    'AND by_default',
+                (self.id, self.product_type.id, self.matrix.id,
+                    self.analysis.id))
+            if cursor.fetchone()[0] != 0:
                 raise UserError(gettext('lims.msg_default_typification'))
         else:
             if self.valid:
-                typifications = self.search([
-                    ('product_type', '=', self.product_type.id),
-                    ('matrix', '=', self.matrix.id),
-                    ('analysis', '=', self.analysis.id),
-                    ('valid', '=', True),
-                    ('id', '!=', self.id),
-                    ])
-                if not typifications:
+                cursor.execute('SELECT COUNT(*) '
+                    'FROM "' + self._table + '" '
+                    'WHERE id != %s '
+                        'AND product_type = %s '
+                        'AND matrix = %s '
+                        'AND analysis = %s '
+                        'AND valid',
+                    (self.id, self.product_type.id, self.matrix.id,
+                        self.analysis.id))
+                if cursor.fetchone()[0] == 0:
                     raise UserError(
                         gettext('lims.msg_not_default_typification'))
 
@@ -2045,17 +2052,34 @@ class CopyTypificationStart(ModelView):
     destination_product_type = fields.Many2One('lims.product.type',
         'Product type', required=True)
     destination_matrix = fields.Many2One('lims.matrix', 'Matrix',
-        required=True)
+        states={
+            'required': Eval('action') == 'move',
+            'invisible': Eval('action') != 'move',
+            })
+    destination_matrices = fields.Many2Many('lims.matrix',
+        None, None, 'Matrices',
+        states={
+            'required': Eval('action') == 'copy',
+            'invisible': Eval('action') != 'copy',
+            })
     destination_method = fields.Many2One('lims.lab.method', 'Method')
     action = fields.Selection([
         ('copy', 'Copy'),
         ('move', 'Move'),
         ], 'Action', required=True,
         help='If choose <Move>, the origin typifications will be deactivated')
+    action_string = action.translated('action')
 
     @staticmethod
     def default_action():
         return 'copy'
+
+
+class CopyTypificationConfirm(ModelView):
+    'Copy/Move Typification'
+    __name__ = 'lims.typification.copy.confirm'
+
+    summary = fields.Text('Summary', readonly=True)
 
 
 class CopyTypification(Wizard):
@@ -2065,27 +2089,85 @@ class CopyTypification(Wizard):
     start = StateView('lims.typification.copy.start',
         'lims.lims_copy_typification_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Continue', 'ask', 'tryton-ok', default=True),
+            ])
+    ask = StateView('lims.typification.copy.confirm',
+        'lims.lims_copy_typification_confirm_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
             Button('Confirm', 'confirm', 'tryton-ok', default=True),
             ])
     confirm = StateTransition()
 
+    def default_ask(self, fields):
+        summary = '%s\n' % gettext(
+            'lims.msg_typification_copy_action',
+            action=str(self.start.action_string).upper())
+
+        # FROM
+        summary += '\n%s\n' % gettext('lims.msg_typification_copy_from')
+
+        # Product type
+        summary += '%s\n' % gettext(
+            'lims.msg_typification_copy_product_type',
+            product_type=self.start.origin_product_type.description)
+
+        # Matrix
+        summary += '%s\n' % gettext(
+            'lims.msg_typification_copy_matrix',
+            matrix=self.start.origin_matrix.description)
+
+        # Analysis
+        if self.start.origin_analysis:
+            summary += '%s\n' % gettext(
+                'lims.msg_typification_copy_analysis',
+                analysis=self.start.origin_analysis.description)
+
+        # Method
+        if self.start.origin_method:
+            summary += '%s\n' % gettext(
+                'lims.msg_typification_copy_method',
+                method=self.start.origin_method.name)
+
+        # TO
+        summary += '\n%s\n' % gettext('lims.msg_typification_copy_to')
+
+        # Product type
+        summary += '%s\n' % gettext(
+            'lims.msg_typification_copy_product_type',
+            product_type=self.start.destination_product_type.description)
+
+        # Matrix
+        if self.start.action == 'copy':
+            summary += '%s\n' % gettext('lims.msg_typification_copy_matrices')
+            for destination_matrix in self.start.destination_matrices:
+                summary += '   - %s\n' % destination_matrix.description
+        else:
+            summary += '%s\n' % gettext(
+                'lims.msg_typification_copy_matrix',
+                matrix=self.start.destination_matrix.description)
+
+        # Method
+        if self.start.destination_method:
+            summary += '%s\n' % gettext(
+                'lims.msg_typification_copy_method',
+                method=self.start.destination_method.name)
+
+        return {'summary': summary}
+
     def transition_confirm(self):
-        Typification = Pool().get('lims.typification')
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Typification = pool.get('lims.typification')
 
         clause = [
+            ('valid', '=', True),
             ('product_type', '=', self.start.origin_product_type.id),
             ('matrix', '=', self.start.origin_matrix.id),
-            ('valid', '=', True),
             ]
         if self.start.origin_analysis:
             clause.append(('analysis', '=', self.start.origin_analysis.id))
         if self.start.origin_method:
             clause.append(('method', '=', self.start.origin_method.id))
-
-        product_type_id = self.start.destination_product_type.id
-        matrix_id = self.start.destination_matrix.id
-        method_id = (self.start.destination_method.id if
-            self.start.destination_method else None)
 
         origins = Typification.search(clause)
         if origins and self.start.action == 'move':
@@ -2094,54 +2176,67 @@ class CopyTypification(Wizard):
                 'by_default': False,
                 })
 
-        to_copy_1 = []
-        to_copy_2 = []
-        for origin in origins:
-            if Typification.search_count([
-                    ('product_type', '=', product_type_id),
-                    ('matrix', '=', matrix_id),
-                    ('analysis', '=', origin.analysis.id),
-                    ('method', '=', method_id or origin.method.id)
-                    ]) != 0:
-                continue
-            if Typification.search_count([
-                    ('valid', '=', True),
-                    ('product_type', '=', product_type_id),
-                    ('matrix', '=', matrix_id),
-                    ('analysis', '=', origin.analysis.id),
-                    ('by_default', '=', True),
-                    ]) != 0:
-                to_copy_1.append(origin)
-            else:
-                to_copy_2.append(origin)
+        product_type_id = self.start.destination_product_type.id
+        if self.start.action == 'copy':
+            matrix_ids = [m.id for m in self.start.destination_matrices]
+        else:
+            matrix_ids = [self.start.destination_matrix.id]
+        method_id = (self.start.destination_method.id if
+            self.start.destination_method else None)
 
-        if to_copy_1:
-            default = {
-                'valid': True,
-                'product_type': product_type_id,
-                'matrix': matrix_id,
-                'by_default': False,
-                }
+        to_copy = {}
+        new_by_defaults = []
+        for origin in origins:
+            # check destination method available in analysis
             if method_id:
-                default['method'] = method_id
-                for r in to_copy_1:
-                    method_domain = [m.id for m in r.analysis.methods]
-                    if method_id not in method_domain:
-                        to_copy_1.remove(r)
-            Typification.copy(to_copy_1, default=default)
-        if to_copy_2:
-            default = {
-                'valid': True,
-                'product_type': product_type_id,
-                'matrix': matrix_id,
-                }
-            if method_id:
-                default['method'] = method_id
-                for r in to_copy_2:
-                    method_domain = [m.id for m in r.analysis.methods]
-                    if method_id not in method_domain:
-                        to_copy_2.remove(r)
-            Typification.copy(to_copy_2, default=default)
+                method_domain = [m.id for m in origin.analysis.methods]
+                if method_id not in method_domain:
+                    continue
+
+            for matrix_id in matrix_ids:
+                cursor.execute('SELECT COUNT(*) '
+                    'FROM "' + Typification._table + '" '
+                    'WHERE product_type = %s '
+                        'AND matrix = %s '
+                        'AND analysis = %s '
+                        'AND method = %s',
+                    (product_type_id, matrix_id, origin.analysis.id,
+                        method_id or origin.method.id))
+                if cursor.fetchone()[0] != 0:
+                    continue
+
+                if origin not in to_copy:
+                    to_copy[origin] = []
+
+                default = {
+                    'valid': True,
+                    'product_type': product_type_id,
+                    'matrix': matrix_id,
+                    'method': method_id or origin.method.id,
+                    }
+
+                ids_key = (product_type_id, matrix_id, origin.analysis.id)
+                cursor.execute('SELECT COUNT(*) '
+                    'FROM "' + Typification._table + '" '
+                    'WHERE valid '
+                        'AND product_type = %s '
+                        'AND matrix = %s '
+                        'AND analysis = %s '
+                        'AND by_default', ids_key)
+                if cursor.fetchone()[0] != 0:
+                    default['by_default'] = False
+                elif ids_key in new_by_defaults:
+                    default['by_default'] = False
+                else:
+                    default['by_default'] = True
+                    new_by_defaults.append(ids_key)
+
+                to_copy[origin].append(default)
+
+        for typification, defaults in to_copy.items():
+            for default in defaults:
+                Typification.copy([typification], default=default)
+
         return 'end'
 
 
@@ -2222,7 +2317,6 @@ class CopyCalculatedTypification(Wizard):
                 'valid': True,
                 'product_type': product_type_id,
                 'matrix': matrix_id,
-                'by_default': False,
                 }
             Typification.copy(to_copy_1, default=default)
         if to_copy_2:

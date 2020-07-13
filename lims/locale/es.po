@@ -5925,9 +5925,17 @@ msgctxt "field:lims.typification.calculated.readonly,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
+msgctxt "field:lims.typification.copy.confirm,summary:"
+msgid "Summary"
+msgstr "Resumen"
+
 msgctxt "field:lims.typification.copy.start,action:"
 msgid "Action"
 msgstr "Acción"
+
+msgctxt "field:lims.typification.copy.start,destination_matrices:"
+msgid "Matrices"
+msgstr "Matrices"
 
 msgctxt "field:lims.typification.copy.start,destination_matrix:"
 msgid "Matrix"
@@ -6220,7 +6228,7 @@ msgstr "Marcar para usar en el futuro."
 
 msgctxt "help:lims.typification.copy.start,action:"
 msgid "If choose <Move>, the origin typifications will be deactivated"
-msgstr "Si elije <Mover>, las tipificaciones origen serán desactivadas"
+msgstr "Si elige <Mover>, las tipificaciones de origen serán desactivadas"
 
 msgctxt "model:FormulaParser,name:"
 msgid "Formula Parser"
@@ -7754,6 +7762,38 @@ msgctxt "model:ir.message,text:msg_typificated_method"
 msgid "You can not delete method \"%(method)s\" because is typificated"
 msgstr "No puede eliminar el método «%(method)s» porque está tipificado"
 
+msgctxt "model:ir.message,text:msg_typification_copy_action"
+msgid "You are going to %(action)s"
+msgstr "Está por %(action)s"
+
+msgctxt "model:ir.message,text:msg_typification_copy_analysis"
+msgid " * Analysis: %(analysis)s"
+msgstr " * Análisis: %(analysis)s"
+
+msgctxt "model:ir.message,text:msg_typification_copy_from"
+msgid "FROM:"
+msgstr "DESDE:"
+
+msgctxt "model:ir.message,text:msg_typification_copy_matrices"
+msgid " * Matrices:"
+msgstr " * Matrices:"
+
+msgctxt "model:ir.message,text:msg_typification_copy_matrix"
+msgid " * Matrix: %(matrix)s"
+msgstr " * Matriz: %(matrix)s"
+
+msgctxt "model:ir.message,text:msg_typification_copy_method"
+msgid " * Method: %(method)s"
+msgstr " * Método: %(method)s"
+
+msgctxt "model:ir.message,text:msg_typification_copy_product_type"
+msgid " * Product type: %(product_type)s"
+msgstr " * Tipo de producto: %(product_type)s"
+
+msgctxt "model:ir.message,text:msg_typification_copy_to"
+msgid "TO:"
+msgstr "HACIA:"
+
 msgctxt "model:ir.message,text:msg_typification_unique_id"
 msgid "This typification already exists"
 msgstr "Esta tipificación ya existe"
@@ -9206,6 +9246,10 @@ msgstr "Copiar tipificación"
 msgctxt "model:lims.typification.calculated.readonly,name:"
 msgid "Calculated Typification"
 msgstr "Tipificación calculada"
+
+msgctxt "model:lims.typification.copy.confirm,name:"
+msgid "Copy/Move Typification"
+msgstr "Copiar/Mover tipificación"
 
 msgctxt "model:lims.typification.copy.start,name:"
 msgid "Copy/Move Typification"
@@ -13715,10 +13759,6 @@ msgid "Sets/Groups Typifications"
 msgstr "Tipificaciones de Sets/Grupos"
 
 msgctxt "view:lims.typification.copy.start:"
-msgid "Action:"
-msgstr "Acción:"
-
-msgctxt "view:lims.typification.copy.start:"
 msgid "Destination:"
 msgstr "Destino:"
 
@@ -14665,9 +14705,17 @@ msgctxt "wizard_button:lims.typification.calculated.copy,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
-msgctxt "wizard_button:lims.typification.copy,start,confirm:"
+msgctxt "wizard_button:lims.typification.copy,ask,confirm:"
 msgid "Confirm"
 msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.typification.copy,ask,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.typification.copy,start,ask:"
+msgid "Continue"
+msgstr "Continuar"
 
 msgctxt "wizard_button:lims.typification.copy,start,end:"
 msgid "Cancel"

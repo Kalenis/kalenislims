@@ -502,5 +502,29 @@
         <record model="ir.message" id="msg_trend_chart_analysis_uom">
             <field name="text">Not all analysis share the same UoM</field>
         </record>
+        <record model="ir.message" id="msg_typification_copy_action">
+            <field name="text">You are going to %(action)s</field>
+        </record>
+        <record model="ir.message" id="msg_typification_copy_from">
+            <field name="text">FROM:</field>
+        </record>
+        <record model="ir.message" id="msg_typification_copy_product_type">
+            <field name="text"> * Product type: %(product_type)s</field>
+        </record>
+        <record model="ir.message" id="msg_typification_copy_matrix">
+            <field name="text"> * Matrix: %(matrix)s</field>
+        </record>
+        <record model="ir.message" id="msg_typification_copy_analysis">
+            <field name="text"> * Analysis: %(analysis)s</field>
+        </record>
+        <record model="ir.message" id="msg_typification_copy_method">
+            <field name="text"> * Method: %(method)s</field>
+        </record>
+        <record model="ir.message" id="msg_typification_copy_to">
+            <field name="text">TO:</field>
+        </record>
+        <record model="ir.message" id="msg_typification_copy_matrices">
+            <field name="text"> * Matrices:</field>
+        </record>
     </data>
 </tryton>
