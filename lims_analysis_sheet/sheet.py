@@ -776,13 +776,18 @@ class ExportAnalysisSheetFile(Wizard):
             }
         delimiter = separator[sheet.template.interface.export_field_separator]
 
+        order = None
+        if sheet.template.interface.export_order_field:
+            order = [(sheet.template.interface.export_order_field.alias,
+                'ASC')]
+
         file_ = StringIO(newline=newline)
         with Transaction().set_context(
                 lims_interface_compilation=sheet.compilation.id,
                 lims_interface_table=sheet.compilation.table.id):
             lines = Data.search([(
                 'compilation', '=', sheet.compilation.id),
-                ])
+                ], order=order)
             for line in lines:
                 entry = ''
                 for field in cols:

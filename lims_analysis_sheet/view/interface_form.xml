@@ -10,6 +10,8 @@
                 <label name="export_field_separator_other"/>
                 <field name="export_field_separator_other"/>
             </group>
+            <label name="export_order_field"/>
+            <field name="export_order_field"/>
         </page>
     </xpath>
 </data>

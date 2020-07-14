@@ -183,6 +183,10 @@ msgctxt "field:lims.interface,export_file_type:"
 msgid "File Type"
 msgstr "Tipo de archivo"
 
+msgctxt "field:lims.interface,export_order_field:"
+msgid "Order field"
+msgstr "Campo ordenación"
+
 msgctxt "field:lims.interface.column,destination_column:"
 msgid "Column"
 msgstr "Columna"

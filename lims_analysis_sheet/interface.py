@@ -131,6 +131,9 @@ class Interface(metaclass=PoolMeta):
                 Eval('export_field_separator') != 'other'),
             },
         depends=['export_file_type', 'export_field_separator'])
+    export_order_field = fields.Many2One('lims.interface.column',
+        'Order field', depends=['id'],
+        domain=[('interface', '=', Eval('id')), ('grouped', '=', False)])
 
     @staticmethod
     def default_export_file_type():

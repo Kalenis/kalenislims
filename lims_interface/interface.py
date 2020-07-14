@@ -216,23 +216,23 @@ class Interface(Workflow, ModelSQL, ModelView):
             'readonly': Eval('state') != 'draft',
             }, depends=['template_type', 'field_separator', 'state'])
     analysis_field = fields.Many2One('lims.interface.column',
-        'Analysis field',
-        domain=[('interface', '=', Eval('id'))],
+        'Analysis field', depends=['state', 'id'],
+        domain=[('interface', '=', Eval('id')), ('grouped', '=', False)],
         states={
             'readonly': Eval('state') != 'draft',
-            }, depends=['state', 'id'])
+            })
     fraction_field = fields.Many2One('lims.interface.column',
-        'Fraction field',
-        domain=[('interface', '=', Eval('id'))],
+        'Fraction field', depends=['state', 'id'],
+        domain=[('interface', '=', Eval('id')), ('grouped', '=', False)],
         states={
             'readonly': Eval('state') != 'draft',
-            }, depends=['state', 'id'])
+            })
     repetition_field = fields.Many2One('lims.interface.column',
-        'Repetition field',
-        domain=[('interface', '=', Eval('id'))],
+        'Repetition field', depends=['state', 'id'],
+        domain=[('interface', '=', Eval('id')), ('grouped', '=', False)],
         states={
             'readonly': Eval('state') != 'draft',
-            }, depends=['state', 'id'])
+            })
     grouped_repetitions = fields.Integer('Repetitions of grouped columns',
         states={'readonly': Eval('state') != 'draft'}, depends=['state'])
     charset = fields.Selection([
