@@ -3,5 +3,6 @@
     <xpath expr="/tree/field[@name='department']" position="after">
         <field name="diagnostician"/>
         <field name="diagnosis_warning"/>
+        <field name="ready_to_diagnose"/>
     </xpath>
 </data>

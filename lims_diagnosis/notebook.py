@@ -17,6 +17,8 @@ class Notebook(metaclass=PoolMeta):
         'Diagnostician'), 'get_sample_field')
     diagnosis_warning = fields.Function(fields.Boolean('Diagnosis Warning'),
         'get_diagnosis_warning')
+    ready_to_diagnose = fields.Function(fields.Boolean('Ready to diagnose'),
+        'get_ready_to_diagnose')
 
     @classmethod
     def get_diagnosis_warning(cls, notebooks, name):
@@ -32,6 +34,41 @@ class Notebook(metaclass=PoolMeta):
             else:
                 result[n.id] = False
         return result
+
+    def get_ready_to_diagnose(self, name):
+        pool = Pool()
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        laboratory_id = Transaction().context.get(
+            'samples_pending_reporting_laboratory', None)
+        if not laboratory_id:
+            return False
+
+        draft_lines_ids = []
+        draft_lines = ResultsLine.search([
+            ('detail_sample.notebook', '=', self.id),
+            ('detail_sample.version_detail.laboratory', '=', laboratory_id),
+            ('detail_sample.version_detail.state', 'in', ['draft', 'revised']),
+            ('detail_sample.version_detail.type', '!=', 'preliminary'),
+            ])
+        if draft_lines:
+            draft_lines_ids = [dl.notebook_line.id for dl in draft_lines]
+
+        clause = [
+            ('notebook', '=', self.id),
+            ('laboratory', '=', laboratory_id),
+            ('notebook.fraction.type.report', '=', True),
+            ('report', '=', True),
+            ('annulled', '=', False),
+            ('results_report', '=', None),
+            ('id', 'not in', draft_lines_ids),
+            ('accepted', '=', False),
+            ('analysis.not_block_diagnosis', '=', False),
+            ]
+        if NotebookLine.search_count(clause) > 0:
+            return False
+        return True
 
 
 class NotebookLine(metaclass=PoolMeta):
