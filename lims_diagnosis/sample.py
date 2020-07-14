@@ -27,12 +27,16 @@ class Sample(metaclass=PoolMeta):
         # 1st check party
         if sample.party.diagnostician:
             return sample.party.diagnostician.id
-        # 2nd check services
+        # 2nd check plant
+        if hasattr(sample, 'plant') and getattr(sample, 'plant'):
+            if sample.plant.diagnostician:
+                return sample.plant.diagnostician.id
+        # 3rd check services
         for fraction in sample.fractions:
             for service in fraction.services:
                 if service.analysis.diagnostician:
                     return service.analysis.diagnostician.id
-        # 3rd check product type
+        # 4th check product type
         if sample.product_type.diagnostician:
             return sample.product_type.diagnostician.id
         return None

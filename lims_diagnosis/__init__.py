@@ -11,6 +11,7 @@ from . import results_report
 from . import notebook
 from . import laboratory
 from . import task
+from . import industry
 
 
 def register():
@@ -40,6 +41,9 @@ def register():
         task.AdministrativeTaskTemplate,
         task.AdministrativeTask,
         module='lims_diagnosis', type_='model')
+    Pool.register(
+        industry.Plant,
+        module='lims_diagnosis', type_='model', depends=['lims_industry'])
     Pool.register(
         sample.CreateSample,
         results_report.ChangeSampleDiagnostician,

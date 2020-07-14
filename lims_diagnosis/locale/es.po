@@ -66,6 +66,10 @@ msgctxt "field:lims.notebook.line.repeat_analysis.start,notify_acceptance:"
 msgid "Notify acceptace"
 msgstr "Notificar aceptación"
 
+msgctxt "field:lims.plant,diagnostician:"
+msgid "Diagnostician"
+msgstr "Diagnosticador"
+
 msgctxt "field:lims.product.type,diagnostician:"
 msgid "Diagnostician"
 msgstr "Diagnosticador"
@@ -299,6 +303,10 @@ msgstr "Diagnóstico"
 msgctxt "view:lims.diagnosis.state:"
 msgid "Options"
 msgstr "Opciones"
+
+msgctxt "view:lims.plant:"
+msgid "Diagnosis"
+msgstr "Diagnóstico"
 
 msgctxt "view:lims.results_report.version.detail:"
 msgid "Diagnosed"

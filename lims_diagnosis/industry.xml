@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<tryton>
+    <data depends="lims_industry">
+
+<!-- Plant -->
+
+        <record model="ir.ui.view" id="plant_view_form">
+            <field name="model">lims.plant</field>
+            <field name="inherit" ref="lims_industry.plant_view_form"/>
+            <field name="name">plant_form</field>
+        </record>
+
+    </data>
+</tryton>
