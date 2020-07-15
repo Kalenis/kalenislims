@@ -1,0 +1,6 @@
+<form>
+    <label name="name"/>
+    <field name="data" filename_visible="1"/>
+    <label name="order"/>
+    <field name="order"/>
+</form>

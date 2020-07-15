@@ -25,6 +25,10 @@
         <field name="comments" colspan="4" widget="html"/>
     </xpath>
     <xpath expr="/form/notebook/page[@name='comments']" position="after">
+        <page name="sections">
+            <field name="previous_sections" colspan="4"/>
+            <field name="following_sections" colspan="4"/>
+        </page>
         <page name="trend_charts">
             <field name="trend_charts" colspan="4"/>
             <label name="charts_x_row"/>

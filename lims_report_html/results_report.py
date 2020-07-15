@@ -6,6 +6,9 @@ from lxml import html as lxml_html
 from base64 import b64encode
 from babel.support import Translations as BabelTranslations
 from jinja2 import contextfilter, Markup
+from io import BytesIO
+from PyPDF2 import PdfFileMerger
+from PyPDF2.utils import PdfReadError
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool, PoolMeta
@@ -15,7 +18,7 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.modules.html_report.generator import PdfGenerator
 
-__all__ = ['ResultsReportVersionDetail',
+__all__ = ['ResultsReportVersionDetail', 'ResultsReportVersionDetailSection',
     'ResultsReportVersionDetailTrendChart',
     'ResultsReportVersionDetailSample', 'ResultReport']
 
@@ -26,6 +29,16 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     template = fields.Many2One('lims.result_report.template',
         'Report Template', domain=[('type', '=', 'base')],
         states={'readonly': Eval('state') != 'draft'}, depends=['state'])
+    sections = fields.One2Many('lims.results_report.version.detail.section',
+        'version_detail', 'Sections')
+    previous_sections = fields.Function(fields.One2Many(
+        'lims.results_report.version.detail.section', 'version_detail',
+        'Previous Sections', domain=[('position', '=', 'previous')]),
+        'get_previous_sections', setter='set_previous_sections')
+    following_sections = fields.Function(fields.One2Many(
+        'lims.results_report.version.detail.section', 'version_detail',
+        'Following Sections', domain=[('position', '=', 'following')]),
+        'get_following_sections', setter='set_following_sections')
     trend_charts = fields.One2Many(
         'lims.results_report.version.detail.trend.chart',
         'version_detail', 'Trend Charts')
@@ -46,7 +59,8 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     def default_charts_x_row():
         return '1'
 
-    @fields.depends('template', '_parent_template.trend_charts')
+    @fields.depends('template', '_parent_template.trend_charts',
+        '_parent_template.sections')
     def on_change_template(self):
         if self.template and self.template.trend_charts:
             self.trend_charts = [{
@@ -54,6 +68,32 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
                 'order': c.order,
                 } for c in self.template.trend_charts]
             self.charts_x_row = self.template.charts_x_row
+        if self.template and self.template.sections:
+            self.sections = [{
+                'name': s.name,
+                'data': s.data,
+                'data_id': s.data_id,
+                'position': s.position,
+                'order': s.order,
+                } for s in self.template.sections]
+
+    def get_previous_sections(self, name):
+        return [s.id for s in self.sections if s.position == 'previous']
+
+    @classmethod
+    def set_previous_sections(cls, sections, name, value):
+        if not value:
+            return
+        cls.write(sections, {'sections': value})
+
+    def get_following_sections(self, name):
+        return [s.id for s in self.sections if s.position == 'following']
+
+    @classmethod
+    def set_following_sections(cls, sections, name, value):
+        if not value:
+            return
+        cls.write(sections, {'sections': value})
 
     @classmethod
     def _get_fields_from_samples(cls, samples):
@@ -72,6 +112,14 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
                         } for c in result_template.trend_charts])]
                     detail_default['charts_x_row'] = (
                         result_template.charts_x_row)
+                if result_template.sections:
+                    detail_default['sections'] = [('create', [{
+                        'name': s.name,
+                        'data': s.data,
+                        'data_id': s.data_id,
+                        'position': s.position,
+                        'order': s.order,
+                        } for s in result_template.sections])]
             resultrange_origin = notebook.fraction.sample.resultrange_origin
             if resultrange_origin:
                 detail_default['resultrange_origin'] = resultrange_origin.id
@@ -89,7 +137,49 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
                 'order': c.order,
                 } for c in detail.trend_charts])]
             detail_default['charts_x_row'] = detail.charts_x_row
+        if detail.sections:
+            detail_default['sections'] = [('create', [{
+                'name': s.name,
+                'data': s.data,
+                'data_id': s.data_id,
+                'position': s.position,
+                'order': s.order,
+                } for s in detail.sections])]
         return detail_default
+
+
+class ResultsReportVersionDetailSection(ModelSQL, ModelView):
+    'Results Report Version Detail Section'
+    __name__ = 'lims.results_report.version.detail.section'
+    _order_name = 'order'
+
+    version_detail = fields.Many2One('lims.results_report.version.detail',
+        'Report Detail', ondelete='CASCADE', select=True, required=True)
+    name = fields.Char('Name', required=True)
+    data = fields.Binary('File', filename='name', required=True,
+        file_id='data_id', store_prefix='results_report_section')
+    data_id = fields.Char('File ID', readonly=True)
+    position = fields.Selection([
+        ('previous', 'Previous'),
+        ('following', 'Following'),
+        ], 'Position', required=True)
+    order = fields.Integer('Order')
+
+    @classmethod
+    def __setup__(cls):
+        super(ResultsReportVersionDetailSection, cls).__setup__()
+        cls._order.insert(0, ('order', 'ASC'))
+
+    @classmethod
+    def validate(cls, sections):
+        super(ResultsReportVersionDetailSection, cls).validate(sections)
+        merger = PdfFileMerger(strict=False)
+        for section in sections:
+            filedata = BytesIO(section.data)
+            try:
+                merger.append(filedata)
+            except PdfReadError:
+                raise UserError(gettext('lims_report_html.msg_section_pdf'))
 
 
 class ResultsReportVersionDetailTrendChart(ModelSQL, ModelView):
@@ -225,45 +315,53 @@ class ResultReport(metaclass=PoolMeta):
 
     @classmethod
     def _execute_html_results_report(cls, records, data, action):
-        documents = []
-        for record in records:
-            template_id, tcontent, theader, tfooter = (
-                cls.get_results_report_template(action, record.id))
-            context = Transaction().context
-            context['template'] = template_id
-            if not template_id:
-                context['default_translations'] = os.path.join(
-                    os.path.dirname(__file__), 'report', 'translations')
-            with Transaction().set_context(**context):
-                content = cls.render_results_report_template(action,
-                    tcontent, record=record, records=[record],
-                    data=data)
-                header = theader and cls.render_results_report_template(action,
-                    theader, record=record, records=[record],
-                    data=data)
-                footer = tfooter and cls.render_results_report_template(action,
-                    tfooter, record=record, records=[record],
-                    data=data)
+        record = records[0]
+        template_id, tcontent, theader, tfooter = (
+            cls.get_results_report_template(action, record.id))
+        context = Transaction().context
+        context['template'] = template_id
+        if not template_id:
+            context['default_translations'] = os.path.join(
+                os.path.dirname(__file__), 'report', 'translations')
+        with Transaction().set_context(**context):
+            content = cls.render_results_report_template(action,
+                tcontent, record=record, records=[record],
+                data=data)
+            header = theader and cls.render_results_report_template(action,
+                theader, record=record, records=[record],
+                data=data)
+            footer = tfooter and cls.render_results_report_template(action,
+                tfooter, record=record, records=[record],
+                data=data)
+        stylesheets = cls.parse_stylesheets(tcontent)
+        if theader:
+            stylesheets += cls.parse_stylesheets(theader)
+        if tfooter:
+            stylesheets += cls.parse_stylesheets(tfooter)
 
-            stylesheets = cls.parse_stylesheets(tcontent)
-            if theader:
-                stylesheets += cls.parse_stylesheets(theader)
-            if tfooter:
-                stylesheets += cls.parse_stylesheets(tfooter)
-            if action.extension == 'pdf':
-                documents.append(PdfGenerator(content,
-                    header_html=header, footer_html=footer,
-                    side_margin=1, extra_vertical_margin=30,
-                    stylesheets=stylesheets).render_html())
-            else:
-                documents.append(content)
-        if action.extension == 'pdf':
-            document = documents[0].copy([page for doc in documents
-                for page in doc.pages])
-            document = document.write_pdf()
-        else:
-            document = ''.join(documents)
-        return action.extension, document
+        document = PdfGenerator(content,
+            header_html=header, footer_html=footer,
+            side_margin=1, extra_vertical_margin=30,
+            stylesheets=stylesheets).render_html().write_pdf()
+
+        if record.previous_sections or record.following_sections:
+            merger = PdfFileMerger(strict=False)
+            # Previous Sections
+            for section in record.previous_sections:
+                filedata = BytesIO(section.data)
+                merger.append(filedata)
+            # Results Report
+            filedata = BytesIO(document)
+            merger.append(filedata)
+            # Following Sections
+            for section in record.following_sections:
+                filedata = BytesIO(section.data)
+                merger.append(filedata)
+            output = BytesIO()
+            merger.write(output)
+            document = output.getvalue()
+
+        return 'pdf', document
 
     @classmethod
     def get_results_report_template(cls, action, detail_id):

@@ -15,6 +15,19 @@
             <field name="name">results_report_version_detail_form</field>
         </record>
 
+<!-- Results Report Version Detail Section -->
+
+        <record model="ir.ui.view" id="results_report_version_detail_section_view_form">
+            <field name="model">lims.results_report.version.detail.section</field>
+            <field name="type">form</field>
+            <field name="name">results_report_version_detail_section_form</field>
+        </record>
+        <record model="ir.ui.view" id="results_report_version_detail_section_view_list">
+            <field name="model">lims.results_report.version.detail.section</field>
+            <field name="type">tree</field>
+            <field name="name">results_report_version_detail_section_list</field>
+        </record>
+
 <!-- Results Report Version Detail Trend Chart -->
 
         <record model="ir.ui.view" id="results_report_version_detail_chart_view_form">

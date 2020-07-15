@@ -1,15 +1,20 @@
 # This file is part of lims_report_html module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+from io import BytesIO
+from PyPDF2 import PdfFileMerger
+from PyPDF2.utils import PdfReadError
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import Pool
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
 from trytond.cache import Cache
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 __all__ = ['ReportTemplate', 'ReportTemplateTranslation',
-    'ReportTemplateTrendChart']
+    'ReportTemplateSection', 'ReportTemplateTrendChart']
 
 
 class ReportTemplate(ModelSQL, ModelView):
@@ -31,6 +36,16 @@ class ReportTemplate(ModelSQL, ModelView):
         'template', 'Translations')
     _translation_cache = Cache('lims.result_report.template.translation',
         size_limit=10240, context=False)
+    sections = fields.One2Many('lims.result_report.template.section',
+        'template', 'Sections')
+    previous_sections = fields.Function(fields.One2Many(
+        'lims.result_report.template.section', 'template',
+        'Previous Sections', domain=[('position', '=', 'previous')]),
+        'get_previous_sections', setter='set_previous_sections')
+    following_sections = fields.Function(fields.One2Many(
+        'lims.result_report.template.section', 'template',
+        'Following Sections', domain=[('position', '=', 'following')]),
+        'get_following_sections', setter='set_following_sections')
     trend_charts = fields.One2Many('lims.result_report.template.trend.chart',
         'template', 'Trend Charts')
     charts_x_row = fields.Selection([
@@ -51,7 +66,14 @@ class ReportTemplate(ModelSQL, ModelView):
         return super(ReportTemplate, cls).view_attributes() + [
             ('//page[@id="header_footer"]', 'states', {
                 'invisible': Eval('type') != 'base',
-                })]
+                }),
+            ('//page[@name="sections"]', 'states', {
+                'invisible': Eval('type') != 'base',
+                }),
+            ('//page[@name="trend_charts"]', 'states', {
+                'invisible': Eval('type') != 'base',
+                }),
+            ]
 
     @classmethod
     def gettext(cls, *args, **variables):
@@ -78,6 +100,24 @@ class ReportTemplate(ModelSQL, ModelView):
                 text = src
             cls._translation_cache.set(key, text)
         return text if not variables else text % variables
+
+    def get_previous_sections(self, name):
+        return [s.id for s in self.sections if s.position == 'previous']
+
+    @classmethod
+    def set_previous_sections(cls, sections, name, value):
+        if not value:
+            return
+        cls.write(sections, {'sections': value})
+
+    def get_following_sections(self, name):
+        return [s.id for s in self.sections if s.position == 'following']
+
+    @classmethod
+    def set_following_sections(cls, sections, name, value):
+        if not value:
+            return
+        cls.write(sections, {'sections': value})
 
 
 class ReportTemplateTranslation(ModelSQL, ModelView):
@@ -124,6 +164,40 @@ class ReportTemplateTranslation(ModelSQL, ModelView):
         Template = Pool().get('lims.result_report.template')
         Template._translation_cache.clear()
         return super(ReportTemplateTranslation, cls).delete(translations)
+
+
+class ReportTemplateSection(ModelSQL, ModelView):
+    'Results Report Template Section'
+    __name__ = 'lims.result_report.template.section'
+    _order_name = 'order'
+
+    template = fields.Many2One('lims.result_report.template', 'Template',
+        ondelete='CASCADE', select=True, required=True)
+    name = fields.Char('Name', required=True)
+    data = fields.Binary('File', filename='name', required=True,
+        file_id='data_id', store_prefix='results_report_template_section')
+    data_id = fields.Char('File ID', readonly=True)
+    position = fields.Selection([
+        ('previous', 'Previous'),
+        ('following', 'Following'),
+        ], 'Position', required=True)
+    order = fields.Integer('Order')
+
+    @classmethod
+    def __setup__(cls):
+        super(ReportTemplateSection, cls).__setup__()
+        cls._order.insert(0, ('order', 'ASC'))
+
+    @classmethod
+    def validate(cls, sections):
+        super(ReportTemplateSection, cls).validate(sections)
+        merger = PdfFileMerger(strict=False)
+        for section in sections:
+            filedata = BytesIO(section.data)
+            try:
+                merger.append(filedata)
+            except PdfReadError:
+                raise UserError(gettext('lims_report_html.msg_section_pdf'))
 
 
 class ReportTemplateTrendChart(ModelSQL, ModelView):

@@ -4,5 +4,8 @@
         <record model="ir.message" id="msg_no_template">
             <field name="text">The report has no template</field>
         </record>
+        <record model="ir.message" id="msg_section_pdf">
+            <field name="text">Section files must be in PDF format</field>
+        </record>
     </data>
 </tryton>
