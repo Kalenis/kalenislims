@@ -2522,7 +2522,7 @@ class OpenAnalysisNotTypified(Wizard):
         res = {}
         active_id = Transaction().context['active_id']
         if active_id:
-            analysis = Analysis()
+            analysis = Analysis(active_id)
             if analysis.type in ('set', 'group'):
                 res['analysis'] = analysis.id
         return res
