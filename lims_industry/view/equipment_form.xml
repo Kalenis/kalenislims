@@ -16,6 +16,10 @@
             <field name="model"/>
             <label name="power"/>
             <field name="power"/>
+            <label name="voltage"/>
+            <field name="voltage"/>
+            <label name="amperage"/>
+            <field name="amperage"/>
             <label name="serial_number"/>
             <field name="serial_number"/>
             <label name="internal_id"/>

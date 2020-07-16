@@ -182,6 +182,10 @@ msgctxt "field:lims.create_sample.start,sampling_type:"
 msgid "Sampling Type"
 msgstr "Muestreo"
 
+msgctxt "field:lims.equipment,amperage:"
+msgid "Amperage"
+msgstr "Intensidad"
+
 msgctxt "field:lims.equipment,brand:"
 msgid "Brand"
 msgstr "Marca"
@@ -241,6 +245,10 @@ msgstr "Número de serie"
 msgctxt "field:lims.equipment,template:"
 msgid "Template"
 msgstr "Plantilla"
+
+msgctxt "field:lims.equipment,voltage:"
+msgid "Voltage"
+msgstr "Tensión"
 
 msgctxt "field:lims.equipment,year_manufacturing:"
 msgid "Year of manufacturing"

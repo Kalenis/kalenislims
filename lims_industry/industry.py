@@ -185,6 +185,8 @@ class Equipment(ModelSQL, ModelView):
         'get_brand', searcher='search_brand')
     model = fields.Char('Model', required=True)
     power = fields.Char('Power')
+    voltage = fields.Char('Voltage')
+    amperage = fields.Char('Amperage')
     serial_number = fields.Char('Serial number')
     internal_id = fields.Char('Internal ID Code')
     latitude = fields.Numeric('Latitude', digits=(3, 14))
