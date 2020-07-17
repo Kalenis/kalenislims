@@ -25,11 +25,10 @@ __all__ = ['ProductType', 'Matrix', 'ObjectiveDescription', 'Formula',
     'AnalysisLabMethod', 'AnalysisDevice', 'CopyTypificationStart',
     'CopyTypificationConfirm', 'CopyTypification',
     'CopyCalculatedTypificationStart', 'CopyCalculatedTypification',
-    'SetTypificationReferableStart', 'SetTypificationReferable',
-    'RelateAnalysisStart', 'RelateAnalysis', 'CreateAnalysisProduct',
-    'OpenAnalysisNotTypifiedStart', 'OpenAnalysisNotTypified',
-    'OpenTypifications', 'AddTypificationsStart', 'AddTypifications',
-    'RemoveTypificationsStart', 'RemoveTypifications']
+    'UpdateTypificationStart', 'UpdateTypification', 'RelateAnalysisStart',
+    'RelateAnalysis', 'CreateAnalysisProduct', 'OpenAnalysisNotTypifiedStart',
+    'OpenAnalysisNotTypified', 'OpenTypifications', 'AddTypificationsStart',
+    'AddTypifications', 'RemoveTypificationsStart', 'RemoveTypifications']
 
 
 class Typification(ModelSQL, ModelView):
@@ -2330,19 +2329,59 @@ class CopyCalculatedTypification(Wizard):
         return 'end'
 
 
-class SetTypificationReferableStart(ModelView):
-    'Set Typification as Referable'
-    __name__ = 'lims.typification.set_referable.start'
+class UpdateTypificationStart(ModelView):
+    'Update Typification Start'
+    __name__ = 'lims.typification.update.start'
 
+    detection_limit = fields.Float('Detection limit',
+        digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
+    quantification_limit = fields.Float('Quantification limit',
+        digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
+    lower_limit = fields.Float('Lower limit allowed',
+        digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
+    upper_limit = fields.Float('Upper limit allowed',
+        digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
+    limit_digits = fields.Integer('Limit digits')
+    check_result_limits = fields.Boolean(
+        'Validate limits on the result')
+    initial_concentration = fields.Char('Initial concentration')
+    start_uom = fields.Many2One('product.uom', 'Start UoM',
+        domain=[('category.lims_only_available', '=', True)])
+    final_concentration = fields.Char('Final concentration')
+    end_uom = fields.Many2One('product.uom', 'End UoM',
+        domain=[('category.lims_only_available', '=', True)])
+    default_repetitions = fields.Integer('Default repetitions')
+    calc_decimals = fields.Integer('Calculation decimals')
+    report = fields.Boolean('Report')
     referable = fields.Boolean('Referred by default')
+    update_detection_limit = fields.Boolean('Update Detection limit')
+    update_quantification_limit = fields.Boolean('Update Quantification limit')
+    update_lower_limit = fields.Boolean('Update Lower limit allowed')
+    update_upper_limit = fields.Boolean(' Update Upper limit allowed')
+    update_limit_digits = fields.Boolean('Update Limit digits')
+    update_check_result_limits = fields.Boolean(
+        'Update Validate limits on the result')
+    update_initial_concentration = fields.Boolean(
+        'Update Initial concentration')
+    update_start_uom = fields.Boolean('Update Start UoM')
+    update_final_concentration = fields.Boolean('Update Final concentration')
+    update_end_uom = fields.Boolean('Update End UoM')
+    update_default_repetitions = fields.Boolean('Update Default repetitions')
+    update_calc_decimals = fields.Boolean('Update Calculation decimals')
+    update_report = fields.Boolean('Update Report')
+    update_referable = fields.Boolean('Update Referred by default')
+
+    @staticmethod
+    def default_limit_digits():
+        return 2
 
 
-class SetTypificationReferable(Wizard):
-    'Set Typification as Referable'
-    __name__ = 'lims.typification.set_referable'
+class UpdateTypification(Wizard):
+    'Update Typification'
+    __name__ = 'lims.typification.update'
 
-    start = StateView('lims.typification.set_referable.start',
-        'lims.set_typification_referable_start_form', [
+    start = StateView('lims.typification.update.start',
+        'lims.update_typification_start_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
             Button('Confirm', 'confirm', 'tryton-ok', default=True),
             ])
@@ -2352,10 +2391,17 @@ class SetTypificationReferable(Wizard):
         Typification = Pool().get('lims.typification')
         active_ids = Transaction().context['active_ids']
         typifications = Typification.browse(active_ids)
-        Typification.write(typifications, {
-            'referable': self.start.referable,
-            })
+        values_to_update = {}
+        for field_name in self.start._fields.keys():
+            if 'update' in field_name and getattr(
+                    self.start, 'update_%s' % (field_name[7:])):
+                values_to_update[field_name[7:]] = getattr(
+                    self.start, '%s' % (field_name[7:]))
+        Typification.write(typifications, values_to_update)
         return 'end'
+
+    def end(self):
+        return 'reload'
 
 
 class RelateAnalysisStart(ModelView):

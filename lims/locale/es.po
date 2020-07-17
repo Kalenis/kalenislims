@@ -5981,9 +5981,117 @@ msgctxt "field:lims.typification.readonly,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
-msgctxt "field:lims.typification.set_referable.start,referable:"
+msgctxt "field:lims.typification.update.start,calc_decimals:"
+msgid "Calculation decimals"
+msgstr "Decimales para cálculo"
+
+msgctxt "field:lims.typification.update.start,check_result_limits:"
+msgid "Validate limits on the result"
+msgstr "Validar límites en el resultado"
+
+msgctxt "field:lims.typification.update.start,default_repetitions:"
+msgid "Default repetitions"
+msgstr "Repeticiones por defecto"
+
+msgctxt "field:lims.typification.update.start,detection_limit:"
+msgid "Detection limit"
+msgstr "Límite de detección"
+
+msgctxt "field:lims.typification.update.start,end_uom:"
+msgid "End UoM"
+msgstr "UdM final"
+
+msgctxt "field:lims.typification.update.start,final_concentration:"
+msgid "Final concentration"
+msgstr "Concentración final"
+
+msgctxt "field:lims.typification.update.start,initial_concentration:"
+msgid "Initial concentration"
+msgstr "Concentración inicial"
+
+msgctxt "field:lims.typification.update.start,limit_digits:"
+msgid "Limit digits"
+msgstr "Dígitos de límite"
+
+msgctxt "field:lims.typification.update.start,lower_limit:"
+msgid "Lower limit allowed"
+msgstr "Límite inferior permitido"
+
+msgctxt "field:lims.typification.update.start,quantification_limit:"
+msgid "Quantification limit"
+msgstr "Límite de cuantificación"
+
+msgctxt "field:lims.typification.update.start,referable:"
 msgid "Referred by default"
 msgstr "Derivado por defecto"
+
+msgctxt "field:lims.typification.update.start,report:"
+msgid "Report"
+msgstr "Informe"
+
+msgctxt "field:lims.typification.update.start,start_uom:"
+msgid "Start UoM"
+msgstr "UdM inicial"
+
+msgctxt "field:lims.typification.update.start,update_calc_decimals:"
+msgid "Update Calculation decimals"
+msgstr "Decimales para cálculo"
+
+msgctxt "field:lims.typification.update.start,update_check_result_limits:"
+msgid "Update Validate limits on the result"
+msgstr "Actualizar Validar límites en el resultado"
+
+msgctxt "field:lims.typification.update.start,update_default_repetitions:"
+msgid "Update Default repetitions"
+msgstr "Actualizar Repeticiones por defecto"
+
+msgctxt "field:lims.typification.update.start,update_detection_limit:"
+msgid "Update Detection limit"
+msgstr "Actualizar Límite de detección"
+
+msgctxt "field:lims.typification.update.start,update_end_uom:"
+msgid "Update End UoM"
+msgstr "Actualizar UdM final"
+
+msgctxt "field:lims.typification.update.start,update_final_concentration:"
+msgid "Update Final concentration"
+msgstr "Actualizar Concentración final"
+
+msgctxt "field:lims.typification.update.start,update_initial_concentration:"
+msgid "Update Initial concentration"
+msgstr "Actualizar Concentración inicial"
+
+msgctxt "field:lims.typification.update.start,update_limit_digits:"
+msgid "Update Limit digits"
+msgstr "Actualizar Dígitos de límite"
+
+msgctxt "field:lims.typification.update.start,update_lower_limit:"
+msgid "Update Lower limit allowed"
+msgstr "Actualizar Límite inferior permitido"
+
+msgctxt "field:lims.typification.update.start,update_quantification_limit:"
+msgid "Update Quantification limit"
+msgstr "Actualizar Límite de cuantificación"
+
+msgctxt "field:lims.typification.update.start,update_referable:"
+msgid "Update Referred by default"
+msgstr "Actualizar Derivado por defecto"
+
+msgctxt "field:lims.typification.update.start,update_report:"
+msgid "Update Report"
+msgstr "Actualizar Informe"
+
+msgctxt "field:lims.typification.update.start,update_start_uom:"
+msgid "Update Start UoM"
+msgstr "Actualizar UdM inicial"
+
+msgctxt "field:lims.typification.update.start,update_upper_limit:"
+msgid " Update Upper limit allowed"
+msgstr "Actualizar Límite superior permitido"
+
+msgctxt "field:lims.typification.update.start,upper_limit:"
+msgid "Upper limit allowed"
+msgstr "Límite superior permitido"
 
 msgctxt "field:lims.uom.conversion,conversion_formula:"
 msgid "Conversion formula"
@@ -6994,10 +7102,6 @@ msgctxt "model:ir.action,name:wiz_results_report_version_detail_new_version"
 msgid "New Results Report Version"
 msgstr "Nueva versión de Informe de resultados"
 
-msgctxt "model:ir.action,name:wiz_set_typification_referable"
-msgid "Set Typification as Referable"
-msgstr "Establecer como derivable"
-
 msgctxt "model:ir.action,name:wiz_trend_chart_download"
 msgid "Download Trend Chart"
 msgstr "Descargar Gráfico de tendencia"
@@ -7005,6 +7109,10 @@ msgstr "Descargar Gráfico de tendencia"
 msgctxt "model:ir.action,name:wiz_trend_chart_open"
 msgid "Open Trend Chart"
 msgstr "Abrir Gráfico de tendencia"
+
+msgctxt "model:ir.action,name:wiz_update_typification"
+msgid "Update Typification"
+msgstr "Actualizar tipificación"
 
 msgctxt "model:ir.action,name:wizard_device_relate_analysis"
 msgid "Relate Analysis to Device"
@@ -9259,9 +9367,9 @@ msgctxt "model:lims.typification.readonly,name:"
 msgid "Typification"
 msgstr "Tipificación"
 
-msgctxt "model:lims.typification.set_referable.start,name:"
-msgid "Set Typification as Referable"
-msgstr "Establecer tipificación como derivable"
+msgctxt "model:lims.typification.update.start,name:"
+msgid "Update Typification Start"
+msgstr "Actualizar tipificación"
 
 msgctxt "model:lims.uom.conversion,name:"
 msgid "Uom Conversion"
@@ -14721,10 +14829,10 @@ msgctxt "wizard_button:lims.typification.copy,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
-msgctxt "wizard_button:lims.typification.set_referable,start,confirm:"
+msgctxt "wizard_button:lims.typification.update,start,confirm:"
 msgid "Confirm"
 msgstr "Confirmar"
 
-msgctxt "wizard_button:lims.typification.set_referable,start,end:"
+msgctxt "wizard_button:lims.typification.update,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"

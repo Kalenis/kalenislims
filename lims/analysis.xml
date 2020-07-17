@@ -371,27 +371,27 @@
             <field name="group" ref="group_lims_conf_base_tables_admin"/>
         </record>
 
-<!-- Wizard Set Typification as Referable -->
+<!-- Wizard Update Typification -->
 
-        <record model="ir.ui.view" id="set_typification_referable_start_form">
-            <field name="model">lims.typification.set_referable.start</field>
+        <record model="ir.ui.view" id="update_typification_start_form">
+            <field name="model">lims.typification.update.start</field>
             <field name="type">form</field>
-            <field name="name">typification_set_referable_form</field>
+            <field name="name">typification_update_form</field>
         </record>
 
-        <record model="ir.action.wizard" id="wiz_set_typification_referable">
-            <field name="name">Set Typification as Referable</field>
-            <field name="wiz_name">lims.typification.set_referable</field>
+        <record model="ir.action.wizard" id="wiz_update_typification">
+            <field name="name">Update Typification</field>
+            <field name="wiz_name">lims.typification.update</field>
         </record>
-        <record model="ir.action.keyword" id="wiz_set_typification_referable_keyword">
+        <record model="ir.action.keyword" id="wiz_update_typification_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.typification,-1</field>
-            <field name="action" ref="wiz_set_typification_referable"/>
+            <field name="action" ref="wiz_update_typification"/>
         </record>
 
         <record model="ir.action-res.group"
-            id="wiz_set_typification_referable-group_conf_base_tables_admin">
-            <field name="action" ref="wiz_set_typification_referable"/>
+            id="wiz_update_typification-group_conf_base_tables_admin">
+            <field name="action" ref="wiz_update_typification"/>
             <field name="group" ref="group_lims_conf_base_tables_admin"/>
         </record>
 
