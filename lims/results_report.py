@@ -608,7 +608,9 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     @classmethod
     @ModelView.button
     def release(cls, details):
-        ResultsSample = Pool().get('lims.results_report.version.detail.sample')
+        pool = Pool()
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        Sample = pool.get('lims.sample')
         cls.link_notebook_lines(details)
         for detail in details:
             # delete samples from previous valid version
@@ -633,6 +635,9 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                 'release_date': datetime.now(),
                 })
             detail.generate_report()
+            sample_ids = list(set(s.notebook.fraction.sample.id for
+                s in detail.samples))
+            Sample.update_samples_state(sample_ids)
 
     @classmethod
     def link_notebook_lines(cls, details):
@@ -969,6 +974,21 @@ class ResultsReportVersionDetailSample(ModelSQL, ModelView):
         if notebook_lines:
             sample_default['notebook_lines'] = [('create', notebook_lines)]
         return sample_default
+
+    @classmethod
+    def create(cls, vlist):
+        Sample = Pool().get('lims.sample')
+        samples = super(ResultsReportVersionDetailSample, cls).create(vlist)
+        sample_ids = list(set(s.notebook.fraction.sample.id for s in samples))
+        Sample.update_samples_state(sample_ids)
+        return samples
+
+    @classmethod
+    def delete(cls, samples):
+        Sample = Pool().get('lims.sample')
+        sample_ids = list(set(s.notebook.fraction.sample.id for s in samples))
+        super(ResultsReportVersionDetailSample, cls).delete(samples)
+        Sample.update_samples_state(sample_ids)
 
 
 class ResultsReportVersionDetailLine(ModelSQL, ModelView):

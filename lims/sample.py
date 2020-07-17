@@ -9,6 +9,8 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal
 
+from sql.conditionals import Case
+
 from trytond.model import ModelView, ModelSQL, fields, Unique, DictSchemaMixin
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
@@ -463,6 +465,7 @@ class Service(ModelSQL, ModelView):
         LabWorkYear = pool.get('lims.lab.workyear')
         Sequence = pool.get('ir.sequence')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Sample = pool.get('lims.sample')
 
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
@@ -501,10 +504,13 @@ class Service(ModelSQL, ModelView):
 
         fractions_ids = list(set(s.fraction.id for s in services))
         cls.set_shared_fraction(fractions_ids)
+        sample_ids = list(set(s.sample.id for s in services))
+        Sample.update_samples_state(sample_ids)
         return services
 
     @classmethod
     def write(cls, *args):
+        Sample = Pool().get('lims.sample')
         super(Service, cls).write(*args)
         actions = iter(args)
         for services, vals in zip(actions, actions):
@@ -517,14 +523,26 @@ class Service(ModelSQL, ModelView):
                 cls.update_analysis_detail(services)
                 fractions_ids = list(set(s.fraction.id for s in services))
                 cls.set_shared_fraction(fractions_ids)
+            change_dates = False
+            for field in ('laboratory_date', 'report_date',
+                    'confirmation_date'):
+                if field in vals:
+                    change_dates = True
+                    break
+            if change_dates:
+                sample_ids = list(set(s.sample.id for s in services))
+                Sample.update_samples_state(sample_ids)
 
     @classmethod
     def delete(cls, services):
+        Sample = Pool().get('lims.sample')
         if Transaction().user != 0:
             cls.check_delete(services)
         fractions_ids = list(set(s.fraction.id for s in services))
+        sample_ids = list(set(s.sample.id for s in services))
         super(Service, cls).delete(services)
         cls.set_shared_fraction(fractions_ids)
+        Sample.update_samples_state(sample_ids)
 
     @classmethod
     def check_delete(cls, services):
@@ -2424,11 +2442,44 @@ class Sample(ModelSQL, ModelView):
     department = fields.Function(fields.Many2One('company.department',
         'Department'), 'get_department', searcher='search_department')
     attributes = fields.Dict('lims.sample.attribute', 'Attributes')
+    confirmation_date = fields.Date('Confirmation date', readonly=True)
+    laboratory_date = fields.Date('Laboratory deadline', readonly=True)
+    report_date = fields.Date('Date agreed for result', readonly=True)
+    laboratory_start_date = fields.Date('Laboratory start date', readonly=True)
+    laboratory_end_date = fields.Date('Laboratory end date', readonly=True)
+    laboratory_acceptance_date = fields.Date('Laboratory acceptance date',
+        readonly=True)
+    results_report_create_date = fields.Date('Report start date',
+        readonly=True)
+    results_report_release_date = fields.Date('Report release date',
+        readonly=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('pending_planning', 'Pending Planification'),
+        ('planned', 'Planned'),
+        ('in_lab', 'In Laboratory'),
+        ('lab_pending_acceptance', 'Pending Laboratory Acceptance'),
+        ('pending_report', 'Pending Reporting'),
+        ('in_report', 'In Report'),
+        ('report_released', 'Report Released'),
+        ], 'State')
 
     @classmethod
     def __setup__(cls):
         super(Sample, cls).__setup__()
         cls._order.insert(0, ('number', 'DESC'))
+
+    @classmethod
+    def __register__(cls, module_name):
+        cursor = Transaction().connection.cursor()
+        table = cls.__table_handler__(module_name)
+        state_exist = table.column_exist('state')
+        super(Sample, cls).__register__(module_name)
+        if not state_exist:
+            logging.getLogger('lims').info('Completing sample dates')
+            cursor.execute('SELECT id FROM "' + cls._table + '"')
+            sample_ids = [x[0] for x in cursor.fetchall()]
+            cls.update_samples_state(sample_ids)
 
     @staticmethod
     def default_date():
@@ -2441,6 +2492,10 @@ class Sample(ModelSQL, ModelView):
     @staticmethod
     def default_trace_report():
         return False
+
+    @staticmethod
+    def default_state():
+        return 'draft'
 
     @classmethod
     def copy(cls, samples, default=None):
@@ -2795,6 +2850,20 @@ class Sample(ModelSQL, ModelView):
             tables['matrix'] = matrix_tables
         return field.convert_order('id', matrix_tables, Matrix)
 
+    @staticmethod
+    def order_state(tables):
+        table, _ = tables[None]
+        order = [Case((table.state == 'draft', 1),
+            else_=Case((table.state == 'pending_planning', 2),
+            else_=Case((table.state == 'planned', 3),
+            else_=Case((table.state == 'in_lab', 4),
+            else_=Case((table.state == 'lab_pending_acceptance', 5),
+            else_=Case((table.state == 'pending_report', 6),
+            else_=Case((table.state == 'in_report', 7),
+            else_=Case((table.state == 'report_released', 8),
+            else_=0))))))))]
+        return order
+
     def get_confirmed(self, name=None):
         if not self.fractions:
             return False
@@ -2945,6 +3014,195 @@ class Sample(ModelSQL, ModelView):
     @classmethod
     def search_department(cls, name, clause):
         return [('product_type.' + name,) + tuple(clause[1:])]
+
+    @classmethod
+    def update_samples_state(cls, sample_ids):
+        samples = cls.browse(sample_ids)
+        for sample in samples:
+            sample.update_sample_dates()
+            sample.update_sample_state()
+
+    def update_sample_dates(self):
+        dates = self._get_sample_dates()
+        for field, value in dates.items():
+            setattr(self, field, value)
+        self.save()
+
+    def _get_sample_dates(self):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
+        Service = pool.get('lims.service')
+        Notebook = pool.get('lims.notebook')
+        NotebookLine = pool.get('lims.notebook.line')
+        ResultsReport = pool.get('lims.results_report')
+        ResultsVersion = pool.get('lims.results_report.version')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        res = {}
+
+        # Confirmation date
+        cursor.execute('SELECT MIN(s.confirmation_date) '
+            'FROM "' + Service._table + '" s '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = s.fraction '
+            'WHERE f.sample = %s',
+            (self.id,))
+        res['confirmation_date'] = cursor.fetchone()[0] or None
+
+        # Laboratory deadline
+        cursor.execute('SELECT MAX(s.laboratory_date) '
+            'FROM "' + Service._table + '" s '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = s.fraction '
+            'WHERE f.sample = %s',
+            (self.id,))
+        res['laboratory_date'] = cursor.fetchone()[0] or None
+
+        # Date agreed for result
+        cursor.execute('SELECT MAX(s.report_date) '
+            'FROM "' + Service._table + '" s '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = s.fraction '
+            'WHERE f.sample = %s',
+            (self.id,))
+        res['report_date'] = cursor.fetchone()[0] or None
+
+        # Laboratory start date
+        cursor.execute('SELECT MIN(nl.start_date) '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + Service._table + '" s '
+                'ON s.id = nl.service '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = s.fraction '
+            'WHERE f.sample = %s',
+            (self.id,))
+        res['laboratory_start_date'] = cursor.fetchone()[0] or None
+
+        # Laboratory end date
+        laboratory_end_date = None
+        cursor.execute('SELECT COUNT(*) '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + Service._table + '" s '
+                'ON s.id = nl.service '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = s.fraction '
+            'WHERE f.sample = %s '
+                'AND nl.report = TRUE '
+                'AND nl.annulled = FALSE '
+                'AND nl.end_date IS NULL',
+            (self.id,))
+        if cursor.fetchone()[0] == 0:
+            cursor.execute('SELECT MAX(nl.end_date) '
+                'FROM "' + NotebookLine._table + '" nl '
+                    'INNER JOIN "' + Service._table + '" s '
+                    'ON s.id = nl.service '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = s.fraction '
+                'WHERE f.sample = %s',
+                (self.id,))
+            laboratory_end_date = cursor.fetchone()[0] or None
+        res['laboratory_end_date'] = laboratory_end_date
+
+        # Laboratory acceptance date
+        laboratory_acceptance_date = None
+        cursor.execute('SELECT COUNT(*) '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + Service._table + '" s '
+                'ON s.id = nl.service '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = s.fraction '
+            'WHERE f.sample = %s '
+                'AND nl.report = TRUE '
+                'AND nl.annulled = FALSE '
+                'AND nl.acceptance_date IS NULL',
+            (self.id,))
+        if cursor.fetchone()[0] == 0:
+            cursor.execute('SELECT MAX(nl.acceptance_date::date) '
+                'FROM "' + NotebookLine._table + '" nl '
+                    'INNER JOIN "' + Service._table + '" s '
+                    'ON s.id = nl.service '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = s.fraction '
+                'WHERE f.sample = %s',
+                (self.id,))
+            laboratory_acceptance_date = cursor.fetchone()[0] or None
+        res['laboratory_acceptance_date'] = laboratory_acceptance_date
+
+        # Report start date
+        cursor.execute('SELECT MIN(r.create_date::date) '
+            'FROM "' + ResultsReport._table + '" r '
+                'INNER JOIN "' + ResultsVersion._table + '" rv '
+                'ON rv.results_report = r.id '
+                'INNER JOIN "' + ResultsDetail._table + '" rd '
+                'ON rd.report_version = rv.id '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON rs.version_detail = rd.id '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON n.id = rs.notebook '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = n.fraction '
+            'WHERE f.sample = %s',
+            (self.id,))
+        res['results_report_create_date'] = cursor.fetchone()[0] or None
+
+        # Report release date
+        cursor.execute('SELECT MAX(rd.release_date::date) '
+            'FROM "' + ResultsDetail._table + '" rd '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON rs.version_detail = rd.id '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON n.id = rs.notebook '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = n.fraction '
+            'WHERE f.sample = %s '
+                'AND rd.valid '
+                'AND rd.type != \'preliminary\'',
+            (self.id,))
+        res['results_report_release_date'] = cursor.fetchone()[0] or None
+
+        return res
+
+    def update_sample_state(self):
+        state = self._get_sample_state()
+        if self.state != state:
+            self.state = state
+            self.save()
+
+    def _get_sample_state(self):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
+        Service = pool.get('lims.service')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        if self.results_report_release_date:
+            return 'report_released'
+        if self.results_report_create_date:
+            return 'in_report'
+        if self.laboratory_acceptance_date:
+            return 'pending_report'
+        if self.laboratory_end_date:
+            return 'lab_pending_acceptance'
+        if self.laboratory_start_date:
+            cursor.execute('SELECT COUNT(*) '
+                'FROM "' + NotebookLine._table + '" nl '
+                    'INNER JOIN "' + Service._table + '" s '
+                    'ON s.id = nl.service '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = s.fraction '
+                'WHERE f.sample = %s '
+                    'AND nl.report = TRUE '
+                    'AND nl.annulled = FALSE '
+                    'AND nl.end_date IS NOT NULL',
+                (self.id,))
+            if cursor.fetchone()[0] > 0:
+                return 'in_lab'
+            return 'planned'
+        if self.confirmation_date:
+            return 'pending_planning'
+        return 'draft'
 
 
 class DuplicateSampleStart(ModelView):

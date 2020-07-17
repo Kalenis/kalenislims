@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <tree>
     <field name="number" icon="icon"/>
+    <field name="state"/>
     <field name="completion_percentage" widget="progressbar"/>
     <field name="date" widget="date"/>
     <field name="date" widget="time" string="Time"/>

@@ -909,17 +909,24 @@ class NotebookLine(ModelSQL, ModelView):
 
     @classmethod
     def write(cls, *args):
+        Sample = Pool().get('lims.sample')
         super(NotebookLine, cls).write(*args)
         actions = iter(args)
         for lines, vals in zip(actions, actions):
             if vals.get('not_accepted_message'):
-                cls.write(lines, {
-                    'not_accepted_message': None,
-                    })
+                cls.write(lines, {'not_accepted_message': None})
             if 'accepted' in vals:
                 cls.update_detail_analysis(lines, vals['accepted'])
             if 'report' in vals:
                 cls.update_detail_report(lines)
+            change_dates = False
+            for field in ('start_date', 'end_date', 'acceptance_date'):
+                if field in vals:
+                    change_dates = True
+                    break
+            if change_dates:
+                sample_ids = list(set(nl.sample.id for nl in lines))
+                Sample.update_samples_state(sample_ids)
 
     @staticmethod
     def update_detail_analysis(lines, accepted):

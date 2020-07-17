@@ -5247,6 +5247,10 @@ msgctxt "field:lims.sample,completion_percentage:"
 msgid "Complete"
 msgstr "Completo"
 
+msgctxt "field:lims.sample,confirmation_date:"
+msgid "Confirmation date"
+msgstr "Fecha de confirmación"
+
 msgctxt "field:lims.sample,confirmed:"
 msgid "Confirmed"
 msgstr "Confirmado"
@@ -5290,6 +5294,22 @@ msgstr "Icono"
 msgctxt "field:lims.sample,label:"
 msgid "Label"
 msgstr "Rótulo"
+
+msgctxt "field:lims.sample,laboratory_acceptance_date:"
+msgid "Laboratory acceptance date"
+msgstr "Fecha de aceptación Laboratorio"
+
+msgctxt "field:lims.sample,laboratory_date:"
+msgid "Laboratory deadline"
+msgstr "Fecha límite Laboratorio"
+
+msgctxt "field:lims.sample,laboratory_end_date:"
+msgid "Laboratory end date"
+msgstr "Fecha de finalización Laboratorio"
+
+msgctxt "field:lims.sample,laboratory_start_date:"
+msgid "Laboratory start date"
+msgstr "Fecha de inicio Laboratorio"
 
 msgctxt "field:lims.sample,matrix:"
 msgid "Matrix"
@@ -5355,13 +5375,29 @@ msgctxt "field:lims.sample,report_comments:"
 msgid "Report comments"
 msgstr "Observaciones informe"
 
+msgctxt "field:lims.sample,report_date:"
+msgid "Date agreed for result"
+msgstr "Fecha pactada de resultado"
+
 msgctxt "field:lims.sample,restricted_entry:"
 msgid "Restricted entry"
 msgstr "Ingreso restringido"
 
+msgctxt "field:lims.sample,results_report_create_date:"
+msgid "Report start date"
+msgstr "Fecha de inicio Informe"
+
+msgctxt "field:lims.sample,results_report_release_date:"
+msgid "Report release date"
+msgstr "Fecha de publicación Informe"
+
 msgctxt "field:lims.sample,sample_client_description:"
 msgid "Product described by the client"
 msgstr "Producto descripto por el cliente"
+
+msgctxt "field:lims.sample,state:"
+msgid "State"
+msgstr "Estado"
 
 msgctxt "field:lims.sample,trace_report:"
 msgid "Trace report"
@@ -12553,6 +12589,38 @@ msgstr ">"
 msgctxt "selection:lims.rule.condition,condition:"
 msgid ">="
 msgstr ">="
+
+msgctxt "selection:lims.sample,state:"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "selection:lims.sample,state:"
+msgid "In Laboratory"
+msgstr "En Laboratorio"
+
+msgctxt "selection:lims.sample,state:"
+msgid "In Report"
+msgstr "En Informe"
+
+msgctxt "selection:lims.sample,state:"
+msgid "Pending Laboratory Acceptance"
+msgstr "Pte. Aceptación Laboratorio"
+
+msgctxt "selection:lims.sample,state:"
+msgid "Pending Planification"
+msgstr "Pte. Planificación"
+
+msgctxt "selection:lims.sample,state:"
+msgid "Pending Reporting"
+msgstr "Pte. Informar"
+
+msgctxt "selection:lims.sample,state:"
+msgid "Planned"
+msgstr "Planificada"
+
+msgctxt "selection:lims.sample,state:"
+msgid "Report Released"
+msgstr "Publicada"
 
 msgctxt "selection:lims.service,analysis_type:"
 msgid "Analysis"
