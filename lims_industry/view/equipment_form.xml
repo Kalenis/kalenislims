@@ -10,6 +10,8 @@
             <field name="plant"/>
             <label name="party"/>
             <field name="party"/>
+            <label name="type"/>
+            <field name="type"/>
             <label name="brand"/>
             <field name="brand"/>
             <label name="model"/>

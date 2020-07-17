@@ -181,6 +181,8 @@ class Equipment(ModelSQL, ModelView):
     template = fields.Many2One('lims.equipment.template', 'Template',
         required=True)
     name = fields.Char('Name', required=True)
+    type = fields.Function(fields.Many2One('lims.equipment.type', 'Type'),
+        'get_type', searcher='search_type')
     brand = fields.Function(fields.Many2One('lims.brand', 'Brand'),
         'get_brand', searcher='search_brand')
     model = fields.Char('Model', required=True)
@@ -258,6 +260,21 @@ class Equipment(ModelSQL, ModelView):
     @classmethod
     def search_party(cls, name, clause):
         return [('plant.party',) + tuple(clause[1:])]
+
+    @fields.depends('template', '_parent_template.type')
+    def on_change_with_type(self, name=None):
+        return self.get_type([self], name)[self.id]
+
+    @classmethod
+    def get_type(cls, equipments, name):
+        result = {}
+        for e in equipments:
+            result[e.id] = e.template and e.template.type.id or None
+        return result
+
+    @classmethod
+    def search_type(cls, name, clause):
+        return [('template.type',) + tuple(clause[1:])]
 
     @fields.depends('template', '_parent_template.brand')
     def on_change_with_brand(self, name=None):
