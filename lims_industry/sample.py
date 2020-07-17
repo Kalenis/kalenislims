@@ -201,8 +201,7 @@ class CreateSampleStart(metaclass=PoolMeta):
         'Comercial Product', depends=['ind_required'],
         states={'required': Bool(Eval('ind_required'))})
     label = fields.Char('Label')
-    ind_sampling_date = fields.Date('Sampling date', depends=['ind_required'],
-        states={'required': Bool(Eval('ind_required'))})
+    ind_sampling_date = fields.Date('Sampling date')
     ind_volume = fields.Float('Received volume', depends=['ind_required'],
         states={'required': Bool(Eval('ind_required'))})
     sampling_type = fields.Many2One('lims.sampling.type',
@@ -239,6 +238,7 @@ class CreateSampleStart(metaclass=PoolMeta):
         cls.attributes.domain = [('id', 'in', Eval('attributes_domain'))]
         if 'attributes_domain' not in cls.attributes.depends:
             cls.attributes.depends.append('attributes_domain')
+        cls.sample_client_description.required = False
 
     @fields.depends('fraction_type')
     def on_change_with_ind_required(self, name=None):
@@ -364,6 +364,9 @@ class CreateSample(metaclass=PoolMeta):
             getattr(self.start, 'changed_oil_filter') or False)
         changed_air_filter = (hasattr(self.start, 'changed_air_filter') and
             getattr(self.start, 'changed_air_filter') or False)
+        sample_client_description = (hasattr(self.start,
+            'sample_client_description') and getattr(self.start,
+            'sample_client_description') or ' ')
 
         for sample_defaults in samples_defaults:
             sample_defaults['equipment'] = equipment_id
@@ -385,6 +388,8 @@ class CreateSample(metaclass=PoolMeta):
             sample_defaults['changed_oil'] = changed_oil
             sample_defaults['changed_oil_filter'] = changed_oil_filter
             sample_defaults['changed_air_filter'] = changed_air_filter
+            sample_defaults['sample_client_description'] = \
+                sample_client_description
 
         return samples_defaults
 
