@@ -2954,6 +2954,7 @@ class Sample(ModelSQL, ModelView):
     def get_completion_percentage(self, name=None):
         cursor = Transaction().connection.cursor()
         pool = Pool()
+        Config = pool.get('lims.configuration')
         NotebookLine = pool.get('lims.notebook.line')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Notebook = pool.get('lims.notebook')
@@ -2961,9 +2962,11 @@ class Sample(ModelSQL, ModelView):
         FractionType = pool.get('lims.fraction.type')
 
         _ZERO = Decimal(0)
+        samples_in_progress = Config(1).samples_in_progress
         digits = Sample.completion_percentage.digits[1]
 
-        cursor.execute('SELECT nl.notebook, nl.analysis, nl.accepted '
+        cursor.execute('SELECT nl.notebook, nl.analysis, nl.accepted, '
+                'nl.result, nl.literal_result, nl.result_modifier '
             'FROM "' + NotebookLine._table + '" nl '
                 'INNER JOIN "' + EntryDetailAnalysis._table + '" d '
                 'ON d.id = nl.analysis_detail '
@@ -2984,12 +2987,25 @@ class Sample(ModelSQL, ModelView):
             return _ZERO
 
         oks, to_check = [], []
-        for line in notebook_lines:
-            key = (line[0], line[1])
-            if line[2]:
-                oks.append(key)
-            else:
-                to_check.append(key)
+
+        if samples_in_progress == 'accepted':
+            for line in notebook_lines:
+                key = (line[0], line[1])
+                if line[2]:
+                    oks.append(key)
+                else:
+                    to_check.append(key)
+
+        elif samples_in_progress == 'result':
+            for line in notebook_lines:
+                key = (line[0], line[1])
+                if (line[3] not in [None, ''] or
+                        line[4] not in [None, ''] or
+                        line[5] in ['d', 'nd', 'pos',
+                        'neg', 'ni', 'abs', 'pre', 'na']):
+                    oks.append(key)
+                else:
+                    to_check.append(key)
 
         accepted = len(oks)
         if not accepted:
