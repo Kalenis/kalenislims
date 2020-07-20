@@ -1043,8 +1043,7 @@ class EditGroupedDataStart(ModelView):
     'Edit Grouped Data'
     __name__ = 'lims.analysis_sheet.edit_grouped_data.start'
 
-    data = fields.One2Many('lims.interface.grouped_data', None, 'Data',
-        readonly=True)
+    data = fields.One2Many('lims.interface.grouped_data', None, 'Data')
 
 
 class EditGroupedData(Wizard):
