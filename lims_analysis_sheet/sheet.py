@@ -173,10 +173,22 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
         required=True, ondelete='CASCADE', select=True)
     analysis = fields.Many2One('lims.analysis', 'Analysis',
         required=True, select=True, domain=[('type', '=', 'analysis')])
-    method = fields.Many2One('lims.lab.method', 'Method')
+    method = fields.Many2One('lims.lab.method', 'Method',
+        domain=[('id', 'in', Eval('method_domain'))],
+        depends=['method_domain'])
+    method_domain = fields.Function(fields.Many2Many('lims.lab.method',
+        None, None, 'Method domain'),
+        'on_change_with_method_domain')
     expressions = fields.One2Many(
         'lims.template.analysis_sheet.analysis.expression',
         'analysis', 'Special formulas')
+
+    @fields.depends('analysis', '_parent_analysis.methods')
+    def on_change_with_method_domain(self, name=None):
+        methods = []
+        if self.analysis and self.analysis.methods:
+            methods = [m.id for m in self.analysis.methods]
+        return methods
 
     @classmethod
     def validate(cls, template_analysis):
