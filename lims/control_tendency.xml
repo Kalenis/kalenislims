@@ -284,12 +284,12 @@
         <record model="ir.action.act_window.view" id="act_trend_chart_view_list">
             <field name="sequence" eval="10"/>
             <field name="view" ref="trend_chart_view_list"/>
-            <field name="act_window" ref="act_lims_range_type_list"/>
+            <field name="act_window" ref="act_trend_chart_list"/>
         </record>
         <record model="ir.action.act_window.view" id="act_trend_chart_view_form">
             <field name="sequence" eval="20"/>
             <field name="view" ref="trend_chart_view_form"/>
-            <field name="act_window" ref="act_lims_range_type_list"/>
+            <field name="act_window" ref="act_trend_chart_list"/>
         </record>
 
         <record model="ir.model.field.access"
