@@ -498,7 +498,8 @@ class Service(ModelSQL, ModelView):
                         'state': 'unplanned',
                         })
                 # from lims_account_invoice
-                if 'trytond.modules.lims_account_invoice' in sys.modules:
+                if hasattr(aditional_services[0].fraction.type,
+                        'invoiceable'):
                     for aditional_service in aditional_services:
                         aditional_service.create_invoice_line('out')
 

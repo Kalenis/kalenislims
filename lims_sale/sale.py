@@ -455,10 +455,12 @@ class SaleLoadServices(Wizard):
         with Transaction().set_context(_check_access=False):
             services = Service.search([
                 ('entry', '=', self.start.entry.id),
-                ('fraction.type.invoiceable', '=', True),
                 ('fraction.cie_fraction_type', '=', False),
                 ])
         for service in services:
+            if hasattr(service.fraction.type, 'invoiceable') and (
+                    not service.fraction.type.invoiceable):
+                continue
             if not service.analysis.product:
                 continue
             if service.analysis.id not in sale_services:
