@@ -518,14 +518,15 @@ class SaleLoadAnalysis(Wizard):
                     if not ia.included_analysis.product:
                         continue
                     if ia.included_analysis.id not in sale_services.keys():
-                        sale_services[ia.included_analysis.id] = {
-                            'quantity': 1,
-                            'unit':
-                                ia.included_analysis.product.default_uom.id,
-                            'product': ia.included_analysis.product.id,
-                            'method': ia.method.id if ia.method else None,
-                            'description': ia.included_analysis.rec_name,
-                            }
+                        if ia.included_analysis.type != 'set':
+                            sale_services[ia.included_analysis.id] = {
+                                'quantity': 1,
+                                'unit':
+                                    ia.included_analysis.product.default_uom.id,
+                                'product': ia.included_analysis.product.id,
+                                'method': ia.method.id if ia.method else None,
+                                'description': ia.included_analysis.rec_name,
+                                }
                         sale_services = get_sale_services(
                             ia.included_analysis, sale_services)
             return sale_services
