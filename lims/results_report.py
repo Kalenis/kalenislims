@@ -1026,6 +1026,7 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         'get_converted_result')
     final_unit = fields.Function(fields.Many2One('product.uom',
         'Final unit'), 'get_nline_field')
+    reference = fields.Function(fields.Char('Reference'), 'get_reference')
     comments = fields.Function(fields.Text('Entry comments'),
         'get_nline_field')
 
@@ -1177,6 +1178,58 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
                 res = gettext('lims.msg_abs')
             else:
                 res = result_modifier
+        return res
+
+    @classmethod
+    def get_reference(cls, details, name):
+        result = {}
+        for d in details:
+            result[d.id] = cls._get_reference(d.notebook_line, d.detail_sample)
+        return result
+
+    @classmethod
+    def _get_reference(cls, notebook_line, detail_sample):
+        Range = Pool().get('lims.range')
+
+        if not detail_sample.version_detail.resultrange_origin:
+            return ''
+
+        ranges = Range.search([
+            ('range_type', '=',
+                detail_sample.version_detail.resultrange_origin.id),
+            ('analysis', '=', notebook_line.analysis.id),
+            ('product_type', '=', notebook_line.product_type.id),
+            ('matrix', '=', notebook_line.matrix.id),
+            ])
+        if not ranges:
+            return ''
+
+        range_ = ranges[0]
+
+        if range_.reference:
+            return range_.reference
+
+        res = ''
+        if range_.min:
+            resf = float(range_.min)
+            resd = abs(resf) - abs(int(resf))
+            if resd > 0:
+                res1 = str(round(range_.min, 2))
+            else:
+                res1 = str(int(range_.min))
+            res = gettext('lims.msg_caa_min', min=res1)
+
+        if range_.max:
+            if res:
+                res += ' - '
+            resf = float(range_.max)
+            resd = abs(resf) - abs(int(resf))
+            if resd > 0:
+                res1 = str(round(range_.max, 2))
+            else:
+                res1 = str(int(range_.max))
+
+            res += gettext('lims.msg_caa_max', max=res1)
         return res
 
 
