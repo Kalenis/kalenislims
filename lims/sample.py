@@ -2,7 +2,6 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-import sys
 import logging
 import operator
 from datetime import datetime
@@ -20,6 +19,7 @@ from trytond.transaction import Transaction
 from trytond.report import Report
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
+from trytond.rpc import RPC
 
 __all__ = ['Zone', 'Variety', 'MatrixVariety', 'PackagingIntegrity',
     'PackagingType', 'FractionType', 'SampleProducer', 'SampleAttribute',
@@ -2469,18 +2469,9 @@ class Sample(ModelSQL, ModelView):
     def __setup__(cls):
         super(Sample, cls).__setup__()
         cls._order.insert(0, ('number', 'DESC'))
-
-    @classmethod
-    def __register__(cls, module_name):
-        cursor = Transaction().connection.cursor()
-        table = cls.__table_handler__(module_name)
-        state_exist = table.column_exist('state')
-        super(Sample, cls).__register__(module_name)
-        if not state_exist:
-            logging.getLogger('lims').info('Completing sample dates')
-            cursor.execute('SELECT id FROM "' + cls._table + '"')
-            sample_ids = [x[0] for x in cursor.fetchall()]
-            cls.update_samples_state(sample_ids)
+        cls.__rpc__.update({
+            'update_samples_state': RPC(readonly=False, instantiate=0),
+            })
 
     @staticmethod
     def default_date():
