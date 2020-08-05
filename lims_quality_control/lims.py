@@ -15,10 +15,6 @@ __all__ = ['Configuration', 'Method', 'Analysis', 'Typification',
     'NotebookLine', 'EntryDetailAnalysis', 'ResultReport',
     'NotebookLoadResultsManualLine', 'NotebookLoadResultsManual']
 
-_PROOF_TYPES = [
-    ('qualitative', 'Qualitative'),
-    ('quantitative', 'Quantitative')
-    ]
 FUNCTIONS.update(custom_functions)
 
 
@@ -36,8 +32,10 @@ class Method(metaclass=PoolMeta):
 
 class Analysis(metaclass=PoolMeta):
     __name__ = 'lims.analysis'
-    quality_type = fields.Selection(_PROOF_TYPES, 'Quality Type',
-        required=True)
+    quality_type = fields.Selection([
+        ('qualitative', 'Qualitative'),
+        ('quantitative', 'Quantitative'),
+        ], 'Quality Type', required=True)
     quality_uom = fields.Many2One('product.uom', 'Quality UoM',
         domain=[('category.lims_only_available', '=', True)],
         states={
@@ -64,8 +62,10 @@ class Typification(metaclass=PoolMeta):
     quality = fields.Boolean('Quality')
     quality_template = fields.Many2One('lims.quality.template',
         'Quality Template')
-    quality_type = fields.Function(fields.Selection(_PROOF_TYPES,
-        'Quality Type', states={'invisible': True}),
+    quality_type = fields.Function(fields.Selection([
+        ('qualitative', 'Qualitative'),
+        ('quantitative', 'Quantitative')
+        ], 'Quality Type', states={'invisible': True}),
         'on_change_with_quality_type')
     valid_value = fields.Many2One('lims.quality.qualitative.value',
         'Valid Value',

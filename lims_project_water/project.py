@@ -13,8 +13,6 @@ from trytond.i18n import gettext
 
 __all__ = ['Project', 'Entry', 'Sample', 'CreateSampleStart', 'CreateSample']
 
-PROJECT_TYPE = ('water', 'Water sampling')
-
 
 class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'
@@ -24,7 +22,7 @@ class Project(metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super(Project, cls).__setup__()
-        project_type = PROJECT_TYPE
+        project_type = ('water', 'Water sampling')
         if project_type not in cls.type.selection:
             cls.type.selection.append(project_type)
 
@@ -42,7 +40,7 @@ class Entry(metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super(Entry, cls).__setup__()
-        project_type = PROJECT_TYPE
+        project_type = ('water', 'Water sampling')
         if project_type not in cls.project_type.selection:
             cls.project_type.selection.append(project_type)
 

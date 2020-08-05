@@ -31,8 +31,6 @@ __all__ = ['Project', 'Entry', 'ProjectReferenceElement',
     'ProjectGLPReportFinalRP', 'ProjectGLPReportFinalFOR',
     'ProjectGLPReportAnalyticalPhase', 'ProjectGLPReport13']
 
-PROJECT_TYPE = ('study_plan', 'Study plan')
-
 
 class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'
@@ -176,7 +174,7 @@ class Project(metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super(Project, cls).__setup__()
-        project_type = PROJECT_TYPE
+        project_type = ('study_plan', 'Study plan')
         if project_type not in cls.type.selection:
             cls.type.selection.append(project_type)
         cls.code.states['readonly'] = Or(And(Eval('type') == 'study_plan',
@@ -378,7 +376,7 @@ class Entry(metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super(Entry, cls).__setup__()
-        project_type = PROJECT_TYPE
+        project_type = ('study_plan', 'Study plan')
         if project_type not in cls.project_type.selection:
             cls.project_type.selection.append(project_type)
 
