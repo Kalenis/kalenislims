@@ -81,11 +81,9 @@ class ResultsReport(metaclass=PoolMeta):
         '''
         logger.info('Cron - Digital Signs:INIT')
         pool = Pool()
-        ResultsReport = pool.get('lims.results_report')
         DigitalSign = pool.get('lims_digital_sign.digital_sign', type='wizard')
 
-        results_reports = ResultsReport.search([
-                ('signed', '=', False)])
+        results_reports = cls.search([('signed', '=', False)])
 
         session_id, _, _ = DigitalSign.create()
         digital_sign = DigitalSign(session_id)

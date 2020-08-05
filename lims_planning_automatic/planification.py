@@ -18,7 +18,6 @@ class Planification(metaclass=PoolMeta):
     def automatic_plan(cls, entries=None, tests=None):
         pool = Pool()
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
-        Planification = pool.get('lims.planification')
         PlanificationTechnician = pool.get('lims.planification.technician')
         SearchFractions = pool.get(
             'lims.planification.search_fractions', type='wizard')
@@ -36,7 +35,6 @@ class Planification(metaclass=PoolMeta):
                 ('laboratory', '=', laboratory),
                 ('plannable', '=', True),
                 ]
-
             if entries:
                 clause.append(('entry', 'in', [e.id for e in entries]),)
 
@@ -51,7 +49,7 @@ class Planification(metaclass=PoolMeta):
             for detail_analysis in detail_analyses:
                 analyses_to_plan.append(detail_analysis.analysis)
 
-            planification = Planification()
+            planification = cls()
             planification.automatic = True
             planification.laboratory = laboratory
             planification.start_date = Date.today()
@@ -69,7 +67,7 @@ class Planification(metaclass=PoolMeta):
                 details = SearchFractionsDetail.search([])
                 search_fractions.next.details = details
                 search_fractions.transition_add()
-            Planification.preplan([planification])
+            cls.preplan([planification])
             for f in planification.details:
                 for s in f.details:
                     s.staff_responsible = [

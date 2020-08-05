@@ -18,7 +18,7 @@ class Sample(metaclass=PoolMeta):
         samples = super(Sample, cls).create(vlist)
         for sample in samples:
             if not sample.diagnostician:
-                sample.diagnostician = Sample.get_default_diagnostician(sample)
+                sample.diagnostician = cls.get_default_diagnostician(sample)
                 sample.save()
         return samples
 

@@ -100,8 +100,7 @@ class Invoice(metaclass=PoolMeta):
         t1 = time()  # DEBUG
         pool = Pool()
         SendOfInvoice = pool.get('account.invoice.send_invoice', type='wizard')
-        Invoice = pool.get('account.invoice')
-        invoices = Invoice.search([
+        invoices = cls.search([
             ('type', '=', 'out'),
             ('sent', '=', False),
             ('no_send_invoice', '=', False),
