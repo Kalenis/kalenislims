@@ -151,9 +151,6 @@ class Product(metaclass=PoolMeta):
         Template = pool.get('product.template')
 
         digits = Template.cost_price.digits
-        write = Template.write
-        record = lambda p: p.template
-
         costs = defaultdict(list)
         for product in products:
             if product.type == 'service':
@@ -161,7 +158,7 @@ class Product(metaclass=PoolMeta):
             cost = getattr(product,
                 'recompute_cost_price_%s' % product.cost_price_method)()
             cost = cost.quantize(Decimal(str(10.0 ** -digits[1])))
-            costs[cost].append(record(product))
+            costs[cost].append(product.template)
 
         if not costs:
             return
@@ -173,7 +170,7 @@ class Product(metaclass=PoolMeta):
 
         # Enforce check access for account_stock*
         with Transaction().set_context(_check_access=True):
-            write(*to_write)
+            Template.write(*to_write)
 
     def recompute_cost_price_average(self):
         # original function rewritten to use cost_price and
