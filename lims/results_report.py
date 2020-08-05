@@ -252,7 +252,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     __name__ = 'lims.results_report.version.detail'
 
     _states = {'readonly': Eval('state') != 'draft'}
-    _depends = ['state'],
+    _depends = ['state']
 
     report_version = fields.Many2One('lims.results_report.version',
         'Report', required=True, readonly=True,
