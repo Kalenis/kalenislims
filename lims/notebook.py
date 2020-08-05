@@ -8,7 +8,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from sql import Literal, Join
 
-from trytond import backend
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     StateReport, Button
@@ -853,13 +852,9 @@ class NotebookLine(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        TableHandler = backend.get('TableHandler')
-        tablehandler = TableHandler(cls, module_name)
-
-        urgent_exist = tablehandler.column_exist('urgent')
-
+        table_h = cls.__table_handler__(module_name)
+        urgent_exist = table_h.column_exist('urgent')
         super(NotebookLine, cls).__register__(module_name)
-
         if not urgent_exist:
             cursor = Transaction().connection.cursor()
             Service = Pool().get('lims.service')

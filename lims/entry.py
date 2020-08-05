@@ -8,7 +8,6 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 
-from trytond import backend
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateReport, \
     Button
@@ -804,13 +803,9 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        TableHandler = backend.get('TableHandler')
-        tablehandler = TableHandler(cls, module_name)
-
-        plannable_exist = tablehandler.column_exist('plannable')
-
+        table_h = cls.__table_handler__(module_name)
+        plannable_exist = table_h.column_exist('plannable')
         super(EntryDetailAnalysis, cls).__register__(module_name)
-
         if not plannable_exist:
             cursor = Transaction().connection.cursor()
             pool = Pool()

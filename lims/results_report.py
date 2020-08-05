@@ -6,7 +6,6 @@ from io import BytesIO
 from datetime import datetime
 from PyPDF2 import PdfFileMerger
 
-from trytond import backend
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
@@ -77,13 +76,10 @@ class ResultsReport(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        TableHandler = backend.get('TableHandler')
-        tablehandler = TableHandler(cls, module_name)
-
-        notebook_exist = tablehandler.column_exist('notebook')
-        entry_exist = tablehandler.column_exist('entry')
+        table_h = cls.__table_handler__(module_name)
+        notebook_exist = table_h.column_exist('notebook')
+        entry_exist = table_h.column_exist('entry')
         super(ResultsReport, cls).__register__(module_name)
-
         if notebook_exist and not entry_exist:
             cursor = Transaction().connection.cursor()
             cursor.execute('UPDATE "lims_results_report" r '
@@ -1036,11 +1032,11 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        table = cls.__table_handler__(module_name)
+        table_h = cls.__table_handler__(module_name)
         super(ResultsReportVersionDetailLine, cls).__register__(module_name)
-        if table.column_exist('report_version_detail'):
+        if table_h.column_exist('report_version_detail'):
             cls._migrate_lines()
-            table.drop_column('report_version_detail')
+            table_h.drop_column('report_version_detail')
 
     @classmethod
     def _migrate_lines(cls):
