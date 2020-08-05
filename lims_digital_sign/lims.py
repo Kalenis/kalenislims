@@ -21,6 +21,7 @@ from .tokenclient import GetToken
 
 __all__ = ['ResultsReportVersionDetail', 'ResultsReport',
     'ResultsReportAnnulation']
+logger = logging.getLogger(__name__)
 
 
 class ResultsReportVersionDetail(metaclass=PoolMeta):
@@ -78,8 +79,7 @@ class ResultsReport(metaclass=PoolMeta):
         '''
         Cron - Digital Signs
         '''
-        logging.getLogger('lims_digital_sign').info(
-                'Cron - Digital Signs:INIT')
+        logger.info('Cron - Digital Signs:INIT')
         pool = Pool()
         ResultsReport = pool.get('lims.results_report')
         DigitalSign = pool.get('lims_digital_sign.digital_sign', type='wizard')
@@ -93,8 +93,7 @@ class ResultsReport(metaclass=PoolMeta):
                 for results_report in results_reports]):
             digital_sign.transition_sign()
 
-        logging.getLogger('lims_digital_sign').info(
-                'Cron - Digital Signs:END')
+        logger.info('Cron - Digital Signs:END')
         return True
 
     def has_report_cached(self, english_report=False):
@@ -134,9 +133,9 @@ class ResultsReport(metaclass=PoolMeta):
         '''
         details = self.details_cached(english_report=english_report)
         if not details:
-            logging.getLogger('lims_digital_sign').info(
-                'No %s details cached to build results report %s'
-                % (english_report and 'english' or 'spanish', self.number))  # TODO: Debug line
+            # TODO: Debug line
+            logger.info('No %s details cached to build results report %s'
+                % (english_report and 'english' or 'spanish', self.number))
             return
 
         output = self._get_global_report(details, english_report)
@@ -185,10 +184,9 @@ class ResultsReport(metaclass=PoolMeta):
             token = GetToken(listen, origin, target)
             token.signDoc()
         except Exception as msg:
-            logging.getLogger('lims_digital_sign').error(
-                'Unable to digitally sign for results report %s'
+            logger.error('Unable to digitally sign for results report %s'
                 % (self.number))
-            logging.getLogger('lims_digital_sign').error(msg[1])
+            logger.error(msg[1])
             return False
         with open(os.path.join(path, target), 'rb') as f:
             f_target = f.read()
@@ -213,12 +211,16 @@ class ResultsReport(metaclass=PoolMeta):
                             if c.contact.report_contact and not
                             c.entry.invoice_party.block_reports_automatic_sending])
                         entries.append(line.notebook_line.fraction.entry.number)  # TODO: Debug line
-        logging.getLogger('lims_digital_sign').info(
+        # TODO: Debug line
+        logger.info(
             'Cron - Digital Signs:results_report.number:%s:to_addrs:%s'
-            % (self.number, to_addrs and ', '.join(list(set(to_addrs))) or 'NONE'))  # TODO: Debug line
-        logging.getLogger('lims_digital_sign').info(
+            % (self.number, to_addrs and ', '.join(list(set(to_addrs))) or
+                'NONE'))
+        # TODO: Debug line
+        logger.info(
             'Cron - Digital Signs:results_report.number:%s:Entries:%s'
-            % (self.number, entries and ', '.join(list(set(entries))) or 'NONE'))  # TODO: Debug line
+            % (self.number, entries and ', '.join(list(set(entries))) or
+                'NONE'))
         if not (from_addr and to_addrs):
             return
 
@@ -332,8 +334,8 @@ class ResultsReport(metaclass=PoolMeta):
             server.quit()
             success = True
         except Exception:
-            logging.getLogger('lims_digital_sign').error(
-                'Unable to deliver mail for results report %s' % (self.number))
+            logger.error('Unable to deliver mail for results report %s'
+                % (self.number))
         return success
 
     def attach_report(self, english_report=False):
@@ -385,11 +387,9 @@ class ResultsReportAnnulation(metaclass=PoolMeta):
     __name__ = 'lims.results_report_annulation'
 
     def transition_annul(self):
-        logging.getLogger('lims_digital_sign').info(
-                'transition_annul():INIT')
+        logger.info('transition_annul():INIT')
         super(ResultsReportAnnulation, self).transition_annul()
-        logging.getLogger('lims_digital_sign').info(
-                'transition_annul():INHERIT')
+        logger.info('transition_annul():INHERIT')
 
         ResultsDetail = Pool().get('lims.results_report.version.detail')
 
@@ -412,6 +412,5 @@ class ResultsReportAnnulation(metaclass=PoolMeta):
             if not detail_valid:
                 results_report.clean_attachments_reports()
 
-        logging.getLogger('lims_digital_sign').info(
-                'transition_annul():END')
+        logger.info('transition_annul():END')
         return 'end'

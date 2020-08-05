@@ -23,7 +23,7 @@ from trytond.i18n import gettext
 __all__ = ['Invoice', 'InvoiceContact', 'InvoiceLine',
     'PopulateInvoiceContactsStart', 'PopulateInvoiceContacts', 'SendOfInvoice']
 
-logger = logging.getLogger('lims_account_invoice')
+logger = logging.getLogger(__name__)
 
 
 class Invoice(metaclass=PoolMeta):
