@@ -38,7 +38,7 @@ def parse(self, infile):
             try:
                 dt = end_date_raw.split('/')
                 end_date = date(int(dt[2]), int(dt[1]), int(dt[0]))
-            except:
+            except Exception:
                 end_date = None
         elif row2nd[COL['E']].ctype == xlrd.XL_CELL_DATE:
             dt = xlrd.xldate_as_tuple(end_date_raw, workbook.datemode)
@@ -55,7 +55,7 @@ def parse(self, infile):
             try:
                 it = inj_date_raw.split('/')
                 inj_date = date(int(it[2]), int(it[1]), int(it[0]))
-            except:
+            except Exception:
                 inj_date = None
         elif row3nd[COL['E']].ctype == xlrd.XL_CELL_DATE:
             it = xlrd.xldate_as_tuple(inj_date_raw, workbook.datemode)
