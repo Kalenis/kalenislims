@@ -396,6 +396,8 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
                     'final_unit': final_unit,
                     'detection_limit': detection_limit,
                     'quantification_limit': quantification_limit,
+                    'lower_limit': lower_limit,
+                    'upper_limit': upper_limit,
                     'decimals': decimals,
                     'report': report,
                     'results_estimated_waiting': results_estimated_waiting,

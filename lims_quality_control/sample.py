@@ -88,7 +88,7 @@ class TakeSample(Wizard):
     confirm = StateTransition()
 
     def transition_confirm(self):
-        sample = self.create_sample()
+        self.create_sample()
         return 'end'
 
     def create_sample(self):
