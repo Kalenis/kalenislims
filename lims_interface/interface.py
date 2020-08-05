@@ -78,12 +78,6 @@ VALID_SYMBOLS = VALID_FIRST_SYMBOLS + VALID_NEXT_SYMBOLS
 
 BLOCKSIZE = 65536
 
-INTERFACE_STATES = [
-    ('draft', 'Draft'),
-    ('active', 'Active'),
-    ('canceled', 'Canceled'),
-    ]
-
 if config.getboolean('lims_interface', 'filestore', default=False):
     file_id = 'origin_file_id'
     store_prefix = config.get('lims_interface', 'store_prefix', default=None)
@@ -173,8 +167,11 @@ class Interface(Workflow, ModelSQL, ModelView):
         ], 'Kind', required=True, states={
             'readonly': Eval('state') != 'draft',
             }, depends=['state'])
-    state = fields.Selection(INTERFACE_STATES, 'State',
-        readonly=True, required=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('active', 'Active'),
+        ('canceled', 'Canceled'),
+        ], 'State', readonly=True, required=True)
     controller_name = fields.Selection([(None, '')], 'Controller Name',
         sort=False, states=_controller_states, depends=_depends)
     columns = fields.One2Many('lims.interface.column', 'interface', 'Columns',
@@ -718,8 +715,11 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
             'required': Bool(Eval('transfer_field')),
             'invisible': Not(Eval('transfer_field'))
         }, depends=['transfer_field'])
-    interface_state = fields.Function(fields.Selection(INTERFACE_STATES,
-        'Interface State'), 'on_change_with_interface_state')
+    interface_state = fields.Function(fields.Selection([
+        ('draft', 'Draft'),
+        ('active', 'Active'),
+        ('canceled', 'Canceled'),
+        ], 'Interface State'), 'on_change_with_interface_state')
     grouped = fields.Boolean('Grouped column')
 
     @classmethod
