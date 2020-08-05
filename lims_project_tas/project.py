@@ -11,24 +11,23 @@ from trytond.i18n import gettext
 
 __all__ = ['TasType', 'Project', 'Entry']
 
-STATES = {
-    'required': Bool(Equal(Eval('type'), 'tas')),
-}
-DEPENDS = ['type']
 PROJECT_TYPE = ('tas', 'TAS')
 
 
 class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'
 
+    _states = {'required': Bool(Equal(Eval('type'), 'tas'))}
+    _depends = ['type']
+
     tas_invoice_party = fields.Many2One('party.party', 'Invoice party',
         domain=[('id', 'in', Eval('tas_invoice_party_domain'))],
-        states=STATES, depends=['type', 'tas_invoice_party_domain'])
+        states=_states, depends=['type', 'tas_invoice_party_domain'])
     tas_invoice_party_domain = fields.Function(fields.Many2Many('party.party',
         None, None, 'TAS Invoice party domain'),
         'on_change_with_tas_invoice_party_domain')
     tas_laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        states=STATES, depends=DEPENDS)
+        states=_states, depends=_depends)
     tas_type = fields.Many2One('lims.tas.type', 'TAS type')
     tas_responsible = fields.Many2One('lims.laboratory.professional',
         'Responsible', domain=[('id', 'in', Eval('tas_responsible_domain'))],
@@ -38,14 +37,16 @@ class Project(metaclass=PoolMeta):
         'on_change_with_tas_responsible_domain')
     tas_comments = fields.Text('Comments')
 
+    del _states, _depends
+
     @classmethod
     def __setup__(cls):
         super(Project, cls).__setup__()
         project_type = PROJECT_TYPE
         if project_type not in cls.type.selection:
             cls.type.selection.append(project_type)
-        cls.client.states = STATES
-        cls.client.depends = DEPENDS
+        cls.client.states = {'required': Bool(Equal(Eval('type'), 'tas'))}
+        cls.client.depends = ['type']
 
     @classmethod
     def view_attributes(cls):

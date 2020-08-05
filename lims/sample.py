@@ -5795,6 +5795,8 @@ class Referral(ModelSQL, ModelView):
             ('referral', '=', None),
             ])
 
+    del _states, _depends
+
     @classmethod
     def __setup__(cls):
         super(Referral, cls).__setup__()

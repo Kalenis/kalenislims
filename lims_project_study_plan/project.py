@@ -31,15 +31,14 @@ __all__ = ['Project', 'Entry', 'ProjectReferenceElement',
     'ProjectGLPReportFinalRP', 'ProjectGLPReportFinalFOR',
     'ProjectGLPReportAnalyticalPhase', 'ProjectGLPReport13']
 
-STATES = {
-    'readonly': Bool(Equal(Eval('stp_state'), 'finalized')),
-    }
-DEPENDS = ['stp_state']
 PROJECT_TYPE = ('study_plan', 'Study plan')
 
 
 class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'
+
+    _states = {'readonly': Eval('stp_state') == 'finalized'}
+    _depends = ['stp_state']
 
     stp_number = fields.Char('SP Id', readonly=True)
     stp_title = fields.Function(fields.Char('Title'),
@@ -54,29 +53,29 @@ class Project(metaclass=PoolMeta):
         ('', ''),
         ('study_plan', 'Study plan'),
         ('analytical_phase', 'Analytical phase plan'),
-        ], 'Study plan phase', sort=False, states=STATES, depends=DEPENDS)
-    stp_target = fields.Text('Target', states=STATES, depends=DEPENDS)
+        ], 'Study plan phase', sort=False, states=_states, depends=_depends)
+    stp_target = fields.Text('Target', states=_states, depends=_depends)
     stp_sponsor = fields.Function(fields.Many2One('party.party', 'Sponsor'),
         'on_change_with_stp_sponsor')
     stp_matrix_client_description = fields.Char('Matrix client description',
-        states=STATES, depends=DEPENDS)
-    stp_product_brand = fields.Char('Product brand', states=STATES,
-        depends=DEPENDS)
+        states=_states, depends=_depends)
+    stp_product_brand = fields.Char('Product brand',
+        states=_states, depends=_depends)
     stp_date = fields.Date('Ingress date',
         states={
             'required': Bool(Equal(Eval('type'), 'study_plan')),
             'readonly': Bool(Equal(Eval('stp_state'), 'finalized')),
             },
         depends=['type', 'stp_state'])
-    stp_proposal_start_date = fields.Char('Proposal start date', states=STATES,
-        depends=DEPENDS)
-    stp_proposal_end_date = fields.Char('Proposal end date', states=STATES,
-        depends=DEPENDS)
+    stp_proposal_start_date = fields.Char('Proposal start date',
+        states=_states, depends=_depends)
+    stp_proposal_end_date = fields.Char('Proposal end date',
+        states=_states, depends=_depends)
     stp_effective_start_date = fields.Date('Effective start date',
-        states=STATES, depends=DEPENDS)
+        states=_states, depends=_depends)
     stp_laboratory_professionals = fields.One2Many(
         'lims.project.stp_professional', 'project', 'Laboratory professionals',
-        states=STATES, depends=DEPENDS)
+        states=_states, depends=_depends)
     stp_study_director = fields.Function(fields.Many2One(
         'lims.laboratory.professional', 'Study director'),
         'on_change_with_stp_study_director')
@@ -86,8 +85,8 @@ class Project(metaclass=PoolMeta):
     stp_quality_unit = fields.Function(fields.Many2One(
         'lims.laboratory.professional', 'Quality unit'),
         'on_change_with_stp_quality_unit')
-    stp_suspension_date = fields.Date('Discard date', states=STATES,
-        depends=DEPENDS)
+    stp_suspension_date = fields.Date('Discard date',
+        states=_states, depends=_depends)
     stp_suspension_reason = fields.Char('Discard reason',
         states={
             'invisible': Not(Bool(Eval('stp_suspension_date'))),
@@ -95,28 +94,28 @@ class Project(metaclass=PoolMeta):
             },
         depends=['stp_suspension_date', 'stp_state'])
     stp_pattern_availability = fields.Boolean('Pattern availability',
-        states=STATES, depends=DEPENDS)
+        states=_states, depends=_depends)
     stp_implementation_validation = fields.Selection([
         ('', ''),
         ('implementation_validation', 'Implementation and validation'),
         ('validation_only', 'Validation only'),
         ('not_apply', 'Does not apply'),
-        ], 'Implementation - Validation', sort=False, states=STATES,
-        depends=DEPENDS)
+        ], 'Implementation - Validation', sort=False,
+        states=_states, depends=_depends)
     stp_rector_scheme_comments = fields.Text('Rector scheme comments',
-        states=STATES, depends=DEPENDS)
-    stp_glp = fields.Boolean('Good laboratory practices', states=STATES,
-        depends=DEPENDS)
+        states=_states, depends=_depends)
+    stp_glp = fields.Boolean('Good laboratory practices',
+        states=_states, depends=_depends)
     stp_reference_elements = fields.One2Many('lims.project.reference_element',
-        'project', 'Reference/Test elements in GLP', states=STATES,
-        depends=DEPENDS)
+        'project', 'Reference/Test elements in GLP',
+        states=_states, depends=_depends)
     stp_solvents_and_reagents = fields.One2Many('lims.project.solvent_reagent',
-        'project', 'Solvents and Reagents', states=STATES, depends=DEPENDS)
+        'project', 'Solvents and Reagents', states=_states, depends=_depends)
     stp_samples_in_custody = fields.One2Many('lims.project.sample_in_custody',
-        'project', 'Samples in custody', states=STATES, depends=DEPENDS)
+        'project', 'Samples in custody', states=_states, depends=_depends)
     stp_deviation_and_amendment = fields.One2Many(
         'lims.project.deviation_amendment', 'project',
-        'Deviations and Amendments', states=STATES, depends=DEPENDS)
+        'Deviations and Amendments', states=_states, depends=_depends)
     stp_state = fields.Selection([
         ('', ''),
         ('canceled', 'Canceled'),
@@ -124,13 +123,13 @@ class Project(metaclass=PoolMeta):
         ('initiated', 'Initiated'),
         ('pending', 'Pending'),
         ('requested', 'Requested'),
-        ], 'State', sort=False, states=STATES, depends=DEPENDS)
+        ], 'State', sort=False, states=_states, depends=_depends)
     stp_state_string = stp_state.translated('stp_state')
-    stp_test_system = fields.Text('Test system', states=STATES,
-        depends=DEPENDS)
-    stp_test_method = fields.Text('Test method', states=STATES,
-        depends=DEPENDS)
-    stp_records = fields.Char('Records', states=STATES, depends=DEPENDS)
+    stp_test_system = fields.Text('Test system',
+        states=_states, depends=_depends)
+    stp_test_method = fields.Text('Test method',
+        states=_states, depends=_depends)
+    stp_records = fields.Char('Records', states=_states, depends=_depends)
     stp_start_date = fields.Function(fields.Date('Start date'),
         'on_change_with_stp_start_date')
     stp_end_date = fields.Function(fields.Date('End date'),
@@ -140,24 +139,26 @@ class Project(metaclass=PoolMeta):
     stp_notebook_lines = fields.Function(fields.Many2Many('lims.notebook.line',
         None, None, 'Tests performed'), 'get_stp_notebook_lines')
     min_qty_sample = fields.Integer('Minimum quantity of sample',
-        states=STATES, depends=DEPENDS)
+        states=_states, depends=_depends)
     unit = fields.Many2One('product.uom', 'Unit',
-        domain=[('category.lims_only_available', '=', True)], states=STATES,
-        depends=DEPENDS)
+        domain=[('category.lims_only_available', '=', True)],
+        states=_states, depends=_depends)
     min_qty_sample_compliance = fields.Selection([
         ('', ''),
         ('conforming', 'Conforming'),
         ('non_conforming', 'Non Conforming'),
         ('not_apply', 'Not apply'),
         ], 'Compliance with Minimum quantity of sample', sort=False,
-        states=STATES, depends=DEPENDS)
+        states=_states, depends=_depends)
     min_qty_sample_compliance_string = min_qty_sample_compliance.translated(
         'min_qty_sample_compliance')
     stp_changelog = fields.One2Many('lims.project.stp_changelog', 'project',
-        'Changelog', states=STATES, depends=DEPENDS)
+        'Changelog', states=_states, depends=_depends)
     stp_date_entry_document_file = fields.Date(
         'Date of entry into the BPL document file',
-        states=STATES, depends=DEPENDS)
+        states=_states, depends=_depends)
+
+    del _states, _depends
 
     @staticmethod
     def default_stp_pattern_availability():
@@ -784,32 +785,27 @@ class ProjectChangeLog(ModelSQL):
 class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
 
-    application_date = fields.Date('Application date', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
-            }, depends=['project_type'])
-    sampling_date = fields.Date('Sampling date', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
-            }, depends=['project_type'])
-    reception_date = fields.Date('Reception date', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
-            }, depends=['project_type'])
-    treatment = fields.Char('Treatment', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
-            }, depends=['project_type'])
-    dosis = fields.Char('Dosis', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
-            }, depends=['project_type'])
-    after_application_days = fields.Char('After application days', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
-            }, depends=['project_type'])
-    glp_repetitions = fields.Char('GLP repetitions', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
-            }, depends=['project_type'])
+    _states = {'invisible': Eval('project_type') != 'study_plan'}
+    _depends = ['project_type']
+
+    application_date = fields.Date('Application date',
+        states=_states, depends=_depends)
+    sampling_date = fields.Date('Sampling date',
+        states=_states, depends=_depends)
+    reception_date = fields.Date('Reception date',
+        states=_states, depends=_depends)
+    treatment = fields.Char('Treatment', states=_states, depends=_depends)
+    dosis = fields.Char('Dosis', states=_states, depends=_depends)
+    after_application_days = fields.Char('After application days',
+        states=_states, depends=_depends)
+    glp_repetitions = fields.Char('GLP repetitions',
+        states=_states, depends=_depends)
     sample_weight = fields.Integer('Sample weight')
     balance = fields.Many2One('lims.lab.device', 'Balance')
-    cultivation_zone = fields.Char('Cultivation zone', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
-            }, depends=['project_type'])
+    cultivation_zone = fields.Char('Cultivation zone',
+        states=_states, depends=_depends)
+
+    del _states, _depends
 
     @classmethod
     def view_attributes(cls):
@@ -823,32 +819,27 @@ class Sample(metaclass=PoolMeta):
 class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
 
-    application_date = fields.Date('Application date', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
-            }, depends=['project_type'])
-    sampling_date = fields.Date('Sampling date', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
-            }, depends=['project_type'])
-    reception_date = fields.Date('Reception date', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
-            }, depends=['project_type'])
-    treatment = fields.Char('Treatment', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
-            }, depends=['project_type'])
-    dosis = fields.Char('Dosis', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
-            }, depends=['project_type'])
-    after_application_days = fields.Char('After application days', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
-            }, depends=['project_type'])
-    glp_repetitions = fields.Char('GLP repetitions', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
-            }, depends=['project_type'])
+    _states = {'invisible': Eval('project_type') != 'study_plan'}
+    _depends = ['project_type']
+
+    application_date = fields.Date('Application date',
+        states=_states, depends=_depends)
+    sampling_date = fields.Date('Sampling date',
+        states=_states, depends=_depends)
+    reception_date = fields.Date('Reception date',
+        states=_states, depends=_depends)
+    treatment = fields.Char('Treatment', states=_states, depends=_depends)
+    dosis = fields.Char('Dosis', states=_states, depends=_depends)
+    after_application_days = fields.Char('After application days',
+        states=_states, depends=_depends)
+    glp_repetitions = fields.Char('GLP repetitions',
+        states=_states, depends=_depends)
     sample_weight = fields.Integer('Sample weight')
     balance = fields.Many2One('lims.lab.device', 'Balance')
-    cultivation_zone = fields.Char('Cultivation zone', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'study_plan'))),
-            }, depends=['project_type'])
+    cultivation_zone = fields.Char('Cultivation zone',
+        states=_states, depends=_depends)
+
+    del _states, _depends
 
     @classmethod
     def view_attributes(cls):

@@ -112,21 +112,19 @@ class ControlTendency(ModelSQL, ModelView):
     'Control Chart Tendency'
     __name__ = 'lims.control.tendency'
 
+    _states = {'readonly': Bool(Eval('context', {}).get('readonly', False))}
+
     product_type = fields.Many2One('lims.product.type', 'Product type',
-        required=True, states={
-            'readonly': Bool(Eval('context', {}).get('readonly', False))})
-    matrix = fields.Many2One('lims.matrix', 'Matrix', required=True,
-        states={'readonly': Bool(Eval('context', {}).get('readonly', False))})
+        required=True, states=_states)
+    matrix = fields.Many2One('lims.matrix', 'Matrix',
+        required=True, states=_states)
     fraction_type = fields.Many2One('lims.fraction.type', 'Fraction type',
-        required=True, states={
-            'readonly': Bool(Eval('context', {}).get('readonly', False))})
-    analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
-        states={'readonly': Bool(Eval('context', {}).get('readonly', False))})
+        required=True, states=_states)
+    analysis = fields.Many2One('lims.analysis', 'Analysis',
+        required=True, states=_states)
     concentration_level = fields.Many2One('lims.concentration.level',
-        'Concentration level', states={
-            'readonly': Bool(Eval('context', {}).get('readonly', False))})
-    mean = fields.Float('Mean', required=True,
-        states={'readonly': Bool(Eval('context', {}).get('readonly', False))},
+        'Concentration level', states=_states)
+    mean = fields.Float('Mean', required=True, states=_states,
         digits=(16, Eval('digits', 2)), depends=['digits'])
     deviation = fields.Float('Standard Deviation', required=True,
         digits=(16, Eval('digits', 2)), depends=['digits'])
@@ -181,13 +179,15 @@ class ControlTendency(ModelSQL, ModelView):
     digits = fields.Integer('Digits')
     # Mobile Range
     mr_avg_abs_diff = fields.Float('Average of Absolute Differences',
-        states={'readonly': Bool(Eval('context', {}).get('readonly', False))})
+        states=_states)
     mr_d3 = fields.Float('D3 Constant')
     mr_d4 = fields.Float('D4 Constant')
     mr_ll = fields.Function(fields.Float('MR LL',
         depends=['mr_avg_abs_diff', 'mr_d3']), 'get_mr_ll')
     mr_ul = fields.Function(fields.Float('MR UL',
         depends=['mr_avg_abs_diff', 'mr_d4']), 'get_mr_ul')
+
+    del _states
 
     @classmethod
     def __setup__(cls):

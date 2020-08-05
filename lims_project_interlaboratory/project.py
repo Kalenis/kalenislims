@@ -9,10 +9,6 @@ from trytond.pyson import Eval, Equal, Bool, Not, And
 
 __all__ = ['Project', 'Entry']
 
-STATES = {
-    'required': Bool(Equal(Eval('type'), 'itl')),
-}
-DEPENDS = ['type']
 PROJECT_TYPE = ('itl', 'Interlaboratory')
 
 
@@ -20,14 +16,16 @@ class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'
 
     int_itl_party = fields.Many2One('party.party', 'ITL Party',
-        states=STATES, depends=DEPENDS)
+        depends=['type'], states={
+            'required': Bool(Equal(Eval('type'), 'itl')),
+            })
     int_result_date = fields.Date('Result date')
     int_report_reception = fields.Date('Report reception')
     int_evaluation = fields.Text('Evaluation',
-        states={
+        depends=['type', 'end_date'], states={
             'required': And(Equal(Eval('type'), 'itl'),
                 Bool(Eval('end_date'))),
-            }, depends=['type', 'end_date'])
+            })
 
     @classmethod
     def __setup__(cls):

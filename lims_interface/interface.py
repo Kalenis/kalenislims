@@ -240,6 +240,8 @@ class Interface(Workflow, ModelSQL, ModelView):
         ('utf-8', 'UTF-8'),
         ('iso-8859', 'ISO-8859')], 'Charset')
 
+    del _controller_states, _template_states, _depends
+
     @classmethod
     def __setup__(cls):
         super(Interface, cls).__setup__()

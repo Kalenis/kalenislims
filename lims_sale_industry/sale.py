@@ -47,6 +47,8 @@ class Sale(metaclass=PoolMeta):
     label_from = fields.Integer('Label from', readonly=True)
     label_to = fields.Integer('Label to', readonly=True)
 
+    del _states
+
     @classmethod
     def __setup__(cls):
         super(Sale, cls).__setup__()

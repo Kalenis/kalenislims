@@ -18,11 +18,6 @@ __all__ = ['QualitativeValue', 'Template', 'QualityTest',
     'CreateQualityTestStart', 'CreateQualityTest', 'TemplateAddServiceStart',
     'TemplateAddService', 'TestResultsReport', 'PrintTest', 'TestReport']
 
-_STATES = {
-    'readonly': Eval('state') != 'draft',
-    }
-_DEPENDS = ['state']
-
 
 class QualitativeValue(DeactivableMixin, ModelSQL, ModelView):
     'Quality Value'
@@ -39,40 +34,45 @@ class Template(Workflow, ModelSQL, ModelView):
     __name__ = 'lims.quality.template'
     _history = True
 
+    _states = {'readonly': Eval('state') != 'draft'}
+    _depends = ['state']
+
     name = fields.Char('Name', required=True, translate=True,
-        select=True, states=_STATES, depends=_DEPENDS)
+        select=True, states=_states, depends=_depends)
     product = fields.Many2One('product.product', 'Product', required=True,
-        select=True, states=_STATES, depends=_DEPENDS)
+        select=True, states=_states, depends=_depends)
     company = fields.Many2One('company.company', 'Company', required=True,
-        select=True, states=_STATES, depends=_DEPENDS)
-    comments = fields.Text('Comments', states=_STATES, depends=_DEPENDS)
+        select=True, states=_states, depends=_depends)
+    comments = fields.Text('Comments', states=_states, depends=_depends)
     lines = fields.One2Many('lims.typification', 'quality_template', 'Lines',
         domain=[
             ('quality', '=', True),
             ],
         context={'quality': True},
-        states=_STATES, depends=_DEPENDS + ['product'])
+        states=_states, depends=_depends + ['product'])
     revision = fields.Integer(
         "Revision", required=True, readonly=True)
     countersample_required = fields.Boolean('Countersample Required',
-        states=_STATES, depends=_DEPENDS)
+        states=_states, depends=_depends)
     results_report_required = fields.Boolean('Results Report Required',
-        states=_STATES, depends=_DEPENDS)
+        states=_states, depends=_depends)
     range_validate = fields.Boolean('Ranges Validate',
-        states=_STATES, depends=_DEPENDS)
+        states=_states, depends=_depends)
     range_type = fields.Many2One('lims.range.type', 'Range Type',
         states={
             'readonly': Eval('state') != 'draft',
             'invisible': Not(Bool(Eval('range_validate'))),
             'required': Bool(Eval('range_validate')),
-        }, depends=_DEPENDS + ['range_validate'])
-    start_date = fields.Date('Start Date', states=_STATES, depends=_DEPENDS)
-    end_date = fields.Date('End Date', states=_STATES, depends=_DEPENDS)
+        }, depends=_depends + ['range_validate'])
+    start_date = fields.Date('Start Date', states=_states, depends=_depends)
+    end_date = fields.Date('End Date', states=_states, depends=_depends)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('active', 'Active'),
         ('not_active', 'Not Active'),
         ], 'State', readonly=True, required=True)
+
+    del _states, _depends
 
     @classmethod
     def __setup__(cls):
@@ -173,39 +173,42 @@ class QualityTest(Workflow, ModelSQL, ModelView):
     __name__ = 'lims.quality.test'
     _rec_name = 'number'
 
+    _states = {'readonly': Eval('state') != 'draft'}
+    _depends = ['state']
+
     number = fields.Char('Number', readonly=True, select=True,
         states={'required': Not(Equal(Eval('state'), 'draft'))})
     company = fields.Many2One('company.company', 'Company', required=True,
-        select=True, states=_STATES, depends=_DEPENDS)
-    test_date = fields.DateTime('Date', states=_STATES, depends=_DEPENDS)
-    comments = fields.Text('Comments', states=_STATES, depends=_DEPENDS)
+        select=True, states=_states, depends=_depends)
+    test_date = fields.DateTime('Date', states=_states, depends=_depends)
+    comments = fields.Text('Comments', states=_states, depends=_depends)
     lines = fields.One2Many('lims.notebook.line', 'quality_test', 'Lines',
         domain=[
             ('quality_test_report', '=', True),
             ],
         readonly=True, context={'quality': True})
     template = fields.Many2One('lims.quality.template', 'Template',
-        required=True, states=_STATES, depends=_DEPENDS)
+        required=True, states=_states, depends=_depends)
     sample = fields.Many2One('lims.sample', 'Sample',
         domain=[('lot.product', '=', Eval('product'))],
-        states=_STATES, depends=_DEPENDS + ['product'])
+        states=_states, depends=_depends + ['product'])
     countersample = fields.Function(fields.Many2One('lims.sample',
         'Countersample',
         states={
             'invisible': Not(Bool(Eval('countersample'))),
             }), 'get_countersample')
     product = fields.Function(fields.Many2One('product.product', 'Product',
-        states=_STATES, depends=_DEPENDS), 'on_change_with_product',
+        states=_states, depends=_depends), 'on_change_with_product',
         searcher='search_product')
     lot = fields.Function(fields.Many2One('stock.lot', 'Lot',
-        states=_STATES, depends=_DEPENDS), 'on_change_with_lot',
+        states=_states, depends=_depends), 'on_change_with_lot',
         searcher='search_lot')
     success = fields.Function(fields.Boolean('Success'), 'get_success')
     confirmed_date = fields.DateTime('Confirmed Date', readonly=True,
         states={
             'invisible': Eval('state') == 'draft',
             },
-        depends=_DEPENDS)
+        depends=_depends)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
@@ -213,6 +216,8 @@ class QualityTest(Workflow, ModelSQL, ModelView):
         ('failed', 'Failed'),
         ], 'State', readonly=True, required=True)
     state_string = state.translated('state')
+
+    del _states, _depends
 
     @classmethod
     def __setup__(cls):

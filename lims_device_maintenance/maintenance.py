@@ -102,6 +102,8 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
     comments = fields.Text('Comments')
     color = fields.Function(fields.Char('Color'), 'get_color')
 
+    del _states, _depends
+
     @classmethod
     def __setup__(cls):
         super(LabDeviceMaintenance, cls).__setup__()

@@ -13,10 +13,6 @@ from trytond.i18n import gettext
 
 __all__ = ['Project', 'Entry', 'Sample', 'CreateSampleStart', 'CreateSample']
 
-STATES = {
-    'required': Bool(Equal(Eval('type'), 'water')),
-}
-DEPENDS = ['type']
 PROJECT_TYPE = ('water', 'Water sampling')
 
 

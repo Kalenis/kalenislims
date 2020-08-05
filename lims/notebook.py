@@ -688,6 +688,9 @@ class NotebookLine(ModelSQL, ModelView):
     'Laboratory Notebook Line'
     __name__ = 'lims.notebook.line'
 
+    _states = {'readonly': Bool(Eval('accepted'))}
+    _depends = ['accepted']
+
     notebook = fields.Many2One('lims.notebook', 'Laboratory notebook',
         ondelete='CASCADE', select=True, required=True)
     analysis_detail = fields.Many2One('lims.entry.detail.analysis',
@@ -728,10 +731,10 @@ class NotebookLine(ModelSQL, ModelView):
         'professional', 'Preparation professionals')
     initial_unit = fields.Many2One('product.uom', 'Initial unit',
         domain=[('category.lims_only_available', '=', True)],
-        states={'readonly': Bool(Eval('accepted'))}, depends=['accepted'])
+        states=_states, depends=_depends)
     final_unit = fields.Many2One('product.uom', 'Final unit',
         domain=[('category.lims_only_available', '=', True)],
-        states={'readonly': Bool(Eval('accepted'))}, depends=['accepted'])
+        states=_states, depends=_depends)
     result_modifier = fields.Selection([
         ('eq', '='),
         ('low', '<'),
@@ -744,7 +747,7 @@ class NotebookLine(ModelSQL, ModelView):
         ('abs', 'Absence'),
         ('pre', 'Presence'),
         ], 'Result modifier', sort=False,
-        states={'readonly': Bool(Eval('accepted'))}, depends=['accepted'])
+        states=_states, depends=_depends)
     result_modifier_string = result_modifier.translated('result_modifier')
     converted_result_modifier = fields.Selection([
         ('eq', '='),
@@ -754,21 +757,21 @@ class NotebookLine(ModelSQL, ModelView):
         ('neg', 'Negative'),
         ('ni', 'ni'),
         ], 'Converted result modifier', sort=False,
-        states={'readonly': Bool(Eval('accepted'))}, depends=['accepted'])
+        states=_states, depends=_depends)
     converted_result_modifier_string = converted_result_modifier.translated(
         'converted_result_modifier')
     result = fields.Char('Result',
-        states={'readonly': Bool(Eval('accepted'))}, depends=['accepted'])
+        states=_states, depends=_depends)
     converted_result = fields.Char('Converted result',
-        states={'readonly': Bool(Eval('accepted'))}, depends=['accepted'])
+        states=_states, depends=_depends)
     detection_limit = fields.Char('Detection limit',
-        states={'readonly': Bool(Eval('accepted'))}, depends=['accepted'])
+        states=_states, depends=_depends)
     quantification_limit = fields.Char('Quantification limit',
-        states={'readonly': Bool(Eval('accepted'))}, depends=['accepted'])
+        states=_states, depends=_depends)
     lower_limit = fields.Char('Lower limit allowed',
-        states={'readonly': Bool(Eval('accepted'))}, depends=['accepted'])
+        states=_states, depends=_depends)
     upper_limit = fields.Char('Upper limit allowed',
-        states={'readonly': Bool(Eval('accepted'))}, depends=['accepted'])
+        states=_states, depends=_depends)
     check_result_limits = fields.Function(fields.Boolean(
         'Validate limits directly on the result'), 'get_typification_field')
     chromatogram = fields.Char('Chromatogram')
@@ -782,7 +785,7 @@ class NotebookLine(ModelSQL, ModelView):
     backup = fields.Char('Backup')
     reference = fields.Char('Reference')
     literal_result = fields.Char('Literal result', translate=True,
-        states={'readonly': Bool(Eval('accepted'))}, depends=['accepted'])
+        states=_states, depends=_depends)
     rm_correction_formula = fields.Char('RM Correction Formula')
     report = fields.Boolean('Report')
     uncertainty = fields.Char('Uncertainty')
@@ -845,6 +848,8 @@ class NotebookLine(ModelSQL, ModelView):
         'notebook_line', 'fraction', 'Controls')
     referral = fields.Function(fields.Many2One('lims.referral', 'Referral'),
         'get_detail_field', searcher='search_detail_field')
+
+    del _states, _depends
 
     @classmethod
     def __register__(cls, module_name):

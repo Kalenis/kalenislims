@@ -56,17 +56,20 @@ class Planification(Workflow, ModelSQL, ModelView):
     __name__ = 'lims.planification'
     _rec_name = 'code'
 
+    _states = {'readonly': Not(Bool(Equal(Eval('state'), 'draft')))}
+    _depends = ['state']
+
     code = fields.Char('Code', select=True, readonly=True)
     date = fields.Date('Date', readonly=True)
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         required=True)
     analysis = fields.Many2Many('lims.planification-analysis',
         'planification', 'analysis', 'Analysis/Sets/Groups',
-        states={'readonly': Not(Bool(Equal(Eval('state'), 'draft')))},
         context={'date_from': Eval('date_from'), 'date_to': Eval('date_to'),
             'calculate': Bool(Equal(Eval('state'), 'draft'))},
         domain=['OR', ('id', 'in', Eval('analysis')), [
             ('id', 'in', Eval('analysis_domain'))]],
+        states=_states,
         depends=['state', 'date_from', 'date_to', 'analysis_domain'])
     analysis_domain = fields.Function(fields.Many2Many('lims.analysis',
         None, None, 'Analysis domain'),
@@ -74,16 +77,13 @@ class Planification(Workflow, ModelSQL, ModelView):
     technicians = fields.One2Many('lims.planification.technician',
         'planification', 'Technicians', depends=['method_domain',
         'technicians_domain'])
-    date_from = fields.Date('Date from', depends=['state'],
-        states={'readonly': Not(Bool(Equal(Eval('state'), 'draft')))})
-    date_to = fields.Date('Date to', depends=['state'],
-        states={'readonly': Not(Bool(Equal(Eval('state'), 'draft')))})
-    start_date = fields.Date('Start date', depends=['state'],
+    date_from = fields.Date('Date from', states=_states, depends=_depends)
+    date_to = fields.Date('Date to', states=_states, depends=_depends)
+    start_date = fields.Date('Start date', depends=_depends,
         states={'readonly': Bool(Equal(Eval('state'), 'confirmed'))})
     details = fields.One2Many('lims.planification.detail',
         'planification', 'Fractions to plan',
-        states={'readonly': Not(Bool(Equal(Eval('state'), 'draft')))},
-        depends=['state'])
+        states=_states, depends=_depends)
     controls = fields.Many2Many('lims.planification-fraction',
         'planification', 'fraction', 'Controls', readonly=True)
     state = fields.Selection([
@@ -100,6 +100,8 @@ class Planification(Workflow, ModelSQL, ModelView):
         'lims.laboratory.professional', None, 'Technicians domain'),
         'on_change_with_technicians_domain', setter='set_technicians_domain')
     comments = fields.Text('Comments')
+
+    del _states, _depends
 
     @classmethod
     def __setup__(cls):

@@ -251,6 +251,9 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     'Results Report Version Detail'
     __name__ = 'lims.results_report.version.detail'
 
+    _states = {'readonly': Eval('state') != 'draft'}
+    _depends = ['state'],
+
     report_version = fields.Many2One('lims.results_report.version',
         'Report', required=True, readonly=True,
         ondelete='CASCADE', select=True)
@@ -272,27 +275,26 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         ], 'Type', readonly=True)
     type_string = type.translated('type')
     samples = fields.One2Many('lims.results_report.version.detail.sample',
-        'version_detail', 'Samples', depends=['state'],
-        states={'readonly': Eval('state') != 'draft'})
+        'version_detail', 'Samples', states=_states, depends=_depends)
     party = fields.Function(fields.Many2One('party.party', 'Party'),
        'get_report_field', searcher='search_report_field')
     signer = fields.Many2One('lims.laboratory.professional', 'Signer',
-        states={'readonly': Eval('state') != 'draft'},
         domain=[('id', 'in', Eval('signer_domain'))],
-        depends=['state', 'signer_domain'])
+        states=_states, depends=['state', 'signer_domain'])
     signer_domain = fields.Function(fields.Many2Many(
         'lims.laboratory.professional', None, None, 'Signer domain'),
         'on_change_with_signer_domain')
     resultrange_origin = fields.Many2One('lims.range.type', 'Origin',
         domain=[('use', '=', 'result_range')],
-        depends=['report_result_type', 'state'], states={
+        depends=['report_result_type', 'state'],
+        states={
             'invisible': Not(Eval('report_result_type').in_([
                 'result_range', 'both_range'])),
             'required': Eval('report_result_type').in_([
                 'result_range', 'both_range']),
             'readonly': Eval('state') != 'draft',
             })
-    comments = fields.Text('Comments', translate=True, depends=['state'],
+    comments = fields.Text('Comments', translate=True, depends=_depends,
         states={'readonly': ~Eval('state').in_(['draft', 'revised'])})
     fractions_comments = fields.Function(fields.Text('Fractions comments'),
         'get_fractions_comments')
@@ -315,9 +317,9 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         readonly=True)
     annulment_date = fields.DateTime('Annulment date', readonly=True)
     annulment_reason = fields.Text('Annulment reason', translate=True,
-        states={'readonly': Eval('state') != 'annulled'}, depends=['state'])
+        states={'readonly': Eval('state') != 'annulled'}, depends=_depends)
     annulment_reason_print = fields.Boolean('Print annulment reason',
-        states={'readonly': Eval('state') != 'annulled'}, depends=['state'])
+        states={'readonly': Eval('state') != 'annulled'}, depends=_depends)
 
     # Report format
     report_section = fields.Function(fields.Char('Section'),
@@ -326,8 +328,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         ('none', 'None'),
         ('normal', 'Normal'),
         ('polisample', 'Polisample'),
-        ], 'Forced Report type', sort=False, depends=['state'],
-        states={'readonly': Eval('state') != 'draft'})
+        ], 'Forced Report type', sort=False,
+        states=_states, depends=_depends)
     report_type = fields.Function(fields.Selection([
         ('normal', 'Normal'),
         ('polisample', 'Polisample'),
@@ -338,8 +340,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         ('both', 'Both'),
         ('result_range', 'Result and Ranges'),
         ('both_range', 'Both and Ranges'),
-        ], 'Forced Result type', sort=False, depends=['state'],
-        states={'readonly': Eval('state') != 'draft'})
+        ], 'Forced Result type', sort=False,
+        states=_states, depends=_depends)
     report_result_type = fields.Function(fields.Selection([
         ('result', 'Result'),
         ('both', 'Both'),
@@ -374,6 +376,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         readonly=True)
     report_format_odt_eng = fields.Char('Transcription Report format',
         readonly=True)
+
+    del _states, _depends
 
     @classmethod
     def __setup__(cls):
