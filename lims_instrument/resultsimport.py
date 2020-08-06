@@ -16,12 +16,6 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
 
-__all__ = ['NotebookLine', 'ResultsImport', 'NotebookLoadResultsFileStart',
-    'NotebookLoadResultsFileEmpty',
-    'NotebookLoadResultsFileResult', 'NotebookLoadResultsFileWarning',
-    'NotebookLoadResultsFileExport', 'NotebookLoadResultsFile']
-
-
 class NotebookLine(metaclass=PoolMeta):
     __name__ = 'lims.notebook.line'
 

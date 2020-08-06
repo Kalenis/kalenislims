@@ -6,8 +6,6 @@ from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 
-__all__ = ['Planification']
-
 
 class Planification(metaclass=PoolMeta):
     __name__ = 'lims.planification'

@@ -15,9 +15,6 @@ from trytond.modules.product import price_digits
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['PurityDegree', 'Brand', 'FamilyEquivalent', 'Template', 'Product',
-    'LotCategory', 'Lot', 'Move', 'ShipmentIn', 'MoveProductionRelated']
-
 
 class PurityDegree(ModelSQL, ModelView):
     'Purity Degree'

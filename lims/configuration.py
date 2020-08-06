@@ -15,10 +15,6 @@ from trytond.modules.company.model import (
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['NotebookView', 'NotebookViewColumn', 'Printer', 'User',
-    'UserLaboratory', 'Configuration', 'ConfigurationLaboratory',
-    'ConfigurationSequence', 'ConfigurationProductCategory', 'LabWorkYear',
-    'LabWorkYearSequence', 'LabWorkYearHoliday', 'Cron', 'ModelDoc', 'Model']
 sequence_names = [
     'entry_sequence', 'sample_sequence', 'service_sequence',
     'results_report_sequence']

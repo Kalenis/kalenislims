@@ -6,9 +6,6 @@ from trytond.model import ModelView, ModelSQL, fields, Unique
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 
-__all__ = ['Uom', 'UomCategory', 'UomConversion', 'Template',
-    'ConcentrationLevel', 'VolumeConversion']
-
 
 class Uom(metaclass=PoolMeta):
     __name__ = 'product.uom'

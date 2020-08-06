@@ -8,9 +8,6 @@ from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
 from trytond.modules.company.model import CompanyValueMixin
 
-__all__ = ['ProductionConfiguration', 'ProductionConfigurationLotSequence',
-    'Configuration', 'ConfigurationSolvents']
-
 
 class ProductionConfiguration(metaclass=PoolMeta):
     __name__ = 'production.configuration'

@@ -7,8 +7,6 @@ from trytond.model import fields
 from trytond.pool import PoolMeta
 from trytond.pyson import Eval, Equal, Bool, Not, And
 
-__all__ = ['Project', 'Entry']
-
 
 class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'

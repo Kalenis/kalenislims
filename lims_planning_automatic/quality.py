@@ -4,8 +4,6 @@
 
 from trytond.pool import Pool, PoolMeta
 
-__all__ = ['QualityTest']
-
 
 class QualityTest(metaclass=PoolMeta):
     __name__ = 'lims.quality.test'

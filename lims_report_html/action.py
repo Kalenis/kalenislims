@@ -4,8 +4,6 @@
 
 from trytond.pool import PoolMeta
 
-__all__ = ['ActionReport', 'ReportTranslationSet']
-
 
 class ActionReport(metaclass=PoolMeta):
     __name__ = 'ir.action.report'

@@ -11,8 +11,6 @@ from trytond.report import Report
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['Project', 'Entry', 'Sample', 'CreateSampleStart', 'CreateSample']
-
 
 class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'

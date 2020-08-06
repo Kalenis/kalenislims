@@ -4,8 +4,6 @@
 
 from trytond.pool import PoolMeta
 
-__all__ = ['NotebookRule']
-
 
 class NotebookRule(metaclass=PoolMeta):
     __name__ = 'lims.rule'

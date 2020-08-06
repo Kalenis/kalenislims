@@ -11,9 +11,6 @@ from trytond.modules.lims_interface.data import Adapter
 from trytond.modules.lims_interface.interface import FUNCTIONS
 from .function import custom_functions
 
-__all__ = ['Compilation', 'Column', 'Interface', 'Table', 'Data']
-
-
 FUNCTIONS.update(custom_functions)
 
 

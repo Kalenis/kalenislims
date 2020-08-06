@@ -9,8 +9,6 @@ from trytond.pyson import Eval, Equal, Bool, Not
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['TasType', 'Project', 'Entry']
-
 
 class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'

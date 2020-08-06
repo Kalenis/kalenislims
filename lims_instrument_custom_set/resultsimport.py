@@ -7,8 +7,6 @@ from trytond.pool import PoolMeta
 from . import custom_set_csv
 from . import custom_set_xls
 
-__all__ = ['ResultsImport']
-
 
 class ResultsImport(metaclass=PoolMeta):
     __name__ = 'lims.resultsimport'

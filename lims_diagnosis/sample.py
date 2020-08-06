@@ -5,8 +5,6 @@
 from trytond.model import fields
 from trytond.pool import PoolMeta
 
-__all__ = ['Sample', 'CreateSampleStart', 'CreateSample']
-
 
 class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'

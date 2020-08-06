@@ -12,8 +12,6 @@ from trytond.report import Report
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['BOM', 'Production', 'FamilyEquivalentReport']
-
 
 class BOM(metaclass=PoolMeta):
     __name__ = 'production.bom'

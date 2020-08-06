@@ -5,8 +5,6 @@
 from trytond.pool import PoolMeta
 from trytond.i18n import gettext
 
-__all__ = ['AdministrativeTaskTemplate', 'AdministrativeTask']
-
 
 class AdministrativeTaskTemplate(metaclass=PoolMeta):
     __name__ = 'lims.administrative.task.template'

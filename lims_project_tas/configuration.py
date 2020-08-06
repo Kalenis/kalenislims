@@ -7,8 +7,6 @@ from trytond.model import fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
 
-__all__ = ['LabWorkYear', 'LabWorkYearSequence']
-
 
 class LabWorkYear(metaclass=PoolMeta):
     __name__ = 'lims.lab.workyear'

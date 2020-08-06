@@ -7,8 +7,6 @@ from trytond.pool import Pool, PoolMeta
 from trytond.pyson import PYSONEncoder
 from trytond.transaction import Transaction
 
-__all__ = ['OpenSampleSale', 'OpenResultsDetailSale']
-
 
 class OpenSampleSale(Wizard):
     'Sample Sale'

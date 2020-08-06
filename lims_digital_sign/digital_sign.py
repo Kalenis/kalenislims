@@ -10,9 +10,6 @@ from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.pool import Pool
 from trytond.transaction import Transaction
 
-__all__ = ['DigitalSignStart', 'DigitalSignSucceed', 'DigitalSignFailed',
-    'DigitalSign']
-
 
 class DigitalSignStart(ModelView):
     "Digital Sign Start"

@@ -7,8 +7,6 @@ from trytond.model import Model
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['FormulaParser']
-
 
 class FormulaParser(Model):
     'Formula Parser'

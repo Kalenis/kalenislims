@@ -5,8 +5,6 @@
 from trytond.model import fields
 from trytond.pool import PoolMeta
 
-__all__ = ['NotebookLine']
-
 
 class NotebookLine(metaclass=PoolMeta):
     __name__ = 'lims.notebook.line'

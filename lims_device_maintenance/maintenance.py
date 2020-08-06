@@ -12,11 +12,6 @@ from trytond.pyson import PYSONEncoder, Eval
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['LabDevice', 'LabDeviceMaintenanceType',
-    'LabDeviceMaintenanceActivity', 'LabDeviceMaintenanceProgram',
-    'LabDeviceMaintenance', 'LabDeviceGenerateMaintenanceStart',
-    'LabDeviceGenerateMaintenance', 'Cron']
-
 
 class LabDevice(metaclass=PoolMeta):
     __name__ = 'lims.lab.device'

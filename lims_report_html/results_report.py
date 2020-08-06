@@ -18,10 +18,6 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.modules.html_report.generator import PdfGenerator
 
-__all__ = ['ResultsReportVersionDetail', 'ResultsReportVersionDetailSection',
-    'ResultsReportVersionDetailTrendChart',
-    'ResultsReportVersionDetailSample', 'ResultReport']
-
 
 class ResultsReportVersionDetail(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail'

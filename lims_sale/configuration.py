@@ -5,8 +5,6 @@
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import PoolMeta
 
-__all__ = ['Configuration', 'Clause']
-
 
 class Configuration(metaclass=PoolMeta):
     __name__ = 'sale.configuration'

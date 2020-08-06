@@ -12,12 +12,6 @@ from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['Sale', 'SalePlant', 'SaleEquipment', 'SaleComponent',
-    'SaleContact', 'SaleLine', 'SaleLinePlant', 'SaleLineEquipment',
-    'SaleLineComponent', 'SaleAddProductKitStart', 'SaleAddProductKit',
-    'SalePrintLabelStart', 'SalePrintLabel', 'SaleLabel', 'SaleLabelShipping',
-    'SaleLabelReturn', 'SaleSearchLabelStart', 'SaleSearchLabel']
-
 
 class Sale(metaclass=PoolMeta):
     __name__ = 'sale.sale'

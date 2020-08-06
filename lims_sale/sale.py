@@ -15,8 +15,6 @@ from trytond.transaction import Transaction
 from trytond.config import config
 from trytond.tools import get_smtp_server
 
-__all__ = ['Sale', 'SaleClause', 'SaleLine', 'SaleLoadServicesStart',
-    'SaleLoadServices', 'SaleLoadAnalysisStart', 'SaleLoadAnalysis']
 logger = logging.getLogger(__name__)
 
 

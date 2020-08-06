@@ -9,8 +9,6 @@ from trytond.model import fields, Unique
 from trytond.pool import PoolMeta
 from trytond.pyson import Bool, Eval, Or
 
-__all__ = ['Party', 'Address', 'Company']
-
 
 class Party(metaclass=PoolMeta):
     __name__ = 'party.party'

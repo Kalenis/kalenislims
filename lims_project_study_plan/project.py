@@ -14,23 +14,6 @@ from trytond.report import Report
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['Project', 'Entry', 'ProjectReferenceElement',
-    'ProjectSolventAndReagent', 'ProjectSampleInCustody',
-    'ProjectDeviationAndAmendment', 'ProjectDeviationAndAmendmentProfessional',
-    'ProjectChangeLog', 'Sample', 'CreateSampleStart', 'CreateSample',
-    'ProjectProfessionalPosition', 'ProjectLaboratoryProfessional', 'Lot',
-    'ProjectReOpenStart', 'ProjectReOpen', 'ProjectGLPReport01',
-    'ProjectGLPReport02', 'ProjectGLPReport03PrintStart',
-    'ProjectGLPReport03Print', 'ProjectGLPReport03', 'ProjectGLPReport04',
-    'ProjectGLPReport05PrintStart', 'ProjectGLPReport05Print',
-    'ProjectGLPReport05', 'ProjectGLPReport06', 'ProjectGLPReport07',
-    'ProjectGLPReport08', 'ProjectGLPReport09', 'ProjectGLPReport10PrintStart',
-    'ProjectGLPReport10Print', 'ProjectGLPReport10', 'ProjectGLPReport11',
-    'ProjectGLPReport12PrintStart', 'ProjectGLPReport12Print',
-    'ProjectGLPReport12', 'ProjectGLPReportStudyPlan',
-    'ProjectGLPReportFinalRP', 'ProjectGLPReportFinalFOR',
-    'ProjectGLPReportAnalyticalPhase', 'ProjectGLPReport13']
-
 
 class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'

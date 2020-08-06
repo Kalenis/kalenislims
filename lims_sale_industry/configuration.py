@@ -6,8 +6,6 @@ from trytond.model import fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
 
-__all__ = ['Configuration', 'ConfigurationSequence']
-
 
 class Configuration(metaclass=PoolMeta):
     __name__ = 'sale.configuration'

@@ -9,9 +9,6 @@ from trytond.model import ModelSQL, ModelView, fields
 from trytond.transaction import Transaction
 from .interface import FIELD_TYPE_SQL, FIELD_TYPE_SELECTION
 
-__all__ = ['Table', 'TableField', 'TableGroupedField', 'TableView',
-    'TableGroupedView']
-
 
 class ModelEmulation:
     __doc__ = None

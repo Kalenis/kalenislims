@@ -10,12 +10,6 @@ from trytond.pyson import Eval
 from trytond.transaction import Transaction
 from trytond.i18n import gettext
 
-__all__ = ['ResultsReportVersionDetail', 'ResultsReportVersionDetailSample',
-    'ResultsReportVersionDetailLine', 'ChangeSampleDiagnosticianStart',
-    'ChangeSampleDiagnostician', 'OpenSamplesComparatorAsk',
-    'OpenSamplesComparator', 'SamplesComparator', 'SamplesComparatorLine',
-    'Cron']
-
 
 class ResultsReportVersionDetail(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail'

@@ -9,9 +9,6 @@ from trytond.pyson import PYSONEncoder, Eval
 from trytond.transaction import Transaction
 from trytond.i18n import gettext
 
-__all__ = ['ResultsReportVersionDetailSample',
-    'ResultsReportVersionDetailLine', 'OpenResultsDetailPrecedent']
-
 
 class ResultsReportVersionDetailSample(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail.sample'

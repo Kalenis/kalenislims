@@ -13,14 +13,6 @@ from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Equal, Bool, If, PYSONEncoder
 from trytond.transaction import Transaction
 
-__all__ = ['Planification', 'SearchAnalysisSheetStart',
-    'SearchAnalysisSheetNext', 'SearchAnalysisSheet', 'RelateTechniciansStart',
-    'RelateTechniciansResult', 'RelateTechniciansDetail4', 'RelateTechnicians',
-    'LaboratoryProfessional', 'PlanificationProfessional',
-    'PlanificationProfessionalContext', 'PlanificationProfessionalLine',
-    'OpenSheetSample', 'PlanificationPending', 'PlanificationPendingContext',
-    'OpenPendingSample']
-
 
 class Planification(metaclass=PoolMeta):
     __name__ = 'lims.planification'

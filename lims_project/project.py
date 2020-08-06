@@ -8,8 +8,6 @@ from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
 
-__all__ = ['Project', 'Entry', 'Sample', 'CreateSampleStart', 'CreateSample']
-
 
 class Project(ModelSQL, ModelView):
     'Project'

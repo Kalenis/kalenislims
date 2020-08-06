@@ -17,39 +17,6 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from .configuration import get_print_date
 
-__all__ = ['Planification', 'PlanificationTechnician',
-    'PlanificationTechnicianDetail', 'PlanificationDetail',
-    'PlanificationServiceDetail', 'NotebookLineFraction',
-    'PlanificationServiceDetailLaboratoryProfessional',
-    'PlanificationAnalysis', 'PlanificationFraction', 'FractionReagent',
-    'LabProfessionalMethod', 'LabProfessionalMethodRequalification',
-    'LabProfessionalMethodRequalificationSupervisor',
-    'LabProfessionalMethodRequalificationControl', 'BlindSample',
-    'RelateTechniciansStart', 'RelateTechniciansResult',
-    'RelateTechniciansDetail1', 'RelateTechniciansDetail2',
-    'RelateTechniciansDetail3', 'RelateTechnicians', 'UnlinkTechniciansStart',
-    'UnlinkTechniciansDetail1', 'UnlinkTechnicians', 'AddFractionControlStart',
-    'AddFractionControl', 'AddFractionRMBMZStart', 'AddFractionRMBMZ',
-    'AddFractionBREStart', 'AddFractionBRE', 'AddFractionMRTStart',
-    'AddFractionMRT', 'RemoveControlStart', 'RemoveControl',
-    'AddAnalysisStart', 'AddAnalysis', 'SearchFractionsNext',
-    'SearchFractionsDetail', 'SearchFractions', 'SearchPlannedFractionsStart',
-    'SearchPlannedFractionsNext', 'SearchPlannedFractions',
-    'CreateFractionControlStart', 'CreateFractionControl',
-    'ReleaseFractionStart', 'ReleaseFractionEmpty', 'ReleaseFractionResult',
-    'ReleaseFraction', 'QualificationSituations', 'QualificationSituation',
-    'QualificationAction', 'QualificationSituation2',
-    'QualificationSituation3', 'QualificationSituation4',
-    'TechniciansQualification', 'ReplaceTechnicianStart', 'ReplaceTechnician',
-    'LoadServices', 'PlanificationSequenceReport',
-    'PlanificationWorksheetAnalysisReport',
-    'PlanificationWorksheetMethodReport', 'PlanificationWorksheetReport',
-    'PendingServicesUnplannedReport', 'PendingServicesUnplannedSpreadsheet',
-    'PrintBlindSampleReportStart', 'PrintBlindSampleReport',
-    'BlindSampleReport', 'PrintPendingServicesUnplannedReportStart',
-    'PrintPendingServicesUnplannedReport',
-    'PlanificationSequenceAnalysisReport']
-
 
 class Planification(Workflow, ModelSQL, ModelView):
     'Planification'

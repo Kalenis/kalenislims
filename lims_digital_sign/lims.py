@@ -19,8 +19,6 @@ from trytond.config import config as tconfig
 from trytond.i18n import gettext
 from .tokenclient import GetToken
 
-__all__ = ['ResultsReportVersionDetail', 'ResultsReport',
-    'ResultsReportAnnulation']
 logger = logging.getLogger(__name__)
 
 

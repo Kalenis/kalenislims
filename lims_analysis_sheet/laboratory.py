@@ -7,8 +7,6 @@ from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 
-__all__ = ['NotebookRule', 'NotebookRuleCondition']
-
 
 class NotebookRule(metaclass=PoolMeta):
     __name__ = 'lims.rule'

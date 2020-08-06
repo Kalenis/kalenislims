@@ -6,9 +6,6 @@ from trytond.model import ModelSQL, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 
-__all__ = ['CreateSampleStart', 'CreateSample', 'Sample', 'SampleSaleLine',
-    'Service']
-
 
 class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'

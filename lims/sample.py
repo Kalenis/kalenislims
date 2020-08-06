@@ -21,28 +21,6 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.rpc import RPC
 
-__all__ = ['Zone', 'Variety', 'MatrixVariety', 'PackagingIntegrity',
-    'PackagingType', 'FractionType', 'SampleProducer', 'SampleAttribute',
-    'Service', 'Fraction', 'Sample', 'DuplicateSampleStart', 'DuplicateSample',
-    'DuplicateSampleFromEntryStart', 'DuplicateSampleFromEntry',
-    'ManageServices', 'CompleteServices', 'EditSampleServiceStart',
-    'EditSampleService', 'FractionsByLocationsStart', 'FractionsByLocations',
-    'CountersampleStorageStart', 'CountersampleStorageEmpty',
-    'CountersampleStorageResult', 'CountersampleStorage',
-    'CountersampleStorageRevertStart', 'CountersampleStorageRevertEmpty',
-    'CountersampleStorageRevertResult', 'CountersampleStorageRevert',
-    'CountersampleDischargeStart', 'CountersampleDischargeEmpty',
-    'CountersampleDischargeResult', 'CountersampleDischarge',
-    'FractionDischargeStart', 'FractionDischargeEmpty',
-    'FractionDischargeResult', 'FractionDischarge',
-    'FractionDischargeRevertStart', 'FractionDischargeRevertEmpty',
-    'FractionDischargeRevertResult', 'FractionDischargeRevert',
-    'CreateSampleStart', 'CreateSampleService', 'CreateSample',
-    'CountersampleStoragePrintStart', 'CountersampleStoragePrint',
-    'CountersampleStorageReport', 'CountersampleDischargePrintStart',
-    'CountersampleDischargePrint', 'CountersampleDischargeReport',
-    'Referral', 'ReferralReport', 'ReferServiceStart', 'ReferService']
-
 
 class Zone(ModelSQL, ModelView):
     'Zone/Region'

@@ -4,8 +4,6 @@
 
 from trytond.pool import PoolMeta
 
-__all__ = ['TrendChart', 'OpenTrendChart']
-
 
 class TrendChart(metaclass=PoolMeta):
     __name__ = 'lims.trend.chart'

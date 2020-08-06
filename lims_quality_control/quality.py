@@ -14,10 +14,6 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.modules.company import CompanyReport
 
-__all__ = ['QualitativeValue', 'Template', 'QualityTest',
-    'CreateQualityTestStart', 'CreateQualityTest', 'TemplateAddServiceStart',
-    'TemplateAddService', 'TestResultsReport', 'PrintTest', 'TestReport']
-
 
 class QualitativeValue(DeactivableMixin, ModelSQL, ModelView):
     'Quality Value'

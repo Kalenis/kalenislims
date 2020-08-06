@@ -7,8 +7,6 @@ from trytond.pool import Pool
 from trytond.pyson import PYSONEncoder
 from trytond.transaction import Transaction
 
-__all__ = ['OpenReferralCompilation']
-
 
 class OpenReferralCompilation(Wizard):
     'Open Compilation'

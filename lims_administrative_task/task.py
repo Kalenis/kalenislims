@@ -17,8 +17,6 @@ from trytond.i18n import gettext
 from trytond.config import config
 from trytond.tools import get_smtp_server
 
-__all__ = ['AdministrativeTaskTemplate', 'AdministrativeTask',
-    'EditAdministrativeTaskStart', 'EditAdministrativeTask']
 logger = logging.getLogger(__name__)
 
 

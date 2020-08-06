@@ -5,9 +5,6 @@
 from trytond.model import ModelSQL, ModelView, fields, DictSchemaMixin
 from trytond.pool import PoolMeta
 
-__all__ = ['DiagnosisState', 'DiagnosisTemplate', 'DiagnosisTemplateState',
-    'ReportTemplate']
-
 
 class DiagnosisTemplate(ModelSQL, ModelView):
     'Diagnosis Template'

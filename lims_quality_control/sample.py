@@ -13,9 +13,6 @@ from trytond.report import Report
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['LabWorkYear', 'Sample', 'TakeSampleStart', 'TakeSample',
-    'CountersampleCreateStart', 'CountersampleCreate', 'SampleLabels']
-
 
 class LabWorkYear(metaclass=PoolMeta):
     __name__ = 'lims.lab.workyear'

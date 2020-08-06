@@ -20,9 +20,6 @@ from trytond.config import config
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['Invoice', 'InvoiceContact', 'InvoiceLine',
-    'PopulateInvoiceContactsStart', 'PopulateInvoiceContacts', 'SendOfInvoice']
-
 logger = logging.getLogger(__name__)
 
 

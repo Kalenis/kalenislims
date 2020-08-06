@@ -5,10 +5,6 @@
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import PoolMeta
 
-__all__ = ['SampleAttributeSet', 'SampleAttribute',
-    'SampleAttributeAttributeSet', 'SamplingType', 'ProductType',
-    'Analysis']
-
 
 class SampleAttributeSet(ModelSQL, ModelView):
     'Sample Attribute Set'

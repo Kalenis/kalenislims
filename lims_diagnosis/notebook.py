@@ -6,9 +6,6 @@ from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 
-__all__ = ['Notebook', 'NotebookLine', 'NotebookLineRepeatAnalysisStart',
-    'NotebookLineRepeatAnalysis']
-
 
 class Notebook(metaclass=PoolMeta):
     __name__ = 'lims.notebook'

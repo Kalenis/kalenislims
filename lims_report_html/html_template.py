@@ -13,9 +13,6 @@ from trytond.cache import Cache
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['ReportTemplate', 'ReportTemplateTranslation',
-    'ReportTemplateSection', 'ReportTemplateTrendChart']
-
 
 class ReportTemplate(ModelSQL, ModelView):
     'Results Report Template'

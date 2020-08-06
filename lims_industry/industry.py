@@ -7,10 +7,6 @@ from trytond.pool import Pool
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
 
-__all__ = ['Plant', 'EquipmentType', 'Brand', 'ComponentType',
-    'EquipmentTemplate', 'EquipmentTemplateComponentType', 'Equipment',
-    'Component', 'ComercialProductBrand', 'ComercialProduct']
-
 
 class Plant(ModelSQL, ModelView):
     'Plant'

@@ -6,8 +6,6 @@ from trytond.model import fields
 from trytond.pyson import Eval
 from trytond.pool import Pool, PoolMeta
 
-__all__ = ['Configuration', 'ConfigurationSequence']
-
 
 class Configuration(metaclass=PoolMeta):
     __name__ = 'lims.configuration'

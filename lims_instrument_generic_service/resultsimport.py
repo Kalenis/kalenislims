@@ -6,8 +6,6 @@
 from trytond.pool import PoolMeta
 from . import generic_service_xls
 
-__all__ = ['ResultsImport']
-
 
 class ResultsImport(metaclass=PoolMeta):
     __name__ = 'lims.resultsimport'

@@ -10,10 +10,6 @@ from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['CertificationType', 'TechnicalScope', 'TechnicalScopeVersion',
-    'TechnicalScopeVersionLine', 'AnalysisFamily', 'AnalysisFamilyCertificant',
-    'DuplicateAnalysisFamilyStart', 'DuplicateAnalysisFamily']
-
 
 class CertificationType(ModelSQL, ModelView):
     'Certification Type'

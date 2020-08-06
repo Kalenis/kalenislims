@@ -7,8 +7,6 @@ from trytond.model import fields
 from trytond.pyson import Eval
 from trytond.pool import PoolMeta
 
-__all__ = ['Location']
-
 
 class Location(metaclass=PoolMeta):
     __name__ = 'stock.location'

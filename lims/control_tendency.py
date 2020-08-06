@@ -16,17 +16,6 @@ from trytond.report import Report
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['RangeType', 'Range', 'ControlTendency', 'ControlTendencyDetail',
-    'ControlTendencyDetailRule', 'MeansDeviationsCalcStart',
-    'MeansDeviationsCalcEmpty', 'MeansDeviationsCalcResult',
-    'ControlResultLine', 'ControlResultLineDetail',
-    'MeansDeviationsCalcResult2', 'MeansDeviationsCalc',
-    'TendenciesAnalysisStart', 'TendenciesAnalysisResult',
-    'TendenciesAnalysis', 'PrintControlChart', 'ControlChartReport',
-    'TrendChart', 'TrendChartAnalysis', 'TrendChartAnalysis2',
-    'OpenTrendChartStart', 'OpenTrendChart', 'TrendChartData',
-    'DownloadTrendChart', 'TrendChartReport']
-
 
 class RangeType(ModelSQL, ModelView):
     'Origins'

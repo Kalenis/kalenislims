@@ -27,13 +27,6 @@ from trytond.i18n import gettext
 from trytond.exceptions import UserError
 from .function import custom_functions
 
-
-__all__ = ['Interface', 'Column', 'CopyInterfaceColumnStart',
-    'CopyInterfaceColumn', 'Compilation', 'CompilationOrigin',
-    'OpenCompilationData', 'TestFormulaView', 'TestFormulaViewVariable',
-    'TestFormula', 'Variable', 'VariableValue']
-
-
 FUNCTIONS = formulas.get_functions()
 FUNCTIONS.update(custom_functions)
 

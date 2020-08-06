@@ -8,9 +8,6 @@ from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Bool
 from trytond.transaction import Transaction
 
-__all__ = ['Entry', 'Sample', 'Fraction', 'CreateSampleStart', 'CreateSample',
-    'EditSampleStart', 'EditSample']
-
 
 class Entry(metaclass=PoolMeta):
     __name__ = 'lims.entry'

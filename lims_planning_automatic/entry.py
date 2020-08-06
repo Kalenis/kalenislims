@@ -4,8 +4,6 @@
 
 from trytond.pool import Pool, PoolMeta
 
-__all__ = ['Entry']
-
 
 class Entry(metaclass=PoolMeta):
     __name__ = 'lims.entry'

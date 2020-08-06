@@ -18,18 +18,6 @@ from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or, And
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['ProductType', 'Matrix', 'ObjectiveDescription', 'Formula',
-    'FormulaVariable', 'Analysis', 'Typification', 'TypificationAditional',
-    'TypificationReadOnly', 'CalculatedTypification',
-    'CalculatedTypificationReadOnly', 'AnalysisIncluded', 'AnalysisLaboratory',
-    'AnalysisLabMethod', 'AnalysisDevice', 'CopyTypificationStart',
-    'CopyTypificationConfirm', 'CopyTypification',
-    'CopyCalculatedTypificationStart', 'CopyCalculatedTypification',
-    'UpdateTypificationStart', 'UpdateTypification', 'RelateAnalysisStart',
-    'RelateAnalysis', 'CreateAnalysisProduct', 'OpenAnalysisNotTypifiedStart',
-    'OpenAnalysisNotTypified', 'OpenTypifications', 'AddTypificationsStart',
-    'AddTypifications', 'RemoveTypificationsStart', 'RemoveTypifications']
-
 
 class Typification(ModelSQL, ModelView):
     'Typification'

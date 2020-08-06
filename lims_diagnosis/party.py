@@ -5,8 +5,6 @@
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import PoolMeta
 
-__all__ = ['Diagnostician', 'Party']
-
 
 class Diagnostician(ModelSQL, ModelView):
     'Diagnostician'

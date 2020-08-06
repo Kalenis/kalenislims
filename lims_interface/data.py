@@ -20,8 +20,6 @@ from trytond.exceptions import UserError
 from trytond.model.modelsql import convert_from
 from .interface import FIELD_TYPE_TRYTON, FIELD_TYPE_CAST
 
-__all__ = ['ModelAccess', 'Data', 'GroupedData']
-
 
 class Adapter:
     def __getattr__(self, name):

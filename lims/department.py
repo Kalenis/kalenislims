@@ -7,8 +7,6 @@ from trytond.model import ModelView, ModelSQL, fields
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-__all__ = ['Department', 'UserDepartment']
-
 
 class Department(ModelSQL, ModelView):
     'Department'

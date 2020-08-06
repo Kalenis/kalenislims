@@ -14,12 +14,6 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from .formula_parser import FormulaParser
 
-__all__ = ['LaboratoryProfessional', 'Laboratory', 'LaboratoryCVCorrection',
-    'LabMethod', 'LabMethodWaitingTime', 'LabDeviceType', 'LabDevice',
-    'LabDeviceLaboratory', 'LabDeviceCorrection', 'LabDeviceTypeLabMethod',
-    'LabDeviceRelateAnalysisStart', 'LabDeviceRelateAnalysis', 'NotebookRule',
-    'NotebookRuleCondition']
-
 
 class Laboratory(ModelSQL, ModelView):
     'Laboratory'

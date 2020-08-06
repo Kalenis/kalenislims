@@ -20,46 +20,6 @@ from trytond.i18n import gettext
 from .configuration import get_print_date
 from .formula_parser import FormulaParser
 
-__all__ = ['Notebook', 'NotebookLine', 'NotebookLineAllFields',
-    'NotebookLineLaboratoryProfessional',
-    'NotebookLineProfessional', 'NotebookInitialConcentrationCalcStart',
-    'NotebookInitialConcentrationCalc', 'NotebookLineInitialConcentrationCalc',
-    'NotebookResultsConversionStart', 'NotebookResultsConversion',
-    'NotebookLineResultsConversion', 'NotebookLimitsValidationStart',
-    'NotebookLimitsValidation', 'NotebookLineLimitsValidation',
-    'NotebookInternalRelationsCalc1Start',
-    'NotebookInternalRelationsCalc1Relation',
-    'NotebookInternalRelationsCalc1Variable', 'NotebookInternalRelationsCalc1',
-    'NotebookLineInternalRelationsCalc1',
-    'NotebookInternalRelationsCalc2Start',
-    'NotebookInternalRelationsCalc2Result',
-    'NotebookInternalRelationsCalc2Relation',
-    'NotebookInternalRelationsCalc2Variable',
-    'NotebookInternalRelationsCalc2Process', 'NotebookInternalRelationsCalc2',
-    'NotebookLineInternalRelationsCalc2', 'NotebookLoadResultsFormulaStart',
-    'NotebookLoadResultsFormulaEmpty', 'NotebookLoadResultsFormulaResult',
-    'NotebookLoadResultsFormulaLine', 'NotebookLoadResultsFormulaAction',
-    'NotebookLoadResultsFormulaProcess', 'NotebookLoadResultsFormulaVariable',
-    'NotebookLoadResultsFormulaBeginning', 'NotebookLoadResultsFormulaConfirm',
-    'NotebookLoadResultsFormulaSit1', 'NotebookLoadResultsFormulaSit2',
-    'NotebookLoadResultsFormulaSit2Detail',
-    'NotebookLoadResultsFormulaSit2DetailLine', 'NotebookLoadResultsFormula',
-    'NotebookLoadResultsManualStart', 'NotebookLoadResultsManualEmpty',
-    'NotebookLoadResultsManualResult', 'NotebookLoadResultsManualLine',
-    'NotebookLoadResultsManualSit1', 'NotebookLoadResultsManualSit2',
-    'NotebookLoadResultsManual', 'NotebookAddInternalRelationsStart',
-    'NotebookAddInternalRelations', 'NotebookLineRepeatAnalysisStart',
-    'NotebookLineRepeatAnalysis', 'NotebookAcceptLinesStart',
-    'NotebookAcceptLines', 'NotebookLineAcceptLines',
-    'NotebookLineUnacceptLines', 'NotebookResultsVerificationStart',
-    'NotebookResultsVerification', 'NotebookLineResultsVerification',
-    'UncertaintyCalcStart', 'UncertaintyCalc', 'NotebookLineUncertaintyCalc',
-    'NotebookPrecisionControlStart', 'NotebookPrecisionControl',
-    'NotebookLinePrecisionControl', 'OpenNotebookLines',
-    'ChangeEstimatedDaysForResultsStart', 'ChangeEstimatedDaysForResults',
-    'NotebookEvaluateRulesStart', 'NotebookEvaluateRules',
-    'NotebookLineEvaluateRules']
-
 
 class Notebook(ModelSQL, ModelView):
     'Laboratory Notebook'
