@@ -512,13 +512,13 @@ class RepeatAnalysisStartLine(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super(RepeatAnalysisStartLine, cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
     @classmethod
     def __setup__(cls):
-        super(RepeatAnalysisStartLine, cls).__setup__()
+        super().__setup__()
 
     @classmethod
     def get_line_field(cls, lines, names):

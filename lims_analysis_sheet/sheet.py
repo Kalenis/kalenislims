@@ -192,7 +192,7 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, template_analysis):
-        super(TemplateAnalysisSheetAnalysis, cls).validate(template_analysis)
+        super().validate(template_analysis)
         for ta in template_analysis:
             ta.check_duplicated()
 
@@ -272,7 +272,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(AnalysisSheet, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('date', 'DESC'))
         t = cls.__table__()
         cls._sql_constraints += [
@@ -415,7 +415,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     @classmethod
     def create(cls, vlist):
         vlist = cls.set_number(vlist)
-        sheets = super(AnalysisSheet, cls).create(vlist)
+        sheets = super().create(vlist)
         cls.update_compilation(sheets)
         return sheets
 
@@ -453,7 +453,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 raise UserError(gettext(
                     'lims_analysis_sheet.delete_done_sheet'))
         compilations = [s.compilation for s in sheets]
-        super(AnalysisSheet, cls).delete(sheets)
+        super().delete(sheets)
         Compilation.delete(compilations)
 
     @classmethod
@@ -895,7 +895,7 @@ class AnalysisSheetReport(Report):
 
         sheet = AnalysisSheet(data.get('id'))
         if data.get('execute') or not sheet.report_cache:
-            return super(AnalysisSheetReport, cls).execute(ids, data)
+            return super().execute(ids, data)
         return (sheet.report_format, sheet.report_cache, False, sheet.number)
 
     @classmethod
@@ -909,8 +909,7 @@ class AnalysisSheetReport(Report):
         Field = pool.get('lims.interface.table.field')
         Data = pool.get('lims.interface.data')
 
-        report_context = super(AnalysisSheetReport,
-            cls).get_context(records, data)
+        report_context = super().get_context(records, data)
 
         sheet = AnalysisSheet(data.get('id'))
         print_expression_column = data.get('print_expression_column')

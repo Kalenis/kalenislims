@@ -26,7 +26,7 @@ class FormulaParser(Model):
                 raise UserError(gettext(
                     'lims.msg_variable_redefine', variable=var))
             self._vars[var] = vars[var]
-        super(FormulaParser, self).__init__(id, **kwargs)
+        super().__init__(id, **kwargs)
 
     def getValue(self):
         value = self.parseExpression()

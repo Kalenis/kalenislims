@@ -32,7 +32,7 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         pool = Pool()
         if field == 'task_sequence':
             return pool.get('lims.administrative.task.configuration.sequence')
-        return super(Configuration, cls).multivalue_model(field)
+        return super().multivalue_model(field)
 
     @classmethod
     def default_task_sequence(cls, **pattern):

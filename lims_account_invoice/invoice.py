@@ -48,13 +48,13 @@ class Invoice(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Invoice, cls).__setup__()
+        super().__setup__()
         cls._check_modify_exclude.extend(['sent', 'sent_date',
             'invoice_contacts', 'no_send_invoice'])
 
     @classmethod
     def view_attributes(cls):
-        return super(Invoice, cls).view_attributes() + [
+        return super().view_attributes() + [
             ('/form/notebook/page[@id="contacts"]', 'states', {
                     'invisible': Eval('type') == 'in',
                     }),
@@ -62,13 +62,13 @@ class Invoice(metaclass=PoolMeta):
 
     @fields.depends('party')
     def on_change_party(self):
-        super(Invoice, self).on_change_party()
+        super().on_change_party()
         self.no_send_invoice = False
         if self.party:
             self.no_send_invoice = self.party.no_send_invoice
 
     def _credit(self):
-        credit = super(Invoice, self)._credit()
+        credit = super()._credit()
         if self.invoice_contacts:
             credit.invoice_contacts = [contact._credit()
                 for contact in self.invoice_contacts]
@@ -80,7 +80,7 @@ class Invoice(metaclass=PoolMeta):
     @Workflow.transition('posted')
     def post(cls, invoices):
         cls.check_invoice_contacts(invoices)
-        super(Invoice, cls).post(invoices)
+        super().post(invoices)
 
     @classmethod
     def check_invoice_contacts(cls, invoices):
@@ -271,7 +271,7 @@ class InvoiceLine(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(InvoiceLine, cls).__setup__()
+        super().__setup__()
         cls.origin.states['readonly'] = True
         cls.party.domain = [If(Bool(Eval('party_domain')),
             ('id', 'in', Eval('party_domain')), ('id', '!=', -1))]
@@ -282,7 +282,7 @@ class InvoiceLine(metaclass=PoolMeta):
     def delete(cls, lines):
         if not Transaction().context.get('delete_service', False):
             cls.check_service_invoice(lines)
-        super(InvoiceLine, cls).delete(lines)
+        super().delete(lines)
 
     @classmethod
     def check_service_invoice(cls, lines):
@@ -355,7 +355,7 @@ class InvoiceLine(metaclass=PoolMeta):
 
     @classmethod
     def _get_origin(cls):
-        models = super(InvoiceLine, cls)._get_origin()
+        models = super()._get_origin()
         models.append('lims.service')
         return models
 

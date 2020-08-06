@@ -50,7 +50,7 @@ class FamilyEquivalent(ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, family_equivalents):
-        super(FamilyEquivalent, cls).validate(family_equivalents)
+        super().validate(family_equivalents)
         for fe in family_equivalents:
             fe.check_products()
 
@@ -68,8 +68,7 @@ class FamilyEquivalent(ModelSQL, ModelView):
             default = {}
         current_default = default.copy()
         current_default['products'] = None
-        return super(FamilyEquivalent, cls).copy(family_equivalents,
-            default=current_default)
+        return super().copy(family_equivalents, default=current_default)
 
 
 class Template(metaclass=PoolMeta):
@@ -101,7 +100,7 @@ class Template(metaclass=PoolMeta):
         if products:
             return [('id', 'in', list(map(int, [product.template.id
                     for product in products])))]
-        return super(Template, cls).search_rec_name(name, clause)
+        return super().search_rec_name(name, clause)
 
 
 class Product(metaclass=PoolMeta):
@@ -137,7 +136,7 @@ class Product(metaclass=PoolMeta):
 
     @classmethod
     def search_rec_name(cls, name, clause):
-        res = super(Product, cls).search_rec_name(name, clause)
+        res = super().search_rec_name(name, clause)
         return ['OR',
             res,
             [('barcode', ) + tuple(clause[1:])]
@@ -252,7 +251,7 @@ class LotCategory(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(LotCategory, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('name', 'ASC'))
 
 
@@ -345,7 +344,7 @@ class Lot(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Lot, cls).__setup__()
+        super().__setup__()
         cls.expiration_date.states['invisible'] = Eval(False)
 
     @staticmethod
@@ -443,7 +442,7 @@ class Lot(metaclass=PoolMeta):
                         config.lot_category_prod_domestic_use else None)
                 if lot_category_id:
                     values['category'] = lot_category_id
-        return super(Lot, cls).create(vlist)
+        return super().create(vlist)
 
     @classmethod
     def search_account_category(cls, name, clause):
@@ -467,7 +466,7 @@ class Move(metaclass=PoolMeta):
 
     @classmethod
     def _get_origin(cls):
-        models = super(Move, cls)._get_origin()
+        models = super()._get_origin()
         models.append('production')
         return models
 
@@ -528,12 +527,12 @@ class ShipmentIn(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(ShipmentIn, cls).__setup__()
+        super().__setup__()
         cls.inventory_moves.states['readonly'] = Eval('state').in_(
             ['draft', 'cancel'])
 
     def _get_inventory_move(self, incoming_move):
-        move = super(ShipmentIn, self)._get_inventory_move(incoming_move)
+        move = super()._get_inventory_move(incoming_move)
         if not move:
             return None
 

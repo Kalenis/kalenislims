@@ -25,7 +25,7 @@ class Configuration(metaclass=PoolMeta):
         pool = Pool()
         if field == 'sample_label_sequence':
             return pool.get('sale.configuration.sequence')
-        return super(Configuration, cls).multivalue_model(field)
+        return super().multivalue_model(field)
 
     @classmethod
     def default_sample_label_sequence(cls, **pattern):

@@ -30,7 +30,7 @@ class Party(metaclass=PoolMeta):
     @classmethod
     def create(cls, vlist):
         TaskTemplate = Pool().get('lims.administrative.task.template')
-        parties = super(Party, cls).create(vlist)
+        parties = super().create(vlist)
         TaskTemplate.create_tasks('party_incomplete_file',
             cls._for_task_incomplete_file(parties))
         return parties
@@ -53,13 +53,13 @@ class Party(metaclass=PoolMeta):
 
     @classmethod
     def search_rec_name(cls, name, clause):
-        res = super(Party, cls).search_rec_name(name, clause)
+        res = super().search_rec_name(name, clause)
         res.append(('fantasy_name',) + tuple(clause[1:]))
         return res
 
     @classmethod
     def validate(cls, parties):
-        super(Party, cls).validate(parties)
+        super().validate(parties)
         cls.check_complete_file(parties)
 
     @classmethod

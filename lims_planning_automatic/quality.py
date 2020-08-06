@@ -13,5 +13,5 @@ class QualityTest(metaclass=PoolMeta):
     @classmethod
     def confirm(cls, tests):
         Planification = Pool().get('lims.planification')
-        super(QualityTest, cls).confirm(tests)
+        super().confirm(tests)
         Planification.automatic_plan(tests=tests)

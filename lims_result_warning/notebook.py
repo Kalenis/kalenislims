@@ -16,7 +16,7 @@ class NotebookLine(metaclass=PoolMeta):
     @classmethod
     def write(cls, *args):
         TaskTemplate = Pool().get('lims.administrative.task.template')
-        super(NotebookLine, cls).write(*args)
+        super().write(*args)
         actions = iter(args)
         for lines, vals in zip(actions, actions):
             if vals.get('result_warning', False):

@@ -88,12 +88,12 @@ class Typification(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Typification, cls).__setup__()
+        super().__setup__()
         cls._sql_constraints = []
 
     @classmethod
     def __register__(cls, module_name):
-        super(Typification, cls).__register__(module_name)
+        super().__register__(module_name)
         table = cls.__table_handler__(module_name)
 
         table.drop_constraint('product_matrix_analysis_method_uniq')
@@ -160,7 +160,7 @@ class Typification(metaclass=PoolMeta):
                 template, = Template.browse([values.get('quality_template')])
                 values['product_type'] = template.product.product_type.id
                 values['matrix'] = template.product.matrix.id
-        return super(Typification, cls).create(vlist)
+        return super().create(vlist)
 
 
 class NotebookLine(metaclass=PoolMeta):
@@ -232,8 +232,7 @@ class NotebookLine(metaclass=PoolMeta):
         Config = pool.get('lims.configuration')
         UiView = pool.get('ir.ui.view')
 
-        result = super(NotebookLine, cls).fields_view_get(view_id=view_id,
-            view_type=view_type)
+        result = super().fields_view_get(view_id=view_id, view_type=view_type)
 
         # All Notebook Lines view
         if view_id and UiView(view_id).name == 'notebook_line_all_list':
@@ -441,8 +440,8 @@ class ResultReport(metaclass=PoolMeta):
     @classmethod
     def get_reference(cls, range_type, notebook_line, language,
             report_section):
-        res = super(ResultReport, cls).get_reference(
-            range_type, notebook_line, language, report_section)
+        res = super().get_reference(range_type, notebook_line, language,
+            report_section)
         if res:
             return res
 

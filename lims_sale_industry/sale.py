@@ -51,7 +51,7 @@ class Sale(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Sale, cls).__setup__()
+        super().__setup__()
         cls.invoice_address.domain = [('party', '=', Eval('invoice_party'))]
         cls.invoice_address.depends.append('invoice_party')
         cls.lines.depends.extend(['plants', 'equipments', 'components'])
@@ -82,7 +82,7 @@ class Sale(metaclass=PoolMeta):
         pool = Pool()
         TaskTemplate = pool.get('lims.administrative.task.template')
         SaleLine = pool.get('sale.line')
-        super(Sale, cls).confirm(sales)
+        super().confirm(sales)
         TaskTemplate.create_tasks('sale_purchase_order_required',
             cls._for_task_purchase_order_required(sales))
         lines = [l for s in sales for l in s.lines]
@@ -211,7 +211,7 @@ class SaleLine(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(SaleLine, cls).__setup__()
+        super().__setup__()
         cls.expiration_date.states['required'] = And(
                 Bool(Eval('_parent_sale', {}).get('lubrication_plan', False)),
                 Bool(Eval('analysis')))

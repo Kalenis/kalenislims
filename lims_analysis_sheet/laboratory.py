@@ -22,7 +22,7 @@ class NotebookRule(metaclass=PoolMeta):
     def eval_condition(self, line):
         if self.analysis_sheet:
             return False
-        return super(NotebookRule, self).eval_condition(line)
+        return super().eval_condition(line)
 
     def eval_sheet_condition(self, line):
         for condition in self.conditions:
@@ -199,4 +199,4 @@ class NotebookRuleCondition(metaclass=PoolMeta):
 
     def check_field(self):
         if not self.rule.analysis_sheet:
-            super(NotebookRuleCondition, self).check_field()
+            super().check_field()

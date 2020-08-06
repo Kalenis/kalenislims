@@ -55,7 +55,7 @@ class NotebookViewColumn(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(NotebookViewColumn, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('sequence', 'ASC'))
 
 
@@ -79,7 +79,7 @@ class User(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(User, cls).__setup__()
+        super().__setup__()
         cls._context_fields.insert(0, 'laboratory')
         cls._context_fields.insert(0, 'laboratories')
 
@@ -91,7 +91,7 @@ class User(metaclass=PoolMeta):
         RoleGroup = pool.get('res.role-res.group')
         UserRole = pool.get('res.user.role')
 
-        super(User, cls).__register__(module_name)
+        super().__register__(module_name)
 
         user_sql_table = cls.__table__()
         user_table = cls.__table_handler__(module_name)
@@ -234,7 +234,7 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         pool = Pool()
         if field == 'planification_sequence':
             return pool.get('lims.configuration.sequence')
-        return super(Configuration, cls).multivalue_model(field)
+        return super().multivalue_model(field)
 
     @classmethod
     def default_planification_sequence(cls, **pattern):
@@ -369,7 +369,7 @@ class LabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
 
     @classmethod
     def __setup__(cls):
-        super(LabWorkYear, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('start_date', 'ASC'))
 
     @classmethod
@@ -377,7 +377,7 @@ class LabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
         pool = Pool()
         if field in sequence_names:
             return pool.get('lims.lab.workyear.sequence')
-        return super(LabWorkYear, cls).multivalue_model(field)
+        return super().multivalue_model(field)
 
     @classmethod
     def default_entry_sequence(cls, **pattern):
@@ -400,7 +400,7 @@ class LabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
 
     @classmethod
     def validate(cls, years):
-        super(LabWorkYear, cls).validate(years)
+        super().validate(years)
         for year in years:
             year.check_dates()
 
@@ -535,7 +535,7 @@ class LabWorkYearHoliday(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(LabWorkYearHoliday, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('date', 'ASC'))
 
 

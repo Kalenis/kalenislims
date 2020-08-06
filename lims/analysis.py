@@ -110,7 +110,7 @@ class Typification(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Typification, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('product_type', 'ASC'))
         cls._order.insert(1, ('matrix', 'ASC'))
         cls._order.insert(2, ('analysis', 'ASC'))
@@ -280,7 +280,7 @@ class Typification(ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, typifications):
-        super(Typification, cls).validate(typifications)
+        super().validate(typifications)
         for t in typifications:
             t.check_limits()
             t.check_default()
@@ -325,7 +325,7 @@ class Typification(ModelSQL, ModelView):
 
     @classmethod
     def create(cls, vlist):
-        typifications = super(Typification, cls).create(vlist)
+        typifications = super().create(vlist)
         active_typifications = [t for t in typifications if t.valid]
         cls.create_typification_calculated(active_typifications)
         return typifications
@@ -389,7 +389,7 @@ class Typification(ModelSQL, ModelView):
     @classmethod
     def delete(cls, typifications):
         cls.delete_typification_calculated(typifications)
-        super(Typification, cls).delete(typifications)
+        super().delete(typifications)
 
     @classmethod
     def delete_typification_calculated(cls, typifications):
@@ -422,7 +422,7 @@ class Typification(ModelSQL, ModelView):
 
     @classmethod
     def write(cls, *args):
-        super(Typification, cls).write(*args)
+        super().write(*args)
         actions = iter(args)
         for typifications, vals in zip(actions, actions):
             if 'valid' in vals:
@@ -518,7 +518,7 @@ class TypificationReadOnly(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(TypificationReadOnly, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('product_type', 'ASC'))
         cls._order.insert(1, ('matrix', 'ASC'))
         cls._order.insert(2, ('analysis', 'ASC'))
@@ -557,7 +557,7 @@ class CalculatedTypification(ModelSQL):
 
     @classmethod
     def __register__(cls, module_name):
-        super(CalculatedTypification, cls).__register__(module_name)
+        super().__register__(module_name)
         if cls.search_count([]) == 0:
             cls.populate_typification_calculated()
 
@@ -637,7 +637,7 @@ class CalculatedTypificationReadOnly(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(CalculatedTypificationReadOnly, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('product_type', 'ASC'))
         cls._order.insert(1, ('matrix', 'ASC'))
         cls._order.insert(2, ('analysis', 'ASC'))
@@ -673,7 +673,7 @@ class ProductType(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(ProductType, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -713,7 +713,7 @@ class Matrix(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Matrix, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -757,7 +757,7 @@ class ObjectiveDescription(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(ObjectiveDescription, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('product_type', 'ASC'))
         cls._order.insert(1, ('matrix', 'ASC'))
         cls._order.insert(2, ('description', 'ASC'))
@@ -934,7 +934,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Analysis, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -1116,7 +1116,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, analysis):
-        super(Analysis, cls).validate(analysis)
+        super().validate(analysis)
         for a in analysis:
             cls.check_duplicate_description(a.type, a.description)
             a.check_set()
@@ -1165,7 +1165,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 for a in analysis:
                     cls.check_duplicate_description(vals.get('type', a.type),
                         vals['description'], 0)
-        super(Analysis, cls).write(*args)
+        super().write(*args)
 
     @classmethod
     def check_laboratory_change(cls, analysis, laboratories):
@@ -1407,7 +1407,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
         current_default['state'] = 'draft'
         current_default['start_date'] = None
         current_default['end_date'] = None
-        return super(Analysis, cls).copy(analysis, default=current_default)
+        return super().copy(analysis, default=current_default)
 
     @classmethod
     def get_pending_fractions(cls, records, name):
@@ -1596,7 +1596,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, included_analysis):
-        super(AnalysisIncluded, cls).validate(included_analysis)
+        super().validate(included_analysis)
         for analysis in included_analysis:
             analysis.check_duplicated_analysis()
 
@@ -1744,7 +1744,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
 
     @classmethod
     def create(cls, vlist):
-        included_analysis = super(AnalysisIncluded, cls).create(vlist)
+        included_analysis = super().create(vlist)
         cls.create_typification_calculated(included_analysis)
         return included_analysis
 
@@ -1843,7 +1843,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
     @classmethod
     def delete(cls, included_analysis):
         cls.delete_typification_calculated(included_analysis)
-        super(AnalysisIncluded, cls).delete(included_analysis)
+        super().delete(included_analysis)
 
     @classmethod
     def delete_typification_calculated(cls, included_analysis):
@@ -1979,7 +1979,7 @@ class AnalysisLabMethod(ModelSQL):
     @classmethod
     def delete(cls, methods):
         cls.check_delete(methods)
-        super(AnalysisLabMethod, cls).delete(methods)
+        super().delete(methods)
 
     @classmethod
     def check_delete(cls, methods):
@@ -2016,7 +2016,7 @@ class AnalysisDevice(DeactivableMixin, ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, devices):
-        super(AnalysisDevice, cls).validate(devices)
+        super().validate(devices)
         for d in devices:
             d.check_default()
 

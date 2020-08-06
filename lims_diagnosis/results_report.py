@@ -28,7 +28,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(ResultsReportVersionDetail, cls).__setup__()
+        super().__setup__()
         diagnosed_state = ('diagnosed', 'Diagnosed')
         if diagnosed_state not in cls.state.selection:
             cls.state.selection.append(diagnosed_state)
@@ -48,7 +48,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     @fields.depends('template', '_parent_template.diagnosis_template',
         methods=['on_change_diagnosis_template'])
     def on_change_template(self):
-        super(ResultsReportVersionDetail, self).on_change_template()
+        super().on_change_template()
         if self.template and self.template.diagnosis_template:
             self.diagnosis_template = self.template.diagnosis_template
             self.on_change_diagnosis_template()
@@ -70,8 +70,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     @classmethod
     def _get_fields_from_samples(cls, samples):
         Notebook = Pool().get('lims.notebook')
-        detail_default = super(ResultsReportVersionDetail,
-            cls)._get_fields_from_samples(samples)
+        detail_default = super()._get_fields_from_samples(samples)
         for sample in samples:
             notebook = Notebook(sample['notebook'])
             diagnostician = notebook.fraction.sample.diagnostician
@@ -85,8 +84,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
 
     @classmethod
     def _get_fields_from_detail(cls, detail):
-        detail_default = super(ResultsReportVersionDetail,
-            cls)._get_fields_from_detail(detail)
+        detail_default = super()._get_fields_from_detail(detail)
         if detail.diagnostician:
             detail_default['diagnostician'] = detail.diagnostician.id
         if detail.diagnosis_template:
@@ -110,7 +108,7 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
 
     @classmethod
     def create(cls, vlist):
-        samples = super(ResultsReportVersionDetailSample, cls).create(vlist)
+        samples = super().create(vlist)
         for sample in samples:
             template = sample.version_detail.template
             if not template or not template.diagnosis_template:
@@ -142,8 +140,7 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
 
     @classmethod
     def _get_fields_from_sample(cls, sample):
-        sample_default = super(ResultsReportVersionDetailSample,
-            cls)._get_fields_from_sample(sample)
+        sample_default = super()._get_fields_from_sample(sample)
         sample_default['diagnosis'] = sample.diagnosis
         sample_default['diagnosis_states'] = sample.diagnosis_states
         return sample_default

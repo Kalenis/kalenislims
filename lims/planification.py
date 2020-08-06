@@ -105,7 +105,7 @@ class Planification(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Planification, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('code', 'DESC'))
         cls._transitions |= set((
             ('draft', 'preplanned'),
@@ -250,7 +250,7 @@ class Planification(Workflow, ModelSQL, ModelView):
         for values in vlist:
             values['code'] = Sequence.get_id(
                 config.planification_sequence.id)
-        return super(Planification, cls).create(vlist)
+        return super().create(vlist)
 
     @classmethod
     def check_delete(cls, planifications):
@@ -262,7 +262,7 @@ class Planification(Workflow, ModelSQL, ModelView):
     @classmethod
     def delete(cls, planifications):
         cls.check_delete(planifications)
-        super(Planification, cls).delete(planifications)
+        super().delete(planifications)
 
     @classmethod
     def copy(cls, planifications, default=None):
@@ -570,7 +570,7 @@ class PlanificationTechnician(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(PlanificationTechnician, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('planification_professional_uniq',
@@ -663,7 +663,7 @@ class PlanificationDetail(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(PlanificationDetail, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('fraction', 'ASC'))
         cls._order.insert(1, ('service_analysis', 'ASC'))
 
@@ -900,7 +900,7 @@ class LabProfessionalMethod(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(LabProfessionalMethod, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('professional', 'ASC'))
         cls._order.insert(1, ('method', 'ASC'))
         t = cls.__table__()
@@ -1065,14 +1065,13 @@ class RelateTechniciansDetail1(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super(RelateTechniciansDetail1,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
     @classmethod
     def __setup__(cls):
-        super(RelateTechniciansDetail1, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('fraction', 'ASC'))
         cls._order.insert(1, ('service_analysis', 'ASC'))
 
@@ -1107,14 +1106,13 @@ class RelateTechniciansDetail2(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super(RelateTechniciansDetail2,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
     @classmethod
     def __setup__(cls):
-        super(RelateTechniciansDetail2, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('fraction', 'ASC'))
         cls._order.insert(1, ('analysis_origin', 'ASC'))
         cls._order.insert(2, ('method', 'ASC'))
@@ -1131,14 +1129,13 @@ class RelateTechniciansDetail3(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super(RelateTechniciansDetail3,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
     @classmethod
     def __setup__(cls):
-        super(RelateTechniciansDetail3, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('fraction', 'ASC'))
         cls._order.insert(1, ('analysis_origin', 'ASC'))
 
@@ -1559,14 +1556,13 @@ class UnlinkTechniciansDetail1(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super(UnlinkTechniciansDetail1,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
     @classmethod
     def __setup__(cls):
-        super(UnlinkTechniciansDetail1, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('fraction', 'ASC'))
         cls._order.insert(1, ('service_analysis', 'ASC'))
 
@@ -3728,14 +3724,13 @@ class SearchFractionsDetail(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super(SearchFractionsDetail,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
     @classmethod
     def __setup__(cls):
-        super(SearchFractionsDetail, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('fraction', 'ASC'))
         cls._order.insert(1, ('service_analysis', 'ASC'))
 
@@ -4824,8 +4819,7 @@ class QualificationSituation(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super(QualificationSituation,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
@@ -4842,8 +4836,7 @@ class QualificationAction(ModelSQL):
 
     @classmethod
     def __register__(cls, module_name):
-        super(QualificationAction,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
@@ -5572,8 +5565,7 @@ class PlanificationSequenceReport(Report):
 
     @classmethod
     def get_context(cls, records, data):
-        report_context = super(PlanificationSequenceReport,
-                cls).get_context(records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
 
@@ -5655,8 +5647,7 @@ class PlanificationWorksheetAnalysisReport(Report):
 
     @classmethod
     def get_context(cls, records, data):
-        report_context = super(PlanificationWorksheetAnalysisReport,
-                cls).get_context(records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
 
@@ -5770,8 +5761,7 @@ class PlanificationWorksheetMethodReport(Report):
 
     @classmethod
     def get_context(cls, records, data):
-        report_context = super(PlanificationWorksheetMethodReport,
-                cls).get_context(records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
 
@@ -5943,8 +5933,7 @@ class PlanificationWorksheetReport(Report):
 
     @classmethod
     def get_context(cls, records, data):
-        report_context = super(PlanificationWorksheetReport,
-                cls).get_context(records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
 
@@ -6183,8 +6172,7 @@ class PendingServicesUnplannedReport(Report):
         Laboratory = pool.get('lims.laboratory')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
-        report_context = super(PendingServicesUnplannedReport,
-                cls).get_context(records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
         report_context['start_date'] = (data['start_date']
@@ -6337,8 +6325,7 @@ class PendingServicesUnplannedSpreadsheet(Report):
         Laboratory = pool.get('lims.laboratory')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
-        report_context = super(PendingServicesUnplannedSpreadsheet,
-                cls).get_context(records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
         report_context['start_date'] = (data['start_date']
@@ -6516,7 +6503,7 @@ class BlindSampleReport(Report):
 
     @classmethod
     def get_context(cls, records, data):
-        report_context = super(BlindSampleReport, cls).get_context(records,
+        report_context = super().get_context(records,
                 data)
         BlindSample = Pool().get('lims.blind_sample')
 
@@ -6661,8 +6648,7 @@ class PlanificationSequenceAnalysisReport(Report):
 
     @classmethod
     def get_context(cls, records, data):
-        report_context = super(PlanificationSequenceAnalysisReport,
-                cls).get_context(records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
 

@@ -13,7 +13,7 @@ class AdministrativeTaskTemplate(metaclass=PoolMeta):
 
     @classmethod
     def get_types(cls):
-        types = super(AdministrativeTaskTemplate, cls).get_types()
+        types = super().get_types()
         types.append(('sale_purchase_order_required',
             gettext('lims_sale_industry.lbl_sale_purchase_order_required')))
         types.append(('product_quotation',
@@ -26,7 +26,7 @@ class AdministrativeTask(metaclass=PoolMeta):
 
     @classmethod
     def _get_origin(cls):
-        origins = super(AdministrativeTask, cls)._get_origin()
+        origins = super()._get_origin()
         origins.extend([
             'sale.sale',
             'sale.line',

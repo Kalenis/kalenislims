@@ -13,7 +13,7 @@ class AdministrativeTaskTemplate(metaclass=PoolMeta):
 
     @classmethod
     def get_types(cls):
-        types = super(AdministrativeTaskTemplate, cls).get_types()
+        types = super().get_types()
         types.append(('device_maintenance',
             gettext('lims_device_maintenance.lbl_device_maintenance')))
         return types
@@ -24,6 +24,6 @@ class AdministrativeTask(metaclass=PoolMeta):
 
     @classmethod
     def _get_origin(cls):
-        origins = super(AdministrativeTask, cls)._get_origin()
+        origins = super()._get_origin()
         origins.append('lims.lab.device.maintenance')
         return origins

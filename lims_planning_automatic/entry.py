@@ -13,5 +13,5 @@ class Entry(metaclass=PoolMeta):
     @classmethod
     def confirm(cls, entries):
         Planification = Pool().get('lims.planification')
-        super(Entry, cls).confirm(entries)
+        super().confirm(entries)
         Planification.automatic_plan(entries=entries)

@@ -27,14 +27,14 @@ class Project(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Project, cls).__setup__()
+        super().__setup__()
         project_type = ('itl', 'Interlaboratory')
         if project_type not in cls.type.selection:
             cls.type.selection.append(project_type)
 
     @classmethod
     def view_attributes(cls):
-        return super(Project, cls).view_attributes() + [
+        return super().view_attributes() + [
             ('//group[@id="itl"]', 'states', {
                     'invisible': Not(Bool(Equal(Eval('type'), 'itl'))),
                     })]
@@ -45,7 +45,7 @@ class Entry(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Entry, cls).__setup__()
+        super().__setup__()
         project_type = ('itl', 'Interlaboratory')
         if project_type not in cls.project_type.selection:
             cls.project_type.selection.append(project_type)

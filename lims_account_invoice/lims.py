@@ -28,7 +28,7 @@ class Entry(metaclass=PoolMeta):
 
     @classmethod
     def on_hold(cls, entries):
-        super(Entry, cls).on_hold(entries)
+        super().on_hold(entries)
         cls.create_invoice_lines(entries)
 
     @classmethod
@@ -50,7 +50,7 @@ class Fraction(metaclass=PoolMeta):
     def confirm(cls, fractions):
         fractions_to_invoice = [f for f in fractions if
             f.sample.entry.state != 'pending']
-        super(Fraction, cls).confirm(fractions)
+        super().confirm(fractions)
         if fractions_to_invoice:
             cls.create_invoice_lines(fractions_to_invoice)
 
@@ -71,7 +71,7 @@ class Service(metaclass=PoolMeta):
 
     @classmethod
     def create(cls, vlist):
-        services = super(Service, cls).create(vlist)
+        services = super().create(vlist)
         services_to_invoice = [s for s in services if
             s.entry.state == 'pending']
         for service in services_to_invoice:
@@ -141,7 +141,7 @@ class Service(metaclass=PoolMeta):
     @classmethod
     def delete(cls, services):
         cls.delete_invoice_lines(services)
-        super(Service, cls).delete(services)
+        super().delete(services)
 
     @classmethod
     def delete_invoice_lines(cls, services):
@@ -167,7 +167,6 @@ class ManageServices(metaclass=PoolMeta):
     __name__ = 'lims.manage_services'
 
     def create_service(self, service, fraction):
-        new_service = super(ManageServices, self).create_service(service,
-            fraction)
+        new_service = super().create_service(service, fraction)
         new_service.create_invoice_line('out')
         return new_service

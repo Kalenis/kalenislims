@@ -111,7 +111,7 @@ class Notebook(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Notebook, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('fraction', 'DESC'))
 
     def get_rec_name(self, name):
@@ -534,7 +534,7 @@ class Notebook(ModelSQL, ModelView):
     @classmethod
     def view_toolbar_get(cls):
         if not Transaction().context.get('samples_pending_reporting', False):
-            return super(Notebook, cls).view_toolbar_get()
+            return super().view_toolbar_get()
 
         # Samples Pending Reporting uses specific keywords
         prints = cls.get_samples_pending_reporting_keyword('form_print')
@@ -854,7 +854,7 @@ class NotebookLine(ModelSQL, ModelView):
     def __register__(cls, module_name):
         table_h = cls.__table_handler__(module_name)
         urgent_exist = table_h.column_exist('urgent')
-        super(NotebookLine, cls).__register__(module_name)
+        super().__register__(module_name)
         if not urgent_exist:
             cursor = Transaction().connection.cursor()
             Service = Pool().get('lims.service')
@@ -865,7 +865,7 @@ class NotebookLine(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(NotebookLine, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('analysis_order', 'ASC'))
         cls._order.insert(1, ('repetition', 'ASC'))
 
@@ -903,14 +903,14 @@ class NotebookLine(ModelSQL, ModelView):
 
     @classmethod
     def create(cls, vlist):
-        lines = super(NotebookLine, cls).create(vlist)
+        lines = super().create(vlist)
         cls.update_detail_report(lines)
         return lines
 
     @classmethod
     def write(cls, *args):
         Sample = Pool().get('lims.sample')
-        super(NotebookLine, cls).write(*args)
+        super().write(*args)
         actions = iter(args)
         for lines, vals in zip(actions, actions):
             if vals.get('not_accepted_message'):
@@ -983,7 +983,7 @@ class NotebookLine(ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, notebook_lines):
-        super(NotebookLine, cls).validate(notebook_lines)
+        super().validate(notebook_lines)
         for line in notebook_lines:
             line.check_end_date()
             line.check_accepted()
@@ -1145,7 +1145,7 @@ class NotebookLine(ModelSQL, ModelView):
         Config = pool.get('lims.configuration')
         UiView = pool.get('ir.ui.view')
 
-        result = super(NotebookLine, cls).fields_view_get(view_id=view_id,
+        result = super().fields_view_get(view_id=view_id,
             view_type=view_type)
 
         # All Notebook Lines view
@@ -1499,7 +1499,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(NotebookLineAllFields, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('fraction', 'DESC'))
         cls._order.insert(1, ('analysis', 'ASC'))
         cls._order.insert(2, ('repetition', 'ASC'))
@@ -2137,8 +2137,7 @@ class NotebookInternalRelationsCalc1Relation(ModelSQL):
 
     @classmethod
     def __register__(cls, module_name):
-        super(NotebookInternalRelationsCalc1Relation,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
@@ -2495,8 +2494,7 @@ class NotebookInternalRelationsCalc2Relation(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super(NotebookInternalRelationsCalc2Relation,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
@@ -2547,7 +2545,7 @@ class NotebookInternalRelationsCalc2Variable(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(NotebookInternalRelationsCalc2Variable, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('relation', 'ASC'))
         cls._order.insert(1, ('analysis', 'ASC'))
         cls._order.insert(2, ('repetition', 'ASC'))
@@ -2989,7 +2987,7 @@ class NotebookLoadResultsFormulaLine(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super(NotebookLoadResultsFormulaLine, cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
@@ -3025,8 +3023,7 @@ class NotebookLoadResultsFormulaAction(ModelSQL):
 
     @classmethod
     def __register__(cls, module_name):
-        super(NotebookLoadResultsFormulaAction,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
@@ -3157,8 +3154,7 @@ class NotebookLoadResultsFormulaSit2Detail(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super(NotebookLoadResultsFormulaSit2Detail,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
@@ -3778,8 +3774,7 @@ class NotebookLoadResultsManualLine(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super(NotebookLoadResultsManualLine,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
@@ -5125,8 +5120,7 @@ class NotebookLinePrecisionControl(NotebookPrecisionControl):
 
         reference_line = NotebookLine(Transaction().context['active_id'])
         with Transaction().set_context(active_id=reference_line.notebook.id):
-            return super(NotebookLinePrecisionControl,
-                self).default_start(fields)
+            return super().default_start(fields)
 
     def transition_ok(self):
         NotebookLine = Pool().get('lims.notebook.line')
@@ -5262,8 +5256,7 @@ class AnalysisPendingInform(Report):
         Laboratory = pool.get('lims.laboratory')
         Party = pool.get('party.party')
 
-        report_context = super(AnalysisPendingInform, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         today = get_print_date()
         report_context['today'] = today
@@ -5410,8 +5403,7 @@ class AnalysisCheckedPendingInform(Report):
         Laboratory = pool.get('lims.laboratory')
         Party = pool.get('party.party')
 
-        report_context = super(AnalysisCheckedPendingInform, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         today = get_print_date()
         report_context['today'] = today

@@ -30,7 +30,7 @@ class Configuration(metaclass=PoolMeta):
         pool = Pool()
         if field == 'analysis_sheet_sequence':
             return pool.get('lims.configuration.sequence')
-        return super(Configuration, cls).multivalue_model(field)
+        return super().multivalue_model(field)
 
 
 class ConfigurationSequence(metaclass=PoolMeta):

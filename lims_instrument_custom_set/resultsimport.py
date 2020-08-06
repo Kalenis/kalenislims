@@ -18,7 +18,7 @@ class ResultsImport(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(ResultsImport, cls).__setup__()
+        super().__setup__()
         controllers = [
             ('custom_set_csv', 'Custom Set - CSV'),
             ('custom_set_xls', 'Custom Set - XLS'),
@@ -33,7 +33,7 @@ class ResultsImport(metaclass=PoolMeta):
         elif self.name == 'custom_set_xls':
             self.controller = custom_set_xls
         else:
-            return super(ResultsImport, self).loadController()
+            return super().loadController()
 
     def getAnalysisCode(self, row):
         return self.controller.getAnalysisCode(self, row)

@@ -41,7 +41,7 @@ class Plant(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Plant, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('party', 'ASC'))
         cls._order.insert(1, ('name', 'ASC'))
         t = cls.__table__()
@@ -69,7 +69,7 @@ class Plant(ModelSQL, ModelView):
         for plant in plants:
             default['name'] = plant.name + ' (copy)'
             default['equipments'] = None
-            new_plant, = super(Plant, cls).copy([plant], default)
+            new_plant, = super().copy([plant], default)
             new_plants.append(new_plant)
         return new_plants
 
@@ -82,7 +82,7 @@ class EquipmentType(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(EquipmentType, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints = [
             ('name_unique', Unique(t, t.name),
@@ -98,7 +98,7 @@ class Brand(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Brand, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints = [
             ('name_unique', Unique(t, t.name),
@@ -116,7 +116,7 @@ class ComponentType(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(ComponentType, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints = [
             ('name_unique', Unique(t, t.name),
@@ -138,7 +138,7 @@ class EquipmentTemplate(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(EquipmentTemplate, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('type', 'ASC'))
         cls._order.insert(1, ('brand', 'ASC'))
         cls._order.insert(2, ('model', 'ASC'))
@@ -209,7 +209,7 @@ class Equipment(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Equipment, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('template', 'ASC'))
         cls._order.insert(1, ('name', 'ASC'))
         t = cls.__table__()
@@ -221,7 +221,7 @@ class Equipment(ModelSQL, ModelView):
     @classmethod
     def create(cls, vlist):
         TaskTemplate = Pool().get('lims.administrative.task.template')
-        equipments = super(Equipment, cls).create(vlist)
+        equipments = super().create(vlist)
         TaskTemplate.create_tasks('equipment_missing_data',
             cls._for_task_missing_data(equipments))
         return equipments
@@ -320,7 +320,7 @@ class Equipment(ModelSQL, ModelView):
         new_equipments = []
         for equipment in equipments:
             default['name'] = equipment.name + ' (copy)'
-            new_equipment, = super(Equipment, cls).copy([equipment], default)
+            new_equipment, = super().copy([equipment], default)
             new_equipments.append(new_equipment)
         return new_equipments
 
@@ -353,7 +353,7 @@ class Component(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Component, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('equipment', 'ASC'))
         cls._order.insert(1, ('type', 'ASC'))
         t = cls.__table__()
@@ -365,7 +365,7 @@ class Component(ModelSQL, ModelView):
     @classmethod
     def create(cls, vlist):
         TaskTemplate = Pool().get('lims.administrative.task.template')
-        components = super(Component, cls).create(vlist)
+        components = super().create(vlist)
         TaskTemplate.create_tasks('component_missing_data',
             cls._for_task_missing_data(components))
         return components

@@ -15,7 +15,7 @@ class Sample(metaclass=PoolMeta):
 
     @classmethod
     def create(cls, vlist):
-        samples = super(Sample, cls).create(vlist)
+        samples = super().create(vlist)
         for sample in samples:
             if not sample.diagnostician:
                 sample.diagnostician = cls.get_default_diagnostician(sample)
@@ -52,8 +52,7 @@ class CreateSample(metaclass=PoolMeta):
     __name__ = 'lims.create_sample'
 
     def _get_samples_defaults(self, entry_id):
-        samples_defaults = super(CreateSample,
-            self)._get_samples_defaults(entry_id)
+        samples_defaults = super()._get_samples_defaults(entry_id)
 
         diagnostician_id = None
         if (hasattr(self.start, 'diagnostician') and

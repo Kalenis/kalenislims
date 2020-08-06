@@ -46,12 +46,12 @@ class Move(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Move, cls).__setup__()
+        super().__setup__()
         cls.origin.readonly = True
 
     @classmethod
     def _get_origin(cls):
-        models = super(Move, cls)._get_origin()
+        models = super()._get_origin()
         models.append('lims.fraction')
         return models
 
@@ -73,7 +73,7 @@ class Move(metaclass=PoolMeta):
     @classmethod
     def copy(cls, moves, default=None):
         with Transaction().set_context(check_current_location=False):
-            return super(Move, cls).copy(moves, default=default)
+            return super().copy(moves, default=default)
 
 
 class ShipmentInternal(metaclass=PoolMeta):
@@ -82,50 +82,49 @@ class ShipmentInternal(metaclass=PoolMeta):
     @classmethod
     def copy(cls, shipments, default=None):
         with Transaction().set_context(check_current_location=False):
-            return super(ShipmentInternal, cls).copy(shipments,
-                default=default)
+            return super().copy(shipments, default=default)
 
     @classmethod
     def _sync_moves(cls, shipments):
         with Transaction().set_context(check_current_location=False):
-            super(ShipmentInternal, cls)._sync_moves(shipments)
+            super()._sync_moves(shipments)
 
     @classmethod
     def _set_transit(cls, shipments):
         with Transaction().set_context(check_current_location=False):
-            super(ShipmentInternal, cls)._set_transit(shipments)
+            super()._set_transit(shipments)
 
     @classmethod
     def draft(cls, shipments):
         with Transaction().set_context(check_current_location=False):
-            super(ShipmentInternal, cls).draft(shipments)
+            super().draft(shipments)
 
     @classmethod
     def wait(cls, shipments):
         with Transaction().set_context(check_current_location=False):
-            super(ShipmentInternal, cls).wait(shipments)
+            super().wait(shipments)
 
     @classmethod
     def ship(cls, shipments):
         with Transaction().set_context(check_current_location=False):
-            super(ShipmentInternal, cls).ship(shipments)
+            super().ship(shipments)
 
     @classmethod
     def done(cls, shipments):
         with Transaction().set_context(check_current_location=False):
-            super(ShipmentInternal, cls).done(shipments)
+            super().done(shipments)
 
     @classmethod
     def cancel(cls, shipments):
         with Transaction().set_context(check_current_location=False):
-            super(ShipmentInternal, cls).cancel(shipments)
+            super().cancel(shipments)
 
     @classmethod
     def assign_try(cls, shipments):
         with Transaction().set_context(check_current_location=False):
-            return super(ShipmentInternal, cls).assign_try(shipments)
+            return super().assign_try(shipments)
 
     @classmethod
     def assign_force(cls, shipments):
         with Transaction().set_context(check_current_location=False):
-            super(ShipmentInternal, cls).assign_force(shipments)
+            super().assign_force(shipments)

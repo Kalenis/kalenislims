@@ -27,7 +27,7 @@ class Planification(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Planification, cls).__setup__()
+        super().__setup__()
         cls._buttons.update({
             'search_analysis_sheet': {
                 'readonly': (Eval('state') != 'draft'),
@@ -41,7 +41,7 @@ class Planification(metaclass=PoolMeta):
 
     @classmethod
     def do_confirm(cls, planifications):
-        super(Planification, cls).do_confirm(planifications)
+        super().do_confirm(planifications)
         for planification in planifications:
             planification.create_analysis_sheets()
 
@@ -414,7 +414,7 @@ class RelateTechniciansStart(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(RelateTechniciansStart, cls).__setup__()
+        super().__setup__()
         grouping = ('analysis_sheet', 'Analysis sheet')
         if grouping not in cls.grouping.selection:
             cls.grouping.selection.append(grouping)
@@ -434,14 +434,14 @@ class RelateTechniciansResult(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(RelateTechniciansResult, cls).__setup__()
+        super().__setup__()
         grouping = ('analysis_sheet', 'Analysis sheet')
         if grouping not in cls.grouping.selection:
             cls.grouping.selection.append(grouping)
 
     @fields.depends('grouping')
     def on_change_grouping(self):
-        super(RelateTechniciansResult, self).on_change_grouping()
+        super().on_change_grouping()
         self.details4 = []
 
 
@@ -457,14 +457,13 @@ class RelateTechniciansDetail4(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super(RelateTechniciansDetail4,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
     @classmethod
     def __setup__(cls):
-        super(RelateTechniciansDetail4, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('fraction', 'ASC'))
         cls._order.insert(1, ('template', 'ASC'))
 
@@ -480,10 +479,10 @@ class RelateTechnicians(metaclass=PoolMeta):
         if self.start.grouping == 'analysis_sheet':
             self.result.details4_domain = self._view_details4(planification_id,
                 self.start.exclude_relateds)
-        return super(RelateTechnicians, self).transition_search()
+        return super().transition_search()
 
     def default_result(self, fields):
-        res = super(RelateTechnicians, self).default_result(fields)
+        res = super().default_result(fields)
         details4_domain = []
         if self.result.details4_domain:
             details4_domain = [d.id for d in self.result.details4_domain]
@@ -552,7 +551,7 @@ class RelateTechnicians(metaclass=PoolMeta):
         return RelateTechniciansDetail4.create(to_create)
 
     def _get_details(self, planification_id):
-        details = super(RelateTechnicians, self)._get_details(planification_id)
+        details = super()._get_details(planification_id)
         if self.start.grouping == 'analysis_sheet':
             details = self._get_details4(planification_id,
                 self.start.exclude_relateds)
@@ -674,7 +673,7 @@ class PlanificationProfessional(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(PlanificationProfessional, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('name', 'ASC'))
 
     @classmethod
@@ -790,7 +789,7 @@ class PlanificationProfessionalLine(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(PlanificationProfessionalLine, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('date', 'ASC'))
 
     @classmethod
@@ -878,7 +877,7 @@ class PlanificationPending(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(PlanificationPending, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('name', 'ASC'))
 
     @classmethod

@@ -110,8 +110,7 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
 
     @classmethod
     def _get_fields_from_sample(cls, sample):
-        sample_default = super(ResultsReportVersionDetailSample,
-            cls)._get_fields_from_sample(sample)
+        sample_default = super()._get_fields_from_sample(sample)
         sample_default['precedent1'] = (sample.precedent1 and
             sample.precedent1 or None)
         sample_default['precedent2'] = (sample.precedent2 and
@@ -122,7 +121,7 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
 
     @classmethod
     def create(cls, vlist):
-        samples = super(ResultsReportVersionDetailSample, cls).create(vlist)
+        samples = super().create(vlist)
         for sample in samples:
             if not sample.precedent1:
                 precedents = cls.get_default_precedents(sample)

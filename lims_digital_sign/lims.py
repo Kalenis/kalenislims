@@ -43,14 +43,14 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     @classmethod
     @ModelView.button
     def release(cls, details):
-        super(ResultsReportVersionDetail, cls).release(details)
+        super().release(details)
         for detail in details:
             detail.unsign()
 
     @classmethod
     @ModelView.button
     def release_all_lang(cls, details):
-        super(ResultsReportVersionDetail, cls).release_all_lang(details)
+        super().release_all_lang(details)
         for detail in details:
             detail.unsign()
 
@@ -65,7 +65,7 @@ class ResultsReport(metaclass=PoolMeta):
 
     @classmethod
     def _get_modified_fields(cls):
-        fields = super(ResultsReport, cls)._get_modified_fields()
+        fields = super()._get_modified_fields()
         fields.extend([
             'signed',
             'signed_date',
@@ -386,7 +386,7 @@ class ResultsReportAnnulation(metaclass=PoolMeta):
 
     def transition_annul(self):
         logger.info('transition_annul():INIT')
-        super(ResultsReportAnnulation, self).transition_annul()
+        super().transition_annul()
         logger.info('transition_annul():INHERIT')
 
         ResultsDetail = Pool().get('lims.results_report.version.detail')

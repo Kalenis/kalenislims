@@ -12,6 +12,6 @@ class NotebookRule(metaclass=PoolMeta):
 
     @classmethod
     def _target_fields(cls):
-        field_list = super(NotebookRule, cls)._target_fields()
+        field_list = super()._target_fields()
         field_list.append('diagnosis_warning')
         return field_list

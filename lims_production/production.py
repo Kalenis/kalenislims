@@ -78,7 +78,7 @@ class Production(metaclass=PoolMeta):
         Template = pool.get('product.template')
         Product = pool.get('product.product')
 
-        super(Production, self).explode_bom()
+        super().explode_bom()
         if not (self.bom and self.product and self.uom):
             return
 
@@ -126,7 +126,7 @@ class Production(metaclass=PoolMeta):
     @classmethod
     def run(cls, productions):
         cls.update_inputs_origin(productions)
-        super(Production, cls).run(productions)
+        super().run(productions)
 
     @classmethod
     def update_inputs_origin(cls, productions):
@@ -140,7 +140,7 @@ class Production(metaclass=PoolMeta):
         cls.update_outputs_origin(productions)
         cls.update_outputs_costs(productions)
         cls.create_lot(productions)
-        super(Production, cls).done(productions)
+        super().done(productions)
 
     @classmethod
     def update_outputs_origin(cls, productions):
@@ -222,8 +222,8 @@ class Production(metaclass=PoolMeta):
                 to_location = product_location
             else:
                 from_location = product_location
-        return super(Production, self)._explode_move_values(from_location,
-            to_location, company, bom_io, quantity)
+        return super()._explode_move_values(from_location, to_location,
+            company, bom_io, quantity)
 
 
 class FamilyEquivalentReport(Report):
@@ -235,8 +235,7 @@ class FamilyEquivalentReport(Report):
         pool = Pool()
         Company = pool.get('company.company')
 
-        report_context = super(FamilyEquivalentReport, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = Company(Transaction().context['company'])
         report_context['records'] = cls._get_family_records(records)

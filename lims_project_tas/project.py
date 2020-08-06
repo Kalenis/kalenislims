@@ -39,7 +39,7 @@ class Project(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Project, cls).__setup__()
+        super().__setup__()
         project_type = ('tas', 'TAS')
         if project_type not in cls.type.selection:
             cls.type.selection.append(project_type)
@@ -48,7 +48,7 @@ class Project(metaclass=PoolMeta):
 
     @classmethod
     def view_attributes(cls):
-        return super(Project, cls).view_attributes() + [
+        return super().view_attributes() + [
             ('//group[@id="tas"]', 'states', {
                     'invisible': Not(Bool(Equal(Eval('type'), 'tas'))),
                     })]
@@ -120,7 +120,7 @@ class Project(metaclass=PoolMeta):
         for values in vlist:
             if values['type'] == 'tas':
                 values['code'] = Sequence.get_id(sequence.id)
-        return super(Project, cls).create(vlist)
+        return super().create(vlist)
 
 
 class Entry(metaclass=PoolMeta):
@@ -128,7 +128,7 @@ class Entry(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Entry, cls).__setup__()
+        super().__setup__()
         project_type = ('tas', 'TAS')
         if project_type not in cls.project_type.selection:
             cls.project_type.selection.append(project_type)
@@ -143,7 +143,7 @@ class TasType(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(TasType, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),

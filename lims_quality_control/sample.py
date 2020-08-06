@@ -329,7 +329,7 @@ class SampleLabels(Report):
 
     @classmethod
     def get_context(cls, records, data):
-        report_context = super(SampleLabels, cls).get_context(records, data)
+        report_context = super().get_context(records, data)
         labels = []
         for sample in records:
             for fraction in sample.fractions:

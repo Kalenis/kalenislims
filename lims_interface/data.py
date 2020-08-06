@@ -164,8 +164,7 @@ class ModelAccess(metaclass=PoolMeta):
         if model_name in ('lims.interface.data',
                 'lims.interface.grouped_data'):
             return True
-        return super(ModelAccess, cls).check_relation(model_name, field_name,
-            mode)
+        return super().check_relation(model_name, field_name, mode)
 
 
 class Data(ModelSQL, ModelView):
@@ -179,13 +178,13 @@ class Data(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Data, cls).__setup__()
+        super().__setup__()
         cls.__rpc__['fields_view_get'].cache = None
         cls.__rpc__['default_get'].cache = None
 
     @classmethod
     def __post_setup__(cls):
-        super(Data, cls).__post_setup__()
+        super().__post_setup__()
         cls._previous_fields = cls._fields
         cls._fields = Adapter()
 
@@ -199,14 +198,14 @@ class Data(ModelSQL, ModelView):
         kwargs_copy = kwargs.copy()
         for kw in kwargs_copy:
             kwargs.pop(kw, None)
-        super(Data, self).__init__(id, **kwargs)
+        super().__init__(id, **kwargs)
         self._values = {}
         for kw in kwargs_copy:
             self._values[kw] = kwargs_copy[kw]
 
     def __getattr__(self, name):
         try:
-            return super(Data, self).__getattr__(name)
+            return super().__getattr__(name)
         except AttributeError:
             pass
 
@@ -270,7 +269,7 @@ class Data(ModelSQL, ModelView):
     @classmethod
     def fields_get(cls, fields_names=None):
         Model = Pool().get('ir.model')
-        res = super(Data, cls).fields_get(fields_names)
+        res = super().fields_get(fields_names)
 
         table = cls.get_table()
         readonly = Transaction().context.get('lims_interface_readonly', False)
@@ -341,8 +340,7 @@ class Data(ModelSQL, ModelView):
                 del cache[cls.__name__]
 
         if not cls.get_table():
-            return super(Data, cls).search(domain, offset, limit, order, count,
-                query)
+            return super().search(domain, offset, limit, order, count, query)
 
         # Get domain clauses
         sql_table = cls.get_sql_table()
@@ -616,7 +614,7 @@ class Data(ModelSQL, ModelView):
         table = cls.get_table()
         if table:
             return Table(table.name)
-        return super(Data, cls).__table__()
+        return super().__table__()
 
 
 class GroupedData(ModelView):
@@ -629,13 +627,13 @@ class GroupedData(ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(GroupedData, cls).__setup__()
+        super().__setup__()
         cls.__rpc__['fields_view_get'].cache = None
         cls.__rpc__['default_get'].cache = None
 
     @classmethod
     def __post_setup__(cls):
-        super(GroupedData, cls).__post_setup__()
+        super().__post_setup__()
         cls._previous_fields = cls._fields
         cls._fields = GroupedAdapter()
 
@@ -643,14 +641,14 @@ class GroupedData(ModelView):
         kwargs_copy = kwargs.copy()
         for kw in kwargs_copy:
             kwargs.pop(kw, None)
-        super(GroupedData, self).__init__(id, **kwargs)
+        super().__init__(id, **kwargs)
         self._values = {}
         for kw in kwargs_copy:
             self._values[kw] = kwargs_copy[kw]
 
     def __getattr__(self, name):
         try:
-            return super(GroupedData, self).__getattr__(name)
+            return super().__getattr__(name)
         except AttributeError:
             pass
 
@@ -714,7 +712,7 @@ class GroupedData(ModelView):
     @classmethod
     def fields_get(cls, fields_names=None):
         Model = Pool().get('ir.model')
-        res = super(GroupedData, cls).fields_get(fields_names)
+        res = super().fields_get(fields_names)
 
         table = cls.get_table()
         readonly = Transaction().context.get('lims_interface_readonly', False)

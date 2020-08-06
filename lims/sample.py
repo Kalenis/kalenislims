@@ -55,7 +55,7 @@ class Zone(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Zone, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -92,7 +92,7 @@ class Variety(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Variety, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -137,7 +137,7 @@ class PackagingIntegrity(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(PackagingIntegrity, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -175,7 +175,7 @@ class PackagingType(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(PackagingType, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -224,7 +224,7 @@ class FractionType(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(FractionType, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._order.insert(0, ('code', 'ASC'))
         cls._sql_constraints += [
@@ -409,7 +409,7 @@ class Service(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Service, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
 
     @staticmethod
@@ -426,7 +426,7 @@ class Service(ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, services):
-        super(Service, cls).validate(services)
+        super().validate(services)
         for service in services:
             service.check_duplicated_analysis()
 
@@ -477,7 +477,7 @@ class Service(ModelSQL, ModelView):
         vlist = [x.copy() for x in vlist]
         for values in vlist:
             values['number'] = Sequence.get_id(sequence.id)
-        services = super(Service, cls).create(vlist)
+        services = super().create(vlist)
 
         if not Transaction().context.get('copying', False):
             cls.update_analysis_detail(services)
@@ -512,7 +512,7 @@ class Service(ModelSQL, ModelView):
     @classmethod
     def write(cls, *args):
         Sample = Pool().get('lims.sample')
-        super(Service, cls).write(*args)
+        super().write(*args)
         actions = iter(args)
         for services, vals in zip(actions, actions):
             change_detail = False
@@ -541,7 +541,7 @@ class Service(ModelSQL, ModelView):
             cls.check_delete(services)
         fractions_ids = list(set(s.fraction.id for s in services))
         sample_ids = list(set(s.sample.id for s in services))
-        super(Service, cls).delete(services)
+        super().delete(services)
         cls.set_shared_fraction(fractions_ids)
         Sample.update_samples_state(sample_ids)
 
@@ -820,7 +820,7 @@ class Service(ModelSQL, ModelView):
         new_services = []
         for service in sorted(services, key=lambda x: x.number):
             with Transaction().set_context(copying=True):
-                new_service, = super(Service, cls).copy([service],
+                new_service, = super().copy([service],
                     default=current_default)
             detail_default['service'] = new_service.id
             EntryDetailAnalysis.copy(service.analysis_detail,
@@ -1429,7 +1429,7 @@ class Fraction(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Fraction, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
         cls._buttons.update({
             'manage_services': {
@@ -1483,7 +1483,7 @@ class Fraction(ModelSQL, ModelView):
             f_count[values['sample']] += 1
             values['number'] = cls.get_next_number(values['sample'],
                 f_count[values['sample']])
-        return super(Fraction, cls).create(vlist)
+        return super().create(vlist)
 
     @classmethod
     def view_attributes(cls):
@@ -1526,7 +1526,7 @@ class Fraction(ModelSQL, ModelView):
                 current_default['countersample_date'] = None
                 current_default['countersample_location'] = None
 
-                new_fraction, = super(Fraction, cls).copy([fraction],
+                new_fraction, = super().copy([fraction],
                     default=current_default)
                 new_fractions.append(new_fraction)
         return new_fractions
@@ -1541,7 +1541,7 @@ class Fraction(ModelSQL, ModelView):
     @classmethod
     def delete(cls, fractions):
         cls.check_delete(fractions)
-        super(Fraction, cls).delete(fractions)
+        super().delete(fractions)
 
     @fields.depends('type', 'storage_location')
     def on_change_with_storage_time(self, name=None):
@@ -2469,7 +2469,7 @@ class Sample(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Sample, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
         cls.__rpc__.update({
             'update_samples_state': RPC(readonly=False, instantiate=0),
@@ -2498,7 +2498,7 @@ class Sample(ModelSQL, ModelView):
 
         new_samples = []
         for sample in sorted(samples, key=lambda x: x.number):
-            new_sample, = super(Sample, cls).copy([sample],
+            new_sample, = super().copy([sample],
                 default=default)
             new_samples.append(new_sample)
         return new_samples
@@ -2565,7 +2565,7 @@ class Sample(ModelSQL, ModelView):
         vlist = [x.copy() for x in vlist]
         for values in vlist:
             values['number'] = Sequence.get_id(sequence.id)
-        samples = super(Sample, cls).create(vlist)
+        samples = super().create(vlist)
         for sample in samples:
             sample.warn_duplicated_label()
         return samples
@@ -2587,7 +2587,7 @@ class Sample(ModelSQL, ModelView):
 
     @classmethod
     def write(cls, *args):
-        super(Sample, cls).write(*args)
+        super().write(*args)
         actions = iter(args)
         for samples, vals in zip(actions, actions):
             if vals.get('label'):
@@ -2744,7 +2744,7 @@ class Sample(ModelSQL, ModelView):
     @classmethod
     def delete(cls, samples):
         cls.check_delete(samples)
-        super(Sample, cls).delete(samples)
+        super().delete(samples)
 
     @staticmethod
     def default_entry_view():
@@ -5500,8 +5500,7 @@ class CountersampleStorageReport(Report):
         Fraction = pool.get('lims.fraction')
         NotebookLine = pool.get('lims.notebook.line')
 
-        report_context = super(CountersampleStorageReport,
-            cls).get_context(records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
         report_context['report_date_from'] = data['report_date_from']
@@ -5700,8 +5699,7 @@ class CountersampleDischargeReport(Report):
         pool = Pool()
         Fraction = pool.get('lims.fraction')
 
-        report_context = super(CountersampleDischargeReport,
-            cls).get_context(records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
         report_context['expiry_date_from'] = data['expiry_date_from']
@@ -5801,7 +5799,7 @@ class Referral(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Referral, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('date', 'DESC'))
         cls._buttons.update({
             'send': {

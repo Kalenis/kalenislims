@@ -79,7 +79,7 @@ class ResultsReport(ModelSQL, ModelView):
         table_h = cls.__table_handler__(module_name)
         notebook_exist = table_h.column_exist('notebook')
         entry_exist = table_h.column_exist('entry')
-        super(ResultsReport, cls).__register__(module_name)
+        super().__register__(module_name)
         if notebook_exist and not entry_exist:
             cursor = Transaction().connection.cursor()
             cursor.execute('UPDATE "lims_results_report" r '
@@ -91,7 +91,7 @@ class ResultsReport(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(ResultsReport, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
 
     @staticmethod
@@ -114,7 +114,7 @@ class ResultsReport(ModelSQL, ModelView):
         vlist = [x.copy() for x in vlist]
         for values in vlist:
             values['number'] = Sequence.get_id(sequence.id)
-        return super(ResultsReport, cls).create(vlist)
+        return super().create(vlist)
 
     @classmethod
     def write(cls, *args):
@@ -125,7 +125,7 @@ class ResultsReport(ModelSQL, ModelView):
                 if field in vals:
                     vals['write_date2'] = datetime.now()
                     break
-        super(ResultsReport, cls).write(*args)
+        super().write(*args)
 
     @staticmethod
     def _get_modified_fields():
@@ -204,7 +204,7 @@ class ResultsReportVersion(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(ResultsReportVersion, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
 
     def get_report_type(self, name):
@@ -240,7 +240,7 @@ class ResultsReportVersion(ModelSQL, ModelView):
         for values in vlist:
             values['number'] = cls.get_number(values['results_report'],
                 values['laboratory'])
-        return super(ResultsReportVersion, cls).create(vlist)
+        return super().create(vlist)
 
 
 class ResultsReportVersionDetail(ModelSQL, ModelView):
@@ -377,7 +377,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(ResultsReportVersionDetail, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('report_version', 'DESC'))
         cls._order.insert(1, ('number', 'DESC'))
         cls._buttons.update({
@@ -420,7 +420,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     @classmethod
     def __register__(cls, module_name):
         cursor = Transaction().connection.cursor()
-        super(ResultsReportVersionDetail, cls).__register__(module_name)
+        super().__register__(module_name)
         cursor.execute('UPDATE "' + cls._table + '" '
             'SET state = \'released\' '
             'WHERE state = \'revised\' '
@@ -469,7 +469,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                 d_count[key] = 0
             d_count[key] += 1
             values['number'] = cls.get_next_number(key, d_count[key])
-        return super(ResultsReportVersionDetail, cls).create(vlist)
+        return super().create(vlist)
 
     def get_rec_name(self, name):
         return '%s-%s' % (self.report_version.number, self.number)
@@ -896,7 +896,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     @classmethod
     def delete(cls, details):
         cls.check_delete(details)
-        super(ResultsReportVersionDetail, cls).delete(details)
+        super().delete(details)
 
     @classmethod
     def check_delete(cls, details):
@@ -978,7 +978,7 @@ class ResultsReportVersionDetailSample(ModelSQL, ModelView):
     @classmethod
     def create(cls, vlist):
         Sample = Pool().get('lims.sample')
-        samples = super(ResultsReportVersionDetailSample, cls).create(vlist)
+        samples = super().create(vlist)
         sample_ids = list(set(s.notebook.fraction.sample.id for s in samples))
         Sample.update_samples_state(sample_ids)
         return samples
@@ -987,7 +987,7 @@ class ResultsReportVersionDetailSample(ModelSQL, ModelView):
     def delete(cls, samples):
         Sample = Pool().get('lims.sample')
         sample_ids = list(set(s.notebook.fraction.sample.id for s in samples))
-        super(ResultsReportVersionDetailSample, cls).delete(samples)
+        super().delete(samples)
         Sample.update_samples_state(sample_ids)
 
 
@@ -1033,7 +1033,7 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
     @classmethod
     def __register__(cls, module_name):
         table_h = cls.__table_handler__(module_name)
-        super(ResultsReportVersionDetailLine, cls).__register__(module_name)
+        super().__register__(module_name)
         if table_h.column_exist('report_version_detail'):
             cls._migrate_lines()
             table_h.drop_column('report_version_detail')
@@ -1266,8 +1266,7 @@ class DivideReportsDetail(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super(DivideReportsDetail,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
@@ -1427,8 +1426,7 @@ class GenerateResultsReportResultAutNotebook(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super(GenerateResultsReportResultAutNotebook,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
@@ -1483,8 +1481,7 @@ class GenerateResultsReportResultAutExcludedNotebook(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super(GenerateResultsReportResultAutExcludedNotebook,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
@@ -3170,7 +3167,7 @@ class ResultReport(Report):
 
     @classmethod
     def __setup__(cls):
-        super(ResultReport, cls).__setup__()
+        super().__setup__()
         cls.__rpc__['execute'] = RPC(False)
 
     @classmethod
@@ -3187,9 +3184,9 @@ class ResultReport(Report):
             data = {}
         current_data = data.copy()
         current_data['alt_lang'] = None
-        result_orig = super(ResultReport, cls).execute(ids, current_data)
+        result_orig = super().execute(ids, current_data)
         current_data['alt_lang'] = 'en'
-        result_eng = super(ResultReport, cls).execute(ids, current_data)
+        result_eng = super().execute(ids, current_data)
 
         save = False
         if results_report.english_report:
@@ -3229,8 +3226,7 @@ class ResultReport(Report):
         Sample = pool.get('lims.sample')
         RangeType = pool.get('lims.range.type')
 
-        report_context = super(ResultReport, cls).get_context(
-                records, data)
+        report_context = super().get_context(records, data)
 
         if data.get('alt_lang'):
             lang_code = data['alt_lang']
@@ -4073,9 +4069,9 @@ class ResultReportTranscription(ResultReport):
             data = {}
         current_data = data.copy()
         current_data['alt_lang'] = None
-        result_orig = super(ResultReport, cls).execute(ids, current_data)
+        result_orig = super().execute(ids, current_data)
         current_data['alt_lang'] = 'en'
-        result_eng = super(ResultReport, cls).execute(ids, current_data)
+        result_eng = super().execute(ids, current_data)
 
         save = False
         if results_report.english_report:
@@ -4114,7 +4110,7 @@ class GlobalResultReport(Report):
     def execute(cls, ids, data):
         ResultsReport = Pool().get('lims.results_report')
 
-        result = super(GlobalResultReport, cls).execute(ids, data)
+        result = super().execute(ids, data)
 
         results_report = ResultsReport(ids[0])
         if results_report.english_report:

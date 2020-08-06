@@ -14,7 +14,7 @@ class Move(metaclass=PoolMeta):
     __name__ = 'stock.move'
 
     def _get_account_stock_move_lines(self, type_):
-        move_line, = super(Move, self)._get_account_stock_move_lines(type_)
+        move_line, = super()._get_account_stock_move_lines(type_)
 
         if not move_line.account.type.expense:
             return [move_line]

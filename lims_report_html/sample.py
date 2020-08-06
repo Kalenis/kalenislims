@@ -30,8 +30,7 @@ class CreateSample(metaclass=PoolMeta):
     __name__ = 'lims.create_sample'
 
     def _get_samples_defaults(self, entry_id):
-        samples_defaults = super(CreateSample,
-            self)._get_samples_defaults(entry_id)
+        samples_defaults = super()._get_samples_defaults(entry_id)
 
         result_template_id = None
         if (hasattr(self.start, 'result_template') and

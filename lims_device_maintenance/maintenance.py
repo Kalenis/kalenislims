@@ -106,7 +106,7 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(LabDeviceMaintenance, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('date', 'DESC'))
         cls._transitions |= set((
             ('draft', 'pending'),
@@ -140,7 +140,7 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
     @classmethod
     def delete(cls, maintenances):
         cls.check_delete(maintenances)
-        super(LabDeviceMaintenance, cls).delete(maintenances)
+        super().delete(maintenances)
 
     @classmethod
     def check_delete(cls, maintenances):

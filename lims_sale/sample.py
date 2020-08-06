@@ -46,8 +46,7 @@ class CreateSampleStart(metaclass=PoolMeta):
 
     @fields.depends('product_type', 'matrix', 'sale_lines')
     def on_change_with_analysis_domain(self, name=None):
-        analysis_domain = super(CreateSampleStart,
-            self).on_change_with_analysis_domain(name)
+        analysis_domain = super().on_change_with_analysis_domain(name)
 
         if not self.sale_lines:
             return analysis_domain
@@ -64,8 +63,7 @@ class CreateSample(metaclass=PoolMeta):
     __name__ = 'lims.create_sample'
 
     def _get_samples_defaults(self, entry_id):
-        samples_defaults = super(CreateSample,
-            self)._get_samples_defaults(entry_id)
+        samples_defaults = super()._get_samples_defaults(entry_id)
 
         if (not hasattr(self.start, 'sale_lines') or
                 not hasattr(self.start, 'services')):
@@ -105,7 +103,7 @@ class Service(metaclass=PoolMeta):
     __name__ = 'lims.service'
 
     def get_invoice_line(self, invoice_type):
-        invoice_line = super(Service, self).get_invoice_line(invoice_type)
+        invoice_line = super().get_invoice_line(invoice_type)
         if self.sample.sale_lines:
             for sale_line in self.sample.sale_lines:
                 if sale_line.product.id == self.analysis.product.id:

@@ -18,7 +18,7 @@ class Entry(metaclass=PoolMeta):
     @classmethod
     def confirm(cls, entries):
         Sample = Pool().get('lims.sample')
-        super(Entry, cls).confirm(entries)
+        super().confirm(entries)
         samples = [s for e in entries for s in e.samples]
         Sample._confirm_samples(samples)
 
@@ -61,7 +61,7 @@ class Sample(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Sample, cls).__setup__()
+        super().__setup__()
         cls.product_type.states['readonly'] = Bool(Eval('component'))
         if 'component' not in cls.product_type.depends:
             cls.product_type.depends.append('component')
@@ -226,7 +226,7 @@ class CreateSampleStart(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(CreateSampleStart, cls).__setup__()
+        super().__setup__()
         for field in ('component', 'comercial_product'):
             cls.analysis_domain.on_change_with.add(field)
         cls.product_type.states['readonly'] = Bool(Eval('component'))
@@ -300,7 +300,7 @@ class CreateSample(metaclass=PoolMeta):
     create_continue = StateTransition()
 
     def default_start(self, fields):
-        defaults = super(CreateSample, self).default_start(fields)
+        defaults = super().default_start(fields)
         for field in ('storage_location', 'equipment'):
             if (hasattr(self.start, field) and getattr(self.start, field)):
                 defaults[field] = getattr(self.start, field).id
@@ -310,8 +310,7 @@ class CreateSample(metaclass=PoolMeta):
         return defaults
 
     def _get_samples_defaults(self, entry_id):
-        samples_defaults = super(CreateSample,
-            self)._get_samples_defaults(entry_id)
+        samples_defaults = super()._get_samples_defaults(entry_id)
 
         equipment_id = None
         if (hasattr(self.start, 'equipment') and

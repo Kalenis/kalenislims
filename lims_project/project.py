@@ -28,7 +28,7 @@ class Project(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Project, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -72,7 +72,7 @@ class Entry(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Entry, cls).__setup__()
+        super().__setup__()
         cls.samples.context.update({
             'project': Eval('project', None),
             })
@@ -120,7 +120,7 @@ class CreateSample(metaclass=PoolMeta):
     def default_start(self, fields):
         Entry = Pool().get('lims.entry')
 
-        defaults = super(CreateSample, self).default_start(fields)
+        defaults = super().default_start(fields)
         defaults['project_type'] = ''
 
         entry = Entry(Transaction().context['active_id'])

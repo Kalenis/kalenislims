@@ -85,7 +85,7 @@ class NotebookLine(metaclass=PoolMeta):
     @classmethod
     def write(cls, *args):
         TaskTemplate = Pool().get('lims.administrative.task.template')
-        super(NotebookLine, cls).write(*args)
+        super().write(*args)
         actions = iter(args)
         for lines, vals in zip(actions, actions):
             if 'accepted' in vals and vals['accepted']:
@@ -125,8 +125,7 @@ class NotebookLineRepeatAnalysis(metaclass=PoolMeta):
     __name__ = 'lims.notebook.line.repeat_analysis'
 
     def _get_repetition_defaults(self, line):
-        defaults = super(NotebookLineRepeatAnalysis,
-            self)._get_repetition_defaults(line)
+        defaults = super()._get_repetition_defaults(line)
         defaults['notify_acceptance'] = self.start.notify_acceptance
         if self.start.notify_acceptance:
             defaults['notify_acceptance_user'] = Transaction().user

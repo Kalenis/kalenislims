@@ -173,7 +173,7 @@ class Project(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Project, cls).__setup__()
+        super().__setup__()
         project_type = ('study_plan', 'Study plan')
         if project_type not in cls.type.selection:
             cls.type.selection.append(project_type)
@@ -228,7 +228,7 @@ class Project(metaclass=PoolMeta):
 
     @classmethod
     def view_attributes(cls):
-        return super(Project, cls).view_attributes() + [
+        return super().view_attributes() + [
             ('//group[@id="study_plan"]', 'states', {
                     'invisible': Not(Bool(Equal(Eval('type'), 'study_plan'))),
                     })]
@@ -253,7 +253,7 @@ class Project(metaclass=PoolMeta):
                 values['stp_number'] = Sequence.get_id(sequence.id)
                 if values['stp_phase'] == 'study_plan':
                     values['code'] = values['stp_number']
-        return super(Project, cls).create(vlist)
+        return super().create(vlist)
 
     @fields.depends('description')
     def on_change_with_stp_title(self, name=None):
@@ -375,7 +375,7 @@ class Entry(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Entry, cls).__setup__()
+        super().__setup__()
         project_type = ('study_plan', 'Study plan')
         if project_type not in cls.project_type.selection:
             cls.project_type.selection.append(project_type)
@@ -399,7 +399,7 @@ class ProjectLaboratoryProfessional(ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, professionals):
-        super(ProjectLaboratoryProfessional, cls).validate(professionals)
+        super().validate(professionals)
         for p in professionals:
             p.check_roles()
 
@@ -459,7 +459,7 @@ class ProjectProfessionalPosition(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(ProjectProfessionalPosition, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -648,7 +648,7 @@ class ProjectSampleInCustody(ModelSQL, ModelView):
         for values in vlist:
             values['sample'] = Sequence.get_id(
                 config.sample_in_custody_sequence.id)
-        return super(ProjectSampleInCustody, cls).create(vlist)
+        return super().create(vlist)
 
 
 class ProjectDeviationAndAmendment(ModelSQL, ModelView):
@@ -685,7 +685,7 @@ class ProjectDeviationAndAmendment(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(ProjectDeviationAndAmendment, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('type', 'ASC'))
         cls._order.insert(1, ('document_type', 'ASC'))
         cls._order.insert(2, ('number', 'ASC'))
@@ -700,7 +700,7 @@ class ProjectDeviationAndAmendment(ModelSQL, ModelView):
                 count[key] = 0
             count[key] += 1
             values['number'] = cls.get_next_number(key, count[key])
-        return super(ProjectDeviationAndAmendment, cls).create(vlist)
+        return super().create(vlist)
 
     @classmethod
     def get_next_number(cls, key, count):
@@ -807,7 +807,7 @@ class Sample(metaclass=PoolMeta):
 
     @classmethod
     def view_attributes(cls):
-        return super(Sample, cls).view_attributes() + [
+        return super().view_attributes() + [
             ('//page[@id="study_plan"]', 'states', {
                     'invisible': Not(Bool(Equal(
                         Eval('project_type'), 'study_plan'))),
@@ -841,7 +841,7 @@ class CreateSampleStart(metaclass=PoolMeta):
 
     @classmethod
     def view_attributes(cls):
-        return super(CreateSampleStart, cls).view_attributes() + [
+        return super().view_attributes() + [
             ('//page[@id="study_plan"]', 'states', {
                     'invisible': Not(Bool(Equal(
                         Eval('project_type'), 'study_plan'))),
@@ -852,8 +852,7 @@ class CreateSample(metaclass=PoolMeta):
     __name__ = 'lims.create_sample'
 
     def _get_samples_defaults(self, entry_id):
-        samples_defaults = super(CreateSample,
-            self)._get_samples_defaults(entry_id)
+        samples_defaults = super()._get_samples_defaults(entry_id)
 
         application_date = (hasattr(self.start, 'application_date') and
             getattr(self.start, 'application_date') or None)
@@ -951,14 +950,14 @@ class ProjectGLPReport01(Report):
         if project.type != 'study_plan':
             raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
-        return super(ProjectGLPReport01, cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
         ProjectSampleInCustody = Pool().get(
             'lims.project.sample_in_custody')
 
-        report_context = super(ProjectGLPReport01, cls).get_context(
+        report_context = super().get_context(
             records, data)
 
         report_context['company'] = report_context['user'].company
@@ -1014,13 +1013,13 @@ class ProjectGLPReport02(Report):
         if project.type != 'study_plan':
             raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
-        return super(ProjectGLPReport02, cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
         Fraction = Pool().get('lims.fraction')
 
-        report_context = super(ProjectGLPReport02, cls).get_context(
+        report_context = super().get_context(
             records, data)
 
         report_context['company'] = report_context['user'].company
@@ -1112,7 +1111,7 @@ class ProjectGLPReport03(Report):
         if project.type != 'study_plan':
             raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
-        return super(ProjectGLPReport03, cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
@@ -1120,7 +1119,7 @@ class ProjectGLPReport03(Report):
         Project = pool.get('lims.project')
         Fraction = pool.get('lims.fraction')
 
-        report_context = super(ProjectGLPReport03, cls).get_context(
+        report_context = super().get_context(
             records, data)
 
         project = Project(data['id'])
@@ -1173,7 +1172,7 @@ class ProjectGLPReport04(Report):
         if project.type != 'study_plan':
             raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
-        return super(ProjectGLPReport04, cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
@@ -1181,8 +1180,7 @@ class ProjectGLPReport04(Report):
         Fraction = pool.get('lims.fraction')
         Move = pool.get('stock.move')
 
-        report_context = super(ProjectGLPReport04, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
         report_context['stp_number'] = records[0].stp_number
@@ -1276,7 +1274,7 @@ class ProjectGLPReport05(Report):
         if project.type != 'study_plan':
             raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
-        return super(ProjectGLPReport05, cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
@@ -1284,8 +1282,7 @@ class ProjectGLPReport05(Report):
         Project = pool.get('lims.project')
         Fraction = pool.get('lims.fraction')
 
-        report_context = super(ProjectGLPReport05, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         project = Project(data['id'])
 
@@ -1335,7 +1332,7 @@ class ProjectGLPReport06(Report):
         if project.type != 'study_plan':
             raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
-        return super(ProjectGLPReport06, cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
@@ -1345,8 +1342,7 @@ class ProjectGLPReport06(Report):
         ProjectDevAndAmndmntProfessional = pool.get(
             'lims.project.deviation_amendment.professional')
 
-        report_context = super(ProjectGLPReport06, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
         report_context['stp_number'] = records[0].stp_number
@@ -1416,7 +1412,7 @@ class ProjectGLPReport07(Report):
         if project.type != 'study_plan':
             raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
-        return super(ProjectGLPReport07, cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
@@ -1424,8 +1420,7 @@ class ProjectGLPReport07(Report):
         Entry = pool.get('lims.entry')
         Fraction = pool.get('lims.fraction')
 
-        report_context = super(ProjectGLPReport07, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
         report_context['stp_number'] = records[0].stp_number
@@ -1481,7 +1476,7 @@ class ProjectGLPReport08(Report):
         if project.type != 'study_plan':
             raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
-        return super(ProjectGLPReport08, cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
@@ -1489,8 +1484,7 @@ class ProjectGLPReport08(Report):
         Entry = pool.get('lims.entry')
         Fraction = pool.get('lims.fraction')
 
-        report_context = super(ProjectGLPReport08, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
         report_context['stp_number'] = records[0].stp_number
@@ -1543,7 +1537,7 @@ class ProjectGLPReport09(Report):
         if project.type != 'study_plan':
             raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
-        return super(ProjectGLPReport09, cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
@@ -1555,8 +1549,7 @@ class ProjectGLPReport09(Report):
         ResultsReport = pool.get('lims.results_report')
         Analysis = pool.get('lims.analysis')
 
-        report_context = super(ProjectGLPReport09, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
         report_context['stp_number'] = records[0].stp_number
@@ -1689,8 +1682,7 @@ class ProjectGLPReport10(Report):
         pool = Pool()
         Project = pool.get('lims.project')
 
-        report_context = super(ProjectGLPReport10, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
         report_context['date_from'] = data['date_from']
@@ -1834,15 +1826,14 @@ class ProjectGLPReport11(Report):
         if project.type != 'study_plan':
             raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
-        return super(ProjectGLPReport11, cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
         ProjectReferenceElement = Pool().get(
             'lims.project.reference_element')
 
-        report_context = super(ProjectGLPReport11, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
         report_context['stp_number'] = records[0].stp_number
@@ -1916,8 +1907,7 @@ class ProjectGLPReport12(Report):
         pool = Pool()
         ProjectChangeLog = pool.get('lims.project.stp_changelog')
 
-        report_context = super(ProjectGLPReport12, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
         report_context['date_from'] = data['date_from']
@@ -1992,12 +1982,11 @@ class ProjectGLPReportStudyPlan(Report):
         if project.type != 'study_plan':
             raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
-        return super(ProjectGLPReportStudyPlan, cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
-        report_context = super(ProjectGLPReportStudyPlan, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         project = records[0]
 
@@ -2087,12 +2076,11 @@ class ProjectGLPReportFinalRP(Report):
             if project.stp_phase != 'study_plan':
                 raise UserError(gettext(
                     'lims_project_study_plan.msg_not_study_plan'))
-        return super(ProjectGLPReportFinalRP, cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
-        report_context = super(ProjectGLPReportFinalRP, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         project = records[0]
 
@@ -2328,12 +2316,11 @@ class ProjectGLPReportFinalFOR(Report):
             if project.stp_phase != 'study_plan':
                 raise UserError(gettext(
                     'lims_project_study_plan.msg_not_study_plan'))
-        return super(ProjectGLPReportFinalFOR, cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
-        report_context = super(ProjectGLPReportFinalFOR, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         project = records[0]
 
@@ -2574,13 +2561,11 @@ class ProjectGLPReportAnalyticalPhase(Report):
             if project.stp_phase != 'analytical_phase':
                 raise UserError(gettext(
                     'lims_project_study_plan.msg_not_analytical_phase'))
-        return super(ProjectGLPReportAnalyticalPhase,
-            cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
-        report_context = super(ProjectGLPReportAnalyticalPhase,
-            cls).get_context(records, data)
+        report_context = super().get_context(records, data)
 
         project = records[0]
 
@@ -2813,15 +2798,14 @@ class ProjectGLPReport13(Report):
         if project.type != 'study_plan':
             raise UserError(gettext('lims_project_study_plan.msg_not_glp'))
 
-        return super(ProjectGLPReport13, cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
         pool = Pool()
         Fraction = pool.get('lims.fraction')
 
-        report_context = super(ProjectGLPReport13, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         report_context['company'] = report_context['user'].company
         report_context['stp_matrix'] = records[0].stp_matrix_client_description

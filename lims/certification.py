@@ -77,7 +77,7 @@ class TechnicalScopeVersion(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(TechnicalScopeVersion, cls).__setup__()
+        super().__setup__()
         cls._buttons.update({
             'open_typifications': {},
             'add_typifications': {
@@ -94,7 +94,7 @@ class TechnicalScopeVersion(ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, versions):
-        super(TechnicalScopeVersion, cls).validate(versions)
+        super().validate(versions)
         for version in versions:
             version.check_active()
 
@@ -148,7 +148,7 @@ class AnalysisFamily(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(AnalysisFamily, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -184,7 +184,7 @@ class AnalysisFamilyCertificant(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(AnalysisFamilyCertificant, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('product_matrix_uniq',

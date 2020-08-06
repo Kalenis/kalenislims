@@ -26,7 +26,7 @@ class LabWorkYear(metaclass=PoolMeta):
         pool = Pool()
         if field == 'project_tas_sequence':
             return pool.get('lims.lab.workyear.sequence')
-        return super(LabWorkYear, cls).multivalue_model(field)
+        return super().multivalue_model(field)
 
 
 class LabWorkYearSequence(metaclass=PoolMeta):

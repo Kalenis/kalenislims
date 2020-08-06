@@ -12,7 +12,7 @@ class TrendChart(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(TrendChart, cls).__setup__()
+        super().__setup__()
         filter = ('component', 'Same Component')
         if filter not in cls.filter.selection:
             cls.filter.selection.append(filter)
@@ -27,7 +27,7 @@ class OpenTrendChart(metaclass=PoolMeta):
     def _get_clause(self):
         chart = self.start.chart
         notebook = self.start.notebook
-        clause = super(OpenTrendChart, self)._get_clause()
+        clause = super()._get_clause()
 
         if chart.filter == 'component':
             clause.append(('component', '=', notebook.component))
@@ -40,10 +40,10 @@ class OpenTrendChart(metaclass=PoolMeta):
         chart = self.start.chart
         if chart.x_axis == 'hours_component':
             return [('hours_component', 'DESC')]
-        return super(OpenTrendChart, self)._get_order()
+        return super()._get_order()
 
     def _get_x_axis(self, notebook):
         chart = self.start.chart
         if chart.x_axis == 'hours_component':
             return notebook.hours_component
-        return super(OpenTrendChart, self)._get_x_axis(notebook)
+        return super()._get_x_axis(notebook)

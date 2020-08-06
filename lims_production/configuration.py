@@ -28,7 +28,7 @@ class ProductionConfiguration(metaclass=PoolMeta):
         pool = Pool()
         if field == 'lot_sequence':
             return pool.get('production.configuration.lot_sequence')
-        return super(ProductionConfiguration, cls).multivalue_model(field)
+        return super().multivalue_model(field)
 
     @classmethod
     def default_lot_sequence(cls, **pattern):

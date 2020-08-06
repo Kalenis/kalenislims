@@ -31,7 +31,7 @@ class Party(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Party, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('lims_user_uniq', Unique(t, t.lims_user),

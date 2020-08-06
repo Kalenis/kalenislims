@@ -69,7 +69,7 @@ class Table(ModelSQL, ModelView):
     def delete(cls, tables):
         for table in tables:
             table.drop_table()
-        super(Table, cls).delete(tables)
+        super().delete(tables)
 
 
 class TableField(ModelSQL, ModelView):

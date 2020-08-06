@@ -18,7 +18,7 @@ class Uom(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Uom, cls).__setup__()
+        super().__setup__()
         cls.symbol.size = 30
         t = cls.__table__()
         cls._sql_constraints += [
@@ -70,7 +70,7 @@ class Template(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Template, cls).__setup__()
+        super().__setup__()
         new_domain = [('category.lims_only_available', '!=', True)]
         cls.default_uom.domain = new_domain
 
@@ -95,7 +95,7 @@ class VolumeConversion(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(VolumeConversion, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('brix', 'ASC'))
 
     @staticmethod
@@ -217,7 +217,7 @@ class ConcentrationLevel(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(ConcentrationLevel, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),

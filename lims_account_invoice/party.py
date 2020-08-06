@@ -55,7 +55,7 @@ class Address(metaclass=PoolMeta):
 
     @classmethod
     def validate(cls, addresses):
-        super(Address, cls).validate(addresses)
+        super().validate(addresses)
         for address in addresses:
             address.check_invoice_type()
 

@@ -13,7 +13,7 @@ class AdministrativeTaskTemplate(metaclass=PoolMeta):
 
     @classmethod
     def get_types(cls):
-        types = super(AdministrativeTaskTemplate, cls).get_types()
+        types = super().get_types()
         types.append(('equipment_missing_data',
             gettext('lims_industry.lbl_equipment_missing_data')))
         types.append(('component_missing_data',
@@ -32,7 +32,7 @@ class AdministrativeTask(metaclass=PoolMeta):
 
     @classmethod
     def _get_origin(cls):
-        origins = super(AdministrativeTask, cls)._get_origin()
+        origins = super()._get_origin()
         origins.extend([
             'lims.equipment',
             'lims.component',

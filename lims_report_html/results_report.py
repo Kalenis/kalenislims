@@ -49,7 +49,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(ResultsReportVersionDetail, cls).__setup__()
+        super().__setup__()
         if 'invisible' in cls.resultrange_origin.states:
             del cls.resultrange_origin.states['invisible']
         if 'required' in cls.resultrange_origin.states:
@@ -98,8 +98,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     @classmethod
     def _get_fields_from_samples(cls, samples):
         Notebook = Pool().get('lims.notebook')
-        detail_default = super(ResultsReportVersionDetail,
-            cls)._get_fields_from_samples(samples)
+        detail_default = super()._get_fields_from_samples(samples)
         for sample in samples:
             notebook = Notebook(sample['notebook'])
             result_template = notebook.fraction.sample.result_template
@@ -127,8 +126,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
 
     @classmethod
     def _get_fields_from_detail(cls, detail):
-        detail_default = super(ResultsReportVersionDetail,
-            cls)._get_fields_from_detail(detail)
+        detail_default = super()._get_fields_from_detail(detail)
         if detail.template:
             detail_default['template'] = detail.template.id
         if detail.trend_charts:
@@ -167,12 +165,12 @@ class ResultsReportVersionDetailSection(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(ResultsReportVersionDetailSection, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('order', 'ASC'))
 
     @classmethod
     def validate(cls, sections):
-        super(ResultsReportVersionDetailSection, cls).validate(sections)
+        super().validate(sections)
         merger = PdfFileMerger(strict=False)
         for section in sections:
             filedata = BytesIO(section.data)

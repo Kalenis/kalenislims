@@ -13,7 +13,7 @@ class AdministrativeTaskTemplate(metaclass=PoolMeta):
 
     @classmethod
     def get_types(cls):
-        types = super(AdministrativeTaskTemplate, cls).get_types()
+        types = super().get_types()
         types.append(('line_acceptance',
             gettext('lims_diagnosis.lbl_line_acceptance')))
         return types
@@ -24,6 +24,6 @@ class AdministrativeTask(metaclass=PoolMeta):
 
     @classmethod
     def _get_origin(cls):
-        origins = super(AdministrativeTask, cls)._get_origin()
+        origins = super()._get_origin()
         origins.append('lims.notebook.line')
         return origins

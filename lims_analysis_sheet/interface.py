@@ -24,7 +24,7 @@ class Compilation(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Compilation, cls).__setup__()
+        super().__setup__()
         cls.date_time.states['readonly'] = Bool(Eval('analysis_sheet'))
         if 'analysis_sheet' not in cls.date_time.depends:
             cls.date_time.depends.append('analysis_sheet')
@@ -65,13 +65,13 @@ class Compilation(metaclass=PoolMeta):
         new_lines = create_new_lines
         if self.analysis_sheet:
             new_lines = False
-        super(Compilation, self).collect_csv(create_new_lines=new_lines)
+        super().collect_csv(create_new_lines=new_lines)
 
     def collect_excel(self, create_new_lines=True):
         new_lines = create_new_lines
         if self.analysis_sheet:
             new_lines = False
-        super(Compilation, self).collect_excel(create_new_lines=new_lines)
+        super().collect_excel(create_new_lines=new_lines)
 
 
 class Column(metaclass=PoolMeta):
@@ -144,12 +144,12 @@ class Interface(metaclass=PoolMeta):
         return 'semicolon'
 
     def _get_fields_tree_view(self):
-        fields = super(Interface, self)._get_fields_tree_view()
+        fields = super()._get_fields_tree_view()
         fields.append('<field name="annulled"/>')
         return fields
 
     def _get_fields_form_view(self):
-        fields = super(Interface, self)._get_fields_form_view()
+        fields = super()._get_fields_form_view()
         fields.append('<label name="annulled"/>')
         fields.append('<field name="annulled"/>')
         return fields
@@ -159,7 +159,7 @@ class Table(metaclass=PoolMeta):
     __name__ = 'lims.interface.table'
 
     def create_table(self):
-        table = super(Table, self).create_table()
+        table = super().create_table()
         table.add_column('annulled', fields.Boolean._sql_type)
         return table
 
@@ -168,7 +168,7 @@ class NewAdapter(Adapter):
 
     def get_fields(self):
         Data = Pool().get('lims.interface.data')
-        res = super(NewAdapter, self).get_fields()
+        res = super().get_fields()
         table = Data.get_table()
         if not table:
             return res
@@ -185,7 +185,7 @@ class Data(metaclass=PoolMeta):
 
     @classmethod
     def __post_setup__(cls):
-        super(Data, cls).__post_setup__()
+        super().__post_setup__()
         cls._fields = NewAdapter()
 
     def set_field(self, value, field):
@@ -203,7 +203,7 @@ class Data(metaclass=PoolMeta):
         if not fields_names:
             fields_names = []
         fields_names.append('annulled')
-        res = super(Data, cls).fields_get(fields_names)
+        res = super().fields_get(fields_names)
         readonly = Transaction().context.get('lims_interface_readonly', False)
         res['annulled']['readonly'] = bool(readonly)
         return res
@@ -214,4 +214,4 @@ class Data(metaclass=PoolMeta):
         notebook_lines = [x.notebook_line for x in records
             if x.notebook_line]
         NotebookLine.write(notebook_lines, {'start_date': None})
-        super(Data, cls).delete(records)
+        super().delete(records)

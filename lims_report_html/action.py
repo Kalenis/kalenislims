@@ -12,7 +12,7 @@ class ActionReport(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(ActionReport, cls).__setup__()
+        super().__setup__()
         results_option = ('results', 'Results Report')
         if results_option not in cls.template_extension.selection:
             cls.template_extension.selection.append(results_option)

@@ -48,7 +48,7 @@ class Laboratory(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Laboratory, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -103,7 +103,7 @@ class LaboratoryProfessional(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(LaboratoryProfessional, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -162,7 +162,7 @@ class LabMethod(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(LabMethod, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -188,7 +188,7 @@ class LabMethod(ModelSQL, ModelView):
 
     @classmethod
     def write(cls, *args):
-        super(LabMethod, cls).write(*args)
+        super().write(*args)
         actions = iter(args)
         for methods, vals in zip(actions, actions):
             if 'results_estimated_waiting' in vals:
@@ -227,7 +227,7 @@ class LabMethodWaitingTime(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(LabMethodWaitingTime, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('method_party_uniq', Unique(t, t.method, t.party),
@@ -236,13 +236,13 @@ class LabMethodWaitingTime(ModelSQL, ModelView):
 
     @classmethod
     def create(cls, vlist):
-        waiting_times = super(LabMethodWaitingTime, cls).create(vlist)
+        waiting_times = super().create(vlist)
         cls.update_laboratory_notebook(waiting_times)
         return waiting_times
 
     @classmethod
     def write(cls, *args):
-        super(LabMethodWaitingTime, cls).write(*args)
+        super().write(*args)
         actions = iter(args)
         for waiting_times, vals in zip(actions, actions):
             if 'results_estimated_waiting' in vals:
@@ -269,7 +269,7 @@ class LabMethodWaitingTime(ModelSQL, ModelView):
     def delete(cls, waiting_times):
         waiting = waiting_times[0].method.results_estimated_waiting
         cls.update_laboratory_notebook(waiting_times, waiting)
-        super(LabMethodWaitingTime, cls).delete(waiting_times)
+        super().delete(waiting_times)
 
 
 class LabDevice(DeactivableMixin, ModelSQL, ModelView):
@@ -289,7 +289,7 @@ class LabDevice(DeactivableMixin, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(LabDevice, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -315,7 +315,7 @@ class LabDevice(DeactivableMixin, ModelSQL, ModelView):
 
     @classmethod
     def write(cls, *args):
-        super(LabDevice, cls).write(*args)
+        super().write(*args)
         actions = iter(args)
         for devices, vals in zip(actions, actions):
             if 'active' in vals:
@@ -372,7 +372,7 @@ class LabDeviceType(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(LabDeviceType, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -423,7 +423,7 @@ class LabDeviceLaboratory(ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, laboratories):
-        super(LabDeviceLaboratory, cls).validate(laboratories)
+        super().validate(laboratories)
         for l in laboratories:
             l.check_location()
 
@@ -451,12 +451,12 @@ class LabDeviceCorrection(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(LabDeviceCorrection, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('result_from', 'ASC'))
 
     @classmethod
     def validate(cls, corrections):
-        super(LabDeviceCorrection, cls).validate(corrections)
+        super().validate(corrections)
         for correction in corrections:
             try:
                 float(correction.result_from)
@@ -797,7 +797,7 @@ class NotebookRuleCondition(ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, conditions):
-        super(NotebookRuleCondition, cls).validate(conditions)
+        super().validate(conditions)
         for c in conditions:
             c.check_field()
 

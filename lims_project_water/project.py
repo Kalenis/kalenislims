@@ -21,14 +21,14 @@ class Project(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Project, cls).__setup__()
+        super().__setup__()
         project_type = ('water', 'Water sampling')
         if project_type not in cls.type.selection:
             cls.type.selection.append(project_type)
 
     @classmethod
     def view_attributes(cls):
-        return super(Project, cls).view_attributes() + [
+        return super().view_attributes() + [
             ('//group[@id="water"]', 'states', {
                     'invisible': Not(Bool(Equal(Eval('type'), 'water'))),
                     })]
@@ -39,7 +39,7 @@ class Entry(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Entry, cls).__setup__()
+        super().__setup__()
         project_type = ('water', 'Water sampling')
         if project_type not in cls.project_type.selection:
             cls.project_type.selection.append(project_type)
@@ -64,7 +64,7 @@ class Sample(metaclass=PoolMeta):
 
     @classmethod
     def view_attributes(cls):
-        return super(Sample, cls).view_attributes() + [
+        return super().view_attributes() + [
             ('//page[@id="water_sampling"]', 'states', {
                     'invisible': Not(Bool(
                         Equal(Eval('project_type'), 'water'))),
@@ -90,7 +90,7 @@ class CreateSampleStart(metaclass=PoolMeta):
 
     @classmethod
     def view_attributes(cls):
-        return super(CreateSampleStart, cls).view_attributes() + [
+        return super().view_attributes() + [
             ('//page[@id="water_sampling"]', 'states', {
                     'invisible': Not(Bool(
                         Equal(Eval('project_type'), 'water'))),
@@ -101,8 +101,7 @@ class CreateSample(metaclass=PoolMeta):
     __name__ = 'lims.create_sample'
 
     def _get_samples_defaults(self, entry_id):
-        samples_defaults = super(CreateSample,
-            self)._get_samples_defaults(entry_id)
+        samples_defaults = super()._get_samples_defaults(entry_id)
 
         sampling_point = (hasattr(self.start, 'sampling_point') and
             getattr(self.start, 'sampling_point') or None)
@@ -134,7 +133,7 @@ class ProjectWaterSampling(Report):
         if project.type != 'water':
             raise UserError(gettext('lims_project_water.msg_not_water'))
 
-        return super(ProjectWaterSampling, cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
@@ -142,8 +141,7 @@ class ProjectWaterSampling(Report):
         Project = pool.get('lims.project')
         Fraction = pool.get('lims.fraction')
         Entry = pool.get('lims.entry')
-        report_context = super(ProjectWaterSampling, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
 
         project = Project(data['id'])
         entry = Entry.search([

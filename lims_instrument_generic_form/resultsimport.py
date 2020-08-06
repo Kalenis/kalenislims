@@ -14,7 +14,7 @@ class ResultsImport(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(ResultsImport, cls).__setup__()
+        super().__setup__()
         controllers = [
             ('generic_form_xls', 'Generic Form - XLS'),
             ]
@@ -26,4 +26,4 @@ class ResultsImport(metaclass=PoolMeta):
         if self.name == 'generic_form_xls':
             self.controller = generic_form_xls
         else:
-            return super(ResultsImport, self).loadController()
+            return super().loadController()

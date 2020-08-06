@@ -35,7 +35,7 @@ class UserDepartment(ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, user_departments):
-        super(UserDepartment, cls).validate(user_departments)
+        super().validate(user_departments)
         for ud in user_departments:
             ud.check_default()
 

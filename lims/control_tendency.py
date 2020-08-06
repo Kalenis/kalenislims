@@ -55,7 +55,7 @@ class RangeType(ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, range_types):
-        super(RangeType, cls).validate(range_types)
+        super().validate(range_types)
         for rt in range_types:
             rt.check_default()
 
@@ -191,7 +191,7 @@ class ControlTendency(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(ControlTendency, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('rule_4_count', 'DESC'))
         cls._order.insert(1, ('rule_3_count', 'DESC'))
         cls._order.insert(2, ('rule_2_count', 'DESC'))
@@ -345,7 +345,7 @@ class ControlTendencyDetail(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(ControlTendencyDetail, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('date', 'ASC'))
         cls._order.insert(1, ('fraction', 'ASC'))
         cls._order.insert(2, ('device', 'ASC'))
@@ -513,14 +513,13 @@ class ControlResultLine(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super(ControlResultLine,
-            cls).__register__(module_name)
+        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
     @classmethod
     def __setup__(cls):
-        super(ControlResultLine, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('product_type', 'ASC'))
         cls._order.insert(1, ('matrix', 'ASC'))
         cls._order.insert(2, ('analysis', 'ASC'))
@@ -580,7 +579,7 @@ class ControlResultLineDetail(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(ControlResultLineDetail, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('date', 'ASC'))
         cls._order.insert(1, ('fraction', 'ASC'))
         cls._order.insert(2, ('device', 'ASC'))
@@ -1220,8 +1219,7 @@ class ControlChartReport(Report):
 
     @classmethod
     def get_context(cls, reports, data):
-        report_context = super(ControlChartReport, cls).get_context(
-                reports, data)
+        report_context = super().get_context(reports, data)
         pool = Pool()
         Company = pool.get('company.company')
         ControlTendency = pool.get('lims.control.tendency')
@@ -1362,7 +1360,7 @@ class TrendChart(ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, charts):
-        super(TrendChart, cls).validate(charts)
+        super().validate(charts)
         for chart in charts:
             chart.check_analysis_qty()
             chart.check_uom()
@@ -1579,7 +1577,7 @@ class TrendChartAnalysis(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(TrendChartAnalysis, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('order', 'ASC'))
 
 
@@ -1594,7 +1592,7 @@ class TrendChartAnalysis2(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(TrendChartAnalysis2, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('order', 'ASC'))
 
 
@@ -1739,7 +1737,7 @@ class TrendChartData(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(TrendChartData, cls).__setup__()
+        super().__setup__()
         cls.__rpc__['fields_view_get'].cache = None
 
     @classmethod
@@ -1798,8 +1796,7 @@ class TrendChartReport(Report):
     def get_context(cls, reports, data):
         TrendChart = Pool().get('lims.trend.chart')
 
-        report_context = super(TrendChartReport, cls).get_context(
-            reports, data)
+        report_context = super().get_context(reports, data)
 
         chart_id = data.get('chart_id')
         chart = TrendChart(chart_id)

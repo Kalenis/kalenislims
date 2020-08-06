@@ -76,7 +76,7 @@ class Template(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Template, cls).__setup__()
+        super().__setup__()
         cls._transitions |= set((
             ('draft', 'active'),
             ('active', 'draft'),
@@ -122,7 +122,7 @@ class Template(Workflow, ModelSQL, ModelView):
         if 'lines' not in default:
             default['lines'] = None
             default['revision'] = 1
-        return super(Template, cls).copy(templates, default)
+        return super().copy(templates, default)
 
     @classmethod
     def check_delete(cls, templates):
@@ -135,7 +135,7 @@ class Template(Workflow, ModelSQL, ModelView):
     @classmethod
     def delete(cls, templates):
         cls.check_delete(templates)
-        super(Template, cls).delete(templates)
+        super().delete(templates)
 
     @classmethod
     @ModelView.button
@@ -221,7 +221,7 @@ class QualityTest(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(QualityTest, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
         cls._transitions |= set((
             ('draft', 'confirmed'),
@@ -295,7 +295,7 @@ class QualityTest(Workflow, ModelSQL, ModelView):
     @classmethod
     def delete(cls, tests):
         cls.check_delete(tests)
-        super(QualityTest, cls).delete(tests)
+        super().delete(tests)
 
     @classmethod
     @ModelView.button
@@ -393,7 +393,7 @@ class QualityTest(Workflow, ModelSQL, ModelView):
             default = {}
         if 'templates' not in default:
             default['templates'] = None
-        return super(QualityTest, cls).copy(tests, default)
+        return super().copy(tests, default)
 
 
 class CreateQualityTestStart(ModelView):
@@ -600,7 +600,7 @@ class TestReport(CompanyReport):
     def get_context(cls, records, data):
         Test = Pool().get('lims.quality.test')
 
-        report_context = super(TestReport, cls).get_context(records, data)
+        report_context = super().get_context(records, data)
 
         report_context['objects'] = Test.browse(data['ids'])
         report_context['get_professionals'] = cls.get_professionals

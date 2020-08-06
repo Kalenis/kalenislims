@@ -48,7 +48,7 @@ class Sale(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Sale, cls).__setup__()
+        super().__setup__()
         cls.invoice_address.domain = [('party', '=', Eval('invoice_party'))]
         cls.invoice_address.depends.append('invoice_party')
         cls._buttons.update({
@@ -62,7 +62,7 @@ class Sale(metaclass=PoolMeta):
 
     @fields.depends('party', 'invoice_party')
     def on_change_party(self):
-        super(Sale, self).on_change_party()
+        super().on_change_party()
         self.invoice_party = None
         if self.party:
             invoice_party_domain = self.on_change_with_invoice_party_domain()
@@ -102,7 +102,7 @@ class Sale(metaclass=PoolMeta):
 
     @classmethod
     def quote(cls, sales):
-        super(Sale, cls).quote(sales)
+        super().quote(sales)
         cls.send_email_party(s for s in sales if s.send_email)
 
     @classmethod

@@ -69,7 +69,7 @@ class OpenResultsDetailAttachment(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail.open_attachment'
 
     def get_resource(self, details):
-        res = super(OpenResultsDetailAttachment, self).get_resource(details)
+        res = super().get_resource(details)
         for detail in details:
             for s in detail.samples:
                 if s.notebook.fraction.sample.sale_lines:

@@ -126,7 +126,7 @@ class Entry(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Entry, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
         cls._transitions |= set((
             ('draft', 'ongoing'),
@@ -379,7 +379,7 @@ class Entry(Workflow, ModelSQL, ModelView):
         vlist = [x.copy() for x in vlist]
         for values in vlist:
             values['number'] = Sequence.get_id(sequence.id)
-        return super(Entry, cls).create(vlist)
+        return super().create(vlist)
 
     @classmethod
     def copy(cls, entries, default=None):
@@ -395,7 +395,7 @@ class Entry(Workflow, ModelSQL, ModelView):
             current_default['sent_date'] = None
             current_default['result_cron'] = ''
 
-            new_entry, = super(Entry, cls).copy([entry],
+            new_entry, = super().copy([entry],
                 default=current_default)
             new_entries.append(new_entry)
         return new_entries
@@ -617,7 +617,7 @@ class Entry(Workflow, ModelSQL, ModelView):
     @classmethod
     def delete(cls, entries):
         cls.check_delete(entries)
-        super(Entry, cls).delete(entries)
+        super().delete(entries)
 
     def get_confirmed(self, name=None):
         if not self.samples:
@@ -697,7 +697,7 @@ class EntrySuspensionReason(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(EntrySuspensionReason, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('code_uniq', Unique(t, t.code),
@@ -727,7 +727,7 @@ class EntrySuspensionReason(ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, reasons):
-        super(EntrySuspensionReason, cls).validate(reasons)
+        super().validate(reasons)
         for sr in reasons:
             sr.check_default()
 
@@ -805,7 +805,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     def __register__(cls, module_name):
         table_h = cls.__table_handler__(module_name)
         plannable_exist = table_h.column_exist('plannable')
-        super(EntryDetailAnalysis, cls).__register__(module_name)
+        super().__register__(module_name)
         if not plannable_exist:
             cursor = Transaction().connection.cursor()
             pool = Pool()
@@ -823,7 +823,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(EntryDetailAnalysis, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('service', 'DESC'))
 
     @staticmethod
@@ -868,7 +868,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
 
     @classmethod
     def view_attributes(cls):
-        return super(EntryDetailAnalysis, cls).view_attributes() + [
+        return super().view_attributes() + [
             ('//group[@id="cie"]', 'states', {
                     'invisible': ~Eval('cie_fraction_type'),
                     })]
@@ -878,7 +878,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         vlist = [x.copy() for x in vlist]
         for values in vlist:
             values['plannable'] = cls._get_plannable(values)
-        details = super(EntryDetailAnalysis, cls).create(vlist)
+        details = super().create(vlist)
         cls._set_referable(details)
         return details
 
@@ -888,7 +888,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
             default = {}
         current_default = default.copy()
         current_default['confirmation_date'] = None
-        return super(EntryDetailAnalysis, cls).copy(details,
+        return super().copy(details,
             default=current_default)
 
     @classmethod
@@ -901,7 +901,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     def delete(cls, details):
         if Transaction().user != 0:
             cls.check_delete(details)
-        super(EntryDetailAnalysis, cls).delete(details)
+        super().delete(details)
 
     @classmethod
     def create_notebook_lines(cls, details, fraction):
@@ -1133,7 +1133,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
 
     @classmethod
     def write(cls, *args):
-        super(EntryDetailAnalysis, cls).write(*args)
+        super().write(*args)
         actions = iter(args)
         for details, vals in zip(actions, actions):
             change_cie_data = False
@@ -1447,14 +1447,14 @@ class AcknowledgmentOfReceipt(Report):
 
     @classmethod
     def __setup__(cls):
-        super(AcknowledgmentOfReceipt, cls).__setup__()
+        super().__setup__()
         cls.__rpc__['execute'] = RPC(False)
 
     @classmethod
     def execute(cls, ids, data):
         Entry = Pool().get('lims.entry')
 
-        result = super(AcknowledgmentOfReceipt, cls).execute(ids, data)
+        result = super().execute(ids, data)
         entry = Entry(ids[0])
 
         if entry.ack_report_cache:
@@ -1472,8 +1472,7 @@ class AcknowledgmentOfReceipt(Report):
         Service = pool.get('lims.service')
         Entry = pool.get('lims.entry')
 
-        report_context = super(AcknowledgmentOfReceipt, cls).get_context(
-            records, data)
+        report_context = super().get_context(records, data)
         if 'id' in data:
             entry = Entry(data['id'])
         else:
@@ -1661,11 +1660,11 @@ class EntryDetail(Report):
     def execute(cls, ids, data):
         if 'ids' in data:
             ids = data['ids']
-        return super(EntryDetail, cls).execute(ids, data)
+        return super().execute(ids, data)
 
     @classmethod
     def get_context(cls, records, data):
-        report_context = super(EntryDetail, cls).get_context(records, data)
+        report_context = super().get_context(records, data)
         Company = Pool().get('company.company')
 
         company = Company(Transaction().context.get('company'))
@@ -1680,7 +1679,7 @@ class EntryLabels(Report):
 
     @classmethod
     def get_context(cls, records, data):
-        report_context = super(EntryLabels, cls).get_context(records, data)
+        report_context = super().get_context(records, data)
         labels = []
         for entry in records:
             for sample in entry.samples:

@@ -241,7 +241,7 @@ class Interface(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Interface, cls).__setup__()
+        super().__setup__()
         cls._transitions |= set((
             ('draft', 'active'),
             ('active', 'canceled'),
@@ -724,7 +724,7 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Column, cls).__setup__()
+        super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
             ('interface_alias_uniq',
@@ -961,7 +961,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(Compilation, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('date_time', 'DESC'))
         cls._transitions |= set((
             ('draft', 'active'),
@@ -1414,7 +1414,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
             with Transaction().set_context(lims_interface_table=c.table):
                 lines = Data.search([('compilation', '=', c.id)])
                 Data.delete(lines)
-        super(Compilation, cls).delete(compilations)
+        super().delete(compilations)
 
 
 class CompilationOrigin(ModelSQL, ModelView):
@@ -1435,7 +1435,7 @@ class CompilationOrigin(ModelSQL, ModelView):
 
     @classmethod
     def validate(cls, origins):
-        super(CompilationOrigin, cls).validate(origins)
+        super().validate(origins)
         for origin in origins:
             origin.check_duplicated()
 

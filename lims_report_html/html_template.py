@@ -63,7 +63,7 @@ class ReportTemplate(ModelSQL, ModelView):
 
     @classmethod
     def view_attributes(cls):
-        return super(ReportTemplate, cls).view_attributes() + [
+        return super().view_attributes() + [
             ('//page[@id="header_footer"]', 'states', {
                 'invisible': Eval('type') != 'base',
                 }),
@@ -151,19 +151,19 @@ class ReportTemplateTranslation(ModelSQL, ModelView):
     def create(cls, vlist):
         Template = Pool().get('lims.result_report.template')
         Template._translation_cache.clear()
-        return super(ReportTemplateTranslation, cls).create(vlist)
+        return super().create(vlist)
 
     @classmethod
     def write(cls, *args):
         Template = Pool().get('lims.result_report.template')
         Template._translation_cache.clear()
-        return super(ReportTemplateTranslation, cls).write(*args)
+        return super().write(*args)
 
     @classmethod
     def delete(cls, translations):
         Template = Pool().get('lims.result_report.template')
         Template._translation_cache.clear()
-        return super(ReportTemplateTranslation, cls).delete(translations)
+        return super().delete(translations)
 
 
 class ReportTemplateSection(ModelSQL, ModelView):
@@ -185,12 +185,12 @@ class ReportTemplateSection(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(ReportTemplateSection, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('order', 'ASC'))
 
     @classmethod
     def validate(cls, sections):
-        super(ReportTemplateSection, cls).validate(sections)
+        super().validate(sections)
         merger = PdfFileMerger(strict=False)
         for section in sections:
             filedata = BytesIO(section.data)

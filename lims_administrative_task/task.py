@@ -118,7 +118,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
-        super(AdministrativeTask, cls).__setup__()
+        super().__setup__()
         cls._order.insert(0, ('id', 'DESC'))
         cls._transitions |= set((
             ('draft', 'pending'),
@@ -176,7 +176,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         vlist = [x.copy() for x in vlist]
         for values in vlist:
             values['number'] = Sequence.get_id(sequence.id)
-        return super(AdministrativeTask, cls).create(vlist)
+        return super().create(vlist)
 
     @classmethod
     def check_delete(cls, tasks):
@@ -189,7 +189,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
     @classmethod
     def delete(cls, tasks):
         cls.check_delete(tasks)
-        super(AdministrativeTask, cls).delete(tasks)
+        super().delete(tasks)
 
     def get_date(self, name):
         return self.create_date.date()

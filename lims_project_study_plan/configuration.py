@@ -27,7 +27,7 @@ class Configuration(metaclass=PoolMeta):
         pool = Pool()
         if field == 'sample_in_custody_sequence':
             return pool.get('lims.configuration.sequence')
-        return super(Configuration, cls).multivalue_model(field)
+        return super().multivalue_model(field)
 
     @classmethod
     def default_sample_in_custody_sequence(cls, **pattern):
@@ -71,7 +71,7 @@ class LabWorkYear(metaclass=PoolMeta):
         pool = Pool()
         if field == 'project_study_plan_sequence':
             return pool.get('lims.lab.workyear.sequence')
-        return super(LabWorkYear, cls).multivalue_model(field)
+        return super().multivalue_model(field)
 
 
 class LabWorkYearSequence(metaclass=PoolMeta):
