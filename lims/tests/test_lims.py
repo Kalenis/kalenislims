@@ -3,6 +3,7 @@
 # the full copyright notices and license terms.
 import unittest
 import doctest
+
 import trytond.tests.test_tryton
 from trytond.tests.test_tryton import ModuleTestCase
 from trytond.tests.test_tryton import doctest_teardown

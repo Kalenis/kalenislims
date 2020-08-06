@@ -202,11 +202,13 @@ class ResultsReport(metaclass=PoolMeta):
             for version in self.versions:
                 for detail in version.details:
                     for line in detail.notebook_lines:
+                        entry = line.notebook_line.fraction.entry
                         to_addrs.extend([c.contact.email for c
-                            in line.notebook_line.fraction.entry.report_contacts
+                            in entry.report_contacts
                             if c.contact.report_contact and not
                             c.entry.invoice_party.block_reports_automatic_sending])
-                        entries.append(line.notebook_line.fraction.entry.number)  # TODO: Debug line
+                        # TODO: Debug line
+                        entries.append(entry.number)
         # TODO: Debug line
         logger.info(
             'Cron - Digital Signs:results_report.number:%s:to_addrs:%s'

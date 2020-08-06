@@ -3,6 +3,7 @@
 # the full copyright notices and license terms.
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
 from trytond.model import fields, ModelView
 from trytond.wizard import Wizard, StateView, StateTransition, StateAction, \
     Button
@@ -16,12 +17,14 @@ from trytond.i18n import gettext
 
 class LabWorkYear(metaclass=PoolMeta):
     __name__ = 'lims.lab.workyear'
+
     default_entry_quality = fields.Many2One('lims.entry',
         'Default entry quality')
 
 
 class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
+
     quality = fields.Boolean('Quality')
     lot = fields.Many2One('stock.lot', 'Lot', readonly=True)
     test_state = fields.Selection([

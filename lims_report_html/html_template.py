@@ -62,14 +62,14 @@ class ReportTemplate(ModelSQL, ModelView):
     def view_attributes(cls):
         return super().view_attributes() + [
             ('//page[@id="header_footer"]', 'states', {
-                'invisible': Eval('type') != 'base',
-                }),
+                    'invisible': Eval('type') != 'base',
+                    }),
             ('//page[@name="sections"]', 'states', {
-                'invisible': Eval('type') != 'base',
-                }),
+                    'invisible': Eval('type') != 'base',
+                    }),
             ('//page[@name="trend_charts"]', 'states', {
-                'invisible': Eval('type') != 'base',
-                }),
+                    'invisible': Eval('type') != 'base',
+                    }),
             ]
 
     @classmethod

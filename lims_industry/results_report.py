@@ -38,10 +38,10 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
     @classmethod
     def view_attributes(cls):
         missing_diagnosis = True if 'diagnosis' not in cls._fields else False
-        return [
+        return super().view_attributes() + [
             ('//group[@id="diagnosis"]', 'states', {
-                'invisible': missing_diagnosis,
-                }),
+                    'invisible': missing_diagnosis,
+                    }),
             ]
 
     @fields.depends('precedent1')

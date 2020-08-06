@@ -2,6 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from datetime import datetime
+
 from trytond.model import fields
 from trytond.pyson import Eval, Equal
 from trytond.transaction import Transaction
@@ -23,11 +24,13 @@ class Configuration(metaclass=PoolMeta):
 
 class Method(metaclass=PoolMeta):
     __name__ = 'lims.lab.method'
+
     specification = fields.Text('Specification')
 
 
 class Analysis(metaclass=PoolMeta):
     __name__ = 'lims.analysis'
+
     quality_type = fields.Selection([
         ('qualitative', 'Qualitative'),
         ('quantitative', 'Quantitative'),
@@ -91,7 +94,6 @@ class Typification(metaclass=PoolMeta):
     def __register__(cls, module_name):
         super().__register__(module_name)
         table = cls.__table_handler__(module_name)
-
         table.drop_constraint('product_matrix_analysis_method_uniq')
 
     @fields.depends('analysis')
@@ -432,7 +434,6 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
 class ResultReport(metaclass=PoolMeta):
     __name__ = 'lims.result_report'
 
-
     @classmethod
     def get_reference(cls, range_type, notebook_line, language,
             report_section):
@@ -469,6 +470,7 @@ class ResultReport(metaclass=PoolMeta):
 
 class NotebookLoadResultsManualLine(metaclass=PoolMeta):
     __name__ = 'lims.notebook.load_results_manual.line'
+
     qualitative_value = fields.Many2One('lims.quality.qualitative.value',
         'Qualitative Value',
         domain=[

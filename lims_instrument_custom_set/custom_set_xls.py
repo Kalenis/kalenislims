@@ -98,7 +98,7 @@ def parse(self, infile):
                                 repetition] = values
                         else:
                             self.rawresults[fraction][self.analysis_code] = {
-                                    repetition: values,
+                                repetition: values,
                                 }
                     else:
                         self.rawresults[fraction] = {

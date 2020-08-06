@@ -68,7 +68,8 @@ class ResultsImport(ModelSQL, ModelView):
         return description
 
     def loadController(self):
-        raise UserError(gettext('lims_instrument.msg_not_module', module=self.name))
+        raise UserError(gettext('lims_instrument.msg_not_module',
+            module=self.name))
 
     def getInputFile(self):
         return self._infile
@@ -83,7 +84,8 @@ class ResultsImport(ModelSQL, ModelView):
             return self.controller.parse(self, infile)
         except AttributeError:
             traceback.print_exc()
-            raise UserError(gettext('lims_instrument.msg_not_implemented', function='parse'))
+            raise UserError(gettext('lims_instrument.msg_not_implemented',
+                function='parse'))
 
     def exportResults(self):
         '''
@@ -467,11 +469,13 @@ class NotebookLoadResultsFile(Wizard):
                 elif (line.imported_end_date and line.start_date and
                         line.start_date > line.imported_end_date):
                     prevent_line = True
-                    outcome = gettext('lims_instrument.msg_end_date_start_date')
+                    outcome = gettext(
+                        'lims_instrument.msg_end_date_start_date')
                 elif (line.imported_inj_date and line.start_date and
                         line.start_date > line.imported_inj_date):
                     prevent_line = True
-                    outcome = gettext('lims_instrument.msg_inj_date_start_date')
+                    outcome = gettext(
+                        'lims_instrument.msg_inj_date_start_date')
                 elif (line.imported_end_date and line.imported_inj_date and
                         line.imported_inj_date > line.imported_end_date):
                     prevent_line = True

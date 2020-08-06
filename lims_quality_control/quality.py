@@ -2,6 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import datetime
+
 from trytond.model import Workflow, ModelView, ModelSQL, DeactivableMixin, \
     fields
 from trytond.wizard import Wizard, StateView, StateTransition, StateAction, \
@@ -155,7 +156,6 @@ class Template(Workflow, ModelSQL, ModelView):
             if not template.lines:
                 raise UserError(gettext(
                     'lims_quality_control.msg_missing_template_lines'))
-
 
     @classmethod
     @ModelView.button

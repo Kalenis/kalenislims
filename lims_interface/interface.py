@@ -152,14 +152,15 @@ class Interface(Workflow, ModelSQL, ModelView):
     name = fields.Char('Name', required=True)
     revision = fields.Integer('Revision', required=True, readonly=True)
     language = fields.Many2One('ir.lang', 'Language',
-        states={'readonly': Eval('state') != 'draft'}, depends=['state'],
-        domain=[('translatable', '=', True)])
+        domain=[('translatable', '=', True)],
+        states={'readonly': Eval('state') != 'draft'},
+        depends=['state'])
     kind = fields.Selection([
         ('template', 'Template'),
         ('controller', 'Controller'),
-        ], 'Kind', required=True, states={
-            'readonly': Eval('state') != 'draft',
-            }, depends=['state'])
+        ], 'Kind', required=True,
+        states={'readonly': Eval('state') != 'draft'},
+        depends=['state'])
     state = fields.Selection([
         ('draft', 'Draft'),
         ('active', 'Active'),
@@ -171,7 +172,8 @@ class Interface(Workflow, ModelSQL, ModelView):
         states={
             'readonly': Eval('state') != 'draft',
             'invisible': Eval('kind') != 'template',
-            }, depends=_depends)
+            },
+        depends=_depends)
     table = fields.Many2One('lims.interface.table', 'Table', readonly=True)
     template_type = fields.Selection([
         (None, ''),
@@ -188,15 +190,16 @@ class Interface(Workflow, ModelSQL, ModelView):
         ('semicolon', 'Semicolon (;)'),
         ('tab', 'Tab'),
         ('space', 'Space'),
-        ('other', 'Other')],
-        'Field separator',
+        ('other', 'Other'),
+        ], 'Field separator',
         states={
             'required': And(Eval('kind') == 'template',
                 Eval('template_type') == 'csv'),
             'invisible': Or(Eval('kind') != 'template',
                 Eval('template_type') != 'csv'),
             'readonly': Eval('state') != 'draft',
-        }, depends=['kind', 'template_type', 'state'])
+            },
+        depends=['kind', 'template_type', 'state'])
     field_separator_other = fields.Char('Other',
         states={
             'required': And(Eval('template_type') == 'csv',
@@ -204,7 +207,8 @@ class Interface(Workflow, ModelSQL, ModelView):
             'invisible': Or(Eval('template_type') != 'csv',
                 Eval('field_separator') != 'other'),
             'readonly': Eval('state') != 'draft',
-            }, depends=['template_type', 'field_separator', 'state'])
+            },
+        depends=['template_type', 'field_separator', 'state'])
     analysis_field = fields.Many2One('lims.interface.column',
         'Analysis field', depends=['state', 'id'],
         domain=[('interface', '=', Eval('id')), ('grouped', '=', False)],
@@ -653,19 +657,19 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         ('reference', 'Reference'),
         ], 'Field Type')
     related_model = fields.Many2One('ir.model', 'Related Model',
-        states={
+        depends=['type_'], states={
             'required': Eval('type_') == 'many2one',
             'invisible': Eval('type_') != 'many2one',
-        }, depends=['type_'])
+            })
     default_value = fields.Char('Default value',
         states={'readonly': Bool(Eval('expression'))},
         depends=['expression'])
     readonly = fields.Boolean('Read only')
     digits = fields.Integer('Digits',
-        states={
+        depends=['type_'], states={
             'required': Eval('type_').in_(['float', 'numeric']),
             'invisible': ~Eval('type_').in_(['float', 'numeric']),
-        }, depends=['type_'])
+            })
     source_start = fields.Integer('Field start',
         states={
             'required': Eval('_parent_interface', {}).get(
@@ -704,10 +708,10 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         help='Check if value have to be transferred to notebook line')
     related_line_field = fields.Many2One('ir.model.field', 'Related field',
         domain=[('model.model', '=', 'lims.notebook.line')],
-        states={
+        depends=['transfer_field'], states={
             'required': Bool(Eval('transfer_field')),
             'invisible': Not(Eval('transfer_field'))
-        }, depends=['transfer_field'])
+        })
     interface_state = fields.Function(fields.Selection([
         ('draft', 'Draft'),
         ('active', 'Active'),
@@ -938,9 +942,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
     date_time = fields.DateTime('Date', required=True, select=True)
     interface = fields.Many2One('lims.interface', 'Device Interface',
         domain=[('state', '=', 'active')])
-    revision = fields.Integer('Revision', states={
-            'readonly': Eval('state') != 'draft',
-            }, depends=['state'])
+    revision = fields.Integer('Revision',
+        states={'readonly': Eval('state') != 'draft'}, depends=['state'])
     table = fields.Many2One('lims.interface.table', 'Table')
     device = fields.Many2One('lims.lab.device', 'Device')
     origins = fields.One2Many('lims.interface.compilation.origin',

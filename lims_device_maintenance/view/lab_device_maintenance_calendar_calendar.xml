@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <calendar dtstart="date" dtend="date" mode="month" background_color="color">
     <field name="device"/>
     <field name="activity"/>

@@ -7,7 +7,6 @@ import operator
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal
-
 from sql.conditionals import Case
 
 from trytond.model import ModelView, ModelSQL, fields, Unique, DictSchemaMixin
@@ -1486,7 +1485,8 @@ class Fraction(ModelSQL, ModelView):
                     }),
             ('//page[@id="con"]', 'states', {
                     'invisible': Not(Bool(Equal(Eval('special_type'), 'con'))),
-                    })]
+                    }),
+            ]
 
     @classmethod
     def copy(cls, fractions, default=None):

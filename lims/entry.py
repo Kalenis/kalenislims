@@ -865,7 +865,8 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         return super().view_attributes() + [
             ('//group[@id="cie"]', 'states', {
                     'invisible': ~Eval('cie_fraction_type'),
-                    })]
+                    }),
+            ]
 
     @classmethod
     def create(cls, vlist):

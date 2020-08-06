@@ -35,7 +35,8 @@ class Project(metaclass=PoolMeta):
         return super().view_attributes() + [
             ('//group[@id="itl"]', 'states', {
                     'invisible': Not(Bool(Equal(Eval('type'), 'itl'))),
-                    })]
+                    }),
+            ]
 
 
 class Entry(metaclass=PoolMeta):

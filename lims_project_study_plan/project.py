@@ -2,8 +2,8 @@
 # This file is part of lims_project_study_plan module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-
 from datetime import datetime
+
 from trytond.model import ModelSQL, ModelView, fields, Unique
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval, Equal, Bool, Not, And, Or
@@ -214,7 +214,8 @@ class Project(metaclass=PoolMeta):
         return super().view_attributes() + [
             ('//group[@id="study_plan"]', 'states', {
                     'invisible': Not(Bool(Equal(Eval('type'), 'study_plan'))),
-                    })]
+                    }),
+            ]
 
     @classmethod
     def create(cls, vlist):
@@ -794,7 +795,8 @@ class Sample(metaclass=PoolMeta):
             ('//page[@id="study_plan"]', 'states', {
                     'invisible': Not(Bool(Equal(
                         Eval('project_type'), 'study_plan'))),
-                    })]
+                    }),
+            ]
 
 
 class CreateSampleStart(metaclass=PoolMeta):
@@ -828,7 +830,8 @@ class CreateSampleStart(metaclass=PoolMeta):
             ('//page[@id="study_plan"]', 'states', {
                     'invisible': Not(Bool(Equal(
                         Eval('project_type'), 'study_plan'))),
-                    })]
+                    }),
+            ]
 
 
 class CreateSample(metaclass=PoolMeta):

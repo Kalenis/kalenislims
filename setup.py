@@ -123,7 +123,8 @@ if __name__ == '__main__':
             'Intended Audience :: Manufacturing',
             'Intended Audience :: Science/Research',
             'Intended Audience :: Other Audience',
-            'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+            'License :: OSI Approved :: '
+            'GNU General Public License v3 or later (GPLv3+)',
             'Natural Language :: English',
             'Natural Language :: Spanish',
             'Operating System :: OS Independent',

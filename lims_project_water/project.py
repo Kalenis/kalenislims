@@ -29,7 +29,8 @@ class Project(metaclass=PoolMeta):
         return super().view_attributes() + [
             ('//group[@id="water"]', 'states', {
                     'invisible': Not(Bool(Equal(Eval('type'), 'water'))),
-                    })]
+                    }),
+            ]
 
 
 class Entry(metaclass=PoolMeta):
@@ -66,7 +67,8 @@ class Sample(metaclass=PoolMeta):
             ('//page[@id="water_sampling"]', 'states', {
                     'invisible': Not(Bool(
                         Equal(Eval('project_type'), 'water'))),
-                    })]
+                    }),
+            ]
 
 
 class CreateSampleStart(metaclass=PoolMeta):
@@ -92,7 +94,8 @@ class CreateSampleStart(metaclass=PoolMeta):
             ('//page[@id="water_sampling"]', 'states', {
                     'invisible': Not(Bool(
                         Equal(Eval('project_type'), 'water'))),
-                    })]
+                    }),
+            ]
 
 
 class CreateSample(metaclass=PoolMeta):

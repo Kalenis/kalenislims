@@ -48,7 +48,7 @@ def parse(self, infile):
         chromatogram = row2nd[COL['G']].value if (
             row2nd[COL['G']].ctype == xlrd.XL_CELL_TEXT) else None
 
-        # 3rd row: injection date 
+        # 3rd row: injection date
         row3nd = worksheet.row(2)
         inj_date_raw = row3nd[COL['E']].value
         if row3nd[COL['E']].ctype == xlrd.XL_CELL_TEXT:

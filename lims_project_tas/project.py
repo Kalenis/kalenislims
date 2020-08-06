@@ -49,7 +49,8 @@ class Project(metaclass=PoolMeta):
         return super().view_attributes() + [
             ('//group[@id="tas"]', 'states', {
                     'invisible': Not(Bool(Equal(Eval('type'), 'tas'))),
-                    })]
+                    }),
+            ]
 
     @fields.depends('client', 'tas_invoice_party')
     def on_change_client(self):

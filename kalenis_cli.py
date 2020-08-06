@@ -102,6 +102,7 @@ def setup(database, language, industry):
         'execute "kalenis-cli run" to start Kalenis LIMS server'.format(
             OK_COLOR), fg=OK_COLOR))
 
+
 @cli.command()
 @click.option('-d', '--database', default='kalenislims', show_default=True)
 def run(database):
