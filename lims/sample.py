@@ -2443,6 +2443,8 @@ class Sample(ModelSQL, ModelView):
     department = fields.Function(fields.Many2One('company.department',
         'Department'), 'get_department', searcher='search_department')
     attributes = fields.Dict('lims.sample.attribute', 'Attributes')
+    attributes_keys_string = attributes.translated('attributes', 'keys')
+    attributes_values_string = attributes.translated('attributes')
     confirmation_date = fields.Date('Confirmation date', readonly=True)
     laboratory_date = fields.Date('Laboratory deadline', readonly=True)
     report_date = fields.Date('Date agreed for result', readonly=True)
