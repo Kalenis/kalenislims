@@ -7,5 +7,11 @@
         <record model="ir.message" id="msg_section_pdf">
             <field name="text">Section files must be in PDF format</field>
         </record>
+        <record model="ir.message" id="msg_yes">
+            <field name="text">Yes</field>
+        </record>
+        <record model="ir.message" id="msg_no">
+            <field name="text">No</field>
+        </record>
     </data>
 </tryton>

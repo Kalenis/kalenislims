@@ -7,9 +7,7 @@ import re
 from configparser import ConfigParser
 from setuptools import setup
 
-MODULE2PREFIX = {
-    'html_report': 'trytonspain',
-    }
+MODULE2PREFIX = {}
 
 
 def kalenis_test_suite():
@@ -44,14 +42,9 @@ minor_version = int(minor_version)
 # TODO: check new openpyxl versions, v.3 seems to be buggy in PyPI
 requires = ['appdirs', 'Click', 'formulas', 'openpyxl==2.6.4', 'pandas',
     'psycopg2', 'PyPDF2', 'pytz', 'unidecode', 'xlrd', 'xlutils',
-    'matplotlib']
+    'matplotlib', 'Jinja2', 'Babel', 'WeasyPrint']
 
-LINKS = {
-    'trytonspain_html_report': ('https://github.com/Kalenis/'
-        'trytond-html_report/tarball/master#egg='
-        'trytonspain_html_report-%s.%s' %
-        (major_version, minor_version)),
-    }
+LINKS = {}
 
 packages = []
 package_dir = {}

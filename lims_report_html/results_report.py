@@ -2,10 +2,16 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import os
+from mimetypes import guess_type as mime_guess_type
+from binascii import b2a_base64
+from functools import partial
+from decimal import Decimal
+from datetime import date, datetime
 from lxml import html as lxml_html
 from base64 import b64encode
 from babel.support import Translations as BabelTranslations
 from jinja2 import contextfilter, Markup
+from jinja2 import Environment, FunctionLoader
 from io import BytesIO
 from PyPDF2 import PdfFileMerger
 from PyPDF2.utils import PdfReadError
@@ -16,7 +22,8 @@ from trytond.pyson import Eval
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
-from trytond.modules.html_report.generator import PdfGenerator
+from trytond.tools import file_open
+from .generator import PdfGenerator
 
 
 class ResultsReportVersionDetail(metaclass=PoolMeta):
@@ -294,18 +301,28 @@ class ResultReport(metaclass=PoolMeta):
 
     @classmethod
     def execute_html_results_report(cls, ids, data):
+        pool = Pool()
+        ActionReport = pool.get('ir.action.report')
         cls.check_access()
-        action, model = cls.get_action(data)
+
+        action_id = data.get('action_id')
+        if action_id is None:
+            action_reports = ActionReport.search([
+                ('report_name', '=', cls.__name__),
+                ])
+            assert action_reports, '%s not found' % cls
+            action = action_reports[0]
+        else:
+            action = ActionReport(action_id)
 
         records = []
+        model = action.model or data.get('model')
         if model:
             records = cls._get_records(ids, model, data)
         oext, content = cls._execute_html_results_report(records, data, action)
         if not isinstance(content, str):
             content = bytearray(content) if bytes == str else bytes(content)
-
-        return oext, content, cls.get_direct_print(action), cls.get_name(
-            action)
+        return (oext, content, action.direct_print, action.name)
 
     @classmethod
     def _execute_html_results_report(cls, records, data, action):
@@ -406,17 +423,62 @@ class ResultReport(metaclass=PoolMeta):
 
     @classmethod
     def get_results_report_environment(cls):
-        env = cls.get_environment()
+        extensions = ['jinja2.ext.i18n', 'jinja2.ext.autoescape',
+            'jinja2.ext.with_', 'jinja2.ext.loopcontrols', 'jinja2.ext.do']
+        env = Environment(extensions=extensions,
+            loader=FunctionLoader(lambda name: ''))
+
         env.filters.update(cls.get_results_report_filters())
 
-        context = Transaction().context
-        locale = context.get('locale').split('_')[0]
+        locale = Transaction().context.get('locale').split('_')[0]
         translations = TemplateTranslations(locale)
         env.install_gettext_translations(translations)
         return env
 
     @classmethod
     def get_results_report_filters(cls):
+        Lang = Pool().get('ir.lang')
+
+        def module_path(name):
+            module, path = name.split('/', 1)
+            with file_open(os.path.join(module, path)) as f:
+                return 'file://%s' % f.name
+
+        def render(value, digits=2, lang=None, filename=None):
+            if value is None or value == '':
+                return ''
+
+            if isinstance(value, (float, Decimal)):
+                return lang.format('%.*f', (digits, value), grouping=True)
+
+            if isinstance(value, int):
+                return lang.format('%d', value, grouping=True)
+
+            if isinstance(value, bool):
+                if value:
+                    return gettext('lims_report_html.msg_yes')
+                return gettext('lims_report_html.msg_no')
+
+            if hasattr(value, 'rec_name'):
+                return value.rec_name
+
+            if isinstance(value, date):
+                return lang.strftime(value)
+
+            if isinstance(value, datetime):
+                return '%s %s' % (lang.strftime(value),
+                    value.strftime('%H:%M:%S'))
+
+            if isinstance(value, str):
+                return value.replace('\n', '<br/>')
+
+            if isinstance(value, bytes):
+                b64_value = b2a_base64(value).decode('ascii')
+                mimetype = 'image/png'
+                if filename:
+                    mimetype = mime_guess_type(filename)[0]
+                return ('data:%s;base64,%s' % (mimetype, b64_value)).strip()
+            return value
 
         @contextfilter
         def subrender(context, value, subobj=None):
@@ -431,7 +493,14 @@ class ResultReport(metaclass=PoolMeta):
                 result = Markup(result)
             return result
 
-        return {'subrender': subrender}
+        locale = Transaction().context.get('locale').split('_')[0]
+        lang, = Lang.search([('code', '=', locale or 'en')])
+
+        return {
+            'modulepath': module_path,
+            'render': partial(render, lang=lang),
+            'subrender': subrender,
+            }
 
     @classmethod
     def parse_images(cls, template_string):

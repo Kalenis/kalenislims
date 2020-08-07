@@ -194,6 +194,10 @@ msgctxt "model:ir.action,name:report_results_report"
 msgid "Results Report"
 msgstr "Informe de resultados"
 
+msgctxt "model:ir.message,text:msg_no"
+msgid "No"
+msgstr "No"
+
 msgctxt "model:ir.message,text:msg_no_template"
 msgid "The report has no template"
 msgstr "El informe no tiene ninguna plantilla"
@@ -201,6 +205,10 @@ msgstr "El informe no tiene ninguna plantilla"
 msgctxt "model:ir.message,text:msg_section_pdf"
 msgid "Section files must be in PDF format"
 msgstr "Los archivos de secciones deben ser PDF"
+
+msgctxt "model:ir.message,text:msg_yes"
+msgid "Yes"
+msgstr "Sí"
 
 msgctxt "model:ir.ui.menu,name:menu_html_template_list"
 msgid "Results Report Templates"
