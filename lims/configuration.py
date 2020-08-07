@@ -174,6 +174,13 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
                 [Eval('context', {}).get('company', -1), None]),
             ('code', '=', 'lims.planification'),
             ]))
+    referral_sequence = fields.MultiValue(fields.Many2One(
+        'ir.sequence', 'Referral Sequence', required=True,
+        domain=[
+            ('company', 'in',
+                [Eval('context', {}).get('company', -1), None]),
+            ('code', '=', 'lims.referral'),
+            ]))
     mcl_fraction_type = fields.Many2One('lims.fraction.type',
         'MCL fraction type')
     con_fraction_type = fields.Many2One('lims.fraction.type',
@@ -228,7 +235,7 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     @classmethod
     def multivalue_model(cls, field):
         pool = Pool()
-        if field == 'planification_sequence':
+        if field in ['planification_sequence', 'referral_sequence']:
             return pool.get('lims.configuration.sequence')
         return super().multivalue_model(field)
 
@@ -236,6 +243,11 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     def default_planification_sequence(cls, **pattern):
         return cls.multivalue_model(
             'planification_sequence').default_planification_sequence()
+
+    @classmethod
+    def default_referral_sequence(cls, **pattern):
+        return cls.multivalue_model(
+            'referral_sequence').default_referral_sequence()
 
     @staticmethod
     def default_planification_process_background():
@@ -290,6 +302,11 @@ class ConfigurationSequence(ModelSQL, CompanyValueMixin):
             ('company', 'in', [Eval('company', -1), None]),
             ('code', '=', 'lims.planification'),
             ])
+    referral_sequence = fields.Many2One('ir.sequence',
+        'Referral Sequence', depends=['company'], domain=[
+            ('company', 'in', [Eval('company', -1), None]),
+            ('code', '=', 'lims.referral'),
+            ])
 
     @classmethod
     def default_planification_sequence(cls):
@@ -297,6 +314,15 @@ class ConfigurationSequence(ModelSQL, CompanyValueMixin):
         ModelData = pool.get('ir.model.data')
         try:
             return ModelData.get_id('lims.planification', 'seq_planification')
+        except KeyError:
+            return None
+
+    @classmethod
+    def default_referral_sequence(cls):
+        pool = Pool()
+        ModelData = pool.get('ir.model.data')
+        try:
+            return ModelData.get_id('lims.referral', 'seq_referral')
         except KeyError:
             return None
 

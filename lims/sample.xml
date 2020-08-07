@@ -36,6 +36,22 @@
             <field eval="8" name="padding"/>
         </record>
 
+<!-- Sequences for Referral -->
+
+        <record model="ir.sequence.type" id="seq_type_referral">
+            <field name="name">Referral</field>
+            <field name="code">lims.referral</field>
+        </record>
+        <record model="ir.sequence.type-res.group"
+            id="seq_type_referral_group_admin">
+            <field name="sequence_type" ref="seq_type_referral"/>
+            <field name="group" ref="res.group_admin"/>
+        </record>
+        <record model="ir.sequence" id="seq_referral">
+            <field name="name">Referral</field>
+            <field name="code">lims.referral</field>
+        </record>
+
 <!-- Packaging Type -->
 
         <record model="ir.ui.view" id="lims_packaging_type_view_form">

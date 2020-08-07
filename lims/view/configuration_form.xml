@@ -8,6 +8,8 @@
             <field name="default_notebook_view"/>
             <label name="planification_sequence"/>
             <field name="planification_sequence"/>
+            <label name="referral_sequence"/>
+            <field name="referral_sequence"/>
             <label name="rm_start_uom"/>
             <field name="rm_start_uom"/>
             <label name="invoice_party_relation_type"/>

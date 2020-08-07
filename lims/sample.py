@@ -5752,14 +5752,19 @@ class CountersampleDischargeReport(Report):
 class Referral(ModelSQL, ModelView):
     'Referral of Services'
     __name__ = 'lims.referral'
+    _rec_name = 'number'
 
     _states = {'readonly': Eval('state') != 'draft'}
     _depends = ['state']
 
+    number = fields.Char('Number', select=True, readonly=True)
     date = fields.Date('Date', required=True,
         states=_states, depends=_depends)
     laboratory = fields.Many2One('party.party', 'Destination Laboratory',
         required=True, states=_states, depends=_depends)
+    carrier = fields.Many2One('carrier', 'Carrier',
+        states=_states, depends=_depends)
+    comments = fields.Text('Comments', states=_states, depends=_depends)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('sent', 'Sent'),
@@ -5778,7 +5783,7 @@ class Referral(ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super().__setup__()
-        cls._order.insert(0, ('date', 'DESC'))
+        cls._order.insert(0, ('number', 'DESC'))
         cls._buttons.update({
             'send': {
                 'invisible': Eval('state') != 'draft',
@@ -5818,6 +5823,19 @@ class Referral(ModelSQL, ModelView):
             EntryDetailAnalysis.write(details, {'state': 'referred'})
 
         cls.write(referrals, {'state': 'sent'})
+
+    @classmethod
+    def create(cls, vlist):
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        Sequence = pool.get('ir.sequence')
+
+        vlist = [x.copy() for x in vlist]
+        config = Config(1)
+        for values in vlist:
+            values['number'] = Sequence.get_id(
+                config.referral_sequence.id)
+        return super().create(vlist)
 
 
 class ReferralReport(Report):

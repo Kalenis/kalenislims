@@ -1,14 +1,25 @@
 <?xml version="1.0"?>
 <form>
+    <label name="number"/>
+    <field name="number"/>
     <label name="laboratory"/>
     <field name="laboratory"/>
     <label name="date"/>
     <field name="date"/>
-    <field name="services" colspan="4"
-        view_ids="lims.referral_service_line_view_list,lims.lims_entry_detail_analysis_view_form"/>
-    <group id="state" colspan="4" col="4">
-        <label name="state"/>
-        <field name="state"/>
-        <button name="send" string="Send" icon="tryton-ok"/>
-    </group>
+    <label name="carrier"/>
+    <field name="carrier"/>
+    <notebook>
+        <page string="General" id="general">
+            <field name="services" colspan="4"
+                view_ids="lims.referral_service_line_view_list,lims.lims_entry_detail_analysis_view_form"/>
+            <group id="state" colspan="4" col="4">
+                <label name="state"/>
+                <field name="state"/>
+                <button name="send" string="Send" icon="tryton-ok"/>
+            </group>
+        </page>
+        <page string="Comments" id="comments">
+            <field name="comments" colspan="4"/>
+        </page>
+    </notebook>
 </form>
