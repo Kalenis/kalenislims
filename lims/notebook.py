@@ -1120,7 +1120,7 @@ class NotebookLine(ModelSQL, ModelView):
 
         if view_type == 'tree':
             xml = '<?xml version="1.0"?>\n' \
-                '<tree editable="bottom">\n'
+                '<tree editable="1">\n'
             fields = set()
             for column in notebook_view.columns:
                 fields.add(column.field.name)

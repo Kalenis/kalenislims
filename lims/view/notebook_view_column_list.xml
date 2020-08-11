@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<tree sequence="sequence" editable="bottom">
+<tree sequence="sequence" editable="1">
     <field name="field"/>
     <field name="sequence"/>
 </tree>

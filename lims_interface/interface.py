@@ -437,7 +437,7 @@ class Interface(Workflow, ModelSQL, ModelView):
     def get_tree_view(self):
         fields = self._get_fields_tree_view()
         xml = ('<?xml version="1.0"?>\n'
-            '<tree editable="bottom">\n'
+            '<tree editable="1">\n'
             '%s\n'
             '</tree>') % ('\n'.join(fields))
         return {
@@ -539,7 +539,7 @@ class Interface(Workflow, ModelSQL, ModelView):
     def get_tree_grouped_view(self):
         fields = self._get_fields_tree_grouped_view()
         xml = ('<?xml version="1.0"?>\n'
-            '<tree editable="bottom">\n'
+            '<tree editable="1">\n'
             '%s\n'
             '</tree>') % ('\n'.join(fields))
         return {

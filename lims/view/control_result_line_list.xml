@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<tree editable="bottom">
+<tree editable="1">
     <field name="update"/>
     <field name="product_type"/>
     <field name="matrix"/>

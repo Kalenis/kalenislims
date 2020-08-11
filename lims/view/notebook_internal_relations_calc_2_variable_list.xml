@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<tree editable="top">
+<tree editable="1">
     <field name="use"/>
     <field name="analysis"/>
     <field name="repetition"/>

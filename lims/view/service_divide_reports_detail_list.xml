@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<tree editable="bottom">
+<tree editable="1">
     <field name="analysis_origin"/>
     <field name="analysis"/>
     <field name="laboratory"/>
