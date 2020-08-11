@@ -87,7 +87,7 @@ def setup(database, language, industry):
 
     click.echo('Downloading front-end...')
     front_end_dir = '%s/kalenis_front_end' % os.environ.get('HOME', '')
-    front_end_file = 'frontend_dist_5.4.tar.gz'
+    front_end_file = 'frontend_dist_5.6.tar.gz'
     Path(front_end_dir).mkdir(exist_ok=True)
     subprocess.run(['wget',
         'https://downloads.kalenislims.com/%s' % front_end_file, '-O',
@@ -113,5 +113,5 @@ def run(database):
     click.echo('Kalenis LIMS running, you can go to http://localhost:8000')
     config_file = get_config()
     os.environ['TRYTOND_web__root'] = \
-        '%s/kalenis_front_end/frontend_dist_5.4' % os.environ.get('HOME', '')
+        '%s/kalenis_front_end/frontend_dist_5.6' % os.environ.get('HOME', '')
     subprocess.run(['trytond', '-d', database, '-c', config_file])
