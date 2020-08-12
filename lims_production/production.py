@@ -91,8 +91,6 @@ class Production(metaclass=PoolMeta):
                 raise UserError(
                     gettext('lims_production.msg_quantity_multiple_required'))
 
-        outputs = []
-
         if self.warehouse:
             storage_location = self.warehouse.storage_location
         else:
@@ -104,6 +102,7 @@ class Production(metaclass=PoolMeta):
         else:
             digits = Template.cost_price.digits
 
+        outputs = []
         for output in self.bom.outputs:
             quantity = output.compute_quantity(factor)
             line_qty = output.quantity
@@ -118,7 +117,6 @@ class Production(metaclass=PoolMeta):
                             self.cost / Decimal(str(quantity))
                             ).quantize(Decimal(str(10 ** -digits[1])))
                     outputs.append(move)
-
         self.outputs = outputs
 
     @classmethod

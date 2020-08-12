@@ -2,9 +2,9 @@
 # This file is part of lims_production module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+from datetime import timedelta
 from decimal import Decimal
 from collections import defaultdict
-from functools import partial
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not
@@ -14,6 +14,8 @@ from trytond.wizard import Wizard, StateAction
 from trytond.modules.product import price_digits
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
+from trytond.tools import grouped_slice
+from trytond.modules.product import round_price
 
 
 class PurityDegree(ModelSQL, ModelView):
@@ -140,83 +142,136 @@ class Product(metaclass=PoolMeta):
             ]
 
     @classmethod
-    def recompute_cost_price(cls, products):
+    def recompute_cost_price(cls, products, start=None):
         # original function rewritten to use cost_price and
         # quantity from Template
         pool = Pool()
         Template = pool.get('product.template')
-
-        digits = Template.cost_price.digits
+        Move = pool.get('stock.move')
         costs = defaultdict(list)
         for product in products:
             if product.type == 'service':
                 continue
-            cost = getattr(product,
-                'recompute_cost_price_%s' % product.cost_price_method)()
-            cost = cost.quantize(Decimal(str(10.0 ** -digits[1])))
+            cost = getattr(
+                product, 'recompute_cost_price_%s' %
+                product.cost_price_method)(start)
+            cost = round_price(cost)
             costs[cost].append(product.template)
 
-        if not costs:
-            return
+        updated = []
+        for sub_products in grouped_slice(products):
+            domain = [
+                ('unit_price_updated', '=', True),
+                cls._domain_moves_cost(),
+                ('product', 'in', [p.id for p in sub_products]),
+                ]
+            if start:
+                domain.append(('effective_date', '>=', start))
+            updated += Move.search(domain, order=[])
+        if updated:
+            Move.write(updated, {'unit_price_updated': False})
 
-        to_write = []
-        for cost, records in costs.items():
-            to_write.append(records)
-            to_write.append({'cost_price': cost})
+        if costs:
+            to_write = []
+            for cost, records in costs.items():
+                to_write.append(records)
+                to_write.append({'cost_price': cost})
 
-        # Enforce check access for account_stock*
-        with Transaction().set_context(_check_access=True):
-            Template.write(*to_write)
+            # Enforce check access for account_stock*
+            with Transaction().set_context(_check_access=True):
+                Template.write(*to_write)
 
-    def recompute_cost_price_average(self):
+    def recompute_cost_price_average(self, start=None):
         # original function rewritten to use cost_price and
         # quantity from Template
         pool = Pool()
         Move = pool.get('stock.move')
         Currency = pool.get('currency.currency')
         Uom = pool.get('product.uom')
+        Revision = pool.get('product.cost_price.revision')
 
-        context = Transaction().context
-
-        product_clause = ('product.template', '=', self.template.id)
-
-        moves = Move.search([
-                product_clause,
-                ('state', '=', 'done'),
-                ('company', '=', context.get('company')),
-                ['OR',
-                    [
-                        ('to_location.type', '=', 'storage'),
-                        ('from_location.type', '!=', 'storage'),
-                        ],
-                    [
-                        ('from_location.type', '=', 'storage'),
-                        ('to_location.type', '!=', 'storage'),
-                        ],
+        domain = [
+            ('product.template', '=', self.template.id),
+            self._domain_moves_cost(),
+            ['OR',
+                [
+                    ('to_location.type', '=', 'storage'),
+                    ('from_location.type', '!=', 'storage'),
+                    ], [
+                    ('from_location.type', '=', 'storage'),
+                    ('to_location.type', '!=', 'storage'),
                     ],
-                ], order=[('effective_date', 'ASC'), ('id', 'ASC')])
+                ],
+            ]
+        if start:
+            domain.append(('effective_date', '>=', start))
+        moves = Move.search(
+                domain, order=[('effective_date', 'ASC'), ('id', 'ASC')])
+
+        revisions = Revision.get_for_product(self)
 
         cost_price = Decimal(0)
         quantity = 0
+        if start:
+            domain.remove(('effective_date', '>=', start))
+            domain.append(('effective_date', '<', start))
+            domain.append(
+                ('from_location.type', 'in', ['supplier', 'production']))
+            prev_moves = Move.search(
+                domain,
+                order=[('effective_date', 'DESC'), ('id', 'DESC')],
+                limit=1)
+            if prev_moves:
+                move, = prev_moves
+                cost_price = move.cost_price
+                quantity = self._get_storage_quantity(
+                    date=start - timedelta(days=1))
+                quantity = Decimal(str(quantity))
+
+        current_moves = []
+        current_cost_price = cost_price
         for move in moves:
+            if (current_moves
+                    and current_moves[-1].effective_date
+                    != move.effective_date):
+                Move.write([
+                        m for m in current_moves
+                        if m.cost_price != current_cost_price],
+                    dict(cost_price=current_cost_price))
+                current_moves.clear()
+            current_moves.append(move)
+
+            cost_price = Revision.apply_up_to(
+                revisions, cost_price, move.effective_date)
             qty = Uom.compute_qty(move.uom, move.quantity,
                 self.template.default_uom)
             qty = Decimal(str(qty))
             if move.from_location.type == 'storage':
                 qty *= -1
-            if (move.from_location.type in ['supplier', 'production'] or
-                    move.to_location.type == 'supplier'):
+            if (move.from_location.type in ['supplier', 'production']
+                    or move.to_location.type == 'supplier'):
                 with Transaction().set_context(date=move.effective_date):
                     unit_price = Currency.compute(
                         move.currency, move.unit_price,
                         move.company.currency, round=False)
-                unit_price = Uom.compute_price(move.uom, unit_price,
-                    self.template.default_uom)
-                if quantity + qty != 0:
+                unit_price = Uom.compute_price(
+                    move.uom, unit_price, self.template.default_uom)
+                if quantity + qty > 0 and quantity >= 0:
                     cost_price = (
                         (cost_price * quantity) + (unit_price * qty)
                         ) / (quantity + qty)
+                elif qty > 0:
+                    cost_price = unit_price
+                current_cost_price = round_price(cost_price)
             quantity += qty
+
+        Move.write([
+                m for m in current_moves
+                if m.cost_price != current_cost_price],
+            dict(cost_price=current_cost_price))
+
+        for revision in revisions:
+            cost_price = revision.get_cost_price(cost_price)
         return cost_price
 
     @classmethod
@@ -258,7 +313,6 @@ class Lot(metaclass=PoolMeta):
     category = fields.Many2One('stock.lot.category', 'Category')
     special_category = fields.Function(fields.Char('Category'),
         'on_change_with_special_category')
-
     stability = fields.Char('Stability', depends=['special_category'],
         states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
@@ -466,57 +520,6 @@ class Move(metaclass=PoolMeta):
         models = super()._get_origin()
         models.append('production')
         return models
-
-    def _update_product_cost_price(self, direction):
-        # original function rewritten to use cost_price and
-        # quantity from Template
-        pool = Pool()
-        Uom = pool.get('product.uom')
-        ProductTemplate = pool.get('product.template')
-        Location = pool.get('stock.location')
-        Currency = pool.get('currency.currency')
-        Date = pool.get('ir.date')
-
-        if direction == 'in':
-            quantity = self.quantity
-        elif direction == 'out':
-            quantity = -self.quantity
-        context = {}
-        locations = Location.search([
-                ('type', '=', 'storage'),
-                ])
-        context['with_childs'] = False
-        context['locations'] = [l.id for l in locations]
-        context['stock_date_end'] = Date.today()
-        with Transaction().set_context(context):
-            template = ProductTemplate(self.product.template.id)
-
-        qty = Uom.compute_qty(self.uom, quantity, template.default_uom)
-        qty = Decimal(str(qty))
-
-        product_qty = template.quantity
-        product_qty = Decimal(str(max(product_qty, 0)))
-        # convert wrt currency
-        with Transaction().set_context(date=self.effective_date):
-            unit_price = Currency.compute(self.currency, self.unit_price,
-                self.company.currency, round=False)
-        # convert wrt to the uom
-        unit_price = Uom.compute_price(self.uom, unit_price,
-            template.default_uom)
-        if product_qty + qty != Decimal('0.0'):
-            new_cost_price = (
-                (template.cost_price * product_qty) + (unit_price * qty)
-                ) / (product_qty + qty)
-        else:
-            new_cost_price = template.cost_price
-
-        digits = ProductTemplate.cost_price.digits
-        write = partial(ProductTemplate.write, [template])
-
-        new_cost_price = new_cost_price.quantize(
-            Decimal(str(10.0 ** -digits[1])))
-
-        write({'cost_price': new_cost_price})
 
 
 class ShipmentIn(metaclass=PoolMeta):
