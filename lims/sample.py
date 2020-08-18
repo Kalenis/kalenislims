@@ -5324,6 +5324,8 @@ class CreateSample(Wizard):
         if len(labels_list) > 1:
             logger.info('.. Sample.copy(..): %s' % (len(labels_list) - 1))
             for label in labels_list[1:]:
+                if not label:
+                    continue
                 Sample.copy([sample], default={
                     'label': label,
                     })
