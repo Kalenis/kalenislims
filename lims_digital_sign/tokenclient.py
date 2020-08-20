@@ -7,6 +7,7 @@ import xmlrpc.client
 
 
 class EchoClient():
+    __slots__ = ('listen', 'origin', 'target', 'server')
 
     def __init__(self, listen, origin, target):
         self.listen = listen
@@ -27,6 +28,7 @@ class EchoClient():
 
 
 class GetToken():
+    __slots__ = ('listen', 'origin', 'target')
 
     def __init__(self, listen, origin, target):
         self.listen = listen
