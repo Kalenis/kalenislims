@@ -63,8 +63,8 @@ class Invoice(metaclass=PoolMeta):
         if self.party:
             self.no_send_invoice = self.party.no_send_invoice
 
-    def _credit(self):
-        credit = super()._credit()
+    def _credit(self, **values):
+        credit = super()._credit(**values)
         if self.invoice_contacts:
             credit.invoice_contacts = [contact._credit()
                 for contact in self.invoice_contacts]
