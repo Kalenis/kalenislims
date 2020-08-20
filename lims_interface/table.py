@@ -31,7 +31,7 @@ class Table(ModelSQL, ModelView):
         'table', 'Grouped Views')
 
     def create_table(self):
-        TableHandler = backend.get('TableHandler')
+        TableHandler = backend.TableHandler
 
         model = ModelEmulation()
         model.__doc__ = self.name
@@ -60,8 +60,7 @@ class Table(ModelSQL, ModelView):
 
     def drop_table(self):
         transaction = Transaction()
-        TableHandler = backend.get('TableHandler')
-        TableHandler.drop_table('', self.name, cascade=True)
+        backend.TableHandler.drop_table('', self.name, cascade=True)
         transaction.database.sequence_delete(transaction.connection,
             self.name + '_id_seq')
 
