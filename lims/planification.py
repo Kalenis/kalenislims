@@ -124,6 +124,13 @@ class Planification(Workflow, ModelSQL, ModelView):
                 },
             })
 
+    @classmethod
+    def __register__(cls, module_name):
+        super().__register__(module_name)
+        table_h = cls.__table_handler__(module_name)
+        table_h.not_null_action('date_from', action='remove')
+        table_h.not_null_action('date_to', action='remove')
+
     @staticmethod
     def default_state():
         return 'draft'
