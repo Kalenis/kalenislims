@@ -396,7 +396,7 @@ class Lot(metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super().__setup__()
-        cls.expiration_date.states['invisible'] = Eval(False)
+        cls.expiration_date.states['invisible'] = False
 
     @staticmethod
     def default_exclusive_glp():
