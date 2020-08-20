@@ -2336,25 +2336,28 @@ class Sample(ModelSQL, ModelView):
         'get_entry_field',
         searcher='search_entry_field')
     producer = fields.Many2One('lims.sample.producer', 'Producer company',
-        domain=[('party', '=', Eval('party'))], depends=['party'])
+        domain=['OR', ('id', '=', Eval('producer')),
+            ('party', '=', Eval('party'))],
+        depends=['party'])
     label = fields.Char('Label', translate=True)
     sample_client_description = fields.Char('Product described by the client',
         translate=True)
     product_type = fields.Many2One('lims.product.type', 'Product type',
+        required=True,
+        domain=['OR', ('id', '=', Eval('product_type')),
+            ('id', 'in', Eval('product_type_domain'))],
         states={'readonly': Bool(Eval('product_type_matrix_readonly'))},
-        required=True, domain=[
-            ('id', 'in', Eval('product_type_domain')),
-            ], depends=['product_type_domain', 'product_type_matrix_readonly'])
+        depends=['product_type_domain', 'product_type_matrix_readonly'])
     product_type_view = fields.Function(fields.Many2One('lims.product.type',
         'Product type'), 'get_views_field', searcher='search_views_field')
     product_type_domain = fields.Function(fields.Many2Many(
         'lims.product.type', None, None, 'Product type domain'),
         'on_change_with_product_type_domain')
     matrix = fields.Many2One('lims.matrix', 'Matrix', required=True,
+        domain=['OR', ('id', '=', Eval('matrix')),
+            ('id', 'in', Eval('matrix_domain'))],
         states={'readonly': Bool(Eval('product_type_matrix_readonly'))},
-        domain=[
-            ('id', 'in', Eval('matrix_domain')),
-            ], depends=['matrix_domain', 'product_type_matrix_readonly'])
+        depends=['matrix_domain', 'product_type_matrix_readonly'])
     matrix_view = fields.Function(fields.Many2One('lims.matrix',
         'Matrix'), 'get_views_field', searcher='search_views_field')
     matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
