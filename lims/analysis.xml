@@ -30,6 +30,26 @@
             <field name="act_window" ref="act_lims_typification_list"/>
         </record>
 
+        <menuitem action="act_lims_typification_list"
+            id="lims_typification_menu"
+            parent="lims_config_base_tables" sequence="60"/>
+
+        <record model="ir.model.access" id="access_typification">
+            <field name="model" search="[('model', '=', 'lims.typification')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_typification_group_conf_base_tables_admin">
+            <field name="model" search="[('model', '=', 'lims.typification')]"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
 <!-- Typification Read Only -->
 
         <record model="ir.ui.view" id="lims_typification_readonly_view_list">
@@ -48,6 +68,14 @@
             <field name="act_window" ref="act_lims_typification_readonly_list"/>
         </record>
 
+        <record model="ir.model.access" id="access_typification_readonly">
+            <field name="model" search="[('model', '=', 'lims.typification.readonly')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
 <!-- Calculated Typification Read Only -->
 
         <record model="ir.ui.view" id="lims_typification_calculated_readonly_view_list">
@@ -64,6 +92,18 @@
             <field name="sequence" eval="10"/>
             <field name="view" ref="lims_typification_calculated_readonly_view_list"/>
             <field name="act_window" ref="act_lims_typification_calculated_readonly_list"/>
+        </record>
+
+        <menuitem action="act_lims_typification_calculated_readonly_list"
+            id="lims_typification_calculated_menu"
+            parent="lims_typification_menu" sequence="10"/>
+
+        <record model="ir.model.access" id="access_typification_calculated_readonly">
+            <field name="model" search="[('model', '=', 'lims.typification.calculated.readonly')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
         </record>
 
 <!-- Product type -->
@@ -94,6 +134,26 @@
             <field name="act_window" ref="act_lims_product_type_list"/>
         </record>
 
+        <menuitem action="act_lims_product_type_list"
+            id="lims_product_type_menu"
+            parent="lims_config_base_tables" sequence="10"/>
+
+        <record model="ir.model.access" id="access_product_type">
+            <field name="model" search="[('model', '=', 'lims.product.type')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_product_type_group_conf_base_tables_admin">
+            <field name="model" search="[('model', '=', 'lims.product.type')]"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
 <!-- Matrix -->
 
         <record model="ir.ui.view" id="lims_matrix_view_form">
@@ -120,6 +180,25 @@
             <field name="sequence" eval="20"/>
             <field name="view" ref="lims_matrix_view_form"/>
             <field name="act_window" ref="act_lims_matrix_list"/>
+        </record>
+
+        <menuitem action="act_lims_matrix_list" id="lims_matrix_menu"
+            parent="lims_config_base_tables" sequence="20"/>
+
+        <record model="ir.model.access" id="access_matrix">
+            <field name="model" search="[('model', '=', 'lims.matrix')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_matrix_group_conf_base_tables_admin">
+            <field name="model" search="[('model', '=', 'lims.matrix')]"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
 <!-- Objective Description -->
@@ -150,6 +229,26 @@
             <field name="act_window" ref="act_lims_objective_description_list"/>
         </record>
 
+        <menuitem action="act_lims_objective_description_list"
+            id="lims_objective_description_menu"
+            parent="lims_config_base_tables" sequence="25"/>
+
+        <record model="ir.model.access" id="access_objective_description">
+            <field name="model" search="[('model', '=', 'lims.objective_description')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_objective_description_group_conf_base_tables_admin">
+            <field name="model" search="[('model', '=', 'lims.objective_description')]"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
 <!-- Formula -->
 
         <record model="ir.ui.view" id="lims_formula_view_form">
@@ -178,6 +277,25 @@
             <field name="act_window" ref="act_lims_formula_list"/>
         </record>
 
+        <menuitem action="act_lims_formula_list" id="lims_formula_list_menu"
+            parent="lims_config_base_tables" sequence="40"/>
+
+        <record model="ir.model.access" id="access_formula">
+            <field name="model" search="[('model', '=', 'lims.formula')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_formula_group_conf_base_tables_admin">
+            <field name="model" search="[('model', '=', 'lims.formula')]"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
 <!-- Formula Variable -->
 
         <record model="ir.ui.view" id="lims_formula_variable_view_form">
@@ -203,6 +321,11 @@
             <field name="type">tree</field>
             <field name="name">analysis_list</field>
         </record>
+        <record model="ir.ui.view" id="lims_analysis_pending_view_list">
+            <field name="model">lims.analysis</field>
+            <field name="type">tree</field>
+            <field name="name">analysis_pending_list</field>
+        </record>
 
         <record model="ir.action.act_window" id="act_lims_analysis_list">
             <field name="name">Analysis/Sets/Groups</field>
@@ -219,6 +342,39 @@
             <field name="act_window" ref="act_lims_analysis_list"/>
         </record>
 
+        <menuitem action="act_lims_analysis_list" id="lims_analysis_menu"
+            parent="lims_config_base_tables" sequence="50"/>
+
+        <record model="ir.model.button" id="analysis_disable_button">
+            <field name="name">disable</field>
+            <field name="model" search="[('model', '=', 'lims.analysis')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="analysis_disable_button_group_admin">
+            <field name="button" ref="analysis_disable_button"/>
+            <field name="group" ref="res.group_admin"/>
+        </record>
+
+        <record model="ir.model.button" id="analysis_activate_button">
+            <field name="name">activate</field>
+            <field name="model" search="[('model', '=', 'lims.analysis')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="analysis_activate_button_group_group_lims_conf_base_tables_admin">
+            <field name="button" ref="analysis_activate_button"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+        </record>
+
+        <record model="ir.model.button" id="analysis_relate_analysis_button">
+            <field name="name">relate_analysis</field>
+            <field name="model" search="[('model', '=', 'lims.analysis')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="analysis_relate_analysis_button_group_group_lims_conf_base_tables_admin">
+            <field name="button" ref="analysis_relate_analysis_button"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+        </record>
+
         <record model="ir.rule.group" id="rule_group_analysis_laboratory">
             <field name="name">User in laboratory</field>
             <field name="model" search="[('model', '=', 'lims.analysis-laboratory')]"/>
@@ -229,6 +385,22 @@
                 eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
                 pyson="1"/>
             <field name="rule_group" ref="rule_group_analysis_laboratory"/>
+        </record>
+
+        <record model="ir.model.access" id="access_analysis">
+            <field name="model" search="[('model', '=', 'lims.analysis')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_analysis_group_conf_base_tables_admin">
+            <field name="model" search="[('model', '=', 'lims.analysis')]"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
 <!-- Included Analysis -->
@@ -335,6 +507,7 @@
             <field name="name">Copy/Move Typification</field>
             <field name="wiz_name">lims.typification.copy</field>
         </record>
+
         <record model="ir.action.keyword" id="lims_copy_typification_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.typification,-1</field>
@@ -359,6 +532,7 @@
             <field name="name">Copy Typification</field>
             <field name="wiz_name">lims.typification.calculated.copy</field>
         </record>
+
         <record model="ir.action.keyword" id="lims_copy_calculated_typification_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.typification.calculated.readonly,-1</field>
@@ -383,6 +557,7 @@
             <field name="name">Update Typification</field>
             <field name="wiz_name">lims.typification.update</field>
         </record>
+
         <record model="ir.action.keyword" id="wiz_update_typification_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.typification,-1</field>
@@ -414,6 +589,7 @@
             <field name="name">Create Analysis Product</field>
             <field name="wiz_name">lims.create_analysis_product</field>
         </record>
+
         <record model="ir.action.keyword" id="lims_create_analysis_product_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.analysis,-1</field>
@@ -432,6 +608,7 @@
             <field name="name">Open Analysis Not Typified</field>
             <field name="wiz_name">lims.analysis.open_not_typified</field>
         </record>
+
         <record model="ir.action.keyword" id="wiz_analysis_open_not_typified_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.analysis,-1</field>
@@ -472,162 +649,6 @@
             <field name="name">Remove Typifications</field>
             <field name="wiz_name">lims.scope_version.remove_typifications</field>
             <field name="model">lims.technical.scope.version</field>
-        </record>
-
-        <menuitem parent="lims_config_base_tables" action="act_lims_product_type_list"
-            id="lims_product_type_menu" sequence="10"/>
-        <menuitem parent="lims_config_base_tables" action="act_lims_matrix_list"
-            id="lims_matrix_menu" sequence="20"/>
-        <menuitem parent="lims_config_base_tables" action="act_lims_objective_description_list"
-            id="lims_objective_description_menu" sequence="25"/>
-        <menuitem parent="lims_config_base_tables" action="act_lims_lab_method_list"
-            id="lims_lab_method_menu" sequence="30"/>
-        <menuitem parent="lims_config_base_tables" action="act_lims_formula_list"
-            id="lims_formula_list_menu" sequence="40"/>
-        <menuitem parent="lims_config_base_tables" action="act_lims_analysis_list"
-            id="lims_analysis_menu" sequence="50"/>
-        <menuitem parent="lims_config_base_tables" action="act_lims_typification_list"
-            id="lims_typification_menu" sequence="60"/>
-        <menuitem parent="lims_typification_menu" action="act_lims_typification_calculated_readonly_list"
-            id="lims_typification_calculated_menu" sequence="10"/>
-
-        <record model="ir.model.access" id="access_product_type">
-            <field name="model" search="[('model', '=', 'lims.product.type')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_product_type_group_conf_base_tables_admin">
-            <field name="model" search="[('model', '=', 'lims.product.type')]"/>
-            <field name="group" ref="group_lims_conf_base_tables_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.model.access" id="access_matrix">
-            <field name="model" search="[('model', '=', 'lims.matrix')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_matrix_group_conf_base_tables_admin">
-            <field name="model" search="[('model', '=', 'lims.matrix')]"/>
-            <field name="group" ref="group_lims_conf_base_tables_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.model.access" id="access_objective_description">
-            <field name="model" search="[('model', '=', 'lims.objective_description')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_objective_description_group_conf_base_tables_admin">
-            <field name="model" search="[('model', '=', 'lims.objective_description')]"/>
-            <field name="group" ref="group_lims_conf_base_tables_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.model.access" id="access_formula">
-            <field name="model" search="[('model', '=', 'lims.formula')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_formula_group_conf_base_tables_admin">
-            <field name="model" search="[('model', '=', 'lims.formula')]"/>
-            <field name="group" ref="group_lims_conf_base_tables_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.model.access" id="access_analysis">
-            <field name="model" search="[('model', '=', 'lims.analysis')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_analysis_group_conf_base_tables_admin">
-            <field name="model" search="[('model', '=', 'lims.analysis')]"/>
-            <field name="group" ref="group_lims_conf_base_tables_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.model.access" id="access_typification">
-            <field name="model" search="[('model', '=', 'lims.typification')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_typification_group_conf_base_tables_admin">
-            <field name="model" search="[('model', '=', 'lims.typification')]"/>
-            <field name="group" ref="group_lims_conf_base_tables_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.model.access" id="access_typification_readonly">
-            <field name="model" search="[('model', '=', 'lims.typification.readonly')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-
-        <record model="ir.model.access" id="access_typification_calculated_readonly">
-            <field name="model" search="[('model', '=', 'lims.typification.calculated.readonly')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-
-        <record model="ir.model.button" id="analysis_disable_button">
-            <field name="name">disable</field>
-            <field name="model" search="[('model', '=', 'lims.analysis')]"/>
-        </record>
-        <record model="ir.model.button-res.group" id="analysis_disable_button_group_admin">
-            <field name="button" ref="analysis_disable_button"/>
-            <field name="group" ref="res.group_admin"/>
-        </record>
-
-        <record model="ir.model.button" id="analysis_activate_button">
-            <field name="name">activate</field>
-            <field name="model" search="[('model', '=', 'lims.analysis')]"/>
-        </record>
-        <record model="ir.model.button-res.group" id="analysis_activate_button_group_group_lims_conf_base_tables_admin">
-            <field name="button" ref="analysis_activate_button"/>
-            <field name="group" ref="group_lims_conf_base_tables_admin"/>
-        </record>
-
-        <record model="ir.model.button" id="analysis_relate_analysis_button">
-            <field name="name">relate_analysis</field>
-            <field name="model" search="[('model', '=', 'lims.analysis')]"/>
-        </record>
-        <record model="ir.model.button-res.group" id="analysis_relate_analysis_button_group_group_lims_conf_base_tables_admin">
-            <field name="button" ref="analysis_relate_analysis_button"/>
-            <field name="group" ref="group_lims_conf_base_tables_admin"/>
         </record>
 
     </data>

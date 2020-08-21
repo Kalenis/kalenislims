@@ -10,5 +10,13 @@
             <field name="name">configuration_form</field>
         </record>
 
+<!-- Cron -->
+
+        <record model="ir.cron" id="cron_lims_digital_sign_results_reports">
+            <field name="interval_number" eval="1"/>
+            <field name="interval_type">days</field>
+            <field name="method">lims.results_report|cron_digital_signs</field>
+        </record>
+
     </data>
 </tryton>

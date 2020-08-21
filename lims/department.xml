@@ -31,21 +31,13 @@
             <field name="act_window" ref="act_company_department_list"/>
         </record>
 
-        <menuitem parent="party.menu_configuration"
-            action="act_company_department_list"
-            id="company_department_menu"/>
+        <menuitem action="act_company_department_list"
+            id="company_department_menu"
+            parent="party.menu_configuration"/>
 
-<!-- User Department -->
-
-        <record model="ir.ui.view" id="user_department_view_form">
-            <field name="model">user.department</field>
-            <field name="type">form</field>
-            <field name="name">user_department_form</field>
-        </record>
-        <record model="ir.ui.view" id="user_department_view_list">
-            <field name="model">user.department</field>
-            <field name="type">tree</field>
-            <field name="name">user_department_list</field>
+        <record model="ir.ui.menu-res.group" id="menu_company_department_group_party_admin">
+            <field name="menu" ref="company_department_menu"/>
+            <field name="group" ref="party.group_party_admin"/>
         </record>
 
         <record model="ir.model.access" id="access_department">
@@ -64,13 +56,17 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
-<!-- Access Rights on Menu -->
+<!-- User Department -->
 
-        <!-- Other menu items -->
-
-        <record model="ir.ui.menu-res.group" id="menu_company_department_group_party_admin">
-            <field name="menu" ref="company_department_menu"/>
-            <field name="group" ref="party.group_party_admin"/>
+        <record model="ir.ui.view" id="user_department_view_form">
+            <field name="model">user.department</field>
+            <field name="type">form</field>
+            <field name="name">user_department_form</field>
+        </record>
+        <record model="ir.ui.view" id="user_department_view_list">
+            <field name="model">user.department</field>
+            <field name="type">tree</field>
+            <field name="name">user_department_list</field>
         </record>
 
     </data>

@@ -30,6 +30,26 @@
             <field name="act_window" ref="act_lims_certification_type_list"/>
         </record>
 
+        <menuitem action="act_lims_certification_type_list"
+            id="lims_certification_type_list_menu"
+            parent="lims_config_certification" sequence="10"/>
+
+        <record model="ir.model.access" id="access_certification_type">
+            <field name="model" search="[('model', '=', 'lims.certification.type')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_certification_type_group_conf_certification_admin">
+            <field name="model" search="[('model', '=', 'lims.certification.type')]"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
 <!-- Technical Scope -->
 
         <record model="ir.ui.view" id="lims_technical_scope_view_form">
@@ -56,6 +76,26 @@
             <field name="sequence" eval="20"/>
             <field name="view" ref="lims_technical_scope_view_form"/>
             <field name="act_window" ref="act_lims_technical_scope_list"/>
+        </record>
+
+        <menuitem action="act_lims_technical_scope_list"
+            id="lims_technical_scope_menu"
+            parent="lims_config_certification" sequence="30"/>
+
+        <record model="ir.model.access" id="access_technical_scope">
+            <field name="model" search="[('model', '=', 'lims.technical.scope')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_technical_scope_group_conf_certification_admin">
+            <field name="model" search="[('model', '=', 'lims.technical.scope')]"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
 <!-- Technical Scope Version -->
@@ -86,11 +126,16 @@
             <field name="act_window" ref="act_lims_technical_scope_version_list"/>
         </record>
 
+        <menuitem action="act_lims_technical_scope_version_list"
+            id="lims_technical_scope_version_menu"
+            parent="lims_technical_scope_menu" sequence="10"/>
+
         <record model="ir.model.button" id="technical_scope_version_open_typifications_button">
             <field name="name">open_typifications</field>
             <field name="model" search="[('model', '=', 'lims.technical.scope.version')]"/>
         </record>
-        <record model="ir.model.button-res.group" id="technical_scope_version_open_typifications_button_group_lims_conf_certification_admin">
+        <record model="ir.model.button-res.group"
+            id="technical_scope_version_open_typifications_button_group_lims_conf_certification_admin">
             <field name="button" ref="technical_scope_version_open_typifications_button"/>
             <field name="group" ref="group_lims_conf_certification_admin"/>
         </record>
@@ -99,7 +144,8 @@
             <field name="name">add_typifications</field>
             <field name="model" search="[('model', '=', 'lims.technical.scope.version')]"/>
         </record>
-        <record model="ir.model.button-res.group" id="technical_scope_version_add_typifications_button_group_lims_conf_certification_admin">
+        <record model="ir.model.button-res.group"
+            id="technical_scope_version_add_typifications_button_group_lims_conf_certification_admin">
             <field name="button" ref="technical_scope_version_add_typifications_button"/>
             <field name="group" ref="group_lims_conf_certification_admin"/>
         </record>
@@ -108,9 +154,26 @@
             <field name="name">remove_typifications</field>
             <field name="model" search="[('model', '=', 'lims.technical.scope.version')]"/>
         </record>
-        <record model="ir.model.button-res.group" id="technical_scope_version_remove_typifications_button_group_lims_conf_certification_admin">
+        <record model="ir.model.button-res.group"
+            id="technical_scope_version_remove_typifications_button_group_lims_conf_certification_admin">
             <field name="button" ref="technical_scope_version_remove_typifications_button"/>
             <field name="group" ref="group_lims_conf_certification_admin"/>
+        </record>
+
+        <record model="ir.model.access" id="access_technical_scope_version">
+            <field name="model" search="[('model', '=', 'lims.technical.scope.version')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_technical_scope_version_group_conf_certification_admin">
+            <field name="model" search="[('model', '=', 'lims.technical.scope.version')]"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
 <!-- Analysis Family -->
@@ -139,6 +202,26 @@
             <field name="sequence" eval="20"/>
             <field name="view" ref="lims_analysis_family_view_form"/>
             <field name="act_window" ref="act_lims_analysis_family_list"/>
+        </record>
+
+        <menuitem action="act_lims_analysis_family_list"
+            id="lims_analysis_family_menu"
+            parent="lims_config_certification" sequence="20"/>
+
+        <record model="ir.model.access" id="access_analysis_family">
+            <field name="model" search="[('model', '=', 'lims.analysis.family')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_analysis_family_group_conf_certification_admin">
+            <field name="model" search="[('model', '=', 'lims.analysis.family')]"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
 <!-- Analysis Family Certificant -->
@@ -181,113 +264,11 @@
             <field name="name">Duplicate Analysis Family</field>
             <field name="wiz_name">lims.analysis.family.duplicate</field>
         </record>
+
         <record model="ir.action.keyword" id="lims_duplicate_analysis_family_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.analysis.family,-1</field>
             <field name="action" ref="wiz_lims_duplicate_analysis_family"/>
-        </record>
-
-        <!-- Configuration / Certification -->
-        <menuitem name="Certification" parent="lims_config"
-            id="lims_config_certification" sequence="20"/>
-        <menuitem parent="lims_config_certification" action="act_lims_certification_type_list"
-            id="lims_certification_type_list_menu" sequence="10"/>
-        <menuitem parent="lims_config_certification" action="act_lims_analysis_family_list"
-            id="lims_analysis_family_menu" sequence="20"/>
-        <menuitem parent="lims_config_certification" action="act_lims_technical_scope_list"
-            id="lims_technical_scope_menu" sequence="30"/>
-        <menuitem parent="lims_technical_scope_menu" action="act_lims_technical_scope_version_list"
-            id="lims_technical_scope_version_menu" sequence="10"/>
-
-        <record model="ir.model.access" id="access_certification_type">
-            <field name="model" search="[('model', '=', 'lims.certification.type')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_certification_type_group_conf_certification_admin">
-            <field name="model" search="[('model', '=', 'lims.certification.type')]"/>
-            <field name="group" ref="group_lims_conf_certification_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.model.access" id="access_analysis_family">
-            <field name="model" search="[('model', '=', 'lims.analysis.family')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_analysis_family_group_conf_certification_admin">
-            <field name="model" search="[('model', '=', 'lims.analysis.family')]"/>
-            <field name="group" ref="group_lims_conf_certification_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.model.access" id="access_technical_scope">
-            <field name="model" search="[('model', '=', 'lims.technical.scope')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_technical_scope_group_conf_certification_admin">
-            <field name="model" search="[('model', '=', 'lims.technical.scope')]"/>
-            <field name="group" ref="group_lims_conf_certification_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.model.access" id="access_technical_scope_version">
-            <field name="model" search="[('model', '=', 'lims.technical.scope.version')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_technical_scope_version_group_conf_certification_admin">
-            <field name="model" search="[('model', '=', 'lims.technical.scope.version')]"/>
-            <field name="group" ref="group_lims_conf_certification_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_certification_readonly">
-            <field name="menu" ref="lims_laboratory"/>
-            <field name="group" ref="group_lims_conf_certification_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_certification_admin">
-            <field name="menu" ref="lims_laboratory"/>
-            <field name="group" ref="group_lims_conf_certification_admin"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_certification_readonly">
-            <field name="menu" ref="lims_config"/>
-            <field name="group" ref="group_lims_conf_certification_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_certification_admin">
-            <field name="menu" ref="lims_config"/>
-            <field name="group" ref="group_lims_conf_certification_admin"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_config_certification_group_conf_certification_readonly">
-            <field name="menu" ref="lims_config_certification"/>
-            <field name="group" ref="group_lims_conf_certification_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_config_certification_group_conf_certification_admin">
-            <field name="menu" ref="lims_config_certification"/>
-            <field name="group" ref="group_lims_conf_certification_admin"/>
         </record>
 
     </data>

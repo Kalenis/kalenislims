@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Groups -->
+
+        <record model="res.group" id="group_lims_conf_material_readonly">
+            <field name="name">Lims Configuration Material Read Only</field>
+        </record>
+        <record model="res.group" id="group_lims_conf_material_admin">
+            <field name="name">Lims Configuration Material Admin</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_conf_material_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_conf_material_admin"/>
+        </record>
+
+        <record model="res.group" id="group_lims_lot_input_prod">
+            <field name="name">Lims Lot Input for production</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lot_input_prod">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_lot_input_prod"/>
+        </record>
+
+        <record model="res.group" id="group_lims_lot_prod_sale">
+            <field name="name">Lims Lot Production for sale</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lot_prod_sale">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_lot_prod_sale"/>
+        </record>
+
+        <record model="res.group" id="group_lims_lot_domestic_use">
+            <field name="name">Lims Lot Production for domestic use</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lot_domestic_use">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_lot_domestic_use"/>
+        </record>
+
+<!-- Menu -->
+
+        <!-- Laboratory / Configuration / Material -->
+        <menuitem name="Material" id="lims_config_material"
+            parent="lims.lims_config" sequence="50"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_material_group_conf_material_readonly">
+            <field name="menu" ref="lims_config_material"/>
+            <field name="group" ref="group_lims_conf_material_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_material_group_conf_material_admin">
+            <field name="menu" ref="lims_config_material"/>
+            <field name="group" ref="group_lims_conf_material_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_material_readonly">
+            <field name="menu" ref="lims.lims_config"/>
+            <field name="group" ref="group_lims_conf_material_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_material_admin">
+            <field name="menu" ref="lims.lims_config"/>
+            <field name="group" ref="group_lims_conf_material_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_material_readonly">
+            <field name="menu" ref="lims.lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_material_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_material_admin">
+            <field name="menu" ref="lims.lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_material_admin"/>
+        </record>
+
+    </data>
+</tryton>
