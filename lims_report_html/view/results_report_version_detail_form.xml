@@ -1,26 +1,21 @@
 <?xml version="1.0"?>
 <data>
-    <xpath expr="/form/label[@name='report_type_forced']" position="replace">
-    </xpath>
-    <xpath expr="/form/field[@name='report_type_forced']" position="replace">
-    </xpath>
-    <xpath expr="/form/label[@name='report_result_type_forced']" position="replace">
-    </xpath>
-    <xpath expr="/form/field[@name='report_result_type_forced']" position="replace">
-    </xpath>
-    <xpath expr="/form/label[@name='report_type']" position="replace">
-    </xpath>
-    <xpath expr="/form/field[@name='report_type']" position="replace">
-    </xpath>
-    <xpath expr="/form/label[@name='report_result_type']" position="replace">
-    </xpath>
-    <xpath expr="/form/field[@name='report_result_type']" position="replace">
-    </xpath>
+    <xpath expr="/form/label[@name='report_type_forced']" position="replace"/>
+    <xpath expr="/form/field[@name='report_type_forced']" position="replace"/>
+    <xpath expr="/form/label[@name='report_result_type_forced']"
+        position="replace"/>
+    <xpath expr="/form/field[@name='report_result_type_forced']"
+        position="replace"/>
+    <xpath expr="/form/label[@name='report_type']" position="replace"/>
+    <xpath expr="/form/field[@name='report_type']" position="replace"/>
+    <xpath expr="/form/label[@name='report_result_type']" position="replace"/>
+    <xpath expr="/form/field[@name='report_result_type']" position="replace"/>
     <xpath expr="/form/label[@name='resultrange_origin']" position="before">
         <label name="template"/>
         <field name="template"/>
     </xpath>
-    <xpath expr="/form/notebook/page[@name='comments']/field[@name='comments']"
+    <xpath
+        expr="/form/notebook/page[@name='comments']/field[@name='comments']"
         position="replace">
         <field name="comments" colspan="4" widget="html"/>
     </xpath>

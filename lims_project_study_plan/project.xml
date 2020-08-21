@@ -38,6 +38,24 @@
             <field name="name">project_form</field>
         </record>
 
+        <record model="ir.model.button" id="project_get_stp_test_system_button">
+            <field name="name">get_stp_test_system</field>
+            <field name="string">Update</field>
+            <field name="model" search="[('model', '=', 'lims.project')]"/>
+        </record>
+
+        <record model="ir.model.button" id="project_get_stp_test_method_button">
+            <field name="name">get_stp_test_method</field>
+            <field name="string">Update</field>
+            <field name="model" search="[('model', '=', 'lims.project')]"/>
+        </record>
+
+        <record model="ir.model.button" id="project_re_open_button">
+            <field name="name">re_open</field>
+            <field name="string">Open</field>
+            <field name="model" search="[('model', '=', 'lims.project')]"/>
+        </record>
+
 <!-- Project Professional-->
 
         <record model="ir.ui.view" id="lims_project_stp_professional_view_form">
@@ -77,6 +95,26 @@
             <field name="sequence" eval="20"/>
             <field name="view" ref="lims_project_stp_professional_position_view_form"/>
             <field name="act_window" ref="act_lims_project_stp_professional_position_list"/>
+        </record>
+
+        <menuitem action="act_lims_project_stp_professional_position_list"
+            id="lims_project_stp_professional_position_menu"
+            parent="lims_project.lims_config_projects" sequence="20"/>
+
+        <record model="ir.model.access" id="access_project_stp_professional_position">
+            <field name="model" search="[('model', '=', 'lims.project.stp_professional.position')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_project_stp_professional_position_group_conf_project_admin">
+            <field name="model" search="[('model', '=', 'lims.project.stp_professional.position')]"/>
+            <field name="group" ref="lims_project.group_lims_conf_project_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
 <!-- Reference Element in GLP-->
@@ -181,13 +219,6 @@
             <field name="name">notebook_line_list</field>
         </record>
 
-<!-- Menu -->
-
-        <!-- Configuration / Projects / Professional Positions -->
-        <menuitem parent="lims_project.lims_config_projects"
-            action="act_lims_project_stp_professional_position_list"
-            id="lims_project_stp_professional_position_menu" sequence="20"/>
-
 <!-- BPL 01. BPL-005- Anexo 3 Ingreso y egreso provisorio de muestras al archivo -->
 
         <record model="ir.action.report" id="report_glp_01">
@@ -197,12 +228,12 @@
             <field name="report">lims_project_study_plan/report/glp_01.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
         <record model="ir.action.keyword" id="report_glp_01_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
             <field name="action" ref="report_glp_01"/>
         </record>
-
 
 <!-- BPL 02. BPL-005- Anexo 4 Ingreso y egreso definitivo de muestras para analizar -->
 
@@ -213,6 +244,7 @@
             <field name="report">lims_project_study_plan/report/glp_02.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
         <record model="ir.action.keyword" id="report_glp_02_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
@@ -221,16 +253,6 @@
 
 <!-- BPL 03. BPL-005- Anexo 5 Almacenamiento de muestras de planes de estudio -->
 
-        <record model="ir.ui.view" id="report_glp_03_print_start_view_form">
-            <field name="model">lims.project.glp_report.03.print.start</field>
-            <field name="type">form</field>
-            <field name="name">report_glp_03_print_start_form</field>
-        </record>
-        <record model="ir.action.wizard" id="wiz_report_glp_03_print">
-            <field name="name">GLP 03. GLP-005- Annex 5 Storage of samples</field>
-            <field name="wiz_name">lims.project.glp_report.03.print</field>
-        </record>
-
         <record model="ir.action.report" id="report_glp_03">
             <field name="name">GLP 03. GLP-005- Annex 5 Storage of samples</field>
             <field name="model">lims.project</field>
@@ -238,6 +260,18 @@
             <field name="report">lims_project_study_plan/report/glp_03.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
+        <record model="ir.ui.view" id="report_glp_03_print_start_view_form">
+            <field name="model">lims.project.glp_report.03.print.start</field>
+            <field name="type">form</field>
+            <field name="name">report_glp_03_print_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_report_glp_03_print">
+            <field name="name">GLP 03. GLP-005- Annex 5 Storage of samples</field>
+            <field name="wiz_name">lims.project.glp_report.03.print</field>
+        </record>
+
         <record model="ir.action.keyword" id="report_glp_03_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
@@ -253,6 +287,7 @@
             <field name="report">lims_project_study_plan/report/glp_04.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
         <record model="ir.action.keyword" id="report_glp_04_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
@@ -261,16 +296,6 @@
 
 <!-- BPL 05. BPL-005- Anexo 7 Descarte de muestras de planes de estudio -->
 
-        <record model="ir.ui.view" id="report_glp_05_print_start_view_form">
-            <field name="model">lims.project.glp_report.05.print.start</field>
-            <field name="type">form</field>
-            <field name="name">report_glp_05_print_start_form</field>
-        </record>
-        <record model="ir.action.wizard" id="wiz_report_glp_05_print">
-            <field name="name">GLP 05. GLP-005- Annex 7 Discharge of samples</field>
-            <field name="wiz_name">lims.project.glp_report.05.print</field>
-        </record>
-
         <record model="ir.action.report" id="report_glp_05">
             <field name="name">GLP 05. GLP-005- Annex 7 Discharge of samples</field>
             <field name="model">lims.project</field>
@@ -278,6 +303,18 @@
             <field name="report">lims_project_study_plan/report/glp_05.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
+        <record model="ir.ui.view" id="report_glp_05_print_start_view_form">
+            <field name="model">lims.project.glp_report.05.print.start</field>
+            <field name="type">form</field>
+            <field name="name">report_glp_05_print_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_report_glp_05_print">
+            <field name="name">GLP 05. GLP-005- Annex 7 Discharge of samples</field>
+            <field name="wiz_name">lims.project.glp_report.05.print</field>
+        </record>
+
         <record model="ir.action.keyword" id="report_glp_05_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
@@ -293,6 +330,7 @@
             <field name="report">lims_project_study_plan/report/glp_06.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
         <record model="ir.action.keyword" id="report_glp_06_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
@@ -308,6 +346,7 @@
             <field name="report">lims_project_study_plan/report/glp_07.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
         <record model="ir.action.keyword" id="report_glp_07_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
@@ -323,6 +362,7 @@
             <field name="report">lims_project_study_plan/report/glp_08.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
         <record model="ir.action.keyword" id="report_glp_08_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
@@ -338,6 +378,7 @@
             <field name="report">lims_project_study_plan/report/glp_09.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
         <record model="ir.action.keyword" id="report_glp_09_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
@@ -346,16 +387,6 @@
 
 <!-- BPL 10. Esquema rector -->
 
-        <record model="ir.ui.view" id="report_glp_10_print_start_view_form">
-            <field name="model">lims.project.glp_report.10.print.start</field>
-            <field name="type">form</field>
-            <field name="name">report_glp_10_print_start_form</field>
-        </record>
-        <record model="ir.action.wizard" id="wiz_report_glp_10_print">
-            <field name="name">GLP 10. Rector scheme</field>
-            <field name="wiz_name">lims.project.glp_report.10.print</field>
-        </record>
-
         <record model="ir.action.report" id="report_glp_10">
             <field name="name">GLP 10. Rector scheme</field>
             <field name="model">lims.project</field>
@@ -363,6 +394,18 @@
             <field name="report">lims_project_study_plan/report/glp_10.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
+        <record model="ir.ui.view" id="report_glp_10_print_start_view_form">
+            <field name="model">lims.project.glp_report.10.print.start</field>
+            <field name="type">form</field>
+            <field name="name">report_glp_10_print_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_report_glp_10_print">
+            <field name="name">GLP 10. Rector scheme</field>
+            <field name="wiz_name">lims.project.glp_report.10.print</field>
+        </record>
+
         <record model="ir.action.keyword" id="report_glp_10_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
@@ -378,6 +421,7 @@
             <field name="report">lims_project_study_plan/report/glp_11.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
         <record model="ir.action.keyword" id="report_glp_11_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
@@ -386,16 +430,6 @@
 
 <!-- BPL 12. Registro de cambios -->
 
-        <record model="ir.ui.view" id="report_glp_12_print_start_view_form">
-            <field name="model">lims.project.glp_report.12.print.start</field>
-            <field name="type">form</field>
-            <field name="name">report_glp_12_print_start_form</field>
-        </record>
-        <record model="ir.action.wizard" id="wiz_report_glp_12_print">
-            <field name="name">GLP 12. Changelog</field>
-            <field name="wiz_name">lims.project.glp_report.12.print</field>
-        </record>
-
         <record model="ir.action.report" id="report_glp_12">
             <field name="name">GLP 12. Changelog</field>
             <field name="model">lims.project</field>
@@ -403,15 +437,24 @@
             <field name="report">lims_project_study_plan/report/glp_12.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
+        <record model="ir.ui.view" id="report_glp_12_print_start_view_form">
+            <field name="model">lims.project.glp_report.12.print.start</field>
+            <field name="type">form</field>
+            <field name="name">report_glp_12_print_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_report_glp_12_print">
+            <field name="name">GLP 12. Changelog</field>
+            <field name="wiz_name">lims.project.glp_report.12.print</field>
+        </record>
+
         <record model="ir.action.keyword" id="report_glp_12_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
             <field name="action" ref="wiz_report_glp_12_print"/>
         </record>
 
-
-
-        
 <!-- BPL Study plan -->
 
         <record model="ir.action.report" id="report_glp_study_plan">
@@ -421,6 +464,7 @@
             <field name="report">lims_project_study_plan/report/glp_study_plan.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
         <record model="ir.action.keyword" id="report_glp_study_plan_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
@@ -436,6 +480,7 @@
             <field name="report">lims_project_study_plan/report/glp_final_report_rp.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
         <record model="ir.action.keyword" id="report_glp_final_rp_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
@@ -451,6 +496,7 @@
             <field name="report">lims_project_study_plan/report/glp_final_report_for.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
         <record model="ir.action.keyword" id="report_glp_final_for_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
@@ -466,13 +512,13 @@
             <field name="report">lims_project_study_plan/report/glp_analytical_phase_report.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
         <record model="ir.action.keyword" id="report_glp_analytical_phase_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
             <field name="action" ref="report_glp_analytical_phase"/>
         </record>
-        
-        
+
 <!-- BPL 13. Registro de preparación de muestras BPL -->
 
         <record model="ir.action.report" id="report_glp_13">
@@ -482,28 +528,11 @@
             <field name="report">lims_project_study_plan/report/glp_13.fods</field>
             <field name="extension">xls</field>
         </record>
+
         <record model="ir.action.keyword" id="report_glp_13_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>
             <field name="action" ref="report_glp_13"/>
-        </record>
-
-        <record model="ir.model.button" id="project_get_stp_test_system_button">
-            <field name="name">get_stp_test_system</field>
-            <field name="string">Update</field>
-            <field name="model" search="[('model', '=', 'lims.project')]"/>
-        </record>
-
-        <record model="ir.model.button" id="project_get_stp_test_method_button">
-            <field name="name">get_stp_test_method</field>
-            <field name="string">Update</field>
-            <field name="model" search="[('model', '=', 'lims.project')]"/>
-        </record>
-
-        <record model="ir.model.button" id="project_re_open_button">
-            <field name="name">re_open</field>
-            <field name="string">Open</field>
-            <field name="model" search="[('model', '=', 'lims.project')]"/>
         </record>
 
 <!-- Wizard Open Project -->
@@ -517,24 +546,6 @@
         <record model="ir.action.wizard" id="wiz_re_open_project">
             <field name="name">Open Project</field>
             <field name="wiz_name">lims.project.re_open</field>
-        </record>
-
-<!-- Access Rights on Models -->
-
-        <record model="ir.model.access" id="access_project_stp_professional_position">
-            <field name="model" search="[('model', '=', 'lims.project.stp_professional.position')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_project_stp_professional_position_group_conf_project_admin">
-            <field name="model" search="[('model', '=', 'lims.project.stp_professional.position')]"/>
-            <field name="group" ref="lims_project.group_lims_conf_project_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
         </record>
 
     </data>

@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <data>
-    <xpath expr="/tree/field[@name='report_type']" position="replace">
-    </xpath>
+    <xpath expr="/tree/field[@name='report_type']" position="replace"/>
     <xpath expr="/tree/field[@name='report_result_type']" position="replace">
         <field name="template"/>
     </xpath>

@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <data>
-    <xpath
-        expr="/form/field[@name='description']" position="after">
+    <xpath expr="/form/field[@name='description']" position="after">
         <group id="production" colspan="6" col="4">
             <label name="catalog"/>
             <field name="catalog"/>

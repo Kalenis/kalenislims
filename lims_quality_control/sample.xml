@@ -2,11 +2,7 @@
 <tryton>
     <data>
 
-        <record model="ir.ui.view" id="lims_workyear_view_form">
-            <field name="model">lims.lab.workyear</field>
-            <field name="inherit" ref="lims.lims_workyear_view_form"/>
-            <field name="name">workyear_form</field>
-        </record>
+<!-- Sample -->
 
         <record model="ir.ui.view" id="lims_sample_view_form">
             <field name="model">lims.sample</field>
@@ -18,6 +14,8 @@
             <field name="inherit" ref="lims.lims_sample_view_list"/>
             <field name="name">sample_list</field>
         </record>
+
+<!-- Quality Sample -->
 
         <record model="ir.ui.view" id="quality_sample_view_form">
             <field name="model">lims.sample</field>
@@ -45,6 +43,7 @@
             <field name="view" ref="quality_sample_view_form"/>
             <field name="act_window" ref="act_lims_sample_list"/>
         </record>
+
         <record model="ir.action.act_window.domain" id="act_lims_sample_list_domain_pending">
             <field name="name">Pending</field>
             <field name="sequence" eval="10"/>
@@ -70,8 +69,10 @@
             <field name="act_window" ref="act_lims_sample_list"/>
         </record>
 
-        <menuitem parent="menu_quality_control" action="act_lims_sample_list"
-            id="lims_sample_menu" sequence="30"/>
+        <menuitem action="act_lims_sample_list" id="lims_sample_menu"
+            parent="menu_quality_control" sequence="30"/>
+
+<!-- Take Sample -->
 
         <record model="ir.ui.view" id="lims_take_sample_start_view_form">
             <field name="model">lims.take.sample.start</field>
@@ -84,11 +85,14 @@
             <field name="wiz_name">lims.take.sample</field>
             <field name="model">stock.lot</field>
         </record>
+
         <record model="ir.action.keyword" id="lims_take_sample_keyword">
             <field name="keyword">form_action</field>
             <field name="model">stock.lot,-1</field>
             <field name="action" ref="wiz_lims_take_sample"/>
         </record>
+
+<!-- Countersample Create -->
 
         <record model="ir.ui.view" id="lims_countersample_create_start_view_form">
             <field name="model">lims.countersample.create.start</field>
@@ -101,11 +105,14 @@
             <field name="wiz_name">lims.countersample.create</field>
             <field name="model">lims.sample</field>
         </record>
+
         <record model="ir.action.keyword" id="lims_countersample_create_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.sample,-1</field>
             <field name="action" ref="wiz_lims_countersample_create"/>
         </record>
+
+<!-- Sample Labels -->
 
         <record model="ir.action.report" id="report_sample_labels">
             <field name="name">Sample Labels</field>
@@ -114,6 +121,7 @@
             <field name="report">lims/report/entry_labels_report.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
         <record model="ir.action.keyword" id="report_sample_labels_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.sample,-1</field>

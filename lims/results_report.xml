@@ -2,7 +2,6 @@
 <tryton>
     <data>
 
-
 <!-- Sequences for Results Report -->
 
         <record model="ir.sequence.type" id="seq_type_results_report">

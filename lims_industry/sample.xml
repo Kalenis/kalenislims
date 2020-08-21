@@ -35,6 +35,7 @@
             <field name="name">Edit Samples</field>
             <field name="wiz_name">lims.sample.edit</field>
         </record>
+
         <record model="ir.action.keyword" id="wiz_edit_sample_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.sample,-1</field>

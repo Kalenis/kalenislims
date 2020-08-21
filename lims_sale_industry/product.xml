@@ -2,7 +2,7 @@
 <tryton>
     <data>
 
-<!-- Analysis/Set/Group -->
+<!-- Template -->
 
         <record model="ir.ui.view" id="template_view_form">
             <field name="model">product.template</field>

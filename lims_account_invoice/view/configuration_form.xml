@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <data>
-    <xpath
-        expr="/form/notebook/page[@id='general']"
-        position="after">
+    <xpath expr="/form/notebook/page[@id='general']" position="after">
         <page string="Mail Invoice Report" id="mail_send_invoice_report">
             <separator string="Email subject of Invoice report"
                 colspan="4" id="mail_send_invoice_subject"/>
@@ -12,5 +10,4 @@
             <field name="mail_send_invoice_body" colspan="4"/>
         </page>
     </xpath>
-
 </data>

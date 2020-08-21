@@ -1,13 +1,11 @@
 <?xml version="1.0"?>
 <data>
-    <xpath
-        expr="/form/notebook/page[@id='lims']/group[@id='lims_checkboxes']"
+    <xpath expr="/form/notebook/page[@id='lims']/group[@id='lims_checkboxes']"
         position="inside">
         <label name="no_send_invoice"/>
         <field name="no_send_invoice"/>
     </xpath>
-    <xpath
-        expr="/form/notebook/page[@id='lims']/group[@id='lims_checkboxes']"
+    <xpath expr="/form/notebook/page[@id='lims']/group[@id='lims_checkboxes']"
         position="after">
         <label name="commercial_item"/>
         <field name="commercial_item"/>

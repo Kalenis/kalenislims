@@ -2,14 +2,16 @@
 <tryton>
     <data>
 
-      <!-- Invoice -->
+<!-- Invoice -->
+
       <record model="ir.ui.view" id="lims_invoice_view_form">
           <field name="model">account.invoice</field>
           <field name="inherit" ref="account_invoice.invoice_view_form"/>
           <field name="name">invoice_form</field>
       </record>
 
-      <!-- Invoice Contacts -->
+<!-- Invoice Contacts -->
+
       <record model="ir.ui.view" id="invoice_contacts_view_form">
           <field name="model">account.invoice.invoice_contacts</field>
           <field name="type">form</field>
@@ -21,19 +23,18 @@
           <field name="name">invoice_contacts_list</field>
       </record>
 
-      <!-- Invoice Line -->
+<!-- Invoice Line -->
+
       <record model="ir.ui.view" id="lims_invoice_line_view_form">
           <field name="model">account.invoice.line</field>
           <field name="inherit" ref="account_invoice.invoice_line_view_form"/>
           <field name="name">invoice_line_form</field>
       </record>
-
       <record model="ir.ui.view" id="lims_invoice_line_view_tree">
           <field name="model">account.invoice.line</field>
           <field name="inherit" ref="account_invoice.invoice_line_view_tree"/>
           <field name="name">invoice_line_tree</field>
       </record>
-
       <record model="ir.ui.view" id="lims_invoice_line_view_tree_sequence">
           <field name="model">account.invoice.line</field>
           <field name="inherit" ref="account_invoice.invoice_line_view_tree_sequence"/>
@@ -53,6 +54,7 @@
           <field name="wiz_name">account.invoice.populate_invoice_contacts</field>
           <field name="model">account.invoice</field>
       </record>
+
       <record model="ir.action.keyword" id="lims_populate_invoice_contacts_keyword">
           <field name="keyword">form_action</field>
           <field name="model">account.invoice,-1</field>
@@ -71,6 +73,7 @@
             <field name="name">Send Invoice</field>
             <field name="wiz_name">account.invoice.send_invoice</field>
         </record>
+
         <record model="ir.action.keyword" id="account_invoice_send_invoice_keyword">
             <field name="keyword">form_action</field>
             <field name="model">account.invoice,-1</field>

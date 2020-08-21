@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <data>
-    <xpath
-        expr="/form/field[@name='production_sequence']"
-        position="after">
+    <xpath expr="/form/field[@name='production_sequence']" position="after">
         <label name="lot_sequence"/>
         <field name="lot_sequence"/>
     </xpath>

@@ -6,10 +6,7 @@
         position="replace"/>
     <xpath expr="/form/label[@name='expiration_date']" position="replace"/>
     <xpath expr="/form/field[@name='expiration_date']" position="replace"/>
-
-    <xpath
-        expr="/form/field[@name='product']"
-        position="after">
+    <xpath expr="/form/field[@name='product']" position="after">
         <label name="category"/>
         <field name="category" colspan="3"/>
         <label name="account_category"/>

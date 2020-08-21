@@ -30,7 +30,6 @@
         <label name="disable_as_individual"/>
         <field name="disable_as_individual" xexpand="0"/>
     </group>
-
     <notebook>
         <page string="Laboratories" id="laboratories" >
             <field name="laboratories" colspan="4"/>

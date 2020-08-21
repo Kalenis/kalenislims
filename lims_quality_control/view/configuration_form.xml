@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <data>
-    <xpath expr="/form/notebook/page[@id='fraction_type']/field[@name='itl_fraction_type']" position="after">
+    <xpath
+        expr="/form/notebook/page[@id='fraction_type']/field[@name='itl_fraction_type']"
+        position="after">
         <label name="qc_fraction_type"/>
         <field name="qc_fraction_type"/>
     </xpath>

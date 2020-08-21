@@ -33,6 +33,7 @@
             <field name="report">lims_project_water/report/wtr_01.fodt</field>
             <field name="extension">pdf</field>
         </record>
+
         <record model="ir.action.keyword" id="report_wtr_01_keyword">
             <field name="keyword">form_print</field>
             <field name="model">lims.project,-1</field>

@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <data>
-    <xpath
-        expr="/form/notebook/page[@id='corrections']"
-        position="after">
+    <xpath expr="/form/notebook/page[@id='corrections']" position="after">
         <page string="Maintenance Program" id="maintenance_program">
             <field name="maintenance_program" colspan="4"/>
         </page>
