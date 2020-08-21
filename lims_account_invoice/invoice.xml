@@ -59,16 +59,6 @@
           <field name="action" ref="wiz_account_invoice_populate_invoice_contacts"/>
       </record>
 
-<!-- Groups -->
-
-        <record model="res.group" id="group_lims_account_invoice">
-            <field name="name">Lims Account Invoice</field>
-        </record>
-        <record model="res.user-res.group" id="user_admin_group_lims_account_invoice">
-            <field name="user" ref="res.user_admin"/>
-            <field name="group" ref="group_lims_account_invoice"/>
-        </record>
-
 <!-- Cron Send Of Invoice -->
 
         <record model="ir.cron" id="cron_account_invoice_send_invoice">

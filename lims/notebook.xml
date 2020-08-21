@@ -2,27 +2,6 @@
 <tryton>
     <data>
 
-        <record model="ir.ui.icon" id="notebook_icon">
-            <field name="name">lims-notebook</field>
-            <field name="path">icons/notebook.svg</field>
-        </record>
-        <record model="ir.ui.icon" id="notebook_line_all_menu_icon">
-            <field name="name">lims-notebook_line_all_menu</field>
-            <field name="path">icons/notebook_line_all_menu.svg</field>
-        </record>
-        <record model="ir.ui.icon" id="laboratory_results_icon">
-            <field name="name">lims-laboratory_results</field>
-            <field name="path">icons/laboratory_results.svg</field>
-        </record>
-        <record model="ir.ui.icon" id="notebook_load_results_manual_icon">
-            <field name="name">lims-notebook_load_results_manual</field>
-            <field name="path">icons/notebook_load_results_manual.svg</field>
-        </record>
-        <record model="ir.ui.icon" id="notebook_load_results_formula_icon">
-            <field name="name">lims-notebook_load_results_formula</field>
-            <field name="path">icons/notebook_load_results_formula.svg</field>
-        </record>
-
 <!-- Notebook -->
 
         <record model="ir.ui.view" id="lims_notebook_view_form">
@@ -51,6 +30,21 @@
             <field name="act_window" ref="act_lims_notebook_list"/>
         </record>
 
+        <menuitem action="act_lims_notebook_list" id="lims_notebook_menu"
+            parent="lims_laboratory" sequence="30"
+            icon="lims-notebook"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_notebook_group_notebook_readonly">
+            <field name="menu" ref="lims_notebook_menu"/>
+            <field name="group" ref="group_lims_notebook_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_notebook_group_notebook">
+            <field name="menu" ref="lims_notebook_menu"/>
+            <field name="group" ref="group_lims_notebook"/>
+        </record>
+
         <record model="ir.rule.group" id="rule_group_notebook">
             <field name="name">User in laboratory</field>
             <field name="model" search="[('model', '=', 'lims.notebook')]"/>
@@ -63,6 +57,24 @@
             <field name="rule_group" ref="rule_group_notebook"/>
         </record>
 
+        <record model="ir.model.access" id="access_notebook">
+            <field name="model" search="[('model', '=', 'lims.notebook')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_notebook_group_notebook">
+            <field name="model" search="[('model', '=', 'lims.notebook')]"/>
+            <field name="group" ref="group_lims_notebook"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+<!-- Open Notebook Lines Wizard -->
+
         <record model="ir.action.act_window" id="act_lims_notebook_line_related1">
             <field name="name">Notebook Lines</field>
             <field name="res_model">lims.notebook.line</field>
@@ -73,6 +85,7 @@
             <field name="wiz_name">lims.open_notebook_lines</field>
             <field name="model">lims.notebook</field>
         </record>
+
         <record model="ir.action.keyword" id="act_open_notebook_line_keyword1">
             <field name="keyword">form_relate</field>
             <field name="model">lims.notebook,-1</field>
@@ -90,6 +103,11 @@
             <field name="model">lims.notebook.line</field>
             <field name="type">tree</field>
             <field name="name">notebook_line_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_notebook_line_generate_results_view_list">
+            <field name="model">lims.notebook.line</field>
+            <field name="type">tree</field>
+            <field name="name">notebook_line_generate_results_list</field>
         </record>
 
         <record model="ir.action.act_window" id="act_lims_notebook_line_list">
@@ -115,6 +133,38 @@
                 eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
                 pyson="1"/>
             <field name="rule_group" ref="rule_group_notebook_line"/>
+        </record>
+
+        <record model="ir.model.access" id="access_notebook_line">
+            <field name="model" search="[('model', '=', 'lims.notebook.line')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_notebook_line_group_notebook">
+            <field name="model" search="[('model', '=', 'lims.notebook.line')]"/>
+            <field name="group" ref="group_lims_notebook"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+        <record model="ir.model.field.access" id="access_notebook_line_accepted">
+            <field name="field" search="[('name', '=', 'accepted'), ('model.model', '=', 'lims.notebook.line')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.field.access" id="access_notebook_line_accepted_group_laboratory_results_acceptance">
+            <field name="field" search="[('name', '=', 'accepted'), ('model.model', '=', 'lims.notebook.line')]"/>
+            <field name="group" ref="group_lims_laboratory_results_acceptance"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
 <!-- Notebook Line Professional -->
@@ -157,6 +207,11 @@
             <field name="view" ref="lims_notebook_line_all_fields_view_form"/>
             <field name="act_window" ref="act_lims_notebook_line_all_fields_list"/>
         </record>
+
+        <menuitem action="act_lims_notebook_line_all_fields_list"
+            id="lims_notebook_line_all_menu"
+            parent="lims_notebook_menu" sequence="10"
+            icon="lims-notebook_line_all_menu"/>
 
         <record model="ir.rule.group" id="rule_group_notebook_line_all_fields">
             <field name="name">User in laboratory</field>
@@ -408,6 +463,11 @@
             <field name="wiz_name">lims.notebook.load_results_formula</field>
         </record>
 
+        <menuitem action="wiz_lims_notebook_load_results_formula"
+            id="lims_notebook_load_results_formula_menu"
+            parent="lims_laboratory_results" sequence="20"
+            icon="lims-notebook_load_results_formula"/>
+
         <record model="ir.model.field.access" id="access_load_results_formula_sit2_details">
             <field name="field"
                 search="[('name', '=', 'details'), ('model.model', '=', 'lims.notebook.load_results_formula.sit2')]"/>
@@ -460,6 +520,11 @@
             <field name="wiz_name">lims.notebook.load_results_manual</field>
         </record>
 
+        <menuitem action="wiz_lims_notebook_load_results_manual"
+            id="lims_notebook_load_results_manual_menu"
+            parent="lims_laboratory_results" sequence="10"
+            icon="lims-notebook_load_results_manual"/>
+
         <record model="ir.model.field.access" id="access_load_results_manual_result_lines">
             <field name="field"
                 search="[('name', '=', 'lines'), ('model.model', '=', 'lims.notebook.load_results_manual.result')]"/>
@@ -481,6 +546,7 @@
             <field name="name">Add Internal Relations</field>
             <field name="wiz_name">lims.notebook.add_internal_relations</field>
         </record>
+
         <record model="ir.action.keyword" id="lims_notebook_add_internal_relations_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.notebook,-1</field>
@@ -499,6 +565,7 @@
             <field name="name">Repeat Analysis</field>
             <field name="wiz_name">lims.notebook.line.repeat_analysis</field>
         </record>
+
         <record model="ir.action.keyword" id="lims_lims_notebook_line_repeat_analysis_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.notebook.line,-1</field>
@@ -523,6 +590,12 @@
             <field name="action" ref="wiz_lims_notebook_accept_lines"/>
         </record>
 
+        <record model="ir.action-res.group"
+            id="wiz_notebook_accept_lines-group_laboratory_results_acceptance">
+            <field name="action" ref="wiz_lims_notebook_accept_lines"/>
+            <field name="group" ref="group_lims_laboratory_results_acceptance"/>
+        </record>
+
         <record model="ir.action.wizard" id="wiz_lims_notebook_line_accept_lines">
             <field name="name">Accept Lines</field>
             <field name="wiz_name">lims.notebook_line.accept_lines</field>
@@ -533,16 +606,29 @@
             <field name="action" ref="wiz_lims_notebook_line_accept_lines"/>
         </record>
 
+        <record model="ir.action-res.group"
+            id="wiz_notebook_line_accept_lines-group_laboratory_results_acceptance">
+            <field name="action" ref="wiz_lims_notebook_line_accept_lines"/>
+            <field name="group" ref="group_lims_laboratory_results_acceptance"/>
+        </record>
+
 <!-- Wizard Unaccept Lines -->
 
         <record model="ir.action.wizard" id="wiz_lims_notebook_line_unaccept_lines">
             <field name="name">Unaccept Lines</field>
             <field name="wiz_name">lims.notebook_line.unaccept_lines</field>
         </record>
+
         <record model="ir.action.keyword" id="lims_notebook_line_unaccept_lines_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.notebook.line,-1</field>
             <field name="action" ref="wiz_lims_notebook_line_unaccept_lines"/>
+        </record>
+
+        <record model="ir.action-res.group"
+            id="wiz_notebook_line_unaccept_lines-group_laboratory_results_acceptance">
+            <field name="action" ref="wiz_lims_notebook_line_unaccept_lines"/>
+            <field name="group" ref="group_lims_laboratory_results_acceptance"/>
         </record>
 
 <!-- Wizard Results Verification -->
@@ -678,15 +764,6 @@
 
 <!-- Analysis Pending of Inform -->
 
-        <record model="ir.ui.view" id="print_analysis_pending_inform_start_view_form">
-            <field name="model">lims.print_analysis_pending_inform.start</field>
-            <field name="type">form</field>
-            <field name="name">analysis_pending_inform_start_form</field>
-        </record>
-        <record model="ir.action.wizard" id="wiz_print_analysis_pending_inform">
-            <field name="name">Pending analysis Unchecked</field>
-            <field name="wiz_name">lims.print_analysis_pending_inform</field>
-        </record>
         <record model="ir.action.report" id="report_analysis_pending_inform">
             <field name="name">Pending analysis Unchecked</field>
             <field name="report_name">lims.analysis_pending_inform</field>
@@ -694,18 +771,24 @@
             <field name="extension">xls</field>
         </record>
 
+        <record model="ir.ui.view" id="print_analysis_pending_inform_start_view_form">
+            <field name="model">lims.print_analysis_pending_inform.start</field>
+            <field name="type">form</field>
+            <field name="name">analysis_pending_inform_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_print_analysis_pending_inform">
+            <field name="name">Pending analysis Unchecked</field>
+            <field name="wiz_name">lims.print_analysis_pending_inform</field>
+        </record>
+
+        <menuitem action="wiz_print_analysis_pending_inform"
+            id="menu_print_analysis_pending_inform"
+            parent="lims_notebook_line_all_menu" sequence="100"
+            icon="tryton-print"/>
 
 <!-- Analysis Checked pending of inform -->
 
-        <record model="ir.ui.view" id="print_analysis_checked_pending_inform_start_view_form">
-            <field name="model">lims.print_analysis_checked_pending_inform.start</field>
-            <field name="type">form</field>
-            <field name="name">print_analysis_checked_pending_inform_start_view_form</field>
-        </record>
-        <record model="ir.action.wizard" id="wiz_print_analysis_checked_pending_inform">
-            <field name="name">Analysis checked pending of inform</field>
-            <field name="wiz_name">lims.print_analysis_checked_pending_inform</field>
-        </record>
         <record model="ir.action.report" id="report_analysis_checked_pending_inform">
             <field name="name">Analysis checked pending of inform</field>
             <field name="report_name">lims.analysis_checked_pending_inform</field>
@@ -713,128 +796,31 @@
             <field name="extension">xls</field>
         </record>
 
-        <menuitem parent="lims_laboratory" action="act_lims_notebook_list"
-            id="lims_notebook_menu" sequence="30"
-            icon="lims-notebook"/>
-        <menuitem parent="lims_notebook_menu" action="act_lims_notebook_line_all_fields_list"
-            id="lims_notebook_line_all_menu" sequence="10"
-            icon="lims-notebook_line_all_menu"/>
-        <menuitem parent="lims_notebook_line_all_menu" action="wiz_print_analysis_pending_inform"
-            id="menu_print_analysis_pending_inform" sequence="100"
+        <record model="ir.ui.view" id="print_analysis_checked_pending_inform_start_view_form">
+            <field name="model">lims.print_analysis_checked_pending_inform.start</field>
+            <field name="type">form</field>
+            <field name="name">print_analysis_checked_pending_inform_start_view_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_print_analysis_checked_pending_inform">
+            <field name="name">Analysis checked pending of inform</field>
+            <field name="wiz_name">lims.print_analysis_checked_pending_inform</field>
+        </record>
+
+        <menuitem action="wiz_print_analysis_checked_pending_inform"
+            id="menu_print_analysis_checked_pending_inform"
+            parent="lims_notebook_line_all_menu" sequence="100"
             icon="tryton-print"/>
-        <menuitem parent="lims_notebook_line_all_menu" action="wiz_print_analysis_checked_pending_inform"
-            id="menu_print_analysis_checked_pending_inform" sequence="100"
-            icon="tryton-print"/>
 
-        <menuitem name="Results entry" parent="lims_laboratory"
-            id="lims_laboratory_results" sequence="40"
-            icon="lims-laboratory_results"/>
-        <menuitem parent="lims_laboratory_results" action="wiz_lims_notebook_load_results_manual"
-            id="lims_notebook_load_results_manual_menu" sequence="10"
-            icon="lims-notebook_load_results_manual"/>
-        <menuitem parent="lims_laboratory_results" action="wiz_lims_notebook_load_results_formula"
-            id="lims_notebook_load_results_formula_menu" sequence="20"
-            icon="lims-notebook_load_results_formula"/>
-
-        <record model="ir.model.access" id="access_notebook_views">
-            <field name="model" search="[('model', '=', 'lims.notebook.view')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_notebook_views_group_conf_laboratory_admin">
-            <field name="model" search="[('model', '=', 'lims.notebook.view')]"/>
-            <field name="group" ref="group_lims_conf_laboratory_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.model.access" id="access_notebook">
-            <field name="model" search="[('model', '=', 'lims.notebook')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_notebook_group_notebook">
-            <field name="model" search="[('model', '=', 'lims.notebook')]"/>
-            <field name="group" ref="group_lims_notebook"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-
-        <record model="ir.model.access" id="access_notebook_line">
-            <field name="model" search="[('model', '=', 'lims.notebook.line')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_notebook_line_group_notebook">
-            <field name="model" search="[('model', '=', 'lims.notebook.line')]"/>
-            <field name="group" ref="group_lims_notebook"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-
-        <record model="ir.model.field.access" id="access_notebook_line_accepted">
-            <field name="field" search="[('name', '=', 'accepted'), ('model.model', '=', 'lims.notebook.line')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.field.access" id="access_notebook_line_accepted_group_laboratory_results_acceptance">
-            <field name="field" search="[('name', '=', 'accepted'), ('model.model', '=', 'lims.notebook.line')]"/>
-            <field name="group" ref="group_lims_laboratory_results_acceptance"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_laboratory_group_notebook_readonly">
-            <field name="menu" ref="lims_laboratory"/>
-            <field name="group" ref="group_lims_notebook_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_laboratory_group_notebook">
-            <field name="menu" ref="lims_laboratory"/>
-            <field name="group" ref="group_lims_notebook"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_notebook_group_notebook_readonly">
-            <field name="menu" ref="lims_notebook_menu"/>
-            <field name="group" ref="group_lims_notebook_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_notebook_group_notebook">
-            <field name="menu" ref="lims_notebook_menu"/>
-            <field name="group" ref="group_lims_notebook"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_notebook_line_all_group_notebook_readonly">
+        <record model="ir.ui.menu-res.group"
+            id="menu_notebook_line_all_group_notebook_readonly">
             <field name="menu" ref="lims_notebook_line_all_menu"/>
             <field name="group" ref="group_lims_notebook_readonly"/>
         </record>
-        <record model="ir.ui.menu-res.group" id="menu_notebook_line_all_group_notebook">
+        <record model="ir.ui.menu-res.group"
+            id="menu_notebook_line_all_group_notebook">
             <field name="menu" ref="lims_notebook_line_all_menu"/>
             <field name="group" ref="group_lims_notebook"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_laboratory_group_laboratory_results">
-            <field name="menu" ref="lims_laboratory"/>
-            <field name="group" ref="group_lims_laboratory_results"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_laboratory_results_group_laboratory_results">
-            <field name="menu" ref="lims_laboratory_results"/>
-            <field name="group" ref="group_lims_laboratory_results"/>
         </record>
 
     </data>

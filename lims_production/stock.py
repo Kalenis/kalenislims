@@ -7,67 +7,12 @@ from decimal import Decimal
 from collections import defaultdict
 
 from trytond.model import ModelView, ModelSQL, fields
+from trytond.wizard import Wizard, StateAction
+from trytond.pool import PoolMeta, Pool
 from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not
 from trytond.transaction import Transaction
-from trytond.pool import PoolMeta, Pool
-from trytond.wizard import Wizard, StateAction
-from trytond.modules.product import price_digits
-from trytond.exceptions import UserError
-from trytond.i18n import gettext
 from trytond.tools import grouped_slice
-from trytond.modules.product import round_price
-
-
-class PurityDegree(ModelSQL, ModelView):
-    'Purity Degree'
-    __name__ = 'lims.purity.degree'
-
-    code = fields.Char('Code', required=True)
-    name = fields.Char('Name', required=True)
-
-
-class Brand(ModelSQL, ModelView):
-    'Brand'
-    __name__ = 'lims.brand'
-
-    code = fields.Char('Code', required=True)
-    name = fields.Char('Name', required=True)
-
-
-class FamilyEquivalent(ModelSQL, ModelView):
-    'Family/Equivalent'
-    __name__ = 'lims.family.equivalent'
-
-    name = fields.Char('Name', required=True)
-    code = fields.Char('Code', required=True)
-    uom = fields.Many2One('product.uom', 'UoM', required=True,
-        domain=[('category.lims_only_available', '=', False)],
-        help='The UoM\'s Category selected here will determine the set '
-        'of Products that can be related to this Family/Equivalent.')
-    products = fields.One2Many('product.template', 'family_equivalent',
-        'Products', readonly=True)
-
-    @classmethod
-    def validate(cls, family_equivalents):
-        super().validate(family_equivalents)
-        for fe in family_equivalents:
-            fe.check_products()
-
-    def check_products(self):
-        if self.products:
-            main_category = self.uom.category
-            for product in self.products:
-                if main_category != product.default_uom.category:
-                    raise UserError(gettext(
-                        'lims_production.msg_invalid_product_uom_category'))
-
-    @classmethod
-    def copy(cls, family_equivalents, default=None):
-        if default is None:
-            default = {}
-        current_default = default.copy()
-        current_default['products'] = None
-        return super().copy(family_equivalents, default=current_default)
+from trytond.modules.product import price_digits, round_price
 
 
 class Template(metaclass=PoolMeta):

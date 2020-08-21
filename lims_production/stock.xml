@@ -2,90 +2,20 @@
 <tryton>
     <data>
 
-<!-- Menu items in lims_menu.xml -->
+<!-- Sequences for Lot -->
 
-<!-- Purity Degree -->
-
-        <record model="ir.ui.view" id="lims_purity_degree_view_form">
-            <field name="model">lims.purity.degree</field>
-            <field name="type">form</field>
-            <field name="name">purity_degree_form</field>
+        <record model="ir.sequence.type" id="seq_type_lot">
+            <field name="name">Lot</field>
+            <field name="code">stock.lot</field>
         </record>
-        <record model="ir.ui.view" id="lims_purity_degree_view_list">
-            <field name="model">lims.purity.degree</field>
-            <field name="type">tree</field>
-            <field name="name">purity_degree_list</field>
+        <record model="ir.sequence.type-res.group"
+            id="seq_type_lot_group_admin">
+            <field name="sequence_type" ref="seq_type_lot"/>
+            <field name="group" ref="res.group_admin"/>
         </record>
-
-        <record model="ir.action.act_window" id="act_lims_purity_degree_list">
-            <field name="name">Purity Degrees</field>
-            <field name="res_model">lims.purity.degree</field>
-        </record>
-        <record model="ir.action.act_window.view" id="act_lims_purity_degree_view_list">
-            <field name="sequence" eval="10"/>
-            <field name="view" ref="lims_purity_degree_view_list"/>
-            <field name="act_window" ref="act_lims_purity_degree_list"/>
-        </record>
-        <record model="ir.action.act_window.view" id="act_lims_purity_degree_view_form">
-            <field name="sequence" eval="20"/>
-            <field name="view" ref="lims_purity_degree_view_form"/>
-            <field name="act_window" ref="act_lims_purity_degree_list"/>
-        </record>
-
-<!-- Brand -->
-
-        <record model="ir.ui.view" id="lims_brand_view_form">
-            <field name="model">lims.brand</field>
-            <field name="type">form</field>
-            <field name="name">brand_form</field>
-        </record>
-        <record model="ir.ui.view" id="lims_brand_view_list">
-            <field name="model">lims.brand</field>
-            <field name="type">tree</field>
-            <field name="name">brand_list</field>
-        </record>
-
-        <record model="ir.action.act_window" id="act_lims_brand_list">
-            <field name="name">Brands</field>
-            <field name="res_model">lims.brand</field>
-        </record>
-        <record model="ir.action.act_window.view" id="act_lims_brand_view_list">
-            <field name="sequence" eval="10"/>
-            <field name="view" ref="lims_brand_view_list"/>
-            <field name="act_window" ref="act_lims_brand_list"/>
-        </record>
-        <record model="ir.action.act_window.view" id="act_lims_brand_view_form">
-            <field name="sequence" eval="20"/>
-            <field name="view" ref="lims_brand_view_form"/>
-            <field name="act_window" ref="act_lims_brand_list"/>
-        </record>
-
-<!-- Family/Equivalents -->
-
-        <record model="ir.ui.view" id="lims_family_equivalent_view_form">
-            <field name="model">lims.family.equivalent</field>
-            <field name="type">form</field>
-            <field name="name">family_equivalent_form</field>
-        </record>
-        <record model="ir.ui.view" id="lims_family_equivalent_view_list">
-            <field name="model">lims.family.equivalent</field>
-            <field name="type">tree</field>
-            <field name="name">family_equivalent_list</field>
-        </record>
-
-        <record model="ir.action.act_window" id="act_lims_family_equivalent_list">
-            <field name="name">Family/Equivalents</field>
-            <field name="res_model">lims.family.equivalent</field>
-        </record>
-        <record model="ir.action.act_window.view" id="act_lims_family_equivalent_view_list">
-            <field name="sequence" eval="10"/>
-            <field name="view" ref="lims_family_equivalent_view_list"/>
-            <field name="act_window" ref="act_lims_family_equivalent_list"/>
-        </record>
-        <record model="ir.action.act_window.view" id="act_lims_family_equivalent_view_form">
-            <field name="sequence" eval="20"/>
-            <field name="view" ref="lims_family_equivalent_view_form"/>
-            <field name="act_window" ref="act_lims_family_equivalent_list"/>
+        <record model="ir.sequence" id="seq_lot">
+            <field name="name">Lot</field>
+            <field name="code">stock.lot</field>
         </record>
 
 <!-- Template -->
@@ -142,16 +72,22 @@
             <field name="name">Lot Categories</field>
             <field name="res_model">stock.lot.category</field>
         </record>
-        <record model="ir.action.act_window.view" id="act_lims_lot_category_view_list">
+        <record model="ir.action.act_window.view"
+            id="act_lims_lot_category_view_list">
             <field name="sequence" eval="10"/>
             <field name="view" ref="lims_lot_category_view_list"/>
             <field name="act_window" ref="act_lims_lot_category_list"/>
         </record>
-        <record model="ir.action.act_window.view" id="act_lims_lot_category_view_form">
+        <record model="ir.action.act_window.view"
+            id="act_lims_lot_category_view_form">
             <field name="sequence" eval="20"/>
             <field name="view" ref="lims_lot_category_view_form"/>
             <field name="act_window" ref="act_lims_lot_category_list"/>
         </record>
+
+        <menuitem action="act_lims_lot_category_list"
+            id="lims_lot_category_menu"
+            parent="stock.menu_configuration" sequence="10"/>
 
 <!-- Lot -->
 
@@ -164,6 +100,204 @@
             <field name="model">stock.lot</field>
             <field name="inherit" ref="stock_lot.lot_view_tree"/>
             <field name="name">stock_lot_list</field>
+        </record>
+
+        <record model="ir.model.field.access"
+            id="access_stock_lot_stability_global">
+            <field name="field"
+                search="[('name', '=', 'stability'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_stock_lot_stability_group_lims_lot_input_prod">
+            <field name="field"
+                search="[('name', '=', 'stability'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_input_prod"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access"
+            id="access_stock_lot_homogeneity_global">
+            <field name="field"
+                search="[('name', '=', 'homogeneity'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_stock_lot_homogeneity_group_lims_lot_input_prod">
+            <field name="field"
+                search="[('name', '=', 'homogeneity'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_input_prod"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access"
+            id="access_stock_lot_concentration_global">
+            <field name="field"
+                search="[('name', '=', 'concentration'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_stock_lot_concentration_group_lims_lot_input_prod">
+            <field name="field"
+                search="[('name', '=', 'concentration'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_input_prod"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_stock_lot_concentration_group_lims_lot_domestic_use">
+            <field name="field"
+                search="[('name', '=', 'concentration'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_domestic_use"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access"
+            id="access_stock_lot_expiration_date_global">
+            <field name="field"
+                search="[('name', '=', 'expiration_date'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_stock_lot_expiration_date_group_lims_lot_input_prod">
+            <field name="field"
+                search="[('name', '=', 'expiration_date'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_input_prod"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_stock_lot_expiration_date_group_lims_lot_prod_sale">
+            <field name="field"
+                search="[('name', '=', 'expiration_date'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_prod_sale"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_stock_lot_expiration_date_group_lims_lot_domestic_use">
+            <field name="field"
+                search="[('name', '=', 'expiration_date'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_domestic_use"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access"
+            id="access_stock_lot_reception_date_global">
+            <field name="field"
+                search="[('name', '=', 'reception_date'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_stock_lot_reception_date_group_lims_lot_input_prod">
+            <field name="field"
+                search="[('name', '=', 'reception_date'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_input_prod"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access"
+            id="access_stock_lot_preparation_date_global">
+            <field name="field"
+                search="[('name', '=', 'preparation_date'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_stock_lot_preparation_date_group_lims_lot_domestic_use">
+            <field name="field"
+                search="[('name', '=', 'preparation_date'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_domestic_use"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access"
+            id="access_stock_lot_solvent_global">
+            <field name="field"
+                search="[('name', '=', 'solvent'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_stock_lot_solvent_group_lims_lot_domestic_use">
+            <field name="field"
+                search="[('name', '=', 'solvent'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_domestic_use"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access"
+            id="access_stock_lot_technician_global">
+            <field name="field"
+                search="[('name', '=', 'technician'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_stock_lot_technician_group_lims_lot_prod_sale">
+            <field name="field"
+                search="[('name', '=', 'technician'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_prod_sale"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.field.access" id="access_stock_lot_technician_group_lims_lot_domestic_use">
+            <field name="field" search="[('name', '=', 'technician'), ('model.model', '=', 'stock.lot')]"/>
+            <field name="group" ref="group_lims_lot_domestic_use"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
 <!-- Move -->
@@ -180,6 +314,34 @@
             <field name="model">stock.shipment.in</field>
             <field name="inherit" ref="stock.shipment_in_view_form"/>
             <field name="name">stock_shipment_in_form</field>
+        </record>
+
+<!-- Move actions related -->
+
+        <record model="ir.action.act_window" id="act_production_related">
+            <field name="name">Related Productions</field>
+            <field name="res_model">production</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_production_related_list_view">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="production.production_view_list"/>
+            <field name="act_window" ref="act_production_related"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_production_related_form_view">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="production.production_view_form"/>
+            <field name="act_window" ref="act_production_related"/>
+        </record>
+
+        <record model="ir.action.wizard" id="wizard_move_production_related">
+            <field name="name">Related Productions</field>
+            <field name="wiz_name">lims.move.production_related</field>
+        </record>
+
+        <record model="ir.action.keyword" id="act_open_production_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">stock.move,-1</field>
+            <field name="action" ref="wizard_move_production_related"/>
         </record>
 
     </data>

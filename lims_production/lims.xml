@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Purity Degree -->
+
+        <record model="ir.ui.view" id="lims_purity_degree_view_form">
+            <field name="model">lims.purity.degree</field>
+            <field name="type">form</field>
+            <field name="name">purity_degree_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_purity_degree_view_list">
+            <field name="model">lims.purity.degree</field>
+            <field name="type">tree</field>
+            <field name="name">purity_degree_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_purity_degree_list">
+            <field name="name">Purity Degrees</field>
+            <field name="res_model">lims.purity.degree</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_purity_degree_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_purity_degree_view_list"/>
+            <field name="act_window" ref="act_lims_purity_degree_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_purity_degree_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_purity_degree_view_form"/>
+            <field name="act_window" ref="act_lims_purity_degree_list"/>
+        </record>
+
+        <menuitem action="act_lims_purity_degree_list"
+            id="lims_purity_degree_menu"
+            parent="lims_config_material" sequence="20"/>
+
+        <record model="ir.model.access" id="access_purity_degree">
+            <field name="model" search="[('model', '=', 'lims.purity.degree')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_purity_degree_group_conf_material_admin">
+            <field name="model" search="[('model', '=', 'lims.purity.degree')]"/>
+            <field name="group" ref="group_lims_conf_material_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+<!-- Brand -->
+
+        <record model="ir.ui.view" id="lims_brand_view_form">
+            <field name="model">lims.brand</field>
+            <field name="type">form</field>
+            <field name="name">brand_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_brand_view_list">
+            <field name="model">lims.brand</field>
+            <field name="type">tree</field>
+            <field name="name">brand_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_brand_list">
+            <field name="name">Brands</field>
+            <field name="res_model">lims.brand</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_brand_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_brand_view_list"/>
+            <field name="act_window" ref="act_lims_brand_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_brand_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_brand_view_form"/>
+            <field name="act_window" ref="act_lims_brand_list"/>
+        </record>
+
+        <menuitem action="act_lims_brand_list" id="lims_brand_menu"
+            parent="lims_config_material" sequence="10"/>
+
+        <record model="ir.model.access" id="access_brand">
+            <field name="model" search="[('model', '=', 'lims.brand')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_brand_group_conf_material_admin">
+            <field name="model" search="[('model', '=', 'lims.brand')]"/>
+            <field name="group" ref="group_lims_conf_material_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+<!-- Family/Equivalents -->
+
+        <record model="ir.ui.view" id="lims_family_equivalent_view_form">
+            <field name="model">lims.family.equivalent</field>
+            <field name="type">form</field>
+            <field name="name">family_equivalent_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_family_equivalent_view_list">
+            <field name="model">lims.family.equivalent</field>
+            <field name="type">tree</field>
+            <field name="name">family_equivalent_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_family_equivalent_list">
+            <field name="name">Family/Equivalents</field>
+            <field name="res_model">lims.family.equivalent</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_family_equivalent_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_family_equivalent_view_list"/>
+            <field name="act_window" ref="act_lims_family_equivalent_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_family_equivalent_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_family_equivalent_view_form"/>
+            <field name="act_window" ref="act_lims_family_equivalent_list"/>
+        </record>
+
+        <menuitem action="act_lims_family_equivalent_list"
+            id="lims_family_equivalent_menu"
+            parent="lims_config_material" sequence="30"/>
+
+        <record model="ir.model.access" id="access_family_equivalent">
+            <field name="model" search="[('model', '=', 'lims.family.equivalent')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_family_equivalent_group_conf_material_admin">
+            <field name="model" search="[('model', '=', 'lims.family.equivalent')]"/>
+            <field name="group" ref="group_lims_conf_material_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+<!-- Family/Equivalents Report -->
+
+        <record model="ir.action.report" id="report_family_equivalent">
+            <field name="name">Family/Equivalents</field>
+            <field name="report_name">lims.family.equivalent.report</field>
+            <field name="report">lims_production/report/family_equivalent.fodt</field>
+            <field name="extension">pdf</field>
+        </record>
+
+        <record model="ir.action.keyword" id="report_family_equivalent_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.family.equivalent,-1</field>
+            <field name="action" ref="report_family_equivalent"/>
+        </record>
+
+    </data>
+</tryton>

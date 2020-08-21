@@ -22,7 +22,6 @@
             <field name="inherit" ref="product.uom_category_view_tree"/>
             <field name="name">product_uom_category_list</field>
         </record>
-
         <record model="ir.ui.view" id="lims_uom_category_view_form">
             <field name="model">product.uom.category</field>
             <field name="inherit" ref="product.uom_category_view_form"/>
@@ -57,6 +56,26 @@
             <field name="act_window" ref="act_lims_volume_conversion_list"/>
         </record>
 
+        <menuitem action="act_lims_volume_conversion_list"
+            id="lims_volume_conversion_list_menu"
+            parent="lims_config_base_tables" sequence="100"/>
+
+        <record model="ir.model.access" id="access_volume_conversion">
+            <field name="model" search="[('model', '=', 'lims.volume.conversion')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_volume_conversion_group_conf_base_tables_admin">
+            <field name="model" search="[('model', '=', 'lims.volume.conversion')]"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
 <!-- Uom Conversion -->
 
         <record model="ir.ui.view" id="lims_uom_conversion_view_form">
@@ -83,6 +102,26 @@
             <field name="sequence" eval="20"/>
             <field name="view" ref="lims_uom_conversion_view_form"/>
             <field name="act_window" ref="act_lims_uom_conversion_list"/>
+        </record>
+
+        <menuitem action="act_lims_uom_conversion_list"
+            id="lims_uom_conversion_list_menu"
+            parent="lims_config_base_tables" sequence="110"/>
+
+        <record model="ir.model.access" id="access_uom_conversion">
+            <field name="model" search="[('model', '=', 'lims.uom.conversion')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_uom_conversion_group_conf_base_tables_admin">
+            <field name="model" search="[('model', '=', 'lims.uom.conversion')]"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
 <!-- Concentration Level -->
@@ -113,41 +152,20 @@
             <field name="act_window" ref="act_lims_concentration_level"/>
         </record>
 
-        <menuitem parent="lims_config_base_tables" action="act_lims_volume_conversion_list"
-            id="lims_volume_conversion_list_menu" sequence="100"/>
-        <menuitem parent="lims_config_base_tables" action="act_lims_uom_conversion_list"
-            id="lims_uom_conversion_list_menu" sequence="110"/>
+        <menuitem action="act_lims_concentration_level"
+            id="lims_concentration_level_menu"
+            parent="lims_laboratory_control" sequence="20"
+            icon="lims-concentration_level"/>
 
-        <record model="ir.model.access" id="access_volume_conversion">
-            <field name="model" search="[('model', '=', 'lims.volume.conversion')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
+        <record model="ir.ui.menu-res.group"
+            id="menu_concentration_level_group_control_readonly">
+            <field name="menu" ref="lims_concentration_level_menu"/>
+            <field name="group" ref="group_lims_control_readonly"/>
         </record>
-        <record model="ir.model.access" id="access_volume_conversion_group_conf_base_tables_admin">
-            <field name="model" search="[('model', '=', 'lims.volume.conversion')]"/>
-            <field name="group" ref="group_lims_conf_base_tables_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.model.access" id="access_uom_conversion">
-            <field name="model" search="[('model', '=', 'lims.uom.conversion')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_uom_conversion_group_conf_base_tables_admin">
-            <field name="model" search="[('model', '=', 'lims.uom.conversion')]"/>
-            <field name="group" ref="group_lims_conf_base_tables_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
+        <record model="ir.ui.menu-res.group"
+            id="menu_concentration_level_group_control">
+            <field name="menu" ref="lims_concentration_level_menu"/>
+            <field name="group" ref="group_lims_control"/>
         </record>
 
         <record model="ir.model.access" id="access_concentration_level">

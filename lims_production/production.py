@@ -5,10 +5,9 @@
 from decimal import Decimal
 
 from trytond.model import fields
-from trytond.pyson import Eval, Bool
 from trytond.pool import PoolMeta, Pool
+from trytond.pyson import Eval, Bool
 from trytond.transaction import Transaction
-from trytond.report import Report
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
@@ -220,44 +219,3 @@ class Production(metaclass=PoolMeta):
                 from_location = product_location
         return super()._explode_move_values(from_location, to_location,
             company, bom_io, quantity)
-
-
-class FamilyEquivalentReport(Report):
-    'Family/Equivalent'
-    __name__ = 'lims.family.equivalent.report'
-
-    @classmethod
-    def get_context(cls, records, data):
-        pool = Pool()
-        Company = pool.get('company.company')
-
-        report_context = super().get_context(records, data)
-
-        report_context['company'] = Company(Transaction().context['company'])
-        report_context['records'] = cls._get_family_records(records)
-        report_context['compute_qty'] = cls.compute_qty
-        return report_context
-
-    @classmethod
-    def _get_family_records(cls, records):
-        pool = Pool()
-        Location = pool.get('stock.location')
-        Date_ = pool.get('ir.date')
-        FamilyEquivalent = pool.get('lims.family.equivalent')
-
-        locations = Location.search([
-            ('type', '=', 'storage'),
-            ])
-        context = {}
-        context['locations'] = [l.id for l in locations]
-        context['stock_date_end'] = Date_.today()
-
-        with Transaction().set_context(context):
-            res = FamilyEquivalent.browse(records)
-        return res
-
-    @classmethod
-    def compute_qty(cls, from_uom, qty, to_uom):
-        pool = Pool()
-        Uom = pool.get('product.uom')
-        return Uom.compute_qty(from_uom, qty, to_uom)

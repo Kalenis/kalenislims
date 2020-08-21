@@ -2,24 +2,6 @@
 <tryton>
     <data>
 
-<!-- Groups -->
-
-        <record model="res.group" id="group_lims_digital_sign">
-            <field name="name">Lims Digital Sign</field>
-        </record>
-        <record model="res.user-res.group" id="user_admin_group_lims_digital_sign">
-            <field name="user" ref="res.user_admin"/>
-            <field name="group" ref="group_lims_digital_sign"/>
-        </record>
-
-<!-- Cron -->
-
-        <record model="ir.cron" id="cron_lims_digital_sign_results_reports">
-            <field name="interval_number" eval="1"/>
-            <field name="interval_type">days</field>
-            <field name="method">lims.results_report|cron_digital_signs</field>
-        </record>
-
 <!-- Wizard Digital Sign -->
 
         <record model="ir.ui.view" id="view_digital_sign_start">
@@ -44,57 +26,41 @@
             <field name="name">Digital Sign</field>
             <field name="wiz_name">lims_digital_sign.digital_sign</field>
         </record>
+
         <record model="ir.action.keyword" id="wizard_digital_sign_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.results_report,-1</field>
             <field name="action" ref="wizard_digital_sign"/>
         </record>
 
-<!-- Access Rights on Menu -->
+        <menuitem action="wizard_digital_sign" id="menu_digital_sign"
+            parent="lims.lims_laboratory_reports" sequence="40"
+            icon="lims-digital_sign"/>
 
-        <!-- Laboratory / Results reports / Digital Sign -->
-
-        <record model="ir.ui.menu-res.group" id="menu_laboratory_group_digital_sign">
-            <field name="menu" ref="lims.lims_laboratory"/>
+        <record model="ir.ui.menu-res.group" id="menu_digital_sign_group_digital_sign">
+            <field name="menu" ref="menu_digital_sign"/>
             <field name="group" ref="group_lims_digital_sign"/>
         </record>
-
         <record model="ir.ui.menu-res.group" id="menu_laboratory_reports_group_digital_sign">
             <field name="menu" ref="lims.lims_laboratory_reports"/>
             <field name="group" ref="group_lims_digital_sign"/>
         </record>
-
-<!-- Access Rights on Actions -->
+        <record model="ir.ui.menu-res.group" id="menu_laboratory_group_digital_sign">
+            <field name="menu" ref="lims.lims_laboratory"/>
+            <field name="group" ref="group_lims_digital_sign"/>
+        </record>
 
         <record model="ir.action-res.group" id="wizard_digital_sign_group_digital_sign">
             <field name="action" ref="wizard_digital_sign"/>
             <field name="group" ref="group_lims_digital_sign"/>
         </record>
 
-<!-- Lims -->
+<!-- Results Report -->
 
         <record model="ir.ui.view" id="lims_results_report_view_list">
             <field name="model">lims.results_report</field>
             <field name="inherit" ref="lims.lims_results_report_view_list"/>
             <field name="name">results_report_list</field>
-        </record>
-
-<!-- Icons -->
-
-        <record model="ir.ui.icon" id="digital_sign_icon">
-            <field name="name">lims-digital_sign</field>
-            <field name="path">icons/digital_sign.svg</field>
-        </record>
-
-<!-- Menu -->
-
-        <!-- Laboratory / Results reports / Digital Sign -->
-        <menuitem parent="lims.lims_laboratory_reports" action="wizard_digital_sign"
-            id="menu_digital_sign" sequence="40"
-            icon="lims-digital_sign"/>
-        <record model="ir.ui.menu-res.group" id="menu_digital_sign_group_digital_sign">
-            <field name="menu" ref="menu_digital_sign"/>
-            <field name="group" ref="group_lims_digital_sign"/>
         </record>
 
     </data>

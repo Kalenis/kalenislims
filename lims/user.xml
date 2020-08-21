@@ -189,5 +189,525 @@ this repository contains the full copyright notices and license terms. -->
             <field name="group" ref="group_lims_planification"/>
         </record>
 
+<!-- Icons -->
+
+        <record model="ir.ui.icon" id="laboratory_icon">
+            <field name="name">lims-laboratory</field>
+            <field name="path">icons/laboratory.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="configuration_icon">
+            <field name="name">lims-configuration</field>
+            <field name="path">icons/configuration.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="lab_icon">
+            <field name="name">lims-lab</field>
+            <field name="path">icons/lab_icon.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="entry_board_icon">
+            <field name="name">lims-entry_board</field>
+            <field name="path">icons/entry_board.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="planification_icon">
+            <field name="name">lims-planification</field>
+            <field name="path">icons/planification.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="create_fraction_con_icon">
+            <field name="name">lims-create_fraction_con</field>
+            <field name="path">icons/create_fraction_con.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="release_fraction_icon">
+            <field name="name">lims-release_fraction</field>
+            <field name="path">icons/release_fraction.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="notebook_icon">
+            <field name="name">lims-notebook</field>
+            <field name="path">icons/notebook.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="notebook_line_all_menu_icon">
+            <field name="name">lims-notebook_line_all_menu</field>
+            <field name="path">icons/notebook_line_all_menu.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="laboratory_results_icon">
+            <field name="name">lims-laboratory_results</field>
+            <field name="path">icons/laboratory_results.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="notebook_load_results_manual_icon">
+            <field name="name">lims-notebook_load_results_manual</field>
+            <field name="path">icons/notebook_load_results_manual.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="notebook_load_results_formula_icon">
+            <field name="name">lims-notebook_load_results_formula</field>
+            <field name="path">icons/notebook_load_results_formula.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="laboratory_control_icon">
+            <field name="name">lims-laboratory_control</field>
+            <field name="path">icons/laboratory_control.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="tendencies_icon">
+            <field name="name">lims-tendencies</field>
+            <field name="path">icons/tendencies.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="concentration_level_icon">
+            <field name="name">lims-concentration_level</field>
+            <field name="path">icons/concentration_level.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="control_means_deviations_calc_icon">
+            <field name="name">lims-control_means_deviations_calc</field>
+            <field name="path">icons/control_means_deviations_calc.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="tendencies_analysis_icon">
+            <field name="name">lims-tendencies_analysis</field>
+            <field name="path">icons/tendencies_analysis.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="laboratory_reports_icon">
+            <field name="name">lims-laboratory_reports</field>
+            <field name="path">icons/laboratory_reports.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="generate_results_report_icon">
+            <field name="name">lims-generate_results_report</field>
+            <field name="path">icons/generate_results_report.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="results_report_version_detail_icon">
+            <field name="name">lims-results_report_version_detail</field>
+            <field name="path">icons/results_report_version_detail.svg</field>
+        </record>
+
+        <record model="ir.ui.icon" id="yellow_icon">
+            <field name="name">lims-yellow</field>
+            <field name="path">icons/yellow.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="red_icon">
+            <field name="name">lims-red</field>
+            <field name="path">icons/red.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="blue_icon">
+            <field name="name">lims-blue</field>
+            <field name="path">icons/blue.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="green_icon">
+            <field name="name">lims-green</field>
+            <field name="path">icons/green.svg</field>
+        </record>
+        <record model="ir.ui.icon" id="white_icon">
+            <field name="name">lims-white</field>
+            <field name="path">icons/white.svg</field>
+        </record>
+
+<!-- Menu -->
+
+        <!-- Laboratory -->
+        <menuitem name="Laboratory" id="lims_laboratory"
+            icon="lims-laboratory"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_conf_base_readonly">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_base_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_conf_base_admin">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_base_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_conf_laboratory_readonly">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_laboratory_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_conf_laboratory_admin">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_laboratory_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_conf_report_readonly">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_report_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_conf_report_admin">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_report_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_conf_base_tables_readonly">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_base_tables_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_conf_base_tables_admin">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_conf_entry_readonly">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_entry_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_conf_entry_admin">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_entry_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_entry_readonly">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_entry_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_entry_update">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_entry_update"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_entry">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_entry"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_blind_sample_readonly">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_blind_sample_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_blind_sample">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_blind_sample"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_planification_readonly">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_planification_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_planification">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_planification"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_group_notebook_readonly">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_notebook_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_group_notebook">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_notebook"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_group_laboratory_results">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_laboratory_results"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_group_control_readonly">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_control_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_group_control">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_control"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_group_lims_trend_chart">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_trend_chart"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_group_lims_trend_chart_admin">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_trend_chart_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_conf_certification_readonly">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_certification_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_lims_laboratory_group_conf_certification_admin">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_group_laboratory_reports_readonly">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_laboratory_reports_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_group_laboratory_reports">
+            <field name="menu" ref="lims_laboratory"/>
+            <field name="group" ref="group_lims_laboratory_reports"/>
+        </record>
+
+        <!-- Laboratory / Configuration -->
+        <menuitem name="Configuration" id="lims_config"
+            parent="lims_laboratory" sequence="10"
+            icon="lims-configuration"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_group_conf_base_readonly">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_base_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_group_conf_base_admin">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_base_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_group_conf_laboratory_readonly">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_laboratory_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_group_conf_laboratory_admin">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_laboratory_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_group_conf_report_readonly">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_report_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_group_conf_report_admin">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_report_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_group_conf_base_tables_readonly">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_base_tables_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_group_conf_base_tables_admin">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_group_conf_entry_readonly">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_entry_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_group_conf_entry_admin">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_entry_admin"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_group_conf_certification_readonly">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_certification_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_group_conf_certification_admin">
+            <field name="menu" ref="lims_config"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+        </record>
+
+        <!-- Laboratory / Configuration / Base -->
+        <menuitem name="Base" id="lims_config_base"
+            parent="lims_config" sequence="10"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_base_group_conf_base_readonly">
+            <field name="menu" ref="lims_config_base"/>
+            <field name="group" ref="group_lims_conf_base_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_base_group_conf_base_admin">
+            <field name="menu" ref="lims_config_base"/>
+            <field name="group" ref="group_lims_conf_base_admin"/>
+        </record>
+
+        <!-- Laboratory / Configuration / Certification -->
+        <menuitem name="Certification" id="lims_config_certification"
+            parent="lims_config" sequence="20"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_certification_group_conf_certification_readonly">
+            <field name="menu" ref="lims_config_certification"/>
+            <field name="group" ref="group_lims_conf_certification_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_certification_group_conf_certification_admin">
+            <field name="menu" ref="lims_config_certification"/>
+            <field name="group" ref="group_lims_conf_certification_admin"/>
+        </record>
+
+        <!-- Laboratory / Configuration / Entry -->
+        <menuitem name="Entry" id="lims_config_entry"
+            parent="lims_config" sequence="30"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_entry_group_conf_entry_readonly">
+            <field name="menu" ref="lims_config_entry"/>
+            <field name="group" ref="group_lims_conf_entry_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_entry_group_conf_entry_admin">
+            <field name="menu" ref="lims_config_entry"/>
+            <field name="group" ref="group_lims_conf_entry_admin"/>
+        </record>
+
+        <!-- Laboratory / Configuration / Laboratory -->
+        <menuitem name="Laboratory" id="lims_config_laboratory"
+            parent="lims_config" sequence="40"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_laboratory_group_conf_laboratory_readonly">
+            <field name="menu" ref="lims_config_laboratory"/>
+            <field name="group" ref="group_lims_conf_laboratory_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_laboratory_group_conf_laboratory_admin">
+            <field name="menu" ref="lims_config_laboratory"/>
+            <field name="group" ref="group_lims_conf_laboratory_admin"/>
+        </record>
+
+        <!-- Laboratory / Configuration / Results Report -->
+        <menuitem name="Results Report" id="lims_config_report"
+            parent="lims_config" sequence="50"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_laboratory_group_conf_report_readonly">
+            <field name="menu" ref="lims_config_report"/>
+            <field name="group" ref="group_lims_conf_report_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_laboratory_group_conf_report_admin">
+            <field name="menu" ref="lims_config_report"/>
+            <field name="group" ref="group_lims_conf_report_admin"/>
+        </record>
+
+        <!-- Laboratory / Configuration / Base Tables -->
+        <menuitem name="Base Tables" id="lims_config_base_tables"
+            parent="lims_config" sequence="70"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_laboratory_group_conf_base_tables_readonly">
+            <field name="menu" ref="lims_config_base_tables"/>
+            <field name="group" ref="group_lims_conf_base_tables_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_laboratory_group_conf_base_tables_admin">
+            <field name="menu" ref="lims_config_base_tables"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+        </record>
+
+        <!-- Laboratory / Entries Board -->
+        <menuitem name="Entries Board" id="lims_entry_board_menu"
+            parent="lims_laboratory" sequence="20"
+            icon="lims-entry_board"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_entry_board_group_entry_readonly">
+            <field name="menu" ref="lims_entry_board_menu"/>
+            <field name="group" ref="group_lims_entry_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_entry_board_group_entry_update">
+            <field name="menu" ref="lims_entry_board_menu"/>
+            <field name="group" ref="group_lims_entry_update"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_entry_board_group_entry">
+            <field name="menu" ref="lims_entry_board_menu"/>
+            <field name="group" ref="group_lims_entry"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_entry_board_group_blind_sample_readonly">
+            <field name="menu" ref="lims_entry_board_menu"/>
+            <field name="group" ref="group_lims_blind_sample_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_entry_board_group_blind_sample">
+            <field name="menu" ref="lims_entry_board_menu"/>
+            <field name="group" ref="group_lims_blind_sample"/>
+        </record>
+
+        <!-- Laboratory / Entries Board / Referrals -->
+        <menuitem name="Referrals" id="menu_entry_board_referrals"
+            parent="lims_entry_board_menu" sequence="70"/>
+
+        <!-- Laboratory / Planifications -->
+        <menuitem name="Planifications" id="lims_planification_menu"
+            parent="lims_laboratory" sequence="30"
+            icon="lims-planification"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_planification_group_planification_readonly">
+            <field name="menu" ref="lims_planification_menu"/>
+            <field name="group" ref="group_lims_planification_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_planification_group_planification">
+            <field name="menu" ref="lims_planification_menu"/>
+            <field name="group" ref="group_lims_planification"/>
+        </record>
+
+        <!-- Laboratory / Results entry -->
+        <menuitem name="Results entry" id="lims_laboratory_results"
+            parent="lims_laboratory" sequence="40"
+            icon="lims-laboratory_results"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_results_group_laboratory_results">
+            <field name="menu" ref="lims_laboratory_results"/>
+            <field name="group" ref="group_lims_laboratory_results"/>
+        </record>
+
+        <!-- Laboratory / Results reports -->
+        <menuitem name="Results reports" id="lims_laboratory_reports"
+            parent="lims_laboratory" sequence="50"
+            icon="lims-laboratory_reports"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_reports_group_laboratory_reports_readonly">
+            <field name="menu" ref="lims_laboratory_reports"/>
+            <field name="group" ref="group_lims_laboratory_reports_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_reports_group_laboratory_reports">
+            <field name="menu" ref="lims_laboratory_reports"/>
+            <field name="group" ref="group_lims_laboratory_reports"/>
+        </record>
+
+        <!-- Laboratory / Control Charts -->
+        <menuitem name="Control Charts" id="lims_laboratory_control"
+            parent="lims_laboratory" sequence="60"
+            icon="lims-laboratory_control"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_control_group_control_readonly">
+            <field name="menu" ref="lims_laboratory_control"/>
+            <field name="group" ref="group_lims_control_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_control_group_control">
+            <field name="menu" ref="lims_laboratory_control"/>
+            <field name="group" ref="group_lims_control"/>
+        </record>
+
     </data>
 </tryton>

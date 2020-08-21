@@ -2,38 +2,6 @@
 <tryton>
     <data>
 
-        <record model="ir.ui.icon" id="lab_icon">
-            <field name="name">lims-lab</field>
-            <field name="path">icons/lab_icon.svg</field>
-        </record>
-        <record model="ir.ui.icon" id="laboratory_icon">
-            <field name="name">lims-laboratory</field>
-            <field name="path">icons/laboratory.svg</field>
-        </record>
-        <record model="ir.ui.icon" id="yellow_icon">
-            <field name="name">lims-yellow</field>
-            <field name="path">icons/yellow.svg</field>
-        </record>
-        <record model="ir.ui.icon" id="red_icon">
-            <field name="name">lims-red</field>
-            <field name="path">icons/red.svg</field>
-        </record>
-        <record model="ir.ui.icon" id="blue_icon">
-            <field name="name">lims-blue</field>
-            <field name="path">icons/blue.svg</field>
-        </record>
-        <record model="ir.ui.icon" id="green_icon">
-            <field name="name">lims-green</field>
-            <field name="path">icons/green.svg</field>
-        </record>
-        <record model="ir.ui.icon" id="white_icon">
-            <field name="name">lims-white</field>
-            <field name="path">icons/white.svg</field>
-        </record>
-
-        <menuitem name="Laboratory"
-            id="lims_laboratory" icon="lims-laboratory"/>
-
 <!-- Laboratory -->
 
         <record model="ir.ui.view" id="lims_laboratory_view_form">
@@ -62,6 +30,9 @@
             <field name="act_window" ref="act_lims_laboratory_list"/>
         </record>
 
+        <menuitem action="act_lims_laboratory_list" id="lims_laboratory_menu"
+            parent="lims_config_laboratory" sequence="10"/>
+
         <record model="ir.rule.group" id="rule_group_laboratory">
             <field name="name">User in laboratory</field>
             <field name="model" search="[('model', '=', 'lims.laboratory')]"/>
@@ -72,6 +43,22 @@
                 eval="[If(Bool(Eval('user', {}).get('laboratories', False)), ('id', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0))]"
                 pyson="1"/>
             <field name="rule_group" ref="rule_group_laboratory"/>
+        </record>
+
+        <record model="ir.model.access" id="access_laboratory">
+            <field name="model" search="[('model', '=', 'lims.laboratory')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_laboratory_group_conf_laboratory_admin">
+            <field name="model" search="[('model', '=', 'lims.laboratory')]"/>
+            <field name="group" ref="group_lims_conf_laboratory_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
 <!-- Laboratory CV Correction -->
@@ -115,6 +102,26 @@
             <field name="act_window" ref="act_lims_laboratory_professional_list"/>
         </record>
 
+        <menuitem action="act_lims_laboratory_professional_list"
+            id="lims_laboratory_professional_menu"
+            parent="lims_config_laboratory" sequence="20"/>
+
+        <record model="ir.model.access" id="access_laboratory_professional">
+            <field name="model" search="[('model', '=', 'lims.laboratory.professional')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_laboratory_professional_group_conf_laboratory_admin">
+            <field name="model" search="[('model', '=', 'lims.laboratory.professional')]"/>
+            <field name="group" ref="group_lims_conf_laboratory_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
 <!-- Laboratory Method -->
 
         <record model="ir.ui.view" id="lims_lab_method_view_form">
@@ -141,6 +148,26 @@
             <field name="sequence" eval="20"/>
             <field name="view" ref="lims_lab_method_view_form"/>
             <field name="act_window" ref="act_lims_lab_method_list"/>
+        </record>
+
+        <menuitem action="act_lims_lab_method_list"
+            id="lims_lab_method_menu"
+            parent="lims_config_base_tables" sequence="30"/>
+
+        <record model="ir.model.access" id="access_lab_method">
+            <field name="model" search="[('model', '=', 'lims.lab.method')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_lab_method_group_conf_base_tables_admin">
+            <field name="model" search="[('model', '=', 'lims.lab.method')]"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
 <!-- Waiting Time per Client -->
@@ -184,6 +211,25 @@
             <field name="act_window" ref="act_lims_lab_device_list"/>
         </record>
 
+        <menuitem action="act_lims_lab_device_list" id="lims_lab_device_menu"
+            parent="lims_config_laboratory" sequence="50"/>
+
+        <record model="ir.model.access" id="access_lab_device">
+            <field name="model" search="[('model', '=', 'lims.lab.device')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_lab_device_group_conf_laboratory_admin">
+            <field name="model" search="[('model', '=', 'lims.lab.device')]"/>
+            <field name="group" ref="group_lims_conf_laboratory_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
 <!-- Laboratory Device Type -->
 
         <record model="ir.ui.view" id="lims_lab_device_type_view_form">
@@ -210,6 +256,26 @@
             <field name="sequence" eval="20"/>
             <field name="view" ref="lims_lab_device_type_view_form"/>
             <field name="act_window" ref="act_lims_lab_device_type_list"/>
+        </record>
+
+        <menuitem action="act_lims_lab_device_type_list"
+            id="lims_lab_device_type_menu"
+            parent="lims_config_laboratory" sequence="40"/>
+
+        <record model="ir.model.access" id="access_lab_device_type">
+            <field name="model" search="[('model', '=', 'lims.lab.device.type')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_lab_device_type_group_conf_laboratory_admin">
+            <field name="model" search="[('model', '=', 'lims.lab.device.type')]"/>
+            <field name="group" ref="group_lims_conf_laboratory_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
 <!-- Laboratory Device Laboratory -->
@@ -245,10 +311,12 @@
             <field name="type">form</field>
             <field name="name">lab_device_relate_analysis_start_form</field>
         </record>
+
         <record model="ir.action.wizard" id="wizard_device_relate_analysis">
             <field name="name">Relate Analysis to Device</field>
             <field name="wiz_name">lims.lab.device.relate_analysis</field>
         </record>
+
         <record model="ir.action.keyword" id="wizard_device_relate_analysis_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.lab.device,-1</field>
@@ -283,6 +351,9 @@
             <field name="act_window" ref="act_notebook_rule_list"/>
         </record>
 
+        <menuitem action="act_notebook_rule_list" id="menu_notebook_rule_list"
+            parent="lims_config_laboratory" sequence="60"/>
+
 <!-- Notebook Rule Condition -->
 
         <record model="ir.ui.view" id="notebook_rule_condition_view_form">
@@ -294,88 +365,6 @@
             <field name="model">lims.rule.condition</field>
             <field name="type">tree</field>
             <field name="name">notebook_rule_condition_list</field>
-        </record>
-
-<!--  -->
-
-        <record model="ir.model.access" id="access_laboratory">
-            <field name="model" search="[('model', '=', 'lims.laboratory')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_laboratory_group_conf_laboratory_admin">
-            <field name="model" search="[('model', '=', 'lims.laboratory')]"/>
-            <field name="group" ref="group_lims_conf_laboratory_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.model.access" id="access_laboratory_professional">
-            <field name="model" search="[('model', '=', 'lims.laboratory.professional')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_laboratory_professional_group_conf_laboratory_admin">
-            <field name="model" search="[('model', '=', 'lims.laboratory.professional')]"/>
-            <field name="group" ref="group_lims_conf_laboratory_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.model.access" id="access_lab_device_type">
-            <field name="model" search="[('model', '=', 'lims.lab.device.type')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_lab_device_type_group_conf_laboratory_admin">
-            <field name="model" search="[('model', '=', 'lims.lab.device.type')]"/>
-            <field name="group" ref="group_lims_conf_laboratory_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.model.access" id="access_lab_device">
-            <field name="model" search="[('model', '=', 'lims.lab.device')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_lab_device_group_conf_laboratory_admin">
-            <field name="model" search="[('model', '=', 'lims.lab.device')]"/>
-            <field name="group" ref="group_lims_conf_laboratory_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.model.access" id="access_lab_method">
-            <field name="model" search="[('model', '=', 'lims.lab.method')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_lab_method_group_conf_base_tables_admin">
-            <field name="model" search="[('model', '=', 'lims.lab.method')]"/>
-            <field name="group" ref="group_lims_conf_base_tables_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
         </record>
 
     </data>

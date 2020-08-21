@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Groups -->
+
+        <record model="res.group" id="group_lims_digital_sign">
+            <field name="name">Lims Digital Sign</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_digital_sign">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_digital_sign"/>
+        </record>
+
+<!-- Icons -->
+
+        <record model="ir.ui.icon" id="digital_sign_icon">
+            <field name="name">lims-digital_sign</field>
+            <field name="path">icons/digital_sign.svg</field>
+        </record>
+
+    </data>
+</tryton>

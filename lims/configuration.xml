@@ -2,11 +2,6 @@
 <tryton>
     <data>
 
-        <record model="ir.ui.icon" id="configuration_icon">
-            <field name="name">lims-configuration</field>
-            <field name="path">icons/configuration.svg</field>
-        </record>
-
 <!-- Configuration -->
 
         <record model="ir.ui.view" id="lims_configuration_view">
@@ -23,6 +18,25 @@
             <field name="sequence" eval="10"/>
             <field name="view" ref="lims_configuration_view"/>
             <field name="act_window" ref="act_lims_configuration"/>
+        </record>
+
+        <menuitem action="act_lims_configuration" id="lims_configuration_menu"
+            parent="lims_config_base" sequence="10"/>
+
+        <record model="ir.model.access" id="access_configuration">
+            <field name="model" search="[('model', '=', 'lims.configuration')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_configuration_group_conf_base_admin">
+            <field name="model" search="[('model', '=', 'lims.configuration')]"/>
+            <field name="group" ref="group_lims_conf_base_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
 <!-- Work Year -->
@@ -51,6 +65,25 @@
             <field name="sequence" eval="20"/>
             <field name="view" ref="lims_workyear_view_form"/>
             <field name="act_window" ref="act_lims_workyear_list"/>
+        </record>
+
+        <menuitem action="act_lims_workyear_list" id="lims_workyear_menu"
+            parent="lims_config_base" sequence="20"/>
+
+        <record model="ir.model.access" id="access_workyear">
+            <field name="model" search="[('model', '=', 'lims.lab.workyear')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_workyear_group_conf_base_admin">
+            <field name="model" search="[('model', '=', 'lims.lab.workyear')]"/>
+            <field name="group" ref="group_lims_conf_base_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
 <!-- Work Year Holiday -->
@@ -94,6 +127,26 @@
             <field name="act_window" ref="act_lims_notebook_views_list"/>
         </record>
 
+        <menuitem action="act_lims_notebook_views_list"
+            id="lims_notebook_views_menu"
+            parent="lims_config_laboratory" sequence="30"/>
+
+        <record model="ir.model.access" id="access_notebook_views">
+            <field name="model" search="[('model', '=', 'lims.notebook.view')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_notebook_views_group_conf_laboratory_admin">
+            <field name="model" search="[('model', '=', 'lims.notebook.view')]"/>
+            <field name="group" ref="group_lims_conf_laboratory_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
 <!-- Laboratory Notebook View Column -->
 
         <record model="ir.ui.view" id="lims_notebook_view_column_view_form">
@@ -135,6 +188,9 @@
             <field name="act_window" ref="act_printer_list"/>
         </record>
 
+        <menuitem action="act_printer_list" id="lims_printer_menu"
+            parent="lims_config_base" sequence="30"/>
+
 <!-- Model -->
 
         <record model="ir.ui.view" id="model_view_form">
@@ -151,192 +207,6 @@
             <field name="model">ir.model.doc</field>
             <field name="type">tree</field>
             <field name="name">model_doc_tree</field>
-        </record>
-
-        <!-- Configuration -->
-        <menuitem name="Configuration" parent="lims_laboratory"
-            id="lims_config" sequence="10" icon="lims-configuration"/>
-
-        <!-- Configuration / Base -->
-        <menuitem name="Base" parent="lims_config"
-            id="lims_config_base" sequence="10"/>
-        <menuitem parent="lims_config_base" action="act_lims_configuration"
-            id="lims_configuration_menu" sequence="10"/>
-        <menuitem parent="lims_config_base" action="act_lims_workyear_list"
-            id="lims_workyear_menu" sequence="20"/>
-        <menuitem parent="lims_config_base" action="act_printer_list"
-            id="lims_printer_menu" sequence="30"/>
-
-        <!-- Configuration / Laboratory -->
-        <menuitem name="Laboratory" parent="lims_config"
-            id="lims_config_laboratory" sequence="40"/>
-        <menuitem parent="lims_config_laboratory" action="act_lims_laboratory_list"
-            id="lims_laboratory_menu" sequence="10"/>
-        <menuitem parent="lims_config_laboratory" action="act_lims_laboratory_professional_list"
-            id="lims_laboratory_professional_menu" sequence="20"/>
-        <menuitem parent="lims_config_laboratory" action="act_lims_notebook_views_list"
-            id="lims_notebook_views_menu" sequence="30"/>
-        <menuitem parent="lims_config_laboratory" action="act_lims_lab_device_type_list"
-            id="lims_lab_device_type_menu" sequence="40"/>
-        <menuitem parent="lims_config_laboratory" action="act_lims_lab_device_list"
-            id="lims_lab_device_menu" sequence="50"/>
-        <menuitem action="act_notebook_rule_list" id="menu_notebook_rule_list"
-            parent="lims_config_laboratory" sequence="60"/>
-
-        <!-- Configuration / Results Report -->
-        <menuitem name="Results Report" parent="lims_config"
-            id="lims_config_report" sequence="50"/>
-
-        <!-- Configuration / Base Tables -->
-        <menuitem name="Base Tables" parent="lims_config"
-            id="lims_config_base_tables" sequence="70"/>
-
-        <record model="ir.model.access" id="access_configuration">
-            <field name="model" search="[('model', '=', 'lims.configuration')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_configuration_group_conf_base_admin">
-            <field name="model" search="[('model', '=', 'lims.configuration')]"/>
-            <field name="group" ref="group_lims_conf_base_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.model.access" id="access_workyear">
-            <field name="model" search="[('model', '=', 'lims.lab.workyear')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_workyear_group_conf_base_admin">
-            <field name="model" search="[('model', '=', 'lims.lab.workyear')]"/>
-            <field name="group" ref="group_lims_conf_base_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <!-- Base -->
-
-        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_base_readonly">
-            <field name="menu" ref="lims_laboratory"/>
-            <field name="group" ref="group_lims_conf_base_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_base_admin">
-            <field name="menu" ref="lims_laboratory"/>
-            <field name="group" ref="group_lims_conf_base_admin"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_base_readonly">
-            <field name="menu" ref="lims_config"/>
-            <field name="group" ref="group_lims_conf_base_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_base_admin">
-            <field name="menu" ref="lims_config"/>
-            <field name="group" ref="group_lims_conf_base_admin"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_config_base_group_conf_base_readonly">
-            <field name="menu" ref="lims_config_base"/>
-            <field name="group" ref="group_lims_conf_base_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_config_base_group_conf_base_admin">
-            <field name="menu" ref="lims_config_base"/>
-            <field name="group" ref="group_lims_conf_base_admin"/>
-        </record>
-
-        <!-- Laboratory -->
-
-        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_laboratory_readonly">
-            <field name="menu" ref="lims_laboratory"/>
-            <field name="group" ref="group_lims_conf_laboratory_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_laboratory_admin">
-            <field name="menu" ref="lims_laboratory"/>
-            <field name="group" ref="group_lims_conf_laboratory_admin"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_laboratory_readonly">
-            <field name="menu" ref="lims_config"/>
-            <field name="group" ref="group_lims_conf_laboratory_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_laboratory_admin">
-            <field name="menu" ref="lims_config"/>
-            <field name="group" ref="group_lims_conf_laboratory_admin"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_laboratory_readonly">
-            <field name="menu" ref="lims_config_laboratory"/>
-            <field name="group" ref="group_lims_conf_laboratory_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_laboratory_admin">
-            <field name="menu" ref="lims_config_laboratory"/>
-            <field name="group" ref="group_lims_conf_laboratory_admin"/>
-        </record>
-
-        <!-- Results Report -->
-
-        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_report_readonly">
-            <field name="menu" ref="lims_laboratory"/>
-            <field name="group" ref="group_lims_conf_report_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_report_admin">
-            <field name="menu" ref="lims_laboratory"/>
-            <field name="group" ref="group_lims_conf_report_admin"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_report_readonly">
-            <field name="menu" ref="lims_config"/>
-            <field name="group" ref="group_lims_conf_report_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_report_admin">
-            <field name="menu" ref="lims_config"/>
-            <field name="group" ref="group_lims_conf_report_admin"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_report_readonly">
-            <field name="menu" ref="lims_config_report"/>
-            <field name="group" ref="group_lims_conf_report_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_report_admin">
-            <field name="menu" ref="lims_config_report"/>
-            <field name="group" ref="group_lims_conf_report_admin"/>
-        </record>
-
-        <!-- Base Tables -->
-
-        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_base_tables_readonly">
-            <field name="menu" ref="lims_laboratory"/>
-            <field name="group" ref="group_lims_conf_base_tables_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_lims_laboratory_group_conf_base_tables_admin">
-            <field name="menu" ref="lims_laboratory"/>
-            <field name="group" ref="group_lims_conf_base_tables_admin"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_base_tables_readonly">
-            <field name="menu" ref="lims_config"/>
-            <field name="group" ref="group_lims_conf_base_tables_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_config_group_conf_base_tables_admin">
-            <field name="menu" ref="lims_config"/>
-            <field name="group" ref="group_lims_conf_base_tables_admin"/>
-        </record>
-
-        <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_base_tables_readonly">
-            <field name="menu" ref="lims_config_base_tables"/>
-            <field name="group" ref="group_lims_conf_base_tables_readonly"/>
-        </record>
-        <record model="ir.ui.menu-res.group" id="menu_config_laboratory_group_conf_base_tables_admin">
-            <field name="menu" ref="lims_config_base_tables"/>
-            <field name="group" ref="group_lims_conf_base_tables_admin"/>
         </record>
 
     </data>

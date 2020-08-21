@@ -3,6 +3,7 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import Pool
+from . import lims
 from . import stock
 from . import configuration
 from . import production
@@ -10,9 +11,9 @@ from . import production
 
 def register():
     Pool.register(
-        stock.PurityDegree,
-        stock.Brand,
-        stock.FamilyEquivalent,
+        lims.PurityDegree,
+        lims.Brand,
+        lims.FamilyEquivalent,
         stock.LotCategory,
         stock.Lot,
         stock.Move,
@@ -30,5 +31,5 @@ def register():
         stock.MoveProductionRelated,
         module='lims_production', type_='wizard')
     Pool.register(
-        production.FamilyEquivalentReport,
+        lims.FamilyEquivalentReport,
         module='lims_production', type_='report')
