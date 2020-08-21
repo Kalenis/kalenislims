@@ -2,6 +2,20 @@
 <tryton>
     <data>
 
+<!-- Menu -->
+
+        <!-- Devices Maintenance -->
+        <menuitem name="Devices Maintenance" id="menu_device_maintenance"/>
+
+        <!-- Devices Maintenance / Configuration -->
+        <menuitem name="Configuration" id="menu_device_maintenance_config"
+            parent="menu_device_maintenance" sequence="10"
+            icon="lims-configuration"/>
+
+        <menuitem action="lims.act_lims_lab_device_list"
+            id="menu_device_maintenance_device"
+            parent="menu_device_maintenance" sequence="20"/>
+
 <!-- Laboratory Device -->
 
         <record model="ir.ui.view" id="lab_device_view_form">
@@ -19,6 +33,7 @@
             <field name="domain" eval="[('device', 'in', Eval('active_ids'))]"
                 pyson="1"/>
         </record>
+
         <record model="ir.action.keyword"
             id="act_lab_device_maintenance_calendar_related_keyword">
             <field name="keyword">form_relate</field>
@@ -57,6 +72,11 @@
             <field name="act_window" ref="act_lab_device_maintenance_type_list"/>
         </record>
 
+        <menuitem name="Maintenance Types"
+            action="act_lab_device_maintenance_type_list"
+            id="menu_device_maintenance_type"
+            parent="menu_device_maintenance_config" sequence="10"/>
+
 <!-- Device Maintenance Activity -->
 
         <record model="ir.ui.view" id="lab_device_maintenance_activity_view_form">
@@ -87,6 +107,11 @@
             <field name="view" ref="lab_device_maintenance_activity_view_form"/>
             <field name="act_window" ref="act_lab_device_maintenance_activity_list"/>
         </record>
+
+        <menuitem name="Activities"
+            action="act_lab_device_maintenance_activity_list"
+            id="menu_device_maintenance_activity"
+            parent="menu_device_maintenance_config" sequence="20"/>
 
 <!-- Device Maintenance Program -->
 
@@ -119,6 +144,11 @@
             <field name="act_window" ref="act_lab_device_maintenance_program_list"/>
         </record>
 
+        <menuitem name="Maintenance Programs"
+            action="act_lab_device_maintenance_program_list"
+            id="menu_device_maintenance_program"
+            parent="menu_device_maintenance" sequence="30"/>
+
 <!-- Wizard Generate Device Maintenance Calendar -->
 
         <record model="ir.ui.view"
@@ -127,10 +157,12 @@
             <field name="type">form</field>
             <field name="name">lab_device_generate_maintenance_calendar_start_form</field>
         </record>
+
         <record model="ir.action.wizard" id="wizard_device_generate_maintenance_calendar">
             <field name="name">Generate Maintenance Calendar</field>
             <field name="wiz_name">lims.lab.device.maintenance.generate</field>
         </record>
+
         <record model="ir.action.keyword" id="wizard_device_generate_maintenance_calendar_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.lab.device,-1</field>
@@ -179,15 +211,10 @@
             <field name="act_window" ref="act_lab_device_maintenance_calendar_list"/>
         </record>
 
-<!-- Cron -->
-
-        <record model="ir.cron" id="cron_device_maintenance_send_notice">
-            <field name="interval_number" eval="1"/>
-            <field name="interval_type">days</field>
-            <field name="method">lims.lab.device.maintenance|send_notice</field>
-        </record>
-
-<!-- Device Maintenance Buttons -->
+        <menuitem name="Calendar"
+            action="act_lab_device_maintenance_calendar_list"
+            id="menu_device_maintenance_calendar"
+            parent="menu_device_maintenance" sequence="40"/>
 
         <record model="ir.model.button" id="device_maintenance_pending_button">
             <field name="name">pending</field>
@@ -202,31 +229,13 @@
             <field name="model" search="[('model', '=', 'lims.lab.device.maintenance')]"/>
         </record>
 
-<!-- Device Maintenance Menu -->
+<!-- Cron -->
 
-        <menuitem name="Devices Maintenance" id="menu_device_maintenance"/>
-        <menuitem name="Configuration" id="menu_device_maintenance_config"
-            parent="menu_device_maintenance" sequence="10"
-            icon="lims-configuration"/>
-        <menuitem name="Maintenance Types"
-            action="act_lab_device_maintenance_type_list"
-            id="menu_device_maintenance_type"
-            parent="menu_device_maintenance_config" sequence="10"/>
-        <menuitem name="Activities"
-            action="act_lab_device_maintenance_activity_list"
-            id="menu_device_maintenance_activity"
-            parent="menu_device_maintenance_config" sequence="20"/>
-        <menuitem action="lims.act_lims_lab_device_list"
-            id="menu_device_maintenance_device"
-            parent="menu_device_maintenance" sequence="20"/>
-        <menuitem name="Maintenance Programs"
-            action="act_lab_device_maintenance_program_list"
-            id="menu_device_maintenance_program"
-            parent="menu_device_maintenance" sequence="30"/>
-        <menuitem name="Calendar"
-            action="act_lab_device_maintenance_calendar_list"
-            id="menu_device_maintenance_calendar"
-            parent="menu_device_maintenance" sequence="40"/>
+        <record model="ir.cron" id="cron_device_maintenance_send_notice">
+            <field name="interval_number" eval="1"/>
+            <field name="interval_type">days</field>
+            <field name="method">lims.lab.device.maintenance|send_notice</field>
+        </record>
 
     </data>
 </tryton>

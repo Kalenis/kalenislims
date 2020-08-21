@@ -2,7 +2,6 @@
 <tryton>
     <data>
 
-
 <!-- Department -->
 
         <record model="ir.ui.view" id="company_department_view_form">

@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <data>
-    <xpath
-        expr="/tree/field[@name='cie_fraction_type']"
-        position="after">
+    <xpath expr="/tree/field[@name='cie_fraction_type']" position="after">
         <field name="signed"/>
         <field name="signed_date" widget="date"/>
         <field name="signed_date" widget="time" string="Time"/>

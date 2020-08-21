@@ -172,10 +172,12 @@
             <field name="type">form</field>
             <field name="name">analysis_sheet_export_form</field>
         </record>
+
         <record model="ir.action.wizard" id="wiz_analysis_sheet_export_file">
             <field name="name">Export Analysis Sheet File</field>
             <field name="wiz_name">lims.analysis_sheet.export_file</field>
         </record>
+
         <record model="ir.action.keyword"
             id="wiz_analysis_sheet_export_file_keyword">
             <field name="keyword">form_action</field>
@@ -191,15 +193,24 @@
 
 <!-- Analysis Sheet Report -->
 
+        <record model="ir.action.report" id="report_analysis_sheet">
+            <field name="name">Analysis Sheet Report</field>
+            <field name="model">lims.analysis_sheet</field>
+            <field name="report_name">lims.analysis_sheet.report</field>
+            <field name="report">lims_analysis_sheet/report/analysis_sheet.fods</field>
+        </record>
+
         <record model="ir.ui.view" id="analysis_sheet_print_report_ask_view_form">
             <field name="model">lims.analysis_sheet.print_report.ask</field>
             <field name="type">form</field>
             <field name="name">analysis_sheet_print_report_ask_form</field>
         </record>
+
         <record model="ir.action.wizard" id="wiz_analysis_sheet_print_report">
             <field name="name">Analysis Sheet Report</field>
             <field name="wiz_name">lims.analysis_sheet.print_report</field>
         </record>
+
         <record model="ir.action.keyword"
             id="wiz_analysis_sheet_print_report_keyword">
             <field name="keyword">form_print</field>
@@ -213,13 +224,6 @@
             <field name="action" ref="wiz_analysis_sheet_print_report"/>
         </record>
 
-        <record model="ir.action.report" id="report_analysis_sheet">
-            <field name="name">Analysis Sheet Report</field>
-            <field name="model">lims.analysis_sheet</field>
-            <field name="report_name">lims.analysis_sheet.report</field>
-            <field name="report">lims_analysis_sheet/report/analysis_sheet.fods</field>
-        </record>
-
 <!-- Wizard Import Analysis Sheet File -->
 
         <record model="ir.ui.view" id="analysis_sheet_import_start_view_form">
@@ -227,10 +231,12 @@
             <field name="type">form</field>
             <field name="name">analysis_sheet_import_form</field>
         </record>
+
         <record model="ir.action.wizard" id="wiz_analysis_sheet_import_file">
             <field name="name">Import Analysis Sheet File</field>
             <field name="wiz_name">lims.analysis_sheet.import_file</field>
         </record>
+
         <record model="ir.action.keyword"
             id="wiz_analysis_sheet_import_file_keyword">
             <field name="keyword">form_action</field>
@@ -250,6 +256,7 @@
             <field name="name">Analysis Sheet Samples</field>
             <field name="wiz_name">lims.analysis_sheet.open_sample</field>
         </record>
+
         <record model="ir.action.keyword"
             id="wiz_analysis_sheet_open_sample_keyword">
             <field name="keyword">form_relate</field>

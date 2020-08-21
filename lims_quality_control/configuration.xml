@@ -2,6 +2,8 @@
 <tryton>
     <data>
 
+<!-- Quality Configuration -->
+
         <record model="ir.ui.view" id="quality_configuration_form_view">
             <field name="model">lims.quality.configuration</field>
             <field name="type">form</field>
@@ -18,6 +20,11 @@
             <field name="view" ref="quality_configuration_form_view"/>
             <field name="act_window" ref="act_quality_configuration"/>
         </record>
+
+        <menuitem action="act_quality_configuration"
+            id="menu_quality_configuration"
+            parent="menu_configuration" sequence="0"
+            icon="tryton-list"/>
 
         <record model="ir.model.access" id="access_quality_configuration">
             <field name="model"
@@ -38,9 +45,5 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
-        <menuitem id="menu_quality_configuration"
-            action="act_quality_configuration"
-            parent="menu_configuration" sequence="0"
-            icon="tryton-list"/>
     </data>
 </tryton>

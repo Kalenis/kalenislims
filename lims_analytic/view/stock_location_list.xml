@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <data>
-    <xpath
-        expr="/tree/field[@name='type']"
-        position="after">
+    <xpath expr="/tree/field[@name='type']" position="after">
         <field name="cost_center"/>
     </xpath>
 </data>

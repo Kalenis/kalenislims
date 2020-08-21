@@ -8,6 +8,7 @@
             <field name="name">Interface Compilations</field>
             <field name="wiz_name">lims.referral.open_compilation</field>
         </record>
+
         <record model="ir.action.keyword" id="wiz_referral_open_compilation_keyword">
             <field name="keyword">form_relate</field>
             <field name="model">lims.referral,-1</field>

@@ -2,6 +2,8 @@
 <tryton>
     <data>
 
+<!-- Groups -->
+
         <record model="res.group" id="group_quality_control_admin">
             <field name="name">LIMS Quality Control Administration</field>
         </record>
@@ -9,6 +11,7 @@
             <field name="user" ref="res.user_admin"/>
             <field name="group" ref="group_quality_control_admin"/>
         </record>
+
         <record model="res.group" id="group_quality_control">
             <field name="name">LIMS Quality Control</field>
         </record>
@@ -17,36 +20,54 @@
             <field name="group" ref="group_quality_control"/>
         </record>
 
-        <record model="ir.rule.group" id="rule_group_quality_template">
-            <field name="name">User in company</field>
-            <field name="model" search="[('model', '=', 'lims.quality.template')]"/>
-            <field name="global_p" eval="True"/>
-        </record>
-        <record model="ir.rule" id="rule_quality_template">
-            <field name="domain"
-                eval="[('company', '=', Eval('user', {}).get('company', -1))]"
-                pyson="1"/>
-            <field name="rule_group" ref="rule_group_quality_template"/>
+<!-- Menu -->
+
+        <!-- Quality Control -->
+        <menuitem name="Quality Control" id="menu_quality_control" sequence="1" />
+
+        <record model="ir.ui.menu-res.group" id="menu_quality_group_quality">
+            <field name="menu" ref="menu_quality_control"/>
+            <field name="group" ref="group_quality_control"/>
         </record>
 
-        <record model="ir.rule.group" id="rule_group_quality_test">
-            <field name="name">User in company</field>
-            <field name="model" search="[('model', '=', 'lims.quality.test')]"/>
-            <field name="global_p" eval="True"/>
+        <!-- Quality Control / Configuration -->
+        <menuitem name="Configuration" id="menu_configuration"
+            parent="menu_quality_control" sequence="0"
+            icon="tryton-settings"/>
+
+        <record model="ir.ui.menu-res.group" id="menu_quality_configuration_group_quality_admin">
+            <field name="menu" ref="menu_configuration"/>
+            <field name="group" ref="group_quality_control_admin"/>
         </record>
-        <record model="ir.rule" id="rule_quality_test">
-            <field name="domain"
-                eval="[('company', '=', Eval('user', {}).get('company', -1))]"
-                pyson="1"/>
-            <field name="rule_group" ref="rule_group_quality_test"/>
+
+<!-- Sequences for Quality Control -->
+
+        <record model="ir.sequence.type" id="sequence_type_quality">
+            <field name="name">Quality Control</field>
+            <field name="code">lims.quality.test</field>
         </record>
+        <record model="ir.sequence.type-res.group"
+            id="sequence_type_quality_group_admin">
+            <field name="sequence_type" ref="sequence_type_quality"/>
+            <field name="group" ref="res.group_admin"/>
+        </record>
+        <record model="ir.sequence.type-res.group"
+            id="sequence_type_quality_group_quality_admin">
+            <field name="sequence_type" ref="sequence_type_quality"/>
+            <field name="group" ref="group_quality_control"/>
+        </record>
+        <record model="ir.sequence" id="sequence_quality">
+            <field name="name">Quality Control</field>
+            <field name="code">lims.quality.test</field>
+        </record>
+
+<!-- Quality Value -->
 
         <record model="ir.ui.view" id="quality_qualitative_value_form_view">
             <field name="model">lims.quality.qualitative.value</field>
             <field name="type">form</field>
             <field name="name">quality_qualitative_value_form</field>
         </record>
-
         <record model="ir.ui.view" id="quality_qualitative_value_tree_view">
             <field name="model">lims.quality.qualitative.value</field>
             <field name="type">tree</field>
@@ -58,7 +79,6 @@
             <field name="res_model">lims.quality.qualitative.value</field>
             <field name="search_value"></field>
         </record>
-
         <record model="ir.action.act_window.view" id="act_quality_qualitative_value_view1">
             <field name="sequence" eval="10"/>
             <field name="view" ref="quality_qualitative_value_tree_view"/>
@@ -86,46 +106,13 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
-        <record model="ir.model.button" id="quality_template_draft_button">
-            <field name="name">draft</field>
-            <field name="string">Reset to Draft</field>
-            <field name="model" search="[('model', '=', 'lims.quality.template')]"/>
-        </record>
-        <record model="ir.model.button-res.group"
-            id="quality_template_draft_button_group_quality_admin">
-            <field name="button" ref="quality_template_draft_button"/>
-            <field name="group" ref="group_quality_control_admin"/>
-        </record>
-
-        <record model="ir.model.button" id="quality_template_active_button">
-            <field name="name">active</field>
-            <field name="string">Activate</field>
-            <field name="model" search="[('model', '=', 'lims.quality.template')]"/>
-        </record>
-        <record model="ir.model.button-res.group"
-            id="quality_template_active_button_group_quality_admin">
-            <field name="button" ref="quality_template_active_button"/>
-            <field name="group" ref="group_quality_control_admin"/>
-        </record>
-
-
-        <record model="ir.model.button" id="quality_template_not_active_button">
-            <field name="name">not_active</field>
-            <field name="string">Deactivate</field>
-            <field name="model" search="[('model', '=', 'lims.quality.template')]"/>
-        </record>
-        <record model="ir.model.button-res.group"
-            id="quality_template_not_active_button_group_quality_admin">
-            <field name="button" ref="quality_template_not_active_button"/>
-            <field name="group" ref="group_quality_control_admin"/>
-        </record>
+<!-- Quality Template -->
 
         <record model="ir.ui.view" id="quality_template_form_view">
             <field name="model">lims.quality.template</field>
             <field name="type">form</field>
             <field name="name">quality_template_form</field>
         </record>
-
         <record model="ir.ui.view" id="quality_template_tree_view">
             <field name="model">lims.quality.template</field>
             <field name="type">tree</field>
@@ -147,6 +134,7 @@
             <field name="view" ref="quality_template_form_view"/>
             <field name="act_window" ref="act_quality_template"/>
         </record>
+
         <record model="ir.action.act_window.domain" id="act_quality_template_domain_draft">
             <field name="name">Draft</field>
             <field name="sequence" eval="10"/>
@@ -178,6 +166,55 @@
             <field name="act_window" ref="act_quality_template"/>
         </record>
 
+        <record model="ir.model.button" id="quality_template_draft_button">
+            <field name="name">draft</field>
+            <field name="string">Reset to Draft</field>
+            <field name="model" search="[('model', '=', 'lims.quality.template')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="quality_template_draft_button_group_quality_admin">
+            <field name="button" ref="quality_template_draft_button"/>
+            <field name="group" ref="group_quality_control_admin"/>
+        </record>
+
+        <menuitem name="Templates" action="act_quality_template"
+            id="menu_quality_template"
+            parent="menu_quality_control" sequence="10" />
+
+        <record model="ir.model.button" id="quality_template_active_button">
+            <field name="name">active</field>
+            <field name="string">Activate</field>
+            <field name="model" search="[('model', '=', 'lims.quality.template')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="quality_template_active_button_group_quality_admin">
+            <field name="button" ref="quality_template_active_button"/>
+            <field name="group" ref="group_quality_control_admin"/>
+        </record>
+
+        <record model="ir.model.button" id="quality_template_not_active_button">
+            <field name="name">not_active</field>
+            <field name="string">Deactivate</field>
+            <field name="model" search="[('model', '=', 'lims.quality.template')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="quality_template_not_active_button_group_quality_admin">
+            <field name="button" ref="quality_template_not_active_button"/>
+            <field name="group" ref="group_quality_control_admin"/>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_quality_template">
+            <field name="name">User in company</field>
+            <field name="model" search="[('model', '=', 'lims.quality.template')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_quality_template">
+            <field name="domain"
+                eval="[('company', '=', Eval('user', {}).get('company', -1))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_quality_template"/>
+        </record>
+
         <record model="ir.model.access" id="access_quality_template">
             <field name="model" search="[('model', '=', 'lims.quality.template')]"/>
             <field name="perm_read" eval="True"/>
@@ -194,12 +231,13 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
+<!-- Quality Test -->
+
         <record model="ir.ui.view" id="quality_test_form_view">
             <field name="model">lims.quality.test</field>
             <field name="type">form</field>
             <field name="name">quality_test_form</field>
         </record>
-
         <record model="ir.ui.view" id="quality_test_tree_view">
             <field name="model">lims.quality.test</field>
             <field name="type">tree</field>
@@ -221,6 +259,7 @@
             <field name="view" ref="quality_test_form_view"/>
             <field name="act_window" ref="act_quality_test"/>
         </record>
+
         <record model="ir.action.act_window.domain" id="act_quality_test_domain_draft">
             <field name="name">Draft</field>
             <field name="sequence" eval="10"/>
@@ -260,50 +299,9 @@
             <field name="act_window" ref="act_quality_test"/>
         </record>
 
-        <record model="ir.model.access" id="access_quality_test">
-            <field name="model" search="[('model', '=', 'lims.quality.test')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_quality_test_quality">
-            <field name="model" search="[('model', '=', 'lims.quality.test')]"/>
-            <field name="group" ref="group_quality_control"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_quality_test_admin">
-            <field name="model" search="[('model', '=', 'lims.quality.test')]"/>
-            <field name="group" ref="group_quality_control_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
-        <record model="ir.sequence.type" id="sequence_type_quality">
-            <field name="name">Quality Control</field>
-            <field name="code">lims.quality.test</field>
-        </record>
-
-        <record model="ir.sequence.type-res.group"
-            id="sequence_type_quality_group_admin">
-            <field name="sequence_type" ref="sequence_type_quality"/>
-            <field name="group" ref="res.group_admin"/>
-        </record>
-        <record model="ir.sequence.type-res.group"
-            id="sequence_type_quality_group_quality_admin">
-            <field name="sequence_type" ref="sequence_type_quality"/>
-            <field name="group" ref="group_quality_control"/>
-        </record>
-
-        <record model="ir.sequence" id="sequence_quality">
-            <field name="name">Quality Control</field>
-            <field name="code">lims.quality.test</field>
-        </record>
+        <menuitem name="Tests" action="act_quality_test"
+            id="menu_quality_test"
+            parent="menu_quality_control" sequence="20"/>
 
         <record model="ir.model.button" id="quality_draft_button">
             <field name="name">draft</field>
@@ -360,26 +358,43 @@
             <field name="group" ref="group_quality_control_admin"/>
         </record>
 
-        <menuitem id="menu_quality_control" name="Quality Control"
-            sequence="1" />
-        <record model="ir.ui.menu-res.group" id="menu_quality_group_quality">
-            <field name="menu" ref="menu_quality_control"/>
+        <record model="ir.rule.group" id="rule_group_quality_test">
+            <field name="name">User in company</field>
+            <field name="model" search="[('model', '=', 'lims.quality.test')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_quality_test">
+            <field name="domain"
+                eval="[('company', '=', Eval('user', {}).get('company', -1))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_quality_test"/>
+        </record>
+
+        <record model="ir.model.access" id="access_quality_test">
+            <field name="model" search="[('model', '=', 'lims.quality.test')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_quality_test_quality">
+            <field name="model" search="[('model', '=', 'lims.quality.test')]"/>
             <field name="group" ref="group_quality_control"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
         </record>
-
-        <menuitem name="Configuration" parent="menu_quality_control"
-            id="menu_configuration"
-            sequence="0" icon="tryton-settings"/>
-        <record model="ir.ui.menu-res.group" id="menu_quality_configuration_group_quality_admin">
-            <field name="menu" ref="menu_configuration"/>
+        <record model="ir.model.access" id="access_quality_test_admin">
+            <field name="model" search="[('model', '=', 'lims.quality.test')]"/>
             <field name="group" ref="group_quality_control_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
-        <menuitem action="act_quality_template" id="menu_quality_template"
-            parent="menu_quality_control" sequence="10" name="Templates"/>
-
-        <menuitem action="act_quality_test" id="menu_quality_test"
-            parent="menu_quality_control" sequence="20" name="Tests"/>
+<!-- Create Quality Test -->
 
         <record model="ir.ui.view" id="lims_create_quality_test_start_view_form">
             <field name="model">lims.create.quality.test.start</field>
@@ -392,11 +407,14 @@
             <field name="wiz_name">lims.create.quality.test</field>
             <field name="model">lims.sample</field>
         </record>
+
         <record model="ir.action.keyword" id="lims_create_quality_test_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.sample,-1</field>
             <field name="action" ref="wiz_lims_create_quality_test"/>
         </record>
+
+<!-- Add Service -->
 
         <record model="ir.ui.view" id="lims_template_add_service_start_view_form">
             <field name="model">lims.template.add.service.start</field>
@@ -409,31 +427,27 @@
             <field name="wiz_name">lims.template.add.service</field>
             <field name="model">lims.quality.template</field>
         </record>
+
         <record model="ir.action.keyword" id="lims_template_add_service_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.quality.template,-1</field>
             <field name="action" ref="wiz_lims_template_add_service"/>
         </record>
 
+<!-- Test Results Reports -->
+
         <record model="ir.action.wizard" id="wiz_lims_test_results_report">
             <field name="name">Test Results Reports</field>
             <field name="wiz_name">lims.test.results_report</field>
         </record>
+
         <record model="ir.action.keyword" id="lims_test_results_report_keyword">
             <field name="keyword">form_relate</field>
             <field name="model">lims.quality.test,-1</field>
             <field name="action" ref="wiz_lims_test_results_report"/>
         </record>
 
-        <record model="ir.action.wizard" id="wiz_print_test">
-            <field name="name">Test Report</field>
-            <field name="wiz_name">lims.print_test</field>
-        </record>
-        <record model="ir.action.keyword" id="print_test_keyword">
-            <field name="keyword">form_print</field>
-            <field name="model">lims.quality.test,-1</field>
-            <field name="action" ref="wiz_print_test"/>
-        </record>
+<!-- Test Report -->
 
         <record model="ir.action.report" id="report_test">
             <field name="name">Test Report</field>
@@ -441,6 +455,17 @@
             <field name="report_name">lims.quality.control.report</field>
             <field name="report">lims_quality_control/report/test_report.fodt</field>
             <field name="extension">pdf</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_print_test">
+            <field name="name">Test Report</field>
+            <field name="wiz_name">lims.print_test</field>
+        </record>
+
+        <record model="ir.action.keyword" id="print_test_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.quality.test,-1</field>
+            <field name="action" ref="wiz_print_test"/>
         </record>
 
     </data>

@@ -2,9 +2,8 @@
 <tryton>
     <data>
 
-    <!-- Menu items in lims_menu.xml -->
+<!-- Interface -->
 
-        <!-- Interface -->
         <record model="ir.ui.view" id="lims_interface_view_form">
             <field name="model">lims.interface</field>
             <field name="type">form</field>
@@ -31,6 +30,10 @@
             <field name="act_window" ref="act_lims_interface_list"/>
         </record>
 
+        <menuitem action="act_lims_interface_list"
+            id="lims_interface_menu"
+            parent="lims.lims_config_laboratory" sequence="80"/>
+
         <record model="ir.model.button" id="lims_interface_draft_button">
             <field name="name">draft</field>
             <field name="string">Draft</field>
@@ -46,7 +49,8 @@
             <field name="model" search="[('model', '=', 'lims.interface')]"/>
         </record>
 
-        <!-- Column -->
+<!-- Column -->
+
         <record model="ir.ui.view" id="lims_interface_column_view_form">
             <field name="model">lims.interface.column</field>
             <field name="type">form</field>
@@ -58,7 +62,8 @@
             <field name="name">interface_column_list</field>
         </record>
 
-        <!-- Wizard Copy Interface Column -->
+<!-- Wizard Copy Interface Column -->
+
         <record model="ir.ui.view" id="interface_copy_column_start_view_form">
             <field name="model">lims.interface.copy_column.start</field>
             <field name="type">form</field>
@@ -69,7 +74,8 @@
             <field name="wiz_name">lims.interface.copy_column</field>
         </record>
 
-        <!-- Compilation -->
+<!-- Compilation -->
+
         <record model="ir.ui.view" id="lims_interface_compilation_view_form">
             <field name="model">lims.interface.compilation</field>
             <field name="type">form</field>
@@ -95,6 +101,10 @@
             <field name="view" ref="lims_interface_compilation_view_form"/>
             <field name="act_window" ref="act_lims_interface_compilation_list"/>
         </record>
+
+        <menuitem action="act_lims_interface_compilation_list"
+            id="lims_interface_compilation_menu"
+            parent="lims.lims_laboratory_results" sequence="40"/>
 
         <record model="ir.model.button" id="lims_interface_compilation_view_data_button">
             <field name="name">view_data</field>
@@ -127,7 +137,8 @@
             <field name="model" search="[('model', '=', 'lims.interface.compilation')]"/>
         </record>
 
-        <!-- Compilation Origin -->
+<!-- Compilation Origin -->
+
         <record model="ir.ui.view" id="lims_interface_compilation_origin_view_form">
             <field name="model">lims.interface.compilation.origin</field>
             <field name="type">form</field>
@@ -139,13 +150,15 @@
             <field name="name">compilation_origin_list</field>
         </record>
 
-        <!-- Wizard Open Compilation Data -->
+<!-- Wizard Open Compilation Data -->
+
         <record model="ir.action.wizard" id="wiz_compilation_open_data">
             <field name="name">Open Compilation Data</field>
             <field name="wiz_name">lims.interface.compilation.open_data</field>
         </record>
 
-        <!-- Compilation Data -->
+<!-- Compilation Data -->
+
         <record model="ir.action.act_window" id="act_open_compilation_data">
             <field name="name">Compilation Data</field>
             <field name="res_model">lims.interface.data</field>
@@ -169,7 +182,8 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
-        <!-- Wizard Test Formula -->
+<!-- Wizard Test Formula -->
+
         <record model="ir.ui.view" id="interface_formula_test_view_form">
             <field name="model">lims.interface.formula.test</field>
             <field name="type">form</field>
@@ -180,17 +194,20 @@
             <field name="type">tree</field>
             <field name="name">interface_formula_test_variable_list</field>
         </record>
+
         <record model="ir.action.wizard" id="wiz_interface_formula_test">
             <field name="name">Test Formula</field>
             <field name="wiz_name">lims.interface.formula.test</field>
         </record>
+
         <record model="ir.action.keyword" id="wiz_interface_formula_test_keyword1">
             <field name="keyword">form_action</field>
             <field name="model">lims.interface,-1</field>
             <field name="action" ref="wiz_interface_formula_test"/>
         </record>
 
-        <!-- Variable -->
+<!-- Variable -->
+
         <record model="ir.ui.view" id="interface_variable_view_form">
             <field name="model">lims.interface.variable</field>
             <field name="type">form</field>
@@ -217,7 +234,12 @@
             <field name="act_window" ref="act_interface_variable_list"/>
         </record>
 
-        <!-- Variable Value -->
+        <menuitem action="act_interface_variable_list"
+            id="lims_interface_variable_menu"
+            parent="lims_interface_menu" sequence="10"/>
+
+<!-- Variable Value -->
+
         <record model="ir.ui.view" id="interface_variable_value_view_form">
             <field name="model">lims.interface.variable.value</field>
             <field name="type">form</field>
@@ -228,20 +250,6 @@
             <field name="type">tree</field>
             <field name="name">variable_value_list</field>
         </record>
-
-    <!-- Menu -->
-
-        <!-- Configuration / Laboratory / Interfaces -->
-        <menuitem parent="lims.lims_config_laboratory" action="act_lims_interface_list"
-            id="lims_interface_menu" sequence="80"/>
-
-        <!-- Configuration / Laboratory / Interfaces / Variables -->
-        <menuitem parent="lims_interface_menu" action="act_interface_variable_list"
-            id="lims_interface_variable_menu" sequence="10"/>
-
-        <!-- Laboratory / Results entry / Interface Compilation -->
-        <menuitem parent="lims.lims_laboratory_results" action="act_lims_interface_compilation_list"
-            id="lims_interface_compilation_menu" sequence="40"/>
 
     </data>
 </tryton>

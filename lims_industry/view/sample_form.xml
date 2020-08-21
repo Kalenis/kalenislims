@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <data>
-    <xpath
-        expr="/form/notebook/page[@id='general']/field[@name='variety']"
+    <xpath expr="/form/notebook/page[@id='general']/field[@name='variety']"
         position="after">
         <newline/>
         <group id="oil_fields" colspan="4" col="8">
@@ -21,8 +20,7 @@
             <field name="changed_air_filter"/>
         </group>
     </xpath>
-    <xpath expr="/form/notebook/page[@id='general']"
-        position="after">
+    <xpath expr="/form/notebook/page[@id='general']" position="after">
         <page id="industry" string="Industry">
             <label name="equipment"/>
             <field name="equipment"/>

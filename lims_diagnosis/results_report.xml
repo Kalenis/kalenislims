@@ -68,6 +68,7 @@
             <field name="name">Change Sample Diagnostician</field>
             <field name="wiz_name">lims.notebook.change_diagnostician</field>
         </record>
+
         <record model="ir.action.keyword" id="wiz_notebook_change_diagnostician_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.notebook,-2</field>
@@ -86,11 +87,13 @@
             <field name="name">Samples Comparator</field>
             <field name="wiz_name">lims.samples_comparator.open</field>
         </record>
+
         <record model="ir.action.keyword" id="wiz_open_samples_comparator_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.results_report.version.detail.sample,-1</field>
             <field name="action" ref="wiz_open_samples_comparator"/>
         </record>
+
         <menuitem action="wiz_open_samples_comparator"
             id="lims_open_samples_comparator_menu"
             parent="lims.lims_results_report_version_detail_menu" sequence="10"/>

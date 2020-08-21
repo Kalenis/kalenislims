@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <data>
-    <xpath
-        expr="/form/notebook/page[@id='general']/field[@name='categories']"
+    <xpath expr="/form/notebook/page[@id='general']/field[@name='categories']"
         position="after">
         <label name="catalog"/>
         <field name="catalog"/>

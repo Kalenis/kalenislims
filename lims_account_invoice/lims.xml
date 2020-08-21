@@ -2,7 +2,7 @@
 <tryton>
     <data>
 
-      <!-- Fraction Type -->
+<!-- Fraction Type -->
 
       <record model="ir.ui.view" id="lims_fraction_type_view_form">
           <field name="model">lims.fraction.type</field>

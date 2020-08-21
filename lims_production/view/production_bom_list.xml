@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <data>
-    <xpath
-        expr="/tree/field[@name='name']"
-        position="after">
+    <xpath expr="/tree/field[@name='name']" position="after">
         <field name="divide_lots"/>
     </xpath>
 </data>

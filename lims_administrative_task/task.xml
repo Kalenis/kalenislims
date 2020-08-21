@@ -2,7 +2,12 @@
 <tryton>
     <data>
 
+<!-- Menu -->
+
+        <!-- Administrative Tasks -->
         <menuitem name="Administrative Tasks" id="menu_administrative_task"/>
+
+        <!-- Administrative Tasks / Configuration -->
         <menuitem name="Configuration" id="menu_config"
             parent="menu_administrative_task" sequence="10"
             icon="lims-configuration"/>
@@ -144,6 +149,31 @@
         <menuitem action="act_task" id="menu_task"
             parent="menu_administrative_task" sequence="30"/>
 
+        <record model="ir.model.button" id="administrative_task_pending_button">
+            <field name="name">pending</field>
+            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
+        </record>
+        <record model="ir.model.button" id="administrative_task_reject_button">
+            <field name="name">reject</field>
+            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
+        </record>
+        <record model="ir.model.button" id="administrative_task_ongoing_button">
+            <field name="name">ongoing</field>
+            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
+        </record>
+        <record model="ir.model.button" id="administrative_task_standby_button">
+            <field name="name">standby</field>
+            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
+        </record>
+        <record model="ir.model.button" id="administrative_task_discard_button">
+            <field name="name">discard</field>
+            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
+        </record>
+        <record model="ir.model.button" id="administrative_task_do_button">
+            <field name="name">do</field>
+            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
+        </record>
+
 <!-- My Administrative Task -->
 
         <record model="ir.action.act_window" id="act_task_mine">
@@ -250,37 +280,11 @@
             <field name="name">Edit Administrative Task</field>
             <field name="wiz_name">lims.administrative.task.edit</field>
         </record>
+
         <record model="ir.action.keyword" id="wiz_edit_task_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.administrative.task,-1</field>
             <field name="action" ref="wiz_edit_task"/>
-        </record>
-
-<!-- Administrative Task Buttons -->
-
-        <record model="ir.model.button" id="administrative_task_pending_button">
-            <field name="name">pending</field>
-            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
-        </record>
-        <record model="ir.model.button" id="administrative_task_reject_button">
-            <field name="name">reject</field>
-            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
-        </record>
-        <record model="ir.model.button" id="administrative_task_ongoing_button">
-            <field name="name">ongoing</field>
-            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
-        </record>
-        <record model="ir.model.button" id="administrative_task_standby_button">
-            <field name="name">standby</field>
-            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
-        </record>
-        <record model="ir.model.button" id="administrative_task_discard_button">
-            <field name="name">discard</field>
-            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
-        </record>
-        <record model="ir.model.button" id="administrative_task_do_button">
-            <field name="name">do</field>
-            <field name="model" search="[('model', '=', 'lims.administrative.task')]"/>
         </record>
 
     </data>

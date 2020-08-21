@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <data>
-    <xpath
-        expr="/tree/field[@name='state']"
-        position="after">
+    <xpath expr="/tree/field[@name='state']" position="after">
         <field name="concentration"/>
         <field name="preparation_date"/>
         <field name="expiration_date"/>

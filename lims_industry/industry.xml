@@ -2,7 +2,12 @@
 <tryton>
     <data>
 
+<!-- Menu -->
+
+        <!-- Industry -->
         <menuitem name="Industry" id="menu_industry"/>
+
+        <!-- Industry / Configuration -->
         <menuitem name="Configuration" id="menu_config"
             parent="menu_industry" sequence="10"
             icon="lims-configuration"/>
@@ -199,6 +204,8 @@
         <menuitem action="act_equipment" id="menu_equipment"
             parent="menu_industry" sequence="30"/>
 
+<!-- Equipment from Party -->
+
         <record model="ir.action.act_window" id="act_equipment_from_party">
             <field name="name">Equipments</field>
             <field name="res_model">lims.equipment</field>
@@ -254,6 +261,8 @@
 
         <menuitem action="act_component" id="menu_component"
             parent="menu_industry" sequence="40"/>
+
+<!-- Component from Party -->
 
         <record model="ir.action.act_window" id="act_component_from_party">
             <field name="name">Components</field>

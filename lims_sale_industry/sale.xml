@@ -25,6 +25,8 @@
             <field name="act_window" ref="act_sale"/>
         </record>
 
+<!-- Sale Report -->
+
         <record model="ir.action.report" id="sale.report_sale">
             <field name="report">lims_sale_industry/report/sale.fodt</field>
         </record>
@@ -59,6 +61,13 @@
 
 <!-- Print Labels Wizard -->
 
+        <record model="ir.action.report" id="report_sale_label">
+            <field name="name">Sale Labels</field>
+            <field name="model">sale.sale</field>
+            <field name="report_name">sale.label.report</field>
+            <field name="report">lims_sale_industry/report/sale_label.fodt</field>
+        </record>
+
         <record model="ir.ui.view" id="sale_print_label_start_view_form">
             <field name="model">sale.print_label.start</field>
             <field name="type">form</field>
@@ -69,13 +78,6 @@
             <field name="name">Labels</field>
             <field name="wiz_name">sale.print_label</field>
             <field name="model">sale.sale</field>
-        </record>
-
-        <record model="ir.action.report" id="report_sale_label">
-            <field name="name">Sale Labels</field>
-            <field name="model">sale.sale</field>
-            <field name="report_name">sale.label.report</field>
-            <field name="report">lims_sale_industry/report/sale_label.fodt</field>
         </record>
 
         <record model="ir.action.keyword" id="wiz_sale_print_label_keyword">

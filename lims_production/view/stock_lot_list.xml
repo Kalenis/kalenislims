@@ -4,10 +4,7 @@
         position="replace"/>
     <xpath expr="/tree/field[@name='expiration_date']"
         position="replace"/>
-
-    <xpath
-        expr="/tree/field[@name='product']"
-        position="after">
+    <xpath expr="/tree/field[@name='product']" position="after">
         <field name="category"/>
         <field name="account_category"/>
         <field name="stability"/>
