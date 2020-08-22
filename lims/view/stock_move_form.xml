@@ -7,7 +7,7 @@
         <label name="origin"/>
         <field name="origin"/>
     </xpath>
-    <xpath expr="/form/field[@name='effective_date']" xposition="after">
+    <xpath expr="/form/field[@name='effective_date']" position="after">
         <label name="fraction"/>
         <field name="fraction"/>
         <field name="fraction_readonly" invisible="1" colspan="4"/>
