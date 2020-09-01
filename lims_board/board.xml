@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- General Dashboard -->
+
+        <record model="ir.ui.view" id="board_general_view_form">
+            <field name="model">lims.board.general</field>
+            <field name="type">form</field>
+            <field name="name">board_general_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_board_general">
+            <field name="name">General Dashboard</field>
+            <field name="res_model">lims.board.general</field>
+            <field name="context" eval="{'kalenis_board': True}" pyson="1"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_board_general_view_form">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="board_general_view_form"/>
+            <field name="act_window" ref="act_board_general"/>
+        </record>
+
+        <menuitem action="act_board_general"
+            id="act_board_general_menu"
+            parent="lims.lims_laboratory" sequence="15"
+            icon="tryton-board"/>
+
+        <record model="ir.model.button" id="board_general_apply_filter_button">
+            <field name="name">apply_filter</field>
+            <field name="model" search="[('model', '=', 'lims.board.general')]"/>
+        </record>
+
+<!-- General Dashboard - Sample state -->
+
+        <record model="ir.ui.view" id="board_general_sample_state_view_list">
+            <field name="model">lims.board.general.sample_state</field>
+            <field name="type">tree</field>
+            <field name="name">board_general_sample_state_list</field>
+        </record>
+        <record model="ir.ui.view" id="board_general_sample_state_view_graph">
+            <field name="model">lims.board.general.sample_state</field>
+            <field name="type">graph</field>
+            <field name="name">board_general_sample_state_graph</field>
+        </record>
+
+<!-- General Dashboard - Sample department -->
+
+        <record model="ir.ui.view" id="board_general_sample_department_view_list">
+            <field name="model">lims.board.general.sample_department</field>
+            <field name="type">tree</field>
+            <field name="name">board_general_sample_department_list</field>
+        </record>
+        <record model="ir.ui.view" id="board_general_sample_department_view_graph">
+            <field name="model">lims.board.general.sample_department</field>
+            <field name="type">graph</field>
+            <field name="name">board_general_sample_department_graph</field>
+        </record>
+
+<!-- Laboratory Dashboard -->
+
+        <record model="ir.ui.view" id="board_laboratory_view_form">
+            <field name="model">lims.board.laboratory</field>
+            <field name="type">form</field>
+            <field name="name">board_laboratory_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_board_laboratory">
+            <field name="name">Laboratory Dashboard</field>
+            <field name="res_model">lims.board.laboratory</field>
+            <field name="context" eval="{'kalenis_board': True}" pyson="1"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_board_laboratory_view_form">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="board_laboratory_view_form"/>
+            <field name="act_window" ref="act_board_laboratory"/>
+        </record>
+
+        <menuitem action="act_board_laboratory"
+            id="act_board_laboratory_menu"
+            parent="lims.lims_laboratory" sequence="16"
+            icon="tryton-board"/>
+
+        <record model="ir.model.button" id="board_laboratory_apply_filter_button">
+            <field name="name">apply_filter</field>
+            <field name="model" search="[('model', '=', 'lims.board.laboratory')]"/>
+        </record>
+
+    </data>
+</tryton>

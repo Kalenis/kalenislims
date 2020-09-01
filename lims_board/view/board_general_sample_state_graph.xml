@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<graph type="vbar" legend="0">
+    <x>
+        <field name="s"/>
+    </x>
+    <y>
+        <field name="q"/>
+    </y>
+</graph>

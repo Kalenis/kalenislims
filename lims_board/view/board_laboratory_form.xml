@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<form>
+    <field name="refresh" colspan="4" invisible="1"/>
+    <button name="apply_filter" string="Refresh" colspan="4"
+        icon="tryton-refresh"/>
+    <group id="filter" string="Filters" colspan="4" expandable="0">
+        <label name="date_from"/>
+        <field name="date_from"/>
+        <label name="date_to"/>
+        <field name="date_to"/>
+        <field name="parties" colspan="4"/>
+        <field name="departments" colspan="4"/>
+        <field name="analysis" colspan="4"/>
+    </group>
+    <field name="samples" colspan="2"/>
+    <field name="samples_laboratory_date" colspan="2" mode="graph,tree"/>
+</form>
