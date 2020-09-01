@@ -35,12 +35,6 @@ class Analysis(metaclass=PoolMeta):
         ('qualitative', 'Qualitative'),
         ('quantitative', 'Quantitative'),
         ], 'Quality Type', required=True)
-    quality_uom = fields.Many2One('product.uom', 'Quality UoM',
-        domain=[('category.lims_only_available', '=', True)],
-        states={
-            'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
-            'required': Equal(Eval('quality_type'), 'quantitative'),
-            }, depends=['quality_type'])
     quality_possible_values = fields.One2Many('lims.quality.qualitative.value',
         'analysis', 'Possible Values',
         states={
@@ -108,13 +102,6 @@ class Typification(metaclass=PoolMeta):
     def on_change_with_quality_type(self, name=None):
         if self.analysis:
             return self.analysis.quality_type
-
-    @fields.depends('analysis')
-    def on_change_analysis(self):
-        if self.analysis:
-            if self.analysis.quality_type == 'quantitative':
-                self.start_uom = self.analysis.quality_uom
-                self.end_uom = self.analysis.quality_uom
 
     @fields.depends('method')
     def on_change_method(self):
