@@ -6782,7 +6782,7 @@ msgctxt "model:ir.action,name:report_entry_labels"
 msgid "Entry Labels"
 msgstr "Etiquetas de ingreso"
 
-msgctxt "model:ir.action,name:report_global_results_report"
+msgctxt "model:ir.action,name:report_global_result_report"
 msgid "Global Results Report"
 msgstr "Informe global de resultados"
 
@@ -6814,7 +6814,7 @@ msgctxt "model:ir.action,name:report_referral"
 msgid "Referral Report"
 msgstr "Informe de Derivación"
 
-msgctxt "model:ir.action,name:report_results_report"
+msgctxt "model:ir.action,name:report_result_report"
 msgid "Results Report"
 msgstr "Informe de resultados"
 
@@ -7057,10 +7057,6 @@ msgctxt "model:ir.action,name:wiz_lims_notebook_uncertainty_calc"
 msgid "Uncertainty Calculation"
 msgstr "07) Cálculo de incertidumbre"
 
-msgctxt "model:ir.action,name:wiz_lims_print_results_report"
-msgid "Print Global Report"
-msgstr "Imprimir Informe global"
-
 msgctxt "model:ir.action,name:wiz_lims_relate_analysis"
 msgid "Relate Analysis"
 msgstr "Relacionar análisis"
@@ -7136,6 +7132,14 @@ msgstr "Análisis tildados pendientes de informar"
 msgctxt "model:ir.action,name:wiz_print_analysis_pending_inform"
 msgid "Pending analysis Unchecked"
 msgstr "Análisis pendientes sin tildar"
+
+msgctxt "model:ir.action,name:wiz_print_global_result_report"
+msgid "Global Results Report"
+msgstr "Informe global de resultados"
+
+msgctxt "model:ir.action,name:wiz_print_result_report"
+msgid "Results Report"
+msgstr "Informe de resultados"
 
 msgctxt "model:ir.action,name:wiz_referral_service"
 msgid "Refer Service"
