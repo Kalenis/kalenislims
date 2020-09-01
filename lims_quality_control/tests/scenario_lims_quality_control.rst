@@ -128,8 +128,7 @@ Create Analyses::
     ...     description='Glucose',
     ...     type='analysis',
     ...     behavior='normal',
-    ...     quality_type='quantitative',
-    ...     quality_uom=unit)
+    ...     quality_type='quantitative')
     >>> _ = analysis.laboratories.new(laboratory=laboratory)
     >>> analysis.methods.append(LabMethod(method.id))
     >>> _ = analysis.devices.new(laboratory=laboratory, device=device)
@@ -152,8 +151,7 @@ Create Analyses::
     ...     description='Fructose',
     ...     type='analysis',
     ...     behavior='normal',
-    ...     quality_type='quantitative',
-    ...     quality_uom=unit)
+    ...     quality_type='quantitative')
     >>> _ = analysis.laboratories.new(laboratory=laboratory)
     >>> analysis.methods.append(LabMethod(method.id))
     >>> _ = analysis.devices.new(laboratory=laboratory, device=device)
