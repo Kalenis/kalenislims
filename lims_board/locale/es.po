@@ -1,0 +1,451 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:lims.board.general,analysis:"
+msgid "Services"
+msgstr "Servicios"
+
+msgctxt "field:lims.board.general,date_from:"
+msgid "From Date"
+msgstr "Desde la fecha"
+
+msgctxt "field:lims.board.general,date_to:"
+msgid "To Date"
+msgstr "Hasta la fecha"
+
+msgctxt "field:lims.board.general,departments:"
+msgid "Departments"
+msgstr "Departamentos"
+
+msgctxt "field:lims.board.general,parties:"
+msgid "Parties"
+msgstr "Entidades"
+
+msgctxt "field:lims.board.general,refresh:"
+msgid "Refresh"
+msgstr "Actualizar"
+
+msgctxt "field:lims.board.general,samples:"
+msgid "Samples in progress"
+msgstr "Muestras en curso"
+
+msgctxt "field:lims.board.general,samples_department:"
+msgid "Samples per Department"
+msgstr "Muestars x Departamento"
+
+msgctxt "field:lims.board.general,samples_report_date:"
+msgid "Samples per Date agreed for result"
+msgstr "Muestras x Fecha pactada de resultado"
+
+msgctxt "field:lims.board.general,samples_state:"
+msgid "Samples per State"
+msgstr "Muestras x Estado"
+
+msgctxt "field:lims.board.general.sample_department,d:"
+msgid "Department"
+msgstr "Departamento"
+
+msgctxt "field:lims.board.general.sample_department,q:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.general.sample_state,q:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.general.sample_state,s:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:lims.board.laboratory,analysis:"
+msgid "Services"
+msgstr "Servicios"
+
+msgctxt "field:lims.board.laboratory,date_from:"
+msgid "From Date"
+msgstr "Desde la fecha"
+
+msgctxt "field:lims.board.laboratory,date_to:"
+msgid "To Date"
+msgstr "Hasta la fecha"
+
+msgctxt "field:lims.board.laboratory,departments:"
+msgid "Departments"
+msgstr "Departamentos"
+
+msgctxt "field:lims.board.laboratory,parties:"
+msgid "Parties"
+msgstr "Entidades"
+
+msgctxt "field:lims.board.laboratory,refresh:"
+msgid "Refresh"
+msgstr "Actualizar"
+
+msgctxt "field:lims.board.laboratory,samples:"
+msgid "Samples in Laboratory"
+msgstr "Muestras en laboratorio"
+
+msgctxt "field:lims.board.laboratory,samples_laboratory_date:"
+msgid "Samples per Laboratory deadline"
+msgstr "Muestras x Fecha límite Laboratorio"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q10:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q11:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q12:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q13:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q14:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q15:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q16:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q17:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q18:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q19:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q1:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q20:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q21:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q22:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q23:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q24:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q25:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q26:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q27:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q28:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q29:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q2:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q30:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q3:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q4:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q5:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q6:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q7:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q8:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q9:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,q:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_laboratory_date,t:"
+msgid "T"
+msgstr "T"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q10:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q11:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q12:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q13:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q14:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q15:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q16:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q17:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q18:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q19:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q1:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q20:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q21:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q22:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q23:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q24:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q25:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q26:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q27:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q28:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q29:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q2:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q30:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q3:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q4:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q5:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q6:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q7:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q8:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q9:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,q:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.sample_report_date,t:"
+msgid "T"
+msgstr "T"
+
+msgctxt "model:ir.action,name:act_board_general"
+msgid "General Dashboard"
+msgstr "Tablero General"
+
+msgctxt "model:ir.action,name:act_board_laboratory"
+msgid "Laboratory Dashboard"
+msgstr "Tablero Laboratorio"
+
+msgctxt "model:ir.message,text:msg_no_department"
+msgid "No Department"
+msgstr "Sin Departamento"
+
+msgctxt "model:ir.message,text:msg_sample_state_draft"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "model:ir.message,text:msg_sample_state_in_lab"
+msgid "In Laboratory"
+msgstr "En Laboratorio"
+
+msgctxt "model:ir.message,text:msg_sample_state_in_report"
+msgid "In Report"
+msgstr "En Informe"
+
+msgctxt "model:ir.message,text:msg_sample_state_lab_pending_acceptance"
+msgid "Pending Laboratory Acceptance"
+msgstr "Pte. Aceptación Laboratorio"
+
+msgctxt "model:ir.message,text:msg_sample_state_pending_planning"
+msgid "Pending Planification"
+msgstr "Pte. Planificación"
+
+msgctxt "model:ir.message,text:msg_sample_state_pending_report"
+msgid "Pending Reporting"
+msgstr "Pte. Informar"
+
+msgctxt "model:ir.message,text:msg_sample_state_planned"
+msgid "Planned"
+msgstr "Planificado"
+
+msgctxt "model:ir.message,text:msg_sample_state_report_released"
+msgid "Report Released"
+msgstr "Publicada"
+
+msgctxt "model:ir.message,text:msg_today"
+msgid "Today"
+msgstr "Hoy"
+
+msgctxt "model:ir.message,text:msg_tomorrow"
+msgid "Tomorrow"
+msgstr "Mañana"
+
+msgctxt "model:ir.message,text:msg_yesterday"
+msgid "Yesterday"
+msgstr "Ayer"
+
+msgctxt "model:ir.ui.menu,name:act_board_general_menu"
+msgid "General Dashboard"
+msgstr "Tablero General"
+
+msgctxt "model:ir.ui.menu,name:act_board_laboratory_menu"
+msgid "Laboratory Dashboard"
+msgstr "Tablero Laboratorio"
+
+msgctxt "model:lims.board.general,name:"
+msgid "General Dashboard"
+msgstr "Tablero General"
+
+msgctxt "model:lims.board.general.sample_department,name:"
+msgid "General Dashboard - Sample department"
+msgstr "Tablero General - Departamento de muestra"
+
+msgctxt "model:lims.board.general.sample_state,name:"
+msgid "General Dashboard - Sample state"
+msgstr "Tablero General - Estado de muestra"
+
+msgctxt "model:lims.board.laboratory,name:"
+msgid "Laboratory Dashboard"
+msgstr "Tablero Laboratorio"
+
+msgctxt "model:lims.board.laboratory.sample_laboratory_date,name:"
+msgid "Laboratory Dashboard - Sample laboratory date"
+msgstr "Tablero Laboratorio - Fecha límite Laboratorio de muestra"
+
+msgctxt "model:lims.board.laboratory.sample_report_date,name:"
+msgid "Laboratory Dashboard - Sample report date"
+msgstr "Tablero Laboratorio - Fecha pactada de resultado de muestra"
+
+msgctxt "view:lims.board.general:"
+msgid "Filters"
+msgstr "Filtros"
+
+msgctxt "view:lims.board.general:"
+msgid "Refresh"
+msgstr "Actualizar"
+
+msgctxt "view:lims.board.laboratory:"
+msgid "Filters"
+msgstr "Filtros"
+
+msgctxt "view:lims.board.laboratory:"
+msgid "Refresh"
+msgstr "Actualizar"
