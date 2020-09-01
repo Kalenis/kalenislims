@@ -4,6 +4,8 @@
     <field name="name"/>
     <label name="type"/>
     <field name="type"/>
+    <label name="report"/>
+    <field name="report"/>
     <notebook>
         <page name="content">
             <field name="content" colspan="4" widget="html"/>

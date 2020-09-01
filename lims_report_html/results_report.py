@@ -30,7 +30,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail'
 
     template = fields.Many2One('lims.result_report.template',
-        'Report Template', domain=[('type', '=', 'base')],
+        'Report Template', domain=[('type', 'in', [None, 'base'])],
         states={'readonly': Eval('state') != 'draft'}, depends=['state'])
     sections = fields.One2Many('lims.results_report.version.detail.section',
         'version_detail', 'Sections')
@@ -266,10 +266,21 @@ class ResultReport(metaclass=PoolMeta):
         if data is None:
             data = {}
         current_data = data.copy()
-        current_data['alt_lang'] = None
-        result_orig = cls.execute_html_results_report(ids, current_data)
-        current_data['alt_lang'] = 'en'
-        result_eng = cls.execute_html_results_report(ids, current_data)
+
+        template = results_report.template
+        if template and template.type == 'base':  # HTML
+            current_data['alt_lang'] = None
+            result_orig = cls.execute_html_results_report(ids, current_data)
+            current_data['alt_lang'] = 'en'
+            result_eng = cls.execute_html_results_report(ids, current_data)
+        else:
+            current_data['action_id'] = None
+            if template and template.report:
+                current_data['action_id'] = template.report.id
+            current_data['alt_lang'] = None
+            result_orig = cls.execute_custom_results_report(ids, current_data)
+            current_data['alt_lang'] = 'en'
+            result_eng = cls.execute_custom_results_report(ids, current_data)
 
         save = False
         if results_report.english_report:
@@ -300,7 +311,7 @@ class ResultReport(metaclass=PoolMeta):
         return result
 
     @classmethod
-    def execute_html_results_report(cls, ids, data):
+    def execute_custom_results_report(cls, ids, data):
         pool = Pool()
         ActionReport = pool.get('ir.action.report')
         cls.check_access()
@@ -309,11 +320,34 @@ class ResultReport(metaclass=PoolMeta):
         if action_id is None:
             action_reports = ActionReport.search([
                 ('report_name', '=', cls.__name__),
+                ('template_extension', '!=', 'results'),
                 ])
             assert action_reports, '%s not found' % cls
             action = action_reports[0]
         else:
             action = ActionReport(action_id)
+
+        records = []
+        model = action.model or data.get('model')
+        if model:
+            records = cls._get_records(ids, model, data)
+        oext, content = cls._execute(records, data, action)
+        if not isinstance(content, str):
+            content = bytearray(content) if bytes == str else bytes(content)
+        return (oext, content, action.direct_print, action.name)
+
+    @classmethod
+    def execute_html_results_report(cls, ids, data):
+        pool = Pool()
+        ActionReport = pool.get('ir.action.report')
+        cls.check_access()
+
+        action_reports = ActionReport.search([
+            ('report_name', '=', cls.__name__),
+            ('template_extension', '=', 'results'),
+            ])
+        assert action_reports, '%s not found' % cls
+        action = action_reports[0]
 
         records = []
         model = action.model or data.get('model')

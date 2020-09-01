@@ -2,4 +2,5 @@
 <tree>
     <field name="name" expand="2"/>
     <field name="type"/>
+    <field name="report"/>
 </tree>

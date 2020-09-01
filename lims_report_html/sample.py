@@ -10,7 +10,7 @@ class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
 
     result_template = fields.Many2One('lims.result_report.template',
-        'Report Template', domain=[('type', '=', 'base')])
+        'Report Template', domain=[('type', 'in', [None, 'base'])])
     resultrange_origin = fields.Many2One('lims.range.type', 'Comparison range',
         domain=[('use', '=', 'result_range')])
 
@@ -19,7 +19,7 @@ class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
 
     result_template = fields.Many2One('lims.result_report.template',
-        'Report Template', domain=[('type', '=', 'base')])
+        'Report Template', domain=[('type', 'in', [None, 'base'])])
     resultrange_origin = fields.Many2One('lims.range.type', 'Comparison range',
         domain=[('use', '=', 'result_range')])
 
