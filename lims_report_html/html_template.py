@@ -7,7 +7,7 @@ from PyPDF2.utils import PdfReadError
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import Pool
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Bool
 from trytond.transaction import Transaction
 from trytond.cache import Cache
 from trytond.exceptions import UserError
@@ -19,12 +19,20 @@ class ReportTemplate(ModelSQL, ModelView):
     __name__ = 'lims.result_report.template'
 
     name = fields.Char('Name', required=True)
+    report = fields.Many2One('ir.action.report', 'Report',
+        domain=[
+            ('report_name', '=', 'lims.result_report'),
+            ('template_extension', '!=', 'results'),
+            ],
+        states={'required': ~Eval('type')}, depends=['type'])
     type = fields.Selection([
-        ('base', 'Base'),
-        ('header', 'Header'),
-        ('footer', 'Footer'),
-        ], 'Type', required=True)
-    content = fields.Text('Content', required=True)
+        (None, ''),
+        ('base', 'HTML'),
+        ('header', 'HTML - Header'),
+        ('footer', 'HTML - Footer'),
+        ], 'Type')
+    content = fields.Text('Content',
+        states={'required': Bool(Eval('type'))}, depends=['type'])
     header = fields.Many2One('lims.result_report.template', 'Header',
         domain=[('type', '=', 'header')])
     footer = fields.Many2One('lims.result_report.template', 'Footer',
@@ -52,7 +60,7 @@ class ReportTemplate(ModelSQL, ModelView):
 
     @staticmethod
     def default_type():
-        return 'base'
+        return None
 
     @staticmethod
     def default_charts_x_row():
@@ -61,8 +69,14 @@ class ReportTemplate(ModelSQL, ModelView):
     @classmethod
     def view_attributes(cls):
         return super().view_attributes() + [
+            ('//page[@id="content"]', 'states', {
+                    'invisible': ~Bool(Eval('type')),
+                    }),
             ('//page[@id="header_footer"]', 'states', {
                     'invisible': Eval('type') != 'base',
+                    }),
+            ('//page[@name="translations"]', 'states', {
+                    'invisible': ~Bool(Eval('type')),
                     }),
             ('//page[@name="sections"]', 'states', {
                     'invisible': Eval('type') != 'base',
