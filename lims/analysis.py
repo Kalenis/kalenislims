@@ -2538,6 +2538,7 @@ class OpenAnalysisNotTypifiedStart(ModelView):
     product_type = fields.Many2One('lims.product.type', 'Product type',
         required=True)
     matrix = fields.Many2One('lims.matrix', 'Matrix', required=True)
+    method = fields.Many2One('lims.lab.method', 'Method')
 
 
 class OpenAnalysisNotTypified(Wizard):
@@ -2570,16 +2571,18 @@ class OpenAnalysisNotTypified(Wizard):
         set_group_id = self.start.analysis.id
         product_type_id = self.start.product_type.id
         matrix_id = self.start.matrix.id
+        method_id = self.start.method and self.start.method.id or None
 
         analysis_ids = []
         ia = Analysis.get_included_analysis_analysis(set_group_id)
+        method_clause = method_id and 'AND method = %s' % (method_id, ) or ''
         for a_id in ia:
             cursor.execute('SELECT COUNT(*) '
                 'FROM "' + Typification._table + '" '
                 'WHERE valid '
                     'AND analysis = %s '
                     'AND product_type = %s '
-                    'AND matrix = %s',
+                    'AND matrix = %s' + method_clause,
                 (a_id, product_type_id, matrix_id))
             typifications = cursor.fetchone()
             if typifications[0] == 0:

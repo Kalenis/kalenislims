@@ -270,6 +270,10 @@ msgctxt "field:lims.analysis.open_not_typified.start,matrix:"
 msgid "Matrix"
 msgstr "Matriz"
 
+msgctxt "field:lims.analysis.open_not_typified.start,method:"
+msgid "Method"
+msgstr "Método"
+
 msgctxt "field:lims.analysis.open_not_typified.start,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
