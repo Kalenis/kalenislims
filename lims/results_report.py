@@ -8,7 +8,7 @@ from PyPDF2 import PdfFileMerger
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
-    Button
+    StateReport, Button
 from trytond.pool import Pool
 from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, And, Or, If
 from trytond.transaction import Transaction
@@ -2778,70 +2778,6 @@ class OpenSampleEntry(Wizard):
         return action, {}
 
 
-class PrintResultsReport(Wizard):
-    'Print Results Report'
-    __name__ = 'lims.print_results_report'
-
-    start = StateTransition()
-    print_ = StateAction('lims.report_global_results_report')
-
-    def transition_start(self):
-        pool = Pool()
-        ResultsReport = pool.get('lims.results_report')
-        ResultsDetail = pool.get('lims.results_report.version.detail')
-
-        for active_id in Transaction().context['active_ids']:
-            results_report = ResultsReport(active_id)
-            format_field = 'report_format'
-            if results_report.english_report:
-                format_field = 'report_format_eng'
-            with Transaction().set_user(0):
-                details = ResultsDetail.search([
-                    ('report_version.results_report.id', '=',
-                        results_report.id),
-                    ('valid', '=', True),
-                    (format_field, '=', 'pdf'),
-                    ])
-            if not details:
-                raise UserError(gettext('lims.msg_empty_report'))
-
-            if results_report.english_report:
-                results_report.report_format_eng = 'pdf'
-                results_report.report_cache_eng = self._get_global_report(
-                    details, True)
-            else:
-                results_report.report_format = 'pdf'
-                results_report.report_cache = self._get_global_report(
-                    details, False)
-            results_report.save()
-        return 'print_'
-
-    def _get_global_report(self, details, english_report=False):
-        merger = PdfFileMerger(strict=False)
-        if english_report:
-            for detail in details:
-                filedata = BytesIO(detail.report_cache_eng)
-                merger.append(filedata)
-        else:
-            for detail in details:
-                filedata = BytesIO(detail.report_cache)
-                merger.append(filedata)
-        output = BytesIO()
-        merger.write(output)
-        return bytearray(output.getvalue())
-
-    def do_print_(self, action):
-        data = {}
-        data['id'] = Transaction().context['active_ids'].pop()
-        data['ids'] = [data['id']]
-        return action, data
-
-    def transition_print_(self):
-        if Transaction().context['active_ids']:
-            return 'print_'
-        return 'end'
-
-
 class ServiceResultsReport(Wizard):
     'Service Results Report'
     __name__ = 'lims.service.results_report'
@@ -3139,6 +3075,28 @@ class NewResultsReportVersion(Wizard):
         return action, {}
 
     def transition_open_(self):
+        return 'end'
+
+
+class PrintResultReport(Wizard):
+    'Print Results Report'
+    __name__ = 'lims.print_result_report'
+
+    start = StateTransition()
+    print_ = StateReport('lims.result_report')
+
+    def transition_start(self):
+        return 'print_'
+
+    def do_print_(self, action):
+        data = {}
+        data['id'] = Transaction().context['active_ids'].pop()
+        data['ids'] = [data['id']]
+        return action, data
+
+    def transition_print_(self):
+        if Transaction().context['active_ids']:
+            return 'print_'
         return 'end'
 
 
@@ -4081,6 +4039,70 @@ class ResultReportTranscription(ResultReport):
             results_report.save()
 
         return result
+
+
+class PrintGlobalResultReport(Wizard):
+    'Print Global Results Report'
+    __name__ = 'lims.print_global_result_report'
+
+    start = StateTransition()
+    print_ = StateReport('lims.global_result_report')
+
+    def transition_start(self):
+        pool = Pool()
+        ResultsReport = pool.get('lims.results_report')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+
+        for active_id in Transaction().context['active_ids']:
+            results_report = ResultsReport(active_id)
+            format_field = 'report_format'
+            if results_report.english_report:
+                format_field = 'report_format_eng'
+            with Transaction().set_user(0):
+                details = ResultsDetail.search([
+                    ('report_version.results_report.id', '=',
+                        results_report.id),
+                    ('valid', '=', True),
+                    (format_field, '=', 'pdf'),
+                    ])
+            if not details:
+                raise UserError(gettext('lims.msg_empty_report'))
+
+            if results_report.english_report:
+                results_report.report_format_eng = 'pdf'
+                results_report.report_cache_eng = self._get_global_report(
+                    details, True)
+            else:
+                results_report.report_format = 'pdf'
+                results_report.report_cache = self._get_global_report(
+                    details, False)
+            results_report.save()
+        return 'print_'
+
+    def _get_global_report(self, details, english_report=False):
+        merger = PdfFileMerger(strict=False)
+        if english_report:
+            for detail in details:
+                filedata = BytesIO(detail.report_cache_eng)
+                merger.append(filedata)
+        else:
+            for detail in details:
+                filedata = BytesIO(detail.report_cache)
+                merger.append(filedata)
+        output = BytesIO()
+        merger.write(output)
+        return bytearray(output.getvalue())
+
+    def do_print_(self, action):
+        data = {}
+        data['id'] = Transaction().context['active_ids'].pop()
+        data['ids'] = [data['id']]
+        return action, data
+
+    def transition_print_(self):
+        if Transaction().context['active_ids']:
+            return 'print_'
+        return 'end'
 
 
 class GlobalResultReport(Report):

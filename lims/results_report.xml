@@ -602,19 +602,6 @@
             <field name="group" ref="group_lims_laboratory_reports"/>
         </record>
 
-<!-- Wizard Print Global Results Report -->
-
-        <record model="ir.action.wizard" id="wiz_lims_print_results_report">
-            <field name="name">Print Global Report</field>
-            <field name="wiz_name">lims.print_results_report</field>
-        </record>
-
-        <record model="ir.action.keyword" id="lims_print_results_report_keyword">
-            <field name="keyword">form_print</field>
-            <field name="model">lims.results_report,-1</field>
-            <field name="action" ref="wiz_lims_print_results_report"/>
-        </record>
-
 <!-- Wizard Service Results Report -->
 
         <record model="ir.action.wizard" id="wiz_lims_service_results_report">
@@ -757,20 +744,27 @@
             <field name="action" ref="wiz_results_report_version_detail_line_repeat_analysis"/>
         </record>
 
+<!-- Wizard Print Results Report -->
+
+        <record model="ir.action.wizard" id="wiz_print_result_report">
+            <field name="name">Results Report</field>
+            <field name="wiz_name">lims.print_result_report</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_print_result_report_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.results_report.version.detail,-1</field>
+            <field name="action" ref="wiz_print_result_report"/>
+        </record>
+
 <!-- Results Report -->
 
-        <record model="ir.action.report" id="report_results_report">
+        <record model="ir.action.report" id="report_result_report">
             <field name="name">Results Report</field>
             <field name="model">lims.results_report.version.detail</field>
             <field name="report_name">lims.result_report</field>
             <field name="report">lims/report/results_report.fodt</field>
             <field name="extension">pdf</field>
-        </record>
-
-        <record model="ir.action.keyword" id="report_results_report_keyword">
-            <field name="keyword">form_print</field>
-            <field name="model">lims.results_report.version.detail,-1</field>
-            <field name="action" ref="report_results_report"/>
         </record>
 
 <!-- Transcription Results Report -->
@@ -789,9 +783,22 @@
             <field name="action" ref="report_results_report_transcription"/>
         </record>
 
+<!-- Wizard Print Global Results Report -->
+
+        <record model="ir.action.wizard" id="wiz_print_global_result_report">
+            <field name="name">Global Results Report</field>
+            <field name="wiz_name">lims.print_global_result_report</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_print_global_result_report_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.results_report,-1</field>
+            <field name="action" ref="wiz_print_global_result_report"/>
+        </record>
+
 <!-- Global Results Report -->
 
-        <record model="ir.action.report" id="report_global_results_report">
+        <record model="ir.action.report" id="report_global_result_report">
             <field name="name">Global Results Report</field>
             <field name="report_name">lims.global_result_report</field>
             <field name="report">lims/report/global_results_report.fodt</field>
