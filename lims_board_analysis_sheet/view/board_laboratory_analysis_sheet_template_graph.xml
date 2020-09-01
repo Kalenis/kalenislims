@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<graph type="pie" legend="0">
+    <x>
+        <field name="t"/>
+    </x>
+    <y>
+        <field name="q"/>
+    </y>
+</graph>

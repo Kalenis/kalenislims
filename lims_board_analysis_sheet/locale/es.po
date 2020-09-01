@@ -1,0 +1,19 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:lims.board.laboratory,analysis_sheet_templates:"
+msgid "Unplanned samples per Analysis sheet"
+msgstr "Muestras sin planificar x Hoja de análisis"
+
+msgctxt "field:lims.board.laboratory.analysis_sheet_template,q:"
+msgid "Samples Qty."
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.board.laboratory.analysis_sheet_template,t:"
+msgid "Analysis Sheet"
+msgstr "Hoja de análisis"
+
+msgctxt "model:lims.board.laboratory.analysis_sheet_template,name:"
+msgid "Laboratory Dashboard - Analysis sheet template"
+msgstr "Tablero Laboratorio - Plantilla de Hoja de análisis"

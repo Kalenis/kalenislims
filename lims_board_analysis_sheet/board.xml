@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Laboratory Dashboard -->
+
+        <record model="ir.ui.view" id="board_laboratory_view_form">
+            <field name="model">lims.board.laboratory</field>
+            <field name="inherit" ref="lims_board.board_laboratory_view_form"/>
+            <field name="name">board_laboratory_form</field>
+        </record>
+
+<!-- Laboratory Dashboard - Analysis sheet template -->
+
+        <record model="ir.ui.view" id="board_laboratory_analysis_sheet_template_view_list">
+            <field name="model">lims.board.laboratory.analysis_sheet_template</field>
+            <field name="type">tree</field>
+            <field name="name">board_laboratory_analysis_sheet_template_list</field>
+        </record>
+        <record model="ir.ui.view" id="board_laboratory_analysis_sheet_template_view_graph">
+            <field name="model">lims.board.laboratory.analysis_sheet_template</field>
+            <field name="type">graph</field>
+            <field name="name">board_laboratory_analysis_sheet_template_graph</field>
+        </record>
+
+    </data>
+</tryton>
