@@ -3351,14 +3351,17 @@ class ManageServices(Wizard):
         delete_ack_report_cache = False
         fraction = Fraction(Transaction().context['active_id'])
 
+        actual_services = self.start.services
         original_services = [s for s in fraction.services if
             s.manage_service_available]
-        actual_services = self.start.services
+        services_to_delete = []
 
         for service in original_services:
             if service not in actual_services:
-                self.delete_service(service)
+                services_to_delete.append(service)
                 delete_ack_report_cache = True
+        if services_to_delete:
+            self.delete_services(services_to_delete)
 
         for service in actual_services:
             if service not in original_services:
@@ -3443,10 +3446,10 @@ class ManageServices(Wizard):
 
         return new_service
 
-    def delete_service(self, service):
+    def delete_services(self, services):
         Service = Pool().get('lims.service')
         with Transaction().set_user(0, set_context=True):
-            Service.delete([service])
+            Service.delete(services)
 
     def update_service(self, original_service, actual_service, fraction,
             field_changed):
@@ -3669,11 +3672,20 @@ class EditSampleService(Wizard):
         for sample in Sample.browse(Transaction().context['active_ids']):
             for fraction in sample.fractions:
                 original_analysis = []
+                services_to_delete = []
+                services_to_annul = []
 
                 for service in fraction.services:
                     original_analysis.append(service.analysis.id)
                     if service.analysis.id not in actual_analysis:
-                        self.delete_service(service)
+                        if service.manage_service_available:
+                            services_to_delete.append(service)
+                        else:
+                            services_to_annul.append(service)
+                if services_to_delete:
+                    self.delete_services(services_to_delete)
+                if services_to_annul:
+                    self.annul_services(services_to_annul)
 
                 for service in self.start.services:
                     if service.analysis.id not in original_analysis:
@@ -3720,14 +3732,16 @@ class EditSampleService(Wizard):
 
         return new_service
 
-    def delete_service(self, service):
-        pool = Pool()
-        #Service = pool.get('lims.service')
-        NotebookLine = pool.get('lims.notebook.line')
+    def delete_services(self, services):
+        Service = Pool().get('lims.service')
         with Transaction().set_user(0, set_context=True):
-            #Service.delete([service])
+            Service.delete(services)
+
+    def annul_services(self, services):
+        NotebookLine = Pool().get('lims.notebook.line')
+        with Transaction().set_user(0, set_context=True):
             notebook_lines = NotebookLine.search([
-                ('service', '=', service.id),
+                ('service', 'in', [s.id for s in services]),
                 ])
             NotebookLine.write(notebook_lines, {
                 'annulled': True,
