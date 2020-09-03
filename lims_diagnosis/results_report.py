@@ -459,3 +459,27 @@ class Cron(metaclass=PoolMeta):
             ('lims.samples_comparator|clean_buffer',
                 'Delete Samples comparison records'),
             ])
+
+
+class ResultReport(metaclass=PoolMeta):
+    __name__ = 'lims.result_report'
+
+    @classmethod
+    def get_context(cls, records, data):
+        report_context = super().get_context(records, data)
+        report_context['state_image'] = cls.get_state_image
+        return report_context
+
+    @classmethod
+    def get_state_image(cls, sample, state):
+        DiagnosisState = Pool().get('lims.diagnosis.state')
+
+        diagnosis_states = DiagnosisState.search([('name', '=', state)])
+        if not diagnosis_states:
+            return None
+        diagnosis_state, = diagnosis_states
+        for image in diagnosis_state.images:
+            if image.name == sample.diagnosis_states[state]:
+                return image.image
+
+        return None

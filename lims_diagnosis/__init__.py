@@ -21,6 +21,7 @@ def register():
         analysis.Analysis,
         analysis.ProductType,
         html_template.DiagnosisState,
+        html_template.DiagnosisStateImage,
         html_template.DiagnosisTemplate,
         html_template.DiagnosisTemplateState,
         html_template.ReportTemplate,
@@ -50,3 +51,6 @@ def register():
         results_report.OpenSamplesComparator,
         notebook.NotebookLineRepeatAnalysis,
         module='lims_diagnosis', type_='wizard')
+    Pool.register(
+        results_report.ResultReport,
+        module='lims_report_html', type_='report')

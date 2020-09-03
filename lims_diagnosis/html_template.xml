@@ -71,6 +71,19 @@
             id="menu_diagnosis_state_list"
             parent="menu_html_diagnosis_template_list" sequence="10"/>
 
+<!-- Diagnosis State Image -->
+
+        <record model="ir.ui.view" id="diagnosis_state_image_view_form">
+            <field name="model">lims.diagnosis.state.image</field>
+            <field name="type">form</field>
+            <field name="name">diagnosis_state_image_form</field>
+        </record>
+        <record model="ir.ui.view" id="diagnosis_state_image_view_list">
+            <field name="model">lims.diagnosis.state.image</field>
+            <field name="type">tree</field>
+            <field name="name">diagnosis_state_image_list</field>
+        </record>
+
 <!-- Results Report Template -->
 
         <record model="ir.ui.view" id="template_view_form">

@@ -22,9 +22,22 @@ class DiagnosisState(DictSchemaMixin, ModelSQL, ModelView):
     __name__ = 'lims.diagnosis.state'
     _rec_name = 'name'
 
+    images = fields.One2Many('lims.diagnosis.state.image',
+        'state', 'Images')
+
     @staticmethod
     def default_type_():
         return 'selection'
+
+
+class DiagnosisStateImage(ModelSQL, ModelView):
+    'Diagnosis State Image'
+    __name__ = 'lims.diagnosis.state.image'
+
+    state = fields.Many2One('lims.diagnosis.state', 'State',
+        required=True, ondelete='CASCADE', select=True)
+    name = fields.Char('Name', required=True)
+    image = fields.Binary('Image', required=True)
 
 
 class DiagnosisTemplateState(ModelSQL):
