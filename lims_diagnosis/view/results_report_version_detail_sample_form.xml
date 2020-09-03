@@ -1,10 +1,17 @@
 <?xml version="1.0"?>
 <data>
     <xpath expr="/form/notebook/page[@id='lines']" position="after">
-        <page name="diagnosis">
+        <page id="diagnosis_plain" string="Diagnosis">
+            <field name="diagnosis_plain" colspan="4" widget="text"/>
+            <field name="diagnosis_states"/>
+            <field name="diagnosis_states_domain" colspan="4" invisible="1"/>
+            <field name="template_type" colspan="4" invisible="1"/>
+        </page>
+        <page id="diagnosis" string="Diagnosis">
             <field name="diagnosis" colspan="4" widget="html"/>
             <field name="diagnosis_states"/>
             <field name="diagnosis_states_domain" colspan="4" invisible="1"/>
+            <field name="template_type" colspan="4" invisible="1"/>
         </page>
     </xpath>
 </data>
