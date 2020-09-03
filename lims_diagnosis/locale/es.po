@@ -14,6 +14,22 @@ msgctxt "field:lims.create_sample.start,diagnostician:"
 msgid "Diagnostician"
 msgstr "Diagnosticador"
 
+msgctxt "field:lims.diagnosis.state,images:"
+msgid "Images"
+msgstr "Imágenes"
+
+msgctxt "field:lims.diagnosis.state.image,image:"
+msgid "Image"
+msgstr "Imagen"
+
+msgctxt "field:lims.diagnosis.state.image,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.diagnosis.state.image,state:"
+msgid "State"
+msgstr "Estado"
+
 msgctxt "field:lims.diagnosis.template,content:"
 msgid "Content"
 msgstr "Contenido"
