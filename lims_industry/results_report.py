@@ -34,6 +34,15 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         'Diagnosis Precedent 2'), 'get_precedent_diagnosis')
     precedent3_diagnosis = fields.Function(fields.Text(
         'Diagnosis Precedent 3'), 'get_precedent_diagnosis')
+    precedent1_diagnosis_states = fields.Function(fields.Dict(
+        'lims.diagnosis.state', 'Diagnosis States Precedent 1'),
+        'get_precedent_diagnosis')
+    precedent2_diagnosis_states = fields.Function(fields.Dict(
+        'lims.diagnosis.state', 'Diagnosis States Precedent 2'),
+        'get_precedent_diagnosis')
+    precedent3_diagnosis_states = fields.Function(fields.Dict(
+        'lims.diagnosis.state', 'Diagnosis States Precedent 3'),
+        'get_precedent_diagnosis')
 
     @classmethod
     def view_attributes(cls):
@@ -80,22 +89,22 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         else:
             for name in names:
                 result[name] = {}
-                if name == 'precedent1_diagnosis':
+                if 'precedent1' in name:
                     for s in samples:
                         result[name][s.id] = cls._get_precedent_diagnosis(
-                            s.precedent1)
-                elif name == 'precedent2_diagnosis':
+                            s.precedent1, name)
+                elif 'precedent2' in name:
                     for s in samples:
                         result[name][s.id] = cls._get_precedent_diagnosis(
-                            s.precedent2)
+                            s.precedent2, name)
                 else:  # name == 'precedent3_diagnosis':
                     for s in samples:
                         result[name][s.id] = cls._get_precedent_diagnosis(
-                            s.precedent3)
+                            s.precedent3, name)
         return result
 
     @classmethod
-    def _get_precedent_diagnosis(cls, precedent):
+    def _get_precedent_diagnosis(cls, precedent, name):
         if not precedent:
             return None
         precedent_sample = cls.search([
@@ -103,7 +112,8 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
             ])
         if not precedent_sample:
             return None
-        return precedent_sample[0].diagnosis
+        return (precedent_sample[0].diagnosis_states if 'states' in name
+            else precedent_sample[0].diagnosis)
 
     @classmethod
     def _get_fields_from_sample(cls, sample):
