@@ -6,7 +6,7 @@ from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Not, Bool
 from trytond.transaction import Transaction
 from trytond.i18n import gettext
 
@@ -90,6 +90,8 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail.sample'
 
     diagnosis = fields.Text('Diagnosis')
+    diagnosis_plain = fields.Function(fields.Text('Diagnosis'),
+        'get_diagnosis_plain', setter='set_diagnosis_plain')
     diagnosis_states = fields.Dict('lims.diagnosis.state', 'States',
         domain=[('id', 'in', Eval('diagnosis_states_domain'))],
         depends=['diagnosis_states_domain'])
@@ -99,6 +101,37 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         'on_change_with_diagnosis_states_domain')
     diagnosis_warning = fields.Function(fields.Boolean('Diagnosis Warning'),
         'get_notebook_field')
+    template_type = fields.Function(fields.Selection([
+        (None, ''),
+        ('base', 'HTML'),
+        ('header', 'HTML - Header'),
+        ('footer', 'HTML - Footer'),
+        ], 'Type'), 'get_template_type')
+
+    def get_diagnosis_plain(self, name):
+        return self.diagnosis
+
+    @classmethod
+    def set_diagnosis_plain(cls, records, name, value):
+        if not value:
+            return
+        cls.write(records, {'diagnosis': value})
+
+    def get_template_type(self, name):
+        return (self.version_detail.template and
+            self.version_detail.template.type or None)
+
+    @classmethod
+    def view_attributes(cls):
+        return super(
+                ResultsReportVersionDetailSample, cls).view_attributes() + [
+            ('/form/notebook/page[@id="diagnosis"]', 'states', {
+                    'invisible': Not(Bool(Eval('template_type'))),
+                    }),
+            ('/form/notebook/page[@id="diagnosis_plain"]', 'states', {
+                    'invisible': Eval('template_type') == 'base',
+                    }),
+            ]
 
     @classmethod
     def create(cls, vlist):

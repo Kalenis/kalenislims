@@ -114,6 +114,10 @@ msgctxt "field:lims.results_report.version.detail.sample,diagnosis:"
 msgid "Diagnosis"
 msgstr "Diagnóstico"
 
+msgctxt "field:lims.results_report.version.detail.sample,diagnosis_plain:"
+msgid "Diagnosis"
+msgstr "Diagnóstico"
+
 msgctxt "field:lims.results_report.version.detail.sample,diagnosis_states:"
 msgid "States"
 msgstr "Estados"
@@ -325,6 +329,10 @@ msgid "Options"
 msgstr "Opciones"
 
 msgctxt "view:lims.plant:"
+msgid "Diagnosis"
+msgstr "Diagnóstico"
+
+msgctxt "view:lims.results_report.version.detail.sample:"
 msgid "Diagnosis"
 msgstr "Diagnóstico"
 
