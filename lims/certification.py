@@ -228,3 +228,6 @@ class DuplicateAnalysisFamily(Wizard):
             'party': self.start.party.id if self.start.party else None,
             })
         return 'end'
+
+    def end(self):
+        return 'reload'
