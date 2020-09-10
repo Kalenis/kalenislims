@@ -597,44 +597,64 @@ class Notebook(ModelSQL, ModelView):
 
     @classmethod
     def get_acceptance_pending(cls, notebooks, name=None):
-        NotebookLine = Pool().get('lims.notebook.line')
-        clause = [
-            ('notebook.fraction.type.report', '=', True),
-            ('report', '=', True),
-            ('annulled', '=', False),
-            ('accepted', '=', False),
-            ['OR',
-                ('result', 'not in', [None, '']),
-                ('literal_result', 'not in', [None, '']),
-                ('result_modifier', 'in', [
-                    'd', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre', 'na']),
-                ],
-            ]
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        Fraction = pool.get('lims.fraction')
+        FractionType = pool.get('lims.fraction.type')
+
         result = {}
         for n in notebooks:
             result[n.id] = False
-            if NotebookLine.search_count(
-                    clause + [('notebook', '=', n.id)]) > 0:
+            cursor.execute('SELECT COUNT(*) '
+                'FROM "' + NotebookLine._table + '" nl '
+                    'INNER JOIN "' + cls._table + '" n '
+                    'ON n.id = nl.notebook '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = n.fraction '
+                    'INNER JOIN "' + FractionType._table + '" ft '
+                    'ON ft.id = f.type '
+                'WHERE ft.report = TRUE '
+                    'AND nl.report = TRUE '
+                    'AND nl.annulled = FALSE '
+                    'AND nl.accepted = FALSE '
+                    'AND (nl.result IS NOT NULL '
+                        'OR nl.literal_result IS NOT NULL '
+                        'OR nl.result_modifier IN '
+                        '(\'d\', \'nd\', \'pos\', \'neg\', '
+                        '\'ni\', \'abs\', \'pre\', \'na\')) '
+                    'AND nl.notebook = %s',
+                (n.id,))
+            if cursor.fetchone()[0] > 0:
                 result[n.id] = True
         return result
 
     @classmethod
     def search_acceptance_pending(cls, name, domain=None):
-        NotebookLine = Pool().get('lims.notebook.line')
-        clause = [
-            ('notebook.fraction.type.report', '=', True),
-            ('report', '=', True),
-            ('annulled', '=', False),
-            ('accepted', '=', False),
-            ['OR',
-                ('result', 'not in', [None, '']),
-                ('literal_result', 'not in', [None, '']),
-                ('result_modifier', 'in', [
-                    'd', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre', 'na']),
-                ],
-            ]
-        lines = NotebookLine.search(clause)
-        notebooks_ids = [nl.notebook.id for nl in lines]
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        Fraction = pool.get('lims.fraction')
+        FractionType = pool.get('lims.fraction.type')
+
+        cursor.execute('SELECT nl.notebook '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + cls._table + '" n '
+                'ON n.id = nl.notebook '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + FractionType._table + '" ft '
+                'ON ft.id = f.type '
+            'WHERE ft.report = TRUE '
+                'AND nl.report = TRUE '
+                'AND nl.annulled = FALSE '
+                'AND nl.accepted = FALSE '
+                'AND (nl.result IS NOT NULL '
+                    'OR nl.literal_result IS NOT NULL '
+                    'OR nl.result_modifier IN '
+                    '(\'d\', \'nd\', \'pos\', \'neg\', '
+                    '\'ni\', \'abs\', \'pre\', \'na\'))')
+        notebooks_ids = [x[0] for x in cursor.fetchall()]
         field, op, operand = domain
         if (op, operand) in (('=', True), ('!=', False)):
             return [('id', 'in', notebooks_ids)]
