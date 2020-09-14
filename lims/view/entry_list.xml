@@ -6,7 +6,7 @@
     <field name="create_date2" widget="date"/>
     <field name="create_date2" widget="time" string="Hora"/>
     <field name="party"/>
-    <field name="invoice_party"/>
+    <field name="invoice_party_view"/>
     <field name="carrier"/>
     <field name="package_type"/>
     <field name="packages_quantity"/>

@@ -97,7 +97,7 @@ class Entry(Workflow, ModelSQL, ModelView):
         ('ongoing', 'Ongoing'),
         ('pending', 'Administration pending'),
         ('closed', 'Closed'),
-        ], 'State', required=True, readonly=True)
+        ], 'State', required=True, readonly=True, select=True)
     state_string = state.translated('state')
     ack_report_cache = fields.Binary('Acknowledgment report cache',
         readonly=True,
@@ -332,7 +332,6 @@ class Entry(Workflow, ModelSQL, ModelView):
     @fields.depends('party', '_parent_party.relations')
     def on_change_with_invoice_party_domain(self, name=None):
         Config = Pool().get('lims.configuration')
-
         config_ = Config(1)
         parties = []
         if self.party:
@@ -755,7 +754,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     party = fields.Function(fields.Many2One('party.party', 'Party'),
         'get_service_field', searcher='search_service_field')
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
-        states={'readonly': True})
+        select=True, states={'readonly': True})
     analysis_type = fields.Function(fields.Selection([
         ('analysis', 'Analysis'),
         ('set', 'Set'),
@@ -1098,7 +1097,8 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     @classmethod
     def get_results_report(cls, details, name):
         cursor = Transaction().connection.cursor()
-        NotebookLine = Pool().get('lims.notebook.line')
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
 
         result = {}
         for d in details:
@@ -1119,8 +1119,12 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
             return True
         return False
 
-    def get_referral_date(self, name=None):
-        return self.referral and self.referral.date or None
+    @classmethod
+    def get_referral_date(cls, details, name):
+        result = {}
+        for d in details:
+            result[d.id] = d.referral and d.referral.date or None
+        return result
 
     @classmethod
     def search_referral_date(cls, name, clause):
