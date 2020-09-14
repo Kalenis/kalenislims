@@ -781,7 +781,7 @@ class NotebookLine(ModelSQL, ModelView):
     annulment_date = fields.DateTime('Annulment date',
         states={'readonly': True})
     results_report = fields.Many2One('lims.results_report', 'Results Report',
-        readonly=True)
+        readonly=True, select=True)
     planification = fields.Many2One('lims.planification', 'Planification',
         readonly=True)
     urgent = fields.Boolean('Urgent')
