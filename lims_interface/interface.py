@@ -1038,6 +1038,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
         pool = Pool()
         Origin = pool.get('lims.interface.compilation.origin')
         Data = pool.get('lims.interface.data')
+        NotebookLine = pool.get('lims.notebook.line')
 
         data_create = []
         data_write = []
@@ -1082,6 +1083,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         if schema[k]['default_value'] is not None:
                             if not create_new_lines:
                                 continue
+                            if schema[k]['default_value'].startswith('='):
+                                continue
                             value = schema[k]['default_value']
                         else:
                             col = schema[k]['col']
@@ -1116,6 +1119,21 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         line[field[0]] = self._get_formula_value(field, line)
 
                     line['notebook_line'] = self._get_notebook_line(line)
+                    if (line['notebook_line']):
+                        nl = NotebookLine(line['notebook_line'])
+                        for k in schema_keys:
+                            if (schema[k]['default_value'] is not None and
+                                    schema[k]['default_value'].startswith('=')):
+                                path = schema[k]['default_value'][1:].split('.')
+                                field = path.pop(0)
+                                try:
+                                    value = getattr(nl, field)
+                                    while path:
+                                        field = path.pop(0)
+                                        value = getattr(value, field)
+                                except AttributeError:
+                                    value = None
+                                line[k] = value
                     line_id = self._get_compilation_line_id(line)
                     if line_id:
                         line['id'] = line_id
@@ -1141,6 +1159,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
         pool = Pool()
         Origin = pool.get('lims.interface.compilation.origin')
         Data = pool.get('lims.interface.data')
+        NotebookLine = pool.get('lims.notebook.line')
 
         data_create = []
         data_write = []
@@ -1165,6 +1184,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                             value = None
                             if schema[k]['default_value'] is not None:
                                 if not create_new_lines:
+                                    continue
+                                if schema[k]['default_value'].startswith('='):
                                     continue
                                 value = schema[k]['default_value']
                             else:
@@ -1210,6 +1231,21 @@ class Compilation(Workflow, ModelSQL, ModelView):
                                 field, line)
 
                         line['notebook_line'] = self._get_notebook_line(line)
+                        if (line['notebook_line']):
+                            nl = NotebookLine(line['notebook_line'])
+                            for k in schema_keys:
+                                if (schema[k]['default_value'] is not None and
+                                        schema[k]['default_value'].startswith('=')):
+                                    path = schema[k]['default_value'][1:].split('.')
+                                    field = path.pop(0)
+                                    try:
+                                        value = getattr(nl, field)
+                                        while path:
+                                            field = path.pop(0)
+                                            value = getattr(value, field)
+                                    except AttributeError:
+                                        value = None
+                                    line[k] = value
                         line_id = self._get_compilation_line_id(line)
                         if line_id:
                             line['id'] = line_id
