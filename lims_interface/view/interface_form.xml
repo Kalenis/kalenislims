@@ -30,11 +30,13 @@
         <page id="template" string="Template">
             <label name="template_type"/>
             <field name="template_type"/>
+            <label name="first_row"/>
+            <field name="first_row"/>
+            <label name="charset"/>
+            <field name="charset"/>
             <label name="language"/>
             <field name="language" widget="selection"/>
-            <group id="separators" colspan="4" col="6">
-                <label name="first_row"/>
-                <field name="first_row"/>
+            <group id="separators" colspan="4" col="4">
                 <label name="field_separator"/>
                 <field name="field_separator"/>
                 <label name="field_separator_other"/>
