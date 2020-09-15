@@ -232,7 +232,8 @@ class Interface(Workflow, ModelSQL, ModelView):
     charset = fields.Selection([
         (None, ''),
         ('utf-8', 'UTF-8'),
-        ('iso-8859', 'ISO-8859')], 'Charset')
+        ('iso-8859-1', 'ISO-8859-1'),
+        ], 'Charset')
 
     del _controller_states, _template_states, _depends
 
@@ -1053,6 +1054,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
             }
         delimiter = separator[self.interface.field_separator]
         first_row = self.interface.first_row - 1
+        encoding = self.interface.charset
         with Transaction().set_context(
                 lims_interface_table=self.table):
             imported_files = []
@@ -1060,8 +1062,12 @@ class Compilation(Workflow, ModelSQL, ModelView):
                 if origin.imported:
                     continue
                 filedata = io.BytesIO(origin.origin_file)
-                wrapper = io.TextIOWrapper(filedata, encoding='utf-8')
-                str_data = io.StringIO(wrapper.read())
+                wrapper = io.TextIOWrapper(filedata, encoding=encoding)
+                try:
+                    str_data = io.StringIO(wrapper.read())
+                except UnicodeDecodeError:
+                    raise UserError(gettext(
+                        'lims_interface.invalid_interface_charset'))
                 reader = csv.reader(str_data, delimiter=delimiter)
                 count = 0
                 for row in reader:
@@ -1102,7 +1108,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
                                 schema[k]['field_name'])
                             line[k] = resource[0].id
                         else:
-                            line[k] = str(row[col - 1])
+                            line[k] = str(value)
 
                     f_fields = sorted(formula_fields.items(),
                         key=lambda x: x[1]['evaluation_order'])
