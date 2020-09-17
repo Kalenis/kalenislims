@@ -942,7 +942,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
 
     date_time = fields.DateTime('Date', required=True, select=True)
     interface = fields.Many2One('lims.interface', 'Device Interface',
-        domain=[('state', '=', 'active')])
+        domain=[('state', '=', 'active')],
+        states={'readonly': Eval('state') != 'draft'}, depends=['state'])
     revision = fields.Integer('Revision',
         states={'readonly': Eval('state') != 'draft'}, depends=['state'])
     table = fields.Many2One('lims.interface.table', 'Table')
@@ -1080,12 +1081,13 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     line = {'compilation': self.id}
                     for k in schema_keys:
                         value = None
-                        if schema[k]['default_value'] is not None:
+                        default_value = schema[k]['default_value']
+                        if default_value not in (None, ''):
                             if not create_new_lines:
                                 continue
-                            if schema[k]['default_value'].startswith('='):
+                            if default_value.startswith('='):
                                 continue
-                            value = schema[k]['default_value']
+                            value = default_value
                         else:
                             col = schema[k]['col']
                             if (not row[col - 1] or
@@ -1105,7 +1107,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         elif schema[k]['type'] == 'date':
                             line[k] = str2date(value, self.interface.language)
                         elif (schema[k]['type'] == 'many2one' and
-                                schema[k]['default_value']):
+                                default_value):
                             resource = get_model_resource(
                                 schema[k]['model_name'], value,
                                 schema[k]['field_name'])
@@ -1122,9 +1124,10 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     if (line['notebook_line']):
                         nl = NotebookLine(line['notebook_line'])
                         for k in schema_keys:
-                            if (schema[k]['default_value'] is not None and
-                                    schema[k]['default_value'].startswith('=')):
-                                path = schema[k]['default_value'][1:].split('.')
+                            default_value = schema[k]['default_value']
+                            if (default_value not in (None, '') and
+                                    default_value.startswith('=')):
+                                path = default_value[1:].split('.')
                                 field = path.pop(0)
                                 try:
                                     value = getattr(nl, field)
@@ -1174,7 +1177,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
                 if origin.imported:
                     continue
                 filedata = io.BytesIO(origin.origin_file)
-                book = load_workbook(filename=filedata)
+                book = load_workbook(filename=filedata, data_only=True)
                 sheet = book.active
                 max_row = sheet.max_row + 1
                 if first_row <= max_row:
@@ -1182,12 +1185,13 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         line = {'compilation': self.id}
                         for k in schema_keys:
                             value = None
-                            if schema[k]['default_value'] is not None:
+                            default_value = schema[k]['default_value']
+                            if default_value not in (None, ''):
                                 if not create_new_lines:
                                     continue
-                                if schema[k]['default_value'].startswith('='):
+                                if default_value.startswith('='):
                                     continue
-                                value = schema[k]['default_value']
+                                value = default_value
                             else:
                                 col = schema[k]['col']
                                 row = i
@@ -1207,7 +1211,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
                             elif schema[k]['type'] == 'boolean':
                                 line[k] = bool(value)
                             elif schema[k]['type'] == 'date':
-                                if schema[k]['default_value']:
+                                if default_value:
                                     line[k] = str2date(
                                         value, self.interface.language)
                                 else:
@@ -1216,7 +1220,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
                                     else:
                                         line[k] = None
                             elif (schema[k]['type'] == 'many2one' and
-                                    schema[k]['default_value']):
+                                    default_value):
                                 resource = get_model_resource(
                                     schema[k]['model_name'], value,
                                     schema[k]['field_name'])
@@ -1234,9 +1238,10 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         if (line['notebook_line']):
                             nl = NotebookLine(line['notebook_line'])
                             for k in schema_keys:
-                                if (schema[k]['default_value'] is not None and
-                                        schema[k]['default_value'].startswith('=')):
-                                    path = schema[k]['default_value'][1:].split('.')
+                                default_value = schema[k]['default_value']
+                                if (default_value not in (None, '') and
+                                        default_value.startswith('=')):
+                                    path = default_value[1:].split('.')
                                     field = path.pop(0)
                                     try:
                                         value = getattr(nl, field)
@@ -1322,7 +1327,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
         return value
 
     def _get_notebook_line(self, line):
-        NotebookLine = Pool().get('lims.notebook.line')
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
 
         if (not self.interface.fraction_field or
                 not self.interface.analysis_field or
@@ -1348,7 +1354,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
         return None
 
     def _get_compilation_line_id(self, line):
-        Data = Pool().get('lims.interface.data')
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
 
         clause = [('compilation', '=', line['compilation'])]
         if line.get('notebook_line'):
