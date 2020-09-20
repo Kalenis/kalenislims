@@ -3,6 +3,7 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import Pool
+from . import laboratory
 from . import interface
 from . import table
 from . import data
@@ -12,6 +13,7 @@ from . import sample
 
 def register():
     Pool.register(
+        laboratory.Laboratory,
         interface.Interface,
         interface.Column,
         interface.CopyInterfaceColumnStart,
