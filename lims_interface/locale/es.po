@@ -446,6 +446,10 @@ msgctxt "field:lims.interface.variable.value,variable:"
 msgid "Variable"
 msgstr "Variable"
 
+msgctxt "field:lims.laboratory,automatic_accept_result:"
+msgid "Automatic Accept Result"
+msgstr "Aceptación de Resultados Automática"
+
 msgctxt "field:lims.notebook.line,compilation:"
 msgid "Compilation"
 msgstr "Compilación"

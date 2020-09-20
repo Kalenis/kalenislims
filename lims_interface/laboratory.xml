@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+        <record model="ir.ui.view" id="lims_laboratory_view_form">
+            <field name="model">lims.laboratory</field>
+            <field name="inherit" ref="lims.lims_laboratory_view_form"/>
+            <field name="name">laboratory_form</field>
+        </record>
+
+    </data>
+</tryton>

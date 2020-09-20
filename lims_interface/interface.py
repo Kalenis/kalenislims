@@ -1446,6 +1446,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         }
                     for alias, nl_field in fields.items():
                         data[nl_field] = getattr(line, alias)
+                    if nb_line.laboratory.automatic_accept_result:
+                        data['accepted'] = True
                     if data:
                         NotebookLine.write([nb_line], data)
 
