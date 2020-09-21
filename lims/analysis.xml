@@ -468,21 +468,12 @@
 
 <!-- Typification actions related -->
 
-        <record model="ir.action.act_window" id="act_lims_technical_scope_version_line_related1">
-            <field name="name">Technical Scope Version Lines</field>
-            <field name="res_model">lims.technical.scope.version.line</field>
-            <field name="domain" eval="[('typification', 'in', Eval('active_ids'))]" pyson="1"/>
-        </record>
-        <record model="ir.action.keyword" id="act_open_technical_scope_version_line_keyword1">
-            <field name="keyword">form_relate</field>
-            <field name="model">lims.typification,-1</field>
-            <field name="action" ref="act_lims_technical_scope_version_line_related1"/>
-        </record>
-
         <record model="ir.action.act_window" id="act_lims_technical_scope_version_related1">
             <field name="name">Technical Scope Versions</field>
             <field name="res_model">lims.technical.scope.version</field>
-            <field name="domain" eval="[('version_lines.id', 'in', Eval('active_ids', []))]" pyson="1"/>
+            <field name="domain"
+                eval="[('version_lines.id', 'in', Eval('active_ids', []))]"
+                pyson="1"/>
         </record>
         <record model="ir.action.keyword" id="act_open_technical_scope_version_keyword1">
             <field name="keyword">form_relate</field>
