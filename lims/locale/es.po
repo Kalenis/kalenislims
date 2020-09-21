@@ -6646,10 +6646,6 @@ msgctxt "model:ir.action,name:act_lims_technical_scope_list"
 msgid "Technical Scopes"
 msgstr "Alcances técnicos"
 
-msgctxt "model:ir.action,name:act_lims_technical_scope_version_line_related1"
-msgid "Technical Scope Version Lines"
-msgstr "Líneas de versión de alcance técnico"
-
 msgctxt "model:ir.action,name:act_lims_technical_scope_version_list"
 msgid "Technical Scope Versions"
 msgstr "Versiones de alcance técnico"
