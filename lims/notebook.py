@@ -270,6 +270,9 @@ class Notebook(ModelSQL, ModelView):
         pool = Pool()
         ResultsLine = pool.get('lims.results_report.version.detail.line')
         NotebookLine = pool.get('lims.notebook.line')
+        Notebook = pool.get('lims.notebook')
+        Fraction = pool.get('lims.fraction')
+        FractionType = pool.get('lims.fraction.type')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
         draft_lines_ids = []
@@ -281,17 +284,25 @@ class Notebook(ModelSQL, ModelView):
             ])
         if draft_lines:
             draft_lines_ids = [dl.notebook_line.id for dl in draft_lines]
+        draft_lines_ids = ', '.join(str(l) for l in [0] + draft_lines_ids)
 
-        clause = [
-            ('notebook', '=', notebook_id),
-            ('laboratory', '=', laboratory_id),
-            ('notebook.fraction.type.report', '=', True),
-            ('report', '=', True),
-            ('annulled', '=', False),
-            ('results_report', '=', None),
-            ('id', 'not in', draft_lines_ids),
-            ('accepted', '=', True),
-            ]
+        sql_query = ('SELECT COUNT(*) '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON n.id = nl.notebook '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + FractionType._table + '" ft '
+                'ON ft.id = f.type '
+            'WHERE nl.notebook = %s '
+                'AND nl.laboratory = %s '
+                'AND ft.report = TRUE '
+                'AND nl.report = TRUE '
+                'AND nl.annulled = FALSE '
+                'AND nl.results_report IS NULL '
+                'AND nl.accepted = TRUE '
+                'AND nl.id NOT IN (' + draft_lines_ids + ') ')
+
         excluded_notebooks = cls._get_excluded_notebooks([notebook_id],
             laboratory_id)
         if excluded_notebooks:
@@ -302,22 +313,33 @@ class Notebook(ModelSQL, ModelView):
                         'ON d.id = nl.analysis_detail '
                     'WHERE nl.notebook = %s AND d.report_grouper = %s',
                     (n_id, grouper))
-                excluded_notebook_lines = [x[0] for x in cursor.fetchall()]
-                clause.append(('id', 'not in', excluded_notebook_lines))
-        if NotebookLine.search_count(clause) > 0:
+                excluded_lines = [x[0] for x in cursor.fetchall()]
+                excluded_lines_ids = ', '.join(str(l)
+                    for l in [0] + excluded_lines)
+                sql_query += 'AND nl.id NOT IN (' + excluded_lines_ids + ') '
+        cursor.execute(sql_query, (notebook_id, laboratory_id))
+        if cursor.fetchone()[0] > 0:
             return 'complete'
 
-        clause = [
-            ('notebook', '=', notebook_id),
-            ('laboratory', '=', laboratory_id),
-            ('notebook.fraction.type.report', '=', True),
-            ('report', '=', True),
-            ('annulled', '=', False),
-            ('results_report', '=', None),
-            ('id', 'not in', draft_lines_ids),
-            ]
-        clause.extend(cls._get_samples_in_progress_clause())
-        if NotebookLine.search_count(clause) > 0:
+        sql_query = ('SELECT COUNT(*) '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON n.id = nl.notebook '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + FractionType._table + '" ft '
+                'ON ft.id = f.type '
+            'WHERE nl.notebook = %s '
+                'AND nl.laboratory = %s '
+                'AND ft.report = TRUE '
+                'AND nl.report = TRUE '
+                'AND nl.annulled = FALSE '
+                'AND nl.results_report IS NULL '
+                'AND nl.id NOT IN (' + draft_lines_ids + ') ')
+        sql_query += cls._get_samples_in_progress_sql_clause()
+
+        cursor.execute(sql_query, (notebook_id, laboratory_id))
+        if cursor.fetchone()[0] > 0:
             return 'in_progress'
 
         return None
@@ -338,6 +360,9 @@ class Notebook(ModelSQL, ModelView):
         pool = Pool()
         ResultsLine = pool.get('lims.results_report.version.detail.line')
         NotebookLine = pool.get('lims.notebook.line')
+        Notebook = pool.get('lims.notebook')
+        Fraction = pool.get('lims.fraction')
+        FractionType = pool.get('lims.fraction.type')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
         laboratory_id = Transaction().context.get(
@@ -353,18 +378,25 @@ class Notebook(ModelSQL, ModelView):
             ])
         if draft_lines:
             draft_lines_ids = [dl.notebook_line.id for dl in draft_lines]
+        draft_lines_ids = ', '.join(str(l) for l in [0] + draft_lines_ids)
 
-        clause = [
-            ('laboratory', '=', laboratory_id),
-            ('notebook.fraction.type.report', '=', True),
-            ('report', '=', True),
-            ('annulled', '=', False),
-            ('results_report', '=', None),
-            ('id', 'not in', draft_lines_ids),
-            ('accepted', '=', True),
-            ]
-        lines = NotebookLine.search(clause)
-        notebooks_ids = [nl.notebook.id for nl in lines]
+        sql_query = ('SELECT nl.notebook '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON n.id = nl.notebook '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + FractionType._table + '" ft '
+                'ON ft.id = f.type '
+            'WHERE nl.laboratory = %s '
+                'AND ft.report = TRUE '
+                'AND nl.report = TRUE '
+                'AND nl.annulled = FALSE '
+                'AND nl.results_report IS NULL '
+                'AND nl.accepted = TRUE '
+                'AND nl.id NOT IN (' + draft_lines_ids + ') ')
+        cursor.execute(sql_query, (laboratory_id,))
+        notebooks_ids = [x[0] for x in cursor.fetchall()]
 
         excluded_notebooks = cls._get_excluded_notebooks(notebooks_ids,
             laboratory_id)
@@ -376,10 +408,12 @@ class Notebook(ModelSQL, ModelView):
                         'ON d.id = nl.analysis_detail '
                     'WHERE nl.notebook = %s AND d.report_grouper = %s',
                     (n_id, grouper))
-                excluded_notebook_lines = [x[0] for x in cursor.fetchall()]
-                clause.append(('id', 'not in', excluded_notebook_lines))
-            lines = NotebookLine.search(clause)
-            notebooks_ids = [nl.notebook.id for nl in lines]
+                excluded_lines = [x[0] for x in cursor.fetchall()]
+                excluded_lines_ids = ', '.join(str(l)
+                    for l in [0] + excluded_lines)
+                sql_query += 'AND nl.id NOT IN (' + excluded_lines_ids + ') '
+            cursor.execute(sql_query, (laboratory_id,))
+            notebooks_ids = [x[0] for x in cursor.fetchall()]
         return notebooks_ids
 
     @classmethod
@@ -444,9 +478,13 @@ class Notebook(ModelSQL, ModelView):
 
     @classmethod
     def _get_notebooks_in_progress(cls):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
         ResultsLine = pool.get('lims.results_report.version.detail.line')
         NotebookLine = pool.get('lims.notebook.line')
+        Notebook = pool.get('lims.notebook')
+        Fraction = pool.get('lims.fraction')
+        FractionType = pool.get('lims.fraction.type')
 
         laboratory_id = Transaction().context.get(
             'samples_pending_reporting_laboratory', None)
@@ -461,18 +499,26 @@ class Notebook(ModelSQL, ModelView):
             ])
         if draft_lines:
             draft_lines_ids = [dl.notebook_line.id for dl in draft_lines]
+        draft_lines_ids = ', '.join(str(l) for l in [0] + draft_lines_ids)
 
-        clause = [
-            ('laboratory', '=', laboratory_id),
-            ('notebook.fraction.type.report', '=', True),
-            ('report', '=', True),
-            ('annulled', '=', False),
-            ('results_report', '=', None),
-            ('id', 'not in', draft_lines_ids),
-            ]
-        clause.extend(cls._get_samples_in_progress_clause())
-        lines = NotebookLine.search(clause)
-        notebooks_ids = [nl.notebook.id for nl in lines]
+        sql_query = ('SELECT nl.notebook '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON n.id = nl.notebook '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + FractionType._table + '" ft '
+                'ON ft.id = f.type '
+            'WHERE nl.laboratory = %s '
+                'AND ft.report = TRUE '
+                'AND nl.report = TRUE '
+                'AND nl.annulled = FALSE '
+                'AND nl.results_report IS NULL '
+                'AND nl.id NOT IN (' + draft_lines_ids + ') ')
+        sql_query += cls._get_samples_in_progress_sql_clause()
+
+        cursor.execute(sql_query, (laboratory_id,))
+        notebooks_ids = [x[0] for x in cursor.fetchall()]
         return notebooks_ids
 
     @classmethod
@@ -490,6 +536,21 @@ class Notebook(ModelSQL, ModelView):
                     'd', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre', 'na']),
                 ]]
         return clause
+
+    @classmethod
+    def _get_samples_in_progress_sql_clause(cls):
+        Config = Pool().get('lims.configuration')
+        samples_in_progress = Config(1).samples_in_progress
+        sql_clause = ''
+        if samples_in_progress == 'accepted':
+            sql_clause = 'AND nl.accepted = TRUE '
+        elif samples_in_progress == 'result':
+            sql_clause = ('AND (nl.result IS NOT NULL '
+                'OR nl.literal_result IS NOT NULL '
+                'OR nl.result_modifier IN '
+                '(\'d\', \'nd\', \'pos\', \'neg\', '
+                '\'ni\', \'abs\', \'pre\', \'na\')) ')
+        return sql_clause
 
     @classmethod
     def view_toolbar_get(cls):
