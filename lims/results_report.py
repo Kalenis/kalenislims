@@ -4069,26 +4069,37 @@ class PrintGlobalResultReport(Wizard):
                 raise UserError(gettext('lims.msg_empty_report'))
 
             if results_report.english_report:
+                cache = self._get_global_report(details, True)
+                if not cache:
+                    raise UserError(gettext('lims.msg_empty_report'))
+                results_report.report_cache_eng = cache
                 results_report.report_format_eng = 'pdf'
-                results_report.report_cache_eng = self._get_global_report(
-                    details, True)
             else:
+                cache = self._get_global_report(details, False)
+                if not cache:
+                    raise UserError(gettext('lims.msg_empty_report'))
+                results_report.report_cache = cache
                 results_report.report_format = 'pdf'
-                results_report.report_cache = self._get_global_report(
-                    details, False)
             results_report.save()
         return 'print_'
 
     def _get_global_report(self, details, english_report=False):
-        merger = PdfFileMerger(strict=False)
+        all_cache = []
         if english_report:
             for detail in details:
-                filedata = BytesIO(detail.report_cache_eng)
-                merger.append(filedata)
+                if detail.report_cache_eng:
+                    all_cache.append(detail.report_cache_eng)
         else:
             for detail in details:
-                filedata = BytesIO(detail.report_cache)
-                merger.append(filedata)
+                if detail.report_cache:
+                    all_cache.append(detail.report_cache)
+        if not all_cache:
+            return False
+
+        merger = PdfFileMerger(strict=False)
+        for cache in all_cache:
+            filedata = BytesIO(cache)
+            merger.append(filedata)
         output = BytesIO()
         merger.write(output)
         return bytearray(output.getvalue())
