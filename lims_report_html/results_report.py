@@ -200,6 +200,8 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
 
     trend_charts = fields.Function(fields.Text('Trend Charts'),
         'get_trend_charts')
+    attachments = fields.Function(fields.Text('Attachments'),
+        'get_attachments')
 
     def get_trend_charts(self, name):
         pool = Pool()
@@ -241,6 +243,60 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
 
             count += 1
             if count == charts_x_row:
+                content += end_div
+                count = 0
+        if count != 0:
+            content += end_div
+
+        content += end_div
+        return content
+
+    def _get_resource(self, obj):
+        return '%s,%s' % (obj.__name__, obj.id)
+
+    def get_attachments(self, name):
+        pool = Pool()
+        Attachment = pool.get('ir.attachment')
+        ResultReport = pool.get('lims.result_report', type='report')
+
+        resources = []
+        resources.append(self._get_resource(self))
+        resources.append(self._get_resource(self.notebook))
+        resources.append(self._get_resource(self.notebook.fraction))
+        resources.append(self._get_resource(
+            self.notebook.fraction.sample))
+        resources.append(self._get_resource(
+            self.notebook.fraction.sample.entry))
+        for line in self.notebook_lines:
+            resources.append(self._get_resource(line))
+            resources.append(self._get_resource(line.notebook_line))
+
+        attachments = Attachment.search([
+            ('resource', 'in', resources),
+            ])
+
+        div_row = '<div>'
+        div_col = '<div style="float:left; width:50%;">'
+        end_div = '</div>'
+
+        content = '<div>'
+        count = 0
+        extensions = ['png', 'jpg']
+        for attachment in attachments:
+            if not any(x in attachment.name.lower() for x in extensions):
+                continue
+
+            if count == 0:
+                content += div_row
+
+            content += div_col
+            content += ('<img src="' +
+                ResultReport.get_image(attachment.data) +
+                '" alt="" style="width:100%;">')
+            content += end_div
+
+            count += 1
+            if count == 2:
                 content += end_div
                 count = 0
         if count != 0:
