@@ -3242,6 +3242,9 @@ class DuplicateSample(Wizard):
             return [None]
         return labels.split('\n')
 
+    def end(self):
+        return 'reload'
+
 
 class DuplicateSampleFromEntryStart(ModelView):
     'Copy Sample'
