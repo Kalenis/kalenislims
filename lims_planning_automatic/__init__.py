@@ -6,6 +6,7 @@ from trytond.pool import Pool
 from . import planification
 from . import laboratory
 from . import entry
+from . import sheet
 from . import quality
 
 
@@ -14,6 +15,7 @@ def register():
         planification.Planification,
         laboratory.Laboratory,
         entry.Entry,
+        sheet.AnalysisSheet,
         module='lims_planning_automatic', type_='model')
     Pool.register(
         quality.QualityTest,
