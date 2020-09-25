@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from trytond.model import fields, ModelView
 from trytond.wizard import Wizard, StateView, StateTransition, StateAction, \
-    Button
+    StateReport, Button
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.pyson import PYSONEncoder, Bool, Not, Eval
@@ -69,11 +69,19 @@ class TakeSampleStart(ModelView):
     date = fields.Date('Date', required=True)
     label = fields.Char('Label', required=True)
     attributes = fields.Dict('lims.sample.attribute', 'Attributes')
+    sample = fields.Many2One('lims.sample', 'Sample')
 
     @staticmethod
     def default_date():
         Date = Pool().get('ir.date')
         return Date.today()
+
+
+class TakeSampleResult(ModelView):
+    'Take Sample Result'
+    __name__ = 'lims.take.sample.result'
+
+    message = fields.Text('Message', readonly=True)
 
 
 class TakeSample(Wizard):
@@ -86,10 +94,16 @@ class TakeSample(Wizard):
             Button('Confirm', 'confirm', 'tryton-ok', default=True),
             ])
     confirm = StateTransition()
+    result = StateView('lims.take.sample.result',
+        'lims_quality_control.lims_take_sample_result_view_form', [
+            Button('Close', 'end', 'tryton-cancel'),
+            Button('Print', 'print_', 'tryton-print', default=True),
+            ])
+    print_ = StateReport('lims.sample.labels.report')
 
     def transition_confirm(self):
-        self.create_sample()
-        return 'end'
+        self.start.sample = self.create_sample()
+        return 'result'
 
     def create_sample(self):
         pool = Pool()
@@ -170,6 +184,8 @@ class TakeSample(Wizard):
             fraction_default['storage_time'] = 3
         new_fraction, = Fraction.create([fraction_default])
 
+        return new_sample
+
     def _get_obj_description(self, product):
         cursor = Transaction().connection.cursor()
         ObjectiveDescription = Pool().get('lims.objective_description')
@@ -181,6 +197,21 @@ class TakeSample(Wizard):
             (product.template.product_type.id, product.template.matrix.id))
         res = cursor.fetchone()
         return res and res[0] or None
+
+    def default_result(self, fields):
+        default = {'message': '%s: %s' % (
+            gettext('lims_quality_control.msg_sample_created'),
+            self.start.sample.number)}
+        return default
+
+    def do_print_(self, action):
+        data = {
+            'sample': self.start.sample.id,
+            }
+        return action, data
+
+    def transition_print_(self):
+        return 'end'
 
 
 class CountersampleCreateStart(ModelView):
@@ -329,12 +360,14 @@ class SampleLabels(Report):
 
     @classmethod
     def get_context(cls, records, data):
+        Sample = Pool().get('lims.sample')
+
         report_context = super().get_context(records, data)
         labels = []
+        if data.get('sample'):
+            records = [Sample(data.get('sample'))]
         for sample in records:
-            for fraction in sample.fractions:
-                for i in range(fraction.packages_quantity):
-                    labels.append(fraction)
+            labels.append(sample)
         report_context['labels'] = labels
 
         return report_context

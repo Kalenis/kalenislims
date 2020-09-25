@@ -410,6 +410,10 @@ msgctxt "field:lims.sample,test_state:"
 msgid "Test State"
 msgstr "Estado de Prueba"
 
+msgctxt "field:lims.take.sample.result,message:"
+msgid "Message"
+msgstr "Mensaje"
+
 msgctxt "field:lims.take.sample.start,attributes:"
 msgid "Attributes"
 msgstr "Atributos"
@@ -425,6 +429,10 @@ msgstr "Identificador"
 msgctxt "field:lims.take.sample.start,label:"
 msgid "Label"
 msgstr "Rótulo"
+
+msgctxt "field:lims.take.sample.start,sample:"
+msgid "Sample"
+msgstr "Muestra "
 
 msgctxt "field:lims.template.add.service.start,id:"
 msgid "ID"
@@ -512,7 +520,7 @@ msgstr "Prueba"
 
 msgctxt "model:ir.action,name:report_sample_labels"
 msgid "Sample Labels"
-msgstr "Etiquetas de muestra (Laser)"
+msgstr "Etiqueta de muestra"
 
 msgctxt "model:ir.action,name:report_test"
 msgid "Test Report"
@@ -666,6 +674,10 @@ msgstr "La muestra debe estar asociada a un test"
 msgctxt "model:ir.message,text:msg_records_not_selected"
 msgid "Records are not selected."
 msgstr "No hay registros seleccionados"
+
+msgctxt "model:ir.message,text:msg_sample_created"
+msgid "Created sample number"
+msgstr "Número de muestra creada"
 
 msgctxt "model:ir.message,text:msg_sample_used"
 msgid "Sample already used for a test."
@@ -1044,6 +1056,14 @@ msgstr "Confirmar"
 msgctxt "wizard_button:lims.create.quality.test,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.take.sample,result,end:"
+msgid "Close"
+msgstr "Cerrar"
+
+msgctxt "wizard_button:lims.take.sample,result,print_:"
+msgid "Print"
+msgstr "Imprimir"
 
 msgctxt "wizard_button:lims.take.sample,start,confirm:"
 msgid "Confirm"

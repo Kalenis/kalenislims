@@ -23,6 +23,7 @@ def register():
         sample.LabWorkYear,
         sample.Sample,
         sample.TakeSampleStart,
+        sample.TakeSampleResult,
         sample.CountersampleCreateStart,
         quality.QualitativeValue,
         quality.Template,

@@ -46,5 +46,8 @@
         <record model="ir.message" id="msg_template_not_draft">
             <field name="text">Template is not in draft state.</field>
         </record>
+        <record model="ir.message" id="msg_sample_created">
+            <field name="text">Created sample number</field>
+        </record>
     </data>
 </tryton>

@@ -79,6 +79,11 @@
             <field name="type">form</field>
             <field name="name">take_sample_start_form</field>
         </record>
+        <record model="ir.ui.view" id="lims_take_sample_result_view_form">
+            <field name="model">lims.take.sample.result</field>
+            <field name="type">form</field>
+            <field name="name">take_sample_result_form</field>
+        </record>
 
         <record model="ir.action.wizard" id="wiz_lims_take_sample">
             <field name="name">Take Sample</field>
@@ -118,7 +123,7 @@
             <field name="name">Sample Labels</field>
             <field name="model">lims.sample</field>
             <field name="report_name">lims.sample.labels.report</field>
-            <field name="report">lims/report/entry_labels_report.fodt</field>
+            <field name="report">lims_quality_control/report/sample_labels_report.fodt</field>
             <field name="extension">pdf</field>
         </record>
 
