@@ -11,9 +11,6 @@ from . import custom_set_xls
 class ResultsImport(metaclass=PoolMeta):
     __name__ = 'lims.resultsimport'
 
-    analysis_code = None
-    formula = None
-
     @classmethod
     def __setup__(cls):
         super().__setup__()

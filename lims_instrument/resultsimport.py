@@ -30,7 +30,52 @@ class NotebookLine(metaclass=PoolMeta):
     imported_inj_date = fields.Date('Inject date')
 
 
-class ResultsImport(ModelSQL, ModelView):
+class BaseImport(object):
+
+    controller = None
+    infile = None
+    rawresults = {}
+    mimetype = None
+    numline = 0
+    analysis_code = None
+    formula = None
+    header = []
+
+    def getInputFile(self):
+        return self.infile
+
+    def setInputFile(self, infile):
+        self.infile = infile
+
+    def loadController(self):
+        self.controller = None
+
+    def parse(self, infile):
+        self.rawresults = {}
+        if not self.controller:
+            self.loadController()
+        try:
+            return self.controller.parse(self, infile)
+        except AttributeError:
+            traceback.print_exc()
+            raise UserError(gettext('lims_instrument.msg_not_implemented',
+                function='parse'))
+
+    def exportResults(self):
+        '''
+        This function defines whether the importer
+        export results to a file at the end of the process.
+        Default is False
+        '''
+        if not self.controller:
+            self.loadController()
+        try:
+            return self.controller.exportResults(self)
+        except AttributeError:
+            return False
+
+
+class ResultsImport(BaseImport, ModelSQL, ModelView):
     'Results Import'
     __name__ = 'lims.resultsimport'
     _rec_name = 'description'
@@ -38,12 +83,6 @@ class ResultsImport(ModelSQL, ModelView):
     name = fields.Selection([], 'Name', required=True, sort=False,
         depends=['description'])
     description = fields.Char('Description', required=True)
-    controller = None
-    _infile = None
-    header = []
-    rawresults = {}
-    mimetype = None
-    numline = 0
 
     @classmethod
     def __setup__(cls):
@@ -70,35 +109,6 @@ class ResultsImport(ModelSQL, ModelView):
     def loadController(self):
         raise UserError(gettext('lims_instrument.msg_not_module',
             module=self.name))
-
-    def getInputFile(self):
-        return self._infile
-
-    def setInputFile(self, infile):
-        self._infile = infile
-
-    def parse(self, infile):
-        if not self.controller:
-            self.loadController()
-        try:
-            return self.controller.parse(self, infile)
-        except AttributeError:
-            traceback.print_exc()
-            raise UserError(gettext('lims_instrument.msg_not_implemented',
-                function='parse'))
-
-    def exportResults(self):
-        '''
-        This function defines whether the importer
-        export results to a file at the end of the process.
-        Default is False
-        '''
-        if not self.controller:
-            self.loadController()
-        try:
-            return self.controller.exportResults(self)
-        except AttributeError:
-            return False
 
 
 class NotebookLoadResultsFileStart(ModelView):
@@ -301,7 +311,6 @@ class NotebookLoadResultsFile(Wizard):
             file_ = getattr(self.start, 'infile_%s' % fline)
             if not file_:
                 continue
-            self.start.results_importer.rawresults = {}
             self.start.results_importer.parse(file_)
             raw_results = self.start.results_importer.rawresults
             fractions_numbers = list(raw_results.keys())
@@ -560,9 +569,8 @@ class NotebookLoadResultsFile(Wizard):
         if warnings:
             self.warning.msg = messages
             return 'warning'
-        else:
-            if export_results:
-                return 'end'  # 'export'
+        if export_results:
+            return 'end'  # 'export'
         return 'end'
 
     def transition_cancel(self):
