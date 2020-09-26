@@ -295,6 +295,7 @@ Take a sample::
     >>> take_sample = Wizard('lims.take.sample', [lot])
     >>> take_sample.form.label = 'LBL-001'
     >>> take_sample.execute('confirm')
+    >>> take_sample.execute('end')
     >>> take_sample.state
     'end'
 
@@ -409,6 +410,7 @@ Take a second sample::
     >>> take_sample = Wizard('lims.take.sample', [lot])
     >>> take_sample.form.label = 'LBL-002'
     >>> take_sample.execute('confirm')
+    >>> take_sample.execute('end')
     >>> take_sample.state
     'end'
 
