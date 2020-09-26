@@ -15,8 +15,11 @@ def register():
         planification.Planification,
         laboratory.Laboratory,
         entry.Entry,
-        sheet.AnalysisSheet,
         module='lims_planning_automatic', type_='model')
+    Pool.register(
+        sheet.AnalysisSheet,
+        module='lims_planning_automatic', type_='model',
+        depends=['lims_analysis_sheet'])
     Pool.register(
         quality.QualityTest,
         module='lims_planning_automatic', type_='model',
