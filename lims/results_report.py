@@ -1087,10 +1087,13 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
             res = literal_result
         else:
             if result:
-                res = round(float(result), decimals)
-                if decimals == 0:
-                    res = int(res)
-                res = str(res)
+                try:
+                    res = round(float(result), decimals)
+                    if decimals == 0:
+                        res = int(res)
+                    res = str(res)
+                except (TypeError, ValueError):
+                    res = ''
             else:
                 res = ''
 
@@ -1132,10 +1135,13 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         res = ''
         if not notebook_line.literal_result:
             if result:
-                res = round(float(result), decimals)
-                if decimals == 0:
-                    res = int(res)
-                res = str(res)
+                try:
+                    res = round(float(result), decimals)
+                    if decimals == 0:
+                        res = int(res)
+                    res = str(res)
+                except (TypeError, ValueError):
+                    res = ''
             else:
                 res = ''
 
