@@ -1353,6 +1353,7 @@ class DivideReports(Wizard):
         return 'end'
 
 
+# TODO: remove
 class GenerateResultsReportStart(ModelView):
     'Generate Results Report'
     __name__ = 'lims.generate_results_report.start'
@@ -1368,11 +1369,13 @@ class GenerateResultsReportStart(ModelView):
         ], 'Generation type', sort=False)
 
 
+# TODO: remove
 class GenerateResultsReportEmpty(ModelView):
     'Generate Results Report'
     __name__ = 'lims.generate_results_report.empty'
 
 
+# TODO: remove
 class GenerateResultsReportResultAut(ModelView):
     'Generate Results Report'
     __name__ = 'lims.generate_results_report.result_aut'
@@ -1389,6 +1392,7 @@ class GenerateResultsReportResultAut(ModelView):
         None, 'Reports details')
 
 
+# TODO: remove
 class GenerateResultsReportResultAutNotebook(ModelSQL, ModelView):
     'Notebook'
     __name__ = 'lims.generate_results_report.aut.notebook'
@@ -1432,6 +1436,7 @@ class GenerateResultsReportResultAutNotebook(ModelSQL, ModelView):
         return result
 
 
+# TODO: remove
 class GenerateResultsReportResultAutNotebookLine(ModelSQL, ModelView):
     'Notebook Line'
     __name__ = 'lims.generate_results_report.aut.notebook-line'
@@ -1443,6 +1448,7 @@ class GenerateResultsReportResultAutNotebookLine(ModelSQL, ModelView):
         ondelete='CASCADE', select=True, required=True)
 
 
+# TODO: remove
 class GenerateResultsReportResultAutExcludedNotebook(ModelSQL, ModelView):
     'Excluded Notebook'
     __name__ = 'lims.generate_results_report.aut.excluded_notebook'
@@ -1487,6 +1493,7 @@ class GenerateResultsReportResultAutExcludedNotebook(ModelSQL, ModelView):
         return result
 
 
+# TODO: remove
 class GenerateResultsReportResultAutExcludedNotebookLine(ModelSQL,
         ModelView):
     'Excluded Notebook Line'
@@ -1500,6 +1507,7 @@ class GenerateResultsReportResultAutExcludedNotebookLine(ModelSQL,
         ondelete='CASCADE', select=True, required=True)
 
 
+# TODO: remove
 class GenerateResultsReportResultMan(ModelView):
     'Generate Results Report'
     __name__ = 'lims.generate_results_report.result_man'
@@ -1585,6 +1593,7 @@ class GenerateResultsReportResultMan(ModelView):
         return False
 
 
+# TODO: remove
 class GenerateResultsReport(Wizard):
     'Generate Results Report'
     __name__ = 'lims.generate_results_report'
@@ -2412,7 +2421,8 @@ class GenerateReportStart(ModelView):
         return 'complementary'
 
     def _get_report_state(self):
-        ResultsDetail = Pool().get('lims.results_report.version.detail')
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
         if not self.report:
             return 'draft'
         report_id = self.report.id
@@ -2452,6 +2462,7 @@ class GenerateReport(Wizard):
 
         res = {
             'notebooks': [],
+            'report': None,
             'report_readonly': False,
             'report_domain': [],
             'type': 'final',
@@ -2460,6 +2471,7 @@ class GenerateReport(Wizard):
             }
 
         party = None
+        entry = None
         report_grouper = None
         cie_fraction_type = None
         current_report = None
@@ -2467,6 +2479,10 @@ class GenerateReport(Wizard):
         for notebook in Notebook.browse(Transaction().context['active_ids']):
             res['notebooks'].append(notebook.id)
             if not res['report_readonly']:
+                if not entry:
+                    entry = notebook.fraction.sample.entry.id
+                elif entry != notebook.fraction.sample.entry.id:
+                    entry = -1
                 # same party
                 if not party:
                     party = notebook.party.id
@@ -2523,6 +2539,22 @@ class GenerateReport(Wizard):
                 reports = ResultsReport.search(clause)
                 if reports:
                     res['report_domain'] = [r.id for r in reports]
+
+        if res['report_domain'] and entry != -1:
+            draft_detail = ResultsDetail.search([
+                ('report_version.results_report.party', '=', party),
+                ('report_version.results_report.entry', '=', entry),
+                ('report_version.results_report.report_grouper', '=',
+                    report_grouper),
+                ('report_version.results_report.cie_fraction_type', '=',
+                    cie_fraction_type),
+                ('report_version.laboratory', '=', laboratory_id),
+                ('state', '=', 'draft'),
+                ])
+            if draft_detail and len(draft_detail) == 1:
+                res['report'] = (
+                    draft_detail[0].report_version.results_report.id)
+
         return res
 
     def transition_generate(self):
@@ -2561,6 +2593,7 @@ class GenerateReport(Wizard):
                 'samples': [('create', samples)],
                 }
             details.update(ResultsDetail._get_fields_from_samples(samples))
+
             actual_version = ResultsVersion.search([
                 ('results_report', '=', self.start.report.id),
                 ('laboratory', '=', laboratory_id),
@@ -2684,7 +2717,7 @@ class GenerateReport(Wizard):
         return 'open_'
 
     def _get_results_report(self, laboratory_id, reports, versions, details,
-            samples, append=True):
+            samples, append=False):
         pool = Pool()
         ResultsReport = pool.get('lims.results_report')
         ResultsVersion = pool.get('lims.results_report.version')
