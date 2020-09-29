@@ -96,7 +96,12 @@ class Project(metaclass=PoolMeta):
         'project', 'Samples in custody', states=_states, depends=_depends)
     stp_deviation_and_amendment = fields.One2Many(
         'lims.project.deviation_amendment', 'project',
-        'Deviations and Amendments', states=_states, depends=_depends)
+        'Deviations and Amendments',
+        context={'stp_dev_amnd_prof_domain': Eval('stp_dev_amnd_prof_domain')},
+        states=_states, depends=['stp_dev_amnd_prof_domain', 'stp_state'])
+    stp_dev_amnd_prof_domain = fields.Function(fields.Many2Many(
+        'lims.laboratory.professional', None, None, 'Professional domain'),
+        'on_change_with_stp_dev_amnd_prof_domain')
     stp_state = fields.Selection([
         ('', ''),
         ('canceled', 'Canceled'),
@@ -334,6 +339,14 @@ class Project(metaclass=PoolMeta):
                 if pp.role_quality_unit:
                     return pp.professional.id
         return None
+
+    @fields.depends('stp_laboratory_professionals')
+    def on_change_with_stp_dev_amnd_prof_domain(self, name=None):
+        professionals = []
+        if self.stp_laboratory_professionals:
+            professionals = [pp.professional.id for pp in
+                self.stp_laboratory_professionals if pp.professional]
+        return professionals
 
     def get_stp_samples(self, name=None):
         Sample = Pool().get('lims.sample')
@@ -659,13 +672,7 @@ class ProjectDeviationAndAmendment(ModelSQL, ModelView):
     sponsor_communication = fields.Char('Sponsor communication')
     professionals = fields.One2Many(
         'lims.project.deviation_amendment.professional',
-        'deviation_amendment', 'Staff involved', context={
-            'dev_amnd_prof_domain': Eval('dev_amnd_prof_domain'),
-            },
-        depends=['dev_amnd_prof_domain'])
-    dev_amnd_prof_domain = fields.Function(fields.Many2Many(
-        'lims.laboratory.professional', None, None, 'Professional domain'),
-        'on_change_with_dev_amnd_prof_domain')
+        'deviation_amendment', 'Staff involved')
 
     @classmethod
     def __setup__(cls):
@@ -696,14 +703,6 @@ class ProjectDeviationAndAmendment(ModelSQL, ModelView):
         number += count
         return str(number)
 
-    @fields.depends('project', '_parent_project.stp_laboratory_professionals')
-    def on_change_with_dev_amnd_prof_domain(self, name=None):
-        professionals = []
-        if self.project and self.project.stp_laboratory_professionals:
-            professionals = [pp.professional.id for pp in
-                self.project.stp_laboratory_professionals if pp.professional]
-        return professionals
-
 
 class ProjectDeviationAndAmendmentProfessional(ModelSQL, ModelView):
     'Deviation/Amendment Professional'
@@ -715,7 +714,7 @@ class ProjectDeviationAndAmendmentProfessional(ModelSQL, ModelView):
     professional = fields.Many2One('lims.laboratory.professional',
         'Laboratory professional', required=True, domain=['OR',
             ('id', '=', Eval('professional')),
-            ('id', 'in', Eval('context', {}).get('dev_amnd_prof_domain', [])),
+            ('id', 'in', Eval('context', {}).get('stp_dev_amnd_prof_domain')),
             ])
     date = fields.Date('Date')
 

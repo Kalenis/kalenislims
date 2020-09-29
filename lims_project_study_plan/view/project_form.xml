@@ -74,6 +74,7 @@
                 </page>
                 <page string="Laboratory professionals" id="stp_laboratory_professionals">
                     <field name="stp_laboratory_professionals" colspan="4"/>
+                    <field name="stp_dev_amnd_prof_domain" colspan="4" invisible="1"/>
                 </page>
                 <page string="Reference/Test elements" id="stp_reference_elements">
                     <field name="stp_reference_elements" colspan="4"/>

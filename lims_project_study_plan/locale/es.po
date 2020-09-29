@@ -96,6 +96,10 @@ msgctxt "field:lims.project,stp_description:"
 msgid "Description"
 msgstr "Descripción"
 
+msgctxt "field:lims.project,stp_dev_amnd_prof_domain:"
+msgid "Professional domain"
+msgstr "Dominio para Profesional"
+
 msgctxt "field:lims.project,stp_deviation_and_amendment:"
 msgid "Deviations and Amendments"
 msgstr "Desvíos y Enmiendas"
@@ -232,14 +236,6 @@ msgctxt "field:lims.project.deviation_amendment,anomaly_number:"
 msgid "Anomaly number"
 msgstr "Número de anomalía"
 
-msgctxt "field:lims.project.deviation_amendment,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.project.deviation_amendment,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.project.deviation_amendment,date:"
 msgid "Date"
 msgstr "Fecha"
@@ -248,17 +244,9 @@ msgctxt "field:lims.project.deviation_amendment,description:"
 msgid "Description"
 msgstr "Descripción"
 
-msgctxt "field:lims.project.deviation_amendment,dev_amnd_prof_domain:"
-msgid "Professional domain"
-msgstr "Dominio para Profesional"
-
 msgctxt "field:lims.project.deviation_amendment,document_type:"
 msgid "Document Type"
 msgstr "Tipo de documento"
-
-msgctxt "field:lims.project.deviation_amendment,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.project.deviation_amendment,number:"
 msgid "Number"
@@ -276,10 +264,6 @@ msgctxt "field:lims.project.deviation_amendment,reason:"
 msgid "Reason"
 msgstr "Motivo"
 
-msgctxt "field:lims.project.deviation_amendment,rec_name:"
-msgid "Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.project.deviation_amendment,sponsor_communication:"
 msgid "Sponsor communication"
 msgstr "Comunicación con el patrocinador"
@@ -287,22 +271,6 @@ msgstr "Comunicación con el patrocinador"
 msgctxt "field:lims.project.deviation_amendment,type:"
 msgid "Type"
 msgstr "Tipo"
-
-msgctxt "field:lims.project.deviation_amendment,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.project.deviation_amendment,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.project.deviation_amendment.professional,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.project.deviation_amendment.professional,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.project.deviation_amendment.professional,date:"
 msgid "Date"
@@ -313,29 +281,9 @@ msgctxt ""
 msgid "Deviation/Amendment"
 msgstr "Desvío/Enmienda"
 
-msgctxt "field:lims.project.deviation_amendment.professional,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.project.deviation_amendment.professional,professional:"
 msgid "Laboratory professional"
 msgstr "Profesional de laboratorio"
-
-msgctxt "field:lims.project.deviation_amendment.professional,rec_name:"
-msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.project.deviation_amendment.professional,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.project.deviation_amendment.professional,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.project.glp_report.03.print.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.project.glp_report.03.print.start,project:"
 msgid "Project"
@@ -357,10 +305,6 @@ msgctxt "field:lims.project.glp_report.05.print.start,expiry_date_to:"
 msgid "to"
 msgstr "hasta"
 
-msgctxt "field:lims.project.glp_report.05.print.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.project.glp_report.05.print.start,project:"
 msgid "Project"
 msgstr "Proyecto"
@@ -373,10 +317,6 @@ msgctxt "field:lims.project.glp_report.10.print.start,date_to:"
 msgid "to"
 msgstr "hasta"
 
-msgctxt "field:lims.project.glp_report.10.print.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.project.glp_report.12.print.start,date_from:"
 msgid "Date from"
 msgstr "Fecha desde"
@@ -384,14 +324,6 @@ msgstr "Fecha desde"
 msgctxt "field:lims.project.glp_report.12.print.start,date_to:"
 msgid "to"
 msgstr "hasta"
-
-msgctxt "field:lims.project.glp_report.12.print.start,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.project.re_open.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.project.re_open.start,reason:"
 msgid "Reason"
@@ -409,14 +341,6 @@ msgctxt "field:lims.project.reference_element,common_name:"
 msgid "Common name"
 msgstr "Nombre común"
 
-msgctxt "field:lims.project.reference_element,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.project.reference_element,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.project.reference_element,expiration_date:"
 msgid "Expiration date"
 msgstr "Fecha de vencimiento"
@@ -428,10 +352,6 @@ msgstr "Fórmula"
 msgctxt "field:lims.project.reference_element,homogeneity:"
 msgid "Homogeneity"
 msgstr "Homogeneidad"
-
-msgctxt "field:lims.project.reference_element,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.project.reference_element,input_product:"
 msgid "Input"
@@ -457,10 +377,6 @@ msgctxt "field:lims.project.reference_element,purity_degree:"
 msgid "Purity Degree"
 msgstr "Grado de pureza"
 
-msgctxt "field:lims.project.reference_element,rec_name:"
-msgid "Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.project.reference_element,reception_date:"
 msgid "Reception date"
 msgstr "Fecha de recepción"
@@ -473,14 +389,6 @@ msgctxt "field:lims.project.reference_element,type:"
 msgid "Type"
 msgstr "Tipo"
 
-msgctxt "field:lims.project.reference_element,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.project.reference_element,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.project.sample_in_custody,carrier:"
 msgid "Carrier"
 msgstr "Transportista"
@@ -488,14 +396,6 @@ msgstr "Transportista"
 msgctxt "field:lims.project.sample_in_custody,comments:"
 msgid "Comments"
 msgstr "Observaciones"
-
-msgctxt "field:lims.project.sample_in_custody,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.project.sample_in_custody,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.project.sample_in_custody,entry_date:"
 msgid "Entry date"
@@ -508,10 +408,6 @@ msgstr "Responsable de ingreso"
 msgctxt "field:lims.project.sample_in_custody,file_operator_responsible:"
 msgid "File operator responsible"
 msgstr "Responsable operario archivo"
-
-msgctxt "field:lims.project.sample_in_custody,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.project.sample_in_custody,location:"
 msgid "Location"
@@ -537,10 +433,6 @@ msgctxt "field:lims.project.sample_in_custody,project:"
 msgid "Project"
 msgstr "Proyecto"
 
-msgctxt "field:lims.project.sample_in_custody,rec_name:"
-msgid "Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.project.sample_in_custody,sample:"
 msgid "Sample"
 msgstr "Muestra"
@@ -552,26 +444,6 @@ msgstr "Condición de temperatura de las muestras"
 msgctxt "field:lims.project.sample_in_custody,temperature_other:"
 msgid "Temperature"
 msgstr "Temperatura"
-
-msgctxt "field:lims.project.sample_in_custody,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.project.sample_in_custody,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.project.solvent_reagent,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.project.solvent_reagent,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.project.solvent_reagent,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.project.solvent_reagent,lot:"
 msgid "Lot"
@@ -585,29 +457,9 @@ msgctxt "field:lims.project.solvent_reagent,project:"
 msgid "Project"
 msgstr "Proyecto"
 
-msgctxt "field:lims.project.solvent_reagent,rec_name:"
-msgid "Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.project.solvent_reagent,solvent_reagent_domain:"
 msgid "Solvent/Reagent domain"
 msgstr "Dominio para Solvente/Reactivo"
-
-msgctxt "field:lims.project.solvent_reagent,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.project.solvent_reagent,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:lims.project.stp_changelog,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.project.stp_changelog,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.project.stp_changelog,date2:"
 msgid "Date"
@@ -617,10 +469,6 @@ msgctxt "field:lims.project.stp_changelog,date:"
 msgid "Date"
 msgstr "Fecha"
 
-msgctxt "field:lims.project.stp_changelog,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.project.stp_changelog,project:"
 msgid "Study plan project"
 msgstr "Proyecto plan de estudio"
@@ -629,37 +477,13 @@ msgctxt "field:lims.project.stp_changelog,reason:"
 msgid "Reason"
 msgstr "Motivo"
 
-msgctxt "field:lims.project.stp_changelog,rec_name:"
-msgid "Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.project.stp_changelog,user:"
 msgid "User"
 msgstr "Usuario"
 
-msgctxt "field:lims.project.stp_changelog,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.project.stp_changelog,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.project.stp_professional,approval_date:"
 msgid "Approval date"
 msgstr "Fecha de aprobación"
-
-msgctxt "field:lims.project.stp_professional,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.project.stp_professional,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.project.stp_professional,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.project.stp_professional,position:"
 msgid "Position"
@@ -672,10 +496,6 @@ msgstr "Profesional de laboratorio"
 msgctxt "field:lims.project.stp_professional,project:"
 msgid "Study plan project"
 msgstr "Proyecto plan de estudio"
-
-msgctxt "field:lims.project.stp_professional,rec_name:"
-msgid "Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.project.stp_professional,role_facility_director:"
 msgid "Facility director"
@@ -693,45 +513,13 @@ msgctxt "field:lims.project.stp_professional,role_study_director:"
 msgid "Study director"
 msgstr "DE/IP"
 
-msgctxt "field:lims.project.stp_professional,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.project.stp_professional,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.project.stp_professional.position,code:"
 msgid "Code"
 msgstr "Código"
 
-msgctxt "field:lims.project.stp_professional.position,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.project.stp_professional.position,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.project.stp_professional.position,description:"
 msgid "Description"
 msgstr "Descripción"
-
-msgctxt "field:lims.project.stp_professional.position,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.project.stp_professional.position,rec_name:"
-msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.project.stp_professional.position,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.project.stp_professional.position,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.sample,after_application_days:"
 msgid "After application days"
