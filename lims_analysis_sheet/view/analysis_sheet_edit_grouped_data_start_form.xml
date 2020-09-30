@@ -1,4 +1,4 @@
 <?xml version="1.0"?>
 <form>
-    <field name="data" colspan="4"/>
+    <field name="data" colspan="4" mode="form"/>
 </form>
