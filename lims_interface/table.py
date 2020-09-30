@@ -80,7 +80,8 @@ class TableField(ModelSQL, ModelView):
         required=True, ondelete='CASCADE')
     name = fields.Char('Name', required=True)
     string = fields.Char('String', required=True)
-    type = fields.Selection([(None, '')] + FIELD_TYPE_SELECTION,
+    type = fields.Selection(
+        [(None, ''), ('one2many', 'One2Many')] + FIELD_TYPE_SELECTION,
         'Field Type', required=False)
     help = fields.Text('Help')
     transfer_field = fields.Boolean('Is a transfer field')
@@ -92,6 +93,13 @@ class TableField(ModelSQL, ModelView):
         'get_inputs')
     readonly = fields.Boolean('Read only')
     digits = fields.Integer('Digits')
+    group = fields.Integer('Group')
+    related_group = fields.Integer('Related Group')
+    default_width = fields.Integer('Default Width')
+    colspan = fields.Integer('Colspan')
+    group_name = fields.Char('Group Name')
+    group_colspan = fields.Integer('Group Colspan')
+    group_col = fields.Integer('Group Col')
 
     def get_inputs(self, name=None):
         if not self.formula:
@@ -124,6 +132,8 @@ class TableGroupedField(ModelSQL, ModelView):
         'get_inputs')
     readonly = fields.Boolean('Read only')
     digits = fields.Integer('Digits')
+    group = fields.Integer('Group')
+    default_width = fields.Integer('Default Width')
 
     def get_inputs(self, name=None):
         if not self.formula:
@@ -160,3 +170,4 @@ class TableGroupedView(ModelSQL, ModelView):
     arch = fields.Text('Arch')
     field_names = fields.Char('Fields')
     field_childs = fields.Char('Field Childs')
+    group = fields.Integer('Group')

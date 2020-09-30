@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<tree editable="top">
+    <field name="cell"/>
+    <field name="name"/>
+    <field name="alias"/>
+    <field name="group"/>
+</tree>

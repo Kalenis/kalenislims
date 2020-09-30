@@ -30,12 +30,16 @@ msgctxt "field:lims.interface,first_row:"
 msgid "First Row"
 msgstr "Primera fila"
 
+msgctxt "field:lims.interface,form_col:"
+msgid "Form Columns"
+msgstr "Columnas en formulario"
+
 msgctxt "field:lims.interface,fraction_field:"
 msgid "Fraction field"
 msgstr "Campo Fracción"
 
 msgctxt "field:lims.interface,grouped_repetitions:"
-msgid "Repetitions of grouped columns"
+msgid "Grouped repetitions"
 msgstr "Repeticiones de columnas agrupadas"
 
 msgctxt "field:lims.interface,kind:"
@@ -74,9 +78,17 @@ msgctxt "field:lims.interface.column,alias:"
 msgid "Alias"
 msgstr "Alias"
 
+msgctxt "field:lims.interface.column,colspan:"
+msgid "Colspan"
+msgstr "Columnas"
+
 msgctxt "field:lims.interface.column,default_value:"
 msgid "Default value"
 msgstr "Valor por defecto"
+
+msgctxt "field:lims.interface.column,default_width:"
+msgid "Default Width"
+msgstr "Ancho por defecto"
 
 msgctxt "field:lims.interface.column,digits:"
 msgid "Digits"
@@ -98,6 +110,30 @@ msgctxt "field:lims.interface.column,expression_icon:"
 msgid "Expression Icon"
 msgstr "Icono"
 
+msgctxt "field:lims.interface.column,fixed_value:"
+msgid "Fixed value"
+msgstr "Valor fijo"
+
+msgctxt "field:lims.interface.column,group:"
+msgid "Group"
+msgstr "Grupo"
+
+msgctxt "field:lims.interface.column,group_col:"
+msgid "Group Col"
+msgstr "Columna en Grupo"
+
+msgctxt "field:lims.interface.column,group_cols:"
+msgid "Group Cols"
+msgstr "Columna en Grupo"
+
+msgctxt "field:lims.interface.column,group_colspan:"
+msgid "Group Colspan"
+msgstr "Columnas del grupo"
+
+msgctxt "field:lims.interface.column,group_name:"
+msgid "Group Name"
+msgstr "Nombre de Grupo"
+
 msgctxt "field:lims.interface.column,grouped:"
 msgid "Grouped column"
 msgstr "Columna agrupada"
@@ -117,6 +153,10 @@ msgstr "Nombre"
 msgctxt "field:lims.interface.column,readonly:"
 msgid "Read only"
 msgstr "Sólo lectura"
+
+msgctxt "field:lims.interface.column,related_group:"
+msgid "Related Group"
+msgstr "Grupo Relacionado"
 
 msgctxt "field:lims.interface.column,related_line_field:"
 msgid "Related field"
@@ -254,6 +294,62 @@ msgctxt "field:lims.interface.grouped_data,notebook_line:"
 msgid "Notebook Line"
 msgstr "Línea de cuaderno"
 
+msgctxt "field:lims.interface.grouped_repetition,colspan:"
+msgid "Colspan"
+msgstr "Columnas"
+
+msgctxt "field:lims.interface.grouped_repetition,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:lims.interface.grouped_repetition,group:"
+msgid "Group"
+msgstr "Grupo"
+
+msgctxt "field:lims.interface.grouped_repetition,interface:"
+msgid "Interface"
+msgstr "Interfaz"
+
+msgctxt "field:lims.interface.grouped_repetition,repetitions:"
+msgid "Repetitions of grouped columns"
+msgstr "Repeticiones en columnas agrupadas"
+
+msgctxt "field:lims.interface.import_column.map,cells:"
+msgid "Cells"
+msgstr "Celdas"
+
+msgctxt "field:lims.interface.import_column.map.cell,alias:"
+msgid "Alias"
+msgstr "Alias"
+
+msgctxt "field:lims.interface.import_column.map.cell,cell:"
+msgid "Cell"
+msgstr "Celda"
+
+msgctxt "field:lims.interface.import_column.map.cell,expression:"
+msgid "Formula"
+msgstr "Fórmula"
+
+msgctxt "field:lims.interface.import_column.map.cell,group:"
+msgid "Group"
+msgstr "Grupo"
+
+msgctxt "field:lims.interface.import_column.map.cell,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.interface.import_column.start,cells:"
+msgid "Cells"
+msgstr "Celdas"
+
+msgctxt "field:lims.interface.import_column.start,file_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.interface.import_column.start,origin_file:"
+msgid "Origin File"
+msgstr "Archivo origen"
+
 msgctxt "field:lims.interface.table,fields_:"
 msgid "Fields"
 msgstr "Campos"
@@ -274,6 +370,14 @@ msgctxt "field:lims.interface.table,views:"
 msgid "Views"
 msgstr "Vistas"
 
+msgctxt "field:lims.interface.table.field,colspan:"
+msgid "Colspan"
+msgstr "Columnas"
+
+msgctxt "field:lims.interface.table.field,default_width:"
+msgid "Default Width"
+msgstr "Ancho por defecto"
+
 msgctxt "field:lims.interface.table.field,digits:"
 msgid "Digits"
 msgstr "Dígitos"
@@ -285,6 +389,26 @@ msgstr "Dominio"
 msgctxt "field:lims.interface.table.field,formula:"
 msgid "On Change With Formula"
 msgstr "Fórmula de cálculo"
+
+msgctxt "field:lims.interface.table.field,group:"
+msgid "Group"
+msgstr "Grupo"
+
+msgctxt "field:lims.interface.table.field,group_col:"
+msgid "Group Col"
+msgstr "Columnas en Grupo"
+
+msgctxt "field:lims.interface.table.field,group_cols:"
+msgid "Group Cols"
+msgstr "Columna en Grupo"
+
+msgctxt "field:lims.interface.table.field,group_colspan:"
+msgid "Group Colspan"
+msgstr "Columnas de grupo"
+
+msgctxt "field:lims.interface.table.field,group_name:"
+msgid "Group Name"
+msgstr "Nombre del grupo"
 
 msgctxt "field:lims.interface.table.field,help:"
 msgid "Help"
@@ -301,6 +425,10 @@ msgstr "Nombre"
 msgctxt "field:lims.interface.table.field,readonly:"
 msgid "Read only"
 msgstr "Sólo lectura"
+
+msgctxt "field:lims.interface.table.field,related_group:"
+msgid "Related Group"
+msgstr "Grupo relacionado"
 
 msgctxt "field:lims.interface.table.field,related_line_field:"
 msgid "Related Field"
@@ -326,6 +454,10 @@ msgctxt "field:lims.interface.table.field,type:"
 msgid "Field Type"
 msgstr "Tipo de campo"
 
+msgctxt "field:lims.interface.table.grouped_field,default_width:"
+msgid "Default Width"
+msgstr "Ancho por defecto"
+
 msgctxt "field:lims.interface.table.grouped_field,digits:"
 msgid "Digits"
 msgstr "Dígitos"
@@ -337,6 +469,10 @@ msgstr "Dominio"
 msgctxt "field:lims.interface.table.grouped_field,formula:"
 msgid "On Change With Formula"
 msgstr "Fórmula de cálculo"
+
+msgctxt "field:lims.interface.table.grouped_field,group:"
+msgid "Group"
+msgstr "Grupo"
 
 msgctxt "field:lims.interface.table.grouped_field,help:"
 msgid "Help"
@@ -381,6 +517,10 @@ msgstr "Hijos"
 msgctxt "field:lims.interface.table.grouped_view,field_names:"
 msgid "Fields"
 msgstr "Campos"
+
+msgctxt "field:lims.interface.table.grouped_view,group:"
+msgid "Group"
+msgstr "Grupo"
 
 msgctxt "field:lims.interface.table.grouped_view,table:"
 msgid "Table"
@@ -446,6 +586,14 @@ msgctxt "field:lims.interface.variable.value,variable:"
 msgid "Variable"
 msgstr "Variable"
 
+msgctxt "field:lims.interface.view_data,compilation:"
+msgid "Compilation"
+msgstr "Compilación"
+
+msgctxt "field:lims.interface.view_data,notebook_line:"
+msgid "Notebook Line"
+msgstr "Línea de cuaderno"
+
 msgctxt "field:lims.laboratory,automatic_accept_result:"
 msgid "Automatic Accept Result"
 msgstr "Aceptación de Resultados Automática"
@@ -461,6 +609,10 @@ msgid ""
 msgstr ""
 "En columnas agrupadas el sufijo _XX será reemplazado por la repetición "
 "correspondiente"
+
+msgctxt "help:lims.interface.column,is_fixed_value:"
+msgid "Check to define a default value for this column"
+msgstr "Marcar para definir el valor por defecto para esta columna"
 
 msgctxt "help:lims.interface.column,singleton:"
 msgid "Is a fixed value (column:row) in source file"
@@ -501,6 +653,10 @@ msgstr "Copiar columna"
 msgctxt "model:ir.action,name:wiz_interface_formula_test"
 msgid "Test Formula"
 msgstr "Probar Fórmula"
+
+msgctxt "model:ir.action,name:wiz_interface_import_column"
+msgid "Import Interface Column"
+msgstr "Importar columnas desde Excel"
 
 msgctxt "model:ir.action,name:wiz_referral_open_compilation"
 msgid "Interface Compilations"
@@ -654,6 +810,22 @@ msgstr "Probar Fórmula"
 msgctxt "model:lims.interface.grouped_data,name:"
 msgid "Grouped Data"
 msgstr "Datos agrupados"
+
+msgctxt "model:lims.interface.grouped_repetition,name:"
+msgid "Grouped Repetition"
+msgstr "Repeticiones Agrupadas"
+
+msgctxt "model:lims.interface.import_column.map,name:"
+msgid "Import Interface Column Map"
+msgstr "Importar columnas desde Excel"
+
+msgctxt "model:lims.interface.import_column.map.cell,name:"
+msgid "Import Interface Column Map Cell"
+msgstr ""
+
+msgctxt "model:lims.interface.import_column.start,name:"
+msgid "Import Interface Column Start"
+msgstr "Importar columnas desde Excel"
 
 msgctxt "model:lims.interface.table,name:"
 msgid "Interface Table"
@@ -1046,3 +1218,19 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.interface.formula.test,test,end:"
 msgid "Close"
 msgstr "Cerrar"
+
+msgctxt "wizard_button:lims.interface.import_column,ask,collect:"
+msgid "Collect"
+msgstr "Obtener datos"
+
+msgctxt "wizard_button:lims.interface.import_column,ask,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.interface.import_column,map_,create_:"
+msgid "Create"
+msgstr "Crear"
+
+msgctxt "wizard_button:lims.interface.import_column,map_,end:"
+msgid "Cancel"
+msgstr "Cancelar"

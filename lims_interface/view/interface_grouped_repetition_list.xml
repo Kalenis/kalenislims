@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="group"/>
+    <field name="repetitions"/>
+    <field name="description"/>
+    <field name="colspan"/>
+</tree>

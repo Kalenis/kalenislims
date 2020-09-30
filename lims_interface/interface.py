@@ -2,6 +2,7 @@
 # This file is part of lims_interface module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import re
 import sql
 import formulas
 import schedula
@@ -9,6 +10,7 @@ import unidecode
 import io
 import csv
 import hashlib
+import tempfile
 from openpyxl import load_workbook
 from decimal import Decimal
 from datetime import datetime, date, time
@@ -92,8 +94,9 @@ def convert_to_symbol(text):
             symbol += first
 
     for x in text[1:]:
-        if x not in VALID_SYMBOLS and symbol[-1] != '_':
-            symbol += '_'
+        if x not in VALID_SYMBOLS:
+            if symbol[-1] != '_':
+                symbol += '_'
         else:
             symbol += x
     return symbol
@@ -174,6 +177,13 @@ class Interface(Workflow, ModelSQL, ModelView):
             'invisible': Eval('kind') != 'template',
             },
         depends=_depends)
+    grouped_repetitions = fields.One2Many('lims.interface.grouped_repetition',
+        'interface', 'Grouped repetitions',
+        states={
+            'readonly': Eval('state') != 'draft',
+            'invisible': Eval('kind') != 'template',
+            },
+        depends=_depends)
     table = fields.Many2One('lims.interface.table', 'Table', readonly=True)
     template_type = fields.Selection([
         (None, ''),
@@ -211,29 +221,28 @@ class Interface(Workflow, ModelSQL, ModelView):
         depends=['template_type', 'field_separator', 'state'])
     analysis_field = fields.Many2One('lims.interface.column',
         'Analysis field', depends=['state', 'id'],
-        domain=[('interface', '=', Eval('id')), ('grouped', '=', False)],
+        domain=[('interface', '=', Eval('id')), ('group', '=', None)],
         states={
             'readonly': Eval('state') != 'draft',
             })
     fraction_field = fields.Many2One('lims.interface.column',
         'Fraction field', depends=['state', 'id'],
-        domain=[('interface', '=', Eval('id')), ('grouped', '=', False)],
+        domain=[('interface', '=', Eval('id')), ('group', '=', None)],
         states={
             'readonly': Eval('state') != 'draft',
             })
     repetition_field = fields.Many2One('lims.interface.column',
         'Repetition field', depends=['state', 'id'],
-        domain=[('interface', '=', Eval('id')), ('grouped', '=', False)],
+        domain=[('interface', '=', Eval('id')), ('group', '=', None)],
         states={
             'readonly': Eval('state') != 'draft',
             })
-    grouped_repetitions = fields.Integer('Repetitions of grouped columns',
-        states={'readonly': Eval('state') != 'draft'}, depends=['state'])
     charset = fields.Selection([
         (None, ''),
         ('utf-8', 'UTF-8'),
         ('iso-8859-1', 'ISO-8859-1'),
         ], 'Charset')
+    form_col = fields.Integer('Form Columns')
 
     del _controller_states, _template_states, _depends
 
@@ -296,10 +305,6 @@ class Interface(Workflow, ModelSQL, ModelView):
     def default_state():
         return 'draft'
 
-    @staticmethod
-    def default_grouped_repetitions():
-        return 1
-
     @property
     def data_table_name(self):
         return ('lims.interface.table.data.%d.%d' % (self.id or 0,
@@ -330,74 +335,124 @@ class Interface(Workflow, ModelSQL, ModelView):
             fields = {}
             grouped_fields = []
 
-            reps = (interface.grouped_repetitions or 1) + 1
             pos_group = 0
-            for rep in range(1, reps):
-                pos = 0
-                for column in interface.columns:
-                    if not column.type_:
-                        continue
-                    pos += 1
-                    if not column.grouped:
-                        if rep == 1:
-                            position = pos * 1000
+            for grouped_repetition in interface.grouped_repetitions:
+                reps = (grouped_repetition.repetitions or 1) + 1
+                for rep in range(1, reps):
+                    pos = 0
+                    for column in interface.columns:
+                        if not column.type_:
+                            continue
+                        if (column.group and
+                                column.group != grouped_repetition.group):
+                            continue
+                        pos += 1
+                        if not column.group:
+                            if rep == 1 and grouped_repetition.group == 1:
+                                position = pos * 1000
+                                fields[position] = Field(
+                                    name=column.alias,
+                                    string=column.name,
+                                    type=column.type_,
+                                    help=column.expression,
+                                    domain=column.domain,
+                                    transfer_field=column.transfer_field,
+                                    related_line_field=
+                                        column.related_line_field,
+                                    related_model=column.related_model,
+                                    formula=(column.expression if
+                                        column.expression and
+                                        column.expression.startswith('=') else
+                                        None),
+                                    readonly=column.readonly,
+                                    digits=column.digits,
+                                    default_width=column.default_width,
+                                    colspan=column.colspan,
+                                    related_group=column.related_group,
+                                    group_name=column.group_name,
+                                    group_colspan=column.group_colspan,
+                                    group_col=column.group_col,
+                                    )
+                            continue
+
+                        else:  # column.grouped
+                            if rep == 1:
+                                position = pos * 1000 + column.group * 100000
+                                pos_group = position
+                                expression = (column.expression and
+                                    column.expression.replace('_XX', ''))
+                                grouped_fields.append(GroupedField(
+                                    name=column.alias,
+                                    string=column.name,
+                                    type=column.type_,
+                                    help=expression,
+                                    domain=column.domain,
+                                    related_model=column.related_model,
+                                    formula=(expression if
+                                        expression and
+                                        expression.startswith('=') else
+                                        None),
+                                    readonly=column.readonly,
+                                    digits=column.digits,
+                                    group=column.group,
+                                    default_width=column.default_width,
+                                    ))
+                            else:
+                                pos_group += 1
+                                position = pos_group
+
+                            expression = (column.expression and
+                                column.expression.replace('_XX', '_%s' % rep))
                             fields[position] = Field(
-                                name=column.alias,
-                                string=column.name,
+                                name='%s_%s' % (column.alias, str(rep)),
+                                string='%s (%s)' % (column.name, str(rep)),
                                 type=column.type_,
-                                help=column.expression,
+                                help=expression,
                                 domain=column.domain,
                                 transfer_field=column.transfer_field,
                                 related_line_field=column.related_line_field,
                                 related_model=column.related_model,
-                                formula=(column.expression if
-                                    column.expression and
-                                    column.expression.startswith('=') else
-                                    None),
+                                formula=(expression if expression and
+                                    expression.startswith('=') else None),
                                 readonly=column.readonly,
                                 digits=column.digits,
+                                group=column.group,
+                                related_group=column.related_group,
+                                default_width=column.default_width,
+                                colspan=column.colspan,
+                                group_name=column.group_name,
+                                group_colspan=column.group_colspan,
+                                group_col=column.group_col,
                                 )
-                        continue
-
-                    else:  # column.grouped
-                        if rep == 1:
-                            position = pos * 1000
-                            pos_group = position
-                            expression = (column.expression and
-                                column.expression.replace('_XX', ''))
-                            grouped_fields.append(GroupedField(
-                                name=column.alias,
-                                string=column.name,
-                                type=column.type_,
-                                help=expression,
-                                domain=column.domain,
-                                related_model=column.related_model,
-                                formula=(expression if
-                                    expression and
-                                    expression.startswith('=') else
-                                    None),
-                                readonly=column.readonly,
-                                digits=column.digits,
-                                ))
-                        else:
-                            pos_group += 1
-                            position = pos_group
-
-                        expression = (column.expression and
-                            column.expression.replace('_XX', '_%s' % rep))
+            else:
+                if not fields:
+                    pos = 0
+                    for column in interface.columns:
+                        if not column.type_:
+                            continue
+                        pos += 1
+                        position = pos * 1000
                         fields[position] = Field(
-                            name='%s_%s' % (column.alias, str(rep)),
-                            string='%s (%s)' % (column.name, str(rep)),
+                            name=column.alias,
+                            string=column.name,
                             type=column.type_,
-                            help=expression,
+                            help=column.expression,
                             domain=column.domain,
                             transfer_field=column.transfer_field,
                             related_line_field=column.related_line_field,
                             related_model=column.related_model,
-                            formula=(expression if expression and
-                                expression.startswith('=') else None),
+                            formula=(column.expression if
+                                column.expression and
+                                column.expression.startswith('=') else
+                                None),
                             readonly=column.readonly,
                             digits=column.digits,
+                            related_group=column.related_group,
+                            default_width=column.default_width,
+                            colspan=column.colspan,
+                            group_name=column.group_name,
+                            group_colspan=column.group_colspan,
+                            group_col=column.group_col,
                             )
 
             table.fields_ = [fields[x] for x in sorted(fields.keys())]
@@ -467,6 +522,8 @@ class Interface(Workflow, ModelSQL, ModelView):
                 current_icon = None
             if line.type == 'image':
                 attributes.append('widget="image"')
+            if line.default_width:
+                attributes.append('width="%s"' % line.default_width)
 
             fields.append('<field name="%s" %s/>' % (line.name,
                     ' '.join(attributes)))
@@ -477,9 +534,10 @@ class Interface(Workflow, ModelSQL, ModelView):
     def get_form_view(self):
         fields = self._get_fields_form_view()
         xml = ('<?xml version="1.0"?>\n'
-            '<form>\n'
+            '<form%s>\n'
             '%s\n'
-            '</form>') % '\n'.join(fields)
+            '</form>') % (' col="%s"' % self.form_col if self.form_col else '',
+                '\n'.join(fields))
         return {
             'type': 'form',
             'arch': xml,
@@ -487,8 +545,45 @@ class Interface(Workflow, ModelSQL, ModelView):
 
     def _get_fields_form_view(self):
         fields = []
+        groups = []
+        groups_count = 0
+        current_group = None
+
         for line in self.table.fields_:
-            fields.append('<label name="%s"/>' % line.name)
+            groups_count = max(groups_count, line.group or 0)
+            if line.group:
+                continue
+
+            if line.group_name:
+                if line.group_name != current_group:
+                    if current_group:
+                        fields.append('</group>')
+            else:
+                if current_group:
+                    fields.append('</group>')
+                    current_group = None
+
+            if line.related_group:
+                if line.related_group not in groups:
+                    field_colspan = 4
+                    for rep in self.grouped_repetitions:
+                        if rep.group == line.related_group:
+                            field_colspan = rep.colspan or field_colspan
+                    fields.append('<field name="group_%s" colspan="%s"/>' % (
+                        line.related_group, field_colspan))
+                    groups.append(line.related_group)
+
+            if line.group_name:
+                if line.group_name != current_group:
+                    current_group = line.group_name
+                    fields.append('<group id="%s" string="%s" \
+                        colspan="%s" col="%s">' % (
+                            line.group_name, line.group_name,
+                            line.group_colspan, line.group_col))
+
+            if line.type != 'multiline':
+                fields.append('<label name="%s"/>' % line.name)
+
             if line.type in ('datetime', 'timestamp'):
                 fields.append('<group col="2">'
                     '<field name="%s" widget="date"/>'
@@ -503,12 +598,20 @@ class Interface(Workflow, ModelSQL, ModelView):
             attributes = []
             if line.type == 'image':
                 attributes.append('widget="image"')
+            if line.colspan:
+                attributes.append('colspan="%s"' % line.colspan)
 
             fields.append('<field name="%s" %s/>' % (line.name,
                     ' '.join(attributes)))
 
+        for i in range(1, groups_count - 1):
+            if i not in groups:
+                fields.append('<field name="group_%s" colspan="4"/>' % (
+                    i + 1, ))
+
         fields.append('<label name="notebook_line"/>')
         fields.append('<field name="notebook_line"/>')
+
         return fields
 
     @classmethod
@@ -523,22 +626,25 @@ class Interface(Workflow, ModelSQL, ModelView):
                     ('table', '=', interface.table),
                     ])
 
-            for view_type in ['tree', 'form']:
-                view = View()
-                view.table = interface.table
-                view_info = getattr(interface,
-                    'get_%s_grouped_view' % view_type)()
-                view.arch = view_info['arch']
-                view.type = view_info['type']
-                to_save.append(view)
+            for repetition_group in interface.grouped_repetitions:
+                for view_type in ['tree', 'form']:
+                    view = View()
+                    view.table = interface.table
+                    view_info = getattr(interface,
+                        'get_%s_grouped_view' % view_type)(
+                            repetition_group.group)
+                    view.arch = view_info['arch']
+                    view.type = view_info['type']
+                    view.group = repetition_group.group
+                    to_save.append(view)
 
         if to_delete:
             View.delete(to_delete)
         if to_save:
             View.save(to_save)
 
-    def get_tree_grouped_view(self):
-        fields = self._get_fields_tree_grouped_view()
+    def get_tree_grouped_view(self, group):
+        fields = self._get_fields_tree_grouped_view(group)
         xml = ('<?xml version="1.0"?>\n'
             '<tree editable="bottom">\n'
             '%s\n'
@@ -548,11 +654,13 @@ class Interface(Workflow, ModelSQL, ModelView):
             'arch': xml,
             }
 
-    def _get_fields_tree_grouped_view(self):
+    def _get_fields_tree_grouped_view(self, group):
         fields = []
-        fields.append('<field name="iteration"/>')
+        fields.append('<field name="iteration" width="60"/>')
         current_icon = None
         for line in self.table.grouped_fields_:
+            if line.group != group:
+                continue
             if line.type in ('datetime', 'timestamp'):
                 fields.append('<field name="%s" widget="date"/>' %
                     line.name)
@@ -570,14 +678,16 @@ class Interface(Workflow, ModelSQL, ModelView):
                 current_icon = None
             if line.type == 'image':
                 attributes.append('widget="image"')
+            if line.default_width:
+                attributes.append('width="%s"' % line.default_width)
 
             fields.append('<field name="%s" %s/>' % (line.name,
                     ' '.join(attributes)))
 
         return fields
 
-    def get_form_grouped_view(self):
-        fields = self._get_fields_form_grouped_view()
+    def get_form_grouped_view(self, group):
+        fields = self._get_fields_form_grouped_view(group)
         xml = ('<?xml version="1.0"?>\n'
             '<form>\n'
             '%s\n'
@@ -587,11 +697,13 @@ class Interface(Workflow, ModelSQL, ModelView):
             'arch': xml,
             }
 
-    def _get_fields_form_grouped_view(self):
+    def _get_fields_form_grouped_view(self, group):
         fields = []
         fields.append('<label name="iteration"/>')
         fields.append('<field name="iteration"/>')
         for line in self.table.grouped_fields_:
+            if line.group != group:
+                continue
             fields.append('<label name="%s"/>' % line.name)
             if line.type in ('datetime', 'timestamp'):
                 fields.append('<group col="2">'
@@ -718,7 +830,13 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         ('active', 'Active'),
         ('canceled', 'Canceled'),
         ], 'Interface State'), 'on_change_with_interface_state')
-    grouped = fields.Boolean('Grouped column')
+    group = fields.Integer('Group')
+    related_group = fields.Integer('Related Group')
+    default_width = fields.Integer('Default Width')
+    colspan = fields.Integer('Colspan')
+    group_name = fields.Char('Group Name')
+    group_colspan = fields.Integer('Group Colspan')
+    group_col = fields.Integer('Group Col')
 
     @classmethod
     def __setup__(cls):
@@ -865,6 +983,18 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         return 'lims-red'
 
 
+class GroupedRepetition(ModelSQL, ModelView):
+    'Grouped Repetition'
+    __name__ = 'lims.interface.grouped_repetition'
+
+    interface = fields.Many2One('lims.interface', 'Interface',
+        required=True, ondelete='CASCADE')
+    group = fields.Integer('Group')
+    repetitions = fields.Integer('Repetitions of grouped columns')
+    description = fields.Char('Description')
+    colspan = fields.Integer('Colspan')
+
+
 class CopyInterfaceColumnStart(ModelView):
     'Copy Interface Column'
     __name__ = 'lims.interface.copy_column.start'
@@ -930,10 +1060,184 @@ class CopyInterfaceColumn(Wizard):
             'transfer_field': origin.transfer_field,
             'related_line_field': (origin.related_line_field and
                 origin.related_line_field.id or None),
-            'grouped': origin.grouped,
+            'group': origin.group,
             'digits': origin.digits,
+            'related_group': origin.related_group,
+            'default_width': origin.default_width,
+            'colspan': origin.colspan,
+            'group_name': origin.group_name,
+            'group_colspan': origin.group_colspan,
+            'group_col': origin.group_col,
             }
         return res
+
+
+class ImportInterfaceColumnStart(ModelView):
+    'Import Interface Column Start'
+    __name__ = 'lims.interface.import_column.start'
+
+    origin_file = fields.Binary('Origin File', filename='file_name',
+        required=True)
+    file_name = fields.Char('Name')
+    cells = fields.Char('Cells')
+
+
+class ImportInterfaceColumnMap(ModelView):
+    'Import Interface Column Map'
+    __name__ = 'lims.interface.import_column.map'
+
+    cells = fields.One2Many(
+        'lims.interface.import_column.map.cell', None, 'Cells')
+
+
+class ImportInterfaceColumnMapCell(ModelView):
+    'Import Interface Column Map Cell'
+    __name__ = 'lims.interface.import_column.map.cell'
+
+    cell = fields.Char('Cell', required=True)
+    name = fields.Char('Name', required=True)
+    alias = fields.Char('Alias', required=True)
+    expression = fields.Char('Formula')
+    group = fields.Integer('Group')
+
+    @fields.depends('name', 'alias')
+    def on_change_name(self):
+        if not self.alias:
+            self.alias = convert_to_symbol(self.name)
+
+
+class ImportInterfaceColumn(Wizard):
+    'Import Interface Column'
+    __name__ = 'lims.interface.import_column'
+
+    start = StateTransition()
+    ask = StateView('lims.interface.import_column.start',
+        'lims_interface.interface_import_column_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Collect', 'collect', 'tryton-forward', default=True),
+            ])
+    collect = StateTransition()
+    map_ = StateView('lims.interface.import_column.map',
+        'lims_interface.interface_import_column_map_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Create', 'create_', 'tryton-forward', default=True),
+            ])
+    create_ = StateTransition()
+
+    def transition_start(self):
+        Interface = Pool().get('lims.interface')
+        interface_id = Transaction().context.get('active_id', None)
+        if not interface_id:
+            return 'end'
+        interface = Interface(interface_id)
+        if interface.state != 'draft':
+            return 'end'
+        return 'ask'
+
+    def transition_collect(self):
+        def clean_cell(name):
+            return name[name.find('!') + 1:]
+
+        tf = tempfile.NamedTemporaryFile(suffix=".xlsx")
+        tf.write(self.ask.origin_file)
+        xl_model = formulas.ExcelModel().loads(tf.name).finish()
+        tf.close()
+        cells = {}
+        expressions = []
+        for cell in xl_model.cells:
+            if xl_model.cells[cell].inputs:
+                for input_ in xl_model.cells[cell].inputs:
+                    input_ = clean_cell(input_)
+                    if ':' in input_:
+                        range_ = re.findall(r'\d+', input_)
+                        for row in range(int(range_[0]), int(range_[1]) + 1):
+                            if '%s%s' % (input_[:1], row) not in cells.keys():
+                                cells['%s%s' % (input_[:1], row)] = {
+                                    'input': True}
+                    else:
+                        if input_ not in cells.keys():
+                            cells[input_] = {'input': True}
+            if xl_model.cells[cell].builder:
+                output = clean_cell(xl_model.cells[cell].output)
+                if output not in cells.keys():
+                    cells[output] = {'expression':
+                        xl_model.cells[cell].builder.match['name']}
+                else:
+                    cells[output]['expression'] = (
+                        xl_model.cells[cell].builder.match['name'])
+        self.ask.cells = str(cells)
+
+        return 'map_'
+
+    def default_map_(self, name):
+        result_inputs = []
+        cells = eval(self.ask.cells)
+        for key, value in cells.items():
+            result_inputs.append({
+                'cell': key,
+                'expression': value.get('expression', None),
+                })
+        return {'cells': sorted(
+            result_inputs, key=lambda x: (int(x['cell'][1:]), x['cell'][:1]))}
+
+    def transition_create_(self):
+        Column = Pool().get('lims.interface.column')
+
+        interface_id = Transaction().context.get('active_id', None)
+        count = Column.search_count([('interface', '=', interface_id)])
+
+        new_columns = []
+
+        for cell in self.map_.cells:
+            count += 1
+            column = self._get_column(cell)
+            column['interface'] = interface_id
+            column['evaluation_order'] = count
+            new_columns.append(column)
+
+        if new_columns:
+            Column.create(new_columns)
+        return 'end'
+
+    def _get_column(self, origin):
+        expression = None
+        if origin.expression:
+            expression = self._get_expression(origin.expression)
+        res = {
+            'name': origin.name,
+            'alias': origin.alias,
+            'expression': expression,
+            'type_': 'float',
+            'group': origin.group,
+            }
+        return res
+
+    def _get_expression(self, expression):
+        expression = '=%s' % (expression, )
+        parser = formulas.Parser()
+        ast = parser.ast(expression)[1].compile()
+        inputs = [x for x in ast.inputs]
+        for input_ in inputs:
+            range_cell = False
+            input_value = input_
+            if ':' in input_:
+                input_value = input_[:input_.find(':')]
+                range_cell = True
+            for cell in self.map_.cells:
+                if input_value == cell.cell:
+                    if range_cell:
+                        range_ = re.findall(r'\d+', input_)
+                        range_alias = []
+                        range_count = 1
+                        for row in range(int(range_[0]), int(range_[1]) + 1):
+                            alias = cell.alias + str(range_count)
+                            range_count += 1
+                            range_alias.append(alias)
+                        expression = expression.replace(
+                            input_, ','.join(range_alias))
+                    else:
+                        expression = expression.replace(input_, cell.alias)
+        return expression
 
 
 class Compilation(Workflow, ModelSQL, ModelView):
@@ -1409,12 +1713,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     nb_line = line.notebook_line
                     if not nb_line:
                         continue
-                    print('## nb_line:', nb_line.id)
                     for alias, field in fields.items():
                         # TODO: check values and correct type
                         value = getattr(line, alias)
-                        print(' * Field:', alias, ':', value, ' - ',
-                            field['field_name'])
 
     @classmethod
     @ModelView.button
@@ -1446,6 +1747,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         }
                     for alias, nl_field in fields.items():
                         data[nl_field] = getattr(line, alias)
+                    if nl_field == 'result':
+                        data[nl_field] = round(
+                            data[nl_field], nb_line.decimals)
                     if nb_line.laboratory.automatic_accept_result:
                         data['accepted'] = True
                     if data:

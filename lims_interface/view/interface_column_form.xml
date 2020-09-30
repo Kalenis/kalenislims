@@ -30,8 +30,22 @@
         <field name="default_value"/>
         <label name="readonly"/>
         <field name="readonly" xexpand="0"/>
-        <label name="grouped"/>
-        <field name="grouped" xexpand="0"/>
+        <label name="group"/>
+        <field name="group" xexpand="0"/>
+    </group>
+    <group id="view_attributes" colspan="4" col="12">
+        <label name="related_group"/>
+        <field name="related_group"/>
+        <label name="default_width"/>
+        <field name="default_width"/>
+        <label name="colspan"/>
+        <field name="colspan"/>
+        <label name="group_name"/>
+        <field name="group_name"/>
+        <label name="group_colspan"/>
+        <field name="group_colspan"/>
+        <label name="group_col"/>
+        <field name="group_col"/>
     </group>
     <separator id="storage" colspan="4" string="Storage:"/>
     <group id="storage_field" colspan="4" col="4">
