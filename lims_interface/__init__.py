@@ -16,7 +16,11 @@ def register():
         laboratory.Laboratory,
         interface.Interface,
         interface.Column,
+        interface.GroupedRepetition,
         interface.CopyInterfaceColumnStart,
+        interface.ImportInterfaceColumnStart,
+        interface.ImportInterfaceColumnMap,
+        interface.ImportInterfaceColumnMapCell,
         interface.Compilation,
         interface.CompilationOrigin,
         interface.TestFormulaView,
@@ -30,12 +34,14 @@ def register():
         table.TableGroupedView,
         data.ModelAccess,
         data.Data,
+        data.ViewData,
         data.GroupedData,
         notebook.NotebookLine,
         module='lims_interface', type_='model')
     Pool.register(
         interface.OpenCompilationData,
         interface.CopyInterfaceColumn,
+        interface.ImportInterfaceColumn,
         interface.TestFormula,
         sample.OpenReferralCompilation,
         module='lims_interface', type_='wizard')

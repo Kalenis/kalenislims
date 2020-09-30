@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<form>
+    <label name="group"/>
+    <field name="group"/>
+    <label name="repetitions"/>
+    <field name="repetitions"/>
+    <label name="description"/>
+    <field name="description"/>
+    <label name="colspan"/>
+    <field name="colspan"/>
+</form>

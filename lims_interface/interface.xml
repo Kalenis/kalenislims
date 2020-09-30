@@ -62,6 +62,19 @@
             <field name="name">interface_column_list</field>
         </record>
 
+<!-- Grouped Repetition -->
+
+        <record model="ir.ui.view" id="lims_interface_grouped_repetition_view_form">
+            <field name="model">lims.interface.grouped_repetition</field>
+            <field name="type">form</field>
+            <field name="name">interface_grouped_repetition_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_interface_grouped_repetition_view_list">
+            <field name="model">lims.interface.grouped_repetition</field>
+            <field name="type">tree</field>
+            <field name="name">interface_grouped_repetition_list</field>
+        </record>
+
 <!-- Wizard Copy Interface Column -->
 
         <record model="ir.ui.view" id="interface_copy_column_start_view_form">
@@ -72,6 +85,33 @@
         <record model="ir.action.wizard" id="wiz_interface_copy_column">
             <field name="name">Copy Interface Column</field>
             <field name="wiz_name">lims.interface.copy_column</field>
+        </record>
+
+<!-- Wizard Import Interface Column -->
+
+        <record model="ir.ui.view" id="interface_import_column_start_view_form">
+            <field name="model">lims.interface.import_column.start</field>
+            <field name="type">form</field>
+            <field name="name">interface_import_column_start_form</field>
+        </record>
+        <record model="ir.ui.view" id="interface_import_column_map_view_form">
+            <field name="model">lims.interface.import_column.map</field>
+            <field name="type">form</field>
+            <field name="name">interface_import_column_map_form</field>
+        </record>
+        <record model="ir.ui.view" id="interface_import_column_map_cell_view_list">
+            <field name="model">lims.interface.import_column.map.cell</field>
+            <field name="type">tree</field>
+            <field name="name">interface_import_column_map_cell_list</field>
+        </record>
+        <record model="ir.action.wizard" id="wiz_interface_import_column">
+            <field name="name">Import Interface Column</field>
+            <field name="wiz_name">lims.interface.import_column</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_interface_import_column_keyword1">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.interface,-1</field>
+            <field name="action" ref="wiz_interface_import_column"/>
         </record>
 
 <!-- Compilation -->

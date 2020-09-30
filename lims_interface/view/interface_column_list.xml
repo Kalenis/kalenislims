@@ -5,7 +5,7 @@
     <field name="evaluation_order"/>
     <field name="type_"/>
     <field name="expression" icon="expression_icon"/>
-    <field name="grouped"/>
+    <field name="group"/>
     <field name="transfer_field"/>
     <field name="related_line_field"/>
     <field name="default_value"/>
