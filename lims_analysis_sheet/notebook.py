@@ -6,6 +6,7 @@ import schedula
 from decimal import Decimal
 from datetime import datetime
 from itertools import chain
+from collections import defaultdict
 #from dateutil.relativedelta import relativedelta
 
 from trytond.model import ModelSQL, ModelView, fields
@@ -1038,7 +1039,7 @@ class EditGroupedDataStart(ModelView):
     'Edit Grouped Data'
     __name__ = 'lims.analysis_sheet.edit_grouped_data.start'
 
-    data = fields.One2Many('lims.interface.grouped_data', None, 'Data')
+    data = fields.One2Many('lims.interface.view_data', None, 'Data')
 
 
 class EditGroupedData(Wizard):
@@ -1064,8 +1065,7 @@ class EditGroupedData(Wizard):
         sheet_id = self._get_analysis_sheet_id()
         if line_id and sheet_id:
             sheet = AnalysisSheet(sheet_id)
-            if (sheet.state in ('active', 'validated') and
-                    (sheet.template.interface.grouped_repetitions or 1) > 1):
+            if sheet.state in ('active', 'validated'):
                 return 'start'
 
         return 'end'
@@ -1078,25 +1078,50 @@ class EditGroupedData(Wizard):
         line_id = Transaction().context.get('active_id', None)
         sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
-        grouped_fields = [f for f in sheet.compilation.table.grouped_fields_]
-        reps = (sheet.template.interface.grouped_repetitions or 1) + 1
+        fields = [f for f in sheet.compilation.table.fields_]
 
         data = []
         with Transaction().set_context(
                 lims_interface_table=sheet.compilation.table.id):
             line = Data.search([('id', '=', line_id)])[0]
-            for rep in range(1, reps):
-                record = {
-                    'notebook_line': line.notebook_line.id,
-                    'iteration': rep,
-                    }
-                for field in grouped_fields:
-                    val = getattr(line, '%s_%s' % (field.name, str(rep)))
-                    if field.type == 'many2one':
-                        record[field.name] = val and val.id or None
-                    else:
-                        record[field.name] = val
-                data.append(record)
+            record = {
+                'notebook_line': line.notebook_line.id,
+                }
+            for field in fields:
+                val = getattr(line, '%s' % (field.name, ))
+                if not val:
+                    continue
+                if field.type == 'many2one':
+                    record[field.name] = val and val.id or None
+                else:
+                    record[field.name] = val
+
+            grouped_fields = defaultdict(list)
+            for field in sheet.compilation.table.grouped_fields_:
+                grouped_fields[field.group].append(field)
+
+            for group, repetition_fields in grouped_fields.items():
+                for rep in sheet.template.interface.grouped_repetitions:
+                    if rep.group == group:
+                        reps = (rep.repetitions or 1) + 1
+                        break
+
+                group_fields = []
+                for rep in range(1, reps):
+                    grouped_record = {
+                        'notebook_line': line.notebook_line.id,
+                        'iteration': rep,
+                        }
+                    for field in repetition_fields:
+                        val = getattr(line, '%s_%s' % (field.name, str(rep)))
+                        if field.type == 'many2one':
+                            grouped_record[field.name] = val and val.id or None
+                        else:
+                            grouped_record[field.name] = val
+                    group_fields.append(grouped_record)
+                record['group_%s' % (group, )] = group_fields
+
+            data.append(record)
 
         defaults = {
             'data': data,
@@ -1111,6 +1136,7 @@ class EditGroupedData(Wizard):
         line_id = Transaction().context.get('active_id', None)
         sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
+        fields = [f for f in sheet.compilation.table.fields_]
         grouped_fields = [f for f in sheet.compilation.table.grouped_fields_]
 
         with Transaction().set_context(
@@ -1118,8 +1144,9 @@ class EditGroupedData(Wizard):
             line = Data.search([('id', '=', line_id)])[0]
             res = {}
             for data in self.start.data:
-                for field in grouped_fields:
-                    field_name = '%s_%s' % (field.name, str(data.iteration))
+                groups = 0
+                for field in fields:
+                    groups = max(groups, field.group or 0)
                     value = getattr(data, field.name)
 
                     if isinstance(value, list):
@@ -1133,7 +1160,35 @@ class EditGroupedData(Wizard):
                         for x in chain(*value):
                             if isinstance(x, formulas.tokens.operand.XlError):
                                 value = None
-                    res[field_name] = value
+                    res[field.name] = value
+
+                for group in range(1, groups + 1):
+                    for group_data in getattr(
+                            data, 'group_%s' % (group, )):
+                        for field in grouped_fields:
+                            if field.group != group:
+                                continue
+                            field_name = '%s_%s' % (
+                                field.name, str(group_data['iteration']))
+                            value = group_data[field.name]
+                            if not value:
+                                continue
+
+                            if isinstance(value, list):
+                                value = str(value)
+                            elif not isinstance(value,
+                                    (str, int, float, Decimal, type(None))):
+                                value = value.tolist()
+                            if isinstance(
+                                    value, formulas.tokens.operand.XlError):
+                                value = None
+                            elif isinstance(value, list):
+                                for x in chain(*value):
+                                    if isinstance(
+                                            x, formulas.tokens.operand.XlError):
+                                        value = None
+                            res[field_name] = value
+
             Data.write([line], res)
 
         return 'end'

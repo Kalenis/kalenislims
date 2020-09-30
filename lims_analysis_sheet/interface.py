@@ -131,7 +131,7 @@ class Interface(metaclass=PoolMeta):
         depends=['export_file_type', 'export_field_separator'])
     export_order_field = fields.Many2One('lims.interface.column',
         'Order field', depends=['id'],
-        domain=[('interface', '=', Eval('id')), ('grouped', '=', False)])
+        domain=[('interface', '=', Eval('id')), ('group', '=', None)])
 
     @staticmethod
     def default_export_file_type():
@@ -143,12 +143,6 @@ class Interface(metaclass=PoolMeta):
 
     def _get_fields_tree_view(self):
         fields = super()._get_fields_tree_view()
-        fields.append('<field name="annulled"/>')
-        return fields
-
-    def _get_fields_form_view(self):
-        fields = super()._get_fields_form_view()
-        fields.append('<label name="annulled"/>')
         fields.append('<field name="annulled"/>')
         return fields
 
@@ -197,7 +191,7 @@ class Data(metaclass=PoolMeta):
             pass
 
     @classmethod
-    def fields_get(cls, fields_names=None):
+    def fields_get(cls, fields_names=None, level=0):
         if not fields_names:
             fields_names = []
         fields_names.append('annulled')
@@ -213,3 +207,24 @@ class Data(metaclass=PoolMeta):
             if x.notebook_line]
         NotebookLine.write(notebook_lines, {'start_date': None})
         super().delete(records)
+
+
+class ViewData(metaclass=PoolMeta):
+    __name__ = 'lims.interface.view_data'
+
+    annulled = fields.Boolean('Annulled')
+
+    @classmethod
+    def __post_setup__(cls):
+        super().__post_setup__()
+        cls._fields = NewAdapter()
+
+    @classmethod
+    def fields_get(cls, fields_names=None, level=0):
+        if not fields_names:
+            fields_names = []
+        fields_names.append('annulled')
+        res = super().fields_get(fields_names)
+        readonly = Transaction().context.get('lims_interface_readonly', False)
+        res['annulled']['readonly'] = bool(readonly)
+        return res

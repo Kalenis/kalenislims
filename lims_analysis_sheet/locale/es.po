@@ -462,7 +462,7 @@ msgstr "03) Calcular fórmulas"
 
 msgctxt "model:ir.action,name:wiz_analysis_sheet_edit_grouped_data"
 msgid "Edit Grouped Data"
-msgstr "Editar datos agrupados"
+msgstr "Editar datos"
 
 msgctxt "model:ir.action,name:wiz_analysis_sheet_evaluate_rules"
 msgid "Evaluate Rules"
@@ -595,7 +595,7 @@ msgstr "Añadir Controles"
 
 msgctxt "model:lims.analysis_sheet.edit_grouped_data.start,name:"
 msgid "Edit Grouped Data"
-msgstr "Editar datos agrupados"
+msgstr "Editar datos"
 
 msgctxt "model:lims.analysis_sheet.export_file.start,name:"
 msgid "Export Analysis Sheet File"
