@@ -1854,6 +1854,9 @@ class NotebookInitialConcentrationCalc(Wizard):
                 return None
         return variables
 
+    def end(self):
+        return 'reload'
+
 
 class NotebookLineInitialConcentrationCalc(NotebookInitialConcentrationCalc):
     'Initial Concentration Calculation'
@@ -2013,6 +2016,9 @@ class NotebookResultsConversion(Wizard):
                         variables[var] = result
         return variables
 
+    def end(self):
+        return 'reload'
+
 
 class NotebookLineResultsConversion(NotebookResultsConversion):
     'Results Conversion'
@@ -2141,6 +2147,9 @@ class NotebookLimitsValidation(Wizard):
 
         if lines_to_save:
             NotebookLine.save(lines_to_save)
+
+    def end(self):
+        return 'reload'
 
 
 class NotebookLineLimitsValidation(NotebookLimitsValidation):
@@ -2486,6 +2495,9 @@ class NotebookInternalRelationsCalc1(Wizard):
             if var is None:
                 return None
         return variables
+
+    def end(self):
+        return 'reload'
 
 
 class NotebookLineInternalRelationsCalc1(NotebookInternalRelationsCalc1):
@@ -2974,6 +2986,9 @@ class NotebookInternalRelationsCalc2(Wizard):
             if var is None:
                 return None
         return variables
+
+    def end(self):
+        return 'reload'
 
 
 class NotebookLineInternalRelationsCalc2(NotebookInternalRelationsCalc2):
@@ -4310,6 +4325,9 @@ class NotebookAddInternalRelations(Wizard):
                 break
         return divide, report_grouper
 
+    def end(self):
+        return 'reload'
+
 
 class NotebookLineRepeatAnalysisStart(ModelView):
     'Repeat Analysis'
@@ -4465,6 +4483,9 @@ class NotebookLineRepeatAnalysis(Wizard):
             }
         return defaults
 
+    def end(self):
+        return 'reload'
+
 
 class NotebookAcceptLinesStart(ModelView):
     'Accept Lines'
@@ -4556,6 +4577,9 @@ class NotebookAcceptLines(Wizard):
                 'acceptance_date': acceptance_date,
                 })
 
+    def end(self):
+        return 'reload'
+
 
 class NotebookLineAcceptLines(NotebookAcceptLines):
     'Accept Lines'
@@ -4614,6 +4638,9 @@ class NotebookLineUnacceptLines(Wizard):
                 'accepted': False,
                 'acceptance_date': None,
                 })
+
+    def end(self):
+        return 'reload'
 
 
 class NotebookResultsVerificationStart(ModelView):
@@ -4815,6 +4842,9 @@ class NotebookResultsVerification(Wizard):
 
         return verifications
 
+    def end(self):
+        return 'reload'
+
 
 class NotebookLineResultsVerification(NotebookResultsVerification):
     'Results Verification'
@@ -4963,6 +4993,9 @@ class UncertaintyCalc(Wizard):
             uncertainty = result * uncertainty / 100
 
         return uncertainty
+
+    def end(self):
+        return 'reload'
 
 
 class NotebookLineUncertaintyCalc(UncertaintyCalc):
@@ -5142,6 +5175,9 @@ class NotebookPrecisionControl(Wizard):
         if not repetition:
             return None
         return repetition[0].result
+
+    def end(self):
+        return 'reload'
 
 
 class NotebookLinePrecisionControl(NotebookPrecisionControl):
@@ -5565,6 +5601,9 @@ class NotebookEvaluateRules(Wizard):
             for rule in rules:
                 if rule.eval_condition(line):
                     rule.exec_action(line)
+
+    def end(self):
+        return 'reload'
 
 
 class NotebookLineEvaluateRules(NotebookEvaluateRules):
