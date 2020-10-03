@@ -894,12 +894,8 @@ msgid "-"
 msgstr "-"
 
 msgctxt "report:lims.sample.labels.report:"
-msgid "C"
-msgstr "C"
-
-msgctxt "report:lims.sample.labels.report:"
-msgid "F"
-msgstr "F"
+msgid "LOT:"
+msgstr "LOTE:"
 
 msgctxt "selection:lims.analysis,quality_type:"
 msgid "Qualitative"

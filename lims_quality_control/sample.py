@@ -162,8 +162,6 @@ class TakeSample(Wizard):
             'packages_quantity': 1,
             'fractions': [],
             }])
-        new_sample.label = '%s [%s]' % (new_sample.label, new_sample.number)
-        new_sample.save()
 
         # new fraction
         fraction_default = {
