@@ -88,8 +88,7 @@ class TableField(ModelSQL, ModelView):
     related_model = fields.Many2One('ir.model', 'Related Model')
     domain = fields.Char('Domain Value')
     formula = fields.Char('On Change With Formula')
-    inputs = fields.Function(fields.Char('On Change With Inputs'),
-        'get_inputs')
+    inputs = fields.Char('On Change With Inputs')
     readonly = fields.Boolean('Read only')
     digits = fields.Integer('Digits')
     group = fields.Integer('Group')
@@ -99,13 +98,6 @@ class TableField(ModelSQL, ModelView):
     group_name = fields.Char('Group Name')
     group_colspan = fields.Integer('Group Colspan')
     group_col = fields.Integer('Group Col')
-
-    def get_inputs(self, name=None):
-        if not self.formula:
-            return
-        parser = formulas.Parser()
-        ast = parser.ast(self.formula)[1].compile()
-        return (' '.join([x for x in ast.inputs])).lower()
 
     def get_ast(self):
         parser = formulas.Parser()

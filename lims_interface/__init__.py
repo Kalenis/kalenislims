@@ -34,7 +34,6 @@ def register():
         table.TableGroupedView,
         data.ModelAccess,
         data.Data,
-        data.ViewData,
         data.GroupedData,
         notebook.NotebookLine,
         module='lims_interface', type_='model')
