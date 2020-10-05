@@ -7,7 +7,7 @@ from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Bool, Or, And
 from trytond.transaction import Transaction
-from trytond.modules.lims_interface.data import Adapter, ViewAdapter
+from trytond.modules.lims_interface.data import Adapter
 from trytond.modules.lims_interface.interface import FUNCTIONS
 from .function import custom_functions
 
@@ -170,20 +170,6 @@ class NewAdapter(Adapter):
         return res
 
 
-class NewViewAdapter(ViewAdapter):
-
-    def get_fields(self):
-        Data = Pool().get('lims.interface.view_data')
-        res = super().get_fields()
-        table = Data.get_table()
-        if not table:
-            return res
-        obj = fields.Boolean('Annulled')
-        obj.name = 'annulled'
-        res['annulled'] = obj
-        return res
-
-
 class Data(metaclass=PoolMeta):
     __name__ = 'lims.interface.data'
 
@@ -221,24 +207,3 @@ class Data(metaclass=PoolMeta):
             if x.notebook_line]
         NotebookLine.write(notebook_lines, {'start_date': None})
         super().delete(records)
-
-
-class ViewData(metaclass=PoolMeta):
-    __name__ = 'lims.interface.view_data'
-
-    annulled = fields.Boolean('Annulled')
-
-    @classmethod
-    def __post_setup__(cls):
-        super().__post_setup__()
-        cls._fields = NewViewAdapter()
-
-    @classmethod
-    def fields_get(cls, fields_names=None, level=0):
-        if not fields_names:
-            fields_names = []
-        fields_names.append('annulled')
-        res = super().fields_get(fields_names)
-        readonly = Transaction().context.get('lims_interface_readonly', False)
-        res['annulled']['readonly'] = bool(readonly)
-        return res

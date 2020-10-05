@@ -753,7 +753,7 @@ class CalculateExpressions(Wizard):
                                 if isinstance(x,
                                         formulas.tokens.operand.XlError):
                                     value = None
-                        Data.write([line], {alias: str(value or '')})
+                        Data.write([line], {alias: value or None})
 
         return 'end'
 
@@ -1039,7 +1039,7 @@ class EditGroupedDataStart(ModelView):
     'Edit Grouped Data'
     __name__ = 'lims.analysis_sheet.edit_grouped_data.start'
 
-    data = fields.One2Many('lims.interface.view_data', None, 'Data')
+    data = fields.One2Many('lims.interface.data', None, 'Data')
 
 
 class EditGroupedData(Wizard):
@@ -1088,6 +1088,8 @@ class EditGroupedData(Wizard):
                 'notebook_line': line.notebook_line.id,
                 }
             for field in fields:
+                if field.group:
+                    continue
                 val = getattr(line, '%s' % (field.name, ))
                 if not val:
                     continue
@@ -1110,6 +1112,7 @@ class EditGroupedData(Wizard):
                 for rep in range(1, reps):
                     grouped_record = {
                         'notebook_line': line.notebook_line.id,
+                        'data': line.id,
                         'iteration': rep,
                         }
                     for field in repetition_fields:
