@@ -9,6 +9,7 @@ import formulas
 import schedula
 from decimal import Decimal
 from itertools import chain
+from collections import defaultdict
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import Pool, PoolMeta
@@ -84,8 +85,7 @@ class Adapter:
         res['notebook_line'] = obj
         for i in range(0, groups):
             obj = fields.One2Many(
-                'lims.interface.grouped_data', None, 'Group %s' % (i + 1, ),
-                context={'lims_interface_table': table.id})
+                'lims.interface.grouped_data', 'data', 'Group %s' % (i + 1, ))
             obj.name = 'group_%s' % (i + 1, )
             res[obj.name] = obj
         return res
@@ -146,80 +146,14 @@ class GroupedAdapter:
         obj.name = 'notebook_line'
         obj.readonly = True
         res['notebook_line'] = obj
+        obj = fields.Many2One('lims.interface.data', 'Data')
+        obj.name = 'data'
+        obj.readonly = True
+        res['data'] = obj
         obj = fields.Integer('Iteration')
         obj.name = 'iteration'
         obj.readonly = True
         res['iteration'] = obj
-        return res
-
-
-class ViewAdapter:
-    def __getattr__(self, name):
-        fields = self.get_fields()
-        return getattr(fields, name)
-
-    def __contains__(self, key):
-        fields = self.get_fields()
-        return fields.__contains__(key)
-
-    def __iter__(self):
-        fields = self.get_fields()
-        return fields.__iter__()
-
-    def __getitem__(self, name):
-        fields = self.get_fields()
-        return fields.__getitem__(name)
-
-    def get_fields(self):
-        # TODO: Cache
-        Data = Pool().get('lims.interface.view_data')
-        table = Data.get_table()
-        if not table:
-            return Data._previous_fields
-        res = {}
-        groups = 0
-        for field in table.fields_:
-            if field.type == 'char':
-                obj = fields.Char(field.string)
-            elif field.type == 'multiline':
-                obj = fields.Text(field.string)
-            elif field.type == 'integer':
-                obj = fields.Integer(field.string)
-            elif field.type == 'float':
-                obj = fields.Float(field.string)
-            elif field.type == 'boolean':
-                obj = fields.Boolean(field.string)
-            elif field.type == 'numeric':
-                obj = fields.Numeric(field.string)
-            elif field.type == 'date':
-                obj = fields.Date(field.string)
-            elif field.type == 'datetime':
-                obj = fields.DateTime(field.string)
-            elif field.type == 'timestamp':
-                obj = fields.Timestamp(field.string)
-            elif field.type == 'many2one':
-                obj = fields.Many2One(field.related_model.model, field.string)
-            elif field.type in ('binary', 'icon'):
-                obj = fields.Binary(field.string)
-            obj.name = field.name
-            res[field.name] = obj
-            groups = max(groups, field.group or 0)
-        obj = fields.Integer('ID')
-        obj.name = 'id'
-        res['id'] = obj
-        obj = fields.Many2One('lims.interface.compilation', 'Compilation')
-        obj.name = 'compilation'
-        res['compilation'] = obj
-        obj = fields.Many2One('lims.notebook.line', 'Notebook Line')
-        obj.name = 'notebook_line'
-        obj.readonly = True
-        res['notebook_line'] = obj
-        for i in range(0, groups):
-            obj = fields.One2Many(
-                'lims.interface.grouped_data', None, 'Group %s' % (i + 1, ),
-                context={'lims_interface_table': table.id})
-            obj.name = 'group_%s' % (i + 1, )
-            res[obj.name] = obj
         return res
 
 
@@ -238,8 +172,7 @@ class ModelAccess(metaclass=PoolMeta):
         Model._fields[fieldname] we would not be forced to override the method.
         '''
         if model_name in ('lims.interface.data',
-                'lims.interface.grouped_data',
-                'lims.interface.view_data'):
+                'lims.interface.grouped_data'):
             return True
         return super().check_relation(model_name, field_name, mode)
 
@@ -263,7 +196,7 @@ class Data(ModelSQL, ModelView):
     def __post_setup__(cls):
         super().__post_setup__()
         cls._previous_fields = cls._fields
-        cls._fields = Adapter().get_fields()
+        cls._fields = Adapter()
 
     @classmethod
     def __table__(cls):
@@ -289,12 +222,33 @@ class Data(ModelSQL, ModelView):
     def on_change_with(self, fieldnames):
         table = self.get_table()
         res = {}
+
+        grouped_fields = defaultdict(list)
+        for field in table.fields_:
+            if field.group:
+                grouped_fields[field.group].append(field.name)
+
         for field in table.fields_:
             if field.name not in fieldnames:
                 continue
             ast = field.get_ast()
-            inputs = field.inputs.split()
-            inputs = [getattr(self, x) for x in inputs]
+            inputs = []
+            for input_ in field.inputs.split():
+                found = False
+                for group, repetition_fields in grouped_fields.items():
+                    if input_ in repetition_fields:
+                        group_values = getattr(self, 'group_%s' % group)
+                        if not group_values:
+                            continue
+                        for line in group_values:
+                            if line['iteration'] == int(
+                                    input_.split('_')[-1:][0]):
+                                inputs.append(line[
+                                    '_'.join(input_.split('_')[:-1])])
+                        found = True
+                if not found:
+                    inputs.append(getattr(self, input_))
+
             try:
                 value = ast(*inputs)
             except schedula.utils.exc.DispatcherError as e:
@@ -321,9 +275,30 @@ class Data(ModelSQL, ModelView):
         fn_name = 'on_change_with_' + field.name
 
         def fn(self):
+            table = self.get_table()
+            grouped_fields = defaultdict(list)
+            for table_field in table.fields_:
+                if table_field.group:
+                    grouped_fields[table_field.group].append(table_field.name)
+
             ast = field.get_ast()
-            inputs = field.inputs.split()
-            inputs = [getattr(self, x) for x in inputs]
+            inputs = []
+            for input_ in field.inputs.split():
+                found = False
+                for group, repetition_fields in grouped_fields.items():
+                    if input_ in repetition_fields:
+                        group_values = getattr(self, 'group_%s' % group)
+                        if not group_values:
+                            continue
+                        for line in group_values:
+                            if line['iteration'] == int(
+                                    input_.split('_')[-1:][0]):
+                                inputs.append(line[
+                                    '_'.join(input_.split('_')[:-1])])
+                        found = True
+                if not found:
+                    inputs.append(getattr(self, input_))
+
             try:
                 value = ast(*inputs)
             except schedula.utils.exc.DispatcherError as e:
@@ -351,7 +326,17 @@ class Data(ModelSQL, ModelView):
         table = cls.get_table()
         readonly = Transaction().context.get('lims_interface_readonly', False)
         encoder = PYSONEncoder()
+        groups = 0
+
+        grouped_fields = defaultdict(list)
         for field in table.fields_:
+            if field.group:
+                grouped_fields[field.group].append(field.name)
+
+        for field in table.fields_:
+            groups = max(groups, field.group or 0)
+            if field.group:
+                continue
             res[field.name] = {
                 'name': field.name,
                 'string': field.string,
@@ -364,7 +349,16 @@ class Data(ModelSQL, ModelView):
                 'sortable': True,
                 }
             if field.inputs:
-                res[field.name]['on_change_with'] = field.inputs.split()
+                inputs = []
+                for input_ in field.inputs.split():
+                    found = False
+                    for group, repetition_fields in grouped_fields.items():
+                        if input_ in repetition_fields:
+                            inputs.append('group_%s' % group)
+                            found = True
+                    if not found:
+                        inputs.append(input_)
+                res[field.name]['on_change_with'] = list(set(inputs))
                 cls.add_on_change_with_method(field)
                 func_name = '%s_%s' % ('on_change_with', field.name)
                 cls.__rpc__.setdefault(func_name, RPC(instantiate=0))
@@ -379,6 +373,24 @@ class Data(ModelSQL, ModelView):
                     '%H:%M:%S.%f')
             if field.type in ['float', 'numeric']:
                 res[field.name]['digits'] = encoder.encode((16, field.digits))
+        for i in range(0, groups):
+            field_description = None
+            for rep in cls.get_compilation().interface.grouped_repetitions:
+                if rep.group == i + 1:
+                    field_description = rep.description
+
+            field_name = 'group_%s' % (i + 1)
+            res[field_name] = {
+                'name': field_name,
+                'string': field_description or field_name,
+                'type': 'one2many',
+                'help': '',
+                'relation': 'lims.interface.grouped_data',
+                }
+            res[field_name]['views'] = {
+                'tree': GroupedData.fields_view_get(
+                    view_type='tree', group=i + 1)}
+            cls.__rpc__.setdefault(func_name, RPC(instantiate=0))
         return res
 
     @classmethod
@@ -397,8 +409,10 @@ class Data(ModelSQL, ModelView):
             ]
         groups = 0
         for field in table.fields_:
-            fields_names.append(field.name)
             groups = max(groups, field.group or 0)
+            if field.group and view.type == 'form':
+                continue
+            fields_names.append(field.name)
         for i in range(0, groups):
             fields_names.append('group_%s' % (i + 1))
         res = {
@@ -632,8 +646,9 @@ class Data(ModelSQL, ModelView):
     def get_formula_value(self, field, vals={}):
         ast = field.get_ast()
         inputs = []
-        for x in field.inputs.split():
-            inputs.append(vals.get(x, getattr(self, x)))
+        if field.inputs:
+            for x in field.inputs.split():
+                inputs.append(vals.get(x, getattr(self, x)))
         try:
             value = ast(*inputs)
         except schedula.utils.exc.DispatcherError as e:
@@ -704,6 +719,8 @@ class GroupedData(ModelView):
     __name__ = 'lims.interface.grouped_data'
 
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
+        readonly=True)
+    data = fields.Many2One('lims.inteface.data', 'Data',
         readonly=True)
     iteration = fields.Integer('Iteration', readonly=True)
 
@@ -813,7 +830,8 @@ class GroupedData(ModelView):
                 'domain': field.domain,
                 }
             if field.inputs:
-                res[field.name]['on_change_with'] = field.inputs.split()
+                res[field.name]['on_change_with'] = field.inputs.split() + [
+                    'data']
                 cls.add_on_change_with_method(field)
                 func_name = '%s_%s' % ('on_change_with', field.name)
                 cls.__rpc__.setdefault(func_name, RPC(instantiate=0))
@@ -842,6 +860,7 @@ class GroupedData(ModelView):
 
         fields_names = [
             'notebook_line',
+            'data',
             'iteration',
             ]
         for field in table.grouped_fields_:
@@ -854,286 +873,6 @@ class GroupedData(ModelView):
             'field_childs': None,
             'arch': view.arch,
             'fields': cls.fields_get(fields_names, group),
-            'model': cls.__name__,
-            }
-        return res
-
-    @classmethod
-    def get_compilation(cls):
-        Compilation = Pool().get('lims.interface.compilation')
-        compilation_id = Transaction().context.get(
-            'lims_interface_compilation')
-        if compilation_id:
-            return Compilation(compilation_id)
-
-    @classmethod
-    def get_table(cls):
-        Table = Pool().get('lims.interface.table')
-        table = Transaction().context.get('lims_interface_table')
-        if Pool().test:
-            # Tryton default tests try to get data using '1' as active_id
-            # We prevent the tests from failing by returning no table
-            return
-        if not table:
-            compilation = cls.get_compilation()
-            if compilation:
-                table = compilation.table
-        if table:
-            return Table(table)
-
-
-class ViewData(ModelView):
-    'Lims Interface View Data'
-    __name__ = 'lims.interface.view_data'
-
-    compilation = fields.Many2One('lims.interface.compilation', 'Compilation',
-        required=True, ondelete='CASCADE')
-    notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
-        readonly=True)
-
-    @classmethod
-    def __setup__(cls):
-        super().__setup__()
-        cls.__rpc__['fields_view_get'].cache = None
-        cls.__rpc__['default_get'].cache = None
-
-    @classmethod
-    def __post_setup__(cls):
-        super().__post_setup__()
-        cls._previous_fields = cls._fields
-        cls._fields = ViewAdapter().get_fields()
-
-    def __init__(self, id=None, **kwargs):
-        kwargs_copy = kwargs.copy()
-        for kw in kwargs_copy:
-            kwargs.pop(kw, None)
-        super().__init__(id, **kwargs)
-        self._values = {}
-        for kw in kwargs_copy:
-            self._values[kw] = kwargs_copy[kw]
-
-    def __getattr__(self, name):
-        try:
-            return super().__getattr__(name)
-        except AttributeError:
-            pass
-
-    def on_change_with(self, fieldnames):
-        table = self.get_table()
-        res = {}
-        for field in table.fields_:
-            if field.name not in fieldnames:
-                continue
-            ast = field.get_ast()
-            inputs = field.inputs.split()
-
-            inputs = [getattr(self, x) for x in inputs]
-            try:
-                value = ast(*inputs)
-            except schedula.utils.exc.DispatcherError as e:
-                raise UserError(e.args[0] % e.args[1:])
-
-            if isinstance(value, list):
-                value = str(value)
-            elif not isinstance(value, (str, int, float, Decimal, type(None))):
-                value = value.tolist()
-            if isinstance(value, formulas.tokens.operand.XlError):
-                value = None
-            elif isinstance(value, list):
-                for x in chain(*value):
-                    if isinstance(x, formulas.tokens.operand.XlError):
-                        value = None
-            res[field.name] = value
-        return res
-
-    @classmethod
-    def add_on_change_with_method(cls, field):
-        """
-        Dynamically add 'on_change_with_<field>' methods.
-        """
-        fn_name = 'on_change_with_' + field.name
-
-        def fn(self):
-            ast = field.get_ast()
-            inputs = field.inputs.split()
-
-            inputs = [getattr(self, x) for x in inputs]
-            try:
-                value = ast(*inputs)
-            except schedula.utils.exc.DispatcherError as e:
-                raise UserError(e.args[0] % e.args[1:])
-
-            if isinstance(value, list):
-                value = str(value)
-            elif not isinstance(value, (str, int, float, Decimal, type(None))):
-                value = value.tolist()
-            if isinstance(value, formulas.tokens.operand.XlError):
-                value = None
-            elif isinstance(value, list):
-                for x in chain(*value):
-                    if isinstance(x, formulas.tokens.operand.XlError):
-                        value = None
-            return value
-
-        setattr(cls, fn_name, fn)
-
-    def on_change(self, fieldnames):
-        table = self.get_table()
-        res = {}
-        for field in table.fields_:
-            if not field.formula:
-                continue
-            ast = field.get_ast()
-            inputs = field.inputs.split()
-
-            inputs = [getattr(self, x) for x in inputs]
-            try:
-                value = ast(*inputs)
-            except schedula.utils.exc.DispatcherError as e:
-                raise UserError(e.args[0] % e.args[1:])
-
-            if isinstance(value, list):
-                value = str(value)
-            elif not isinstance(value, (str, int, float, Decimal, type(None))):
-                value = value.tolist()
-            if isinstance(value, formulas.tokens.operand.XlError):
-                value = None
-            elif isinstance(value, list):
-                for x in chain(*value):
-                    if isinstance(x, formulas.tokens.operand.XlError):
-                        value = None
-            res[field.name] = value
-        return res
-
-    @classmethod
-    def add_on_change_method(cls, field_name):
-        """
-        Dynamically add 'on_change_<field>' methods.
-        """
-        fn_name = 'on_change_' + field_name
-
-        def fn(self):
-            table = self.get_table()
-            for field in table.fields_:
-                if not field.formula:
-                    continue
-                ast = field.get_ast()
-                inputs = field.inputs.split()
-                if not inputs:
-                    continue
-
-                inputs = [getattr(self, x) for x in inputs]
-
-                try:
-                    value = ast(*inputs)
-                except schedula.utils.exc.DispatcherError as e:
-                    raise UserError(e.args[0] % e.args[1:])
-
-                if isinstance(value, list):
-                    value = str(value)
-                elif not isinstance(
-                        value, (str, int, float, Decimal, type(None))):
-                    value = value.tolist()
-                if isinstance(value, formulas.tokens.operand.XlError):
-                    value = None
-                elif isinstance(value, list):
-                    for x in chain(*value):
-                        if isinstance(x, formulas.tokens.operand.XlError):
-                            value = None
-                if getattr(self, field.name):
-                    setattr(self, field.name, value)
-
-        setattr(cls, fn_name, fn)
-
-    @classmethod
-    def fields_get(cls, fields_names=None, level=0):
-        Model = Pool().get('ir.model')
-        res = super().fields_get(fields_names)
-
-        table = cls.get_table()
-        readonly = Transaction().context.get('lims_interface_readonly', False)
-        encoder = PYSONEncoder()
-        groups = 0
-        for field in table.fields_:
-            res[field.name] = {
-                'name': field.name,
-                'string': field.string,
-                'type': FIELD_TYPE_TRYTON[field.type],
-                'relation': (field.related_model.model if
-                    field.related_model else None),
-                'readonly': bool(field.formula or field.readonly or readonly),
-                'help': field.help,
-                'domain': field.domain,
-                'sortable': True,
-                }
-            if field.inputs:
-                res[field.name]['on_change_with'] = field.inputs.split()
-                cls.add_on_change_with_method(field)
-                func_name = '%s_%s' % ('on_change_with', field.name)
-                cls.__rpc__.setdefault(func_name, RPC(instantiate=0))
-
-            if field.type == 'reference':
-                selection = []
-                for model in Model.search([]):
-                    selection.append((model.model, model.name))
-                res[field.name]['selection'] = selection
-            if field.type in ['datetime', 'timestamp']:
-                res[field.name]['format'] = PYSONEncoder().encode(
-                    '%H:%M:%S.%f')
-            if field.type in ['float', 'numeric']:
-                res[field.name]['digits'] = encoder.encode((16, field.digits))
-            groups = max(groups, field.group or 0)
-
-        for i in range(0, groups):
-            field_description = None
-            for rep in cls.get_compilation().interface.grouped_repetitions:
-                if rep.group == i + 1:
-                    field_description = rep.description
-
-            field_name = 'group_%s' % (i + 1)
-            res[field_name] = {
-                'name': field_name,
-                'string': field_description or field_name,
-                'type': 'one2many',
-                'help': '',
-                'relation': 'lims.interface.grouped_data',
-                }
-            res[field_name]['views'] = {
-                'tree': GroupedData.fields_view_get(
-                    view_type='tree', group=i + 1)}
-            res['group_%s' % (i + 1)]['on_change'] = [field_name]
-            cls.add_on_change_method(field_name)
-            func_name = '%s_%s' % ('on_change', field_name)
-            cls.__rpc__.setdefault(func_name, RPC(instantiate=0))
-
-        return res
-
-    @classmethod
-    def fields_view_get(cls, view_id=None, view_type='form'):
-        if Pool().test:
-            return
-        table = cls.get_table()
-        for view in table.views:
-            if view.type == view_type:
-                break
-        assert(view.id)
-
-        fields_names = [
-            'compilation',
-            'notebook_line',
-            ]
-        groups = 0
-        for field in table.fields_:
-            fields_names.append(field.name)
-            groups = max(groups, field.group or 0)
-        for i in range(0, groups):
-            fields_names.append('group_%s' % (i + 1))
-        res = {
-            'type': view.type,
-            'view_id': view_id,
-            'field_childs': None,
-            'arch': view.arch,
-            'fields': cls.fields_get(fields_names),
             'model': cls.__name__,
             }
         return res

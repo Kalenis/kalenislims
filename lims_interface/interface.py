@@ -325,6 +325,13 @@ class Interface(Workflow, ModelSQL, ModelView):
         Field = pool.get('lims.interface.table.field')
         GroupedField = pool.get('lims.interface.table.grouped_field')
 
+        def get_inputs(formula):
+            if not formula:
+                return
+            parser = formulas.Parser()
+            ast = parser.ast(formula)[1].compile()
+            return (' '.join([x for x in ast.inputs])).lower()
+
         for interface in interfaces:
             # interface.check_formulas()
             # interface.check_icons()
@@ -364,6 +371,10 @@ class Interface(Workflow, ModelSQL, ModelView):
                                         column.expression and
                                         column.expression.startswith('=') else
                                         None),
+                                    inputs=(get_inputs(column.expression) if
+                                        column.expression and
+                                        column.expression.startswith('=') else
+                                        None),
                                     readonly=column.readonly,
                                     digits=column.digits,
                                     default_width=column.default_width,
@@ -392,6 +403,9 @@ class Interface(Workflow, ModelSQL, ModelView):
                                         expression and
                                         expression.startswith('=') else
                                         None),
+                                    inputs=(get_inputs(expression) if
+                                        expression and
+                                        expression.startswith('=') else None),
                                     readonly=column.readonly,
                                     digits=column.digits,
                                     group=column.group,
@@ -413,6 +427,9 @@ class Interface(Workflow, ModelSQL, ModelView):
                                 related_line_field=column.related_line_field,
                                 related_model=column.related_model,
                                 formula=(expression if expression and
+                                    expression.startswith('=') else None),
+                                inputs=(get_inputs(expression)
+                                    if expression and
                                     expression.startswith('=') else None),
                                 readonly=column.readonly,
                                 digits=column.digits,
@@ -442,6 +459,10 @@ class Interface(Workflow, ModelSQL, ModelView):
                             related_line_field=column.related_line_field,
                             related_model=column.related_model,
                             formula=(column.expression if
+                                column.expression and
+                                column.expression.startswith('=') else
+                                None),
+                            inputs=(get_inputs(column.expression) if
                                 column.expression and
                                 column.expression.startswith('=') else
                                 None),
