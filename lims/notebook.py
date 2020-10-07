@@ -740,7 +740,7 @@ class NotebookLine(ModelSQL, ModelView):
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
         readonly=True)
     repetition = fields.Integer('Repetition', readonly=True)
-    start_date = fields.Date('Start date', readonly=True)
+    start_date = fields.Date('Start date', states={'readonly': True})
     end_date = fields.Date('End date', states={
         'readonly': Or(~Bool(Eval('start_date')), Bool(Eval('accepted'))),
         }, depends=['start_date', 'accepted'])
@@ -1226,7 +1226,8 @@ class NotebookLine(ModelSQL, ModelView):
         return result
 
     @fields.depends('result', 'converted_result', 'converted_result_modifier',
-        'backup', 'verification', 'uncertainty', 'end_date')
+        'backup', 'verification', 'uncertainty', 'end_date', 'start_date',
+        'analysis')
     def on_change_result(self):
         self.converted_result = None
         self.converted_result_modifier = 'eq'
@@ -1234,6 +1235,8 @@ class NotebookLine(ModelSQL, ModelView):
         self.verification = None
         self.uncertainty = None
         self.end_date = None
+        if self.analysis.behavior == 'internal_relation':
+            self.start_date = None
 
     @fields.depends('accepted', 'report', 'annulled', 'result',
         'converted_result', 'literal_result', 'result_modifier',
@@ -2847,7 +2850,6 @@ class NotebookInternalRelationsCalc2(Wizard):
                 notebook_line.end_date = date
                 notebook_lines_to_save.append(notebook_line)
         NotebookLine.save(notebook_lines_to_save)
-
         return 'end'
 
     def _get_analysis_result(self, analysis_code, notebook, relation_code,
