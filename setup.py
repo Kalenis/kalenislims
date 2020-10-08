@@ -8,6 +8,7 @@ from configparser import ConfigParser
 from setuptools import setup
 
 MODULE2PREFIX = {}
+LINKS = {}
 
 
 def kalenis_test_suite():
@@ -40,11 +41,11 @@ major_version = int(major_version)
 minor_version = int(minor_version)
 
 # TODO: check new openpyxl versions, v.3 seems to be buggy in PyPI
-requires = ['appdirs', 'Click', 'formulas', 'openpyxl==2.6.4', 'pandas',
-    'psycopg2', 'PyPDF2', 'pytz', 'unidecode', 'xlrd', 'xlutils',
-    'matplotlib', 'Jinja2', 'Babel', 'WeasyPrint']
+requires = ['appdirs', 'Babel', 'Click', 'formulas', 'Jinja2',
+    get_require_version('kalenis_user_view'), 'openpyxl==2.6.4', 'matplotlib',
+    'pandas', 'psycopg2', 'PyPDF2', 'pytz', 'unidecode', 'WeasyPrint', 'xlrd',
+    'xlutils']
 
-LINKS = {}
 
 packages = []
 package_dir = {}
