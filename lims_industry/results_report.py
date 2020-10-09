@@ -19,6 +19,8 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         'get_notebook_field')
     component = fields.Function(fields.Many2One('lims.component', 'Component'),
         'get_notebook_field')
+    comercial_product = fields.Function(fields.Many2One(
+        'lims.comercial.product', 'Comercial Product'), 'get_notebook_field')
     precedent1 = fields.Many2One('lims.notebook', 'Precedent 1',
         domain=[('component', '=', Eval('component'))],
         depends=['component'])
