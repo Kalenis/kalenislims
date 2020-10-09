@@ -15,6 +15,9 @@ class Notebook(metaclass=PoolMeta):
         'get_sample_field', searcher='search_sample_field')
     component = fields.Function(fields.Many2One('lims.component', 'Component'),
         'get_sample_field', searcher='search_sample_field')
+    comercial_product = fields.Function(fields.Many2One(
+        'lims.comercial.product', 'Comercial Product'),
+        'get_sample_field', searcher='search_sample_field')
     hours_component = fields.Function(fields.Integer('Hs. Component'),
         'get_sample_field', searcher='search_sample_field')
 
