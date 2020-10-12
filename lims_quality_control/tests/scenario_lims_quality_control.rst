@@ -143,7 +143,8 @@ Create Analyses::
     ...     method=method,
     ...     quality=True,
     ...     quality_min=0.0,
-    ...     quality_max=5.0)
+    ...     quality_max=5.0,
+    ...     start_uom=unit)
     >>> typification_1.save()
 
     >>> analysis = Analysis(
@@ -165,7 +166,8 @@ Create Analyses::
     ...     method=method,
     ...     quality=True,
     ...     quality_min=1.0,
-    ...     quality_max=10.0)
+    ...     quality_max=10.0,
+    ...     start_uom=unit)
     >>> typification_2.save()
 
     >>> analysis = Analysis(
