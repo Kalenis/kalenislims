@@ -828,6 +828,7 @@ class GroupedData(ModelView):
                 'readonly': bool(field.formula or field.readonly or readonly),
                 'help': field.help,
                 'domain': field.domain,
+                'states': '{}',
                 }
             if field.inputs:
                 res[field.name]['on_change_with'] = field.inputs.split() + [
