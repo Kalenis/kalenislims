@@ -1235,7 +1235,7 @@ class NotebookLine(ModelSQL, ModelView):
         self.verification = None
         self.uncertainty = None
         self.end_date = None
-        if self.analysis.behavior == 'internal_relation':
+        if self.analysis and self.analysis.behavior == 'internal_relation':
             self.start_date = None
 
     @fields.depends('accepted', 'report', 'annulled', 'result',
