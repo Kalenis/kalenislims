@@ -15,9 +15,11 @@
     <label name="limit_digits"/>
     <field name="limit_digits"/>
     <label name="quality_min"/>
-    <field name="quality_min"/>
-    <label name="quality_max"/>
-    <field name="quality_max"/>
+    <group id="limits" colspan="1" col="3">
+        <field name="quality_min"/>
+        <label name="quality_max"/>
+        <field name="quality_max"/>
+    </group>
     <label name="initial_concentration"/>
     <field name="initial_concentration"/>
     <label name="start_uom"/>

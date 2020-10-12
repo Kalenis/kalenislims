@@ -75,14 +75,47 @@ class Typification(metaclass=PoolMeta):
     quality_test_report = fields.Boolean('Quality Test Report')
     quality_order = fields.Integer('Quality Order')
     quality_min = fields.Float('Min',
-        digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
+        digits=(16, Eval('limit_digits', 2)),
+        states={
+            'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
+            'required': Equal(Eval('quality_type'), 'quantitative'),
+            }, depends=['quality_type', 'limit_digits'])
     quality_max = fields.Float('Max',
-        digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
+        digits=(16, Eval('limit_digits', 2)),
+        states={
+            'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
+            'required': Equal(Eval('quality_type'), 'quantitative'),
+            }, depends=['quality_type', 'limit_digits'])
 
     @classmethod
     def __setup__(cls):
         super().__setup__()
         cls._sql_constraints = []
+        cls.start_uom.states = {
+            'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
+            'required': Equal(Eval('quality_type'), 'quantitative'),
+            }
+        cls.start_uom.depends = ['quality_type']
+        cls.end_uom.states = {
+            'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
+            }
+        cls.end_uom.depends = ['quality_type']
+        cls.initial_concentration.states = {
+            'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
+            }
+        cls.initial_concentration.depends = ['quality_type']
+        cls.final_concentration.states = {
+            'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
+            }
+        cls.final_concentration.depends = ['quality_type']
+        cls.limit_digits.states = {
+            'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
+            }
+        cls.limit_digits.depends = ['quality_type']
+        cls.calc_decimals.states = {
+            'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
+            }
+        cls.calc_decimals.depends = ['quality_type']
 
     @classmethod
     def __register__(cls, module_name):
