@@ -32,9 +32,18 @@ class NotebookLine(metaclass=PoolMeta):
         cursor.execute('SELECT template '
             'FROM "' + TemplateAnalysis._table + '" '
             'WHERE analysis = %s '
-            'AND (method = %s OR method IS NULL)',
+            'AND method = %s',
             (self.analysis.id, self.method.id))
         template = cursor.fetchone()
+
+        if not template:
+            cursor.execute('SELECT template '
+                'FROM "' + TemplateAnalysis._table + '" '
+                'WHERE analysis = %s '
+                'AND method IS NULL',
+                (self.analysis.id, ))
+            template = cursor.fetchone()
+
         return template and template[0] or None
 
 
