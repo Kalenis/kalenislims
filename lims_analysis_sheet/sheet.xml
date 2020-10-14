@@ -158,6 +158,18 @@
             <field name="model" search="[('model', '=', 'lims.analysis_sheet')]"/>
         </record>
 
+        <record model="ir.rule.group" id="rule_group_sheet">
+            <field name="name">User in laboratory</field>
+            <field name="model" search="[('model', '=', 'lims.analysis_sheet')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_sheet">
+            <field name="domain"
+                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_sheet"/>
+        </record>
+
 <!-- Wizard Open Analysis Sheet Data -->
 
         <record model="ir.action.wizard" id="wiz_analysis_sheet_open_data">
