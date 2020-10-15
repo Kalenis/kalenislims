@@ -209,5 +209,25 @@
             <field name="name">model_doc_tree</field>
         </record>
 
+<!-- Attachment -->
+
+        <menuitem name="Attachments" id="menu_attachment"
+            icon="tryton-attach"/>
+        <menuitem name="Attachments" parent="menu_attachment"
+            action="ir.act_attachment_form" id="menu_attachment_form"/>
+
+        <record model="res.group" id="group_attachments_global">
+            <field name="name">Attachments Global List</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_attachments_global">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_attachments_global"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_attachment_group_attachments_global">
+            <field name="menu" ref="menu_attachment"/>
+            <field name="group" ref="group_attachments_global"/>
+        </record>
+
     </data>
 </tryton>
