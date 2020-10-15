@@ -8410,6 +8410,14 @@ msgctxt "model:ir.ui.menu,name:menu_act_service_referred_pending_result_list"
 msgid "Referred Services Pending Result"
 msgstr "Servicios derivados pendientes de resultado"
 
+msgctxt "model:ir.ui.menu,name:menu_attachment"
+msgid "Attachments"
+msgstr "Adjuntos"
+
+msgctxt "model:ir.ui.menu,name:menu_attachment_form"
+msgid "Attachments"
+msgstr "Adjuntos"
+
 msgctxt "model:ir.ui.menu,name:menu_entry_board_referrals"
 msgid "Referrals"
 msgstr "Derivaciones"
@@ -9462,6 +9470,10 @@ msgstr "Zona/Región"
 msgctxt "model:product.template,name:template_fraction"
 msgid "Fraction"
 msgstr "Fracción"
+
+msgctxt "model:res.group,name:group_attachments_global"
+msgid "Attachments Global List"
+msgstr "Lista global de adjuntos"
 
 msgctxt "model:res.group,name:group_lims_blind_sample"
 msgid "Lims Blind Samples"
