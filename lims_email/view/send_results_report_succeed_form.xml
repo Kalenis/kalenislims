@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <form>
     <image name="tryton-info" xexpand="0" xfill="0"/>
-    <label string="Digital Sign Succeed!" id="succeed"
+    <label string="Results Reports sent successfully!" id="succeed"
         yalign="0.0" xalign="0.0" xexpand="1"/>
 </form>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Icons -->
+
+        <record model="ir.ui.icon" id="icon_email">
+            <field name="name">lims-email</field>
+            <field name="path">icons/email.svg</field>
+        </record>
+
+<!-- Groups -->
+
+        <record model="res.group" id="group_lims_send_results_report">
+            <field name="name">Lims Sending Results Report</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_send_results_report">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_send_results_report"/>
+        </record>
+
+    </data>
+</tryton>
