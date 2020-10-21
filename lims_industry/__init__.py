@@ -3,6 +3,7 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import Pool
+from . import configuration
 from . import industry
 from . import analysis
 from . import sample
@@ -46,8 +47,16 @@ def register():
         control_tendency.TrendChart,
         module='lims_industry', type_='model')
     Pool.register(
+        configuration.Configuration,
+        module='lims_industry', type_='model',
+        depends=['lims_email'])
+    Pool.register(
         sample.CreateSample,
         sample.EditSample,
         results_report.OpenResultsDetailPrecedent,
         control_tendency.OpenTrendChart,
         module='lims_industry', type_='wizard')
+    Pool.register(
+        results_report.SendResultsReport,
+        module='lims_industry', type_='wizard',
+        depends=['lims_email'])

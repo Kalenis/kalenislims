@@ -236,3 +236,67 @@ class OpenResultsDetailPrecedent(Wizard):
         action['name'] = '%s (%s)' % (gettext('lims_industry.lbl_precedents'),
             ', '.join(d.rec_name for d in details))
         return action, {}
+
+
+class SendResultsReport(metaclass=PoolMeta):
+    __name__ = 'lims_email.send_results_report'
+
+    def get_grouped_reports(self, report_ids):
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        ResultsReport = pool.get('lims.results_report')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        config = Config(1)
+
+        if config.mail_ack_report_grouping == 'plant':
+            res = {}
+            results_reports = ResultsReport.browse(report_ids)
+            for report in results_reports:
+                plant_id = None
+                samples = ResultsSample.search([
+                    ('version_detail.report_version.results_report.id',
+                        '=', report.id),
+                    ])
+                if samples:
+                    sample = samples[0].notebook.fraction.sample
+                    if sample.plant:
+                        plant_id = sample.plant.id
+                if not plant_id:
+                    plant_id = report.id
+
+                key = (plant_id, report.cie_fraction_type)
+                if key not in res:
+                    res[key] = {
+                        'cie_fraction_type': report.cie_fraction_type,
+                        'reports': [],
+                        }
+                res[key]['reports'].append(report)
+            return res
+
+        if config.mail_ack_report_grouping == 'equipment':
+            res = {}
+            results_reports = ResultsReport.browse(report_ids)
+            for report in results_reports:
+                equipment_id = None
+                samples = ResultsSample.search([
+                    ('version_detail.report_version.results_report.id',
+                        '=', report.id),
+                    ])
+                if samples:
+                    sample = samples[0].notebook.fraction.sample
+                    if sample.equipment:
+                        equipment_id = sample.equipment.id
+                if not equipment_id:
+                    equipment_id = report.id
+
+                key = (equipment_id, report.cie_fraction_type)
+                if key not in res:
+                    res[key] = {
+                        'cie_fraction_type': report.cie_fraction_type,
+                        'reports': [],
+                        }
+                res[key]['reports'].append(report)
+            return res
+
+        return super().get_grouped_reports(report_ids)

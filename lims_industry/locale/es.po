@@ -822,6 +822,14 @@ msgctxt "model:lims.sampling.type,name:"
 msgid "Sampling Type"
 msgstr "Muestreo"
 
+msgctxt "selection:lims.configuration,mail_ack_report_grouping:"
+msgid "Equipment"
+msgstr "Equipo"
+
+msgctxt "selection:lims.configuration,mail_ack_report_grouping:"
+msgid "Plant"
+msgstr "Planta"
+
 msgctxt "selection:lims.trend.chart,filter:"
 msgid "Same Component"
 msgstr "Mismo Componente"
