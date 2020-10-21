@@ -12,10 +12,10 @@
 
 <!-- Cron -->
 
-        <record model="ir.cron" id="cron_lims_digital_sign_results_reports">
+        <record model="ir.cron" id="cron_results_report_send_email">
             <field name="interval_number" eval="1"/>
             <field name="interval_type">days</field>
-            <field name="method">lims.results_report|cron_digital_signs</field>
+            <field name="method">lims.results_report|cron_send_results_report</field>
         </record>
 
     </data>

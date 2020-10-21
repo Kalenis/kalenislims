@@ -1,0 +1,123 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:lims.configuration,mail_ack_report_body:"
+msgid "Email body of Acknowledgment of results report"
+msgstr "Cuerpo del correo de Acuse de informe de resultados"
+
+msgctxt "field:lims.configuration,mail_ack_report_grouping:"
+msgid "Grouping of Results reports by Email"
+msgstr "Agrupamiento de Informes de resultados por correo"
+
+msgctxt "field:lims.configuration,mail_ack_report_subject:"
+msgid "Email subject of Acknowledgment of results report"
+msgstr "Asunto del correo de Acuse de informe de resultados"
+
+msgctxt "field:lims.results_report,sent:"
+msgid "Sent"
+msgstr "Enviado"
+
+msgctxt "field:lims.results_report,sent_date:"
+msgid "Sent date"
+msgstr "Fecha de enviado"
+
+msgctxt "field:lims_email.send_results_report.failed,reports_not_ready:"
+msgid "Reports not ready"
+msgstr "Informes no listos"
+
+msgctxt "field:lims_email.send_results_report.failed,reports_not_sent:"
+msgid "Reports not sent"
+msgstr "Informes no enviados"
+
+msgctxt "help:lims.configuration,mail_ack_report_body:"
+msgid "<SAMPLES> will be replaced by the list of sample's labels"
+msgstr "<SAMPLES> será reemplazado por la lista de rótulos de las muestras"
+
+msgctxt "help:lims.configuration,mail_ack_report_subject:"
+msgid "In the text will be added suffix with the results report number"
+msgstr "En el texto se añadirá sufijo con el número del informe de resultados"
+
+msgctxt "model:ir.action,name:wizard_send_results_report"
+msgid "Send Results Reports"
+msgstr "Enviar Informes de resultados"
+
+msgctxt "model:ir.message,text:msg_polisample"
+msgid "Polisample"
+msgstr "Polimuestra"
+
+msgctxt "model:ir.ui.menu,name:menu_send_results_report"
+msgid "Send Results Reports"
+msgstr "Enviar Informes de resultados"
+
+msgctxt "model:lims_email.send_results_report.failed,name:"
+msgid "Send Results Report"
+msgstr "Enviar Informe de resultados"
+
+msgctxt "model:lims_email.send_results_report.start,name:"
+msgid "Send Results Report"
+msgstr "Enviar Informe de resultados"
+
+msgctxt "model:lims_email.send_results_report.succeed,name:"
+msgid "Send Results Report"
+msgstr "Enviar Informe de resultados"
+
+msgctxt "model:res.group,name:group_lims_send_results_report"
+msgid "Lims Sending Results Report"
+msgstr "Lims Enviar Informe de resultados"
+
+msgctxt "selection:ir.cron,method:"
+msgid "Send Results Report"
+msgstr "Enviar Informe de resultados"
+
+msgctxt "selection:lims.configuration,mail_ack_report_grouping:"
+msgid "None"
+msgstr "Ninguno"
+
+msgctxt "selection:lims.configuration,mail_ack_report_grouping:"
+msgid "Party"
+msgstr "Entidad"
+
+msgctxt "view:lims.configuration:"
+msgid "Email body of Acknowledgment of results report"
+msgstr "Cuerpo del correo de Acuse de informe de resultados"
+
+msgctxt "view:lims.configuration:"
+msgid "Email subject of Acknowledgment of results report"
+msgstr "Asunto del correo de Acuse de informe de resultados"
+
+msgctxt "view:lims.configuration:"
+msgid "Mail Acknowledgment Report"
+msgstr "Email Acuse de Informe"
+
+msgctxt "view:lims.results_report:"
+msgid "Time"
+msgstr "Hora"
+
+msgctxt "view:lims_email.send_results_report.failed:"
+msgid "Results Reports sending failed! Solve the problem and try again."
+msgstr "¡Envío de Informes de resultados fallido! Resuelva el problema y vuelva a intentar."
+
+msgctxt "view:lims_email.send_results_report.start:"
+msgid "Send Results Reports?"
+msgstr "¿Desea enviar los Informes de resultados?"
+
+msgctxt "view:lims_email.send_results_report.succeed:"
+msgid "Results Reports sent successfully!"
+msgstr "¡Envío de Informes de resultados exitoso!"
+
+msgctxt "wizard_button:lims_email.send_results_report,failed,end:"
+msgid "Ok"
+msgstr "Aceptar"
+
+msgctxt "wizard_button:lims_email.send_results_report,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims_email.send_results_report,start,send:"
+msgid "Send"
+msgstr "Enviar"
+
+msgctxt "wizard_button:lims_email.send_results_report,succeed,end:"
+msgid "Ok"
+msgstr "Aceptar"
