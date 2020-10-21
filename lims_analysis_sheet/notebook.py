@@ -1100,7 +1100,7 @@ class EditGroupedData(Wizard):
                 if field.group:
                     continue
                 val = getattr(line, '%s' % (field.name, ))
-                if not val:
+                if val != 0.0 and not val:
                     continue
                 if field.type == 'many2one':
                     record[field.name] = val and val.id or None
@@ -1183,7 +1183,7 @@ class EditGroupedData(Wizard):
                             field_name = '%s_%s' % (
                                 field.name, str(group_data['iteration']))
                             value = group_data[field.name]
-                            if not value:
+                            if value != 0.0 and not value:
                                 continue
 
                             if isinstance(value, list):
