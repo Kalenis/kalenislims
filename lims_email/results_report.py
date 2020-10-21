@@ -388,7 +388,10 @@ class SendResultsReport(Wizard):
                         ])
                     for sample in samples:
                         entry = sample.notebook.fraction.entry
-                        if entry.invoice_party.block_reports_automatic_sending:
+                        if (hasattr(entry.invoice_party,
+                                'block_reports_automatic_sending') and
+                                getattr(entry.invoice_party,
+                                    'block_reports_automatic_sending')):
                             continue
                         group['to_addrs'].extend([c.contact.email
                                 for c in entry.report_contacts
