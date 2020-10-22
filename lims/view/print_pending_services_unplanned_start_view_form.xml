@@ -1,11 +1,15 @@
 <?xml version="1.0"?>
-<form>
+<form col="2">
     <label name="start_date"/>
     <field name="start_date"/>
     <label name="end_date"/>
     <field name="end_date"/>
-    <label name="party"/>
-    <field name="party" colspan="3"/>
-    <label name="include_method"/>
-    <field name="include_method"/>
+    <group id="party" colspan="2" col="2">
+        <label name="party"/>
+        <field name="party"/>
+    </group>
+    <group id="include_method" colspan="2" col="2">
+        <label name="include_method"/>
+        <field name="include_method"/>
+    </group>
 </form>
