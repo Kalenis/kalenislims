@@ -36,6 +36,9 @@ class Notebook(ModelSQL, ModelView):
         'get_sample_field', searcher='search_sample_field')
     party_code = fields.Function(fields.Char('Party'), 'get_party_code',
         searcher='search_party_code')
+    invoice_party = fields.Function(fields.Many2One('party.party',
+        'Invoice Party'),
+        'get_sample_field', searcher='search_sample_field')
     label = fields.Function(fields.Char('Label'), 'get_sample_field',
         searcher='search_sample_field')
     date = fields.Function(fields.DateTime('Date'), 'get_sample_field',

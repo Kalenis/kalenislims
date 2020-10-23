@@ -27,6 +27,13 @@ class Sample(metaclass=PoolMeta):
         'get_plant')
     equipment = fields.Many2One('lims.equipment', 'Equipment',
         domain=[('party', '=', Eval('party'))], depends=['party'])
+    equipment_template = fields.Function(fields.Many2One(
+        'lims.equipment.template', 'Equipment Template'),
+        'get_equipment_field')
+    equipment_model = fields.Function(fields.Char('Equipment Model'),
+        'get_equipment_field')
+    equipment_serial_number = fields.Function(fields.Char(
+        'Equipment Serial Number'), 'get_equipment_field')
     component = fields.Many2One('lims.component', 'Component',
         domain=[('equipment', '=', Eval('equipment'))], depends=['equipment'])
     comercial_product = fields.Many2One('lims.comercial.product',
@@ -154,6 +161,22 @@ class Sample(metaclass=PoolMeta):
         result = {}
         for s in samples:
             result[s.id] = s.equipment and s.equipment.plant.id or None
+        return result
+
+    @classmethod
+    def get_equipment_field(cls, samples, names):
+        result = {}
+        for name in names:
+            result[name] = {}
+            if cls._fields[name]._type == 'many2one':
+                for s in samples:
+                    field = getattr(s.equipment, name.replace(
+                        'equipment_', ''), None)
+                    result[name][s.id] = field.id if field else None
+            else:
+                for s in samples:
+                    result[name][s.id] = getattr(s.equipment, name.replace(
+                        'equipment_', ''), None)
         return result
 
 

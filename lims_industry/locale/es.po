@@ -302,6 +302,18 @@ msgctxt "field:lims.notebook,equipment:"
 msgid "Equipment"
 msgstr "Equipo"
 
+msgctxt "field:lims.notebook,equipment_model:"
+msgid "Equipment Model"
+msgstr "Modelo"
+
+msgctxt "field:lims.notebook,equipment_serial_number:"
+msgid "Equipment Serial Number"
+msgstr "Número de Serie"
+
+msgctxt "field:lims.notebook,equipment_template:"
+msgid "Equipment Template"
+msgstr "Tipo/Marca"
+
 msgctxt "field:lims.notebook,hours_component:"
 msgid "Hs. Component"
 msgstr "Hs. Componente"
@@ -382,6 +394,19 @@ msgctxt "field:lims.results_report.version.detail.sample,equipment:"
 msgid "Equipment"
 msgstr "Equipo"
 
+msgctxt "field:lims.results_report.version.detail.sample,equipment_model:"
+msgid "Equipment Model"
+msgstr "Modelo"
+
+msgctxt ""
+"field:lims.results_report.version.detail.sample,equipment_serial_number:"
+msgid "Equipment Serial Number"
+msgstr "Número de Serie"
+
+msgctxt "field:lims.results_report.version.detail.sample,equipment_template:"
+msgid "Equipment Template"
+msgstr "Tipo/Marca"
+
 msgctxt "field:lims.results_report.version.detail.sample,plant:"
 msgid "Plant"
 msgstr "Planta"
@@ -440,6 +465,18 @@ msgstr "Componente"
 msgctxt "field:lims.sample,equipment:"
 msgid "Equipment"
 msgstr "Equipo"
+
+msgctxt "field:lims.sample,equipment_model:"
+msgid "Equipment Model"
+msgstr "Modelo"
+
+msgctxt "field:lims.sample,equipment_serial_number:"
+msgid "Equipment Serial Number"
+msgstr "Número de Serie"
+
+msgctxt "field:lims.sample,equipment_template:"
+msgid "Equipment Template"
+msgstr "Tipo/Marca"
 
 msgctxt "field:lims.sample,hours_component:"
 msgid "Hs. Component"

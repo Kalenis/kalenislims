@@ -13,6 +13,13 @@ class Notebook(metaclass=PoolMeta):
         'get_sample_field', searcher='search_sample_field')
     equipment = fields.Function(fields.Many2One('lims.equipment', 'Equipment'),
         'get_sample_field', searcher='search_sample_field')
+    equipment_template = fields.Function(fields.Many2One(
+        'lims.equipment.template', 'Equipment Template'),
+        'get_sample_field')
+    equipment_model = fields.Function(fields.Char('Equipment Model'),
+        'get_sample_field')
+    equipment_serial_number = fields.Function(fields.Char(
+        'Equipment Serial Number'), 'get_sample_field')
     component = fields.Function(fields.Many2One('lims.component', 'Component'),
         'get_sample_field', searcher='search_sample_field')
     comercial_product = fields.Function(fields.Many2One(
