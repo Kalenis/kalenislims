@@ -2335,6 +2335,10 @@ class Sample(ModelSQL, ModelView):
     party = fields.Function(fields.Many2One('party.party', 'Party'),
         'get_entry_field',
         searcher='search_entry_field')
+    invoice_party = fields.Function(fields.Many2One('party.party',
+        'Invoice Party'),
+        'get_entry_field',
+        searcher='search_entry_field')
     producer = fields.Many2One('lims.sample.producer', 'Producer company',
         domain=['OR', ('id', '=', Eval('producer')),
             ('party', '=', Eval('party'))],

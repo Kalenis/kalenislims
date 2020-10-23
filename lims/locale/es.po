@@ -2591,6 +2591,10 @@ msgctxt "field:lims.notebook,icon:"
 msgid "Icon"
 msgstr "Icono"
 
+msgctxt "field:lims.notebook,invoice_party:"
+msgid "Invoice Party"
+msgstr "Tercero de la factura"
+
 msgctxt "field:lims.notebook,label:"
 msgid "Label"
 msgstr "Rótulo"
@@ -5136,6 +5140,10 @@ msgctxt "field:lims.results_report.version.detail.line,notebook_line:"
 msgid "Notebook Line"
 msgstr "Línea de cuaderno"
 
+msgctxt "field:lims.results_report.version.detail.line,party:"
+msgid "Party"
+msgstr "Terceros"
+
 msgctxt "field:lims.results_report.version.detail.line,priority:"
 msgid "Priority"
 msgstr "Prioridad"
@@ -5178,6 +5186,14 @@ msgstr "Informe creado"
 msgctxt "field:lims.results_report.version.detail.new_version.start,type:"
 msgid "Type"
 msgstr "Tipo"
+
+msgctxt "field:lims.results_report.version.detail.sample,invoice_party:"
+msgid "Invoice Party"
+msgstr "Tercero de la factura"
+
+msgctxt "field:lims.results_report.version.detail.sample,label:"
+msgid "Label"
+msgstr "Rótulo"
 
 msgctxt "field:lims.results_report.version.detail.sample,matrix:"
 msgid "Matrix"
@@ -5314,6 +5330,10 @@ msgstr "Informe de resultados"
 msgctxt "field:lims.sample,icon:"
 msgid "Icon"
 msgstr "Icono"
+
+msgctxt "field:lims.sample,invoice_party:"
+msgid "Invoice Party"
+msgstr "Tercero de la factura"
 
 msgctxt "field:lims.sample,label:"
 msgid "Label"

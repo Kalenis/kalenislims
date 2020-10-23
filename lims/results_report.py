@@ -922,6 +922,11 @@ class ResultsReportVersionDetailSample(ModelSQL, ModelView):
         readonly=True)
     notebook_lines = fields.One2Many('lims.results_report.version.detail.line',
         'detail_sample', 'Analysis')
+    party = fields.Function(fields.Many2One('party.party', 'Party'),
+        'get_notebook_field')
+    invoice_party = fields.Function(fields.Many2One('party.party',
+        'Invoice Party'), 'get_notebook_field')
+    label = fields.Function(fields.Char('Label'), 'get_notebook_field')
     product_type = fields.Function(fields.Many2One('lims.product.type',
         'Product type'), 'get_notebook_field')
     matrix = fields.Function(fields.Many2One('lims.matrix', 'Matrix'),
