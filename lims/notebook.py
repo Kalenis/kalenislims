@@ -45,6 +45,8 @@ class Notebook(ModelSQL, ModelView):
         searcher='search_sample_field')
     date2 = fields.Function(fields.Date('Date'), 'get_sample_field',
         searcher='search_sample_field')
+    sample_comments = fields.Function(fields.Text('Sample Comments'),
+        'get_sample_field')
     fraction_type = fields.Function(fields.Many2One('lims.fraction.type',
         'Fraction type'), 'get_fraction_field',
         searcher='search_fraction_field')
@@ -94,6 +96,10 @@ class Notebook(ModelSQL, ModelView):
                 for n in notebooks:
                     field = getattr(n.fraction.sample, name, None)
                     result[name][n.id] = field.id if field else None
+            elif name == 'sample_comments':
+                for n in notebooks:
+                    result[name][n.id] = getattr(
+                        n.fraction.sample, 'comments', None)
             else:
                 for n in notebooks:
                     result[name][n.id] = getattr(n.fraction.sample, name, None)
