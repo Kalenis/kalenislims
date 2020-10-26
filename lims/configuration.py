@@ -215,6 +215,11 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         ], 'Samples in progress',
         help='Samples allowed for preliminary reports')
     zone_required = fields.Boolean('Zone required')
+    entry_default_contacts = fields.Selection([
+        ('party', 'Party'),
+        ('invoice_party', 'Invoice party'),
+        ], 'Default Contacts in Entries',
+        help='From which Party takes the contacts for the Entry')
 
     @staticmethod
     def default_brix_digits():
@@ -260,6 +265,10 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     @staticmethod
     def default_zone_required():
         return True
+
+    @staticmethod
+    def default_entry_default_contacts():
+        return 'party'
 
     def get_reagents(self):
         res = []
