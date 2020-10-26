@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <form col="2">
     <image name="tryton-info" xexpand="0" xfill="0"/>
-    <label string="Send Results Reports?" id="ask"
+    <label string="Send the following Results Reports?" id="ask"
         yalign="0.0" xalign="0.0" xexpand="1"/>
+    <field name="summary" colspan="2"/>
 </form>

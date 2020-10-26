@@ -30,6 +30,10 @@ msgctxt "field:lims_email.send_results_report.failed,reports_not_sent:"
 msgid "Reports not sent"
 msgstr "Informes no enviados"
 
+msgctxt "field:lims_email.send_results_report.start,summary:"
+msgid "Summary"
+msgstr "Resumen"
+
 msgctxt "help:lims.configuration,mail_ack_report_body:"
 msgid "<SAMPLES> will be replaced by the list of sample's labels"
 msgstr "<SAMPLES> será reemplazado por la lista de rótulos de las muestras"
@@ -96,11 +100,13 @@ msgstr "Hora"
 
 msgctxt "view:lims_email.send_results_report.failed:"
 msgid "Results Reports sending failed! Solve the problem and try again."
-msgstr "¡Envío de Informes de resultados fallido! Resuelva el problema y vuelva a intentar."
+msgstr ""
+"¡Envío de Informes de resultados fallido! Resuelva el problema y vuelva a "
+"intentar."
 
 msgctxt "view:lims_email.send_results_report.start:"
-msgid "Send Results Reports?"
-msgstr "¿Desea enviar los Informes de resultados?"
+msgid "Send the following Results Reports?"
+msgstr "¿Desea enviar los siguientes Informes de resultados?"
 
 msgctxt "view:lims_email.send_results_report.succeed:"
 msgid "Results Reports sent successfully!"
