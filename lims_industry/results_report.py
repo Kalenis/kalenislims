@@ -149,10 +149,12 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
 
     @staticmethod
     def get_default_precedents(sample):
-        Notebook = Pool().get('lims.notebook')
+        pool = Pool()
+        Notebook = pool.get('lims.notebook')
         precedents = Notebook.search([
             ('id', '!=', sample.notebook.id),
             ('component', '=', sample.component),
+            ('invoice_party', '=', sample.notebook.invoice_party),
             ], order=[('id', 'DESC')], limit=3)
         return precedents
 
@@ -188,7 +190,8 @@ class ResultsReportVersionDetailLine(metaclass=PoolMeta):
 
     @classmethod
     def _get_precedent_result(cls, precedent, line):
-        NotebookLine = Pool().get('lims.notebook.line')
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
         if not precedent:
             return None
         precedent_line = NotebookLine.search([
