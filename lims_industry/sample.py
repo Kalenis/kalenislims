@@ -34,6 +34,8 @@ class Sample(metaclass=PoolMeta):
         'get_equipment_field')
     equipment_serial_number = fields.Function(fields.Char(
         'Equipment Serial Number'), 'get_equipment_field')
+    equipment_name = fields.Function(fields.Char(
+        'Equipment Name'), 'get_equipment_field')
     component = fields.Many2One('lims.component', 'Component',
         domain=[('equipment', '=', Eval('equipment'))], depends=['equipment'])
     comercial_product = fields.Many2One('lims.comercial.product',

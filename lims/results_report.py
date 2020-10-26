@@ -931,6 +931,8 @@ class ResultsReportVersionDetailSample(ModelSQL, ModelView):
         'Product type'), 'get_notebook_field')
     matrix = fields.Function(fields.Many2One('lims.matrix', 'Matrix'),
         'get_notebook_field')
+    sample_comments = fields.Function(fields.Text('Sample Comments'),
+        'get_notebook_field')
 
     def get_rec_name(self, name):
         return self.notebook.rec_name

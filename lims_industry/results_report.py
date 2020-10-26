@@ -23,6 +23,8 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         'get_notebook_field')
     equipment_serial_number = fields.Function(fields.Char(
         'Equipment Serial Number'), 'get_notebook_field')
+    equipment_name = fields.Function(fields.Char(
+        'Equipment Name'), 'get_notebook_field')
     component = fields.Function(fields.Many2One('lims.component', 'Component'),
         'get_notebook_field')
     comercial_product = fields.Function(fields.Many2One(
