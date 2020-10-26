@@ -222,18 +222,23 @@ class Entry(Workflow, ModelSQL, ModelView):
         'report_contacts', 'acknowledgment_contacts')
     def on_change_party(self):
         pool = Pool()
+        Config = pool.get('lims.configuration')
         ReportContacts = pool.get('lims.entry.report_contacts')
         AcknowledgmentContacts = pool.get('lims.entry.acknowledgment_contacts')
+
+        config_ = Config(1)
 
         email = False
         single_sending = False
         english = False
         no_ack = False
+
         invoice_contacts = []
         a_report_contacts = []
         report_contacts = []
         a_acknowledgment_contacts = []
         acknowledgment_contacts = []
+
         parties = []
         if self.party:
             parties.append(self.party.id)
@@ -260,23 +265,24 @@ class Entry(Workflow, ModelSQL, ModelView):
             single_sending = self.party.single_sending_report
             english = self.party.english_report
             no_ack = self.party.no_acknowledgment_of_receipt
+
             if self.party.addresses:
-                for c in self.party.addresses:
-                    if (c.report_contact_default and c not
-                            in a_report_contacts):
-                        report_contact = ReportContacts()
-                        report_contact.contact = c
-                        report_contacts.append(report_contact)
-                    if (c.acknowledgment_contact_default and c not
-                            in a_acknowledgment_contacts):
-                        acknowledgment_contact = AcknowledgmentContacts()
-                        acknowledgment_contact.contact = c
-                        acknowledgment_contacts.append(acknowledgment_contact)
+                if config_.entry_default_contacts == 'party':
+                    for c in self.party.addresses:
+                        if (c.report_contact_default and c not
+                                in a_report_contacts):
+                            report_contacts.append(
+                                ReportContacts(contact=c))
+                        if (c.acknowledgment_contact_default and c not
+                                in a_acknowledgment_contacts):
+                            acknowledgment_contacts.append(
+                                AcknowledgmentContacts(contact=c))
 
         self.email_report = email
         self.single_sending_report = single_sending
         self.english_report = english
         self.no_acknowledgment_of_receipt = no_ack
+
         self.invoice_contacts = invoice_contacts
         self.report_contacts = report_contacts
         self.acknowledgment_contacts = acknowledgment_contacts
@@ -290,12 +296,20 @@ class Entry(Workflow, ModelSQL, ModelView):
         'report_contacts', 'acknowledgment_contacts')
     def on_change_invoice_party(self):
         pool = Pool()
+        Config = pool.get('lims.configuration')
         InvoiceContacts = pool.get('lims.entry.invoice_contacts')
+        ReportContacts = pool.get('lims.entry.report_contacts')
+        AcknowledgmentContacts = pool.get('lims.entry.acknowledgment_contacts')
+
+        config_ = Config(1)
 
         a_invoice_contacts = []
         invoice_contacts = []
+        a_report_contacts = []
         report_contacts = []
+        a_acknowledgment_contacts = []
         acknowledgment_contacts = []
+
         parties = []
         if self.party:
             parties.append(self.party.id)
@@ -311,19 +325,35 @@ class Entry(Workflow, ModelSQL, ModelView):
             for c in self.report_contacts:
                 if c.contact.party.id in parties:
                     report_contacts.append(c)
+                    a_report_contacts.append(c.contact)
         if self.acknowledgment_contacts:
             for c in self.acknowledgment_contacts:
                 if c.contact.party.id in parties:
                     acknowledgment_contacts.append(c)
+                    a_acknowledgment_contacts.append(c.contact)
 
         if self.invoice_party:
             if self.invoice_party.addresses:
-                for c in self.invoice_party.addresses:
-                    if (c.invoice_contact_default and c not
-                            in a_invoice_contacts):
-                        invoice_contact = InvoiceContacts()
-                        invoice_contact.contact = c
-                        invoice_contacts.append(invoice_contact)
+                if config_.entry_default_contacts == 'invoice_party':
+                    for c in self.invoice_party.addresses:
+                        if (c.invoice_contact_default and c not
+                                in a_invoice_contacts):
+                            invoice_contacts.append(
+                                InvoiceContacts(contact=c))
+                        if (c.report_contact_default and c not
+                                in a_report_contacts):
+                            report_contacts.append(
+                                ReportContacts(contact=c))
+                        if (c.acknowledgment_contact_default and c not
+                                in a_acknowledgment_contacts):
+                            acknowledgment_contacts.append(
+                                AcknowledgmentContacts(contact=c))
+                else:
+                    for c in self.invoice_party.addresses:
+                        if (c.invoice_contact_default and c not
+                                in a_invoice_contacts):
+                            invoice_contacts.append(
+                                InvoiceContacts(contact=c))
 
         self.invoice_contacts = invoice_contacts
         self.report_contacts = report_contacts
@@ -518,7 +548,7 @@ class Entry(Workflow, ModelSQL, ModelView):
         User = pool.get('res.user')
         Lang = pool.get('ir.lang')
 
-        config = Config(1)
+        config_ = Config(1)
 
         lang = User(Transaction().user).language
         if not lang:
@@ -527,9 +557,9 @@ class Entry(Workflow, ModelSQL, ModelView):
                     ], limit=1)
 
         with Transaction().set_context(language=lang.code):
-            subject = str('%s %s' % (config.mail_ack_subject,
+            subject = str('%s %s' % (config_.mail_ack_subject,
                     self.number)).strip()
-            body = str(config.mail_ack_body)
+            body = str(config_.mail_ack_body)
 
         return subject, body
 

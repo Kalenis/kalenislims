@@ -22,6 +22,8 @@
             <field name="entry_confirm_background"/>
             <label name="planification_process_background"/>
             <field name="planification_process_background"/>
+            <label name="entry_default_contacts"/>
+            <field name="entry_default_contacts"/>
             <label name="samples_in_progress"/>
             <field name="samples_in_progress"/>
             <label name="zone_required"/>

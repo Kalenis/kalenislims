@@ -415,6 +415,10 @@ msgctxt "field:lims.configuration,entry_confirm_background:"
 msgid "Confirm Entries in Background"
 msgstr "Confirmar ingresos en segundo plano"
 
+msgctxt "field:lims.configuration,entry_default_contacts:"
+msgid "Default Contacts in Entries"
+msgstr "Contactos por defecto en Ingresos"
+
 msgctxt "field:lims.configuration,fraction_product:"
 msgid "Fraction product"
 msgstr "Producto fracción"
@@ -6378,6 +6382,10 @@ msgid "Estimated number of days needed to report the result of the analysis"
 msgstr ""
 "Cantidad estimada de días necesarios para informar el resultado del análisis"
 
+msgctxt "help:lims.configuration,entry_default_contacts:"
+msgid "From which Party takes the contacts for the Entry"
+msgstr "De qué Entidad se toman los contactos en el Ingreso"
+
 msgctxt "help:lims.configuration,mail_ack_subject:"
 msgid "In the text will be added suffix with the entry report number"
 msgstr "En el texto se añadirá sufijo con el número de ingreso del informe"
@@ -11786,6 +11794,14 @@ msgstr "Grupo"
 msgctxt "selection:lims.analysis.included,analysis_type:"
 msgid "Set"
 msgstr "Set"
+
+msgctxt "selection:lims.configuration,entry_default_contacts:"
+msgid "Invoice party"
+msgstr "Entidad facturación"
+
+msgctxt "selection:lims.configuration,entry_default_contacts:"
+msgid "Party"
+msgstr "Entidad"
 
 msgctxt "selection:lims.configuration,samples_in_progress:"
 msgid "With accepted results"
