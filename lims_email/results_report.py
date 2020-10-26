@@ -262,6 +262,8 @@ class SendResultsReportStart(ModelView):
     "Send Results Report"
     __name__ = 'lims_email.send_results_report.start'
 
+    summary = fields.Text('Summary', readonly=True)
+
 
 class SendResultsReportSucceed(ModelView):
     "Send Results Report"
@@ -296,6 +298,61 @@ class SendResultsReport(Wizard):
         'lims_email.send_results_report_failed_view', [
             Button('Ok', 'end', 'tryton-ok', default=True),
             ])
+
+    def default_start(self, fields):
+        pool = Pool()
+        ResultsReport = pool.get('lims.results_report')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        summary = ''
+
+        active_ids = [r.id for r in ResultsReport.search(
+                [('sent', '=', False)])]
+
+        for group in self.get_grouped_reports(active_ids).values():
+            group['reports_ready'] = []
+            group['to_addrs'] = []
+
+            for report in group['reports']:
+                if (report.single_sending_report and not
+                        report.single_sending_report_ready):
+                    continue
+
+                spanish_report = report.has_report_cached(
+                    english_report=False)
+                english_report = report.has_report_cached(
+                    english_report=True)
+                if not spanish_report and not english_report:
+                    continue
+
+                if not group['cie_fraction_type']:
+                    group['reports_ready'].append(report)
+                    samples = ResultsSample.search([
+                        ('version_detail.report_version.results_report',
+                            '=', report),
+                        ])
+                    for sample in samples:
+                        entry = sample.notebook.fraction.entry
+                        if (hasattr(entry.invoice_party,
+                                'block_reports_automatic_sending') and
+                                getattr(entry.invoice_party,
+                                    'block_reports_automatic_sending')):
+                            continue
+                        group['to_addrs'].extend([c.contact.email
+                                for c in entry.report_contacts
+                                if c.contact.report_contact])
+
+            if not group['reports_ready']:
+                continue
+
+            to_addrs = list(set(group['to_addrs']))
+
+            summary += '%s\n - TO: %s\n\n' % (
+                ', '.join([r.number for r in group['reports_ready']]),
+                ', '.join(to_addrs))
+
+        default = {'summary': summary}
+        return default
 
     def transition_send(self):
         logger.info('Send Results Report: INIT')
