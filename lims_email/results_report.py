@@ -306,8 +306,15 @@ class SendResultsReport(Wizard):
 
         summary = ''
 
-        active_ids = [r.id for r in ResultsReport.search(
-                [('sent', '=', False)])]
+        context = Transaction().context
+        model = context.get('active_model', None)
+        if model and model == 'ir.ui.menu':
+            # If it was executed from `menu item`, then search ids
+            active_ids = [r.id for r in ResultsReport.search(
+                    [('sent', '=', False)])]
+        else:
+            # If it was executed from `actions`, then use context ids
+            active_ids = context['active_ids']
 
         for group in self.get_grouped_reports(active_ids).values():
             group['reports_ready'] = []
@@ -373,7 +380,7 @@ class SendResultsReport(Wizard):
         context = Transaction().context
         model = context.get('active_model', None)
         if model and model == 'ir.ui.menu':
-            # If it was executed from `menu item`, then get ids
+            # If it was executed from `menu item`, then search ids
             active_ids = [r.id for r in ResultsReport.search(
                     [('sent', '=', False)])]
             logger.info('Send Results Report: '
