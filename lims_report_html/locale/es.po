@@ -2,6 +2,10 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "field:lims.analysis,result_template:"
+msgid "Report Template"
+msgstr "Plantilla de Informe"
+
 msgctxt "field:lims.create_sample.start,result_template:"
 msgid "Report Template"
 msgstr "Plantilla de Informe"
@@ -285,6 +289,10 @@ msgstr "Siguiente"
 msgctxt "selection:lims.results_report.version.detail.section,position:"
 msgid "Previous"
 msgstr "Anterior"
+
+msgctxt "view:lims.analysis:"
+msgid "Report"
+msgstr "Informe"
 
 msgctxt "view:lims.result_report.template:"
 msgid "Header and Footer"

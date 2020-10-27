@@ -104,7 +104,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         detail_default = super()._get_fields_from_samples(samples)
         for sample in samples:
             notebook = Notebook(sample['notebook'])
-            result_template = notebook.fraction.sample.result_template
+            result_template = cls._get_result_template_from_sample(notebook)
             if result_template:
                 detail_default['template'] = result_template.id
                 if result_template.trend_charts:
@@ -126,6 +126,27 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             if resultrange_origin:
                 detail_default['resultrange_origin'] = resultrange_origin.id
         return detail_default
+
+    @classmethod
+    def _get_result_template_from_sample(cls, notebook):
+        Service = Pool().get('lims.service')
+        result_template = notebook.fraction.sample.result_template
+        if not result_template:
+            ok = True
+            services = Service.search([
+                ('fraction', '=', notebook.fraction),
+                ])
+            for service in services:
+                if service.analysis.result_template:
+                    if not result_template:
+                        result_template = service.analysis.result_template
+                    elif result_template != service.analysis.result_template:
+                        ok = False
+                elif result_template:
+                    ok = False
+            if not ok:
+                result_template = None
+        return result_template
 
     @classmethod
     def _get_fields_from_detail(cls, detail):
