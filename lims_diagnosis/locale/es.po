@@ -320,10 +320,6 @@ msgctxt "selection:lims.results_report.version.detail,state:"
 msgid "Diagnosed"
 msgstr "Diagnosticado"
 
-msgctxt "view:lims.analysis:"
-msgid "Diagnosis"
-msgstr "Diagnóstico"
-
 msgctxt "view:lims.diagnosis.state:"
 msgid "Options"
 msgstr "Opciones"

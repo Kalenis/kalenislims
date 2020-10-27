@@ -6,6 +6,7 @@ from trytond.pool import Pool
 from . import action
 from . import html_template
 from . import sample
+from . import analysis
 from . import results_report
 from . import notebook
 
@@ -19,6 +20,7 @@ def register():
         html_template.ReportTemplateTrendChart,
         sample.Sample,
         sample.CreateSampleStart,
+        analysis.Analysis,
         results_report.ResultsReportVersionDetail,
         results_report.ResultsReportVersionDetailSection,
         results_report.ResultsReportVersionDetailTrendChart,
