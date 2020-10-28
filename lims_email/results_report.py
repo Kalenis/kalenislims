@@ -82,37 +82,6 @@ class ResultsReport(metaclass=PoolMeta):
         logger.info('Cron - Send Results Report: END')
         return True
 
-    def has_report_cached(self, english_report=False):
-        '''
-        Has Report Cached
-        :english_report: boolean
-        :return: boolean
-        '''
-        details = self.details_cached(english_report)
-        if not details:
-            return False
-        return True
-
-    def details_cached(self, english_report=False):
-        '''
-        Details Cached
-        :english_report: boolean
-        :return: list of details
-        '''
-        pool = Pool()
-        ResultsDetail = pool.get('lims.results_report.version.detail')
-
-        format_field = 'report_format'
-        if english_report:
-            format_field = 'report_format_eng'
-
-        details = ResultsDetail.search([
-            ('report_version.results_report.id', '=', self.id),
-            ('valid', '=', True),
-            (format_field, '=', 'pdf'),
-            ])
-        return details
-
     def build_report(self, english_report=False):
         '''
         Build Results Report.
@@ -321,15 +290,7 @@ class SendResultsReport(Wizard):
             group['to_addrs'] = []
 
             for report in group['reports']:
-                if (report.single_sending_report and not
-                        report.single_sending_report_ready):
-                    continue
-
-                spanish_report = report.has_report_cached(
-                    english_report=False)
-                english_report = report.has_report_cached(
-                    english_report=True)
-                if not spanish_report and not english_report:
+                if not report.ready_to_send:
                     continue
 
                 if not group['cie_fraction_type']:

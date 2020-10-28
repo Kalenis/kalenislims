@@ -5,8 +5,7 @@
     <field name="english_report"/>
     <field name="party"/>
     <field name="cie_fraction_type"/>
-    <field name="single_sending_report"/>
-    <field name="single_sending_report_ready"/>
+    <field name="ready_to_send"/>
     <field name="create_date2" widget="date"/>
     <field name="create_date2" widget="time" string="Time"/>
     <field name="write_date2" widget="date"/>

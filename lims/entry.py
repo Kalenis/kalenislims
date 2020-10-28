@@ -76,7 +76,8 @@ class Entry(Workflow, ModelSQL, ModelView):
         'Package state')
     packages_quantity = fields.Integer('Packages quantity')
     email_report = fields.Boolean('Email report')
-    single_sending_report = fields.Boolean('Single sending of report')
+    single_sending_report = fields.Boolean('Single sending of report',
+        select=True)
     english_report = fields.Boolean('English report')
     no_acknowledgment_of_receipt = fields.Boolean(
         'No acknowledgment of receipt')
