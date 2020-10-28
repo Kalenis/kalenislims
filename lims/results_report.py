@@ -29,7 +29,7 @@ class ResultsReport(ModelSQL, ModelView):
     versions = fields.One2Many('lims.results_report.version',
         'results_report', 'Laboratories', readonly=True)
     party = fields.Many2One('party.party', 'Party', readonly=True)
-    entry = fields.Many2One('lims.entry', 'Entry', readonly=True)
+    entry = fields.Many2One('lims.entry', 'Entry', select=True, readonly=True)
     notebook = fields.Many2One('lims.notebook', 'Laboratory notebook')
     report_grouper = fields.Integer('Report Grouper')
     generation_type = fields.Char('Generation type')
@@ -40,6 +40,9 @@ class ResultsReport(ModelSQL, ModelView):
         searcher='search_single_sending_report')
     single_sending_report_ready = fields.Function(fields.Boolean(
         'Single sending Ready'), 'get_single_sending_report_ready')
+    ready_to_send = fields.Function(fields.Boolean(
+        'Ready to Send'), 'get_ready_to_send',
+        searcher='search_ready_to_send')
     create_date2 = fields.Function(fields.DateTime('Create Date'),
        'get_create_date2', searcher='search_create_date2')
     write_date2 = fields.DateTime('Write Date', readonly=True)
@@ -123,10 +126,12 @@ class ResultsReport(ModelSQL, ModelView):
             'attachments',
             ]
 
-    def get_single_sending_report(self, name):
-        if self.entry:
-            return self.entry.single_sending_report
-        return False
+    @classmethod
+    def get_single_sending_report(cls, reports, name):
+        result = {}
+        for r in reports:
+            result[r.id] = r.entry and r.entry.single_sending_report or False
+        return result
 
     @classmethod
     def search_single_sending_report(cls, name, clause):
@@ -134,21 +139,87 @@ class ResultsReport(ModelSQL, ModelView):
 
     @classmethod
     def get_single_sending_report_ready(cls, reports, name):
-        EntryDetailAnalysis = Pool().get('lims.entry.detail.analysis')
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Service = pool.get('lims.service')
+        Fraction = pool.get('lims.fraction')
+        Sample = pool.get('lims.sample')
+
         result = {}
         for r in reports:
-            if not r.single_sending_report or not not r.entry:
-                result[r.id] = False
-            elif EntryDetailAnalysis.search_count([
-                    ('entry', '=', r.entry),
-                    ('report_grouper', '=', r.report_grouper),
-                    ('report', '=', True),
-                    ('state', '!=', 'reported'),
-                    ]) > 0:
-                result[r.id] = False
-            else:
-                result[r.id] = True
+            result[r.id] = False
+            if not r.single_sending_report:
+                continue
+            cursor.execute('SELECT COUNT(*) '
+                'FROM "' + EntryDetailAnalysis._table + '" ad '
+                    'INNER JOIN "' + Service._table + '" srv '
+                    'ON srv.id = ad.service '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = srv.fraction '
+                    'INNER JOIN "' + Sample._table + '" s '
+                    'ON s.id = f.sample '
+                'WHERE s.entry = %s '
+                    'AND ad.report_grouper = %s '
+                    'AND ad.report = TRUE '
+                    'AND ad.state != \'reported\'',
+                (r.entry.id, r.report_grouper,))
+            if cursor.fetchone()[0] > 0:
+                continue
+            result[r.id] = True
         return result
+
+    @classmethod
+    def get_ready_to_send(cls, reports, name):
+        result = {}
+        for r in reports:
+            result[r.id] = False
+            if r.single_sending_report and not r.single_sending_report_ready:
+                continue
+            spanish_report = r.has_report_cached(english_report=False)
+            english_report = r.has_report_cached(english_report=True)
+            if not spanish_report and not english_report:
+                continue
+            result[r.id] = True
+        return result
+
+    @classmethod
+    def search_ready_to_send(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Entry = pool.get('lims.entry')
+        ResultsReport = pool.get('lims.results_report')
+        ResultsVersion = pool.get('lims.results_report.version')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+
+        excluded_ids = []
+        cursor.execute('SELECT r.id '
+            'FROM "' + ResultsReport._table + '" r '
+                'INNER JOIN "' + Entry._table + '" e '
+                'ON r.entry = e.id '
+            'WHERE e.single_sending_report = TRUE')
+        single_sending_ids = [x[0] for x in cursor.fetchall()]
+        for report in ResultsReport.browse(single_sending_ids):
+            if not report.single_sending_report_ready:
+                excluded_ids.append(report.id)
+        excluded_ids = ', '.join(str(r) for r in [0] + excluded_ids)
+
+        cursor.execute('SELECT rv.results_report '
+            'FROM "' + ResultsDetail._table + '" rd '
+                'INNER JOIN "' + ResultsVersion._table + '" rv '
+                'ON rd.report_version = rv.id '
+            'WHERE rd.valid = TRUE '
+                'AND (rd.report_format = \'pdf\' '
+                'OR rd.report_format_eng = \'pdf\') '
+                'AND rv.results_report NOT IN (' + excluded_ids + ') ')
+        ready_ids = [x[0] for x in cursor.fetchall()]
+
+        field, op, operand = clause
+        if (op, operand) in (('=', True), ('!=', False)):
+            return [('id', 'in', ready_ids)]
+        elif (op, operand) in (('=', False), ('!=', True)):
+            return [('id', 'not in', ready_ids)]
+        return []
 
     def get_create_date2(self, name):
         return self.create_date.replace(microsecond=0)
@@ -166,6 +237,46 @@ class ResultsReport(ModelSQL, ModelView):
     @classmethod
     def order_create_date2(cls, tables):
         return cls.create_date.convert_order('create_date', tables, cls)
+
+    def has_report_cached(self, english_report=False):
+        '''
+        Has Report Cached
+        :english_report: boolean
+        :return: boolean
+        '''
+        return bool(self._get_details_cached(english_report))
+
+    def details_cached(self, english_report=False):
+        '''
+        Details Cached
+        :english_report: boolean
+        :return: list of details
+        '''
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        with Transaction().set_user(0):
+            return ResultsDetail.browse(
+                self._get_details_cached(english_report))
+
+    def _get_details_cached(self, english_report=False):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
+
+        format_field = 'report_format'
+        if english_report:
+            format_field = 'report_format_eng'
+
+        cursor.execute('SELECT rd.id '
+            'FROM "' + ResultsDetail._table + '" rd '
+                'INNER JOIN "' + ResultsVersion._table + '" rv '
+                'ON rd.report_version = rv.id '
+            'WHERE rv.results_report = %s '
+                'AND rd.valid = TRUE '
+                'AND rd.' + format_field + ' = \'pdf\'',
+            (self.id,))
+        return [x[0] for x in cursor.fetchall()]
 
 
 class ResultsReportVersion(ModelSQL, ModelView):
@@ -4097,20 +4208,11 @@ class PrintGlobalResultReport(Wizard):
     def transition_start(self):
         pool = Pool()
         ResultsReport = pool.get('lims.results_report')
-        ResultsDetail = pool.get('lims.results_report.version.detail')
 
         for active_id in Transaction().context['active_ids']:
             results_report = ResultsReport(active_id)
-            format_field = 'report_format'
-            if results_report.english_report:
-                format_field = 'report_format_eng'
-            with Transaction().set_user(0):
-                details = ResultsDetail.search([
-                    ('report_version.results_report.id', '=',
-                        results_report.id),
-                    ('valid', '=', True),
-                    (format_field, '=', 'pdf'),
-                    ])
+            details = results_report.details_cached(
+                results_report.english_report)
             if not details:
                 raise UserError(gettext('lims.msg_empty_report'))
 
