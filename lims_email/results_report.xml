@@ -4,6 +4,12 @@
 
 <!-- Results Report -->
 
+        <record model="ir.action.act_window" id="lims.act_lims_results_report">
+            <field name="search_value"
+                eval="[('ready_to_send', '=', True), ('sent', '=', False)]"
+                pyson="1"/>
+        </record>
+
         <record model="ir.ui.view" id="lims_results_report_view_list">
             <field name="model">lims.results_report</field>
             <field name="inherit" ref="lims.lims_results_report_view_list"/>
