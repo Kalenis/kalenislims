@@ -5,5 +5,9 @@
             <label name="analysis_sheet"/>
             <field name="analysis_sheet"/>
         </group>
+        <group id="apply_on_notebook" colspan="2" col="2">
+            <label name="apply_on_notebook"/>
+            <field name="apply_on_notebook"/>
+        </group>
     </xpath>
 </data>
