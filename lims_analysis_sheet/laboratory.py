@@ -6,15 +6,24 @@ import operator
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
+from trytond.pyson import Eval, Bool, And
 
 
 class NotebookRule(metaclass=PoolMeta):
     __name__ = 'lims.rule'
 
     analysis_sheet = fields.Boolean('For use in Analysis Sheets')
+    apply_on_notebook = fields.Boolean('Apply directly on the Notebook',
+        states={'readonly': ~And(
+            Bool(Eval('analysis_sheet')), Eval('action') == 'edit')},
+        depends=['analysis_sheet', 'action'])
 
     @staticmethod
     def default_analysis_sheet():
+        return False
+
+    @staticmethod
+    def default_apply_on_notebook():
         return False
 
     def eval_condition(self, line):
@@ -32,7 +41,10 @@ class NotebookRule(metaclass=PoolMeta):
         if self.action == 'add':
             self._exec_sheet_add(line)
         elif self.action == 'edit':
-            self._exec_sheet_edit(line)
+            if self.apply_on_notebook:
+                self._exec_notebook_edit(line)
+            else:
+                self._exec_sheet_edit(line)
 
     def _exec_sheet_add(self, line):
         Typification = Pool().get('lims.typification')
@@ -141,6 +153,33 @@ class NotebookRule(metaclass=PoolMeta):
 
         try:
             Data.write([sheet_line], {target_field: str(self.value)})
+        except Exception as e:
+            return
+
+    def _exec_notebook_edit(self, line):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        Date = pool.get('ir.date')
+
+        if line.notebook_line.analysis == self.target_analysis:
+            notebook_line = NotebookLine(line.notebook_line.id)
+        else:
+            target_line = NotebookLine.search([
+                ('notebook', '=', line.notebook_line.notebook),
+                ('analysis', '=', self.target_analysis),
+                ], order=[('repetition', 'DESC')], limit=1)
+            if not target_line:
+                return
+            notebook_line = target_line[0]
+
+        if notebook_line.accepted or notebook_line.annulled:
+            return
+
+        try:
+            setattr(notebook_line, self.target_field.name, self.value)
+            if self.target_field.name in ('result', 'literal_result'):
+                setattr(notebook_line, 'end_date', Date.today())
+            notebook_line.save()
         except Exception as e:
             return
 

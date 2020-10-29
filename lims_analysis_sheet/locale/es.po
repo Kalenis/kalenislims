@@ -352,6 +352,10 @@ msgctxt "field:lims.rule,analysis_sheet:"
 msgid "For use in Analysis Sheets"
 msgstr "Para uso en Hojas de análisis"
 
+msgctxt "field:lims.rule,apply_on_notebook:"
+msgid "Apply directly on the Notebook"
+msgstr "Aplicar directamente en el Cuaderno"
+
 msgctxt "field:lims.template.analysis_sheet,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
