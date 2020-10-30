@@ -1770,7 +1770,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         data[nl_field] = getattr(line, alias)
                     if nl_field == 'result':
                         data[nl_field] = round(
-                            data[nl_field], nb_line.decimals)
+                            float(data[nl_field]), nb_line.decimals)
                     if nb_line.laboratory.automatic_accept_result:
                         data['accepted'] = True
                     if data:
