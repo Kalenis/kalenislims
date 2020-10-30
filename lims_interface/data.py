@@ -15,7 +15,7 @@ from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.tools import cursor_dict
-from trytond.pyson import PYSONEncoder
+from trytond.pyson import PYSONEncoder, Eval
 from trytond.rpc import RPC
 from trytond.exceptions import UserError
 from trytond.model.modelsql import convert_from
@@ -319,12 +319,27 @@ class Data(ModelSQL, ModelView):
         setattr(cls, fn_name, fn)
 
     @classmethod
+    def _get_readonly_notebook_lines(cls):
+        readonly_ids = []
+        compilation_id = Transaction().context.get(
+            'lims_interface_compilation', None)
+        if not compilation_id:
+            return readonly_ids
+        for line in cls.search([('compilation', '=', compilation_id)]):
+            if line.notebook_line and line.notebook_line.end_date:
+                readonly_ids.append(line.notebook_line.id)
+        return readonly_ids
+
+    @classmethod
     def fields_get(cls, fields_names=None, level=0):
         Model = Pool().get('ir.model')
         res = super().fields_get(fields_names)
 
         table = cls.get_table()
+        readonly_ids = []
         readonly = Transaction().context.get('lims_interface_readonly', False)
+        if not readonly:
+            readonly_ids = cls._get_readonly_notebook_lines()
         encoder = PYSONEncoder()
         groups = 0
 
@@ -337,13 +352,17 @@ class Data(ModelSQL, ModelView):
             groups = max(groups, field.group or 0)
             if field.group:
                 continue
+            states = {
+                'readonly': (bool(readonly or field.formula or field.readonly)
+                    or Eval('notebook_line').in_(readonly_ids)),
+                }
             res[field.name] = {
                 'name': field.name,
                 'string': field.string,
                 'type': FIELD_TYPE_TRYTON[field.type],
                 'relation': (field.related_model.model if
                     field.related_model else None),
-                'readonly': bool(field.formula or field.readonly or readonly),
+                'states': encoder.encode(states),
                 'help': field.help,
                 'domain': field.domain,
                 'sortable': True,
@@ -825,7 +844,7 @@ class GroupedData(ModelView):
                 'type': FIELD_TYPE_TRYTON[field.type],
                 'relation': (field.related_model.model if
                     field.related_model else None),
-                'readonly': bool(field.formula or field.readonly or readonly),
+                'readonly': bool(readonly or field.formula or field.readonly),
                 'help': field.help,
                 'domain': field.domain,
                 'states': '{}',
