@@ -465,9 +465,9 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     lims_interface_table=s.compilation.table.id):
                 lines = Data.search([('compilation', '=', s.compilation.id)])
                 for line in lines:
-                    nl = line.notebook_line
-                    if nl:
-                        notebooks_ids.append(nl.notebook.id)
+                    nb_line = line.notebook_line
+                    if nb_line:
+                        notebooks_ids.append(nb_line.notebook.id)
             if notebooks_ids:
                 clause = [
                     ('notebook', 'in', notebooks_ids),
@@ -537,6 +537,11 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     raise UserError(gettext(
                         'lims_analysis_sheet.msg_sheet_not_lines'))
                 for line in lines:
+                    nb_line = line.notebook_line
+                    if not nb_line:
+                        continue
+                    if nb_line.end_date:
+                        continue
                     if (not getattr(line, result_field) and not line.annulled
                             and getattr(line, result_field) != 0.0):
                         raise UserError(gettext(
@@ -557,8 +562,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 ok = False
                 lines = Data.search([('compilation', '=', s.compilation.id)])
                 for line in lines:
-                    nl = line.notebook_line
-                    if nl and nl.fraction.special_type in controls_allowed:
+                    nb_line = line.notebook_line
+                    if not nb_line:
+                        continue
+                    if nb_line.end_date:
+                        continue
+                    if nb_line.fraction.special_type in controls_allowed:
                         ok = True
                         break
                 if not ok:
@@ -580,6 +589,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 for line in lines:
                     nb_line = line.notebook_line
                     if not nb_line:
+                        continue
+                    if nb_line.end_date:
                         continue
                     data = {
                         'end_date': today,
