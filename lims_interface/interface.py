@@ -1747,6 +1747,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
         Field = pool.get('lims.interface.table.field')
         NotebookLine = pool.get('lims.notebook.line')
 
+        now = datetime.now()
+        #today = now.date()
         for c in compilations:
             fields = {}
             columns = Field.search([
@@ -1763,6 +1765,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     nb_line = line.notebook_line
                     if not nb_line:
                         continue
+                    if nb_line.end_date:
+                        continue
                     data = {
                         'compilation': c.id,
                         }
@@ -1772,7 +1776,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         data[nl_field] = round(
                             float(data[nl_field]), nb_line.decimals)
                     if nb_line.laboratory.automatic_accept_result:
+                        #data['end_date'] = today
                         data['accepted'] = True
+                        data['acceptance_date'] = now
                     if data:
                         NotebookLine.write([nb_line], data)
 
