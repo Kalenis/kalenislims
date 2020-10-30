@@ -366,9 +366,10 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 result_field = result_column and result_column[0].name or None
                 if result_field:
                     result_column = Column(sql_table, result_field)
-                    cursor.execute(*sql_table.select(Count(Literal('*')),
+                    cursor.execute(*sql_join.select(Count(Literal('*')),
                         where=(sql_table.compilation == s.compilation.id) &
-                            (result_column != Null)))
+                            ((result_column != Null) |
+                            (notebook_line.end_date != Null))))
                     results = cursor.fetchone()[0]
 
             result['urgent'][s.id] = False
