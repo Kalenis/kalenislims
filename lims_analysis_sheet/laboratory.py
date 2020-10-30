@@ -1,6 +1,7 @@
 # This file is part of lims_analysis_sheet module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+from datetime import datetime, date
 import operator
 
 from trytond.model import fields
@@ -72,8 +73,9 @@ class NotebookRule(metaclass=PoolMeta):
         Service = pool.get('lims.service')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         NotebookLine = pool.get('lims.notebook.line')
-        Date = pool.get('ir.date')
         AnalysisSheet = pool.get('lims.analysis_sheet')
+
+        today = date.today()
 
         cursor.execute('SELECT DISTINCT(laboratory) '
             'FROM "' + AnalysisLaboratory._table + '" '
@@ -121,8 +123,7 @@ class NotebookRule(metaclass=PoolMeta):
             notebook_lines = [nl for nl in notebook_lines if
                 nl.get_analysis_sheet_template() == sheet.template.id]
             if notebook_lines:
-                date = Date.today()
-                NotebookLine.write(notebook_lines, {'start_date': date})
+                NotebookLine.write(notebook_lines, {'start_date': today})
                 sheet.create_lines(notebook_lines)
 
     def _exec_sheet_edit(self, line):
@@ -159,7 +160,9 @@ class NotebookRule(metaclass=PoolMeta):
     def _exec_notebook_edit(self, line):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
-        Date = pool.get('ir.date')
+
+        now = datetime.now()
+        today = now.date()
 
         if line.notebook_line.analysis == self.target_analysis:
             notebook_line = NotebookLine(line.notebook_line.id)
@@ -178,7 +181,10 @@ class NotebookRule(metaclass=PoolMeta):
         try:
             setattr(notebook_line, self.target_field.name, self.value)
             if self.target_field.name in ('result', 'literal_result'):
-                setattr(notebook_line, 'end_date', Date.today())
+                notebook_line.end_date = today
+                if notebook_line.laboratory.automatic_accept_result:
+                    notebook_line.accepted = True
+                    notebook_line.acceptance_date = now
             notebook_line.save()
         except Exception as e:
             return
