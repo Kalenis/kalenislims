@@ -160,10 +160,14 @@ class NotebookRule(metaclass=PoolMeta):
     def _exec_notebook_edit(self, line):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
+        Data = pool.get('lims.interface.data')
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Field = pool.get('lims.interface.table.field')
 
         now = datetime.now()
         today = now.date()
 
+        # update notebook line
         if line.notebook_line.analysis == self.target_analysis:
             notebook_line = NotebookLine(line.notebook_line.id)
         else:
@@ -188,6 +192,39 @@ class NotebookRule(metaclass=PoolMeta):
             notebook_line.save()
         except Exception as e:
             return
+
+        # find analysis sheet line and update it
+        if notebook_line.analysis_sheet:
+            sheets = [notebook_line.analysis_sheet]
+        else:
+            template_id = notebook_line.get_analysis_sheet_template()
+            if not template_id:
+                return
+            sheets = AnalysisSheet.search([
+                ('template', '=', template_id),
+                ('state', 'in', ['draft', 'active', 'validated'])
+                ], order=[('id', 'DESC')])
+        for s in sheets:
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                lines = Data.search([
+                    ('compilation', '=', s.compilation.id),
+                    ('notebook_line', '=', notebook_line.id),
+                    ], limit=1)
+                if not lines:
+                    continue
+                target_column = Field.search([
+                    ('table', '=', s.compilation.table.id),
+                    ('transfer_field', '=', True),
+                    ('related_line_field', '=', self.target_field),
+                    ])
+                if not target_column:
+                    return
+                target_field = target_column[0].name
+                try:
+                    Data.write(lines, {target_field: str(self.value)})
+                except Exception as e:
+                    return
 
     def _get_existing_line(self, notebook_id, analysis_id,
             compilation_id=None):

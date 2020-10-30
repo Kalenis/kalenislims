@@ -27,7 +27,8 @@ class NotebookLine(metaclass=PoolMeta):
 
     def get_analysis_sheet_template(self):
         cursor = Transaction().connection.cursor()
-        TemplateAnalysis = Pool().get('lims.template.analysis_sheet.analysis')
+        pool = Pool()
+        TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
 
         cursor.execute('SELECT template '
             'FROM "' + TemplateAnalysis._table + '" '
