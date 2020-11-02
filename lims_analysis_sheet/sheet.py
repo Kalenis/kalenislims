@@ -504,10 +504,13 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     @Workflow.transition('done')
     def confirm(cls, sheets):
         Compilation = Pool().get('lims.interface.compilation')
+        cls.exec_sheet_wizards(sheets)
         cls.check_results(sheets)
         cls.check_controls(sheets)
-        Compilation.confirm([s.compilation for s in sheets])
-        cls.confirm_compilations(sheets)
+        with Transaction().set_context(avoid_accept_result=True):
+            Compilation.confirm([s.compilation for s in sheets])
+            cls.exec_notebook_wizards(sheets)
+            cls.confirm_compilations(sheets)
 
     @classmethod
     def check_results(cls, sheets):
@@ -576,10 +579,57 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         'lims_analysis_sheet.msg_sheet_not_controls'))
 
     @classmethod
+    def exec_sheet_wizards(cls, sheets):
+        pool = Pool()
+        EvaluateRules = pool.get('lims.analysis_sheet.evaluate_rules',
+            type='wizard')
+
+        # Evaluate Sheet Rules
+        for s in sheets:
+            session_id, _, _ = EvaluateRules.create()
+            evaluate_rules = EvaluateRules(session_id)
+            with Transaction().set_context(lims_analysis_sheet=s.id):
+                evaluate_rules.transition_evaluate()
+
+        return
+
+    @classmethod
+    def exec_notebook_wizards(cls, sheets):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+        EvaluateRules = pool.get('lims.notebook.evaluate_rules',
+            type='wizard')
+
+        # Evaluate Notebook Rules
+        for s in sheets:
+            notebook_lines = []
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                lines = Data.search([('compilation', '=', s.compilation.id)])
+                for line in lines:
+                    nb_line = line.notebook_line
+                    if not nb_line:
+                        continue
+                    if nb_line.end_date:
+                        continue
+                    notebook_lines.append(nb_line)
+            if not notebook_lines:
+                continue
+            session_id, _, _ = EvaluateRules.create()
+            evaluate_rules = EvaluateRules(session_id)
+            with Transaction().set_context(lims_analysis_sheet=s.id):
+                evaluate_rules.evaluate_rules(notebook_lines)
+
+        return
+
+    @classmethod
     def confirm_compilations(cls, sheets):
         pool = Pool()
         Data = pool.get('lims.interface.data')
         NotebookLine = pool.get('lims.notebook.line')
+
+        avoid_accept_result = Transaction().context.get('avoid_accept_result',
+            False)
 
         now = datetime.now()
         today = now.date()
@@ -604,6 +654,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                             'annulment_date': now,
                             'report': False,
                             })
+                    # if already avoided in compilations then accept here
+                    elif (avoid_accept_result and
+                            nb_line.laboratory.automatic_accept_result):
+                        #data['end_date'] = today
+                        data['accepted'] = True
+                        data['acceptance_date'] = now
                     NotebookLine.write([nb_line], data)
 
     def get_new_compilation(self, defaults={}):
