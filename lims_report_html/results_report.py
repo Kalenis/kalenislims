@@ -2,6 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import os
+import operator
 from mimetypes import guess_type as mime_guess_type
 from binascii import b2a_base64
 from functools import partial
@@ -526,6 +527,7 @@ class ResultReport(metaclass=PoolMeta):
         context.update({
             'report': action,
             'get_image': cls.get_image,
+            'operation': cls.operation,
             })
         res = report_template.render(**context)
         res = cls.parse_images(res)
@@ -642,6 +644,10 @@ class ResultReport(metaclass=PoolMeta):
             return ''
         b64_image = b64encode(image).decode()
         return 'data:image/png;base64,%s' % b64_image
+
+    @classmethod
+    def operation(cls, function, value1, value2):
+        return getattr(operator, function)(value1, value2)
 
     @classmethod
     def parse_stylesheets(cls, template_string):
