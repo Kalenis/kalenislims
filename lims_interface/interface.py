@@ -1747,6 +1747,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
         Field = pool.get('lims.interface.table.field')
         NotebookLine = pool.get('lims.notebook.line')
 
+        avoid_accept_result = Transaction().context.get('avoid_accept_result',
+            False)
+
         now = datetime.now()
         #today = now.date()
         for c in compilations:
@@ -1775,7 +1778,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     if nl_field == 'result':
                         data[nl_field] = round(
                             float(data[nl_field]), nb_line.decimals)
-                    if nb_line.laboratory.automatic_accept_result:
+                    if (not avoid_accept_result and
+                            nb_line.laboratory.automatic_accept_result):
                         #data['end_date'] = today
                         data['accepted'] = True
                         data['acceptance_date'] = now
