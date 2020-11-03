@@ -1075,7 +1075,7 @@ class EditGroupedData(Wizard):
         sheet_id = self._get_analysis_sheet_id()
         if line_id and sheet_id:
             sheet = AnalysisSheet(sheet_id)
-            if sheet.state in ('active', 'validated'):
+            if sheet.state in ('active', 'validated', 'done'):
                 return 'start'
 
         return 'end'
@@ -1149,6 +1149,10 @@ class EditGroupedData(Wizard):
         line_id = Transaction().context.get('active_id', None)
         sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
+
+        if sheet.state == 'done':
+            return 'end'
+
         fields = [f for f in sheet.compilation.table.fields_]
         grouped_fields = [f for f in sheet.compilation.table.grouped_fields_]
 
