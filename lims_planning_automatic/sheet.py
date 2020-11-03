@@ -17,7 +17,8 @@ class AnalysisSheet(metaclass=PoolMeta):
         super().activate(sheets)
         professional_id = LaboratoryProfessional.get_lab_professional()
         if not professional_id:
-            raise UserError(gettext('lims_rack.msg_user_no_professional'))
+            raise UserError(gettext(
+                'lims_planning_automatic.msg_user_no_professional'))
 
         for s in sheets:
             s.professional = professional_id

@@ -14,3 +14,7 @@ msgctxt ""
 "model:ir.action.act_window.domain,name:act_lims_planification_list_domain_automatic"
 msgid "Automatic"
 msgstr "Automática"
+
+msgctxt "model:ir.message,text:msg_user_no_professional"
+msgid "This user is not associated with any professional"
+msgstr "Este usuario no está asociado a ningún profesional"
