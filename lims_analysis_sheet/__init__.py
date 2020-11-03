@@ -62,6 +62,7 @@ def register():
         notebook.RepeatAnalysis,
         notebook.CalculateExpressions,
         notebook.ResultsVerification,
+        notebook.LimitsValidation,
         notebook.EvaluateRules,
         notebook.EditGroupedData,
         module='lims_analysis_sheet', type_='wizard')

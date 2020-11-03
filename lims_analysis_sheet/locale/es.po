@@ -470,7 +470,7 @@ msgstr "Editar datos"
 
 msgctxt "model:ir.action,name:wiz_analysis_sheet_evaluate_rules"
 msgid "Evaluate Rules"
-msgstr "05) Evaluar Reglas de cuaderno"
+msgstr "06) Evaluar Reglas de cuaderno"
 
 msgctxt "model:ir.action,name:wiz_analysis_sheet_export_file"
 msgid "Export Analysis Sheet File"
@@ -479,6 +479,10 @@ msgstr "Exportar Hoja de análisis"
 msgctxt "model:ir.action,name:wiz_analysis_sheet_import_file"
 msgid "Import Analysis Sheet File"
 msgstr "Importar archivo de datos"
+
+msgctxt "model:ir.action,name:wiz_analysis_sheet_limits_validation"
+msgid "Limits Validation"
+msgstr "05) Validación de límites"
 
 msgctxt "model:ir.action,name:wiz_analysis_sheet_open_data"
 msgid "Open Analysis Sheet Data"
@@ -558,11 +562,15 @@ msgid "Template \"%(template)s\" has no associated report"
 msgstr "La plantilla «%(template)s» no tiene informe asociado"
 
 msgctxt "model:ir.message,text:msg_template_not_result_field"
-msgid "The template does not have a column for the result field"
+msgid "The template does not have a column for the Result field"
 msgstr "La plantilla no tiene una columna para el campo Resultado"
 
+msgctxt "model:ir.message,text:msg_template_not_result_modifier_field"
+msgid "The template does not have a column for the Result modifier field"
+msgstr "La plantilla no tiene una columna para el campo Modificador de resultado"
+
 msgctxt "model:ir.message,text:msg_template_not_verification_field"
-msgid "The template does not have a column for the verification field"
+msgid "The template does not have a column for the Verification field"
 msgstr "La plantilla no tiene una columna para el campo Verificación"
 
 msgctxt "model:ir.sequence,name:seq_analysis_sheet"
