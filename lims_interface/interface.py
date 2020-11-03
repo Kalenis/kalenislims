@@ -630,6 +630,9 @@ class Interface(Workflow, ModelSQL, ModelView):
                 fields.append('<field name="group_%s" colspan="4"/>' % (
                     i + 1, ))
 
+        if current_group:
+            fields.append('</group>')
+
         fields.append('<label name="notebook_line"/>')
         fields.append('<field name="notebook_line"/>')
 
@@ -704,6 +707,8 @@ class Interface(Workflow, ModelSQL, ModelView):
 
             fields.append('<field name="%s" %s/>' % (line.name,
                     ' '.join(attributes)))
+
+        fields.append('<field name="data"/>')
 
         return fields
 

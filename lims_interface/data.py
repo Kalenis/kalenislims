@@ -405,6 +405,7 @@ class Data(ModelSQL, ModelView):
                 'type': 'one2many',
                 'help': '',
                 'relation': 'lims.interface.grouped_data',
+                'relation_field': 'data',
                 }
             res[field_name]['views'] = {
                 'tree': GroupedData.fields_view_get(
@@ -807,7 +808,8 @@ class GroupedData(ModelView):
         def fn(self):
             ast = field.get_ast()
             inputs = field.get_inputs().split()
-            inputs = [getattr(self, x) for x in inputs]
+            inputs = [self.data.get(x) if x in self.data.keys()
+                else getattr(self, x) for x in inputs]
             try:
                 value = ast(*inputs)
             except schedula.utils.exc.DispatcherError as e:
@@ -828,8 +830,9 @@ class GroupedData(ModelView):
         setattr(cls, fn_name, fn)
 
     @classmethod
-    def fields_get(cls, fields_names=None, group=0):
+    def fields_get(cls, fields_names=None, group=0, level=0):
         Model = Pool().get('ir.model')
+        Data = Pool().get('lims.interface.data')
         res = super().fields_get(fields_names)
 
         table = cls.get_table()
@@ -866,6 +869,17 @@ class GroupedData(ModelView):
                     '%H:%M:%S.%f')
             if field.type in ['float', 'numeric']:
                 res[field.name]['digits'] = encoder.encode((16, field.digits))
+        res['data'] = {
+            'name': 'data',
+            'string': 'Data',
+            'type': 'many2one',
+            'relation': 'lims.interface.data',
+            'relation_field': 'group_%s' % group,
+            'relation_fields': (Data.fields_get(level=level - 1)
+                if level > 0 else []),
+            'readonly': True,
+            'states': '{}',
+            }
         return res
 
     @classmethod
