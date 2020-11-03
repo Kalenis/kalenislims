@@ -658,13 +658,22 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         pool = Pool()
         EvaluateRules = pool.get('lims.analysis_sheet.evaluate_rules',
             type='wizard')
+        LimitsValidation = pool.get('lims.analysis_sheet.limits_validation',
+            type='wizard')
 
-        # Evaluate Sheet Rules
         for s in sheets:
+            # Evaluate Sheet Rules
             session_id, _, _ = EvaluateRules.create()
             evaluate_rules = EvaluateRules(session_id)
             with Transaction().set_context(lims_analysis_sheet=s.id):
                 evaluate_rules.transition_evaluate()
+
+            # Validate Limits
+            session_id, _, _ = LimitsValidation.create()
+            limits_validation = LimitsValidation(session_id)
+            with Transaction().set_context(lims_analysis_sheet=s.id,
+                    unattended=True):
+                limits_validation.transition_validate_limits()
 
         return
 
@@ -675,8 +684,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         EvaluateRules = pool.get('lims.notebook.evaluate_rules',
             type='wizard')
 
-        # Evaluate Notebook Rules
         for s in sheets:
+            # Evaluate Notebook Rules
             notebook_lines = []
             with Transaction().set_context(
                     lims_interface_table=s.compilation.table.id):
