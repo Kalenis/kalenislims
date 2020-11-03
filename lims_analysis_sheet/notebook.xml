@@ -90,6 +90,19 @@
             <field name="action" ref="wiz_analysis_sheet_results_verification"/>
         </record>
 
+<!-- Wizard Limits Validation -->
+
+        <record model="ir.action.wizard" id="wiz_analysis_sheet_limits_validation">
+            <field name="name">Limits Validation</field>
+            <field name="wiz_name">lims.analysis_sheet.limits_validation</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_analysis_sheet_limits_validation_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.interface.data,-1</field>
+            <field name="action" ref="wiz_analysis_sheet_limits_validation"/>
+        </record>
+
 <!-- Wizard Evaluate Rules -->
 
         <record model="ir.action.wizard" id="wiz_analysis_sheet_evaluate_rules">

@@ -821,44 +821,28 @@ class ResultsVerification(Wizard):
     def transition_verify(self):
         pool = Pool()
         AnalysisSheet = pool.get('lims.analysis_sheet')
-        ModelField = pool.get('ir.model.field')
-        Field = pool.get('lims.interface.table.field')
         Data = pool.get('lims.interface.data')
 
         sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
+        table_id = sheet.compilation.table.id
 
-        nl_result_field, = ModelField.search([
-            ('model.model', '=', 'lims.notebook.line'),
-            ('name', '=', 'result'),
-            ])
-        result_column = Field.search([
-            ('table', '=', sheet.compilation.table.id),
-            ('transfer_field', '=', True),
-            ('related_line_field', '=', nl_result_field),
-            ])
+        result_column = self._get_template_column(
+            'result', table_id)
         if not result_column:
-            raise UserError(gettext(
-                'lims_analysis_sheet.msg_template_not_result_field'))
+            raise UserError(gettext('lims_analysis_sheet.'
+                'msg_template_not_result_field'))
+        result_field = result_column.name
 
-        nl_verification_field, = ModelField.search([
-            ('model.model', '=', 'lims.notebook.line'),
-            ('name', '=', 'verification'),
-            ])
-        verification_column = Field.search([
-            ('table', '=', sheet.compilation.table.id),
-            ('transfer_field', '=', True),
-            ('related_line_field', '=', nl_verification_field),
-            ])
+        verification_column = self._get_template_column(
+            'verification', table_id)
         if not verification_column:
-            raise UserError(gettext(
-                'lims_analysis_sheet.msg_template_not_verification_field'))
+            raise UserError(gettext('lims_analysis_sheet.'
+                'msg_template_not_verification_field'))
+        verification_field = verification_column.name
 
-        result_field = result_column[0].name
-        verification_field = verification_column[0].name
         notebook_lines = {}
-        with Transaction().set_context(
-                lims_interface_table=sheet.compilation.table.id):
+        with Transaction().set_context(lims_interface_table=table_id):
             lines = Data.search([('compilation', '=', sheet.compilation.id)])
             for line in lines:
                 nl = line.notebook_line
@@ -876,6 +860,22 @@ class ResultsVerification(Wizard):
                         {verification_field: str(verification)})
 
         return 'end'
+
+    def _get_template_column(self, field_name, table_id):
+        pool = Pool()
+        ModelField = pool.get('ir.model.field')
+        Field = pool.get('lims.interface.table.field')
+
+        nl_field, = ModelField.search([
+            ('model.model', '=', 'lims.notebook.line'),
+            ('name', '=', field_name),
+            ])
+        table_column = Field.search([
+            ('table', '=', table_id),
+            ('transfer_field', '=', True),
+            ('related_line_field', '=', nl_field),
+            ])
+        return table_column and table_column[0] or None
 
     def _get_result_verification(self, result, notebook_line):
         pool = Pool()
@@ -991,6 +991,128 @@ class ResultsVerification(Wizard):
                 return gettext('lims.msg_ok')
             else:
                 return gettext('lims.msg_out')
+
+    def end(self):
+        return 'reload'
+
+
+class LimitsValidation(Wizard):
+    'Limits Validation'
+    __name__ = 'lims.analysis_sheet.limits_validation'
+
+    start_state = 'check'
+    check = StateTransition()
+    validate_limits = StateTransition()
+
+    def _get_analysis_sheet_id(self):
+        return Transaction().context.get('lims_analysis_sheet', None)
+
+    def transition_check(self):
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
+
+        sheet_id = self._get_analysis_sheet_id()
+        if sheet_id:
+            sheet = AnalysisSheet(sheet_id)
+            if sheet.state in ('active', 'validated'):
+                return 'validate_limits'
+
+        return 'end'
+
+    def transition_validate_limits(self):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        unattended = Transaction().context.get('unattended', False)
+
+        sheet_id = self._get_analysis_sheet_id()
+        sheet = AnalysisSheet(sheet_id)
+        table_id = sheet.compilation.table.id
+
+        result_column = self._get_template_column(
+            'result', table_id)
+        if not result_column:
+            if unattended:
+                return 'end'
+            raise UserError(gettext('lims_analysis_sheet.'
+                'msg_template_not_result_field'))
+        result_field = result_column.name
+
+        result_modifier_column = self._get_template_column(
+            'result_modifier', table_id)
+        if not result_modifier_column:
+            if unattended:
+                return 'end'
+            raise UserError(gettext('lims_analysis_sheet.'
+                'msg_template_not_result_modifier_field'))
+        result_modifier_field = result_modifier_column.name
+
+        with Transaction().set_context(lims_interface_table=table_id):
+            lines = Data.search([('compilation', '=', sheet.compilation.id)])
+            for line in lines:
+                nl = line.notebook_line
+                if not nl:
+                    continue
+
+                result = getattr(line, result_field)
+                if not result:
+                    continue
+                result_modifier = getattr(line, result_modifier_field) or 'eq'
+                if result_modifier != 'eq':
+                    continue
+                try:
+                    value = float(result)
+                except ValueError:
+                    continue
+
+                try:
+                    dl = float(nl.detection_limit)
+                    ql = float(nl.quantification_limit)
+                except (TypeError, ValueError):
+                    continue
+                ll = nl.lower_limit and float(nl.lower_limit) or None
+                ul = nl.upper_limit and float(nl.upper_limit) or None
+
+                data = {}
+                if (ll and value < ll) or (ul and value > ul):
+                    raise UserError(gettext(
+                        'lims.msg_error_limits_allowed',
+                        line=nl.rec_name))
+                if dl < value and value < ql:
+                    data[result_field] = str(ql)
+                    data[result_modifier_field] = 'low'
+                elif value < dl:
+                    data[result_field] = None
+                    data[result_modifier_field] = 'nd'
+                elif value == dl:
+                    data[result_field] = str(ql)
+                    data[result_modifier_field] = 'low'
+                else:
+                    data[result_modifier_field] = 'eq'
+
+                if data:
+                    Data.write([line], data)
+                    if data[result_modifier_field] != 'eq':
+                        NotebookLine.write([nl], {'backup': str(value)})
+
+        return 'end'
+
+    def _get_template_column(self, field_name, table_id):
+        pool = Pool()
+        ModelField = pool.get('ir.model.field')
+        Field = pool.get('lims.interface.table.field')
+
+        nl_field, = ModelField.search([
+            ('model.model', '=', 'lims.notebook.line'),
+            ('name', '=', field_name),
+            ])
+        table_column = Field.search([
+            ('table', '=', table_id),
+            ('transfer_field', '=', True),
+            ('related_line_field', '=', nl_field),
+            ])
+        return table_column and table_column[0] or None
 
     def end(self):
         return 'reload'

@@ -20,10 +20,13 @@
             <field name="text">Template "%(template)s" has no associated report</field>
         </record>
         <record model="ir.message" id="msg_template_not_result_field">
-            <field name="text">The template does not have a column for the result field</field>
+            <field name="text">The template does not have a column for the Result field</field>
+        </record>
+        <record model="ir.message" id="msg_template_not_result_modifier_field">
+            <field name="text">The template does not have a column for the Result modifier field</field>
         </record>
         <record model="ir.message" id="msg_template_not_verification_field">
-            <field name="text">The template does not have a column for the verification field</field>
+            <field name="text">The template does not have a column for the Verification field</field>
         </record>
         <record model="ir.message" id="delete_done_sheet">
             <field name="text">You cannot delete an Analysis Sheet in "Done" state</field>
