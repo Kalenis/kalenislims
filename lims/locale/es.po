@@ -6285,6 +6285,10 @@ msgctxt "field:party.address,report_contact_default:"
 msgid "Report contact by default"
 msgstr "Contacto informe por defecto"
 
+msgctxt "field:party.address,report:"
+msgid "Report"
+msgstr "Informe"
+
 msgctxt "field:party.party,block_entry_confirmation:"
 msgid "Block Entry Confirmation"
 msgstr "Bloquear ingreso de muestras"

@@ -55,6 +55,7 @@ class Party(metaclass=PoolMeta):
 class Address(metaclass=PoolMeta):
     __name__ = 'party.address'
 
+    report = fields.Boolean('Report')
     email = fields.Char('Email',
         states={
             'required': Or(
