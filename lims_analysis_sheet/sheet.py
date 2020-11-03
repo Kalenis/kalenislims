@@ -338,6 +338,15 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             ('model.model', '=', 'lims.notebook.line'),
             ('name', '=', 'result'),
             ])
+        nl_literal_result_field, = ModelField.search([
+            ('model.model', '=', 'lims.notebook.line'),
+            ('name', '=', 'literal_result'),
+            ])
+        nl_result_modifier_field, = ModelField.search([
+            ('model.model', '=', 'lims.notebook.line'),
+            ('name', '=', 'result_modifier'),
+            ])
+
         _ZERO = Decimal(0)
         digits = cls.completion_percentage.digits[1]
 
@@ -358,19 +367,49 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
             results = _ZERO
             if s.state != 'draft':
+                table_id = s.compilation.table.id
+
                 result_column = Field.search([
-                    ('table', '=', s.compilation.table.id),
+                    ('table', '=', table_id),
                     ('transfer_field', '=', True),
                     ('related_line_field', '=', nl_result_field),
                     ])
                 result_field = result_column and result_column[0].name or None
+
+                literal_result_column = Field.search([
+                    ('table', '=', table_id),
+                    ('transfer_field', '=', True),
+                    ('related_line_field', '=', nl_literal_result_field),
+                    ])
+                literal_result_field = (literal_result_column and
+                    literal_result_column[0].name or None)
+
+                result_modifier_column = Field.search([
+                    ('table', '=', table_id),
+                    ('transfer_field', '=', True),
+                    ('related_line_field', '=', nl_result_modifier_field),
+                    ])
+                result_modifier_field = (result_modifier_column and
+                    result_modifier_column[0].name or None)
+
+                result_clause = Literal(False)
                 if result_field:
-                    result_column = Column(sql_table, result_field)
-                    cursor.execute(*sql_join.select(Count(Literal('*')),
-                        where=(sql_table.compilation == s.compilation.id) &
-                            ((result_column != Null) |
-                            (notebook_line.end_date != Null))))
-                    results = cursor.fetchone()[0]
+                    result_clause |= (Column(sql_table,
+                        result_field) != Null)
+                if literal_result_field:
+                    result_clause |= (Column(sql_table,
+                        literal_result_field) != Null)
+                if result_modifier_field:
+                    result_clause |= (Column(sql_table,
+                        result_modifier_field).in_((
+                            'd', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre')))
+
+                cursor.execute(*sql_join.select(Count(Literal('*')),
+                    where=(sql_table.compilation == s.compilation.id) & (
+                        (notebook_line.end_date != Null) |
+                        (sql_table.annulled == Literal(True)) |
+                        result_clause)))
+                results = cursor.fetchone()[0]
 
             result['urgent'][s.id] = False
             cursor.execute(*sql_join.select(Count(Literal('*')),
