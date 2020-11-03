@@ -562,10 +562,20 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             ('model.model', '=', 'lims.notebook.line'),
             ('name', '=', 'result'),
             ])
+        nl_literal_result_field, = ModelField.search([
+            ('model.model', '=', 'lims.notebook.line'),
+            ('name', '=', 'literal_result'),
+            ])
+        nl_result_modifier_field, = ModelField.search([
+            ('model.model', '=', 'lims.notebook.line'),
+            ('name', '=', 'result_modifier'),
+            ])
 
         for s in sheets:
+            table_id = s.compilation.table.id
+
             result_column = Field.search([
-                ('table', '=', s.compilation.table.id),
+                ('table', '=', table_id),
                 ('transfer_field', '=', True),
                 ('related_line_field', '=', nl_result_field),
                 ])
@@ -573,8 +583,24 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 raise UserError(gettext(
                     'lims_analysis_sheet.msg_template_not_result_field'))
             result_field = result_column[0].name
-            with Transaction().set_context(
-                    lims_interface_table=s.compilation.table.id):
+
+            literal_result_column = Field.search([
+                ('table', '=', table_id),
+                ('transfer_field', '=', True),
+                ('related_line_field', '=', nl_literal_result_field),
+                ])
+            literal_result_field = (literal_result_column and
+                literal_result_column[0].name or None)
+
+            result_modifier_column = Field.search([
+                ('table', '=', table_id),
+                ('transfer_field', '=', True),
+                ('related_line_field', '=', nl_result_modifier_field),
+                ])
+            result_modifier_field = (result_modifier_column and
+                result_modifier_column[0].name or None)
+
+            with Transaction().set_context(lims_interface_table=table_id):
                 lines = Data.search([('compilation', '=', s.compilation.id)])
                 if not lines:
                     raise UserError(gettext(
@@ -585,9 +611,19 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         continue
                     if nb_line.end_date:
                         continue
-                    if (not getattr(line, result_field) and not line.annulled
-                            and getattr(line, result_field) != 0.0):
-                        raise UserError(gettext(
+
+                    if line.annulled:
+                        continue
+                    if getattr(line, result_field) not in (None, ''):
+                        continue
+                    if (literal_result_field and getattr(line,
+                            literal_result_field) not in (None, '')):
+                        continue
+                    if (result_modifier_field and getattr(line,
+                            result_modifier_field) in (
+                            'd', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre')):
+                        continue
+                    raise UserError(gettext(
                             'lims_analysis_sheet.msg_sheet_not_results'))
 
     @classmethod
