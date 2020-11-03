@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tryton>
+    <data grouped="1">
+        <record model="ir.message" id="msg_user_no_professional">
+            <field name="text">This user is not associated with any professional</field>
+        </record>
+    </data>
+</tryton>
