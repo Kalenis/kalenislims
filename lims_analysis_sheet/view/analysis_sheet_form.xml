@@ -22,6 +22,15 @@
     <field name="compilation"/>
     <label name="planification"/>
     <field name="planification"/>
+    <separator string="Other Info" id="other" colspan="4"/>
+    <label name="validated_by"/>
+    <field name="validated_by"/>
+    <label name="validated_date"/>
+    <field name="validated_date"/>
+    <label name="confirmed_by"/>
+    <field name="confirmed_by"/>
+    <label name="confirmed_date"/>
+    <field name="confirmed_date"/>
     <button name="view_data" string="View data" colspan="4"/>
     <group id="state_holder" colspan="4">
         <label name="state"/>
