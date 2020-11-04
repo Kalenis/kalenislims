@@ -779,7 +779,8 @@ class GroupedData(ModelView):
                 continue
             ast = field.get_ast()
             inputs = field.get_inputs().split()
-            inputs = [getattr(self, x) for x in inputs]
+            inputs = [self.data.get(x) if x in self.data.keys()
+                else getattr(self, x) for x in inputs]
             try:
                 value = ast(*inputs)
             except schedula.utils.exc.DispatcherError as e:
