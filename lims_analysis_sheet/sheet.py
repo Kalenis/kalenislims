@@ -1,6 +1,7 @@
 # This file is part of lims_analysis_sheet module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import functools
 from io import StringIO
 from decimal import Decimal
 from datetime import datetime, date
@@ -222,6 +223,25 @@ class TemplateAnalysisSheetAnalysisExpression(ModelSQL, ModelView):
             return self.column.expression
 
 
+def set_state_info(kind):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(cls, sheets, *args, **kwargs):
+            pool = Pool()
+            LaboratoryProfessional = pool.get('lims.laboratory.professional')
+
+            result = func(cls, sheets, *args, **kwargs)
+            professional_id = LaboratoryProfessional.get_lab_professional()
+            if professional_id:
+                cls.write(sheets, {
+                    '%s_by' % kind: professional_id,
+                    '%s_date' % kind: datetime.now(),
+                    })
+            return result
+        return wrapper
+    return decorator
+
+
 class AnalysisSheet(Workflow, ModelSQL, ModelView):
     'Analysis Sheet'
     __name__ = 'lims.analysis_sheet'
@@ -261,6 +281,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         file_id='report_cache_id', store_prefix='analysis_sheet')
     report_cache_id = fields.Char('Report ID', readonly=True)
     report_format = fields.Char('Report Format', readonly=True)
+    validated_by = fields.Many2One('lims.laboratory.professional',
+        'Validated By', readonly=True)
+    validated_date = fields.DateTime('Validated Date', readonly=True)
+    confirmed_by = fields.Many2One('lims.laboratory.professional',
+        'Confirmed By', readonly=True)
+    confirmed_date = fields.DateTime('Confirmed Date', readonly=True)
 
     @classmethod
     def __setup__(cls):
@@ -532,6 +558,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     @classmethod
     @ModelView.button
     @Workflow.transition('validated')
+    @set_state_info('validated')
     def validate_(cls, sheets):
         Compilation = Pool().get('lims.interface.compilation')
         cls.check_results(sheets)
@@ -541,6 +568,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     @classmethod
     @ModelView.button
     @Workflow.transition('done')
+    @set_state_info('confirmed')
     def confirm(cls, sheets):
         Compilation = Pool().get('lims.interface.compilation')
         cls.exec_sheet_wizards(sheets)

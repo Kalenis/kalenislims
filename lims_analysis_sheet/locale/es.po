@@ -10,6 +10,14 @@ msgctxt "field:lims.analysis_sheet,completion_percentage:"
 msgid "Complete"
 msgstr "Completo"
 
+msgctxt "field:lims.analysis_sheet,confirmed_by:"
+msgid "Confirmed By"
+msgstr "Confirmada Por"
+
+msgctxt "field:lims.analysis_sheet,confirmed_date:"
+msgid "Confirmed Date"
+msgstr "Fecha Confirmación"
+
 msgctxt "field:lims.analysis_sheet,date:"
 msgid "Date"
 msgstr "Fecha"
@@ -61,6 +69,14 @@ msgstr "Plantilla"
 msgctxt "field:lims.analysis_sheet,urgent:"
 msgid "Urgent"
 msgstr "Urgente"
+
+msgctxt "field:lims.analysis_sheet,validated_by:"
+msgid "Validated By"
+msgstr "Validada Por"
+
+msgctxt "field:lims.analysis_sheet,validated_date:"
+msgid "Validated Date"
+msgstr "Fecha Validación"
 
 msgctxt "field:lims.analysis_sheet.add_control.start,analysis_sheet:"
 msgid "Analysis Sheet"
@@ -1060,6 +1076,10 @@ msgstr "Activar"
 msgctxt "view:lims.analysis_sheet:"
 msgid "Confirm"
 msgstr "Confirmar"
+
+msgctxt "view:lims.analysis_sheet:"
+msgid "Other Info"
+msgstr "Información adicional"
 
 msgctxt "view:lims.analysis_sheet:"
 msgid "Validate"
