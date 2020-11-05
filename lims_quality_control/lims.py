@@ -4,7 +4,7 @@
 from datetime import datetime
 
 from trytond.model import fields
-from trytond.pyson import Eval, Equal
+from trytond.pyson import Eval, Equal, Bool
 from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
 from trytond.exceptions import UserError
@@ -205,6 +205,15 @@ class NotebookLine(metaclass=PoolMeta):
     quality_max = fields.Float('Max',
         digits=(16, Eval('decimals', 2)), depends=['decimals'])
     quality_test_report = fields.Boolean('Quality Test Report')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls.result.states = {
+            'invisible': Bool(Eval('qualitative_value')),
+            'readonly': Bool(Eval('accepted')),
+            }
+        cls.result.depends = ['accepted', 'qualitative_value']
 
     @staticmethod
     def default_quality_test_report():
