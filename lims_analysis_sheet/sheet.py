@@ -709,28 +709,25 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def exec_notebook_wizards(cls, sheets):
         pool = Pool()
         Data = pool.get('lims.interface.data')
+        Notebook = pool.get('lims.notebook')
         EvaluateRules = pool.get('lims.notebook.evaluate_rules',
             type='wizard')
 
         for s in sheets:
             # Evaluate Notebook Rules
-            notebook_lines = []
+            session_id, _, _ = EvaluateRules.create()
+            evaluate_rules = EvaluateRules(session_id)
+
+            notebook_ids = []
             with Transaction().set_context(
                     lims_interface_table=s.compilation.table.id):
                 lines = Data.search([('compilation', '=', s.compilation.id)])
                 for line in lines:
-                    nb_line = line.notebook_line
-                    if not nb_line:
-                        continue
-                    if nb_line.end_date:
-                        continue
-                    notebook_lines.append(nb_line)
-            if not notebook_lines:
-                continue
-            session_id, _, _ = EvaluateRules.create()
-            evaluate_rules = EvaluateRules(session_id)
-            with Transaction().set_context(lims_analysis_sheet=s.id):
-                evaluate_rules.evaluate_rules(notebook_lines)
+                    if line.notebook_line:
+                        notebook_ids.append(line.notebook_line.notebook.id)
+            for active_id in list(set(notebook_ids)):
+                notebook = Notebook(active_id)
+                evaluate_rules.evaluate_rules(notebook.lines)
 
         return
 
