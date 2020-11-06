@@ -2,6 +2,7 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+from datetime import datetime
 import operator
 from sql import Cast
 
@@ -714,6 +715,9 @@ class NotebookRule(ModelSQL, ModelView):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
 
+        now = datetime.now()
+        today = now.date()
+
         if line.analysis == self.target_analysis:
             notebook_line = NotebookLine(line.id)
         else:
@@ -730,6 +734,11 @@ class NotebookRule(ModelSQL, ModelView):
 
         try:
             setattr(notebook_line, self.target_field.name, self.value)
+            if self.target_field.name in ('result', 'literal_result'):
+                notebook_line.end_date = today
+                if notebook_line.laboratory.automatic_accept_result:
+                    notebook_line.accepted = True
+                    notebook_line.acceptance_date = now
             notebook_line.save()
         except Exception as e:
             return

@@ -5596,8 +5596,6 @@ class NotebookEvaluateRules(Wizard):
 
         for active_id in Transaction().context['active_ids']:
             notebook = Notebook(active_id)
-            if not notebook.lines:
-                continue
             self.evaluate_rules(notebook.lines)
         return 'end'
 
