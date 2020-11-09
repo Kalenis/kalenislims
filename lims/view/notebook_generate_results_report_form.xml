@@ -8,6 +8,10 @@
         <label name="corrective"/>
         <field name="corrective" xexpand="0"/>
     </group>
+    <group id="group_samples" colspan="4" col="2">
+        <label name="group_samples"/>
+        <field name="group_samples"/>
+    </group>
     <field name="notebooks" colspan="4" mode="tree,form"
         view_ids="lims.lims_samples_pending_reporting_view_list,lims.lims_samples_pending_reporting_view_form"/>
     <group id="invisible" colspan="4" col="1">

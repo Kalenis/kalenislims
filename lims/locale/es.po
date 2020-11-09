@@ -2651,6 +2651,10 @@ msgctxt "field:lims.notebook.generate_results_report.start,corrective:"
 msgid "Corrective"
 msgstr "Rectificativo"
 
+msgctxt "field:lims.notebook.generate_results_report.start,group_samples:"
+msgid "Group samples in the same report"
+msgstr "Agrupar muestras en mismo Informe"
+
 msgctxt "field:lims.notebook.generate_results_report.start,notebooks:"
 msgid "Samples"
 msgstr "Muestras"

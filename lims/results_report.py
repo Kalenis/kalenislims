@@ -2526,6 +2526,9 @@ class GenerateReportStart(ModelView):
         depends=['type'])
     reports_created = fields.One2Many('lims.results_report.version.detail',
         None, 'Reports created')
+    group_samples = fields.Boolean('Group samples in the same report',
+        states={'readonly': Bool(Eval('report'))},
+        depends=['report', 'report_readonly'])
 
     @fields.depends('report', 'preliminary', 'corrective')
     def on_change_with_type(self, name=None):
@@ -2586,6 +2589,7 @@ class GenerateReport(Wizard):
             'type': 'final',
             'preliminary': False,
             'corrective': False,
+            'group_samples': False,
             }
 
         party = None
@@ -2760,7 +2764,10 @@ class GenerateReport(Wizard):
 
             parties = {}
             for notebook in self.start.notebooks:
-                key = (notebook.party.id, notebook.fraction.cie_fraction_type)
+                key = notebook.id
+                if self.start.group_samples:
+                    key = (notebook.party.id,
+                        notebook.fraction.cie_fraction_type)
                 if key not in parties:
                     parties[key] = {
                         'party': notebook.party.id,
