@@ -294,6 +294,10 @@ msgctxt "field:lims.fraction,hours_component:"
 msgid "Hs. Component"
 msgstr "Hs. Componente"
 
+msgctxt "field:lims.fraction.type,default_sampling_type:"
+msgid "Default Sampling Type"
+msgstr "Tipo de muestreo por defecto"
+
 msgctxt "field:lims.notebook,component:"
 msgid "Component"
 msgstr "Componente"

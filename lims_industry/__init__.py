@@ -35,6 +35,7 @@ def register():
         sample.Entry,
         sample.Sample,
         sample.Fraction,
+        sample.FractionType,
         sample.CreateSampleStart,
         sample.EditSampleStart,
         notebook.Notebook,
