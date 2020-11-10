@@ -15,6 +15,24 @@
             <field name="inherit" ref="lims.lims_results_report_view_list"/>
             <field name="name">results_report_list</field>
         </record>
+        <record model="ir.ui.view" id="lims_results_report_view_form">
+            <field name="model">lims.results_report</field>
+            <field name="inherit" ref="lims.lims_results_report_view_form"/>
+            <field name="name">results_report_form</field>
+        </record>
+
+<!-- Results Report Mailing -->
+
+        <record model="ir.ui.view" id="lims_results_report_mailing_view_list">
+            <field name="model">lims.results_report.mailing</field>
+            <field name="type">tree</field>
+            <field name="name">results_report_mailing_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_results_report_mailing_view_form">
+            <field name="model">lims.results_report.mailing</field>
+            <field name="type">form</field>
+            <field name="name">results_report_mailing_form</field>
+        </record>
 
 <!-- Wizard Send Results Report -->
 

@@ -9,7 +9,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from PyPDF2 import PdfFileMerger
 
-from trytond.model import ModelView, fields
+from trytond.model import ModelSQL, ModelView, fields
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
@@ -51,6 +51,8 @@ class ResultsReport(metaclass=PoolMeta):
 
     sent = fields.Boolean('Sent', readonly=True)
     sent_date = fields.DateTime('Sent date', readonly=True)
+    mailings = fields.One2Many('lims.results_report.mailing',
+        'results_report', 'Mailings', readonly=True)
 
     @classmethod
     def _get_modified_fields(cls):
@@ -198,6 +200,39 @@ class ResultsReport(metaclass=PoolMeta):
         suffix = 'eng' if english_report else 'esp'
         filename = str(self.number) + '-' + suffix
         return filename
+
+
+class ResultsReportMailing(ModelSQL, ModelView):
+    'Results Report Mailing'
+    __name__ = 'lims.results_report.mailing'
+
+    results_report = fields.Many2One('lims.results_report', 'Results Report',
+        required=True, ondelete='CASCADE', select=True)
+    date = fields.Function(fields.DateTime('Date'),
+       'get_date', searcher='search_date')
+    addresses = fields.Char('Addresses', readonly=True)
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._order.insert(0, ('date', 'DESC'))
+
+    def get_date(self, name):
+        return self.create_date.replace(microsecond=0)
+
+    @classmethod
+    def search_date(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        operator_ = clause[1:2][0]
+        cursor.execute('SELECT id '
+            'FROM "' + cls._table + '" '
+            'WHERE create_date' + operator_ + ' %s',
+            clause[2:3])
+        return [('id', 'in', [x[0] for x in cursor.fetchall()])]
+
+    @classmethod
+    def order_date(cls, tables):
+        return cls.create_date.convert_order('create_date', tables, cls)
 
 
 class ResultsReportAnnulation(metaclass=PoolMeta):
@@ -357,7 +392,7 @@ class SendResultsReport(Wizard):
         reports_not_sent = []
         for group in self.get_grouped_reports(active_ids).values():
             group['reports_ready'] = []
-            group['to_addrs'] = []
+            group['to_addrs'] = {}
 
             for report in group['reports']:
                 logger.info('Send Results Report: %s', report.number)
@@ -406,7 +441,7 @@ class SendResultsReport(Wizard):
                     report.number)
 
                 if group['cie_fraction_type']:
-                    group['to_addrs'].append(config.email_qa)
+                    group['to_addrs'][config.email_qa] = 'QA'
                 else:
                     samples = ResultsSample.search([
                         ('version_detail.report_version.results_report',
@@ -419,15 +454,16 @@ class SendResultsReport(Wizard):
                                 getattr(entry.invoice_party,
                                     'block_reports_automatic_sending')):
                             continue
-                        group['to_addrs'].extend([c.contact.email
-                                for c in entry.report_contacts
-                                if c.contact.report_contact])
+                        for c in entry.report_contacts:
+                            if c.contact.report_contact:
+                                group['to_addrs'][c.contact.email] = (
+                                    c.contact.party_full_name)
 
             if not group['reports_ready']:
                 continue
 
             # Email sending
-            to_addrs = list(set(group['to_addrs']))
+            to_addrs = list(group['to_addrs'].keys())
             if not to_addrs:
                 reports_not_sent.extend(
                     [r[0] for r in group['reports_ready']])
@@ -458,9 +494,12 @@ class SendResultsReport(Wizard):
                 continue
             logger.info('Send Results Report: Sent')
 
-            ResultsReport.write(
-                [r[0] for r in group['reports_ready']],
-                {'sent': True, 'sent_date': datetime.now()})
+            addresses = ', '.join(['"%s" <%s>' % (v, k)
+                    for k, v in group['to_addrs'].items()])
+            ResultsReport.write([r[0] for r in group['reports_ready']], {
+                'sent': True, 'sent_date': datetime.now(),
+                'mailings': [('create', [{'addresses': addresses}])],
+                })
 
         if reports_not_ready or reports_not_sent:
             logger.warning('Send Results Report: FAILED')
