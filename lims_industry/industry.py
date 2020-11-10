@@ -242,6 +242,13 @@ class Equipment(ModelSQL, ModelView):
         res = '%s [%s]' % (self.name, self.plant.name)
         return res
 
+    @classmethod
+    def search_rec_name(cls, name, clause):
+        return ['OR',
+            ('name',) + tuple(clause[1:]),
+            ('serial_number',) + tuple(clause[1:]),
+            ]
+
     @fields.depends('plant', '_parent_plant.party')
     def on_change_with_party(self, name=None):
         return self.get_party([self], name)[self.id]
