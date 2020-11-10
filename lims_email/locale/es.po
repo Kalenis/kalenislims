@@ -14,6 +14,10 @@ msgctxt "field:lims.configuration,mail_ack_report_subject:"
 msgid "Email subject of Acknowledgment of results report"
 msgstr "Asunto del correo de Acuse de informe de resultados"
 
+msgctxt "field:lims.results_report,mailings:"
+msgid "Mailings"
+msgstr "Envíos"
+
 msgctxt "field:lims.results_report,sent:"
 msgid "Sent"
 msgstr "Enviado"
@@ -21,6 +25,18 @@ msgstr "Enviado"
 msgctxt "field:lims.results_report,sent_date:"
 msgid "Sent date"
 msgstr "Fecha de enviado"
+
+msgctxt "field:lims.results_report.mailing,addresses:"
+msgid "Addresses"
+msgstr "Direcciones"
+
+msgctxt "field:lims.results_report.mailing,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:lims.results_report.mailing,results_report:"
+msgid "Results Report"
+msgstr "Informe de resultados"
 
 msgctxt "field:lims_email.send_results_report.failed,reports_not_ready:"
 msgid "Reports not ready"
@@ -53,6 +69,10 @@ msgstr "Polimuestra"
 msgctxt "model:ir.ui.menu,name:menu_send_results_report"
 msgid "Send Results Reports"
 msgstr "Enviar Informes de resultados"
+
+msgctxt "model:lims.results_report.mailing,name:"
+msgid "Results Report Mailing"
+msgstr "Envío de Informe de resultados"
 
 msgctxt "model:lims_email.send_results_report.failed,name:"
 msgid "Send Results Report"
@@ -93,6 +113,10 @@ msgstr "Asunto del correo de Acuse de informe de resultados"
 msgctxt "view:lims.configuration:"
 msgid "Mail Acknowledgment Report"
 msgstr "Email Acuse de Informe"
+
+msgctxt "view:lims.results_report.mailing:"
+msgid "Time"
+msgstr "Hora"
 
 msgctxt "view:lims.results_report:"
 msgid "Time"

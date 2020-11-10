@@ -13,6 +13,7 @@ def register():
         configuration.Cron,
         results_report.ResultsReportVersionDetail,
         results_report.ResultsReport,
+        results_report.ResultsReportMailing,
         results_report.SendResultsReportStart,
         results_report.SendResultsReportSucceed,
         results_report.SendResultsReportFailed,
