@@ -24,7 +24,7 @@
             </group>
             <group col="6" colspan="4" id="packaging">
                 <label name="packages_quantity"/>
-                <field name="packages_quantity" xexpand="0"/>
+                <field name="packages_quantity"/>
                 <label name="package_type"/>
                 <field name="package_type"/>
                 <label name="fraction_state"/>
