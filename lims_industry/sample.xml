@@ -15,6 +15,14 @@
             <field name="name">sample_list</field>
         </record>
 
+<!-- Fraction Type -->
+
+        <record model="ir.ui.view" id="fraction_type_view_form">
+            <field name="model">lims.fraction.type</field>
+            <field name="inherit" ref="lims.lims_fraction_type_view_form"/>
+            <field name="name">fraction_type_form</field>
+        </record>
+
 <!-- Wizard Create Sample -->
 
         <record model="ir.ui.view" id="create_sample_start_view_form">

@@ -206,6 +206,13 @@ class Fraction(metaclass=PoolMeta):
     order_hours_component = _order_sample_field('hours_component')
 
 
+class FractionType(metaclass=PoolMeta):
+    __name__ = 'lims.fraction.type'
+
+    default_sampling_type = fields.Many2One('lims.sampling.type',
+        'Default Sampling Type')
+
+
 class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
 
@@ -308,6 +315,15 @@ class CreateSampleStart(metaclass=PoolMeta):
                 self.package_type and self.package_type.capacity):
             return (self.packages_quantity * self.package_type.capacity)
         return None
+
+    @fields.depends('fraction_type', 'sampling_type')
+    def on_change_fraction_type(self):
+        super().on_change_fraction_type()
+        if not self.fraction_type:
+            return
+        if (not self.sampling_type and
+                self.fraction_type.default_sampling_type):
+            self.sampling_type = self.fraction_type.default_sampling_type
 
 
 class CreateSample(metaclass=PoolMeta):
