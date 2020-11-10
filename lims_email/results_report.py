@@ -287,7 +287,7 @@ class SendResultsReport(Wizard):
 
         for group in self.get_grouped_reports(active_ids).values():
             group['reports_ready'] = []
-            group['to_addrs'] = []
+            group['to_addrs'] = {}
 
             for report in group['reports']:
                 if not report.ready_to_send:
@@ -306,18 +306,19 @@ class SendResultsReport(Wizard):
                                 getattr(entry.invoice_party,
                                     'block_reports_automatic_sending')):
                             continue
-                        group['to_addrs'].extend([c.contact.email
-                                for c in entry.report_contacts
-                                if c.contact.report_contact])
+                        for c in entry.report_contacts:
+                            if c.contact.report_contact:
+                                group['to_addrs'][c.contact.email] = (
+                                    c.contact.party_full_name)
 
             if not group['reports_ready']:
                 continue
 
-            to_addrs = list(set(group['to_addrs']))
-
+            addresses = ['"%s" <%s>' % (v, k)
+                for k, v in group['to_addrs'].items()]
             summary += '%s\n - TO: %s\n\n' % (
                 ', '.join([r.number for r in group['reports_ready']]),
-                ', '.join(to_addrs))
+                ', '.join(addresses))
 
         default = {'summary': summary}
         return default
