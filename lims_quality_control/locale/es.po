@@ -78,6 +78,10 @@ msgctxt "field:lims.notebook.line,quality_test_report:"
 msgid "Quality Test Report"
 msgstr "Informar en Prueba"
 
+msgctxt "field:lims.notebook.line,specification:"
+msgid "Specification"
+msgstr "Especificación"
+
 msgctxt "field:lims.notebook.line,success:"
 msgid "Success"
 msgstr "Válido"

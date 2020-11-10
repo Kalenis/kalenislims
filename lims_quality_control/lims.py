@@ -205,6 +205,7 @@ class NotebookLine(metaclass=PoolMeta):
     quality_max = fields.Float('Max',
         digits=(16, Eval('decimals', 2)), depends=['decimals'])
     quality_test_report = fields.Boolean('Quality Test Report')
+    specification = fields.Text('Specification', readonly=True)
 
     @classmethod
     def __setup__(cls):
@@ -443,6 +444,8 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
                         quality_typification.quality_max
                     notebook_line['quality_test_report'] = \
                         quality_typification.quality_test_report
+                    notebook_line['specification'] = \
+                        quality_typification.specification
                 lines_create.append(notebook_line)
 
         if not lines_create:
