@@ -5388,7 +5388,7 @@ class AnalysisPendingInform(Report):
                     ]
                 excluded_lines = NotebookLine.search(clause)
                 if excluded_lines:
-                    res.extend(line for line in excluded_lines)
+                    res.extend(excluded_lines)
         return res
 
     @classmethod
