@@ -1491,6 +1491,10 @@ msgctxt "field:lims.entry.detail.analysis,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
 
+msgctxt "field:lims.entry.detail.analysis,label:"
+msgid "Label"
+msgstr "Rótulo"
+
 msgctxt "field:lims.entry.detail.analysis,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"

@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <tree>
     <field name="fraction"/>
+    <field name="label"/>
     <field name="create_date2" widget="date"/>
     <field name="create_date2" widget="time" string="Time"/>
     <field name="party"/>
