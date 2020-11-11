@@ -1041,9 +1041,11 @@ class NotebookLine(ModelSQL, ModelView):
     def check_end_date(self):
         if self.end_date:
             if not self.start_date or self.end_date < self.start_date:
-                raise UserError(gettext('lims.msg_line_end_date'))
+                raise UserError(gettext('lims.msg_line_end_date',
+                    analysis=self.analysis.rec_name))
             if not self.start_date or self.end_date > datetime.now().date():
-                raise UserError(gettext('lims.msg_end_date_wrong'))
+                raise UserError(gettext('lims.msg_end_date_wrong',
+                    analysis=self.analysis.rec_name))
 
     def check_accepted(self):
         if self.accepted:
@@ -1054,8 +1056,8 @@ class NotebookLine(ModelSQL, ModelView):
                 ('id', '!=', self.id),
                 ])
             if accepted_lines:
-                raise UserError(gettext(
-                    'lims.msg_accepted', analysis=self.analysis.rec_name))
+                raise UserError(gettext('lims.msg_accepted',
+                    analysis=self.analysis.rec_name))
 
     @classmethod
     def get_analysis_order(cls, notebook_lines, name):
