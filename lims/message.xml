@@ -35,7 +35,7 @@
             <field name="text">The leaving date cannot be lower than entry date</field>
         </record>
         <record model="ir.message" id="msg_end_date_wrong">
-            <field name="text">End date should not be greater than the current date</field>
+            <field name="text">End date should not be greater than the current date in "%(analysis)s"</field>
         </record>
         <record model="ir.message" id="msg_duplicated_analysis">
             <field name="text">The analysis "%(analysis)s" is already included</field>
@@ -146,7 +146,7 @@
             <field name="text">This Device is physically in another Laboratory</field>
         </record>
         <record model="ir.message" id="msg_line_end_date">
-            <field name="text">The end date cannot be lower than start date</field>
+            <field name="text">The end date cannot be lower than start date in "%(analysis)s"</field>
         </record>
         <record model="ir.message" id="msg_accepted">
             <field name="text">The analysis "%(analysis)s" is already accepted</field>
