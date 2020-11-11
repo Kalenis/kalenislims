@@ -2914,7 +2914,7 @@ class Sample(ModelSQL, ModelView):
                 ('sample', '=', s.id),
                 ('urgent', '=', True),
                 ])
-            result[n.id] = True if services > 0 else False
+            result[s.id] = True if services > 0 else False
         return result
 
     @classmethod
