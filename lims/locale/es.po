@@ -2639,6 +2639,10 @@ msgctxt "field:lims.notebook,state:"
 msgid "State"
 msgstr "Estado"
 
+msgctxt "field:lims.notebook,urgent:"
+msgid "Urgent"
+msgstr "Urgente"
+
 msgctxt "field:lims.notebook.add_internal_relations.start,analysis:"
 msgid "Internal relations"
 msgstr "Relaciones internas"

@@ -9,4 +9,5 @@
     <field name="label"/>
     <field name="fraction_type"/>
     <field name="department"/>
+    <field name="urgent"/>
 </tree>
