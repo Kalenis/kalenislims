@@ -824,6 +824,8 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         states={'readonly': True})
     referral_date = fields.Function(fields.Date('Referral date'),
         'get_referral_date', searcher='search_referral_date')
+    label = fields.Function(fields.Char('Label', translate=True),
+        'get_sample_field', searcher='search_sample_field')
 
     @classmethod
     def __register__(cls, module_name):
@@ -1075,35 +1077,18 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         result = {}
         for name in names:
             result[name] = {}
-            for d in details:
-                field = getattr(d.service, name, None)
-                result[name][d.id] = field.id if field else None
+            if cls._fields[name]._type == 'many2one':
+                for d in details:
+                    field = getattr(d.service, name, None)
+                    result[name][d.id] = field.id if field else None
+            else:
+                for d in details:
+                    result[name][d.id] = getattr(d.service, name, None)
         return result
-
-    @classmethod
-    def get_create_date2(cls, details, name):
-        result = {}
-        for d in details:
-            result[d.id] = d.create_date.replace(microsecond=0)
-        return result
-
-    @classmethod
-    def search_create_date2(cls, name, clause):
-        cursor = Transaction().connection.cursor()
-        operator_ = clause[1:2][0]
-        cursor.execute('SELECT id '
-                'FROM "' + cls._table + '" '
-                'WHERE create_date' + operator_ + ' %s',
-                clause[2:3])
-        return [('id', 'in', [x[0] for x in cursor.fetchall()])]
 
     @classmethod
     def search_service_field(cls, name, clause):
         return [('service.' + name,) + tuple(clause[1:])]
-
-    @classmethod
-    def order_create_date2(cls, tables):
-        return cls.create_date.convert_order('create_date', tables, cls)
 
     def _order_service_field(name):
         def order_field(tables):
@@ -1124,6 +1109,27 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     order_sample = _order_service_field('sample')
     order_entry = _order_service_field('entry')
     order_party = _order_service_field('party')
+
+    @classmethod
+    def get_create_date2(cls, details, name):
+        result = {}
+        for d in details:
+            result[d.id] = d.create_date.replace(microsecond=0)
+        return result
+
+    @classmethod
+    def search_create_date2(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        operator_ = clause[1:2][0]
+        cursor.execute('SELECT id '
+                'FROM "' + cls._table + '" '
+                'WHERE create_date' + operator_ + ' %s',
+                clause[2:3])
+        return [('id', 'in', [x[0] for x in cursor.fetchall()])]
+
+    @classmethod
+    def order_create_date2(cls, tables):
+        return cls.create_date.convert_order('create_date', tables, cls)
 
     @classmethod
     def get_results_report(cls, details, name):
@@ -1160,6 +1166,24 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     @classmethod
     def search_referral_date(cls, name, clause):
         return [('referral.date',) + tuple(clause[1:])]
+
+    @classmethod
+    def get_sample_field(cls, details, names):
+        result = {}
+        for name in names:
+            result[name] = {}
+            if cls._fields[name]._type == 'many2one':
+                for d in details:
+                    field = getattr(d.sample, name, None)
+                    result[name][d.id] = field.id if field else None
+            else:
+                for d in details:
+                    result[name][d.id] = getattr(d.sample, name, None)
+        return result
+
+    @classmethod
+    def search_sample_field(cls, name, clause):
+        return [('service.fraction.sample.' + name,) + tuple(clause[1:])]
 
     @classmethod
     def write(cls, *args):
