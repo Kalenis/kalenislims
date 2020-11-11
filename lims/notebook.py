@@ -73,6 +73,8 @@ class Notebook(ModelSQL, ModelView):
         'get_lines_pending_reporting')
     acceptance_pending = fields.Function(fields.Boolean('Pending acceptance'),
         'get_acceptance_pending', searcher='search_acceptance_pending')
+    urgent = fields.Function(fields.Boolean('Urgent'), 'get_urgent',
+        searcher='search_urgent')
 
     @classmethod
     def __setup__(cls):
@@ -730,6 +732,30 @@ class Notebook(ModelSQL, ModelView):
             return [('id', 'in', notebooks_ids)]
         elif (op, operand) in (('=', False), ('!=', True)):
             return [('id', 'not in', notebooks_ids)]
+        return []
+
+    @classmethod
+    def get_urgent(cls, notebooks, name):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+
+        result = {}
+        for n in notebooks:
+            lines = NotebookLine.search_count([
+                ('notebook', '=', n.id),
+                ('urgent', '=', True),
+                ])
+            result[n.id] = True if lines > 0 else False
+        return result
+
+    @classmethod
+    def search_urgent(cls, name, clause):
+        field, op, operand = clause
+        if (op, operand) in (('=', True), ('!=', False)):
+            return [('lines.urgent', '=', True)]
+        elif (op, operand) in (('=', False), ('!=', True)):
+            urgents = cls.search([('lines.urgent', '=', True)])
+            return [('id', 'not in', [u.id for u in urgents])]
         return []
 
 
