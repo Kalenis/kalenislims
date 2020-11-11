@@ -70,7 +70,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             diagnostician = notebook.fraction.sample.diagnostician
             if diagnostician:
                 detail_default['diagnostician'] = diagnostician.id
-            result_template = notebook.fraction.sample.result_template
+            result_template = cls._get_result_template_from_sample(notebook)
             if result_template and result_template.diagnosis_template:
                 detail_default['diagnosis_template'] = (
                     result_template.diagnosis_template.id)
