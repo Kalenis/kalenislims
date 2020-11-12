@@ -6658,6 +6658,10 @@ msgctxt "model:ir.action,name:act_lims_results_report"
 msgid "Results Reports"
 msgstr "Informes de resultados"
 
+msgctxt "model:ir.action,name:act_lims_results_report_list"
+msgid "Results Reports"
+msgstr "Informes de resultados"
+
 msgctxt "model:ir.action,name:act_lims_results_report_version_detail"
 msgid "Approval of Reports"
 msgstr "Aprobación de informes"

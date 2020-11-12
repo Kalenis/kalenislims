@@ -27,6 +27,23 @@
             <field name="name">results_report_form</field>
         </record>
 
+        <record model="ir.action.act_window" id="act_lims_results_report_list">
+            <field name="name">Results Reports</field>
+            <field name="res_model">lims.results_report</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_lims_results_report_list_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_results_report_view_list"/>
+            <field name="act_window" ref="act_lims_results_report_list"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_lims_results_report_list_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_results_report_view_form"/>
+            <field name="act_window" ref="act_lims_results_report_list"/>
+        </record>
+
         <record model="ir.action.act_window" id="act_lims_results_report">
             <field name="name">Results Reports</field>
             <field name="res_model">lims.results_report</field>

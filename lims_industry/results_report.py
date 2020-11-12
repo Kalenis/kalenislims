@@ -210,7 +210,7 @@ class OpenResultsDetailPrecedent(Wizard):
     'Results Report Precedent'
     __name__ = 'lims.results_report.version.detail.open_precedent'
 
-    start = StateAction('lims.act_lims_results_report')
+    start = StateAction('lims.act_lims_results_report_list')
 
     def do_start(self, action):
         pool = Pool()
