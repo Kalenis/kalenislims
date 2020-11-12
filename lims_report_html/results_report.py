@@ -64,7 +64,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         return '1'
 
     @fields.depends('template', '_parent_template.trend_charts',
-        '_parent_template.sections')
+        '_parent_template.sections', 'sections')
     def on_change_template(self):
         if self.template and self.template.trend_charts:
             self.trend_charts = [{
