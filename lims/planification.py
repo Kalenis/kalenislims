@@ -29,7 +29,10 @@ class Planification(Workflow, ModelSQL, ModelView):
     code = fields.Char('Code', select=True, readonly=True)
     date = fields.Date('Date', readonly=True)
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        required=True)
+        required=True, states={
+            'readonly': ((Eval('state') != 'draft')
+                | (Eval('analysis', [0]) & Eval('laboratory'))),
+            }, depends=['state'])
     analysis = fields.Many2Many('lims.planification-analysis',
         'planification', 'analysis', 'Analysis/Sets/Groups',
         context={'date_from': Eval('date_from'), 'date_to': Eval('date_to'),
@@ -277,7 +280,8 @@ class Planification(Workflow, ModelSQL, ModelView):
         for detail in self.details:
             if detail.fraction.sample.date2 > self.start_date:
                 raise UserError(gettext('lims.msg_invalid_start_date',
-                    date=detail.fraction.sample.date2))
+                    date=detail.fraction.sample.date2,
+                    sample=detail.fraction.sample.rec_name))
 
     def check_technicians(self):
         fractions = {}
