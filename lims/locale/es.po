@@ -7590,8 +7590,8 @@ msgstr ""
 "El Límite superior permitido debe ser mayor que el Límite inferior permitido"
 
 msgctxt "model:ir.message,text:msg_invalid_start_date"
-msgid "The start date must be after \"%(date)s\""
-msgstr "La fecha de inicio debe ser posterior a «%(date)s»"
+msgid "The start date must be after \"%(date)s\" (Creation date of Sample \"%(sample)s\")"
+msgstr "La fecha de inicio debe ser posterior a «%(date)s» (Fecha de creación de la muestra «%(sample)s»)"
 
 msgctxt "model:ir.message,text:msg_invoice_address"
 msgid "There is already a address with invoice type"
