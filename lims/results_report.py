@@ -2946,7 +2946,7 @@ class ServiceResultsReport(Wizard):
     'Service Results Report'
     __name__ = 'lims.service.results_report'
 
-    start = StateAction('lims.act_lims_results_report')
+    start = StateAction('lims.act_lims_results_report_list')
 
     def do_start(self, action):
         pool = Pool()
@@ -2974,7 +2974,7 @@ class FractionResultsReport(Wizard):
     'Fraction Results Report'
     __name__ = 'lims.fraction.results_report'
 
-    start = StateAction('lims.act_lims_results_report')
+    start = StateAction('lims.act_lims_results_report_list')
 
     def do_start(self, action):
         pool = Pool()
@@ -3002,7 +3002,7 @@ class SampleResultsReport(Wizard):
     'Sample Results Report'
     __name__ = 'lims.sample.results_report'
 
-    start = StateAction('lims.act_lims_results_report')
+    start = StateAction('lims.act_lims_results_report_list')
 
     def do_start(self, action):
         pool = Pool()

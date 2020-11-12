@@ -542,7 +542,7 @@ class TestResultsReport(Wizard):
     'Test Results Report'
     __name__ = 'lims.test.results_report'
 
-    start = StateAction('lims.act_lims_results_report')
+    start = StateAction('lims.act_lims_results_report_list')
 
     def do_start(self, action):
         pool = Pool()
