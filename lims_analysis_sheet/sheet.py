@@ -7,6 +7,7 @@ from decimal import Decimal
 from datetime import datetime, date
 from sql import Table, Column, Literal, Null
 from sql.aggregate import Count
+from sql.conditionals import Coalesce
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
@@ -395,12 +396,15 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             if s.state != 'draft':
                 table_id = s.compilation.table.id
 
+                result_field = None
                 result_column = Field.search([
                     ('table', '=', table_id),
                     ('transfer_field', '=', True),
                     ('related_line_field', '=', nl_result_field),
                     ])
-                result_field = result_column and result_column[0].name or None
+                if result_column:
+                    result_field = result_column[0].name
+                    result_field_type = result_column[0].type
 
                 literal_result_column = Field.search([
                     ('table', '=', table_id),
@@ -420,11 +424,15 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
                 result_clause = Literal(False)
                 if result_field:
-                    result_clause |= (Column(sql_table,
-                        result_field) != Null)
+                    if result_field_type == 'char':
+                        result_clause |= (Coalesce(Column(sql_table,
+                            result_field), '') != '')
+                    else:
+                        result_clause |= (Column(sql_table,
+                            result_field) != Null)
                 if literal_result_field:
-                    result_clause |= (Column(sql_table,
-                        literal_result_field) != Null)
+                    result_clause |= (Coalesce(Column(sql_table,
+                        literal_result_field), '') != '')
                 if result_modifier_field:
                     result_clause |= (Column(sql_table,
                         result_modifier_field).in_((
