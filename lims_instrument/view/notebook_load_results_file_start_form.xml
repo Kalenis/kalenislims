@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <form>
     <label name="results_importer"/>
-    <field name="results_importer" widget="selection" width="600"/>
+    <field name="results_importer" widget="selection" xexpand="1"/>
     <notebook height="400">
         <page string="20" id="p20">
             <group col="3" colspan="2" id="g10">
