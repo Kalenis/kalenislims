@@ -512,7 +512,7 @@ class ResultReport(metaclass=PoolMeta):
             return None
         diagnosis_state, = diagnosis_states
         for image in diagnosis_state.images:
-            if image.name == sample.diagnosis_states[state]:
+            if image.name == sample.diagnosis_states.get(state, ''):
                 return image.image
 
         return None
