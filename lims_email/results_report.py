@@ -585,8 +585,10 @@ class SendResultsReport(Wizard):
                 ])
             if not samples:
                 return []
-            samples = [s.notebook.label for s in samples]
-            return sorted(list(set(samples)), key=lambda x: x)
+            res = []
+            for s in samples:
+                res.append(s.notebook.label or s.notebook.rec_name)
+            return sorted(list(set(res)), key=lambda x: x)
 
     def _create_msg(self, from_addr, to_addrs, subject, body,
             attachments_data=[]):
