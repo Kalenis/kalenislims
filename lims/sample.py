@@ -700,6 +700,12 @@ class Service(ModelSQL, ModelView):
                             res = cursor.fetchone()
                             method_id = res and res[0] or None
 
+                            if not method_id:
+                                raise UserError(gettext(
+                                    'lims.msg_additional_no_method',
+                                    additional=additional.rec_name,
+                                    analysis=typification.analysis.rec_name))
+
                             cursor.execute('SELECT device '
                                 'FROM "' + AnalysisDevice._table + '" '
                                 'WHERE active IS TRUE '
