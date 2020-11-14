@@ -8078,6 +8078,10 @@ msgctxt "model:ir.message,text:msg_zone_code_unique_id"
 msgid "Zone code must be unique"
 msgstr "El código de la zona debe ser único"
 
+msgctxt "model:ir.message,text:msg_additional_no_method"
+msgid "Missing typification for additional analysis \"%(additional)s\" of analysis \"%(analysis)s\"."
+msgstr "Falta tipificación para el análisis adicional \"%(additional)s\" del análisis ingresado \"%(analysis)s\"."
+
 msgctxt "model:ir.model.doc,doc:lims_entry_model_doc"
 msgid ""
 "<div align=\"left\"><b><font face=\"normal\" size=\"7\">Entry "

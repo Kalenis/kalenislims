@@ -526,5 +526,8 @@
         <record model="ir.message" id="msg_typification_copy_matrices">
             <field name="text"> * Matrices:</field>
         </record>
+        <record model="ir.message" id="msg_additional_no_method">
+            <field name="text">Missing typification for additional analysis "%(additional)s" of analysis "%(analysis)s".</field>
+        </record>
     </data>
 </tryton>
