@@ -104,6 +104,63 @@ def get_nline_analysis(analysis_code, alias=None, notebook_line=None):
 custom_functions['NL'] = get_nline_analysis
 
 
+def get_sheet_analysis(analysis_code, alias=None, notebook_line=None):
+    pool = Pool()
+    NotebookLine = pool.get('lims.notebook.line')
+    AnalysisSheet = pool.get('lims.analysis_sheet')
+    Data = pool.get('lims.interface.data')
+
+    notebook_id = Transaction().context.get('lims_analysis_notebook')
+    if not notebook_id:
+        if not notebook_line:
+            return None
+        if isinstance(notebook_line, int):
+            notebook_line = NotebookLine(notebook_line)
+        notebook_id = notebook_line.notebook.id
+
+    lines = NotebookLine.search([
+        ('notebook', '=', notebook_id),
+        ('analysis.code', '=', analysis_code),
+        ('annulled', '=', False),
+        ])
+    nline = lines and lines[0] or None
+    if not nline:
+        return None
+
+    if nline.analysis_sheet:
+        sheets = [nline.analysis_sheet]
+    else:
+        template_id = nline.get_analysis_sheet_template()
+        if not template_id:
+            return None
+        sheets = AnalysisSheet.search([
+            ('template', '=', template_id),
+            ('state', 'in', ['draft', 'active', 'validated'])
+            ], order=[('id', 'DESC')])
+    for s in sheets:
+        with Transaction().set_context(
+                lims_interface_table=s.compilation.table.id):
+            lines = Data.search([
+                ('compilation', '=', s.compilation.id),
+                ('notebook_line', '=', nline.id),
+                ], limit=1)
+            target_line = lines and lines[0] or None
+            if not target_line:
+                continue
+
+            target_field = alias or _get_result_column(
+                s.compilation.table.id)
+            if not hasattr(target_line, target_field):
+                return None
+
+            return getattr(target_line, target_field)
+
+    return None
+
+
+custom_functions['XS_A'] = get_sheet_analysis
+
+
 def convert_brix_to_density(value=None):
     pool = Pool()
     VolumeConversion = pool.get('lims.volume.conversion')
