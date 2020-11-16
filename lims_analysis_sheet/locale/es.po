@@ -583,7 +583,8 @@ msgstr "La plantilla no tiene una columna para el campo Resultado"
 
 msgctxt "model:ir.message,text:msg_template_not_result_modifier_field"
 msgid "The template does not have a column for the Result modifier field"
-msgstr "La plantilla no tiene una columna para el campo Modificador de resultado"
+msgstr ""
+"La plantilla no tiene una columna para el campo Modificador de resultado"
 
 msgctxt "model:ir.message,text:msg_template_not_verification_field"
 msgid "The template does not have a column for the Verification field"
