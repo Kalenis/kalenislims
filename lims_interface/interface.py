@@ -585,14 +585,16 @@ class Interface(Workflow, ModelSQL, ModelView):
                     current_group = None
 
             if line.related_group:
-                if line.related_group not in groups:
-                    field_colspan = 4
-                    for rep in self.grouped_repetitions:
-                        if rep.group == line.related_group:
-                            field_colspan = rep.colspan or field_colspan
-                    fields.append('<field name="group_%s" colspan="%s"/>' % (
-                        line.related_group, field_colspan))
-                    groups.append(line.related_group)
+                for group in range(1, line.related_group + 1):
+                    if group not in groups:
+                        field_colspan = 4
+                        for rep in self.grouped_repetitions:
+                            if rep.group == group:
+                                field_colspan = rep.colspan or field_colspan
+                        fields.append(
+                            '<field name="group_%s" colspan="%s"/>' % (
+                                group, field_colspan))
+                        groups.append(group)
 
             if line.group_name:
                 if line.group_name != current_group:
