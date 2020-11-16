@@ -863,17 +863,12 @@ class ResultsVerification(Wizard):
 
     def _get_template_column(self, field_name, table_id):
         pool = Pool()
-        ModelField = pool.get('ir.model.field')
         Field = pool.get('lims.interface.table.field')
 
-        nl_field, = ModelField.search([
-            ('model.model', '=', 'lims.notebook.line'),
-            ('name', '=', field_name),
-            ])
         table_column = Field.search([
             ('table', '=', table_id),
             ('transfer_field', '=', True),
-            ('related_line_field', '=', nl_field),
+            ('related_line_field.name', '=', field_name),
             ])
         return table_column and table_column[0] or None
 
@@ -1100,17 +1095,12 @@ class LimitsValidation(Wizard):
 
     def _get_template_column(self, field_name, table_id):
         pool = Pool()
-        ModelField = pool.get('ir.model.field')
         Field = pool.get('lims.interface.table.field')
 
-        nl_field, = ModelField.search([
-            ('model.model', '=', 'lims.notebook.line'),
-            ('name', '=', field_name),
-            ])
         table_column = Field.search([
             ('table', '=', table_id),
             ('transfer_field', '=', True),
-            ('related_line_field', '=', nl_field),
+            ('related_line_field.name', '=', field_name),
             ])
         return table_column and table_column[0] or None
 

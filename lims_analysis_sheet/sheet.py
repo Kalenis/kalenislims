@@ -357,22 +357,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def get_fields(cls, sheets, names):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        ModelField = pool.get('ir.model.field')
         Field = pool.get('lims.interface.table.field')
         notebook_line = pool.get('lims.notebook.line').__table__()
-
-        nl_result_field, = ModelField.search([
-            ('model.model', '=', 'lims.notebook.line'),
-            ('name', '=', 'result'),
-            ])
-        nl_literal_result_field, = ModelField.search([
-            ('model.model', '=', 'lims.notebook.line'),
-            ('name', '=', 'literal_result'),
-            ])
-        nl_result_modifier_field, = ModelField.search([
-            ('model.model', '=', 'lims.notebook.line'),
-            ('name', '=', 'result_modifier'),
-            ])
 
         _ZERO = Decimal(0)
         digits = cls.completion_percentage.digits[1]
@@ -400,7 +386,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 result_column = Field.search([
                     ('table', '=', table_id),
                     ('transfer_field', '=', True),
-                    ('related_line_field', '=', nl_result_field),
+                    ('related_line_field.name', '=', 'result'),
                     ])
                 if result_column:
                     result_field = result_column[0].name
@@ -409,7 +395,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 literal_result_column = Field.search([
                     ('table', '=', table_id),
                     ('transfer_field', '=', True),
-                    ('related_line_field', '=', nl_literal_result_field),
+                    ('related_line_field.name', '=', 'literal_result'),
                     ])
                 literal_result_field = (literal_result_column and
                     literal_result_column[0].name or None)
@@ -417,7 +403,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 result_modifier_column = Field.search([
                     ('table', '=', table_id),
                     ('transfer_field', '=', True),
-                    ('related_line_field', '=', nl_result_modifier_field),
+                    ('related_line_field.name', '=', 'result_modifier'),
                     ])
                 result_modifier_field = (result_modifier_column and
                     result_modifier_column[0].name or None)
@@ -590,22 +576,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     @classmethod
     def check_results(cls, sheets):
         pool = Pool()
-        ModelField = pool.get('ir.model.field')
         Field = pool.get('lims.interface.table.field')
         Data = pool.get('lims.interface.data')
-
-        nl_result_field, = ModelField.search([
-            ('model.model', '=', 'lims.notebook.line'),
-            ('name', '=', 'result'),
-            ])
-        nl_literal_result_field, = ModelField.search([
-            ('model.model', '=', 'lims.notebook.line'),
-            ('name', '=', 'literal_result'),
-            ])
-        nl_result_modifier_field, = ModelField.search([
-            ('model.model', '=', 'lims.notebook.line'),
-            ('name', '=', 'result_modifier'),
-            ])
 
         for s in sheets:
             table_id = s.compilation.table.id
@@ -613,7 +585,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             result_column = Field.search([
                 ('table', '=', table_id),
                 ('transfer_field', '=', True),
-                ('related_line_field', '=', nl_result_field),
+                ('related_line_field.name', '=', 'result'),
                 ])
             if not result_column:
                 raise UserError(gettext(
@@ -623,7 +595,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             literal_result_column = Field.search([
                 ('table', '=', table_id),
                 ('transfer_field', '=', True),
-                ('related_line_field', '=', nl_literal_result_field),
+                ('related_line_field.name', '=', 'literal_result'),
                 ])
             literal_result_field = (literal_result_column and
                 literal_result_column[0].name or None)
@@ -631,7 +603,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             result_modifier_column = Field.search([
                 ('table', '=', table_id),
                 ('transfer_field', '=', True),
-                ('related_line_field', '=', nl_result_modifier_field),
+                ('related_line_field.name', '=', 'result_modifier'),
                 ])
             result_modifier_field = (result_modifier_column and
                 result_modifier_column[0].name or None)
