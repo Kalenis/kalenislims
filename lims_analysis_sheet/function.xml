@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Functions -->
+
+        <record model="lims.interface.function" id="function_d">
+            <field name="name">D</field>
+            <field name="parameters">value</field>
+            <field name="help">Returns the conversion from °Brix to Density.</field>
+        </record>
+
+        <record model="lims.interface.function" id="function_t">
+            <field name="name">T</field>
+            <field name="parameters">value</field>
+            <field name="help">Returns the conversion from °Brix to Soluble Solids.</field>
+        </record>
+
+        <record model="lims.interface.function" id="function_device_correction">
+            <field name="name">DEVICE_CORRECTION</field>
+            <field name="parameters">device_id, value</field>
+            <field name="help">Returns the corrected value for a device.</field>
+        </record>
+
+        <record model="lims.interface.function" id="function_a">
+            <field name="name">A</field>
+            <field name="parameters">analysis_code, alias=None</field>
+            <field name="help">Obtains the value of a given column (by default the result field) for an indicated analysis, from the same analysis sheet.</field>
+        </record>
+
+        <record model="lims.interface.function" id="function_nl">
+            <field name="name">NL</field>
+            <field name="parameters">analysis_code, alias=None, notebook_line=None</field>
+            <field name="help">Obtains the value of a given field (by default the result field) for an indicated analysis, from the laboratory notebook.</field>
+        </record>
+
+    </data>
+</tryton>
