@@ -10,7 +10,8 @@ custom_functions = {}
 
 
 def device_correction(device_id, value):
-    LabDevice = Pool().get('lims.lab.device')
+    pool = Pool()
+    LabDevice = pool.get('lims.lab.device')
     if device_id and value:
         device = LabDevice(device_id)
         if device:
@@ -21,22 +22,19 @@ def device_correction(device_id, value):
 custom_functions['DEVICE_CORRECTION'] = device_correction
 
 
-def _get_result_column():
+def _get_result_column(table_id=None):
     pool = Pool()
-    ModelField = pool.get('ir.model.field')
     Field = pool.get('lims.interface.table.field')
 
-    table_id = Transaction().context.get('lims_interface_table')
+    if not table_id:
+        table_id = Transaction().context.get('lims_interface_table')
     if not table_id:
         return None
-    nl_result_field, = ModelField.search([
-        ('model.model', '=', 'lims.notebook.line'),
-        ('name', '=', 'result'),
-        ])
+
     result_column = Field.search([
         ('table', '=', table_id),
         ('transfer_field', '=', True),
-        ('related_line_field', '=', nl_result_field),
+        ('related_line_field.name', '=', 'result'),
         ])
     if not result_column:
         return None
@@ -44,7 +42,8 @@ def _get_result_column():
 
 
 def get_analysis(analysis_code, alias=None):
-    Data = Pool().get('lims.interface.data')
+    pool = Pool()
+    Data = pool.get('lims.interface.data')
 
     compilation_id = Transaction().context.get('lims_interface_compilation')
     if not compilation_id:
@@ -54,29 +53,29 @@ def get_analysis(analysis_code, alias=None):
     if not notebook_id:
         return None
 
-    target_line = None
-    lines = Data.search([('compilation', '=', compilation_id)])
-    for line in lines:
-        if (not line.annulled and
-                line.notebook_line.notebook.id == notebook_id and
-                line.notebook_line.analysis.code == analysis_code):
-            target_line = line
-            break
+    lines = Data.search([
+        ('compilation', '=', compilation_id),
+        ('notebook_line.notebook.id', '=', notebook_id),
+        ('notebook_line.analysis.code', '=', analysis_code),
+        ('annulled', '=', False),
+        ], limit=1)
+    target_line = lines and lines[0] or None
     if not target_line:
         return None
 
-    alias = alias or _get_result_column()
-    if not hasattr(target_line, alias):
+    target_field = alias or _get_result_column()
+    if not hasattr(target_line, target_field):
         return None
 
-    return getattr(target_line, alias)
+    return getattr(target_line, target_field)
 
 
 custom_functions['A'] = get_analysis
 
 
 def get_nline_analysis(analysis_code, alias=None, notebook_line=None):
-    NotebookLine = Pool().get('lims.notebook.line')
+    pool = Pool()
+    NotebookLine = pool.get('lims.notebook.line')
 
     notebook_id = Transaction().context.get('lims_analysis_notebook')
     if not notebook_id:
@@ -106,7 +105,8 @@ custom_functions['NL'] = get_nline_analysis
 
 
 def convert_brix_to_density(value=None):
-    VolumeConversion = Pool().get('lims.volume.conversion')
+    pool = Pool()
+    VolumeConversion = pool.get('lims.volume.conversion')
     try:
         brix = float(value)
     except (TypeError, ValueError):
@@ -118,7 +118,8 @@ custom_functions['D'] = convert_brix_to_density
 
 
 def convert_brix_to_soluble_solids(value=None):
-    VolumeConversion = Pool().get('lims.volume.conversion')
+    pool = Pool()
+    VolumeConversion = pool.get('lims.volume.conversion')
     try:
         brix = float(value)
     except (TypeError, ValueError):
