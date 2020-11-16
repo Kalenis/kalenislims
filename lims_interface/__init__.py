@@ -5,6 +5,7 @@
 from trytond.pool import Pool
 from . import laboratory
 from . import interface
+from . import function
 from . import table
 from . import data
 from . import notebook
@@ -27,6 +28,7 @@ def register():
         interface.TestFormulaViewVariable,
         interface.Variable,
         interface.VariableValue,
+        function.Function,
         table.Table,
         table.TableField,
         table.TableGroupedField,

@@ -3,6 +3,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
+from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool
 
 custom_functions = {}
@@ -55,3 +56,15 @@ def get_variable(notebook_line, variable):
 
 
 custom_functions['VAR'] = get_variable
+
+
+class Function(ModelSQL, ModelView):
+    'Interface Function'
+    __name__ = 'lims.interface.function'
+
+    name = fields.Char('Name', required=True)
+    parameters = fields.Char('Parameters')
+    help = fields.Text('Help')
+
+    def get_rec_name(self, name):
+        return '%s(%s)' % (self.name, self.parameters)

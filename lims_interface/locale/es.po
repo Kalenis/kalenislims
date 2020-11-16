@@ -286,6 +286,18 @@ msgctxt "field:lims.interface.formula.test.variable,variable:"
 msgid "Variable"
 msgstr "Variable"
 
+msgctxt "field:lims.interface.function,help:"
+msgid "Help"
+msgstr "Ayuda"
+
+msgctxt "field:lims.interface.function,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.interface.function,parameters:"
+msgid "Parameters"
+msgstr "Parámetros"
+
 msgctxt "field:lims.interface.grouped_data,iteration:"
 msgid "Iteration"
 msgstr "Iteración"
@@ -626,6 +638,10 @@ msgctxt "help:lims.interface.column,transfer_field:"
 msgid "Check if value have to be transferred to notebook line"
 msgstr "Marcar si se debe trasladar el dato a la línea de cuaderno"
 
+msgctxt "model:ir.action,name:act_interface_function_list"
+msgid "Interface Functions"
+msgstr "Funciones de Interfaz"
+
 msgctxt "model:ir.action,name:act_interface_variable_list"
 msgid "Interface Variables"
 msgstr "Variables de Interfaz"
@@ -767,6 +783,10 @@ msgctxt "model:ir.ui.menu,name:lims_interface_compilation_menu"
 msgid "Interface Compilations"
 msgstr "Compilaciones desde interfaz"
 
+msgctxt "model:ir.ui.menu,name:lims_interface_function_menu"
+msgid "Interface Functions"
+msgstr "Funciones"
+
 msgctxt "model:ir.ui.menu,name:lims_interface_menu"
 msgid "Interfaces"
 msgstr "Interfaces"
@@ -806,6 +826,10 @@ msgstr "Probar Fórmula"
 msgctxt "model:lims.interface.formula.test.variable,name:"
 msgid "Test Formula"
 msgstr "Probar Fórmula"
+
+msgctxt "model:lims.interface.function,name:"
+msgid "Interface Function"
+msgstr "Función de interfaz"
 
 msgctxt "model:lims.interface.grouped_data,name:"
 msgid "Grouped Data"
