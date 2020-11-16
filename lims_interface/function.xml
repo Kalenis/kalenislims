@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Function -->
+
+        <record model="ir.ui.view" id="interface_function_view_form">
+            <field name="model">lims.interface.function</field>
+            <field name="type">form</field>
+            <field name="name">function_form</field>
+        </record>
+        <record model="ir.ui.view" id="interface_function_view_list">
+            <field name="model">lims.interface.function</field>
+            <field name="type">tree</field>
+            <field name="name">function_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_interface_function_list">
+            <field name="name">Interface Functions</field>
+            <field name="res_model">lims.interface.function</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_interface_function_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="interface_function_view_list"/>
+            <field name="act_window" ref="act_interface_function_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_interface_function_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="interface_function_view_form"/>
+            <field name="act_window" ref="act_interface_function_list"/>
+        </record>
+
+        <menuitem action="act_interface_function_list"
+            id="lims_interface_function_menu"
+            parent="lims_interface_menu" sequence="20"/>
+
+<!-- Functions -->
+
+        <record model="lims.interface.function" id="function_str">
+            <field name="name">STR</field>
+            <field name="parameters">value</field>
+            <field name="help">Returns the value as a string.</field>
+        </record>
+
+        <record model="lims.interface.function" id="function_var">
+            <field name="name">VAR</field>
+            <field name="parameters">notebook_line, variable</field>
+            <field name="help">Obtains the value of a given variable, setted for the analysis, product type, matrix and method indicated.</field>
+        </record>
+
+    </data>
+</tryton>
