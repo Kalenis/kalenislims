@@ -19,7 +19,7 @@ from PyPDF2.utils import PdfReadError
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Not, Bool
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
@@ -33,6 +33,12 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     template = fields.Many2One('lims.result_report.template',
         'Report Template', domain=[('type', 'in', [None, 'base'])],
         states={'readonly': Eval('state') != 'draft'}, depends=['state'])
+    template_type = fields.Function(fields.Selection([
+        (None, ''),
+        ('base', 'HTML'),
+        ('header', 'HTML - Header'),
+        ('footer', 'HTML - Footer'),
+        ], 'Report Template Type'), 'get_template_type')
     sections = fields.One2Many('lims.results_report.version.detail.section',
         'version_detail', 'Sections')
     previous_sections = fields.Function(fields.One2Many(
@@ -50,6 +56,8 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         ('1', '1'),
         ('2', '2'),
         ], 'Charts per Row')
+    comments_plain = fields.Function(fields.Text('Comments'),
+        'get_comments_plain', setter='set_comments_plain')
 
     @classmethod
     def __setup__(cls):
@@ -59,9 +67,23 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         if 'required' in cls.resultrange_origin.states:
             del cls.resultrange_origin.states['required']
 
+    @classmethod
+    def view_attributes(cls):
+        return super().view_attributes() + [
+            ('//page[@id="comments"]', 'states', {
+                    'invisible': Not(Bool(Eval('template_type'))),
+                    }),
+            ('//page[@id="comments_plain"]', 'states', {
+                    'invisible': Eval('template_type') == 'base',
+                    }),
+            ]
+
     @staticmethod
     def default_charts_x_row():
         return '1'
+
+    def get_template_type(self, name):
+        return self.template and self.template.type or None
 
     @fields.depends('template', '_parent_template.trend_charts',
         '_parent_template.sections', 'sections')
@@ -169,6 +191,13 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
                 'order': s.order,
                 } for s in detail.sections])]
         return detail_default
+
+    def get_comments_plain(self, name):
+        return self.comments
+
+    @classmethod
+    def set_comments_plain(cls, records, name, value):
+        cls.write(records, {'comments': value})
 
 
 class ResultsReportVersionDetailSection(ModelSQL, ModelView):

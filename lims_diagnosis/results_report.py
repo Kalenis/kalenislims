@@ -106,32 +106,29 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         ('base', 'HTML'),
         ('header', 'HTML - Header'),
         ('footer', 'HTML - Footer'),
-        ], 'Type'), 'get_template_type')
+        ], 'Report Template Type'), 'get_template_type')
+
+    @classmethod
+    def view_attributes(cls):
+        return super().view_attributes() + [
+            ('//page[@id="diagnosis"]', 'states', {
+                    'invisible': Not(Bool(Eval('template_type'))),
+                    }),
+            ('//page[@id="diagnosis_plain"]', 'states', {
+                    'invisible': Eval('template_type') == 'base',
+                    }),
+            ]
 
     def get_diagnosis_plain(self, name):
         return self.diagnosis
 
     @classmethod
     def set_diagnosis_plain(cls, records, name, value):
-        if not value:
-            return
         cls.write(records, {'diagnosis': value})
 
     def get_template_type(self, name):
         return (self.version_detail.template and
             self.version_detail.template.type or None)
-
-    @classmethod
-    def view_attributes(cls):
-        return super(
-                ResultsReportVersionDetailSample, cls).view_attributes() + [
-            ('/form/notebook/page[@id="diagnosis"]', 'states', {
-                    'invisible': Not(Bool(Eval('template_type'))),
-                    }),
-            ('/form/notebook/page[@id="diagnosis_plain"]', 'states', {
-                    'invisible': Eval('template_type') == 'base',
-                    }),
-            ]
 
     @classmethod
     def create(cls, vlist):

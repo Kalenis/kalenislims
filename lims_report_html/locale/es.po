@@ -126,6 +126,10 @@ msgctxt "field:lims.results_report.version.detail,charts_x_row:"
 msgid "Charts per Row"
 msgstr "Gráficos por fila"
 
+msgctxt "field:lims.results_report.version.detail,comments_plain:"
+msgid "Comments"
+msgstr "Observaciones"
+
 msgctxt "field:lims.results_report.version.detail,following_sections:"
 msgid "Following Sections"
 msgstr "Secciones siguientes"
@@ -142,9 +146,17 @@ msgctxt "field:lims.results_report.version.detail,template:"
 msgid "Report Template"
 msgstr "Plantilla de Informe"
 
+msgctxt "field:lims.results_report.version.detail,template_type:"
+msgid "Report Template Type"
+msgstr "Tipo de Plantilla de Informe"
+
 msgctxt "field:lims.results_report.version.detail,trend_charts:"
 msgid "Trend Charts"
 msgstr "Gráficos de tendencia"
+
+msgctxt "field:lims.results_report.version.detail.sample,attachments:"
+msgid "Attachments"
+msgstr "Adjuntos"
 
 msgctxt "field:lims.results_report.version.detail.sample,trend_charts:"
 msgid "Trend Charts"
@@ -282,6 +294,18 @@ msgctxt "selection:lims.results_report.version.detail,charts_x_row:"
 msgid "2"
 msgstr "2"
 
+msgctxt "selection:lims.results_report.version.detail,template_type:"
+msgid "HTML"
+msgstr "HTML"
+
+msgctxt "selection:lims.results_report.version.detail,template_type:"
+msgid "HTML - Footer"
+msgstr "HTML - Pie de página"
+
+msgctxt "selection:lims.results_report.version.detail,template_type:"
+msgid "HTML - Header"
+msgstr "HTML - Encabezado"
+
 msgctxt "selection:lims.results_report.version.detail.section,position:"
 msgid "Following"
 msgstr "Siguiente"
@@ -297,3 +321,7 @@ msgstr "Informe"
 msgctxt "view:lims.result_report.template:"
 msgid "Header and Footer"
 msgstr "Encabezado y Pie de página"
+
+msgctxt "view:lims.results_report.version.detail:"
+msgid "Comments"
+msgstr "Observaciones"
