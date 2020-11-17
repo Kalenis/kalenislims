@@ -324,7 +324,10 @@ class Service(ModelSQL, ModelView):
             ~Eval('report_date_readonly'))},
         depends=['report_date_readonly'])
     laboratory_date = fields.Date('Laboratory deadline',
-        states={'readonly': True})
+        states={'readonly': Or(
+            Bool(Eval('context', {}).get('readonly', True)),
+            Bool(Eval('report_date_readonly')))},
+        depends=['report_date_readonly'])
     report_date = fields.Date('Date agreed for result',
         states={'readonly': Or(
             Bool(Eval('context', {}).get('readonly', True)),
@@ -5145,8 +5148,9 @@ class CreateSampleService(ModelView):
         'Number of days for Reporting',
         states={'readonly': ~Eval('report_date_readonly')},
         depends=['report_date_readonly'])
-    laboratory_date = fields.Function(fields.Date('Laboratory deadline'),
-        'on_change_with_laboratory_date')
+    laboratory_date = fields.Date('Laboratory deadline',
+        states={'readonly': Bool(Eval('report_date_readonly'))},
+        depends=['report_date_readonly'])
     report_date = fields.Date('Date agreed for result',
         states={'readonly': Bool(Eval('report_date_readonly'))},
         depends=['report_date_readonly'])
