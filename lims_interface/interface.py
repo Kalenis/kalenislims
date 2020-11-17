@@ -1783,8 +1783,11 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     for alias, nl_field in fields.items():
                         data[nl_field] = getattr(line, alias)
                         if nl_field == 'result' and data[nl_field]:
-                            data[nl_field] = round(
-                                float(data[nl_field]), nb_line.decimals)
+                            if nb_line.decimals and nb_line.decimals > 0:
+                                data[nl_field] = round(
+                                    float(data[nl_field]), nb_line.decimals)
+                            else:
+                                data[nl_field] = int(data[nl_field])
                     if (not avoid_accept_result and
                             nb_line.laboratory.automatic_accept_result):
                         #data['end_date'] = today
