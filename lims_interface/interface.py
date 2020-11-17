@@ -1782,7 +1782,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         }
                     for alias, nl_field in fields.items():
                         data[nl_field] = getattr(line, alias)
-                        if nl_field == 'result':
+                        if nl_field == 'result' and data[nl_field]:
                             data[nl_field] = round(
                                 float(data[nl_field]), nb_line.decimals)
                     if (not avoid_accept_result and
