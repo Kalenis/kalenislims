@@ -254,6 +254,8 @@ class Equipment(ModelSQL, ModelView):
         return ['OR',
             ('name',) + tuple(clause[1:]),
             ('serial_number',) + tuple(clause[1:]),
+            ('brand.name',) + tuple(clause[1:]),
+            ('plant.name',) + tuple(clause[1:]),
             ]
 
     @fields.depends('plant', '_parent_plant.party')
@@ -407,6 +409,14 @@ class Component(ModelSQL, ModelView):
         return res
 
     @classmethod
+    def search_rec_name(cls, name, clause):
+        return ['OR',
+            ('type.name',) + tuple(clause[1:]),
+            ('brand.name',) + tuple(clause[1:]),
+            ('model',) + tuple(clause[1:]),
+            ]
+
+    @classmethod
     def get_plant(cls, component, name):
         result = {}
         for c in component:
@@ -459,3 +469,10 @@ class ComercialProduct(ModelSQL, ModelView):
     def get_rec_name(self, name):
         res = '%s %s' % (self.brand.name, self.name)
         return res
+
+    @classmethod
+    def search_rec_name(cls, name, clause):
+        return ['OR',
+            ('name',) + tuple(clause[1:]),
+            ('brand.name',) + tuple(clause[1:]),
+            ]
