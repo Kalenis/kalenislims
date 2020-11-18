@@ -55,6 +55,10 @@ class Plant(ModelSQL, ModelView):
             if address and address.country:
                 return address.country.id
 
+    def get_rec_name(self, name):
+        res = '%s [%s]' % (self.name, self.party.name)
+        return res
+
     @classmethod
     def copy(cls, plants, default=None):
         if default is None:
