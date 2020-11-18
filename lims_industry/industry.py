@@ -4,7 +4,7 @@
 
 from trytond.model import ModelSQL, ModelView, fields, Unique
 from trytond.pool import Pool
-from trytond.pyson import Eval
+from trytond.pyson import Eval, If
 from trytond.transaction import Transaction
 
 
@@ -194,7 +194,10 @@ class Equipment(ModelSQL, ModelView):
     latitude = fields.Numeric('Latitude', digits=(3, 14))
     longitude = fields.Numeric('Longitude', digits=(4, 14))
     plant = fields.Many2One('lims.plant', 'Plant',
-        required=True, select=True)
+        required=True, select=True,
+        domain=[If(Eval('context', {}).contains('party'),
+            ('party', '=', Eval('context', {}).get('party', -1)),
+            ())])
     components = fields.One2Many('lims.component', 'equipment',
         'Components')
     year_manufacturing = fields.Integer('Year of manufacturing')
