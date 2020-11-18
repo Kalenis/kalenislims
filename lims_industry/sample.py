@@ -221,6 +221,7 @@ class CreateSampleStart(metaclass=PoolMeta):
     equipment = fields.Many2One('lims.equipment', 'Equipment',
         domain=[('party', '=', Eval('party'))],
         states={'required': Bool(Eval('ind_required'))},
+        context={'party': Eval('party')},
         depends=['party', 'ind_required'])
     component = fields.Many2One('lims.component', 'Component',
         domain=[('equipment', '=', Eval('equipment'))],
