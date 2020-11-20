@@ -189,6 +189,9 @@ class Data(ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super().__setup__()
+        cls._order.insert(0, ('notebook_line.notebook', 'ASC'))
+        cls._order.insert(1, ('notebook_line.analysis.order', 'ASC'))
+        cls._order.insert(2, ('notebook_line.analysis.code', 'ASC'))
         cls.__rpc__['fields_view_get'].cache = None
         cls.__rpc__['default_get'].cache = None
 
