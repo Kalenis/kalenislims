@@ -1788,6 +1788,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                                     float(data[nl_field]), nb_line.decimals)
                             else:
                                 data[nl_field] = int(data[nl_field])
+                        if nl_field == 'result_modifier' and not data[nl_field]:
+                            data[nl_field] = 'eq'
                     if (not avoid_accept_result and
                             nb_line.laboratory.automatic_accept_result):
                         #data['end_date'] = today
