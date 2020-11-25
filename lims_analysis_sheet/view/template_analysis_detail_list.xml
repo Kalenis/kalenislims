@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="interface"/>
+    <field name="template"/>
+    <field name="analysis"/>
+    <field name="method"/>
+</tree>

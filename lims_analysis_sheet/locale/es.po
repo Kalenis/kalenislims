@@ -412,6 +412,10 @@ msgctxt "field:lims.template.analysis_sheet.analysis,expressions:"
 msgid "Special formulas"
 msgstr "Fórmulas especiales"
 
+msgctxt "field:lims.template.analysis_sheet.analysis,interface:"
+msgid "Device Interface"
+msgstr "Interfaz"
+
 msgctxt "field:lims.template.analysis_sheet.analysis,method:"
 msgid "Method"
 msgstr "Método"
@@ -463,6 +467,10 @@ msgstr "Tareas por Profesional"
 msgctxt "model:ir.action,name:act_planification_professional_line_form"
 msgid "Planifications by Professional - Sheets"
 msgstr "Tareas por Profesional - Hojas"
+
+msgctxt "model:ir.action,name:act_template_analysis_list"
+msgid "Template Analysis"
+msgstr "Análisis de Plantilla"
 
 msgctxt "model:ir.action,name:act_template_analysis_sheet_list"
 msgid "Analysis Sheet Templates"
@@ -609,6 +617,10 @@ msgstr "Muestras Pendientes de Planificar"
 msgctxt "model:ir.ui.menu,name:menu_planification_professional"
 msgid "Planifications by Professional"
 msgstr "Tareas por Profesional"
+
+msgctxt "model:ir.ui.menu,name:menu_template_analysis_list"
+msgid "Template Analysis"
+msgstr "Análisis de Plantilla"
 
 msgctxt "model:ir.ui.menu,name:menu_template_analysis_sheet_list"
 msgid "Analysis Sheet Templates"
