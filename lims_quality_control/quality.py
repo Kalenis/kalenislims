@@ -2,6 +2,8 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import datetime
+from io import BytesIO
+from PyPDF2 import PdfFileMerger
 
 from trytond.model import Workflow, ModelView, ModelSQL, DeactivableMixin, \
     fields
@@ -10,6 +12,7 @@ from trytond.wizard import Wizard, StateView, StateTransition, StateAction, \
 from trytond.pyson import PYSONEncoder, Bool, Equal, Eval, Not
 from trytond.transaction import Transaction
 from trytond.pool import Pool
+from trytond.report import Report
 from trytond.tools import grouped_slice, reduce_ids
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
@@ -567,6 +570,39 @@ class TestResultsReport(Wizard):
         return action, {}
 
 
+class OpenTestAttachment(Wizard):
+    'Test Attachment'
+    __name__ = 'lims.quality.test.open_attachment'
+
+    start = StateAction('lims.act_attachment')
+
+    def do_start(self, action):
+        Test = Pool().get('lims.quality.test')
+
+        active_ids = Transaction().context['active_ids']
+        tests = Test.browse(active_ids)
+
+        resources = self.get_resource(tests)
+
+        action['pyson_domain'] = PYSONEncoder().encode([
+            ('resource', 'in', resources),
+            ])
+        action['name'] += ' (%s)' % ', '.join(t.rec_name for t in tests)
+        return action, {}
+
+    def get_resource(self, tests):
+        res = []
+        for test in tests:
+            res.append(self._get_resource(test))
+            for line in test.lines:
+                if line.analysis_sheet:
+                    res.append(self._get_resource(line.analysis_sheet))
+        return res
+
+    def _get_resource(self, obj):
+        return '%s,%s' % (obj.__name__, obj.id)
+
+
 class PrintTest(Wizard):
     'Print Test'
     __name__ = 'lims.print_test'
@@ -613,3 +649,43 @@ class TestReport(CompanyReport):
             p.professional.party.name for p in professionals]))
 
         return ' / '.join(professionals)
+
+
+class TestAttachmentReport(Report):
+    'Test Attachment Report'
+    __name__ = 'lims.quality.test.attachment.report'
+
+    @classmethod
+    def execute(cls, ids, data):
+        pool = Pool()
+        Test = pool.get('lims.quality.test')
+        Attachment = pool.get('ir.attachment')
+
+        if len(ids) > 1:
+            raise UserError(gettext('lims.msg_multiple_reports'))
+
+        test = Test(ids[0])
+
+        resources = []
+        for line in test.lines:
+            if line.analysis_sheet:
+                resources.append(cls._get_resource(line.analysis_sheet))
+
+        attachments = Attachment.search([
+            ('resource', 'in', resources),
+            ])
+
+        merger = PdfFileMerger(strict=False)
+
+        for attachment in attachments:
+            filedata = BytesIO(attachment.data)
+            merger.append(filedata)
+        output = BytesIO()
+        merger.write(output)
+        document = output.getvalue()
+
+        return 'pdf', document
+
+    @classmethod
+    def _get_resource(cls, obj):
+        return '%s,%s' % (obj.__name__, obj.id)

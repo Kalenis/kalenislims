@@ -38,10 +38,12 @@ def register():
         quality.CreateQualityTest,
         quality.TemplateAddService,
         quality.TestResultsReport,
+        quality.OpenTestAttachment,
         quality.PrintTest,
         module='lims_quality_control', type_='wizard')
     Pool.register(
         sample.SampleLabels,
         lims.ResultReport,
         quality.TestReport,
+        quality.TestAttachmentReport,
         module='lims_quality_control', type_='report')

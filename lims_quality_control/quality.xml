@@ -414,6 +414,19 @@
             <field name="action" ref="wiz_lims_create_quality_test"/>
         </record>
 
+<!-- Open Test Attachment -->
+
+        <record model="ir.action.wizard" id="wiz_test_open_attachment">
+            <field name="name">Test Attachments</field>
+            <field name="wiz_name">lims.quality.test.open_attachment</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_test_open_attachment_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.quality.test,-1</field>
+            <field name="action" ref="wiz_test_open_attachment"/>
+        </record>
+
 <!-- Add Service -->
 
         <record model="ir.ui.view" id="lims_template_add_service_start_view_form">
@@ -466,6 +479,20 @@
             <field name="keyword">form_print</field>
             <field name="model">lims.quality.test,-1</field>
             <field name="action" ref="wiz_print_test"/>
+        </record>
+
+<!-- Test Attachment Report -->
+
+        <record model="ir.action.report" id="report_test_attachment">
+            <field name="name">Test Attachment Report</field>
+            <field name="model">lims.quality.test</field>
+            <field name="report_name">lims.quality.test.attachment.report</field>
+            <field name="extension">pdf</field>
+        </record>
+        <record model="ir.action.keyword" id="report_test_attachment_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.quality.test,-1</field>
+            <field name="action" ref="report_test_attachment"/>
         </record>
 
     </data>
