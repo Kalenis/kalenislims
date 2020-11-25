@@ -54,6 +54,27 @@
             <field name="name">template_analysis_list</field>
         </record>
 
+        <record model="ir.ui.view" id="template_analysis_detail_view_list">
+            <field name="model">lims.template.analysis_sheet.analysis</field>
+            <field name="type">tree</field>
+            <field name="name">template_analysis_detail_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_template_analysis_list">
+            <field name="name">Template Analysis</field>
+            <field name="res_model">lims.template.analysis_sheet.analysis</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_template_analysis_list_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="template_analysis_detail_view_list"/>
+            <field name="act_window" ref="act_template_analysis_list"/>
+        </record>
+
+        <menuitem action="act_template_analysis_list"
+            id="menu_template_analysis_list"
+            parent="menu_template_analysis_sheet_list" sequence="10"/>
+
 <!-- Special Formula -->
 
         <record model="ir.ui.view" id="template_analysis_expression_view_form">

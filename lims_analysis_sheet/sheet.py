@@ -176,6 +176,8 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
     expressions = fields.One2Many(
         'lims.template.analysis_sheet.analysis.expression',
         'analysis', 'Special formulas')
+    interface = fields.Function(fields.Many2One(
+        'lims.interface', 'Device Interface'), 'get_interface')
 
     @fields.depends('analysis', '_parent_analysis.methods')
     def on_change_with_method_domain(self, name=None):
@@ -183,6 +185,9 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
         if self.analysis and self.analysis.methods:
             methods = [m.id for m in self.analysis.methods]
         return methods
+
+    def get_interface(self, name):
+        return self.template.interface.id
 
     @classmethod
     def validate(cls, template_analysis):
