@@ -530,6 +530,10 @@ msgctxt "model:ir.action,name:report_test"
 msgid "Test Report"
 msgstr "Informe"
 
+msgctxt "model:ir.action,name:report_test_attachment"
+msgid "Test Attachment Report"
+msgstr "Documentación Respaldatoria"
+
 msgctxt "model:ir.action,name:wiz_lims_countersample_create"
 msgid "Countersample Create"
 msgstr "Crear Contramuestra"
@@ -553,6 +557,10 @@ msgstr "Informes de Resultados"
 msgctxt "model:ir.action,name:wiz_print_test"
 msgid "Test Report"
 msgstr "Informe"
+
+msgctxt "model:ir.action,name:wiz_test_open_attachment"
+msgid "Test Attachments"
+msgstr "Adjuntos de Hojas de Análisis"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_lims_analysis_list_domain_all"
