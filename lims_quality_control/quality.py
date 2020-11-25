@@ -629,6 +629,17 @@ class TestReport(CompanyReport):
     __name__ = 'lims.quality.control.report'
 
     @classmethod
+    def execute(cls, ids, data):
+        pool = Pool()
+        Test = pool.get('lims.quality.test')
+        result = super().execute(ids, data)
+        if len(ids) == 1:
+            test, = Test.browse(ids)
+            result = result[:3] + (
+                test.product.product_type.code + ' - ' + test.lot.number,)
+        return result
+
+    @classmethod
     def get_context(cls, records, data):
         Test = Pool().get('lims.quality.test')
 
