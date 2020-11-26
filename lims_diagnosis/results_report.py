@@ -8,6 +8,7 @@ from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Not, Bool
 from trytond.transaction import Transaction
+from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
 
@@ -37,7 +38,19 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     @classmethod
     @ModelView.button
     def diagnose(cls, details):
+        cls.check_diagnosis_states(details)
         cls.write(details, {'state': 'diagnosed'})
+
+    @classmethod
+    def check_diagnosis_states(cls, details):
+        for detail in details:
+            for sample in detail.samples:
+                if not sample.diagnosis_states:
+                    continue
+                for state in sample.diagnosis_states.values():
+                    if state == '*':
+                        raise UserError(gettext(
+                            'lims_diagnosis.msg_invalid_diagnosis_state'))
 
     @fields.depends('template', '_parent_template.diagnosis_template',
         methods=['on_change_diagnosis_template'])

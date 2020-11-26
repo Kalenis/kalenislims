@@ -4,5 +4,8 @@
         <record model="ir.message" id="lbl_line_acceptance">
             <field name="text">Notebook Line Acceptance</field>
         </record>
+        <record model="ir.message" id="msg_invalid_diagnosis_state">
+            <field name="text">Missing diagnosis states</field>
+        </record>
     </data>
 </tryton>
