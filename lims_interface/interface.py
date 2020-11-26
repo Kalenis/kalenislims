@@ -1780,6 +1780,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     data = {
                         'compilation': c.id,
                         }
+                    data_eng = {}
                     for alias, nl_field in fields.items():
                         data[nl_field] = getattr(line, alias)
                         if nl_field == 'result' and data[nl_field]:
@@ -1790,6 +1791,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
                                 data[nl_field] = int(data[nl_field])
                         if nl_field == 'result_modifier' and not data[nl_field]:
                             data[nl_field] = 'eq'
+                        if nl_field == 'literal_result' and data[nl_field]:
+                            data_eng[nl_field] = data[nl_field]
+
                     if (not avoid_accept_result and
                             nb_line.laboratory.automatic_accept_result):
                         #data['end_date'] = today
@@ -1797,6 +1801,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         data['acceptance_date'] = now
                     if data:
                         NotebookLine.write([nb_line], data)
+                    if data_eng:
+                        with Transaction().set_context(language='en'):
+                            NotebookLine.write([nb_line], data_eng)
 
     @classmethod
     def delete(cls, compilations):
