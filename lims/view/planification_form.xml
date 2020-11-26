@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <form>
-    <group col="6" colspan="4" id="header_holder">
+    <group col="2" colspan="2" id="header_laboratory">
         <label name="laboratory"/>
         <field name="laboratory"/>
-        <group col="4" colspan="2" id="dates">
-            <label name="start_date"/>
-            <field name="start_date"/>
-            <label name="date"/>
-            <field name="date"/>
-        </group>
+    </group>
+    <group col="6" colspan="2" id="header_holder">
+        <label name="start_date"/>
+        <field name="start_date"/>
+        <label name="date"/>
+        <field name="date"/>
         <label name="code"/>
         <field name="code"/>
     </group>
