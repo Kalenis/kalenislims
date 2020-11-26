@@ -268,6 +268,10 @@ msgctxt "model:ir.message,text:lbl_line_acceptance"
 msgid "Notebook Line Acceptance"
 msgstr "Aceptación de Línea de cuaderno"
 
+msgctxt "model:ir.message,text:msg_invalid_diagnosis_state"
+msgid "Missing diagnosis states"
+msgstr "Faltan estados de diagnóstico"
+
 msgctxt "model:ir.ui.menu,name:lims_open_samples_comparator_menu"
 msgid "Samples Comparator"
 msgstr "Comparador de muestras"
@@ -287,6 +291,10 @@ msgstr "Plantillas de Diagnóstico"
 msgctxt "model:lims.diagnosis.state,name:"
 msgid "Diagnosis State"
 msgstr "Estado de Diagnóstico"
+
+msgctxt "model:lims.diagnosis.state.image,name:"
+msgid "Diagnosis State Image"
+msgstr "Imagen de Estado de diagnóstico"
 
 msgctxt "model:lims.diagnosis.template,name:"
 msgid "Diagnosis Template"
