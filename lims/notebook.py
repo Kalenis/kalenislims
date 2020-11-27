@@ -773,9 +773,10 @@ class NotebookLine(ModelSQL, ModelView):
     service = fields.Many2One('lims.service', 'Service', readonly=True,
         ondelete='CASCADE', select=True)
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
-        readonly=True)
+        readonly=True, select=True)
     repetition = fields.Integer('Repetition', readonly=True)
-    start_date = fields.Date('Start date', states={'readonly': True})
+    start_date = fields.Date('Start date', states={'readonly': True},
+        select=True)
     end_date = fields.Date('End date', states={
         'readonly': Or(~Bool(Eval('start_date')), Bool(Eval('accepted'))),
         }, depends=['start_date', 'accepted'])
@@ -868,12 +869,13 @@ class NotebookLine(ModelSQL, ModelView):
     analysis_order = fields.Function(fields.Integer('Order'),
         'get_analysis_order')
     dilution_factor = fields.Float('Dilution factor')
-    accepted = fields.Boolean('Accepted')
+    accepted = fields.Boolean('Accepted', select=True)
     acceptance_date = fields.DateTime('Acceptance date',
         states={'readonly': True})
     not_accepted_message = fields.Text('Message', readonly=True,
         states={'invisible': Not(Bool(Eval('not_accepted_message')))})
-    annulled = fields.Boolean('Annulled', states={'readonly': True})
+    annulled = fields.Boolean('Annulled', states={'readonly': True},
+        select=True)
     annulment_date = fields.DateTime('Annulment date',
         states={'readonly': True})
     results_report = fields.Many2One('lims.results_report', 'Results Report',
