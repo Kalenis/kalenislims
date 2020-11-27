@@ -615,9 +615,10 @@ class PlanificationDetail(ModelSQL, ModelView):
 
     planification = fields.Many2One('lims.planification', 'Planification',
         ondelete='CASCADE', select=True, required=True)
-    fraction = fields.Many2One('lims.fraction', 'Fraction', required=True)
+    fraction = fields.Many2One('lims.fraction', 'Fraction', required=True,
+        select=True)
     service_analysis = fields.Many2One('lims.analysis', 'Service',
-        required=True)
+        required=True, select=True)
     fraction_type = fields.Function(fields.Many2One('lims.fraction.type',
         'Fraction type'), 'get_fraction_field',
         searcher='search_fraction_field')
@@ -731,8 +732,8 @@ class PlanificationServiceDetail(ModelSQL, ModelView):
     staff_responsible = fields.Many2Many(
         'lims.planification.service_detail-laboratory.professional', 'detail',
         'professional', 'Laboratory professionals')
-    is_control = fields.Boolean('Is Control')
-    is_replanned = fields.Boolean('Is Replanned')
+    is_control = fields.Boolean('Is Control', select=True)
+    is_replanned = fields.Boolean('Is Replanned', select=True)
     planned_service = fields.Many2One('lims.analysis', 'Planned service')
     repetition = fields.Function(fields.Integer('Repetition'),
         'get_repetition')
@@ -859,8 +860,9 @@ class LabProfessionalMethod(ModelSQL, ModelView):
     __name__ = 'lims.lab.professional.method'
 
     professional = fields.Many2One('lims.laboratory.professional',
-        'Professional', required=True)
-    method = fields.Many2One('lims.lab.method', 'Method', required=True)
+        'Professional', required=True, select=True)
+    method = fields.Many2One('lims.lab.method', 'Method', required=True,
+        select=True)
     state = fields.Selection([
         ('training', 'Training'),
         ('qualified', 'Qualified'),
@@ -869,7 +871,7 @@ class LabProfessionalMethod(ModelSQL, ModelView):
     type = fields.Selection([
         ('preparation', 'Preparation'),
         ('analytical', 'Analytical'),
-        ], 'Type', sort=False)
+        ], 'Type', sort=False, select=True)
     requalification_history = fields.One2Many(
         'lims.lab.professional.method.requalification', 'professional_method',
         'Trainings/Qualifications/Requalifications')

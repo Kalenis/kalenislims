@@ -345,13 +345,14 @@ class NotebookLoadResultsFile(Wizard):
                             ('converted_result_modifier', 'not in',
                                 ['d', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre']),
                             ]
-                        line = NotebookLine.search(clause)
-                        if line:
-                            data = raw_results[f[1]][analysis][rep]
-                            res = self.get_results(line[0], data)
-                            if res:
-                                NotebookLine.write([line[0]], res)
-                                lines.append(line[0])
+                        line = NotebookLine.search(clause, limit=1)
+                        if not line:
+                            continue
+                        data = raw_results[f[1]][analysis][rep]
+                        res = self.get_results(line[0], data)
+                        if res:
+                            NotebookLine.write([line[0]], res)
+                            lines.append(line[0])
 
         if lines:
             self.result.result_lines = [l.id for l in lines]

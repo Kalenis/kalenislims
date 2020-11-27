@@ -783,7 +783,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
     __name__ = 'lims.analysis'
     _rec_name = 'description'
 
-    code = fields.Char('Code', required=True,
+    code = fields.Char('Code', required=True, select=True,
         states={'readonly': Eval('state') != 'draft'}, depends=['state'])
     description = fields.Char('Description', required=True, translate=True,
         states={'readonly': Bool(Equal(Eval('state'), 'disabled'))},
@@ -883,7 +883,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
     product = fields.Many2One('product.product', 'Product')
     automatic_acquisition = fields.Boolean('Automatic acquisition',
         states={'readonly': Bool(Equal(Eval('state'), 'disabled'))},
-        depends=['state'])
+        depends=['state'], select=True)
     order = fields.Integer('Order', states={
         'invisible': Not(And(
             Bool(Equal(Eval('type'), 'analysis')),
