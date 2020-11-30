@@ -7,6 +7,7 @@ import traceback
 import xlrd
 from xlutils.copy import copy
 from datetime import datetime
+from sql import Null, Literal
 
 from trytond.model import ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateView, StateTransition, Button
@@ -448,9 +449,11 @@ class NotebookLoadResultsFile(Wizard):
         return validated, msg
 
     def transition_confirm(self):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
         AnalyticProfessional = pool.get('lims.notebook.line.professional')
+        sql_table = NotebookLine.__table__()
 
         NOW = datetime.now()
         warnings = False
@@ -458,8 +461,10 @@ class NotebookLoadResultsFile(Wizard):
         export_results = self.start.results_importer.exportResults()
 
         previous_professionals = []
-        lines_to_update = []
+        new_professionals = []
         for line in self.result.result_lines:
+            columns = []
+            values = []
             prevent_line = False
             outcome = 'OK'
 
@@ -482,24 +487,40 @@ class NotebookLoadResultsFile(Wizard):
                     prevent_line = True
                     outcome = gettext('lims_instrument.msg_inj_date_end_date')
                 else:
-                    line.result = line.imported_result
-                    line.end_date = line.imported_end_date
-                    line.injection_date = line.imported_inj_date
+                    columns.append(sql_table.result)
+                    values.append(line.imported_result)
+                    columns.append(sql_table.end_date)
+                    values.append(line.imported_end_date)
+                    columns.append(sql_table.injection_date)
+                    values.append(line.imported_inj_date)
 
             else:
-                line.result = None
-                line.result_modifier = 'na'
-                line.report = False
-                line.annulled = True
-                line.annulment_date = NOW
-                line.end_date = None
-                line.injection_date = None
+                columns.append(sql_table.result)
+                values.append(Null)
+                columns.append(sql_table.result_modifier)
+                values.append(Literal('na'))
+                columns.append(sql_table.report)
+                values.append(Literal(False))
+                columns.append(sql_table.annulled)
+                values.append(Literal(True))
+                columns.append(sql_table.annulment_date)
+                values.append(NOW)
+                columns.append(sql_table.end_date)
+                values.append(Null)
+                columns.append(sql_table.injection_date)
+                values.append(Null)
 
-            line.literal_result = line.imported_literal_result
-            line.chromatogram = line.imported_chromatogram
-            line.device = line.imported_device
-            line.dilution_factor = line.imported_dilution_factor
-            line.rm_correction_formula = line.imported_rm_correction_formula
+            columns.append(sql_table.literal_result)
+            values.append(line.imported_literal_result)
+            columns.append(sql_table.chromatogram)
+            values.append(line.imported_chromatogram)
+            columns.append(sql_table.device)
+            values.append(line.imported_device and
+                line.imported_device.id or Null)
+            columns.append(sql_table.dilution_factor)
+            values.append(line.imported_dilution_factor)
+            columns.append(sql_table.rm_correction_formula)
+            values.append(line.imported_rm_correction_formula)
 
             line_previous_professionals = []
             if line.imported_professionals:
@@ -510,10 +531,10 @@ class NotebookLoadResultsFile(Wizard):
                     if validated:
                         line_previous_professionals = [p for p in
                             line.professionals]
-                        new_professionals = [
-                            AnalyticProfessional(professional=p[0])
-                            for p in profs]
-                        line.professionals = new_professionals
+                        line_new_professionals = [{
+                            'notebook_line': line.id,
+                            'professional': p[0],
+                            } for p in profs]
                     else:
                         prevent_line = True
                         outcome = msg
@@ -543,20 +564,33 @@ class NotebookLoadResultsFile(Wizard):
 
             else:
                 previous_professionals.extend(line_previous_professionals)
-                line.imported_result = None
-                line.imported_literal_result = None
-                line.imported_end_date = None
-                line.imported_professionals = None
-                line.imported_chromatogram = None
-                line.imported_device = None
-                line.imported_dilution_factor = None
-                line.imported_rm_correction_formula = None
-                line.imported_inj_date = None
-                lines_to_update.append(line)
+                new_professionals.extend(line_new_professionals)
+                columns.append(sql_table.imported_result)
+                values.append(Null)
+                columns.append(sql_table.imported_literal_result)
+                values.append(Null)
+                columns.append(sql_table.imported_end_date)
+                values.append(Null)
+                columns.append(sql_table.imported_professionals)
+                values.append(Null)
+                columns.append(sql_table.imported_chromatogram)
+                values.append(Null)
+                columns.append(sql_table.imported_device)
+                values.append(Null)
+                columns.append(sql_table.imported_dilution_factor)
+                values.append(Null)
+                columns.append(sql_table.imported_rm_correction_formula)
+                values.append(Null)
+                columns.append(sql_table.imported_inj_date)
+                values.append(Null)
+                # Write Results to Notebook lines
+                cursor.execute(*sql_table.update(
+                    columns, values,
+                    where=(sql_table.id == line.id)))
 
-        # Write Results to Notebook lines
+        # Update Professionals
         AnalyticProfessional.delete(previous_professionals)
-        NotebookLine.save(lines_to_update)
+        AnalyticProfessional.create(new_professionals)
 
         if warnings:
             self.warning.msg = messages
