@@ -5084,6 +5084,10 @@ msgctxt "field:lims.results_report.version.detail,samples:"
 msgid "Samples"
 msgstr "Muestras"
 
+msgctxt "field:lims.results_report.version.detail,samples_list:"
+msgid "Samples"
+msgstr "Muestras"
+
 msgctxt "field:lims.results_report.version.detail,signer:"
 msgid "Signer"
 msgstr "Firmante"

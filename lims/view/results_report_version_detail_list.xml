@@ -7,6 +7,7 @@
     <field name="valid"/>
     <field name="type"/>
     <field name="party"/>
+    <field name="samples_list"/>
     <field name="report_type"/>
     <field name="report_result_type"/>
     <field name="signer"/>

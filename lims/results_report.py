@@ -395,6 +395,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     write_date2 = fields.Function(fields.DateTime('Write Date'),
        'get_write_date2', searcher='search_write_date2')
     icon = fields.Function(fields.Char('Icon'), 'get_icon')
+    samples_list = fields.Function(fields.Char('Samples'),
+        'get_samples_list', searcher='search_samples_list')
 
     # State changes
     revision_uid = fields.Many2One('res.user', 'Revision user', readonly=True)
@@ -1021,6 +1023,58 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         else:
             detail_default['report_type_forced'] = 'normal'
         return detail_default
+
+    @classmethod
+    def get_samples_list(cls, details, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        result = {}
+        for d in details:
+            result[d.id] = ''
+            cursor.execute('SELECT s.number '
+                'FROM "' + Sample._table + '" s '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON s.id = f.sample '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON f.id = n.fraction '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON n.id = rs.notebook '
+                'WHERE rs.version_detail = %s',
+                (d.id,))
+            samples = [x[0] for x in cursor.fetchall()]
+            if samples:
+                result[d.id] = ', '.join(samples)
+        return result
+
+    @classmethod
+    def search_samples_list(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        value = clause[2]
+        cursor.execute('SELECT rs.version_detail '
+            'FROM "' + Sample._table + '" s '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON s.id = f.sample '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON n.id = rs.notebook '
+            'WHERE s.number ILIKE %s',
+            (value,))
+        details_ids = [x[0] for x in cursor.fetchall()]
+        if not details_ids:
+            return [('id', '=', -1)]
+        return [('id', 'in', details_ids)]
 
 
 class ResultsReportVersionDetailSample(ModelSQL, ModelView):
