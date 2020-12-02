@@ -3026,6 +3026,45 @@ class SampleResultsReport(Wizard):
         return action, {}
 
 
+class SampleResultsReportInProgress(Wizard):
+    'Sample Results Report in progress'
+    __name__ = 'lims.sample.results_report.in_progress'
+
+    start = StateAction('lims.act_lims_results_report_version_detail')
+
+    def do_start(self, action):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+
+        active_ids = Transaction().context['active_ids']
+        samples = Sample.browse(active_ids)
+
+        cursor.execute('SELECT rd.id '
+            'FROM "' + ResultsDetail._table + '" rd '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON rd.id = rs.version_detail '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON n.id = rs.notebook '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = n.fraction '
+            'WHERE f.sample IN (%s) '
+                'AND rd.state NOT IN (\'released\', \'annulled\')',
+            (', '.join(str(r) for r in active_ids),))
+        details_ids = [x[0] for x in cursor.fetchall()]
+
+        action['pyson_domain'] = PYSONEncoder().encode([
+            ('id', 'in', details_ids),
+            ])
+        action['name'] += ' (%s)' % ', '.join(
+            s.rec_name for s in samples)
+        return action, {}
+
+
 class OpenResultsReportSample(Wizard):
     'Results Report Sample'
     __name__ = 'lims.results_report.open_sample'

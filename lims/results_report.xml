@@ -658,6 +658,19 @@
             <field name="action" ref="wiz_lims_sample_results_report"/>
         </record>
 
+<!-- Wizard Sample Results Report in progress -->
+
+        <record model="ir.action.wizard" id="wiz_lims_sample_results_report_in_progress">
+            <field name="name">Sample Results Reports in progress</field>
+            <field name="wiz_name">lims.sample.results_report.in_progress</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_lims_sample_results_report_in_progress_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.sample,-1</field>
+            <field name="action" ref="wiz_lims_sample_results_report_in_progress"/>
+        </record>
+
 <!-- Wizard Open Results Report Sample -->
 
         <record model="ir.action.wizard" id="wiz_results_report_open_sample">

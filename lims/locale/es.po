@@ -7133,6 +7133,10 @@ msgctxt "model:ir.action,name:wiz_lims_sample_results_report"
 msgid "Sample Results Reports"
 msgstr "Informes de resultados de la Muestra"
 
+msgctxt "model:ir.action,name:wiz_lims_sample_results_report_in_progress"
+msgid "Sample Results Reports in progress"
+msgstr "Informes de resultados en curso de la Muestra"
+
 msgctxt "model:ir.action,name:wiz_lims_samples_pending_reporting"
 msgid "Samples Pending Reporting"
 msgstr "Muestras pendientes de informar"

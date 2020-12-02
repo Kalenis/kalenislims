@@ -328,6 +328,7 @@ def register():
         results_report.ServiceResultsReport,
         results_report.FractionResultsReport,
         results_report.SampleResultsReport,
+        results_report.SampleResultsReportInProgress,
         results_report.OpenResultsReportSample,
         results_report.OpenResultsDetailEntry,
         results_report.OpenResultsDetailAttachment,
