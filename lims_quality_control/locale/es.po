@@ -372,7 +372,11 @@ msgstr "Plantilla"
 
 msgctxt "field:lims.quality.test,test_date:"
 msgid "Date"
-msgstr "Fecha de recepción"
+msgstr "Fecha"
+
+msgctxt "field:lims.quality.test,validated_date:"
+msgid "Validated Date"
+msgstr "Fecha Validación"
 
 msgctxt "field:lims.quality.test,write_date:"
 msgid "Write Date"
