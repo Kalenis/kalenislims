@@ -208,6 +208,11 @@ class QualityTest(Workflow, ModelSQL, ModelView):
             'invisible': Eval('state') == 'draft',
             },
         depends=_depends)
+    validated_date = fields.DateTime('Validated Date', readonly=True,
+        states={
+            'invisible': Eval('state') == 'draft',
+            },
+        depends=_depends)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
@@ -309,12 +314,12 @@ class QualityTest(Workflow, ModelSQL, ModelView):
     @classmethod
     @Workflow.transition('successful')
     def successful(cls, tests):
-        pass
+        cls.write(tests, {'validated_date': datetime.datetime.now()})
 
     @classmethod
     @Workflow.transition('failed')
     def failed(cls, tests):
-        pass
+        cls.write(tests, {'validated_date': datetime.datetime.now()})
 
     @classmethod
     @ModelView.button
