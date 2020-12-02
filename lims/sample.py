@@ -2450,6 +2450,8 @@ class Sample(ModelSQL, ModelView):
         readonly=True)
     results_report_release_date = fields.Date('Report release date',
         readonly=True)
+    results_reports_list = fields.Function(fields.Char('Results Reports'),
+        'get_results_reports_list', searcher='search_results_reports_list')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('pending_planning', 'Pending Planification'),
@@ -3015,6 +3017,70 @@ class Sample(ModelSQL, ModelView):
     @classmethod
     def search_department(cls, name, clause):
         return [('product_type.' + name,) + tuple(clause[1:])]
+
+    @classmethod
+    def get_results_reports_list(cls, samples, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        ResultsReport = pool.get('lims.results_report')
+        ResultsVersion = pool.get('lims.results_report.version')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        Notebook = pool.get('lims.notebook')
+        Fraction = pool.get('lims.fraction')
+
+        result = {}
+        for s in samples:
+            result[s.id] = ''
+            cursor.execute('SELECT r.number '
+                'FROM "' + ResultsReport._table + '" r '
+                    'INNER JOIN "' + ResultsVersion._table + '" rv '
+                    'ON r.id = rv.results_report '
+                    'INNER JOIN "' + ResultsDetail._table + '" rd '
+                    'ON rv.id = rd.report_version '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON rd.id = rs.version_detail '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON n.id = rs.notebook '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = n.fraction '
+                'WHERE f.sample = %s',
+                (s.id,))
+            details = [x[0] for x in cursor.fetchall()]
+            if details:
+                result[s.id] = ', '.join(details)
+        return result
+
+    @classmethod
+    def search_results_reports_list(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        ResultsReport = pool.get('lims.results_report')
+        ResultsVersion = pool.get('lims.results_report.version')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        Notebook = pool.get('lims.notebook')
+        Fraction = pool.get('lims.fraction')
+
+        value = clause[2]
+        cursor.execute('SELECT f.sample '
+            'FROM "' + ResultsReport._table + '" r '
+                'INNER JOIN "' + ResultsVersion._table + '" rv '
+                'ON r.id = rv.results_report '
+                'INNER JOIN "' + ResultsDetail._table + '" rd '
+                'ON rv.id = rd.report_version '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON rd.id = rs.version_detail '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON n.id = rs.notebook '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = n.fraction '
+            'WHERE r.number ILIKE %s',
+            (value,))
+        samples_ids = [x[0] for x in cursor.fetchall()]
+        if not samples_ids:
+            return [('id', '=', -1)]
+        return [('id', 'in', samples_ids)]
 
     @classmethod
     def update_samples_state(cls, sample_ids):

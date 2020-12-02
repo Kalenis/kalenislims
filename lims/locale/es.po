@@ -5455,6 +5455,10 @@ msgctxt "field:lims.sample,results_report_release_date:"
 msgid "Report release date"
 msgstr "Fecha de publicación Informe"
 
+msgctxt "field:lims.sample,results_reports_list:"
+msgid "Results Reports"
+msgstr "Informes de resultados"
+
 msgctxt "field:lims.sample,sample_client_description:"
 msgid "Product described by the client"
 msgstr "Producto descripto por el cliente"
