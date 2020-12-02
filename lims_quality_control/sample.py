@@ -22,6 +22,17 @@ class LabWorkYear(metaclass=PoolMeta):
         'Default entry quality')
 
 
+class Fraction(metaclass=PoolMeta):
+    __name__ = 'lims.fraction'
+
+    def _get_stock_move(self):
+        move = super()._get_stock_move()
+        if self.sample.quality:
+            move.product = self.sample.lot.product.id
+            move.lot = self.sample.lot.id
+        return move
+
+
 class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
 
@@ -320,25 +331,20 @@ class CountersampleCreate(Wizard):
 
     def _get_stock_moves(self, fractions):
         pool = Pool()
-        Config = pool.get('lims.configuration')
         User = pool.get('res.user')
         Move = pool.get('stock.move')
 
-        config_ = Config(1)
-        if config_.fraction_product:
-            product = config_.fraction_product
-        else:
-            raise UserError(gettext('lims.msg_missing_fraction_product'))
         company = User(Transaction().user).company
 
         moves = []
         for fraction in fractions:
             with Transaction().set_user(0, set_context=True):
                 move = Move()
-            move.product = product.id
+            move.product = fraction.sample.lot.product.id
+            move.lot = fraction.sample.lot.id
             move.fraction = fraction.id
             move.quantity = fraction.packages_quantity
-            move.uom = product.default_uom
+            move.uom = fraction.sample.lot.product.default_uom
             move.from_location = \
                 fraction.sample.countersample_original_sample.fractions[
                     0].storage_location.id

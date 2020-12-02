@@ -21,6 +21,7 @@ def register():
         lims.EntryDetailAnalysis,
         lims.NotebookLoadResultsManualLine,
         sample.LabWorkYear,
+        sample.Fraction,
         sample.Sample,
         sample.TakeSampleStart,
         sample.TakeSampleResult,
