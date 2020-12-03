@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="template" expand="1"/>
+    <field name="product" expand="1"/>
+    <field name="quantity"/>
+    <field name="uom"/>
+    <field name="quantity_by_sample"/>
+</tree>

@@ -1,0 +1,160 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:lims.analysis_sheet,moves:"
+msgid "Moves"
+msgstr "Movimientos"
+
+msgctxt ""
+"field:lims.analysis_sheet.add_material.assign.failed,inventory_moves:"
+msgid "Inventory Moves"
+msgstr "Movimientos internos"
+
+msgctxt "field:lims.analysis_sheet.add_material.start,materials:"
+msgid "Materials"
+msgstr "Materiales"
+
+msgctxt "field:lims.analysis_sheet.add_material_detail.start,from_location:"
+msgid "From Location"
+msgstr "Desde ubicación"
+
+msgctxt "field:lims.analysis_sheet.add_material_detail.start,lot:"
+msgid "Lot"
+msgstr "Lote"
+
+msgctxt "field:lims.analysis_sheet.add_material_detail.start,material:"
+msgid "Material"
+msgstr "Material"
+
+msgctxt "field:lims.analysis_sheet.add_material_detail.start,product:"
+msgid "Product"
+msgstr "Producto"
+
+msgctxt "field:lims.analysis_sheet.add_material_detail.start,quantity:"
+msgid "Quantity"
+msgstr "Cantidad"
+
+msgctxt "field:lims.analysis_sheet.add_material_detail.start,unit_digits:"
+msgid "Unit Digits"
+msgstr "Decimales de la unidad"
+
+msgctxt "field:lims.analysis_sheet.add_material_detail.start,uom:"
+msgid "Uom"
+msgstr "UdM"
+
+msgctxt "field:lims.analysis_sheet.add_material_detail.start,uom_category:"
+msgid "Uom Category"
+msgstr "Categoría de UdM"
+
+msgctxt "field:lims.configuration,materials_consumption_location:"
+msgid "Materials Consumption Location"
+msgstr "Ubicación de consumo de materiales"
+
+msgctxt "field:lims.template.analysis_sheet,materials:"
+msgid "Materials"
+msgstr "Materiales"
+
+msgctxt "field:lims.template.analysis_sheet.material,interface:"
+msgid "Device Interface"
+msgstr "Interfaz"
+
+msgctxt "field:lims.template.analysis_sheet.material,product:"
+msgid "Product"
+msgstr "Producto"
+
+msgctxt "field:lims.template.analysis_sheet.material,quantity:"
+msgid "Quantity"
+msgstr "Cantidad"
+
+msgctxt "field:lims.template.analysis_sheet.material,quantity_by_sample:"
+msgid "Quantity by Sample"
+msgstr "Cantidad por Muestra"
+
+msgctxt "field:lims.template.analysis_sheet.material,template:"
+msgid "Template"
+msgstr "Plantilla"
+
+msgctxt "field:lims.template.analysis_sheet.material,unit_digits:"
+msgid "Unit Digits"
+msgstr "Decimales de la unidad"
+
+msgctxt "field:lims.template.analysis_sheet.material,uom:"
+msgid "Uom"
+msgstr "UdM"
+
+msgctxt "field:lims.template.analysis_sheet.material,uom_category:"
+msgid "Uom Category"
+msgstr "Categoría de UdM"
+
+msgctxt "model:ir.action,name:act_analysis_sheet_open_moves"
+msgid "Materials moves"
+msgstr "Movimientos de Materiales"
+
+msgctxt "model:ir.action,name:act_template_material_list"
+msgid "Template Material"
+msgstr "Materiales de Plantilla"
+
+msgctxt "model:ir.action,name:wiz_analysis_sheet_add_material"
+msgid "Add Materials"
+msgstr "Añadir Materiales"
+
+msgctxt "model:ir.message,text:msg_product_template_unique"
+msgid "Products can only appear once on each Template."
+msgstr "Los productos solo pueden estar una vez en cada plantilla"
+
+msgctxt "model:ir.message,text:msg_sheet_not_materials"
+msgid "The analysis sheet has no materials"
+msgstr "Faltan ingresar movimientos de materiales"
+
+msgctxt "model:ir.ui.menu,name:menu_template_material_list"
+msgid "Template Material"
+msgstr "Materiales de Plantilla"
+
+msgctxt "model:lims.analysis_sheet.add_material.assign.failed,name:"
+msgid "Add Material Assign Failed"
+msgstr "Materiales"
+
+msgctxt "model:lims.analysis_sheet.add_material.start,name:"
+msgid "Add Material"
+msgstr "Añadir Materiales"
+
+msgctxt "model:lims.analysis_sheet.add_material_detail.start,name:"
+msgid "Add Material"
+msgstr "Añadir Materiales"
+
+msgctxt "model:lims.template.analysis_sheet.material,name:"
+msgid "Template Material"
+msgstr "Materiales de Plantilla"
+
+msgctxt "view:lims.analysis_sheet.add_material.assign.failed:"
+msgid "Unable to assign those products:"
+msgstr "No se pueden reservar estos productos:"
+
+msgctxt "view:lims.analysis_sheet:"
+msgid "Materials"
+msgstr "Materiales"
+
+msgctxt "view:lims.template.analysis_sheet:"
+msgid "Materials"
+msgstr "Materiales"
+
+msgctxt "wizard_button:lims.analysis_sheet.add_material,failed,delete_moves:"
+msgid "OK"
+msgstr "OK"
+
+msgctxt "wizard_button:lims.analysis_sheet.add_material,failed,end:"
+msgid "OK"
+msgstr "OK"
+
+msgctxt "wizard_button:lims.analysis_sheet.add_material,failed,force:"
+msgid "Force Assign"
+msgstr "Forzar reserva"
+
+msgctxt "wizard_button:lims.analysis_sheet.add_material,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.analysis_sheet.add_material,start,save:"
+msgid "Save"
+msgstr "Guardar"
