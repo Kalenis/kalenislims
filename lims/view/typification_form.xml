@@ -34,6 +34,8 @@
     <field name="end_uom"/>
     <label name="calc_decimals"/>
     <field name="calc_decimals"/>
+    <label name="significant_digits"/>
+    <field name="significant_digits"/>
     <notebook>
         <page string="Additional analysis" id="additionals" >
             <label name="additional"/>

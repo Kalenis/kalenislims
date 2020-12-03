@@ -3095,6 +3095,10 @@ msgctxt "field:lims.notebook.line,service:"
 msgid "Service"
 msgstr "Servicio"
 
+msgctxt "field:lims.notebook.line,significant_digits:"
+msgid "Significant digits"
+msgstr "Cifras significativas"
+
 msgctxt "field:lims.notebook.line,start_date:"
 msgid "Start date"
 msgstr "Fecha de inicio"
@@ -3350,6 +3354,10 @@ msgstr "Fórmula Corrección RM"
 msgctxt "field:lims.notebook.line.all_fields,service:"
 msgid "Service"
 msgstr "Servicio"
+
+msgctxt "field:lims.notebook.line.all_fields,significant_digits:"
+msgid "Significant digits"
+msgstr "Cifras significativas"
 
 msgctxt "field:lims.notebook.line.all_fields,start_date:"
 msgid "Start date"
@@ -5955,6 +5963,10 @@ msgstr "Tipo de resultado"
 msgctxt "field:lims.typification,report_type:"
 msgid "Report type"
 msgstr "Tipo de informe"
+
+msgctxt "field:lims.typification,significant_digits:"
+msgid "Significant digits"
+msgstr "Cifras significativas"
 
 msgctxt "field:lims.typification,start_uom:"
 msgid "Start UoM"

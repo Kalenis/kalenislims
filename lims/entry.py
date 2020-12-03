@@ -949,7 +949,8 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
             cursor.execute('SELECT default_repetitions, '
                     'initial_concentration, final_concentration, start_uom, '
                     'end_uom, detection_limit, quantification_limit, '
-                    'lower_limit, upper_limit, calc_decimals, report '
+                    'lower_limit, upper_limit, calc_decimals, '
+                    'significant_digits, report '
                 'FROM "' + Typification._table + '" '
                 'WHERE product_type = %s '
                     'AND matrix = %s '
@@ -972,7 +973,8 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                 lower_limit = _str_value(typification[7])
                 upper_limit = _str_value(typification[8])
                 decimals = typification[9]
-                report = typification[10]
+                significant_digits = typification[10]
+                report = typification[11]
             else:
                 repetitions = 0
                 initial_concentration = None
@@ -984,6 +986,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                 lower_limit = None
                 upper_limit = None
                 decimals = 2
+                significant_digits = None
                 report = False
 
             results_estimated_waiting = None
@@ -1040,6 +1043,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                     'lower_limit': lower_limit,
                     'upper_limit': upper_limit,
                     'decimals': decimals,
+                    'significant_digits': significant_digits,
                     'report': report,
                     'results_estimated_waiting': results_estimated_waiting,
                     'department': department,
