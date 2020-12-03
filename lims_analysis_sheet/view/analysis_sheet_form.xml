@@ -4,34 +4,38 @@
     <field name="template"/>
     <label name="number"/>
     <field name="number"/>
-    <label name="professional"/>
-    <field name="professional"/>
-    <label name="laboratory"/>
-    <field name="laboratory"/>
-    <label name="date"/>
-    <field name="date"/>
-    <group id="samples" colspan="2" col="6">
-        <label name="urgent"/>
-        <field name="urgent"/>
-        <label name="samples_qty"/>
-        <field name="samples_qty"/>
-        <label name="completion_percentage"/>
-        <field name="completion_percentage" widget="progressbar"/>
-    </group>
-    <label name="compilation"/>
-    <field name="compilation"/>
-    <label name="planification"/>
-    <field name="planification"/>
-    <separator string="Other Info" id="other" colspan="4"/>
-    <label name="validated_by"/>
-    <field name="validated_by"/>
-    <label name="validated_date"/>
-    <field name="validated_date"/>
-    <label name="confirmed_by"/>
-    <field name="confirmed_by"/>
-    <label name="confirmed_date"/>
-    <field name="confirmed_date"/>
-    <button name="view_data" string="View data" colspan="4"/>
+    <notebook>
+        <page string="General" id="general">
+            <label name="professional"/>
+            <field name="professional"/>
+            <label name="laboratory"/>
+            <field name="laboratory"/>
+            <label name="date"/>
+            <field name="date"/>
+            <group id="samples" colspan="2" col="6">
+                <label name="urgent"/>
+                <field name="urgent"/>
+                <label name="samples_qty"/>
+                <field name="samples_qty"/>
+                <label name="completion_percentage"/>
+                <field name="completion_percentage" widget="progressbar"/>
+            </group>
+            <label name="compilation"/>
+            <field name="compilation"/>
+            <label name="planification"/>
+            <field name="planification"/>
+            <separator string="Other Info" id="other" colspan="4"/>
+            <label name="validated_by"/>
+            <field name="validated_by"/>
+            <label name="validated_date"/>
+            <field name="validated_date"/>
+            <label name="confirmed_by"/>
+            <field name="confirmed_by"/>
+            <label name="confirmed_date"/>
+            <field name="confirmed_date"/>
+            <button name="view_data" string="View data" colspan="4"/>
+        </page>
+    </notebook>
     <group id="state_holder" colspan="4">
         <label name="state"/>
         <field name="state"/>
