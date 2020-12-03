@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tree editable="top">
+    <field name="product" expand="1"/>
+    <field name="lot" expand="1"/>
+    <field name="from_location" expand="1"/>
+    <field name="quantity"/>
+    <field name="uom"/>
+</tree>

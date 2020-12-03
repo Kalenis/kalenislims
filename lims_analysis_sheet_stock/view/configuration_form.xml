@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='general']/field[@name='analysis_product_category']"
+        position="after">
+        <label name="materials_consumption_location"/>
+        <field name="materials_consumption_location"/>
+    </xpath>
+</data>

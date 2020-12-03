@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Analysis Sheet Template -->
+
+        <record model="ir.ui.view" id="template_analysis_sheet_view_form">
+            <field name="model">lims.template.analysis_sheet</field>
+            <field name="inherit" ref="lims_analysis_sheet.template_analysis_sheet_view_form"/>
+            <field name="name">template_analysis_sheet_form</field>
+        </record>
+
+<!-- Template Material -->
+
+        <record model="ir.ui.view" id="template_material_view_form">
+            <field name="model">lims.template.analysis_sheet.material</field>
+            <field name="type">form</field>
+            <field name="name">template_material_form</field>
+        </record>
+        <record model="ir.ui.view" id="template_material_view_list">
+            <field name="model">lims.template.analysis_sheet.material</field>
+            <field name="type">tree</field>
+            <field name="name">template_material_list</field>
+        </record>
+
+        <record model="ir.ui.view" id="template_material_detail_view_list">
+            <field name="model">lims.template.analysis_sheet.material</field>
+            <field name="type">tree</field>
+            <field name="name">template_material_detail_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_template_material_list">
+            <field name="name">Template Material</field>
+            <field name="res_model">lims.template.analysis_sheet.material</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_template_material_list_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="template_material_detail_view_list"/>
+            <field name="act_window" ref="act_template_material_list"/>
+        </record>
+
+        <menuitem action="act_template_material_list"
+            id="menu_template_material_list"
+            parent="lims_analysis_sheet.menu_template_analysis_sheet_list"
+            sequence="20"/>
+
+<!-- Analysis Sheet -->
+
+        <record model="ir.ui.view" id="analysis_sheet_view_form">
+            <field name="model">lims.analysis_sheet</field>
+            <field name="inherit" ref="lims_analysis_sheet.analysis_sheet_view_form"/>
+            <field name="name">analysis_sheet_form</field>
+        </record>
+
+
+<!-- Wizard Add Material -->
+
+        <record model="ir.ui.view" id="add_material_start_view_form">
+            <field name="model">lims.analysis_sheet.add_material.start</field>
+            <field name="type">form</field>
+            <field name="name">add_material_start_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="add_material_detail_start_view_list">
+            <field name="model">lims.analysis_sheet.add_material_detail.start</field>
+            <field name="type">tree</field>
+            <field name="name">add_material_detail_start_list</field>
+        </record>
+
+        <record model="ir.ui.view" id="add_material_assign_failed_view_form">
+            <field name="model">lims.analysis_sheet.add_material.assign.failed</field>
+            <field name="type">form</field>
+            <field name="name">add_material_assign_failed_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_analysis_sheet_add_material">
+            <field name="name">Add Materials</field>
+            <field name="wiz_name">lims.analysis_sheet.add_material</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_analysis_sheet_add_material_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.interface.data,-1</field>
+            <field name="action" ref="wiz_analysis_sheet_add_material"/>
+        </record>
+
+<!-- Analysis sheet materials related -->
+
+        <record model="ir.action.act_window" id="act_analysis_sheet_open_moves">
+            <field name="name">Materials moves</field>
+            <field name="res_model">stock.move</field>
+            <field name="domain" eval="[('origin.id', 'in', Eval('active_ids'), 'lims.analysis_sheet')]"
+                pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_analysis_sheet_open_moves_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.analysis_sheet,-1</field>
+            <field name="action" ref="act_analysis_sheet_open_moves"/>
+        </record>
+
+    </data>
+</tryton>
