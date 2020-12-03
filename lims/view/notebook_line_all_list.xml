@@ -38,6 +38,7 @@
     <field name="theoretical_concentration"/>
     <field name="concentration_level"/>
     <field name="decimals"/>
+    <field name="significant_digits"/>
     <field name="backup"/>
     <field name="reference"/>
     <field name="literal_result"/>

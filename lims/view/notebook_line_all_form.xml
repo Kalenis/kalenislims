@@ -68,8 +68,12 @@
     <field name="theoretical_concentration"/>
     <label name="concentration_level"/>
     <field name="concentration_level"/>
-    <label name="decimals"/>
-    <field name="decimals"/>
+    <group id="decimals" colspan="2" col="4">
+        <label name="decimals"/>
+        <field name="decimals"/>
+        <label name="significant_digits"/>
+        <field name="significant_digits"/>
+    </group>
     <label name="backup"/>
     <field name="backup"/>
     <label name="reference"/>

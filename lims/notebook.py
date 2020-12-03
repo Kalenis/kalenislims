@@ -858,6 +858,7 @@ class NotebookLine(ModelSQL, ModelView):
     concentration_level = fields.Many2One('lims.concentration.level',
         'Concentration level')
     decimals = fields.Integer('Decimals')
+    significant_digits = fields.Integer('Significant digits')
     backup = fields.Char('Backup')
     reference = fields.Char('Reference')
     literal_result = fields.Char('Literal result', translate=True,
@@ -1475,26 +1476,13 @@ class NotebookLine(ModelSQL, ModelView):
         return ''
 
     def get_formated_result(self):
-        literal_result = self.literal_result
-        result = self.result
-        decimals = self.decimals
-        result_modifier = self.result_modifier
-
         res = ''
-        if literal_result:
-            res = literal_result
+        result_modifier = self.result_modifier
+        if self.literal_result:
+            res = self.literal_result
         else:
-            if result:
-                try:
-                    res = round(float(result), decimals)
-                    if decimals == 0:
-                        res = int(res)
-                    res = str(res)
-                except (TypeError, ValueError):
-                    res = ''
-            else:
-                res = ''
-
+            res = self._format_result(self.result,
+                self.decimals, self.significant_digits)
             if result_modifier == 'eq':
                 res = res
             elif result_modifier == 'low':
@@ -1518,23 +1506,11 @@ class NotebookLine(ModelSQL, ModelView):
         return res
 
     def get_formated_converted_result(self):
-        result = self.converted_result
-        decimals = self.decimals
-        result_modifier = self.converted_result_modifier
-
         res = ''
+        result_modifier = self.converted_result_modifier
         if not self.literal_result:
-            if result:
-                try:
-                    res = round(float(result), decimals)
-                    if decimals == 0:
-                        res = int(res)
-                    res = str(res)
-                except (TypeError, ValueError):
-                    res = ''
-            else:
-                res = ''
-
+            res = self._format_result(self.converted_result,
+                self.decimals, self.significant_digits)
             if result_modifier == 'eq':
                 res = res
             elif result_modifier == 'low':
@@ -1555,6 +1531,23 @@ class NotebookLine(ModelSQL, ModelView):
                 res = gettext('lims.msg_abs')
             else:
                 res = result_modifier
+        return res
+
+    def _format_result(self, result, decimals, significant_digits=None):
+        res = ''
+        if not result:
+            return res
+        try:
+            if significant_digits:
+                res = ("{0:.%ie}" % (significant_digits - 1)).format(
+                    float(result))
+            else:
+                res = round(float(result), decimals)
+                if decimals == 0:
+                    res = int(res)
+                res = str(res)
+        except (TypeError, ValueError):
+            pass
         return res
 
 
@@ -1634,6 +1627,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     concentration_level = fields.Many2One('lims.concentration.level',
         'Concentration level', readonly=True)
     decimals = fields.Integer('Decimals', readonly=True)
+    significant_digits = fields.Integer('Significant digits', readonly=True)
     backup = fields.Char('Backup', readonly=True)
     reference = fields.Char('Reference', readonly=True)
     literal_result = fields.Char('Literal result', readonly=True)
@@ -1737,6 +1731,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
             line.theoretical_concentration,
             line.concentration_level,
             line.decimals,
+            line.significant_digits,
             line.backup,
             line.reference,
             line.literal_result,
@@ -4588,6 +4583,7 @@ class NotebookLineRepeatAnalysis(Wizard):
             'method': line.method.id,
             'device': line.device.id if line.device else None,
             'decimals': line.decimals,
+            'significant_digits': line.significant_digits,
             'report': line.report,
             'results_estimated_waiting': (
                 line.results_estimated_waiting),

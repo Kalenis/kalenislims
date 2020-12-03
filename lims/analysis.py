@@ -77,6 +77,7 @@ class Typification(ModelSQL, ModelView):
         'on_change_with_additionals_domain')
     by_default = fields.Boolean('By default', select=True)
     calc_decimals = fields.Integer('Calculation decimals', required=True)
+    significant_digits = fields.Integer('Significant digits')
     report = fields.Boolean('Report')
     report_type = fields.Selection([
         ('normal', 'Normal'),
@@ -421,7 +422,8 @@ class Typification(ModelSQL, ModelView):
 
             fields_check = ('detection_limit', 'quantification_limit',
                 'lower_limit', 'upper_limit', 'initial_concentration',
-                'final_concentration', 'start_uom', 'end_uom', 'calc_decimals')
+                'final_concentration', 'start_uom', 'end_uom',
+                'calc_decimals', 'significant_digits')
             for field in fields_check:
                 if field in vals:
                     cls.update_laboratory_notebook(typifications)
@@ -465,6 +467,7 @@ class Typification(ModelSQL, ModelView):
                     'final_unit': (typification.end_uom and
                         typification.end_uom.id or None),
                     'decimals': typification.calc_decimals,
+                    'significant_digits': typification.significant_digits,
                     })
 
             # Update RM
