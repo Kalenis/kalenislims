@@ -371,92 +371,13 @@ class SamplesComparatorLine(ModelSQL, ModelView):
             result[name] = {}
             if name == 'result':
                 for l in lines:
-                    result[name][l.id] = cls._get_result(
-                        l.notebook_line)
+                    result[name][l.id] = (
+                        l.notebook_line.get_formated_result())
             elif name == 'converted_result':
                 for l in lines:
-                    result[name][l.id] = cls._get_converted_result(
-                        l.notebook_line)
+                    result[name][l.id] = (
+                        l.notebook_line.get_formated_converted_result())
         return result
-
-    @classmethod
-    def _get_result(cls, notebook_line):
-        literal_result = notebook_line.literal_result
-        result = notebook_line.result
-        decimals = notebook_line.decimals
-        result_modifier = notebook_line.result_modifier
-
-        res = ''
-        if literal_result:
-            res = literal_result
-        else:
-            if result:
-                res = round(float(result), decimals)
-                if decimals == 0:
-                    res = int(res)
-                res = str(res)
-            else:
-                res = ''
-
-            if result_modifier == 'eq':
-                res = res
-            elif result_modifier == 'low':
-                res = gettext('lims.msg_quantification_limit', loq=res)
-            elif result_modifier == 'd':
-                res = gettext('lims.msg_d')
-            elif result_modifier == 'nd':
-                res = gettext('lims.msg_nd')
-            elif result_modifier == 'ni':
-                res = ''
-            elif result_modifier == 'pos':
-                res = gettext('lims.msg_pos')
-            elif result_modifier == 'neg':
-                res = gettext('lims.msg_neg')
-            elif result_modifier == 'pre':
-                res = gettext('lims.msg_pre')
-            elif result_modifier == 'abs':
-                res = gettext('lims.msg_abs')
-            else:
-                res = result_modifier
-        return res
-
-    @classmethod
-    def _get_converted_result(cls, notebook_line):
-        result = notebook_line.converted_result
-        decimals = notebook_line.decimals
-        result_modifier = notebook_line.converted_result_modifier
-
-        res = ''
-        if not notebook_line.literal_result:
-            if result:
-                res = round(float(result), decimals)
-                if decimals == 0:
-                    res = int(res)
-                res = str(res)
-            else:
-                res = ''
-
-            if result_modifier == 'eq':
-                res = res
-            elif result_modifier == 'low':
-                res = gettext('lims.msg_quantification_limit', loq=res)
-            elif result_modifier == 'd':
-                res = gettext('lims.msg_d')
-            elif result_modifier == 'nd':
-                res = gettext('lims.msg_nd')
-            elif result_modifier == 'ni':
-                res = ''
-            elif result_modifier == 'pos':
-                res = gettext('lims.msg_pos')
-            elif result_modifier == 'neg':
-                res = gettext('lims.msg_neg')
-            elif result_modifier == 'pre':
-                res = gettext('lims.msg_pre')
-            elif result_modifier == 'abs':
-                res = gettext('lims.msg_abs')
-            else:
-                res = result_modifier
-        return res
 
     @classmethod
     def get_comparison_result(cls, lines, names):
@@ -489,7 +410,7 @@ class SamplesComparatorLine(ModelSQL, ModelView):
             ])
         if not notebook_line:
             return None
-        return cls._get_result(notebook_line[0])
+        return notebook_line[0].get_formated_result()
 
 
 class Cron(metaclass=PoolMeta):

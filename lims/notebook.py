@@ -1474,6 +1474,89 @@ class NotebookLine(ModelSQL, ModelView):
             return self.planification.comments
         return ''
 
+    def get_formated_result(self):
+        literal_result = self.literal_result
+        result = self.result
+        decimals = self.decimals
+        result_modifier = self.result_modifier
+
+        res = ''
+        if literal_result:
+            res = literal_result
+        else:
+            if result:
+                try:
+                    res = round(float(result), decimals)
+                    if decimals == 0:
+                        res = int(res)
+                    res = str(res)
+                except (TypeError, ValueError):
+                    res = ''
+            else:
+                res = ''
+
+            if result_modifier == 'eq':
+                res = res
+            elif result_modifier == 'low':
+                res = gettext('lims.msg_quantification_limit', loq=res)
+            elif result_modifier == 'd':
+                res = gettext('lims.msg_d')
+            elif result_modifier == 'nd':
+                res = gettext('lims.msg_nd')
+            elif result_modifier == 'ni':
+                res = ''
+            elif result_modifier == 'pos':
+                res = gettext('lims.msg_pos')
+            elif result_modifier == 'neg':
+                res = gettext('lims.msg_neg')
+            elif result_modifier == 'pre':
+                res = gettext('lims.msg_pre')
+            elif result_modifier == 'abs':
+                res = gettext('lims.msg_abs')
+            else:
+                res = result_modifier
+        return res
+
+    def get_formated_converted_result(self):
+        result = self.converted_result
+        decimals = self.decimals
+        result_modifier = self.converted_result_modifier
+
+        res = ''
+        if not self.literal_result:
+            if result:
+                try:
+                    res = round(float(result), decimals)
+                    if decimals == 0:
+                        res = int(res)
+                    res = str(res)
+                except (TypeError, ValueError):
+                    res = ''
+            else:
+                res = ''
+
+            if result_modifier == 'eq':
+                res = res
+            elif result_modifier == 'low':
+                res = gettext('lims.msg_quantification_limit', loq=res)
+            elif result_modifier == 'd':
+                res = gettext('lims.msg_d')
+            elif result_modifier == 'nd':
+                res = gettext('lims.msg_nd')
+            elif result_modifier == 'ni':
+                res = ''
+            elif result_modifier == 'pos':
+                res = gettext('lims.msg_pos')
+            elif result_modifier == 'neg':
+                res = gettext('lims.msg_neg')
+            elif result_modifier == 'pre':
+                res = gettext('lims.msg_pre')
+            elif result_modifier == 'abs':
+                res = gettext('lims.msg_abs')
+            else:
+                res = result_modifier
+        return res
+
 
 class NotebookLineAllFields(ModelSQL, ModelView):
     'Laboratory Notebook Line'
