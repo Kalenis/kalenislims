@@ -2,9 +2,10 @@
 # This file is part of lims_digital_sign module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import logging
 import os
 import time
-import logging
+from datetime import datetime
 
 from trytond.model import ModelView, fields
 from trytond.pool import Pool, PoolMeta
@@ -56,25 +57,13 @@ class ResultsReport(metaclass=PoolMeta):
             ])
         return fields
 
-    @classmethod
-    def cron_send_results_report(cls):
-        '''
-        Cron - Send Results Report
-        '''
-        logger.info('Cron - Send Results Report:INIT')
-        pool = Pool()
-        SendResultsReport = pool.get('lims_email.send_results_report',
-            type='wizard')
-
-        results_reports = cls.search([('signed', '=', False)])
-
-        session_id, _, _ = SendResultsReport.create()
-        send_results_report = SendResultsReport(session_id)
-        with Transaction().set_context(active_ids=[results_report.id
-                for results_report in results_reports]):
-            send_results_report.transition_send()
-
-        logger.info('Cron - Send Results Report:END')
+    def build_report(self, english_report=False):
+        res = super().build_report(english_report)
+        if not res:
+            return False
+        self.signed = True
+        self.signed_date = datetime.now()
+        self.save()
         return True
 
     def _get_global_report(self, details, english_report=False):
