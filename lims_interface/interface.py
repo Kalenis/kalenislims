@@ -1784,11 +1784,13 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     for alias, nl_field in fields.items():
                         data[nl_field] = getattr(line, alias)
                         if nl_field == 'result' and data[nl_field]:
-                            if nb_line.decimals and nb_line.decimals > 0:
-                                data[nl_field] = round(
-                                    float(data[nl_field]), nb_line.decimals)
-                            else:
-                                data[nl_field] = int(data[nl_field])
+                            if not nb_line.significant_digits:
+                                if nb_line.decimals and nb_line.decimals > 0:
+                                    data[nl_field] = round(
+                                        float(data[nl_field]),
+                                        nb_line.decimals)
+                                else:
+                                    data[nl_field] = int(data[nl_field])
                         if nl_field == 'result_modifier' and not data[nl_field]:
                             data[nl_field] = 'eq'
                         if nl_field == 'literal_result' and data[nl_field]:
