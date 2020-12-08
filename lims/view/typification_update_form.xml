@@ -48,6 +48,10 @@
     <field name="calc_decimals"/>
     <label name="update_calc_decimals"/>
     <field name="update_calc_decimals"/>
+    <label name="significant_digits"/>
+    <field name="significant_digits"/>
+    <label name="update_significant_digits"/>
+    <field name="update_significant_digits"/>
     <label name="report"/>
     <field name="report"/>
     <label name="update_report"/>
