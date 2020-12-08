@@ -135,6 +135,8 @@ class AddMaterialDetailStart(ModelView):
         depends=['product'])
     from_location = fields.Many2One('stock.location', 'From Location',
         domain=[('type', '=', 'storage')])
+    uom_category = fields.Function(fields.Many2One(
+        'product.uom.category', 'Uom Category'), 'on_change_with_uom_category')
     uom = fields.Many2One('product.uom', 'Uom', required=True,
         domain=[
             ('category', '=', Eval('uom_category')),
