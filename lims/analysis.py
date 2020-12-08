@@ -2343,6 +2343,7 @@ class UpdateTypificationStart(ModelView):
         domain=[('category.lims_only_available', '=', True)])
     default_repetitions = fields.Integer('Default repetitions')
     calc_decimals = fields.Integer('Calculation decimals')
+    significant_digits = fields.Integer('Significant digits')
     report = fields.Boolean('Report')
     referable = fields.Boolean('Referred by default')
     update_detection_limit = fields.Boolean('Update Detection limit')
@@ -2359,6 +2360,7 @@ class UpdateTypificationStart(ModelView):
     update_end_uom = fields.Boolean('Update End UoM')
     update_default_repetitions = fields.Boolean('Update Default repetitions')
     update_calc_decimals = fields.Boolean('Update Calculation decimals')
+    update_significant_digits = fields.Boolean('Update Significant digits')
     update_report = fields.Boolean('Update Report')
     update_referable = fields.Boolean('Update Referred by default')
 

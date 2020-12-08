@@ -6149,6 +6149,10 @@ msgctxt "field:lims.typification.update.start,report:"
 msgid "Report"
 msgstr "Informe"
 
+msgctxt "field:lims.typification.update.start,significant_digits:"
+msgid "Significant digits"
+msgstr "Cifras significativas"
+
 msgctxt "field:lims.typification.update.start,start_uom:"
 msgid "Start UoM"
 msgstr "UdM inicial"
@@ -6200,6 +6204,10 @@ msgstr "Actualizar Derivado por defecto"
 msgctxt "field:lims.typification.update.start,update_report:"
 msgid "Update Report"
 msgstr "Actualizar Informe"
+
+msgctxt "field:lims.typification.update.start,update_significant_digits:"
+msgid "Update Significant digits"
+msgstr "Actualizar Cifras significativas"
 
 msgctxt "field:lims.typification.update.start,update_start_uom:"
 msgid "Update Start UoM"
