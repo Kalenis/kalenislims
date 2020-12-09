@@ -5464,6 +5464,12 @@ class CreateSample(Wizard):
         services_defaults = []
         if hasattr(self.start, 'services'):
             for service in self.start.services:
+                estimated_waiting_laboratory = (
+                    hasattr(service, 'estimated_waiting_laboratory') and
+                    getattr(service, 'estimated_waiting_laboratory') or None)
+                estimated_waiting_report = (
+                    hasattr(service, 'estimated_waiting_report') and
+                    getattr(service, 'estimated_waiting_report') or None)
                 service_defaults = {
                     'analysis': service.analysis.id,
                     'laboratory': (service.laboratory.id if service.laboratory
@@ -5473,9 +5479,9 @@ class CreateSample(Wizard):
                     'urgent': service.urgent,
                     'priority': service.priority,
                     'estimated_waiting_laboratory': (
-                        service.estimated_waiting_laboratory),
+                        estimated_waiting_laboratory),
                     'estimated_waiting_report': (
-                        service.estimated_waiting_report),
+                        estimated_waiting_report),
                     'laboratory_date': service.laboratory_date,
                     'report_date': service.report_date,
                     'divide': service.divide,
