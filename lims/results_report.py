@@ -2973,6 +2973,10 @@ class SampleResultsReport(Wizard):
 
     start = StateAction('lims.act_lims_results_report_list')
 
+    @classmethod
+    def check_access(cls):
+        pass
+
     def do_start(self, action):
         pool = Pool()
         Sample = pool.get('lims.sample')
@@ -3000,6 +3004,10 @@ class SampleResultsReportInProgress(Wizard):
     __name__ = 'lims.sample.results_report.in_progress'
 
     start = StateAction('lims.act_lims_results_report_version_detail')
+
+    @classmethod
+    def check_access(cls):
+        pass
 
     def do_start(self, action):
         cursor = Transaction().connection.cursor()
