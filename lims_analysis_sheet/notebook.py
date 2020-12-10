@@ -1052,7 +1052,7 @@ class LimitsValidation(Wizard):
                     continue
 
                 result = getattr(line, result_field)
-                if not result:
+                if result is None:
                     continue
                 result_modifier = getattr(line, result_modifier_field) or 'eq'
                 if result_modifier != 'eq':
