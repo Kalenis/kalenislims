@@ -4469,6 +4469,10 @@ class NotebookLineRepeatAnalysis(Wizard):
             ])
     repeat = StateTransition()
 
+    @classmethod
+    def check_access(cls):
+        pass
+
     def _get_notebook_line_id(self):
         return Transaction().context.get('active_id', None)
 
