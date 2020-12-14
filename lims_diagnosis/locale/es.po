@@ -54,6 +54,10 @@ msgctxt "field:lims.diagnostician,party:"
 msgid "Party"
 msgstr "Entidad"
 
+msgctxt "field:lims.diagnostician,signature:"
+msgid "Signature"
+msgstr "Firma"
+
 msgctxt "field:lims.notebook,diagnosis_warning:"
 msgid "Diagnosis Warning"
 msgstr "Advertencia de diagnóstico"
@@ -347,6 +351,10 @@ msgstr "HTML - Encabezado"
 msgctxt "view:lims.diagnosis.state:"
 msgid "Options"
 msgstr "Opciones"
+
+msgctxt "view:lims.diagnostician:"
+msgid "Signature"
+msgstr "Firma"
 
 msgctxt "view:lims.plant:"
 msgid "Diagnosis"

@@ -2,4 +2,7 @@
 <form>
     <label name="party"/>
     <field name="party"/>
+    <group colspan="4" yfill="1" string="Signature" id="signature">
+        <field xfill="0" xexpand="1" name="signature" height="200" width="200" widget="image"/>
+    </group>
 </form>

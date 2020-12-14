@@ -11,6 +11,7 @@ class Diagnostician(ModelSQL, ModelView):
     __name__ = 'lims.diagnostician'
 
     party = fields.Many2One('party.party', 'Party', required=True)
+    signature = fields.Binary('Signature')
 
     def get_rec_name(self, name):
         if self.party:
