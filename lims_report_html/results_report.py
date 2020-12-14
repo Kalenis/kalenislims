@@ -56,7 +56,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         ('1', '1'),
         ('2', '2'),
         ], 'Charts per Row')
-    comments_plain = fields.Function(fields.Text('Comments'),
+    comments_plain = fields.Function(fields.Text('Comments', translate=True),
         'get_comments_plain', setter='set_comments_plain')
 
     @classmethod
