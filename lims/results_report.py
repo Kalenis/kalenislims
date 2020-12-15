@@ -4228,6 +4228,10 @@ class PrintGlobalResultReport(Wizard):
     start = StateTransition()
     print_ = StateReport('lims.global_result_report')
 
+    @classmethod
+    def check_access(cls):
+        pass
+
     def transition_start(self):
         pool = Pool()
         ResultsReport = pool.get('lims.results_report')
