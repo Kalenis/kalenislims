@@ -4502,6 +4502,9 @@ class NotebookLineRepeatAnalysis(Wizard):
             default['analysis'] = notebook_analysis[0]
         return default
 
+    def _unaccept_original(self):
+        return True
+
     def transition_repeat(self):
         pool = Pool()
         Analysis = pool.get('lims.analysis')
@@ -4559,11 +4562,12 @@ class NotebookLineRepeatAnalysis(Wizard):
         Notebook.write([notebook], {
             'lines': [('create', to_create)],
             })
-        NotebookLine.write(to_update, {
-            'accepted': False,
-            'acceptance_date': None,
-            'report': False,
-            })
+        if self._unaccept_original():
+            NotebookLine.write(to_update, {
+                'accepted': False,
+                'acceptance_date': None,
+                'report': False,
+                })
 
         details = EntryDetailAnalysis.search([
             ('id', 'in', details_to_update),
