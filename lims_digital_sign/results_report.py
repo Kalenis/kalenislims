@@ -85,20 +85,22 @@ class ResultsReport(metaclass=PoolMeta):
         origin = ''.join(['origin', t, '.pdf'])
         target = ''.join(['target', t, '.pdf'])
 
-        with open(os.path.join(path, origin), 'wb') as f:
-            f.write(output)
         try:
+            with open(os.path.join(path, origin), 'wb') as f:
+                f.write(output)
+
             token = GetToken(listen, origin, target)
             token.signDoc()
+
+            with open(os.path.join(path, target), 'rb') as f:
+                f_target = f.read()
+            return f_target
         except Exception as e:
             logger.error('Send Results Report: '
                 'Unable to digitally sign results report %s',
                 self.number)
             logger.error(str(e))
             return False
-        with open(os.path.join(path, target), 'rb') as f:
-            f_target = f.read()
-        return f_target
 
 
 class ResultsReportAnnulation(metaclass=PoolMeta):
