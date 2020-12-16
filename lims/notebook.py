@@ -4608,6 +4608,8 @@ class NotebookLineRepeatAnalysis(Wizard):
             'lower_limit': line.lower_limit,
             'upper_limit': line.upper_limit,
             }
+        if line.accepted and not self._unaccept_original():
+            defaults['report'] = False
         return defaults
 
     def end(self):
