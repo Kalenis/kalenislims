@@ -812,6 +812,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         ('referred', 'Referred'),
         ('done', 'Done'),
         ('reported', 'Reported'),
+        ('annulled', 'Annulled'),
         ], 'State', readonly=True)
     cie_min_value = fields.Char('Minimum value')
     cie_max_value = fields.Char('Maximum value')
@@ -1574,6 +1575,7 @@ class AcknowledgmentOfReceipt(Report):
                     ('sample', '=', sample.id),
                     ('fraction.confirmed', '=', True),
                     ('fraction.cie_fraction_type', '=', False),
+                    ('annulled', '=', False),
                     ])
             for service in services_obj:
                 if (service.analysis.type == 'analysis' and not

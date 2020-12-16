@@ -14,6 +14,7 @@
     <field name="method_view"/>
     <field name="device_view"/>
     <field name="comments"/>
-    <field name="confirmed" tree_invisible="1" />
-    <field name="has_results_report" tree_invisible="1" />
+    <field name="annulled"/>
+    <field name="confirmed" tree_invisible="1"/>
+    <field name="has_results_report" tree_invisible="1"/>
 </tree>

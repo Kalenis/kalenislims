@@ -386,6 +386,7 @@ class Service(ModelSQL, ModelView):
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
     planned = fields.Function(fields.Boolean('Planned'), 'get_planned',
         searcher='search_planned')
+    annulled = fields.Boolean('Annulled', states={'readonly': True})
 
     @classmethod
     def __setup__(cls):
@@ -404,6 +405,10 @@ class Service(ModelSQL, ModelView):
     def default_divide():
         return False
 
+    @staticmethod
+    def default_annulled():
+        return False
+
     @classmethod
     def validate(cls, services):
         super().validate(services)
@@ -416,6 +421,7 @@ class Service(ModelSQL, ModelView):
         fraction_id = self.fraction.id
         services = self.search([
             ('fraction', '=', fraction_id),
+            ('annulled', '=', False),
             ('id', '!=', self.id)
             ])
         if not services:
@@ -539,13 +545,14 @@ class Service(ModelSQL, ModelView):
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
         for service in services:
+            if service.annulled:
+                continue
             to_delete = EntryDetailAnalysis.search([
                 ('service', '=', service.id),
                 ])
             if to_delete:
                 with Transaction().set_user(0, set_context=True):
                     EntryDetailAnalysis.delete(to_delete)
-
             if service.analysis.behavior == 'additional':
                 continue
 
@@ -1873,6 +1880,7 @@ class Fraction(ModelSQL, ModelView):
         services = Service.search([
             ('fraction', 'in', [f.id for f in fractions]),
             ('divide', '=', True),
+            ('annulled', '=', False),
             ])
         for service in services:
             if (EntryDetailAnalysis.search_count([
@@ -2017,6 +2025,8 @@ class Fraction(ModelSQL, ModelView):
         analysis = []
         for service in self.services:
             if not service.analysis:
+                continue
+            if service.annulled:
                 continue
             new_analysis = [(service.analysis.id,
                 service.method and service.method.id or None)]
@@ -3744,33 +3754,38 @@ class EditSampleService(Wizard):
         return default
 
     def transition_confirm(self):
-        Sample = Pool().get('lims.sample')
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Entry = pool.get('lims.entry')
 
         actual_analysis = [s.analysis.id for s in self.start.services]
 
         for sample in Sample.browse(Transaction().context['active_ids']):
+            delete_ack_report_cache = False
             for fraction in sample.fractions:
                 original_analysis = []
-                services_to_delete = []
-                services_to_annul = []
-
                 for service in fraction.services:
                     original_analysis.append(service.analysis.id)
                     if service.analysis.id not in actual_analysis:
-                        if service.manage_service_available:
-                            services_to_delete.append(service)
-                        else:
-                            services_to_annul.append(service)
-                if services_to_delete:
-                    self.delete_services(services_to_delete)
-                if services_to_annul:
-                    self.annul_services(services_to_annul)
-
+                        self.annul_service(service)
+                        delete_ack_report_cache = True
                 for service in self.start.services:
                     if service.analysis.id not in original_analysis:
                         self.create_service(service, fraction)
+                        delete_ack_report_cache = True
+                self.update_fraction_services(fraction)
+
+            if delete_ack_report_cache:
+                entry = Entry(sample.entry.id)
+                entry.ack_report_format = None
+                entry.ack_report_cache = None
+                entry.save()
 
         return 'end'
+
+    def annul_service(self, service):
+        service.annulled = True
+        service.save()
 
     def create_service(self, service, fraction):
         pool = Pool()
@@ -3811,21 +3826,87 @@ class EditSampleService(Wizard):
 
         return new_service
 
-    def delete_services(self, services):
-        Service = Pool().get('lims.service')
-        with Transaction().set_user(0, set_context=True):
-            Service.delete(services)
+    def update_fraction_services(self, fraction):
+        pool = Pool()
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
 
-    def annul_services(self, services):
+        annulled_services = Service.search([
+            ('fraction', '=', fraction),
+            ('annulled', '=', True),
+            ])
+        for annulled_service in annulled_services:
+            original_details = EntryDetailAnalysis.search([
+                ('service', '=', annulled_service),
+                ])
+            for original_detail in original_details:
+                duplicated_details = self._get_duplicated_details(
+                    original_detail)
+                if duplicated_details:
+                    self._migrate_detail(original_detail,
+                        duplicated_details[0])
+                    with Transaction().set_user(0, set_context=True):
+                        duplicated_nlines = NotebookLine.search([
+                            ('analysis_detail', 'in', duplicated_details),
+                            ])
+                        NotebookLine.delete(duplicated_nlines)
+                        EntryDetailAnalysis.delete(duplicated_details)
+                else:
+                    self._annul_detail(original_detail)
+
+    def _get_duplicated_details(self, original):
+        EntryDetailAnalysis = Pool().get('lims.entry.detail.analysis')
+        duplicated_details = EntryDetailAnalysis.search([
+            ('fraction', '=', original.fraction),
+            ('analysis', '=', original.analysis),
+            ('method', '=', original.method),
+            ('service', '!=', original.service),
+            ])
+        return duplicated_details
+
+    def _migrate_detail(self, original, duplicated):
         NotebookLine = Pool().get('lims.notebook.line')
+
+        original.service = duplicated.service
+        original.analysis_origin = duplicated.analysis_origin
+        #original.device = duplicated.device
+        original.save()
+
         with Transaction().set_user(0, set_context=True):
             notebook_lines = NotebookLine.search([
-                ('service', 'in', [s.id for s in services]),
+                ('analysis_detail', '=', original),
+                ])
+            NotebookLine.write(notebook_lines, {
+                'service': original.service.id,
+                'analysis_origin': original.analysis_origin,
+                #'device': original.device and original.device.id or None,
+                })
+
+    def _annul_detail(self, original):
+        NotebookLine = Pool().get('lims.notebook.line')
+
+        if NotebookLine.search_count([
+                ('analysis_detail', '=', original),
+                ('results_report', '!=', None),
+                ]) > 0:
+            raise UserError(gettext('lims.msg_annul_analysis',
+                analysis=original.analysis.rec_name))
+
+        with Transaction().set_user(0, set_context=True):
+            notebook_lines = NotebookLine.search([
+                ('analysis_detail', '=', original),
                 ])
             NotebookLine.write(notebook_lines, {
                 'annulled': True,
                 'annulment_date': datetime.now(),
+                'accepted': False,
+                'acceptance_date': None,
+                'report': False,
                 })
+
+        original.state = 'annulled'
+        original.save()
 
 
 class FractionsByLocationsStart(ModelView):

@@ -1849,6 +1849,7 @@ class AddFractionControl(Wizard):
 
         services = Service.search([
             ('fraction', '=', original_fraction),
+            ('annulled', '=', False),
             ])
         for service in services:
             if not Analysis.is_typified(service.analysis,
@@ -2344,6 +2345,7 @@ class AddFractionRMBMZ(Wizard):
 
         services = Service.search([
             ('fraction', '=', original_fraction),
+            ('annulled', '=', False),
             ])
         for service in services:
             if not Analysis.is_typified(service.analysis,
@@ -5531,6 +5533,7 @@ class LoadServices(Wizard):
         # new services
         services = Service.search([
             ('fraction', '=', original_fraction),
+            ('annulled', '=', False),
             ])
         for service in services:
             if not Analysis.is_typified(service.analysis,
