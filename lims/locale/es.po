@@ -5576,6 +5576,10 @@ msgctxt "field:lims.service,analysis_view:"
 msgid "Analysis/Set/Group"
 msgstr "Análisis/Set/Grupo"
 
+msgctxt "field:lims.service,annulled:"
+msgid "Annulled"
+msgstr "Anulado"
+
 msgctxt "field:lims.service,comments:"
 msgid "Comments"
 msgstr "Observaciones"
@@ -7387,6 +7391,10 @@ msgid "The \"%(analysis)s\" analysis is not defined in laboratory \"%(laboratory
 msgstr ""
 "El análisis \"%(analysis)s\" no está definido para el laboratorio "
 "\"%(laboratory)s\""
+
+msgctxt "model:ir.message,text:msg_annul_analysis"
+msgid "The analysis \"%(analysis)s\" is already reported"
+msgstr "El análisis \"%(analysis)s\" ya fue informado"
 
 msgctxt "model:ir.message,text:msg_annulled_report"
 msgid "This report is annulled"
@@ -11914,6 +11922,10 @@ msgstr "Grupo"
 msgctxt "selection:lims.entry.detail.analysis,analysis_type:"
 msgid "Set"
 msgstr "Set"
+
+msgctxt "selection:lims.entry.detail.analysis,state:"
+msgid "Annulled"
+msgstr "Anulado"
 
 msgctxt "selection:lims.entry.detail.analysis,state:"
 msgid "Done"

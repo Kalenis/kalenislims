@@ -158,6 +158,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             ok = True
             services = Service.search([
                 ('fraction', '=', notebook.fraction),
+                ('annulled', '=', False),
                 ])
             for service in services:
                 if service.analysis.result_template:

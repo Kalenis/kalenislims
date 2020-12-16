@@ -454,6 +454,7 @@ class SaleLoadServices(Wizard):
             services = Service.search([
                 ('entry', '=', self.start.entry.id),
                 ('fraction.cie_fraction_type', '=', False),
+                ('annulled', '=', False),
                 ])
         for service in services:
             if hasattr(service.fraction.type, 'invoiceable') and (

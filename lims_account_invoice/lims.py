@@ -36,6 +36,7 @@ class Entry(metaclass=PoolMeta):
         with Transaction().set_context(_check_access=False):
             services = Service.search([
                 ('entry', 'in', [e.id for e in entries]),
+                ('annulled', '=', False),
                 ])
         for service in services:
             service.create_invoice_line('out')
@@ -59,6 +60,7 @@ class Fraction(metaclass=PoolMeta):
         with Transaction().set_context(_check_access=False):
             services = Service.search([
                 ('fraction', 'in', [f.id for f in fractions]),
+                ('annulled', '=', False),
                 ])
         for service in services:
             service.create_invoice_line('out')

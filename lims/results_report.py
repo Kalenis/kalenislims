@@ -1378,6 +1378,7 @@ class DivideReports(Wizard):
         services = Service.search([
             ('entry', '=', Transaction().context['active_id']),
             ('divide', '=', True),
+            ('annulled', '=', False),
             ])
         if services:
             self.result.services = services

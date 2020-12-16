@@ -357,6 +357,7 @@ class AddControl(Wizard):
         original_services = []
         services = Service.search([
             ('fraction', '=', original_fraction),
+            ('annulled', '=', False),
             ])
         for service in services:
             if Analysis.is_typified(service.analysis,
