@@ -1736,29 +1736,30 @@ class GenerateResultsReport(Wizard):
         NotebookLine = pool.get('lims.notebook.line')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
-        clause = [
-            ('notebook.fraction.type.report', '=', True),
-            ('notebook.date2', '>=', self.start.date_from),
-            ('notebook.date2', '<=', self.start.date_to),
-            ('laboratory', '=', self.start.laboratory.id),
-            ('report', '=', True),
-            ('annulled', '=', False),
-            ]
-        if self.start.party:
-            clause.append(('notebook.party', '=', self.start.party.id))
-
         draft_lines_ids = []
         draft_lines = ResultsLine.search([
-            ('detail_sample.version_detail.state', '=', 'draft'),
+            ('detail_sample.version_detail.laboratory', '=',
+                self.start.laboratory.id),
+            ('detail_sample.version_detail.state', 'in', ['draft', 'revised']),
             ])
         if draft_lines:
             draft_lines_ids = [dl.notebook_line.id for dl in draft_lines]
 
-        clause.extend([
-            ('accepted', '=', True),
+        clause = [
+            ('notebook.date2', '>=', self.start.date_from),
+            ('notebook.date2', '<=', self.start.date_to),
+            ('laboratory', '=', self.start.laboratory.id),
+            ('notebook.fraction.type.report', '=', True),
+            ('report', '=', True),
+            ('annulled', '=', False),
             ('results_report', '=', None),
             ('id', 'not in', draft_lines_ids),
-            ])
+            ]
+        if self.start.party:
+            clause.append(('notebook.party', '=', self.start.party.id))
+
+        clause.append(('accepted', '=', True))
+
         if generation_type == 'aut':
             for n_id, grouper in excluded_notebooks:
                 cursor.execute('SELECT nl.id '
