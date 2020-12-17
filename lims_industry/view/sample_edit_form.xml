@@ -8,4 +8,6 @@
     <field name="equipment"/>
     <label name="component"/>
     <field name="component"/>
+    <label name="comercial_product"/>
+    <field name="comercial_product"/>
 </form>

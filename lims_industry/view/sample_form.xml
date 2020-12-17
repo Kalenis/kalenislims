@@ -62,4 +62,9 @@
             <field name="attributes_domain" colspan="4" invisible="1"/>
         </page>
     </xpath>
+    <xpath expr="/form/notebook/page[@id='comments']" position="after">
+        <page id="edition_log" string="Edition log">
+            <field name="edition_log" colspan="4"/>
+        </page>
+    </xpath>
 </data>

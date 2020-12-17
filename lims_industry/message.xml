@@ -49,5 +49,11 @@
         <record model="ir.message" id="msg_equipment_template_unique">
             <field name="text">There is already a equipment template with the same type, brand and model</field>
         </record>
+        <record model="ir.message" id="msg_edit_entry_party">
+            <field name="text">You must select all samples from the same entry to change the Party</field>
+        </record>
+        <record model="ir.message" id="msg_edit_results_report_party">
+            <field name="text">Sample "%(sample)s" has a Results report already released</field>
+        </record>
     </data>
 </tryton>

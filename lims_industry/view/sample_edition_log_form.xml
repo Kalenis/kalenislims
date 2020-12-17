@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<form>
+    <label name="create_date2"/>
+    <field name="create_date2"/>
+    <label name="create_uid"/>
+    <field name="create_uid"/>
+    <label name="field"/>
+    <field name="field" colspan="3"/>
+    <group id="initial_value" colspan="2" yexpand="1" yfill="1" col="1">
+        <separator name="initial_value"/>
+        <field name="initial_value"/>
+    </group>
+    <group id="final_value" colspan="2" yexpand="1" yfill="1" col="1">
+        <separator name="final_value"/>
+        <field name="final_value"/>
+    </group>
+</form>

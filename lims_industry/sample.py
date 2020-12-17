@@ -2,11 +2,13 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond.model import ModelView, fields
+from trytond.model import ModelSQL, ModelView, fields
 from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Bool
 from trytond.transaction import Transaction
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 
 class Entry(metaclass=PoolMeta):
@@ -64,6 +66,8 @@ class Sample(metaclass=PoolMeta):
     changed_oil = fields.Boolean('Did change Oil?')
     changed_oil_filter = fields.Boolean('Did change Oil Filter?')
     changed_air_filter = fields.Boolean('Did change Air Filter?')
+    edition_log = fields.One2Many('lims.sample.edition.log', 'sample',
+        'Edition log', readonly=True)
 
     @classmethod
     def __setup__(cls):
@@ -180,6 +184,48 @@ class Sample(metaclass=PoolMeta):
                     result[name][s.id] = getattr(s.equipment, name.replace(
                         'equipment_', ''), None)
         return result
+
+
+class SampleEditionLog(ModelSQL, ModelView):
+    'Sample Edition Log'
+    __name__ = 'lims.sample.edition.log'
+
+    create_date2 = fields.Function(fields.DateTime('Created at'),
+       'get_create_date2', searcher='search_create_date2')
+    sample = fields.Many2One('lims.sample', 'Sample', required=True,
+        ondelete='CASCADE', select=True, readonly=True)
+    field = fields.Selection([
+        ('party', 'Party'),
+        ('equipment', 'Equipment'),
+        ('component', 'Component'),
+        ('product_type', 'Product type'),
+        ('comercial_product', 'Comercial Product'),
+        ('matrix', 'Matrix'),
+        ], 'Field', readonly=True)
+    initial_value = fields.Text('Initial value', readonly=True)
+    final_value = fields.Text('Final value', readonly=True)
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._order.insert(0, ('create_date', 'ASC'))
+
+    def get_create_date2(self, name):
+        return self.create_date.replace(microsecond=0)
+
+    @classmethod
+    def search_create_date2(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        operator_ = clause[1:2][0]
+        cursor.execute('SELECT id '
+                'FROM "' + cls._table + '" '
+                'WHERE create_date' + operator_ + ' %s',
+                clause[2:3])
+        return [('id', 'in', [x[0] for x in cursor.fetchall()])]
+
+    @classmethod
+    def order_create_date2(cls, tables):
+        return cls.create_date.convert_order('create_date', tables, cls)
 
 
 class Fraction(metaclass=PoolMeta):
@@ -450,6 +496,13 @@ class EditSampleStart(ModelView):
     component = fields.Many2One('lims.component', 'Component',
         domain=[('equipment', '=', Eval('equipment'))],
         depends=['equipment'])
+    comercial_product = fields.Many2One('lims.comercial.product',
+        'Comercial Product')
+
+    @fields.depends('component')
+    def on_change_component(self):
+        if self.component and self.component.comercial_product:
+            self.comercial_product = self.component.comercial_product.id
 
 
 class EditSample(Wizard):
@@ -466,7 +519,8 @@ class EditSample(Wizard):
     def _get_filtered_samples(self):
         Sample = Pool().get('lims.sample')
         samples = Sample.browse(Transaction().context['active_ids'])
-        return [s for s in samples if s.entry.state == 'draft']
+        #return [s for s in samples if s.entry.state == 'draft']
+        return samples
 
     def default_start(self, fields):
         samples = self._get_filtered_samples()
@@ -482,29 +536,154 @@ class EditSample(Wizard):
             }
 
     def transition_confirm(self):
-        component_changed = bool(self.start.component)
-        equipment_changed = bool(self.start.equipment)
-        party_changed = bool(self.start.party)
+        SampleEditionLog = Pool().get('lims.sample.edition.log')
 
         samples = self._get_filtered_samples()
+        samples_to_edit_party = []
         for sample in samples:
-            if component_changed:
-                sample.component = self.start.component.id
-            if equipment_changed:
+            check_typifications = False
+            log = []
+            if (self.start.party and
+                    self.start.party != sample.party):
+                log.append({
+                    'sample': sample.id,
+                    'field': 'party',
+                    'initial_value': sample.party.rec_name,
+                    'final_value': self.start.party.rec_name,
+                    })
+                samples_to_edit_party.append(sample)
+
+            if (self.start.equipment and
+                    self.start.equipment != sample.equipment):
+                log.append({
+                    'sample': sample.id,
+                    'field': 'equipment',
+                    'initial_value': (sample.equipment and
+                        sample.equipment.rec_name or None),
+                    'final_value': self.start.equipment.rec_name,
+                    })
                 sample.equipment = self.start.equipment.id
-            if party_changed:
-                if self.start.party.id != sample.party.id:
-                    entry = self._new_entry()
-                    sample.entry = entry.id
+
+            if (self.start.component and
+                    self.start.component != sample.component):
+                log.append({
+                    'sample': sample.id,
+                    'field': 'component',
+                    'initial_value': (sample.component and
+                        sample.component.rec_name or None),
+                    'final_value': self.start.component.rec_name,
+                    })
+                sample.component = self.start.component.id
+                if (self.start.component.product_type and
+                        self.start.component.product_type !=
+                        sample.product_type):
+                    check_typifications = True
+                    log.append({
+                        'sample': sample.id,
+                        'field': 'product_type',
+                        'initial_value': sample.product_type.rec_name,
+                        'final_value': (
+                            self.start.component.product_type.rec_name),
+                        })
+                    sample.product_type = self.start.component.product_type.id
+
+            if (self.start.comercial_product and
+                    self.start.comercial_product != sample.comercial_product):
+                log.append({
+                    'sample': sample.id,
+                    'field': 'comercial_product',
+                    'initial_value': (sample.comercial_product and
+                        sample.comercial_product.rec_name),
+                    'final_value': self.start.comercial_product.rec_name,
+                    })
+                sample.comercial_product = self.start.comercial_product.id
+                if (self.start.comercial_product.matrix and
+                        self.start.comercial_product.matrix !=
+                        self.start.comercial_product.matrix):
+                    check_typifications = True
+                    log.append({
+                        'sample': sample.id,
+                        'field': 'matrix',
+                        'initial_value': sample.matrix.rec_name,
+                        'final_value': (
+                            self.start.comercial_product.matrix.rec_name),
+                        })
+                    sample.matrix = self.start.comercial_product.matrix.id
+
+            if check_typifications:
+                self.check_typifications(sample)
+
             sample.save()
+            if log:
+                SampleEditionLog.create(log)
+
+        for sample in samples_to_edit_party:
+            self.edit_party(sample, samples)
+
         return 'end'
 
-    def _new_entry(self):
+    def edit_party(self, sample, samples):
+        self._edit_entry_party(sample, samples)
+        self._edit_results_report_party(sample, samples)
+
+    def _edit_entry_party(self, sample, samples):
         pool = Pool()
+        Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
-        entry = Entry()
+
+        if Sample.search_count([
+                ('entry', '=', sample.entry.id),
+                ('id', 'not in', [s.id for s in samples]),
+                ]) > 0:
+            raise UserError(gettext('lims_industry.msg_edit_entry_party'))
+
+        entry = Entry(sample.entry.id)
         entry.party = self.start.party.id
         entry.invoice_party = self.start.party.id
-        entry.state = 'draft'
+        entry.ack_report_format = None
+        entry.ack_report_cache = None
         entry.save()
-        return entry
+
+    def _edit_results_report_party(self, sample, samples):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
+        ResultsReport = pool.get('lims.results_report')
+
+        if sample.has_results_report:
+            raise UserError(gettext(
+                'lims_industry.msg_edit_results_report_party',
+                sample=sample.rec_name))
+
+        cursor.execute('SELECT rv.results_report '
+            'FROM "' + ResultsVersion._table + '" rv '
+                'INNER JOIN "' + ResultsDetail._table + '" rd '
+                'ON rv.id =  rd.report_version '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON rd.id = rs.version_detail '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON n.id = rs.notebook '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = n.fraction '
+            'WHERE f.sample = %s '
+                'AND rd.state NOT IN (\'released\', \'annulled\')',
+            (str(sample.id),))
+        reports_ids = [x[0] for x in cursor.fetchall()]
+        if not reports_ids:
+            return
+        reports = ResultsReport.browse(reports_ids)
+        ResultsReport.write(reports, {'party': self.start.party.id})
+
+    def check_typifications(self, sample):
+        analysis_domain_ids = sample.on_change_with_analysis_domain()
+        for f in sample.fractions:
+            for s in f.services:
+                if s.analysis.id not in analysis_domain_ids:
+                    raise UserError(gettext('lims.msg_not_typified',
+                        analysis=s.analysis.rec_name,
+                        product_type=sample.product_type.rec_name,
+                        matrix=sample.matrix.rec_name))

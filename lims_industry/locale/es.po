@@ -466,6 +466,10 @@ msgctxt "field:lims.sample,component:"
 msgid "Component"
 msgstr "Componente"
 
+msgctxt "field:lims.sample,edition_log:"
+msgid "Edition log"
+msgstr "Registro de cambios"
+
 msgctxt "field:lims.sample,equipment:"
 msgid "Equipment"
 msgstr "Equipo"
@@ -566,6 +570,10 @@ msgctxt "field:lims.sample.attribute.set,name:"
 msgid "Name"
 msgstr "Nombre"
 
+msgctxt "field:lims.sample.edit.start,comercial_product:"
+msgid "Comercial Product"
+msgstr "Producto comercial"
+
 msgctxt "field:lims.sample.edit.start,component:"
 msgid "Component"
 msgstr "Componente"
@@ -576,11 +584,31 @@ msgstr "Equipo"
 
 msgctxt "field:lims.sample.edit.start,party:"
 msgid "Party"
-msgstr "Tercero"
+msgstr "Entidad"
 
 msgctxt "field:lims.sample.edit.start,plant:"
 msgid "Plant"
 msgstr "Planta"
+
+msgctxt "field:lims.sample.edition.log,create_date2:"
+msgid "Created at"
+msgstr "Creado el"
+
+msgctxt "field:lims.sample.edition.log,field:"
+msgid "Field"
+msgstr "Campo"
+
+msgctxt "field:lims.sample.edition.log,final_value:"
+msgid "Final value"
+msgstr "Valor final"
+
+msgctxt "field:lims.sample.edition.log,initial_value:"
+msgid "Initial value"
+msgstr "Valor inicial"
+
+msgctxt "field:lims.sample.edition.log,sample:"
+msgid "Sample"
+msgstr "Muestra"
 
 msgctxt "field:lims.sampling.type,description:"
 msgid "Description"
@@ -726,6 +754,16 @@ msgctxt "model:ir.message,text:msg_component_type_unique"
 msgid "A component of the same type already exists for the equipment"
 msgstr "Ya existe un componente del mismo tipo para el equipo"
 
+msgctxt "model:ir.message,text:msg_edit_entry_party"
+msgid "You must select all samples from the same entry to change the Party"
+msgstr ""
+"Debe seleccionar todas las muestras del mismo ingreso para cambiar la "
+"entidad"
+
+msgctxt "model:ir.message,text:msg_edit_results_report_party"
+msgid "Sample \"%(sample)s\" has a Results report already released"
+msgstr "La muestra «%(sample)s» tiene un Informe de resultados ya publicado"
+
 msgctxt "model:ir.message,text:msg_equipment_name_unique"
 msgid "There is already an equipment with the same name for the plant"
 msgstr "Ya existe un equipo con el mismo nombre para la planta"
@@ -859,6 +897,10 @@ msgctxt "model:lims.sample.edit.start,name:"
 msgid "Edit Samples"
 msgstr "Modificar muestras"
 
+msgctxt "model:lims.sample.edition.log,name:"
+msgid "Sample Edition Log"
+msgstr "Registro de cambios en Muestra"
+
 msgctxt "model:lims.sampling.type,name:"
 msgid "Sampling Type"
 msgstr "Muestreo"
@@ -870,6 +912,30 @@ msgstr "Equipo"
 msgctxt "selection:lims.configuration,mail_ack_report_grouping:"
 msgid "Plant"
 msgstr "Planta"
+
+msgctxt "selection:lims.sample.edition.log,field:"
+msgid "Comercial Product"
+msgstr "Producto comercial"
+
+msgctxt "selection:lims.sample.edition.log,field:"
+msgid "Component"
+msgstr "Componente"
+
+msgctxt "selection:lims.sample.edition.log,field:"
+msgid "Equipment"
+msgstr "Equipo"
+
+msgctxt "selection:lims.sample.edition.log,field:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "selection:lims.sample.edition.log,field:"
+msgid "Party"
+msgstr "Entidad"
+
+msgctxt "selection:lims.sample.edition.log,field:"
+msgid "Product type"
+msgstr "Tipo de producto"
 
 msgctxt "selection:lims.trend.chart,filter:"
 msgid "Same Component"
@@ -998,6 +1064,14 @@ msgstr "General"
 msgctxt "view:lims.results_report.version.detail.sample:"
 msgid "Precedents"
 msgstr "Antecedentes"
+
+msgctxt "view:lims.sample.edition.log:"
+msgid "Time"
+msgstr "Hora"
+
+msgctxt "view:lims.sample:"
+msgid "Edition log"
+msgstr "Registro de cambios"
 
 msgctxt "view:lims.sample:"
 msgid "Industry"

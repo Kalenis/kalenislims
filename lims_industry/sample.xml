@@ -15,6 +15,19 @@
             <field name="name">sample_list</field>
         </record>
 
+<!-- Sample Edition Log -->
+
+        <record model="ir.ui.view" id="sample_edition_log_view_list">
+            <field name="model">lims.sample.edition.log</field>
+            <field name="type">tree</field>
+            <field name="name">sample_edition_log_list</field>
+        </record>
+        <record model="ir.ui.view" id="sample_edition_log_view_form">
+            <field name="model">lims.sample.edition.log</field>
+            <field name="type">form</field>
+            <field name="name">sample_edition_log_form</field>
+        </record>
+
 <!-- Fraction Type -->
 
         <record model="ir.ui.view" id="fraction_type_view_form">
