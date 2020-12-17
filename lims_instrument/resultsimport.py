@@ -347,6 +347,7 @@ class NotebookLoadResultsFile(Wizard):
                             ('notebook', '=', notebook[0]),
                             ('analysis', '=', analysis),
                             ('repetition', '=', rep),
+                            ('start_date', '!=', None),
                             ('result', 'in', [None, '']),
                             ('converted_result', 'in', [None, '']),
                             ('literal_result', 'in', [None, '']),
