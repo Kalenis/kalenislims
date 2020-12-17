@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="create_date2" widget="date"/>
+    <field name="create_date2" widget="time" string="Time"/>
+    <field name="create_uid"/>
+    <field name="field"/>
+    <field name="initial_value"/>
+    <field name="final_value"/>
+</tree>

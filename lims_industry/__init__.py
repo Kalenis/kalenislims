@@ -34,6 +34,7 @@ def register():
         analysis.Analysis,
         sample.Entry,
         sample.Sample,
+        sample.SampleEditionLog,
         sample.Fraction,
         sample.FractionType,
         sample.CreateSampleStart,
