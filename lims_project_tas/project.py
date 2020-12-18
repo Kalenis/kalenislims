@@ -17,7 +17,8 @@ class Project(metaclass=PoolMeta):
     _depends = ['type']
 
     tas_invoice_party = fields.Many2One('party.party', 'Invoice party',
-        domain=[('id', 'in', Eval('tas_invoice_party_domain'))],
+        domain=['OR', ('id', '=', Eval('tas_invoice_party')),
+            ('id', 'in', Eval('tas_invoice_party_domain'))],
         states=_states, depends=['type', 'tas_invoice_party_domain'])
     tas_invoice_party_domain = fields.Function(fields.Many2Many('party.party',
         None, None, 'TAS Invoice party domain'),

@@ -23,7 +23,8 @@ class Sale(metaclass=PoolMeta):
 
     invoice_party = fields.Many2One('party.party', 'Invoice party',
         required=True, select=True,
-        domain=[('id', 'in', Eval('invoice_party_domain'))],
+        domain=['OR', ('id', '=', Eval('invoice_party')),
+            ('id', 'in', Eval('invoice_party_domain'))],
         states={
             'readonly': ((Eval('state') != 'draft') |
                 (Eval('lines', [0]) & Eval('party'))),
