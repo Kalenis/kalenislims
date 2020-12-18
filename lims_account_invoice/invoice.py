@@ -269,7 +269,8 @@ class InvoiceLine(metaclass=PoolMeta):
     def __setup__(cls):
         super().__setup__()
         cls.origin.states['readonly'] = True
-        cls.party.domain = [If(Bool(Eval('party_domain')),
+        cls.party.domain = ['OR', ('id', '=', Eval('party')),
+            If(Bool(Eval('party_domain')),
             ('id', 'in', Eval('party_domain')), ('id', '!=', -1))]
         if 'party_domain' not in cls.party.depends:
             cls.party.depends.append('party_domain')

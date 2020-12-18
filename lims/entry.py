@@ -54,7 +54,8 @@ class Entry(Workflow, ModelSQL, ModelView):
     party = fields.Many2One('party.party', 'Party', required=True,
         states={'readonly': Eval('state') != 'draft'}, depends=['state'])
     invoice_party = fields.Many2One('party.party', 'Invoice party',
-        domain=[('id', 'in', Eval('invoice_party_domain'))],
+        domain=['OR', ('id', '=', Eval('invoice_party')),
+            ('id', 'in', Eval('invoice_party_domain'))],
         depends=['invoice_party_domain', 'state'], required=True,
         states={'readonly': Eval('state') != 'draft'})
     invoice_party_view = fields.Function(fields.Many2One('party.party',
