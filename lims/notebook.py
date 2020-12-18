@@ -1541,6 +1541,11 @@ class NotebookLine(ModelSQL, ModelView):
             if significant_digits:
                 res = ("{0:.%ie}" % (significant_digits - 1)).format(
                     float(result))
+                if res[-3] == '+' and int(res[-2:]) < significant_digits:
+                    res = float(res)
+                    if res == int(res):
+                        res = int(res)
+                    res = str(res)
             else:
                 res = round(float(result), decimals)
                 if decimals == 0:
