@@ -734,7 +734,8 @@ class NotebookRule(ModelSQL, ModelView):
 
         try:
             setattr(notebook_line, self.target_field.name, self.value)
-            if self.target_field.name in ('result', 'literal_result'):
+            if (self.target_field.name in ('result', 'literal_result') and
+                    notebook_line.start_date):
                 notebook_line.end_date = today
                 if notebook_line.laboratory.automatic_accept_result:
                     notebook_line.accepted = True
