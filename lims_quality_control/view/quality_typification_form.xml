@@ -32,6 +32,8 @@
     <field name="calc_decimals"/>
     <label name="valid_value"/>
     <field name="valid_value"/>
+    <label name="interface"/>
+    <field name="interface"/>
     <notebook>
         <!-- <page string="Qualitative info" id="qualitative_info" >
             <label name="valid_value"/>

@@ -356,7 +356,7 @@ msgstr "Nombre registro"
 
 msgctxt "field:lims.quality.test,sample:"
 msgid "Sample"
-msgstr "Muestra "
+msgstr "Muestra"
 
 msgctxt "field:lims.quality.test,state:"
 msgid "State"
@@ -440,7 +440,7 @@ msgstr "Rótulo"
 
 msgctxt "field:lims.take.sample.start,sample:"
 msgid "Sample"
-msgstr "Muestra "
+msgstr "Muestra"
 
 msgctxt "field:lims.template.add.service.start,id:"
 msgid "ID"
@@ -449,6 +449,10 @@ msgstr "Identificador"
 msgctxt "field:lims.template.add.service.start,service:"
 msgid "Service"
 msgstr "Servicio"
+
+msgctxt "field:lims.typification,interface:"
+msgid "Interface"
+msgstr "Interfaz"
 
 msgctxt "field:lims.typification,quality:"
 msgid "Quality"
