@@ -86,6 +86,9 @@ class Typification(metaclass=PoolMeta):
             'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
             'required': Equal(Eval('quality_type'), 'quantitative'),
             }, depends=['quality_type', 'limit_digits'])
+    interface = fields.Function(fields.Many2One('lims.interface',
+        'Interface'), 'get_interface')
+
 
     @classmethod
     def __setup__(cls):
@@ -167,6 +170,27 @@ class Typification(metaclass=PoolMeta):
                 if not typifications:
                     raise UserError(
                         gettext('lims.msg_not_default_typification'))
+
+    @classmethod
+    def get_interface(cls, typifications, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Template = pool.get('lims.template.analysis_sheet')
+        TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
+
+        result = {}
+        for t in typifications:
+            cursor.execute('SELECT template '
+                'FROM "' + TemplateAnalysis._table + '" '
+                'WHERE analysis = %s '
+                'AND (method = %s OR method IS NULL)',
+                (t.analysis.id, t.method.id))
+            template_id = cursor.fetchone()
+            result[t.id] = None
+            if template_id:
+                template = Template(template_id[0])
+                result[t.id] = template.interface.id
+        return result
 
     @classmethod
     def create(cls, vlist):

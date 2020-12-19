@@ -24,4 +24,5 @@
     <field name="report_type"/>
     <field name="report_result_type"/>
     <field name="valid_view"/>
+    <field name="interface"/>
 </tree>
