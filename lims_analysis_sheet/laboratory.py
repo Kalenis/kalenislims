@@ -152,8 +152,19 @@ class NotebookRule(metaclass=PoolMeta):
         if sheet_line.annulled:
             return
 
+        value = self.value
+        if self.value.startswith('='):
+            path = self.value[1:].split('.')
+            field = path.pop(0)
+            try:
+                value = getattr(sheet_line, field)
+                while path:
+                    field = path.pop(0)
+                    value = getattr(value, field)
+            except AttributeError:
+                value = None
         try:
-            Data.write([sheet_line], {target_field: str(self.value)})
+            Data.write([sheet_line], {target_field: str(value)})
         except Exception as e:
             return
 
@@ -183,7 +194,18 @@ class NotebookRule(metaclass=PoolMeta):
             return
 
         try:
-            setattr(notebook_line, self.target_field.name, self.value)
+            value = self.value
+            if self.value.startswith('='):
+                path = self.value[1:].split('.')
+                field = path.pop(0)
+                try:
+                    value = getattr(line, field)
+                    while path:
+                        field = path.pop(0)
+                        value = getattr(value, field)
+                except AttributeError:
+                    value = None
+            setattr(notebook_line, self.target_field.name, value)
             if self.target_field.name in ('result', 'literal_result'):
                 if not notebook_line.start_date:
                     notebook_line.start_date = today
@@ -224,7 +246,7 @@ class NotebookRule(metaclass=PoolMeta):
                     return
                 target_field = target_column[0].name
                 try:
-                    Data.write(lines, {target_field: str(self.value)})
+                    Data.write(lines, {target_field: str(value)})
                 except Exception as e:
                     return
 
