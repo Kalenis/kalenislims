@@ -762,22 +762,29 @@ class Interface(Workflow, ModelSQL, ModelView):
 class Column(sequence_ordered(), ModelSQL, ModelView):
     'Column'
     __name__ = 'lims.interface.column'
+    _states = {
+        'readonly': Eval('interface_state') != 'draft',
+        }
+    _depends = ['interface_state']
 
     interface = fields.Many2One('lims.interface', 'Interface',
-        required=True, ondelete='CASCADE')
-    name = fields.Char('Name', required=True)
+        required=True, ondelete='CASCADE',
+        states=_states, depends=_depends)
+    interface_state = fields.Function(fields.Selection('get_interface_states',
+        'Interface State'), 'on_change_with_interface_state')
+    name = fields.Char('Name', required=True, states=_states, depends=_depends)
     alias = fields.Char('Alias', required=True,
-        states={'readonly': Eval('interface_state') != 'draft'},
-        depends=['interface_state'])
-    evaluation_order = fields.Integer('Evaluation order')
+        states=_states, depends=_depends)
+    evaluation_order = fields.Integer('Evaluation order',
+        states=_states, depends=_depends)
     expression = fields.Char('Formula',
-        states={'readonly': Bool(Eval('default_value'))},
-        depends=['default_value'],
+        states={'readonly': _states['readonly'] | Bool(Eval('default_value'))},
+        depends=['default_value', 'interface_state'],
         help=('In grouped columns the suffix _XX will be replaced by the '
             'corresponding repetition'))
     expression_icon = fields.Function(fields.Char('Expression Icon'),
         'on_change_with_expression_icon')
-    domain = fields.Char('Domain Value')
+    domain = fields.Char('Domain Value', states=_states, depends=_depends)
     type_ = fields.Selection([
         (None, ''),
         ('char', 'Text (single-line)'),
@@ -796,75 +803,90 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         ('image', 'Image'),
         ('binary', 'File'),
         ('reference', 'Reference'),
-        ], 'Field Type')
+        ], 'Field Type', states=_states, depends=_depends)
     related_model = fields.Many2One('ir.model', 'Related Model',
-        depends=['type_'], states={
+        states={
             'required': Eval('type_') == 'many2one',
             'invisible': Eval('type_') != 'many2one',
-            })
+            'readonly': _states['readonly'],
+            },
+        depends=['type_', 'interface_state'])
     default_value = fields.Char('Default value',
-        states={'readonly': Bool(Eval('expression'))},
-        depends=['expression'])
-    readonly = fields.Boolean('Read only')
+        states={'readonly': _states['readonly'] | Bool(Eval('expression'))},
+        depends=['expression', 'interface_state'])
+    readonly = fields.Boolean('Read only', states=_states, depends=_depends)
     digits = fields.Integer('Digits',
-        depends=['type_'], states={
+        states={
             'required': Eval('type_').in_(['float', 'numeric']),
             'invisible': ~Eval('type_').in_(['float', 'numeric']),
-            })
+            'readonly': _states['readonly'],
+            },
+        depends=['type_', 'interface_state'])
     source_start = fields.Integer('Field start',
         states={
             'required': Eval('_parent_interface', {}).get(
                 'template_type') == 'txt',
             'invisible': Eval('_parent_interface', {}).get(
                 'template_type') != 'txt',
-            })
+            'readonly': _states['readonly'],
+            },
+        depends=['interface_state'])
     source_end = fields.Integer('Field end',
         states={
             'required': Eval('_parent_interface', {}).get(
                 'template_type') == 'txt',
             'invisible': Eval('_parent_interface', {}).get(
                 'template_type') != 'txt',
-            })
+            'readonly': _states['readonly'],
+            },
+        depends=['interface_state'])
     source_column = fields.Integer('Column',
-        depends=['default_value'], states={
-            'readonly': Bool(Eval('default_value')),
+        states={
+            'readonly': _states['readonly'] | Bool(Eval('default_value')),
             'invisible': Eval('_parent_interface', {}).get(
                 'template_type') == 'txt',
             },
+        depends=['default_value', 'interface_state'],
         help='Mapped column in source file')
     singleton = fields.Boolean('Is a singleton value',
-        depends=['default_value'], states={
-            'readonly': Bool(Eval('default_value')),
+        states={
+            'readonly': _states['readonly'] | Bool(Eval('default_value')),
             'invisible': Eval('_parent_interface', {}).get(
                 'template_type') == 'txt',
             },
+        depends=['default_value', 'interface_state'],
         help='Is a fixed value (column:row) in source file')
     source_row = fields.Integer('Row',
-        depends=['singleton'], states={
+        states={
             'required': Bool(Eval('singleton')),
             'invisible': Or(Not(Eval('singleton')),
                 Eval('_parent_interface', {}).get('template_type') == 'txt'),
-            })
+            'readonly': _states['readonly'],
+            },
+        depends=['singleton', 'interface_state'])
     transfer_field = fields.Boolean('Transfer field',
+        states=_states, depends=_depends,
         help='Check if value have to be transferred to notebook line')
     related_line_field = fields.Many2One('ir.model.field', 'Related field',
         domain=[('model.model', '=', 'lims.notebook.line')],
-        depends=['transfer_field'], states={
+        states={
             'required': Bool(Eval('transfer_field')),
-            'invisible': Not(Eval('transfer_field'))
-        })
-    interface_state = fields.Function(fields.Selection([
-        ('draft', 'Draft'),
-        ('active', 'Active'),
-        ('canceled', 'Canceled'),
-        ], 'Interface State'), 'on_change_with_interface_state')
-    group = fields.Integer('Group')
-    related_group = fields.Integer('Related Group')
-    default_width = fields.Integer('Default Width')
-    colspan = fields.Integer('Colspan')
-    group_name = fields.Char('Group Name')
-    group_colspan = fields.Integer('Group Colspan')
-    group_col = fields.Integer('Group Col')
+            'invisible': Not(Eval('transfer_field')),
+            'readonly': _states['readonly'],
+            },
+        depends=['transfer_field', 'interface_state'])
+    group = fields.Integer('Group', states=_states, depends=_depends)
+    related_group = fields.Integer('Related Group',
+        states=_states, depends=_depends)
+    default_width = fields.Integer('Default Width',
+        states=_states, depends=_depends)
+    colspan = fields.Integer('Colspan', states=_states, depends=_depends)
+    group_name = fields.Char('Group Name', states=_states, depends=_depends)
+    group_colspan = fields.Integer('Group Colspan',
+        states=_states, depends=_depends)
+    group_col = fields.Integer('Group Col', states=_states, depends=_depends)
+
+    del _states, _depends
 
     @classmethod
     def __setup__(cls):
@@ -879,6 +901,12 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
     @staticmethod
     def default_digits():
         return 2
+
+    @classmethod
+    def get_interface_states(cls):
+        pool = Pool()
+        Interface = pool.get('lims.interface')
+        return Interface.fields_get(['state'])['state']['selection']
 
     @fields.depends('default_value', 'expression', 'singleton',
         'source_column')

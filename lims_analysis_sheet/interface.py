@@ -79,7 +79,9 @@ class Column(metaclass=PoolMeta):
         states={
             'invisible': Eval('_parent_interface', {}).get(
                 'export_template_type') == 'txt',
+            'readonly': Eval('interface_state') != 'draft',
             },
+        depends=['interface_state'],
         help='Mapped column in batch file')
     destination_start = fields.Integer('Field start',
         states={
@@ -87,14 +89,18 @@ class Column(metaclass=PoolMeta):
                 'export_template_type') == 'txt',
             'invisible': Eval('_parent_interface', {}).get(
                 'export_template_type') != 'txt',
-            })
+            'readonly': Eval('interface_state') != 'draft',
+            },
+        depends=['interface_state'])
     destination_end = fields.Integer('Field end',
         states={
             'required': Eval('_parent_interface', {}).get(
                 'export_template_type') == 'txt',
             'invisible': Eval('_parent_interface', {}).get(
                 'export_template_type') != 'txt',
-            })
+            'readonly': Eval('interface_state') != 'draft',
+            },
+        depends=['interface_state'])
 
 
 class Interface(metaclass=PoolMeta):
