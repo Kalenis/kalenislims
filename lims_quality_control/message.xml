@@ -49,5 +49,8 @@
         <record model="ir.message" id="msg_sample_created">
             <field name="text">Created sample number</field>
         </record>
+        <record model="ir.message" id="msg_missing_interface">
+            <field name="text">Missing interface for analysis "%(analysis)s".</field>
+        </record>
     </data>
 </tryton>

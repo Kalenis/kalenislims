@@ -362,6 +362,11 @@ class QualityTest(Workflow, ModelSQL, ModelView):
         # new services
         services_default = []
         for line in self.template.lines:
+            if not line.interface:
+                raise UserError(gettext(
+                    'lims_quality_control.msg_missing_interface',
+                    analysis=line.analysis.rec_name))
+
             laboratory_id = (line.analysis.laboratories[0].laboratory.id
                 if line.analysis.type != 'group' else None)
             services_default.append({

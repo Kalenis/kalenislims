@@ -667,6 +667,10 @@ msgctxt "model:ir.message,text:msg_missing_countersample"
 msgid "Missing countersample."
 msgstr "Falta contramuestra"
 
+msgctxt "model:ir.message,text:msg_missing_interface"
+msgid "Missing interface for analysis \"%(analysis)s\"."
+msgstr "Falta interfaz para análisis \"%(analysis)s\"."
+
 msgctxt "model:ir.message,text:msg_missing_results_report"
 msgid "There are lines without results report."
 msgstr "Existen líneas sin informe de resultados"
