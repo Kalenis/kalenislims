@@ -147,7 +147,24 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
                 for i in range(0, min(3, len(precedents))):
                     setattr(sample, 'precedent%s' % str(i + 1), precedents[i])
                 sample.save()
+                cls.update_precedent_lines(sample)
         return samples
+
+    @classmethod
+    def write(cls, *args):
+        super().write(*args)
+        update_precedent_lines = False
+        if not update_precedent_lines:
+            return
+        actions = iter(args)
+        for samples, vals in zip(actions, actions):
+            change_precedents = False
+            for field in ['precedent1', 'precedent2', 'precedent3']:
+                if field in vals:
+                    change_precedents = True
+            if change_precedents:
+                for sample in samples:
+                    cls.update_precedent_lines(sample)
 
     @staticmethod
     def get_default_precedents(sample):
@@ -160,16 +177,73 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
             ], order=[('id', 'DESC')], limit=3)
         return precedents
 
+    @classmethod
+    def update_precedent_lines(cls, sample):
+        pool = Pool()
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        precedent_lines = ResultsLine.search([
+            ('detail_sample', '=', sample.id),
+            ('notebook_line', '=', None),
+            ])
+        if precedent_lines:
+            ResultsLine.delete(precedent_lines)
+
+        result_lines = ResultsLine.search([
+            ('detail_sample', '=', sample.id),
+            ])
+        analysis = [rl.notebook_line.analysis.id for rl in result_lines]
+
+        lines_to_create = []
+        for precedent in [sample.precedent1, sample.precedent2,
+                sample.precedent3]:
+            if not precedent:
+                continue
+            precedent_lines = NotebookLine.search([
+                ('notebook', '=', precedent),
+                ('analysis', 'not in', analysis),
+                ('accepted', '=', True),
+                ])
+            for line in precedent_lines:
+                lines_to_create.append({
+                    'detail_sample': sample.id,
+                    'precedent_analysis': line.analysis.id,
+                    })
+                analysis.append(line.analysis.id)
+
+        if lines_to_create:
+            ResultsLine.create(lines_to_create)
+
 
 class ResultsReportVersionDetailLine(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail.line'
 
+    precedent_analysis = fields.Many2One('lims.analysis', 'Analysis')
     precedent1_result = fields.Function(fields.Char('Precedent 1'),
         'get_precedent_result')
     precedent2_result = fields.Function(fields.Char('Precedent 2'),
         'get_precedent_result')
     precedent3_result = fields.Function(fields.Char('Precedent 3'),
         'get_precedent_result')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls.analysis.getter = 'get_analysis'
+
+    @classmethod
+    def get_analysis(cls, details, name):
+        result = {}
+        for d in details:
+            if d.precedent_analysis:
+                result[d.id] = d.precedent_analysis.id
+            elif d.notebook_line:
+                field = getattr(d.notebook_line, name, None)
+                result[d.id] = field.id if field else None
+            else:
+                result[d.id] = None
+        return result
 
     @classmethod
     def get_precedent_result(cls, details, names):
@@ -198,7 +272,7 @@ class ResultsReportVersionDetailLine(metaclass=PoolMeta):
             return None
         precedent_line = NotebookLine.search([
             ('notebook', '=', precedent),
-            ('analysis', '=', line.notebook_line.analysis),
+            ('analysis', '=', line.analysis),
             ('accepted', '=', True),
             ])
         if not precedent_line:
