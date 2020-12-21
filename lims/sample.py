@@ -416,7 +416,10 @@ class Service(ModelSQL, ModelView):
             service.check_duplicated_analysis()
 
     def check_duplicated_analysis(self):
-        Analysis = Pool().get('lims.analysis')
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        Typification = pool.get('lims.typification')
 
         fraction_id = self.fraction.id
         services = self.search([
@@ -426,17 +429,49 @@ class Service(ModelSQL, ModelView):
             ])
         if not services:
             return
+
         analysis = []
         for service in services:
             analysis.append((service.analysis.id,
                 service.method and service.method.id or None))
             analysis.extend(Analysis.get_included_analysis_method(
                 service.analysis.id))
+        analysis = [list(a) for a in analysis]
+        for a in analysis:
+            if a[1]:
+                continue
+            cursor.execute('SELECT method '
+                'FROM "' + Typification._table + '" '
+                'WHERE product_type = %s '
+                    'AND matrix = %s '
+                    'AND analysis = %s '
+                    'AND valid IS TRUE '
+                    'AND by_default IS TRUE',
+                (self.fraction.product_type.id, self.fraction.matrix.id, a[0]))
+            res = cursor.fetchone()
+            if res:
+                a[1] = res[0]
 
         new_analysis = [(self.analysis.id,
             self.method and self.method.id or None)]
         new_analysis.extend(Analysis.get_included_analysis_method(
             self.analysis.id))
+        new_analysis = [list(a) for a in new_analysis]
+        for a in new_analysis:
+            if a[1]:
+                continue
+            cursor.execute('SELECT method '
+                'FROM "' + Typification._table + '" '
+                'WHERE product_type = %s '
+                    'AND matrix = %s '
+                    'AND analysis = %s '
+                    'AND valid IS TRUE '
+                    'AND by_default IS TRUE',
+                (self.fraction.product_type.id, self.fraction.matrix.id, a[0]))
+            res = cursor.fetchone()
+            if res:
+                a[1] = res[0]
+
         for a in new_analysis:
             if a in analysis:
                 raise UserError(gettext(

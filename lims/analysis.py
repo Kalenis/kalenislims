@@ -1021,11 +1021,10 @@ class Analysis(Workflow, ModelSQL, ModelView):
             'FROM "' + AnalysisIncluded._table + '" '
             'WHERE analysis = %s', (analysis_id,))
         included_analysis_ids = [x[0] for x in cursor.fetchall()]
-        if included_analysis_ids:
-            for analysis_id in included_analysis_ids:
-                if analysis_id not in childs:
-                    childs.append(analysis_id)
-                    childs.extend(cls.get_included_analysis(analysis_id))
+        for analysis_id in included_analysis_ids:
+            if analysis_id not in childs:
+                childs.append(analysis_id)
+                childs.extend(cls.get_included_analysis(analysis_id))
         return childs
 
     @classmethod
@@ -1042,11 +1041,10 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 'ON a.id = ia.included_analysis '
             'WHERE analysis = %s', (analysis_id,))
         included_analysis = cursor.fetchall()
-        if included_analysis:
-            for analysis in included_analysis:
-                if analysis[1] == 'analysis' and analysis[0] not in childs:
-                    childs.append(analysis[0])
-                childs.extend(cls.get_included_analysis_analysis(analysis[0]))
+        for analysis in included_analysis:
+            if analysis[1] == 'analysis' and analysis[0] not in childs:
+                childs.append(analysis[0])
+            childs.extend(cls.get_included_analysis_analysis(analysis[0]))
         return childs
 
     @classmethod
@@ -1059,11 +1057,10 @@ class Analysis(Workflow, ModelSQL, ModelView):
             'FROM "' + AnalysisIncluded._table + '" '
             'WHERE analysis = %s', (analysis_id,))
         included_analysis = cursor.fetchall()
-        if included_analysis:
-            for analysis in included_analysis:
-                if analysis not in childs:
-                    childs.append(analysis)
-                childs.extend(cls.get_included_analysis_method(analysis[0]))
+        for analysis in included_analysis:
+            if analysis not in childs:
+                childs.append(analysis)
+            childs.extend(cls.get_included_analysis_method(analysis[0]))
         return childs
 
     @classmethod
@@ -1081,11 +1078,10 @@ class Analysis(Workflow, ModelSQL, ModelView):
             'WHERE ia.included_analysis = %s '
                 'AND a.state = \'active\'', (analysis_id,))
         parents_analysis_ids = [x[0] for x in cursor.fetchall()]
-        if parents_analysis_ids:
-            for analysis_id in parents_analysis_ids:
-                if analysis_id not in parents:
-                    parents.append(analysis_id)
-                    parents.extend(cls.get_parents_analysis(analysis_id))
+        for analysis_id in parents_analysis_ids:
+            if analysis_id not in parents:
+                parents.append(analysis_id)
+                parents.extend(cls.get_parents_analysis(analysis_id))
         return parents
 
     def get_rec_name(self, name):
