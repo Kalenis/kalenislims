@@ -3901,9 +3901,9 @@ class SearchFractions(Wizard):
 
         planification_details = PlanificationServiceDetail.search([
             ('planification.state', '=', 'preplanned'),
+            ('notebook_line', '!=', None),
             ])
-        planned_lines = [pd.notebook_line.id for pd in planification_details
-            if pd.notebook_line]
+        planned_lines = [pd.notebook_line.id for pd in planification_details]
         planned_lines_ids = ', '.join(str(x) for x in [0] + planned_lines)
         preplanned_where = 'AND nl.id NOT IN (%s) ' % planned_lines_ids
 
