@@ -903,6 +903,10 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         return 2
 
     @classmethod
+    def default_interface_state(cls):
+        return 'draft'
+
+    @classmethod
     def get_interface_states(cls):
         pool = Pool()
         Interface = pool.get('lims.interface')
