@@ -48,6 +48,7 @@ class Notebook(metaclass=PoolMeta):
             ('detail_sample.version_detail.laboratory', '=', laboratory_id),
             ('detail_sample.version_detail.state', 'in', ['draft', 'revised']),
             ('detail_sample.version_detail.type', '!=', 'preliminary'),
+            ('notebook_line', '!=', None),
             ])
         if draft_lines:
             draft_lines_ids = [dl.notebook_line.id for dl in draft_lines]

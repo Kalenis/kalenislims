@@ -744,6 +744,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
             linked_entry_details = []
             for sample in detail.samples:
                 for nline in sample.notebook_lines:
+                    if not nline.notebook_line:
+                        continue
                     linked_lines.append(nline.notebook_line.id)
                     linked_entry_details.append(
                         nline.notebook_line.analysis_detail.id)
@@ -846,6 +848,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
             unlinked_entry_details = []
             for sample in detail.samples:
                 for nline in sample.notebook_lines:
+                    if not nline.notebook_line:
+                        continue
                     unlinked_lines.append(nline.notebook_line.id)
                     unlinked_entry_details.append(
                         nline.notebook_line.analysis_detail.id)
@@ -1123,7 +1127,7 @@ class ResultsReportVersionDetailSample(ModelSQL, ModelView):
             'notebook_line': nline.notebook_line.id,
             'hide': nline.hide,
             'corrected': nline.corrected,
-            } for nline in sample.notebook_lines]
+            } for nline in sample.notebook_lines if nline.notebook_line]
         if notebook_lines:
             sample_default['notebook_lines'] = [('create', notebook_lines)]
         return sample_default
@@ -1153,7 +1157,7 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         'lims.results_report.version.detail.sample', 'Sample Detail',
         required=True, ondelete='CASCADE', select=True)
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
-        required=True, readonly=True, select=True)
+        readonly=True, select=True)
     hide = fields.Boolean('Hide in Report')
     corrected = fields.Boolean('Corrected')
     analysis_origin = fields.Function(fields.Char('Analysis origin'),
@@ -1233,32 +1237,39 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
             result[name] = {}
             if cls._fields[name]._type == 'many2one':
                 for d in details:
-                    field = getattr(d.notebook_line, name, None)
-                    result[name][d.id] = field.id if field else None
+                    if d.notebook_line:
+                        field = getattr(d.notebook_line, name, None)
+                        result[name][d.id] = field.id if field else None
+                    else:
+                        result[name][d.id] = None
             else:
                 for d in details:
-                    result[name][d.id] = getattr(d.notebook_line, name, None)
+                    result[name][d.id] = (d.notebook_line and
+                        getattr(d.notebook_line, name, None) or None)
         return result
 
     @classmethod
     def get_result(cls, details, name):
         result = {}
         for d in details:
-            result[d.id] = d.notebook_line.get_formated_result()
+            result[d.id] = (d.notebook_line and
+                d.notebook_line.get_formated_result() or None)
         return result
 
     @classmethod
     def get_converted_result(cls, details, name):
         result = {}
         for d in details:
-            result[d.id] = d.notebook_line.get_formated_converted_result()
+            result[d.id] = (d.notebook_line and
+                d.notebook_line.get_formated_converted_result() or None)
         return result
 
     @classmethod
     def get_reference(cls, details, name):
         result = {}
         for d in details:
-            result[d.id] = cls._get_reference(d.notebook_line, d.detail_sample)
+            result[d.id] = (d.notebook_line and
+                cls._get_reference(d.notebook_line, d.detail_sample) or None)
         return result
 
     @classmethod
@@ -1314,7 +1325,13 @@ class ResultsLineRepeatAnalysis(NotebookLineRepeatAnalysis):
     def _get_notebook_line_id(self):
         ResultsLine = Pool().get('lims.results_report.version.detail.line')
         line = ResultsLine(Transaction().context['active_id'])
-        return line.notebook_line.id
+        return line.notebook_line and line.notebook_line.id or None
+
+    def default_start(self, fields):
+        line_id = self._get_notebook_line_id()
+        if not line_id:
+            return {}
+        return super().default_start(fields)
 
 
 class DivideReportsResult(ModelView):
@@ -1741,6 +1758,7 @@ class GenerateResultsReport(Wizard):
             ('detail_sample.version_detail.laboratory', '=',
                 self.start.laboratory.id),
             ('detail_sample.version_detail.state', 'in', ['draft', 'revised']),
+            ('notebook_line', '!=', None),
             ])
         if draft_lines:
             draft_lines_ids = [dl.notebook_line.id for dl in draft_lines]
@@ -3130,6 +3148,8 @@ class OpenResultsDetailAttachment(Wizard):
                 res.append(self._get_resource(
                     sample.notebook.fraction.sample.entry))
                 for line in sample.notebook_lines:
+                    if not line.notebook_line:
+                        continue
                     res.append(self._get_resource(line))
                     res.append(self._get_resource(line.notebook_line))
         return res
@@ -3442,6 +3462,7 @@ class ResultReport(Report):
         notebook_lines = ResultsLine.search([
             ('detail_sample.version_detail.id', '=', report.id),
             ('hide', '=', False),
+            ('notebook_line', '!=', None),
             ], order=[('detail_sample', 'ASC')])
         if not notebook_lines:
             raise UserError(gettext('lims.msg_empty_report'))
