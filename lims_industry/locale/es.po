@@ -390,6 +390,10 @@ msgctxt "field:lims.results_report.version.detail.line,precedent3_result:"
 msgid "Precedent 3"
 msgstr "Antecedente 3"
 
+msgctxt "field:lims.results_report.version.detail.line,precedent_analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
 msgctxt "field:lims.results_report.version.detail.sample,component:"
 msgid "Component"
 msgstr "Componente"
