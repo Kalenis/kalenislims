@@ -1635,6 +1635,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
                 del data['compilation']
                 Data.write([data_line], data)
 
+    def collect_txt(self, create_new_lines=True):
+        return
+
     def _get_schema(self):
         schema = {}
         formula_fields = {}
