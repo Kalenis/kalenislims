@@ -78,7 +78,7 @@ class Column(metaclass=PoolMeta):
     destination_column = fields.Integer('Column',
         states={
             'invisible': Eval('_parent_interface', {}).get(
-                'export_template_type') == 'txt',
+                'export_file_type') == 'txt',
             'readonly': Eval('interface_state') != 'draft',
             },
         depends=['interface_state'],
@@ -86,18 +86,18 @@ class Column(metaclass=PoolMeta):
     destination_start = fields.Integer('Field start',
         states={
             'required': Eval('_parent_interface', {}).get(
-                'export_template_type') == 'txt',
+                'export_file_type') == 'txt',
             'invisible': Eval('_parent_interface', {}).get(
-                'export_template_type') != 'txt',
+                'export_file_type') != 'txt',
             'readonly': Eval('interface_state') != 'draft',
             },
         depends=['interface_state'])
     destination_end = fields.Integer('Field end',
         states={
             'required': Eval('_parent_interface', {}).get(
-                'export_template_type') == 'txt',
+                'export_file_type') == 'txt',
             'invisible': Eval('_parent_interface', {}).get(
-                'export_template_type') != 'txt',
+                'export_file_type') != 'txt',
             'readonly': Eval('interface_state') != 'draft',
             },
         depends=['interface_state'])
