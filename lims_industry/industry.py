@@ -370,8 +370,9 @@ class Component(ModelSQL, ModelView):
         cls._order.insert(1, ('type', 'ASC'))
         t = cls.__table__()
         cls._sql_constraints = [
-            ('type_unique', Unique(t, t.equipment, t.type),
-                'lims_industry.msg_component_type_unique'),
+            ('type_description_unique', Unique(t, t.equipment, t.type,
+                    t.customer_description),
+                'lims_industry.msg_component_unique'),
             ]
 
     @classmethod
