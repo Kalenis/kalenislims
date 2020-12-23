@@ -12,12 +12,12 @@
             <field name="hours_component"/>
             <label name="hours_oil"/>
             <field name="hours_oil"/>
-            <label name="changed_oil"/>
-            <field name="changed_oil"/>
-            <label name="changed_oil_filter"/>
-            <field name="changed_oil_filter"/>
-            <label name="changed_air_filter"/>
-            <field name="changed_air_filter"/>
+            <label name="oil_changed"/>
+            <field name="oil_changed"/>
+            <label name="oil_filter_changed"/>
+            <field name="oil_filter_changed"/>
+            <label name="air_filter_changed"/>
+            <field name="air_filter_changed"/>
         </group>
     </xpath>
     <xpath expr="/form/notebook/page[@id='general']" position="after">
