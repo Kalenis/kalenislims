@@ -94,21 +94,13 @@ msgctxt "field:lims.component.type,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
-msgctxt "field:lims.create_sample.start,attributes_domain:"
-msgid "Attributes domain"
-msgstr "Dominio para Atributos"
-
-msgctxt "field:lims.create_sample.start,changed_air_filter:"
+msgctxt "field:lims.create_sample.start,air_filter_changed:"
 msgid "Did change Air Filter?"
 msgstr "Cambió filtro de aire?"
 
-msgctxt "field:lims.create_sample.start,changed_oil:"
-msgid "Did change Oil?"
-msgstr "Cambió aceite?"
-
-msgctxt "field:lims.create_sample.start,changed_oil_filter:"
-msgid "Did change Oil Filter?"
-msgstr "Cambió filtro de aceite?"
+msgctxt "field:lims.create_sample.start,attributes_domain:"
+msgid "Attributes domain"
+msgstr "Dominio para Atributos"
 
 msgctxt "field:lims.create_sample.start,comercial_product:"
 msgid "Comercial Product"
@@ -173,6 +165,14 @@ msgstr "Falta información"
 msgctxt "field:lims.create_sample.start,oil_added:"
 msgid "Liters Oil added"
 msgstr "Litros aceite agregado"
+
+msgctxt "field:lims.create_sample.start,oil_changed:"
+msgid "Did change Oil?"
+msgstr "Cambió aceite?"
+
+msgctxt "field:lims.create_sample.start,oil_filter_changed:"
+msgid "Did change Oil Filter?"
+msgstr "Cambió filtro de aceite?"
 
 msgctxt "field:lims.create_sample.start,sample_photo:"
 msgid "Sample Photo"
@@ -446,21 +446,14 @@ msgctxt ""
 msgid "Diagnosis Precedent 3"
 msgstr "Diagnóstico Antecedente 3"
 
-msgctxt "field:lims.sample,attributes_domain:"
-msgid "Attributes domain"
-msgstr "Dominio para Atributos"
 
-msgctxt "field:lims.sample,changed_air_filter:"
+msgctxt "field:lims.sample,air_filter_changed:"
 msgid "Did change Air Filter?"
 msgstr "Cambió filtro de aire?"
 
-msgctxt "field:lims.sample,changed_oil:"
-msgid "Did change Oil?"
-msgstr "Cambió aceite?"
-
-msgctxt "field:lims.sample,changed_oil_filter:"
-msgid "Did change Oil Filter?"
-msgstr "Cambió filtro de aceite?"
+msgctxt "field:lims.sample,attributes_domain:"
+msgid "Attributes domain"
+msgstr "Dominio para Atributos"
 
 msgctxt "field:lims.sample,comercial_product:"
 msgid "Comercial Product"
@@ -537,6 +530,14 @@ msgstr "Falta información"
 msgctxt "field:lims.sample,oil_added:"
 msgid "Liters Oil added"
 msgstr "Litros aceite agregado"
+
+msgctxt "field:lims.sample,oil_changed:"
+msgid "Did change Oil?"
+msgstr "Cambió aceite?"
+
+msgctxt "field:lims.sample,oil_filter_changed:"
+msgid "Did change Oil Filter?"
+msgstr "Cambió filtro de aceite?"
 
 msgctxt "field:lims.sample,plant:"
 msgid "Plant"
@@ -916,6 +917,78 @@ msgstr "Equipo"
 msgctxt "selection:lims.configuration,mail_ack_report_grouping:"
 msgid "Plant"
 msgstr "Planta"
+
+msgctxt "selection:lims.create_sample.start,air_filter_changed:"
+msgid "-"
+msgstr "-"
+
+msgctxt "selection:lims.create_sample.start,air_filter_changed:"
+msgid "No"
+msgstr "No"
+
+msgctxt "selection:lims.create_sample.start,air_filter_changed:"
+msgid "Yes"
+msgstr "Sí"
+
+msgctxt "selection:lims.create_sample.start,oil_changed:"
+msgid "-"
+msgstr "-"
+
+msgctxt "selection:lims.create_sample.start,oil_changed:"
+msgid "No"
+msgstr "No"
+
+msgctxt "selection:lims.create_sample.start,oil_changed:"
+msgid "Yes"
+msgstr "Sí"
+
+msgctxt "selection:lims.create_sample.start,oil_filter_changed:"
+msgid "-"
+msgstr "-"
+
+msgctxt "selection:lims.create_sample.start,oil_filter_changed:"
+msgid "No"
+msgstr "No"
+
+msgctxt "selection:lims.create_sample.start,oil_filter_changed:"
+msgid "Yes"
+msgstr "Sí"
+
+msgctxt "selection:lims.sample,air_filter_changed:"
+msgid "-"
+msgstr "-"
+
+msgctxt "selection:lims.sample,air_filter_changed:"
+msgid "No"
+msgstr "No"
+
+msgctxt "selection:lims.sample,air_filter_changed:"
+msgid "Yes"
+msgstr "Sí"
+
+msgctxt "selection:lims.sample,oil_changed:"
+msgid "-"
+msgstr "-"
+
+msgctxt "selection:lims.sample,oil_changed:"
+msgid "No"
+msgstr "No"
+
+msgctxt "selection:lims.sample,oil_changed:"
+msgid "Yes"
+msgstr "Sí"
+
+msgctxt "selection:lims.sample,oil_filter_changed:"
+msgid "-"
+msgstr "-"
+
+msgctxt "selection:lims.sample,oil_filter_changed:"
+msgid "No"
+msgstr "No"
+
+msgctxt "selection:lims.sample,oil_filter_changed:"
+msgid "Yes"
+msgstr "Sí"
 
 msgctxt "selection:lims.sample.edition.log,field:"
 msgid "Comercial Product"

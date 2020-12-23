@@ -1,6 +1,8 @@
 # This file is part of lims_industry module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+from sql import Literal
+from sql.conditionals import Case
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.wizard import Wizard, StateTransition, StateView, Button
@@ -63,11 +65,52 @@ class Sample(metaclass=PoolMeta):
     hours_equipment = fields.Integer('Hs. Equipment')
     hours_component = fields.Integer('Hs. Component')
     hours_oil = fields.Integer('Hs. Oil')
-    changed_oil = fields.Boolean('Did change Oil?')
-    changed_oil_filter = fields.Boolean('Did change Oil Filter?')
-    changed_air_filter = fields.Boolean('Did change Air Filter?')
+    oil_changed = fields.Selection([
+        (None, '-'),
+        ('yes', 'Yes'),
+        ('no', 'No'),
+        ], 'Did change Oil?', sort=False)
+    oil_changed_string = oil_changed.translated('oil_changed')
+    oil_filter_changed = fields.Selection([
+        (None, '-'),
+        ('yes', 'Yes'),
+        ('no', 'No'),
+        ], 'Did change Oil Filter?', sort=False)
+    oil_filter_changed_string = oil_filter_changed.translated(
+        'oil_filter_changed')
+    air_filter_changed = fields.Selection([
+        (None, '-'),
+        ('yes', 'Yes'),
+        ('no', 'No'),
+        ], 'Did change Air Filter?', sort=False)
+    air_filter_changed_string = air_filter_changed.translated(
+        'air_filter_changed')
     edition_log = fields.One2Many('lims.sample.edition.log', 'sample',
         'Edition log', readonly=True)
+
+    @classmethod
+    def __register__(cls, module_name):
+        cursor = Transaction().connection.cursor()
+        table_h = cls.__table_handler__(module_name)
+        sample = cls.__table__()
+
+        super().__register__(module_name)
+
+        if table_h.column_exist('changed_oil'):
+            cursor.execute(*sample.update([sample.oil_changed],
+                [Case((sample.changed_oil == Literal(True),
+                    'yes'), else_='no')]))
+            table_h.drop_column('changed_oil')
+        if table_h.column_exist('changed_oil_filter'):
+            cursor.execute(*sample.update([sample.oil_filter_changed],
+                [Case((sample.changed_oil_filter == Literal(True),
+                    'yes'), else_='no')]))
+            table_h.drop_column('changed_oil_filter')
+        if table_h.column_exist('changed_air_filter'):
+            cursor.execute(*sample.update([sample.air_filter_changed],
+                [Case((sample.changed_air_filter == Literal(True),
+                    'yes'), else_='no')]))
+            table_h.drop_column('changed_air_filter')
 
     @classmethod
     def __setup__(cls):
@@ -296,9 +339,21 @@ class CreateSampleStart(metaclass=PoolMeta):
     hours_equipment = fields.Integer('Hs. Equipment')
     hours_component = fields.Integer('Hs. Component')
     hours_oil = fields.Integer('Hs. Oil')
-    changed_oil = fields.Boolean('Did change Oil?')
-    changed_oil_filter = fields.Boolean('Did change Oil Filter?')
-    changed_air_filter = fields.Boolean('Did change Air Filter?')
+    oil_changed = fields.Selection([
+        (None, '-'),
+        ('yes', 'Yes'),
+        ('no', 'No'),
+        ], 'Did change Oil?', sort=False)
+    oil_filter_changed = fields.Selection([
+        (None, '-'),
+        ('yes', 'Yes'),
+        ('no', 'No'),
+        ], 'Did change Oil Filter?', sort=False)
+    air_filter_changed = fields.Selection([
+        (None, '-'),
+        ('yes', 'Yes'),
+        ('no', 'No'),
+        ], 'Did change Air Filter?', sort=False)
 
     @classmethod
     def __setup__(cls):
@@ -442,12 +497,12 @@ class CreateSample(metaclass=PoolMeta):
             getattr(self.start, 'hours_component') or None)
         hours_oil = (hasattr(self.start, 'hours_oil') and
             getattr(self.start, 'hours_oil') or None)
-        changed_oil = (hasattr(self.start, 'changed_oil') and
-            getattr(self.start, 'changed_oil') or False)
-        changed_oil_filter = (hasattr(self.start, 'changed_oil_filter') and
-            getattr(self.start, 'changed_oil_filter') or False)
-        changed_air_filter = (hasattr(self.start, 'changed_air_filter') and
-            getattr(self.start, 'changed_air_filter') or False)
+        oil_changed = (hasattr(self.start, 'oil_changed') and
+            getattr(self.start, 'oil_changed') or None)
+        oil_filter_changed = (hasattr(self.start, 'oil_filter_changed') and
+            getattr(self.start, 'oil_filter_changed') or None)
+        air_filter_changed = (hasattr(self.start, 'air_filter_changed') and
+            getattr(self.start, 'air_filter_changed') or None)
         sample_client_description = (hasattr(self.start,
             'sample_client_description') and getattr(self.start,
             'sample_client_description') or ' ')
@@ -469,9 +524,9 @@ class CreateSample(metaclass=PoolMeta):
             sample_defaults['hours_equipment'] = hours_equipment
             sample_defaults['hours_component'] = hours_component
             sample_defaults['hours_oil'] = hours_oil
-            sample_defaults['changed_oil'] = changed_oil
-            sample_defaults['changed_oil_filter'] = changed_oil_filter
-            sample_defaults['changed_air_filter'] = changed_air_filter
+            sample_defaults['oil_changed'] = oil_changed
+            sample_defaults['oil_filter_changed'] = oil_filter_changed
+            sample_defaults['air_filter_changed'] = air_filter_changed
             sample_defaults['sample_client_description'] = \
                 sample_client_description
 
