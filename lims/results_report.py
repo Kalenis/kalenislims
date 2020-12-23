@@ -735,20 +735,27 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
 
     @classmethod
     def link_notebook_lines(cls, details):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
         NotebookLine = pool.get('lims.notebook.line')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
         for detail in details:
             linked_lines = []
             linked_entry_details = []
-            for sample in detail.samples:
-                for nline in sample.notebook_lines:
-                    if not nline.notebook_line:
-                        continue
-                    linked_lines.append(nline.notebook_line.id)
-                    linked_entry_details.append(
-                        nline.notebook_line.analysis_detail.id)
+            cursor.execute('SELECT nl.id, nl.analysis '
+                'FROM "' + NotebookLine._table + '" nl '
+                    'INNER JOIN "' + ResultsLine._table + '" rl '
+                    'ON nl.id = rl.notebook_line '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON rl.detail_sample = rs.id '
+                'WHERE rs.version_detail = %s',
+                (detail.id,))
+            for x in cursor.fetchall():
+                linked_lines.append(x[0])
+                linked_entry_details.append(x[1])
 
             notebook_lines = NotebookLine.search([
                 ('id', 'in', linked_lines),
