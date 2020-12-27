@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <tree>
+    <field name="variable"/>
     <field name="value"/>
     <field name="analysis"/>
     <field name="product_type"/>
