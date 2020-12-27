@@ -646,6 +646,10 @@ msgctxt "model:ir.action,name:act_interface_variable_list"
 msgid "Interface Variables"
 msgstr "Variables de Interfaz"
 
+msgctxt "model:ir.action,name:act_interface_variable_value_list"
+msgid "Interface Variable Values"
+msgstr "Valores"
+
 msgctxt "model:ir.action,name:act_lims_interface_compilation_list"
 msgid "Interface Compilations"
 msgstr "Compilaciones"
@@ -794,6 +798,10 @@ msgstr "Interfaces"
 msgctxt "model:ir.ui.menu,name:lims_interface_variable_menu"
 msgid "Interface Variables"
 msgstr "Variables"
+
+msgctxt "model:ir.ui.menu,name:lims_interface_variable_value_menu"
+msgid "Interface Variable Values"
+msgstr "Valores"
 
 msgctxt "model:lims.interface,name:"
 msgid "Interface"

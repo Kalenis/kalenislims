@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <form>
+    <label name="variable"/>
+    <field name="variable"/>
+    <newline/>
     <label name="value"/>
     <field name="value"/>
     <label name="analysis"/>
