@@ -1165,7 +1165,7 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         required=True, ondelete='CASCADE', select=True)
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
         readonly=True, select=True)
-    hide = fields.Boolean('Hide in Report')
+    hide = fields.Boolean('Hide in Report', select=True)
     corrected = fields.Boolean('Corrected')
     analysis_origin = fields.Function(fields.Char('Analysis origin'),
         'get_nline_field')
@@ -4218,9 +4218,9 @@ class ResultReportTranscription(ResultReport):
             data = {}
         current_data = data.copy()
         current_data['alt_lang'] = None
-        result_orig = super().execute(ids, current_data)
+        result_orig = super(ResultReport, cls).execute(ids, current_data)
         current_data['alt_lang'] = 'en'
-        result_eng = super().execute(ids, current_data)
+        result_eng = super(ResultReport, cls).execute(ids, current_data)
 
         save = False
         if results_report.english_report:
