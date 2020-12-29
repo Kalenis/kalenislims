@@ -602,8 +602,11 @@ class EditSample(Wizard):
         for sample in samples:
             check_typifications = False
             log = []
+
+            sample_party = sample.party
             if (self.start.party and
                     self.start.party != sample.party):
+                sample_party = self.start.party
                 log.append({
                     'sample': sample.id,
                     'field': 'party',
@@ -621,7 +624,11 @@ class EditSample(Wizard):
                         sample.equipment.rec_name or None),
                     'final_value': self.start.equipment.rec_name,
                     })
-                sample.equipment = self.start.equipment.id
+                sample.equipment = self.start.equipment
+            if (sample.equipment and sample.equipment.party != sample_party):
+                raise UserError(gettext(
+                    'lims_industry.msg_edit_sample_equipment',
+                    sample=sample.rec_name))
 
             if (self.start.component and
                     self.start.component != sample.component):
@@ -632,7 +639,7 @@ class EditSample(Wizard):
                         sample.component.rec_name or None),
                     'final_value': self.start.component.rec_name,
                     })
-                sample.component = self.start.component.id
+                sample.component = self.start.component
                 if (self.start.component.product_type and
                         self.start.component.product_type !=
                         sample.product_type):
@@ -644,7 +651,12 @@ class EditSample(Wizard):
                         'final_value': (
                             self.start.component.product_type.rec_name),
                         })
-                    sample.product_type = self.start.component.product_type.id
+                    sample.product_type = self.start.component.product_type
+            if (sample.component and (not sample.equipment or
+                    sample.component.equipment != sample.equipment)):
+                raise UserError(gettext(
+                    'lims_industry.msg_edit_sample_component',
+                    sample=sample.rec_name))
 
             if (self.start.comercial_product and
                     self.start.comercial_product != sample.comercial_product):
@@ -655,7 +667,7 @@ class EditSample(Wizard):
                         sample.comercial_product.rec_name),
                     'final_value': self.start.comercial_product.rec_name,
                     })
-                sample.comercial_product = self.start.comercial_product.id
+                sample.comercial_product = self.start.comercial_product
                 if (self.start.comercial_product.matrix and
                         self.start.comercial_product.matrix !=
                         self.start.comercial_product.matrix):
@@ -667,7 +679,7 @@ class EditSample(Wizard):
                         'final_value': (
                             self.start.comercial_product.matrix.rec_name),
                         })
-                    sample.matrix = self.start.comercial_product.matrix.id
+                    sample.matrix = self.start.comercial_product.matrix
 
             if check_typifications:
                 self.check_typifications(sample)

@@ -807,6 +807,14 @@ msgctxt "model:ir.message,text:msg_edit_results_report_party"
 msgid "Sample \"%(sample)s\" has a Results report already released"
 msgstr "La muestra «%(sample)s» tiene un Informe de resultados ya publicado"
 
+msgctxt "model:ir.message,text:msg_edit_sample_component"
+msgid "The Component in sample \"%(sample)s\" does not belong to the Equipment"
+msgstr "El componente de la muestra «%(sample)s» no pertenece al equipo"
+
+msgctxt "model:ir.message,text:msg_edit_sample_equipment"
+msgid "The Equipment in sample \"%(sample)s\" does not belong to the Party"
+msgstr "El equipo de la muestra «%(sample)s» no pertenece a la entidad"
+
 msgctxt "model:ir.message,text:msg_equipment_name_unique"
 msgid "There is already an equipment with the same name for the plant"
 msgstr "Ya existe un equipo con el mismo nombre para la planta"
