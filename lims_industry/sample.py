@@ -30,7 +30,9 @@ class Sample(metaclass=PoolMeta):
     plant = fields.Function(fields.Many2One('lims.plant', 'Plant'),
         'get_plant')
     equipment = fields.Many2One('lims.equipment', 'Equipment',
-        domain=[('party', '=', Eval('party'))], depends=['party'])
+        domain=['OR', ('id', '=', Eval('equipment')),
+            ('party', '=', Eval('party'))],
+        depends=['party'])
     equipment_template = fields.Function(fields.Many2One(
         'lims.equipment.template', 'Equipment Template'),
         'get_equipment_field')
@@ -41,7 +43,9 @@ class Sample(metaclass=PoolMeta):
     equipment_name = fields.Function(fields.Char(
         'Equipment Name'), 'get_equipment_field')
     component = fields.Many2One('lims.component', 'Component',
-        domain=[('equipment', '=', Eval('equipment'))], depends=['equipment'])
+        domain=['OR', ('id', '=', Eval('component')),
+            ('equipment', '=', Eval('equipment'))],
+        depends=['equipment'])
     comercial_product = fields.Many2One('lims.comercial.product',
         'Comercial Product')
     ind_sampling_date = fields.Date('Sampling date')
