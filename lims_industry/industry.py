@@ -303,24 +303,25 @@ class Equipment(ModelSQL, ModelView):
     def search_brand(cls, name, clause):
         return [('template.brand',) + tuple(clause[1:])]
 
-    @fields.depends('template')
+    @fields.depends('template', 'components')
     def on_change_template(self):
         pool = Pool()
         Component = pool.get('lims.component')
 
-        model = None
-        power = None
-        components = []
-        if self.template:
-            model = self.template.model
-            power = self.template.power
-            for type in self.template.component_types:
-                value = Component(**Component.default_get(
-                    list(Component._fields.keys()), with_rec_name=False))
-                value.type = type.id
-                components.append(value)
-        self.model = model
-        self.power = power
+        if not self.template:
+            return
+        current_components_ids = [component.type.id
+            for component in self.components]
+        components = list(self.components)
+        for type in self.template.component_types:
+            if type.id in current_components_ids:
+                continue
+            value = Component(**Component.default_get(
+                list(Component._fields.keys()), with_rec_name=False))
+            value.type = type.id
+            components.append(value)
+        self.model = self.template.model
+        self.power = self.template.power
         self.components = components
 
     @classmethod
