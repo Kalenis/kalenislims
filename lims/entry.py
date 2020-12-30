@@ -814,7 +814,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         ('done', 'Done'),
         ('reported', 'Reported'),
         ('annulled', 'Annulled'),
-        ], 'State', readonly=True)
+        ], 'State', readonly=True, select=True)
     cie_min_value = fields.Char('Minimum value')
     cie_max_value = fields.Char('Maximum value')
     cie_fraction_type = fields.Function(fields.Boolean('Blind Sample'),

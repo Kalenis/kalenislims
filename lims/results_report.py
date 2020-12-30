@@ -162,7 +162,7 @@ class ResultsReport(ModelSQL, ModelView):
                 'WHERE s.entry = %s '
                     'AND ad.report_grouper = %s '
                     'AND ad.report = TRUE '
-                    'AND ad.state != \'reported\'',
+                    'AND ad.state NOT IN (\'reported\', \'annulled\')',
                 (r.entry.id, r.report_grouper,))
             if cursor.fetchone()[0] > 0:
                 continue
@@ -745,7 +745,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         for detail in details:
             linked_lines = []
             linked_entry_details = []
-            cursor.execute('SELECT nl.id, nl.analysis '
+            cursor.execute('SELECT nl.id, nl.analysis_detail '
                 'FROM "' + NotebookLine._table + '" nl '
                     'INNER JOIN "' + ResultsLine._table + '" rl '
                     'ON nl.id = rl.notebook_line '
@@ -3046,6 +3046,7 @@ class SampleResultsReportInProgress(Wizard):
         ResultsDetail = pool.get('lims.results_report.version.detail')
 
         active_ids = Transaction().context['active_ids']
+        sample_ids = ', '.join(str(r) for r in active_ids)
         samples = Sample.browse(active_ids)
 
         cursor.execute('SELECT rd.id '
@@ -3056,9 +3057,8 @@ class SampleResultsReportInProgress(Wizard):
                 'ON n.id = rs.notebook '
                 'INNER JOIN "' + Fraction._table + '" f '
                 'ON f.id = n.fraction '
-            'WHERE f.sample IN (%s) '
-                'AND rd.state NOT IN (\'released\', \'annulled\')',
-            (', '.join(str(r) for r in active_ids),))
+            'WHERE f.sample IN (' + sample_ids + ') '
+                'AND rd.state NOT IN (\'released\', \'annulled\')')
         details_ids = [x[0] for x in cursor.fetchall()]
 
         action['pyson_domain'] = PYSONEncoder().encode([
