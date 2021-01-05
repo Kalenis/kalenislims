@@ -56,6 +56,7 @@ def register():
         sample.CreateSample,
         sample.EditSample,
         results_report.OpenResultsDetailPrecedent,
+        results_report.OpenResultsDetailAttachment,
         control_tendency.OpenTrendChart,
         module='lims_industry', type_='wizard')
     Pool.register(
