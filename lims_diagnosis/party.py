@@ -4,6 +4,7 @@
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import PoolMeta
+from trytond.transaction import Transaction
 
 
 class Diagnostician(ModelSQL, ModelView):
@@ -20,6 +21,26 @@ class Diagnostician(ModelSQL, ModelView):
     @classmethod
     def search_rec_name(cls, name, clause):
         return [('party',) + tuple(clause[1:])]
+
+    @classmethod
+    def get_diagnostician(cls):
+        cursor = Transaction().connection.cursor()
+        login_user_id = Transaction().user
+        cursor.execute('SELECT id '
+            'FROM party_party '
+            'WHERE lims_user = %s '
+            'LIMIT 1', (login_user_id,))
+        party_id = cursor.fetchone()
+        if not party_id:
+            return None
+        cursor.execute('SELECT id '
+            'FROM "' + cls._table + '" '
+            'WHERE party = %s '
+            'LIMIT 1', (party_id[0],))
+        diagnostician_id = cursor.fetchone()
+        if (diagnostician_id):
+            return diagnostician_id[0]
+        return None
 
 
 class Party(metaclass=PoolMeta):
