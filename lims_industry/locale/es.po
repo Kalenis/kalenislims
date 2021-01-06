@@ -386,6 +386,22 @@ msgctxt "field:lims.product.type,attribute_set:"
 msgid "Attribute Set"
 msgstr "Conjunto de atributos"
 
+msgctxt "field:lims.results_report,equipments_list:"
+msgid "Equipments"
+msgstr "Equipos"
+
+msgctxt "field:lims.results_report,plants_list:"
+msgid "Plants"
+msgstr "Plantas"
+
+msgctxt "field:lims.results_report.version.detail,equipments_list:"
+msgid "Equipments"
+msgstr "Equipos"
+
+msgctxt "field:lims.results_report.version.detail,plants_list:"
+msgid "Plants"
+msgstr "Plantas"
+
 msgctxt "field:lims.results_report.version.detail.line,precedent1_result:"
 msgid "Precedent 1"
 msgstr "Antecedente 1"

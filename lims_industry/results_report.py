@@ -10,6 +10,292 @@ from trytond.transaction import Transaction
 from trytond.i18n import gettext
 
 
+class ResultsReport(metaclass=PoolMeta):
+    __name__ = 'lims.results_report'
+
+    plants_list = fields.Function(fields.Char('Plants'),
+        'get_plants_list', searcher='search_plants_list')
+    equipments_list = fields.Function(fields.Char('Equipments'),
+        'get_equipments_list', searcher='search_equipments_list')
+
+    @classmethod
+    def get_plants_list(cls, reports, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Plant = pool.get('lims.plant')
+        Equipment = pool.get('lims.equipment')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
+
+        result = {}
+        for r in reports:
+            result[r.id] = ''
+            cursor.execute('SELECT DISTINCT(p.name) '
+                'FROM "' + Plant._table + '" p '
+                    'INNER JOIN "' + Equipment._table + '" e '
+                    'ON p.id = e.plant '
+                    'INNER JOIN "' + Sample._table + '" s '
+                    'ON e.id = s.equipment '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON s.id = f.sample '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON f.id = n.fraction '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON n.id = rs.notebook '
+                    'INNER JOIN "' + ResultsDetail._table + '" rd '
+                    'ON rs.version_detail = rd.id '
+                    'INNER JOIN "' + ResultsVersion._table + '" rv '
+                    'ON rd.report_version = rv.id '
+                'WHERE rv.results_report = %s '
+                'ORDER BY p.name', (r.id,))
+            samples = [x[0] for x in cursor.fetchall()]
+            if samples:
+                result[r.id] = ', '.join(samples)
+        return result
+
+    @classmethod
+    def search_plants_list(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Plant = pool.get('lims.plant')
+        Equipment = pool.get('lims.equipment')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
+
+        value = clause[2]
+        cursor.execute('SELECT rv.results_report '
+            'FROM "' + Plant._table + '" p '
+                'INNER JOIN "' + Equipment._table + '" e '
+                'ON p.id = e.plant '
+                'INNER JOIN "' + Sample._table + '" s '
+                'ON e.id = s.equipment '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON s.id = f.sample '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON n.id = rs.notebook '
+                'INNER JOIN "' + ResultsDetail._table + '" rd '
+                'ON rs.version_detail = rd.id '
+                'INNER JOIN "' + ResultsVersion._table + '" rv '
+                'ON rd.report_version = rv.id '
+            'WHERE p.name ILIKE %s',
+            (value,))
+        details_ids = [x[0] for x in cursor.fetchall()]
+        if not details_ids:
+            return [('id', '=', -1)]
+        return [('id', 'in', details_ids)]
+
+    @classmethod
+    def get_equipments_list(cls, reports, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Equipment = pool.get('lims.equipment')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
+
+        result = {}
+        for r in reports:
+            result[r.id] = ''
+            cursor.execute('SELECT DISTINCT(e.name) '
+                'FROM "' + Equipment._table + '" e '
+                    'INNER JOIN "' + Sample._table + '" s '
+                    'ON e.id = s.equipment '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON s.id = f.sample '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON f.id = n.fraction '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON n.id = rs.notebook '
+                    'INNER JOIN "' + ResultsDetail._table + '" rd '
+                    'ON rs.version_detail = rd.id '
+                    'INNER JOIN "' + ResultsVersion._table + '" rv '
+                    'ON rd.report_version = rv.id '
+                'WHERE rv.results_report = %s '
+                'ORDER BY e.name', (r.id,))
+            samples = [x[0] for x in cursor.fetchall()]
+            if samples:
+                result[r.id] = ', '.join(samples)
+        return result
+
+    @classmethod
+    def search_equipments_list(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Equipment = pool.get('lims.equipment')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
+
+        value = clause[2]
+        cursor.execute('SELECT rv.results_report '
+            'FROM "' + Equipment._table + '" e '
+                'INNER JOIN "' + Sample._table + '" s '
+                'ON e.id = s.equipment '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON s.id = f.sample '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON n.id = rs.notebook '
+                'INNER JOIN "' + ResultsDetail._table + '" rd '
+                'ON rs.version_detail = rd.id '
+                'INNER JOIN "' + ResultsVersion._table + '" rv '
+                'ON rd.report_version = rv.id '
+            'WHERE e.name ILIKE %s',
+            (value,))
+        details_ids = [x[0] for x in cursor.fetchall()]
+        if not details_ids:
+            return [('id', '=', -1)]
+        return [('id', 'in', details_ids)]
+
+
+class ResultsReportVersionDetail(metaclass=PoolMeta):
+    __name__ = 'lims.results_report.version.detail'
+
+    plants_list = fields.Function(fields.Char('Plants'),
+        'get_plants_list', searcher='search_plants_list')
+    equipments_list = fields.Function(fields.Char('Equipments'),
+        'get_equipments_list', searcher='search_equipments_list')
+
+    @classmethod
+    def get_plants_list(cls, details, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Plant = pool.get('lims.plant')
+        Equipment = pool.get('lims.equipment')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        result = {}
+        for d in details:
+            result[d.id] = ''
+            cursor.execute('SELECT DISTINCT(p.name) '
+                'FROM "' + Plant._table + '" p '
+                    'INNER JOIN "' + Equipment._table + '" e '
+                    'ON p.id = e.plant '
+                    'INNER JOIN "' + Sample._table + '" s '
+                    'ON e.id = s.equipment '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON s.id = f.sample '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON f.id = n.fraction '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON n.id = rs.notebook '
+                'WHERE rs.version_detail = %s '
+                'ORDER BY p.name', (d.id,))
+            samples = [x[0] for x in cursor.fetchall()]
+            if samples:
+                result[d.id] = ', '.join(samples)
+        return result
+
+    @classmethod
+    def search_plants_list(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Plant = pool.get('lims.plant')
+        Equipment = pool.get('lims.equipment')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        value = clause[2]
+        cursor.execute('SELECT rs.version_detail '
+            'FROM "' + Plant._table + '" p '
+                'INNER JOIN "' + Equipment._table + '" e '
+                'ON p.id = e.plant '
+                'INNER JOIN "' + Sample._table + '" s '
+                'ON e.id = s.equipment '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON s.id = f.sample '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON n.id = rs.notebook '
+            'WHERE p.name ILIKE %s',
+            (value,))
+        details_ids = [x[0] for x in cursor.fetchall()]
+        if not details_ids:
+            return [('id', '=', -1)]
+        return [('id', 'in', details_ids)]
+
+    @classmethod
+    def get_equipments_list(cls, details, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Equipment = pool.get('lims.equipment')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        result = {}
+        for d in details:
+            result[d.id] = ''
+            cursor.execute('SELECT DISTINCT(e.name) '
+                'FROM "' + Equipment._table + '" e '
+                    'INNER JOIN "' + Sample._table + '" s '
+                    'ON e.id = s.equipment '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON s.id = f.sample '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON f.id = n.fraction '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON n.id = rs.notebook '
+                'WHERE rs.version_detail = %s '
+                'ORDER BY e.name', (d.id,))
+            samples = [x[0] for x in cursor.fetchall()]
+            if samples:
+                result[d.id] = ', '.join(samples)
+        return result
+
+    @classmethod
+    def search_equipments_list(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Equipment = pool.get('lims.equipment')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        value = clause[2]
+        cursor.execute('SELECT rs.version_detail '
+            'FROM "' + Equipment._table + '" e '
+                'INNER JOIN "' + Sample._table + '" s '
+                'ON e.id = s.equipment '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON s.id = f.sample '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON n.id = rs.notebook '
+            'WHERE e.name ILIKE %s',
+            (value,))
+        details_ids = [x[0] for x in cursor.fetchall()]
+        if not details_ids:
+            return [('id', '=', -1)]
+        return [('id', 'in', details_ids)]
+
+
 class ResultsReportVersionDetailSample(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail.sample'
 

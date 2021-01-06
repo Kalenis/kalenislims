@@ -40,6 +40,8 @@ def register():
         sample.CreateSampleStart,
         sample.EditSampleStart,
         notebook.Notebook,
+        results_report.ResultsReport,
+        results_report.ResultsReportVersionDetail,
         results_report.ResultsReportVersionDetailSample,
         results_report.ResultsReportVersionDetailLine,
         party.Party,
