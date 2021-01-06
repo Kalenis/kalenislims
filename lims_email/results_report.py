@@ -373,6 +373,8 @@ class SendResultsReport(Wizard):
             return 'failed'
 
         config = Config(1)
+        hide_recipients = config.mail_ack_report_hide_recipients
+        email_qa = config.email_qa
 
         context = Transaction().context
         model = context.get('active_model', None)
@@ -441,7 +443,7 @@ class SendResultsReport(Wizard):
                     report.number)
 
                 if group['cie_fraction_type']:
-                    group['to_addrs'][config.email_qa] = 'QA'
+                    group['to_addrs'][email_qa] = 'QA'
                 else:
                     samples = ResultsSample.search([
                         ('version_detail.report_version.results_report',
@@ -485,7 +487,7 @@ class SendResultsReport(Wizard):
                         english_report=True))
 
             msg = self._create_msg(from_addr, to_addrs, subject,
-                body, attachments_data)
+                body, hide_recipients, attachments_data)
             sent = self._send_msg(from_addr, to_addrs, msg)
             if not sent:
                 reports_not_sent.extend(
@@ -591,14 +593,13 @@ class SendResultsReport(Wizard):
             return sorted(list(set(res)), key=lambda x: x)
 
     def _create_msg(self, from_addr, to_addrs, subject, body,
-            attachments_data=[]):
+            hide_recipients, attachments_data=[]):
         if not to_addrs:
             return None
 
         msg = MIMEMultipart()
         msg['From'] = from_addr
-        hidden = True
-        if not hidden:
+        if not hide_recipients:
             msg['To'] = ', '.join(to_addrs)
         msg['Subject'] = subject
 
