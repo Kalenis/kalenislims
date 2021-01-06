@@ -29,6 +29,9 @@ class ResultsReport(ModelSQL, ModelView):
     versions = fields.One2Many('lims.results_report.version',
         'results_report', 'Laboratories', readonly=True)
     party = fields.Many2One('party.party', 'Party', readonly=True)
+    invoice_party = fields.Function(fields.Many2One('party.party',
+        'Invoice party'), 'get_entry_field',
+        searcher='search_entry_field')
     entry = fields.Many2One('lims.entry', 'Entry', select=True, readonly=True)
     notebook = fields.Many2One('lims.notebook', 'Laboratory notebook')
     report_grouper = fields.Integer('Report Grouper')
@@ -36,8 +39,8 @@ class ResultsReport(ModelSQL, ModelView):
     cie_fraction_type = fields.Boolean('QA', readonly=True)
     english_report = fields.Boolean('English report')
     single_sending_report = fields.Function(fields.Boolean(
-        'Single sending'), 'get_single_sending_report',
-        searcher='search_single_sending_report')
+        'Single sending'), 'get_entry_field',
+        searcher='search_entry_field')
     single_sending_report_ready = fields.Function(fields.Boolean(
         'Single sending Ready'), 'get_single_sending_report_ready')
     ready_to_send = fields.Function(fields.Boolean(
@@ -127,14 +130,26 @@ class ResultsReport(ModelSQL, ModelView):
             ]
 
     @classmethod
-    def get_single_sending_report(cls, reports, name):
+    def get_entry_field(cls, reports, names):
         result = {}
-        for r in reports:
-            result[r.id] = r.entry and r.entry.single_sending_report or False
+        for name in names:
+            result[name] = {}
+            if cls._fields[name]._type == 'many2one':
+                for r in reports:
+                    field = r.entry and getattr(r.entry, name, None) or None
+                    result[name][r.id] = field.id if field else None
+            elif cls._fields[name]._type == 'boolean':
+                for r in reports:
+                    result[name][r.id] = r.entry and getattr(
+                        r.entry, name, False) or False
+            else:
+                for r in reports:
+                    result[name][r.id] = r.entry and getattr(
+                        r.entry, name, None) or None
         return result
 
     @classmethod
-    def search_single_sending_report(cls, name, clause):
+    def search_entry_field(cls, name, clause):
         return [('entry.' + name,) + tuple(clause[1:])]
 
     @classmethod
@@ -366,6 +381,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         'version_detail', 'Samples', states=_states, depends=_depends)
     party = fields.Function(fields.Many2One('party.party', 'Party'),
        'get_report_field', searcher='search_report_field')
+    invoice_party = fields.Function(fields.Many2One('party.party',
+        'Invoice party'), 'get_entry_field', searcher='search_entry_field')
     signer = fields.Many2One('lims.laboratory.professional', 'Signer',
         domain=[('id', 'in', Eval('signer_domain'))],
         states=_states, depends=['state', 'signer_domain'])
@@ -951,6 +968,35 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     @classmethod
     def search_report_field(cls, name, clause):
         return [('report_version.results_report.' + name,) + tuple(clause[1:])]
+
+    @classmethod
+    def get_entry_field(cls, details, names):
+        result = {}
+        for name in names:
+            result[name] = {}
+            if cls._fields[name]._type == 'many2one':
+                for d in details:
+                    field = (d.report_version.results_report.entry and
+                        getattr(d.report_version.results_report.entry,
+                            name, None) or None)
+                    result[name][d.id] = field.id if field else None
+            elif cls._fields[name]._type == 'boolean':
+                    field = (d.report_version.results_report.entry and
+                        getattr(d.report_version.results_report.entry,
+                            name, False) or False)
+                    result[name][d.id] = field
+            else:
+                for d in details:
+                    field = (d.report_version.results_report.entry and
+                        getattr(d.report_version.results_report.entry,
+                            name, None) or None)
+                    result[name][d.id] = field
+        return result
+
+    @classmethod
+    def search_entry_field(cls, name, clause):
+        return [('report_version.results_report.entry.' + name,) +
+            tuple(clause[1:])]
 
     @classmethod
     def get_create_date2(cls, details, name):

@@ -4,6 +4,7 @@
     <field name="versions"/>
     <field name="english_report"/>
     <field name="party"/>
+    <field name="invoice_party"/>
     <field name="cie_fraction_type"/>
     <field name="ready_to_send"/>
     <field name="create_date2" widget="date"/>

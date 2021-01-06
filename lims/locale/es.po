@@ -4860,6 +4860,10 @@ msgctxt "field:lims.results_report,generation_type:"
 msgid "Generation type"
 msgstr "Tipo de generación"
 
+msgctxt "field:lims.results_report,invoice_party:"
+msgid "Invoice party"
+msgstr "Entidad facturación"
+
 msgctxt "field:lims.results_report,notebook:"
 msgid "Laboratory notebook"
 msgstr "Cuaderno de laboratorio"
@@ -4983,6 +4987,10 @@ msgstr "Observaciones de las fracciones"
 msgctxt "field:lims.results_report.version.detail,icon:"
 msgid "Icon"
 msgstr "Icono"
+
+msgctxt "field:lims.results_report.version.detail,invoice_party:"
+msgid "Invoice party"
+msgstr "Entidad facturación"
 
 msgctxt "field:lims.results_report.version.detail,laboratory:"
 msgid "Laboratory"
