@@ -32,7 +32,7 @@ class Sample(metaclass=PoolMeta):
     equipment = fields.Many2One('lims.equipment', 'Equipment',
         domain=['OR', ('id', '=', Eval('equipment')),
             ('party', '=', Eval('party'))],
-        depends=['party'])
+        depends=['party'], select=True)
     equipment_template = fields.Function(fields.Many2One(
         'lims.equipment.template', 'Equipment Template'),
         'get_equipment_field')
