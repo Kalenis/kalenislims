@@ -10,6 +10,10 @@ msgctxt "field:lims.configuration,mail_ack_report_grouping:"
 msgid "Grouping of Results reports by Email"
 msgstr "Agrupamiento de Informes de resultados por correo"
 
+msgctxt "field:lims.configuration,mail_ack_report_hide_recipients:"
+msgid "Hide recipients"
+msgstr "Ocultar destinatarios"
+
 msgctxt "field:lims.configuration,mail_ack_report_subject:"
 msgid "Email subject of Acknowledgment of results report"
 msgstr "Asunto del correo de Acuse de informe de resultados"

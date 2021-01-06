@@ -19,10 +19,15 @@ class Configuration(metaclass=PoolMeta):
     mail_ack_report_body = fields.Text('Email body of Acknowledgment of'
         ' results report',
         help='<SAMPLES> will be replaced by the list of sample\'s labels')
+    mail_ack_report_hide_recipients = fields.Boolean('Hide recipients')
 
     @staticmethod
     def default_mail_ack_report_grouping():
         return None
+
+    @staticmethod
+    def default_mail_ack_report_hide_recipients():
+        return True
 
 
 class Cron(metaclass=PoolMeta):
