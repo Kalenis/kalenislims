@@ -50,6 +50,8 @@ class ResultsReport(ModelSQL, ModelView):
        'get_create_date2', searcher='search_create_date2')
     write_date2 = fields.DateTime('Write Date', readonly=True)
     attachments = fields.One2Many('ir.attachment', 'resource', 'Attachments')
+    samples_list = fields.Function(fields.Char('Samples'),
+        'get_samples_list', searcher='search_samples_list')
 
     # PDF Report Cache
     report_cache = fields.Binary('Report cache', readonly=True,
@@ -292,6 +294,70 @@ class ResultsReport(ModelSQL, ModelView):
                 'AND rd.' + format_field + ' = \'pdf\'',
             (self.id,))
         return [x[0] for x in cursor.fetchall()]
+
+    @classmethod
+    def get_samples_list(cls, reports, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
+
+        result = {}
+        for r in reports:
+            result[r.id] = ''
+            cursor.execute('SELECT DISTINCT(s.number) '
+                'FROM "' + Sample._table + '" s '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON s.id = f.sample '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON f.id = n.fraction '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON n.id = rs.notebook '
+                    'INNER JOIN "' + ResultsDetail._table + '" rd '
+                    'ON rs.version_detail = rd.id '
+                    'INNER JOIN "' + ResultsVersion._table + '" rv '
+                    'ON rd.report_version = rv.id '
+                'WHERE rv.results_report = %s '
+                'ORDER BY s.number', (r.id,))
+            samples = [x[0] for x in cursor.fetchall()]
+            if samples:
+                result[r.id] = ', '.join(samples)
+        return result
+
+    @classmethod
+    def search_samples_list(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
+
+        value = clause[2]
+        cursor.execute('SELECT rv.results_report '
+            'FROM "' + Sample._table + '" s '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON s.id = f.sample '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON n.id = rs.notebook '
+                'INNER JOIN "' + ResultsDetail._table + '" rd '
+                'ON rs.version_detail = rd.id '
+                'INNER JOIN "' + ResultsVersion._table + '" rv '
+                'ON rd.report_version = rv.id '
+            'WHERE s.number ILIKE %s',
+            (value,))
+        details_ids = [x[0] for x in cursor.fetchall()]
+        if not details_ids:
+            return [('id', '=', -1)]
+        return [('id', 'in', details_ids)]
 
 
 class ResultsReportVersion(ModelSQL, ModelView):
@@ -1093,7 +1159,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         result = {}
         for d in details:
             result[d.id] = ''
-            cursor.execute('SELECT s.number '
+            cursor.execute('SELECT DISTINCT(s.number) '
                 'FROM "' + Sample._table + '" s '
                     'INNER JOIN "' + Fraction._table + '" f '
                     'ON s.id = f.sample '
@@ -1101,8 +1167,8 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                     'ON f.id = n.fraction '
                     'INNER JOIN "' + ResultsSample._table + '" rs '
                     'ON n.id = rs.notebook '
-                'WHERE rs.version_detail = %s',
-                (d.id,))
+                'WHERE rs.version_detail = %s '
+                'ORDER BY s.number', (d.id,))
             samples = [x[0] for x in cursor.fetchall()]
             if samples:
                 result[d.id] = ', '.join(samples)
