@@ -45,6 +45,8 @@ def register():
         notebook.RepeatAnalysisStartLine,
         notebook.ResultsVerificationStart,
         notebook.EditGroupedDataStart,
+        notebook.EditMultiSampleDataStart,
+        notebook.MultiSampleData,
         laboratory.NotebookRule,
         laboratory.NotebookRuleCondition,
         module='lims_analysis_sheet', type_='model')
@@ -65,6 +67,7 @@ def register():
         notebook.LimitsValidation,
         notebook.EvaluateRules,
         notebook.EditGroupedData,
+        notebook.EditMultiSampleData,
         module='lims_analysis_sheet', type_='wizard')
     Pool.register(
         sheet.AnalysisSheetReport,
