@@ -1428,7 +1428,7 @@ class MultiSampleData(ModelView):
         readonly = (sheet.state not in ('active', 'validated'))
         res = {
             'fraction': {
-                'name': 'sample',
+                'name': 'fraction',
                 'string': 'Sample',
                 'type': 'char',
                 'help': '',
