@@ -328,6 +328,14 @@ msgctxt "model:lims.samples_comparator.line,name:"
 msgid "Samples Comparator Line"
 msgstr "Línea de Comparador de muestras"
 
+msgctxt "model:res.group,name:group_diagnostician"
+msgid "Lims Diagnostician"
+msgstr "Lims Diagnosticador"
+
+msgctxt "model:res.group,name:group_diagnostician_admin"
+msgid "Lims Diagnostician Admin"
+msgstr "Lims Diagnosticador Admin"
+
 msgctxt "selection:ir.cron,method:"
 msgid "Delete Samples comparison records"
 msgstr "Eliminar registros de Comparación de muestras"

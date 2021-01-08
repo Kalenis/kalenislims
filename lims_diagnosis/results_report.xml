@@ -2,6 +2,36 @@
 <tryton>
     <data>
 
+<!-- Results Report -->
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_results_report_group_diagnostician">
+            <field name="menu" ref="lims.lims_results_report_menu"/>
+            <field name="group" ref="group_diagnostician"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_results_report_group_diagnostician_admin">
+            <field name="menu" ref="lims.lims_results_report_menu"/>
+            <field name="group" ref="group_diagnostician_admin"/>
+        </record>
+
+        <record model="ir.model.access" id="access_results_report_group_diagnostician">
+            <field name="model" search="[('model', '=', 'lims.results_report')]"/>
+            <field name="group" ref="group_diagnostician"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.access" id="access_results_report_group_diagnostician_admin">
+            <field name="model" search="[('model', '=', 'lims.results_report')]"/>
+            <field name="group" ref="group_diagnostician_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
 <!-- Results Report Version Detail -->
 
         <record model="ir.ui.view" id="results_report_version_detail_view_list">
@@ -25,6 +55,17 @@
             <field name="act_window" ref="lims.act_lims_results_report_version_detail"/>
         </record>
 
+        <record model="ir.ui.menu-res.group"
+            id="menu_results_report_version_detail_group_diagnostician">
+            <field name="menu" ref="lims.lims_results_report_version_detail_menu"/>
+            <field name="group" ref="group_diagnostician"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_results_report_version_detail_group_diagnostician_admin">
+            <field name="menu" ref="lims.lims_results_report_version_detail_menu"/>
+            <field name="group" ref="group_diagnostician_admin"/>
+        </record>
+
         <record model="ir.model.button" id="results_report_version_detail_diagnose_button">
             <field name="name">diagnose</field>
             <field name="model" search="[('model', '=', 'lims.results_report.version.detail')]"/>
@@ -33,6 +74,39 @@
             id="results_report_version_detail_diagnose_button_group_lims_laboratory_reports">
             <field name="button" ref="results_report_version_detail_diagnose_button"/>
             <field name="group" ref="lims.group_lims_laboratory_reports"/>
+        </record>
+
+        <record model="ir.model.access" id="access_results_report_version_detail_group_diagnostician">
+            <field name="model" search="[('model', '=', 'lims.results_report.version.detail')]"/>
+            <field name="group" ref="group_diagnostician"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.access" id="access_results_report_version_detail_group_diagnostician_admin">
+            <field name="model" search="[('model', '=', 'lims.results_report.version.detail')]"/>
+            <field name="group" ref="group_diagnostician_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access" id="access_results_report_version_detail_diagnostician">
+            <field name="field" search="[('name', '=', 'diagnostician'), ('model.model', '=', 'lims.results_report.version.detail')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.field.access" id="access_results_report_version_detail_diagnostician_group_diagnostician_admin">
+            <field name="field" search="[('name', '=', 'diagnostician'), ('model.model', '=', 'lims.results_report.version.detail')]"/>
+            <field name="group" ref="group_diagnostician_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
         </record>
 
 <!-- Results Report Version Detail Sample -->
@@ -56,6 +130,19 @@
             <field name="name">results_report_version_detail_line_list</field>
         </record>
 
+<!-- Wizard Open Samples Pending Reporting -->
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_samples_pending_reporting_group_diagnostician">
+            <field name="menu" ref="lims.lims_samples_pending_reporting_menu"/>
+            <field name="group" ref="group_diagnostician"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_samples_pending_reporting_group_diagnostician_admin">
+            <field name="menu" ref="lims.lims_samples_pending_reporting_menu"/>
+            <field name="group" ref="group_diagnostician_admin"/>
+        </record>
+
 <!-- Wizard Change Sample Diagnostician -->
 
         <record model="ir.ui.view" id="notebook_change_diagnostician_view_form">
@@ -73,6 +160,12 @@
             <field name="keyword">form_action</field>
             <field name="model">lims.notebook,-2</field>
             <field name="action" ref="wiz_notebook_change_diagnostician"/>
+        </record>
+
+        <record model="ir.action-res.group"
+            id="wiz_notebook_change_diagnostician-group_diagnostician_admin">
+            <field name="action" ref="wiz_notebook_change_diagnostician"/>
+            <field name="group" ref="group_diagnostician_admin"/>
         </record>
 
 <!-- Wizard Open Samples Comparator -->
