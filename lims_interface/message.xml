@@ -34,5 +34,8 @@
         <record model="ir.message" id="invalid_interface_charset">
             <field name="text">The charset of the file does not match the one defined in the interface.</field>
         </record>
+        <record model="ir.message" id="msg_analysis_specific">
+            <field name="text">There cannot be more than one column per analysis in view "%(view)s"</field>
+        </record>
     </data>
 </tryton>

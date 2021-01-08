@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form>
+    <label name="column"/>
+    <field name="column"/>
+    <label name="analysis_specific"/>
+    <field name="analysis_specific"/>
+</form>
