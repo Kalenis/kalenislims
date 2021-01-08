@@ -136,5 +136,18 @@
             <field name="action" ref="wiz_analysis_sheet_edit_grouped_data"/>
         </record>
 
+<!-- Wizard Edit Multi Sample Data -->
+
+        <record model="ir.ui.view" id="analysis_sheet_edit_multi_sample_data_start_form">
+            <field name="model">lims.analysis_sheet.edit_multi_sample_data.start</field>
+            <field name="type">form</field>
+            <field name="name">analysis_sheet_edit_multi_sample_data_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_analysis_sheet_edit_multi_sample_data">
+            <field name="name">Edit Multi Sample Data</field>
+            <field name="wiz_name">lims.analysis_sheet.edit_multi_sample_data</field>
+        </record>
+
     </data>
 </tryton>

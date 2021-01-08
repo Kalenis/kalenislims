@@ -293,6 +293,9 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     confirmed_by = fields.Many2One('lims.laboratory.professional',
         'Confirmed By', readonly=True)
     confirmed_date = fields.DateTime('Confirmed Date', readonly=True)
+    view = fields.Many2One('lims.interface.view', 'View',
+        states={'invisible': Eval('state') == 'draft'},
+        depends=['state'])
 
     @classmethod
     def __setup__(cls):
@@ -317,6 +320,10 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 'depends': ['state'],
                 },
             'view_data': {
+                'invisible': Eval('state') == 'draft',
+                'depends': ['state'],
+                },
+            'view_grouped_data': {
                 'invisible': Eval('state') == 'draft',
                 'depends': ['state'],
                 },
@@ -552,6 +559,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     @ModelView.button_action(
         'lims_analysis_sheet.wiz_analysis_sheet_open_data')
     def view_data(cls, sheets):
+        pass
+
+    @classmethod
+    @ModelView.button_action(
+        'lims_analysis_sheet.wiz_analysis_sheet_edit_multi_sample_data')
+    def view_grouped_data(cls, sheets):
         pass
 
     @classmethod

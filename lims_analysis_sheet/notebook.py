@@ -1264,7 +1264,7 @@ class EditGroupedData(Wizard):
         sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
 
-        if sheet.state == 'done':
+        if sheet.state not in ('active', 'validated'):
             return 'end'
 
         fields = [f for f in sheet.compilation.table.fields_]
@@ -1326,3 +1326,281 @@ class EditGroupedData(Wizard):
 
     def end(self):
         return 'reload'
+
+
+class EditMultiSampleDataStart(ModelView):
+    'Edit Multi Sample Data'
+    __name__ = 'lims.analysis_sheet.edit_multi_sample_data.start'
+
+    data = fields.One2Many('lims.interface.multi_sample_data', None, 'Data')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls.__rpc__['fields_view_get'].cache = None
+
+    @classmethod
+    def fields_view_get(cls, view_id=None, view_type='form', level=None):
+        result = super().fields_view_get(view_id, view_type, level)
+        key = (cls.__name__, view_id, view_type, level)
+        cls._fields_view_get_cache.set(key, False)
+        return result
+
+
+class MultiSampleData(ModelView):
+    'Multi Sample Data'
+    __name__ = 'lims.interface.multi_sample_data'
+
+    fraction = fields.Char('Sample', readonly=True)
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls.__rpc__['fields_view_get'].cache = None
+
+    def __init__(self, id=None, **kwargs):
+        kwargs_copy = kwargs.copy()
+        for kw in kwargs_copy:
+            kwargs.pop(kw, None)
+        super().__init__(id, **kwargs)
+        self._values = {}
+        for kw in kwargs_copy:
+            self._values[kw] = kwargs_copy[kw]
+
+    def __getattr__(self, name):
+        try:
+            return super().__getattr__(name)
+        except AttributeError:
+            pass
+
+    @classmethod
+    def fields_view_get(cls, view_id=None, view_type='form', level=None):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+
+        sheet = AnalysisSheet(Transaction().context.get('active_id'))
+        fields = {
+            'fraction': {'default_width': 100},
+            }
+
+        add_analysis_columns = False
+        for view_column in sheet.view.columns:
+            if not view_column.analysis_specific:
+                fields[view_column.column.alias] = {
+                    'default_width': view_column.column.default_width or 100,
+                    }
+            else:
+                add_analysis_columns = True
+
+        if add_analysis_columns:
+            analysis_codes = set()
+            with Transaction().set_context(
+                    lims_interface_table=sheet.compilation.table.id):
+                lines = Data.search([
+                    ('compilation', '=', sheet.compilation.id),
+                    ])
+                for line in lines:
+                    analysis_codes.add(line.notebook_line.analysis.code)
+            for analysis in list(analysis_codes):
+                fields[analysis] = {
+                    'default_width': 60,
+                    }
+
+        res = {
+            'type': 'tree',
+            'view_id': view_id,
+            'field_childs': None,
+            'arch': cls.get_tree_multi_sample_view(fields),
+            'fields': cls.fields_get(),
+            'model': cls.__name__,
+            }
+
+        return res
+
+    @classmethod
+    def fields_get(cls, fields=None):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+
+        sheet = AnalysisSheet(Transaction().context.get('active_id'))
+        readonly = (sheet.state not in ('active', 'validated'))
+        res = {
+            'fraction': {
+                'name': 'sample',
+                'string': 'Sample',
+                'type': 'char',
+                'help': '',
+                'readonly': True,
+                },
+            }
+
+        add_analysis_columns = False
+        analysis_column_type = 'float'
+        for view_column in sheet.view.columns:
+            if not view_column.analysis_specific:
+                res[view_column.column.alias] = {
+                    'name': view_column.column.alias,
+                    'string': view_column.column.name,
+                    'type': view_column.column.type_,
+                    'help': '',
+                    'readonly': bool(view_column.column.expression or
+                        view_column.column.readonly or readonly),
+                    }
+            else:
+                add_analysis_columns = True
+                analysis_column_type = view_column.column.type_
+
+        if add_analysis_columns:
+            analysis_codes = set()
+            with Transaction().set_context(
+                    lims_interface_table=sheet.compilation.table.id):
+                lines = Data.search([
+                    ('compilation', '=', sheet.compilation.id),
+                    ])
+                for line in lines:
+                    analysis_codes.add(line.notebook_line.analysis.code)
+            for analysis in list(analysis_codes):
+                res[analysis] = {
+                    'name': analysis,
+                    'string': analysis,
+                    'type': analysis_column_type,
+                    'help': '',
+                    'readonly': readonly,
+                    }
+
+        return res
+
+    @classmethod
+    def get_tree_multi_sample_view(cls, fields):
+        fields = cls._get_fields_tree_multi_sample_view(fields)
+        return ('<?xml version="1.0"?>\n'
+            '<tree editable="bottom">\n'
+            '%s\n'
+            '</tree>') % ('\n'.join(fields))
+
+    @classmethod
+    def _get_fields_tree_multi_sample_view(cls, fields):
+        view_fields = []
+        for field, values in fields.items():
+            view_fields.append('<field name="%s" width="%s"/>' % (
+                field, values['default_width']))
+        return view_fields
+
+
+class EditMultiSampleData(Wizard):
+    'Edit Multi Sample Data'
+    __name__ = 'lims.analysis_sheet.edit_multi_sample_data'
+
+    start_state = 'check'
+    check = StateTransition()
+    start = StateView('lims.analysis_sheet.edit_multi_sample_data.start',
+        'lims_analysis_sheet.analysis_sheet_edit_multi_sample_data_start'
+        '_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Save', 'save', 'tryton-save', default=True),
+            ])
+    save = StateTransition()
+
+    def transition_check(self):
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
+
+        sheet_id = Transaction().context.get('active_id', None)
+        if sheet_id:
+            sheet = AnalysisSheet(sheet_id)
+            if sheet.view and sheet.state in ('active', 'validated', 'done'):
+                return 'start'
+
+        return 'end'
+
+    def default_start(self, fields):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+
+        sheet_id = Transaction().context.get('active_id', None)
+        sheet = AnalysisSheet(sheet_id)
+
+        records = {}
+        with Transaction().set_context(
+                lims_interface_table=sheet.compilation.table.id):
+            lines = Data.search([('compilation', '=', sheet.compilation.id)])
+            for line in lines:
+                fraction = line.notebook_line.fraction.number
+                if fraction not in records.keys():
+                    records[fraction] = {'fraction': fraction}
+                for view_column in sheet.view.columns:
+                    if view_column.analysis_specific:
+                        alias = line.notebook_line.analysis.code
+                    else:
+                        alias = view_column.column.alias
+                    records[fraction][alias] = getattr(
+                        line, view_column.column.alias)
+
+        data = list(records.values())
+        defaults = {
+            'data': data,
+            }
+        return defaults
+
+    def transition_save(self):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+
+        sheet_id = Transaction().context.get('active_id', None)
+        sheet = AnalysisSheet(sheet_id)
+
+        if sheet.state not in ('active', 'validated'):
+            return 'end'
+
+        columns = {}
+        for view_column in sheet.view.columns:
+            if view_column.analysis_specific:
+                analysis_codes = set()
+                with Transaction().set_context(
+                        lims_interface_table=sheet.compilation.table.id):
+                    lines = Data.search([
+                        ('compilation', '=', sheet.compilation.id),
+                        ])
+                    for line in lines:
+                        analysis_codes.add(line.notebook_line.analysis.code)
+                for alias in list(analysis_codes):
+                    columns[alias] = {
+                        'field': view_column.column.alias,
+                        'is_analysis': True,
+                        }
+            else:
+                alias = view_column.column.alias
+                columns[alias] = {
+                    'field': view_column.column.alias,
+                    'is_analysis': False,
+                    }
+        with Transaction().set_context(
+                lims_interface_table=sheet.compilation.table.id):
+            for data in self.start.data:
+                fraction_clause = [
+                    ('compilation', '=', sheet.compilation.id),
+                    ('notebook_line.fraction.number', '=', data.fraction),
+                    ]
+                for alias, field in columns.items():
+                    value = getattr(data, alias)
+                    if field['is_analysis']:
+                        analysis_clause = [
+                            ('notebook_line.analysis.code', '=', alias),
+                            ]
+                    else:
+                        analysis_clause = []
+                    lines = Data.search(fraction_clause + analysis_clause)
+                    if not lines:
+                        continue
+                    Data.write(lines, {field['field']: value})
+
+        return 'end'
+
+    def end(self):
+        return 'reload'
+
+    def _save(self):
+        pass

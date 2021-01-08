@@ -78,6 +78,10 @@ msgctxt "field:lims.analysis_sheet,validated_date:"
 msgid "Validated Date"
 msgstr "Fecha Validación"
 
+msgctxt "field:lims.analysis_sheet,view:"
+msgid "View"
+msgstr "Vista"
+
 msgctxt "field:lims.analysis_sheet.add_control.start,analysis_sheet:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
@@ -120,6 +124,10 @@ msgid "Control type"
 msgstr "Tipo de Control"
 
 msgctxt "field:lims.analysis_sheet.edit_grouped_data.start,data:"
+msgid "Data"
+msgstr "Datos"
+
+msgctxt "field:lims.analysis_sheet.edit_multi_sample_data.start,data:"
 msgid "Data"
 msgstr "Datos"
 
@@ -222,6 +230,10 @@ msgstr "Hoja de análisis"
 msgctxt "field:lims.interface.data,annulled:"
 msgid "Annulled"
 msgstr "Anulado"
+
+msgctxt "field:lims.interface.multi_sample_data,fraction:"
+msgid "Sample"
+msgstr "Muestra"
 
 msgctxt "field:lims.laboratory.professional,samples_qty:"
 msgid "# Samples"
@@ -492,6 +504,10 @@ msgctxt "model:ir.action,name:wiz_analysis_sheet_edit_grouped_data"
 msgid "Edit Grouped Data"
 msgstr "Editar datos"
 
+msgctxt "model:ir.action,name:wiz_analysis_sheet_edit_multi_sample_data"
+msgid "Edit Multi Sample Data"
+msgstr "Editar datos multi muestra"
+
 msgctxt "model:ir.action,name:wiz_analysis_sheet_evaluate_rules"
 msgid "Evaluate Rules"
 msgstr "06) Evaluar Reglas de cuaderno"
@@ -638,6 +654,10 @@ msgctxt "model:lims.analysis_sheet.edit_grouped_data.start,name:"
 msgid "Edit Grouped Data"
 msgstr "Editar datos"
 
+msgctxt "model:lims.analysis_sheet.edit_multi_sample_data.start,name:"
+msgid "Edit Multi Sample Data"
+msgstr "Editar datos multi muestra"
+
 msgctxt "model:lims.analysis_sheet.export_file.start,name:"
 msgid "Export Analysis Sheet File"
 msgstr "Exportar Hoja de análisis"
@@ -661,6 +681,10 @@ msgstr "Línea de Hoja de análisis"
 msgctxt "model:lims.analysis_sheet.results_verification.start,name:"
 msgid "Results Verification"
 msgstr "Verificación de resultados"
+
+msgctxt "model:lims.interface.multi_sample_data,name:"
+msgid "Multi Sample Data"
+msgstr "Datos multi muestra"
 
 msgctxt "model:lims.planification.pending,name:"
 msgid "Planification Pending"
@@ -1091,6 +1115,10 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 msgctxt "view:lims.analysis_sheet:"
+msgid "General"
+msgstr "General"
+
+msgctxt "view:lims.analysis_sheet:"
 msgid "Other Info"
 msgstr "Información adicional"
 
@@ -1101,6 +1129,10 @@ msgstr "Validar"
 msgctxt "view:lims.analysis_sheet:"
 msgid "View data"
 msgstr "Ver datos"
+
+msgctxt "view:lims.analysis_sheet:"
+msgid "View grouped data"
+msgstr "Ver datos agrupados"
 
 msgctxt "view:lims.interface.column:"
 msgid "Export:"
@@ -1139,6 +1171,14 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 msgctxt "wizard_button:lims.analysis_sheet.edit_grouped_data,start,save:"
+msgid "Save"
+msgstr "Guardar"
+
+msgctxt "wizard_button:lims.analysis_sheet.edit_multi_sample_data,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.analysis_sheet.edit_multi_sample_data,start,save:"
 msgid "Save"
 msgstr "Guardar"
 
