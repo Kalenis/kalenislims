@@ -184,6 +184,12 @@ class Interface(Workflow, ModelSQL, ModelView):
             'invisible': Eval('kind') != 'template',
             },
         depends=_depends)
+    views = fields.One2Many('lims.interface.view', 'interface', 'Views',
+        states={
+            'readonly': Eval('state') != 'draft',
+            'invisible': Eval('kind') != 'template',
+            },
+        depends=_depends)
     table = fields.Many2One('lims.interface.table', 'Table', readonly=True)
     template_type = fields.Selection([
         (None, ''),
@@ -1053,6 +1059,52 @@ class GroupedRepetition(ModelSQL, ModelView):
     repetitions = fields.Integer('Repetitions of grouped columns')
     description = fields.Char('Description')
     colspan = fields.Integer('Colspan')
+
+
+class View(ModelSQL, ModelView):
+    'View'
+    __name__ = 'lims.interface.view'
+
+    interface = fields.Many2One('lims.interface', 'Interface',
+        required=True, ondelete='CASCADE')
+    name = fields.Char('Name', required=True)
+    columns = fields.One2Many('lims.interface.view.column', 'view', 'Columns',
+        context={'interface': Eval('interface')}, depends=['interface'])
+
+
+class ViewColumn(sequence_ordered(), ModelSQL, ModelView):
+    'View Column'
+    __name__ = 'lims.interface.view.column'
+
+    view = fields.Many2One('lims.interface.view', 'View',
+        required=True, ondelete='CASCADE')
+    column = fields.Many2One('lims.interface.column', 'Column', required=True,
+        domain=['OR',
+            ('interface', '=', Eval('context', {}).get('interface', -1)),
+            ('interface', '=', Eval('_parent_view', {}).get('interface'))],
+        depends=['view'], ondelete='CASCADE')
+    analysis_specific = fields.Boolean('Analysis specific')
+
+    @staticmethod
+    def default_analysis_specific():
+        return False
+
+    @classmethod
+    def validate(cls, columns):
+        super().validate(columns)
+        for c in columns:
+            c.check_analysis_specific()
+
+    def check_analysis_specific(self):
+        if self.analysis_specific:
+            if self.search([
+                    ('view', '=', self.view.id),
+                    ('analysis_specific', '=', True),
+                    ('id', '!=', self.id),
+                    ]):
+                raise UserError(gettext(
+                    'lims_interface.msg_analysis_specific',
+                    view=self.view.name))
 
 
 class CopyInterfaceColumnStart(ModelView):

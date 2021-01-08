@@ -74,6 +74,10 @@ msgctxt "field:lims.interface,template_type:"
 msgid "Template Type"
 msgstr "Tipo de plantilla"
 
+msgctxt "field:lims.interface,views:"
+msgid "Views"
+msgstr "Vistas"
+
 msgctxt "field:lims.interface.column,alias:"
 msgid "Alias"
 msgstr "Alias"
@@ -598,13 +602,29 @@ msgctxt "field:lims.interface.variable.value,variable:"
 msgid "Variable"
 msgstr "Variable"
 
-msgctxt "field:lims.interface.view_data,compilation:"
-msgid "Compilation"
-msgstr "Compilación"
+msgctxt "field:lims.interface.view,columns:"
+msgid "Columns"
+msgstr "Columnas"
 
-msgctxt "field:lims.interface.view_data,notebook_line:"
-msgid "Notebook Line"
-msgstr "Línea de cuaderno"
+msgctxt "field:lims.interface.view,interface:"
+msgid "Interface"
+msgstr "Interfaz"
+
+msgctxt "field:lims.interface.view,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.interface.view.column,analysis_specific:"
+msgid "Analysis specific"
+msgstr "Específica de Análisis"
+
+msgctxt "field:lims.interface.view.column,column:"
+msgid "Column"
+msgstr "Columna"
+
+msgctxt "field:lims.interface.view.column,view:"
+msgid "View"
+msgstr "Vista"
 
 msgctxt "field:lims.laboratory,automatic_accept_result:"
 msgid "Automatic Accept Result"
@@ -741,6 +761,10 @@ msgid ""
 msgstr ""
 "El conjunto de caracteres del archivo no coincide con el definido en la "
 "interfaz."
+
+msgctxt "model:ir.message,text:msg_analysis_specific"
+msgid "There cannot be more than one column per analysis in view \"%(view)s\""
+msgstr "No puede haber más de una columna por análisis en la vista \"%(view)s\""
 
 msgctxt "model:ir.message,text:msg_interface_column_alias_unique"
 msgid "There cannot be two columns with the same alias in an interface."
@@ -886,6 +910,14 @@ msgstr "Variable de Interfaz"
 msgctxt "model:lims.interface.variable.value,name:"
 msgid "Interface Variable Value"
 msgstr "Valor de Variable de Interfaz"
+
+msgctxt "model:lims.interface.view,name:"
+msgid "View"
+msgstr "Vista"
+
+msgctxt "model:lims.interface.view.column,name:"
+msgid "View Column"
+msgstr "Columna de Vista"
 
 msgctxt "selection:lims.interface,charset:"
 msgid "ISO-8859-1"
@@ -1238,6 +1270,10 @@ msgstr "Campos"
 msgctxt "view:lims.interface:"
 msgid "Template"
 msgstr "Plantilla"
+
+msgctxt "view:lims.interface:"
+msgid "Views"
+msgstr "Vistas"
 
 msgctxt "wizard_button:lims.interface.copy_column,ask,copy:"
 msgid "Copy"

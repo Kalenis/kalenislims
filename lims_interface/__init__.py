@@ -18,6 +18,8 @@ def register():
         interface.Interface,
         interface.Column,
         interface.GroupedRepetition,
+        interface.View,
+        interface.ViewColumn,
         interface.CopyInterfaceColumnStart,
         interface.ImportInterfaceColumnStart,
         interface.ImportInterfaceColumnMap,

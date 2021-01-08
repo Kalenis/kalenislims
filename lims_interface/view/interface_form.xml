@@ -48,6 +48,9 @@
             <label name="language"/>
             <field name="language" widget="selection"/>
         </page>
+        <page id="views" string="Views">
+            <field name="views" colspan="4"/>
+        </page>
     </notebook>
     <label name="state"/>
     <field name="state"/>

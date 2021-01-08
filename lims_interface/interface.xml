@@ -75,6 +75,32 @@
             <field name="name">interface_grouped_repetition_list</field>
         </record>
 
+<!-- Grouped View -->
+
+        <record model="ir.ui.view" id="lims_interface_view_view_form">
+            <field name="model">lims.interface.view</field>
+            <field name="type">form</field>
+            <field name="name">interface_view_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_interface_view_view_list">
+            <field name="model">lims.interface.view</field>
+            <field name="type">tree</field>
+            <field name="name">interface_view_list</field>
+        </record>
+
+<!-- Grouped View Column -->
+
+        <record model="ir.ui.view" id="lims_interface_view_column_view_form">
+            <field name="model">lims.interface.view.column</field>
+            <field name="type">form</field>
+            <field name="name">interface_view_column_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_interface_view_column_view_list">
+            <field name="model">lims.interface.view.column</field>
+            <field name="type">tree</field>
+            <field name="name">interface_view_column_list</field>
+        </record>
+
 <!-- Wizard Copy Interface Column -->
 
         <record model="ir.ui.view" id="interface_copy_column_start_view_form">
