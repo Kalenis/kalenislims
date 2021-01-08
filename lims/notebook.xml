@@ -72,6 +72,14 @@
             <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
+        <record model="ir.model.access" id="access_notebook_group_laboratory_reports">
+            <field name="model" search="[('model', '=', 'lims.notebook')]"/>
+            <field name="group" ref="group_lims_laboratory_reports"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
 
 <!-- Open Notebook Lines Wizard -->
 

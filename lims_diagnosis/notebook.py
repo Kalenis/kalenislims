@@ -11,7 +11,7 @@ class Notebook(metaclass=PoolMeta):
     __name__ = 'lims.notebook'
 
     diagnostician = fields.Function(fields.Many2One('lims.diagnostician',
-        'Diagnostician'), 'get_sample_field')
+        'Diagnostician'), 'get_sample_field', searcher='search_sample_field')
     diagnosis_warning = fields.Function(fields.Boolean('Diagnosis Warning'),
         'get_diagnosis_warning')
     ready_to_diagnose = fields.Function(fields.Boolean('Ready to diagnose'),

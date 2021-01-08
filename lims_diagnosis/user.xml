@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+
+<!-- Groups -->
+
+        <record model="res.group" id="group_diagnostician">
+            <field name="name">Lims Diagnostician</field>
+        </record>
+        <record model="res.group" id="group_diagnostician_admin">
+            <field name="name">Lims Diagnostician Admin</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_diagnostician_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_diagnostician_admin"/>
+        </record>
+
+<!-- Menu -->
+
+        <!-- Laboratory -->
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_group_diagnostician">
+            <field name="menu" ref="lims.lims_laboratory"/>
+            <field name="group" ref="group_diagnostician"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_group_diagnostician_admin">
+            <field name="menu" ref="lims.lims_laboratory"/>
+            <field name="group" ref="group_diagnostician_admin"/>
+        </record>
+
+        <!-- Laboratory / Results reports -->
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_reports_group_diagnostician">
+            <field name="menu" ref="lims.lims_laboratory_reports"/>
+            <field name="group" ref="group_diagnostician"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_reports_group_diagnostician_admin">
+            <field name="menu" ref="lims.lims_laboratory_reports"/>
+            <field name="group" ref="group_diagnostician_admin"/>
+        </record>
+
+    </data>
+</tryton>
