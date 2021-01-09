@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<tree editable="bottom" sequence="sequence">
+<tree editable="1" sequence="sequence">
     <field name="column"/>
     <field name="analysis_specific"/>
 </tree>

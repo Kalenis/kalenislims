@@ -1476,7 +1476,7 @@ class MultiSampleData(ModelView):
     def get_tree_multi_sample_view(cls, fields):
         fields = cls._get_fields_tree_multi_sample_view(fields)
         return ('<?xml version="1.0"?>\n'
-            '<tree editable="bottom">\n'
+            '<tree editable="1">\n'
             '%s\n'
             '</tree>') % ('\n'.join(fields))
 
