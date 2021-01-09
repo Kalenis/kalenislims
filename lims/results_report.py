@@ -3762,11 +3762,11 @@ class ResultReport(Report):
                 with Transaction().set_context(language=lang_code):
                     reference_sample = Sample(sample.id)
 
-            if (not min_start_date or
-                    t_line.start_date < min_start_date):
+            if (t_line.start_date and (not min_start_date or
+                    t_line.start_date < min_start_date)):
                 min_start_date = t_line.start_date
-            if (not max_end_date or
-                    t_line.end_date > max_end_date):
+            if (t_line.end_date and (not max_end_date or
+                    t_line.end_date > max_end_date)):
                 max_end_date = t_line.end_date
             if (not min_confirmation_date or
                     (t_line.analysis_detail.confirmation_date and
