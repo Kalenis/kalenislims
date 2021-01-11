@@ -1436,6 +1436,35 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
             res += gettext('lims.msg_caa_max', max=res1)
         return res
 
+    @classmethod
+    def get_draft_lines_ids(cls, laboratory_id=None, notebook_id=None):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
+
+        laboratory_clause = ''
+        if laboratory_id:
+            laboratory_clause = 'AND rv.laboratory = %s ' % laboratory_id
+        notebook_clause = ''
+        if notebook_id:
+            notebook_clause = 'AND rs.notebook = %s ' % notebook_id
+
+        cursor.execute('SELECT rl.notebook_line '
+            'FROM "' + cls._table + '" rl '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON rl.detail_sample = rs.id '
+                'INNER JOIN "' + ResultsDetail._table + '" rd '
+                'ON rs.version_detail = rd.id '
+                'INNER JOIN "' + ResultsVersion._table + '" rv '
+                'ON rd.report_version = rv.id '
+            'WHERE rl.notebook_line IS NOT NULL '
+                'AND rd.state IN (\'draft\', \'revised\') '
+                'AND rd.type != \'preliminary\' ' +
+                laboratory_clause + notebook_clause)
+        return [x[0] for x in cursor.fetchall()]
+
 
 class ResultsLineRepeatAnalysis(NotebookLineRepeatAnalysis):
     'Repeat Analysis'
@@ -1872,15 +1901,8 @@ class GenerateResultsReport(Wizard):
         NotebookLine = pool.get('lims.notebook.line')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
-        draft_lines_ids = []
-        draft_lines = ResultsLine.search([
-            ('detail_sample.version_detail.laboratory', '=',
-                self.start.laboratory.id),
-            ('detail_sample.version_detail.state', 'in', ['draft', 'revised']),
-            ('notebook_line', '!=', None),
-            ])
-        if draft_lines:
-            draft_lines_ids = [dl.notebook_line.id for dl in draft_lines]
+        draft_lines_ids = ResultsLine.get_draft_lines_ids(
+            self.start.laboratory.id)
 
         clause = [
             ('notebook.date2', '>=', self.start.date_from),
