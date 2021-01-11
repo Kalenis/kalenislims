@@ -19,7 +19,8 @@ class Notebook(metaclass=PoolMeta):
 
     @classmethod
     def get_diagnosis_warning(cls, notebooks, name):
-        NotebookLine = Pool().get('lims.notebook.line')
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
         result = {}
         for n in notebooks:
             lines = NotebookLine.search_count([
@@ -42,16 +43,8 @@ class Notebook(metaclass=PoolMeta):
         if not laboratory_id:
             return False
 
-        draft_lines_ids = []
-        draft_lines = ResultsLine.search([
-            ('detail_sample.notebook', '=', self.id),
-            ('detail_sample.version_detail.laboratory', '=', laboratory_id),
-            ('detail_sample.version_detail.state', 'in', ['draft', 'revised']),
-            ('detail_sample.version_detail.type', '!=', 'preliminary'),
-            ('notebook_line', '!=', None),
-            ])
-        if draft_lines:
-            draft_lines_ids = [dl.notebook_line.id for dl in draft_lines]
+        draft_lines_ids = ResultsLine.get_draft_lines_ids(
+            laboratory_id, self.id)
 
         clause = [
             ('notebook', '=', self.id),
