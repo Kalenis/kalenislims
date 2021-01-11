@@ -6157,6 +6157,7 @@ class PendingServicesUnplannedReport(Report):
         pool = Pool()
         Laboratory = pool.get('lims.laboratory')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
 
         report_context = super().get_context(records, data)
 
@@ -6191,6 +6192,14 @@ class PendingServicesUnplannedReport(Report):
         with Transaction().set_user(0):
             details = EntryDetailAnalysis.search(clause)
         for detail in details:
+            # Check for available lines
+            if NotebookLine.search_count([
+                    ('analysis_detail', '=', detail),
+                    ('start_date', '=', None),
+                    ('annulment_date', '=', None),
+                    ]) == 0:
+                continue
+
             # Laboratory
             laboratory_id = detail.laboratory.id
             if laboratory_id not in labs:
