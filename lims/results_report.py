@@ -4026,23 +4026,35 @@ class ResultReport(Report):
 
     @classmethod
     def get_accreditation(cls, product_type, matrix, analysis, method):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
         Typification = pool.get('lims.typification')
+        TechnicalScopeVersionLine = pool.get(
+            'lims.technical.scope.version.line')
+        TechnicalScopeVersion = pool.get('lims.technical.scope.version')
+        TechnicalScope = pool.get('lims.technical.scope')
+        CertificationType = pool.get('lims.certification.type')
 
-        typifications = Typification.search([
-            ('product_type', '=', product_type),
-            ('matrix', '=', matrix),
-            ('analysis', '=', analysis),
-            ('method', '=', method),
-            ('valid', '=', True),
-            ])
-        if typifications:
-            if typifications[0].technical_scope_versions:
-                for version in typifications[0].technical_scope_versions:
-                    certification_type = (
-                        version.technical_scope.certification_type)
-                    if certification_type and certification_type.report:
-                        return 'True'
+        cursor.execute('SELECT ct.report '
+            'FROM "' + Typification._table + '" t '
+                'INNER JOIN "' + TechnicalScopeVersionLine._table + '" svl '
+                'ON t.id = svl.typification '
+                'INNER JOIN "' + TechnicalScopeVersion._table + '" sv '
+                'ON svl.version = sv.id '
+                'INNER JOIN "' + TechnicalScope._table + '" s '
+                'ON sv.technical_scope = s.id '
+                'INNER JOIN "' + CertificationType._table + '" ct '
+                'ON s.certification_type = ct.id '
+            'WHERE sv.valid IS TRUE '
+                'AND t.product_type = %s '
+                'AND t.matrix = %s '
+                'AND t.analysis = %s '
+                'AND t.method = %s '
+                'AND t.valid IS TRUE',
+            (product_type.id, matrix.id, analysis.id, method.id))
+        for x in cursor.fetchall():
+            if x[0]:
+                return 'True'
         return 'False'
 
     @classmethod
