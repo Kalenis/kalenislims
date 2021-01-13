@@ -1437,6 +1437,7 @@ class MultiSampleData(ModelView):
             }
 
         add_analysis_columns = False
+        analysis_column_field = None
         analysis_column_type = 'float'
         for view_column in sheet.view.columns:
             if not view_column.analysis_specific:
@@ -1450,21 +1451,26 @@ class MultiSampleData(ModelView):
                     }
             else:
                 add_analysis_columns = True
+                analysis_column_field = view_column.analysis_field
                 analysis_column_type = view_column.column.type_
 
         if add_analysis_columns:
             analysis_codes = set()
+            analysis_descriptions = dict()
             with Transaction().set_context(
                     lims_interface_table=sheet.compilation.table.id):
                 lines = Data.search([
                     ('compilation', '=', sheet.compilation.id),
                     ])
                 for line in lines:
-                    analysis_codes.add(line.notebook_line.analysis.code)
+                    code = line.notebook_line.analysis.code
+                    analysis_codes.add(code)
+                    analysis_descriptions[code] = getattr(
+                        line.notebook_line.analysis, analysis_column_field)
             for analysis in list(analysis_codes):
                 res[analysis] = {
                     'name': analysis,
-                    'string': analysis,
+                    'string': analysis_descriptions[analysis],
                     'type': analysis_column_type,
                     'help': '',
                     'readonly': readonly,
