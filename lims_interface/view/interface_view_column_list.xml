@@ -2,4 +2,5 @@
 <tree editable="1" sequence="sequence">
     <field name="column"/>
     <field name="analysis_specific"/>
+    <field name="analysis_field"/>
 </tree>

@@ -1084,10 +1084,20 @@ class ViewColumn(sequence_ordered(), ModelSQL, ModelView):
             ('interface', '=', Eval('_parent_view', {}).get('interface'))],
         depends=['view'], ondelete='CASCADE')
     analysis_specific = fields.Boolean('Analysis specific')
+    analysis_field = fields.Selection([
+        ('code', 'Code'),
+        ('description', 'Description'),
+        ], 'Analysis field',
+        states={'invisible': ~Eval('analysis_specific')},
+        depends=['analysis_specific'])
 
     @staticmethod
     def default_analysis_specific():
         return False
+
+    @staticmethod
+    def default_analysis_field():
+        return 'code'
 
     @classmethod
     def validate(cls, columns):

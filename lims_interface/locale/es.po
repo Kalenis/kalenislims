@@ -614,6 +614,10 @@ msgctxt "field:lims.interface.view,name:"
 msgid "Name"
 msgstr "Nombre"
 
+msgctxt "field:lims.interface.view.column,analysis_field:"
+msgid "Analysis field"
+msgstr "Campo Análisis"
+
 msgctxt "field:lims.interface.view.column,analysis_specific:"
 msgid "Analysis specific"
 msgstr "Específica de Análisis"

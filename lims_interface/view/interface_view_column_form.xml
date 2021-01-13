@@ -4,4 +4,6 @@
     <field name="column"/>
     <label name="analysis_specific"/>
     <field name="analysis_specific"/>
+    <label name="analysis_field"/>
+    <field name="analysis_field"/>
 </form>
