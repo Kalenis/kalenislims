@@ -14,6 +14,7 @@ from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Bool, Or, And
 from trytond.transaction import Transaction
+from trytond.rpc import RPC
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.modules.lims.formula_parser import FormulaParser
@@ -1338,6 +1339,7 @@ class EditMultiSampleDataStart(ModelView):
     def __setup__(cls):
         super().__setup__()
         cls.__rpc__['fields_view_get'].cache = None
+        cls.__rpc__['default_get'].cache = None
 
     @classmethod
     def fields_view_get(cls, view_id=None, view_type='form', level=None):
@@ -1357,6 +1359,7 @@ class MultiSampleData(ModelView):
     def __setup__(cls):
         super().__setup__()
         cls.__rpc__['fields_view_get'].cache = None
+        cls.__rpc__['default_get'].cache = None
 
     def __init__(self, id=None, **kwargs):
         kwargs_copy = kwargs.copy()
@@ -1441,14 +1444,26 @@ class MultiSampleData(ModelView):
         analysis_column_type = 'float'
         for view_column in sheet.view.columns:
             if not view_column.analysis_specific:
-                res[view_column.column.alias] = {
-                    'name': view_column.column.alias,
+                name = view_column.column.alias
+                res[name] = {
+                    'name': name,
                     'string': view_column.column.name,
                     'type': view_column.column.type_,
                     'help': '',
                     'readonly': bool(view_column.column.expression or
                         view_column.column.readonly or readonly),
                     }
+                if view_column.column.expression:
+                    parser = formulas.Parser()
+                    ast = parser.ast(
+                        view_column.column.expression)[1].compile()
+                    inputs = (' '.join([x for x in ast.inputs])).lower()
+                    if inputs:
+                        inputs = list(set(inputs.split()))
+                        res[name]['on_change_with'] = inputs
+                        cls.add_on_change_with_method(view_column.column)
+                        func_name = '%s_%s' % ('on_change_with', name)
+                        cls.__rpc__.setdefault(func_name, RPC(instantiate=0))
             else:
                 add_analysis_columns = True
                 analysis_column_field = view_column.analysis_field
@@ -1456,7 +1471,7 @@ class MultiSampleData(ModelView):
 
         if add_analysis_columns:
             analysis_codes = set()
-            analysis_descriptions = dict()
+            analysis_strings = dict()
             with Transaction().set_context(
                     lims_interface_table=sheet.compilation.table.id):
                 lines = Data.search([
@@ -1465,12 +1480,12 @@ class MultiSampleData(ModelView):
                 for line in lines:
                     code = line.notebook_line.analysis.code
                     analysis_codes.add(code)
-                    analysis_descriptions[code] = getattr(
+                    analysis_strings[code] = getattr(
                         line.notebook_line.analysis, analysis_column_field)
             for analysis in list(analysis_codes):
                 res[analysis] = {
                     'name': analysis,
-                    'string': analysis_descriptions[analysis],
+                    'string': analysis_strings[analysis],
                     'type': analysis_column_type,
                     'help': '',
                     'readonly': readonly,
@@ -1493,6 +1508,34 @@ class MultiSampleData(ModelView):
             view_fields.append('<field name="%s" width="%s"/>' % (
                 field, values['default_width']))
         return view_fields
+
+    @classmethod
+    def add_on_change_with_method(cls, column):
+        fn_name = 'on_change_with_' + column.alias
+
+        def fn(self):
+            parser = formulas.Parser()
+            ast = parser.ast(column.expression)[1].compile()
+            inputs = (' '.join([x for x in ast.inputs])).lower().split()
+            inputs = [getattr(self, x) for x in inputs]
+            try:
+                value = ast(*inputs)
+            except schedula.utils.exc.DispatcherError as e:
+                raise UserError(e.args[0] % e.args[1:])
+
+            if isinstance(value, list):
+                value = str(value)
+            elif not isinstance(value, (str, int, float, Decimal, type(None))):
+                value = value.tolist()
+            if isinstance(value, formulas.tokens.operand.XlError):
+                value = None
+            elif isinstance(value, list):
+                for x in chain(*value):
+                    if isinstance(x, formulas.tokens.operand.XlError):
+                        value = None
+            return value
+
+        setattr(cls, fn_name, fn)
 
 
 class EditMultiSampleData(Wizard):
@@ -1563,6 +1606,8 @@ class EditMultiSampleData(Wizard):
 
         columns = {}
         for view_column in sheet.view.columns:
+            if view_column.column.expression:
+                continue
             if view_column.analysis_specific:
                 analysis_codes = set()
                 with Transaction().set_context(
