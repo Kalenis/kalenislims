@@ -4363,6 +4363,19 @@ class ResultReport(Report):
         res = sample.notebook_lines
         return res
 
+    @classmethod
+    def _get_lines_grouped_by_origin(cls, sample):
+        all_lines = {}
+        for nl in sample.notebook_lines:
+            key = nl.notebook_line.analysis_origin
+            if key not in all_lines:
+                all_lines[key] = {
+                    'name': key,
+                    'lines': [],
+                    }
+            all_lines[key]['lines'].append(nl)
+        return all_lines.values()
+
 
 class ResultReportTranscription(ResultReport):
     'Transcription Results Report'
