@@ -3524,6 +3524,7 @@ class ResultReport(Report):
             else:
                 report = ResultsDetail(records[0].id)
         report_context['obj'] = report
+        report_context['get_grouped_lines'] = cls.get_grouped_lines
 
         company = Company(Transaction().context.get('company'))
         report_context['company'] = company
@@ -4343,6 +4344,23 @@ class ResultReport(Report):
                     res1 = str(int(range_.max))
 
                 res += gettext('lims.msg_caa_max', max=res1)
+        return res
+
+    @classmethod
+    def get_grouped_lines(cls, sample, grouped_by=None):
+        if not sample:
+            return []
+        if not grouped_by:
+            grouped_by = 'none'
+        try:
+            return getattr(cls,
+                '_get_lines_grouped_by_%s' % grouped_by)(sample)
+        except AttributeError:
+            return []
+
+    @classmethod
+    def _get_lines_grouped_by_none(cls, sample):
+        res = sample.notebook_lines
         return res
 
 
