@@ -2039,13 +2039,8 @@ class TestFormulaView(ModelView):
                 msg += (', '.join(missing_methods))
                 return ('error', msg)
 
-            ast = builder.compile()
-            missing = (set([x.lower() for x in ast.inputs]) -
-                self.previous_formulas())
-            if not missing:
-                return
-            return ('warning', 'Referenced alias "%s" not found. Ensure it is '
-                'declared before this formula.' % ', '.join(missing))
+            return
+
         except formulas.errors.FormulaError as error:
             msg = error.msg.replace('\n', ' ')
             if error.args[1:]:
@@ -2088,8 +2083,11 @@ class TestFormulaView(ModelView):
         except Exception:
             return None
 
+        expression_inputs = (' '.join([x for x in ast.inputs])).lower().split()
         inputs = []
         for variable in self.variables:
+            if variable.variable not in expression_inputs:
+                continue
             try:
                 input_value = float(variable.value)
             except ValueError:
