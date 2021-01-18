@@ -6129,6 +6129,10 @@ class PrintPendingServicesUnplannedReport(Wizard):
     save = StateAction(
         'lims.report_pending_services_unplanned_spreadsheet')
 
+    @classmethod
+    def check_access(cls):
+        pass
+
     def do_print_(self, action):
         data = {
             'start_date': self.start.start_date,
