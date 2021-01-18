@@ -48,6 +48,10 @@
             <field name="name">copy_columns</field>
             <field name="model" search="[('model', '=', 'lims.interface')]"/>
         </record>
+        <record model="ir.model.button" id="button_interface_show_view">
+            <field name="name">show_view</field>
+            <field name="model" search="[('model', '=', 'lims.interface')]"/>
+        </record>
 
 <!-- Column -->
 
@@ -138,6 +142,13 @@
             <field name="keyword">form_action</field>
             <field name="model">lims.interface,-1</field>
             <field name="action" ref="wiz_interface_import_column"/>
+        </record>
+
+<!-- Wizard Show Interface View -->
+
+        <record model="ir.action.wizard" id="wiz_interface_show_view">
+            <field name="name">Show Interface View</field>
+            <field name="wiz_name">lims.interface.show_view</field>
         </record>
 
 <!-- Compilation -->

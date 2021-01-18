@@ -24,6 +24,7 @@ def register():
         interface.ImportInterfaceColumnStart,
         interface.ImportInterfaceColumnMap,
         interface.ImportInterfaceColumnMapCell,
+        interface.ShowInterfaceViewStart,
         interface.Compilation,
         interface.CompilationOrigin,
         interface.TestFormulaView,
@@ -45,6 +46,7 @@ def register():
         interface.OpenCompilationData,
         interface.CopyInterfaceColumn,
         interface.ImportInterfaceColumn,
+        interface.ShowInterfaceView,
         interface.TestFormula,
         sample.OpenReferralCompilation,
         module='lims_interface', type_='wizard')
