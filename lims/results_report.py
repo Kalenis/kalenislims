@@ -161,7 +161,10 @@ class ResultsReport(ModelSQL, ModelView):
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Service = pool.get('lims.service')
         Fraction = pool.get('lims.fraction')
-        Sample = pool.get('lims.sample')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
 
         result = {}
         for r in reports:
@@ -171,16 +174,22 @@ class ResultsReport(ModelSQL, ModelView):
             cursor.execute('SELECT COUNT(*) '
                 'FROM "' + EntryDetailAnalysis._table + '" ad '
                     'INNER JOIN "' + Service._table + '" srv '
-                    'ON srv.id = ad.service '
+                    'ON ad.service = srv.id '
                     'INNER JOIN "' + Fraction._table + '" f '
-                    'ON f.id = srv.fraction '
-                    'INNER JOIN "' + Sample._table + '" s '
-                    'ON s.id = f.sample '
-                'WHERE s.entry = %s '
+                    'ON srv.fraction = f.id '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON f.id = n.fraction '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON n.id = rs.notebook '
+                    'INNER JOIN "' + ResultsDetail._table + '" rd '
+                    'ON rs.version_detail = rd.id '
+                    'INNER JOIN "' + ResultsVersion._table + '" rv '
+                    'ON rd.report_version = rv.id '
+                'WHERE rv.results_report = %s '
                     'AND ad.report_grouper = %s '
                     'AND ad.report = TRUE '
                     'AND ad.state NOT IN (\'reported\', \'annulled\')',
-                (r.entry.id, r.report_grouper,))
+                (r.id, r.report_grouper,))
             if cursor.fetchone()[0] > 0:
                 continue
             result[r.id] = True
