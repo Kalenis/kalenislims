@@ -4127,7 +4127,6 @@ class NotebookLoadResultsManual(Wizard):
             notebook_line_write = {
                 'result': data.result,
                 'result_modifier': data.result_modifier,
-                'end_date': data.end_date,
                 'chromatogram': data.chromatogram,
                 'initial_unit': (data.initial_unit.id if
                     data.initial_unit else None),
@@ -4139,6 +4138,9 @@ class NotebookLoadResultsManual(Wizard):
                 'verification': None,
                 'uncertainty': None,
                 }
+            if (not (data.result_modifier == 'eq' and not data.result) or
+                    data.literal_result):
+                notebook_line_write['end_date'] = data.end_date
             if data.result_modifier == 'na':
                 notebook_line_write['annulled'] = True
                 notebook_line_write['annulment_date'] = datetime.now()
