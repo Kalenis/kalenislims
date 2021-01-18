@@ -702,6 +702,10 @@ msgctxt "model:ir.action,name:wiz_interface_import_column"
 msgid "Import Interface Column"
 msgstr "Importar columnas desde Excel"
 
+msgctxt "model:ir.action,name:wiz_interface_show_view"
+msgid "Show Interface View"
+msgstr "Mostrar vista de interfaz"
+
 msgctxt "model:ir.action,name:wiz_referral_open_compilation"
 msgid "Interface Compilations"
 msgstr "Compilaciones desde interfaz"
@@ -886,6 +890,10 @@ msgstr ""
 msgctxt "model:lims.interface.import_column.start,name:"
 msgid "Import Interface Column Start"
 msgstr "Importar columnas desde Excel"
+
+msgctxt "model:lims.interface.show_view.start,name:"
+msgid "Show Interface View"
+msgstr "Mostrar vista de interfaz"
 
 msgctxt "model:lims.interface.table,name:"
 msgid "Interface Table"
@@ -1272,6 +1280,10 @@ msgid "Fields"
 msgstr "Campos"
 
 msgctxt "view:lims.interface:"
+msgid "Show View"
+msgstr "Mostrar vista"
+
+msgctxt "view:lims.interface:"
 msgid "Template"
 msgstr "Plantilla"
 
@@ -1306,3 +1318,7 @@ msgstr "Crear"
 msgctxt "wizard_button:lims.interface.import_column,map_,end:"
 msgid "Cancel"
 msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.interface.show_view,start,end:"
+msgid "Close"
+msgstr "Cerrar"

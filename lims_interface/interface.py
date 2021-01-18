@@ -272,6 +272,9 @@ class Interface(Workflow, ModelSQL, ModelView):
             'copy_columns': {
                 'invisible': Eval('state') != 'draft',
                 },
+            'show_view': {
+                'invisible': Eval('state') != 'active',
+                },
             })
 
     @classmethod
@@ -762,6 +765,11 @@ class Interface(Workflow, ModelSQL, ModelView):
     @classmethod
     @ModelView.button_action('lims_interface.wiz_interface_copy_column')
     def copy_columns(cls, interfaces):
+        pass
+
+    @classmethod
+    @ModelView.button_action('lims_interface.wiz_interface_show_view')
+    def show_view(cls, interfaces):
         pass
 
 
@@ -1360,6 +1368,45 @@ class ImportInterfaceColumn(Wizard):
                     else:
                         expression = expression.replace(input_, cell.alias)
         return expression
+
+
+class ShowInterfaceViewStart(ModelView):
+    'Show Interface View'
+    __name__ = 'lims.interface.show_view.start'
+    __no_slots__ = True
+
+
+class ShowInterfaceView(Wizard):
+    'Show Interface View'
+    __name__ = 'lims.interface.show_view'
+
+    class ShowStateView(StateView):
+
+        def __init__(self, model_name, buttons):
+            StateView.__init__(self, model_name, None, buttons)
+
+        def get_view(self, wizard, state_name):
+            pool = Pool()
+            Interface = pool.get('lims.interface')
+            Data = pool.get('lims.interface.data')
+
+            interface_id = Transaction().context.get('active_id', None)
+            if not interface_id:
+                return {}
+
+            interface = Interface(interface_id)
+            table_id = interface.table and interface.table.id or None
+            with Transaction().set_context(lims_interface_table=table_id):
+                res = Data.fields_view_get(view_id=None, view_type='form')
+                print(res)
+                return res
+
+        def get_defaults(self, wizard, state_name, fields):
+            return {}
+
+    start = ShowStateView('lims.interface.show_view.start', [
+            Button('Close', 'end', 'tryton-close', default=True),
+            ])
 
 
 class Compilation(Workflow, ModelSQL, ModelView):

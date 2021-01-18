@@ -339,6 +339,8 @@ class Data(ModelSQL, ModelView):
         res = super().fields_get(fields_names)
 
         table = cls.get_table()
+        interface = cls.get_interface()
+
         readonly_ids = []
         readonly = Transaction().context.get('lims_interface_readonly', False)
         if not readonly:
@@ -395,9 +397,10 @@ class Data(ModelSQL, ModelView):
                     '%H:%M:%S.%f')
             if field.type in ['float', 'numeric']:
                 res[field.name]['digits'] = encoder.encode((16, field.digits))
+
         for i in range(0, groups):
             field_description = None
-            for rep in cls.get_compilation().interface.grouped_repetitions:
+            for rep in interface.grouped_repetitions:
                 if rep.group == i + 1:
                     field_description = rep.description
 
@@ -632,9 +635,7 @@ class Data(ModelSQL, ModelView):
 
         table = cls.get_table()
         sql_table = cls.get_sql_table()
-        compilation = cls.get_compilation()
-
-        interface = compilation and compilation.interface.id or None
+        interface = cls.get_interface()
 
         formula_fields = []
         for field in table.fields_:
@@ -719,16 +720,26 @@ class Data(ModelSQL, ModelView):
 
     @classmethod
     def get_table(cls):
-        Table = Pool().get('lims.interface.table')
-        table = Transaction().context.get('lims_interface_table')
+        pool = Pool()
+        Interface = pool.get('lims.interface')
+        Table = pool.get('lims.interface.table')
+
         if Pool().test:
             # Tryton default tests try to get data using '1' as active_id
             # We prevent the tests from failing by returning no table
             return
+
+        table = Transaction().context.get('lims_interface_table')
         if not table:
             compilation = cls.get_compilation()
             if compilation:
                 table = compilation.table
+        if (not table and
+                Transaction().context.get('active_model') == 'lims.interface'):
+            interface_id = Transaction().context.get('active_id', None)
+            if interface_id:
+                interface = Interface(interface_id)
+                table = interface.table and interface.table.id or None
         if table:
             return Table(table)
 
@@ -738,6 +749,23 @@ class Data(ModelSQL, ModelView):
         if table:
             return Table(table.name)
         return super().__table__()
+
+    @classmethod
+    def get_interface(cls):
+        pool = Pool()
+        Compilation = pool.get('lims.interface.compilation')
+        Interface = pool.get('lims.interface')
+
+        compilation_id = Transaction().context.get(
+            'lims_interface_compilation')
+        if compilation_id:
+            return Compilation(compilation_id).interface
+        interface_id = (Transaction().context.get(
+            'active_model') == 'lims.interface' and
+            Transaction().context.get('active_id', None) or None)
+        if interface_id:
+            return Interface(interface_id)
+        return None
 
 
 class GroupedData(ModelView):
@@ -845,6 +873,7 @@ class GroupedData(ModelView):
         table = cls.get_table()
         readonly = Transaction().context.get('lims_interface_readonly', False)
         encoder = PYSONEncoder()
+
         for field in table.grouped_fields_:
             if field.group != group:
                 continue
@@ -876,6 +905,7 @@ class GroupedData(ModelView):
                     '%H:%M:%S.%f')
             if field.type in ['float', 'numeric']:
                 res[field.name]['digits'] = encoder.encode((16, field.digits))
+
         res['data'] = {
             'name': 'data',
             'string': 'Data',
@@ -885,6 +915,7 @@ class GroupedData(ModelView):
             'relation_fields': (Data.fields_get(level=level - 1)
                 if level > 0 else []),
             'readonly': True,
+            'help': '',
             'states': '{}',
             }
         return res
@@ -928,15 +959,25 @@ class GroupedData(ModelView):
 
     @classmethod
     def get_table(cls):
-        Table = Pool().get('lims.interface.table')
-        table = Transaction().context.get('lims_interface_table')
+        pool = Pool()
+        Interface = pool.get('lims.interface')
+        Table = pool.get('lims.interface.table')
+
         if Pool().test:
             # Tryton default tests try to get data using '1' as active_id
             # We prevent the tests from failing by returning no table
             return
+
+        table = Transaction().context.get('lims_interface_table')
         if not table:
             compilation = cls.get_compilation()
             if compilation:
                 table = compilation.table
+        if (not table and
+                Transaction().context.get('active_model') == 'lims.interface'):
+            interface_id = Transaction().context.get('active_id', None)
+            if interface_id:
+                interface = Interface(interface_id)
+                table = interface.table and interface.table.id or None
         if table:
             return Table(table)
