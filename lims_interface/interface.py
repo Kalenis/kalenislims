@@ -1376,7 +1376,7 @@ class ShowInterfaceViewAsk(ModelView):
     __name__ = 'lims.interface.show_view.ask'
 
     notebook_line = fields.Many2One('lims.notebook.line.all_fields',
-        'Notebook line', required=True)
+        'Notebook line')
 
 
 class ShowInterfaceViewStart(ModelView):
@@ -1402,7 +1402,6 @@ class ShowInterfaceView(Wizard):
             ])
 
     def default_start(self, fields):
-        print('default_start')
         pool = Pool()
         Interface = pool.get('lims.interface')
         Data = pool.get('lims.interface.data')
@@ -1416,9 +1415,11 @@ class ShowInterfaceView(Wizard):
             return {}
 
         fields = interface.table.fields_
+        notebook_line_id = (self.ask.notebook_line and
+            self.ask.notebook_line.line.id or None)
 
         record = {
-            'notebook_line': self.ask.notebook_line.line.id,
+            'notebook_line': notebook_line_id,
             }
         for field in fields:
             if field.group:
@@ -1438,7 +1439,7 @@ class ShowInterfaceView(Wizard):
             group_fields = []
             for rep in range(1, reps):
                 grouped_record = {
-                    'notebook_line': self.ask.notebook_line.line.id,
+                    'notebook_line': notebook_line_id,
                     'data': None,
                     'iteration': rep,
                     }
