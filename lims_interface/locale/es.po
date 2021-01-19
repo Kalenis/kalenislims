@@ -114,20 +114,12 @@ msgctxt "field:lims.interface.column,expression_icon:"
 msgid "Expression Icon"
 msgstr "Icono"
 
-msgctxt "field:lims.interface.column,fixed_value:"
-msgid "Fixed value"
-msgstr "Valor fijo"
-
 msgctxt "field:lims.interface.column,group:"
 msgid "Group"
 msgstr "Grupo"
 
 msgctxt "field:lims.interface.column,group_col:"
 msgid "Group Col"
-msgstr "Columna en Grupo"
-
-msgctxt "field:lims.interface.column,group_cols:"
-msgid "Group Cols"
 msgstr "Columna en Grupo"
 
 msgctxt "field:lims.interface.column,group_colspan:"
@@ -137,10 +129,6 @@ msgstr "Columnas del grupo"
 msgctxt "field:lims.interface.column,group_name:"
 msgid "Group Name"
 msgstr "Nombre de Grupo"
-
-msgctxt "field:lims.interface.column,grouped:"
-msgid "Grouped column"
-msgstr "Columna agrupada"
 
 msgctxt "field:lims.interface.column,interface:"
 msgid "Interface"
@@ -302,6 +290,10 @@ msgctxt "field:lims.interface.function,parameters:"
 msgid "Parameters"
 msgstr "Parámetros"
 
+msgctxt "field:lims.interface.grouped_data,data:"
+msgid "Data"
+msgstr "Datos"
+
 msgctxt "field:lims.interface.grouped_data,iteration:"
 msgid "Iteration"
 msgstr "Iteración"
@@ -366,6 +358,14 @@ msgctxt "field:lims.interface.import_column.start,origin_file:"
 msgid "Origin File"
 msgstr "Archivo origen"
 
+msgctxt "field:lims.interface.show_view.ask,notebook_line:"
+msgid "Notebook line"
+msgstr "Línea de cuaderno"
+
+msgctxt "field:lims.interface.show_view.start,data:"
+msgid "Data"
+msgstr "Datos"
+
 msgctxt "field:lims.interface.table,fields_:"
 msgid "Fields"
 msgstr "Campos"
@@ -413,10 +413,6 @@ msgstr "Grupo"
 msgctxt "field:lims.interface.table.field,group_col:"
 msgid "Group Col"
 msgstr "Columnas en Grupo"
-
-msgctxt "field:lims.interface.table.field,group_cols:"
-msgid "Group Cols"
-msgstr "Columna en Grupo"
 
 msgctxt "field:lims.interface.table.field,group_colspan:"
 msgid "Group Colspan"
@@ -645,10 +641,6 @@ msgid ""
 msgstr ""
 "En columnas agrupadas el sufijo _XX será reemplazado por la repetición "
 "correspondiente"
-
-msgctxt "help:lims.interface.column,is_fixed_value:"
-msgid "Check to define a default value for this column"
-msgstr "Marcar para definir el valor por defecto para esta columna"
 
 msgctxt "help:lims.interface.column,singleton:"
 msgid "Is a fixed value (column:row) in source file"
@@ -891,6 +883,10 @@ msgctxt "model:lims.interface.import_column.start,name:"
 msgid "Import Interface Column Start"
 msgstr "Importar columnas desde Excel"
 
+msgctxt "model:lims.interface.show_view.ask,name:"
+msgid "Show Interface View"
+msgstr "Mostrar vista de interfaz"
+
 msgctxt "model:lims.interface.show_view.start,name:"
 msgid "Show Interface View"
 msgstr "Mostrar vista de interfaz"
@@ -1128,6 +1124,10 @@ msgid "Numeric"
 msgstr "Numérico"
 
 msgctxt "selection:lims.interface.table.field,type:"
+msgid "One2Many"
+msgstr "One2Many"
+
+msgctxt "selection:lims.interface.table.field,type:"
 msgid "Reference"
 msgstr "Referencia"
 
@@ -1214,6 +1214,14 @@ msgstr "Intervalo de tiempo"
 msgctxt "selection:lims.interface.table.grouped_field,type:"
 msgid "Timestamp"
 msgstr "Timestamp"
+
+msgctxt "selection:lims.interface.view.column,analysis_field:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "selection:lims.interface.view.column,analysis_field:"
+msgid "Description"
+msgstr "Descripción"
 
 msgctxt "view:lims.interface.column:"
 msgid "Import:"
@@ -1318,6 +1326,14 @@ msgstr "Crear"
 msgctxt "wizard_button:lims.interface.import_column,map_,end:"
 msgid "Cancel"
 msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.interface.show_view,ask,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.interface.show_view,ask,start:"
+msgid "Show"
+msgstr "Mostrar"
 
 msgctxt "wizard_button:lims.interface.show_view,start,end:"
 msgid "Close"

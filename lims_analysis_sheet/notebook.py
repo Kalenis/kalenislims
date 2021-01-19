@@ -1203,7 +1203,7 @@ class EditGroupedData(Wizard):
         line_id = Transaction().context.get('active_id', None)
         sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
-        fields = [f for f in sheet.compilation.table.fields_]
+        fields = sheet.compilation.table.fields_
 
         data = []
         with Transaction().set_context(
@@ -1268,8 +1268,8 @@ class EditGroupedData(Wizard):
         if sheet.state not in ('active', 'validated'):
             return 'end'
 
-        fields = [f for f in sheet.compilation.table.fields_]
-        grouped_fields = [f for f in sheet.compilation.table.grouped_fields_]
+        fields = sheet.compilation.table.fields_
+        grouped_fields = sheet.compilation.table.grouped_fields_
 
         with Transaction().set_context(
                 lims_interface_table=sheet.compilation.table.id):
