@@ -1750,6 +1750,9 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     def search_line_field(cls, name, clause):
         return [('line.' + name,) + tuple(clause[1:])]
 
+    def get_rec_name(self, name):
+        return self.line.get_rec_name(name)
+
 
 class NotebookLineLaboratoryProfessional(ModelSQL):
     'Laboratory Notebook Line - Laboratory Professional'

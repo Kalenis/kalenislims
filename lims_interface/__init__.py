@@ -24,6 +24,7 @@ def register():
         interface.ImportInterfaceColumnStart,
         interface.ImportInterfaceColumnMap,
         interface.ImportInterfaceColumnMapCell,
+        interface.ShowInterfaceViewAsk,
         interface.ShowInterfaceViewStart,
         interface.Compilation,
         interface.CompilationOrigin,

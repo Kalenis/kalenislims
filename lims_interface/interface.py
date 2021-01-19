@@ -16,6 +16,7 @@ from decimal import Decimal
 from datetime import datetime, date, time
 from dateutil import relativedelta
 from itertools import chain
+from collections import defaultdict
 
 from trytond.config import config
 from trytond.model import (Workflow, ModelView, ModelSQL, fields,
@@ -1370,43 +1371,86 @@ class ImportInterfaceColumn(Wizard):
         return expression
 
 
+class ShowInterfaceViewAsk(ModelView):
+    'Show Interface View'
+    __name__ = 'lims.interface.show_view.ask'
+
+    notebook_line = fields.Many2One('lims.notebook.line.all_fields',
+        'Notebook line', required=True)
+
+
 class ShowInterfaceViewStart(ModelView):
     'Show Interface View'
     __name__ = 'lims.interface.show_view.start'
-    __no_slots__ = True
+
+    data = fields.One2Many('lims.interface.data', None, 'Data')
 
 
 class ShowInterfaceView(Wizard):
     'Show Interface View'
     __name__ = 'lims.interface.show_view'
 
-    class ShowStateView(StateView):
-
-        def __init__(self, model_name, buttons):
-            StateView.__init__(self, model_name, None, buttons)
-
-        def get_view(self, wizard, state_name):
-            pool = Pool()
-            Interface = pool.get('lims.interface')
-            Data = pool.get('lims.interface.data')
-
-            interface_id = Transaction().context.get('active_id', None)
-            if not interface_id:
-                return {}
-
-            interface = Interface(interface_id)
-            table_id = interface.table and interface.table.id or None
-            with Transaction().set_context(lims_interface_table=table_id):
-                res = Data.fields_view_get(view_id=None, view_type='form')
-                print(res)
-                return res
-
-        def get_defaults(self, wizard, state_name, fields):
-            return {}
-
-    start = ShowStateView('lims.interface.show_view.start', [
+    start_state = 'ask'
+    ask = StateView('lims.interface.show_view.ask',
+        'lims_interface.interface_show_view_ask_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Show', 'start', 'tryton-forward', default=True),
+            ])
+    start = StateView('lims.interface.show_view.start',
+        'lims_interface.interface_show_view_start_form', [
             Button('Close', 'end', 'tryton-close', default=True),
             ])
+
+    def default_start(self, fields):
+        print('default_start')
+        pool = Pool()
+        Interface = pool.get('lims.interface')
+        Data = pool.get('lims.interface.data')
+
+        interface_id = Transaction().context.get('active_id', None)
+        if not interface_id:
+            return {}
+
+        interface = Interface(interface_id)
+        if not interface.table:
+            return {}
+
+        fields = interface.table.fields_
+
+        record = {
+            'notebook_line': self.ask.notebook_line.line.id,
+            }
+        for field in fields:
+            if field.group:
+                continue
+            record[field.name] = None
+
+        grouped_fields = defaultdict(list)
+        for field in interface.table.grouped_fields_:
+            grouped_fields[field.group].append(field)
+
+        for group, repetition_fields in grouped_fields.items():
+            for rep in interface.grouped_repetitions:
+                if rep.group == group:
+                    reps = (rep.repetitions or 1) + 1
+                    break
+
+            group_fields = []
+            for rep in range(1, reps):
+                grouped_record = {
+                    'notebook_line': self.ask.notebook_line.line.id,
+                    'data': None,
+                    'iteration': rep,
+                    }
+                for field in repetition_fields:
+                    grouped_record[field.name] = None
+                group_fields.append(grouped_record)
+            record['group_%s' % (group, )] = group_fields
+
+        defaults = {
+            'data': [record],
+            }
+        return defaults
 
 
 class Compilation(Workflow, ModelSQL, ModelView):
