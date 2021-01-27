@@ -1384,15 +1384,18 @@ class MultiSampleData(ModelView):
 
         sheet = AnalysisSheet(Transaction().context.get('active_id'))
         fields = {
-            'fraction': {'default_width': 100},
+            'fraction': {'default_width': 100, 'order': 0},
             }
 
         add_analysis_columns = False
+        order = 1
         for view_column in sheet.view.columns:
             if not view_column.analysis_specific:
                 fields[view_column.column.alias] = {
                     'default_width': view_column.column.default_width or 100,
+                    'order': order,
                     }
+                order += 1
             else:
                 add_analysis_columns = True
 
@@ -1404,10 +1407,12 @@ class MultiSampleData(ModelView):
                     ('compilation', '=', sheet.compilation.id),
                     ])
                 for line in lines:
-                    analysis_codes.add(line.notebook_line.analysis.code)
-            for analysis in list(analysis_codes):
+                    analysis_codes.add((line.notebook_line.analysis.code,
+                        line.notebook_line.analysis.order))
+            for analysis, order in list(analysis_codes):
                 fields[analysis] = {
                     'default_width': 60,
+                    'order': order,
                     }
 
         res = {
@@ -1504,7 +1509,8 @@ class MultiSampleData(ModelView):
     @classmethod
     def _get_fields_tree_multi_sample_view(cls, fields):
         view_fields = []
-        for field, values in fields.items():
+        for field, values in sorted(
+                fields.items(), key=lambda x: x[1]['order']):
             view_fields.append('<field name="%s" width="%s"/>' % (
                 field, values['default_width']))
         return view_fields
