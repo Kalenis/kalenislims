@@ -280,7 +280,8 @@ class Service(ModelSQL, ModelView):
     fraction_view = fields.Function(fields.Many2One('lims.fraction',
         'Fraction', states={'invisible': Not(Bool(Eval('_parent_fraction')))}),
         'on_change_with_fraction_view')
-    sample = fields.Function(fields.Many2One('lims.sample', 'Sample'),
+    sample = fields.Function(fields.Many2One('lims.sample', 'Sample',
+        states={'readonly': Bool(Eval('context', {}).get('readonly', True))}),
         'get_fraction_field', setter='set_fraction_field',
         searcher='search_fraction_field')
     entry = fields.Function(fields.Many2One('lims.entry', 'Entry'),
@@ -1364,7 +1365,7 @@ class Fraction(ModelSQL, ModelView):
             'product_type': Eval('product_type'), 'matrix': Eval('matrix'),
             'fraction': Eval('id'), 'sample': Eval('sample'),
             'entry': Eval('entry'), 'party': Eval('party'),
-            'readonly': False,
+            'readonly': Bool(Eval('button_manage_services_available')),
             },
         depends=['button_manage_services_available', 'analysis_domain',
             'typification_domain', 'product_type', 'matrix', 'sample',
