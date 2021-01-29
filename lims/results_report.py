@@ -582,15 +582,15 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
             'release_all_lang': {
                 'invisible': Not(If(Bool(Eval('english_report')),
                     Bool(And(
+                        Eval('state') == 'released',
                         ~Bool(Eval('report_cache_eng')),
-                        Bool(Eval('report_cache')),
                         )),
                     Bool(And(
+                        Eval('state') == 'released',
                         ~Bool(Eval('report_cache')),
-                        Bool(Eval('report_cache_eng')),
                         )),
                     )),
-                'depends': ['english_report', 'report_cache',
+                'depends': ['english_report', 'state', 'report_cache',
                     'report_cache_eng'],
                 },
             'annul': {
