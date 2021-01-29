@@ -456,6 +456,8 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
     def get_default_precedents(sample):
         pool = Pool()
         Notebook = pool.get('lims.notebook')
+        if not sample.component:
+            return []
         precedents = Notebook.search([
             ('id', '!=', sample.notebook.id),
             ('component', '=', sample.component),
