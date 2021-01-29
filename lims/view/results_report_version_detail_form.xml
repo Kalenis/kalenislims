@@ -65,9 +65,9 @@
         <label name="state"/>
         <field name="state"/>
         <label name="valid"/>
-        <field name="valid"/>
+        <field name="valid" xexpand="0"/>
     </group>
-    <group id="buttons" colspan="2" col="4">
+    <group id="buttons" colspan="2" col="6">
         <button name="draft" string="Draft"/>
         <button name="revise" string="Revised"/>
         <button name="release" string="Release"/>
