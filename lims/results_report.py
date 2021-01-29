@@ -10,7 +10,7 @@ from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     StateReport, Button
 from trytond.pool import Pool
-from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, And, Or, If
+from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or, If
 from trytond.transaction import Transaction
 from trytond.report import Report
 from trytond.rpc import RPC
@@ -580,18 +580,21 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                 'depends': ['state'],
                 },
             'release_all_lang': {
-                'invisible': Not(If(Bool(Eval('english_report')),
-                    Bool(And(
-                        Eval('state') == 'released',
-                        ~Bool(Eval('report_cache_eng')),
+                'invisible': If(Bool(Eval('english_report')),
+                    Bool(Or(
+                        Eval('state') != 'released',
+                        Bool(Eval('report_cache_eng')),
+                        Bool(Eval('report_cache_eng_id')),
                         )),
-                    Bool(And(
-                        Eval('state') == 'released',
-                        ~Bool(Eval('report_cache')),
+                    Bool(Or(
+                        Eval('state') != 'released',
+                        Bool(Eval('report_cache')),
+                        Bool(Eval('report_cache_id')),
                         )),
-                    )),
-                'depends': ['english_report', 'state', 'report_cache',
-                    'report_cache_eng'],
+                    ),
+                'depends': ['english_report', 'state',
+                    'report_cache', 'report_cache_id',
+                    'report_cache_eng', 'report_cache_eng_id'],
                 },
             'annul': {
                 'invisible': Or(Eval('state') != 'released', ~Eval('valid')),
