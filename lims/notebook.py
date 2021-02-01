@@ -756,28 +756,33 @@ class NotebookLine(ModelSQL, ModelView):
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         readonly=True, select=True)
     method = fields.Many2One('lims.lab.method', 'Method',
-        required=True, domain=['OR', ('id', '=', Eval('method')),
+        required=True, states=_states,
+        domain=['OR', ('id', '=', Eval('method')),
             ('id', 'in', Eval('method_domain'))],
-        depends=['method_domain'])
+        depends=['accepted', 'method_domain'])
     method_view = fields.Function(fields.Many2One('lims.lab.method',
         'Method'), 'get_views_field')
     method_domain = fields.Function(fields.Many2Many('lims.lab.method',
         None, None, 'Method domain'),
         'on_change_with_method_domain')
     device = fields.Many2One('lims.lab.device', 'Device',
+        states=_states,
         domain=['OR', ('id', '=', Eval('device')),
             ('id', 'in', Eval('device_domain'))],
-        depends=['device_domain'])
+        depends=['accepted', 'device_domain'])
     device_view = fields.Function(fields.Many2One('lims.lab.device',
         'Device'), 'get_views_field')
     device_domain = fields.Function(fields.Many2Many('lims.lab.device',
         None, None, 'Device domain'), 'on_change_with_device_domain')
     analysis_origin = fields.Char('Analysis origin', readonly=True)
-    initial_concentration = fields.Char('Initial concentration')
-    final_concentration = fields.Char('Final concentration')
+    initial_concentration = fields.Char('Initial concentration',
+        states=_states, depends=_depends)
+    final_concentration = fields.Char('Final concentration',
+        states=_states, depends=_depends)
     laboratory_professionals = fields.Many2Many(
         'lims.notebook.line-laboratory.professional', 'notebook_line',
-        'professional', 'Preparation professionals')
+        'professional', 'Preparation professionals',
+        states=_states, depends=_depends)
     initial_unit = fields.Many2One('product.uom', 'Initial unit',
         domain=[('category.lims_only_available', '=', True)],
         states=_states, depends=_depends)
@@ -823,26 +828,40 @@ class NotebookLine(ModelSQL, ModelView):
         states=_states, depends=_depends)
     check_result_limits = fields.Function(fields.Boolean(
         'Validate limits directly on the result'), 'get_typification_field')
-    chromatogram = fields.Char('Chromatogram')
+    chromatogram = fields.Char('Chromatogram',
+        states=_states, depends=_depends)
     professionals = fields.One2Many('lims.notebook.line.professional',
-        'notebook_line', 'Analytic professionals')
-    comments = fields.Text('Entry comments')
-    theoretical_concentration = fields.Char('Theoretical concentration')
+        'notebook_line', 'Analytic professionals',
+        states=_states, depends=_depends)
+    comments = fields.Text('Entry comments',
+        states=_states, depends=_depends)
+    theoretical_concentration = fields.Char('Theoretical concentration',
+        states=_states, depends=_depends)
     concentration_level = fields.Many2One('lims.concentration.level',
-        'Concentration level')
-    decimals = fields.Integer('Decimals')
-    significant_digits = fields.Integer('Significant digits')
-    backup = fields.Char('Backup')
-    reference = fields.Char('Reference')
+        'Concentration level',
+        states=_states, depends=_depends)
+    decimals = fields.Integer('Decimals',
+        states=_states, depends=_depends)
+    significant_digits = fields.Integer('Significant digits',
+        states=_states, depends=_depends)
+    backup = fields.Char('Backup',
+        states=_states, depends=_depends)
+    reference = fields.Char('Reference',
+        states=_states, depends=_depends)
     literal_result = fields.Char('Literal result', translate=True,
         states=_states, depends=_depends)
-    rm_correction_formula = fields.Char('RM Correction Formula')
-    report = fields.Boolean('Report')
-    uncertainty = fields.Char('Uncertainty')
-    verification = fields.Char('Verification')
+    rm_correction_formula = fields.Char('RM Correction Formula',
+        states=_states, depends=_depends)
+    report = fields.Boolean('Report',
+        states=_states, depends=_depends)
+    uncertainty = fields.Char('Uncertainty',
+        states=_states, depends=_depends)
+    verification = fields.Char('Verification',
+        states=_states, depends=_depends)
     analysis_order = fields.Function(fields.Integer('Order'),
         'get_analysis_order')
-    dilution_factor = fields.Float('Dilution factor')
+    dilution_factor = fields.Float('Dilution factor',
+        states=_states, depends=_depends)
     accepted = fields.Boolean('Accepted', select=True)
     acceptance_date = fields.DateTime('Acceptance date',
         states={'readonly': True})
@@ -856,7 +875,8 @@ class NotebookLine(ModelSQL, ModelView):
         readonly=True, select=True)
     planification = fields.Many2One('lims.planification', 'Planification',
         readonly=True)
-    urgent = fields.Boolean('Urgent')
+    urgent = fields.Boolean('Urgent',
+        states=_states, depends=_depends)
     priority = fields.Function(fields.Integer('Priority'),
         'get_service_field', searcher='search_service_field')
     fraction = fields.Function(fields.Many2One('lims.fraction', 'Fraction'),
@@ -896,7 +916,8 @@ class NotebookLine(ModelSQL, ModelView):
     planning_comments = fields.Function(fields.Text('Planification comments'),
         'get_planning_comments')
     controls = fields.Many2Many('lims.notebook.line-fraction',
-        'notebook_line', 'fraction', 'Controls')
+        'notebook_line', 'fraction', 'Controls',
+        states=_states, depends=_depends)
     referral = fields.Function(fields.Many2One('lims.referral', 'Referral'),
         'get_detail_field', searcher='search_detail_field')
 
