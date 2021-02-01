@@ -1063,6 +1063,10 @@ msgctxt "field:lims.create_sample.service,analysis:"
 msgid "Analysis/Set/Group"
 msgstr "Análisis/Set/Grupo"
 
+msgctxt "field:lims.create_sample.service,analysis_locked:"
+msgid "Analysis/Set/Group Locked"
+msgstr "Análisis/Set/Grupo bloqueado"
+
 msgctxt "field:lims.create_sample.service,device:"
 msgid "Device"
 msgstr "Equipo"
@@ -1086,6 +1090,10 @@ msgstr "Cantidad de días para Informar"
 msgctxt "field:lims.create_sample.service,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
+
+msgctxt "field:lims.create_sample.service,laboratory_locked:"
+msgid "Laboratory Locked"
+msgstr "Laboratorio bloqueado"
 
 msgctxt "field:lims.create_sample.service,laboratory_date:"
 msgid "Laboratory deadline"
