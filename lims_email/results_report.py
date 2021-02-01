@@ -306,7 +306,6 @@ class SendResultsReport(Wizard):
     def default_start(self, fields):
         pool = Pool()
         ResultsReport = pool.get('lims.results_report')
-        ResultsSample = pool.get('lims.results_report.version.detail.sample')
 
         summary = ''
 
@@ -327,24 +326,10 @@ class SendResultsReport(Wizard):
             for report in group['reports']:
                 if not report.ready_to_send:
                     continue
-
                 if not group['cie_fraction_type']:
                     group['reports_ready'].append(report)
-                    samples = ResultsSample.search([
-                        ('version_detail.report_version.results_report',
-                            '=', report),
-                        ])
-                    for sample in samples:
-                        entry = sample.notebook.fraction.entry
-                        if (hasattr(entry.invoice_party,
-                                'block_reports_automatic_sending') and
-                                getattr(entry.invoice_party,
-                                    'block_reports_automatic_sending')):
-                            continue
-                        for c in entry.report_contacts:
-                            if c.contact.report_contact:
-                                group['to_addrs'][c.contact.email] = (
-                                    c.contact.party_full_name)
+                    group['to_addrs'].update(self.get_report_addrs(
+                        report))
 
             if not group['reports_ready']:
                 continue
@@ -363,7 +348,6 @@ class SendResultsReport(Wizard):
         pool = Pool()
         Config = pool.get('lims.configuration')
         ResultsReport = pool.get('lims.results_report')
-        ResultsSample = pool.get('lims.results_report.version.detail.sample')
 
         from_addr = tconfig.get('email', 'from')
         if not from_addr:
@@ -445,21 +429,8 @@ class SendResultsReport(Wizard):
                 if group['cie_fraction_type']:
                     group['to_addrs'][email_qa] = 'QA'
                 else:
-                    samples = ResultsSample.search([
-                        ('version_detail.report_version.results_report',
-                            '=', report),
-                        ])
-                    for sample in samples:
-                        entry = sample.notebook.fraction.entry
-                        if (hasattr(entry.invoice_party,
-                                'block_reports_automatic_sending') and
-                                getattr(entry.invoice_party,
-                                    'block_reports_automatic_sending')):
-                            continue
-                        for c in entry.report_contacts:
-                            if c.contact.report_contact:
-                                group['to_addrs'][c.contact.email] = (
-                                    c.contact.party_full_name)
+                    group['to_addrs'].update(self.get_report_addrs(
+                        report))
 
             if not group['reports_ready']:
                 continue
@@ -542,6 +513,28 @@ class SendResultsReport(Wizard):
             return res
 
         return res
+
+    def get_report_addrs(self, report):
+        pool = Pool()
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        to_addrs = {}
+
+        samples = ResultsSample.search([
+            ('version_detail.report_version.results_report', '=', report),
+            ])
+        for sample in samples:
+            entry = sample.notebook.fraction.entry
+            if (hasattr(entry.invoice_party,
+                    'block_reports_automatic_sending') and
+                    getattr(entry.invoice_party,
+                        'block_reports_automatic_sending')):
+                continue
+            for c in entry.report_contacts:
+                if c.contact.report_contact:
+                    to_addrs[c.contact.email] = (
+                        c.contact.party_full_name)
+        return to_addrs
 
     def _get_subject_body(self, reports):
         '''
