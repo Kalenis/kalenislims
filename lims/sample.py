@@ -3765,7 +3765,11 @@ class EditSampleService(Wizard):
         services = []
         for f in sample.fractions:
             for s in f.services:
+                if s.annulled:
+                    continue
                 services.append({
+                    'analysis_locked': True,
+                    'laboratory_locked': True,
                     'analysis': s.analysis.id,
                     'laboratory': s.laboratory and s.laboratory.id or None,
                     'method': s.method and s.method.id or None,
@@ -3794,19 +3798,24 @@ class EditSampleService(Wizard):
         Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
 
-        actual_analysis = [s.analysis.id for s in self.start.services]
+        actual_analysis = [(s.analysis.id, s.method and s.method.id or None)
+            for s in self.start.services]
 
         for sample in Sample.browse(Transaction().context['active_ids']):
             delete_ack_report_cache = False
             for fraction in sample.fractions:
                 original_analysis = []
                 for service in fraction.services:
-                    original_analysis.append(service.analysis.id)
-                    if service.analysis.id not in actual_analysis:
+                    key = (service.analysis.id,
+                        service.method and service.method.id or None)
+                    original_analysis.append(key)
+                    if key not in actual_analysis:
                         self.annul_service(service)
                         delete_ack_report_cache = True
                 for service in self.start.services:
-                    if service.analysis.id not in original_analysis:
+                    key = (service.analysis.id,
+                        service.method and service.method.id or None)
+                    if key not in original_analysis:
                         self.create_service(service, fraction)
                         delete_ack_report_cache = True
                 self.update_fraction_services(fraction)
@@ -5339,6 +5348,16 @@ class CreateSampleService(ModelView):
         depends=['report_date_readonly'])
     report_date_readonly = fields.Boolean('Report deadline Readonly')
     divide = fields.Boolean('Divide')
+    analysis_locked = fields.Boolean('Analysis/Set/Group Locked')
+    laboratory_locked = fields.Boolean('Laboratory Locked')
+
+    @staticmethod
+    def default_analysis_locked():
+        return False
+
+    @staticmethod
+    def default_laboratory_locked():
+        return False
 
     @staticmethod
     def default_urgent():
@@ -5356,7 +5375,7 @@ class CreateSampleService(ModelView):
     def default_report_date_readonly():
         return True
 
-    @fields.depends('analysis')
+    @fields.depends('analysis', 'analysis_locked')
     def on_change_analysis(self):
         analysis_id = self.analysis.id if self.analysis else None
 
@@ -5388,13 +5407,16 @@ class CreateSampleService(ModelView):
                 self.analysis.estimated_waiting_report)
 
         self.laboratory_domain = laboratory_domain
-        self.laboratory = laboratory_id
         self.method_domain = method_domain
-        self.method = method_id
         self.device_domain = device_domain
-        self.device = device_id
+        if not self.analysis_locked:
+            self.laboratory = laboratory_id
+            self.method = method_id
+            self.device = device_id
+        self.analysis_locked = False
 
-    @fields.depends('analysis', 'laboratory')
+
+    @fields.depends('analysis', 'laboratory', 'laboratory_locked')
     def on_change_laboratory(self):
         analysis_id = self.analysis.id if self.analysis else None
         laboratory_id = self.laboratory.id if self.laboratory else None
@@ -5408,7 +5430,9 @@ class CreateSampleService(ModelView):
                 device_id = device_domain[0]
 
         self.device_domain = device_domain
-        self.device = device_id
+        if self.laboratory_locked:
+            self.device = device_id
+        self.laboratory_locked = False
 
     @staticmethod
     def _get_laboratory_domain(analysis_id):
