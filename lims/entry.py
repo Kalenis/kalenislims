@@ -826,7 +826,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         states={'readonly': True})
     referral_date = fields.Function(fields.Date('Referral date'),
         'get_referral_date', searcher='search_referral_date')
-    label = fields.Function(fields.Char('Label', translate=True),
+    label = fields.Function(fields.Char('Label'),
         'get_sample_field', searcher='search_sample_field')
 
     @classmethod
