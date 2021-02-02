@@ -907,7 +907,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
         ('disabled', 'Disabled'),
         ], 'State', required=True, readonly=True)
     planning_legend = fields.Char('Planning legend',
-    states={
+        states={
             'invisible': Not(And(
                 Bool(Equal(Eval('type'), 'analysis')),
                 Bool(Equal(Eval('behavior'), 'normal')))),
@@ -1105,17 +1105,18 @@ class Analysis(Workflow, ModelSQL, ModelView):
     def validate(cls, analysis):
         super().validate(analysis)
         for a in analysis:
-            cls.check_duplicate_description(a.type, a.description)
+            cls.check_duplicate_description(a.type, a.description, a.id)
             a.check_set()
             a.check_end_date()
 
     @classmethod
-    def check_duplicate_description(cls, type, description, count=1):
+    def check_duplicate_description(cls, type, description, a_id):
         if cls.search_count([
+                ('id', '!=', a_id),
                 ('description', '=', description),
                 ('type', '=', type),
                 ('end_date', '=', None),
-                ]) > count:
+                ]) > 0:
             raise UserError(gettext('lims.msg_description_uniq'))
 
     def check_set(self):
@@ -1151,7 +1152,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
             if vals.get('description'):
                 for a in analysis:
                     cls.check_duplicate_description(vals.get('type', a.type),
-                        vals['description'], 0)
+                        vals['description'], a.id)
         super().write(*args)
 
     @classmethod
@@ -1387,14 +1388,21 @@ class Analysis(Workflow, ModelSQL, ModelView):
         return False
 
     @classmethod
-    def copy(cls, analysis, default=None):
+    def copy(cls, analyzes, default=None):
         if default is None:
             default = {}
         current_default = default.copy()
         current_default['state'] = 'draft'
         current_default['start_date'] = None
         current_default['end_date'] = None
-        return super().copy(analysis, default=current_default)
+
+        new_analyzes = []
+        for analysis in analyzes:
+            current_default['code'] = '%s (copy)' % analysis.code
+            current_default['description'] = '%s (copy)' % analysis.description
+            new_analysis, = super().copy([analysis], default=current_default)
+            new_analyzes.append(new_analysis)
+        return new_analyzes
 
     @classmethod
     def get_pending_fractions(cls, records, name):
