@@ -459,6 +459,10 @@ msgctxt "field:lims.configuration,mrt_fraction_type:"
 msgid "MRT fraction type"
 msgstr "Tipo de fracción MRT"
 
+msgctxt "field:lims.configuration,notebook_lines_acceptance:"
+msgid "Acceptance of notebook lines"
+msgstr "Aceptación de Líneas de cuaderno"
+
 msgctxt "field:lims.configuration,planification_process_background:"
 msgid "Process Planifications in Background"
 msgstr "Procesar planificaciones en segundo plano"
@@ -1091,10 +1095,6 @@ msgctxt "field:lims.create_sample.service,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
 
-msgctxt "field:lims.create_sample.service,laboratory_locked:"
-msgid "Laboratory Locked"
-msgstr "Laboratorio bloqueado"
-
 msgctxt "field:lims.create_sample.service,laboratory_date:"
 msgid "Laboratory deadline"
 msgstr "Fecha límite Laboratorio"
@@ -1102,6 +1102,10 @@ msgstr "Fecha límite Laboratorio"
 msgctxt "field:lims.create_sample.service,laboratory_domain:"
 msgid "Laboratory domain"
 msgstr "Dominio para Laboratorio"
+
+msgctxt "field:lims.create_sample.service,laboratory_locked:"
+msgid "Laboratory Locked"
+msgstr "Laboratorio bloqueado"
 
 msgctxt "field:lims.create_sample.service,method:"
 msgid "Method"
@@ -11894,6 +11898,14 @@ msgstr "Entidad facturación"
 msgctxt "selection:lims.configuration,entry_default_contacts:"
 msgid "Party"
 msgstr "Entidad"
+
+msgctxt "selection:lims.configuration,notebook_lines_acceptance:"
+msgid "Accept the last repetition of the analyzes"
+msgstr "Aceptar la última repetición de los análisis"
+
+msgctxt "selection:lims.configuration,notebook_lines_acceptance:"
+msgid "Do not accept analyzes that have repetition"
+msgstr "No aceptar análisis que tengan repetición"
 
 msgctxt "selection:lims.configuration,samples_in_progress:"
 msgid "With accepted results"

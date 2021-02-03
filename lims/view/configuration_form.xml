@@ -26,6 +26,8 @@
             <field name="entry_default_contacts"/>
             <label name="samples_in_progress"/>
             <field name="samples_in_progress"/>
+            <label name="notebook_lines_acceptance"/>
+            <field name="notebook_lines_acceptance"/>
             <label name="zone_required"/>
             <field name="zone_required"/>
             <field name="microbiology_laboratories" colspan="4"/>
