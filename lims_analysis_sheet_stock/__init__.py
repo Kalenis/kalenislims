@@ -11,6 +11,11 @@ from . import sheet
 def register():
     Pool.register(
         configuration.Configuration,
+        stock.LotAttributeType,
+        stock.LotAttribute,
+        stock.ProductCategory,
+        stock.ProductCategoryLotAttributeType,
+        stock.Lot,
         stock.Move,
         sheet.TemplateAnalysisSheet,
         sheet.TemplateAnalysisSheetMaterial,

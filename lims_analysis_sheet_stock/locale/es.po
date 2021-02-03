@@ -87,9 +87,45 @@ msgctxt "field:lims.template.analysis_sheet.material,uom_category:"
 msgid "Uom Category"
 msgstr "Categoría de UdM"
 
+msgctxt "field:product.category,lot_attribute_types:"
+msgid "Lot Attribute Types"
+msgstr "Tipos de atributos de lote"
+
+msgctxt "field:product.category-stock.lot.attribute.type,attribute_type:"
+msgid "Lot Attribute Type"
+msgstr "Tipo de atributo de lote"
+
+msgctxt "field:product.category-stock.lot.attribute.type,category:"
+msgid "Product Category"
+msgstr "Categoría de producto"
+
+msgctxt "field:stock.lot,attribute_types_domain:"
+msgid "Attribute Types domain"
+msgstr "Dominio para Tipos de atributos"
+
+msgctxt "field:stock.lot,attributes:"
+msgid "Attributes"
+msgstr "Atributos"
+
+msgctxt "field:stock.lot.attribute,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:stock.lot.attribute.type,attributes:"
+msgid "Attributes"
+msgstr "Atributos"
+
+msgctxt "field:stock.lot.attribute.type,name:"
+msgid "Name"
+msgstr "Nombre"
+
 msgctxt "model:ir.action,name:act_analysis_sheet_open_moves"
 msgid "Materials moves"
 msgstr "Movimientos de Materiales"
+
+msgctxt "model:ir.action,name:act_lot_attribute_type"
+msgid "Lot Attribute Types"
+msgstr "Tipos de atributos de lote"
 
 msgctxt "model:ir.action,name:act_template_material_list"
 msgid "Template Material"
@@ -106,6 +142,10 @@ msgstr "Los productos solo pueden estar una vez en cada plantilla"
 msgctxt "model:ir.message,text:msg_sheet_not_materials"
 msgid "The analysis sheet has no materials"
 msgstr "Faltan ingresar movimientos de materiales"
+
+msgctxt "model:ir.ui.menu,name:menu_lot_attribute_type"
+msgid "Lot Attribute Types"
+msgstr "Tipos de atributos de lote"
 
 msgctxt "model:ir.ui.menu,name:menu_template_material_list"
 msgid "Template Material"
@@ -127,6 +167,18 @@ msgctxt "model:lims.template.analysis_sheet.material,name:"
 msgid "Template Material"
 msgstr "Materiales de Plantilla"
 
+msgctxt "model:product.category-stock.lot.attribute.type,name:"
+msgid "Product Category - Lot Attribute Type"
+msgstr "Categoría de producto - Tipo de atributo de lote"
+
+msgctxt "model:stock.lot.attribute,name:"
+msgid "Lot Attribute"
+msgstr "Atributo de lote"
+
+msgctxt "model:stock.lot.attribute.type,name:"
+msgid "Lot Attribute Type"
+msgstr "Tipo de atributo de lote"
+
 msgctxt "view:lims.analysis_sheet.add_material.assign.failed:"
 msgid "Unable to assign those products:"
 msgstr "No se pueden reservar estos productos:"
@@ -140,10 +192,6 @@ msgid "Materials"
 msgstr "Materiales"
 
 msgctxt "wizard_button:lims.analysis_sheet.add_material,failed,delete_moves:"
-msgid "OK"
-msgstr "OK"
-
-msgctxt "wizard_button:lims.analysis_sheet.add_material,failed,end:"
 msgid "OK"
 msgstr "OK"
 
