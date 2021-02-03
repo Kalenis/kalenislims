@@ -4639,12 +4639,32 @@ class NotebookAcceptLines(Wizard):
 
     def transition_ok(self):
         pool = Pool()
+        Config = pool.get('lims.configuration')
         NotebookLine = pool.get('lims.notebook.line')
 
+        notebook_lines_acceptance = Config(1).notebook_lines_acceptance
+
         for active_id in Transaction().context['active_ids']:
-            notebook_lines = NotebookLine.search([
-                ('notebook', '=', active_id),
-                ], order=[('repetition', 'DESC')])
+
+            if notebook_lines_acceptance == 'none':
+                repeated_analysis = []
+                repetitions = NotebookLine.search([
+                    ('notebook', '=', active_id),
+                    ('repetition', '>', 0),
+                    ])
+                if repetitions:
+                    repeated_analysis = [l.analysis.id for l in repetitions]
+
+                notebook_lines = NotebookLine.search([
+                    ('notebook', '=', active_id),
+                    ('analysis', 'not in', repeated_analysis),
+                    ])
+
+            else:  # last
+                notebook_lines = NotebookLine.search([
+                    ('notebook', '=', active_id),
+                    ], order=[('repetition', 'DESC')])
+
             if not notebook_lines:
                 continue
             self.lines_accept(notebook_lines)

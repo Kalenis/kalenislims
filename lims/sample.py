@@ -5415,7 +5415,6 @@ class CreateSampleService(ModelView):
             self.device = device_id
         self.analysis_locked = False
 
-
     @fields.depends('analysis', 'laboratory', 'laboratory_locked')
     def on_change_laboratory(self):
         analysis_id = self.analysis.id if self.analysis else None

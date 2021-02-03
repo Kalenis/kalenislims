@@ -220,6 +220,10 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         ('invoice_party', 'Invoice party'),
         ], 'Default Contacts in Entries',
         help='From which Party takes the contacts for the Entry')
+    notebook_lines_acceptance = fields.Selection([
+        ('none', 'Do not accept analyzes that have repetition'),
+        ('last', 'Accept the last repetition of the analyzes'),
+        ], 'Acceptance of notebook lines')
 
     @staticmethod
     def default_brix_digits():
@@ -269,6 +273,10 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     @staticmethod
     def default_entry_default_contacts():
         return 'party'
+
+    @staticmethod
+    def default_notebook_lines_acceptance():
+        return 'none'
 
     def get_reagents(self):
         res = []
