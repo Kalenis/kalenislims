@@ -4639,24 +4639,14 @@ class NotebookAcceptLines(Wizard):
 
     def transition_ok(self):
         pool = Pool()
-        Notebook = pool.get('lims.notebook')
         NotebookLine = pool.get('lims.notebook.line')
 
         for active_id in Transaction().context['active_ids']:
-            notebook = Notebook(active_id)
-            if not notebook.lines:
+            notebook_lines = NotebookLine.search([
+                ('notebook', '=', active_id),
+                ], order=[('repetition', 'DESC')])
+            if not notebook_lines:
                 continue
-
-            repeated_analysis = []
-            repetitions = NotebookLine.search([
-                ('notebook', '=', notebook.id),
-                ('repetition', '>', 0),
-                ])
-            if repetitions:
-                repeated_analysis = [l.analysis.id for l in repetitions]
-            notebook_lines = [l for l in notebook.lines
-                if l.analysis.id not in repeated_analysis]
-
             self.lines_accept(notebook_lines)
         return 'end'
 
