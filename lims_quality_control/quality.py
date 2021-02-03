@@ -49,7 +49,8 @@ class Template(Workflow, ModelSQL, ModelView):
             ('quality', '=', True),
             ],
         context={'quality': True},
-        states=_states, depends=_depends + ['product'])
+        states=_states, depends=_depends + ['product'],
+        order=[('quality_order', 'ASC'), ('analysis.code', 'ASC')])
     revision = fields.Integer(
         "Revision", required=True, readonly=True)
     countersample_required = fields.Boolean('Countersample Required',
