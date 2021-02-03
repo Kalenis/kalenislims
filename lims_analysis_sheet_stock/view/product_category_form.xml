@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/form/notebook" position="inside">
+        <page name="lot_attribute_types">
+            <field name="lot_attribute_types" colspan="4"/>
+        </page>
+    </xpath>
+</data>

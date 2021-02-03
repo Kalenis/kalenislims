@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Lot Attribute Type -->
+
+        <record model="ir.ui.view" id="lot_attribute_type_view_form">
+            <field name="model">stock.lot.attribute.type</field>
+            <field name="type">form</field>
+            <field name="name">lot_attribute_type_form</field>
+        </record>
+        <record model="ir.ui.view" id="lot_attribute_type_view_list">
+            <field name="model">stock.lot.attribute.type</field>
+            <field name="type">tree</field>
+            <field name="name">lot_attribute_type_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lot_attribute_type">
+            <field name="name">Lot Attribute Types</field>
+            <field name="res_model">stock.lot.attribute.type</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_lot_attribute_type_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lot_attribute_type_view_list"/>
+            <field name="act_window" ref="act_lot_attribute_type"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_lot_attribute_type_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lot_attribute_type_view_form"/>
+            <field name="act_window" ref="act_lot_attribute_type"/>
+        </record>
+
+        <menuitem action="act_lot_attribute_type"
+            id="menu_lot_attribute_type"
+            parent="product.menu_main_product" sequence="4"/>
+
+<!-- Lot Attribute -->
+
+        <record model="ir.ui.view" id="lot_attribute_view_form">
+            <field name="model">stock.lot.attribute</field>
+            <field name="type">form</field>
+            <field name="name">lot_attribute_form</field>
+        </record>
+        <record model="ir.ui.view" id="lot_attribute_view_list">
+            <field name="model">stock.lot.attribute</field>
+            <field name="type">tree</field>
+            <field name="name">lot_attribute_list</field>
+        </record>
+
+<!-- Product Category -->
+
+        <record model="ir.ui.view" id="product_category_view_form">
+            <field name="model">product.category</field>
+            <field name="inherit" ref="product.category_view_form"/>
+            <field name="name">product_category_form</field>
+        </record>
+
+<!-- Lot -->
+
+        <record model="ir.ui.view" id="lot_view_form">
+            <field name="model">stock.lot</field>
+            <field name="inherit" ref="stock_lot.lot_view_form"/>
+            <field name="name">lot_form</field>
+        </record>
+
+    </data>
+</tryton>
