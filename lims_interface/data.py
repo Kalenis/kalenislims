@@ -416,6 +416,7 @@ class Data(ModelSQL, ModelView):
             res[field_name]['views'] = {
                 'tree': GroupedData.fields_view_get(
                     view_type='tree', group=i + 1)}
+            func_name = '%s_%s' % ('on_change_with', field_name)
             cls.__rpc__.setdefault(func_name, RPC(instantiate=0))
         return res
 
