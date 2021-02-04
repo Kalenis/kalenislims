@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Functions -->
+
+        <record model="lims.interface.function" id="function_m2o">
+            <field name="name">M2O</field>
+            <field name="parameters">m2o_field, m2o_name, field_name, dict_key=None</field>
+            <field name="help">Obtains the value of a given field from a related record.</field>
+        </record>
+
+    </data>
+</tryton>
