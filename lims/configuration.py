@@ -224,6 +224,8 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         ('none', 'Do not accept analyzes that have repetition'),
         ('last', 'Accept the last repetition of the analyzes'),
         ], 'Acceptance of notebook lines')
+    notebook_lines_acceptance_method = fields.Boolean(
+        'Allow to accept the same analysis with different methods')
 
     @staticmethod
     def default_brix_digits():
@@ -277,6 +279,10 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     @staticmethod
     def default_notebook_lines_acceptance():
         return 'none'
+
+    @staticmethod
+    def default_notebook_lines_acceptance_method():
+        return False
 
     def get_reagents(self):
         res = []
