@@ -1071,13 +1071,17 @@ class NotebookLine(ModelSQL, ModelView):
                     analysis=self.analysis.rec_name))
 
     def check_accepted(self):
+        Config = Pool().get('lims.configuration')
         if self.accepted:
-            accepted_lines = self.search([
+            clause = [
                 ('notebook', '=', self.notebook.id),
                 ('analysis', '=', self.analysis.id),
                 ('accepted', '=', True),
                 ('id', '!=', self.id),
-                ])
+                ]
+            if Config(1).notebook_lines_acceptance_method:
+                clause.append(('method', '=', self.method.id))
+            accepted_lines = self.search(clause)
             if accepted_lines:
                 raise UserError(gettext('lims.msg_accepted',
                     analysis=self.analysis.rec_name))
