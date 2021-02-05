@@ -11,6 +11,7 @@ import io
 import csv
 import hashlib
 import tempfile
+import json
 from openpyxl import load_workbook
 from decimal import Decimal
 from datetime import datetime, date, time
@@ -24,7 +25,7 @@ from trytond.model import (Workflow, ModelView, ModelSQL, fields,
 from trytond.wizard import (Wizard, StateTransition, StateView, StateAction,
     Button)
 from trytond.pool import Pool
-from trytond.pyson import PYSONEncoder, Eval, Bool, Not, And, Or
+from trytond.pyson import PYSONDecoder, PYSONEncoder, Eval, Bool, Not, And, Or
 from trytond.transaction import Transaction
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
@@ -58,6 +59,8 @@ FIELD_TYPES = [
     ('image', 'binary', 'Image', 'fields.Binary', 'BLOB', bytes, bytearray),
     ('binary', 'binary', 'File', 'fields.Binary', 'BLOB', bytes, bytearray),
     ('reference', 'reference', 'Reference', 'fields.Reference', 'VARCHAR', str,
+        None),
+    ('selection', 'selection', 'Selection', 'fields.Selection', 'VARCHAR', str,
         None),
     ]
 
@@ -377,6 +380,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                                     related_line_field=
                                         column.related_line_field,
                                     related_model=column.related_model,
+                                    selection=column.selection,
                                     formula=(column.expression if
                                         column.expression and
                                         column.expression.startswith('=') else
@@ -409,6 +413,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                                     help=expression,
                                     domain=column.domain,
                                     related_model=column.related_model,
+                                    selection=column.selection,
                                     formula=(expression if
                                         expression and
                                         expression.startswith('=') else
@@ -436,6 +441,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                                 transfer_field=column.transfer_field,
                                 related_line_field=column.related_line_field,
                                 related_model=column.related_model,
+                                selection=column.selection,
                                 formula=(expression if expression and
                                     expression.startswith('=') else None),
                                 inputs=(get_inputs(expression)
@@ -468,6 +474,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                             transfer_field=column.transfer_field,
                             related_line_field=column.related_line_field,
                             related_model=column.related_model,
+                            selection=column.selection,
                             formula=(column.expression if
                                 column.expression and
                                 column.expression.startswith('=') else
@@ -818,6 +825,7 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         ('image', 'Image'),
         ('binary', 'File'),
         ('reference', 'Reference'),
+        ('selection', 'Selection'),
         ], 'Field Type', states=_states, depends=_depends)
     related_model = fields.Many2One('ir.model', 'Related Model',
         states={
@@ -826,6 +834,14 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
             'readonly': _states['readonly'],
             },
         depends=['type_', 'interface_state'])
+    selection = fields.Text('Selection',
+        states={
+            'required': Eval('type_') == 'selection',
+            'invisible': Eval('type_') != 'selection',
+            'readonly': _states['readonly'],
+            },
+        depends=['type_', 'interface_state'],
+        help='A couple of key and label separated by ":" per line.')
     default_value = fields.Char('Default value',
         states={'readonly': _states['readonly'] | Bool(Eval('expression'))},
         depends=['expression', 'interface_state'])
@@ -953,6 +969,8 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         for column in columns:
             column.check_alias()
             column.check_default_value()
+            column.check_domain()
+            column.check_selection()
 
     def check_alias(self):
         for symbol in self.alias:
@@ -961,39 +979,70 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
                     symbol=symbol, name=self.name))
 
     def check_default_value(self):
-        if self.default_value:
-            if self.type_ in [
-                    'datetime', 'time', 'timestamp', 'timedelta',
-                    'icon', 'image', 'binary', 'reference',
-                    ]:
+        if not self.default_value:
+            return
+        if self.type_ in [
+                'datetime', 'time', 'timestamp', 'timedelta',
+                'icon', 'image', 'binary', 'reference',
+                ]:
+            raise UserError(gettext(
+                'lims_interface.invalid_default_value_type',
+                name=self.name))
+        if self.type_ == 'boolean':
+            try:
+                int(self.default_value)
+            except Exception:
                 raise UserError(gettext(
-                    'lims_interface.invalid_default_value_type',
+                    'lims_interface.invalid_default_value_boolean',
                     name=self.name))
-            if self.type_ == 'boolean':
-                try:
-                    int(self.default_value)
-                except Exception:
-                    raise UserError(gettext(
-                        'lims_interface.invalid_default_value_boolean',
-                        name=self.name))
-            elif self.type_ == 'date':
-                try:
-                    str2date(self.default_value, self.interface.language)
-                except Exception:
-                    raise UserError(gettext(
-                        'lims_interface.invalid_default_value_date',
-                        name=self.name))
-            elif self.type_ == 'many2one':
-                get_model_resource(
-                    self.related_model.model, self.default_value, self.name)
-            else:
-                ftype = FIELD_TYPE_PYTHON[self.type_]
-                try:
-                    ftype(self.default_value)
-                except Exception:
-                    raise UserError(gettext(
-                        'lims_interface.invalid_default_value',
-                        value=self.default_value, name=self.name))
+        elif self.type_ == 'date':
+            try:
+                str2date(self.default_value, self.interface.language)
+            except Exception:
+                raise UserError(gettext(
+                    'lims_interface.invalid_default_value_date',
+                    name=self.name))
+        elif self.type_ == 'many2one':
+            get_model_resource(
+                self.related_model.model, self.default_value, self.name)
+        else:
+            ftype = FIELD_TYPE_PYTHON[self.type_]
+            try:
+                ftype(self.default_value)
+            except Exception:
+                raise UserError(gettext(
+                    'lims_interface.invalid_default_value',
+                    value=self.default_value, name=self.name))
+
+    def check_domain(self):
+        if not self.domain:
+            return
+        try:
+            value = PYSONDecoder().decode(self.domain)
+        except Exception:
+            raise UserError(gettext(
+                'lims_interface.invalid_domain',
+                name=self.name))
+        if not isinstance(value, list):
+            raise UserError(gettext(
+                'lims_interface.invalid_domain',
+                name=self.name))
+
+    def check_selection(self):
+        if self.type_ != 'selection':
+            return
+        try:
+            dict(json.loads(self.get_selection_json()))
+        except Exception:
+            raise UserError(gettext(
+                'lims_interface.invalid_selection',
+                name=self.name))
+
+    def get_selection_json(self, name=None):
+        db_selection = self.selection or ''
+        selection = [[w.strip() for w in v.split(':', 1)]
+            for v in db_selection.splitlines() if v]
+        return json.dumps(selection, separators=(',', ':'))
 
     def formula_error(self):
         if not self.expression:
@@ -1115,15 +1164,16 @@ class ViewColumn(sequence_ordered(), ModelSQL, ModelView):
             c.check_analysis_specific()
 
     def check_analysis_specific(self):
-        if self.analysis_specific:
-            if self.search([
-                    ('view', '=', self.view.id),
-                    ('analysis_specific', '=', True),
-                    ('id', '!=', self.id),
-                    ]):
-                raise UserError(gettext(
-                    'lims_interface.msg_analysis_specific',
-                    view=self.view.name))
+        if not self.analysis_specific:
+            return
+        if self.search([
+                ('view', '=', self.view.id),
+                ('analysis_specific', '=', True),
+                ('id', '!=', self.id),
+                ]):
+            raise UserError(gettext(
+                'lims_interface.msg_analysis_specific',
+                view=self.view.name))
 
 
 class CopyInterfaceColumnStart(ModelView):
@@ -1186,6 +1236,7 @@ class CopyInterfaceColumn(Wizard):
             'type_': origin.type_,
             'related_model': (origin.related_model and
                 origin.related_model or None),
+            'selection': origin.selection,
             'default_value': origin.default_value,
             'readonly': origin.readonly,
             'transfer_field': origin.transfer_field,

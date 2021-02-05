@@ -16,6 +16,9 @@
         <label name="digits"/>
         <field name="digits" xexpand="0"/>
     </group>
+    <group name="selection" colspan="4" col="1">
+        <field name="selection"/>
+    </group>
     <group id="expression" colspan="4" col="3">
         <label name="expression"/>
         <field name="expression" xexpand="1"/>

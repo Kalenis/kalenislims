@@ -22,6 +22,12 @@
         <record model="ir.message" id="invalid_default_value_many2one">
             <field name="text">The resource set as default value in "%(name)s" is not valid or it does not exist.</field>
         </record>
+        <record model="ir.message" id="invalid_domain">
+            <field name="text">Invalid domain in column "%(name)s".</field>
+        </record>
+        <record model="ir.message" id="invalid_selection">
+            <field name="text">Invalid selection in column "%(name)s".</field>
+        </record>
         <record model="ir.message" id="duplicated_origin_file">
             <field name="text">File "%(file_name)s" already exists as origin.</field>
         </record>

@@ -86,6 +86,7 @@ class TableField(ModelSQL, ModelView):
     transfer_field = fields.Boolean('Is a transfer field')
     related_line_field = fields.Many2One('ir.model.field', 'Related Field')
     related_model = fields.Many2One('ir.model', 'Related Model')
+    selection = fields.Text('Selection')
     domain = fields.Char('Domain Value')
     formula = fields.Char('On Change With Formula')
     inputs = fields.Char('On Change With Inputs')
@@ -117,6 +118,7 @@ class TableGroupedField(ModelSQL, ModelView):
         'Field Type', required=False)
     help = fields.Text('Help')
     related_model = fields.Many2One('ir.model', 'Related Model')
+    selection = fields.Text('Selection')
     domain = fields.Char('Domain Value')
     formula = fields.Char('On Change With Formula')
     inputs = fields.Function(fields.Char('On Change With Inputs'),
