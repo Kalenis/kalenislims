@@ -487,6 +487,14 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
                 })
 
 
+class AnalysisSheet(metaclass=PoolMeta):
+    __name__ = 'lims.analysis_sheet'
+
+    @classmethod
+    def delete(cls, sheets):
+        raise UserError(gettext('lims_quality_control.delete_sheet'))
+
+
 class ResultReport(metaclass=PoolMeta):
     __name__ = 'lims.result_report'
 

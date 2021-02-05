@@ -52,5 +52,8 @@
         <record model="ir.message" id="msg_missing_interface">
             <field name="text">Missing interface for analysis "%(analysis)s".</field>
         </record>
+        <record model="ir.message" id="delete_sheet">
+            <field name="text">You cannot delete an Analysis Sheet</field>
+        </record>
     </data>
 </tryton>

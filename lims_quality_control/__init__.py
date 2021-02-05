@@ -19,6 +19,7 @@ def register():
         lims.Analysis,
         lims.NotebookLine,
         lims.EntryDetailAnalysis,
+        lims.AnalysisSheet,
         lims.NotebookLoadResultsManualLine,
         sample.LabWorkYear,
         sample.Fraction,
