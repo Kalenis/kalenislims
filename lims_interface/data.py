@@ -70,6 +70,10 @@ class Adapter:
                 obj = fields.Many2One(field.related_model.model, field.string)
             elif field.type in ('binary', 'icon'):
                 obj = fields.Binary(field.string)
+            elif field.type == 'selection':
+                selection = [tuple(v.split(':', 1))
+                    for v in field.selection.splitlines() if v]
+                obj = fields.Selection(selection, field.string)
             obj.name = field.name
             res[field.name] = obj
             groups = max(groups, field.group or 0)
@@ -137,6 +141,10 @@ class GroupedAdapter:
                 obj = fields.Many2One(field.related_model.model, field.string)
             elif field.type in ('binary', 'icon'):
                 obj = fields.Binary(field.string)
+            elif field.type == 'selection':
+                selection = [tuple(v.split(':', 1))
+                    for v in field.selection.splitlines() if v]
+                obj = fields.Selection(selection, field.string)
             obj.name = field.name
             res[field.name] = obj
         obj = fields.Integer('ID')
@@ -365,13 +373,30 @@ class Data(ModelSQL, ModelView):
                 'name': field.name,
                 'string': field.string,
                 'type': FIELD_TYPE_TRYTON[field.type],
-                'relation': (field.related_model.model if
-                    field.related_model else None),
-                'states': encoder.encode(states),
                 'help': field.help,
                 'domain': field.domain,
+                'states': encoder.encode(states),
                 'sortable': True,
                 }
+            if field.type == 'many2one':
+                res[field.name]['relation'] = (field.related_model.model if
+                    field.related_model else None)
+            if field.type == 'selection':
+                selection = [tuple(v.split(':', 1))
+                    for v in field.selection.splitlines() if v]
+                res[field.name]['selection'] = selection
+                res[field.name]['selection_change_with'] = []
+                res[field.name]['sort'] = False
+            if field.type == 'reference':
+                selection = []
+                for model in Model.search([]):
+                    selection.append((model.model, model.name))
+                res[field.name]['selection'] = selection
+            if field.type in ['date', 'time', 'datetime', 'timestamp']:
+                res[field.name]['format'] = PYSONEncoder().encode(
+                    '%H:%M:%S.%f')
+            if field.type in ['float', 'numeric']:
+                res[field.name]['digits'] = encoder.encode((16, field.digits))
             if field.inputs:
                 inputs = []
                 for input_ in field.inputs.split():
@@ -386,17 +411,6 @@ class Data(ModelSQL, ModelView):
                 cls.add_on_change_with_method(field)
                 func_name = '%s_%s' % ('on_change_with', field.name)
                 cls.__rpc__.setdefault(func_name, RPC(instantiate=0))
-
-            if field.type == 'reference':
-                selection = []
-                for model in Model.search([]):
-                    selection.append((model.model, model.name))
-                res[field.name]['selection'] = selection
-            if field.type in ['datetime', 'timestamp']:
-                res[field.name]['format'] = PYSONEncoder().encode(
-                    '%H:%M:%S.%f')
-            if field.type in ['float', 'numeric']:
-                res[field.name]['digits'] = encoder.encode((16, field.digits))
 
         for i in range(0, groups):
             field_description = None
@@ -879,13 +893,30 @@ class GroupedData(ModelView):
                 'name': field.name,
                 'string': field.string,
                 'type': FIELD_TYPE_TRYTON[field.type],
-                'relation': (field.related_model.model if
-                    field.related_model else None),
                 'readonly': bool(readonly or field.formula or field.readonly),
                 'help': field.help,
                 'domain': field.domain,
                 'states': '{}',
                 }
+            if field.type == 'many2one':
+                res[field.name]['relation'] = (field.related_model.model if
+                    field.related_model else None)
+            if field.type == 'selection':
+                selection = [tuple(v.split(':', 1))
+                    for v in field.selection.splitlines() if v]
+                res[field.name]['selection'] = selection
+                res[field.name]['selection_change_with'] = []
+                res[field.name]['sort'] = False
+            if field.type == 'reference':
+                selection = []
+                for model in Model.search([]):
+                    selection.append((model.model, model.name))
+                res[field.name]['selection'] = selection
+            if field.type in ['date', 'time', 'datetime', 'timestamp']:
+                res[field.name]['format'] = PYSONEncoder().encode(
+                    '%H:%M:%S.%f')
+            if field.type in ['float', 'numeric']:
+                res[field.name]['digits'] = encoder.encode((16, field.digits))
             if field.inputs:
                 res[field.name]['on_change_with'] = field.inputs.split() + [
                     'data']
@@ -893,28 +924,17 @@ class GroupedData(ModelView):
                 func_name = '%s_%s' % ('on_change_with', field.name)
                 cls.__rpc__.setdefault(func_name, RPC(instantiate=0))
 
-            if field.type == 'reference':
-                selection = []
-                for model in Model.search([]):
-                    selection.append((model.model, model.name))
-                res[field.name]['selection'] = selection
-            if field.type in ['datetime', 'timestamp']:
-                res[field.name]['format'] = PYSONEncoder().encode(
-                    '%H:%M:%S.%f')
-            if field.type in ['float', 'numeric']:
-                res[field.name]['digits'] = encoder.encode((16, field.digits))
-
         res['data'] = {
             'name': 'data',
             'string': 'Data',
             'type': 'many2one',
+            'readonly': True,
+            'help': '',
+            'states': '{}',
             'relation': 'lims.interface.data',
             'relation_field': 'group_%s' % group,
             'relation_fields': (Data.fields_get(level=level - 1)
                 if level > 0 else []),
-            'readonly': True,
-            'help': '',
-            'states': '{}',
             }
         return res
 
