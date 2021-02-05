@@ -643,6 +643,10 @@ msgctxt ""
 msgid "Successful"
 msgstr "Válido"
 
+msgctxt "model:ir.message,text:delete_sheet"
+msgid "You cannot delete an Analysis Sheet"
+msgstr "No puede eliminar hojas de análisis"
+
 msgctxt "model:ir.message,text:msg_can_not_print_test"
 msgid "Test is not finished."
 msgstr "La prueba no fue finalizada"
