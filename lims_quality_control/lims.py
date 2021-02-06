@@ -230,6 +230,8 @@ class NotebookLine(metaclass=PoolMeta):
         digits=(16, Eval('decimals', 2)), depends=['decimals'])
     quality_test_report = fields.Boolean('Quality Test Report')
     specification = fields.Text('Specification', readonly=True)
+    test_result = fields.Function(fields.Char('Test Result'),
+        'get_test_result')
 
     @classmethod
     def __setup__(cls):
@@ -243,6 +245,13 @@ class NotebookLine(metaclass=PoolMeta):
     @staticmethod
     def default_quality_test_report():
         return True
+
+    @classmethod
+    def get_test_result(cls, lines, name):
+        result = {}
+        for line in lines:
+            result[line.id] = line.get_formated_result()
+        return result
 
     @classmethod
     def get_success(self, lines, name):
