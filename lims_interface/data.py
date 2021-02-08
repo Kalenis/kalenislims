@@ -673,8 +673,10 @@ class Data(ModelSQL, ModelView):
             values = []
             for field in sorted(formula_fields, key=lambda x: x['order']):
                 field_name = field['field'].name
-                fields.append(SqlColumn(sql_table, field_name))
                 value = record.get_formula_value(field['field'], vals)
+                if value is None:
+                    continue
+                fields.append(SqlColumn(sql_table, field_name))
                 values.append(value)
                 vals[field_name] = value
 
