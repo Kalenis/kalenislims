@@ -680,6 +680,8 @@ class Data(ModelSQL, ModelView):
                 values.append(value)
                 vals[field_name] = value
 
+            if not values:
+                continue
             query = sql_table.update(fields, values,
                 where=(sql_table.id == record.id))
             cursor.execute(*query)
