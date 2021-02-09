@@ -20,7 +20,9 @@ def get_m2o_field(m2o_field, m2o_name, field_name, dict_key=None):
         table_id = Transaction().context.get('lims_interface_table')
         column = Field.search([
             ('table', '=', table_id),
-            ('name', '=', m2o_name),
+            ['OR', ('name', '=', m2o_name),
+                ('name', 'like', m2o_name + "\_%"),
+                ],
             ('related_model', '!=', None),
             ])
         if not column:
