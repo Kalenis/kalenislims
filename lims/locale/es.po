@@ -2671,6 +2671,10 @@ msgctxt "field:lims.notebook.add_internal_relations.start,analysis_domain:"
 msgid "Internal relations domain"
 msgstr "Dominio para Relaciones internas"
 
+msgctxt "field:lims.notebook.generate_results_report.start,append_samples:"
+msgid "Append samples to existing reports"
+msgstr "Anexar muestras a informes existentes"
+
 msgctxt "field:lims.notebook.generate_results_report.start,corrective:"
 msgid "Corrective"
 msgstr "Rectificativo"

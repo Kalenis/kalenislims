@@ -2670,7 +2670,10 @@ class GenerateReportStart(ModelView):
         None, 'Reports created')
     group_samples = fields.Boolean('Group samples in the same report',
         states={'readonly': Bool(Eval('report'))},
-        depends=['report', 'report_readonly'])
+        depends=['report'])
+    append_samples = fields.Boolean('Append samples to existing reports',
+        states={'readonly': Bool(Eval('report'))},
+        depends=['report'])
 
     @fields.depends('report', 'preliminary', 'corrective')
     def on_change_with_type(self, name=None):
@@ -2732,6 +2735,7 @@ class GenerateReport(Wizard):
             'preliminary': False,
             'corrective': False,
             'group_samples': False,
+            'append_samples': False,
             }
 
         party = None
@@ -2975,7 +2979,8 @@ class GenerateReport(Wizard):
                         'versions': [('create', [versions])],
                         }
                     report_detail = self._get_results_report(laboratory_id,
-                        reports, versions, details, samples)
+                        reports, versions, details, samples,
+                        self.start.append_samples)
                     reports_details.extend(report_detail)
 
             reports_created.extend(reports_details)
