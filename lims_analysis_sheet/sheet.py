@@ -715,12 +715,11 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         Notebook = pool.get('lims.notebook')
         EvaluateRules = pool.get('lims.notebook.evaluate_rules',
             type='wizard')
+        CalculateInternalRelations = pool.get(
+            'lims.notebook.internal_relations_calc_1',
+            type='wizard')
 
         for s in sheets:
-            # Evaluate Notebook Rules
-            session_id, _, _ = EvaluateRules.create()
-            evaluate_rules = EvaluateRules(session_id)
-
             notebook_ids = []
             with Transaction().set_context(
                     lims_interface_table=s.compilation.table.id):
@@ -728,9 +727,21 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 for line in lines:
                     if line.notebook_line:
                         notebook_ids.append(line.notebook_line.notebook.id)
+
+            # Evaluate Notebook Rules
+            session_id, _, _ = EvaluateRules.create()
+            evaluate_rules = EvaluateRules(session_id)
             for active_id in list(set(notebook_ids)):
                 notebook = Notebook(active_id)
                 evaluate_rules.evaluate_rules(notebook.lines)
+
+            # Calculate Internal Relations
+            session_id, _, _ = CalculateInternalRelations.create()
+            calculate_ir = CalculateInternalRelations(session_id)
+            for active_id in list(set(notebook_ids)):
+                notebook = Notebook(active_id)
+                if calculate_ir.get_relations(notebook.lines):
+                    calculate_ir.transition_confirm()
 
         return
 
