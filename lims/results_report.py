@@ -3001,9 +3001,19 @@ class GenerateReport(Wizard):
             reports_details = [d.id for d in report.versions[0].details]
             return reports_details
 
+        existing_sample = ResultsSample.search([
+            ('version_detail.state', '!=', 'annulled'),
+            ('notebook', '=', samples[0]['notebook']),
+            ], limit=1)
+        if not existing_sample:
+            report, = ResultsReport.create([reports])
+            reports_details = [d.id for d in report.versions[0].details]
+            return reports_details
+        existing_report = (
+            existing_sample[0].version_detail.report_version.results_report)
+
         actual_report = ResultsReport.search([
-            ('party', '=', reports['party']),
-            ('entry', '=', reports['entry']),
+            ('id', '=', existing_report.id),
             ('report_grouper', '=', reports['report_grouper']),
             ('cie_fraction_type', '=', reports['cie_fraction_type']),
             ], limit=1)
