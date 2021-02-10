@@ -1923,14 +1923,17 @@ class NotebookInitialConcentrationCalc(Wizard):
         return round(res, notebook_lines[0].decimals)
 
     def _get_variables(self, formula, notebook):
-        VolumeConversion = Pool().get('lims.volume.conversion')
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        VolumeConversion = pool.get('lims.volume.conversion')
 
+        code_length = Analysis._code_length() + 1
         variables = {}
         for prefix in ('A', 'D', 'T', 'Y', 'R'):
             while True:
                 idx = formula.find(prefix)
                 if idx >= 0:
-                    var = formula[idx:idx + 5]
+                    var = formula[idx:idx + code_length]
                     variables[var] = None
                     formula = formula.replace(var, '_')
                 else:
@@ -2402,12 +2405,13 @@ class NotebookInternalRelationsCalc1(Wizard):
         Analysis = pool.get('lims.analysis')
         NotebookLine = pool.get('lims.notebook.line')
 
+        code_length = Analysis._code_length() + 1
         variables = {}
         for prefix in ('A', 'D', 'T', 'Y', 'R'):
             while True:
                 idx = formula.find(prefix)
                 if idx >= 0:
-                    var = formula[idx:idx + 5]
+                    var = formula[idx:idx + code_length]
                     variables[var] = None
                     formula = formula.replace(var, '_')
                 else:
@@ -2565,14 +2569,17 @@ class NotebookInternalRelationsCalc1(Wizard):
 
     def _get_variables(self, formula, notebook, relation_code,
             converted=False):
-        VolumeConversion = Pool().get('lims.volume.conversion')
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        VolumeConversion = pool.get('lims.volume.conversion')
 
+        code_length = Analysis._code_length() + 1
         variables = {}
         for prefix in ('A', 'D', 'T', 'Y', 'R'):
             while True:
                 idx = formula.find(prefix)
                 if idx >= 0:
-                    var = formula[idx:idx + 5]
+                    var = formula[idx:idx + code_length]
                     variables[var] = None
                     formula = formula.replace(var, '_')
                 else:
@@ -2874,12 +2881,13 @@ class NotebookInternalRelationsCalc2(Wizard):
         Analysis = pool.get('lims.analysis')
         NotebookLine = pool.get('lims.notebook.line')
 
+        code_length = Analysis._code_length() + 1
         variables = {}
         for prefix in ('A', 'D', 'T', 'Y', 'R'):
             while True:
                 idx = formula.find(prefix)
                 if idx >= 0:
-                    var = formula[idx:idx + 5]
+                    var = formula[idx:idx + code_length]
                     variables[var] = None
                     formula = formula.replace(var, '_')
                 else:
@@ -3055,14 +3063,17 @@ class NotebookInternalRelationsCalc2(Wizard):
 
     def _get_variables(self, formula, notebook, relation_code,
             converted=False):
-        VolumeConversion = Pool().get('lims.volume.conversion')
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        VolumeConversion = pool.get('lims.volume.conversion')
 
+        code_length = Analysis._code_length() + 1
         variables = {}
         for prefix in ('A', 'D', 'T', 'Y', 'R'):
             while True:
                 idx = formula.find(prefix)
                 if idx >= 0:
-                    var = formula[idx:idx + 5]
+                    var = formula[idx:idx + code_length]
                     variables[var] = None
                     formula = formula.replace(var, '_')
                 else:
@@ -4354,12 +4365,15 @@ class NotebookAddInternalRelations(Wizard):
         return default
 
     def _get_variables(self, formula):
+        Analysis = Pool().get('lims.analysis')
+
+        code_length = Analysis._code_length() + 1
         variables = []
         for prefix in ('A', 'D', 'T', 'Y', 'R'):
             while True:
                 idx = formula.find(prefix)
                 if idx >= 0:
-                    var = formula[idx:idx + 5]
+                    var = formula[idx:idx + code_length]
                     formula = formula.replace(var, '_')
                     variables.append(var[1:])
                 else:

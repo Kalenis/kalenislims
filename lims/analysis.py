@@ -964,6 +964,10 @@ class Analysis(Workflow, ModelSQL, ModelView):
     def default_state():
         return 'draft'
 
+    @staticmethod
+    def _code_length():
+        return 4
+
     @fields.depends('type', 'behavior')
     def on_change_with_behavior(self, name=None):
         if self.type in ('set', 'group'):
