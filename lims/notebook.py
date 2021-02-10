@@ -4061,10 +4061,6 @@ class NotebookLoadResultsManual(Wizard):
             self.result.start_date = self.start.start_date
             self.result.professional = professional_id
             self.result.lines = res_lines
-            if line.result_modifier == 'na':
-                self.result.annulled = True
-                self.result.annulment_date = datetime.now()
-                self.result.report = False
             return 'result'
         return 'empty'
 
