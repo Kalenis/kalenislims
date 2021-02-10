@@ -1472,7 +1472,7 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
                 'INNER JOIN "' + ResultsVersion._table + '" rv '
                 'ON rd.report_version = rv.id '
             'WHERE rl.notebook_line IS NOT NULL '
-                'AND rd.state IN (\'draft\', \'revised\') '
+                'AND rd.state NOT IN (\'released\', \'annulled\') '
                 'AND rd.type != \'preliminary\' ' +
                 laboratory_clause + notebook_clause)
         return [x[0] for x in cursor.fetchall()]
