@@ -18,6 +18,10 @@ msgctxt "field:lims.configuration,qc_fraction_type:"
 msgid "QC fraction type"
 msgstr "Tipo de fracción de QC"
 
+msgctxt "field:lims.countersample.create.start,comments:"
+msgid "Comments"
+msgstr "Observaciones"
+
 msgctxt "field:lims.countersample.create.start,countersamples:"
 msgid "Countersamples"
 msgstr "Contramuestras"
@@ -29,6 +33,10 @@ msgstr "Identificador"
 msgctxt "field:lims.countersample.create.start,location:"
 msgid "Location"
 msgstr "Ubicación Destino"
+
+msgctxt "field:lims.countersample.create.start,quantity:"
+msgid "Quantity"
+msgstr "Cantidad"
 
 msgctxt "field:lims.create.quality.test.start,date:"
 msgid "Date"

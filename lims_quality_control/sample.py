@@ -228,6 +228,8 @@ class CountersampleCreateStart(ModelView):
     __name__ = 'lims.countersample.create.start'
 
     location = fields.Many2One('stock.location', 'Location', required=True)
+    quantity = fields.Float('Quantity')
+    comments = fields.Text('Comments')
     countersamples = fields.Many2Many(
         'lims.sample', None, None, 'Countersamples')
 
@@ -294,6 +296,7 @@ class CountersampleCreate(Wizard):
                 'packages_quantity': sample.packages_quantity,
                 'countersample_original_sample': sample.id,
                 'test_state': 'countersample',
+                'comments': self.ask.comments,
                 'fractions': [],
                 }])
 
@@ -314,7 +317,7 @@ class CountersampleCreate(Wizard):
                 }
             new_fraction, = Fraction.create([fraction_default])
 
-            moves = self._get_stock_moves([new_fraction])
+            moves = self._get_stock_moves([new_fraction], self.ask.quantity)
             Move.do(moves)
             countersamples.append(new_countersample)
 
@@ -329,7 +332,7 @@ class CountersampleCreate(Wizard):
             'res_id': [self.ask.countersamples[0].id],
             }
 
-    def _get_stock_moves(self, fractions):
+    def _get_stock_moves(self, fractions, quantity):
         pool = Pool()
         User = pool.get('res.user')
         Move = pool.get('stock.move')
@@ -343,7 +346,7 @@ class CountersampleCreate(Wizard):
             move.product = fraction.sample.lot.product.id
             move.lot = fraction.sample.lot.id
             move.fraction = fraction.id
-            move.quantity = fraction.packages_quantity
+            move.quantity = quantity or 1
             move.uom = fraction.sample.lot.product.default_uom
             move.from_location = \
                 fraction.sample.countersample_original_sample.fractions[
