@@ -424,6 +424,10 @@ msgctxt "field:lims.template.analysis_sheet,report:"
 msgid "Report"
 msgstr "Informe"
 
+msgctxt "field:lims.template.analysis_sheet,urgent:"
+msgid "Urgent"
+msgstr "Urgente"
+
 msgctxt "field:lims.template.analysis_sheet.analysis,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
