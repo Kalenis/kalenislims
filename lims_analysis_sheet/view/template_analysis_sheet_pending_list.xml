@@ -2,4 +2,5 @@
 <tree>
     <field name="name"/>
     <field name="pending_fractions"/>
+    <field name="urgent"/>
 </tree>

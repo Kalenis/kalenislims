@@ -38,7 +38,9 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
         depends=['interface'])
     comments = fields.Text('Comments')
     pending_fractions = fields.Function(fields.Integer('Pending fractions'),
-        'get_pending_fractions')
+        'get_fields')
+    urgent = fields.Function(fields.Boolean('Urgent'), 'get_fields',
+        searcher='search_urgent')
     report = fields.Many2One('ir.action.report', 'Report',
         domain=[
             ('model', '=', 'lims.analysis_sheet'),
@@ -75,7 +77,7 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
             return self.interface.name
 
     @classmethod
-    def get_pending_fractions(cls, records, name):
+    def get_fields(cls, records, names):
         context = Transaction().context
         cursor = Transaction().connection.cursor()
         pool = Pool()
@@ -90,12 +92,15 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
         Analysis = pool.get('lims.analysis')
         TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
 
-        res = dict((r.id, None) for r in records)
+        result = {
+            'urgent': dict((r.id, False) for r in records),
+            'pending_fractions': dict((r.id, None) for r in records),
+            }
 
         date_from = context.get('date_from') or str(date.min)
         date_to = context.get('date_to') or str(date.max)
         if not (date_from and date_to):
-            return res
+            return result
 
         cursor.execute('SELECT nl.id '
             'FROM "' + NotebookLine._table + '" nl '
@@ -116,7 +121,7 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
         dates_where += ('AND ad.confirmation_date::date <= \'%s\'::date ' %
             date_to)
 
-        sql_select = 'SELECT nl.analysis, nl.method, frc.id '
+        sql_select = 'SELECT nl.analysis, nl.method, nl.urgent, frc.id '
         sql_from = (
             'FROM "' + NotebookLine._table + '" nl '
             'INNER JOIN "' + Analysis._table + '" nla '
@@ -146,7 +151,7 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
             cursor.execute(sql_select + sql_from + sql_where, tuple(params))
         notebook_lines = cursor.fetchall()
         if not notebook_lines:
-            return res
+            return result
 
         templates = {}
         for nl in notebook_lines:
@@ -160,11 +165,104 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
                 continue
             if template[0] not in templates:
                 templates[template[0]] = set()
-            templates[template[0]].add(nl[2])
-
+            templates[template[0]].add(nl[3])
+            if nl[2]:
+                result['urgent'][template[0]] = True
         for t_id, fractions in templates.items():
-            res[t_id] = len(fractions)
-        return res
+            result['pending_fractions'][t_id] = len(fractions)
+        return result
+
+    @classmethod
+    def search_urgent(cls, name, clause):
+        context = Transaction().context
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        PlanificationServiceDetail = pool.get(
+            'lims.planification.service_detail')
+        PlanificationDetail = pool.get('lims.planification.detail')
+        Planification = pool.get('lims.planification')
+        NotebookLine = pool.get('lims.notebook.line')
+        Notebook = pool.get('lims.notebook')
+        Fraction = pool.get('lims.fraction')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Analysis = pool.get('lims.analysis')
+        TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
+
+        date_from = context.get('date_from') or str(date.min)
+        date_to = context.get('date_to') or str(date.max)
+        if not (date_from and date_to):
+            return [('id', '=', -1)]
+
+        cursor.execute('SELECT nl.id '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + PlanificationServiceDetail._table +
+                '" psd ON psd.notebook_line = nl.id '
+                'INNER JOIN "' + PlanificationDetail._table + '" pd '
+                'ON psd.detail = pd.id '
+                'INNER JOIN "' + Planification._table + '" p '
+                'ON pd.planification = p.id '
+            'WHERE p.state = \'preplanned\'')
+        planned_lines = [x[0] for x in cursor.fetchall()]
+        planned_lines_ids = ', '.join(str(x) for x in [0] + planned_lines)
+        preplanned_where = 'AND nl.id NOT IN (%s) ' % planned_lines_ids
+
+        dates_where = ''
+        dates_where += ('AND ad.confirmation_date::date >= \'%s\'::date ' %
+            date_from)
+        dates_where += ('AND ad.confirmation_date::date <= \'%s\'::date ' %
+            date_to)
+
+        sql_select = 'SELECT nl.analysis, nl.method, nl.urgent, frc.id '
+        sql_from = (
+            'FROM "' + NotebookLine._table + '" nl '
+            'INNER JOIN "' + Analysis._table + '" nla '
+            'ON nla.id = nl.analysis '
+            'INNER JOIN "' + Notebook._table + '" nb '
+            'ON nb.id = nl.notebook '
+            'INNER JOIN "' + Fraction._table + '" frc '
+            'ON frc.id = nb.fraction '
+            'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
+            'ON ad.id = nl.analysis_detail ')
+        sql_where = (
+            'WHERE nl.urgent '
+            'AND ad.plannable = TRUE '
+            'AND nl.start_date IS NULL '
+            'AND nl.annulled = FALSE '
+            'AND nla.behavior != \'internal_relation\' ' +
+            preplanned_where + dates_where)
+        params = []
+
+        if context.get('laboratory'):
+            sql_where += 'AND nl.laboratory = %s '
+            params.append(context.get('laboratory'))
+        if context.get('department'):
+            sql_where += 'AND nl.department = %s '
+            params.append(context.get('department'))
+
+        field, op, operand = clause
+        with Transaction().set_user(0):
+            cursor.execute(sql_select + sql_from + sql_where, tuple(params))
+        urgent_lines = cursor.fetchall()
+        if not urgent_lines:
+            if (op, operand) in (('=', True), ('!=', False)):
+                return [('id', '=', -1)]
+            return []
+
+        urgent_templates = []
+        for nl in urgent_lines:
+            cursor.execute('SELECT template '
+                'FROM "' + TemplateAnalysis._table + '" '
+                'WHERE analysis = %s '
+                'AND (method = %s OR method IS NULL)',
+                (nl[0], nl[1]))
+            template = cursor.fetchone()
+            if not template:
+                continue
+            urgent_templates.append(template[0])
+
+        if (op, operand) in (('=', True), ('!=', False)):
+            return [('id', 'in', urgent_templates)]
+        return [('id', 'not in', urgent_templates)]
 
 
 class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
