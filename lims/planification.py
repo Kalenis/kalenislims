@@ -3694,7 +3694,8 @@ class SearchFractionsDetail(ModelSQL, ModelView):
         'get_fraction_field', searcher='search_fraction_field')
     create_date2 = fields.Function(fields.DateTime('Create Date'),
        'get_fraction_field', searcher='search_fraction_field')
-    urgent = fields.Function(fields.Boolean('Urgent'), 'get_service_field')
+    urgent = fields.Function(fields.Boolean('Urgent'), 'get_service_field',
+        searcher='search_urgent')
     priority = fields.Function(fields.Integer('Priority'), 'get_service_field')
     repetition = fields.Boolean('Repetition', readonly=True)
     laboratory_date = fields.Function(fields.Date('Laboratory deadline'),
@@ -3741,16 +3742,12 @@ class SearchFractionsDetail(ModelSQL, ModelView):
     def get_service_field(cls, details, names):
         result = {}
         for name in names:
-            result[name] = {}
             if name == 'urgent':
-                for d in details:
-                    result[name][d.id] = False
+                result[name] = dict((d.id, False) for d in details)
             elif name == 'priority':
-                for d in details:
-                    result[name][d.id] = 0
+                result[name] = dict((d.id, 0) for d in details)
             else:
-                for d in details:
-                    result[name][d.id] = None
+                result[name] = dict((d.id, None) for d in details)
         for d in details:
             if d.fraction and d.service_analysis:
                 for service in d.fraction.services:
@@ -3758,6 +3755,24 @@ class SearchFractionsDetail(ModelSQL, ModelView):
                         for name in names:
                             result[name][d.id] = getattr(service, name)
         return result
+
+    @classmethod
+    def search_urgent(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        Service = Pool().get('lims.service')
+
+        cursor.execute('SELECT fd.id '
+            'FROM "' + cls._table + '" fd '
+                'INNER JOIN "' + Service._table + '" s '
+                'ON (fd.fraction = s.fraction '
+                'AND fd.service_analysis = s.analysis) '
+            'WHERE s.urgent = TRUE')
+        urgent_services = [x[0] for x in cursor.fetchall()]
+
+        field, op, operand = clause
+        if (op, operand) in (('=', True), ('!=', False)):
+            return [('id', 'in', urgent_services)]
+        return [('id', 'not in', urgent_services)]
 
     @classmethod
     def get_completion_percentage(cls, details, name):
@@ -3776,7 +3791,7 @@ class SearchFractionsDetail(ModelSQL, ModelView):
 
     @classmethod
     def search_department(cls, name, clause):
-        return [('product_type.' + name,) + tuple(clause[1:])]
+        return [('fraction.sample.product_type.' + name,) + tuple(clause[1:])]
 
 
 class SearchFractions(Wizard):
