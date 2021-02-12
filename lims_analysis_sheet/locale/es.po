@@ -267,6 +267,10 @@ msgctxt "field:lims.planification.pending.context,date_to:"
 msgid "To Date"
 msgstr "Hasta la fecha"
 
+msgctxt "field:lims.planification.pending.context,department:"
+msgid "Department"
+msgstr "Departamento"
+
 msgctxt "field:lims.planification.pending.context,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
@@ -431,6 +435,10 @@ msgstr "Interfaz"
 msgctxt "field:lims.template.analysis_sheet.analysis,method:"
 msgid "Method"
 msgstr "Método"
+
+msgctxt "field:lims.template.analysis_sheet.analysis,method_domain:"
+msgid "Method domain"
+msgstr "Dominio para Método"
 
 msgctxt "field:lims.template.analysis_sheet.analysis,template:"
 msgid "Template"
