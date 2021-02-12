@@ -4,4 +4,6 @@
     <field name="fraction"/>
     <label name="template"/>
     <field name="template"/>
+    <label name="services_list"/>
+    <field name="services_list" colspan="3"/>
 </form>

@@ -445,6 +445,7 @@ class RelateTechniciansDetail4(ModelSQL, ModelView):
     fraction = fields.Many2One('lims.fraction', 'Fraction')
     template = fields.Many2One('lims.template.analysis_sheet',
         'Analysis sheet')
+    services_list = fields.Char('Services')
     session_id = fields.Integer('Session ID')
 
     @classmethod
@@ -484,17 +485,17 @@ class RelateTechnicians(metaclass=PoolMeta):
     def _view_details4(self, planification_id, exclude_relateds):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        PlanificationDetail = pool.get(
-            'lims.planification.detail')
+        PlanificationDetail = pool.get('lims.planification.detail')
         PlanificationServiceDetail = pool.get(
             'lims.planification.service_detail')
         ServiceDetailProfessional = pool.get(
             'lims.planification.service_detail-laboratory.professional')
-        NotebookLine = pool.get(
-            'lims.notebook.line')
+        NotebookLine = pool.get('lims.notebook.line')
         RelateTechniciansDetail4 = pool.get(
             'lims.planification.relate_technicians.detail4')
         TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Service = pool.get('lims.service')
 
         exclude_relateds_clause = ''
         if exclude_relateds:
@@ -509,12 +510,15 @@ class RelateTechnicians(metaclass=PoolMeta):
                 ')' % planification_id)
 
         details4 = {}
-        cursor.execute('SELECT d.fraction, nl.analysis, nl.method '
+        cursor.execute('SELECT d.fraction, nl.analysis, nl.method, '
+                'ad.service '
             'FROM "' + PlanificationDetail._table + '" d '
                 'INNER JOIN "' + PlanificationServiceDetail._table + '" sd '
                     'ON sd.detail = d.id '
                 'INNER JOIN "' + NotebookLine._table + '" nl '
                     'ON sd.notebook_line = nl.id '
+                'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
+                    'ON nl.analysis_detail = ad.id '
             'WHERE d.planification = %s' +
             exclude_relateds_clause,
             (planification_id,))
@@ -531,14 +535,18 @@ class RelateTechnicians(metaclass=PoolMeta):
                 details4[(f, t)] = {
                     'fraction': f,
                     'template': t,
+                    'service_ids': [],
                     }
+            details4[(f, t)]['service_ids'].append(x[3])
 
         to_create = []
         for d in details4.values():
+            services = Service.browse(list(set(d['service_ids'])))
             to_create.append({
                 'session_id': self._session_id,
                 'fraction': d['fraction'],
                 'template': d['template'],
+                'services_list': ', '.join(s.analysis.code for s in services),
                 })
         return RelateTechniciansDetail4.create(to_create)
 

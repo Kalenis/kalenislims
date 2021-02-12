@@ -2,4 +2,5 @@
 <tree>
     <field name="fraction"/>
     <field name="template"/>
+    <field name="services_list"/>
 </tree>

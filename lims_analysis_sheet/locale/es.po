@@ -339,6 +339,10 @@ msgctxt "field:lims.planification.relate_technicians.detail4,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
 
+msgctxt "field:lims.planification.relate_technicians.detail4,services_list:"
+msgid "Services"
+msgstr "Servicios"
+
 msgctxt "field:lims.planification.relate_technicians.detail4,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
