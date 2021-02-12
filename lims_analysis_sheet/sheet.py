@@ -133,9 +133,17 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
             'AND nl.annulled = FALSE '
             'AND nla.behavior != \'internal_relation\' ' +
             preplanned_where + dates_where)
+        params = []
+
+        if context.get('laboratory'):
+            sql_where += 'AND nl.laboratory = %s '
+            params.append(context.get('laboratory'))
+        if context.get('department'):
+            sql_where += 'AND nl.department = %s '
+            params.append(context.get('department'))
 
         with Transaction().set_user(0):
-            cursor.execute(sql_select + sql_from + sql_where)
+            cursor.execute(sql_select + sql_from + sql_where, tuple(params))
         notebook_lines = cursor.fetchall()
         if not notebook_lines:
             return res

@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
-<form col="6">
+<form col="8">
     <label name="date_from"/>
     <field name="date_from"/>
     <label name="date_to"/>
     <field name="date_to"/>
     <label name="laboratory"/>
     <field name="laboratory" widget="selection"/>
+    <label name="department"/>
+    <field name="department" widget="selection"/>
 </form>

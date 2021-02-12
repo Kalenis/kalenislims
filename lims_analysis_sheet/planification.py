@@ -927,6 +927,9 @@ class PlanificationPending(ModelSQL, ModelView):
         if context.get('laboratory'):
             sql_where += 'AND nl.laboratory = %s '
             params.append(context.get('laboratory'))
+        if context.get('department'):
+            sql_where += 'AND nl.department = %s '
+            params.append(context.get('department'))
         if context.get('date_from'):
             sql_where += 'AND ad.confirmation_date::date >= %s::date '
             params.append(context.get('date_from'))
@@ -968,7 +971,9 @@ class PlanificationPending(ModelSQL, ModelView):
         context = Transaction().context
         with Transaction().set_context(
                 date_from=context.get('date_from') or datetime.min,
-                date_to=context.get('date_to') or datetime.max):
+                date_to=context.get('date_to') or datetime.max,
+                laboratory=context.get('laboratory'),
+                department=context.get('department')):
             templates = Template.browse(records)
         return {t.id: getattr(t, 'pending_fractions') for t in templates}
 
@@ -979,7 +984,9 @@ class PlanificationPending(ModelSQL, ModelView):
 class PlanificationPendingContext(ModelView):
     'Planification Pending Context'
     __name__ = 'lims.planification.pending.context'
+
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
+    department = fields.Many2One('company.department', 'Department')
     date_from = fields.Date("From Date",
         domain=[
             If(Eval('date_to') & Eval('date_from'),
@@ -1076,6 +1083,9 @@ class OpenPendingSample(Wizard):
         if context.get('laboratory'):
             sql_where += 'AND nl.laboratory = %s '
             params.append(context.get('laboratory'))
+        if context.get('department'):
+            sql_where += 'AND nl.department = %s '
+            params.append(context.get('department'))
         if context.get('date_from'):
             sql_where += 'AND ad.confirmation_date::date >= %s::date '
             params.append(context.get('date_from'))
@@ -1099,4 +1109,5 @@ class OpenPendingSample(Wizard):
             ('id', 'in', samples),
             ]
         action['pyson_domain'] = PYSONEncoder().encode(action['pyson_domain'])
+        action['name'] += ' (%s)' % template.rec_name
         return action, {}
