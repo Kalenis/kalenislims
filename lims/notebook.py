@@ -4685,7 +4685,11 @@ class NotebookAcceptLines(Wizard):
         return 'end'
 
     def lines_accept(self, notebook_lines):
-        NotebookLine = Pool().get('lims.notebook.line')
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        allow_same_analysis = Config(1).notebook_lines_acceptance_method
 
         accepted_analysis = {}
         lines_to_write = []
@@ -4719,12 +4723,20 @@ class NotebookAcceptLines(Wizard):
                     ('notebook', '=', notebook_id),
                     ('accepted', '=', True),
                     ])
-                accepted_analysis[notebook_id] = [l.analysis.id
-                    for l in accepted_lines]
-            if notebook_line.analysis.id in accepted_analysis[notebook_id]:
+                if allow_same_analysis:
+                    accepted_analysis[notebook_id] = [
+                        (l.analysis.id, l.method.id) for l in accepted_lines]
+                else:
+                    accepted_analysis[notebook_id] = [
+                        l.analysis.id for l in accepted_lines]
+            if allow_same_analysis:
+                key = (notebook_line.analysis.id, notebook_line.method.id)
+            else:
+                key = notebook_line.analysis.id
+            if key in accepted_analysis[notebook_id]:
                 continue
 
-            accepted_analysis[notebook_id].append(notebook_line.analysis.id)
+            accepted_analysis[notebook_id].append(key)
             lines_to_write.append(notebook_line)
 
         if lines_to_write:
