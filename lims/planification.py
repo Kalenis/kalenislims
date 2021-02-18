@@ -5520,47 +5520,6 @@ class ReplaceTechnician(Wizard):
             })
 
 
-class LoadServices(Wizard):
-    'Load Services'
-    __name__ = 'lims.load_services'
-
-    start_state = 'check'
-    check = StateTransition()
-    load = StateTransition()
-
-    def transition_check(self):
-        Fraction = Pool().get('lims.fraction')
-
-        fraction = Fraction(Transaction().context['active_id'])
-        if (not fraction or not fraction.cie_fraction_type or
-                not fraction.cie_original_fraction):
-            return 'end'
-        return 'load'
-
-    def transition_load(self):
-        pool = Pool()
-        Fraction = pool.get('lims.fraction')
-        Service = pool.get('lims.service')
-        Analysis = pool.get('lims.analysis')
-
-        new_fraction = Fraction(Transaction().context['active_id'])
-        original_fraction = new_fraction.cie_original_fraction
-
-        # new services
-        services = Service.search([
-            ('fraction', '=', original_fraction),
-            ('annulled', '=', False),
-            ])
-        for service in services:
-            if not Analysis.is_typified(service.analysis,
-                    new_fraction.product_type, new_fraction.matrix):
-                continue
-            new_service, = Service.copy([service], default={
-                'fraction': new_fraction.id,
-                })
-        return 'end'
-
-
 class PlanificationSequenceReport(Report):
     'Sequence'
     __name__ = 'lims.planification.sequence.report'
