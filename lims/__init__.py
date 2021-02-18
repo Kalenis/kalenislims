@@ -286,6 +286,7 @@ def register():
         laboratory.LabDeviceRelateAnalysis,
         sample.ManageServices,
         sample.CompleteServices,
+        sample.LoadServices,
         notebook.NotebookInitialConcentrationCalc,
         notebook.NotebookLineInitialConcentrationCalc,
         notebook.NotebookResultsConversion,
@@ -363,7 +364,6 @@ def register():
         planification.ReleaseFraction,
         planification.TechniciansQualification,
         planification.ReplaceTechnician,
-        planification.LoadServices,
         planification.PrintBlindSampleReport,
         planification.PrintPendingServicesUnplannedReport,
         module='lims', type_='wizard')

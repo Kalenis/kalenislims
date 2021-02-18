@@ -796,6 +796,13 @@
             <field name="wiz_name">lims.complete_services</field>
         </record>
 
+<!-- Wizard Load Services -->
+
+        <record model="ir.action.wizard" id="wiz_lims_load_services">
+            <field name="name">Load Services</field>
+            <field name="wiz_name">lims.load_services</field>
+        </record>
+
 <!-- Fractions by Locations -->
 
         <record model="ir.action.act_window" id="act_lims_fractions_by_locations">

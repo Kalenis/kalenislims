@@ -999,12 +999,5 @@
             <field name="name">planification_qualification_situation_4_form</field>
         </record>
 
-<!-- Wizard Load Services -->
-
-        <record model="ir.action.wizard" id="wiz_lims_load_services">
-            <field name="name">Load Services</field>
-            <field name="wiz_name">lims.load_services</field>
-        </record>
-
     </data>
 </tryton>
