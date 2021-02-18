@@ -413,6 +413,8 @@ class Service(ModelSQL, ModelView):
     @classmethod
     def validate(cls, services):
         super().validate(services)
+        if Transaction().context.get('not_validate'):
+            return
         for service in services:
             service.check_duplicated_analysis()
 
