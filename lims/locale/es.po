@@ -467,10 +467,6 @@ msgctxt "field:lims.configuration,notebook_lines_acceptance_method:"
 msgid "Allow to accept the same analysis with different methods"
 msgstr "Permitir aceptar el mismo análisis con diferentes métodos"
 
-msgctxt "field:lims.configuration,planification_process_background:"
-msgid "Process Planifications in Background"
-msgstr "Procesar planificaciones en segundo plano"
-
 msgctxt "field:lims.configuration,planification_sequence:"
 msgid "Planification Sequence"
 msgstr "Secuencia de planificaciones"

@@ -379,19 +379,12 @@ class Planification(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('not_executed')
     def release_controls(cls, planifications):
-        Config = Pool().get('lims.configuration')
-        process_background = Config(1).planification_process_background
-
         for planification in planifications:
             # Check if is still waiting for confirmation
             if planification.waiting_process:
                 raise UserError(gettext('lims.msg_waiting_process',
                     planification=planification.code))
-            if process_background:
-                planification.waiting_process = True
-                planification.save()
-        if not process_background:
-            cls.do_release_controls(planifications)
+        cls.__queue__.do_release_controls(planifications)
 
     @classmethod
     def do_release_controls(cls, planifications):
@@ -5277,19 +5270,11 @@ class TechniciansQualification(Wizard):
             })
 
     def transition_confirm(self):
-        pool = Pool()
-        Planification = pool.get('lims.planification')
-        Config = pool.get('lims.configuration')
-        process_background = Config(1).planification_process_background
-
+        Planification = Pool().get('lims.planification')
         planification = Planification(Transaction().context['active_id'])
         planification.state = 'confirmed'
-        if process_background:
-            planification.waiting_process = True
         planification.save()
-
-        if not process_background:
-            Planification.do_confirm([planification])
+        Planification.__queue__.do_confirm([planification])
         return 'end'
 
     def _get_supervisors(self, data):

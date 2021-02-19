@@ -205,8 +205,6 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         'ITL fraction type')
     reagents = fields.Many2Many('lims.configuration-product.category',
         'configuration', 'category', 'Reagents')
-    planification_process_background = fields.Boolean(
-        'Process Planifications in Background')
     invoice_party_relation_type = fields.Many2One('party.relation.type',
         'Invoice Party Relation Type')
     samples_in_progress = fields.Selection([
@@ -259,10 +257,6 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     def default_referral_sequence(cls, **pattern):
         return cls.multivalue_model(
             'referral_sequence').default_referral_sequence()
-
-    @staticmethod
-    def default_planification_process_background():
-        return False
 
     @staticmethod
     def default_samples_in_progress():
