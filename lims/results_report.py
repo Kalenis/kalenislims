@@ -2539,7 +2539,7 @@ class GenerateResultsReport(Wizard):
             ('entry', '=', reports['entry']),
             ('notebook', '=', reports['notebook']),
             ('report_grouper', '=', reports['report_grouper']),
-            ('generation_type', '=', reports['generation_type']),
+            #('generation_type', '=', reports['generation_type']),
             ('cie_fraction_type', '=', reports['cie_fraction_type']),
             ], limit=1)
         if not actual_report:
@@ -2771,7 +2771,7 @@ class GenerateReport(Wizard):
                 # same current_report
                 existing_detail = ResultsDetail.search([
                     ('laboratory', '=', laboratory_id),
-                    ('state', '!=', 'annulled'),
+                    #('state', '!=', 'annulled'),
                     ('samples.notebook', '=', notebook.id),
                     ], limit=1)
                 if existing_detail:
@@ -3002,7 +3002,7 @@ class GenerateReport(Wizard):
             return reports_details
 
         existing_sample = ResultsSample.search([
-            ('version_detail.state', '!=', 'annulled'),
+            #('version_detail.state', '!=', 'annulled'),
             ('notebook', '=', samples[0]['notebook']),
             ], limit=1)
         if not existing_sample:
