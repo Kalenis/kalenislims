@@ -251,30 +251,6 @@ msgctxt "field:lims.notebook.line,analysis_sheet:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
 
-msgctxt "field:lims.planification.pending,name:"
-msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.planification.pending,samples_qty:"
-msgid "# Samples"
-msgstr "Cant. Muestras"
-
-msgctxt "field:lims.planification.pending.context,date_from:"
-msgid "From Date"
-msgstr "Desde la fecha"
-
-msgctxt "field:lims.planification.pending.context,date_to:"
-msgid "To Date"
-msgstr "Hasta la fecha"
-
-msgctxt "field:lims.planification.pending.context,department:"
-msgid "Department"
-msgstr "Departamento"
-
-msgctxt "field:lims.planification.pending.context,laboratory:"
-msgid "Laboratory"
-msgstr "Laboratorio"
-
 msgctxt "field:lims.planification.professional,name:"
 msgid "Name"
 msgstr "Nombre"
@@ -392,6 +368,30 @@ msgctxt "field:lims.rule,apply_on_notebook:"
 msgid "Apply directly on the Notebook"
 msgstr "Aplicar directamente en el Cuaderno"
 
+msgctxt "field:lims.sample_pending_planning,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.sample_pending_planning,samples_qty:"
+msgid "# Samples"
+msgstr "Cant. Muestras"
+
+msgctxt "field:lims.sample_pending_planning.context,date_from:"
+msgid "From Date"
+msgstr "Desde la fecha"
+
+msgctxt "field:lims.sample_pending_planning.context,date_to:"
+msgid "To Date"
+msgstr "Hasta la fecha"
+
+msgctxt "field:lims.sample_pending_planning.context,department:"
+msgid "Department"
+msgstr "Departamento"
+
+msgctxt "field:lims.sample_pending_planning.context,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
 msgctxt "field:lims.template.analysis_sheet,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
@@ -484,10 +484,6 @@ msgctxt "model:ir.action,name:act_open_sheet_sample"
 msgid "Open Sheet Sample"
 msgstr "Abrir Muestras de hoja"
 
-msgctxt "model:ir.action,name:act_planification_pending_form"
-msgid "Samples Pending Planning"
-msgstr "Muestras Pendientes de Planificar"
-
 msgctxt "model:ir.action,name:act_planification_professional_form"
 msgid "Planifications by Professional"
 msgstr "Tareas por Profesional"
@@ -495,6 +491,10 @@ msgstr "Tareas por Profesional"
 msgctxt "model:ir.action,name:act_planification_professional_line_form"
 msgid "Planifications by Professional - Sheets"
 msgstr "Tareas por Profesional - Hojas"
+
+msgctxt "model:ir.action,name:act_sample_pending_planning"
+msgid "Samples Pending Planning"
+msgstr "Muestras Pendientes de Planificar"
 
 msgctxt "model:ir.action,name:act_template_analysis_list"
 msgid "Template Analysis"
@@ -638,17 +638,21 @@ msgctxt "model:ir.sequence.type,name:seq_type_analysis_sheet"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
 
+msgctxt "model:ir.ui.menu,name:"
+msgid "Samples Pending Planning"
+msgstr "Muestras Pendientes de Planificar"
+
 msgctxt "model:ir.ui.menu,name:menu_analysis_sheet_list"
 msgid "Analysis Sheets"
 msgstr "Hojas de análisis"
 
-msgctxt "model:ir.ui.menu,name:menu_planification_pending"
-msgid "Samples Pending Planning"
-msgstr "Muestras Pendientes de Planificar"
-
 msgctxt "model:ir.ui.menu,name:menu_planification_professional"
 msgid "Planifications by Professional"
 msgstr "Tareas por Profesional"
+
+msgctxt "model:ir.ui.menu,name:menu_sample_pending_planning"
+msgid "Samples Pending Planning"
+msgstr "Muestras Pendientes de Planificar"
 
 msgctxt "model:ir.ui.menu,name:menu_template_analysis_list"
 msgid "Template Analysis"
@@ -702,14 +706,6 @@ msgctxt "model:lims.interface.multi_sample_data,name:"
 msgid "Multi Sample Data"
 msgstr "Datos multi muestra"
 
-msgctxt "model:lims.planification.pending,name:"
-msgid "Planification Pending"
-msgstr "Muestras Pendientes de Planificar"
-
-msgctxt "model:lims.planification.pending.context,name:"
-msgid "Planification Pending Context"
-msgstr "Planificaciones Pendientes Contexto"
-
 msgctxt "model:lims.planification.professional,name:"
 msgid "Planification Professional"
 msgstr "Tareas por Profesional"
@@ -733,6 +729,14 @@ msgstr "Buscar Hojas de ensayos"
 msgctxt "model:lims.planification.search_analysis_sheet.start,name:"
 msgid "Search Analysis Sheets"
 msgstr "Buscar Hojas de ensayos"
+
+msgctxt "model:lims.sample_pending_planning,name:"
+msgid "Samples Pending Planning"
+msgstr "Muestras Pendientes de Planificar"
+
+msgctxt "model:lims.sample_pending_planning.context,name:"
+msgid "Samples Pending Planning Context"
+msgstr "Muestras Pendientes de Planificar Contexto"
 
 msgctxt "model:lims.template.analysis_sheet,name:"
 msgid "Analysis Sheet Template"

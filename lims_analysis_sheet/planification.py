@@ -867,9 +867,9 @@ class OpenSheetSample(Wizard):
         return action, {}
 
 
-class PlanificationPending(ModelSQL, ModelView):
-    'Planification Pending'
-    __name__ = 'lims.planification.pending'
+class SamplesPendingPlanning(ModelSQL, ModelView):
+    'Samples Pending Planning'
+    __name__ = 'lims.sample_pending_planning'
 
     name = fields.Char('Name')
     samples_qty = fields.Function(fields.Integer('# Samples'),
@@ -989,9 +989,9 @@ class PlanificationPending(ModelSQL, ModelView):
         return self.name
 
 
-class PlanificationPendingContext(ModelView):
-    'Planification Pending Context'
-    __name__ = 'lims.planification.pending.context'
+class SamplesPendingPlanningContext(ModelView):
+    'Samples Pending Planning Context'
+    __name__ = 'lims.sample_pending_planning.context'
 
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
     department = fields.Many2One('company.department', 'Department')
@@ -1023,9 +1023,10 @@ class PlanificationPendingContext(ModelView):
         return Transaction().context.get('date_to')
 
 
-class OpenPendingSample(Wizard):
-    'Open Pending Sample'
-    __name__ = 'lims.planification.pending.open_pending_sample'
+class OpenPendingPlanningSample(Wizard):
+    'Open Pending Planning Sample'
+    __name__ = 'lims.sample_pending_planning.open_sample'
+
     start_state = 'open_'
     open_ = StateAction('lims.act_lims_sample_list')
 
