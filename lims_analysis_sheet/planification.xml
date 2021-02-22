@@ -152,57 +152,57 @@
             <field name="name">planification_professional_context_form</field>
         </record>
 
-<!-- Planification Pending -->
+<!-- Samples Pending Planning -->
 
-        <record model="ir.ui.view" id="planification_pending_view_list">
-            <field name="model">lims.planification.pending</field>
+        <record model="ir.ui.view" id="sample_pending_planning_view_list">
+            <field name="model">lims.sample_pending_planning</field>
             <field name="type">tree</field>
-            <field name="name">planification_pending_list</field>
+            <field name="name">sample_pending_planning_list</field>
         </record>
-        <record model="ir.ui.view" id="planification_pending_view_graph">
-            <field name="model">lims.planification.pending</field>
+        <record model="ir.ui.view" id="sample_pending_planning_view_graph">
+            <field name="model">lims.sample_pending_planning</field>
             <field name="type">graph</field>
-            <field name="name">planification_pending_graph</field>
+            <field name="name">sample_pending_planning_graph</field>
         </record>
 
-        <record model="ir.action.act_window" id="act_planification_pending_form">
+        <record model="ir.action.act_window" id="act_sample_pending_planning">
             <field name="name">Samples Pending Planning</field>
-            <field name="res_model">lims.planification.pending</field>
-            <field name="context_model">lims.planification.pending.context</field>
+            <field name="res_model">lims.sample_pending_planning</field>
+            <field name="context_model">lims.sample_pending_planning.context</field>
         </record>
         <record model="ir.action.act_window.view"
-            id="act_planification_pending_form_view1">
+            id="act_sample_pending_planning_view1">
             <field name="sequence" eval="10"/>
-            <field name="view" ref="planification_pending_view_list"/>
-            <field name="act_window" ref="act_planification_pending_form"/>
+            <field name="view" ref="sample_pending_planning_view_list"/>
+            <field name="act_window" ref="act_sample_pending_planning"/>
         </record>
         <record model="ir.action.act_window.view"
-            id="act_planification_pending_form_view2">
+            id="act_sample_pending_planning_view2">
             <field name="sequence" eval="20"/>
-            <field name="view" ref="planification_pending_view_graph"/>
-            <field name="act_window" ref="act_planification_pending_form"/>
+            <field name="view" ref="sample_pending_planning_view_graph"/>
+            <field name="act_window" ref="act_sample_pending_planning"/>
         </record>
 
         <menuitem name="Samples Pending Planning"
-            action="act_planification_pending_form"
-            id="menu_planification_pending"
+            action="act_sample_pending_planning"
+            id="menu_sample_pending_planning"
             parent="lims.lims_planification_menu" sequence="40"/>
 
         <record model="ir.action.wizard" id="act_open_pending_sample">
             <field name="name">Open Pending Sample</field>
-            <field name="wiz_name">lims.planification.pending.open_pending_sample</field>
+            <field name="wiz_name">lims.sample_pending_planning.open_sample</field>
         </record>
 
         <record model="ir.action.keyword" id="act_open_pending_sample_keyword">
             <field name="keyword">tree_open</field>
-            <field name="model">lims.planification.pending,-1</field>
+            <field name="model">lims.sample_pending_planning,-1</field>
             <field name="action" ref="act_open_pending_sample"/>
         </record>
 
-        <record model="ir.ui.view" id="planification_pending_context_view_form">
-            <field name="model">lims.planification.pending.context</field>
+        <record model="ir.ui.view" id="sample_pending_planning_context_view_form">
+            <field name="model">lims.sample_pending_planning.context</field>
             <field name="type">form</field>
-            <field name="name">planification_pending_context_form</field>
+            <field name="name">sample_pending_planning_context_form</field>
         </record>
 
     </data>
