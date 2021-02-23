@@ -14,7 +14,7 @@ class TrendChart(metaclass=PoolMeta):
         filter = ('component', 'Same Component')
         if filter not in cls.filter.selection:
             cls.filter.selection.append(filter)
-        x_axis = ('hours_component', 'Hs. Component')
+        x_axis = ('ind_component', 'Hs/Km Component')
         if x_axis not in cls.x_axis.selection:
             cls.x_axis.selection.append(x_axis)
 
@@ -30,18 +30,18 @@ class OpenTrendChart(metaclass=PoolMeta):
         if chart.filter == 'component':
             clause.append(('component', '=', notebook.component))
 
-        if chart.x_axis == 'hours_component':
-            clause.append(('hours_component', '<=', notebook.hours_component))
+        if chart.x_axis == 'ind_component':
+            clause.append(('ind_component', '<=', notebook.ind_component))
         return clause
 
     def _get_order(self):
         chart = self.start.chart
-        if chart.x_axis == 'hours_component':
-            return [('hours_component', 'DESC')]
+        if chart.x_axis == 'ind_component':
+            return [('ind_component', 'DESC')]
         return super()._get_order()
 
     def _get_x_axis(self, notebook):
         chart = self.start.chart
-        if chart.x_axis == 'hours_component':
-            return notebook.hours_component
+        if chart.x_axis == 'ind_component':
+            return notebook.ind_component
         return super()._get_x_axis(notebook)
