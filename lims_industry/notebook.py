@@ -27,7 +27,7 @@ class Notebook(metaclass=PoolMeta):
     comercial_product = fields.Function(fields.Many2One(
         'lims.comercial.product', 'Comercial Product'),
         'get_sample_field', searcher='search_sample_field')
-    hours_component = fields.Function(fields.Integer('Hs. Component'),
+    ind_component = fields.Function(fields.Integer('Hs/Km Component'),
         'get_sample_field', searcher='search_sample_field')
 
     def _order_sample_field(name):
@@ -46,4 +46,4 @@ class Notebook(metaclass=PoolMeta):
                 tables['fraction'] = fraction_tables
             return field.convert_order(name, fraction_tables, Fraction)
         return staticmethod(order_field)
-    order_hours_component = _order_sample_field('hours_component')
+    order_ind_component = _order_sample_field('ind_component')

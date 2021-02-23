@@ -114,21 +114,33 @@ msgctxt "field:lims.create_sample.start,equipment:"
 msgid "Equipment"
 msgstr "Equipo"
 
-msgctxt "field:lims.create_sample.start,hours_component:"
-msgid "Hs. Component"
-msgstr "Hs. Componente"
-
-msgctxt "field:lims.create_sample.start,hours_equipment:"
-msgid "Hs. Equipment"
-msgstr "Hs. Equipo"
-
-msgctxt "field:lims.create_sample.start,hours_oil:"
-msgid "Hs. Oil"
-msgstr "Hs. Aceite"
-
 msgctxt "field:lims.create_sample.start,ind_analysis_reason:"
 msgid "Reason for analysis"
 msgstr "Motivo de análisis"
+
+msgctxt "field:lims.create_sample.start,ind_component:"
+msgid "Component"
+msgstr "Componente"
+
+msgctxt "field:lims.create_sample.start,ind_component_uom:"
+msgid "UoM"
+msgstr "UdM"
+
+msgctxt "field:lims.create_sample.start,ind_equipment:"
+msgid "Equipment"
+msgstr "Equipo"
+
+msgctxt "field:lims.create_sample.start,ind_equipment_uom:"
+msgid "UoM"
+msgstr "UdM"
+
+msgctxt "field:lims.create_sample.start,ind_oil:"
+msgid "Oil"
+msgstr "Aceite"
+
+msgctxt "field:lims.create_sample.start,ind_oil_uom:"
+msgid "UoM"
+msgstr "UdM"
 
 msgctxt "field:lims.create_sample.start,ind_operational_detail:"
 msgid "Operational detail"
@@ -290,9 +302,9 @@ msgctxt "field:lims.equipment.type,name:"
 msgid "Name"
 msgstr "Nombre"
 
-msgctxt "field:lims.fraction,hours_component:"
-msgid "Hs. Component"
-msgstr "Hs. Componente"
+msgctxt "field:lims.fraction,ind_component:"
+msgid "Hs/Km Component"
+msgstr "Hs/Km Componente"
 
 msgctxt "field:lims.fraction.type,default_sampling_type:"
 msgid "Default Sampling Type"
@@ -326,9 +338,9 @@ msgctxt "field:lims.notebook,equipment_template:"
 msgid "Equipment Template"
 msgstr "Tipo/Marca"
 
-msgctxt "field:lims.notebook,hours_component:"
-msgid "Hs. Component"
-msgstr "Hs. Componente"
+msgctxt "field:lims.notebook,ind_component:"
+msgid "Hs/Km Component"
+msgstr "Hs/Km Componente"
 
 msgctxt "field:lims.notebook,plant:"
 msgid "Plant"
@@ -533,21 +545,33 @@ msgctxt "field:lims.sample,equipment_template:"
 msgid "Equipment Template"
 msgstr "Tipo/Marca"
 
-msgctxt "field:lims.sample,hours_component:"
-msgid "Hs. Component"
-msgstr "Hs. Componente"
-
-msgctxt "field:lims.sample,hours_equipment:"
-msgid "Hs. Equipment"
-msgstr "Hs. Equipo"
-
-msgctxt "field:lims.sample,hours_oil:"
-msgid "Hs. Oil"
-msgstr "Hs. Aceite"
-
 msgctxt "field:lims.sample,ind_analysis_reason:"
 msgid "Reason for analysis"
 msgstr "Motivo de análisis"
+
+msgctxt "field:lims.sample,ind_component:"
+msgid "Component"
+msgstr "Componente"
+
+msgctxt "field:lims.sample,ind_component_uom:"
+msgid "UoM"
+msgstr "UdM"
+
+msgctxt "field:lims.sample,ind_equipment:"
+msgid "Equipment"
+msgstr "Equipo"
+
+msgctxt "field:lims.sample,ind_equipment_uom:"
+msgid "UoM"
+msgstr "UdM"
+
+msgctxt "field:lims.sample,ind_oil:"
+msgid "Oil"
+msgstr "Aceite"
+
+msgctxt "field:lims.sample,ind_oil_uom:"
+msgid "UoM"
+msgstr "UdM"
 
 msgctxt "field:lims.sample,ind_operational_detail:"
 msgid "Operational detail"
@@ -992,6 +1016,30 @@ msgctxt "selection:lims.create_sample.start,air_filter_changed:"
 msgid "Yes"
 msgstr "Sí"
 
+msgctxt "selection:lims.create_sample.start,ind_component_uom:"
+msgid "Hs."
+msgstr "Hs."
+
+msgctxt "selection:lims.create_sample.start,ind_component_uom:"
+msgid "Km."
+msgstr "Km."
+
+msgctxt "selection:lims.create_sample.start,ind_equipment_uom:"
+msgid "Hs."
+msgstr "Hs."
+
+msgctxt "selection:lims.create_sample.start,ind_equipment_uom:"
+msgid "Km."
+msgstr "Km."
+
+msgctxt "selection:lims.create_sample.start,ind_oil_uom:"
+msgid "Hs."
+msgstr "Hs."
+
+msgctxt "selection:lims.create_sample.start,ind_oil_uom:"
+msgid "Km."
+msgstr "Km."
+
 msgctxt "selection:lims.create_sample.start,oil_changed:"
 msgid "-"
 msgstr "-"
@@ -1027,6 +1075,30 @@ msgstr "No"
 msgctxt "selection:lims.sample,air_filter_changed:"
 msgid "Yes"
 msgstr "Sí"
+
+msgctxt "selection:lims.sample,ind_component_uom:"
+msgid "Hs."
+msgstr "Hs."
+
+msgctxt "selection:lims.sample,ind_component_uom:"
+msgid "Km."
+msgstr "Km."
+
+msgctxt "selection:lims.sample,ind_equipment_uom:"
+msgid "Hs."
+msgstr "Hs."
+
+msgctxt "selection:lims.sample,ind_equipment_uom:"
+msgid "Km."
+msgstr "Km."
+
+msgctxt "selection:lims.sample,ind_oil_uom:"
+msgid "Hs."
+msgstr "Hs."
+
+msgctxt "selection:lims.sample,ind_oil_uom:"
+msgid "Km."
+msgstr "Km."
 
 msgctxt "selection:lims.sample,oil_changed:"
 msgid "-"
@@ -1081,8 +1153,8 @@ msgid "Same Component"
 msgstr "Mismo Componente"
 
 msgctxt "selection:lims.trend.chart,x_axis:"
-msgid "Hs. Component"
-msgstr "Hs. Componente"
+msgid "Hs/Km Component"
+msgstr "Hs/Km Componente"
 
 msgctxt "view:lims.create_sample.start:"
 msgid "Industry"

@@ -66,9 +66,21 @@ class Sample(metaclass=PoolMeta):
         file_id='label_photo_id', store_prefix='sample')
     label_photo_id = fields.Char('Label Photo ID', readonly=True)
     oil_added = fields.Float('Liters Oil added')
-    hours_equipment = fields.Integer('Hs. Equipment')
-    hours_component = fields.Integer('Hs. Component')
-    hours_oil = fields.Integer('Hs. Oil')
+    ind_equipment = fields.Integer('Equipment')
+    ind_equipment_uom = fields.Selection([
+        ('hs', 'Hs.'),
+        ('km', 'Km.'),
+        ], 'UoM', sort=False)
+    ind_component = fields.Integer('Component')
+    ind_component_uom = fields.Selection([
+        ('hs', 'Hs.'),
+        ('km', 'Km.'),
+        ], 'UoM', sort=False)
+    ind_oil = fields.Integer('Oil')
+    ind_oil_uom = fields.Selection([
+        ('hs', 'Hs.'),
+        ('km', 'Km.'),
+        ], 'UoM', sort=False)
     oil_changed = fields.Selection([
         (None, '-'),
         ('yes', 'Yes'),
@@ -115,6 +127,18 @@ class Sample(metaclass=PoolMeta):
                 [Case((sample.changed_air_filter == Literal(True),
                     'yes'), else_='no')]))
             table_h.drop_column('changed_air_filter')
+        if table_h.column_exist('hours_equipment'):
+            cursor.execute(*sample.update([sample.ind_equipment],
+                [sample.hours_equipment]))
+            table_h.drop_column('hours_equipment')
+        if table_h.column_exist('hours_component'):
+            cursor.execute(*sample.update([sample.ind_component],
+                [sample.hours_component]))
+            table_h.drop_column('hours_component')
+        if table_h.column_exist('hours_oil'):
+            cursor.execute(*sample.update([sample.ind_oil],
+                [sample.hours_oil]))
+            table_h.drop_column('hours_oil')
 
     @classmethod
     def __setup__(cls):
@@ -128,6 +152,18 @@ class Sample(metaclass=PoolMeta):
         cls.attributes.domain = [('id', 'in', Eval('attributes_domain'))]
         if 'attributes_domain' not in cls.attributes.depends:
             cls.attributes.depends.append('attributes_domain')
+
+    @staticmethod
+    def default_ind_equipment_uom():
+        return 'hs'
+
+    @staticmethod
+    def default_ind_component_uom():
+        return 'hs'
+
+    @staticmethod
+    def default_ind_oil_uom():
+        return 'hs'
 
     @fields.depends('component')
     def on_change_component(self):
@@ -278,7 +314,7 @@ class SampleEditionLog(ModelSQL, ModelView):
 class Fraction(metaclass=PoolMeta):
     __name__ = 'lims.fraction'
 
-    hours_component = fields.Function(fields.Integer('Hs. Component'),
+    ind_component = fields.Function(fields.Integer('Hs/Km Component'),
         'get_sample_field', searcher='search_sample_field')
 
     def _order_sample_field(name):
@@ -296,7 +332,7 @@ class Fraction(metaclass=PoolMeta):
                 tables['sample'] = sample_tables
             return field.convert_order(name, sample_tables, Sample)
         return staticmethod(order_field)
-    order_hours_component = _order_sample_field('hours_component')
+    order_ind_component = _order_sample_field('ind_component')
 
 
 class FractionType(metaclass=PoolMeta):
@@ -340,9 +376,21 @@ class CreateSampleStart(metaclass=PoolMeta):
     sample_photo = fields.Binary('Sample Photo')
     label_photo = fields.Binary('Label Photo')
     oil_added = fields.Float('Liters Oil added')
-    hours_equipment = fields.Integer('Hs. Equipment')
-    hours_component = fields.Integer('Hs. Component')
-    hours_oil = fields.Integer('Hs. Oil')
+    ind_equipment = fields.Integer('Equipment')
+    ind_equipment_uom = fields.Selection([
+        ('hs', 'Hs.'),
+        ('km', 'Km.'),
+        ], 'UoM', sort=False)
+    ind_component = fields.Integer('Component')
+    ind_component_uom = fields.Selection([
+        ('hs', 'Hs.'),
+        ('km', 'Km.'),
+        ], 'UoM', sort=False)
+    ind_oil = fields.Integer('Oil')
+    ind_oil_uom = fields.Selection([
+        ('hs', 'Hs.'),
+        ('km', 'Km.'),
+        ], 'UoM', sort=False)
     oil_changed = fields.Selection([
         (None, '-'),
         ('yes', 'Yes'),
@@ -374,6 +422,18 @@ class CreateSampleStart(metaclass=PoolMeta):
         if 'attributes_domain' not in cls.attributes.depends:
             cls.attributes.depends.append('attributes_domain')
         cls.sample_client_description.required = False
+
+    @staticmethod
+    def default_ind_equipment_uom():
+        return 'hs'
+
+    @staticmethod
+    def default_ind_component_uom():
+        return 'hs'
+
+    @staticmethod
+    def default_ind_oil_uom():
+        return 'hs'
 
     @fields.depends('fraction_type')
     def on_change_with_ind_required(self, name=None):
@@ -448,7 +508,7 @@ class CreateSample(metaclass=PoolMeta):
         for field in ('storage_location', 'equipment'):
             if (hasattr(self.start, field) and getattr(self.start, field)):
                 defaults[field] = getattr(self.start, field).id
-        for field in ('hours_equipment',):
+        for field in ('ind_equipment', 'ind_equipment_uom'):
             if (hasattr(self.start, field) and getattr(self.start, field)):
                 defaults[field] = getattr(self.start, field)
         return defaults
@@ -495,12 +555,18 @@ class CreateSample(metaclass=PoolMeta):
             getattr(self.start, 'label_photo') or None)
         oil_added = (hasattr(self.start, 'oil_added') and
             getattr(self.start, 'oil_added') or None)
-        hours_equipment = (hasattr(self.start, 'hours_equipment') and
-            getattr(self.start, 'hours_equipment') or None)
-        hours_component = (hasattr(self.start, 'hours_component') and
-            getattr(self.start, 'hours_component') or None)
-        hours_oil = (hasattr(self.start, 'hours_oil') and
-            getattr(self.start, 'hours_oil') or None)
+        ind_equipment = (hasattr(self.start, 'ind_equipment') and
+            getattr(self.start, 'ind_equipment') or None)
+        ind_equipment_uom = (hasattr(self.start, 'ind_equipment_uom') and
+            getattr(self.start, 'ind_equipment_uom') or None)
+        ind_component = (hasattr(self.start, 'ind_component') and
+            getattr(self.start, 'ind_component') or None)
+        ind_component_uom = (hasattr(self.start, 'ind_component_uom') and
+            getattr(self.start, 'ind_component_uom') or None)
+        ind_oil = (hasattr(self.start, 'ind_oil') and
+            getattr(self.start, 'ind_oil') or None)
+        ind_oil_uom = (hasattr(self.start, 'ind_oil_uom') and
+            getattr(self.start, 'ind_oil_uom') or None)
         oil_changed = (hasattr(self.start, 'oil_changed') and
             getattr(self.start, 'oil_changed') or None)
         oil_filter_changed = (hasattr(self.start, 'oil_filter_changed') and
@@ -525,9 +591,12 @@ class CreateSample(metaclass=PoolMeta):
             sample_defaults['sample_photo'] = sample_photo
             sample_defaults['label_photo'] = label_photo
             sample_defaults['oil_added'] = oil_added
-            sample_defaults['hours_equipment'] = hours_equipment
-            sample_defaults['hours_component'] = hours_component
-            sample_defaults['hours_oil'] = hours_oil
+            sample_defaults['ind_equipment'] = ind_equipment
+            sample_defaults['ind_equipment_uom'] = ind_equipment_uom
+            sample_defaults['ind_component'] = ind_component
+            sample_defaults['ind_component_uom'] = ind_component_uom
+            sample_defaults['ind_oil'] = ind_oil
+            sample_defaults['ind_oil_uom'] = ind_oil_uom
             sample_defaults['oil_changed'] = oil_changed
             sample_defaults['oil_filter_changed'] = oil_filter_changed
             sample_defaults['air_filter_changed'] = air_filter_changed
