@@ -333,6 +333,7 @@ def register():
         results_report.OpenResultsReportSample,
         results_report.OpenResultsDetailEntry,
         results_report.OpenResultsDetailAttachment,
+        results_report.ResultsReportRelease,
         results_report.ResultsReportAnnulation,
         results_report.NewResultsReportVersion,
         sample.CountersampleStorage,

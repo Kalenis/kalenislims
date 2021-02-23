@@ -3326,6 +3326,28 @@ class OpenResultsDetailAttachment(Wizard):
         return '%s,%s' % (obj.__name__, obj.id)
 
 
+class ResultsReportRelease(Wizard):
+    'Release Report'
+    __name__ = 'lims.results_report_release'
+
+    start = StateTransition()
+
+    def transition_start(self):
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
+        details_to_release = []
+        for active_id in Transaction().context['active_ids']:
+            detail = ResultsDetail(active_id)
+            if detail.state != 'revised':
+                continue
+            details_to_release.append(detail)
+        if details_to_release:
+            ResultsDetail.release(details_to_release)
+        return 'end'
+
+    def end(self):
+        return 'reload'
+
+
 class ResultsReportAnnulationStart(ModelView):
     'Report Annulation'
     __name__ = 'lims.results_report_annulation.start'
