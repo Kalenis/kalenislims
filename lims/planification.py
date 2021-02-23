@@ -327,11 +327,32 @@ class Planification(Workflow, ModelSQL, ModelView):
                 planification.waiting_process = False
                 planification.save()
 
+    def pre_update_laboratory_notebook(self):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        PlanificationDetail = pool.get('lims.planification.detail')
+        PlanificationServiceDetail = pool.get(
+            'lims.planification.service_detail')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        cursor.execute('SELECT sd.notebook_line '
+            'FROM "' + PlanificationServiceDetail._table + '" sd '
+                'INNER JOIN "' + PlanificationDetail._table + '" pd '
+                'ON pd.id = sd.detail '
+            'WHERE pd.planification = %s '
+                'AND sd.notebook_line IS NOT NULL',
+            (self.id,))
+        notebook_lines = NotebookLine.browse(x[0] for x in cursor.fetchall())
+        if notebook_lines:
+            NotebookLine.write(notebook_lines, {'start_date': self.start_date})
+
     def update_laboratory_notebook(self):
         pool = Pool()
         PlanificationServiceDetail = pool.get(
             'lims.planification.service_detail')
         NotebookLine = pool.get('lims.notebook.line')
+
+        controls = [f.id for f in self.controls]
 
         notebook_lines = []
         service_details = PlanificationServiceDetail.search([
@@ -346,8 +367,7 @@ class Planification(Workflow, ModelSQL, ModelView):
                 for p in service_detail.staff_responsible]
             notebook_line.planification = self.id
             if not service_detail.is_control:
-                notebook_line.controls = [f.id
-                    for f in self.controls]
+                notebook_line.controls = controls
             notebook_lines.append(notebook_line)
         if notebook_lines:
             NotebookLine.save(notebook_lines)
@@ -5274,6 +5294,7 @@ class TechniciansQualification(Wizard):
         planification = Planification(Transaction().context['active_id'])
         planification.state = 'confirmed'
         planification.save()
+        planification.pre_update_laboratory_notebook()
         Planification.__queue__.do_confirm([planification])
         return 'end'
 
