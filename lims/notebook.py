@@ -992,12 +992,13 @@ class NotebookLine(ModelSQL, ModelView):
                 cls.update_detail_analysis(lines, vals['accepted'])
             if 'report' in vals:
                 cls.update_detail_report(lines)
-            change_dates = False
-            for field in ('start_date', 'end_date', 'acceptance_date'):
+            update_samples_state = False
+            for field in ('start_date', 'end_date', 'acceptance_date',
+                    'report', 'annulled'):
                 if field in vals:
-                    change_dates = True
+                    update_samples_state = True
                     break
-            if change_dates:
+            if update_samples_state:
                 sample_ids = list(set(nl.sample.id for nl in lines))
                 Sample.update_samples_state(sample_ids)
 
