@@ -5787,3 +5787,32 @@ class NotebookLineEvaluateRules(NotebookEvaluateRules):
 
         self.evaluate_rules(notebook_lines)
         return 'end'
+
+
+class SampleNotebook(Wizard):
+    'Sample Notebook'
+    __name__ = 'lims.sample.notebook'
+
+    start = StateAction('lims.act_lims_notebook_list')
+
+    @classmethod
+    def check_access(cls):
+        pass
+
+    def do_start(self, action):
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Notebook = pool.get('lims.notebook')
+
+        active_ids = Transaction().context['active_ids']
+        samples = Sample.browse(active_ids)
+
+        notebooks = Notebook.search([
+            ('fraction.sample', 'in', active_ids),
+            ])
+        action['pyson_domain'] = PYSONEncoder().encode([
+            ('id', 'in', [nb.id for nb in notebooks]),
+            ])
+        action['name'] += ' (%s)' % ', '.join(
+            s.rec_name for s in samples)
+        return action, {}

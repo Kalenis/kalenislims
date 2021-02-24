@@ -7294,6 +7294,10 @@ msgctxt "model:ir.action,name:wiz_results_report_version_detail_new_version"
 msgid "New Results Report Version"
 msgstr "Nueva versión de Informe de resultados"
 
+msgctxt "model:ir.action,name:wiz_sample_notebook"
+msgid "Sample Notebooks"
+msgstr "Cuadernos de laboratorio de la Muestra"
+
 msgctxt "model:ir.action,name:wiz_trend_chart_download"
 msgid "Download Trend Chart"
 msgstr "Descargar Gráfico de tendencia"

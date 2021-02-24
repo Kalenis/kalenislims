@@ -351,6 +351,7 @@ def register():
         analysis.RemoveTypifications,
         notebook.ChangeEstimatedDaysForResults,
         notebook.PrintAnalysisCheckedPendingInform,
+        notebook.SampleNotebook,
         planification.RelateTechnicians,
         planification.UnlinkTechnicians,
         planification.AddFractionControl,

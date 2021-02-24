@@ -831,5 +831,18 @@
             <field name="group" ref="group_lims_notebook"/>
         </record>
 
+<!-- Wizard Sample Notebook -->
+
+        <record model="ir.action.wizard" id="wiz_sample_notebook">
+            <field name="name">Sample Notebooks</field>
+            <field name="wiz_name">lims.sample.notebook</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_sample_notebook_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.sample,-1</field>
+            <field name="action" ref="wiz_sample_notebook"/>
+        </record>
+
     </data>
 </tryton>
