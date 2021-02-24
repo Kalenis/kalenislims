@@ -548,13 +548,13 @@ class Service(ModelSQL, ModelView):
                 cls.update_analysis_detail(services)
                 fractions_ids = list(set(s.fraction.id for s in services))
                 cls.set_shared_fraction(fractions_ids)
-            change_dates = False
+            update_samples_state = False
             for field in ('laboratory_date', 'report_date',
                     'confirmation_date'):
                 if field in vals:
-                    change_dates = True
+                    update_samples_state = True
                     break
-            if change_dates:
+            if update_samples_state:
                 sample_ids = list(set(s.sample.id for s in services))
                 Sample.update_samples_state(sample_ids)
 
