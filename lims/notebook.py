@@ -4181,10 +4181,12 @@ class NotebookLoadResultsManual(Wizard):
                 notebook_line_write['annulled'] = True
                 notebook_line_write['annulment_date'] = datetime.now()
                 notebook_line_write['report'] = False
-            professionals = [{'professional': self.result.professional.id}]
-            notebook_line_write['professionals'] = (
-                [('delete', [p.id for p in notebook_line.professionals])] +
-                [('create', professionals)])
+            if (notebook_line_write.get('end_date') or
+                    notebook_line_write.get('annulment_date')):
+                professionals = [{'professional': self.result.professional.id}]
+                notebook_line_write['professionals'] = (
+                    [('delete', [p.id for p in notebook_line.professionals])] +
+                    [('create', professionals)])
             NotebookLine.write([notebook_line], notebook_line_write)
 
         # Write Supervisors to Notebook lines
