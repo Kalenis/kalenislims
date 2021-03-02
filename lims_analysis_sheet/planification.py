@@ -546,7 +546,8 @@ class RelateTechnicians(metaclass=PoolMeta):
                 'session_id': self._session_id,
                 'fraction': d['fraction'],
                 'template': d['template'],
-                'services_list': ', '.join(s.analysis.code for s in services),
+                'services_list': ' // '.join(
+                    s.analysis.rec_name for s in services),
                 })
         return RelateTechniciansDetail4.create(to_create)
 
