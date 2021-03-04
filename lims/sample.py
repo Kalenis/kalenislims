@@ -3849,6 +3849,8 @@ class EditSampleService(Wizard):
             for fraction in sample.fractions:
                 original_analysis = []
                 for service in fraction.services:
+                    if service.annulled:
+                        continue
                     key = (service.analysis.id,
                         service.method and service.method.id or None)
                     original_analysis.append(key)
