@@ -1920,6 +1920,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
             ('analysis.code', '=', analysis_value.split(' ')[0]),
             ('analysis.automatic_acquisition', '=', True),
             ('repetition', '=', repetition_value),
+            ('annulled', '=', False),
             ])
         if nb_line:
             return nb_line[0].id
