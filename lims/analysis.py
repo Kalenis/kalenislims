@@ -78,6 +78,7 @@ class Typification(ModelSQL, ModelView):
     by_default = fields.Boolean('By default', select=True)
     calc_decimals = fields.Integer('Calculation decimals', required=True)
     significant_digits = fields.Integer('Significant digits')
+    scientific_notation = fields.Boolean('Scientific notation')
     report = fields.Boolean('Report')
     report_type = fields.Selection([
         ('normal', 'Normal'),
@@ -136,6 +137,10 @@ class Typification(ModelSQL, ModelView):
     @staticmethod
     def default_calc_decimals():
         return 2
+
+    @staticmethod
+    def default_scientific_notation():
+        return False
 
     @staticmethod
     def default_report():
@@ -423,7 +428,7 @@ class Typification(ModelSQL, ModelView):
             fields_check = ('detection_limit', 'quantification_limit',
                 'lower_limit', 'upper_limit', 'initial_concentration',
                 'final_concentration', 'start_uom', 'end_uom',
-                'calc_decimals', 'significant_digits')
+                'calc_decimals', 'significant_digits', 'scientific_notation')
             for field in fields_check:
                 if field in vals:
                     cls.update_laboratory_notebook(typifications)
@@ -468,6 +473,7 @@ class Typification(ModelSQL, ModelView):
                         typification.end_uom.id or None),
                     'decimals': typification.calc_decimals,
                     'significant_digits': typification.significant_digits,
+                    'scientific_notation': typification.scientific_notation,
                     })
 
             # Update RM
@@ -2352,6 +2358,7 @@ class UpdateTypificationStart(ModelView):
     default_repetitions = fields.Integer('Default repetitions')
     calc_decimals = fields.Integer('Calculation decimals')
     significant_digits = fields.Integer('Significant digits')
+    scientific_notation = fields.Boolean('Scientific notation')
     report = fields.Boolean('Report')
     referable = fields.Boolean('Referred by default')
     update_detection_limit = fields.Boolean('Update Detection limit')
@@ -2369,6 +2376,7 @@ class UpdateTypificationStart(ModelView):
     update_default_repetitions = fields.Boolean('Update Default repetitions')
     update_calc_decimals = fields.Boolean('Update Calculation decimals')
     update_significant_digits = fields.Boolean('Update Significant digits')
+    update_scientific_notation = fields.Boolean('Update Scientific notation')
     update_report = fields.Boolean('Update Report')
     update_referable = fields.Boolean('Update Referred by default')
 

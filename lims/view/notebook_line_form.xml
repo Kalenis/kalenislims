@@ -77,11 +77,13 @@
     <field name="theoretical_concentration"/>
     <label name="concentration_level"/>
     <field name="concentration_level"/>
-    <group id="decimals" colspan="2" col="4">
+    <group id="decimals" colspan="4" col="6">
         <label name="decimals"/>
         <field name="decimals"/>
         <label name="significant_digits"/>
         <field name="significant_digits"/>
+        <label name="scientific_notation"/>
+        <field name="scientific_notation"/>
     </group>
     <label name="backup"/>
     <field name="backup"/>

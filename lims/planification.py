@@ -1992,6 +1992,7 @@ class AddFractionControl(Wizard):
                 'upper_limit': nline.upper_limit,
                 'decimals': nline.decimals,
                 'significant_digits': nline.significant_digits,
+                'scientific_notation': nline.scientific_notation,
                 'report': nline.report,
                 'concentration_level': (nline.concentration_level.id if
                     nline.concentration_level else None),
@@ -2670,6 +2671,7 @@ class AddFractionRMBMZ(Wizard):
                     'upper_limit': nline.upper_limit,
                     'decimals': nline.decimals,
                     'significant_digits': nline.significant_digits,
+                    'scientific_notation': nline.scientific_notation,
                     'report': nline.report,
                     'concentration_level': (nline.concentration_level.id if
                         nline.concentration_level else None),
@@ -3467,6 +3469,7 @@ class AddFractionMRT(Wizard):
                     'upper_limit': nline.upper_limit,
                     'decimals': nline.decimals,
                     'significant_digits': nline.significant_digits,
+                    'scientific_notation': nline.scientific_notation,
                     'report': nline.report,
                     'concentration_level': (nline.concentration_level.id if
                         nline.concentration_level else None),
