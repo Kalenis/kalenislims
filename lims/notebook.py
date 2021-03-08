@@ -1542,10 +1542,9 @@ class NotebookLine(ModelSQL, ModelView):
                     float(result))
                 if (res[-3] in ('+', '-') and
                         int(res[-2:]) < significant_digits):
-                    res = float(res)
-                    if res == int(res):
-                        res = int(res)
-                    res = str(res)
+                    res = str(float(res))
+                    if float(res) < 1 and len(res) < (significant_digits + 2):
+                        res = res.ljust(significant_digits + 2, '0')
             else:
                 res = round(float(result), decimals)
                 if decimals == 0:
