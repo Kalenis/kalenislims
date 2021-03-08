@@ -37,6 +37,7 @@
     <field name="concentration_level"/>
     <field name="decimals"/>
     <field name="significant_digits"/>
+    <field name="scientific_notation"/>
     <field name="backup"/>
     <field name="reference"/>
     <field name="literal_result"/>

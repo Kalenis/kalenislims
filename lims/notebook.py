@@ -844,6 +844,8 @@ class NotebookLine(ModelSQL, ModelView):
         states=_states, depends=_depends)
     significant_digits = fields.Integer('Significant digits',
         states=_states, depends=_depends)
+    scientific_notation = fields.Boolean('Scientific notation',
+        states=_states, depends=_depends)
     backup = fields.Char('Backup',
         states=_states, depends=_depends)
     reference = fields.Char('Reference',
@@ -1481,7 +1483,8 @@ class NotebookLine(ModelSQL, ModelView):
             res = self.literal_result
         else:
             res = self._format_result(self.result,
-                self.decimals, self.significant_digits)
+                self.decimals, self.significant_digits,
+                self.scientific_notation)
             if result_modifier == 'eq':
                 res = res
             elif result_modifier == 'low':
@@ -1509,7 +1512,8 @@ class NotebookLine(ModelSQL, ModelView):
         result_modifier = self.converted_result_modifier
         if not self.literal_result:
             res = self._format_result(self.converted_result,
-                self.decimals, self.significant_digits)
+                self.decimals, self.significant_digits,
+                self.scientific_notation)
             if result_modifier == 'eq':
                 res = res
             elif result_modifier == 'low':
@@ -1532,7 +1536,8 @@ class NotebookLine(ModelSQL, ModelView):
                 res = result_modifier
         return res
 
-    def _format_result(self, result, decimals, significant_digits=None):
+    def _format_result(self, result, decimals, significant_digits=None,
+            scientific_notation=False):
         res = ''
         if not result:
             return res
@@ -1540,8 +1545,7 @@ class NotebookLine(ModelSQL, ModelView):
             if significant_digits:
                 res = ("{0:.%ie}" % (significant_digits - 1)).format(
                     float(result))
-                if (res[-3] in ('+', '-') and
-                        int(res[-2:]) < significant_digits):
+                if not scientific_notation:
                     res = str(float(res))
                     if float(res) < 1 and len(res) < (significant_digits + 2):
                         res = res.ljust(significant_digits + 2, '0')
@@ -1632,6 +1636,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
         'Concentration level', readonly=True)
     decimals = fields.Integer('Decimals', readonly=True)
     significant_digits = fields.Integer('Significant digits', readonly=True)
+    scientific_notation = fields.Boolean('Scientific notation', readonly=True)
     backup = fields.Char('Backup', readonly=True)
     reference = fields.Char('Reference', readonly=True)
     literal_result = fields.Char('Literal result', readonly=True)
@@ -1736,6 +1741,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
             line.concentration_level,
             line.decimals,
             line.significant_digits,
+            line.scientific_notation,
             line.backup,
             line.reference,
             line.literal_result,
@@ -4613,6 +4619,7 @@ class NotebookLineRepeatAnalysis(Wizard):
             'device': line.device.id if line.device else None,
             'decimals': line.decimals,
             'significant_digits': line.significant_digits,
+            'scientific_notation': line.scientific_notation,
             'report': line.report,
             'results_estimated_waiting': (
                 line.results_estimated_waiting),

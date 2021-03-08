@@ -643,6 +643,7 @@ class RepeatAnalysis(Wizard):
                 'initial_concentration': nline_to_repeat.initial_concentration,
                 'decimals': nline_to_repeat.decimals,
                 'significant_digits': nline_to_repeat.significant_digits,
+                'scientific_notation': nline_to_repeat.scientific_notation,
                 'report': nline_to_repeat.report,
                 'concentration_level': (nline_to_repeat.concentration_level.id
                     if nline_to_repeat.concentration_level else None),
