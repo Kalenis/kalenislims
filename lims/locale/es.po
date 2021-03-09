@@ -7910,8 +7910,8 @@ msgstr ""
 "inválido"
 
 msgctxt "model:ir.message,text:msg_not_default_typification"
-msgid "This typification should be the default"
-msgstr "Esta tipificación debe ser la predeterminada"
+msgid "This typification (ID: %(typification)s) should be the default"
+msgstr "Esta tipificación (ID: %(typification)s) debe ser la predeterminada"
 
 msgctxt "model:ir.message,text:msg_not_divided"
 msgid "You can not confirm fraction because is not yet divided"
