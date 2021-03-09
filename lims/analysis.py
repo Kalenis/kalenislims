@@ -283,7 +283,7 @@ class Typification(ModelSQL, ModelView):
         if (self.lower_limit and self.upper_limit and
                 self.upper_limit <= self.lower_limit):
             raise UserError(gettext('lims.msg_invalid_limits_allowed'))
-        if (self.detection_limit and
+        if (self.quantification_limit and self.detection_limit and
                 self.quantification_limit <= self.detection_limit):
             raise UserError(gettext('lims.msg_invalid_limits'))
 
@@ -314,8 +314,9 @@ class Typification(ModelSQL, ModelView):
                     (self.id, self.product_type.id, self.matrix.id,
                         self.analysis.id))
                 if cursor.fetchone()[0] == 0:
-                    raise UserError(
-                        gettext('lims.msg_not_default_typification'))
+                    raise UserError(gettext(
+                        'lims.msg_not_default_typification',
+                        typification=self.id))
 
     @classmethod
     def create(cls, vlist):
