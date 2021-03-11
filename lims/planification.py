@@ -4749,35 +4749,42 @@ class ReleaseFraction(Wizard):
             }
 
     def transition_release(self):
-        self._re_update_laboratory_notebook()
-        self._re_update_analysis_detail()
-        self._unlink_fractions()
-        return 'end'
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        PlanificationServiceDetail = pool.get(
+            'lims.planification.service_detail')
+        PlanificationDetail = pool.get('lims.planification.detail')
 
-    def _re_update_laboratory_notebook(self):
-        NotebookLine = Pool().get('lims.notebook.line')
+        notebook_lines = []
+        analysis_detail_ids = []
+        details_ids = []
+        service_details_ids = []
+
         for detail in self.result.fractions:
             for service_detail in detail.details:
-                if (not service_detail.is_control and
-                        service_detail.notebook_line):
+                if service_detail.is_control:
+                    continue
+
+                if service_detail.notebook_line:
                     notebook_line = NotebookLine(
                         service_detail.notebook_line.id)
                     notebook_line.start_date = None
                     notebook_line.laboratory_professionals = []
                     notebook_line.planification = None
                     notebook_line.controls = []
-                    notebook_line.save()
+                    notebook_lines.append(notebook_line)
 
-    def _re_update_analysis_detail(self):
-        EntryDetailAnalysis = Pool().get('lims.entry.detail.analysis')
-        analysis_detail_ids = []
-        for detail in self.result.fractions:
-            for service_detail in detail.details:
-                if (not service_detail.is_control and
-                        service_detail.notebook_line and
-                        service_detail.notebook_line.analysis_detail):
-                    analysis_detail_ids.append(
-                        service_detail.notebook_line.analysis_detail.id)
+                    if service_detail.notebook_line.analysis_detail:
+                        analysis_detail_ids.append(
+                            service_detail.notebook_line.analysis_detail.id)
+
+                service_details_ids.append(service_detail.id)
+                details_ids.append(service_detail.detail.id)
+
+        if notebook_lines:
+            NotebookLine.save(notebook_lines)
+
         analysis_details = EntryDetailAnalysis.search([
             ('id', 'in', analysis_detail_ids),
             ])
@@ -4785,20 +4792,6 @@ class ReleaseFraction(Wizard):
             EntryDetailAnalysis.write(analysis_details, {
                 'state': 'unplanned',
                 })
-
-    def _unlink_fractions(self):
-        pool = Pool()
-        PlanificationServiceDetail = pool.get(
-            'lims.planification.service_detail')
-        PlanificationDetail = pool.get('lims.planification.detail')
-
-        details_ids = []
-        service_details_ids = []
-        for detail in self.result.fractions:
-            for service_detail in detail.details:
-                if not service_detail.is_control:
-                    service_details_ids.append(service_detail.id)
-                    details_ids.append(service_detail.detail.id)
 
         service_detail = PlanificationServiceDetail.search([
             ('id', 'in', service_details_ids),
@@ -4812,6 +4805,8 @@ class ReleaseFraction(Wizard):
             ])
         if details:
             PlanificationDetail.delete(details)
+
+        return 'end'
 
 
 class QualificationSituations(ModelView):
