@@ -161,10 +161,7 @@ class ResultsReport(ModelSQL, ModelView):
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Service = pool.get('lims.service')
         Fraction = pool.get('lims.fraction')
-        Notebook = pool.get('lims.notebook')
-        ResultsSample = pool.get('lims.results_report.version.detail.sample')
-        ResultsDetail = pool.get('lims.results_report.version.detail')
-        ResultsVersion = pool.get('lims.results_report.version')
+        Sample = pool.get('lims.sample')
 
         result = {}
         for r in reports:
@@ -177,19 +174,13 @@ class ResultsReport(ModelSQL, ModelView):
                     'ON ad.service = srv.id '
                     'INNER JOIN "' + Fraction._table + '" f '
                     'ON srv.fraction = f.id '
-                    'INNER JOIN "' + Notebook._table + '" n '
-                    'ON f.id = n.fraction '
-                    'INNER JOIN "' + ResultsSample._table + '" rs '
-                    'ON n.id = rs.notebook '
-                    'INNER JOIN "' + ResultsDetail._table + '" rd '
-                    'ON rs.version_detail = rd.id '
-                    'INNER JOIN "' + ResultsVersion._table + '" rv '
-                    'ON rd.report_version = rv.id '
-                'WHERE rv.results_report = %s '
+                    'INNER JOIN "' + Sample._table + '" s '
+                    'ON f.sample = s.id '
+                'WHERE s.entry = %s '
                     'AND ad.report_grouper = %s '
                     'AND ad.report = TRUE '
                     'AND ad.state NOT IN (\'reported\', \'annulled\')',
-                (r.id, r.report_grouper,))
+                (r.entry.id, r.report_grouper,))
             if cursor.fetchone()[0] > 0:
                 continue
             result[r.id] = True
