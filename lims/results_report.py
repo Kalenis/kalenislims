@@ -2726,7 +2726,7 @@ class GenerateReport(Wizard):
             'preliminary': False,
             'corrective': False,
             'group_samples': False,
-            'append_samples': False,
+            'append_samples': True,
             }
 
         party = None
@@ -2762,7 +2762,6 @@ class GenerateReport(Wizard):
                 # same current_report
                 existing_detail = ResultsDetail.search([
                     ('laboratory', '=', laboratory_id),
-                    #('state', '!=', 'annulled'),
                     ('samples.notebook', '=', notebook.id),
                     ], limit=1)
                 if existing_detail:
@@ -2992,16 +2991,24 @@ class GenerateReport(Wizard):
             reports_details = [d.id for d in report.versions[0].details]
             return reports_details
 
-        existing_sample = ResultsSample.search([
-            #('version_detail.state', '!=', 'annulled'),
-            ('notebook', '=', samples[0]['notebook']),
+        existing_detail = ResultsDetail.search([
+            ('laboratory', '=', laboratory_id),
+            ('samples.notebook', '=', samples[0]['notebook']),
             ], limit=1)
-        if not existing_sample:
-            report, = ResultsReport.create([reports])
-            reports_details = [d.id for d in report.versions[0].details]
-            return reports_details
-        existing_report = (
-            existing_sample[0].version_detail.report_version.results_report)
+        if existing_detail:
+            existing_report = (
+                existing_detail[0].report_version.results_report)
+        else:
+            existing_detail = ResultsDetail.search([
+                ('samples.notebook', '=', samples[0]['notebook']),
+                ], limit=1)
+            if existing_detail:
+                existing_report = (
+                    existing_detail[0].report_version.results_report)
+            else:
+                report, = ResultsReport.create([reports])
+                reports_details = [d.id for d in report.versions[0].details]
+                return reports_details
 
         actual_report = ResultsReport.search([
             ('id', '=', existing_report.id),
