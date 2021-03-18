@@ -2525,12 +2525,28 @@ class GenerateResultsReport(Wizard):
             reports_details = [d.id for d in report.versions[0].details]
             return reports_details
 
+        existing_detail = ResultsDetail.search([
+            ('laboratory', '=', self.start.laboratory.id),
+            ('samples.notebook', '=', reports['notebook']),
+            ], limit=1)
+        if existing_detail:
+            existing_report = (
+                existing_detail[0].report_version.results_report)
+        else:
+            existing_detail = ResultsDetail.search([
+                ('samples.notebook', '=', reports['notebook']),
+                ], limit=1)
+            if existing_detail:
+                existing_report = (
+                    existing_detail[0].report_version.results_report)
+            else:
+                report, = ResultsReport.create([reports])
+                reports_details = [d.id for d in report.versions[0].details]
+                return reports_details
+
         actual_report = ResultsReport.search([
-            ('party', '=', reports['party']),
-            ('entry', '=', reports['entry']),
-            ('notebook', '=', reports['notebook']),
+            ('id', '=', existing_report.id),
             ('report_grouper', '=', reports['report_grouper']),
-            #('generation_type', '=', reports['generation_type']),
             ('cie_fraction_type', '=', reports['cie_fraction_type']),
             ], limit=1)
         if not actual_report:
