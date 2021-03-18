@@ -4749,14 +4749,18 @@ class ReleaseFraction(Wizard):
             }
 
     def transition_release(self):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
+        NotebookLineProfessional = pool.get(
+            'lims.notebook.line-laboratory.professional')
+        NotebookLineControl = pool.get('lims.notebook.line-fraction')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         PlanificationServiceDetail = pool.get(
             'lims.planification.service_detail')
         PlanificationDetail = pool.get('lims.planification.detail')
 
-        notebook_lines = []
+        notebook_lines_ids = []
         analysis_detail_ids = []
         details_ids = []
         service_details_ids = []
@@ -4765,39 +4769,40 @@ class ReleaseFraction(Wizard):
             for service_detail in detail.details:
                 if service_detail.is_control:
                     continue
-
                 if service_detail.notebook_line:
-                    notebook_line = NotebookLine(
-                        service_detail.notebook_line.id)
-                    notebook_line.start_date = None
-                    notebook_line.laboratory_professionals = []
-                    notebook_line.planification = None
-                    notebook_line.controls = []
-                    notebook_lines.append(notebook_line)
-
+                    notebook_lines_ids.append(service_detail.notebook_line.id)
                     if service_detail.notebook_line.analysis_detail:
                         analysis_detail_ids.append(
                             service_detail.notebook_line.analysis_detail.id)
-
                 service_details_ids.append(service_detail.id)
                 details_ids.append(service_detail.detail.id)
 
-        if notebook_lines:
-            NotebookLine.save(notebook_lines)
+        if notebook_lines_ids:
+            notebook_lines_ids = ', '.join(str(nl)
+                for nl in notebook_lines_ids)
+            cursor.execute('UPDATE "' + NotebookLine._table + '" '
+                'SET start_date = NULL, planification = NULL '
+                'WHERE id IN (' + notebook_lines_ids + ')')
+            cursor.execute('DELETE FROM "' +
+                NotebookLineProfessional._table + '" '
+                'WHERE notebook_line IN (' + notebook_lines_ids + ')')
+            cursor.execute('DELETE FROM "' +
+                NotebookLineControl._table + '" '
+                'WHERE notebook_line IN (' + notebook_lines_ids + ')')
 
-        analysis_details = EntryDetailAnalysis.search([
-            ('id', 'in', analysis_detail_ids),
-            ])
-        if analysis_details:
-            EntryDetailAnalysis.write(analysis_details, {
-                'state': 'unplanned',
-                })
+        if analysis_detail_ids:
+            analysis_detail_ids = ', '.join(str(ad)
+                for ad in analysis_detail_ids)
+            cursor.execute('UPDATE "' + EntryDetailAnalysis._table + '" '
+                'SET state = \'unplanned\' '
+                'WHERE id IN (' + analysis_detail_ids + ')')
 
-        service_detail = PlanificationServiceDetail.search([
-            ('id', 'in', service_details_ids),
-            ])
-        if service_detail:
-            PlanificationServiceDetail.delete(service_detail)
+        if service_details_ids:
+            service_details_ids = ', '.join(str(sd)
+                for sd in service_details_ids)
+            cursor.execute('DELETE FROM "' +
+                PlanificationServiceDetail._table + '" '
+                'WHERE id IN (' + service_details_ids + ')')
 
         details = PlanificationDetail.search([
             ('id', 'in', details_ids),
