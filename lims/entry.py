@@ -820,8 +820,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     cie_fraction_type = fields.Function(fields.Boolean('Blind Sample'),
         'get_cie_fraction_type')
     plannable = fields.Boolean('Plannable', readonly=True, select=True)
-    referable = fields.Boolean('Referred by default', readonly=True,
-        select=True)
+    referable = fields.Boolean('Referred by default', select=True)
     referral = fields.Many2One('lims.referral', 'Referral',
         states={'readonly': True})
     referral_date = fields.Function(fields.Date('Referral date'),
