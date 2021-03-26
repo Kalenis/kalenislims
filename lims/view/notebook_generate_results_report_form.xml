@@ -20,7 +20,8 @@
         view_ids="lims.lims_samples_pending_reporting_view_list,lims.lims_samples_pending_reporting_view_form"/>
     <group id="invisible" colspan="4" col="1">
         <field name="report_readonly" invisible="1"/>
-        <field name="report_domain" invisible="1"/>
+        <field name="report_domain" invisible="1"
+            mode="form" view_ids="lims.lims_results_report_view_form"/>
         <field name="preliminary" invisible="1"/>
     </group>
 </form>
