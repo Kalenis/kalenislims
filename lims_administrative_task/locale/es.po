@@ -282,6 +282,14 @@ msgctxt "model:lims.administrative.task.template,name:"
 msgid "Administrative Task Configuration"
 msgstr "Configuración de Tarea administrativa"
 
+msgctxt "model:res.group,name:group_administrative_task"
+msgid "Lims Administrative Task"
+msgstr "Lims Tarea administrativa"
+
+msgctxt "model:res.group,name:group_administrative_task_admin"
+msgid "Lims Administrative Task Admin"
+msgstr "Lims Tarea administrativa Admin"
+
 msgctxt "selection:lims.administrative.task,priority:"
 msgid "High"
 msgstr "Alta"
