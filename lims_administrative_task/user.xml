@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Groups -->
+
+        <record model="res.group" id="group_administrative_task">
+            <field name="name">Lims Administrative Task</field>
+        </record>
+        <record model="res.group" id="group_administrative_task_admin">
+            <field name="name">Lims Administrative Task Admin</field>
+        </record>
+        <record model="res.user-res.group"
+            id="user_admin_group_administrative_task_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_administrative_task_admin"/>
+        </record>
+
+    </data>
+</tryton>

@@ -7,10 +7,27 @@
         <!-- Administrative Tasks -->
         <menuitem name="Administrative Tasks" id="menu_administrative_task"/>
 
+        <record model="ir.ui.menu-res.group"
+            id="menu_administrative_task_group_administrative_task">
+            <field name="menu" ref="menu_administrative_task"/>
+            <field name="group" ref="group_administrative_task"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_administrative_task_group_administrative_task_admin">
+            <field name="menu" ref="menu_administrative_task"/>
+            <field name="group" ref="group_administrative_task_admin"/>
+        </record>
+
         <!-- Administrative Tasks / Configuration -->
         <menuitem name="Configuration" id="menu_config"
             parent="menu_administrative_task" sequence="10"
             icon="lims-configuration"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_config_group_administrative_task_admin">
+            <field name="menu" ref="menu_config"/>
+            <field name="group" ref="group_administrative_task_admin"/>
+        </record>
 
 <!-- Administrative Task Configuration -->
 
