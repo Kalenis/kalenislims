@@ -7,10 +7,27 @@
         <!-- Devices Maintenance -->
         <menuitem name="Devices Maintenance" id="menu_device_maintenance"/>
 
+        <record model="ir.ui.menu-res.group"
+            id="menu_device_maintenance_group_device_maintenance">
+            <field name="menu" ref="menu_device_maintenance"/>
+            <field name="group" ref="group_device_maintenance"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_device_maintenance_group_device_maintenance_admin">
+            <field name="menu" ref="menu_device_maintenance"/>
+            <field name="group" ref="group_device_maintenance_admin"/>
+        </record>
+
         <!-- Devices Maintenance / Configuration -->
         <menuitem name="Configuration" id="menu_device_maintenance_config"
             parent="menu_device_maintenance" sequence="10"
             icon="lims-configuration"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_device_maintenance_config_group_device_maintenance_admin">
+            <field name="menu" ref="menu_device_maintenance_config"/>
+            <field name="group" ref="group_device_maintenance_admin"/>
+        </record>
 
         <menuitem action="lims.act_lims_lab_device_list"
             id="menu_device_maintenance_device"

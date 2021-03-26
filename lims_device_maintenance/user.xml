@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Groups -->
+
+        <record model="res.group" id="group_device_maintenance">
+            <field name="name">Lims Devices Maintenance</field>
+        </record>
+        <record model="res.group" id="group_device_maintenance_admin">
+            <field name="name">Lims Devices Maintenance Admin</field>
+        </record>
+        <record model="res.user-res.group"
+            id="user_admin_group_device_maintenance_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_device_maintenance_admin"/>
+        </record>
+
+    </data>
+</tryton>
