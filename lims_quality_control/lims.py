@@ -183,10 +183,17 @@ class Typification(metaclass=PoolMeta):
             cursor.execute('SELECT template '
                 'FROM "' + TemplateAnalysis._table + '" '
                 'WHERE analysis = %s '
-                'AND (method = %s OR method IS NULL)',
+                'AND method = %s',
                 (t.analysis.id, t.method.id))
             template_id = cursor.fetchone()
             result[t.id] = None
+            if not template_id:
+                cursor.execute('SELECT template '
+                    'FROM "' + TemplateAnalysis._table + '" '
+                    'WHERE analysis = %s '
+                    'AND method IS NULL',
+                    (t.analysis.id, ))
+                template_id = cursor.fetchone()
             if template_id:
                 template = Template(template_id[0])
                 result[t.id] = template.interface.id
