@@ -227,6 +227,37 @@ Create Analyses::
     ...     valid_value=qualitative_value)
     >>> typification_4.save()
 
+Create Interface::
+
+    >>> Interface = Model.get('lims.interface')
+    >>> interface = Interface(
+    ...     name='Interface',
+    ...     kind='template',
+    ...     template_type='excel',
+    ...     first_row=1)
+    >>> _ = interface.columns.new(
+    ...     name='Column',
+    ...     alias='column',
+    ...     type_='char')
+    >>> interface.save()
+    >>> interface.click('activate')
+
+Create Template Analysis Sheet::
+
+    >>> TemplateAnalysisSheet = Model.get('lims.template.analysis_sheet')
+    >>> template_analysis_sheet = TemplateAnalysisSheet(
+    ...     interface=interface,
+    ...     name='Template Analysis Sheet')
+    >>> _ = template_analysis_sheet.analysis.new(
+    ...     analysis=typification_1.analysis)
+    >>> _ = template_analysis_sheet.analysis.new(
+    ...     analysis=typification_2.analysis)
+    >>> _ = template_analysis_sheet.analysis.new(
+    ...     analysis=typification_3.analysis)
+    >>> _ = template_analysis_sheet.analysis.new(
+    ...     analysis=typification_4.analysis)
+    >>> template_analysis_sheet.save()
+
 Create Quality Fraction Type::
 
     >>> PackagingType = Model.get('lims.packaging.type')
