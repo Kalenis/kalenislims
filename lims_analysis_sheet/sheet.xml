@@ -166,6 +166,10 @@
             <field name="name">view_data</field>
             <field name="model" search="[('model', '=', 'lims.analysis_sheet')]"/>
         </record>
+        <record model="ir.model.button" id="button_sheet_view_grouped_data">
+            <field name="name">view_grouped_data</field>
+            <field name="model" search="[('model', '=', 'lims.analysis_sheet')]"/>
+        </record>
         <record model="ir.model.button" id="button_sheet_activate">
             <field name="name">activate</field>
             <field name="model" search="[('model', '=', 'lims.analysis_sheet')]"/>
