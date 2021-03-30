@@ -2480,7 +2480,7 @@ class NotebookInternalRelationsCalc1(Wizard):
 
             analysis_code = relation.internal_relation.code
             result = self._get_relation_result(analysis_code,
-                relation.notebook, analysis_code)
+                relation.notebook, analysis_code, round_=True)
             converted_result = self._get_relation_result(analysis_code,
                 relation.notebook, analysis_code, converted=True)
 
@@ -2492,6 +2492,9 @@ class NotebookInternalRelationsCalc1(Wizard):
             if result is not None or converted_result is not None:
                 notebook_line.start_date = date
                 notebook_line.end_date = date
+                if notebook_line.laboratory.automatic_accept_result:
+                    notebook_line.accepted = True
+                    notebook_line.acceptance_date = datetime.now()
                 notebook_lines_to_save.append(notebook_line)
         NotebookLine.save(notebook_lines_to_save)
         return 'end'
@@ -2974,7 +2977,7 @@ class NotebookInternalRelationsCalc2(Wizard):
 
             analysis_code = relation.internal_relation.code
             result = self._get_relation_result(analysis_code,
-                relation.notebook, analysis_code)
+                relation.notebook, analysis_code, round_=True)
             converted_result = self._get_relation_result(analysis_code,
                 relation.notebook, analysis_code, converted=True)
 
@@ -2986,6 +2989,9 @@ class NotebookInternalRelationsCalc2(Wizard):
             if result is not None or converted_result is not None:
                 notebook_line.start_date = date
                 notebook_line.end_date = date
+                if notebook_line.laboratory.automatic_accept_result:
+                    notebook_line.accepted = True
+                    notebook_line.acceptance_date = datetime.now()
                 notebook_lines_to_save.append(notebook_line)
         NotebookLine.save(notebook_lines_to_save)
         return 'end'
