@@ -37,6 +37,7 @@
             <label name="view"/>
             <field name="view" widget="selection"/>
             <button name="view_grouped_data" string="View grouped data" colspan="2"/>
+            <field name="interface" invisible="1"/>
         </page>
     </notebook>
     <group id="state_holder" colspan="4">

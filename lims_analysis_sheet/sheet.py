@@ -405,8 +405,11 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         'Confirmed By', readonly=True)
     confirmed_date = fields.DateTime('Confirmed Date', readonly=True)
     view = fields.Many2One('lims.interface.view', 'View',
+        domain=[('interface', '=', Eval('interface'))],
         states={'invisible': Eval('state') == 'draft'},
         depends=['state'])
+    interface = fields.Function(fields.Many2One('lims.interface', 'Interface'),
+        'get_interface')
 
     @classmethod
     def __setup__(cls):
@@ -586,6 +589,9 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     ).quantize(Decimal(str(10 ** -digits)))
 
         return result
+
+    def get_interface(self, name):
+        return self.compilation.interface.id
 
     @classmethod
     def create(cls, vlist):
