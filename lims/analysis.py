@@ -2534,7 +2534,7 @@ class CreateAnalysisProduct(Wizard):
 
         product = Product()
         product.template = template.id
-        product.code = analysis.code
+        product.suffix_code = analysis.code
         product.save()
 
         analysis.product = product
