@@ -25,6 +25,9 @@
         <record model="ir.message" id="msg_equipment_name_unique">
             <field name="text">There is already an equipment with the same name for the plant</field>
         </record>
+        <record model="ir.message" id="msg_delete_component">
+            <field name="text">You can not delete component "%(component)s" because it is associated with a sample</field>
+        </record>
         <record model="ir.message" id="msg_party_no_email">
             <field name="text">Party "%(party)s" has no Email</field>
         </record>

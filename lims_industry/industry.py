@@ -6,6 +6,8 @@ from trytond.model import ModelSQL, ModelView, fields, Unique
 from trytond.pool import Pool
 from trytond.pyson import Eval, If
 from trytond.transaction import Transaction
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 
 class Plant(ModelSQL, ModelView):
@@ -399,6 +401,22 @@ class Component(ModelSQL, ModelView):
                 continue
             res.append(component)
         return res
+
+    @classmethod
+    def delete(cls, components):
+        cls.check_delete(components)
+        super().delete(components)
+
+    @classmethod
+    def check_delete(cls, components):
+        Sample = Pool().get('lims.sample')
+        for component in components:
+            samples = Sample.search_count([
+                ('component', '=', component.id),
+                ])
+            if samples != 0:
+                raise UserError(gettext('lims_industry.msg_delete_component',
+                    component=component.get_rec_name(None)))
 
     def get_rec_name(self, name):
         res = self.type.rec_name
