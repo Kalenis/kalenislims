@@ -3588,6 +3588,7 @@ class ResultReport(Report):
                 report = ResultsDetail(records[0].id)
         report_context['obj'] = report
         report_context['get_grouped_lines'] = cls.get_grouped_lines
+        report_context['get_value'] = cls.get_value
 
         company = Company(Transaction().context.get('company'))
         report_context['company'] = company
@@ -4408,6 +4409,26 @@ class ResultReport(Report):
 
                 res += gettext('lims.msg_caa_max', max=res1)
         return res
+
+    @classmethod
+    def get_value(cls, obj, path):
+        if not obj or not path:
+            return ''
+
+        path = path.split('.')
+        value = obj
+        try:
+            while path:
+                field = path.pop(0)
+                value = getattr(value, field, None)
+                if isinstance(value, dict):
+                    dict_key = path.pop(0)
+                    if dict_key not in value:
+                        return ''
+                    value = value[dict_key]
+        except AttributeError:
+            value = None
+        return value or ''
 
     @classmethod
     def get_grouped_lines(cls, sample, grouped_by=None):
