@@ -249,8 +249,7 @@ class NotebookLoadResultsFileResult(ModelView):
     'Process Results from File'
     __name__ = 'lims.notebook.load_results_file.result'
 
-    result_lines = fields.One2Many('lims.notebook.line', None, 'Lines',
-        readonly=True)
+    result_lines = fields.One2Many('lims.notebook.line', None, 'Lines')
 
 
 class NotebookLoadResultsFileWarning(ModelView):
