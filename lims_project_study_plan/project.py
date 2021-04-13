@@ -1070,6 +1070,10 @@ class ProjectGLPReport03Print(Wizard):
             ])
     print_ = StateAction('lims_project_study_plan.report_glp_03')
 
+    @classmethod
+    def check_access(cls):
+        pass
+
     def default_start(self, fields):
         return {
             'project': Transaction().context['active_id'],
@@ -1232,6 +1236,10 @@ class ProjectGLPReport05Print(Wizard):
             Button('Print', 'print_', 'tryton-print', default=True),
             ])
     print_ = StateAction('lims_project_study_plan.report_glp_05')
+
+    @classmethod
+    def check_access(cls):
+        pass
 
     def default_start(self, fields):
         return {
@@ -1647,6 +1655,10 @@ class ProjectGLPReport10Print(Wizard):
             ])
     print_ = StateAction('lims_project_study_plan.report_glp_10')
 
+    @classmethod
+    def check_access(cls):
+        pass
+
     def do_print_(self, action):
         data = {
             'date_from': self.start.date_from,
@@ -1874,6 +1886,10 @@ class ProjectGLPReport12Print(Wizard):
             Button('Print', 'print_', 'tryton-print', default=True),
             ])
     print_ = StateAction('lims_project_study_plan.report_glp_12')
+
+    @classmethod
+    def check_access(cls):
+        pass
 
     def do_print_(self, action):
         data = {
