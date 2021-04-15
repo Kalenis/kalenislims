@@ -5178,108 +5178,117 @@ class TechniciansQualification(Wizard):
         # The technician has not the method. Write a new training directly.
         pool = Pool()
         LabProfessionalMethod = pool.get('lims.lab.professional.method')
+        LabProfessionalMethodRequalification = pool.get(
+            'lims.lab.professional.method.requalification')
         Date = pool.get('ir.date')
 
         supervisors = self._get_supervisors(data)
-        requalification_history = [{
+        professional_method, = LabProfessionalMethod.create([{
+            'professional': data.professional.id,
+            'method': data.method.id,
+            'type': 'preparation',
+            'state': 'training',
+            }])
+        LabProfessionalMethodRequalification.create([{
+            'professional_method': professional_method.id,
             'type': 'training',
             'date': Date.today(),
             'last_execution_date': start_date,
             'supervisors': [('create', supervisors)],
             'controls': [('create', controls)],
-            }]
-        professional_method, = LabProfessionalMethod.create([{
-            'professional': data.professional.id,
-            'method': data.method.id,
-            'state': 'training',
-            'type': 'preparation',
-            'requalification_history': [('create', requalification_history)],
             }])
 
     def action_2(self, data, controls, start_date):
         # Qualify the technician
         pool = Pool()
         LabProfessionalMethod = pool.get('lims.lab.professional.method')
+        LabProfessionalMethodRequalification = pool.get(
+            'lims.lab.professional.method.requalification')
         Date = pool.get('ir.date')
 
+        supervisors = self._get_supervisors(data)
         professional_method, = LabProfessionalMethod.search([
             ('professional', '=', data.professional),
             ('method', '=', data.method),
             ('type', '=', 'preparation'),
             ])
-        supervisors = self._get_supervisors(data)
-        requalification_history = [{
+        LabProfessionalMethod.write([professional_method], {
+            'state': 'qualified',
+            })
+        LabProfessionalMethodRequalification.create([{
+            'professional_method': professional_method.id,
             'type': 'qualification',
             'date': Date.today(),
             'last_execution_date': start_date,
             'supervisors': [('create', supervisors)],
             'controls': [('create', controls)],
-            }]
-        LabProfessionalMethod.write([professional_method], {
-            'state': 'qualified',
-            'requalification_history': [('create', requalification_history)],
-            })
+            }])
 
     def action_3(self, data, controls, start_date):
         # Write a new training
         pool = Pool()
         LabProfessionalMethod = pool.get('lims.lab.professional.method')
+        LabProfessionalMethodRequalification = pool.get(
+            'lims.lab.professional.method.requalification')
         Date = pool.get('ir.date')
 
+        supervisors = self._get_supervisors(data)
         professional_method, = LabProfessionalMethod.search([
             ('professional', '=', data.professional),
             ('method', '=', data.method),
             ('type', '=', 'preparation'),
             ])
-        supervisors = self._get_supervisors(data)
-        requalification_history = [{
+        LabProfessionalMethodRequalification.create([{
+            'professional_method': professional_method.id,
             'type': 'training',
             'date': Date.today(),
             'last_execution_date': start_date,
             'supervisors': [('create', supervisors)],
             'controls': [('create', controls)],
-            }]
-        LabProfessionalMethod.write([professional_method], {
-            'requalification_history': [('create', requalification_history)],
-            })
+            }])
 
     def action_4(self, data, controls, start_date):
         # Requalify the technician
         pool = Pool()
         LabProfessionalMethod = pool.get('lims.lab.professional.method')
+        LabProfessionalMethodRequalification = pool.get(
+            'lims.lab.professional.method.requalification')
         Date = pool.get('ir.date')
 
+        supervisors = self._get_supervisors(data)
         professional_method, = LabProfessionalMethod.search([
             ('professional', '=', data.professional),
             ('method', '=', data.method),
             ('type', '=', 'preparation'),
             ])
-        supervisors = self._get_supervisors(data)
-        requalification_history = [{
+        LabProfessionalMethod.write([professional_method], {
+            'state': 'requalified',
+            })
+        LabProfessionalMethodRequalification.create([{
+            'professional_method': professional_method.id,
             'type': 'requalification',
             'date': Date.today(),
             'last_execution_date': start_date,
             'supervisors': [('create', supervisors)],
             'controls': [('create', controls)],
-            }]
-        LabProfessionalMethod.write([professional_method], {
-            'state': 'requalified',
-            'requalification_history': [('create', requalification_history)],
-            })
+            }])
 
     def action_5(self, data, controls, start_date):
         # Write a new execution
         pool = Pool()
         LabProfessionalMethod = pool.get('lims.lab.professional.method')
+        LabProfessionalMethodRequalification = pool.get(
+            'lims.lab.professional.method.requalification')
         Date = pool.get('ir.date')
 
+        supervisors = self._get_supervisors(data)
         professional_method, = LabProfessionalMethod.search([
             ('professional', '=', data.professional),
             ('method', '=', data.method),
             ('type', '=', 'preparation'),
             ])
-        supervisors = self._get_supervisors(data)
-        requalification_history = [{
+        LabProfessionalMethodRequalification.create([{
+            'professional_method': professional_method.id,
             'type': ('qualification'
                 if professional_method.state == 'qualified'
                 else 'requalification'),
@@ -5287,10 +5296,7 @@ class TechniciansQualification(Wizard):
             'last_execution_date': start_date,
             'supervisors': [('create', supervisors)],
             'controls': [('create', controls)],
-            }]
-        LabProfessionalMethod.write([professional_method], {
-            'requalification_history': [('create', requalification_history)],
-            })
+            }])
 
     def transition_confirm(self):
         Planification = Pool().get('lims.planification')
