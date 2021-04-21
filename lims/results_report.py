@@ -159,9 +159,11 @@ class ResultsReport(ModelSQL, ModelView):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
-        Service = pool.get('lims.service')
-        Fraction = pool.get('lims.fraction')
-        Sample = pool.get('lims.sample')
+        NotebookLine = pool.get('lims.notebook.line')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
 
         result = {}
         for r in reports:
@@ -170,17 +172,21 @@ class ResultsReport(ModelSQL, ModelView):
                 continue
             cursor.execute('SELECT COUNT(*) '
                 'FROM "' + EntryDetailAnalysis._table + '" ad '
-                    'INNER JOIN "' + Service._table + '" srv '
-                    'ON ad.service = srv.id '
-                    'INNER JOIN "' + Fraction._table + '" f '
-                    'ON srv.fraction = f.id '
-                    'INNER JOIN "' + Sample._table + '" s '
-                    'ON f.sample = s.id '
-                'WHERE s.entry = %s '
+                    'INNER JOIN "' + NotebookLine._table + '" nl '
+                    'ON ad.id = nl.analysis_detail '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON n.id = nl.notebook '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON n.id = rs.notebook '
+                    'INNER JOIN "' + ResultsDetail._table + '" rd '
+                    'ON rs.version_detail = rd.id '
+                    'INNER JOIN "' + ResultsVersion._table + '" rv '
+                    'ON rd.report_version = rv.id '
+                'WHERE rv.results_report = %s '
                     'AND ad.report_grouper = %s '
                     'AND ad.report = TRUE '
                     'AND ad.state NOT IN (\'reported\', \'annulled\')',
-                (r.entry.id, r.report_grouper,))
+                (r.id, r.report_grouper,))
             if cursor.fetchone()[0] > 0:
                 continue
             result[r.id] = True
