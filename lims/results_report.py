@@ -2533,14 +2533,14 @@ class GenerateResultsReport(Wizard):
 
         existing_detail = ResultsDetail.search([
             ('laboratory', '=', self.start.laboratory.id),
-            ('samples.notebook', '=', reports['notebook']),
+            ('samples.notebook', '=', samples[0]['notebook']),
             ], limit=1)
         if existing_detail:
             existing_report = (
                 existing_detail[0].report_version.results_report)
         else:
             existing_detail = ResultsDetail.search([
-                ('samples.notebook', '=', reports['notebook']),
+                ('samples.notebook', '=', samples[0]['notebook']),
                 ], limit=1)
             if existing_detail:
                 existing_report = (
