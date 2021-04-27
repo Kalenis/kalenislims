@@ -32,9 +32,8 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         return True
 
     @classmethod
-    @ModelView.button
-    def release(cls, details):
-        super().release(details)
+    def do_release(cls, details):
+        super().do_release(details)
         for detail in details:
             detail.unsend()
 

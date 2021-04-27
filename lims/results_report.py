@@ -794,10 +794,7 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
     @classmethod
     @ModelView.button
     def release(cls, details):
-        pool = Pool()
-        ResultsSample = pool.get('lims.results_report.version.detail.sample')
-        Sample = pool.get('lims.sample')
-        cls.link_notebook_lines(details)
+        ResultsSample = Pool().get('lims.results_report.version.detail.sample')
         for detail in details:
             # delete samples from previous valid version
             old_samples = ResultsSample.search([
@@ -820,6 +817,13 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
                 'release_uid': int(Transaction().user),
                 'release_date': datetime.now(),
                 })
+        cls.__queue__.do_release(details)
+
+    @classmethod
+    def do_release(cls, details):
+        Sample = Pool().get('lims.sample')
+        cls.link_notebook_lines(details)
+        for detail in details:
             detail.generate_report()
             sample_ids = list(set(s.notebook.fraction.sample.id for
                 s in detail.samples))
