@@ -288,7 +288,11 @@ class Entry(Workflow, ModelSQL, ModelView):
         self.invoice_contacts = invoice_contacts
         self.report_contacts = report_contacts
         self.acknowledgment_contacts = acknowledgment_contacts
-        if self.party and not self.invoice_party:
+
+        if not self.party:
+            self.invoice_party = None
+            self.on_change_invoice_party()
+        elif not self.invoice_party:
             invoice_party_domain = self.on_change_with_invoice_party_domain()
             if len(invoice_party_domain) == 1:
                 self.invoice_party = invoice_party_domain[0]
