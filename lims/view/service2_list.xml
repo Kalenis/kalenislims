@@ -5,14 +5,14 @@
     <field name="sample"/>
     <field name="entry"/>
     <field name="party"/>
-    <field name="analysis_view"/>
+    <field name="analysis"/>
     <field name="analysis_type"/>
     <field name="urgent"/>
     <field name="priority"/>
     <field name="report_date"/>
     <field name="divide"/>
-    <field name="method_view"/>
-    <field name="device_view"/>
+    <field name="method"/>
+    <field name="device"/>
     <field name="comments"/>
     <field name="annulled"/>
     <field name="confirmed" tree_invisible="1"/>
