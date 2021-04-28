@@ -360,6 +360,11 @@ class Entry(Workflow, ModelSQL, ModelView):
                                 in a_invoice_contacts):
                             invoice_contacts.append(
                                 InvoiceContacts(contact=c))
+        else:
+            invoice_contacts = []
+            if config_.entry_default_contacts == 'invoice_party':
+                report_contacts = []
+                acknowledgment_contacts = []
 
         self.invoice_contacts = invoice_contacts
         self.report_contacts = report_contacts
