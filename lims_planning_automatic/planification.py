@@ -32,6 +32,7 @@ class Planification(metaclass=PoolMeta):
             clause = [
                 ('laboratory', '=', laboratory),
                 ('plannable', '=', True),
+                ('state', '=', 'unplanned'),
                 ]
             if entries:
                 clause.append(('entry', 'in', [e.id for e in entries]),)

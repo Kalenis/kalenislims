@@ -13,3 +13,13 @@ class Entry(metaclass=PoolMeta):
         Planification = Pool().get('lims.planification')
         super().confirm(entries)
         Planification.automatic_plan(entries=entries)
+
+
+class ManageServices(metaclass=PoolMeta):
+    __name__ = 'lims.manage_services'
+
+    def create_service(self, service, fraction):
+        Planification = Pool().get('lims.planification')
+        new_service = super().create_service(service, fraction)
+        Planification.automatic_plan(entries=[new_service.entry])
+        return new_service
