@@ -24,3 +24,6 @@ def register():
         quality.QualityTest,
         module='lims_planning_automatic', type_='model',
         depends=['lims_quality_control'])
+    Pool.register(
+        entry.ManageServices,
+        module='lims_planning_automatic', type_='wizard')
