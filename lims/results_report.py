@@ -6,7 +6,7 @@ from io import BytesIO
 from datetime import datetime
 from PyPDF2 import PdfFileMerger
 
-from trytond.model import ModelView, ModelSQL, fields
+from trytond.model import Workflow, ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     StateReport, Button
 from trytond.pool import Pool
@@ -422,7 +422,7 @@ class ResultsReportVersion(ModelSQL, ModelView):
         return super().create(vlist)
 
 
-class ResultsReportVersionDetail(ModelSQL, ModelView):
+class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     'Results Report Version Detail'
     __name__ = 'lims.results_report.version.detail'
 
@@ -563,6 +563,12 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
         super().__setup__()
         cls._order.insert(0, ('report_version', 'DESC'))
         cls._order.insert(1, ('number', 'DESC'))
+        cls._transitions = set((
+            ('draft', 'revised'),
+            ('revised', 'draft'),
+            ('revised', 'released'),
+            ('released', 'annulled'),
+            ))
         cls._buttons.update({
             'draft': {
                 'invisible': Eval('state') != 'revised',
@@ -779,20 +785,22 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
 
     @classmethod
     @ModelView.button
+    @Workflow.transition('draft')
     def draft(cls, details):
-        cls.write(details, {'state': 'draft'})
+        pass
 
     @classmethod
     @ModelView.button
+    @Workflow.transition('revised')
     def revise(cls, details):
         cls.write(details, {
-            'state': 'revised',
             'revision_uid': int(Transaction().user),
             'revision_date': datetime.now(),
             })
 
     @classmethod
     @ModelView.button
+    @Workflow.transition('released')
     def release(cls, details):
         ResultsSample = Pool().get('lims.results_report.version.detail.sample')
         for detail in details:
@@ -812,7 +820,6 @@ class ResultsReportVersionDetail(ModelSQL, ModelView):
             cls.write(valid_details, {'valid': False})
 
             cls.write([detail], {
-                'state': 'released',
                 'valid': True,
                 'release_uid': int(Transaction().user),
                 'release_date': datetime.now(),

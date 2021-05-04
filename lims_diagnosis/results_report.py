@@ -2,7 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond.model import ModelView, ModelSQL, fields
+from trytond.model import Workflow, ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
 from trytond.pool import Pool, PoolMeta
@@ -27,6 +27,14 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         diagnosed_state = ('diagnosed', 'Diagnosed')
         if diagnosed_state not in cls.state.selection:
             cls.state.selection.append(diagnosed_state)
+        cls._transitions = set((
+            ('draft', 'diagnosed'),
+            ('diagnosed', 'draft'),
+            ('diagnosed', 'revised'),
+            ('revised', 'draft'),
+            ('revised', 'released'),
+            ('released', 'annulled'),
+            ))
         cls._buttons.update({
             'diagnose': {
                 'invisible': Eval('state') != 'draft',
@@ -37,9 +45,9 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
 
     @classmethod
     @ModelView.button
+    @Workflow.transition('diagnosed')
     def diagnose(cls, details):
         cls.check_diagnosis_states(details)
-        cls.write(details, {'state': 'diagnosed'})
 
     @classmethod
     def check_diagnosis_states(cls, details):
