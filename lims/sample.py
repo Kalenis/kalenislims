@@ -2910,12 +2910,17 @@ class Sample(ModelSQL, ModelView):
                 return False
         return True
 
-    def get_icon(self, name):
-        if self.has_results_report:
-            return 'lims-green'
-        if not self.confirmed:
-            return 'lims-red'
-        return 'lims-white'
+    @classmethod
+    def get_icon(cls, samples, name):
+        result = {}
+        for s in samples:
+            if s.state == 'report_released':
+                result[s.id] = 'lims-green'
+            elif s.state == 'draft':
+                result[s.id] = 'lims-red'
+            else:
+                result[s.id] = 'lims-white'
+        return result
 
     @classmethod
     def order_create_date2(cls, tables):
