@@ -2026,12 +2026,14 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         data[nl_field] = getattr(line, alias)
                         if nl_field == 'result' and data[nl_field]:
                             if not nb_line.significant_digits:
-                                if nb_line.decimals and nb_line.decimals > 0:
-                                    data[nl_field] = round(
-                                        float(data[nl_field]),
-                                        nb_line.decimals)
+                                decimals = nb_line.decimals or 0
+                                result = round(float(data[nl_field]), decimals)
+                                if decimals == 0:
+                                    data[nl_field] = str(int(result))
                                 else:
-                                    data[nl_field] = int(data[nl_field])
+                                    integer, decimal = str(result).split('.')
+                                    data[nl_field] = '%s.%s' % (integer,
+                                        decimal.ljust(decimals, '0'))
                         if nl_field == 'result_modifier' and not data[nl_field]:
                             data[nl_field] = 'eq'
                         if nl_field == 'literal_result' and data[nl_field]:
