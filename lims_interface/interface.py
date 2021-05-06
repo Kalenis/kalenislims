@@ -2023,8 +2023,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         }
                     data_eng = {}
                     for alias, nl_field in fields.items():
-                        data[nl_field] = getattr(line, alias)
-                        if nl_field == 'result' and data[nl_field]:
+                        data[nl_field] = getattr(line, alias, None)
+                        if nl_field == 'result' and data[nl_field] is not None:
                             if not nb_line.significant_digits:
                                 decimals = nb_line.decimals or 0
                                 result = round(float(data[nl_field]), decimals)
