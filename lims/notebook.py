@@ -2357,13 +2357,12 @@ class NotebookInternalRelationsCalc1(Wizard):
     def transition_search(self):
         Notebook = Pool().get('lims.notebook')
 
-        notebook = Notebook(Transaction().context['active_id'])
-        if not notebook.lines:
-            return 'end'
-
-        if self.get_relations(notebook.lines):
-            return 'confirm'
-        return 'end'
+        notebooks = Notebook.browse(Transaction().context['active_ids'])
+        for notebook in notebooks:
+            if not notebook.lines:
+                continue
+            self.get_relations(notebook.lines)
+        return 'confirm'
 
     def get_relations(self, notebook_lines):
         NotebookInternalRelationsCalc1Relation = Pool().get(
