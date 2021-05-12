@@ -339,9 +339,15 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
                 continue
 
             if count == 0:
-                content += div_row
+                content += div_row                
 
             content += div_col
+            
+            if attachment.title:
+                content += '<p style="font-size: 6pt;font-family: arial,\
+                    helvetica, sans-serif;">%s</p>' % (
+                        attachment.title, )
+            
             content += ('<img src="' +
                 ResultReport.get_image(attachment.data) +
                 '" alt="" style="width:100%;">')
