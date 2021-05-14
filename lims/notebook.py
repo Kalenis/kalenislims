@@ -1221,14 +1221,13 @@ class NotebookLine(ModelSQL, ModelView):
         return [('analysis',) + tuple(clause[1:])]
 
     @classmethod
-    def fields_view_get(cls, view_id=None, view_type='form'):
+    def fields_view_get(cls, view_id=None, view_type='form', level=None):
         pool = Pool()
         User = pool.get('res.user')
         Config = pool.get('lims.configuration')
         UiView = pool.get('ir.ui.view')
 
-        result = super().fields_view_get(view_id=view_id,
-            view_type=view_type)
+        result = super().fields_view_get(view_id, view_type, level)
 
         # All Notebook Lines view
         if view_id and UiView(view_id).name == 'notebook_line_all_list':
