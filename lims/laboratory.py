@@ -362,6 +362,7 @@ class LabDeviceType(ModelSQL, ModelView):
 
     code = fields.Char('Code', required=True)
     description = fields.Char('Description', required=True)
+    non_analytical = fields.Boolean('Non-analytical')
     methods = fields.Many2Many('lims.lab.device.type-lab.method',
         'device_type', 'method', 'Methods')
 
@@ -373,6 +374,10 @@ class LabDeviceType(ModelSQL, ModelView):
             ('code_uniq', Unique(t, t.code),
                 'lims.msg_device_type_code_unique_id'),
             ]
+
+    @staticmethod
+    def default_non_analytical():
+        return False
 
     def get_rec_name(self, name):
         if self.code:
@@ -407,7 +412,8 @@ class LabDeviceLaboratory(ModelSQL, ModelView):
     __name__ = 'lims.lab.device.laboratory'
 
     device = fields.Many2One('lims.lab.device', 'Device', required=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE', select=True,
+        domain=[('device_type.non_analytical', '=', False)])
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         required=True)
     physically_here = fields.Boolean('Physically here')
@@ -438,7 +444,8 @@ class LabDeviceCorrection(ModelSQL, ModelView):
     __name__ = 'lims.lab.device.correction'
 
     device = fields.Many2One('lims.lab.device', 'Device', required=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE', select=True,
+        domain=[('device_type.non_analytical', '=', False)])
     result_from = fields.Char('From', required=True)
     result_to = fields.Char('To', required=True)
     formula = fields.Char('Correction Formula', required=True,

@@ -2,5 +2,6 @@
 <tree>
     <field name="code"/>
     <field name="description"/>
+    <field name="non_analytical"/>
     <field name="methods"/>
 </tree>

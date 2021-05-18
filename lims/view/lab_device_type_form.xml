@@ -4,5 +4,7 @@
     <field name="code"/>
     <label name="description"/>
     <field name="description"/>
+    <label name="non_analytical"/>
+    <field name="non_analytical"/>
     <field name="methods" colspan="4"/>
 </form>
