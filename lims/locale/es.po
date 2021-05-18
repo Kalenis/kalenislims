@@ -2258,6 +2258,10 @@ msgctxt "field:lims.lab.device.type,methods:"
 msgid "Methods"
 msgstr "Métodos"
 
+msgctxt "field:lims.lab.device.type,non_analytical:"
+msgid "Non-analytical"
+msgstr "No analítico"
+
 msgctxt "field:lims.lab.device.type-lab.method,device_type:"
 msgid "Device type"
 msgstr "Tipo de equipo"

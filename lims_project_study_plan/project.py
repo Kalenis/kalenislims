@@ -782,7 +782,8 @@ class Sample(metaclass=PoolMeta):
     glp_repetitions = fields.Char('GLP repetitions',
         states=_states, depends=_depends)
     sample_weight = fields.Integer('Sample weight')
-    balance = fields.Many2One('lims.lab.device', 'Balance')
+    balance = fields.Many2One('lims.lab.device', 'Balance',
+        domain=[('device_type.non_analytical', '=', False)])
     cultivation_zone = fields.Char('Cultivation zone',
         states=_states, depends=_depends)
 
@@ -817,7 +818,8 @@ class CreateSampleStart(metaclass=PoolMeta):
     glp_repetitions = fields.Char('GLP repetitions',
         states=_states, depends=_depends)
     sample_weight = fields.Integer('Sample weight')
-    balance = fields.Many2One('lims.lab.device', 'Balance')
+    balance = fields.Many2One('lims.lab.device', 'Balance',
+        domain=[('device_type.non_analytical', '=', False)])
     cultivation_zone = fields.Char('Cultivation zone',
         states=_states, depends=_depends)
 

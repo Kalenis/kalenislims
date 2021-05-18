@@ -2012,7 +2012,8 @@ class AnalysisDevice(DeactivableMixin, ModelSQL, ModelView):
         domain=[('id', 'in', Eval('_parent_analysis',
             {}).get('laboratory_domain', [Eval('laboratory')]))])
     device = fields.Many2One('lims.lab.device', 'Device', required=True,
-        domain=[('laboratories.laboratory', '=', Eval('laboratory'))],
+        domain=[('laboratories.laboratory', '=', Eval('laboratory')),
+            ('device_type.non_analytical', '=', False)],
         depends=['laboratory'])
     by_default = fields.Boolean('By default')
 

@@ -1516,7 +1516,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
     revision = fields.Integer('Revision',
         states={'readonly': Eval('state') != 'draft'}, depends=['state'])
     table = fields.Many2One('lims.interface.table', 'Table')
-    device = fields.Many2One('lims.lab.device', 'Device')
+    device = fields.Many2One('lims.lab.device', 'Device',
+        domain=[('device_type.non_analytical', '=', False)])
     origins = fields.One2Many('lims.interface.compilation.origin',
        'compilation', 'Origins')
     state = fields.Selection([
