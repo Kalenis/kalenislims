@@ -10,6 +10,10 @@ msgctxt "field:lims.administrative.task,closing_date:"
 msgid "Closing Date"
 msgstr "Fecha de cierre"
 
+msgctxt "field:lims.administrative.task,color:"
+msgid "Color"
+msgstr "Color"
+
 msgctxt "field:lims.administrative.task,comments:"
 msgid "Comments"
 msgstr "Observaciones"
@@ -50,6 +54,10 @@ msgctxt "field:lims.administrative.task,responsible:"
 msgid "Responsible User"
 msgstr "Usuario responsable"
 
+msgctxt "field:lims.administrative.task,scheduled:"
+msgid "Scheduled"
+msgstr "Programada"
+
 msgctxt "field:lims.administrative.task,state:"
 msgid "State"
 msgstr "Estado"
@@ -87,6 +95,42 @@ msgctxt "field:lims.administrative.task.edit.start,responsible:"
 msgid "Responsible User"
 msgstr "Usuario responsable"
 
+msgctxt "field:lims.administrative.task.generate.start,end_date:"
+msgid "End Date"
+msgstr "Fecha de finalización"
+
+msgctxt "field:lims.administrative.task.generate.start,start_date:"
+msgid "Start Date"
+msgstr "Fecha de inicio"
+
+msgctxt "field:lims.administrative.task.generate.start,task_program:"
+msgid "Administrative Task Scheduling"
+msgstr "Programación de Tarea administrativa"
+
+msgctxt "field:lims.administrative.task.generate.start,tasks:"
+msgid "Tasks"
+msgstr "Tareas"
+
+msgctxt "field:lims.administrative.task.program,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:lims.administrative.task.program,frequency:"
+msgid "Frequency"
+msgstr "Frecuencia"
+
+msgctxt "field:lims.administrative.task.program,latest_date:"
+msgid "Latest scheduled date"
+msgstr "Última fecha programada"
+
+msgctxt "field:lims.administrative.task.program,responsible:"
+msgid "Responsible User"
+msgstr "Usuario responsable"
+
+msgctxt "field:lims.administrative.task.program,type:"
+msgid "Type"
+msgstr "Tipo"
+
 msgctxt "field:lims.administrative.task.template,description:"
 msgid "Description"
 msgstr "Descripción"
@@ -116,6 +160,10 @@ msgctxt "model:ir.action,name:act_task"
 msgid "All Administrative Tasks"
 msgstr "Todas las tareas administrativas"
 
+msgctxt "model:ir.action,name:act_task_calendar_list"
+msgid "Administrative Tasks Calendar"
+msgstr "Calendario de Tareas administrativas"
+
 msgctxt "model:ir.action,name:act_task_configuration"
 msgid "Configuration"
 msgstr "Configuración"
@@ -124,6 +172,10 @@ msgctxt "model:ir.action,name:act_task_mine"
 msgid "My Administrative Tasks"
 msgstr "Mis tareas administrativas"
 
+msgctxt "model:ir.action,name:act_task_program_list"
+msgid "Administrative Tasks Scheduling"
+msgstr "Programación de Tareas administrativas"
+
 msgctxt "model:ir.action,name:act_task_template"
 msgid "Administrative Tasks Configuration"
 msgstr "Configuración de Tareas administrativas"
@@ -131,6 +183,10 @@ msgstr "Configuración de Tareas administrativas"
 msgctxt "model:ir.action,name:wiz_edit_task"
 msgid "Edit Administrative Task"
 msgstr "Editar Tarea administrativa"
+
+msgctxt "model:ir.action,name:wizard_generate_task_calendar"
+msgid "Generate Administrative Tasks Calendar"
+msgstr "Generar Calendario de Tareas administrativas"
 
 msgctxt "model:ir.action.act_window.domain,name:act_task_domain_all"
 msgid "All"
@@ -250,6 +306,10 @@ msgctxt "model:ir.ui.menu,name:menu_task"
 msgid "All Administrative Tasks"
 msgstr "Todas las tareas administrativas"
 
+msgctxt "model:ir.ui.menu,name:menu_task_calendar"
+msgid "Calendar"
+msgstr "Calendario"
+
 msgctxt "model:ir.ui.menu,name:menu_task_configuration"
 msgid "Configuration"
 msgstr "Configuración"
@@ -257,6 +317,10 @@ msgstr "Configuración"
 msgctxt "model:ir.ui.menu,name:menu_task_mine"
 msgid "My Administrative Tasks"
 msgstr "Mis tareas administrativas"
+
+msgctxt "model:ir.ui.menu,name:menu_task_program"
+msgid "Administrative Tasks Scheduling"
+msgstr "Programación de Tareas administrativas"
 
 msgctxt "model:ir.ui.menu,name:menu_task_template"
 msgid "Automatic generation of administrative tasks"
@@ -277,6 +341,14 @@ msgstr "Configuración - Secuencia"
 msgctxt "model:lims.administrative.task.edit.start,name:"
 msgid "Edit Administrative Task"
 msgstr "Editar Tarea administrativa"
+
+msgctxt "model:lims.administrative.task.generate.start,name:"
+msgid "Generate Administrative Tasks Calendar"
+msgstr "Generar Calendario de Tareas administrativas"
+
+msgctxt "model:lims.administrative.task.program,name:"
+msgid "Administrative Task Scheduling"
+msgstr "Programación de Tarea administrativa"
 
 msgctxt "model:lims.administrative.task.template,name:"
 msgid "Administrative Task Configuration"
@@ -358,6 +430,22 @@ msgctxt "selection:lims.administrative.task.edit.start,priority:"
 msgid "Very Low"
 msgstr "Muy baja"
 
+msgctxt "selection:lims.administrative.task.program,frequency:"
+msgid "Daily"
+msgstr "Diaria"
+
+msgctxt "selection:lims.administrative.task.program,frequency:"
+msgid "Monthly"
+msgstr "Mensual"
+
+msgctxt "selection:lims.administrative.task.program,frequency:"
+msgid "Weekly"
+msgstr "Semanal"
+
+msgctxt "selection:lims.administrative.task.program,frequency:"
+msgid "Yearly"
+msgstr "Anual"
+
 msgctxt "view:lims.administrative.task:"
 msgid "Comments"
 msgstr "Observaciones"
@@ -393,3 +481,11 @@ msgstr "Confirmar"
 msgctxt "wizard_button:lims.administrative.task.edit,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.administrative.task.generate,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.administrative.task.generate,start,generate:"
+msgid "Generate"
+msgstr "Generar"

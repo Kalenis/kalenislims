@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<calendar dtstart="date" dtend="date" mode="month" background_color="color">
+    <field name="description"/>
+    <field name="responsible"/>
+</calendar>

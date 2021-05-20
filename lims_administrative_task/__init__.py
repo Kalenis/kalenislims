@@ -14,6 +14,8 @@ def register():
         task.AdministrativeTaskTemplate,
         task.AdministrativeTask,
         task.EditAdministrativeTaskStart,
+        task.AdministrativeTaskProgram,
+        task.GenerateAdministrativeTaskStart,
         department.Department,
         user.User,
         configuration.Configuration,
@@ -21,4 +23,5 @@ def register():
         module='lims_administrative_task', type_='model')
     Pool.register(
         task.EditAdministrativeTask,
+        task.GenerateAdministrativeTask,
         module='lims_administrative_task', type_='wizard')

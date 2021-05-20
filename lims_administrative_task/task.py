@@ -8,9 +8,10 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
 from trytond.model import Workflow, ModelSQL, ModelView, fields
-from trytond.pyson import Eval
+from trytond.pyson import PYSONEncoder, Eval
 from trytond.pool import Pool
-from trytond.wizard import Wizard, StateTransition, StateView, Button
+from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
+    Button
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
@@ -113,6 +114,8 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         ], 'State', select=True, readonly=True, required=True)
     icon = fields.Function(fields.Char('Icon'), 'get_icon')
     comments = fields.Text('Comments')
+    scheduled = fields.Boolean('Scheduled', readonly=True)
+    color = fields.Function(fields.Char('Color'), 'get_color')
 
     @classmethod
     def __setup__(cls):
@@ -159,6 +162,10 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
     def default_priority():
         return '3'
 
+    @staticmethod
+    def default_scheduled():
+        return False
+
     @classmethod
     def create(cls, vlist):
         pool = Pool()
@@ -190,16 +197,22 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         super().delete(tasks)
 
     def get_date(self, name):
+        if self.scheduled:
+            return self.expiration_date
         return self.create_date.date()
 
     @classmethod
     def search_date(cls, name, clause):
         cursor = Transaction().connection.cursor()
         operator_ = clause[1:2][0]
+        value = clause[2:3][0]
         cursor.execute('SELECT id '
             'FROM "' + cls._table + '" '
-            'WHERE create_date::date ' + operator_ + ' %s',
-            clause[2:3])
+            'WHERE (scheduled IS FALSE AND create_date::date '
+                + operator_ + ' %s) '
+            'OR (scheduled IS TRUE AND expiration_date::date '
+                + operator_ + ' %s)',
+            (value, value))
         return [('id', 'in', [x[0] for x in cursor.fetchall()])]
 
     @classmethod
@@ -230,6 +243,15 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
             if (t.state in ('pending', 'rejected', 'ongoing', 'standby') and
                     t.expiration_date and t.expiration_date < today):
                 result[t.id] = 'lims-red'
+        return result
+
+    @classmethod
+    def get_color(cls, tasks, name):
+        result = {}
+        for t in tasks:
+            result[t.id] = 'lightgray'
+            if t.state in ('pending', 'ongoing', 'standby'):
+                result[t.id] = 'lightblue'
         return result
 
     @classmethod
@@ -320,6 +342,8 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
             if not to_addr:
                 logger.error("Missing address for '%s' to send email",
                     task.responsible.rec_name)
+                continue
+            if task.scheduled:
                 continue
 
             subject, body = task._get_subject_body()
@@ -454,4 +478,137 @@ class EditAdministrativeTask(Wizard):
             if 'responsible' in to_write:
                 AdministrativeTask.send_email_responsible(tasks)
 
+        return 'end'
+
+
+class AdministrativeTaskProgram(ModelSQL, ModelView):
+    'Administrative Task Scheduling'
+    __name__ = 'lims.administrative.task.program'
+    _rec_name = 'type'
+
+    type = fields.Selection('get_types', 'Type', required=True)
+    description = fields.Char('Description', required=True)
+    responsible = fields.Many2One('res.user', 'Responsible User',
+        required=True)
+    frequency = fields.Selection([
+        ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
+        ('monthly', 'Monthly'),
+        ('yearly', 'Yearly'),
+        ], 'Frequency', required=True, sort=False)
+    latest_date = fields.Function(fields.Date('Latest scheduled date'),
+        'get_latest_date')
+
+    @classmethod
+    def get_types(cls):
+        AdministrativeTaskTemplate = Pool().get(
+            'lims.administrative.task.template')
+        return AdministrativeTaskTemplate.get_types()
+
+    @classmethod
+    def get_latest_date(cls, programs, name):
+        AdministrativeTask = Pool().get('lims.administrative.task')
+        result = {}
+        for p in programs:
+            latest_task = AdministrativeTask.search([
+                ('type', '=', p.type),
+                ('responsible', '=', p.responsible.id),
+                ('state', '=', 'pending'),
+                ], order=[('date', 'DESC')], limit=1)
+            result[p.id] = (latest_task and
+                latest_task[0].date or None)
+        return result
+
+
+class GenerateAdministrativeTaskStart(ModelView):
+    'Generate Administrative Tasks Calendar'
+    __name__ = 'lims.administrative.task.generate.start'
+
+    start_date = fields.Date('Start Date', required=True)
+    end_date = fields.Date('End Date', required=True)
+    task_program = fields.Many2Many(
+        'lims.administrative.task.program', None, None,
+        'Administrative Task Scheduling', required=True)
+    tasks = fields.One2Many('lims.administrative.task',
+        None, 'Tasks')
+
+
+class GenerateAdministrativeTask(Wizard):
+    'Generate Administrative Tasks Calendar'
+    __name__ = 'lims.administrative.task.generate'
+
+    start = StateView('lims.administrative.task.generate.start',
+        'lims_administrative_task.generate_task_calendar_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Generate', 'generate', 'tryton-ok', default=True),
+            ])
+    generate = StateTransition()
+    open = StateAction('lims_administrative_task.act_task')
+
+    def default_start(self, fields):
+        Date = Pool().get('ir.date')
+
+        today = Date.today()
+        programs = Transaction().context['active_ids']
+        defaults = {
+            'start_date': today,
+            'end_date': today,
+            'task_program': programs,
+            }
+        return defaults
+
+    def transition_generate(self):
+        AdministrativeTask = Pool().get('lims.administrative.task')
+
+        new_tasks = []
+        for program in self.start.task_program:
+            new_tasks.extend(self._get_new_tasks(program))
+
+        tasks = AdministrativeTask.create(new_tasks)
+        if tasks:
+            AdministrativeTask.pending(tasks)
+            self.start.tasks = tasks
+            return 'open'
+
+        return 'end'
+
+    def _get_new_tasks(self, program):
+        new_tasks = []
+        for date in self._get_dates(self.start.start_date,
+                program.frequency, self.start.end_date):
+            task = {
+                'type': program.type,
+                'description': program.description,
+                'responsible': program.responsible.id,
+                'expiration_date': date,
+                'priority': '3',
+                'state': 'draft',
+                'scheduled': True,
+                }
+            new_tasks.append(task)
+        return new_tasks
+
+    def _get_dates(self, start_date, frequency, end_date):
+        dates = []
+        if frequency == 'daily':
+            delta = relativedelta(days=1)
+        elif frequency == 'weekly':
+            delta = relativedelta(days=7)
+        elif frequency == 'monthly':
+            delta = relativedelta(months=1)
+        elif frequency == 'yearly':
+            delta = relativedelta(years=1)
+        date = start_date
+        while date <= end_date:
+            dates.append(date)
+            date += delta
+        return dates
+
+    def do_open(self, action):
+        action['pyson_domain'] = PYSONEncoder().encode([
+            ('id', 'in', [m.id for m in self.start.tasks]),
+            ])
+        return action, {}
+
+    def transition_open(self):
         return 'end'
