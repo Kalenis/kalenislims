@@ -401,9 +401,10 @@ class ResultsReportVersion(ModelSQL, ModelView):
         ResultsReport = pool.get('lims.results_report')
         Laboratory = pool.get('lims.laboratory')
 
-        results_reports = ResultsReport.search([
-            ('id', '=', results_report_id),
-            ])
+        with Transaction().set_user(0):
+            results_reports = ResultsReport.search([
+                ('id', '=', results_report_id),
+                ])
         report_number = results_reports[0].number
 
         laboratories = Laboratory.search([
