@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<form>
+    <label name="type"/>
+    <field name="type"/>
+    <label name="description"/>
+    <field name="description"/>
+    <label name="responsible"/>
+    <field name="responsible"/>
+    <label name="frequency"/>
+    <field name="frequency"/>
+    <label name="latest_date"/>
+    <field name="latest_date"/>
+</form>
