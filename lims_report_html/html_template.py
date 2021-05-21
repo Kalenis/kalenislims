@@ -17,6 +17,7 @@ from trytond.i18n import gettext
 class ReportTemplate(ModelSQL, ModelView):
     'Results Report Template'
     __name__ = 'lims.result_report.template'
+    _history = True
 
     name = fields.Char('Name', required=True)
     report = fields.Many2One('ir.action.report', 'Report',
