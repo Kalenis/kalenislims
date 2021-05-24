@@ -24,9 +24,12 @@
     <field name="company"/>
     <group id="range" colspan="2" col="4">
         <label name="range_validate"/>
-        <field name="range_validate"/>
+        <field name="range_validate"/>        
         <label name="range_type"/>
         <field name="range_type"/>
+    </group>
+    <group id="copy_lines" colspan="4" col="1">
+        <button name="copy_lines" string="Copy Lines"/>
     </group>
     <notebook colspan="4">
         <page name="lines">

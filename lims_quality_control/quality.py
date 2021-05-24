@@ -97,6 +97,9 @@ class Template(Workflow, ModelSQL, ModelView):
                 'invisible': (Eval('state') != 'active'),
                 'icon': 'tryton-clear',
                 },
+            'copy_lines': {
+                'invisible': Eval('state') != 'draft',
+                },
             })
 
     @classmethod
@@ -165,6 +168,11 @@ class Template(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('not_active')
     def not_active(cls, templates):
+        pass
+    
+    @classmethod
+    @ModelView.button_action('lims_quality_control.wiz_quality_template_copy_line')
+    def copy_lines(cls, typifications):
         pass
 
 
@@ -711,3 +719,96 @@ class TestAttachmentReport(Report):
     @classmethod
     def _get_resource(cls, obj):
         return '%s,%s' % (obj.__name__, obj.id)
+
+
+class CopyQualityTemplateLineStart(ModelView):
+    'Copy Quality Template Line'
+    __name__ = 'lims.quality.template.copy_line.start'
+    
+    origin_quality_template = fields.Many2One('lims.quality.template', 'Origin Template',
+        required=True,
+        )
+
+
+class CopyQualityTemplateLine(Wizard):
+    'Copy Quality Template Line'
+    __name__ = 'lims.quality.template.copy_line'
+    
+    start = StateTransition()
+    ask = StateView('lims.quality.template.copy_line.start',
+        'lims_quality_control.quality_template_copy_line_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Copy', 'copy', 'tryton-ok', default=True),            
+            ])
+    copy = StateTransition()
+    
+    def transition_start(self):
+        QualityTemplate = Pool().get('lims.quality.template')
+        quality_template_id = Transaction().context.get('active_id', None)
+        if not quality_template_id:
+            return 'end'
+        quality_template = QualityTemplate(quality_template_id)
+        if quality_template.state != 'draft':
+            return 'end'
+        return 'ask'
+
+    def transition_copy(self):
+        Line = Pool().get('lims.typification')
+
+        quality_template_id = Transaction().context.get('active_id', None)
+        count = Line.search_count([('quality_template', '=', quality_template_id)])
+
+        new_lines = []
+        origin_lines = Line.search([
+            ('quality_template', '=', self.ask.origin_quality_template.id),
+            ], order=[('quality_order', 'ASC')])
+        for origin in origin_lines:
+            count += 1
+            line = self._get_line(origin)
+            line['quality_template'] = quality_template_id
+            line['quality_order'] = count
+            new_lines.append(line)
+
+        if new_lines:
+            Line.create(new_lines)
+        return 'end'
+
+    def _get_line(self, origin):
+        res = {
+            'product_type': origin.product_type,
+            'matrix': origin.matrix,
+            'analysis': origin.analysis,
+            'method': origin.method,
+            'detection_limit': origin.detection_limit,
+            'quantification_limit': origin.quantification_limit,
+            'lower_limit': origin.lower_limit,
+            'upper_limit': origin.upper_limit,
+            'limit_digits': origin.limit_digits,
+            'check_result_limits': origin.check_result_limits,
+            'initial_concentration': origin.initial_concentration,
+            'start_uom': origin.start_uom,
+            'final_concentration': origin.final_concentration,
+            'end_uom': origin.end_uom,
+            'default_repetitions': origin.default_repetitions,
+            'comments': origin.comments,
+            'additional': origin.additional,
+            'additionals': origin.additionals,
+            'by_default': origin.by_default,
+            'calc_decimals': origin.calc_decimals,
+            'significant_digits': origin.significant_digits,
+            'scientific_notation': origin.scientific_notation,
+            'report': origin.report,
+            'report_type': origin.report_type,
+            'report_result_type': origin.report_result_type,
+            'referable': origin.referable,
+            'valid': origin.valid,
+            'specification': origin.specification,
+            'quality': origin.quality,
+            'valid_value': origin.valid_value,
+            'quality_test_report': origin.quality_test_report,
+            'quality_order': origin.quality_order,
+            #problemas al copiar algunos registros que no tienen valor en quality_min
+            'quality_min': origin.quality_min,
+            'quality_max': origin.quality_max,
+            }
+        return res

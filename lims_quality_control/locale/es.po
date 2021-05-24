@@ -1112,3 +1112,27 @@ msgstr "Añadir"
 msgctxt "wizard_button:lims.template.add.service,ask,end:"
 msgid "Cancel"
 msgstr "Cancelar"
+
+msgctxt "field:lims.quality.template.copy_line.start,origin_quality_template:"
+msgid "Origin Template"
+msgstr "Plantilla origen"
+
+msgctxt "model:ir.action,name:wiz_quality_template_copy_line"
+msgid "Copy Quality Template Line"
+msgstr "Copiar Linea de Plantilla de Cálidad"
+
+msgctxt "model:lims.quality.template.copy_line.start,name:"
+msgid "Copy Quality Template Line"
+msgstr "Copiar Linea de Plantilla de Cálidad"
+
+msgctxt "view:lims.quality.template:"
+msgid "Copy Lines"
+msgstr "Copiar Líneas"
+
+msgctxt "wizard_button:lims.quality.template.copy_line,ask,copy:"
+msgid "Copy"
+msgstr "Copiar"
+
+msgctxt "wizard_button:lims.quality.template.copy_line,ask,end:"
+msgid "Cancel"
+msgstr "Cancelar"
