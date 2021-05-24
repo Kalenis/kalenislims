@@ -495,5 +495,17 @@
             <field name="action" ref="report_test_attachment"/>
         </record>
 
+<!-- Wizard Copy Quality Template Line  -->
+
+        <record model="ir.ui.view" id="quality_template_copy_line_start_view_form">
+            <field name="model">lims.quality.template.copy_line.start</field>
+            <field name="type">form</field>
+            <field name="name">quality_template_copy_line_form</field>
+        </record>
+        <record model="ir.action.wizard" id="wiz_quality_template_copy_line">
+            <field name="name">Copy Quality Template Line</field>
+            <field name="wiz_name">lims.quality.template.copy_line</field>
+        </record>
+
     </data>
 </tryton>
