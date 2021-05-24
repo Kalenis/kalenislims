@@ -32,6 +32,7 @@ def register():
         quality.QualityTest,
         quality.CreateQualityTestStart,
         quality.TemplateAddServiceStart,
+        quality.CopyQualityTemplateLineStart,
         module='lims_quality_control', type_='model')
     Pool.register(
         lims.NotebookLoadResultsManual,
@@ -42,6 +43,7 @@ def register():
         quality.TestResultsReport,
         quality.OpenTestAttachment,
         quality.PrintTest,
+        quality.CopyQualityTemplateLine,
         module='lims_quality_control', type_='wizard')
     Pool.register(
         sample.SampleLabels,
