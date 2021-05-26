@@ -3545,6 +3545,10 @@ class ManageServices(Wizard):
             'fraction': fraction.id,
             'sample': service.sample.id,
             'analysis': service.analysis.id,
+            'laboratory': (service.laboratory.id if service.laboratory
+                else None),
+            'method': service.method.id if service.method else None,
+            'device': service.device.id if service.device else None,
             'urgent': service.urgent,
             'priority': service.priority,
             'estimated_waiting_laboratory': (
@@ -3553,10 +3557,6 @@ class ManageServices(Wizard):
                 service.estimated_waiting_report),
             'laboratory_date': service.laboratory_date,
             'report_date': service.report_date,
-            'laboratory': (service.laboratory.id if service.laboratory
-                else None),
-            'method': service.method.id if service.method else None,
-            'device': service.device.id if service.device else None,
             'comments': service.comments,
             'divide': service.divide,
             }]
@@ -3773,6 +3773,120 @@ class LoadServices(Wizard):
                 'fraction': new_fraction.id,
                 })
         return 'end'
+
+
+class AddSampleServiceStart(ModelView):
+    'Add Sample Services'
+    __name__ = 'lims.sample.add_service.start'
+
+    product_type = fields.Many2One('lims.product.type', 'Product type')
+    matrix = fields.Many2One('lims.matrix', 'Matrix')
+    analysis_domain = fields.Many2Many('lims.analysis', None, None,
+        'Analysis domain')
+    services = fields.One2Many('lims.create_sample.service', None, 'Services',
+        required=True, depends=['analysis_domain', 'product_type', 'matrix'],
+        context={
+            'analysis_domain': Eval('analysis_domain'),
+            'product_type': Eval('product_type'), 'matrix': Eval('matrix'),
+            })
+
+
+class AddSampleService(Wizard):
+    'Add Sample Services'
+    __name__ = 'lims.sample.add_service'
+
+    start = StateView('lims.sample.add_service.start',
+        'lims.add_sample_service_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Confirm', 'confirm', 'tryton-ok', default=True),
+            ])
+    confirm = StateTransition()
+
+    def default_start(self, fields):
+        Sample = Pool().get('lims.sample')
+
+        sample = Sample(Transaction().context['active_id'])
+        if not sample:
+            return {}
+
+        analysis_domain_ids = sample.on_change_with_analysis_domain()
+
+        default = {
+            'product_type': sample.product_type.id,
+            'matrix': sample.matrix.id,
+            'analysis_domain': analysis_domain_ids,
+            'services': [],
+            }
+        return default
+
+    def transition_confirm(self):
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Entry = pool.get('lims.entry')
+
+        for sample in Sample.browse(Transaction().context['active_ids']):
+            delete_ack_report_cache = False
+            for fraction in sample.fractions:
+                original_analysis = []
+                for service in fraction.services:
+                    if service.annulled:
+                        continue
+                    key = (service.analysis.id,
+                        service.method and service.method.id or None)
+                    original_analysis.append(key)
+                for service in self.start.services:
+                    key = (service.analysis.id,
+                        service.method and service.method.id or None)
+                    if key not in original_analysis:
+                        self.create_service(service, fraction)
+                        delete_ack_report_cache = True
+
+            if delete_ack_report_cache:
+                entry = Entry(sample.entry.id)
+                entry.ack_report_format = None
+                entry.ack_report_cache = None
+                entry.save()
+
+        return 'end'
+
+    def create_service(self, service, fraction):
+        pool = Pool()
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        service_create = [{
+            'fraction': fraction.id,
+            'sample': fraction.sample.id,
+            'analysis': service.analysis.id,
+            'laboratory': (service.laboratory.id if service.laboratory
+                else None),
+            'method': service.method.id if service.method else None,
+            'device': service.device.id if service.device else None,
+            'urgent': service.urgent,
+            'priority': service.priority,
+            'estimated_waiting_laboratory': (
+                service.estimated_waiting_laboratory),
+            'estimated_waiting_report': (
+                service.estimated_waiting_report),
+            'laboratory_date': service.laboratory_date,
+            'report_date': service.report_date,
+            'divide': service.divide,
+            }]
+        with Transaction().set_context(manage_service=True):
+            new_service, = Service.create(service_create)
+
+        Service.copy_analysis_comments([new_service])
+        Service.set_confirmation_date([new_service])
+        analysis_detail = EntryDetailAnalysis.search([
+            ('service', '=', new_service.id)])
+        if analysis_detail:
+            EntryDetailAnalysis.create_notebook_lines(analysis_detail,
+                fraction)
+            EntryDetailAnalysis.write(analysis_detail, {
+                'state': 'unplanned',
+                })
+
+        return new_service
 
 
 class EditSampleServiceStart(ModelView):

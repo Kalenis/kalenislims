@@ -1017,6 +1017,25 @@
             <field name="action" ref="ir.act_module_form"/>
         </record>
 
+<!-- Wizard Add Sample Services -->
+
+        <record model="ir.ui.view" id="add_sample_service_start_view_form">
+            <field name="model">lims.sample.add_service.start</field>
+            <field name="type">form</field>
+            <field name="name">sample_add_services_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_add_sample_service">
+            <field name="name">Add Sample Services</field>
+            <field name="wiz_name">lims.sample.add_service</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_add_sample_service_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.sample,-1</field>
+            <field name="action" ref="wiz_add_sample_service"/>
+        </record>
+
 <!-- Wizard Edit Sample Services -->
 
         <record model="ir.ui.view" id="edit_sample_service_start_view_form">
