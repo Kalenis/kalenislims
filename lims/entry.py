@@ -1217,8 +1217,6 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                     if (detail.service and detail.service.fraction and
                             detail.service.fraction.confirmed):
                         detail.update_cie_data()
-            if vals.get('state'):
-                cls.update_referrals(details)
 
     def update_cie_data(self):
         pool = Pool()
@@ -1273,25 +1271,6 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                 'referable': True,
                 'plannable': False,
                 })
-
-    @classmethod
-    def update_referrals(cls, details):
-        Referral = Pool().get('lims.referral')
-
-        referral_ids = [d.referral.id for d in details if d.referral]
-        if not referral_ids:
-            return
-
-        referrals = Referral.search([
-            ('state', '=', 'sent'),
-            ('id', 'in', referral_ids),
-            ])
-        for referral in referrals:
-            if cls.search_count([
-                    ('referral', '=', referral.id),
-                    ('state', '=', 'referred'),
-                    ]) == 0:
-                Referral.write([referral], {'state': 'done'})
 
 
 class ForwardAcknowledgmentOfReceipt(Wizard):

@@ -1003,6 +1003,14 @@ class NotebookLine(ModelSQL, ModelView):
             if update_samples_state:
                 sample_ids = list(set(nl.sample.id for nl in lines))
                 Sample.update_samples_state(sample_ids)
+            update_referrals_state = False
+            for field in ('accepted', 'annulled', 'result', 'literal_result',
+                    'result_modifier'):
+                if field in vals:
+                    update_referrals_state = True
+                    break
+            if update_referrals_state:
+                cls.update_referrals_state(lines)
 
     @staticmethod
     def update_detail_analysis(lines, accepted):
@@ -1056,6 +1064,30 @@ class NotebookLine(ModelSQL, ModelView):
             d.report = value[0] if value else False
             to_save.append(d)
         EntryDetailAnalysis.save(to_save)
+
+    @classmethod
+    def update_referrals_state(cls, lines):
+        Referral = Pool().get('lims.referral')
+
+        referral_ids = [l.analysis_detail.referral.id
+            for l in lines if l.analysis_detail.referral]
+        if not referral_ids:
+            return
+
+        referrals = Referral.search([
+            ('state', '=', 'sent'),
+            ('id', 'in', referral_ids),
+            ])
+        for referral in referrals:
+            if cls.search_count([
+                    ('analysis_detail.referral', '=', referral.id),
+                    ('annulled', '=', False),
+                    ('result', 'in', [None, '']),
+                    ('literal_result', 'in', [None, '']),
+                    ('result_modifier', 'not in', [
+                        'd', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre', 'na']),
+                    ]) == 0:
+                Referral.write([referral], {'state': 'done'})
 
     @classmethod
     def validate(cls, notebook_lines):
