@@ -3901,6 +3901,10 @@ msgctxt "field:lims.planification,waiting_process:"
 msgid "Waiting process"
 msgstr "Esperando procesamiento"
 
+msgctxt "field:lims.planification,wizard_executed:"
+msgid "Wizard executed"
+msgstr "Asistente ejecutado"
+
 msgctxt "field:lims.planification-analysis,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
@@ -8193,6 +8197,10 @@ msgstr "El código de la variedad debe ser único"
 msgctxt "model:ir.message,text:msg_waiting_process"
 msgid "Planification \"%(planification)s\" is still waiting for processing"
 msgstr "La planificación «%(planification)s» aún está en procesamiento"
+
+msgctxt "model:ir.message,text:msg_wizard_executed"
+msgid "Wizard already executed. Please wait."
+msgstr "Asistente ya ejecutado. Espere por favor."
 
 msgctxt "model:ir.message,text:msg_workyear_overlaps"
 msgid "Work year \"%(first)s\" and \"%(second)s\" overlap."
