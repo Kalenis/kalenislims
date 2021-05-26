@@ -5559,6 +5559,22 @@ msgctxt "field:lims.sample,zone_required:"
 msgid "Zone required"
 msgstr "Zona requerida"
 
+msgctxt "field:lims.sample.add_service.start,analysis_domain:"
+msgid "Analysis domain"
+msgstr "Dominio para Análisis"
+
+msgctxt "field:lims.sample.add_service.start,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.sample.add_service.start,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.sample.add_service.start,services:"
+msgid "Services"
+msgstr "Servicios"
+
 msgctxt "field:lims.sample.duplicate.start,date:"
 msgid "Date"
 msgstr "Fecha de ingreso"
@@ -6973,6 +6989,10 @@ msgstr "Transcripción Informe de resultados"
 msgctxt "model:ir.action,name:report_trend_chart"
 msgid "Trend Chart"
 msgstr "Gráfico de tendencia"
+
+msgctxt "model:ir.action,name:wiz_add_sample_service"
+msgid "Add Sample Services"
+msgstr "Añadir servicios a muestras"
 
 msgctxt "model:ir.action,name:wiz_analysis_open_not_typified"
 msgid "Open Analysis Not Typified"
@@ -9534,6 +9554,10 @@ msgstr "Condición de Regla de cuaderno"
 msgctxt "model:lims.sample,name:"
 msgid "Sample"
 msgstr "Muestra"
+
+msgctxt "model:lims.sample.add_service.start,name:"
+msgid "Add Sample Services"
+msgstr "Añadir servicios a muestras"
 
 msgctxt "model:lims.sample.attribute,name:"
 msgid "Sample Attribute"
@@ -15087,6 +15111,14 @@ msgid "Annul"
 msgstr "Anular"
 
 msgctxt "wizard_button:lims.results_report_annulation,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.sample.add_service,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.sample.add_service,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
