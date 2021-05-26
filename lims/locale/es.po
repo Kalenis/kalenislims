@@ -14102,6 +14102,11 @@ msgctxt "view:lims.sample.duplicate.start:"
 msgid "Labels"
 msgstr "Rótulos"
 
+msgctxt "view:lims.sample.edit_service.start:"
+msgid "All selected samples will be left only with the following services:"
+msgstr ""
+"Todas las muestras seleccionadas quedarán sólo con los siguientes servicios:"
+
 msgctxt "view:lims.sample:"
 msgid "Attributes"
 msgstr "Atributos"
