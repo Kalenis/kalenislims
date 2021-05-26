@@ -63,6 +63,7 @@ class Planification(Workflow, ModelSQL, ModelView):
         ('not_executed', 'Not executed'),
         ], 'State', required=True, readonly=True)
     waiting_process = fields.Boolean('Waiting process')
+    wizard_executed = fields.Boolean('Wizard executed')
     method_domain = fields.Function(fields.One2Many('lims.lab.method',
         None, 'Method domain'),
         'on_change_with_method_domain', setter='set_method_domain')
@@ -140,6 +141,10 @@ class Planification(Workflow, ModelSQL, ModelView):
 
     @staticmethod
     def default_waiting_process():
+        return False
+
+    @staticmethod
+    def default_wizard_executed():
         return False
 
     @staticmethod
@@ -271,8 +276,15 @@ class Planification(Workflow, ModelSQL, ModelView):
     @ModelView.button_action('lims.wiz_lims_technicians_qualification')
     def confirm(cls, planifications):
         for planification in planifications:
+            planification.check_wizard_executed()
             planification.check_start_date()
             planification.check_technicians()
+
+    def check_wizard_executed(self):
+        if self.wizard_executed:
+            raise UserError(gettext('lims.msg_wizard_executed'))
+        self.wizard_executed = True
+        self.save()
 
     def check_start_date(self):
         if not self.start_date:
@@ -4924,6 +4936,8 @@ class TechniciansQualification(Wizard):
             'lims.planification.qualification.situation')
 
         planification = Planification(Transaction().context['active_id'])
+        planification.wizard_executed = False
+        planification.save()
 
         planification_details = PlanificationServiceDetail.search([
             ('planification', '=', planification.id),
