@@ -5503,6 +5503,10 @@ msgctxt "field:lims.sample,product_type_view:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
+msgctxt "field:lims.sample,qty_lines_pending_acceptance:"
+msgid "Lines pending acceptance"
+msgstr "Líneas pendientes de aceptación"
+
 msgctxt "field:lims.sample,report_comments:"
 msgid "Report comments"
 msgstr "Observaciones informe"
