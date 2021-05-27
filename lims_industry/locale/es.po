@@ -459,6 +459,10 @@ msgctxt "field:lims.results_report.version.detail.sample,equipment_template:"
 msgid "Equipment Template"
 msgstr "Tipo/Marca"
 
+msgctxt "field:lims.results_report.version.detail.sample,free_precedents:"
+msgid "Free precedents"
+msgstr "Antecedentes libres"
+
 msgctxt "field:lims.results_report.version.detail.sample,plant:"
 msgid "Plant"
 msgstr "Planta"
