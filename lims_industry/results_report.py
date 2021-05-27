@@ -5,7 +5,7 @@
 from trytond.model import fields
 from trytond.wizard import Wizard, StateAction
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import PYSONEncoder, Eval
+from trytond.pyson import PYSONEncoder, Eval, If
 from trytond.transaction import Transaction
 from trytond.i18n import gettext
 
@@ -316,14 +316,18 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
     comercial_product = fields.Function(fields.Many2One(
         'lims.comercial.product', 'Comercial Product'), 'get_notebook_field')
     precedent1 = fields.Many2One('lims.notebook', 'Precedent 1',
-        domain=[('component', '=', Eval('component'))],
-        depends=['component'])
+        domain=[If(~Eval('free_precedents'),
+            ('component', '=', Eval('component')), ())],
+        depends=['free_precedents', 'component'])
     precedent2 = fields.Many2One('lims.notebook', 'Precedent 2',
-        domain=[('component', '=', Eval('component'))],
-        depends=['component'])
+        domain=[If(~Eval('free_precedents'),
+            ('component', '=', Eval('component')), ())],
+        depends=['free_precedents', 'component'])
     precedent3 = fields.Many2One('lims.notebook', 'Precedent 3',
-        domain=[('component', '=', Eval('component'))],
-        depends=['component'])
+        domain=[If(~Eval('free_precedents'),
+            ('component', '=', Eval('component')), ())],
+        depends=['free_precedents', 'component'])
+    free_precedents = fields.Boolean('Free precedents')
     precedent1_diagnosis = fields.Function(fields.Text(
         'Diagnosis Precedent 1'), 'get_precedent_diagnosis')
     precedent2_diagnosis = fields.Function(fields.Text(
@@ -339,6 +343,10 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
     precedent3_diagnosis_states = fields.Function(fields.Dict(
         'lims.diagnosis.state', 'Diagnosis States Precedent 3'),
         'get_precedent_diagnosis')
+
+    @staticmethod
+    def default_free_precedents():
+        return False
 
     @classmethod
     def view_attributes(cls):

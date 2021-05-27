@@ -10,6 +10,9 @@
     </xpath>
     <xpath expr="/form/notebook/page[@id='lines']" position="after">
         <page id="precedents" col="6" string="Precedents">
+            <label name="free_precedents"/>
+            <field name="free_precedents"/>
+            <newline/>
             <label name="precedent1"/>
             <field name="precedent1"/>
             <label name="precedent2"/>
