@@ -103,6 +103,12 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         return detail_default
 
     @classmethod
+    def _get_fields_not_overwrite(cls):
+        fields = super()._get_fields_not_overwrite()
+        fields.extend(['diagnostician', 'diagnosis_template'])
+        return fields
+
+    @classmethod
     def _get_fields_from_detail(cls, detail):
         detail_default = super()._get_fields_from_detail(detail)
         if detail.diagnostician:
