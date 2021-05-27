@@ -173,6 +173,13 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         return result_template
 
     @classmethod
+    def _get_fields_not_overwrite(cls):
+        fields = super()._get_fields_not_overwrite()
+        fields.extend(['template', 'trend_charts', 'charts_x_row',
+            'sections', 'resultrange_origin'])
+        return fields
+
+    @classmethod
     def _get_fields_from_detail(cls, detail):
         detail_default = super()._get_fields_from_detail(detail)
         if detail.template:

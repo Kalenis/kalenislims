@@ -1169,6 +1169,11 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         return detail_default
 
     @classmethod
+    def _get_fields_not_overwrite(cls):
+        fields = ['type', 'signer', 'samples']
+        return fields
+
+    @classmethod
     def get_samples_list(cls, details, name):
         cursor = Transaction().connection.cursor()
         pool = Pool()
@@ -2922,9 +2927,10 @@ class GenerateReport(Wizard):
                             del sample['notebook']
                             ResultsSample.write(existing_sample, sample)
 
-                    del details['type']
-                    del details['signer']
-                    del details['samples']
+                    # do not overwrite some fields of the draft detail
+                    for field in ResultsDetail._get_fields_not_overwrite():
+                        if field in details:
+                            del details[field]
                     ResultsDetail.write([draft_detail], details)
                     reports_details = [draft_detail.id]
 
