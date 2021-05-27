@@ -978,8 +978,11 @@ class NotebookLine(ModelSQL, ModelView):
 
     @classmethod
     def create(cls, vlist):
+        Sample = Pool().get('lims.sample')
         lines = super().create(vlist)
         cls.update_detail_report(lines)
+        sample_ids = list(set(nl.sample.id for nl in lines))
+        Sample.update_samples_state(sample_ids)
         return lines
 
     @classmethod

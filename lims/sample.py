@@ -13,7 +13,7 @@ from trytond.model import ModelView, ModelSQL, fields, Unique, DictSchemaMixin
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
 from trytond.pool import Pool
-from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or
+from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or, If
 from trytond.transaction import Transaction
 from trytond.report import Report
 from trytond.exceptions import UserError
@@ -2510,6 +2510,7 @@ class Sample(ModelSQL, ModelView):
         ('in_report', 'In Report'),
         ('report_released', 'Report Released'),
         ], 'State')
+    qty_lines_pending_acceptance = fields.Integer('Lines pending acceptance')
 
     @classmethod
     def __setup__(cls):
@@ -2518,6 +2519,17 @@ class Sample(ModelSQL, ModelView):
         cls.__rpc__.update({
             'update_samples_state': RPC(readonly=False, instantiate=0),
             })
+
+    @classmethod
+    def __register__(cls, module_name):
+        table_h = cls.__table_handler__(module_name)
+        qty_lines_pending_acceptance_exist = table_h.column_exist(
+            'qty_lines_pending_acceptance')
+        super().__register__(module_name)
+        if not qty_lines_pending_acceptance_exist:
+            logging.getLogger(__name__).info('Updating samples...')
+            for sample in cls.search([]):
+                sample.update_qty_lines_pending_acceptance()
 
     @staticmethod
     def default_date():
@@ -2535,15 +2547,21 @@ class Sample(ModelSQL, ModelView):
     def default_state():
         return 'draft'
 
+    @staticmethod
+    def default_qty_lines_pending_acceptance():
+        return None
+
     @classmethod
     def copy(cls, samples, default=None):
         if default is None:
             default = {}
+        current_default = default.copy()
+        current_default['qty_lines_pending_acceptance'] = None
 
         new_samples = []
         for sample in sorted(samples, key=lambda x: x.number):
             new_sample, = super().copy([sample],
-                default=default)
+                default=current_default)
             new_samples.append(new_sample)
         return new_samples
 
@@ -2637,6 +2655,14 @@ class Sample(ModelSQL, ModelView):
             if vals.get('label'):
                 for sample in samples:
                     sample.warn_duplicated_label()
+
+    @classmethod
+    def view_attributes(cls):
+        return [
+            ('/tree/field[@name="qty_lines_pending_acceptance"]',
+                'visual', If(Eval('qty_lines_pending_acceptance', 0) > 0,
+                'danger', '')),
+            ]
 
     @fields.depends('product_type', 'matrix', 'zone',
         '_parent_product_type.restricted_entry',
@@ -3141,6 +3167,7 @@ class Sample(ModelSQL, ModelView):
         for sample in samples:
             sample.update_sample_dates()
             sample.update_sample_state()
+            sample.update_qty_lines_pending_acceptance()
 
     def update_sample_dates(self):
         dates = self._get_sample_dates()
@@ -3323,6 +3350,33 @@ class Sample(ModelSQL, ModelView):
         if self.confirmation_date:
             return 'pending_planning'
         return 'draft'
+
+    def update_qty_lines_pending_acceptance(self):
+        qty = self._get_qty_lines_pending_acceptance()
+        if self.qty_lines_pending_acceptance != qty:
+            self.qty_lines_pending_acceptance = qty
+            self.save()
+
+    def _get_qty_lines_pending_acceptance(self):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
+        Service = pool.get('lims.service')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        cursor.execute('SELECT COUNT(*) '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + Service._table + '" s '
+                'ON s.id = nl.service '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = s.fraction '
+            'WHERE f.sample = %s '
+                'AND nl.report = TRUE '
+                'AND nl.annulled = FALSE '
+                'AND nl.end_date IS NOT NULL '
+                'AND nl.acceptance_date IS NULL',
+            (self.id,))
+        return cursor.fetchone()[0]
 
 
 class DuplicateSampleStart(ModelView):
