@@ -7741,6 +7741,10 @@ msgid "Upper limit allowed must be greater than Lower limit allowed"
 msgstr ""
 "El Límite superior permitido debe ser mayor que el Límite inferior permitido"
 
+msgctxt "model:ir.message,text:msg_invalid_report_state"
+msgid "The target Results Report does not have a valid state"
+msgstr "El informe de resultados destino no tiene un estado válido"
+
 msgctxt "model:ir.message,text:msg_invalid_start_date"
 msgid ""
 "The start date must be after \"%(date)s\" (Creation date of Sample "

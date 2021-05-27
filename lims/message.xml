@@ -535,5 +535,8 @@
         <record model="ir.message" id="msg_annul_analysis">
             <field name="text">The analysis "%(analysis)s" is already reported</field>
         </record>
+        <record model="ir.message" id="msg_invalid_report_state">
+            <field name="text">The target Results Report does not have a valid state</field>
+        </record>
     </data>
 </tryton>
