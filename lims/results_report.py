@@ -2909,6 +2909,13 @@ class GenerateReport(Wizard):
                     ('state', '=', 'draft'),
                     ], limit=1)
                 if not draft_detail:
+                    if ResultsDetail.search_count([
+                            ('report_version', '=', actual_version.id),
+                            ('state', 'not in', ['released', 'annulled']),
+                            ]) > 0:
+                        raise UserError(gettext(
+                            'lims.msg_invalid_report_state'))
+
                     details['report_version'] = actual_version.id
                     detail, = ResultsDetail.create([details])
                     ResultsDetail.update_from_valid_version([detail])
@@ -3080,6 +3087,13 @@ class GenerateReport(Wizard):
             ('state', '=', 'draft'),
             ], limit=1)
         if not draft_detail:
+            if ResultsDetail.search_count([
+                    ('report_version', '=', actual_version.id),
+                    ('state', 'not in', ['released', 'annulled']),
+                    ]) > 0:
+                raise UserError(gettext(
+                    'lims.msg_invalid_report_state'))
+
             details['report_version'] = actual_version.id
             detail, = ResultsDetail.create([details])
             ResultsDetail.update_from_valid_version([detail])
