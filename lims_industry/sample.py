@@ -794,10 +794,10 @@ class EditSample(Wizard):
         ResultsVersion = pool.get('lims.results_report.version')
         ResultsReport = pool.get('lims.results_report')
 
-        if sample.has_results_report:
-            raise UserError(gettext(
-                'lims_industry.msg_edit_results_report_party',
-                sample=sample.rec_name))
+        #if sample.has_results_report:
+            #raise UserError(gettext(
+                #'lims_industry.msg_edit_results_report_party',
+                #sample=sample.rec_name))
 
         cursor.execute('SELECT rv.results_report '
             'FROM "' + ResultsVersion._table + '" rv '
