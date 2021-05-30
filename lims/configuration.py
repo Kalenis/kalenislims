@@ -594,25 +594,3 @@ class Cron(metaclass=PoolMeta):
                 ('lims.trend.chart|clean',
                     "Lims Clean Inactive Trend Charts"),
                 ])
-
-
-class ModelDoc(ModelSQL, ModelView):
-    'Model Doc'
-    __name__ = 'ir.model.doc'
-
-    model = fields.Many2One('ir.model', 'Model')
-    doc = fields.Text('Documentation', translate=True)
-    kind = fields.Selection([
-        ('base', 'Base'),
-        ('extended', 'Extended'),
-        ], 'Kind')
-    name = fields.Function(fields.Char('Name'), 'get_name')
-
-    def get_name(self, name):
-        return self.model.name
-
-
-class Model(metaclass=PoolMeta):
-    __name__ = 'ir.model'
-
-    docs = fields.One2Many('ir.model.doc', 'model', 'Docs')

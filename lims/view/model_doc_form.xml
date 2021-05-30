@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<form>
-    <label name="kind"/>
-    <field name="kind"/>
-    <separator name="doc" colspan="4"/>
-    <field name="doc" colspan="4"  widget="richtext"/>
-</form>
