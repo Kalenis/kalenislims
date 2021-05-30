@@ -140,12 +140,6 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
-        <record model="ir.model.doc" id="lims_entry_model_doc">
-            <field name="model" search="[('model', '=', 'lims.entry')]"/>
-            <field name="kind">base</field>
-            <field name="doc"><![CDATA[<div align="left"><b><font face="normal" size="7">Entry <i>Documentation</i></font></b></div>]]></field>
-        </record>
-
 <!-- New Entry -->
 
         <record model="ir.action.act_window" id="act_lims_entry_form">
