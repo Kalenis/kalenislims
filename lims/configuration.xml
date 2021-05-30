@@ -191,24 +191,6 @@
         <menuitem action="act_printer_list" id="lims_printer_menu"
             parent="lims_config_base" sequence="30"/>
 
-<!-- Model -->
-
-        <record model="ir.ui.view" id="model_view_form">
-            <field name="model">ir.model</field>
-            <field name="inherit" ref="ir.model_view_form"/>
-            <field name="name">model_form</field>
-        </record>
-        <record model="ir.ui.view" id="model_doc_view_form">
-            <field name="model">ir.model.doc</field>
-            <field name="type">form</field>
-            <field name="name">model_doc_form</field>
-        </record>
-        <record model="ir.ui.view" id="model_doc_view_tree">
-            <field name="model">ir.model.doc</field>
-            <field name="type">tree</field>
-            <field name="name">model_doc_tree</field>
-        </record>
-
 <!-- Attachment -->
 
         <menuitem name="Attachments" id="menu_attachment"
