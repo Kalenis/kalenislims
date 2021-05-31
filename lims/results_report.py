@@ -897,9 +897,10 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
             cls.write([detail], detail_default)
 
             # copy samples from previous valid version
+            only_accepted = (detail.type != 'preliminary')
             for valid_sample in valid_detail.samples:
                 sample_default = ResultsSample._get_fields_from_sample(
-                    valid_sample)
+                    valid_sample, only_accepted)
                 existing_sample = ResultsSample.search([
                     ('version_detail', '=', detail.id),
                     ('notebook', '=', valid_sample.notebook.id),
@@ -1266,13 +1267,19 @@ class ResultsReportVersionDetailSample(ModelSQL, ModelView):
         return result
 
     @classmethod
-    def _get_fields_from_sample(cls, sample):
+    def _get_fields_from_sample(cls, sample, only_accepted=True):
         sample_default = {}
-        notebook_lines = [{
-            'notebook_line': nline.notebook_line.id,
-            'hide': nline.hide,
-            'corrected': nline.corrected,
-            } for nline in sample.notebook_lines if nline.notebook_line]
+        notebook_lines = []
+        for nline in sample.notebook_lines:
+            if not nline.notebook_line:
+                continue
+            if only_accepted and not nline.notebook_line.accepted:
+                continue
+            notebook_lines.append({
+                'notebook_line': nline.notebook_line.id,
+                'hide': nline.hide,
+                'corrected': nline.corrected,
+                })
         if notebook_lines:
             sample_default['notebook_lines'] = [('create', notebook_lines)]
         return sample_default
@@ -2839,13 +2846,8 @@ class GenerateReport(Wizard):
 
         if res['report_domain'] and entry != -1:
             draft_detail = ResultsDetail.search([
-                ('report_version.results_report.party', '=', party),
-                ('report_version.results_report.entry', '=', entry),
-                ('report_version.results_report.report_grouper', '=',
-                    report_grouper),
-                ('report_version.results_report.cie_fraction_type', '=',
-                    cie_fraction_type),
-                ('report_version.laboratory', '=', laboratory_id),
+                ('report_version.results_report.id', 'in',
+                    res['report_domain']),
                 ('state', '=', 'draft'),
                 ])
             if draft_detail and len(draft_detail) == 1:
