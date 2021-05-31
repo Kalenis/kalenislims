@@ -184,8 +184,9 @@ class ResultsReport(ModelSQL, ModelView):
                     'ON rd.report_version = rv.id '
                 'WHERE rv.results_report = %s '
                     'AND ad.report_grouper = %s '
-                    'AND ad.report = TRUE '
-                    'AND ad.state NOT IN (\'reported\', \'annulled\')',
+                    'AND nl.report = TRUE '
+                    'AND nl.annulled = FALSE '
+                    'AND nl.results_report IS NULL',
                 (r.id, r.report_grouper,))
             if cursor.fetchone()[0] > 0:
                 continue
