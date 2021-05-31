@@ -281,7 +281,7 @@ class Service(ModelSQL, ModelView):
         'Fraction', states={'invisible': Not(Bool(Eval('_parent_fraction')))}),
         'on_change_with_fraction_view')
     sample = fields.Function(fields.Many2One('lims.sample', 'Sample',
-        states={'readonly': Bool(Eval('context', {}).get('readonly', True))}),
+        states={'readonly': True}),
         'get_fraction_field', setter='set_fraction_field',
         searcher='search_fraction_field')
     entry = fields.Function(fields.Many2One('lims.entry', 'Entry'),
