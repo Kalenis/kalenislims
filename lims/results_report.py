@@ -2555,27 +2555,27 @@ class GenerateResultsReport(Wizard):
             reports_details = [d.id for d in report.versions[0].details]
             return reports_details
 
-        existing_detail = ResultsDetail.search([
+        existing_details = ResultsDetail.search([
             ('laboratory', '=', self.start.laboratory.id),
             ('samples.notebook', '=', samples[0]['notebook']),
-            ], limit=1)
-        if existing_detail:
-            existing_report = (
-                existing_detail[0].report_version.results_report)
+            ])
+        if existing_details:
+            current_reports = [d.report_version.results_report.id
+                for d in existing_details]
         else:
-            existing_detail = ResultsDetail.search([
+            existing_details = ResultsDetail.search([
                 ('samples.notebook', '=', samples[0]['notebook']),
-                ], limit=1)
-            if existing_detail:
-                existing_report = (
-                    existing_detail[0].report_version.results_report)
+                ])
+            if existing_details:
+                current_reports = [d.report_version.results_report.id
+                    for d in existing_details]
             else:
                 report, = ResultsReport.create([reports])
                 reports_details = [d.id for d in report.versions[0].details]
                 return reports_details
 
         actual_report = ResultsReport.search([
-            ('id', '=', existing_report.id),
+            ('id', 'in', current_reports),
             ('report_grouper', '=', reports['report_grouper']),
             ('cie_fraction_type', '=', reports['cie_fraction_type']),
             ], limit=1)
@@ -2779,7 +2779,7 @@ class GenerateReport(Wizard):
         entry = None
         report_grouper = None
         cie_fraction_type = None
-        current_report = None
+        current_reports = []
 
         for notebook in Notebook.browse(Transaction().context['active_ids']):
             res['notebooks'].append(notebook.id)
@@ -2794,7 +2794,8 @@ class GenerateReport(Wizard):
                 elif party != notebook.party.id:
                     res['report_readonly'] = True
                 # same report_grouper
-                for line in notebook.lines:
+                for line in notebook._get_lines_for_reporting(
+                        laboratory_id, 'complete'):
                     if not report_grouper:
                         report_grouper = line.analysis_detail.report_grouper
                     elif report_grouper != line.analysis_detail.report_grouper:
@@ -2806,16 +2807,16 @@ class GenerateReport(Wizard):
                 elif cie_fraction_type != notebook.fraction.cie_fraction_type:
                     res['report_readonly'] = True
                 # same current_report
-                existing_detail = ResultsDetail.search([
+                existing_details = ResultsDetail.search([
                     ('laboratory', '=', laboratory_id),
                     ('samples.notebook', '=', notebook.id),
-                    ], limit=1)
-                if existing_detail:
-                    existing_report = (
-                        existing_detail[0].report_version.results_report)
-                    if not current_report:
-                        current_report = existing_report.id
-                    elif current_report != existing_report.id:
+                    ])
+                if existing_details:
+                    existing_reports = [d.report_version.results_report.id
+                        for d in existing_details]
+                    if not current_reports:
+                        current_reports = existing_reports
+                    elif current_reports != existing_reports:
                         res['report_readonly'] = True
 
             if notebook.state != 'complete':
@@ -2832,8 +2833,8 @@ class GenerateReport(Wizard):
                     res['report_domain'] = [
                         last_detail[0].report_version.results_report.id]
             else:
-                if current_report:
-                    clause = [('id', '=', current_report)]
+                if current_reports:
+                    clause = [('id', 'in', current_reports)]
                 else:
                     clause = [
                         ('party', '=', party),
@@ -3040,27 +3041,27 @@ class GenerateReport(Wizard):
             reports_details = [d.id for d in report.versions[0].details]
             return reports_details
 
-        existing_detail = ResultsDetail.search([
+        existing_details = ResultsDetail.search([
             ('laboratory', '=', laboratory_id),
             ('samples.notebook', '=', samples[0]['notebook']),
-            ], limit=1)
-        if existing_detail:
-            existing_report = (
-                existing_detail[0].report_version.results_report)
+            ])
+        if existing_details:
+            current_reports = [d.report_version.results_report.id
+                for d in existing_details]
         else:
-            existing_detail = ResultsDetail.search([
+            existing_details = ResultsDetail.search([
                 ('samples.notebook', '=', samples[0]['notebook']),
-                ], limit=1)
-            if existing_detail:
-                existing_report = (
-                    existing_detail[0].report_version.results_report)
+                ])
+            if existing_details:
+                current_reports = [d.report_version.results_report.id
+                    for d in existing_details]
             else:
                 report, = ResultsReport.create([reports])
                 reports_details = [d.id for d in report.versions[0].details]
                 return reports_details
 
         actual_report = ResultsReport.search([
-            ('id', '=', existing_report.id),
+            ('id', 'in', current_reports),
             ('report_grouper', '=', reports['report_grouper']),
             ('cie_fraction_type', '=', reports['cie_fraction_type']),
             ], limit=1)
