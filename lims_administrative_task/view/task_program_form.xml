@@ -6,8 +6,35 @@
     <field name="description"/>
     <label name="responsible"/>
     <field name="responsible"/>
-    <label name="frequency"/>
-    <field name="frequency"/>
     <label name="latest_date"/>
     <field name="latest_date"/>
+    <group id="frequence" colspan="4" string="Frequence">
+        <label name="frequence_selection"/>
+        <field name="frequence_selection"/>
+        <group id="detail_frequence" colspan="2" col="2">
+            <field name="detail_frequence" xexpand="0" width="30"/>
+            <field name="detail_frequence_selection" xexpand="1"/>
+        </group>
+        <label name="only_workdays"/>
+        <field name="only_workdays"/>
+        <group id="specific" colspan="2" col="2">
+            <label name="specific_day"/>
+            <field name="specific_day"/>
+            <label name="specific_time"/>
+            <field name="specific_time"/>
+        </group>
+    </group>
+    <group id="create_tasks" colspan="4" string="Generate Administrative Tasks">
+        <label name="start_date"/>
+        <field name="start_date"/>
+        <label name="finish_selection"/>
+        <field name="finish_selection"/>
+        <group id="end" colspan="2" col="2">
+            <label name="end_repetition"/>
+            <field name="end_repetition"/>
+            <label name="end_date"/>
+            <field name="end_date"/>
+        </group>
+        <button name="create_tasks" colspan="2"/>
+    </group>
 </form>
