@@ -165,6 +165,11 @@ class Sample(metaclass=PoolMeta):
     def default_ind_oil_uom():
         return 'hs'
 
+    @fields.depends('equipment', 'component')
+    def on_change_equipment(self):
+        if not self.equipment and self.component:
+            self.component = None
+
     @fields.depends('component')
     def on_change_component(self):
         if self.component:
