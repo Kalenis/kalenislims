@@ -5024,6 +5024,10 @@ msgctxt "field:lims.results_report.version.detail,english_report:"
 msgid "English report"
 msgstr "Informe en inglés"
 
+msgctxt "field:lims.results_report.version.detail,entry_summary:"
+msgid "Entry / Qty. Samples"
+msgstr "Ingreso / Cant. Muestras"
+
 msgctxt "field:lims.results_report.version.detail,fractions_comments:"
 msgid "Fractions comments"
 msgstr "Observaciones de las fracciones"

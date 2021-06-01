@@ -9,6 +9,7 @@
     <field name="party"/>
     <field name="invoice_party"/>
     <field name="samples_list"/>
+    <field name="entry_summary"/>
     <field name="report_type"/>
     <field name="report_result_type"/>
     <field name="signer"/>
