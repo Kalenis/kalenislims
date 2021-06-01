@@ -75,6 +75,8 @@ class Notebook(ModelSQL, ModelView):
         'get_acceptance_pending', searcher='search_acceptance_pending')
     urgent = fields.Function(fields.Boolean('Urgent'), 'get_urgent',
         searcher='search_urgent')
+    entry_summary = fields.Function(fields.Char('Entry / Qty. Samples'),
+        'get_entry_summary', searcher='search_entry_summary')
 
     @classmethod
     def __setup__(cls):
@@ -730,6 +732,43 @@ class Notebook(ModelSQL, ModelView):
             urgents = cls.search([('lines.urgent', '=', True)])
             return [('id', 'not in', [u.id for u in urgents])]
         return []
+
+    @classmethod
+    def get_entry_summary(cls, notebooks, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Entry = pool.get('lims.entry')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+
+        result = {}
+        for n in notebooks:
+            result[n.id] = ''
+
+            cursor.execute('SELECT s.entry '
+                'FROM "' + Sample._table + '" s '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON s.id = f.sample '
+                'WHERE f.id = %s',
+                (str(n.fraction.id),))
+            entry_id = cursor.fetchone()[0]
+
+            cursor.execute('SELECT e.number, count(s.id) '
+                'FROM "' + Entry._table + '" e '
+                    'INNER JOIN "' + Sample._table + '" s '
+                    'ON e.id = s.entry '
+                'WHERE e.id = %s '
+                'GROUP BY e.number',
+                (str(entry_id),))
+            res = cursor.fetchone()
+            if not res:
+                continue
+            result[n.id] = '%s/%s' % (res[0], res[1])
+        return result
+
+    @classmethod
+    def search_entry_summary(cls, name, clause):
+        return [('fraction.sample.entry.number',) + tuple(clause[1:])]
 
 
 class NotebookLine(ModelSQL, ModelView):
