@@ -488,6 +488,8 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     icon = fields.Function(fields.Char('Icon'), 'get_icon')
     samples_list = fields.Function(fields.Char('Samples'),
         'get_samples_list', searcher='search_samples_list')
+    entry_summary = fields.Function(fields.Char('Entry / Qty. Samples'),
+        'get_entry_summary', searcher='search_entry_summary')
 
     # State changes
     revision_uid = fields.Many2One('res.user', 'Revision user', readonly=True)
@@ -1221,6 +1223,74 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                 'INNER JOIN "' + ResultsSample._table + '" rs '
                 'ON n.id = rs.notebook '
             'WHERE s.number ILIKE %s',
+            (value,))
+        details_ids = [x[0] for x in cursor.fetchall()]
+        if not details_ids:
+            return [('id', '=', -1)]
+        return [('id', 'in', details_ids)]
+
+    @classmethod
+    def get_entry_summary(cls, details, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Entry = pool.get('lims.entry')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        result = {}
+        for d in details:
+            result[d.id] = ''
+
+            cursor.execute('SELECT DISTINCT(s.entry) '
+                'FROM "' + Sample._table + '" s '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON s.id = f.sample '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON f.id = n.fraction '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON n.id = rs.notebook '
+                'WHERE rs.version_detail = %s', (d.id,))
+            entry_ids = [x[0] for x in cursor.fetchall()]
+            if not entry_ids:
+                continue
+            entry_ids = ', '.join(str(e) for e in entry_ids)
+
+            cursor.execute('SELECT e.number, count(s.id) '
+                'FROM "' + Entry._table + '" e '
+                    'INNER JOIN "' + Sample._table + '" s '
+                    'ON e.id = s.entry '
+                'WHERE e.id IN (' + entry_ids + ') '
+                'GROUP BY e.number')
+            res = cursor.fetchone()
+            if not res:
+                continue
+            result[d.id] = '%s/%s' % (res[0], res[1])
+        return result
+
+    @classmethod
+    def search_entry_summary(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Entry = pool.get('lims.entry')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        value = clause[2]
+        cursor.execute('SELECT rs.version_detail '
+            'FROM "' + Entry._table + '" e '
+                'INNER JOIN "' + Sample._table + '" s '
+                'ON e.id = s.entry '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON s.id = f.sample '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON n.id = rs.notebook '
+            'WHERE e.number ILIKE %s',
             (value,))
         details_ids = [x[0] for x in cursor.fetchall()]
         if not details_ids:
