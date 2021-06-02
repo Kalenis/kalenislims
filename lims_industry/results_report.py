@@ -327,6 +327,21 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         domain=[If(~Eval('free_precedents'),
             ('component', '=', Eval('component')), ())],
         depends=['free_precedents', 'component'])
+    precedent4 = fields.Many2One('lims.notebook', 'Precedent 4',
+        domain=[('component', '=', Eval('component'))],
+        depends=['component'])
+    precedent5 = fields.Many2One('lims.notebook', 'Precedent 5',
+        domain=[('component', '=', Eval('component'))],
+        depends=['component'])
+    precedent6 = fields.Many2One('lims.notebook', 'Precedent 6',
+        domain=[('component', '=', Eval('component'))],
+        depends=['component'])
+    precedent7 = fields.Many2One('lims.notebook', 'Precedent 7',
+        domain=[('component', '=', Eval('component'))],
+        depends=['component'])
+    precedent8 = fields.Many2One('lims.notebook', 'Precedent 8',
+        domain=[('component', '=', Eval('component'))],
+        depends=['component'])
     free_precedents = fields.Boolean('Free precedents')
     precedent1_diagnosis = fields.Function(fields.Text(
         'Diagnosis Precedent 1'), 'get_precedent_diagnosis')
@@ -429,6 +444,16 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
             sample.precedent2 or None)
         sample_default['precedent3'] = (sample.precedent3 and
             sample.precedent3 or None)
+        sample_default['precedent4'] = (sample.precedent4 and
+            sample.precedent4 or None)
+        sample_default['precedent5'] = (sample.precedent5 and
+            sample.precedent5 or None)
+        sample_default['precedent6'] = (sample.precedent6 and
+            sample.precedent6 or None)
+        sample_default['precedent7'] = (sample.precedent7 and
+            sample.precedent7 or None)
+        sample_default['precedent8'] = (sample.precedent8 and
+            sample.precedent8 or None)
         return sample_default
 
     @classmethod
@@ -454,7 +479,9 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         actions = iter(args)
         for samples, vals in zip(actions, actions):
             change_precedents = False
-            for field in ['precedent1', 'precedent2', 'precedent3']:
+            for field in ['precedent1', 'precedent2', 'precedent3',
+                    'precedent4', 'precedent5', 'precedent6', 'precedent7',
+                    'precedent8']:
                 if field in vals:
                     change_precedents = True
             if change_precedents:
@@ -523,6 +550,16 @@ class ResultsReportVersionDetailLine(metaclass=PoolMeta):
         'get_precedent_result')
     precedent3_result = fields.Function(fields.Char('Precedent 3'),
         'get_precedent_result')
+    precedent4_result = fields.Function(fields.Char('Precedent 4'),
+        'get_precedent_result')
+    precedent5_result = fields.Function(fields.Char('Precedent 5'),
+        'get_precedent_result')
+    precedent6_result = fields.Function(fields.Char('Precedent 6'),
+        'get_precedent_result')
+    precedent7_result = fields.Function(fields.Char('Precedent 7'),
+        'get_precedent_result')
+    precedent8_result = fields.Function(fields.Char('Precedent 8'),
+        'get_precedent_result')
 
     @classmethod
     def __setup__(cls):
@@ -555,10 +592,30 @@ class ResultsReportVersionDetailLine(metaclass=PoolMeta):
                 for d in details:
                     result[name][d.id] = cls._get_precedent_result(
                         d.detail_sample.precedent2, d)
-            else:  # name == 'precedent3_result':
+            elif name == 'precedent3_result':
                 for d in details:
                     result[name][d.id] = cls._get_precedent_result(
                         d.detail_sample.precedent3, d)
+            elif name == 'precedent4_result':
+                for d in details:
+                    result[name][d.id] = cls._get_precedent_result(
+                        d.detail_sample.precedent4, d)
+            elif name == 'precedent5_result':
+                for d in details:
+                    result[name][d.id] = cls._get_precedent_result(
+                        d.detail_sample.precedent5, d)
+            elif name == 'precedent6_result':
+                for d in details:
+                    result[name][d.id] = cls._get_precedent_result(
+                        d.detail_sample.precedent6, d)
+            elif name == 'precedent7_result':
+                for d in details:
+                    result[name][d.id] = cls._get_precedent_result(
+                        d.detail_sample.precedent7, d)
+            else:  # name == 'precedent8_result':
+                for d in details:
+                    result[name][d.id] = cls._get_precedent_result(
+                        d.detail_sample.precedent8, d)
         return result
 
     @classmethod
