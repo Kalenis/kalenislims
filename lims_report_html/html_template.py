@@ -58,6 +58,10 @@ class ReportTemplate(ModelSQL, ModelView):
         ('1', '1'),
         ('2', '2'),
         ], 'Charts per Row')
+    page_orientation = fields.Selection([
+        ('portrait', 'Portrait'),
+        ('landscape','Landscape'),
+        ],'Page orientation',sort=False)
 
     @staticmethod
     def default_type():
@@ -66,6 +70,10 @@ class ReportTemplate(ModelSQL, ModelView):
     @staticmethod
     def default_charts_x_row():
         return '1'
+
+    @staticmethod
+    def default_page_orientation():
+        return 'portrait'
 
     @classmethod
     def view_attributes(cls):

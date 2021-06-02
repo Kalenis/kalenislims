@@ -70,6 +70,10 @@ msgctxt "field:lims.result_report.template,type:"
 msgid "Type"
 msgstr "Tipo"
 
+msgctxt "field:lims.result_report.template,page_orientation:"
+msgid "Page orientation"
+msgstr "Orientación de la página"
+
 msgctxt "field:lims.result_report.template.section,data:"
 msgid "File"
 msgstr "Archivo"
@@ -277,6 +281,14 @@ msgstr "HTML - Pie de página"
 msgctxt "selection:lims.result_report.template,type:"
 msgid "HTML - Header"
 msgstr "HTML - Encabezado"
+
+msgctxt "selection:lims.result_report.template,page_orientation:"
+msgid "Portrait"
+msgstr "Vertical"
+
+msgctxt "selection:lims.result_report.template,page_orientation:"
+msgid "Landscape"
+msgstr "Horizontal"
 
 msgctxt "selection:lims.result_report.template.section,position:"
 msgid "Following"

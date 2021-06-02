@@ -6,6 +6,8 @@
     <field name="type"/>
     <label name="report"/>
     <field name="report"/>
+    <label name="page_orientation"/>
+    <field name="page_orientation"/>
     <notebook>
         <page name="content">
             <field name="content" colspan="4" widget="html"/>
