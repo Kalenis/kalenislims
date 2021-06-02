@@ -95,37 +95,57 @@ msgctxt "field:lims.administrative.task.edit.start,responsible:"
 msgid "Responsible User"
 msgstr "Usuario responsable"
 
-msgctxt "field:lims.administrative.task.generate.start,end_date:"
-msgid "End Date"
-msgstr "Fecha de finalización"
-
-msgctxt "field:lims.administrative.task.generate.start,start_date:"
-msgid "Start Date"
-msgstr "Fecha de inicio"
-
-msgctxt "field:lims.administrative.task.generate.start,task_program:"
-msgid "Administrative Task Scheduling"
-msgstr "Programación de Tarea administrativa"
-
-msgctxt "field:lims.administrative.task.generate.start,tasks:"
-msgid "Tasks"
-msgstr "Tareas"
-
 msgctxt "field:lims.administrative.task.program,description:"
 msgid "Description"
 msgstr "Descripción"
 
-msgctxt "field:lims.administrative.task.program,frequency:"
-msgid "Frequency"
+msgctxt "field:lims.administrative.task.program,detail_frequence:"
+msgid "Frequence"
 msgstr "Frecuencia"
+
+msgctxt "field:lims.administrative.task.program,detail_frequence_selection:"
+msgid "Frequence"
+msgstr "Frecuencia"
+
+msgctxt "field:lims.administrative.task.program,end_date:"
+msgid "End Date"
+msgstr "Fecha de finalización"
+
+msgctxt "field:lims.administrative.task.program,end_repetition:"
+msgid "Repetition Qty."
+msgstr "Cant. de Repeticiones"
+
+msgctxt "field:lims.administrative.task.program,finish_selection:"
+msgid "Ends on"
+msgstr "Finalizar en"
+
+msgctxt "field:lims.administrative.task.program,frequence_selection:"
+msgid "Select Frequence"
+msgstr "Seleccione frecuencia"
 
 msgctxt "field:lims.administrative.task.program,latest_date:"
 msgid "Latest scheduled date"
 msgstr "Última fecha programada"
 
+msgctxt "field:lims.administrative.task.program,only_workdays:"
+msgid "Allow working days only"
+msgstr "Permitir solamente días laborables"
+
 msgctxt "field:lims.administrative.task.program,responsible:"
 msgid "Responsible User"
 msgstr "Usuario responsable"
+
+msgctxt "field:lims.administrative.task.program,specific_day:"
+msgid "Specific Day"
+msgstr "Día específico"
+
+msgctxt "field:lims.administrative.task.program,specific_time:"
+msgid "Specific Time"
+msgstr "Horario específico"
+
+msgctxt "field:lims.administrative.task.program,start_date:"
+msgid "Start Date"
+msgstr "Fecha de inicio"
 
 msgctxt "field:lims.administrative.task.program,type:"
 msgid "Type"
@@ -286,6 +306,18 @@ msgctxt "model:ir.message,text:msg_no_task_sequence"
 msgid "There is no task sequence configured"
 msgstr "No hay una secuencia de tarea configurada"
 
+msgctxt "model:ir.model.button,confirm:task_program_create_tasks_button"
+msgid "Are you sure you want to generate new administrative tasks?"
+msgstr "¿Está seguro que quiere generar nuevas tareas administrativas?"
+
+msgctxt "model:ir.model.button,help:task_program_create_tasks_button"
+msgid "Generate administrative tasks"
+msgstr "Generar tareas administrativas"
+
+msgctxt "model:ir.model.button,string:task_program_create_tasks_button"
+msgid "Generate"
+msgstr "Generar"
+
 msgctxt "model:ir.sequence,name:seq_task"
 msgid "Administrative Task"
 msgstr "Tarea administrativa"
@@ -341,10 +373,6 @@ msgstr "Configuración - Secuencia"
 msgctxt "model:lims.administrative.task.edit.start,name:"
 msgid "Edit Administrative Task"
 msgstr "Editar Tarea administrativa"
-
-msgctxt "model:lims.administrative.task.generate.start,name:"
-msgid "Generate Administrative Tasks Calendar"
-msgstr "Generar Calendario de Tareas administrativas"
 
 msgctxt "model:lims.administrative.task.program,name:"
 msgid "Administrative Task Scheduling"
@@ -430,21 +458,107 @@ msgctxt "selection:lims.administrative.task.edit.start,priority:"
 msgid "Very Low"
 msgstr "Muy baja"
 
-msgctxt "selection:lims.administrative.task.program,frequency:"
+msgctxt ""
+"selection:lims.administrative.task.program,detail_frequence_selection:"
+msgid "Days"
+msgstr "Días"
+
+msgctxt ""
+"selection:lims.administrative.task.program,detail_frequence_selection:"
+msgid "Hours"
+msgstr "Horas"
+
+msgctxt ""
+"selection:lims.administrative.task.program,detail_frequence_selection:"
+msgid "Minutes"
+msgstr "Minutos"
+
+msgctxt ""
+"selection:lims.administrative.task.program,detail_frequence_selection:"
+msgid "Months"
+msgstr "Meses"
+
+msgctxt ""
+"selection:lims.administrative.task.program,detail_frequence_selection:"
+msgid "Weeks"
+msgstr "Semanas"
+
+msgctxt ""
+"selection:lims.administrative.task.program,detail_frequence_selection:"
+msgid "Years"
+msgstr "Años"
+
+msgctxt "selection:lims.administrative.task.program,finish_selection:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "selection:lims.administrative.task.program,finish_selection:"
+msgid "Quantity"
+msgstr "Cantidad"
+
+msgctxt "selection:lims.administrative.task.program,frequence_selection:"
+msgid "Customize"
+msgstr "Personalizada"
+
+msgctxt "selection:lims.administrative.task.program,frequence_selection:"
 msgid "Daily"
 msgstr "Diaria"
 
-msgctxt "selection:lims.administrative.task.program,frequency:"
+msgctxt "selection:lims.administrative.task.program,frequence_selection:"
+msgid "Every 15 days"
+msgstr "Cada 15 días"
+
+msgctxt "selection:lims.administrative.task.program,frequence_selection:"
+msgid "Hourly"
+msgstr "Cada hora"
+
+msgctxt "selection:lims.administrative.task.program,frequence_selection:"
 msgid "Monthly"
 msgstr "Mensual"
 
-msgctxt "selection:lims.administrative.task.program,frequency:"
+msgctxt "selection:lims.administrative.task.program,frequence_selection:"
 msgid "Weekly"
 msgstr "Semanal"
 
-msgctxt "selection:lims.administrative.task.program,frequency:"
+msgctxt "selection:lims.administrative.task.program,frequence_selection:"
 msgid "Yearly"
 msgstr "Anual"
+
+msgctxt "selection:lims.administrative.task.program,specific_day:"
+msgid "Friday"
+msgstr "Viernes"
+
+msgctxt "selection:lims.administrative.task.program,specific_day:"
+msgid "Monday"
+msgstr "Lunes"
+
+msgctxt "selection:lims.administrative.task.program,specific_day:"
+msgid "Saturday"
+msgstr "Sábado"
+
+msgctxt "selection:lims.administrative.task.program,specific_day:"
+msgid "Sunday"
+msgstr "Domingo"
+
+msgctxt "selection:lims.administrative.task.program,specific_day:"
+msgid "Thursday"
+msgstr "Jueves"
+
+msgctxt "selection:lims.administrative.task.program,specific_day:"
+msgid "Tuesday"
+msgstr "Martes"
+
+msgctxt "selection:lims.administrative.task.program,specific_day:"
+msgid "Wednesday"
+msgstr "Miércoles"
+
+msgctxt "view:lims.administrative.task.program:"
+msgid "Frequence"
+msgstr "Frecuencia"
+
+msgctxt "view:lims.administrative.task.program:"
+msgid "Generate Administrative Tasks"
+msgstr "Generar tareas administrativas"
 
 msgctxt "view:lims.administrative.task:"
 msgid "Comments"
@@ -481,11 +595,3 @@ msgstr "Confirmar"
 msgctxt "wizard_button:lims.administrative.task.edit,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
-
-msgctxt "wizard_button:lims.administrative.task.generate,start,end:"
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgctxt "wizard_button:lims.administrative.task.generate,start,generate:"
-msgid "Generate"
-msgstr "Generar"
