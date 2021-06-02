@@ -195,8 +195,9 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         return []
 
     @classmethod
-    def _get_fields_from_sample(cls, sample):
-        sample_default = super()._get_fields_from_sample(sample)
+    def _get_fields_from_sample(cls, sample, only_accepted=True):
+        sample_default = super()._get_fields_from_sample(sample,
+            only_accepted)
         sample_default['diagnosis'] = sample.diagnosis
         sample_default['diagnosis_states'] = sample.diagnosis_states
         return sample_default

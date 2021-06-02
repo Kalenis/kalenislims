@@ -3,6 +3,5 @@
     <field name="type"/>
     <field name="description"/>
     <field name="responsible"/>
-    <field name="frequency"/>
     <field name="latest_date"/>
 </tree>

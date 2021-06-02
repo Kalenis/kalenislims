@@ -2599,6 +2599,10 @@ msgctxt "field:lims.notebook,divided_report:"
 msgid "Divided report"
 msgstr "Informe dividido"
 
+msgctxt "field:lims.notebook,entry_summary:"
+msgid "Entry / Qty. Samples"
+msgstr "Ingreso / Cant. Muestras"
+
 msgctxt "field:lims.notebook,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
@@ -5019,6 +5023,10 @@ msgstr "Fecha"
 msgctxt "field:lims.results_report.version.detail,english_report:"
 msgid "English report"
 msgstr "Informe en inglés"
+
+msgctxt "field:lims.results_report.version.detail,entry_summary:"
+msgid "Entry / Qty. Samples"
+msgstr "Ingreso / Cant. Muestras"
 
 msgctxt "field:lims.results_report.version.detail,fractions_comments:"
 msgid "Fractions comments"

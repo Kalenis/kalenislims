@@ -1,0 +1,7 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "model:ir.message,text:missing_end_condition"
+msgid "No end condition defined"
+msgstr "Falta la condición de finalización"
