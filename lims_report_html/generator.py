@@ -9,7 +9,7 @@ class PdfGenerator:
 
     def __init__(self, main_html, header_html=None, footer_html=None,
             base_url=None, side_margin=2, extra_vertical_margin=30,
-            stylesheets=None):
+            stylesheets=None, page_orientation='portrait'):
         self.main_html = main_html
         self.header_html = header_html
         self.footer_html = footer_html
@@ -17,6 +17,7 @@ class PdfGenerator:
         self.side_margin = side_margin
         self.extra_vertical_margin = extra_vertical_margin
         self.stylesheets = stylesheets or []
+        self.page_orientation = page_orientation
 
     @staticmethod
     def get_element(boxes, element):
@@ -43,8 +44,10 @@ class PdfGenerator:
             footer_size=footer_height + self.extra_vertical_margin,
             side_margin='{}cm'.format(self.side_margin),
             )
-        content_print_layout = ('@page {size: A4 portrait; margin: %s;}' %
+        content_print_layout = ('@page {size: A4 %s; margin: %s;}' %
+            (self.page_orientation,
             margins)
+            )
         stylesheets = [CSS(string=content_print_layout)]
         for sheet in self.stylesheets:
             stylesheets.append(CSS(string=sheet))
@@ -62,7 +65,7 @@ class PdfGenerator:
 
     def _compute_overlay_element(self, element: str):
         overlay_layout = (
-            '@page {size: A4 portrait; margin: 0;}' +
+            '@page {size: A4 %s; margin: 0;}' % self.page_orientation +
             '\nheader {position: fixed; width: 100%; top: 0;}' +
             '\nfooter {position: fixed; width: 100%; bottom: 0;}')
         stylesheets = [CSS(string=overlay_layout)]

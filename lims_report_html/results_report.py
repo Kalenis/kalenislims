@@ -346,15 +346,15 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
                 continue
 
             if count == 0:
-                content += div_row                
+                content += div_row
 
             content += div_col
-            
+
             if attachment.title:
                 content += '<p style="font-size: 6pt;font-family: arial,\
                     helvetica, sans-serif;">%s</p>' % (
                         attachment.title, )
-            
+
             content += ('<img src="' +
                 ResultReport.get_image(attachment.data) +
                 '" alt="" style="width:100%;">')
@@ -499,16 +499,20 @@ class ResultReport(metaclass=PoolMeta):
             footer = tfooter and cls.render_results_report_template(action,
                 tfooter, record=record, records=[record],
                 data=data)
+
         stylesheets = cls.parse_stylesheets(tcontent)
         if theader:
             stylesheets += cls.parse_stylesheets(theader)
         if tfooter:
             stylesheets += cls.parse_stylesheets(tfooter)
 
+        page_orientation = record.template and record.template.page_orientation or 'portrait'
+
         document = PdfGenerator(content,
             header_html=header, footer_html=footer,
             side_margin=1, extra_vertical_margin=30,
-            stylesheets=stylesheets).render_html().write_pdf()
+            stylesheets=stylesheets,
+            page_orientation=page_orientation).render_html().write_pdf()
 
         if record.previous_sections or record.following_sections:
             merger = PdfFileMerger(strict=False)
