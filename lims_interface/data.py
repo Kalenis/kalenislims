@@ -882,8 +882,9 @@ class GroupedData(ModelView):
 
     @classmethod
     def fields_get(cls, fields_names=None, group=0, level=0):
-        Model = Pool().get('ir.model')
-        Data = Pool().get('lims.interface.data')
+        pool = Pool()
+        Model = pool.get('ir.model')
+        Data = pool.get('lims.interface.data')
         res = super().fields_get(fields_names)
 
         table = cls.get_table()

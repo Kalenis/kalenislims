@@ -2,9 +2,11 @@
 # This file is part of lims_interface module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import formulas
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool
+from trytond.transaction import Transaction
 
 custom_functions = {}
 
@@ -56,6 +58,48 @@ def get_variable(notebook_line, variable):
 
 
 custom_functions['VAR'] = get_variable
+
+
+def _get_column_name(alias, iteration=None):
+    if not iteration:
+        return alias
+    parser = formulas.Parser()
+    ast = parser.ast('=%s' % str(iteration))[1].compile()
+    iteration = str(ast())
+    return '%s_%s' % (alias, iteration)
+
+
+def get_column_value(notebook_line, alias, iteration=None):
+    pool = Pool()
+    NotebookLine = pool.get('lims.notebook.line')
+    Data = pool.get('lims.interface.data')
+
+    if not notebook_line or not alias:
+        return None
+
+    if isinstance(notebook_line, int):
+        notebook_line = NotebookLine(notebook_line)
+
+    compilation_id = Transaction().context.get('lims_interface_compilation')
+    if not compilation_id:
+        return None
+
+    lines = Data.search([
+        ('compilation', '=', compilation_id),
+        ('notebook_line', '=', notebook_line.id),
+        ], limit=1)
+    target_line = lines and lines[0] or None
+    if not target_line:
+        return None
+
+    target_field = _get_column_name(alias, iteration)
+    if not hasattr(target_line, target_field):
+        return None
+
+    return getattr(target_line, target_field)
+
+
+custom_functions['V'] = get_column_value
 
 
 class Function(ModelSQL, ModelView):

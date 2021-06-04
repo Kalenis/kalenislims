@@ -3,6 +3,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import formulas
+import re
 
 from trytond import backend
 from trytond.model import ModelSQL, ModelView, fields
@@ -102,8 +103,18 @@ class TableField(ModelSQL, ModelView):
     group_col = fields.Integer('Group Col')
 
     def get_ast(self):
+        formula = self.formula.replace(' ', '')
+        # V Function
+        v_pattern = 'V\("[a-zA-Z\_0-9]+","[a-zA-Z\_0-9]+"\)'
+        for v_func in re.findall(v_pattern, formula):
+            v_var = v_func.replace(
+                'V("', '').replace(
+                '","', '_').replace(
+                '")', '')
+            formula = formula.replace(v_func, v_var)
+
         parser = formulas.Parser()
-        ast = parser.ast(self.formula)[1].compile()
+        ast = parser.ast(formula)[1].compile()
         return ast
 
 
@@ -132,13 +143,23 @@ class TableGroupedField(ModelSQL, ModelView):
     def get_inputs(self, name=None):
         if not self.formula:
             return
-        parser = formulas.Parser()
-        ast = parser.ast(self.formula)[1].compile()
-        return (' '.join([x for x in ast.inputs])).lower()
+        ast = self.get_ast()
+        res = (' '.join([x for x in ast.inputs])).lower()
+        return res
 
     def get_ast(self):
+        formula = self.formula.replace(' ', '')
+        # V Function
+        v_pattern = 'V\("[a-zA-Z\_0-9]+","[a-zA-Z\_0-9]+"\)'
+        for v_func in re.findall(v_pattern, formula):
+            v_var = v_func.replace(
+                'V("', '').replace(
+                '","', '_').replace(
+                '")', '')
+            formula = formula.replace(v_func, v_var)
+
         parser = formulas.Parser()
-        ast = parser.ast(self.formula)[1].compile()
+        ast = parser.ast(formula)[1].compile()
         return ast
 
 
