@@ -620,10 +620,10 @@
             <field name="group" ref="group_lims_laboratory_results_acceptance"/>
         </record>
 
-<!-- Wizard Unaccept Lines -->
+<!-- Wizard Revert Lines Acceptance -->
 
         <record model="ir.action.wizard" id="wiz_lims_notebook_line_unaccept_lines">
-            <field name="name">Unaccept Lines</field>
+            <field name="name">Revert Lines Acceptance</field>
             <field name="wiz_name">lims.notebook_line.unaccept_lines</field>
         </record>
 
@@ -637,6 +637,47 @@
             id="wiz_notebook_line_unaccept_lines-group_laboratory_results_acceptance">
             <field name="action" ref="wiz_lims_notebook_line_unaccept_lines"/>
             <field name="group" ref="group_lims_laboratory_results_acceptance"/>
+        </record>
+
+<!-- Wizard Annul Lines -->
+
+        <record model="ir.ui.view" id="lims_notebook_annul_lines_start_view_form">
+            <field name="model">lims.notebook.annul_lines.start</field>
+            <field name="type">form</field>
+            <field name="name">notebook_annul_lines_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_notebook_annul_lines">
+            <field name="name">Annul Lines</field>
+            <field name="wiz_name">lims.notebook.annul_lines</field>
+        </record>
+        <record model="ir.action.keyword" id="lims_notebook_annul_lines_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.notebook,-1</field>
+            <field name="action" ref="wiz_lims_notebook_annul_lines"/>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_notebook_line_annul_lines">
+            <field name="name">Annul Lines</field>
+            <field name="wiz_name">lims.notebook_line.annul_lines</field>
+        </record>
+        <record model="ir.action.keyword" id="lims_notebook_line_annul_lines_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.notebook.line,-1</field>
+            <field name="action" ref="wiz_lims_notebook_line_annul_lines"/>
+        </record>
+
+<!-- Wizard Revert Lines Annulment -->
+
+        <record model="ir.action.wizard" id="wiz_lims_notebook_line_unannul_lines">
+            <field name="name">Revert Lines Annulment</field>
+            <field name="wiz_name">lims.notebook_line.unannul_lines</field>
+        </record>
+
+        <record model="ir.action.keyword" id="lims_notebook_line_unannul_lines_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.notebook.line,-1</field>
+            <field name="action" ref="wiz_lims_notebook_line_unannul_lines"/>
         </record>
 
 <!-- Wizard Results Verification -->

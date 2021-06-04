@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<form>
+    <image name="tryton-info" xexpand="0" xfill="0"/>
+    <label string="Annul all lines?"
+        id="ask" yalign="0.5" xalign="0.0" colspan="3"/>
+    <separator name="annulment_reason" colspan="4"/>
+    <field name="annulment_reason" colspan="4"/>
+</form>

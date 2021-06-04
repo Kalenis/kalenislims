@@ -2502,6 +2502,7 @@ class Sample(ModelSQL, ModelView):
         'get_results_reports_list', searcher='search_results_reports_list')
     state = fields.Selection([
         ('draft', 'Draft'),
+        ('annulled', 'Annulled'),
         ('pending_planning', 'Pending Planification'),
         ('planned', 'Planned'),
         ('in_lab', 'In Laboratory'),
@@ -2918,14 +2919,15 @@ class Sample(ModelSQL, ModelView):
     def order_state(tables):
         table, _ = tables[None]
         order = [Case((table.state == 'draft', 1),
-            else_=Case((table.state == 'pending_planning', 2),
-            else_=Case((table.state == 'planned', 3),
-            else_=Case((table.state == 'in_lab', 4),
-            else_=Case((table.state == 'lab_pending_acceptance', 5),
-            else_=Case((table.state == 'pending_report', 6),
-            else_=Case((table.state == 'in_report', 7),
-            else_=Case((table.state == 'report_released', 8),
-            else_=0))))))))]
+            else_=Case((table.state == 'annulled', 2),
+            else_=Case((table.state == 'pending_planning', 3),
+            else_=Case((table.state == 'planned', 4),
+            else_=Case((table.state == 'in_lab', 5),
+            else_=Case((table.state == 'lab_pending_acceptance', 6),
+            else_=Case((table.state == 'pending_report', 7),
+            else_=Case((table.state == 'in_report', 8),
+            else_=Case((table.state == 'report_released', 9),
+            else_=0)))))))))]
         return order
 
     def get_confirmed(self, name=None):
@@ -3348,6 +3350,17 @@ class Sample(ModelSQL, ModelView):
                 return 'in_lab'
             return 'planned'
         if self.confirmation_date:
+            cursor.execute('SELECT COUNT(*) '
+                'FROM "' + NotebookLine._table + '" nl '
+                    'INNER JOIN "' + Service._table + '" s '
+                    'ON s.id = nl.service '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = s.fraction '
+                'WHERE f.sample = %s '
+                    'AND nl.annulled = FALSE',
+                (self.id,))
+            if cursor.fetchone()[0] == 0:
+                return 'annulled'
             return 'pending_planning'
         return 'draft'
 
