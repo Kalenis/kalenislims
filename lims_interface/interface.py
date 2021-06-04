@@ -343,10 +343,10 @@ class Interface(Workflow, ModelSQL, ModelView):
                 return
             formula = formula.replace(' ', '')
             # V Function
-            v_pattern = 'V\("[a-zA-Z\_0-9]+","[a-zA-Z\_0-9]+"\)'
+            v_pattern = 'V\(notebook_line,"[a-zA-Z\_0-9]+","[a-zA-Z\_0-9]+"\)'
             for v_func in re.findall(v_pattern, formula):
                 v_var = v_func.replace(
-                    'V("', '').replace(
+                    'V(notebook_line,"', '').replace(
                     '","', '_').replace(
                     '")', '')
                 formula = formula.replace(v_func, v_var)
