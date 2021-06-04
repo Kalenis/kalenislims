@@ -32,6 +32,7 @@
     <field name="initial_concentration"/>
     <label name="final_concentration"/>
     <field name="final_concentration"/>
+    <newline/>
     <field name="laboratory_professionals" colspan="4"/>
     <label name="initial_unit"/>
     <field name="initial_unit"/>
@@ -84,26 +85,25 @@
     <field name="literal_result"/>
     <label name="rm_correction_formula"/>
     <field name="rm_correction_formula"/>
-    <label name="report"/>
-    <field name="report"/>
     <label name="uncertainty"/>
     <field name="uncertainty"/>
     <label name="verification"/>
     <field name="verification"/>
-    <label name="accepted"/>
-    <field name="accepted"/>
-    <label name="acceptance_date"/>
-    <field name="acceptance_date"/>
-    <label name="annulled"/>
-    <field name="annulled"/>
-    <label name="annulment_date"/>
-    <field name="annulment_date"/>
+    <group id="acceptance_annulment" colspan="4" col="8">
+        <label name="accepted"/>
+        <field name="accepted"/>
+        <label name="acceptance_date"/>
+        <field name="acceptance_date"/>
+        <label name="annulled"/>
+        <field name="annulled"/>
+        <label name="annulment_date"/>
+        <field name="annulment_date"/>
+    </group>
+    <field name="annulment_reason" colspan="4" yexpand="0"/>
     <label name="planification"/>
     <field name="planification"/>
     <label name="referral"/>
     <field name="referral"/>
-    <label name="results_report"/>
-    <field name="results_report"/>
     <group id="results_estimated_waiting" colspan="2" col="2">
         <label name="results_estimated_waiting"/>
         <field name="results_estimated_waiting"/>
@@ -112,6 +112,10 @@
         <label name="results_estimated_date"/>
         <field name="results_estimated_date"/>
     </group>
+    <label name="report"/>
+    <field name="report"/>
+    <label name="results_report"/>
+    <field name="results_report"/>
     <label name="department"/>
     <field name="department"/>
 </form>

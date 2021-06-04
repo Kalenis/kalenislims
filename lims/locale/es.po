@@ -2679,6 +2679,10 @@ msgctxt "field:lims.notebook.add_internal_relations.start,analysis_domain:"
 msgid "Internal relations domain"
 msgstr "Dominio para Relaciones internas"
 
+msgctxt "field:lims.notebook.annul_lines.start,annulment_reason:"
+msgid "Annulment reason"
+msgstr "Motivo de anulación"
+
 msgctxt "field:lims.notebook.generate_results_report.start,append_samples:"
 msgid "Append samples to existing reports"
 msgstr "Anexar muestras a informes existentes"
@@ -2886,6 +2890,10 @@ msgstr "Anulado"
 msgctxt "field:lims.notebook.line,annulment_date:"
 msgid "Annulment date"
 msgstr "Fecha de anulación"
+
+msgctxt "field:lims.notebook.line,annulment_reason:"
+msgid "Annulment reason"
+msgstr "Motivo de anulación"
 
 msgctxt "field:lims.notebook.line,backup:"
 msgid "Backup"
@@ -3194,6 +3202,10 @@ msgstr "Anulado"
 msgctxt "field:lims.notebook.line.all_fields,annulment_date:"
 msgid "Annulment date"
 msgstr "Fecha de anulación"
+
+msgctxt "field:lims.notebook.line.all_fields,annulment_reason:"
+msgid "Annulment reason"
+msgstr "Motivo de anulación"
 
 msgctxt "field:lims.notebook.line.all_fields,backup:"
 msgid "Backup"
@@ -7144,11 +7156,15 @@ msgstr "Gestionar servicios"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_accept_lines"
 msgid "Accept Lines"
-msgstr "11) Aceptar Resultados a todas las líneas"
+msgstr "11) Aceptar resultados a todas las líneas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_add_internal_relations"
 msgid "Add Internal Relations"
 msgstr "02) Agregar relaciones internas"
+
+msgctxt "model:ir.action,name:wiz_lims_notebook_annul_lines"
+msgid "Annul Lines"
+msgstr "12) Anular resultados a todas las líneas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_initial_concentration_calc"
 msgid "Initial Concentration Calculation"
@@ -7168,7 +7184,11 @@ msgstr "09) Validación de límites"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_line_accept_lines"
 msgid "Accept Lines"
-msgstr "11) Aceptar Resultados a las líneas"
+msgstr "11) Aceptar resultados a las líneas"
+
+msgctxt "model:ir.action,name:wiz_lims_notebook_line_annul_lines"
+msgid "Annul Lines"
+msgstr "13) Anular resultados a las líneas"
 
 msgctxt ""
 "model:ir.action,name:wiz_lims_notebook_line_initial_concentration_calc"
@@ -7206,8 +7226,12 @@ msgid "Results Verification"
 msgstr "08) Verificación de resultados"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_line_unaccept_lines"
-msgid "Unaccept Lines"
-msgstr "12) Revertir Aceptación de Resultados a las líneas"
+msgid "Revert Lines Acceptance"
+msgstr "12) Revertir Aceptación de resultados a las líneas"
+
+msgctxt "model:ir.action,name:wiz_lims_notebook_line_unannul_lines"
+msgid "Revert Lines Annulment"
+msgstr "14) Revertir Anulación de resultados a las líneas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_line_uncertainty_calc"
 msgid "Uncertainty Calculation"
@@ -9157,6 +9181,10 @@ msgstr "Aceptar líneas"
 msgctxt "model:lims.notebook.add_internal_relations.start,name:"
 msgid "Add Internal Relations"
 msgstr "Agregar relaciones internas"
+
+msgctxt "model:lims.notebook.annul_lines.start,name:"
+msgid "Annul Lines"
+msgstr "Anular líneas"
 
 msgctxt "model:lims.notebook.evaluate_rules.start,name:"
 msgid "Evaluate Rules"
@@ -12883,6 +12911,10 @@ msgid ">="
 msgstr ">="
 
 msgctxt "selection:lims.sample,state:"
+msgid "Annulled"
+msgstr "Anulada"
+
+msgctxt "selection:lims.sample,state:"
 msgid "Draft"
 msgstr "Borrador"
 
@@ -13573,6 +13605,10 @@ msgstr "¿Aceptar todas las líneas?"
 msgctxt "view:lims.notebook.add_internal_relations.start:"
 msgid "Add Internal Relations"
 msgstr "Agregar relaciones internas"
+
+msgctxt "view:lims.notebook.annul_lines.start:"
+msgid "Annul all lines?"
+msgstr "¿Anular todas las líneas?"
 
 msgctxt "view:lims.notebook.evaluate_rules.start:"
 msgid "Evaluate rules?"
@@ -14603,6 +14639,14 @@ msgctxt "wizard_button:lims.notebook.add_internal_relations,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
+msgctxt "wizard_button:lims.notebook.annul_lines,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.notebook.annul_lines,start,ok:"
+msgid "Ok"
+msgstr "Aceptar"
+
 msgctxt "wizard_button:lims.notebook.evaluate_rules,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
@@ -14799,6 +14843,14 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 msgctxt "wizard_button:lims.notebook_line.accept_lines,start,ok:"
+msgid "Ok"
+msgstr "Aceptar"
+
+msgctxt "wizard_button:lims.notebook_line.annul_lines,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.notebook_line.annul_lines,start,ok:"
 msgid "Ok"
 msgstr "Aceptar"
 

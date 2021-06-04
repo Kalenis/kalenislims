@@ -2,5 +2,5 @@
 <form col="2">
     <image name="tryton-info" xexpand="0" xfill="0"/>
     <label string="Accept all lines?" id="ask"
-        yalign="0.0" xalign="0.0" xexpand="1"/>
+        yalign="0.0" xalign="0.0"/>
 </form>

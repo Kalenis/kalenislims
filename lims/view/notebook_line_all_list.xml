@@ -51,6 +51,7 @@
     <field name="acceptance_date" widget="date"/>
     <field name="annulled"/>
     <field name="annulment_date" widget="date"/>
+    <field name="annulment_reason"/>
     <field name="results_report"/>
     <field name="planification"/>
     <field name="referral"/>

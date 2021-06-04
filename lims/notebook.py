@@ -912,6 +912,9 @@ class NotebookLine(ModelSQL, ModelView):
         select=True)
     annulment_date = fields.DateTime('Annulment date',
         states={'readonly': True})
+    annulment_reason = fields.Text('Annulment reason',
+        states={'readonly': True, 'invisible': ~Eval('annulled')},
+        depends=['annulled'])
     results_report = fields.Many2One('lims.results_report', 'Results Report',
         readonly=True, select=True)
     planification = fields.Many2One('lims.planification', 'Planification',
@@ -1723,6 +1726,9 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     acceptance_date = fields.DateTime('Acceptance date', readonly=True)
     annulled = fields.Boolean('Annulled', readonly=True)
     annulment_date = fields.DateTime('Annulment date', readonly=True)
+    annulment_reason = fields.Text('Annulment reason', readonly=True,
+        states={'invisible': ~Eval('annulled')},
+        depends=['annulled'])
     results_report = fields.Many2One('lims.results_report', 'Results Report',
         readonly=True)
     planification = fields.Many2One('lims.planification', 'Planification',
@@ -1827,6 +1833,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
             line.acceptance_date,
             line.annulled,
             line.annulment_date,
+            line.annulment_reason,
             line.results_report,
             line.planification,
             detail.confirmation_date,
@@ -4856,7 +4863,7 @@ class NotebookLineAcceptLines(NotebookAcceptLines):
 
 
 class NotebookLineUnacceptLines(Wizard):
-    'Unaccept Lines'
+    'Revert Lines Acceptance'
     __name__ = 'lims.notebook_line.unaccept_lines'
 
     start_state = 'ok'
@@ -4896,6 +4903,101 @@ class NotebookLineUnacceptLines(Wizard):
                 'accepted': False,
                 'acceptance_date': None,
                 })
+
+    def end(self):
+        return 'reload'
+
+
+class NotebookAnnulLinesStart(ModelView):
+    'Annul Lines'
+    __name__ = 'lims.notebook.annul_lines.start'
+
+    annulment_reason = fields.Text('Annulment reason')
+
+
+class NotebookAnnulLines(Wizard):
+    'Annul Lines'
+    __name__ = 'lims.notebook.annul_lines'
+
+    start = StateView('lims.notebook.annul_lines.start',
+        'lims.lims_notebook_annul_lines_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Ok', 'ok', 'tryton-ok', default=True),
+            ])
+    ok = StateTransition()
+
+    def transition_ok(self):
+        NotebookLine = Pool().get('lims.notebook.line')
+
+        notebook_lines = NotebookLine.search([
+            ('notebook', 'in', Transaction().context['active_ids']),
+            ('accepted', '=', False),
+            ('annulled', '=', False),
+            ])
+        if notebook_lines:
+            self.lines_annul(notebook_lines)
+        return 'end'
+
+    def lines_annul(self, notebook_lines):
+        NotebookLine = Pool().get('lims.notebook.line')
+
+        NotebookLine.write(notebook_lines, {
+            'result_modifier': 'na',
+            'annulled': True,
+            'annulment_date': datetime.now(),
+            'annulment_reason': self.start.annulment_reason,
+            'report': False,
+            })
+
+    def end(self):
+        return 'reload'
+
+
+class NotebookLineAnnulLines(NotebookAnnulLines):
+    'Annul Lines'
+    __name__ = 'lims.notebook_line.annul_lines'
+
+    def transition_ok(self):
+        NotebookLine = Pool().get('lims.notebook.line')
+
+        notebook_lines = NotebookLine.search([
+            ('id', 'in', Transaction().context['active_ids']),
+            ('accepted', '=', False),
+            ('annulled', '=', False),
+            ])
+        if notebook_lines:
+            self.lines_annul(notebook_lines)
+        return 'end'
+
+
+class NotebookLineUnannulLines(Wizard):
+    'Revert Lines Annulment'
+    __name__ = 'lims.notebook_line.unannul_lines'
+
+    start_state = 'ok'
+    ok = StateTransition()
+
+    def transition_ok(self):
+        NotebookLine = Pool().get('lims.notebook.line')
+
+        notebook_lines = NotebookLine.search([
+            ('id', 'in', Transaction().context['active_ids']),
+            ('annulled', '=', True),
+            ])
+        if notebook_lines:
+            self.lines_unannul(notebook_lines)
+        return 'end'
+
+    def lines_unannul(self, notebook_lines):
+        NotebookLine = Pool().get('lims.notebook.line')
+
+        NotebookLine.write(notebook_lines, {
+            'result_modifier': 'eq',
+            'annulled': False,
+            'annulment_date': None,
+            'annulment_reason': None,
+            'report': True,
+            })
 
     def end(self):
         return 'reload'
