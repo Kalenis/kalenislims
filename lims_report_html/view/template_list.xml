@@ -3,4 +3,5 @@
     <field name="name" expand="2"/>
     <field name="type"/>
     <field name="report"/>
+    <field name="resultrange_origin"/>
 </tree>

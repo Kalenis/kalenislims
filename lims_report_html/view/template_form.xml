@@ -6,6 +6,8 @@
     <field name="type"/>
     <label name="report"/>
     <field name="report"/>
+    <label name="resultrange_origin"/>
+    <field name="resultrange_origin"/>
     <label name="page_orientation"/>
     <field name="page_orientation"/>
     <notebook>

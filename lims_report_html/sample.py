@@ -14,6 +14,12 @@ class Sample(metaclass=PoolMeta):
     resultrange_origin = fields.Many2One('lims.range.type', 'Comparison range',
         domain=[('use', '=', 'result_range')])
 
+    @fields.depends('result_template')
+    def on_change_result_template(self):
+        if self.result_template and self.result_template.resultrange_origin:
+            self.resultrange_origin = (
+                self.result_template.resultrange_origin.id)
+
 
 class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
@@ -22,6 +28,12 @@ class CreateSampleStart(metaclass=PoolMeta):
         'Report Template', domain=[('type', 'in', [None, 'base'])])
     resultrange_origin = fields.Many2One('lims.range.type', 'Comparison range',
         domain=[('use', '=', 'result_range')])
+
+    @fields.depends('result_template')
+    def on_change_result_template(self):
+        if self.result_template and self.result_template.resultrange_origin:
+            self.resultrange_origin = (
+                self.result_template.resultrange_origin.id)
 
 
 class CreateSample(metaclass=PoolMeta):

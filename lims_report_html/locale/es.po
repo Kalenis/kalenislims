@@ -54,6 +54,10 @@ msgctxt "field:lims.result_report.template,report:"
 msgid "Report"
 msgstr "Informe"
 
+msgctxt "field:lims.result_report.template,resultrange_origin:"
+msgid "Comparison range"
+msgstr "Rango de comparación"
+
 msgctxt "field:lims.result_report.template,sections:"
 msgid "Sections"
 msgstr "Secciones"
