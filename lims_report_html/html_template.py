@@ -62,6 +62,8 @@ class ReportTemplate(ModelSQL, ModelView):
         ('portrait', 'Portrait'),
         ('landscape','Landscape'),
         ],'Page orientation',sort=False)
+    resultrange_origin = fields.Many2One('lims.range.type', 'Comparison range',
+        domain=[('use', '=', 'result_range')])
 
     @staticmethod
     def default_type():

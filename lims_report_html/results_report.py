@@ -86,8 +86,11 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         return self.template and self.template.type or None
 
     @fields.depends('template', '_parent_template.trend_charts',
-        '_parent_template.sections', 'sections')
+        '_parent_template.sections', 'sections', 'resultrange_origin')
     def on_change_template(self):
+        if (self.template and self.template.resultrange_origin and
+                not self.resultrange_origin):
+            self.resultrange_origin = self.template.resultrange_origin.id
         if self.template and self.template.trend_charts:
             self.trend_charts = [{
                 'chart': c.chart.id,
@@ -130,6 +133,9 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             result_template = cls._get_result_template_from_sample(notebook)
             if result_template:
                 detail_default['template'] = result_template.id
+                if result_template.resultrange_origin:
+                    detail_default['resultrange_origin'] = (
+                        result_template.resultrange_origin.id)
                 if result_template.trend_charts:
                     detail_default['trend_charts'] = [('create', [{
                         'chart': c.chart.id,
