@@ -1320,6 +1320,11 @@ class ResultsReportVersionDetailSample(ModelSQL, ModelView):
     sample_comments = fields.Function(fields.Text('Sample Comments'),
         'get_notebook_field')
 
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._order.insert(0, ('notebook', 'ASC'))
+
     def get_rec_name(self, name):
         return self.notebook.rec_name
 
