@@ -474,6 +474,7 @@
         <record model="ir.action.act_window" id="act_lims_samples_pending_reporting">
             <field name="name">Samples Pending Reporting</field>
             <field name="res_model">lims.notebook</field>
+            <field name="order" eval="[('fraction', 'ASC')]" pyson="1"/>
         </record>
         <record model="ir.action.act_window.view"
             id="act_lims_samples_pending_reporting_view_list">
