@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <form>
-    <separator string="Annulment reason" colspan="4" id="annulment_reason"/>
+    <separator name="annulment_reason" colspan="4"/>
     <field name="annulment_reason" colspan="4"/>
     <label name="annulment_reason_print"/>
     <field name="annulment_reason_print"/>

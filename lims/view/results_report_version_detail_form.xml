@@ -40,13 +40,18 @@
             <field name="fractions_comments" colspan="4"/>
         </page>
         <page id="annulation" string="Annulation">
+            <separator name="annulment_reason" colspan="4"/>
+            <field name="annulment_reason" colspan="4"/>
             <label name="annulment_date"/>
             <field name="annulment_date"/>
             <label name="annulment_reason_print"/>
             <field name="annulment_reason_print"/>
-            <separator id="annulment_reason" colspan="4"
-                string="Annulment reason"/>
-            <field name="annulment_reason" colspan="4"/>
+        </page>
+        <page id="review" string="Review">
+            <separator name="review_reason" colspan="4"/>
+            <field name="review_reason" colspan="4"/>
+            <label name="review_reason_print"/>
+            <field name="review_reason_print"/>
         </page>
         <page id="dates" string="Dates">
             <label name="create_date2"/>

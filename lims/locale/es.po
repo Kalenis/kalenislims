@@ -5148,6 +5148,14 @@ msgctxt "field:lims.results_report.version.detail,resultrange_origin:"
 msgid "Origin"
 msgstr "Origen"
 
+msgctxt "field:lims.results_report.version.detail,review_reason:"
+msgid "Review reason"
+msgstr "Motivo de revisión"
+
+msgctxt "field:lims.results_report.version.detail,review_reason_print:"
+msgid "Print review reason in next version"
+msgstr "Imprimir motivo de revisión en próxima versión"
+
 msgctxt "field:lims.results_report.version.detail,revision_date:"
 msgid "Revision date"
 msgstr "Fecha de revisión"
@@ -5282,6 +5290,16 @@ msgctxt ""
 "field:lims.results_report.version.detail.new_version.start,report_created:"
 msgid "Report created"
 msgstr "Informe creado"
+
+msgctxt ""
+"field:lims.results_report.version.detail.new_version.start,review_reason:"
+msgid "Review reason"
+msgstr "Motivo de revisión"
+
+msgctxt ""
+"field:lims.results_report.version.detail.new_version.start,review_reason_print:"
+msgid "Print review reason in next version"
+msgstr "Imprimir motivo de revisión en próxima versión"
 
 msgctxt "field:lims.results_report.version.detail.new_version.start,type:"
 msgid "Type"
@@ -14135,10 +14153,6 @@ msgid "Annull"
 msgstr "Anular"
 
 msgctxt "view:lims.results_report.version.detail:"
-msgid "Annulment reason"
-msgstr "Motivo de anulación"
-
-msgctxt "view:lims.results_report.version.detail:"
 msgid "Dates"
 msgstr "Fechas"
 
@@ -14157,6 +14171,10 @@ msgstr "Publicar"
 msgctxt "view:lims.results_report.version.detail:"
 msgid "Release for all languages"
 msgstr "Publicar para todos los idiomas"
+
+msgctxt "view:lims.results_report.version.detail:"
+msgid "Review"
+msgstr "Revisión"
 
 msgctxt "view:lims.results_report.version.detail:"
 msgid "Revised"
