@@ -964,6 +964,9 @@ class NotebookLine(ModelSQL, ModelView):
         states=_states, depends=_depends)
     referral = fields.Function(fields.Many2One('lims.referral', 'Referral'),
         'get_detail_field', searcher='search_detail_field')
+    repetition_reason = fields.Char('Repetition reason',
+        states={'readonly': True, 'invisible': Eval('repetition', 0) == 0},
+        depends=['repetition'])
 
     del _states, _depends
 
@@ -1744,6 +1747,9 @@ class NotebookLineAllFields(ModelSQL, ModelView):
         readonly=True)
     referral = fields.Function(fields.Many2One('lims.referral', 'Referral'),
         'get_line_field', searcher='search_line_field')
+    repetition_reason = fields.Char('Repetition reason', readonly=True,
+        states={'invisible': Eval('repetition', 0) == 0},
+        depends=['repetition'])
 
     @classmethod
     def __setup__(cls):
@@ -1841,6 +1847,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
             service.laboratory_date,
             service.report_date,
             line.department,
+            line.repetition_reason,
             ]
         where = Literal(True)
         return join6.select(*columns, where=where)
@@ -4569,6 +4576,7 @@ class NotebookLineRepeatAnalysisStart(ModelView):
         depends=['analysis_domain'])
     analysis_domain = fields.One2Many('lims.analysis', None,
         'Analysis domain')
+    repetition_reason = fields.Char('Reason')
 
 
 class NotebookLineRepeatAnalysis(Wizard):
@@ -4722,6 +4730,7 @@ class NotebookLineRepeatAnalysis(Wizard):
             'lower_limit': line.lower_limit,
             'upper_limit': line.upper_limit,
             }
+        defaults['repetition_reason'] = self.start.repetition_reason
         if line.accepted and not self._unaccept_original():
             defaults['report'] = False
         return defaults

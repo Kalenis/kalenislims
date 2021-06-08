@@ -4,6 +4,8 @@
     <field name="analysis"/>
     <label name="repetition"/>
     <field name="repetition"/>
+    <label name="repetition_reason"/>
+    <field name="repetition_reason" colspan="3"/>
     <label name="start_date"/>
     <field name="start_date"/>
     <label name="end_date"/>

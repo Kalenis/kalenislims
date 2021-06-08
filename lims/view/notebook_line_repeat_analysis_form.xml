@@ -2,4 +2,6 @@
 <form>
     <label name="analysis"/>
     <field name="analysis"/>
+    <label name="repetition_reason"/>
+    <field name="repetition_reason"/>
 </form>
