@@ -496,6 +496,11 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     revision_date = fields.DateTime('Revision date', readonly=True)
     release_uid = fields.Many2One('res.user', 'Release user', readonly=True)
     release_date = fields.DateTime('Release date', readonly=True)
+    review_reason = fields.Text('Review reason', translate=True,
+        states={'readonly': True})
+    review_reason_print = fields.Boolean(
+        'Print review reason in next version',
+        states={'readonly': True})
     annulment_uid = fields.Many2One('res.user', 'Annulment user',
         readonly=True)
     annulment_date = fields.DateTime('Annulment date', readonly=True)
@@ -3461,6 +3466,7 @@ class ResultsReportAnnulation(Wizard):
                 'annulment_uid': int(Transaction().user),
                 'annulment_date': datetime.now(),
                 'annulment_reason': self.start.annulment_reason,
+                'annulment_reason_print': self.start.annulment_reason_print,
                 })
         return 'end'
 
@@ -3479,8 +3485,16 @@ class NewResultsReportVersionStart(ModelView):
         states={'invisible': ~Eval('type').in_([
             'complementary', 'corrective'])},
         depends=['type'])
+    review_reason = fields.Text('Review reason', required=True,
+        translate=True)
+    review_reason_print = fields.Boolean(
+        'Print review reason in next version')
     report_created = fields.Many2One('lims.results_report.version.detail',
         'Report created')
+
+    @staticmethod
+    def default_review_reason_print():
+        return False
 
     @fields.depends('preliminary', 'corrective')
     def on_change_with_type(self, name=None):
@@ -3528,6 +3542,11 @@ class NewResultsReportVersion(Wizard):
         new_version, = ResultsDetail.create([defaults])
         ResultsDetail.update_from_valid_version([new_version])
         self.start.report_created = new_version
+
+        ResultsDetail.write([valid_detail], {
+            'review_reason': self.start.review_reason,
+            'review_reason_print': self.start.review_reason_print,
+            })
         return 'open_'
 
     def do_open_(self, action):
@@ -4133,15 +4152,20 @@ class ResultReport(Report):
                 report_context['comments'] += gettext('lims.msg_obs_rm_c_f')
 
         report_context['annulment_reason'] = ''
+        report_context['review_reason'] = ''
         if report.number != '1':
             with Transaction().set_context(language=lang_code):
                 prev_report = ResultsDetail.search([
                     ('report_version', '=', report.report_version.id),
                     ('number', '=', str(int(report.number) - 1)),
                     ])
-                if prev_report and prev_report[0].annulment_reason_print:
-                    report_context['annulment_reason'] = (
-                        prev_report[0].annulment_reason)
+                if prev_report:
+                    if prev_report[0].annulment_reason_print:
+                        report_context['annulment_reason'] = (
+                            prev_report[0].annulment_reason)
+                    if prev_report[0].review_reason_print:
+                        report_context['review_reason'] = (
+                            prev_report[0].review_reason)
 
         return report_context
 
