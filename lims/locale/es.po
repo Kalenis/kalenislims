@@ -3083,6 +3083,10 @@ msgctxt "field:lims.notebook.line,repetition:"
 msgid "Repetition"
 msgstr "Repetición"
 
+msgctxt "field:lims.notebook.line,repetition_reason:"
+msgid "Repetition reason"
+msgstr "Motivo de repetición"
+
 msgctxt "field:lims.notebook.line,report:"
 msgid "Report"
 msgstr "Informar"
@@ -3363,6 +3367,10 @@ msgctxt "field:lims.notebook.line.all_fields,repetition:"
 msgid "Repetition"
 msgstr "Repetición"
 
+msgctxt "field:lims.notebook.line.all_fields,repetition_reason:"
+msgid "Repetition reason"
+msgstr "Motivo de repetición"
+
 msgctxt "field:lims.notebook.line.all_fields,report:"
 msgid "Report"
 msgstr "Informar"
@@ -3446,6 +3454,10 @@ msgstr "Análisis"
 msgctxt "field:lims.notebook.line.repeat_analysis.start,analysis_domain:"
 msgid "Analysis domain"
 msgstr "Dominio para Análisis"
+
+msgctxt "field:lims.notebook.line.repeat_analysis.start,repetition_reason:"
+msgid "Reason"
+msgstr "Motivo"
 
 msgctxt "field:lims.notebook.load_results_formula.action,chromatogram:"
 msgid "Chromatogram"
