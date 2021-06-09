@@ -3,7 +3,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import formulas
-import re
+#import re
 
 from trytond import backend
 from trytond.model import ModelSQL, ModelView, fields
@@ -104,14 +104,14 @@ class TableField(ModelSQL, ModelView):
 
     def get_ast(self):
         formula = self.formula.replace(' ', '')
-        # V Function
-        v_pattern = 'V\(notebook_line,"[a-zA-Z\_0-9]+","[a-zA-Z\_0-9]+"\)'
-        for v_func in re.findall(v_pattern, formula):
-            v_var = v_func.replace(
-                'V(notebook_line,"', '').replace(
-                '","', '_').replace(
-                '")', '')
-            formula = formula.replace(v_func, v_var)
+        ## V Function
+        #v_pattern = 'V\(notebook_line,"[a-zA-Z\_0-9]+","[0-9\+\-\*0-9]+"\)'
+        #for v_func in re.findall(v_pattern, formula):
+            #v_var = v_func.replace(
+                #'V(notebook_line,"', '').replace(
+                #'","', '_').replace(
+                #'")', '')
+            #formula = formula.replace(v_func, v_var)
 
         parser = formulas.Parser()
         ast = parser.ast(formula)[1].compile()
@@ -144,19 +144,19 @@ class TableGroupedField(ModelSQL, ModelView):
         if not self.formula:
             return
         ast = self.get_ast()
-        res = (' '.join([x for x in ast.inputs])).lower()
-        return res
+        inputs = (' '.join([x for x in ast.inputs])).lower()
+        return inputs
 
     def get_ast(self):
         formula = self.formula.replace(' ', '')
-        # V Function
-        v_pattern = 'V\(notebook_line,"[a-zA-Z\_0-9]+","[a-zA-Z\_0-9]+"\)'
-        for v_func in re.findall(v_pattern, formula):
-            v_var = v_func.replace(
-                'V(notebook_line,"', '').replace(
-                '","', '_').replace(
-                '")', '')
-            formula = formula.replace(v_func, v_var)
+        ## V Function
+        #v_pattern = 'V\(notebook_line,"[a-zA-Z\_0-9]+","[0-9\+\-\*0-9]+"\)'
+        #for v_func in re.findall(v_pattern, formula):
+            #v_var = v_func.replace(
+                #'V(notebook_line,"', '').replace(
+                #'","', '_').replace(
+                #'")', '')
+            #formula = formula.replace(v_func, v_var)
 
         parser = formulas.Parser()
         ast = parser.ast(formula)[1].compile()
