@@ -601,10 +601,7 @@ class NotebookRule(ModelSQL, ModelView):
     target_field_domain = fields.Function(fields.Many2Many('ir.model.field',
         None, None, 'Target Field domain'), 'get_target_field_domain')
     value = fields.Char('Value', depends=['action'],
-        states={
-            'required': Eval('action') == 'edit',
-            'invisible': Eval('action') != 'edit',
-            })
+        states={'invisible': Eval('action') != 'edit'})
 
     @classmethod
     def _target_fields(cls):
