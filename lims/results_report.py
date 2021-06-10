@@ -900,7 +900,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
             valid_detail = valid_details[0]
 
             detail_default = cls._get_fields_from_detail(valid_detail)
-            if detail.type == 'final':
+            if detail.type == 'final' and valid_detail.type != 'preliminary':
                 detail_default['type'] = 'complementary'
             cls.write([detail], detail_default)
 
@@ -2756,6 +2756,7 @@ class GenerateReportStart(ModelView):
         last_detail = ResultsDetail.search([
             ('report_version.results_report', '=', report_id),
             ('report_version.laboratory', '=', laboratory_id),
+            ('type', '!=', 'preliminary'),
             ], order=[('id', 'DESC')], limit=1)
         if last_detail:
             return last_detail[0].state
