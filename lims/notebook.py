@@ -538,8 +538,10 @@ class Notebook(ModelSQL, ModelView):
         if samples_in_progress == 'accepted':
             sql_clause = 'AND nl.accepted = TRUE '
         elif samples_in_progress == 'result':
-            sql_clause = ('AND (nl.result IS NOT NULL '
-                'OR nl.literal_result IS NOT NULL '
+            sql_clause = ('AND ((nl.result IS NOT NULL '
+                'AND nl.result != \'\') '
+                'OR (nl.literal_result IS NOT NULL '
+                'AND nl.literal_result != \'\') '
                 'OR nl.result_modifier IN '
                 '(\'d\', \'nd\', \'pos\', \'neg\', '
                 '\'ni\', \'abs\', \'pre\', \'na\')) ')
