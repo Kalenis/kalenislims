@@ -90,6 +90,10 @@ msgctxt "field:lims.notebook.line.repeat_analysis.start,notify_acceptance:"
 msgid "Notify acceptace"
 msgstr "Notificar aceptación"
 
+msgctxt "field:lims.notebook.repeat_analysis.start,notify_acceptance:"
+msgid "Notify acceptace"
+msgstr "Notificar aceptación"
+
 msgctxt "field:lims.plant,diagnostician:"
 msgid "Diagnostician"
 msgstr "Diagnosticador"
@@ -236,6 +240,10 @@ msgid "This analysis is not necessary to begin diagnosing the sample"
 msgstr "Este análisis no es necesario para comenzar a diagnosticar la muestra"
 
 msgctxt "help:lims.notebook.line.repeat_analysis.start,notify_acceptance:"
+msgid "Notify when analysis is ready"
+msgstr "Notificar cuando el análisis esté terminado"
+
+msgctxt "help:lims.notebook.repeat_analysis.start,notify_acceptance:"
 msgid "Notify when analysis is ready"
 msgstr "Notificar cuando el análisis esté terminado"
 

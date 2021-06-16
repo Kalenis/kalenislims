@@ -101,6 +101,17 @@ class NotebookLine(metaclass=PoolMeta):
         return res
 
 
+class NotebookRepeatAnalysisStart(metaclass=PoolMeta):
+    __name__ = 'lims.notebook.repeat_analysis.start'
+
+    notify_acceptance = fields.Boolean('Notify acceptace',
+        help='Notify when analysis is ready')
+
+    @staticmethod
+    def default_notify_acceptance():
+        return False
+
+
 class NotebookLineRepeatAnalysisStart(metaclass=PoolMeta):
     __name__ = 'lims.notebook.line.repeat_analysis.start'
 
@@ -110,6 +121,17 @@ class NotebookLineRepeatAnalysisStart(metaclass=PoolMeta):
     @staticmethod
     def default_notify_acceptance():
         return False
+
+
+class NotebookRepeatAnalysis(metaclass=PoolMeta):
+    __name__ = 'lims.notebook.repeat_analysis'
+
+    def _get_repetition_defaults(self, line):
+        defaults = super()._get_repetition_defaults(line)
+        defaults['notify_acceptance'] = self.start.notify_acceptance
+        if self.start.notify_acceptance:
+            defaults['notify_acceptance_user'] = Transaction().user
+        return defaults
 
 
 class NotebookLineRepeatAnalysis(metaclass=PoolMeta):

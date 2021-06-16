@@ -128,7 +128,7 @@ class Entry(Workflow, ModelSQL, ModelView):
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
     block_entry_confirmation = fields.Function(fields.Boolean(
         'Block Entry Confirmation'), 'get_block_entry_confirmation')
-    multi_party = fields.Boolean('Multy Party', readonly=True, select=True)
+    multi_party = fields.Boolean('Multi Party', readonly=True, select=True)
 
     @classmethod
     def __setup__(cls):
