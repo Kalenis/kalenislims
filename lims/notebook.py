@@ -4569,6 +4569,172 @@ class NotebookAddInternalRelations(Wizard):
         return 'reload'
 
 
+class NotebookRepeatAnalysisStart(ModelView):
+    'Repeat Analysis'
+    __name__ = 'lims.notebook.repeat_analysis.start'
+
+    analysis = fields.Many2Many('lims.analysis', None, None,
+        'Analysis', required=True,
+        domain=[('id', 'in', Eval('analysis_domain'))],
+        depends=['analysis_domain'])
+    analysis_domain = fields.One2Many('lims.analysis', None,
+        'Analysis domain')
+    repetition_reason = fields.Char('Reason')
+
+
+class NotebookRepeatAnalysis(Wizard):
+    'Repeat Analysis'
+    __name__ = 'lims.notebook.repeat_analysis'
+
+    start = StateView('lims.notebook.repeat_analysis.start',
+        'lims.lims_notebook_repeat_analysis_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Repeat', 'repeat', 'tryton-ok', default=True),
+            ])
+    repeat = StateTransition()
+
+    @classmethod
+    def check_access(cls):
+        pass
+
+    def default_start(self, fields):
+        pool = Pool()
+        Notebook = pool.get('lims.notebook')
+        Analysis = pool.get('lims.analysis')
+
+        analysis_domain = set()
+        first = True
+        for notebook in Notebook.browse(Transaction().context['active_ids']):
+            analysis_origin_list = []
+            for nl in notebook.lines:
+                analysis_origin_list.extend(nl.analysis_origin.split(' > '))
+                analysis_origin_list.append(nl.analysis.code)
+            analysis = Analysis.search([
+                ('code', 'in', analysis_origin_list),
+                ('behavior', '=', 'normal'),
+                ])
+            notebook_analysis = set(a.id for a in analysis)
+            if first:
+                analysis_domain = notebook_analysis
+                first = False
+                continue
+            analysis_domain = analysis_domain.intersection(
+                notebook_analysis)
+
+        default = {
+            'analysis_domain': list(analysis_domain),
+            }
+        return default
+
+    def _unaccept_original(self):
+        return True
+
+    def transition_repeat(self):
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
+        Notebook = pool.get('lims.notebook')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Config = pool.get('lims.configuration')
+
+        config = Config(1)
+
+        analysis_to_repeat = []
+        for analysis in self.start.analysis:
+            if analysis.type == 'analysis':
+                analysis_to_repeat.append(analysis.id)
+            else:
+                analysis_to_repeat.extend(
+                    Analysis.get_included_analysis_analysis(analysis.id))
+
+        for notebook in Notebook.browse(Transaction().context['active_ids']):
+            rm_type = (notebook.fraction.special_type == 'rm')
+            if rm_type:
+                rm_start_uom = (config.rm_start_uom.id if config.rm_start_uom
+                    else None)
+
+            to_create = []
+            to_update = []
+            details_to_update = []
+            for analysis_id in analysis_to_repeat:
+                nlines = NotebookLine.search([
+                    ('notebook', '=', notebook.id),
+                    ('analysis', '=', analysis_id),
+                    ('analysis.behavior', '=', 'normal'),
+                    ], order=[('repetition', 'DESC')], limit=1)
+                if not nlines:
+                    continue
+                nline_to_repeat = nlines[0]
+
+                defaults = self._get_repetition_defaults(nline_to_repeat)
+                if rm_type:
+                    defaults['final_concentration'] = None
+                    defaults['initial_unit'] = rm_start_uom
+                    defaults['final_unit'] = None
+                    defaults['detection_limit'] = None
+                    defaults['quantification_limit'] = None
+                    defaults['lower_limit'] = None
+                    defaults['upper_limit'] = None
+                to_create.append(defaults)
+                to_update.append(nline_to_repeat)
+                details_to_update.append(nline_to_repeat.analysis_detail.id)
+
+            Notebook.write([notebook], {
+                'lines': [('create', to_create)],
+                })
+            if self._unaccept_original():
+                NotebookLine.write(to_update, {
+                    'accepted': False,
+                    'acceptance_date': None,
+                    'report': False,
+                    })
+
+            details = EntryDetailAnalysis.search([
+                ('id', 'in', details_to_update),
+                ])
+            if details:
+                EntryDetailAnalysis.write(details, {
+                    'state': 'unplanned',
+                    })
+
+        return 'end'
+
+    def _get_repetition_defaults(self, line):
+        defaults = {
+            'analysis_detail': line.analysis_detail.id,
+            'service': line.service.id,
+            'analysis': line.analysis.id,
+            'analysis_origin': line.analysis_origin,
+            'urgent': line.urgent,
+            'repetition': line.repetition + 1,
+            'laboratory': line.laboratory.id,
+            'method': line.method.id,
+            'device': line.device.id if line.device else None,
+            'decimals': line.decimals,
+            'significant_digits': line.significant_digits,
+            'scientific_notation': line.scientific_notation,
+            'report': line.report,
+            'results_estimated_waiting': (
+                line.results_estimated_waiting),
+            'department': line.department,
+            'concentration_level': (line.concentration_level.id
+                if line.concentration_level else None),
+            'initial_concentration': line.initial_concentration,
+            'final_concentration': line.final_concentration,
+            'initial_unit': (line.initial_unit.id
+                if line.initial_unit else None),
+            'final_unit': line.final_unit.id if line.final_unit else None,
+            'detection_limit': line.detection_limit,
+            'quantification_limit': line.quantification_limit,
+            'lower_limit': line.lower_limit,
+            'upper_limit': line.upper_limit,
+            }
+        defaults['repetition_reason'] = self.start.repetition_reason
+        if line.accepted and not self._unaccept_original():
+            defaults['report'] = False
+        return defaults
+
+
 class NotebookLineRepeatAnalysisStart(ModelView):
     'Repeat Analysis'
     __name__ = 'lims.notebook.line.repeat_analysis.start'
@@ -4661,13 +4827,10 @@ class NotebookLineRepeatAnalysis(Wizard):
                 ('notebook', '=', notebook.id),
                 ('analysis', '=', analysis_id),
                 ('analysis.behavior', '=', 'normal'),
-                ])
+                ], order=[('repetition', 'DESC')], limit=1)
             if not nlines:
                 continue
             nline_to_repeat = nlines[0]
-            for nline in nlines:
-                if nline.repetition > nline_to_repeat.repetition:
-                    nline_to_repeat = nline
 
             defaults = self._get_repetition_defaults(nline_to_repeat)
             if rm_type:

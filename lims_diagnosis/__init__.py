@@ -37,6 +37,7 @@ def register():
         results_report.Cron,
         notebook.Notebook,
         notebook.NotebookLine,
+        notebook.NotebookRepeatAnalysisStart,
         notebook.NotebookLineRepeatAnalysisStart,
         laboratory.NotebookRule,
         task.AdministrativeTaskTemplate,
@@ -49,6 +50,7 @@ def register():
         sample.CreateSample,
         results_report.ChangeSampleDiagnostician,
         results_report.OpenSamplesComparator,
+        notebook.NotebookRepeatAnalysis,
         notebook.NotebookLineRepeatAnalysis,
         module='lims_diagnosis', type_='wizard')
     Pool.register(

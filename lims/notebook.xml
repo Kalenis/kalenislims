@@ -563,6 +563,23 @@
 
 <!-- Wizard Repeat Analysis -->
 
+        <record model="ir.ui.view" id="lims_notebook_repeat_analysis_start_view_form">
+            <field name="model">lims.notebook.repeat_analysis.start</field>
+            <field name="type">form</field>
+            <field name="name">notebook_repeat_analysis_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_notebook_repeat_analysis">
+            <field name="name">Repeat Analysis</field>
+            <field name="wiz_name">lims.notebook.repeat_analysis</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_lims_notebook_repeat_analysis_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.notebook,-1</field>
+            <field name="action" ref="wiz_lims_notebook_repeat_analysis"/>
+        </record>
+
         <record model="ir.ui.view" id="lims_notebook_line_repeat_analysis_start_view_form">
             <field name="model">lims.notebook.line.repeat_analysis.start</field>
             <field name="type">form</field>

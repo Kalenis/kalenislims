@@ -12,6 +12,12 @@
 
 <!-- Wizard Repeat Analysis -->
 
+        <record model="ir.ui.view" id="notebook_repeat_analysis_start_view_form">
+            <field name="model">lims.notebook.repeat_analysis.start</field>
+            <field name="inherit" ref="lims.lims_notebook_repeat_analysis_start_view_form"/>
+            <field name="name">notebook_repeat_analysis_form</field>
+        </record>
+
         <record model="ir.ui.view" id="notebook_line_repeat_analysis_start_view_form">
             <field name="model">lims.notebook.line.repeat_analysis.start</field>
             <field name="inherit" ref="lims.lims_notebook_line_repeat_analysis_start_view_form"/>

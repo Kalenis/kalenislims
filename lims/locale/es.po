@@ -3797,6 +3797,18 @@ msgctxt "field:lims.notebook.precision_control.start,range_type:"
 msgid "Origin"
 msgstr "Origen"
 
+msgctxt "field:lims.notebook.repeat_analysis.start,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:lims.notebook.repeat_analysis.start,analysis_domain:"
+msgid "Analysis domain"
+msgstr "Dominio para Análisis"
+
+msgctxt "field:lims.notebook.repeat_analysis.start,repetition_reason:"
+msgid "Reason"
+msgstr "Motivo"
+
 msgctxt "field:lims.notebook.results_verification.start,range_type:"
 msgid "Origin"
 msgstr "Origen"
@@ -7206,31 +7218,31 @@ msgstr "Gestionar servicios"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_accept_lines"
 msgid "Accept Lines"
-msgstr "11) Aceptar resultados a todas las líneas"
+msgstr "12) Aceptar resultados a todas las líneas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_add_internal_relations"
 msgid "Add Internal Relations"
-msgstr "02) Agregar relaciones internas"
+msgstr "03) Agregar relaciones internas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_annul_lines"
 msgid "Annul Lines"
-msgstr "12) Anular resultados a todas las líneas"
+msgstr "13) Anular resultados a todas las líneas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_initial_concentration_calc"
 msgid "Initial Concentration Calculation"
-msgstr "03) Cálculo de concentración inicial"
+msgstr "04) Cálculo de concentración inicial"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_internal_relations_calc_1"
 msgid "Internal Relations Calculation"
-msgstr "05) Cálculo de relaciones internas"
+msgstr "06) Cálculo de relaciones internas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_internal_relations_calc_2"
 msgid "Internal Relations Calculation"
-msgstr "06) Cálculo de relaciones internas con repeticiones"
+msgstr "07) Cálculo de relaciones internas con repeticiones"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_limits_validation"
 msgid "Limits Validation"
-msgstr "09) Validación de límites"
+msgstr "10) Validación de límites"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_line_accept_lines"
 msgid "Accept Lines"
@@ -7299,17 +7311,21 @@ msgctxt "model:ir.action,name:wiz_lims_notebook_precision_control"
 msgid "Precision Control"
 msgstr "01) Control de precisión (solamente para RM/CON)"
 
+msgctxt "model:ir.action,name:wiz_lims_notebook_repeat_analysis"
+msgid "Repeat Analysis"
+msgstr "02) Repetir análisis"
+
 msgctxt "model:ir.action,name:wiz_lims_notebook_results_conversion"
 msgid "Results Conversion"
-msgstr "04) Conversión de resultados"
+msgstr "05) Conversión de resultados"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_results_verification"
 msgid "Results Verification"
-msgstr "08) Verificación de resultados"
+msgstr "09) Verificación de resultados"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_uncertainty_calc"
 msgid "Uncertainty Calculation"
-msgstr "07) Cálculo de incertidumbre"
+msgstr "08) Cálculo de incertidumbre"
 
 msgctxt "model:ir.action,name:wiz_lims_relate_analysis"
 msgid "Relate Analysis"
@@ -7369,7 +7385,7 @@ msgstr "Desvincular técnicos"
 
 msgctxt "model:ir.action,name:wiz_notebook_evaluate_rules"
 msgid "Evaluate Rules"
-msgstr "10) Evaluar Reglas de cuaderno"
+msgstr "11) Evaluar Reglas de cuaderno"
 
 msgctxt "model:ir.action,name:wiz_notebook_generate_results_report"
 msgid "Generate Results Report"
@@ -9411,6 +9427,10 @@ msgstr "Carga manual de resultados"
 msgctxt "model:lims.notebook.precision_control.start,name:"
 msgid "Precision Control"
 msgstr "Control de precisión"
+
+msgctxt "model:lims.notebook.repeat_analysis.start,name:"
+msgid "Repeat Analysis"
+msgstr "Repetir análisis"
 
 msgctxt "model:lims.notebook.results_conversion.start,name:"
 msgid "Results Conversion"
@@ -14887,6 +14907,14 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.notebook.precision_control,start,ok:"
 msgid "Ok"
 msgstr "Aceptar"
+
+msgctxt "wizard_button:lims.notebook.repeat_analysis,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.notebook.repeat_analysis,start,repeat:"
+msgid "Repeat"
+msgstr "Repetir"
 
 msgctxt "wizard_button:lims.notebook.results_conversion,start,end:"
 msgid "Cancel"
