@@ -1167,6 +1167,10 @@ msgctxt "field:lims.create_sample.start,matrix_domain:"
 msgid "Matrix domain"
 msgstr "Dominio para Matriz"
 
+msgctxt "field:lims.create_sample.start,multi_party:"
+msgid "Multi Party"
+msgstr "Multi cliente"
+
 msgctxt "field:lims.create_sample.start,obj_description:"
 msgid "Objective description"
 msgstr "Descripción objetiva"
@@ -1190,6 +1194,10 @@ msgstr "Cantidad de envases"
 msgctxt "field:lims.create_sample.start,party:"
 msgid "Party"
 msgstr "Entidad"
+
+msgctxt "field:lims.create_sample.start,party_domain:"
+msgid "Party domain"
+msgstr "Dominio para Entidad"
 
 msgctxt "field:lims.create_sample.start,producer:"
 msgid "Producer company"
@@ -1382,6 +1390,10 @@ msgstr "Dominio para Entidad facturación"
 msgctxt "field:lims.entry,invoice_party_view:"
 msgid "Invoice party"
 msgstr "Entidad facturación"
+
+msgctxt "field:lims.entry,multi_party:"
+msgid "Multi Party"
+msgstr "Multi cliente"
 
 msgctxt "field:lims.entry,no_acknowledgment_of_receipt:"
 msgid "No acknowledgment of receipt"
@@ -5505,6 +5517,10 @@ msgctxt "field:lims.sample,matrix_view:"
 msgid "Matrix"
 msgstr "Matriz"
 
+msgctxt "field:lims.sample,multi_party:"
+msgid "Multi Party"
+msgstr "Multi cliente"
+
 msgctxt "field:lims.sample,number:"
 msgid "Number"
 msgstr "Número"
@@ -6708,6 +6724,10 @@ msgctxt "model:ir.action,name:act_lims_entry_list"
 msgid "Entries"
 msgstr "Ingresos"
 
+msgctxt "model:ir.action,name:act_lims_entry_multi_party_list"
+msgid "Multi Party Entries"
+msgstr "Ingresos multi cliente"
+
 msgctxt "model:ir.action,name:act_lims_entry_suspension_reason_list"
 msgid "Entry Suspension Reasons"
 msgstr "Motivos de suspensión de ingreso"
@@ -7453,6 +7473,26 @@ msgstr "En curso"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_lims_entry_list_domain_pending"
+msgid "Administration pending"
+msgstr "Pendiente por administración"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_entry_multi_party_list_domain_all"
+msgid "All"
+msgstr "Todos"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_entry_multi_party_list_domain_draft"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_entry_multi_party_list_domain_ongoing"
+msgid "Ongoing"
+msgstr "En curso"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_entry_multi_party_list_domain_pending"
 msgid "Administration pending"
 msgstr "Pendiente por administración"
 
@@ -8491,6 +8531,10 @@ msgstr "Nuevo Ingreso"
 msgctxt "model:ir.ui.menu,name:lims_entry_menu"
 msgid "Entries"
 msgstr "Ingresos"
+
+msgctxt "model:ir.ui.menu,name:lims_entry_multi_party_menu"
+msgid "Multi Party Entries"
+msgstr "Ingresos multi cliente"
 
 msgctxt "model:ir.ui.menu,name:lims_entry_suspension_reason_menu"
 msgid "Entry Suspension Reasons"

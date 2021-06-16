@@ -773,8 +773,25 @@ class EditSample(Wizard):
 
     def _edit_entry_party(self, sample, samples):
         pool = Pool()
+        Config = pool.get('lims.configuration')
+        PartyRelation = pool.get('party.relation')
         Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
+
+        if sample.entry.multi_party:
+            config_ = Config(1)
+            party_domain = [sample.entry.invoice_party.id]
+            relations = PartyRelation.search([
+                ('to', '=', sample.entry.invoice_party),
+                ('type', '=', config_.invoice_party_relation_type)
+                ])
+            party_domain.extend([r.from_.id for r in relations])
+            party_domain = list(set(party_domain))
+            if self.start.party.id not in party_domain:
+                raise UserError(gettext('lims_industry.msg_edit_sample_party'))
+            sample.party = self.start.party.id
+            sample.save()
+            return
 
         if Sample.search_count([
                 ('entry', '=', sample.entry.id),

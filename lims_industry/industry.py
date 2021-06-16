@@ -384,7 +384,6 @@ class Component(ModelSQL, ModelView):
         table = cls.__table_handler__(module_name)
         table.drop_constraint('type_unique')
 
-
     @classmethod
     def create(cls, vlist):
         TaskTemplate = Pool().get('lims.administrative.task.template')
