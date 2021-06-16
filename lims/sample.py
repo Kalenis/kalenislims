@@ -2007,8 +2007,8 @@ class Fraction(ModelSQL, ModelView):
             raise UserError(gettext('lims.msg_missing_fraction_product'))
         today = Date.today()
         company = User(Transaction().user).company
-        if self.sample.entry.party.customer_location:
-            from_location = self.sample.entry.party.customer_location
+        if self.sample.party.customer_location:
+            from_location = self.sample.party.customer_location
         else:
             locations = Location.search([('type', '=', 'customer')])
             from_location = locations[0] if len(locations) == 1 else None
@@ -2389,13 +2389,12 @@ class Sample(ModelSQL, ModelView):
     entry_view = fields.Function(fields.Many2One('lims.entry', 'Entry',
         states={'invisible': Not(Bool(Eval('_parent_entry')))}),
         'on_change_with_entry_view')
-    party = fields.Function(fields.Many2One('party.party', 'Party'),
-        'get_entry_field',
-        searcher='search_entry_field')
+    party = fields.Many2One('party.party', 'Party', required=True,
+        states={'readonly': True})
+    multi_party = fields.Function(fields.Boolean('Multi Party'),
+        'get_entry_field', searcher='search_entry_field')
     invoice_party = fields.Function(fields.Many2One('party.party',
-        'Invoice Party'),
-        'get_entry_field',
-        searcher='search_entry_field')
+        'Invoice Party'), 'get_entry_field', searcher='search_entry_field')
     producer = fields.Many2One('lims.sample.producer', 'Producer company',
         domain=['OR', ('id', '=', Eval('producer')),
             ('party', '=', Eval('party'))],
@@ -2523,14 +2522,23 @@ class Sample(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
+        cursor = Transaction().connection.cursor()
+        Entry = Pool().get('lims.entry')
         table_h = cls.__table_handler__(module_name)
         qty_lines_pending_acceptance_exist = table_h.column_exist(
             'qty_lines_pending_acceptance')
+        party_exist = table_h.column_exist('party')
         super().__register__(module_name)
         if not qty_lines_pending_acceptance_exist:
             logging.getLogger(__name__).info('Updating samples...')
             for sample in cls.search([]):
                 sample.update_qty_lines_pending_acceptance()
+        if not party_exist:
+            logging.getLogger(__name__).info('Updating Party in Samples...')
+            cursor.execute('UPDATE "' + cls._table + '" s '
+                'SET party = e.party FROM '
+                '"' + Entry._table + '" e '
+                'WHERE e.id = s.entry')
 
     @staticmethod
     def default_date():
@@ -2878,9 +2886,13 @@ class Sample(ModelSQL, ModelView):
         result = {}
         for name in names:
             result[name] = {}
-            for s in samples:
-                field = getattr(s.entry, name, None)
-                result[name][s.id] = field.id if field else None
+            if cls._fields[name]._type == 'many2one':
+                for s in samples:
+                    field = getattr(s.entry, name, None)
+                    result[name][s.id] = field.id if field else None
+            else:
+                for s in samples:
+                    result[name][s.id] = getattr(s.entry, name, None)
         return result
 
     @classmethod
@@ -5289,7 +5301,13 @@ class CreateSampleStart(ModelView):
     'Create Sample'
     __name__ = 'lims.create_sample.start'
 
-    party = fields.Many2One('party.party', 'Party')
+    party = fields.Many2One('party.party', 'Party', required=True,
+        states={'invisible': ~Eval('multi_party')},
+        domain=[('id', 'in', Eval('party_domain'))],
+        depends=['party_domain', 'multi_party'])
+    party_domain = fields.Many2Many('party.party',
+        None, None, 'Party domain')
+    multi_party = fields.Boolean('Multi Party')
     date = fields.DateTime('Date', required=True)
     producer = fields.Many2One('lims.sample.producer', 'Producer company',
         domain=[('party', '=', Eval('party'))], depends=['party'])
@@ -5756,10 +5774,31 @@ class CreateSample(Wizard):
     create_ = StateTransition()
 
     def default_start(self, fields):
-        Entry = Pool().get('lims.entry')
+        pool = Pool()
+        Entry = pool.get('lims.entry')
+        Config = pool.get('lims.configuration')
+        PartyRelation = pool.get('party.relation')
+
         entry = Entry(Transaction().context['active_id'])
+
+        if entry.multi_party:
+            config_ = Config(1)
+            party_domain = [entry.invoice_party.id]
+            relations = PartyRelation.search([
+                ('to', '=', entry.invoice_party),
+                ('type', '=', config_.invoice_party_relation_type)
+                ])
+            party_domain.extend([r.from_.id for r in relations])
+            party_domain = list(set(party_domain))
+            party_id = party_domain[0] if len(party_domain) == 1 else None
+        else:
+            party_domain = [entry.party.id]
+            party_id = entry.party.id
+
         return {
-            'party': entry.party.id,
+            'party': party_id,
+            'party_domain': party_domain,
+            'multi_party': entry.multi_party,
             }
 
     def transition_create_(self):
@@ -5878,6 +5917,7 @@ class CreateSample(Wizard):
 
             sample_defaults = {
                 'entry': entry_id,
+                'party': self.start.party.id,
                 'date': self.start.date,
                 'producer': producer_id,
                 'sample_client_description': (

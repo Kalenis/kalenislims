@@ -12,7 +12,7 @@ from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateReport, \
     Button
 from trytond.pool import Pool
-from trytond.pyson import Eval, Equal, Bool, Not
+from trytond.pyson import Eval, Equal, Bool, Not, If
 from trytond.transaction import Transaction
 from trytond.tools import get_smtp_server
 from trytond.config import config
@@ -51,13 +51,22 @@ class Entry(Workflow, ModelSQL, ModelView):
     date = fields.DateTime('Date')
     date2 = fields.Function(fields.Date('Date'), 'get_date',
         searcher='search_date')
-    party = fields.Many2One('party.party', 'Party', required=True,
-        states={'readonly': Eval('state') != 'draft'}, depends=['state'])
+    party = fields.Many2One('party.party', 'Party',
+        states={
+            'required': ~Eval('multi_party'),
+            'invisible': Bool(Eval('multi_party')),
+            'readonly': Eval('state') != 'draft',
+            },
+        depends=['multi_party', 'state'])
     invoice_party = fields.Many2One('party.party', 'Invoice party',
-        domain=['OR', ('id', '=', Eval('invoice_party')),
-            ('id', 'in', Eval('invoice_party_domain'))],
-        depends=['invoice_party_domain', 'state'], required=True,
-        states={'readonly': Eval('state') != 'draft'})
+        states={
+            'required': True,
+            'readonly': Eval('state') != 'draft',
+            },
+        domain=[If(~Eval('multi_party'), ['OR',
+            ('id', '=', Eval('invoice_party')),
+            ('id', 'in', Eval('invoice_party_domain'))], [])],
+        depends=['multi_party', 'state', 'invoice_party_domain'])
     invoice_party_view = fields.Function(fields.Many2One('party.party',
         'Invoice party'), 'get_views_field',
         searcher='search_views_field')
@@ -119,6 +128,7 @@ class Entry(Workflow, ModelSQL, ModelView):
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
     block_entry_confirmation = fields.Function(fields.Boolean(
         'Block Entry Confirmation'), 'get_block_entry_confirmation')
+    multi_party = fields.Boolean('Multy Party', readonly=True, select=True)
 
     @classmethod
     def __setup__(cls):
@@ -145,6 +155,10 @@ class Entry(Workflow, ModelSQL, ModelView):
                 'depends': ['state'],
                 },
             })
+
+    @staticmethod
+    def default_multi_party():
+        return Transaction().context.get('multi_party', False)
 
     @staticmethod
     def default_date():
@@ -413,7 +427,27 @@ class Entry(Workflow, ModelSQL, ModelView):
         vlist = [x.copy() for x in vlist]
         for values in vlist:
             values['number'] = Sequence.get_id(sequence.id)
+            if values.get('party', None) is None:
+                values['party'] = values['invoice_party']
         return super().create(vlist)
+
+    @classmethod
+    def write(cls, *args):
+        Sample = Pool().get('lims.sample')
+        super().write(*args)
+        actions = iter(args)
+        for entries, vals in zip(actions, actions):
+            if 'party' in vals:
+                single_party_entries = [e for e in entries
+                    if not e.multi_party]
+                Sample.write([s for e in single_party_entries
+                    for s in e.samples],
+                    {'party': vals.get('party')})
+            if 'invoice_party' in vals:
+                multi_party_entries = [e for e in entries
+                    if e.multi_party]
+                cls.write(multi_party_entries,
+                    {'party': vals.get('invoice_party')})
 
     @classmethod
     def copy(cls, entries, default=None):

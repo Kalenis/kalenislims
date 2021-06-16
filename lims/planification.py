@@ -2519,6 +2519,7 @@ class AddFractionRMBMZ(Wizard):
         # new sample
         new_sample, = Sample.create([{
             'entry': entry.id,
+            'party': entry.party.id,
             'date': datetime.now(),
             'product_type': self.start.product_type.id,
             'matrix': self.start.matrix.id,
@@ -2960,6 +2961,7 @@ class AddFractionBRE(Wizard):
         # new sample
         new_sample, = Sample.create([{
             'entry': entry.id,
+            'party': entry.party.id,
             'date': datetime.now(),
             'product_type': self.start.product_type.id,
             'matrix': self.start.matrix.id,
@@ -3324,6 +3326,7 @@ class AddFractionMRT(Wizard):
         # new sample
         new_sample, = Sample.create([{
             'entry': entry.id,
+            'party': entry.party.id,
             'date': datetime.now(),
             'product_type': self.start.product_type.id,
             'matrix': self.start.matrix.id,
@@ -4561,6 +4564,7 @@ class CreateFractionControl(Wizard):
         # new sample
         new_sample, = Sample.create([{
             'entry': entry.id,
+            'party': entry.party.id,
             'date': datetime.now(),
             'product_type': self.start.product_type.id,
             'matrix': self.start.matrix.id,

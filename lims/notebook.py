@@ -152,7 +152,7 @@ class Notebook(ModelSQL, ModelView):
 
     @classmethod
     def search_party_code(cls, name, clause):
-        return [('fraction.sample.entry.party.code',) + tuple(clause[1:])]
+        return [('fraction.sample.party.code',) + tuple(clause[1:])]
 
     @classmethod
     def get_fraction_field(cls, notebooks, names):
@@ -1792,7 +1792,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
             line.write_date,
             line.id.as_('line'),
             service.fraction,
-            entry.party,
+            sample.party,
             party.code.as_('party_code'),
             sample.product_type,
             sample.matrix,

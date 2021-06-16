@@ -867,6 +867,10 @@ msgctxt "model:ir.message,text:msg_edit_sample_equipment"
 msgid "The Equipment in sample \"%(sample)s\" does not belong to the Party"
 msgstr "El equipo de la muestra «%(sample)s» no pertenece a la entidad"
 
+msgctxt "model:ir.message,text:msg_edit_sample_party"
+msgid "You must select a Party related to the invoice Party"
+msgstr "Debe seleccionar una entidad relacionada con la entidad de facturación"
+
 msgctxt "model:ir.message,text:msg_equipment_name_unique"
 msgid "There is already an equipment with the same name for the plant"
 msgstr "Ya existe un equipo con el mismo nombre para la planta"

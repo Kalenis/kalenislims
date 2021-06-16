@@ -35,6 +35,7 @@
         <record model="ir.action.act_window" id="act_lims_entry_list">
             <field name="name">Entries</field>
             <field name="res_model">lims.entry</field>
+            <field name="domain" eval="[('multi_party', '=', False)]" pyson="1"/>
         </record>
         <record model="ir.action.act_window.view" id="act_lims_entry_list_view_list">
             <field name="sequence" eval="10"/>
@@ -145,6 +146,7 @@
         <record model="ir.action.act_window" id="act_lims_entry_form">
             <field name="name">New Entry</field>
             <field name="res_model">lims.entry</field>
+            <field name="domain" eval="[('multi_party', '=', False)]" pyson="1"/>
         </record>
         <record model="ir.action.act_window.view" id="act_lims_entry_form_view_form">
             <field name="sequence" eval="10"/>
@@ -162,6 +164,78 @@
 
         <record model="ir.ui.menu-res.group" id="menu_entry_form_group_entry">
             <field name="menu" ref="lims_entry_form_menu"/>
+            <field name="group" ref="group_lims_entry"/>
+        </record>
+
+<!-- Entry Multi Party -->
+
+        <record model="ir.action.act_window" id="act_lims_entry_multi_party_list">
+            <field name="name">Multi Party Entries</field>
+            <field name="res_model">lims.entry</field>
+            <field name="domain" eval="[('multi_party', '=', True)]" pyson="1"/>
+            <field name="context" eval="{'multi_party': True}" pyson="1"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_lims_entry_multi_party_list_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_entry_view_list"/>
+            <field name="act_window" ref="act_lims_entry_multi_party_list"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_lims_entry_multi_party_list_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_entry_view_form"/>
+            <field name="act_window" ref="act_lims_entry_multi_party_list"/>
+        </record>
+
+        <record model="ir.action.act_window.domain"
+            id="act_lims_entry_multi_party_list_domain_draft">
+            <field name="name">Draft</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain"
+                eval="[('state', '=', 'draft')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_entry_multi_party_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_lims_entry_multi_party_list_domain_ongoing">
+            <field name="name">Ongoing</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain"
+                eval="[('state', '=', 'ongoing')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_entry_multi_party_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_lims_entry_multi_party_list_domain_pending">
+            <field name="name">Administration pending</field>
+            <field name="sequence" eval="30"/>
+            <field name="domain"
+                eval="[('state', '=', 'pending')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_entry_multi_party_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_lims_entry_multi_party_list_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="9999"/>
+            <field name="domain"></field>
+            <field name="act_window" ref="act_lims_entry_multi_party_list"/>
+        </record>
+
+        <menuitem parent="lims_entry_board_menu" action="act_lims_entry_multi_party_list"
+            id="lims_entry_multi_party_menu" sequence="25"  icon="tryton-list"/>
+
+        <record model="ir.ui.menu-res.group" id="menu_entry_multi_party_group_entry_readonly">
+            <field name="menu" ref="lims_entry_multi_party_menu"/>
+            <field name="group" ref="group_lims_entry_readonly"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_entry_multi_party_group_entry_update">
+            <field name="menu" ref="lims_entry_multi_party_menu"/>
+            <field name="group" ref="group_lims_entry_update"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_entry_multi_party_group_entry">
+            <field name="menu" ref="lims_entry_multi_party_menu"/>
             <field name="group" ref="group_lims_entry"/>
         </record>
 
