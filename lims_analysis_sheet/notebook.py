@@ -48,6 +48,34 @@ class NotebookLine(metaclass=PoolMeta):
 
         return template and template[0] or None
 
+    @fields.depends('end_date', 'analysis', 'method')
+    def on_change_end_date(self):
+        if not self.end_date:
+            return
+        if self.analysis_sheet:
+            return
+        template_id = self.get_analysis_sheet_template()
+        if not template_id:
+            return
+
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+        sheets = AnalysisSheet.search([
+            ('template', '=', template_id),
+            ('state', 'in', ['draft', 'active', 'validated'])
+            ], order=[('id', 'DESC')])
+        for s in sheets:
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                lines = Data.search([
+                    ('compilation', '=', s.compilation.id),
+                    ('notebook_line', '=', self.id),
+                    ], limit=1)
+                if lines:
+                    self.end_date = None
+                    return
+
 
 class AddControlStart(ModelView):
     'Add Controls'
