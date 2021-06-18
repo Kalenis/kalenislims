@@ -3344,6 +3344,17 @@ class Sample(ModelSQL, ModelView):
             return 'in_report'
         if self.laboratory_acceptance_date:
             return 'pending_report'
+        cursor.execute('SELECT COUNT(*) '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + Service._table + '" s '
+                'ON s.id = nl.service '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = s.fraction '
+            'WHERE f.sample = %s '
+                'AND nl.annulled = FALSE',
+            (self.id,))
+        if cursor.fetchone()[0] == 0:
+            return 'annulled'
         if self.laboratory_end_date:
             return 'lab_pending_acceptance'
         if self.laboratory_start_date:
@@ -3362,17 +3373,6 @@ class Sample(ModelSQL, ModelView):
                 return 'in_lab'
             return 'planned'
         if self.confirmation_date:
-            cursor.execute('SELECT COUNT(*) '
-                'FROM "' + NotebookLine._table + '" nl '
-                    'INNER JOIN "' + Service._table + '" s '
-                    'ON s.id = nl.service '
-                    'INNER JOIN "' + Fraction._table + '" f '
-                    'ON f.id = s.fraction '
-                'WHERE f.sample = %s '
-                    'AND nl.annulled = FALSE',
-                (self.id,))
-            if cursor.fetchone()[0] == 0:
-                return 'annulled'
             return 'pending_planning'
         return 'draft'
 
