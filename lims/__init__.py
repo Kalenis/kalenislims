@@ -306,6 +306,7 @@ def register():
         notebook.NotebookLineUnacceptLines,
         notebook.NotebookAnnulLines,
         notebook.NotebookLineAnnulLines,
+        notebook.NotebookUnannulLines,
         notebook.NotebookLineUnannulLines,
         notebook.NotebookRepeatAnalysis,
         notebook.NotebookLineRepeatAnalysis,
