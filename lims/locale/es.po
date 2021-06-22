@@ -5349,6 +5349,10 @@ msgctxt "field:lims.results_report.version.detail.sample,label:"
 msgid "Label"
 msgstr "Rótulo"
 
+msgctxt "field:lims.results_report.version.detail.sample,lines_not_reported:"
+msgid "Not reported Lines"
+msgstr "Líneas no informadas"
+
 msgctxt "field:lims.results_report.version.detail.sample,matrix:"
 msgid "Matrix"
 msgstr "Matriz"
