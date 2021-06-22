@@ -69,7 +69,7 @@ class Notebook(ModelSQL, ModelView):
     state = fields.Function(fields.Char('State'), 'get_state',
         searcher='search_state')
     lines_pending_reporting = fields.Function(fields.One2Many(
-        'lims.notebook.line', 'notebook', 'Lines'),
+        'lims.notebook.line', None, 'Lines'),
         'get_lines_pending_reporting')
     acceptance_pending = fields.Function(fields.Boolean('Pending acceptance'),
         'get_acceptance_pending', searcher='search_acceptance_pending')

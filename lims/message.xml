@@ -11,7 +11,7 @@
             <field name="text">There is already a default typification for this combination of product type, matrix and analysis</field>
         </record>
         <record model="ir.message" id="msg_not_default_typification">
-            <field name="text">This typification should be the default</field>
+            <field name="text">This typification (ID: %(typification)s) should be the default</field>
         </record>
         <record model="ir.message" id="msg_error_limits_allowed">
             <field name="text">The value of line "%(line)s" is outside the allowed limits</field>
