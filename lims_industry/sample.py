@@ -198,6 +198,29 @@ class Sample(metaclass=PoolMeta):
         return [x.attribute.id for x in res]
 
     @classmethod
+    def get_plant(cls, samples, name):
+        result = {}
+        for s in samples:
+            result[s.id] = s.equipment and s.equipment.plant.id or None
+        return result
+
+    @classmethod
+    def get_equipment_field(cls, samples, names):
+        result = {}
+        for name in names:
+            result[name] = {}
+            if cls._fields[name]._type == 'many2one':
+                for s in samples:
+                    field = getattr(s.equipment, name.replace(
+                        'equipment_', ''), None)
+                    result[name][s.id] = field.id if field else None
+            else:
+                for s in samples:
+                    result[name][s.id] = getattr(s.equipment, name.replace(
+                        'equipment_', ''), None)
+        return result
+
+    @classmethod
     def _confirm_samples(cls, samples):
         TaskTemplate = Pool().get('lims.administrative.task.template')
         for sample in samples:
@@ -251,27 +274,17 @@ class Sample(metaclass=PoolMeta):
         return res
 
     @classmethod
-    def get_plant(cls, samples, name):
-        result = {}
-        for s in samples:
-            result[s.id] = s.equipment and s.equipment.plant.id or None
-        return result
-
-    @classmethod
-    def get_equipment_field(cls, samples, names):
-        result = {}
-        for name in names:
-            result[name] = {}
-            if cls._fields[name]._type == 'many2one':
-                for s in samples:
-                    field = getattr(s.equipment, name.replace(
-                        'equipment_', ''), None)
-                    result[name][s.id] = field.id if field else None
-            else:
-                for s in samples:
-                    result[name][s.id] = getattr(s.equipment, name.replace(
-                        'equipment_', ''), None)
-        return result
+    def delete(cls, samples):
+        AdministrativeTask = Pool().get('lims.administrative.task')
+        for sample in samples:
+            tasks = AdministrativeTask.search([
+                ('origin', '=', '%s,%s' % (cls.__name__, sample.id)),
+                ('state', 'not in', ('done', 'discarded')),
+                ])
+            if tasks:
+                AdministrativeTask.write(tasks, {'state': 'draft'})
+                AdministrativeTask.delete(tasks)
+        super().delete(samples)
 
 
 class SampleEditionLog(ModelSQL, ModelView):
