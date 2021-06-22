@@ -17,6 +17,8 @@ class ResultsReport(metaclass=PoolMeta):
         'get_plants_list', searcher='search_plants_list')
     equipments_list = fields.Function(fields.Char('Equipments'),
         'get_equipments_list', searcher='search_equipments_list')
+    components_list = fields.Function(fields.Char('Components'),
+        'get_components_list', searcher='search_components_list')
 
     @classmethod
     def get_plants_list(cls, reports, name):
@@ -164,6 +166,82 @@ class ResultsReport(metaclass=PoolMeta):
             return [('id', '=', -1)]
         return [('id', 'in', details_ids)]
 
+    @classmethod
+    def get_components_list(cls, reports, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        ComponentType = pool.get('lims.component.type')
+        Component = pool.get('lims.component')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
+
+        result = {}
+        for r in reports:
+            result[r.id] = ''
+            cursor.execute('SELECT DISTINCT(ct.name) '
+                'FROM "' + ComponentType._table + '" ct '
+                    'INNER JOIN "' + Component._table + '" c '
+                    'ON ct.id = c.type '
+                    'INNER JOIN "' + Sample._table + '" s '
+                    'ON c.id = s.component '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON s.id = f.sample '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON f.id = n.fraction '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON n.id = rs.notebook '
+                    'INNER JOIN "' + ResultsDetail._table + '" rd '
+                    'ON rs.version_detail = rd.id '
+                    'INNER JOIN "' + ResultsVersion._table + '" rv '
+                    'ON rd.report_version = rv.id '
+                'WHERE rv.results_report = %s '
+                'ORDER BY ct.name', (r.id,))
+            samples = [x[0] for x in cursor.fetchall()]
+            if samples:
+                result[r.id] = ', '.join(samples)
+        return result
+
+    @classmethod
+    def search_components_list(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        ComponentType = pool.get('lims.component.type')
+        Component = pool.get('lims.component')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
+
+        value = clause[2]
+        cursor.execute('SELECT rv.results_report '
+            'FROM "' + ComponentType._table + '" ct '
+                'INNER JOIN "' + Component._table + '" c '
+                'ON ct.id = c.type '
+                'INNER JOIN "' + Sample._table + '" s '
+                'ON c.id = s.component '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON s.id = f.sample '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON n.id = rs.notebook '
+                'INNER JOIN "' + ResultsDetail._table + '" rd '
+                'ON rs.version_detail = rd.id '
+                'INNER JOIN "' + ResultsVersion._table + '" rv '
+                'ON rd.report_version = rv.id '
+            'WHERE ct.name ILIKE %s',
+            (value,))
+        details_ids = [x[0] for x in cursor.fetchall()]
+        if not details_ids:
+            return [('id', '=', -1)]
+        return [('id', 'in', details_ids)]
+
 
 class ResultsReportVersionDetail(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail'
@@ -172,6 +250,8 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         'get_plants_list', searcher='search_plants_list')
     equipments_list = fields.Function(fields.Char('Equipments'),
         'get_equipments_list', searcher='search_equipments_list')
+    components_list = fields.Function(fields.Char('Components'),
+        'get_components_list', searcher='search_components_list')
 
     @classmethod
     def get_plants_list(cls, details, name):
@@ -289,6 +369,70 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
                 'INNER JOIN "' + ResultsSample._table + '" rs '
                 'ON n.id = rs.notebook '
             'WHERE e.name ILIKE %s',
+            (value,))
+        details_ids = [x[0] for x in cursor.fetchall()]
+        if not details_ids:
+            return [('id', '=', -1)]
+        return [('id', 'in', details_ids)]
+
+    @classmethod
+    def get_components_list(cls, details, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        ComponentType = pool.get('lims.component.type')
+        Component = pool.get('lims.component')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        result = {}
+        for d in details:
+            result[d.id] = ''
+            cursor.execute('SELECT DISTINCT(ct.name) '
+                'FROM "' + ComponentType._table + '" ct '
+                    'INNER JOIN "' + Component._table + '" c '
+                    'ON ct.id = c.type '
+                    'INNER JOIN "' + Sample._table + '" s '
+                    'ON c.id = s.component '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON s.id = f.sample '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON f.id = n.fraction '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON n.id = rs.notebook '
+                'WHERE rs.version_detail = %s '
+                'ORDER BY ct.name', (d.id,))
+            samples = [x[0] for x in cursor.fetchall()]
+            if samples:
+                result[d.id] = ', '.join(samples)
+        return result
+
+    @classmethod
+    def search_components_list(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        ComponentType = pool.get('lims.component.type')
+        Component = pool.get('lims.component')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        value = clause[2]
+        cursor.execute('SELECT rs.version_detail '
+            'FROM "' + ComponentType._table + '" ct '
+                'INNER JOIN "' + Component._table + '" c '
+                'ON ct.id = c.type '
+                'INNER JOIN "' + Sample._table + '" s '
+                'ON c.id = s.component '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON s.id = f.sample '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON n.id = rs.notebook '
+            'WHERE ct.name ILIKE %s',
             (value,))
         details_ids = [x[0] for x in cursor.fetchall()]
         if not details_ids:
