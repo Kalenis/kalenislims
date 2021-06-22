@@ -56,3 +56,5 @@ class ReportTemplate(metaclass=PoolMeta):
 
     diagnosis_template = fields.Many2One('lims.diagnosis.template',
         'Diagnosis Template')
+    diagnosis_length = fields.Integer('Diagnosis Length',
+        help='Maximum number of characters in diagnosis')

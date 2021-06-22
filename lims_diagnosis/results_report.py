@@ -8,7 +8,7 @@ from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Not, Bool
 from trytond.transaction import Transaction
-from trytond.exceptions import UserError
+from trytond.exceptions import UserError, UserWarning
 from trytond.i18n import gettext
 
 
@@ -48,6 +48,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     @Workflow.transition('diagnosed')
     def diagnose(cls, details):
         cls.check_diagnosis_states(details)
+        cls.check_diagnosis_length(details)
 
     @classmethod
     def check_diagnosis_states(cls, details):
@@ -59,6 +60,24 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
                     if state == '*':
                         raise UserError(gettext(
                             'lims_diagnosis.msg_invalid_diagnosis_state'))
+
+    @classmethod
+    def check_diagnosis_length(cls, details):
+        Warning = Pool().get('res.user.warning')
+        for detail in details:
+            if not detail.template or not detail.template.diagnosis_length:
+                continue
+            diagnosis_length = detail.template.diagnosis_length
+            for sample in detail.samples:
+                if not sample.diagnosis:
+                    continue
+                if len(sample.diagnosis) > diagnosis_length:
+                    key = 'lims_diagnosis_length@%s' % sample.id
+                    if Warning.check(key):
+                        raise UserWarning(key, gettext(
+                            'lims_diagnosis.msg_invalid_diagnosis_length',
+                            length=str(len(sample.diagnosis)),
+                            allowed=str(diagnosis_length)))
 
     @fields.depends('template', '_parent_template.diagnosis_template',
         methods=['on_change_diagnosis_template'])

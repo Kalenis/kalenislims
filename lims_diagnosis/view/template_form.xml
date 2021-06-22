@@ -3,5 +3,9 @@
     <xpath expr="/form/field[@name='report']" position="after">
         <label name="diagnosis_template"/>
         <field name="diagnosis_template"/>
+        <group id="diagnosis_length" colspan="2">
+            <label name="diagnosis_length"/>
+            <field name="diagnosis_length"/>
+        </group>
     </xpath>
 </data>
