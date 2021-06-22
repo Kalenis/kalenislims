@@ -22,26 +22,6 @@ msgctxt "field:company.department,name:"
 msgid "Name"
 msgstr "Nombre"
 
-msgctxt "field:ir.model,docs:"
-msgid "Docs"
-msgstr ""
-
-msgctxt "field:ir.model.doc,doc:"
-msgid "Documentation"
-msgstr ""
-
-msgctxt "field:ir.model.doc,kind:"
-msgid "Kind"
-msgstr "Tipo"
-
-msgctxt "field:ir.model.doc,model:"
-msgid "Model"
-msgstr "Modelo"
-
-msgctxt "field:ir.model.doc,name:"
-msgid "Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.analysis,all_included_analysis:"
 msgid "All included analysis"
 msgstr "Todos los análisis incluidos"
@@ -8360,18 +8340,6 @@ msgctxt "model:ir.message,text:msg_zone_code_unique_id"
 msgid "Zone code must be unique"
 msgstr "El código de la zona debe ser único"
 
-msgctxt "model:ir.model.doc,doc:lims_entry_model_doc"
-msgid ""
-"<div align=\"left\"><b><font face=\"normal\" size=\"7\">Entry "
-"<i>Documentation</i></font></b></div>"
-msgstr ""
-"<div align=\"left\"><b><font face=\"normal\" size=\"7\"><i>Documentación "
-"de</i> Ingresos</font></b></div>"
-
-msgctxt "model:ir.model.doc,name:"
-msgid "Model Doc"
-msgstr ""
-
 msgctxt "model:ir.rule.group,name:rule_group_analysis_device"
 msgid "User in laboratory"
 msgstr ""
@@ -12064,14 +12032,6 @@ msgstr "Confirmar ingresos en espera"
 msgctxt "selection:ir.cron,method:"
 msgid "Lims Process Waiting Planification"
 msgstr "Procesar planificaciones en espera"
-
-msgctxt "selection:ir.model.doc,kind:"
-msgid "Base"
-msgstr "Base"
-
-msgctxt "selection:ir.model.doc,kind:"
-msgid "Extended"
-msgstr ""
 
 msgctxt "selection:lims.analysis,behavior:"
 msgid "Additional"
