@@ -3,5 +3,6 @@
     <xpath expr="/tree/field[@name='samples_list']" position="after">
         <field name="plants_list"/>
         <field name="equipments_list"/>
+        <field name="components_list"/>
     </xpath>
 </data>
