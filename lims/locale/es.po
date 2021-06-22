@@ -7307,6 +7307,10 @@ msgctxt "model:ir.action,name:wiz_lims_notebook_results_verification"
 msgid "Results Verification"
 msgstr "09) Verificación de resultados"
 
+msgctxt "model:ir.action,name:wiz_lims_notebook_unannul_lines"
+msgid "Revert Lines Annulment"
+msgstr "14) Revertir Anulación de resultados a todas las líneas"
+
 msgctxt "model:ir.action,name:wiz_lims_notebook_uncertainty_calc"
 msgid "Uncertainty Calculation"
 msgstr "08) Cálculo de incertidumbre"

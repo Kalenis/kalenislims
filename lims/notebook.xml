@@ -686,6 +686,17 @@
 
 <!-- Wizard Revert Lines Annulment -->
 
+        <record model="ir.action.wizard" id="wiz_lims_notebook_unannul_lines">
+            <field name="name">Revert Lines Annulment</field>
+            <field name="wiz_name">lims.notebook.unannul_lines</field>
+        </record>
+
+        <record model="ir.action.keyword" id="lims_notebook_unannul_lines_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.notebook,-1</field>
+            <field name="action" ref="wiz_lims_notebook_unannul_lines"/>
+        </record>
+
         <record model="ir.action.wizard" id="wiz_lims_notebook_line_unannul_lines">
             <field name="name">Revert Lines Annulment</field>
             <field name="wiz_name">lims.notebook_line.unannul_lines</field>
