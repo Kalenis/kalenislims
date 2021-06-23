@@ -767,7 +767,7 @@ class ResultsReportVersionDetailLine(metaclass=PoolMeta):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
         if not precedent:
-            return None
+            return ''
         precedent_line = NotebookLine.search([
             ('notebook', '=', precedent),
             ('analysis', '=', line.analysis),
@@ -775,7 +775,7 @@ class ResultsReportVersionDetailLine(metaclass=PoolMeta):
             ('accepted', '=', True),
             ])
         if not precedent_line:
-            return None
+            return ''
         return precedent_line[0].get_formated_result()
 
 
