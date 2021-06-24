@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Notebook -->
+
+        <record model="ir.ui.view" id="notebook_view_list">
+            <field name="model">lims.notebook</field>
+            <field name="inherit" ref="lims.lims_notebook_view_list"/>
+            <field name="name">notebook_list</field>
+        </record>
+
+    </data>
+</tryton>
