@@ -2088,6 +2088,13 @@ class CopyTypificationConfirm(ModelView):
     summary = fields.Text('Summary', readonly=True)
 
 
+class CopyTypificationError(ModelView):
+    'Copy/Move Typification'
+    __name__ = 'lims.typification.copy.error'
+
+    message = fields.Text('Message', readonly=True)
+
+
 class CopyTypification(Wizard):
     'Copy/Move Typification'
     __name__ = 'lims.typification.copy'
@@ -2103,6 +2110,10 @@ class CopyTypification(Wizard):
             Button('Confirm', 'confirm', 'tryton-ok', default=True),
             ])
     confirm = StateTransition()
+    error = StateView('lims.typification.copy.error',
+        'lims.lims_copy_typification_error_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel', default=True),
+            ])
 
     def default_ask(self, fields):
         summary = '%s\n' % gettext(
@@ -2160,10 +2171,15 @@ class CopyTypification(Wizard):
 
         return {'summary': summary}
 
+    def default_error(self, fields):
+        return {'message': self.error.message}
+
     def transition_confirm(self):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         Typification = pool.get('lims.typification')
+        ProductType = pool.get('lims.product.type')
+        Matrix = pool.get('lims.matrix')
 
         clause = [
             ('valid', '=', True),
@@ -2176,11 +2192,6 @@ class CopyTypification(Wizard):
             clause.append(('method', '=', self.start.origin_method.id))
 
         origins = Typification.search(clause)
-        if origins and self.start.action == 'move':
-            Typification.write(origins, {
-                'valid': False,
-                'by_default': False,
-                })
 
         product_type_id = self.start.destination_product_type.id
         if self.start.action == 'copy':
@@ -2190,6 +2201,7 @@ class CopyTypification(Wizard):
         method_id = (self.start.destination_method.id if
             self.start.destination_method else None)
 
+        error_additionals = ''
         to_copy = {}
         new_by_defaults = []
         for origin in origins:
@@ -2200,6 +2212,7 @@ class CopyTypification(Wizard):
                     continue
 
             for matrix_id in matrix_ids:
+                # check if typification already exists
                 cursor.execute('SELECT COUNT(*) '
                     'FROM "' + Typification._table + '" '
                     'WHERE product_type = %s '
@@ -2210,6 +2223,29 @@ class CopyTypification(Wizard):
                         method_id or origin.method.id))
                 if cursor.fetchone()[0] != 0:
                     continue
+
+                # check if additionals are typified
+                for a in origin.additionals:
+                    cursor.execute('SELECT COUNT(*) '
+                        'FROM "' + Typification._table + '" '
+                        'WHERE product_type = %s '
+                            'AND matrix = %s '
+                            'AND analysis = %s '
+                            'AND valid IS TRUE',
+                        (product_type_id, matrix_id, a.id))
+                    if cursor.fetchone()[0] == 0:
+                        error_additionals += '* %s\n' % gettext('lims.msg_not_typified',
+                            analysis=a.rec_name,
+                            product_type=ProductType(product_type_id).rec_name,
+                            matrix=Matrix(matrix_id).rec_name)
+                if error_additionals:
+                    continue
+
+                if self.start.action == 'move':
+                    Typification.write([origin], {
+                        'valid': False,
+                        'by_default': False,
+                        })
 
                 if origin not in to_copy:
                     to_copy[origin] = []
@@ -2238,6 +2274,12 @@ class CopyTypification(Wizard):
                     new_by_defaults.append(ids_key)
 
                 to_copy[origin].append(default)
+
+        if error_additionals:
+            self.error.message = '%s\n%s' % (
+                gettext('lims.msg_typification_copy_additional'),
+                error_additionals)
+            return 'error'
 
         for typification, defaults in to_copy.items():
             for default in defaults:

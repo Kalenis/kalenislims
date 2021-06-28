@@ -6195,6 +6195,10 @@ msgctxt "field:lims.typification.copy.confirm,summary:"
 msgid "Summary"
 msgstr "Resumen"
 
+msgctxt "field:lims.typification.copy.error,message:"
+msgid "Message"
+msgstr "Mensaje"
+
 msgctxt "field:lims.typification.copy.start,action:"
 msgid "Action"
 msgstr "Acción"
@@ -8252,6 +8256,10 @@ msgctxt "model:ir.message,text:msg_typification_copy_action"
 msgid "You are going to %(action)s"
 msgstr "Está por %(action)s"
 
+msgctxt "model:ir.message,text:msg_typification_copy_additional"
+msgid "Missing typification for additional analysis:"
+msgstr "Falta tipificación para análisis adicional:"
+
 msgctxt "model:ir.message,text:msg_typification_copy_analysis"
 msgid " * Analysis: %(analysis)s"
 msgstr " * Análisis: %(analysis)s"
@@ -9758,6 +9766,10 @@ msgid "Calculated Typification"
 msgstr "Tipificación calculada"
 
 msgctxt "model:lims.typification.copy.confirm,name:"
+msgid "Copy/Move Typification"
+msgstr "Copiar/Mover tipificación"
+
+msgctxt "model:lims.typification.copy.error,name:"
 msgid "Copy/Move Typification"
 msgstr "Copiar/Mover tipificación"
 
@@ -15321,6 +15333,10 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 msgctxt "wizard_button:lims.typification.copy,ask,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.typification.copy,error,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
