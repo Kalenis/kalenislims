@@ -493,6 +493,11 @@
             <field name="type">form</field>
             <field name="name">typification_copy_confirm_form</field>
         </record>
+        <record model="ir.ui.view" id="lims_copy_typification_error_view_form">
+            <field name="model">lims.typification.copy.error</field>
+            <field name="type">form</field>
+            <field name="name">typification_copy_error_form</field>
+        </record>
 
         <record model="ir.action.wizard" id="wiz_lims_copy_typification">
             <field name="name">Copy/Move Typification</field>

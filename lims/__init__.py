@@ -111,6 +111,7 @@ def register():
         sample.DuplicateSampleFromEntryStart,
         analysis.CopyTypificationStart,
         analysis.CopyTypificationConfirm,
+        analysis.CopyTypificationError,
         analysis.CopyCalculatedTypificationStart,
         analysis.UpdateTypificationStart,
         analysis.RelateAnalysisStart,

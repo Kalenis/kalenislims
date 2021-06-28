@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<form>
+    <field name="message" colspan="4" height="300"/>
+</form>
