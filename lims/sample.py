@@ -3304,7 +3304,8 @@ class Sample(ModelSQL, ModelView):
                 'ON n.id = rs.notebook '
                 'INNER JOIN "' + Fraction._table + '" f '
                 'ON f.id = n.fraction '
-            'WHERE f.sample = %s',
+            'WHERE f.sample = %s '
+                'AND rd.type != \'preliminary\'',
             (self.id,))
         res['results_report_create_date'] = cursor.fetchone()[0] or None
 
