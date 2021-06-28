@@ -855,6 +855,8 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
         for detail in details:
+            if detail.type == 'preliminary':
+                continue
             linked_lines = []
             linked_entry_details = []
             cursor.execute('SELECT nl.id, nl.analysis_detail '
