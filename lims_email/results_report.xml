@@ -91,5 +91,38 @@
             <field name="group" ref="group_lims_send_results_report"/>
         </record>
 
+<!-- Results Report Name Format -->
+
+        <record model="ir.ui.view" id="results_report_format_view_list">
+            <field name="model">lims.result_report.format</field>
+            <field name="type">tree</field>
+            <field name="name">results_report_format_list</field>
+        </record>
+
+        <record model="ir.ui.view" id="results_report_format_view_form">
+            <field name="model">lims.result_report.format</field>
+            <field name="type">form</field>
+            <field name="name">results_report_format_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_results_report_format">
+            <field name="name">Results Report Name Formats</field>
+            <field name="res_model">lims.result_report.format</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_results_report_format_view_form">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="results_report_format_view_list"/>
+            <field name="act_window" ref="act_results_report_format"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_results_report_format_view_list">
+          <field name="sequence" eval="20"/>
+          <field name="view" ref="results_report_format_view_form"/>
+          <field name="act_window" ref="act_results_report_format"/>
+        </record>
+
+        <menuitem action="act_results_report_format"
+            id="menu_results_report_format"
+            parent="lims.lims_config_report" sequence="30"/>
+
     </data>
 </tryton>

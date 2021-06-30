@@ -2,6 +2,8 @@
 <data>
     <xpath expr="/form/notebook/page[@id='general']" position="after">
         <page string="Mail Acknowledgment Report" id="mail_ack_report">
+            <label name="result_report_format"/>
+            <field name="result_report_format"/>
             <label name="mail_ack_report_grouping"/>
             <field name="mail_ack_report_grouping"/>
             <label name="mail_ack_report_hide_recipients"/>

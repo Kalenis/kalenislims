@@ -4,5 +4,8 @@
         <record model="ir.message" id="msg_polisample">
             <field name="text">Polisample</field>
         </record>
+        <record model="ir.message" id="msg_invalid_report_name">
+            <field name="text">Invalid format "%(format)s" with exception "%(exception)s".</field>
+        </record>
     </data>
 </tryton>
