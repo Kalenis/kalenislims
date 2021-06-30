@@ -243,6 +243,45 @@ class ResultsReport(metaclass=PoolMeta):
         return [('id', 'in', details_ids)]
 
 
+class ResultsReport2(metaclass=PoolMeta):
+    __name__ = 'lims.results_report'
+
+    def _get_name_substitutions(self):
+        pool = Pool()
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        res = super()._get_name_substitutions()
+
+        samples = ResultsSample.search([
+            ('version_detail.report_version.results_report',
+                '=', self.id),
+            ], order=[('id', 'ASC')], limit=1)
+        sample = samples and samples[0] or None
+
+        substitutions = {
+            'party_fantasy_name': sample and sample.party.fantasy_name or '',
+            'equipment_name': (sample and sample.equipment and
+                sample.equipment.name or ''),
+            'equipment_serial_number': (sample and sample.equipment and
+                sample.equipment.serial_number or ''),
+            'equipment_type': (sample and sample.equipment and
+                sample.equipment.type.name or ''),
+            'plant_name': sample and sample.plant and sample.plant.name or '',
+            'component_customer_description': (sample and sample.component and
+                sample.component.customer_description or ''),
+            'component_type': (sample and sample.component and
+                sample.component.type.name or ''),
+            'ind_equipment': (sample and
+                sample.notebook.fraction.sample.ind_equipment and
+                (str(sample.notebook.fraction.sample.ind_equipment) +
+                sample.notebook.fraction.sample.ind_equipment_uom) or '')
+            }
+        for key, value in list(substitutions.items()):
+            substitutions[key.upper()] = value.upper()
+        res.update(substitutions)
+        return res
+
+
 class ResultsReportVersionDetail(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail'
 
@@ -900,3 +939,20 @@ class OpenResultsDetailAttachment(metaclass=PoolMeta):
                     res.append(self._get_resource(
                         s.notebook.fraction.sample.component))
         return res
+
+
+class ReportNameFormat(metaclass=PoolMeta):
+    __name__ = 'lims.result_report.format'
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls.format_.help += (
+            "\n- ${party_fantasy_name}"
+            "\n- ${equipment_name}"
+            "\n- ${equipment_serial_number}"
+            "\n- ${equipment_type}"
+            "\n- ${plant_name}"
+            "\n- ${component_customer_description}"
+            "\n- ${component_type}"
+            "\n- ${ind_equipment}")
