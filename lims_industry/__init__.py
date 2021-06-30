@@ -44,6 +44,7 @@ def register():
         results_report.ResultsReportVersionDetail,
         results_report.ResultsReportVersionDetailSample,
         results_report.ResultsReportVersionDetailLine,
+        results_report.ReportNameFormat,
         party.Party,
         party.Address,
         task.AdministrativeTaskTemplate,
@@ -52,6 +53,7 @@ def register():
         module='lims_industry', type_='model')
     Pool.register(
         configuration.Configuration,
+        results_report.ResultsReport2,
         module='lims_industry', type_='model',
         depends=['lims_email'])
     Pool.register(
