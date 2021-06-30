@@ -8,6 +8,7 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from PyPDF2 import PdfFileMerger
+from string import Template
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.wizard import Wizard, StateView, StateTransition, Button
@@ -15,6 +16,7 @@ from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.tools import get_smtp_server
 from trytond.config import config as tconfig
+from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
 logger = logging.getLogger(__name__)
@@ -197,8 +199,36 @@ class ResultsReport(metaclass=PoolMeta):
 
     def _get_attached_report_filename(self, english_report=False):
         suffix = 'eng' if english_report else 'esp'
-        filename = str(self.number) + '-' + suffix
+        #filename = str(self.number) + '-' + suffix
+        filename = self.get_report_filename() + '-' + suffix
         return filename
+
+    def get_report_filename(self):
+        pool = Pool()
+        ReportNameFormat = pool.get('lims.result_report.format')
+        report_name = Template(ReportNameFormat.get_format(self)).substitute(
+            **self._get_name_substitutions())
+        return report_name.strip()
+
+    def _get_name_substitutions(self):
+        pool = Pool()
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        samples = ResultsSample.search([
+            ('version_detail.report_version.results_report',
+                '=', self.id),
+            ], order=[('id', 'ASC')], limit=1)
+        sample = samples and samples[0] or None
+
+        substitutions = {
+            'number': getattr(self, 'number', None) or '',
+            'sample_number': (sample and
+                sample.notebook.fraction.sample.number or ''),
+            'party_name': sample and sample.party.rec_name or '',
+            }
+        for key, value in list(substitutions.items()):
+            substitutions[key.upper()] = value.upper()
+        return substitutions
 
 
 class ResultsReportMailing(ModelSQL, ModelView):
@@ -627,3 +657,50 @@ class SendResultsReport(Wizard):
             'reports_not_sent': [f.id for f in self.failed.reports_not_sent],
             }
         return default
+
+
+class ReportNameFormat(ModelSQL, ModelView):
+    'Results Report Name Format'
+    __name__ = 'lims.result_report.format'
+
+    name = fields.Char('Name')
+    format_ = fields.Char('Format', required=True,
+        help=("Available variables (also in upper case):"
+            "\n- ${number}"
+            "\n- ${sample_number}"
+            "\n- ${party_name}"))
+
+    @classmethod
+    def default_format_(cls):
+        return '${number}'
+
+    @classmethod
+    def validate(cls, formats):
+        super().validate(formats)
+        for format_ in formats:
+            format_.check_format()
+
+    def check_format(self):
+        pool = Pool()
+        ResultsReport = pool.get('lims.results_report')
+        report = ResultsReport()
+        try:
+            Template(self.format_).substitute(
+                **report._get_name_substitutions())
+        except Exception as exception:
+            raise UserError(gettext('lims_email.msg_invalid_report_name',
+                    format=self.format_,
+                    exception=exception)) from exception
+
+    @classmethod
+    def get_format(cls, results_report):
+        Config = Pool().get('lims.configuration')
+
+        if results_report.party.result_report_format:
+            return results_report.party.result_report_format.format_
+
+        config_ = Config(1)
+        if config_.result_report_format:
+            return config_.result_report_format.format_
+
+        return cls.default_format_()

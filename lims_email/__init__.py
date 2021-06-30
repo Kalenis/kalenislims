@@ -4,6 +4,7 @@
 
 from trytond.pool import Pool
 from . import configuration
+from . import party
 from . import results_report
 
 
@@ -17,6 +18,8 @@ def register():
         results_report.SendResultsReportStart,
         results_report.SendResultsReportSucceed,
         results_report.SendResultsReportFailed,
+        results_report.ReportNameFormat,
+        party.Party,
         module='lims_email', type_='model')
     Pool.register(
         results_report.ResultsReportAnnulation,
