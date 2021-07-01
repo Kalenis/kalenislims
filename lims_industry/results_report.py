@@ -255,6 +255,7 @@ class ResultsReport2(metaclass=PoolMeta):
         samples = ResultsSample.search([
             ('version_detail.report_version.results_report',
                 '=', self.id),
+            ('version_detail.valid', '=', True),
             ], order=[('id', 'ASC')], limit=1)
         sample = samples and samples[0] or None
 
