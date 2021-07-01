@@ -329,6 +329,7 @@ class ResultsReport(ModelSQL, ModelView):
                     'INNER JOIN "' + ResultsVersion._table + '" rv '
                     'ON rd.report_version = rv.id '
                 'WHERE rv.results_report = %s '
+                    'AND rd.state != \'annulled\' '
                 'ORDER BY s.number', (r.id,))
             samples = [x[0] for x in cursor.fetchall()]
             if samples:
@@ -359,7 +360,8 @@ class ResultsReport(ModelSQL, ModelView):
                 'ON rs.version_detail = rd.id '
                 'INNER JOIN "' + ResultsVersion._table + '" rv '
                 'ON rd.report_version = rv.id '
-            'WHERE s.number ILIKE %s',
+            'WHERE s.number ILIKE %s '
+                'AND rd.state != \'annulled\'',
             (value,))
         details_ids = [x[0] for x in cursor.fetchall()]
         if not details_ids:
