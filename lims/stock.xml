@@ -36,6 +36,12 @@
             <field name="name">stock_shipment_in_form</field>
         </record>
 
+        <record model="ir.ui.view" id="lims_shipment_internal_view_form">
+            <field name="model">stock.shipment.internal</field>
+            <field name="inherit" ref="stock.shipment_internal_view_form"/>
+            <field name="name">stock_shipment_internal_form</field>
+        </record>
+
 <!-- Fraction Product -->
 
         <record model="product.template" id="template_fraction">

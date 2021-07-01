@@ -6,4 +6,7 @@
             <field name="storage_time"/>
         </group>
     </xpath>
+    <xpath expr="/form/field[@name='childs']" position="after">
+        <field name="internal_shipment_to_location_restrictions"/>
+    </xpath>
 </data>

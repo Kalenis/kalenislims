@@ -221,6 +221,7 @@ def register():
         stock.Location,
         stock.Move,
         stock.ShipmentInternal,
+        stock.LocationShipmentInternalRestrictionLocation,
         uom.Uom,
         uom.UomCategory,
         uom.Template,
