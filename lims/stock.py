@@ -83,7 +83,7 @@ class ShipmentInternal(metaclass=PoolMeta):
 
     to_location_domain = fields.Function(fields.Many2Many(
         'stock.location',None, None,
-        'Internal Shipment To Location Restrictions'), 'on_change_with_to_location_domain')
+        'Internal Shipment To Location Restrictions Domain'), 'on_change_with_to_location_domain')
 
     @fields.depends('from_location')
     def on_change_with_to_location_domain(self, name=None):

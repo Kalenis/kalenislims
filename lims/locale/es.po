@@ -6511,6 +6511,10 @@ msgctxt "field:stock.location,storage_time:"
 msgid "Storage time (in months)"
 msgstr "Tiempo de almacenamiento (en meses)"
 
+msgctxt "field:stock.location,internal_shipment_to_location_restrictions:"
+msgid "Internal Shipment To Location Restrictions"
+msgstr "Restricciones de Destinos de Envíos Internos"
+
 msgctxt "field:stock.move,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
@@ -6518,6 +6522,18 @@ msgstr "Fracción"
 msgctxt "field:stock.move,fraction_readonly:"
 msgid "Fraction Read Only"
 msgstr "Fracción solo lectura"
+
+msgctxt "field:stock.shipment.internal,to_location_domain:"
+msgid "Internal Shipment To Location Restrictions Domain"
+msgstr "Dominio de Restricciones de Destinos de Envíos Internos"
+
+msgctxt "field:stock.location-stock.location,from_location:"
+msgid "Input location"
+msgstr "Origen"
+
+msgctxt "field:stock.location-stock.location,to_location:"
+msgid "Output location"
+msgstr "Destino"
 
 msgctxt "field:user.department,default:"
 msgid "By default"
