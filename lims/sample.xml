@@ -1135,9 +1135,46 @@
             <field name="view" ref="referral_view_list"/>
             <field name="act_window" ref="act_referral_list"/>
         </record>
+
         <record model="ir.action.act_window.view" id="act_referral_list_view_form">
             <field name="sequence" eval="20"/>
             <field name="view" ref="referral_view_form"/>
+            <field name="act_window" ref="act_referral_list"/>
+        </record>
+
+        <record model="ir.action.act_window.domain" id="act_referral_list_domain_draft">
+            <field name="name">Draft</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain"
+                eval="[('state', '=', 'draft')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_referral_list"/>
+        </record>
+
+        <record model="ir.action.act_window.domain" id="act_referral_list_domain_sent">
+            <field name="name">Sent</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain"
+                eval="[('state', '=', 'sent')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_referral_list"/>
+        </record>
+
+        <record model="ir.action.act_window.domain" id="act_referral_list_domain_done">
+            <field name="name">Done</field>
+            <field name="sequence" eval="30"/>
+            <field name="domain"
+                eval="[('state', '=', 'done')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_referral_list"/>
+        </record>
+
+        <record model="ir.action.act_window.domain" id="act_referral_list_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="40"/>
+            <field name="domain"
+                eval="[]"
+                pyson="1"/>
             <field name="act_window" ref="act_referral_list"/>
         </record>
 
