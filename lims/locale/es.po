@@ -15619,3 +15619,23 @@ msgstr "Confirmar"
 msgctxt "wizard_button:lims.typification.update,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_referral_list_domain_draft"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_referral_list_domain_sent"
+msgid "Sent"
+msgstr "Enviado"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_referral_list_domain_done"
+msgid "Done"
+msgstr "Hecho"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_referral_list_domain_all"
+msgid "All"
+msgstr "Todo"
