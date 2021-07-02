@@ -7,6 +7,6 @@
         </group>
     </xpath>
     <xpath expr="/form/field[@name='childs']" position="after">
-        <field name="internal_shipment_to_location_restrictions"/>
+        <field name="internal_shipment_to_location_restrictions" colspan="4"/>
     </xpath>
 </data>
