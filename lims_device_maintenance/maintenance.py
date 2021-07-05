@@ -11,6 +11,7 @@ from trytond.transaction import Transaction
 from trytond.pyson import PYSONEncoder, Eval
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
+from trytond.modules.lims_tools.event_creator import EventCreator
 
 
 class LabDevice(metaclass=PoolMeta):
@@ -36,7 +37,7 @@ class LabDeviceMaintenanceActivity(ModelSQL, ModelView):
     type = fields.Many2One('lims.lab.device.maintenance.type', 'Type')
 
 
-class LabDeviceMaintenanceProgram(ModelSQL, ModelView):
+class LabDeviceMaintenanceProgram(EventCreator, ModelSQL, ModelView):
     'Device Maintenance Program'
     __name__ = 'lims.lab.device.maintenance.program'
 
@@ -44,16 +45,39 @@ class LabDeviceMaintenanceProgram(ModelSQL, ModelView):
         ondelete='CASCADE', select=True)
     activity = fields.Many2One('lims.lab.device.maintenance.activity',
         'Activity', required=True)
-    frequency = fields.Selection([
-        ('daily', 'Daily'),
-        ('weekly', 'Weekly'),
-        ('monthly', 'Monthly'),
-        ('yearly', 'Yearly'),
-        ], 'Frequency', required=True, sort=False)
     responsible = fields.Many2One('res.user', 'Responsible User')
     notice_days = fields.Integer('Days to notify')
     latest_date = fields.Function(fields.Date('Latest scheduled date'),
         'get_latest_date')
+
+    @classmethod
+    def __register__(cls, module_name):
+        table_h = cls.__table_handler__(module_name)
+        frequency_exist = table_h.column_exist('frequency')
+        super().__register__(module_name)
+        if frequency_exist:
+            cursor = Transaction().connection.cursor()
+            cursor.execute('UPDATE "' + cls._table + '" '
+                'SET frequence_selection = \'daily\', '
+                    'detail_frequence = 1, '
+                    'detail_frequence_selection = \'days\' '
+                'WHERE frequency = \'daily\'')
+            cursor.execute('UPDATE "' + cls._table + '" '
+                'SET frequence_selection = \'weekly\', '
+                    'detail_frequence = 1, '
+                    'detail_frequence_selection = \'weeks\' '
+                'WHERE frequency = \'weekly\'')
+            cursor.execute('UPDATE "' + cls._table + '" '
+                'SET frequence_selection = \'monthly\', '
+                    'detail_frequence = 1, '
+                    'detail_frequence_selection = \'months\' '
+                'WHERE frequency = \'monthly\'')
+            cursor.execute('UPDATE "' + cls._table + '" '
+                'SET frequence_selection = \'yearly\', '
+                    'detail_frequence = 1, '
+                    'detail_frequence_selection = \'years\' '
+                'WHERE frequency = \'yearly\'')
+            table_h.drop_column('frequency')
 
     def get_rec_name(self, name):
         return '%s - %s' % (self.activity.rec_name, self.device.description)
@@ -71,6 +95,36 @@ class LabDeviceMaintenanceProgram(ModelSQL, ModelView):
             result[p.id] = (latest_maintenance and
                 latest_maintenance[0].date or None)
         return result
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._buttons.update({
+            'create_maintenances': {
+                },
+            })
+
+    @classmethod
+    @ModelView.button_action(
+        'lims_device_maintenance.wizard_device_generate_maintenance_calendar')
+    def create_maintenances(cls, programs):
+        pass
+
+    @classmethod
+    def _create_maintenances(cls, program, schedule_info):
+        pool = Pool()
+        Maintenance = pool.get('lims.lab.device.maintenance')
+
+        maintenance = Maintenance()
+        maintenance.device = program.device
+        maintenance.activity = program.activity
+        maintenance.responsible = program.responsible
+        maintenance.date = schedule_info['scheduled_date'].date()
+        if program.notice_days:
+            maintenance.notice_date = (maintenance.date +
+                relativedelta.relativedelta(days=-program.notice_days))
+        maintenance.state = 'draft'
+        return maintenance
 
 
 class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
@@ -193,107 +247,29 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
         return res
 
 
-class LabDeviceGenerateMaintenanceStart(ModelView):
-    'Generate Device Maintenance Calendar'
-    __name__ = 'lims.lab.device.maintenance.generate.start'
-
-    start_date = fields.Date('Start Date', required=True)
-    end_date = fields.Date('End Date', required=True)
-    maintenance_program = fields.Many2Many(
-        'lims.lab.device.maintenance.program', None, None,
-        'Maintenance Program', required=True,
-        domain=[('id', 'in', Eval('maintenance_program_domain'))],
-        depends=['maintenance_program_domain'])
-    maintenance_program_domain = fields.One2Many(
-        'lims.lab.device.maintenance.program',
-        None, 'Maintenance Program domain')
-    maintenances = fields.One2Many('lims.lab.device.maintenance',
-        None, 'Maintenances')
-
-
 class LabDeviceGenerateMaintenance(Wizard):
     'Generate Device Maintenance Calendar'
     __name__ = 'lims.lab.device.maintenance.generate'
 
-    start = StateView('lims.lab.device.maintenance.generate.start',
-        'lims_device_maintenance.lab_device_generate_maintenance_calendar'
-        '_start_view_form', [
-            Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Generate', 'generate', 'tryton-ok', default=True),
-            ])
-    generate = StateTransition()
+    start_state = 'open'
     open = StateAction(
         'lims_device_maintenance.act_lab_device_maintenance_calendar_related')
 
-    def default_start(self, fields):
+    def do_open(self, action):
         pool = Pool()
         MaintenanceProgram = pool.get('lims.lab.device.maintenance.program')
-        Date = pool.get('ir.date')
+        Maintenance = pool.get('lims.lab.device.maintenance')
 
-        device_id = Transaction().context['active_id']
-        programs = MaintenanceProgram.search([
-            ('device', '=', device_id),
-            ])
-        today = Date.today()
-        defaults = {
-            'start_date': today,
-            'end_date': today,
-            'maintenance_program_domain': [p.id for p in programs],
-            }
-        return defaults
-
-    def transition_generate(self):
-        Maintenance = Pool().get('lims.lab.device.maintenance')
-
-        new_maintenances = []
-        for program in self.start.maintenance_program:
-            new_maintenances.extend(self._get_new_maintenances(program))
-
-        maintenances = Maintenance.create(new_maintenances)
+        programs = MaintenanceProgram.browse(
+            Transaction().context['active_ids'])
+        maintenances = MaintenanceProgram.create_events(programs,
+            MaintenanceProgram._create_maintenances)
         if maintenances:
+            Maintenance.save(maintenances)
             Maintenance.pending(maintenances)
-            self.start.maintenances = maintenances
-            return 'open'
 
-        return 'end'
-
-    def _get_new_maintenances(self, program):
-        new_maintenances = []
-        for date in self._get_dates(self.start.start_date,
-                program.frequency, self.start.end_date):
-            maintenance = {
-                'device': program.device.id,
-                'activity': program.activity.id,
-                'responsible': (program.responsible and
-                    program.responsible.id or None),
-                'date': date,
-                'state': 'draft',
-                }
-            if program.notice_days:
-                maintenance['notice_date'] = (date +
-                    relativedelta.relativedelta(days=-program.notice_days))
-            new_maintenances.append(maintenance)
-        return new_maintenances
-
-    def _get_dates(self, start_date, frequency, end_date):
-        dates = []
-        if frequency == 'daily':
-            delta = relativedelta.relativedelta(days=1)
-        elif frequency == 'weekly':
-            delta = relativedelta.relativedelta(days=7)
-        elif frequency == 'monthly':
-            delta = relativedelta.relativedelta(months=1)
-        elif frequency == 'yearly':
-            delta = relativedelta.relativedelta(years=1)
-        date = start_date
-        while date <= end_date:
-            dates.append(date)
-            date += delta
-        return dates
-
-    def do_open(self, action):
         action['pyson_domain'] = PYSONEncoder().encode([
-            ('id', 'in', [m.id for m in self.start.maintenances]),
+            ('id', 'in', [m.id for m in maintenances]),
             ])
         return action, {}
 
