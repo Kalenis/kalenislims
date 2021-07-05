@@ -1,19 +1,42 @@
 <?xml version="1.0"?>
 <form>
     <label name="device"/>
-    <field name="device" colspan="3"/>
+    <field name="device"/>
     <label name="activity"/>
     <field name="activity"/>
-    <label name="frequency"/>
-    <field name="frequency"/>
-    <group id="responsible" colspan="2" col="4">
-        <label name="responsible"/>
-        <field name="responsible"/>
+    <label name="responsible"/>
+    <field name="responsible"/>
+    <label name="latest_date"/>
+    <field name="latest_date"/>
+    <group id="frequence" colspan="4" string="Frequence">
+        <label name="frequence_selection"/>
+        <field name="frequence_selection"/>
+        <group id="detail_frequence" colspan="2" col="2">
+            <field name="detail_frequence" xexpand="0" width="30"/>
+            <field name="detail_frequence_selection" xexpand="1"/>
+        </group>
+        <label name="only_workdays"/>
+        <field name="only_workdays"/>
+        <group id="specific" colspan="2" col="2">
+            <label name="specific_day"/>
+            <field name="specific_day"/>
+            <label name="specific_time"/>
+            <field name="specific_time"/>
+        </group>
         <label name="notice_days"/>
-        <field name="notice_days" xexpand="0"/>
+        <field name="notice_days"/>
     </group>
-    <group id="latest_date" colspan="2" col="2">
-        <label name="latest_date"/>
-        <field name="latest_date"/>
+    <group id="create_maintenances" colspan="4" string="Generate Maintenance Programs">
+        <label name="start_date"/>
+        <field name="start_date"/>
+        <label name="finish_selection"/>
+        <field name="finish_selection"/>
+        <group id="end" colspan="2" col="2">
+            <label name="end_repetition"/>
+            <field name="end_repetition"/>
+            <label name="end_date"/>
+            <field name="end_date"/>
+        </group>
+        <button name="create_maintenances" colspan="2"/>
     </group>
 </form>

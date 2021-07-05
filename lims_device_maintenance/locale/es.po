@@ -46,39 +46,38 @@ msgctxt "field:lims.lab.device.maintenance.activity,type:"
 msgid "Type"
 msgstr "Tipo"
 
-msgctxt "field:lims.lab.device.maintenance.generate.start,end_date:"
-msgid "End Date"
-msgstr "Fecha de finalización"
-
-msgctxt ""
-"field:lims.lab.device.maintenance.generate.start,maintenance_program:"
-msgid "Maintenance Program"
-msgstr "Programa de mantenimiento"
-
-msgctxt ""
-"field:lims.lab.device.maintenance.generate.start,maintenance_program_domain:"
-msgid "Maintenance Program domain"
-msgstr "Dominio para Programa de mantenimiento"
-
-msgctxt "field:lims.lab.device.maintenance.generate.start,maintenances:"
-msgid "Maintenances"
-msgstr "Mantenimientos"
-
-msgctxt "field:lims.lab.device.maintenance.generate.start,start_date:"
-msgid "Start Date"
-msgstr "Fecha de inicio"
-
 msgctxt "field:lims.lab.device.maintenance.program,activity:"
 msgid "Activity"
 msgstr "Actividad"
+
+msgctxt "field:lims.lab.device.maintenance.program,detail_frequence:"
+msgid "Frequence"
+msgstr "Frecuencia"
+
+msgctxt ""
+"field:lims.lab.device.maintenance.program,detail_frequence_selection:"
+msgid "Frequence"
+msgstr "Frecuencia"
 
 msgctxt "field:lims.lab.device.maintenance.program,device:"
 msgid "Device"
 msgstr "Equipo"
 
-msgctxt "field:lims.lab.device.maintenance.program,frequency:"
-msgid "Frequency"
-msgstr "Frecuencia"
+msgctxt "field:lims.lab.device.maintenance.program,end_date:"
+msgid "End Date"
+msgstr "Fecha de finalización"
+
+msgctxt "field:lims.lab.device.maintenance.program,end_repetition:"
+msgid "Repetition Qty."
+msgstr "Cant. de Repeticiones"
+
+msgctxt "field:lims.lab.device.maintenance.program,finish_selection:"
+msgid "Ends on"
+msgstr "Finalizar en"
+
+msgctxt "field:lims.lab.device.maintenance.program,frequence_selection:"
+msgid "Select Frequence"
+msgstr "Seleccione frecuencia"
 
 msgctxt "field:lims.lab.device.maintenance.program,latest_date:"
 msgid "Latest scheduled date"
@@ -88,9 +87,25 @@ msgctxt "field:lims.lab.device.maintenance.program,notice_days:"
 msgid "Days to notify"
 msgstr "Días para el aviso"
 
+msgctxt "field:lims.lab.device.maintenance.program,only_workdays:"
+msgid "Allow working days only"
+msgstr "Permitir solamente días laborables"
+
 msgctxt "field:lims.lab.device.maintenance.program,responsible:"
 msgid "Responsible User"
 msgstr "Usuario responsable"
+
+msgctxt "field:lims.lab.device.maintenance.program,specific_day:"
+msgid "Specific Day"
+msgstr "Día específico"
+
+msgctxt "field:lims.lab.device.maintenance.program,specific_time:"
+msgid "Specific Time"
+msgstr "Horario específico"
+
+msgctxt "field:lims.lab.device.maintenance.program,start_date:"
+msgid "Start Date"
+msgstr "Fecha de inicio"
 
 msgctxt "field:lims.lab.device.maintenance.type,name:"
 msgid "Name"
@@ -128,6 +143,21 @@ msgctxt "model:ir.message,text:msg_delete_maintenance"
 msgid "You can not delete \"%(maintenance)s\" because it is not in draft state"
 msgstr "No puede eliminar «%(maintenance)s» porque no está en estado borrador"
 
+msgctxt ""
+"model:ir.model.button,confirm:maintenance_program_create_maintenances_button"
+msgid "Are you sure you want to generate new maintenance programs?"
+msgstr "¿Está seguro que quiere generar nuevos programas de mantenimiento?"
+
+msgctxt ""
+"model:ir.model.button,help:maintenance_program_create_maintenances_button"
+msgid "Generate maintenance programs"
+msgstr "Generar programas de mantenimiento"
+
+msgctxt ""
+"model:ir.model.button,string:maintenance_program_create_maintenances_button"
+msgid "Generate"
+msgstr "Generar"
+
 msgctxt "model:ir.ui.menu,name:menu_device_maintenance"
 msgid "Devices Maintenance"
 msgstr "Mantenimiento de Equipos"
@@ -163,10 +193,6 @@ msgstr "Calendario de mantenimiento de Equipo"
 msgctxt "model:lims.lab.device.maintenance.activity,name:"
 msgid "Device Maintenance Activity"
 msgstr "Actividad de mantenimiento de Equipo"
-
-msgctxt "model:lims.lab.device.maintenance.generate.start,name:"
-msgid "Generate Device Maintenance Calendar"
-msgstr "Generar Calendario de mantenimiento de Equipo"
 
 msgctxt "model:lims.lab.device.maintenance.program,name:"
 msgid "Device Maintenance Program"
@@ -204,21 +230,107 @@ msgctxt "selection:lims.lab.device.maintenance,state:"
 msgid "Pending"
 msgstr "Pendiente"
 
-msgctxt "selection:lims.lab.device.maintenance.program,frequency:"
+msgctxt ""
+"selection:lims.lab.device.maintenance.program,detail_frequence_selection:"
+msgid "Days"
+msgstr "Días"
+
+msgctxt ""
+"selection:lims.lab.device.maintenance.program,detail_frequence_selection:"
+msgid "Hours"
+msgstr "Horas"
+
+msgctxt ""
+"selection:lims.lab.device.maintenance.program,detail_frequence_selection:"
+msgid "Minutes"
+msgstr "Minutos"
+
+msgctxt ""
+"selection:lims.lab.device.maintenance.program,detail_frequence_selection:"
+msgid "Months"
+msgstr "Meses"
+
+msgctxt ""
+"selection:lims.lab.device.maintenance.program,detail_frequence_selection:"
+msgid "Weeks"
+msgstr "Semanas"
+
+msgctxt ""
+"selection:lims.lab.device.maintenance.program,detail_frequence_selection:"
+msgid "Years"
+msgstr "Años"
+
+msgctxt "selection:lims.lab.device.maintenance.program,finish_selection:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "selection:lims.lab.device.maintenance.program,finish_selection:"
+msgid "Quantity"
+msgstr "Cantidad"
+
+msgctxt "selection:lims.lab.device.maintenance.program,frequence_selection:"
+msgid "Customize"
+msgstr "Personalizada"
+
+msgctxt "selection:lims.lab.device.maintenance.program,frequence_selection:"
 msgid "Daily"
 msgstr "Diaria"
 
-msgctxt "selection:lims.lab.device.maintenance.program,frequency:"
+msgctxt "selection:lims.lab.device.maintenance.program,frequence_selection:"
+msgid "Every 15 days"
+msgstr "Cada 15 días"
+
+msgctxt "selection:lims.lab.device.maintenance.program,frequence_selection:"
+msgid "Hourly"
+msgstr "Cada hora"
+
+msgctxt "selection:lims.lab.device.maintenance.program,frequence_selection:"
 msgid "Monthly"
 msgstr "Mensual"
 
-msgctxt "selection:lims.lab.device.maintenance.program,frequency:"
+msgctxt "selection:lims.lab.device.maintenance.program,frequence_selection:"
 msgid "Weekly"
 msgstr "Semanal"
 
-msgctxt "selection:lims.lab.device.maintenance.program,frequency:"
+msgctxt "selection:lims.lab.device.maintenance.program,frequence_selection:"
 msgid "Yearly"
 msgstr "Anual"
+
+msgctxt "selection:lims.lab.device.maintenance.program,specific_day:"
+msgid "Friday"
+msgstr "Viernes"
+
+msgctxt "selection:lims.lab.device.maintenance.program,specific_day:"
+msgid "Monday"
+msgstr "Lunes"
+
+msgctxt "selection:lims.lab.device.maintenance.program,specific_day:"
+msgid "Saturday"
+msgstr "Sábado"
+
+msgctxt "selection:lims.lab.device.maintenance.program,specific_day:"
+msgid "Sunday"
+msgstr "Domingo"
+
+msgctxt "selection:lims.lab.device.maintenance.program,specific_day:"
+msgid "Thursday"
+msgstr "Jueves"
+
+msgctxt "selection:lims.lab.device.maintenance.program,specific_day:"
+msgid "Tuesday"
+msgstr "Martes"
+
+msgctxt "selection:lims.lab.device.maintenance.program,specific_day:"
+msgid "Wednesday"
+msgstr "Miércoles"
+
+msgctxt "view:lims.lab.device.maintenance.program:"
+msgid "Frequence"
+msgstr "Frecuencia"
+
+msgctxt "view:lims.lab.device.maintenance.program:"
+msgid "Generate Maintenance Programs"
+msgstr "Generar programas de mantenimiento"
 
 msgctxt "view:lims.lab.device.maintenance:"
 msgid "Comments"
@@ -239,11 +351,3 @@ msgstr "Pendiente"
 msgctxt "view:lims.lab.device:"
 msgid "Maintenance Program"
 msgstr "Programa de mantenimiento"
-
-msgctxt "wizard_button:lims.lab.device.maintenance.generate,start,end:"
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgctxt "wizard_button:lims.lab.device.maintenance.generate,start,generate:"
-msgid "Generate"
-msgstr "Generar"

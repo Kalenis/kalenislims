@@ -14,7 +14,6 @@ def register():
         maintenance.LabDeviceMaintenanceActivity,
         maintenance.LabDeviceMaintenanceProgram,
         maintenance.LabDeviceMaintenance,
-        maintenance.LabDeviceGenerateMaintenanceStart,
         maintenance.Cron,
         task.AdministrativeTaskTemplate,
         task.AdministrativeTask,

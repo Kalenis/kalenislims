@@ -166,24 +166,21 @@
             id="menu_device_maintenance_program"
             parent="menu_device_maintenance" sequence="30"/>
 
-<!-- Wizard Generate Device Maintenance Calendar -->
-
-        <record model="ir.ui.view"
-            id="lab_device_generate_maintenance_calendar_start_view_form">
-            <field name="model">lims.lab.device.maintenance.generate.start</field>
-            <field name="type">form</field>
-            <field name="name">lab_device_generate_maintenance_calendar_start_form</field>
+        <record model="ir.model.button"
+            id="maintenance_program_create_maintenances_button">
+            <field name="name">create_maintenances</field>
+            <field name="string">Generate</field>
+            <field name="confirm">Are you sure you want to generate new maintenance programs?</field>
+            <field name="help">Generate maintenance programs</field>
+            <field name="model"
+                search="[('model', '=', 'lims.lab.device.maintenance.program')]"/>
         </record>
+
+<!-- Wizard Generate Device Maintenance Calendar -->
 
         <record model="ir.action.wizard" id="wizard_device_generate_maintenance_calendar">
             <field name="name">Generate Maintenance Calendar</field>
             <field name="wiz_name">lims.lab.device.maintenance.generate</field>
-        </record>
-
-        <record model="ir.action.keyword" id="wizard_device_generate_maintenance_calendar_keyword">
-            <field name="keyword">form_action</field>
-            <field name="model">lims.lab.device,-1</field>
-            <field name="action" ref="wizard_device_generate_maintenance_calendar"/>
         </record>
 
 <!-- Device Maintenance Calendar -->

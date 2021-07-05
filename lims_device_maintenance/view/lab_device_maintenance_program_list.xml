@@ -2,8 +2,6 @@
 <tree>
     <field name="device"/>
     <field name="activity"/>
-    <field name="frequency"/>
     <field name="responsible"/>
-    <field name="notice_days"/>
     <field name="latest_date"/>
 </tree>
