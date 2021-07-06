@@ -421,6 +421,9 @@
         <record model="ir.message" id="msg_rule_condition_field">
             <field name="text">Invalid field: %(field)s</field>
         </record>
+        <record model="ir.message" id="msg_rule_condition_value">
+            <field name="text">Invalid value: %(value)s</field>
+        </record>
         <record model="ir.message" id="msg_typification_unique_id">
             <field name="text">This typification already exists</field>
         </record>

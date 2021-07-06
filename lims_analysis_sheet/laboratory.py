@@ -292,13 +292,25 @@ class NotebookRuleCondition(metaclass=PoolMeta):
             'ge': operator.ge,
             'lt': operator.lt,
             'le': operator.le,
+            'in': lambda v, l: v in l,
+            'not_in': lambda v, l: v not in l,
             }
-        try:
-            result = operator_func[self.condition](
-                float(value), float(self.value))
-        except (TypeError, ValueError):
-            result = (value and operator_func[self.condition](
-                str(value), str(self.value)) or False)
+
+        if self.condition in ('in', 'not_in'):
+            values = [str(x).strip() for x in self.value.split(',')]
+            try:
+                result = operator_func[self.condition](
+                    float(value), [float(x) for x in values])
+            except (TypeError, ValueError):
+                result = (value and operator_func[self.condition](
+                    str(value), [str(x) for x in values]) or False)
+        else:
+            try:
+                result = operator_func[self.condition](
+                    float(value), float(self.value))
+            except (TypeError, ValueError):
+                result = (value and operator_func[self.condition](
+                    str(value), str(self.value)) or False)
         return result
 
     def check_field(self):

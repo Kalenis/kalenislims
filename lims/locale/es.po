@@ -8232,6 +8232,10 @@ msgctxt "model:ir.message,text:msg_rule_condition_field"
 msgid "Invalid field: %(field)s"
 msgstr "Campo inválido: %(field)s"
 
+msgctxt "model:ir.message,text:msg_rule_condition_value"
+msgid "Invalid value: %(value)s"
+msgstr "Valor inválido: %(value)s"
+
 msgctxt "model:ir.message,text:msg_set_laboratories"
 msgid "A Set can be assigned to a single laboratory"
 msgstr "Un Set puede ser asignado a un único laboratorio"
@@ -12983,6 +12987,14 @@ msgstr ">"
 msgctxt "selection:lims.rule.condition,condition:"
 msgid ">="
 msgstr ">="
+
+msgctxt "selection:lims.rule.condition,condition:"
+msgid "In"
+msgstr "En"
+
+msgctxt "selection:lims.rule.condition,condition:"
+msgid "Not In"
+msgstr "No en"
 
 msgctxt "selection:lims.sample,state:"
 msgid "Annulled"

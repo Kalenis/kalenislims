@@ -773,6 +773,8 @@ class NotebookRuleCondition(ModelSQL, ModelView):
         ('ge', '>='),
         ('lt', '<'),
         ('le', '<='),
+        ('in', 'In'),
+        ('not_in', 'Not In'),
         ], 'Condition', required=True, sort=False)
     value = fields.Char('Value', required=True)
 
@@ -794,13 +796,25 @@ class NotebookRuleCondition(ModelSQL, ModelView):
             'ge': operator.ge,
             'lt': operator.lt,
             'le': operator.le,
+            'in': lambda v, l: v in l,
+            'not_in': lambda v, l: v not in l,
             }
-        try:
-            result = operator_func[self.condition](
-                float(value), float(self.value))
-        except (TypeError, ValueError):
-            result = (value and operator_func[self.condition](
-                str(value), str(self.value)) or False)
+
+        if self.condition in ('in', 'not_in'):
+            values = [str(x).strip() for x in self.value.split(',')]
+            try:
+                result = operator_func[self.condition](
+                    float(value), [float(x) for x in values])
+            except (TypeError, ValueError):
+                result = (value and operator_func[self.condition](
+                    str(value), [str(x) for x in values]) or False)
+        else:
+            try:
+                result = operator_func[self.condition](
+                    float(value), float(self.value))
+            except (TypeError, ValueError):
+                result = (value and operator_func[self.condition](
+                    str(value), str(self.value)) or False)
         return result
 
     @classmethod
@@ -808,6 +822,7 @@ class NotebookRuleCondition(ModelSQL, ModelView):
         super().validate(conditions)
         for c in conditions:
             c.check_field()
+            c.check_value()
 
     def check_field(self):
         pool = Pool()
@@ -840,3 +855,11 @@ class NotebookRuleCondition(ModelSQL, ModelView):
             if not path and field._type in invalid_fields:
                 raise UserError(gettext('lims.msg_rule_condition_field',
                     field=self.field))
+
+    def check_value(self):
+        if self.condition in ('in', 'not_in'):
+            try:
+                values = [str(x).strip() for x in self.value.split(',')]
+            except Exception:
+                raise UserError(gettext('lims.msg_rule_condition_value',
+                    field=self.value))
