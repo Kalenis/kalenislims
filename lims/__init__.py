@@ -112,6 +112,7 @@ def register():
         analysis.CopyTypificationStart,
         analysis.CopyTypificationConfirm,
         analysis.CopyTypificationError,
+        analysis.CopyTypificationResult,
         analysis.CopyCalculatedTypificationStart,
         analysis.UpdateTypificationStart,
         analysis.RelateAnalysisStart,
@@ -378,6 +379,7 @@ def register():
         planification.PrintPendingServicesUnplannedReport,
         module='lims', type_='wizard')
     Pool.register(
+        analysis.CopyTypificationSpreadsheet,
         entry.AcknowledgmentOfReceipt,
         entry.EntryDetail,
         entry.EntryLabels,

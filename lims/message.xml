@@ -535,6 +535,12 @@
         <record model="ir.message" id="msg_typification_copy_additional">
             <field name="text">Missing typification for additional analysis:</field>
         </record>
+        <record model="ir.message" id="msg_typification_copy_new_typifications">
+            <field name="text">%(qty)s Typifications were created</field>
+        </record>
+        <record model="ir.message" id="msg_typification_copy_existing_typifications">
+            <field name="text">%(qty)s Typifications already existed</field>
+        </record>
         <record model="ir.message" id="msg_additional_no_method">
             <field name="text">Missing typification for additional analysis "%(additional)s" of analysis "%(analysis)s".</field>
         </record>

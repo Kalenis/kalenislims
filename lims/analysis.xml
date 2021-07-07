@@ -498,6 +498,11 @@
             <field name="type">form</field>
             <field name="name">typification_copy_error_form</field>
         </record>
+        <record model="ir.ui.view" id="lims_copy_typification_result_view_form">
+            <field name="model">lims.typification.copy.result</field>
+            <field name="type">form</field>
+            <field name="name">typification_copy_result_form</field>
+        </record>
 
         <record model="ir.action.wizard" id="wiz_lims_copy_typification">
             <field name="name">Copy/Move Typification</field>
@@ -514,6 +519,15 @@
             id="wiz_copy_typification-group_conf_base_tables_admin">
             <field name="action" ref="wiz_lims_copy_typification"/>
             <field name="group" ref="group_lims_conf_base_tables_admin"/>
+        </record>
+
+<!-- Typifications Copied/Moved -->
+
+        <record model="ir.action.report" id="report_typification_copy_spreadsheet">
+            <field name="name">Typifications Copied/Moved</field>
+            <field name="report_name">lims.report_typification_copy.spreadsheet</field>
+            <field name="report">lims/report/typification_copy_spreadsheet.fods</field>
+            <field name="extension">xls</field>
         </record>
 
 <!-- Wizard Copy Calculated Typification -->
