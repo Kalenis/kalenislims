@@ -6199,6 +6199,18 @@ msgctxt "field:lims.typification.copy.error,message:"
 msgid "Message"
 msgstr "Mensaje"
 
+msgctxt "field:lims.typification.copy.result,existing_typifications:"
+msgid "Existing Typifications"
+msgstr "Tipificaciones existentes"
+
+msgctxt "field:lims.typification.copy.result,message:"
+msgid "Message"
+msgstr "Mensaje"
+
+msgctxt "field:lims.typification.copy.result,new_typifications:"
+msgid "New Typifications"
+msgstr "Tipificaciones nuevas"
+
 msgctxt "field:lims.typification.copy.start,action:"
 msgid "Action"
 msgstr "Acción"
@@ -7063,6 +7075,10 @@ msgstr "Transcripción Informe de resultados"
 msgctxt "model:ir.action,name:report_trend_chart"
 msgid "Trend Chart"
 msgstr "Gráfico de tendencia"
+
+msgctxt "model:ir.action,name:report_typification_copy_spreadsheet"
+msgid "Typifications Copied/Moved"
+msgstr "Tipificaciones copiadas/movidas"
 
 msgctxt "model:ir.action,name:wiz_add_sample_service"
 msgid "Add Sample Services"
@@ -8268,6 +8284,10 @@ msgctxt "model:ir.message,text:msg_typification_copy_analysis"
 msgid " * Analysis: %(analysis)s"
 msgstr " * Análisis: %(analysis)s"
 
+msgctxt "model:ir.message,text:msg_typification_copy_existing_typifications"
+msgid "%(qty)s Typifications already existed"
+msgstr "%(qty)s tipificaciones ya existían"
+
 msgctxt "model:ir.message,text:msg_typification_copy_from"
 msgid "FROM:"
 msgstr "DESDE:"
@@ -8283,6 +8303,10 @@ msgstr " * Matriz: %(matrix)s"
 msgctxt "model:ir.message,text:msg_typification_copy_method"
 msgid " * Method: %(method)s"
 msgstr " * Método: %(method)s"
+
+msgctxt "model:ir.message,text:msg_typification_copy_new_typifications"
+msgid "%(qty)s Typifications were created"
+msgstr "Se crearon %(qty)s tipificaciones"
 
 msgctxt "model:ir.message,text:msg_typification_copy_product_type"
 msgid " * Product type: %(product_type)s"
@@ -9774,6 +9798,10 @@ msgid "Copy/Move Typification"
 msgstr "Copiar/Mover tipificación"
 
 msgctxt "model:lims.typification.copy.error,name:"
+msgid "Copy/Move Typification"
+msgstr "Copiar/Mover tipificación"
+
+msgctxt "model:lims.typification.copy.result,name:"
 msgid "Copy/Move Typification"
 msgstr "Copiar/Mover tipificación"
 
@@ -11663,6 +11691,130 @@ msgstr ""
 
 msgctxt "report:lims.referral.report:"
 msgid "record.laboratory.name"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "("
+msgstr "("
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid ")"
+msgstr ")"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid ","
+msgstr ","
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "-"
+msgstr "-"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "/for"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "/if"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "00/00/0000"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "00:00:00"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "???"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Date:"
+msgstr "Fecha:"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Existing Typifications"
+msgstr "Tipificaciones existentes"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Method"
+msgstr "Método"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "New Typifications"
+msgstr "Tipificaciones nuevas"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Page"
+msgstr "Página"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Typifications Copied/Moved"
+msgstr "Tipificaciones copiadas/movidas"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "User:"
+msgstr "Usuario:"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "for each=\"line in existing_typifications\""
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "for each=\"line in new_typifications\""
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "format_date(datetime.date.today(), user.language)"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "if test=\"existing_typifications\""
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "if test=\"new_typifications\""
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.analysis.rec_name"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.matrix.rec_name"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.method.rec_name"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.product_type.rec_name"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "user.rec_name"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "€"
 msgstr ""
 
 msgctxt "report:lims.result_report.transcription:"
@@ -15351,6 +15503,14 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.typification.copy,error,end:"
 msgid "Cancel"
 msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.typification.copy,result,end:"
+msgid "Ok"
+msgstr "Aceptar"
+
+msgctxt "wizard_button:lims.typification.copy,result,save:"
+msgid "Save"
+msgstr "Guardar"
 
 msgctxt "wizard_button:lims.typification.copy,start,ask:"
 msgid "Continue"

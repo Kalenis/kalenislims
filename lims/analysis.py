@@ -12,6 +12,7 @@ from trytond.model import Workflow, ModelView, ModelSQL, DeactivableMixin, \
     fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
+from trytond.report import Report
 from trytond.pool import Pool
 from trytond.transaction import Transaction
 from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or, And
@@ -2095,6 +2096,17 @@ class CopyTypificationError(ModelView):
     message = fields.Text('Message', readonly=True)
 
 
+class CopyTypificationResult(ModelView):
+    'Copy/Move Typification'
+    __name__ = 'lims.typification.copy.result'
+
+    message = fields.Text('Message', readonly=True)
+    existing_typifications = fields.Many2Many('lims.typification',
+        None, None, 'Existing Typifications')
+    new_typifications = fields.Many2Many('lims.typification',
+        None, None, 'New Typifications')
+
+
 class CopyTypification(Wizard):
     'Copy/Move Typification'
     __name__ = 'lims.typification.copy'
@@ -2114,6 +2126,12 @@ class CopyTypification(Wizard):
         'lims.lims_copy_typification_error_view_form', [
             Button('Cancel', 'end', 'tryton-cancel', default=True),
             ])
+    result = StateView('lims.typification.copy.result',
+        'lims.lims_copy_typification_result_view_form', [
+            Button('Save', 'save', 'tryton-save'),
+            Button('Ok', 'end', 'tryton-ok', default=True),
+            ])
+    save = StateAction('lims.report_typification_copy_spreadsheet')
 
     def default_ask(self, fields):
         summary = '%s\n' % gettext(
@@ -2202,6 +2220,9 @@ class CopyTypification(Wizard):
             self.start.destination_method else None)
 
         error_additionals = ''
+        existing_typifications = []
+        new_typifications = []
+
         to_copy = {}
         new_by_defaults = []
         for origin in origins:
@@ -2213,7 +2234,7 @@ class CopyTypification(Wizard):
 
             for matrix_id in matrix_ids:
                 # check if typification already exists
-                cursor.execute('SELECT COUNT(*) '
+                cursor.execute('SELECT id '
                     'FROM "' + Typification._table + '" '
                     'WHERE product_type = %s '
                         'AND matrix = %s '
@@ -2221,7 +2242,9 @@ class CopyTypification(Wizard):
                         'AND method = %s',
                     (product_type_id, matrix_id, origin.analysis.id,
                         method_id or origin.method.id))
-                if cursor.fetchone()[0] != 0:
+                res = cursor.fetchone()
+                if res:
+                    existing_typifications.append(res[0])
                     continue
 
                 # check if additionals are typified
@@ -2234,7 +2257,8 @@ class CopyTypification(Wizard):
                             'AND valid IS TRUE',
                         (product_type_id, matrix_id, a.id))
                     if cursor.fetchone()[0] == 0:
-                        error_additionals += '* %s\n' % gettext('lims.msg_not_typified',
+                        error_additionals += '* %s\n' % gettext(
+                            'lims.msg_not_typified',
                             analysis=a.rec_name,
                             product_type=ProductType(product_type_id).rec_name,
                             matrix=Matrix(matrix_id).rec_name)
@@ -2283,9 +2307,52 @@ class CopyTypification(Wizard):
 
         for typification, defaults in to_copy.items():
             for default in defaults:
-                Typification.copy([typification], default=default)
+                t = Typification.copy([typification], default=default)
+                new_typifications.append(t[0].id)
 
-        return 'end'
+        self.result.message = '%s' % gettext(
+            'lims.msg_typification_copy_new_typifications',
+            qty=len(new_typifications))
+        if len(existing_typifications) > 0:
+            self.result.message += '\n%s' % gettext(
+                'lims.msg_typification_copy_existing_typifications',
+                qty=len(existing_typifications))
+        self.result.existing_typifications = existing_typifications
+        self.result.new_typifications = new_typifications
+        return 'result'
+
+    def default_result(self, fields):
+        return {
+            'message': self.result.message,
+            'existing_typifications': [t.id
+                for t in self.result.existing_typifications],
+            'new_typifications': [t.id
+                for t in self.result.new_typifications],
+            }
+
+    def do_save(self, action):
+        data = {
+            'existing_typifications': [t.id
+                for t in self.result.existing_typifications],
+            'new_typifications': [t.id
+                for t in self.result.new_typifications],
+            }
+        return action, data
+
+
+class CopyTypificationSpreadsheet(Report):
+    'Typifications Copied/Moved'
+    __name__ = 'lims.report_typification_copy.spreadsheet'
+
+    @classmethod
+    def get_context(cls, records, data):
+        Typification = Pool().get('lims.typification')
+        report_context = super().get_context(records, data)
+        report_context['new_typifications'] = Typification.browse(
+            data['new_typifications'])
+        report_context['existing_typifications'] = Typification.browse(
+            data['existing_typifications'])
+        return report_context
 
 
 class CopyCalculatedTypificationStart(ModelView):
