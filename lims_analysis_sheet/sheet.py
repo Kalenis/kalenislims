@@ -840,20 +840,21 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     if line.notebook_line:
                         notebook_ids.append(line.notebook_line.notebook.id)
 
-            # Evaluate Notebook Rules
-            session_id, _, _ = EvaluateRules.create()
-            evaluate_rules = EvaluateRules(session_id)
-            for active_id in list(set(notebook_ids)):
-                notebook = Notebook(active_id)
-                evaluate_rules.evaluate_rules(notebook.lines)
+            for i in range(2):
+                # Evaluate Notebook Rules
+                session_id, _, _ = EvaluateRules.create()
+                evaluate_rules = EvaluateRules(session_id)
+                for active_id in list(set(notebook_ids)):
+                    notebook = Notebook(active_id)
+                    evaluate_rules.evaluate_rules(notebook.lines)
 
-            # Calculate Internal Relations
-            session_id, _, _ = CalculateInternalRelations.create()
-            calculate_ir = CalculateInternalRelations(session_id)
-            for active_id in list(set(notebook_ids)):
-                notebook = Notebook(active_id)
-                if calculate_ir.get_relations(notebook.lines):
-                    calculate_ir.transition_confirm()
+                # Calculate Internal Relations
+                session_id, _, _ = CalculateInternalRelations.create()
+                calculate_ir = CalculateInternalRelations(session_id)
+                for active_id in list(set(notebook_ids)):
+                    notebook = Notebook(active_id)
+                    if calculate_ir.get_relations(notebook.lines):
+                        calculate_ir.transition_confirm()
 
         return
 
