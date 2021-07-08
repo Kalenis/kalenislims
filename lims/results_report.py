@@ -3637,8 +3637,8 @@ class ResultReport(Report):
                 result = result_eng
                 if ('english_report' in current_data and
                         current_data['english_report']):
-                    results_report.report_format_eng, \
-                        results_report.report_cache_eng = result_eng[:2]
+                    results_report.report_format_eng = 'pdf'
+                    results_report.report_cache_eng = result_eng[1]
                     save = True
         else:
             if results_report.report_cache:
@@ -3648,8 +3648,8 @@ class ResultReport(Report):
                 result = result_orig
                 if ('english_report' in current_data and
                         not current_data['english_report']):
-                    results_report.report_format, \
-                        results_report.report_cache = result_orig[:2]
+                    results_report.report_format = 'pdf'
+                    results_report.report_cache = result_orig[1]
                     save = True
         if save:
             results_report.save()
