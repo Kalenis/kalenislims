@@ -16,6 +16,7 @@
         string="Destination:">
         <label name="destination_product_type"/>
         <field name="destination_product_type"/>
+        <field name="destination_product_types" colspan="2"/>
         <label name="destination_matrix"/>
         <field name="destination_matrix"/>
         <field name="destination_matrices" colspan="2"/>

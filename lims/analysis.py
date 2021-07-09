@@ -2057,7 +2057,17 @@ class CopyTypificationStart(ModelView):
         states={'required': Bool(Eval('destination_method'))},
         depends=['destination_method'])
     destination_product_type = fields.Many2One('lims.product.type',
-        'Product type', required=True)
+        'Product type',
+        states={
+            'required': Eval('action') == 'move',
+            'invisible': Eval('action') != 'move',
+            })
+    destination_product_types = fields.Many2Many('lims.product.type',
+        None, None, 'Product types',
+        states={
+            'required': Eval('action') == 'copy',
+            'invisible': Eval('action') != 'copy',
+            })
     destination_matrix = fields.Many2One('lims.matrix', 'Matrix',
         states={
             'required': Eval('action') == 'move',
@@ -2167,15 +2177,22 @@ class CopyTypification(Wizard):
         summary += '\n%s\n' % gettext('lims.msg_typification_copy_to')
 
         # Product type
-        summary += '%s\n' % gettext(
-            'lims.msg_typification_copy_product_type',
-            product_type=self.start.destination_product_type.description)
+        if self.start.action == 'copy':
+            summary += '%s\n' % gettext(
+                'lims.msg_typification_copy_product_types')
+            for dest_product_type in self.start.destination_product_types:
+                summary += '   - %s\n' % dest_product_type.description
+        else:
+            summary += '%s\n' % gettext(
+                'lims.msg_typification_copy_product_type',
+                product_type=self.start.destination_product_type.description)
 
         # Matrix
         if self.start.action == 'copy':
-            summary += '%s\n' % gettext('lims.msg_typification_copy_matrices')
-            for destination_matrix in self.start.destination_matrices:
-                summary += '   - %s\n' % destination_matrix.description
+            summary += '%s\n' % gettext(
+                'lims.msg_typification_copy_matrices')
+            for dest_matrix in self.start.destination_matrices:
+                summary += '   - %s\n' % dest_matrix.description
         else:
             summary += '%s\n' % gettext(
                 'lims.msg_typification_copy_matrix',
@@ -2211,10 +2228,13 @@ class CopyTypification(Wizard):
 
         origins = Typification.search(clause)
 
-        product_type_id = self.start.destination_product_type.id
         if self.start.action == 'copy':
-            matrix_ids = [m.id for m in self.start.destination_matrices]
+            product_type_ids = [pt.id
+                for pt in self.start.destination_product_types]
+            matrix_ids = [m.id
+                for m in self.start.destination_matrices]
         else:
+            product_type_ids = [self.start.destination_product_type.id]
             matrix_ids = [self.start.destination_matrix.id]
         method_id = (self.start.destination_method.id if
             self.start.destination_method else None)
@@ -2232,72 +2252,76 @@ class CopyTypification(Wizard):
                 if method_id not in method_domain:
                     continue
 
-            for matrix_id in matrix_ids:
-                # check if typification already exists
-                cursor.execute('SELECT id '
-                    'FROM "' + Typification._table + '" '
-                    'WHERE product_type = %s '
-                        'AND matrix = %s '
-                        'AND analysis = %s '
-                        'AND method = %s',
-                    (product_type_id, matrix_id, origin.analysis.id,
-                        method_id or origin.method.id))
-                res = cursor.fetchone()
-                if res:
-                    existing_typifications.append(res[0])
-                    continue
+            for product_type_id in product_type_ids:
+                product_type = ProductType(product_type_id)
+                for matrix_id in matrix_ids:
+                    matrix = Matrix(matrix_id)
 
-                # check if additionals are typified
-                for a in origin.additionals:
-                    cursor.execute('SELECT COUNT(*) '
+                    # check if typification already exists
+                    cursor.execute('SELECT id '
                         'FROM "' + Typification._table + '" '
                         'WHERE product_type = %s '
                             'AND matrix = %s '
                             'AND analysis = %s '
-                            'AND valid IS TRUE',
-                        (product_type_id, matrix_id, a.id))
-                    if cursor.fetchone()[0] == 0:
-                        error_additionals += '* %s\n' % gettext(
-                            'lims.msg_not_typified',
-                            analysis=a.rec_name,
-                            product_type=ProductType(product_type_id).rec_name,
-                            matrix=Matrix(matrix_id).rec_name)
-                if error_additionals:
-                    continue
+                            'AND method = %s',
+                        (product_type_id, matrix_id, origin.analysis.id,
+                            method_id or origin.method.id))
+                    res = cursor.fetchone()
+                    if res:
+                        existing_typifications.append(res[0])
+                        continue
 
-                if self.start.action == 'move':
-                    Typification.write([origin], {
-                        'valid': False,
-                        'by_default': False,
-                        })
+                    # check if additionals are typified
+                    for a in origin.additionals:
+                        cursor.execute('SELECT COUNT(*) '
+                            'FROM "' + Typification._table + '" '
+                            'WHERE product_type = %s '
+                                'AND matrix = %s '
+                                'AND analysis = %s '
+                                'AND valid IS TRUE',
+                            (product_type_id, matrix_id, a.id))
+                        if cursor.fetchone()[0] == 0:
+                            error_additionals += '* %s\n' % gettext(
+                                'lims.msg_not_typified',
+                                analysis=a.rec_name,
+                                product_type=product_type.rec_name,
+                                matrix=matrix.rec_name)
+                    if error_additionals:
+                        continue
 
-                if origin not in to_copy:
-                    to_copy[origin] = []
+                    if self.start.action == 'move':
+                        Typification.write([origin], {
+                            'valid': False,
+                            'by_default': False,
+                            })
 
-                default = {
-                    'valid': True,
-                    'product_type': product_type_id,
-                    'matrix': matrix_id,
-                    'method': method_id or origin.method.id,
-                    }
+                    if origin not in to_copy:
+                        to_copy[origin] = []
 
-                ids_key = (product_type_id, matrix_id, origin.analysis.id)
-                cursor.execute('SELECT COUNT(*) '
-                    'FROM "' + Typification._table + '" '
-                    'WHERE valid '
-                        'AND product_type = %s '
-                        'AND matrix = %s '
-                        'AND analysis = %s '
-                        'AND by_default', ids_key)
-                if cursor.fetchone()[0] != 0:
-                    default['by_default'] = False
-                elif ids_key in new_by_defaults:
-                    default['by_default'] = False
-                else:
-                    default['by_default'] = True
-                    new_by_defaults.append(ids_key)
+                    default = {
+                        'valid': True,
+                        'product_type': product_type_id,
+                        'matrix': matrix_id,
+                        'method': method_id or origin.method.id,
+                        }
 
-                to_copy[origin].append(default)
+                    ids_key = (product_type_id, matrix_id, origin.analysis.id)
+                    cursor.execute('SELECT COUNT(*) '
+                        'FROM "' + Typification._table + '" '
+                        'WHERE valid '
+                            'AND product_type = %s '
+                            'AND matrix = %s '
+                            'AND analysis = %s '
+                            'AND by_default', ids_key)
+                    if cursor.fetchone()[0] != 0:
+                        default['by_default'] = False
+                    elif ids_key in new_by_defaults:
+                        default['by_default'] = False
+                    else:
+                        default['by_default'] = True
+                        new_by_defaults.append(ids_key)
+
+                    to_copy[origin].append(default)
 
         if error_additionals:
             self.error.message = '%s\n%s' % (
