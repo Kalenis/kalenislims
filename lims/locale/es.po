@@ -6231,6 +6231,10 @@ msgctxt "field:lims.typification.copy.start,destination_product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
+msgctxt "field:lims.typification.copy.start,destination_product_types:"
+msgid "Product types"
+msgstr "Tipos de producto"
+
 msgctxt "field:lims.typification.copy.start,origin_analysis:"
 msgid "Analysis"
 msgstr "Análisis"
@@ -8311,6 +8315,10 @@ msgstr "Se crearon %(qty)s tipificaciones"
 msgctxt "model:ir.message,text:msg_typification_copy_product_type"
 msgid " * Product type: %(product_type)s"
 msgstr " * Tipo de producto: %(product_type)s"
+
+msgctxt "model:ir.message,text:msg_typification_copy_product_types"
+msgid " * Product types:"
+msgstr " * Tipos de producto:"
 
 msgctxt "model:ir.message,text:msg_typification_copy_to"
 msgid "TO:"
