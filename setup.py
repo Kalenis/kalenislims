@@ -13,8 +13,9 @@ LINKS = {}
 
 def kalenis_test_suite():
     from trytond.tests.test_tryton import modules_suite
-    return modules_suite([name for name in os.listdir('.')
-        if name.startswith('lims')])
+    lims_modules = [name for name in os.listdir('.')
+        if name.startswith('lims') and name != 'lims_tools']
+    return modules_suite(lims_modules)
 
 
 def read(fname):
