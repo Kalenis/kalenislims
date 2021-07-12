@@ -6334,6 +6334,11 @@ class Referral(ModelSQL, ModelView):
     def search_rec_name(cls, name, clause):
         return [('laboratory',) + tuple(clause[1:])]
 
+    @fields.depends('laboratory')
+    def on_change_laboratory(self):
+        if self.laboratory and self.laboratory.carrier:
+            self.carrier = self.laboratory.carrier
+
     @classmethod
     @ModelView.button
     def send(cls, referrals):
@@ -6439,6 +6444,8 @@ class ReferService(Wizard):
 
         referrals = Referral.create([{
             'laboratory': self.start.laboratory.id,
+            'carrier': (self.start.laboratory.carrier and
+                self.start.laboratory.carrier.id or None),
             'date': self.start.date,
             'state': 'draft',
             }])

@@ -6507,6 +6507,10 @@ msgctxt "field:party.party,block_entry_confirmation:"
 msgid "Block Entry Confirmation"
 msgstr "Bloquear ingreso de muestras"
 
+msgctxt "field:party.party,carrier:"
+msgid "Carrier"
+msgstr "Transportista"
+
 msgctxt "field:party.party,email_report:"
 msgid "Email report"
 msgstr "Informe por e-mail"
