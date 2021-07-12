@@ -15,6 +15,8 @@
                 <field name="no_acknowledgment_of_receipt"/>
             </group>
             <field name="sample_producers" colspan="4"/>
+            <label name="carrier"/>
+            <field name="carrier"/>
             <label name="entry_zone"/>
             <field name="entry_zone"/>
             <group id="lims_party_footer" colspan="2" col="4">
