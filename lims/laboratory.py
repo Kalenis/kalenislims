@@ -776,7 +776,9 @@ class NotebookRuleCondition(ModelSQL, ModelView):
         ('in', 'In'),
         ('not_in', 'Not In'),
         ], 'Condition', required=True, sort=False)
-    value = fields.Char('Value', required=True)
+    value = fields.Char('Value', required=True, help=("For the \"In\" and " +
+        "\"Not in\" conditions, use a comma-separated list of values " +
+        "(e.g.: AB, CD, 12, 34)"))
 
     def eval_condition(self, line):
         path = self.field.split('.')
