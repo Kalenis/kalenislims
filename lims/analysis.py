@@ -2040,6 +2040,23 @@ class AnalysisDevice(DeactivableMixin, ModelSQL, ModelView):
                 raise UserError(gettext('lims.msg_default_device'))
 
 
+class OpenAnalysisIncluded(Wizard):
+    'Open Included Analysis'
+    __name__ = 'lims.analysis.open_all_included_analysis'
+
+    start_state = 'open_'
+    open_ = StateAction('lims.act_lims_analysis_list')
+
+    def do_open_(self, action):
+        Analysis = Pool().get('lims.analysis')
+
+        analysis_ids = Analysis.get_included_analysis_analysis(
+            Transaction().context['active_id'])
+        action['pyson_domain'] = PYSONEncoder().encode([
+            ('id', 'in', analysis_ids)])
+        return action, {}
+
+
 class CopyTypificationStart(ModelView):
     'Copy/Move Typification'
     __name__ = 'lims.typification.copy.start'

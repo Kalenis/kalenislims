@@ -466,6 +466,19 @@
             <field name="name">analysis_laboratory_list</field>
         </record>
 
+<!-- Wizard Open All Included Analysis -->
+
+        <record model="ir.action.wizard" id="wiz_analysis_open_all_included_analysis">
+            <field name="name">All Included Analysis</field>
+            <field name="wiz_name">lims.analysis.open_all_included_analysis</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_analysis_open_all_included_analysis_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.analysis,-1</field>
+            <field name="action" ref="wiz_analysis_open_all_included_analysis"/>
+        </record>
+
 <!-- Typification actions related -->
 
         <record model="ir.action.act_window" id="act_lims_technical_scope_version_related1">
