@@ -542,6 +542,53 @@
             <field name="perm_delete" eval="False"/>
         </record>
 
+<!-- Wizard Exceptional Loading of Results -->
+
+        <record model="ir.ui.view" id="lims_notebook_load_results_exceptional_start_view_form">
+            <field name="model">lims.notebook.load_results_exceptional.start</field>
+            <field name="type">form</field>
+            <field name="name">notebook_load_results_exceptional_start_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_notebook_load_results_exceptional_result_view_form">
+            <field name="model">lims.notebook.load_results_exceptional.result</field>
+            <field name="type">form</field>
+            <field name="name">notebook_load_results_exceptional_result_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_notebook_load_results_exceptional_result_line_view_list">
+            <field name="model">lims.notebook.load_results_exceptional.line</field>
+            <field name="type">tree</field>
+            <field name="name">notebook_load_results_exceptional_result_line_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_notebook_load_results_exceptional_result_line_view_form">
+            <field name="model">lims.notebook.load_results_exceptional.line</field>
+            <field name="type">form</field>
+            <field name="name">notebook_load_results_exceptional_result_line_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_notebook_load_results_exceptional">
+            <field name="name">Exceptional Loading of Results</field>
+            <field name="wiz_name">lims.notebook.load_results_exceptional</field>
+        </record>
+
+        <menuitem action="wiz_lims_notebook_load_results_exceptional"
+            id="lims_notebook_load_results_exceptional_menu"
+            parent="lims_laboratory_results" sequence="100"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_notebook_load_results_exceptional_group_laboratory_exceptional_results">
+            <field name="menu" ref="lims_notebook_load_results_exceptional_menu"/>
+            <field name="group" ref="group_lims_laboratory_exceptional_results"/>
+        </record>
+
+        <record model="ir.model.field.access" id="access_load_results_exceptional_result_lines">
+            <field name="field"
+                search="[('name', '=', 'lines'), ('model.model', '=', 'lims.notebook.load_results_exceptional.result')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
 <!-- Wizard Add Internal Relations -->
 
         <record model="ir.ui.view" id="lims_notebook_add_internal_relations_start_view_form">
