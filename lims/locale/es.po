@@ -7100,6 +7100,10 @@ msgctxt "model:ir.action,name:wiz_add_sample_service"
 msgid "Add Sample Services"
 msgstr "Añadir servicios a muestras"
 
+msgctxt "model:ir.action,name:wiz_analysis_open_all_included_analysis"
+msgid "All Included Analysis"
+msgstr "Todos los análisis incluidos"
+
 msgctxt "model:ir.action,name:wiz_analysis_open_not_typified"
 msgid "Open Analysis Not Typified"
 msgstr "Abrir análisis sin tipificar"

@@ -280,6 +280,7 @@ def register():
         sample.DuplicateSample,
         sample.DuplicateSampleFromEntry,
         entry.ForwardAcknowledgmentOfReceipt,
+        analysis.OpenAnalysisIncluded,
         analysis.CopyTypification,
         analysis.CopyCalculatedTypification,
         analysis.UpdateTypification,
