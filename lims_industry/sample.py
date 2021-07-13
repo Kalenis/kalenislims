@@ -685,7 +685,7 @@ class EditSample(Wizard):
         SampleEditionLog = Pool().get('lims.sample.edition.log')
 
         samples = self._get_filtered_samples()
-        samples_to_edit_party = []
+        samples_to_edit_party = {}
         for sample in samples:
             check_typifications = False
             log = []
@@ -700,7 +700,9 @@ class EditSample(Wizard):
                     'initial_value': sample.party.rec_name,
                     'final_value': self.start.party.rec_name,
                     })
-                samples_to_edit_party.append(sample)
+                if sample.entry.id not in samples_to_edit_party:
+                    samples_to_edit_party[sample.entry.id] = []
+                samples_to_edit_party[sample.entry.id].append(sample)
 
             if (self.start.equipment and
                     self.start.equipment != sample.equipment):
@@ -775,51 +777,64 @@ class EditSample(Wizard):
             if log:
                 SampleEditionLog.create(log)
 
-        for sample in samples_to_edit_party:
-            self.edit_party(sample, samples)
+        for entry_id, samples_to_edit in samples_to_edit_party.items():
+            self._edit_entry_party(entry_id, samples_to_edit)
+            self._edit_results_report_party(samples_to_edit)
 
         return 'end'
 
-    def edit_party(self, sample, samples):
-        self._edit_entry_party(sample, samples)
-        self._edit_results_report_party(sample, samples)
-
-    def _edit_entry_party(self, sample, samples):
+    def _edit_entry_party(self, entry_id, samples):
         pool = Pool()
         Config = pool.get('lims.configuration')
         PartyRelation = pool.get('party.relation')
         Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
 
-        if sample.entry.multi_party:
+        entry = Entry(entry_id)
+        party_id = self.start.party.id
+
+        if entry.multi_party:
             config_ = Config(1)
-            party_domain = [sample.entry.invoice_party.id]
+            party_domain = [entry.invoice_party.id]
             relations = PartyRelation.search([
-                ('to', '=', sample.entry.invoice_party),
+                ('to', '=', entry.invoice_party),
                 ('type', '=', config_.invoice_party_relation_type)
                 ])
             party_domain.extend([r.from_.id for r in relations])
             party_domain = list(set(party_domain))
-            if self.start.party.id not in party_domain:
+            if party_id not in party_domain:
                 raise UserError(gettext('lims_industry.msg_edit_sample_party'))
-            sample.party = self.start.party.id
-            sample.save()
+            Sample.write(samples, {'party': party_id})
             return
 
+        # Check if all samples from the same entry were selected
         if Sample.search_count([
-                ('entry', '=', sample.entry.id),
+                ('entry', '=', entry.id),
                 ('id', 'not in', [s.id for s in samples]),
-                ]) > 0:
-            raise UserError(gettext('lims_industry.msg_edit_entry_party'))
+                ]) == 0:
+            entry.party = party_id
+            entry.invoice_party = party_id
+            entry.ack_report_format = None
+            entry.ack_report_cache = None
+            entry.ack_report_cache_id = None
+            entry.save()
+            Sample.write(samples, {'party': party_id})
+        else:
+            new_vals = {
+                'party': party_id,
+                'invoice_party': party_id,
+                'samples': [],
+                'invoice_contacts': [],
+                'report_contacts': [],
+                'acknowledgment_contacts': [],
+                }
 
-        entry = Entry(sample.entry.id)
-        entry.party = self.start.party.id
-        entry.invoice_party = self.start.party.id
-        entry.ack_report_format = None
-        entry.ack_report_cache = None
-        entry.save()
+            new_entry, = Entry.copy([entry], new_vals)
+            new_entry.state = entry.state
+            new_entry.save()
+            Sample.write(samples, {'entry': new_entry.id, 'party': party_id})
 
-    def _edit_results_report_party(self, sample, samples):
+    def _edit_results_report_party(self, samples):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         Fraction = pool.get('lims.fraction')
@@ -829,29 +844,32 @@ class EditSample(Wizard):
         ResultsVersion = pool.get('lims.results_report.version')
         ResultsReport = pool.get('lims.results_report')
 
-        #if sample.has_results_report:
-            #raise UserError(gettext(
-                #'lims_industry.msg_edit_results_report_party',
-                #sample=sample.rec_name))
+        party_id = self.start.party.id
 
-        cursor.execute('SELECT rv.results_report '
-            'FROM "' + ResultsVersion._table + '" rv '
-                'INNER JOIN "' + ResultsDetail._table + '" rd '
-                'ON rv.id =  rd.report_version '
-                'INNER JOIN "' + ResultsSample._table + '" rs '
-                'ON rd.id = rs.version_detail '
-                'INNER JOIN "' + Notebook._table + '" n '
-                'ON n.id = rs.notebook '
-                'INNER JOIN "' + Fraction._table + '" f '
-                'ON f.id = n.fraction '
-            'WHERE f.sample = %s '
-                'AND rd.state NOT IN (\'released\', \'annulled\')',
-            (str(sample.id),))
-        reports_ids = [x[0] for x in cursor.fetchall()]
-        if not reports_ids:
-            return
-        reports = ResultsReport.browse(reports_ids)
-        ResultsReport.write(reports, {'party': self.start.party.id})
+        for sample in samples:
+            #if sample.has_results_report:
+                #raise UserError(gettext(
+                    #'lims_industry.msg_edit_results_report_party',
+                    #sample=sample.rec_name))
+
+            cursor.execute('SELECT rv.results_report '
+                'FROM "' + ResultsVersion._table + '" rv '
+                    'INNER JOIN "' + ResultsDetail._table + '" rd '
+                    'ON rv.id =  rd.report_version '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON rd.id = rs.version_detail '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON n.id = rs.notebook '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = n.fraction '
+                'WHERE f.sample = %s '
+                    'AND rd.state NOT IN (\'released\', \'annulled\')',
+                (str(sample.id),))
+            reports_ids = [x[0] for x in cursor.fetchall()]
+            if not reports_ids:
+                continue
+            reports = ResultsReport.browse(reports_ids)
+            ResultsReport.write(reports, {'party': party_id})
 
     def check_typifications(self, sample):
         analysis_domain_ids = sample.on_change_with_analysis_domain()

@@ -61,9 +61,6 @@
         <record model="ir.message" id="msg_edit_sample_party">
             <field name="text">You must select a Party related to the invoice Party</field>
         </record>
-        <record model="ir.message" id="msg_edit_entry_party">
-            <field name="text">You must select all samples from the same entry to change the Party</field>
-        </record>
         <record model="ir.message" id="msg_edit_results_report_party">
             <field name="text">Sample "%(sample)s" has a Results report already released</field>
         </record>

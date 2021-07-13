@@ -879,12 +879,6 @@ msgstr ""
 "No puede eliminar el componente «%(component)s» porque está asociado a una "
 "muestra"
 
-msgctxt "model:ir.message,text:msg_edit_entry_party"
-msgid "You must select all samples from the same entry to change the Party"
-msgstr ""
-"Debe seleccionar todas las muestras del mismo ingreso para cambiar la "
-"entidad"
-
 msgctxt "model:ir.message,text:msg_edit_results_report_party"
 msgid "Sample \"%(sample)s\" has a Results report already released"
 msgstr "La muestra «%(sample)s» tiene un Informe de resultados ya publicado"
