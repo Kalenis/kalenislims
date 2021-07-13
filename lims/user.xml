@@ -116,6 +116,14 @@
             <field name="group" ref="group_lims_laboratory_results"/>
         </record>
 
+        <record model="res.group" id="group_lims_laboratory_exceptional_results">
+            <field name="name">Lims Results exceptional entry</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_laboratory_exceptionalresults">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_laboratory_exceptional_results"/>
+        </record>
+
         <record model="res.group" id="group_lims_laboratory_results_acceptance">
             <field name="name">Lims Results acceptance</field>
         </record>
@@ -673,6 +681,11 @@
             id="menu_laboratory_results_group_laboratory_results">
             <field name="menu" ref="lims_laboratory_results"/>
             <field name="group" ref="group_lims_laboratory_results"/>
+        </record>
+        <record model="ir.ui.menu-res.group"
+            id="menu_laboratory_results_group_laboratory_exceptional_results">
+            <field name="menu" ref="lims_laboratory_results"/>
+            <field name="group" ref="group_lims_laboratory_exceptional_results"/>
         </record>
 
         <!-- Laboratory / Results reports -->

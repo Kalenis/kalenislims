@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form>
+    <label name="line"/>
+    <field name="line"/>
+    <label name="result"/>
+    <field name="result"/>
+</form>

@@ -969,6 +969,8 @@ class NotebookLine(ModelSQL, ModelView):
     repetition_reason = fields.Char('Repetition reason',
         states={'readonly': True, 'invisible': Eval('repetition', 0) == 0},
         depends=['repetition'])
+    exceptional_load = fields.Boolean('Exceptionally loaded result',
+        readonly=True)
 
     del _states, _depends
 
@@ -4194,8 +4196,9 @@ class NotebookLoadResultsManual(Wizard):
 
         lines_to_save = []
         for line in self.result.lines:
-            if line.line:  # Avoid empty lines created with ENTER key
-                lines_to_save.append(line)
+            if not line.line:  # Avoid empty lines created with ENTER key
+                continue
+            lines_to_save.append(line)
         NotebookLoadResultsManualLine.save(lines_to_save)
 
         professional = self.result.professional
@@ -4387,6 +4390,94 @@ class NotebookLoadResultsManual(Wizard):
                         }]
                     LabProfessionalMethodRequalification.create(to_create)
 
+        return 'end'
+
+
+class NotebookLoadResultsExceptionalStart(ModelView):
+    'Exceptional Loading of Results'
+    __name__ = 'lims.notebook.load_results_exceptional.start'
+
+    notebook = fields.Many2One('lims.notebook', 'Notebook', required=True)
+
+
+class NotebookLoadResultsExceptionalResult(ModelView):
+    'Exceptional Loading of Results'
+    __name__ = 'lims.notebook.load_results_exceptional.result'
+
+    start_date = fields.Date('Start date', required=True)
+    end_date = fields.Date('End date', required=True)
+    lines = fields.One2Many('lims.notebook.load_results_exceptional.line',
+        None, 'Lines')
+
+
+class NotebookLoadResultsExceptionalLine(ModelSQL, ModelView):
+    'Exceptional Loading of Results'
+    __name__ = 'lims.notebook.load_results_exceptional.line'
+
+    line = fields.Many2One('lims.notebook.line', 'Analysis', readonly=True)
+    result = fields.Char('Result')
+
+
+class NotebookLoadResultsExceptional(Wizard):
+    'Exceptional Loading of Results'
+    __name__ = 'lims.notebook.load_results_exceptional'
+
+    start = StateView('lims.notebook.load_results_exceptional.start',
+        'lims.lims_notebook_load_results_exceptional_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Load results', 'result', 'tryton-forward', default=True),
+            ])
+    result = StateView('lims.notebook.load_results_exceptional.result',
+        'lims.lims_notebook_load_results_exceptional_result_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Confirm', 'confirm', 'tryton-ok', default=True),
+            ])
+    confirm = StateTransition()
+
+    def default_result(self, fields):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        Date = pool.get('ir.date')
+
+        today = Date.today()
+        res_lines = []
+        lines = NotebookLine.search([
+            ('notebook', '=', self.start.notebook),
+            ('start_date', '=', None),
+            ],
+            order=[('analysis_order', 'ASC'), ('id', 'ASC')])
+        for line in lines:
+            res_lines.append({
+                'line': line.id,
+                'result': None,
+                })
+
+        default = {}
+        default['start_date'] = today
+        default['end_date'] = today
+        default['lines'] = res_lines
+        return default
+
+    def transition_confirm(self):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+
+        start_date = self.result.start_date
+        end_date = self.result.end_date
+
+        lines_to_save = []
+        for line in self.result.lines:
+            if not line.line:  # Avoid empty lines created with ENTER key
+                continue
+            if not line.result:
+                continue
+            notebook_line = NotebookLine(line.line.id)
+            notebook_line.result = line.result
+            notebook_line.start_date = start_date
+            notebook_line.end_date = end_date
+            notebook_line.exceptional_load = True
+            lines_to_save.append(notebook_line)
+        NotebookLine.save(lines_to_save)
         return 'end'
 
 

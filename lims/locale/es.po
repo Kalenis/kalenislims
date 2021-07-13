@@ -2959,6 +2959,10 @@ msgctxt "field:lims.notebook.line,end_date:"
 msgid "End date"
 msgstr "Fecha de finalización"
 
+msgctxt "field:lims.notebook.line,exceptional_load:"
+msgid "Exceptionally loaded result"
+msgstr "Resultado cargado excepcionalmente"
+
 msgctxt "field:lims.notebook.line,final_concentration:"
 msgid "Final concentration"
 msgstr "Concentración final"
@@ -3450,6 +3454,30 @@ msgstr "Dominio para Análisis"
 msgctxt "field:lims.notebook.line.repeat_analysis.start,repetition_reason:"
 msgid "Reason"
 msgstr "Motivo"
+
+msgctxt "field:lims.notebook.load_results_exceptional.line,line:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:lims.notebook.load_results_exceptional.line,result:"
+msgid "Result"
+msgstr "Resultado"
+
+msgctxt "field:lims.notebook.load_results_exceptional.result,end_date:"
+msgid "End date"
+msgstr "Fecha de finalización"
+
+msgctxt "field:lims.notebook.load_results_exceptional.result,lines:"
+msgid "Lines"
+msgstr "Líneas"
+
+msgctxt "field:lims.notebook.load_results_exceptional.result,start_date:"
+msgid "Start date"
+msgstr "Fecha de inicio"
+
+msgctxt "field:lims.notebook.load_results_exceptional.start,notebook:"
+msgid "Notebook"
+msgstr "Cuaderno"
 
 msgctxt "field:lims.notebook.load_results_formula.action,chromatogram:"
 msgid "Chromatogram"
@@ -7323,6 +7351,10 @@ msgctxt "model:ir.action,name:wiz_lims_notebook_line_uncertainty_calc"
 msgid "Uncertainty Calculation"
 msgstr "07) Cálculo de incertidumbre"
 
+msgctxt "model:ir.action,name:wiz_lims_notebook_load_results_exceptional"
+msgid "Exceptional Loading of Results"
+msgstr "Carga excepcional de resultados"
+
 msgctxt "model:ir.action,name:wiz_lims_notebook_load_results_formula"
 msgid "Load Results by Formula"
 msgstr "Carga de resultados por fórmula"
@@ -8660,6 +8692,10 @@ msgctxt "model:ir.ui.menu,name:lims_notebook_line_all_menu"
 msgid "All Notebook Lines"
 msgstr "Todas las Líneas de Cuaderno"
 
+msgctxt "model:ir.ui.menu,name:lims_notebook_load_results_exceptional_menu"
+msgid "Exceptional Loading of Results"
+msgstr "Carga excepcional de resultados"
+
 msgctxt "model:ir.ui.menu,name:lims_notebook_load_results_formula_menu"
 msgid "Load Results by Formula"
 msgstr "Carga de resultados por fórmula"
@@ -9384,6 +9420,18 @@ msgctxt "model:lims.notebook.line.repeat_analysis.start,name:"
 msgid "Repeat Analysis"
 msgstr "Repetir análisis"
 
+msgctxt "model:lims.notebook.load_results_exceptional.line,name:"
+msgid "Exceptional Loading of Results"
+msgstr "Carga excepcional de resultados"
+
+msgctxt "model:lims.notebook.load_results_exceptional.result,name:"
+msgid "Exceptional Loading of Results"
+msgstr "Carga excepcional de resultados"
+
+msgctxt "model:lims.notebook.load_results_exceptional.start,name:"
+msgid "Exceptional Loading of Results"
+msgstr "Carga excepcional de resultados"
+
 msgctxt "model:lims.notebook.load_results_formula.action,name:"
 msgid "Load Results by Formula"
 msgstr "Carga de resultados por fórmula"
@@ -9944,6 +9992,10 @@ msgstr "Lims Ingreso Sólo lectura"
 msgctxt "model:res.group,name:group_lims_entry_update"
 msgid "Lims Entries Update"
 msgstr "Lims Ingreso Actualización"
+
+msgctxt "model:res.group,name:group_lims_laboratory_exceptional_results"
+msgid "Lims Results exceptional entry"
+msgstr "Lims Ingreso excepcional de resultados"
 
 msgctxt "model:res.group,name:group_lims_laboratory_reports"
 msgid "Lims Results reports"
@@ -14969,6 +15021,22 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.notebook.line.repeat_analysis,start,repeat:"
 msgid "Repeat"
 msgstr "Repetir"
+
+msgctxt "wizard_button:lims.notebook.load_results_exceptional,result,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.notebook.load_results_exceptional,result,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.notebook.load_results_exceptional,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.notebook.load_results_exceptional,start,result:"
+msgid "Load results"
+msgstr "Cargar resultados"
 
 msgctxt "wizard_button:lims.notebook.load_results_formula,beginning,end:"
 msgid "Cancel"

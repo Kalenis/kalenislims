@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<tree editable="bottom">
+    <field name="line"/>
+    <field name="result"/>
+</tree>
