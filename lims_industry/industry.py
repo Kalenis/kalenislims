@@ -189,8 +189,9 @@ class Equipment(ModelSQL, ModelView):
         'get_brand', searcher='search_brand')
     model = fields.Char('Model', required=True)
     power = fields.Char('Power')
-    voltage = fields.Char('Voltage')
-    amperage = fields.Char('Amperage')
+    voltage = fields.Char('Primary Voltage')
+    voltage_secondary = fields.Char('Secondary Voltage')
+    amperage = fields.Char('Secondary Amperage')
     serial_number = fields.Char('Serial number')
     internal_id = fields.Char('Internal ID Code')
     latitude = fields.Numeric('Latitude', digits=(3, 14))
@@ -203,6 +204,7 @@ class Equipment(ModelSQL, ModelView):
     components = fields.One2Many('lims.component', 'equipment',
         'Components')
     year_manufacturing = fields.Integer('Year of manufacturing')
+    year_service_start = fields.Integer('Year of service start')
     internal_location = fields.Char('Internal location')
     contacts = fields.One2Many('party.address', 'equipment',
         'Contacts', domain=[('party', '=', Eval('party'))],
