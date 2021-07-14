@@ -195,8 +195,8 @@ msgid "Sampling Type"
 msgstr "Muestreo"
 
 msgctxt "field:lims.equipment,amperage:"
-msgid "Amperage"
-msgstr "Intensidad"
+msgid "Secondary Amperage"
+msgstr "Intensidad secundaria"
 
 msgctxt "field:lims.equipment,brand:"
 msgid "Brand"
@@ -263,12 +263,20 @@ msgid "Type"
 msgstr "Tipo"
 
 msgctxt "field:lims.equipment,voltage:"
-msgid "Voltage"
-msgstr "Tensión"
+msgid "Primary Voltage"
+msgstr "Tensión primaria"
+
+msgctxt "field:lims.equipment,voltage_secondary:"
+msgid "Secondary Voltage"
+msgstr "Tensión secundaria"
 
 msgctxt "field:lims.equipment,year_manufacturing:"
 msgid "Year of manufacturing"
 msgstr "Año de fabricación"
+
+msgctxt "field:lims.equipment,year_service_start:"
+msgid "Year of service start"
+msgstr "Año de inicio en servicio"
 
 msgctxt "field:lims.equipment.template,brand:"
 msgid "Brand"
@@ -434,6 +442,26 @@ msgctxt "field:lims.results_report.version.detail.line,precedent3_result:"
 msgid "Precedent 3"
 msgstr "Antecedente 3"
 
+msgctxt "field:lims.results_report.version.detail.line,precedent4_result:"
+msgid "Precedent 4"
+msgstr "Antecedente 4"
+
+msgctxt "field:lims.results_report.version.detail.line,precedent5_result:"
+msgid "Precedent 5"
+msgstr "Antecedente 5"
+
+msgctxt "field:lims.results_report.version.detail.line,precedent6_result:"
+msgid "Precedent 6"
+msgstr "Antecedente 6"
+
+msgctxt "field:lims.results_report.version.detail.line,precedent7_result:"
+msgid "Precedent 7"
+msgstr "Antecedente 7"
+
+msgctxt "field:lims.results_report.version.detail.line,precedent8_result:"
+msgid "Precedent 8"
+msgstr "Antecedente 8"
+
 msgctxt "field:lims.results_report.version.detail.line,precedent_analysis:"
 msgid "Analysis"
 msgstr "Análisis"
@@ -516,6 +544,26 @@ msgctxt ""
 "field:lims.results_report.version.detail.sample,precedent3_diagnosis_states:"
 msgid "Diagnosis States Precedent 3"
 msgstr "Estados de Diagnóstico Antecedente 3"
+
+msgctxt "field:lims.results_report.version.detail.sample,precedent4:"
+msgid "Precedent 4"
+msgstr "Antecedente 4"
+
+msgctxt "field:lims.results_report.version.detail.sample,precedent5:"
+msgid "Precedent 5"
+msgstr "Antecedente 5"
+
+msgctxt "field:lims.results_report.version.detail.sample,precedent6:"
+msgid "Precedent 6"
+msgstr "Antecedente 6"
+
+msgctxt "field:lims.results_report.version.detail.sample,precedent7:"
+msgid "Precedent 7"
+msgstr "Antecedente 7"
+
+msgctxt "field:lims.results_report.version.detail.sample,precedent8:"
+msgid "Precedent 8"
+msgstr "Antecedente 8"
 
 msgctxt "field:lims.sample,air_filter_changed:"
 msgid "Did change Air Filter?"
@@ -893,7 +941,8 @@ msgstr "El equipo de la muestra «%(sample)s» no pertenece a la entidad"
 
 msgctxt "model:ir.message,text:msg_edit_sample_party"
 msgid "You must select a Party related to the invoice Party"
-msgstr "Debe seleccionar una entidad relacionada con la entidad de facturación"
+msgstr ""
+"Debe seleccionar una entidad relacionada con la entidad de facturación"
 
 msgctxt "model:ir.message,text:msg_equipment_name_unique"
 msgid "There is already an equipment with the same name for the plant"

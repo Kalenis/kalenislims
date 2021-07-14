@@ -20,6 +20,8 @@
             <field name="power"/>
             <label name="voltage"/>
             <field name="voltage"/>
+            <label name="voltage_secondary"/>
+            <field name="voltage_secondary"/>
             <label name="amperage"/>
             <field name="amperage"/>
             <label name="serial_number"/>
@@ -29,6 +31,10 @@
             <group colspan="2" id="year_manufacturing">
                 <label name="year_manufacturing"/>
                 <field name="year_manufacturing"/>
+            </group>
+            <group colspan="2" id="year_service_start">
+                <label name="year_service_start"/>
+                <field name="year_service_start"/>
             </group>
             <label name="internal_location"/>
             <field name="internal_location"/>
