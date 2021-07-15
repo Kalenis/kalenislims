@@ -509,9 +509,13 @@ class Notebook(ModelSQL, ModelView):
                 'AND nl.results_report IS NULL '
                 'AND nl.id NOT IN (' + draft_lines_ids + ') ')
         sql_query += cls._get_samples_in_progress_sql_clause()
-
         cursor.execute(sql_query, (laboratory_id,))
         notebooks_ids = [x[0] for x in cursor.fetchall()]
+
+        complete_notebooks_ids = cls._get_notebooks_complete()
+        if complete_notebooks_ids:
+            notebooks_ids = list(
+                set(notebooks_ids) - set(complete_notebooks_ids))
         return notebooks_ids
 
     @classmethod
