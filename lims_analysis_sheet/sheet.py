@@ -9,7 +9,8 @@ from sql import Table, Column, Literal, Null
 from sql.aggregate import Count
 from sql.conditionals import Coalesce
 
-from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
+from trytond.model import Workflow, ModelView, ModelSQL, DeactivableMixin, \
+    fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
 from trytond.pool import Pool
@@ -22,7 +23,7 @@ from trytond.modules.lims_interface.interface import str2date, \
     get_model_resource
 
 
-class TemplateAnalysisSheet(ModelSQL, ModelView):
+class TemplateAnalysisSheet(DeactivableMixin, ModelSQL, ModelView):
     'Analysis Sheet Template'
     __name__ = 'lims.template.analysis_sheet'
 
@@ -90,6 +91,7 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
         Fraction = pool.get('lims.fraction')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Analysis = pool.get('lims.analysis')
+        Template = pool.get('lims.template.analysis_sheet')
         TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
 
         result = {
@@ -155,10 +157,13 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
 
         templates = {}
         for nl in notebook_lines:
-            cursor.execute('SELECT template '
-                'FROM "' + TemplateAnalysis._table + '" '
-                'WHERE analysis = %s '
-                'AND (method = %s OR method IS NULL)',
+            cursor.execute('SELECT t.id '
+                'FROM "' + Template._table + '" t '
+                    'INNER JOIN "' + TemplateAnalysis._table + '" ta '
+                    'ON t.id = ta.template '
+                'WHERE t.active IS TRUE '
+                    'AND ta.analysis = %s '
+                    'AND (ta.method = %s OR ta.method IS NULL)',
                 (nl[0], nl[1]))
             template = cursor.fetchone()
             if not template:
@@ -186,6 +191,7 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
         Fraction = pool.get('lims.fraction')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Analysis = pool.get('lims.analysis')
+        Template = pool.get('lims.template.analysis_sheet')
         TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
 
         date_from = context.get('date_from') or str(date.min)
@@ -250,10 +256,13 @@ class TemplateAnalysisSheet(ModelSQL, ModelView):
 
         urgent_templates = []
         for nl in urgent_lines:
-            cursor.execute('SELECT template '
-                'FROM "' + TemplateAnalysis._table + '" '
-                'WHERE analysis = %s '
-                'AND (method = %s OR method IS NULL)',
+            cursor.execute('SELECT t.id '
+                'FROM "' + Template._table + '" t '
+                    'INNER JOIN "' + TemplateAnalysis._table + '" ta '
+                    'ON t.id = ta.template '
+                'WHERE t.active IS TRUE '
+                    'AND ta.analysis = %s '
+                    'AND (ta.method = %s OR ta.method IS NULL)',
                 (nl[0], nl[1]))
             template = cursor.fetchone()
             if not template:

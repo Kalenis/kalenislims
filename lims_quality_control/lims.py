@@ -180,19 +180,25 @@ class Typification(metaclass=PoolMeta):
 
         result = {}
         for t in typifications:
-            cursor.execute('SELECT template '
-                'FROM "' + TemplateAnalysis._table + '" '
-                'WHERE analysis = %s '
-                'AND method = %s',
+            cursor.execute('SELECT t.id '
+                'FROM "' + Template._table + '" t '
+                    'INNER JOIN "' + TemplateAnalysis._table + '" ta '
+                    'ON t.id = ta.template '
+                'WHERE t.active IS TRUE '
+                    'AND ta.analysis = %s '
+                    'AND ta.method = %s',
                 (t.analysis.id, t.method.id))
             template_id = cursor.fetchone()
             result[t.id] = None
             if not template_id:
-                cursor.execute('SELECT template '
-                    'FROM "' + TemplateAnalysis._table + '" '
-                    'WHERE analysis = %s '
-                    'AND method IS NULL',
-                    (t.analysis.id, ))
+                cursor.execute('SELECT t.id '
+                    'FROM "' + Template._table + '" t '
+                        'INNER JOIN "' + TemplateAnalysis._table + '" ta '
+                        'ON t.id = ta.template '
+                    'WHERE t.active IS TRUE '
+                        'WHERE ta.analysis = %s '
+                        'AND ta.method IS NULL',
+                    (t.analysis.id,))
                 template_id = cursor.fetchone()
             if template_id:
                 template = Template(template_id[0])

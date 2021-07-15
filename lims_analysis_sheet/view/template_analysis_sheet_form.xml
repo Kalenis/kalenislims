@@ -8,6 +8,8 @@
     <field name="report"/>
     <label name="controls_required"/>
     <field name="controls_required"/>
+    <label name="active"/>
+    <field name="active"/>
     <notebook>
         <page string="Analysis" id="analysis">
             <field name="analysis" colspan="4"/>

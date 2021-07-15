@@ -46,6 +46,7 @@ class BoardLaboratory(metaclass=PoolMeta):
         Fraction = pool.get('lims.fraction')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Analysis = pool.get('lims.analysis')
+        Template = pool.get('lims.template.analysis_sheet')
         TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
 
         cursor.execute('SELECT nl.id '
@@ -95,10 +96,13 @@ class BoardLaboratory(metaclass=PoolMeta):
 
         result = []
         for nl in notebook_lines:
-            cursor.execute('SELECT template '
-                'FROM "' + TemplateAnalysis._table + '" '
-                'WHERE analysis = %s '
-                'AND (method = %s OR method IS NULL)',
+            cursor.execute('SELECT t.id '
+                'FROM "' + Template._table + '" t '
+                    'INNER JOIN "' + TemplateAnalysis._table + '" ta '
+                    'ON t.id = ta.template '
+                'WHERE t.active IS TRUE '
+                    'AND ta.analysis = %s '
+                    'AND (ta.method = %s OR ta.method IS NULL)',
                 (nl[0], nl[1]))
             template = cursor.fetchone()
             if template:

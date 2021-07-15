@@ -29,21 +29,27 @@ class NotebookLine(metaclass=PoolMeta):
     def get_analysis_sheet_template(self):
         cursor = Transaction().connection.cursor()
         pool = Pool()
+        Template = pool.get('lims.template.analysis_sheet')
         TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
 
-        cursor.execute('SELECT template '
-            'FROM "' + TemplateAnalysis._table + '" '
-            'WHERE analysis = %s '
-            'AND method = %s',
+        cursor.execute('SELECT t.id '
+            'FROM "' + Template._table + '" t '
+                'INNER JOIN "' + TemplateAnalysis._table + '" ta '
+                'ON t.id = ta.template '
+            'WHERE t.active IS TRUE '
+                'AND ta.analysis = %s '
+                'AND ta.method = %s',
             (self.analysis.id, self.method.id))
         template = cursor.fetchone()
-
         if not template:
-            cursor.execute('SELECT template '
-                'FROM "' + TemplateAnalysis._table + '" '
-                'WHERE analysis = %s '
-                'AND method IS NULL',
-                (self.analysis.id, ))
+            cursor.execute('SELECT t.id '
+                'FROM "' + Template._table + '" t '
+                    'INNER JOIN "' + TemplateAnalysis._table + '" ta '
+                    'ON t.id = ta.template '
+                'WHERE t.active IS TRUE '
+                    'WHERE ta.analysis = %s '
+                    'AND ta.method IS NULL',
+                (self.analysis.id,))
             template = cursor.fetchone()
 
         return template and template[0] or None
