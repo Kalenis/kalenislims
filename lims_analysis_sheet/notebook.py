@@ -801,7 +801,7 @@ class CalculateExpressions(Wizard):
                                 if isinstance(x,
                                         formulas.tokens.operand.XlError):
                                     value = None
-                        Data.write([line], {alias: value or None})
+                        Data.write([line], {alias: value})
 
         return 'end'
 
