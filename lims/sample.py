@@ -5360,8 +5360,8 @@ class CreateSampleStart(ModelView):
     zone = fields.Many2One('lims.zone', 'Zone',
         states={'required': Bool(Eval('zone_required'))},
         depends=['zone_required'])
-    zone_required = fields.Function(fields.Boolean('Zone required'),
-        'get_zone_required')
+    zone_required = fields.Boolean('Zone required',
+        states={'readonly': True})
     trace_report = fields.Boolean('Trace report')
     report_comments = fields.Text('Report comments', translate=True)
     comments = fields.Text('Comments')
@@ -5387,56 +5387,6 @@ class CreateSampleStart(ModelView):
             'without_services'])
     without_services = fields.Boolean('Without services')
     attributes = fields.Dict('lims.sample.attribute', 'Attributes')
-
-    @staticmethod
-    def default_date():
-        return datetime.now()
-
-    @staticmethod
-    def default_restricted_entry():
-        return False
-
-    @staticmethod
-    def default_zone_required():
-        Config = Pool().get('lims.configuration')
-        return Config(1).zone_required
-
-    def get_zone_required(self, name=None):
-        return self.default_zone_required()
-
-    @staticmethod
-    def default_zone():
-        Entry = Pool().get('lims.entry')
-        entry_id = Transaction().context.get('active_id', None)
-        if entry_id:
-            entry = Entry(entry_id)
-            if entry.party.entry_zone:
-                return entry.party.entry_zone.id
-
-    @staticmethod
-    def default_trace_report():
-        return False
-
-    @staticmethod
-    def default_storage_time():
-        return 3
-
-    @staticmethod
-    def default_product_type_domain():
-        cursor = Transaction().connection.cursor()
-        Typification = Pool().get('lims.typification')
-
-        cursor.execute('SELECT DISTINCT(product_type) '
-            'FROM "' + Typification._table + '" '
-            'WHERE valid')
-        res = cursor.fetchall()
-        if not res:
-            return []
-        return [x[0] for x in res]
-
-    @staticmethod
-    def default_without_services():
-        return False
 
     @fields.depends('product_type', 'matrix', 'matrix_domain')
     def on_change_product_type(self):
@@ -5785,15 +5735,26 @@ class CreateSample(Wizard):
     create_ = StateTransition()
 
     def default_start(self, fields):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
         Entry = pool.get('lims.entry')
         Config = pool.get('lims.configuration')
         PartyRelation = pool.get('party.relation')
+        Typification = pool.get('lims.typification')
+
+        config_ = Config(1)
+
+        defaults = {
+            'date': datetime.now(),
+            'restricted_entry': False,
+            'zone_required': config_.zone_required,
+            'trace_report': False,
+            'storage_time': 3,
+            'without_services': False,
+            }
 
         entry = Entry(Transaction().context['active_id'])
-
         if entry.multi_party:
-            config_ = Config(1)
             party_domain = [entry.invoice_party.id]
             relations = PartyRelation.search([
                 ('to', '=', entry.invoice_party),
@@ -5806,11 +5767,20 @@ class CreateSample(Wizard):
             party_domain = [entry.party.id]
             party_id = entry.party.id
 
-        return {
-            'party': party_id,
-            'party_domain': party_domain,
-            'multi_party': entry.multi_party,
-            }
+        if entry.party.entry_zone:
+            defaults['zone'] = entry.party.entry_zone.id
+
+        cursor.execute('SELECT DISTINCT(product_type) '
+            'FROM "' + Typification._table + '" '
+            'WHERE valid')
+        res = cursor.fetchall()
+        if res:
+            defaults['product_type_domain'] = [x[0] for x in res]
+
+        defaults['party'] = party_id
+        defaults['party_domain'] = party_domain
+        defaults['multi_party'] = entry.multi_party
+        return defaults
 
     def transition_create_(self):
         # TODO: Remove logs
