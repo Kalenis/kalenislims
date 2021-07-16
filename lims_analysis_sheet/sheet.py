@@ -839,6 +839,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         CalculateInternalRelations = pool.get(
             'lims.notebook.internal_relations_calc_1',
             type='wizard')
+        LimitsValidation = pool.get('lims.notebook.limits_validation',
+            type='wizard')
 
         for s in sheets:
             notebook_ids = []
@@ -864,6 +866,13 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     notebook = Notebook(active_id)
                     if calculate_ir.get_relations(notebook.lines):
                         calculate_ir.transition_confirm()
+
+            # Validate Limits
+            session_id, _, _ = LimitsValidation.create()
+            limits_validation = LimitsValidation(session_id)
+            for active_id in list(set(notebook_ids)):
+                notebook = Notebook(active_id)
+                limits_validation.lines_limits_validation(notebook.lines)
 
         return
 
