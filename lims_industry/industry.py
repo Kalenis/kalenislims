@@ -164,6 +164,19 @@ class EquipmentTemplate(ModelSQL, ModelView):
             ('model',) + tuple(clause[1:]),
             ]
 
+    @classmethod
+    def copy(cls, templates, default=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+
+        new_templates = []
+        for template in templates:
+            default['model'] = template.model + ' (copy)'
+            new_template, = super().copy([template], default)
+            new_templates.append(new_template)
+        return new_templates
+
 
 class EquipmentTemplateComponentType(ModelSQL):
     'Equipment Template - Component Type'
