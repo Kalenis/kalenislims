@@ -132,6 +132,14 @@
             <field name="group" ref="group_lims_laboratory_results_acceptance"/>
         </record>
 
+        <record model="res.group" id="group_notebook_repeat_analysis">
+            <field name="name">Lims Analysis repetition</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_notebook_repeat_analysis">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_notebook_repeat_analysis"/>
+        </record>
+
         <record model="res.group" id="group_lims_laboratory_reports_readonly">
             <field name="name">Lims Results reports Read Only</field>
         </record>

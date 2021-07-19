@@ -10041,6 +10041,10 @@ msgctxt "model:res.group,name:group_lims_trend_chart_admin"
 msgid "Lims Trend Charts Admin"
 msgstr "Lims Gráficos de tendencia Admin"
 
+msgctxt "model:res.group,name:group_notebook_repeat_analysis"
+msgid "Lims Analysis repetition"
+msgstr "Lims Repetición de análisis"
+
 msgctxt "model:user.department,name:"
 msgid "User Department"
 msgstr "Usuario Departamento"
