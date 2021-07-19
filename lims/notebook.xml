@@ -627,6 +627,12 @@
             <field name="action" ref="wiz_lims_notebook_repeat_analysis"/>
         </record>
 
+        <record model="ir.action-res.group"
+            id="wiz_notebook_repeat_analysis-group_notebook_repeat_analysis">
+            <field name="action" ref="wiz_lims_notebook_repeat_analysis"/>
+            <field name="group" ref="group_notebook_repeat_analysis"/>
+        </record>
+
         <record model="ir.ui.view" id="lims_notebook_line_repeat_analysis_start_view_form">
             <field name="model">lims.notebook.line.repeat_analysis.start</field>
             <field name="type">form</field>
@@ -642,6 +648,12 @@
             <field name="keyword">form_action</field>
             <field name="model">lims.notebook.line,-1</field>
             <field name="action" ref="wiz_lims_notebook_line_repeat_analysis"/>
+        </record>
+
+        <record model="ir.action-res.group"
+            id="wiz_notebook_line_repeat_analysis-group_notebook_repeat_analysis">
+            <field name="action" ref="wiz_lims_notebook_line_repeat_analysis"/>
+            <field name="group" ref="group_notebook_repeat_analysis"/>
         </record>
 
 <!-- Wizard Accept Lines -->

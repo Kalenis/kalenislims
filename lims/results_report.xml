@@ -788,6 +788,12 @@
             <field name="action" ref="wiz_results_report_version_detail_line_repeat_analysis"/>
         </record>
 
+        <record model="ir.action-res.group"
+            id="wiz_results_report_version_detail_line_repeat_analysis-group_notebook_repeat_analysis">
+            <field name="action" ref="wiz_results_report_version_detail_line_repeat_analysis"/>
+            <field name="group" ref="group_notebook_repeat_analysis"/>
+        </record>
+
 <!-- Wizard Print Results Report -->
 
         <record model="ir.action.wizard" id="wiz_print_result_report">
