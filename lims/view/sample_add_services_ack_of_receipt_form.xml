@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form>
+    <image name="tryton-info" xexpand="0" xfill="0"/>
+    <label
+        string="Do you want to resend the acknowledgment of receipt?"
+        id="info" yalign="0.5" xalign="0.0" colspan="3"/>
+</form>

@@ -173,6 +173,8 @@ def register():
         control_tendency.TrendChartAnalysis2,
         control_tendency.OpenTrendChartStart,
         control_tendency.TrendChartData,
+        module='lims', type_='model')
+    Pool.register(
         results_report.DivideReportsResult,
         results_report.DivideReportsDetail,
         results_report.DivideReportsProcess,
@@ -207,7 +209,10 @@ def register():
         sample.CreateSampleStart,
         sample.CreateSampleService,
         sample.AddSampleServiceStart,
+        sample.AddSampleServiceAckOfReceipt,
         sample.EditSampleServiceStart,
+        sample.EditSampleServiceAckOfReceipt,
+        sample.ManageServicesAckOfReceipt,
         sample.Referral,
         sample.ReferServiceStart,
         entry.ChangeInvoicePartyStart,
