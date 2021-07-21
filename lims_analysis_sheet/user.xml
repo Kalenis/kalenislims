@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Groups -->
+
+        <record model="res.group" id="group_analysis_sheet_view_data">
+            <field name="name">Lims Analysis Sheet View Data</field>
+        </record>
+        <record model="res.user-res.group"
+            id="user_admin_group_analysis_sheet_view_data">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_analysis_sheet_view_data"/>
+        </record>
+
+    </data>
+</tryton>

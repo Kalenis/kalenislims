@@ -2,6 +2,10 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "field:lims.analysis_sheet,button_view_data_available:"
+msgid "Button view data available"
+msgstr "Botón ver datos disponible"
+
 msgctxt "field:lims.analysis_sheet,compilation:"
 msgid "Compilation"
 msgstr "Compilación"
@@ -753,6 +757,10 @@ msgstr "Análisis de Plantilla"
 msgctxt "model:lims.template.analysis_sheet.analysis.expression,name:"
 msgid "Special Formula"
 msgstr "Fórmula especial"
+
+msgctxt "model:res.group,name:group_analysis_sheet_view_data"
+msgid "Lims Analysis Sheet View Data"
+msgstr "Lims Hoja de análisis Ver datos"
 
 msgctxt "report:lims.analysis_sheet.report:"
 msgid "("
