@@ -33,6 +33,7 @@
             <field name="confirmed_by"/>
             <label name="confirmed_date"/>
             <field name="confirmed_date"/>
+            <field name="button_view_data_available" colspan="4" invisible="1"/>
             <button name="view_data" string="View data" colspan="4"/>
             <label name="view"/>
             <field name="view" widget="selection"/>
