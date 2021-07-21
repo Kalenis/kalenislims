@@ -8,6 +8,8 @@
     <field name="date"/>
     <label name="carrier"/>
     <field name="carrier"/>
+    <label name="sent_date"/>
+    <field name="sent_date"/>
     <notebook>
         <page string="General" id="general">
             <field name="services" colspan="4"
