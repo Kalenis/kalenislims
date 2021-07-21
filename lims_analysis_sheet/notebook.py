@@ -47,7 +47,7 @@ class NotebookLine(metaclass=PoolMeta):
                     'INNER JOIN "' + TemplateAnalysis._table + '" ta '
                     'ON t.id = ta.template '
                 'WHERE t.active IS TRUE '
-                    'WHERE ta.analysis = %s '
+                    'AND ta.analysis = %s '
                     'AND ta.method IS NULL',
                 (self.analysis.id,))
             template = cursor.fetchone()
