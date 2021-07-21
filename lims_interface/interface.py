@@ -407,6 +407,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                                     formula=get_formula(column.expression),
                                     inputs=get_inputs(column.expression),
                                     readonly=column.readonly,
+                                    invisible=column.invisible,
                                     digits=column.digits,
                                     default_width=column.default_width,
                                     colspan=column.colspan,
@@ -436,6 +437,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                                     formula=get_formula(expression),
                                     inputs=get_inputs(expression),
                                     readonly=column.readonly,
+                                    invisible=column.invisible,
                                     digits=column.digits,
                                     group=column.group,
                                     default_width=column.default_width,
@@ -461,6 +463,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                                 formula=get_formula(expression),
                                 inputs=get_inputs(expression),
                                 readonly=column.readonly,
+                                invisible=column.invisible,
                                 digits=column.digits,
                                 group=column.group,
                                 related_group=column.related_group,
@@ -491,6 +494,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                             formula=get_formula(column.expression),
                             inputs=get_inputs(column.expression),
                             readonly=column.readonly,
+                            invisible=column.invisible,
                             digits=column.digits,
                             related_group=column.related_group,
                             default_width=column.default_width,
@@ -628,7 +632,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                             line.group_name, line.group_name,
                             line.group_colspan, line.group_col))
 
-            if line.type != 'multiline':
+            if line.type != 'multiline' and not line.invisible:
                 fields.append('<label name="%s"/>' % line.name)
 
             if line.type in ('datetime', 'timestamp'):
@@ -647,6 +651,8 @@ class Interface(Workflow, ModelSQL, ModelView):
                 attributes.append('widget="image"')
             if line.colspan:
                 attributes.append('colspan="%s"' % line.colspan)
+            if line.invisible:
+                attributes.append('invisible="1"')
 
             fields.append('<field name="%s" %s/>' % (line.name,
                     ' '.join(attributes)))
@@ -853,6 +859,7 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         states={'readonly': _states['readonly'] | Bool(Eval('expression'))},
         depends=['expression', 'interface_state'])
     readonly = fields.Boolean('Read only', states=_states, depends=_depends)
+    invisible = fields.Boolean('Invisible', states=_states, depends=_depends)
     digits = fields.Integer('Digits',
         states={
             'required': Eval('type_').in_(['float', 'numeric']),
@@ -1246,6 +1253,7 @@ class CopyInterfaceColumn(Wizard):
             'selection': origin.selection,
             'default_value': origin.default_value,
             'readonly': origin.readonly,
+            'invisible': origin.invisible,
             'transfer_field': origin.transfer_field,
             'related_line_field': (origin.related_line_field and
                 origin.related_line_field.id or None),
