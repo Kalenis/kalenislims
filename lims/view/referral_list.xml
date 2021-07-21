@@ -4,4 +4,5 @@
     <field name="date"/>
     <field name="laboratory"/>
     <field name="state"/>
+    <field name="sent_date"/>
 </tree>

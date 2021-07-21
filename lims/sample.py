@@ -6355,6 +6355,7 @@ class Referral(ModelSQL, ModelView):
     number = fields.Char('Number', select=True, readonly=True)
     date = fields.Date('Date', required=True,
         states=_states, depends=_depends)
+    sent_date = fields.Date('Sent date', readonly=True)
     laboratory = fields.Many2One('party.party', 'Destination Laboratory',
         required=True, states=_states, depends=_depends)
     carrier = fields.Many2One('carrier', 'Carrier',
@@ -6413,6 +6414,7 @@ class Referral(ModelSQL, ModelView):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Date = pool.get('ir.date')
 
         for referral in referrals:
             details = [s for s in referral.services]
@@ -6422,7 +6424,7 @@ class Referral(ModelSQL, ModelView):
             NotebookLine.write(lines, {'start_date': referral.date})
             EntryDetailAnalysis.write(details, {'state': 'referred'})
 
-        cls.write(referrals, {'state': 'sent'})
+        cls.write(referrals, {'state': 'sent', 'sent_date': Date.today()})
 
     @classmethod
     def create(cls, vlist):
