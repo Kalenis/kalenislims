@@ -28,11 +28,13 @@
         <label name="domain"/>
         <field name="domain" colspan="3" widget="pyson"/>
     </group>
-    <group id="default_value" colspan="4" col="6">
+    <group id="default_value" colspan="4" col="8">
         <label name="default_value"/>
         <field name="default_value"/>
         <label name="readonly"/>
         <field name="readonly" xexpand="0"/>
+        <label name="invisible"/>
+        <field name="invisible" xexpand="0"/>
         <label name="group"/>
         <field name="group" xexpand="0"/>
     </group>
