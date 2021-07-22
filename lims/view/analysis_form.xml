@@ -57,11 +57,12 @@
             <field name="estimated_waiting_report"/>
         </page>
     </notebook>
-    <group id="buttons" colspan="4" col="8">
+    <group id="buttons" colspan="4" col="-1">
         <label name="state"/>
         <field name="state"/>
         <button name="activate" string="Activate"/>
         <button name="disable" string="Disable"/>
+        <button name="reactivate" string="Reactivate"/>
         <label name="start_date"/>
         <field name="start_date"/>
         <label name="end_date"/>
