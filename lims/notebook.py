@@ -430,8 +430,8 @@ class Notebook(ModelSQL, ModelView):
 
         notebooks_ids = '\', \''.join(str(n) for n in notebooks_ids + [0])
 
-        cursor.execute('SELECT nl.notebook, nl.analysis, nl.accepted, '
-                'd.report_grouper '
+        cursor.execute('SELECT nl.notebook, nl.analysis, nl.method, '
+                'd.report_grouper, nl.accepted '
             'FROM "' + NotebookLine._table + '" nl '
                 'INNER JOIN "' + EntryDetailAnalysis._table + '" d '
                 'ON d.id = nl.analysis_detail '
@@ -453,13 +453,12 @@ class Notebook(ModelSQL, ModelView):
             (laboratory_id,))
         notebook_lines = cursor.fetchall()
 
-        # Check accepted repetitions
-        to_check = []
-        oks = []
+        # Check repetitions
+        oks, to_check = [], []
         accepted_notebooks = []
         for line in notebook_lines:
-            key = (line[0], line[1], line[3])
-            if not line[2]:
+            key = (line[0], line[1], line[2], line[3])
+            if not line[4]:
                 to_check.append(key)
             else:
                 oks.append(key)
@@ -469,7 +468,7 @@ class Notebook(ModelSQL, ModelView):
         accepted_notebooks = list(set(accepted_notebooks))
 
         excluded_notebooks = set()
-        for n_id, a_id, grouper in to_check:
+        for n_id, a_id, m_id, grouper in to_check:
             if n_id not in accepted_notebooks:
                 continue
             key = (n_id, grouper)
@@ -6039,7 +6038,8 @@ class AnalysisPendingInform(Report):
         if party:
             party_clause = 'AND e.party = ' + str(party)
 
-        cursor.execute('SELECT nl.notebook, nl.analysis, nl.accepted '
+        cursor.execute('SELECT nl.notebook, nl.analysis, nl.method, '
+                'nl.accepted '
             'FROM "' + NotebookLine._table + '" nl '
                 'INNER JOIN "' + Notebook._table + '" n '
                 'ON n.id = nl.notebook '
@@ -6061,12 +6061,11 @@ class AnalysisPendingInform(Report):
             (date_from, date_to, laboratory,))
         notebook_lines = cursor.fetchall()
 
-        # Check accepted repetitions
-        to_check = []
-        oks = []
+        # Check repetitions
+        oks, to_check = [], []
         for line in notebook_lines:
-            key = (line[0], line[1])
-            if not line[2]:
+            key = (line[0], line[1], line[2])
+            if not line[3]:
                 to_check.append(key)
             else:
                 oks.append(key)
@@ -6074,7 +6073,7 @@ class AnalysisPendingInform(Report):
         to_check = list(set(to_check) - set(oks))
 
         excluded_notebooks = {}
-        for n_id, a_id in to_check:
+        for n_id, a_id, m_id in to_check:
             if n_id not in excluded_notebooks:
                 excluded_notebooks[n_id] = []
             excluded_notebooks[n_id].append(a_id)

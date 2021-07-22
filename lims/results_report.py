@@ -2079,8 +2079,8 @@ class GenerateResultsReport(Wizard):
         if self.start.party:
             party_clause = 'AND e.party = ' + str(self.start.party.id)
 
-        cursor.execute('SELECT nl.notebook, nl.analysis, nl.accepted, '
-                'd.report_grouper '
+        cursor.execute('SELECT nl.notebook, nl.analysis, nl.method, '
+                'd.report_grouper, nl.accepted '
             'FROM "' + NotebookLine._table + '" nl '
                 'INNER JOIN "' + EntryDetailAnalysis._table + '" d '
                 'ON d.id = nl.analysis_detail '
@@ -2105,13 +2105,12 @@ class GenerateResultsReport(Wizard):
                 self.start.laboratory.id,))
         notebook_lines = cursor.fetchall()
 
-        # Check accepted repetitions
-        to_check = []
-        oks = []
+        # Check repetitions
+        oks, to_check = [], []
         accepted_notebooks = []
         for line in notebook_lines:
-            key = (line[0], line[1], line[3])
-            if not line[2]:
+            key = (line[0], line[1], line[2], line[3])
+            if not line[4]:
                 to_check.append(key)
             else:
                 oks.append(key)
@@ -2121,7 +2120,7 @@ class GenerateResultsReport(Wizard):
         accepted_notebooks = list(set(accepted_notebooks))
 
         excluded_notebooks = {}
-        for n_id, a_id, grouper in to_check:
+        for n_id, a_id, m_id, grouper in to_check:
             if n_id not in accepted_notebooks:
                 continue
             key = (n_id, grouper)
