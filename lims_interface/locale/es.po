@@ -50,6 +50,10 @@ msgctxt "field:lims.interface,language:"
 msgid "Language"
 msgstr "Idioma"
 
+msgctxt "field:lims.interface,method_field:"
+msgid "Method field"
+msgstr "Campo Método"
+
 msgctxt "field:lims.interface,name:"
 msgid "Name"
 msgstr "Nombre"

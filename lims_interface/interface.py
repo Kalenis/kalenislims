@@ -229,14 +229,20 @@ class Interface(Workflow, ModelSQL, ModelView):
             'readonly': Eval('state') != 'draft',
             },
         depends=['template_type', 'field_separator', 'state'])
+    fraction_field = fields.Many2One('lims.interface.column',
+        'Fraction field', depends=['state', 'id'],
+        domain=[('interface', '=', Eval('id')), ('group', '=', None)],
+        states={
+            'readonly': Eval('state') != 'draft',
+            })
     analysis_field = fields.Many2One('lims.interface.column',
         'Analysis field', depends=['state', 'id'],
         domain=[('interface', '=', Eval('id')), ('group', '=', None)],
         states={
             'readonly': Eval('state') != 'draft',
             })
-    fraction_field = fields.Many2One('lims.interface.column',
-        'Fraction field', depends=['state', 'id'],
+    method_field = fields.Many2One('lims.interface.column',
+        'Method field', depends=['state', 'id'],
         domain=[('interface', '=', Eval('id')), ('group', '=', None)],
         states={
             'readonly': Eval('state') != 'draft',
@@ -400,8 +406,8 @@ class Interface(Workflow, ModelSQL, ModelView):
                                     help=column.expression,
                                     domain=column.domain,
                                     transfer_field=column.transfer_field,
-                                    related_line_field=
-                                        column.related_line_field,
+                                    related_line_field=(
+                                        column.related_line_field),
                                     related_model=column.related_model,
                                     selection=column.selection,
                                     formula=get_formula(column.expression),
@@ -1340,7 +1346,6 @@ class ImportInterfaceColumn(Wizard):
         xl_model = formulas.ExcelModel().loads(tf.name).finish()
         tf.close()
         cells = {}
-        expressions = []
         for cell in xl_model.cells:
             if xl_model.cells[cell].inputs:
                 for input_ in xl_model.cells[cell].inputs:
@@ -1470,7 +1475,6 @@ class ShowInterfaceView(Wizard):
     def default_start(self, fields):
         pool = Pool()
         Interface = pool.get('lims.interface')
-        Data = pool.get('lims.interface.data')
 
         interface_id = Transaction().context.get('active_id', None)
         if not interface_id:
@@ -1920,21 +1924,25 @@ class Compilation(Workflow, ModelSQL, ModelView):
 
         if (not self.interface.fraction_field or
                 not self.interface.analysis_field or
+                not self.interface.method_field or
                 not self.interface.repetition_field):
             return None
 
         fraction_value = line[self.interface.fraction_field.alias]
         analysis_value = line[self.interface.analysis_field.alias]
+        method_value = line[self.interface.method_field.alias]
         repetition_value = line[self.interface.repetition_field.alias]
         if (fraction_value is None or
                 analysis_value is None or
+                method_value is None or
                 repetition_value is None):
             return None
 
         nb_line = NotebookLine.search([
             ('notebook.fraction.number', '=', fraction_value),
-            ('analysis.code', '=', analysis_value.split(' ')[0]),
+            ('analysis.code', '=', analysis_value.split(' - ')[0]),
             ('analysis.automatic_acquisition', '=', True),
+            ('method.code', '=', method_value.split(' - ')[0]),
             ('repetition', '=', repetition_value),
             ('annulled', '=', False),
             ])
@@ -1954,17 +1962,22 @@ class Compilation(Workflow, ModelSQL, ModelView):
             sub_clause = [('id', '=', -1)]
             fraction_field = self.interface.fraction_field
             analysis_field = self.interface.analysis_field
+            method_field = self.interface.method_field
             repetition_field = self.interface.repetition_field
-            if (fraction_field and analysis_field and repetition_field):
+            if (fraction_field and analysis_field and method_field and
+                    repetition_field):
                 fraction_value = line[fraction_field.alias]
                 analysis_value = line[analysis_field.alias]
+                method_value = line[method_field.alias]
                 repetition_value = line[repetition_field.alias]
                 if (fraction_value is not None and
                         analysis_value is not None and
+                        method_value is not None and
                         repetition_value is not None):
                     sub_clause = [
                         (fraction_field.alias, '=', fraction_value),
                         (analysis_field.alias, '=', analysis_value),
+                        (method_field.alias, '=', method_value),
                         (repetition_field.alias, '=', repetition_value),
                         ]
             clause.extend(sub_clause)
@@ -2050,7 +2063,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                                     integer, decimal = str(result).split('.')
                                     data[nl_field] = '%s.%s' % (integer,
                                         decimal.ljust(decimals, '0'))
-                        if nl_field == 'result_modifier' and not data[nl_field]:
+                        if (nl_field == 'result_modifier' and
+                                not data[nl_field]):
                             data[nl_field] = 'eq'
                         if nl_field == 'literal_result' and data[nl_field]:
                             data_eng[nl_field] = data[nl_field]
