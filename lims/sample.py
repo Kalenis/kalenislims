@@ -3045,8 +3045,9 @@ class Sample(ModelSQL, ModelView):
         samples_in_progress = Config(1).samples_in_progress
         digits = Sample.completion_percentage.digits[1]
 
-        cursor.execute('SELECT nl.notebook, nl.analysis, nl.accepted, '
-                'nl.result, nl.literal_result, nl.result_modifier '
+        cursor.execute('SELECT nl.notebook, nl.analysis, nl.method, '
+                'nl.accepted, nl.result, nl.literal_result, '
+                'nl.result_modifier '
             'FROM "' + NotebookLine._table + '" nl '
                 'INNER JOIN "' + EntryDetailAnalysis._table + '" d '
                 'ON d.id = nl.analysis_detail '
@@ -3066,22 +3067,23 @@ class Sample(ModelSQL, ModelView):
         if not total:
             return _ZERO
 
+        # Check repetitions
         oks, to_check = [], []
 
         if samples_in_progress == 'accepted':
             for line in notebook_lines:
-                key = (line[0], line[1])
-                if line[2]:
+                key = (line[0], line[1], line[2])
+                if line[3]:
                     oks.append(key)
                 else:
                     to_check.append(key)
 
         elif samples_in_progress == 'result':
             for line in notebook_lines:
-                key = (line[0], line[1])
-                if (line[3] not in [None, ''] or
-                        line[4] not in [None, ''] or
-                        line[5] in ['d', 'nd', 'pos',
+                key = (line[0], line[1], line[2])
+                if (line[4] not in [None, ''] or
+                        line[5] not in [None, ''] or
+                        line[6] in ['d', 'nd', 'pos',
                         'neg', 'ni', 'abs', 'pre', 'na']):
                     oks.append(key)
                 else:
@@ -4460,21 +4462,16 @@ class CountersampleStorage(Wizard):
                     if not notebook_lines:
                         continue
 
-                    # Check not accepted (with repetitions)
-                    to_check = []
-                    oks = []
+                    # Check repetitions
+                    oks, to_check = [], []
                     for line in notebook_lines:
-                        key = line.analysis.id
+                        key = (line.analysis.id, line.method.id)
                         if not line.accepted:
                             to_check.append(key)
                         else:
                             oks.append(key)
-                    to_check = list(set(to_check))
-                    oks = list(set(oks))
-                    if to_check:
-                        for key in oks:
-                            if key in to_check:
-                                to_check.remove(key)
+
+                    to_check = list(set(to_check) - set(oks))
                     if len(to_check) > 0:
                         continue
 
@@ -6099,21 +6096,16 @@ class CountersampleStorageReport(Report):
             if not notebook_lines:
                 continue
 
-            # Check not accepted (with repetitions)
-            to_check = []
-            oks = []
+            # Check repetitions
+            oks, to_check = [], []
             for line in notebook_lines:
-                key = line.analysis.id
+                key = (line.analysis.id, line.method.id)
                 if not line.accepted:
                     to_check.append(key)
                 else:
                     oks.append(key)
-            to_check = list(set(to_check))
-            oks = list(set(oks))
-            if to_check:
-                for key in oks:
-                    if key in to_check:
-                        to_check.remove(key)
+
+            to_check = list(set(to_check) - set(oks))
             if len(to_check) > 0:
                 continue
 
