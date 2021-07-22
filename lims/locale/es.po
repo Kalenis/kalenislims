@@ -82,6 +82,10 @@ msgctxt "field:lims.analysis,included_analysis:"
 msgid "Included analysis"
 msgstr "Análisis incluidos"
 
+msgctxt "field:lims.analysis,included_analysis_backup:"
+msgid "Included analysis Backup"
+msgstr "Resguardo Análisis incluidos"
+
 msgctxt "field:lims.analysis,laboratories:"
 msgid "Laboratories"
 msgstr "Laboratorios"
@@ -13412,6 +13416,10 @@ msgstr "Laboratorios"
 msgctxt "view:lims.analysis:"
 msgid "Methods"
 msgstr "Métodos"
+
+msgctxt "view:lims.analysis:"
+msgid "Reactivate"
+msgstr "Reactivar"
 
 msgctxt "view:lims.analysis:"
 msgid "Relate analysis"

@@ -365,6 +365,16 @@
             <field name="group" ref="group_lims_conf_base_tables_admin"/>
         </record>
 
+        <record model="ir.model.button" id="analysis_reactivate_button">
+            <field name="name">reactivate</field>
+            <field name="model" search="[('model', '=', 'lims.analysis')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="analysis_reactivate_button_group_group_lims_conf_base_tables_admin">
+            <field name="button" ref="analysis_reactivate_button"/>
+            <field name="group" ref="group_lims_conf_base_tables_admin"/>
+        </record>
+
         <record model="ir.model.button" id="analysis_relate_analysis_button">
             <field name="name">relate_analysis</field>
             <field name="model" search="[('model', '=', 'lims.analysis')]"/>

@@ -4,6 +4,7 @@
 # the full copyright notices and license terms.
 import logging
 import operator
+import json
 from datetime import datetime, date
 from decimal import Decimal
 from sql import Literal
@@ -850,6 +851,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
         None, 'All included analysis'),
         'on_change_with_all_included_analysis',
         setter='set_all_included_analysis')
+    included_analysis_backup = fields.Text('Included analysis Backup')
     behavior = fields.Selection([
         ('normal', 'Normal'),
         ('internal_relation', 'Internal Relation'),
@@ -942,6 +944,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
         cls._transitions |= set((
             ('draft', 'active'),
             ('active', 'disabled'),
+            ('disabled', 'active'),
             ))
         cls._buttons.update({
             'relate_analysis': {
@@ -953,6 +956,9 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 },
             'disable': {
                 'invisible': (Eval('state') != 'active'),
+                },
+            'reactivate': {
+                'invisible': (Eval('state') != 'disabled'),
                 },
             })
 
@@ -971,6 +977,10 @@ class Analysis(Workflow, ModelSQL, ModelView):
     @staticmethod
     def default_state():
         return 'draft'
+
+    @staticmethod
+    def default_included_analysis_backup():
+        return '[]'
 
     @staticmethod
     def _code_length():
@@ -1204,9 +1214,18 @@ class Analysis(Workflow, ModelSQL, ModelView):
     def disable(cls, analysis):
         Date = Pool().get('ir.date')
         cls.write(analysis, {'end_date': Date.today()})
-        cls.disable_typifications(analysis)
         cls.delete_included_analysis(analysis)
+        cls.disable_typifications(analysis)
         cls.disable_product(analysis)
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('active')
+    def reactivate(cls, analysis):
+        cls.write(analysis, {'end_date': None})
+        cls.recover_included_analysis(analysis)
+        cls.enable_typifications(analysis)
+        cls.enable_product(analysis)
 
     @classmethod
     def create_typification_calculated(cls, analysis):
@@ -1334,15 +1353,48 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 CalculatedTypification.delete(typifications)
 
     @classmethod
+    def enable_typifications(cls, analysis):
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+
+        analysis_ids = []
+        for a in analysis:
+            if a.type == 'analysis':
+                analysis_ids.append(a.id)
+        if analysis_ids:
+            typifications = Typification.search([
+                ('analysis', 'in', analysis_ids),
+                ])
+            if typifications:
+                Typification.write(typifications, {'valid': True})
+        cls.create_typification_calculated(analysis)
+
+    @classmethod
     def delete_included_analysis(cls, analysis):
         AnalysisIncluded = Pool().get('lims.analysis.included')
-        analysis_ids = [a.id for a in analysis]
-        if analysis_ids:
-            included_delete = AnalysisIncluded.search([
-                ('included_analysis', 'in', analysis_ids),
+        for a in analysis:
+            backup = []
+            included = AnalysisIncluded.search([
+                ('included_analysis', '=', a.id),
                 ])
-            if included_delete:
-                AnalysisIncluded.delete(included_delete)
+            for ia in included:
+                backup.append({
+                    'analysis': ia.analysis.id,
+                    'included_analysis': ia.included_analysis.id,
+                    'laboratory': ia.laboratory and ia.laboratory.id or None,
+                    'method': ia.method and ia.method.id or None,
+                    })
+            a.included_analysis_backup = json.dumps(backup)
+            a.save()
+            AnalysisIncluded.delete(included)
+
+    @classmethod
+    def recover_included_analysis(cls, analysis):
+        AnalysisIncluded = Pool().get('lims.analysis.included')
+        for a in analysis:
+            backup = json.loads(a.included_analysis_backup)
+            if backup:
+                AnalysisIncluded.create(backup)
 
     @classmethod
     def disable_product(cls, analysis):
@@ -1350,8 +1402,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
         Product = pool.get('product.product')
         Template = pool.get('product.template')
 
-        products = []
-        templates = []
+        products, templates = [], []
         for a in analysis:
             if a.product:
                 products.append(a.product)
@@ -1359,6 +1410,21 @@ class Analysis(Workflow, ModelSQL, ModelView):
         if products:
             Product.write(products, {'active': False})
             Template.write(templates, {'active': False})
+
+    @classmethod
+    def enable_product(cls, analysis):
+        pool = Pool()
+        Product = pool.get('product.product')
+        Template = pool.get('product.template')
+
+        products, templates = [], []
+        for a in analysis:
+            if a.product:
+                products.append(a.product)
+                templates.append(a.product.template)
+        if products:
+            Product.write(products, {'active': True})
+            Template.write(templates, {'active': True})
 
     @fields.depends('laboratories')
     def on_change_with_microbiology(self, name=None):
