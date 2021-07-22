@@ -15,14 +15,14 @@
             <field name="columns" colspan="4"/>
         </page>
         <page id="fields" string="Fields">
-            <group id="definition_fields" colspan="4" col="6">
-                <label name="analysis_field"/>
-                <field name="analysis_field"/>
-                <label name="fraction_field"/>
-                <field name="fraction_field"/>
-                <label name="repetition_field"/>
-                <field name="repetition_field"/>
-            </group>
+            <label name="fraction_field"/>
+            <field name="fraction_field"/>
+            <label name="analysis_field"/>
+            <field name="analysis_field"/>
+            <label name="method_field"/>
+            <field name="method_field"/>
+            <label name="repetition_field"/>
+            <field name="repetition_field"/>
             <label name="form_col"/>
             <field name="form_col"/>
             <field name="grouped_repetitions" colspan="4"/>

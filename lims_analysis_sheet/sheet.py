@@ -1000,18 +1000,24 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                             value = None
                         line[k] = value
 
-                if interface.analysis_field:
-                    if interface.analysis_field.type_ == 'many2one':
-                        line[interface.analysis_field.alias] = nl.analysis.id
-                    else:
-                        line[interface.analysis_field.alias] = (
-                            nl.analysis.rec_name)
                 if interface.fraction_field:
                     if interface.fraction_field.type_ == 'many2one':
                         line[interface.fraction_field.alias] = nl.fraction.id
                     else:
                         line[interface.fraction_field.alias] = (
                             nl.fraction.number)
+                if interface.analysis_field:
+                    if interface.analysis_field.type_ == 'many2one':
+                        line[interface.analysis_field.alias] = nl.analysis.id
+                    else:
+                        line[interface.analysis_field.alias] = (
+                            nl.analysis.rec_name)
+                if interface.method_field:
+                    if interface.method_field.type_ == 'many2one':
+                        line[interface.method_field.alias] = nl.method.id
+                    else:
+                        line[interface.method_field.alias] = (
+                            nl.method.rec_name)
                 if interface.repetition_field:
                     line[interface.repetition_field.alias] = nl.repetition
                 data.append(line)
