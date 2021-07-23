@@ -166,6 +166,10 @@
             <field name="act_window" ref="act_quality_template"/>
         </record>
 
+        <menuitem name="Templates" action="act_quality_template"
+            id="menu_quality_template"
+            parent="menu_quality_control" sequence="10" />
+
         <record model="ir.model.button" id="quality_template_draft_button">
             <field name="name">draft</field>
             <field name="string">Reset to Draft</field>
@@ -176,10 +180,6 @@
             <field name="button" ref="quality_template_draft_button"/>
             <field name="group" ref="group_quality_control_admin"/>
         </record>
-
-        <menuitem name="Templates" action="act_quality_template"
-            id="menu_quality_template"
-            parent="menu_quality_control" sequence="10" />
 
         <record model="ir.model.button" id="quality_template_active_button">
             <field name="name">active</field>
@@ -200,6 +200,17 @@
         <record model="ir.model.button-res.group"
             id="quality_template_not_active_button_group_quality_admin">
             <field name="button" ref="quality_template_not_active_button"/>
+            <field name="group" ref="group_quality_control_admin"/>
+        </record>
+
+        <record model="ir.model.button" id="quality_template_copy_lines_button">
+            <field name="name">copy_lines</field>
+            <field name="string">Copy Lines</field>
+            <field name="model" search="[('model', '=', 'lims.quality.template')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="quality_template_copy_lines_button_group_quality_admin">
+            <field name="button" ref="quality_template_copy_lines_button"/>
             <field name="group" ref="group_quality_control_admin"/>
         </record>
 
