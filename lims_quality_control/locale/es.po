@@ -26,10 +26,6 @@ msgctxt "field:lims.countersample.create.start,countersamples:"
 msgid "Countersamples"
 msgstr "Contramuestras"
 
-msgctxt "field:lims.countersample.create.start,id:"
-msgid "ID"
-msgstr "Identificador"
-
 msgctxt "field:lims.countersample.create.start,location:"
 msgid "Location"
 msgstr "Ubicación Destino"
@@ -41,10 +37,6 @@ msgstr "Cantidad"
 msgctxt "field:lims.create.quality.test.start,date:"
 msgid "Date"
 msgstr "Fecha"
-
-msgctxt "field:lims.create.quality.test.start,id:"
-msgid "ID"
-msgstr "Identificador"
 
 msgctxt "field:lims.create.quality.test.start,product:"
 msgid "Product"
@@ -118,37 +110,13 @@ msgctxt "field:lims.notebook.load_results_manual.line,qualitative_value:"
 msgid "Qualitative Value"
 msgstr "Resultado Cualitativo"
 
-msgctxt "field:lims.quality.configuration,create_date:"
-msgid "Create Date"
-msgstr "Fecha de Creación"
-
-msgctxt "field:lims.quality.configuration,create_uid:"
-msgid "Create User"
-msgstr "Usuario decreación"
-
-msgctxt "field:lims.quality.configuration,id:"
-msgid "ID"
-msgstr "Identificador"
-
 msgctxt "field:lims.quality.configuration,quality_sequence:"
 msgid "Quality Sequence"
 msgstr "Secuencia de Calidad"
 
-msgctxt "field:lims.quality.configuration,rec_name:"
-msgid "Record Name"
-msgstr "Nombre registro"
-
 msgctxt "field:lims.quality.configuration,sample_location:"
 msgid "Sample Location"
 msgstr "Ubicación para muestras"
-
-msgctxt "field:lims.quality.configuration,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.quality.configuration,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.quality.configuration.line,company:"
 msgid "Company"
@@ -158,37 +126,13 @@ msgctxt "field:lims.quality.configuration.line,configuration:"
 msgid "Configuration"
 msgstr "Configuración"
 
-msgctxt "field:lims.quality.configuration.line,create_date:"
-msgid "Create Date"
-msgstr "Fecha de Creación"
-
-msgctxt "field:lims.quality.configuration.line,create_uid:"
-msgid "Create User"
-msgstr "Usuario de creación"
-
 msgctxt "field:lims.quality.configuration.line,document:"
 msgid "Document"
 msgstr "Documento"
 
-msgctxt "field:lims.quality.configuration.line,id:"
-msgid "ID"
-msgstr "Identificador"
-
 msgctxt "field:lims.quality.configuration.line,quality_sequence:"
 msgid "Quality Sequence"
 msgstr "Secuencia para Pruebas de Calidad"
-
-msgctxt "field:lims.quality.configuration.line,rec_name:"
-msgid "Record Name"
-msgstr "Nombre registro"
-
-msgctxt "field:lims.quality.configuration.line,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.quality.configuration.line,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.quality.qualitative.value,active:"
 msgid "Active"
@@ -198,37 +142,13 @@ msgctxt "field:lims.quality.qualitative.value,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
 
-msgctxt "field:lims.quality.qualitative.value,create_date:"
-msgid "Create Date"
-msgstr "Fecha de Creación"
-
-msgctxt "field:lims.quality.qualitative.value,create_uid:"
-msgid "Create User"
-msgstr "Usuario de creación"
-
-msgctxt "field:lims.quality.qualitative.value,id:"
-msgid "ID"
-msgstr "Identificador"
-
 msgctxt "field:lims.quality.qualitative.value,name:"
 msgid "Name"
 msgstr "Nombre"
 
-msgctxt "field:lims.quality.qualitative.value,rec_name:"
-msgid "Record Name"
-msgstr "Nombre registro"
-
 msgctxt "field:lims.quality.qualitative.value,typification:"
 msgid "Typification"
 msgstr "Tipificación"
-
-msgctxt "field:lims.quality.qualitative.value,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.quality.qualitative.value,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.quality.template,comments:"
 msgid "Comments"
@@ -242,14 +162,6 @@ msgctxt "field:lims.quality.template,countersample_required:"
 msgid "Countersample Required"
 msgstr "Contramuestra requerida"
 
-msgctxt "field:lims.quality.template,create_date:"
-msgid "Create Date"
-msgstr "Fecha de Creación"
-
-msgctxt "field:lims.quality.template,create_uid:"
-msgid "Create User"
-msgstr "Usuario de creación"
-
 msgctxt "field:lims.quality.template,document:"
 msgid "Document"
 msgstr "Documento"
@@ -257,10 +169,6 @@ msgstr "Documento"
 msgctxt "field:lims.quality.template,end_date:"
 msgid "End Date"
 msgstr "Fecha Vencimiento"
-
-msgctxt "field:lims.quality.template,id:"
-msgid "ID"
-msgstr "Identificador"
 
 msgctxt "field:lims.quality.template,lines:"
 msgid "Lines"
@@ -282,10 +190,6 @@ msgctxt "field:lims.quality.template,range_validate:"
 msgid "Ranges Validate"
 msgstr "Validar contra rangos"
 
-msgctxt "field:lims.quality.template,rec_name:"
-msgid "Record Name"
-msgstr "Nombre registro"
-
 msgctxt "field:lims.quality.template,results_report_required:"
 msgid "Results Report Required"
 msgstr "Informe de resultados requerido"
@@ -301,14 +205,6 @@ msgstr "Fecha Inicio"
 msgctxt "field:lims.quality.template,state:"
 msgid "State"
 msgstr "Estado"
-
-msgctxt "field:lims.quality.template,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.quality.template,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.quality.test,comments:"
 msgid "Comments"
@@ -326,21 +222,9 @@ msgctxt "field:lims.quality.test,countersample:"
 msgid "Countersample"
 msgstr "Contramuestra"
 
-msgctxt "field:lims.quality.test,create_date:"
-msgid "Create Date"
-msgstr "Fecha de Creación"
-
-msgctxt "field:lims.quality.test,create_uid:"
-msgid "Create User"
-msgstr "Usuario de creación"
-
 msgctxt "field:lims.quality.test,document:"
 msgid "Document"
 msgstr "Documento"
-
-msgctxt "field:lims.quality.test,id:"
-msgid "ID"
-msgstr "Identificador"
 
 msgctxt "field:lims.quality.test,lines:"
 msgid "Lines"
@@ -357,10 +241,6 @@ msgstr "Número"
 msgctxt "field:lims.quality.test,product:"
 msgid "Product"
 msgstr "Producto"
-
-msgctxt "field:lims.quality.test,rec_name:"
-msgid "Record Name"
-msgstr "Nombre registro"
 
 msgctxt "field:lims.quality.test,sample:"
 msgid "Sample"
@@ -385,14 +265,6 @@ msgstr "Fecha"
 msgctxt "field:lims.quality.test,validated_date:"
 msgid "Validated Date"
 msgstr "Fecha Validación"
-
-msgctxt "field:lims.quality.test,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.quality.test,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.sample,countersample:"
 msgid "Countersample"
@@ -438,10 +310,6 @@ msgctxt "field:lims.take.sample.start,date:"
 msgid "Date"
 msgstr "Fecha"
 
-msgctxt "field:lims.take.sample.start,id:"
-msgid "ID"
-msgstr "Identificador"
-
 msgctxt "field:lims.take.sample.start,label:"
 msgid "Label"
 msgstr "Rótulo"
@@ -449,10 +317,6 @@ msgstr "Rótulo"
 msgctxt "field:lims.take.sample.start,sample:"
 msgid "Sample"
 msgstr "Muestra"
-
-msgctxt "field:lims.template.add.service.start,id:"
-msgid "ID"
-msgstr "Identificador"
 
 msgctxt "field:lims.template.add.service.start,service:"
 msgid "Service"
@@ -748,6 +612,10 @@ msgstr "Validar"
 msgctxt "model:ir.model.button,string:quality_template_active_button"
 msgid "Activate"
 msgstr "Activar"
+
+msgctxt "model:ir.model.button,string:quality_template_copy_lines_button"
+msgid "Copy Lines"
+msgstr "Copiar líneas"
 
 msgctxt "model:ir.model.button,string:quality_template_draft_button"
 msgid "Reset to Draft"
