@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <data>
     <xpath expr="/tree/field[@name='label']" position="after">
+        <field name="plant"/>
         <field name="equipment"/>
         <field name="component"/>
         <field name="comercial_product"/>
