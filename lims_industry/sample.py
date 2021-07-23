@@ -28,7 +28,7 @@ class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
 
     plant = fields.Function(fields.Many2One('lims.plant', 'Plant'),
-        'get_plant')
+        'get_plant', searcher='search_plant')
     equipment = fields.Many2One('lims.equipment', 'Equipment',
         domain=['OR', ('id', '=', Eval('equipment')),
             ('party', '=', Eval('party'))],
@@ -203,6 +203,10 @@ class Sample(metaclass=PoolMeta):
         for s in samples:
             result[s.id] = s.equipment and s.equipment.plant.id or None
         return result
+
+    @classmethod
+    def search_plant(cls, name, clause):
+        return [('equipment.plant',) + tuple(clause[1:])]
 
     @classmethod
     def get_equipment_field(cls, samples, names):
