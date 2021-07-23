@@ -416,7 +416,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     view = fields.Many2One('lims.interface.view', 'View',
         domain=[('interface', '=', Eval('interface'))],
         states={'invisible': Eval('state') == 'draft'},
-        depends=['state'])
+        depends=['state', 'interface'])
     interface = fields.Function(fields.Many2One('lims.interface', 'Interface'),
         'get_interface')
     button_view_data_available = fields.Function(fields.Boolean(
