@@ -701,6 +701,19 @@ class ProductType(ModelSQL, ModelView):
             return [(field,) + tuple(clause[1:])]
         return [(cls._rec_name,) + tuple(clause[1:])]
 
+    @classmethod
+    def copy(cls, records, default=None):
+        if default is None:
+            default = {}
+        current_default = default.copy()
+
+        new_records = []
+        for record in records:
+            current_default['code'] = '%s (copy)' % record.code
+            new_record, = super().copy([record], default=current_default)
+            new_records.append(new_record)
+        return new_records
+
 
 class Matrix(ModelSQL, ModelView):
     'Matrix'
@@ -740,6 +753,19 @@ class Matrix(ModelSQL, ModelView):
         if records:
             return [(field,) + tuple(clause[1:])]
         return [(cls._rec_name,) + tuple(clause[1:])]
+
+    @classmethod
+    def copy(cls, records, default=None):
+        if default is None:
+            default = {}
+        current_default = default.copy()
+
+        new_records = []
+        for record in records:
+            current_default['code'] = '%s (copy)' % record.code
+            new_record, = super().copy([record], default=current_default)
+            new_records.append(new_record)
+        return new_records
 
 
 class ObjectiveDescription(ModelSQL, ModelView):
@@ -1466,21 +1492,22 @@ class Analysis(Workflow, ModelSQL, ModelView):
         return False
 
     @classmethod
-    def copy(cls, analyzes, default=None):
+    def copy(cls, records, default=None):
         if default is None:
             default = {}
         current_default = default.copy()
         current_default['state'] = 'draft'
         current_default['start_date'] = None
         current_default['end_date'] = None
+        current_default['product'] = None
 
-        new_analyzes = []
-        for analysis in analyzes:
-            current_default['code'] = '%s (copy)' % analysis.code
-            current_default['description'] = '%s (copy)' % analysis.description
-            new_analysis, = super().copy([analysis], default=current_default)
-            new_analyzes.append(new_analysis)
-        return new_analyzes
+        new_records = []
+        for record in records:
+            current_default['code'] = '%s (copy)' % record.code
+            current_default['description'] = '%s (copy)' % record.description
+            new_record, = super().copy([record], default=current_default)
+            new_records.append(new_record)
+        return new_records
 
     @classmethod
     def get_pending_fractions(cls, records, name):

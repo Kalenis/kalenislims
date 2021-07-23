@@ -190,6 +190,19 @@ class LabMethod(ModelSQL, ModelView):
                 cls.update_laboratory_notebook(methods)
 
     @classmethod
+    def copy(cls, records, default=None):
+        if default is None:
+            default = {}
+        current_default = default.copy()
+
+        new_records = []
+        for record in records:
+            current_default['code'] = '%s (copy)' % record.code
+            new_record, = super().copy([record], default=current_default)
+            new_records.append(new_record)
+        return new_records
+
+    @classmethod
     def update_laboratory_notebook(cls, methods):
         NotebookLine = Pool().get('lims.notebook.line')
 

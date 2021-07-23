@@ -58,6 +58,14 @@ class RangeType(ModelSQL, ModelView):
             if range_types:
                 raise UserError(gettext('lims.msg_default_range_type'))
 
+    @classmethod
+    def copy(cls, records, default=None):
+        if default is None:
+            default = {}
+        current_default = default.copy()
+        current_default['by_default'] = False
+        return super().copy(records, default=current_default)
+
 
 class Range(ModelSQL, ModelView):
     'Range'
