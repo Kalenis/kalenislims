@@ -62,18 +62,18 @@ class Plant(ModelSQL, ModelView):
         return res
 
     @classmethod
-    def copy(cls, plants, default=None):
+    def copy(cls, records, default=None):
         if default is None:
             default = {}
-        default = default.copy()
+        current_default = default.copy()
+        current_default['equipments'] = None
 
-        new_plants = []
-        for plant in plants:
-            default['name'] = plant.name + ' (copy)'
-            default['equipments'] = None
-            new_plant, = super().copy([plant], default)
-            new_plants.append(new_plant)
-        return new_plants
+        new_records = []
+        for record in records:
+            current_default['name'] = '%s (copy)' % record.name
+            new_record, = super().copy([record], default=current_default)
+            new_records.append(new_record)
+        return new_records
 
 
 class EquipmentType(ModelSQL, ModelView):
@@ -91,6 +91,19 @@ class EquipmentType(ModelSQL, ModelView):
                 'lims_industry.msg_equipment_type_name_unique'),
             ]
 
+    @classmethod
+    def copy(cls, records, default=None):
+        if default is None:
+            default = {}
+        current_default = default.copy()
+
+        new_records = []
+        for record in records:
+            current_default['name'] = '%s (copy)' % record.name
+            new_record, = super().copy([record], default=current_default)
+            new_records.append(new_record)
+        return new_records
+
 
 class Brand(ModelSQL, ModelView):
     'Brand'
@@ -106,6 +119,19 @@ class Brand(ModelSQL, ModelView):
             ('name_unique', Unique(t, t.name),
                 'lims_industry.msg_brand_name_unique'),
             ]
+
+    @classmethod
+    def copy(cls, records, default=None):
+        if default is None:
+            default = {}
+        current_default = default.copy()
+
+        new_records = []
+        for record in records:
+            current_default['name'] = '%s (copy)' % record.name
+            new_record, = super().copy([record], default=current_default)
+            new_records.append(new_record)
+        return new_records
 
 
 class ComponentType(ModelSQL, ModelView):
@@ -124,6 +150,19 @@ class ComponentType(ModelSQL, ModelView):
             ('name_unique', Unique(t, t.name),
                 'lims_industry.msg_component_type_name_unique'),
             ]
+
+    @classmethod
+    def copy(cls, records, default=None):
+        if default is None:
+            default = {}
+        current_default = default.copy()
+
+        new_records = []
+        for record in records:
+            current_default['name'] = '%s (copy)' % record.name
+            new_record, = super().copy([record], default=current_default)
+            new_records.append(new_record)
+        return new_records
 
 
 class EquipmentTemplate(ModelSQL, ModelView):
@@ -165,17 +204,17 @@ class EquipmentTemplate(ModelSQL, ModelView):
             ]
 
     @classmethod
-    def copy(cls, templates, default=None):
+    def copy(cls, records, default=None):
         if default is None:
             default = {}
-        default = default.copy()
+        current_default = default.copy()
 
-        new_templates = []
-        for template in templates:
-            default['model'] = template.model + ' (copy)'
-            new_template, = super().copy([template], default)
-            new_templates.append(new_template)
-        return new_templates
+        new_records = []
+        for record in records:
+            current_default['model'] = '%s (copy)' % record.model
+            new_record, = super().copy([record], default=current_default)
+            new_records.append(new_record)
+        return new_records
 
 
 class EquipmentTemplateComponentType(ModelSQL):
@@ -342,17 +381,17 @@ class Equipment(ModelSQL, ModelView):
         self.components = components
 
     @classmethod
-    def copy(cls, equipments, default=None):
+    def copy(cls, records, default=None):
         if default is None:
             default = {}
-        default = default.copy()
+        current_default = default.copy()
 
-        new_equipments = []
-        for equipment in equipments:
-            default['name'] = equipment.name + ' (copy)'
-            new_equipment, = super().copy([equipment], default)
-            new_equipments.append(new_equipment)
-        return new_equipments
+        new_records = []
+        for record in records:
+            current_default['name'] = '%s (copy)' % record.name
+            new_record, = super().copy([record], default=current_default)
+            new_records.append(new_record)
+        return new_records
 
 
 class Component(ModelSQL, ModelView):
