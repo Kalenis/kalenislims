@@ -122,7 +122,7 @@
 
         <menuitem action="act_results_report_format"
             id="menu_results_report_format"
-            parent="lims.lims_config_report" sequence="30"/>
+            parent="lims.lims_config_report" sequence="40"/>
 
     </data>
 </tryton>
