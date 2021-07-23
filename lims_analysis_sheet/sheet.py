@@ -319,6 +319,7 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
         clause = [
             ('id', '!=', self.id),
             ('analysis', '=', self.analysis.id),
+            ('template.active', '=', True),
             ]
         if self.method:
             clause.append(('method', '=', self.method.id))
