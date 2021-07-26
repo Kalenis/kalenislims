@@ -98,13 +98,16 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
                 } for c in self.template.trend_charts]
             self.charts_x_row = self.template.charts_x_row
         if self.template and self.template.sections:
-            self.sections = [{
-                'name': s.name,
-                'data': s.data,
-                'data_id': s.data_id,
-                'position': s.position,
-                'order': s.order,
-                } for s in self.template.sections]
+            sections = {}
+            for s in self.sections + self.template.sections:
+                sections[s.name] = {
+                    'name': s.name,
+                    'data': s.data,
+                    'data_id': s.data_id,
+                    'position': s.position,
+                    'order': s.order,
+                    }
+            self.sections = sections.values()
 
     def get_previous_sections(self, name):
         return [s.id for s in self.sections if s.position == 'previous']
