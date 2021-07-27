@@ -39,7 +39,7 @@ class Entry(metaclass=PoolMeta):
                 ('annulled', '=', False),
                 ])
         for service in services:
-            service.create_invoice_line('out')
+            service.create_invoice_line()
 
 
 class Fraction(metaclass=PoolMeta):
@@ -63,7 +63,7 @@ class Fraction(metaclass=PoolMeta):
                 ('annulled', '=', False),
                 ])
         for service in services:
-            service.create_invoice_line('out')
+            service.create_invoice_line()
 
 
 class Service(metaclass=PoolMeta):
@@ -75,22 +75,22 @@ class Service(metaclass=PoolMeta):
         services_to_invoice = [s for s in services if
             s.entry.state == 'pending']
         for service in services_to_invoice:
-            service.create_invoice_line('out')
+            service.create_invoice_line()
         return services
 
-    def create_invoice_line(self, invoice_type):
+    def create_invoice_line(self):
         InvoiceLine = Pool().get('account.invoice.line')
 
         if (not self.fraction.type.invoiceable or
                 self.fraction.cie_fraction_type):
             return
-        invoice_line = self.get_invoice_line(invoice_type)
+        invoice_line = self.get_invoice_line()
         if not invoice_line:
             return
         with Transaction().set_context(_check_access=False):
             InvoiceLine.create([invoice_line])
 
-    def get_invoice_line(self, invoice_type):
+    def get_invoice_line(self):
         Company = Pool().get('company.company')
 
         company = Transaction().context.get('company')
@@ -126,7 +126,7 @@ class Service(metaclass=PoolMeta):
         return {
             'company': company,
             'currency': currency,
-            'invoice_type': invoice_type,
+            'invoice_type': 'out',
             'party': party,
             'description': self.number + ' - ' + self.analysis.rec_name,
             'origin': str(self),
@@ -142,6 +142,14 @@ class Service(metaclass=PoolMeta):
     def delete(cls, services):
         cls.delete_invoice_lines(services)
         super().delete(services)
+
+    @classmethod
+    def write(cls, *args):
+        super().write(*args)
+        actions = iter(args)
+        for services, vals in zip(actions, actions):
+            if vals.get('annulled'):
+                cls.delete_invoice_lines(services)
 
     @classmethod
     def delete_invoice_lines(cls, services):
@@ -168,5 +176,23 @@ class ManageServices(metaclass=PoolMeta):
 
     def create_service(self, service, fraction):
         new_service = super().create_service(service, fraction)
-        new_service.create_invoice_line('out')
+        new_service.create_invoice_line()
+        return new_service
+
+
+class EditSampleService(metaclass=PoolMeta):
+    __name__ = 'lims.sample.edit_service'
+
+    def create_service(self, service, fraction):
+        new_service = super().create_service(service, fraction)
+        new_service.create_invoice_line()
+        return new_service
+
+
+class AddSampleService(metaclass=PoolMeta):
+    __name__ = 'lims.sample.add_service'
+
+    def create_service(self, service, fraction):
+        new_service = super().create_service(service, fraction)
+        new_service.create_invoice_line()
         return new_service
