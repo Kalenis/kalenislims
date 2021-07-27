@@ -974,6 +974,8 @@ class NotebookLine(ModelSQL, ModelView):
         depends=['repetition'])
     exceptional_load = fields.Boolean('Exceptionally loaded result',
         readonly=True)
+    exceptional_load_uid = fields.Many2One('res.user',
+        'Exceptional loading of results User', readonly=True)
 
     del _states, _depends
 
@@ -1757,6 +1759,10 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     repetition_reason = fields.Char('Repetition reason', readonly=True,
         states={'invisible': Eval('repetition', 0) == 0},
         depends=['repetition'])
+    exceptional_load = fields.Boolean('Exceptionally loaded result',
+        readonly=True)
+    exceptional_load_uid = fields.Many2One('res.user',
+        'Exceptional loading of results User', readonly=True)
 
     @classmethod
     def __setup__(cls):
@@ -1855,6 +1861,8 @@ class NotebookLineAllFields(ModelSQL, ModelView):
             service.report_date,
             line.department,
             line.repetition_reason,
+            line.exceptional_load,
+            line.exceptional_load_uid,
             ]
         where = Literal(True)
         return join6.select(*columns, where=where)
@@ -4479,6 +4487,7 @@ class NotebookLoadResultsExceptional(Wizard):
             notebook_line.start_date = start_date
             notebook_line.end_date = end_date
             notebook_line.exceptional_load = True
+            notebook_line.exceptional_load_uid = int(Transaction().user)
             lines_to_save.append(notebook_line)
         NotebookLine.save(lines_to_save)
         return 'end'

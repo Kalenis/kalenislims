@@ -59,4 +59,6 @@
     <field name="results_estimated_waiting"/>
     <field name="results_estimated_date"/>
     <field name="department"/>
+    <field name="exceptional_load"/>
+    <field name="exceptional_load_uid"/>
 </tree>

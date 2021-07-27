@@ -47,4 +47,6 @@
     <field name="verification"/>
     <field name="accepted"/>
     <field name="department"/>
+    <field name="exceptional_load"/>
+    <field name="exceptional_load_uid"/>
 </tree>
