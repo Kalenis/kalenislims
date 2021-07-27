@@ -99,8 +99,8 @@ class SampleSaleLine(ModelSQL):
 class Service(metaclass=PoolMeta):
     __name__ = 'lims.service'
 
-    def get_invoice_line(self, invoice_type):
-        invoice_line = super().get_invoice_line(invoice_type)
+    def get_invoice_line(self):
+        invoice_line = super().get_invoice_line()
         if not invoice_line:
             return
         if self.sample.sale_lines:

@@ -28,6 +28,8 @@ def register():
         module='lims_account_invoice', type_='model')
     Pool.register(
         lims.ManageServices,
+        lims.EditSampleService,
+        lims.AddSampleService,
         invoice.PopulateInvoiceContacts,
         invoice.SendOfInvoice,
         module='lims_account_invoice', type_='wizard')
