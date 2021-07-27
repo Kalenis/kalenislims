@@ -1698,25 +1698,25 @@ class Fraction(ModelSQL, ModelView):
             for type_ in types:
                 if type_ == 'mcl':
                     res_type.append(config.mcl_fraction_type)
-                if type_ == 'con':
+                elif type_ == 'con':
                     res_type.append(config.con_fraction_type)
-                if type_ == 'bmz':
+                elif type_ == 'bmz':
                     res_type.append(config.bmz_fraction_type)
-                if type_ == 'rm':
+                elif type_ == 'rm':
                     res_type.append(config.rm_fraction_type)
-                if type_ == 'bre':
+                elif type_ == 'bre':
                     res_type.append(config.bre_fraction_type)
-                if type_ == 'mrt':
+                elif type_ == 'mrt':
                     res_type.append(config.mrt_fraction_type)
-                if type_ == 'coi':
+                elif type_ == 'coi':
                     res_type.append(config.coi_fraction_type)
-                if type_ == 'mrc':
+                elif type_ == 'mrc':
                     res_type.append(config.mrc_fraction_type)
-                if type_ == 'sla':
+                elif type_ == 'sla':
                     res_type.append(config.sla_fraction_type)
-                if type_ == 'itc':
+                elif type_ == 'itc':
                     res_type.append(config.itc_fraction_type)
-                if type_ == 'itl':
+                elif type_ == 'itl':
                     res_type.append(config.itl_fraction_type)
             if clause[1] in ('=', '!='):
                 return [('type', clause[1], res_type[0])]
