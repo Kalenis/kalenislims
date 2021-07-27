@@ -120,4 +120,10 @@
     <field name="results_report"/>
     <label name="department"/>
     <field name="department"/>
+    <group id="exceptional_load" colspan="2" col="2">
+        <label name="exceptional_load"/>
+        <field name="exceptional_load"/>
+    </group>
+    <label name="exceptional_load_uid"/>
+    <field name="exceptional_load_uid"/>
 </form>

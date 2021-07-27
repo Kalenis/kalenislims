@@ -2967,6 +2967,10 @@ msgctxt "field:lims.notebook.line,exceptional_load:"
 msgid "Exceptionally loaded result"
 msgstr "Resultado cargado excepcionalmente"
 
+msgctxt "field:lims.notebook.line,exceptional_load_uid:"
+msgid "Exceptional loading of results User"
+msgstr "Usuario Carga excepcional de resultados"
+
 msgctxt "field:lims.notebook.line,final_concentration:"
 msgid "Final concentration"
 msgstr "Concentración final"
@@ -3266,6 +3270,14 @@ msgstr "Factor de dilución"
 msgctxt "field:lims.notebook.line.all_fields,end_date:"
 msgid "End date"
 msgstr "Fecha de finalización"
+
+msgctxt "field:lims.notebook.line.all_fields,exceptional_load:"
+msgid "Exceptionally loaded result"
+msgstr "Resultado cargado excepcionalmente"
+
+msgctxt "field:lims.notebook.line.all_fields,exceptional_load_uid:"
+msgid "Exceptional loading of results User"
+msgstr "Usuario Carga excepcional de resultados"
 
 msgctxt "field:lims.notebook.line.all_fields,final_concentration:"
 msgid "Final concentration"
