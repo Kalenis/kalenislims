@@ -353,58 +353,102 @@ class Planification(Workflow, ModelSQL, ModelView):
             'WHERE pd.planification = %s '
                 'AND sd.notebook_line IS NOT NULL',
             (self.id,))
-        notebook_lines = NotebookLine.browse(x[0] for x in cursor.fetchall())
+        notebook_lines = NotebookLine.browse(x[0]
+            for x in cursor.fetchall())
         if notebook_lines:
-            NotebookLine.write(notebook_lines, {'start_date': self.start_date})
+            NotebookLine.write(notebook_lines, {
+                'start_date': self.start_date,
+                'planification': self.id,
+                })
 
     def update_laboratory_notebook(self):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
+        PlanificationDetail = pool.get('lims.planification.detail')
+        PlanificationServiceDetail = pool.get(
+            'lims.planification.service_detail')
+        ServiceDetailProfessional = pool.get(
+            'lims.planification.service_detail-laboratory.professional')
+        NotebookLineProfessional = pool.get(
+            'lims.notebook.line-laboratory.professional')
+        NotebookLineControl = pool.get('lims.notebook.line-fraction')
+
+        # Professionals
+        cursor.execute('SELECT sd.notebook_line, sdp.professional '
+            'FROM "' + ServiceDetailProfessional._table + '" sdp '
+                'INNER JOIN "' + PlanificationServiceDetail._table + '" sd '
+                'ON sd.id = sdp.detail '
+                'INNER JOIN "' + PlanificationDetail._table + '" pd '
+                'ON pd.id = sd.detail '
+            'WHERE pd.planification = %s '
+                'AND sd.notebook_line IS NOT NULL',
+            (self.id,))
+        res = cursor.fetchall()
+        if res:
+            notebook_lines_ids = ', '.join(str(nl_id)
+                for nl_id, sd_id in res)
+            cursor.execute('DELETE FROM "' +
+                NotebookLineProfessional._table + '" '
+                'WHERE notebook_line IN (' + notebook_lines_ids + ')')
+
+            to_create = []
+            for notebook_line, professional in res:
+                to_create.append({
+                    'notebook_line': notebook_line,
+                    'professional': professional,
+                    })
+            NotebookLineProfessional.create(to_create)
+
+        # Controls
+        controls = [f.id for f in self.controls]
+        if controls:
+            cursor.execute('SELECT sd.notebook_line '
+                'FROM "' + PlanificationServiceDetail._table + '" sd '
+                    'INNER JOIN "' + PlanificationDetail._table + '" pd '
+                    'ON pd.id = sd.detail '
+                'WHERE pd.planification = %s '
+                    'AND sd.notebook_line IS NOT NULL '
+                    'AND sd.is_control = FALSE',
+                (self.id,))
+            res = [x[0] for x in cursor.fetchall()]
+            if res:
+                notebook_lines_ids = ', '.join(str(nl_id)
+                    for nl_id in res)
+                cursor.execute('DELETE FROM "' +
+                    NotebookLineControl._table + '" '
+                    'WHERE notebook_line IN (' + notebook_lines_ids + ')')
+
+                to_create = []
+                for notebook_line in res:
+                    for fraction in controls:
+                        to_create.append({
+                            'notebook_line': notebook_line,
+                            'fraction': fraction,
+                            })
+                NotebookLineControl.create(to_create)
+
+    def update_analysis_detail(self):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        PlanificationDetail = pool.get('lims.planification.detail')
         PlanificationServiceDetail = pool.get(
             'lims.planification.service_detail')
         NotebookLine = pool.get('lims.notebook.line')
-
-        controls = [f.id for f in self.controls]
-
-        notebook_lines = []
-        service_details = PlanificationServiceDetail.search([
-            ('detail.planification', '=', self.id),
-            ('notebook_line', '!=', None),
-            ])
-        for service_detail in service_details:
-            notebook_line = NotebookLine(
-                service_detail.notebook_line.id)
-            notebook_line.start_date = self.start_date
-            notebook_line.laboratory_professionals = [p.id
-                for p in service_detail.staff_responsible]
-            notebook_line.planification = self.id
-            if not service_detail.is_control:
-                notebook_line.controls = controls
-            notebook_lines.append(notebook_line)
-        if notebook_lines:
-            NotebookLine.save(notebook_lines)
-
-    def update_analysis_detail(self):
-        pool = Pool()
-        PlanificationServiceDetail = pool.get(
-            'lims.planification.service_detail')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
-        analysis_detail_ids = []
-        service_details = PlanificationServiceDetail.search([
-            ('detail.planification', '=', self.id),
-            ('notebook_line.analysis_detail', '!=', None),
-            ])
-        for service_detail in service_details:
-            analysis_detail_ids.append(
-                service_detail.notebook_line.analysis_detail.id)
-
-        analysis_details = EntryDetailAnalysis.search([
-            ('id', 'in', analysis_detail_ids),
-            ])
+        cursor.execute('SELECT nl.analysis_detail '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + PlanificationServiceDetail._table + '" sd '
+                'ON nl.id = sd.notebook_line '
+                'INNER JOIN "' + PlanificationDetail._table + '" pd '
+                'ON pd.id = sd.detail '
+            'WHERE pd.planification = %s '
+                'AND nl.analysis_detail IS NOT NULL',
+            (self.id,))
+        analysis_details = EntryDetailAnalysis.browse(x[0]
+            for x in cursor.fetchall())
         if analysis_details:
-            EntryDetailAnalysis.write(analysis_details, {
-                'state': 'planned',
-                })
+            EntryDetailAnalysis.write(analysis_details, {'state': 'planned'})
 
     @classmethod
     @ModelView.button
