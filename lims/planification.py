@@ -334,7 +334,6 @@ class Planification(Workflow, ModelSQL, ModelView):
     def do_confirm(cls, planifications):
         for planification in planifications:
             planification.update_laboratory_notebook()
-            planification.update_analysis_detail()
             if planification.waiting_process:
                 planification.waiting_process = False
                 planification.save()
@@ -5322,6 +5321,7 @@ class TechniciansQualification(Wizard):
         planification.state = 'confirmed'
         planification.save()
         planification.pre_update_laboratory_notebook()
+        planification.update_analysis_detail()
         Planification.__queue__.do_confirm([planification])
         return 'end'
 
