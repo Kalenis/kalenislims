@@ -223,9 +223,10 @@ class ResultsReport(ModelSQL, ModelView):
                 'ON r.entry = e.id '
             'WHERE e.single_sending_report = TRUE')
         single_sending_ids = [x[0] for x in cursor.fetchall()]
-        for report in ResultsReport.browse(single_sending_ids):
-            if not report.single_sending_report_ready:
-                excluded_ids.append(report.id)
+        with Transaction().set_user(0):
+            for report in ResultsReport.browse(single_sending_ids):
+                if not report.single_sending_report_ready:
+                    excluded_ids.append(report.id)
         excluded_ids = ', '.join(str(r) for r in [0] + excluded_ids)
 
         cursor.execute('SELECT rv.results_report '
