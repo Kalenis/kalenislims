@@ -157,9 +157,10 @@ class Service(metaclass=PoolMeta):
 
         lines_to_delete = []
         for service in services:
-            lines = InvoiceLine.search([
-                ('origin', '=', str(service)),
-                ])
+            with Transaction().set_context(_check_access=False):
+                lines = InvoiceLine.search([
+                    ('origin', '=', str(service)),
+                    ])
             lines_to_delete.extend(lines)
         if lines_to_delete:
             for line in lines_to_delete:
