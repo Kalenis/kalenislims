@@ -50,7 +50,7 @@ class PdfGenerator:
             )
         stylesheets = [CSS(string=content_print_layout)]
         for sheet in self.stylesheets:
-            stylesheets.append(CSS(string=sheet))
+            stylesheets.append(CSS(string=sheet or ''))
 
         html = HTML(
             string=self.main_html,
@@ -70,7 +70,7 @@ class PdfGenerator:
             '\nfooter {position: fixed; width: 100%; bottom: 0;}')
         stylesheets = [CSS(string=overlay_layout)]
         for sheet in self.stylesheets:
-            stylesheets.append(CSS(string=sheet))
+            stylesheets.append(CSS(string=sheet or ''))
 
         html = HTML(
             string=getattr(self, '{}_html'.format(element)),
