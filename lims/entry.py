@@ -55,9 +55,10 @@ class Entry(Workflow, ModelSQL, ModelView):
         states={
             'required': ~Eval('multi_party'),
             'invisible': Bool(Eval('multi_party')),
-            'readonly': Eval('state') != 'draft',
+            'readonly': ((Eval('state') != 'draft')
+                | (Eval('samples', [0]))),
             },
-        depends=['multi_party', 'state'])
+        depends=['multi_party', 'state', 'samples'])
     invoice_party = fields.Many2One('party.party', 'Invoice party',
         states={
             'required': True,
