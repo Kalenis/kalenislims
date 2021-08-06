@@ -501,15 +501,21 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         'lims.comercial.product', 'Comercial Product'), 'get_notebook_field')
     precedent1 = fields.Many2One('lims.notebook', 'Precedent 1',
         domain=[If(~Eval('free_precedents'),
-            ('component', '=', Eval('component')), ())],
+            [('component', '=', Eval('component')),
+            ('fraction.sample.state', '!=', 'annulled')],
+            [('fraction.sample.state', '!=', 'annulled')])],
         depends=['free_precedents', 'component'])
     precedent2 = fields.Many2One('lims.notebook', 'Precedent 2',
         domain=[If(~Eval('free_precedents'),
-            ('component', '=', Eval('component')), ())],
+            [('component', '=', Eval('component')),
+            ('fraction.sample.state', '!=', 'annulled')],
+            [('fraction.sample.state', '!=', 'annulled')])],
         depends=['free_precedents', 'component'])
     precedent3 = fields.Many2One('lims.notebook', 'Precedent 3',
         domain=[If(~Eval('free_precedents'),
-            ('component', '=', Eval('component')), ())],
+            [('component', '=', Eval('component')),
+            ('fraction.sample.state', '!=', 'annulled')],
+            [('fraction.sample.state', '!=', 'annulled')])],
         depends=['free_precedents', 'component'])
     precedent4 = fields.Many2One('lims.notebook', 'Precedent 4',
         domain=[('component', '=', Eval('component'))],
