@@ -6,7 +6,6 @@
     <field name="samples_qty"/>
     <field name="completion_percentage" widget="progressbar"/>
     <button name="view_data" string="View data"/>
-    <field name="button_view_data_available" tree_invisible="1"/>
     <field name="date" widget="date"/>
     <field name="urgent"/>
     <field name="state"/>

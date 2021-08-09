@@ -420,8 +420,6 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         depends=['state', 'interface'])
     interface = fields.Function(fields.Many2One('lims.interface', 'Interface'),
         'get_interface')
-    button_view_data_available = fields.Function(fields.Boolean(
-        'Button view data available'), 'get_button_view_data_available')
 
     @classmethod
     def __setup__(cls):
@@ -446,12 +444,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 'depends': ['state'],
                 },
             'view_data': {
-                'invisible': ~Eval('button_view_data_available'),
-                'depends': ['button_view_data_available'],
+                'invisible': Eval('state') == 'draft',
+                'depends': ['state'],
                 },
             'view_grouped_data': {
-                'invisible': ~Eval('button_view_data_available'),
-                'depends': ['button_view_data_available'],
+                'invisible': Eval('state') == 'draft',
+                'depends': ['state'],
                 },
             'validate_': {
                 'invisible': Eval('state') != 'active',
@@ -604,29 +602,6 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
     def get_interface(self, name):
         return self.compilation.interface.id
-
-    @classmethod
-    def get_button_view_data_available(cls, sheets, name):
-        ModelData = Pool().get('ir.model.data')
-
-        user_id = Transaction().user
-        group_id = ModelData.get_id('lims_analysis_sheet',
-            'group_analysis_sheet_view_data')
-        allowed_group = (group_id in Transaction().context.get('groups'))
-
-        result = {}
-        for s in sheets:
-            if s.state == 'draft':
-                result[s.id] = False
-                continue
-            if allowed_group:
-                result[s.id] = True
-                continue
-            if s.professional.party.lims_user.id == user_id:
-                result[s.id] = True
-                continue
-            result[s.id] = False
-        return result
 
     @classmethod
     def create(cls, vlist):
