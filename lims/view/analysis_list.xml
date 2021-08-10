@@ -14,6 +14,7 @@
     <field name="formula"/>
     <field name="order"/>
     <field name="disable_as_individual"/>
+    <field name="validate_limits_after_calculation"/>
     <field name="estimated_waiting_laboratory"/>
     <field name="estimated_waiting_report"/>
     <field name="state"/>

@@ -937,6 +937,13 @@ class Analysis(Workflow, ModelSQL, ModelView):
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
             },
         depends=['type', 'behavior', 'state'])
+    validate_limits_after_calculation = fields.Boolean(
+        'Validate limits after calculation ', states={
+            'invisible': Not(
+                Bool(Equal(Eval('behavior'), 'internal_relation'))),
+            'readonly': Bool(Equal(Eval('state'), 'disabled')),
+            },
+        depends=['behavior', 'state'])
     state = fields.Selection([
         ('draft', 'Draft'),
         ('active', 'Active'),
@@ -998,6 +1005,10 @@ class Analysis(Workflow, ModelSQL, ModelView):
 
     @staticmethod
     def default_disable_as_individual():
+        return False
+
+    @staticmethod
+    def default_validate_limits_after_calculation():
         return False
 
     @staticmethod

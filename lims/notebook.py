@@ -2570,7 +2570,8 @@ class NotebookInternalRelationsCalc1(Wizard):
         relations = NotebookInternalRelationsCalc1Relation.search([
             ('session_id', '=', self._session_id),
             ])
-        notebook_lines_to_save = []
+        lines_to_save = []
+        lines_to_validate_limits = []
         for relation in relations:
             notebook_lines = NotebookLine.search([
                 ('notebook', '=', relation.notebook.id),
@@ -2596,9 +2597,22 @@ class NotebookInternalRelationsCalc1(Wizard):
                 if notebook_line.laboratory.automatic_accept_result:
                     notebook_line.accepted = True
                     notebook_line.acceptance_date = datetime.now()
-                notebook_lines_to_save.append(notebook_line)
-        NotebookLine.save(notebook_lines_to_save)
+                lines_to_save.append(notebook_line)
+                if notebook_line.analysis.validate_limits_after_calculation:
+                    lines_to_validate_limits.append(notebook_line)
+        NotebookLine.save(lines_to_save)
+
+        if lines_to_validate_limits:
+            self.validate_limits(lines_to_validate_limits)
         return 'end'
+
+    def validate_limits(self, notebook_lines):
+        pool = Pool()
+        LimitsValidation = pool.get('lims.notebook.limits_validation',
+            type='wizard')
+        session_id, _, _ = LimitsValidation.create()
+        limits_validation = LimitsValidation(session_id)
+        limits_validation.lines_limits_validation(notebook_lines)
 
     def _get_analysis_result(self, analysis_code, notebook, relation_code,
             converted=False):
