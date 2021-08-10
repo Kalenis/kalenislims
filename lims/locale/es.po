@@ -134,6 +134,10 @@ msgctxt "field:lims.analysis,type:"
 msgid "Type"
 msgstr "Tipo"
 
+msgctxt "field:lims.analysis,validate_limits_after_calculation:"
+msgid "Validate limits after calculation "
+msgstr "Validar límites después del cálculo"
+
 msgctxt "field:lims.analysis-lab.method,analysis:"
 msgid "Analysis"
 msgstr "Análisis"

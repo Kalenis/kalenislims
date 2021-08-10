@@ -30,6 +30,10 @@
         <label name="disable_as_individual"/>
         <field name="disable_as_individual" xexpand="0"/>
     </group>
+    <group id="validate_limits_after_calculation" colspan="2" col="2">
+        <label name="validate_limits_after_calculation"/>
+        <field name="validate_limits_after_calculation" xexpand="0"/>
+    </group>
     <notebook>
         <page string="Laboratories" id="laboratories" >
             <field name="laboratories" colspan="4"/>
