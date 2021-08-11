@@ -4568,6 +4568,15 @@ msgctxt "field:lims.planification.search_fractions.detail,report_date:"
 msgid "Date agreed for result"
 msgstr "Fecha pactada de resultado"
 
+msgctxt ""
+"field:lims.planification.search_fractions.detail,results_estimated_date:"
+msgid "Estimated date of result"
+msgstr "Fecha estimada de resultado"
+
+msgctxt "field:lims.planification.search_fractions.detail,sample_state:"
+msgid "State"
+msgstr "Estado"
+
 msgctxt "field:lims.planification.search_fractions.detail,service_analysis:"
 msgid "Service"
 msgstr "Servicio"

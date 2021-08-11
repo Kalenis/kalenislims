@@ -12,6 +12,8 @@
     <field name="create_date2" widget="date"/>
     <field name="laboratory_date"/>
     <field name="report_date"/>
+    <field name="results_estimated_date"/>
     <field name="completion_percentage" widget="progressbar"/>
+    <field name="sample_state"/>
     <field name="department"/>
 </tree>
