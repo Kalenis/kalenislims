@@ -786,7 +786,7 @@ class NotebookLine(ModelSQL, ModelView):
     notebook = fields.Many2One('lims.notebook', 'Laboratory notebook',
         ondelete='CASCADE', select=True, required=True)
     analysis_detail = fields.Many2One('lims.entry.detail.analysis',
-        'Analysis detail', select=True)
+        'Analysis detail', ondelete='CASCADE', select=True)
     service = fields.Many2One('lims.service', 'Service', readonly=True,
         ondelete='CASCADE', select=True)
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
