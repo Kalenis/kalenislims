@@ -630,16 +630,15 @@ class Service(ModelSQL, ModelView):
                     service.analysis, service.analysis.code,
                     service_context))
 
-            if analysis_data:
-                for analysis in analysis_data:
-                    values = {}
-                    values['service'] = service.id
-                    values['analysis'] = analysis['id']
-                    values['analysis_origin'] = analysis['origin']
-                    values['laboratory'] = analysis['laboratory']
-                    values['method'] = analysis['method']
-                    values['device'] = analysis['device']
-                    to_create.append(values)
+            for analysis in analysis_data:
+                values = {}
+                values['service'] = service.id
+                values['analysis'] = analysis['id']
+                values['analysis_origin'] = analysis['origin']
+                values['laboratory'] = analysis['laboratory']
+                values['method'] = analysis['method']
+                values['device'] = analysis['device']
+                to_create.append(values)
 
             if to_create:
                 with Transaction().set_user(0, set_context=True):
@@ -3812,8 +3811,7 @@ class CompleteServices(Wizard):
         Fraction = Pool().get('lims.fraction')
         fraction = Fraction(Transaction().context['active_id'])
         for service in fraction.services:
-            if service.analysis.behavior != 'additional':
-                self.complete_analysis_detail(service)
+            self.complete_analysis_detail(service)
         return 'end'
 
     def complete_analysis_detail(self, service):
@@ -3821,6 +3819,18 @@ class CompleteServices(Wizard):
         pool = Pool()
         Service = pool.get('lims.service')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        if service.annulled:
+            return
+        to_delete = EntryDetailAnalysis.search([
+            ('service', '=', service.id),
+            ('state', 'in', ('draft', 'unplanned')),
+            ])
+        if to_delete:
+            with Transaction().set_user(0, set_context=True):
+                EntryDetailAnalysis.delete(to_delete)
+        if service.analysis.behavior == 'additional':
+            return
 
         analysis_data = []
         if service.analysis.type == 'analysis':
@@ -3848,8 +3858,9 @@ class CompleteServices(Wizard):
         to_create = []
         for analysis in analysis_data:
             if EntryDetailAnalysis.search_count([
-                    ('service', '=', service.id),
+                    ('fraction', '=', service.fraction.id),
                     ('analysis', '=', analysis['id']),
+                    ('method', '=', analysis['method']),
                     ]) != 0:
                 continue
             values = {}
