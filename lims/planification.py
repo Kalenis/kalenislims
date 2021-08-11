@@ -3777,10 +3777,14 @@ class SearchFractionsDetail(ModelSQL, ModelView):
         'get_service_field')
     report_date = fields.Function(fields.Date('Date agreed for result'),
         'get_service_field')
+    results_estimated_date = fields.Function(fields.Date(
+        'Estimated date of result'), 'get_results_estimated_date')
     completion_percentage = fields.Function(fields.Numeric('Complete',
         digits=(1, 4)), 'get_completion_percentage')
     department = fields.Function(fields.Many2One('company.department',
         'Department'), 'get_department', searcher='search_department')
+    sample_state = fields.Function(fields.Selection(
+        'get_sample_states', 'State'), 'get_sample_state')
     session_id = fields.Integer('Session ID')
 
     @classmethod
@@ -3794,6 +3798,19 @@ class SearchFractionsDetail(ModelSQL, ModelView):
         super().__setup__()
         cls._order.insert(0, ('fraction', 'ASC'))
         cls._order.insert(1, ('service_analysis', 'ASC'))
+
+    @classmethod
+    def get_sample_states(cls):
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        return Sample.fields_get(['state'])['state']['selection']
+
+    @classmethod
+    def get_sample_state(cls, details, name):
+        result = {}
+        for d in details:
+            result[d.id] = getattr(d.fraction.sample, 'state', None)
+        return result
 
     @classmethod
     def get_fraction_field(cls, details, names):
@@ -3812,6 +3829,24 @@ class SearchFractionsDetail(ModelSQL, ModelView):
     @classmethod
     def search_fraction_field(cls, name, clause):
         return [('fraction.' + name,) + tuple(clause[1:])]
+
+    def _order_fraction_field(name):
+        def order_field(tables):
+            Fraction = Pool().get('lims.fraction')
+            field = Fraction._fields[name]
+            table, _ = tables[None]
+            fraction_tables = tables.get('fraction')
+            if fraction_tables is None:
+                fraction = Fraction.__table__()
+                fraction_tables = {
+                    None: (fraction, fraction.id == table.fraction),
+                    }
+                tables['fraction'] = fraction_tables
+            return field.convert_order(name, fraction_tables, Fraction)
+        return staticmethod(order_field)
+    # Redefine convert_order function with 'order_%s' % field
+    order_product_type = _order_fraction_field('product_type')
+    order_matrix = _order_fraction_field('matrix')
 
     @classmethod
     def get_service_field(cls, details, names):
@@ -3848,6 +3883,42 @@ class SearchFractionsDetail(ModelSQL, ModelView):
         if (op, operand) in (('=', True), ('!=', False)):
             return [('id', 'in', urgent_services)]
         return [('id', 'not in', urgent_services)]
+
+    @classmethod
+    def get_results_estimated_date(cls, details, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Service = pool.get('lims.service')
+        Notebook = pool.get('lims.notebook')
+
+        result = {}
+        for d in details:
+            cursor.execute('SELECT ad.confirmation_date, '
+                    'nl.results_estimated_waiting '
+                'FROM "' + NotebookLine._table + '" nl '
+                    'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
+                    'ON ad.id = nl.analysis_detail '
+                    'INNER JOIN "' + Service._table + '" srv '
+                    'ON srv.id = nl.service '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON n.id = nl.notebook '
+                'WHERE n.fraction = %s '
+                    'AND srv.analysis = %s '
+                    'AND ad.confirmation_date IS NOT NULL '
+                    'AND nl.results_estimated_waiting IS NOT NULL',
+                (str(d.fraction.id), str(d.service_analysis.id)))
+            date = None
+            for x in cursor.fetchall():
+                line_date = NotebookLine._get_results_estimated_date(
+                    x[0], x[1])
+                if not line_date:
+                    continue
+                if not date or date > line_date:
+                    date = line_date
+            result[d.id] = date
+        return result
 
     @classmethod
     def get_completion_percentage(cls, details, name):
