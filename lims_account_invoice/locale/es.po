@@ -2,26 +2,6 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "model:ir.message,text:msg_delete_service_invoice"
-msgid "You can not delete an invoice line related to a service (\"%(service)s\")"
-msgstr "No puede eliminar una línea de factura relacionada a un servicio (\"%(service)s\")"
-
-msgctxt "model:ir.message,text:msg_not_invoice_contacts"
-msgid "Invoice Contacts field must have a value"
-msgstr "El campo Contactos de factura debe tener un valor"
-
-msgctxt "model:ir.message,text:msg_missing_account_revenue"
-msgid ""
-"Analysis product \"%(product)s\" in Service \"%(service)s\" misses an "
-"\"account revenue\"."
-msgstr ""
-"Al producto \"%(product)s\" del análisis del servicio \"%(service)s\" le "
-"falta una \"cuenta de ingresos\"."
-
-msgctxt "field:account.invoice,currency_rate:"
-msgid "Currency rate"
-msgstr "Cotización"
-
 msgctxt "field:account.invoice,entries_comments:"
 msgid "Entries comments"
 msgstr "Observaciones ingresos"
@@ -29,10 +9,6 @@ msgstr "Observaciones ingresos"
 msgctxt "field:account.invoice,invoice_contacts:"
 msgid "Invoice contacts"
 msgstr "Contactos de factura"
-
-msgctxt "field:account.invoice,lims_project:"
-msgid "TAS Project"
-msgstr "Proyecto SAT"
 
 msgctxt "field:account.invoice,no_send_invoice:"
 msgid "No send invoice"
@@ -50,33 +26,9 @@ msgctxt "field:account.invoice.invoice_contacts,contact:"
 msgid "Contact"
 msgstr "Contacto"
 
-msgctxt "field:account.invoice.invoice_contacts,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:account.invoice.invoice_contacts,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:account.invoice.invoice_contacts,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:account.invoice.invoice_contacts,invoice:"
 msgid "Invoice"
 msgstr "Factura"
-
-msgctxt "field:account.invoice.invoice_contacts,rec_name:"
-msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:account.invoice.invoice_contacts,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:account.invoice.invoice_contacts,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:account.invoice.line,lims_service_entry:"
 msgid "Entry"
@@ -98,10 +50,6 @@ msgctxt "field:account.invoice.line,party_domain:"
 msgid "Party domain"
 msgstr "Dominio para Entidad"
 
-msgctxt "field:account.invoice.populate_invoice_contacts.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.configuration,mail_send_invoice_body:"
 msgid "Email body of Invoice report"
 msgstr "Cuerpo del correo de Informe de factura"
@@ -110,13 +58,41 @@ msgctxt "field:lims.configuration,mail_send_invoice_subject:"
 msgid "Email subject of Invoice report"
 msgstr "Asunto del correo de Informe de factura"
 
+msgctxt "field:lims.entry,last_release_date:"
+msgid "Last Release date"
+msgstr "Última Fecha de publicación"
+
+msgctxt "field:lims.entry,qty_lines_pending_invoicing:"
+msgid "Lines pending invoicing"
+msgstr "Líneas pendientes de facturación"
+
 msgctxt "field:lims.fraction.type,invoiceable:"
 msgid "Invoiceable"
 msgstr "Facturable"
 
+msgctxt "field:party.address,commercial_item:"
+msgid "Commercial Item"
+msgstr "Rubro comercial"
+
+msgctxt "field:party.address,commercial_zone:"
+msgid "Commercial Zone"
+msgstr "Región comercial"
+
+msgctxt "field:party.party,commercial_item:"
+msgid "Commercial Item"
+msgstr "Rubro comercial"
+
+msgctxt "field:party.party,commercial_zone:"
+msgid "Commercial Zone"
+msgstr "Región comercial"
+
 msgctxt "field:party.party,no_send_invoice:"
 msgid "No send invoice"
 msgstr "No envía factura"
+
+msgctxt "field:stock.inventory.line,account_move:"
+msgid "Account Move"
+msgstr "Asiento contable"
 
 msgctxt "help:account.invoice,no_send_invoice:"
 msgid "If checked, then the invoice will not be mailed to contacts."
@@ -147,25 +123,153 @@ msgctxt "model:account.invoice.populate_invoice_contacts.start,name:"
 msgid "Populate Invoice Contacts Start"
 msgstr "Completar contactos de factura - Inicio"
 
+msgctxt "model:ir.action,name:act_entries_ready_for_invoicing"
+msgid "Entries Ready for Invoicing"
+msgstr "Ingresos listos para facturación"
+
+msgctxt "model:ir.action,name:act_invoice_line"
+msgid "Invoice Lines"
+msgstr "Lineas de factura"
+
+msgctxt "model:ir.action,name:report_entries_ready_for_invoicing"
+msgid "Entries Ready for Invoicing"
+msgstr "Ingresos listos para facturación"
+
 msgctxt "model:ir.action,name:wiz_account_invoice_populate_invoice_contacts"
 msgid "Populate Invoice Contacts"
 msgstr "Completar contactos de factura"
+
+msgctxt "model:ir.action,name:wiz_open_entries_ready_for_invoicing"
+msgid "Entries Ready for Invoicing"
+msgstr "Ingresos listos para facturación"
+
+msgctxt "model:ir.action,name:wiz_open_lines_pending_invoicing"
+msgid "Lines Pending Invoicing"
+msgstr "Líneas pendientes de facturación"
 
 msgctxt "model:ir.action,name:wiz_send_invoice"
 msgid "Send Invoice"
 msgstr "Enviar factura"
 
-msgctxt "model:ir.cron,name:cron_account_invoice_send_invoice"
-msgid "Send Invoice"
-msgstr "Enviar factura"
+msgctxt "model:ir.message,text:msg_delete_service_invoice"
+msgid "You can not delete an invoice line related to a service (\"%(service)s\")"
+msgstr ""
+"No puede eliminar una línea de factura relacionada a un servicio "
+"(\"%(service)s\")"
 
-msgctxt "model:res.group,name:group_lims_account_invoice"
-msgid "Lims Account Invoice"
-msgstr "Lims Facturación"
+msgctxt "model:ir.message,text:msg_missing_account_revenue"
+msgid ""
+"Analysis product \"%(product)s\" in Service \"%(service)s\" misses an "
+"\"account revenue\"."
+msgstr ""
+"Al producto \"%(product)s\" del análisis del servicio \"%(service)s\" le "
+"falta una \"cuenta de ingresos\"."
 
-msgctxt "model:res.user,name:user_send_invoice"
-msgid "Cron Send Of Invoice"
-msgstr "Programador de Envío de factura"
+msgctxt "model:ir.message,text:msg_not_invoice_contacts"
+msgid "Invoice Contacts field must have a value"
+msgstr "El campo Contactos de factura debe tener un valor"
+
+msgctxt "model:ir.ui.menu,name:menu_entry_for_invoicing"
+msgid "Entries Ready for Invoicing"
+msgstr "Ingresos listos para facturación"
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "("
+msgstr "("
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid ")"
+msgstr ")"
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid ","
+msgstr ","
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "/for"
+msgstr ""
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "00/00/0000"
+msgstr ""
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "00:00:00"
+msgstr ""
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "???"
+msgstr ""
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "Date"
+msgstr "Fecha de ingreso"
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "Entries Ready for Invoicing"
+msgstr "Ingresos listos para facturación"
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "Entry"
+msgstr "Ingreso"
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "Last Release date"
+msgstr "Última Fecha de publicación"
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "Lines pending invoicing"
+msgstr "Líneas pendientes de facturación"
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "Party"
+msgstr "Entidad"
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "Print date:"
+msgstr "Fecha de Impresión:"
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "Página"
+msgstr ""
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid ""
+"entry.last_release_date and format_date(entry.last_release_date, "
+"user.language) or ''"
+msgstr ""
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "entry.party and entry.party.rec_name or entry.invoice_party.rec_name"
+msgstr ""
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "entry.qty_lines_pending_invoicing"
+msgstr ""
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "entry.rec_name"
+msgstr ""
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "for each=\"entry in records\""
+msgstr ""
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "format_date(datetime.date.today(), user.language)"
+msgstr ""
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "format_date(entry.date2, user.language)"
+msgstr ""
+
+msgctxt "selection:ir.cron,method:"
+msgid "Send Of Invoice"
+msgstr "Envío de factura"
 
 msgctxt "view:account.invoice.invoice_contacts:"
 msgid "Invoice Contact"
@@ -174,10 +278,6 @@ msgstr "Contacto de factura"
 msgctxt "view:account.invoice.invoice_contacts:"
 msgid "Invoice Contacts"
 msgstr "Contactos de factura"
-
-msgctxt "view:account.invoice.populate_invoice_contacts.start:"
-msgid "Populate Invoice Contacts"
-msgstr "Completar contactos de factura"
 
 msgctxt "view:account.invoice.populate_invoice_contacts.start:"
 msgid "Populate Invoice Contacts?"
@@ -199,6 +299,10 @@ msgctxt "view:lims.configuration:"
 msgid "Mail Invoice Report"
 msgstr "Email Informe de Factura"
 
+msgctxt "view:lims.entry:"
+msgid "Hora"
+msgstr "Hora"
+
 msgctxt "wizard_button:account.invoice.populate_invoice_contacts,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
@@ -207,19 +311,3 @@ msgctxt ""
 "wizard_button:account.invoice.populate_invoice_contacts,start,populate:"
 msgid "Populate"
 msgstr "Completar"
-
-msgctxt "field:party.party,commercial_item:"
-msgid "Commercial Item"
-msgstr "Rubro comercial"
-
-msgctxt "field:party.party,commercial_zone:"
-msgid "Commercial Zone"
-msgstr "Región comercial"
-
-msgctxt "field:party.address,commercial_item:"
-msgid "Commercial Item"
-msgstr "Rubro comercial"
-
-msgctxt "field:party.address,commercial_zone:"
-msgid "Commercial Zone"
-msgstr "Región comercial"
