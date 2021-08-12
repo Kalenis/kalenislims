@@ -687,6 +687,7 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         precedents = Notebook.search([
             ('id', '!=', sample.notebook.id),
             ('component', '=', sample.component),
+            ('fraction.sample.state', '!=', 'annulled'),
             ('invoice_party', '=', sample.notebook.invoice_party),
             ], order=[('id', 'DESC')], limit=3)
         return precedents
