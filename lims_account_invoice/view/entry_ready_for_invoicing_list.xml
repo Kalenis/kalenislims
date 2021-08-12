@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="number" icon="icon"/>
+    <field name="date" widget="date"/>
+    <field name="date" widget="time" string="Hora"/>
+    <field name="create_date2" widget="date"/>
+    <field name="create_date2" widget="time" string="Hora"/>
+    <field name="party"/>
+    <field name="invoice_party_view"/>
+    <field name="qty_lines_pending_invoicing"/>
+    <field name="last_release_date" widget="date"/>
+    <field name="last_release_date" widget="time" string="Hora"/>
+    <field name="result_cron"/>
+    <field name="sent_date" widget="date"/>
+    <field name="sent_date" widget="time" string="Hora"/>
+</tree>

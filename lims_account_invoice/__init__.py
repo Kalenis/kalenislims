@@ -30,6 +30,11 @@ def register():
         lims.ManageServices,
         lims.EditSampleService,
         lims.AddSampleService,
+        lims.OpenEntriesReadyForInvoicing,
+        lims.OpenLinesPendingInvoicing,
         invoice.PopulateInvoiceContacts,
         invoice.SendOfInvoice,
         module='lims_account_invoice', type_='wizard')
+    Pool.register(
+        lims.EntriesReadyForInvoicingSpreadsheet,
+        module='lims_account_invoice', type_='report')
