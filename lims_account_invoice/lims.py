@@ -2,10 +2,15 @@
 # This file is part of lims_account_invoice module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import operator
+from collections import defaultdict
 from decimal import Decimal
 
 from trytond.model import fields
+from trytond.wizard import Wizard, StateAction
+from trytond.report import Report
 from trytond.pool import Pool, PoolMeta
+from trytond.pyson import PYSONEncoder
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
@@ -24,6 +29,79 @@ class FractionType(metaclass=PoolMeta):
 class Entry(metaclass=PoolMeta):
     __name__ = 'lims.entry'
 
+    last_release_date = fields.Function(fields.DateTime(
+        'Last Release date'), 'get_last_release_date')
+    qty_lines_pending_invoicing = fields.Function(fields.Integer(
+        'Lines pending invoicing'), 'get_qty_lines_pending_invoicing')
+
+    @classmethod
+    def get_last_release_date(cls, entries, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        ResultsVersion = pool.get('lims.results_report.version')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        NotebookLine = pool.get('lims.notebook.line')
+        Notebook = pool.get('lims.notebook')
+        Fraction = pool.get('lims.fraction')
+        Sample = pool.get('lims.sample')
+
+        result = {}
+        for e in entries:
+            cursor.execute('SELECT MAX(rd.release_date) '
+                'FROM "' + ResultsVersion._table + '" rv '
+                    'INNER JOIN "' + ResultsDetail._table + '" rd '
+                    'ON rv.id = rd.report_version '
+                    'INNER JOIN "' + NotebookLine._table + '" nl '
+                    'ON nl.results_report = rv.results_report '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON n.id = nl.notebook '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = n.fraction '
+                    'INNER JOIN "' + Sample._table + '" s '
+                    'ON s.id = f.sample '
+                'WHERE s.entry = %s '
+                    'AND rd.state = \'released\' '
+                    'AND rd.type != \'preliminary\'',
+                (str(e.id),))
+            result[e.id] = cursor.fetchone()[0]
+
+        return result
+
+    @classmethod
+    def get_qty_lines_pending_invoicing(cls, entries, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Service = pool.get('lims.service')
+        InvoiceLine = pool.get('account.invoice.line')
+
+        result = {}
+        for e in entries:
+            result[e.id] = 0
+
+            cursor.execute('SELECT srv.id '
+                'FROM "' + Service._table + '" srv '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = srv.fraction '
+                    'INNER JOIN "' + Sample._table + '" s '
+                    'ON s.id = f.sample '
+                'WHERE s.entry = %s',
+                (str(e.id),))
+            services_ids = [x[0] for x in cursor.fetchall()]
+            if not services_ids:
+                continue
+
+            origins = '\', \''.join(['lims.service,' + str(s)
+                for s in services_ids])
+            cursor.execute('SELECT COUNT(*) '
+                'FROM "' + InvoiceLine._table + '" '
+                'WHERE origin IN (\'' + origins + '\') '
+                    'AND invoice IS NULL')
+            result[e.id] = cursor.fetchone()[0]
+
+        return result
+
     @classmethod
     def on_hold(cls, entries):
         super().on_hold(entries)
@@ -40,6 +118,57 @@ class Entry(metaclass=PoolMeta):
                 ])
         for service in services:
             service.create_invoice_line()
+
+    @classmethod
+    def view_toolbar_get(cls):
+        if not Transaction().context.get('ready_for_invoicing', False):
+            return super().view_toolbar_get()
+
+        # Entries Ready for Invoicing uses specific keywords
+        prints = cls.get_entries_ready_for_invoicing_keyword('form_print')
+        actions = cls.get_entries_ready_for_invoicing_keyword('form_action')
+        relates = cls.get_entries_ready_for_invoicing_keyword('form_relate')
+        result = {
+            'print': prints,
+            'action': actions,
+            'relate': relates,
+            'exports': [],
+            }
+        return result
+
+    @classmethod
+    def get_entries_ready_for_invoicing_keyword(cls, keyword):
+        """
+        Method copied from ActionKeyword. It search for specific keywords
+        for Entries Ready for Invoicing: lims.entry,-2
+        """
+        pool = Pool()
+        ActionKeyword = pool.get('ir.action.keyword')
+        Action = pool.get('ir.action')
+
+        key = (keyword, ('lims.entry', -2))
+        keywords = ActionKeyword._get_keyword_cache.get(key)
+        if keywords is not None:
+            return keywords
+
+        clause = [
+            ('keyword', '=', keyword),
+            ('model', '=', 'lims.entry,-2'),
+            ('action.active', '=', True),
+            ]
+        action_keywords = ActionKeyword.search(clause, order=[])
+        types = defaultdict(list)
+        for action_keyword in action_keywords:
+            type_ = action_keyword.action.type
+            types[type_].append(action_keyword.action.id)
+        keywords = []
+        for type_, action_ids in types.items():
+            for value in Action.get_action_values(type_, action_ids):
+                value['keyword'] = keyword
+                keywords.append(value)
+        keywords.sort(key=operator.itemgetter('name'))
+        ActionKeyword._get_keyword_cache.set(key, keywords)
+        return keywords
 
 
 class Fraction(metaclass=PoolMeta):
@@ -197,3 +326,116 @@ class AddSampleService(metaclass=PoolMeta):
         new_service = super().create_service(service, fraction)
         new_service.create_invoice_line()
         return new_service
+
+
+class OpenEntriesReadyForInvoicing(Wizard):
+    'Entries Ready for Invoicing'
+    __name__ = 'lims.entries_ready_for_invoicing'
+
+    start_state = 'open_'
+    open_ = StateAction('lims_account_invoice.act_entries_ready_for_invoicing')
+
+    def _get_entries_ready_for_invoicing(self):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        InvoiceLine = pool.get('account.invoice.line')
+        NotebookLine = pool.get('lims.notebook.line')
+        Notebook = pool.get('lims.notebook')
+        Fraction = pool.get('lims.fraction')
+        Sample = pool.get('lims.sample')
+
+        cursor.execute('SELECT origin '
+            'FROM "' + InvoiceLine._table + '" '
+            'WHERE origin LIKE \'lims.service,%\' '
+                'AND invoice IS NULL')
+        invoiced_services = [x[0][13:] for x in cursor.fetchall()]
+        if not invoiced_services:
+            return []
+        services_ids = ', '.join(s for s in invoiced_services)
+
+        cursor.execute('SELECT DISTINCT(service) '
+            'FROM "' + NotebookLine._table + '" '
+            'WHERE service IN (' + services_ids + ') '
+                'AND (annulled = FALSE '
+                'AND report = TRUE '
+                'AND results_report IS NULL)')
+        pending_services = [str(x[0]) for x in cursor.fetchall()]
+
+        services = list(set(invoiced_services) - set(pending_services))
+        services_ids = ', '.join(s for s in services)
+
+        cursor.execute('SELECT DISTINCT(s.entry) '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON n.id = nl.notebook '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + Sample._table + '" s '
+                'ON s.id = f.sample '
+            'WHERE nl.service IN (' + services_ids + ')')
+        entries_ids = [x[0] for x in cursor.fetchall()]
+        if not entries_ids:
+            return []
+        return entries_ids
+
+    def do_open_(self, action):
+        entries_ids = self._get_entries_ready_for_invoicing()
+        action['pyson_context'] = PYSONEncoder().encode({
+            'ready_for_invoicing': True,
+            })
+        action['pyson_domain'] = PYSONEncoder().encode([
+            ('id', 'in', entries_ids),
+            ])
+        return action, {}
+
+
+class OpenLinesPendingInvoicing(Wizard):
+    'Lines Pending Invoicing'
+    __name__ = 'lims.lines_pending_invoicing'
+
+    start_state = 'open_'
+    open_ = StateAction('lims_account_invoice.act_invoice_line')
+
+    def do_open_(self, action):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Entry = pool.get('lims.entry')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Service = pool.get('lims.service')
+        InvoiceLine = pool.get('account.invoice.line')
+
+        lines_ids = []
+        entries = Entry.browse(Transaction().context['active_ids'])
+        for entry in entries:
+            cursor.execute('SELECT srv.id '
+                'FROM "' + Service._table + '" srv '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = srv.fraction '
+                    'INNER JOIN "' + Sample._table + '" s '
+                    'ON s.id = f.sample '
+                'WHERE s.entry = %s',
+                (str(entry.id),))
+            services_ids = [x[0] for x in cursor.fetchall()]
+            if not services_ids:
+                continue
+
+            origins = '\', \''.join(['lims.service,' + str(s)
+                for s in services_ids])
+            cursor.execute('SELECT id '
+                'FROM "' + InvoiceLine._table + '" '
+                'WHERE origin IN (\'' + origins + '\') '
+                    'AND invoice IS NULL')
+            lines_ids.extend(x[0] for x in cursor.fetchall())
+
+        action['pyson_domain'] = PYSONEncoder().encode([
+            ('id', 'in', lines_ids),
+            ])
+        action['name'] += ' (%s)' % ', '.join(
+            e.rec_name for e in entries)
+        return action, {}
+
+
+class EntriesReadyForInvoicingSpreadsheet(Report):
+    'Entries Ready for Invoicing'
+    __name__ = 'lims.entries_ready_for_invoicing.spreadsheet'

@@ -22,5 +22,5 @@ class Cron(metaclass=PoolMeta):
     def __setup__(cls):
         super().__setup__()
         cls.method.selection.extend([
-                ('account.invoice|cron_send_invoice', "Cron Send Of Invoice"),
+                ('account.invoice|cron_send_invoice', "Send Of Invoice"),
                 ])

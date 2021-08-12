@@ -4,16 +4,87 @@
 
 <!-- Fraction Type -->
 
-      <record model="ir.ui.view" id="lims_fraction_type_view_form">
-          <field name="model">lims.fraction.type</field>
-          <field name="inherit" ref="lims.lims_fraction_type_view_form"/>
-          <field name="name">fraction_type_form</field>
-      </record>
-      <record model="ir.ui.view" id="lims_fraction_type_view_list">
-          <field name="model">lims.fraction.type</field>
-          <field name="inherit" ref="lims.lims_fraction_type_view_list"/>
-          <field name="name">fraction_type_list</field>
-      </record>
+        <record model="ir.ui.view" id="lims_fraction_type_view_form">
+            <field name="model">lims.fraction.type</field>
+            <field name="inherit" ref="lims.lims_fraction_type_view_form"/>
+            <field name="name">fraction_type_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_fraction_type_view_list">
+            <field name="model">lims.fraction.type</field>
+            <field name="inherit" ref="lims.lims_fraction_type_view_list"/>
+            <field name="name">fraction_type_list</field>
+        </record>
+
+<!-- Wizard Open Entries Ready for Invoicing -->
+
+        <record model="ir.action.wizard" id="wiz_open_entries_ready_for_invoicing">
+            <field name="name">Entries Ready for Invoicing</field>
+            <field name="wiz_name">lims.entries_ready_for_invoicing</field>
+        </record>
+
+        <menuitem action="wiz_open_entries_ready_for_invoicing"
+            id="menu_entry_for_invoicing"
+            parent="account_invoice.menu_invoices" sequence="100"/>
+
+<!-- Entries Ready for Invoicing -->
+
+        <record model="ir.ui.view" id="entry_ready_for_invoicing_view_list">
+            <field name="model">lims.entry</field>
+            <field name="type">tree</field>
+            <field name="name">entry_ready_for_invoicing_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_entries_ready_for_invoicing">
+            <field name="name">Entries Ready for Invoicing</field>
+            <field name="res_model">lims.entry</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_entries_ready_for_invoicing_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="entry_ready_for_invoicing_view_list"/>
+            <field name="act_window" ref="act_entries_ready_for_invoicing"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_entries_ready_for_invoicing_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims.lims_entry_view_form"/>
+            <field name="act_window" ref="act_entries_ready_for_invoicing"/>
+        </record>
+
+<!-- Wizard Open Lines Pending Invoicing -->
+
+        <record model="ir.action.wizard" id="wiz_open_lines_pending_invoicing">
+            <field name="name">Lines Pending Invoicing</field>
+            <field name="wiz_name">lims.lines_pending_invoicing</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_open_lines_pending_invoicing_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.entry,-2</field>
+            <field name="action" ref="wiz_open_lines_pending_invoicing"/>
+        </record>
+
+<!-- Invoice Line -->
+
+        <record model="ir.action.act_window" id="act_invoice_line">
+            <field name="name">Invoice Lines</field>
+            <field name="res_model">account.invoice.line</field>
+        </record>
+
+<!-- Report Entries Ready for Invoicing -->
+
+        <record model="ir.action.report" id="report_entries_ready_for_invoicing">
+            <field name="name">Entries Ready for Invoicing</field>
+            <field name="report_name">lims.entries_ready_for_invoicing.spreadsheet</field>
+            <field name="report">lims_account_invoice/report/entries_ready_for_invoicing.fods</field>
+            <field name="extension">xls</field>
+        </record>
+
+        <record model="ir.action.keyword" id="report_entries_ready_for_invoicing_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.entry,-2</field>
+            <field name="action" ref="report_entries_ready_for_invoicing"/>
+        </record>
 
     </data>
 </tryton>

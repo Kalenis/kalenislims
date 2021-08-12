@@ -8,7 +8,7 @@
             <field name="text">You can not delete an invoice line related to a service ("%(service)s")</field>
         </record>
         <record model="ir.message" id="msg_missing_account_revenue">
-            <field name="text">Analysis product \"%(product)s\" in Service "%(service)s" misses an "account revenue".</field>
+            <field name="text">Analysis product "%(product)s" in Service "%(service)s" misses an "account revenue".</field>
         </record>
     </data>
 </tryton>
