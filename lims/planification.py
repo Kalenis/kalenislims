@@ -6465,21 +6465,7 @@ class PendingServicesUnplannedSpreadsheet(Report):
         else:
             labs = [l.id for l in Laboratory.search([])]
 
-        clause = [
-            ('plannable', '=', True),
-            ('state', '=', 'unplanned'),
-            ('analysis.behavior', '!=', 'internal_relation'),
-            ('service.fraction.confirmed', '=', True),
-            ]
-        if data['start_date']:
-            clause.append(
-                ('service.confirmation_date', '>=', data['start_date']))
-        if data['end_date']:
-            clause.append(
-                ('service.confirmation_date', '<=', data['end_date']))
-        if data['party']:
-            clause.append(('party', '=', data['party']))
-
+        clause = cls._get_details_clause(data)
         objects = {}
         with Transaction().set_user(0):
             details = EntryDetailAnalysis.search(clause)
@@ -6570,6 +6556,24 @@ class PendingServicesUnplannedSpreadsheet(Report):
 
         report_context['objects'] = objects
         return report_context
+
+    @classmethod
+    def _get_details_clause(cls, data):
+        clause = [
+            ('plannable', '=', True),
+            ('state', '=', 'unplanned'),
+            ('analysis.behavior', '!=', 'internal_relation'),
+            ('service.fraction.confirmed', '=', True),
+            ]
+        if data['start_date']:
+            clause.append(
+                ('service.confirmation_date', '>=', data['start_date']))
+        if data['end_date']:
+            clause.append(
+                ('service.confirmation_date', '<=', data['end_date']))
+        if data['party']:
+            clause.append(('party', '=', data['party']))
+        return clause
 
     @classmethod
     def _get_estimated_waiting(cls, detail_id):
