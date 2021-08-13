@@ -3594,7 +3594,6 @@ class ManageServices(Wizard):
         pool = Pool()
         Entry = pool.get('lims.entry')
         Fraction = pool.get('lims.fraction')
-        Cron = pool.get('ir.cron')
 
         delete_ack_report_cache = False
         fraction = Fraction(Transaction().context['active_id'])
@@ -3650,11 +3649,9 @@ class ManageServices(Wizard):
                         for detail in actual_service.analysis_detail:
                             detail.save()
 
-        if Cron.search([
-                ('method', '=', 'lims.entry|cron_acknowledgment_of_receipt'),
-                ('active', '=', True),
-                ]):
+        if self._send_ack_of_receipt():
             return 'send_ack_of_receipt'
+
         return 'end'
 
     def create_service(self, service, fraction):
@@ -3784,6 +3781,15 @@ class ManageServices(Wizard):
         return ('analysis', 'laboratory', 'method', 'device', 'urgent',
             'priority', 'estimated_waiting_laboratory',
             'estimated_waiting_report', 'report_date', 'comments', 'divide')
+
+    def _send_ack_of_receipt(self):
+        Cron = Pool().get('ir.cron')
+        if Cron.search([
+                ('method', '=', 'lims.entry|cron_acknowledgment_of_receipt'),
+                ('active', '=', True),
+                ]):
+            return True
+        return False
 
     def transition_send_ack(self):
         pool = Pool()
@@ -3982,7 +3988,6 @@ class AddSampleService(Wizard):
         pool = Pool()
         Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
-        Cron = pool.get('ir.cron')
 
         for sample in Sample.browse(Transaction().context['active_ids']):
             delete_ack_report_cache = False
@@ -4007,11 +4012,9 @@ class AddSampleService(Wizard):
                 entry.ack_report_cache = None
                 entry.save()
 
-        if Cron.search([
-                ('method', '=', 'lims.entry|cron_acknowledgment_of_receipt'),
-                ('active', '=', True),
-                ]):
+        if self._send_ack_of_receipt()
             return 'send_ack_of_receipt'
+
         return 'end'
 
     def create_service(self, service, fraction):
@@ -4052,6 +4055,15 @@ class AddSampleService(Wizard):
                 })
 
         return new_service
+
+    def _send_ack_of_receipt(self):
+        Cron = Pool().get('ir.cron')
+        if Cron.search([
+                ('method', '=', 'lims.entry|cron_acknowledgment_of_receipt'),
+                ('active', '=', True),
+                ]):
+            return True
+        return False
 
     def transition_send_ack(self):
         pool = Pool()
@@ -4151,7 +4163,6 @@ class EditSampleService(Wizard):
         pool = Pool()
         Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
-        Cron = pool.get('ir.cron')
 
         actual_analysis = [(s.analysis.id, s.method and s.method.id or None)
             for s in self.start.services]
@@ -4183,11 +4194,9 @@ class EditSampleService(Wizard):
                 entry.ack_report_cache = None
                 entry.save()
 
-        if Cron.search([
-                ('method', '=', 'lims.entry|cron_acknowledgment_of_receipt'),
-                ('active', '=', True),
-                ]):
+        if self._send_ack_of_receipt()
             return 'send_ack_of_receipt'
+
         return 'end'
 
     def annul_service(self, service):
@@ -4314,6 +4323,15 @@ class EditSampleService(Wizard):
 
         original.state = 'annulled'
         original.save()
+
+    def _send_ack_of_receipt(self):
+        Cron = Pool().get('ir.cron')
+        if Cron.search([
+                ('method', '=', 'lims.entry|cron_acknowledgment_of_receipt'),
+                ('active', '=', True),
+                ]):
+            return True
+        return False
 
     def transition_send_ack(self):
         pool = Pool()
