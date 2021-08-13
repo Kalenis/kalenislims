@@ -1202,6 +1202,15 @@
             <field name="model" search="[('model', '=', 'lims.referral')]"/>
         </record>
 
+        <record model="ir.model.field.access" id="access_referral_services">
+            <field name="field"
+                search="[('name', '=', 'services'), ('model.model', '=', 'lims.referral')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
 <!-- New Referral -->
 
         <record model="ir.action.act_window" id="act_referral_form">
