@@ -4012,7 +4012,7 @@ class AddSampleService(Wizard):
                 entry.ack_report_cache = None
                 entry.save()
 
-        if self._send_ack_of_receipt()
+        if self._send_ack_of_receipt():
             return 'send_ack_of_receipt'
 
         return 'end'
@@ -4194,7 +4194,7 @@ class EditSampleService(Wizard):
                 entry.ack_report_cache = None
                 entry.save()
 
-        if self._send_ack_of_receipt()
+        if self._send_ack_of_receipt():
             return 'send_ack_of_receipt'
 
         return 'end'
