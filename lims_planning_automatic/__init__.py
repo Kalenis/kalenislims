@@ -26,4 +26,6 @@ def register():
         depends=['lims_quality_control'])
     Pool.register(
         entry.ManageServices,
+        entry.AddSampleService,
+        entry.EditSampleService,
         module='lims_planning_automatic', type_='wizard')

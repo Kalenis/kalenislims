@@ -23,3 +23,22 @@ class ManageServices(metaclass=PoolMeta):
         new_service = super().create_service(service, fraction)
         Planification.automatic_plan(entries=[new_service.entry])
         return new_service
+
+
+class AddSampleService(metaclass=PoolMeta):
+    __name__ = 'lims.sample.add_service'
+
+    def create_service(self, service, fraction):
+        Planification = Pool().get('lims.planification')
+        new_service = super().create_service(service, fraction)
+        Planification.automatic_plan(entries=[new_service.entry])
+        return new_service
+
+class EditSampleService(metaclass=PoolMeta):
+    __name__ = 'lims.sample.edit_service'
+
+    def create_service(self, service, fraction):
+        Planification = Pool().get('lims.planification')
+        new_service = super().create_service(service, fraction)
+        Planification.automatic_plan(entries=[new_service.entry])
+        return new_service
