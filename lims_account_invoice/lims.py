@@ -353,17 +353,6 @@ class OpenEntriesReadyForInvoicing(Wizard):
             return []
         services_ids = ', '.join(s for s in invoiced_services)
 
-        cursor.execute('SELECT DISTINCT(service) '
-            'FROM "' + NotebookLine._table + '" '
-            'WHERE service IN (' + services_ids + ') '
-                'AND (annulled = FALSE '
-                'AND report = TRUE '
-                'AND results_report IS NULL)')
-        pending_services = [str(x[0]) for x in cursor.fetchall()]
-
-        services = list(set(invoiced_services) - set(pending_services))
-        services_ids = ', '.join(s for s in services)
-
         cursor.execute('SELECT DISTINCT(s.entry) '
             'FROM "' + NotebookLine._table + '" nl '
                 'INNER JOIN "' + Notebook._table + '" n '
@@ -373,10 +362,26 @@ class OpenEntriesReadyForInvoicing(Wizard):
                 'INNER JOIN "' + Sample._table + '" s '
                 'ON s.id = f.sample '
             'WHERE nl.service IN (' + services_ids + ')')
-        entries_ids = [x[0] for x in cursor.fetchall()]
-        if not entries_ids:
+        invoiced_entries = [x[0] for x in cursor.fetchall()]
+
+        cursor.execute('SELECT DISTINCT(s.entry) '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON n.id = nl.notebook '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + Sample._table + '" s '
+                'ON s.id = f.sample '
+            'WHERE nl.service IN (' + services_ids + ') '
+                'AND (nl.annulled = FALSE '
+                'AND nl.report = TRUE '
+                'AND nl.results_report IS NULL)')
+        pending_entries = [x[0] for x in cursor.fetchall()]
+
+        entries = list(set(invoiced_entries) - set(pending_entries))
+        if not entries:
             return []
-        return entries_ids
+        return entries
 
     def do_open_(self, action):
         entries_ids = self._get_entries_ready_for_invoicing()
