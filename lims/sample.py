@@ -538,7 +538,7 @@ class Service(ModelSQL, ModelView):
                 if hasattr(aditional_services[0].fraction.type,
                         'invoiceable'):
                     for aditional_service in aditional_services:
-                        aditional_service.create_invoice_line('out')
+                        aditional_service.create_invoice_line()
 
         fractions_ids = list(set(s.fraction.id for s in services))
         cls.set_shared_fraction(fractions_ids)
