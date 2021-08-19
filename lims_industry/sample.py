@@ -762,8 +762,7 @@ class EditSample(Wizard):
                     })
                 sample.comercial_product = self.start.comercial_product
                 if (self.start.comercial_product.matrix and
-                        self.start.comercial_product.matrix !=
-                        self.start.comercial_product.matrix):
+                        self.start.comercial_product.matrix != sample.matrix):
                     check_typifications = True
                     log.append({
                         'sample': sample.id,
