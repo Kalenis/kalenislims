@@ -1653,7 +1653,8 @@ class OpenTrendChart(Wizard):
                     ('accepted', '=', True),
                     ])
                 if line:
-                    record['analysis%s' % str(i)] = line[0].result
+                    record['analysis%s' % str(i)] = line[0].result.replace(
+                        ',', '.')
                 i += 1
             for a in chart.analysis_y2:
                 line = NotebookLine.search([
@@ -1662,7 +1663,8 @@ class OpenTrendChart(Wizard):
                     ('accepted', '=', True),
                     ])
                 if line:
-                    record['analysis%s' % str(i)] = line[0].result
+                    record['analysis%s' % str(i)] = line[0].result.replace(
+                        ',', '.')
                 i += 1
             records.append(record)
         TrendChartData.create(records)
