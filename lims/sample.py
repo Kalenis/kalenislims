@@ -2522,6 +2522,7 @@ class Sample(ModelSQL, ModelView):
         ('in_report', 'In Report'),
         ('report_released', 'Report Released'),
         ], 'State')
+    qty_lines_pending = fields.Integer('Pending lines')
     qty_lines_pending_acceptance = fields.Integer('Lines pending acceptance')
 
     @classmethod
@@ -2537,14 +2538,17 @@ class Sample(ModelSQL, ModelView):
         cursor = Transaction().connection.cursor()
         Entry = Pool().get('lims.entry')
         table_h = cls.__table_handler__(module_name)
+        qty_lines_pending_exist = table_h.column_exist('qty_lines_pending')
         qty_lines_pending_acceptance_exist = table_h.column_exist(
             'qty_lines_pending_acceptance')
         party_exist = table_h.column_exist('party')
         super().__register__(module_name)
-        if not qty_lines_pending_acceptance_exist:
-            logging.getLogger(__name__).info('Updating samples...')
+        if (not qty_lines_pending_exist or
+                not qty_lines_pending_acceptance_exist):
+            logging.getLogger(__name__).info(
+                'Updating Pending lines in Samples...')
             for sample in cls.search([]):
-                sample.update_qty_lines_pending_acceptance()
+                sample.update_qty_lines()
         if not party_exist:
             logging.getLogger(__name__).info('Updating Party in Samples...')
             cursor.execute('UPDATE "' + cls._table + '" s '
@@ -2569,6 +2573,10 @@ class Sample(ModelSQL, ModelView):
         return 'draft'
 
     @staticmethod
+    def default_qty_lines_pending():
+        return None
+
+    @staticmethod
     def default_qty_lines_pending_acceptance():
         return None
 
@@ -2577,6 +2585,7 @@ class Sample(ModelSQL, ModelView):
         if default is None:
             default = {}
         current_default = default.copy()
+        current_default['qty_lines_pending'] = None
         current_default['qty_lines_pending_acceptance'] = None
 
         new_samples = []
@@ -3195,7 +3204,7 @@ class Sample(ModelSQL, ModelView):
         for sample in samples:
             sample.update_sample_dates()
             sample.update_sample_state()
-            sample.update_qty_lines_pending_acceptance()
+            sample.update_qty_lines()
 
     def update_sample_dates(self):
         dates = self._get_sample_dates()
@@ -3401,11 +3410,38 @@ class Sample(ModelSQL, ModelView):
             return 'pending_planning'
         return 'draft'
 
-    def update_qty_lines_pending_acceptance(self):
+    def update_qty_lines(self):
+        save = False
+        qty = self._get_qty_lines_pending()
+        if self.qty_lines_pending != qty:
+            self.qty_lines_pending = qty
+            save = True
         qty = self._get_qty_lines_pending_acceptance()
         if self.qty_lines_pending_acceptance != qty:
             self.qty_lines_pending_acceptance = qty
+            save = True
+        if save:
             self.save()
+
+    def _get_qty_lines_pending(self):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
+        Service = pool.get('lims.service')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        cursor.execute('SELECT COUNT(*) '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + Service._table + '" s '
+                'ON s.id = nl.service '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = s.fraction '
+            'WHERE f.sample = %s '
+                'AND nl.report = TRUE '
+                'AND nl.annulled = FALSE '
+                'AND nl.end_date IS NULL',
+            (self.id,))
+        return cursor.fetchone()[0]
 
     def _get_qty_lines_pending_acceptance(self):
         cursor = Transaction().connection.cursor()
