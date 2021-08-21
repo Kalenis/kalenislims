@@ -1434,6 +1434,8 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         'Initial unit'), 'get_nline_field')
     converted_result = fields.Function(fields.Char('Converted result'),
         'get_converted_result')
+    uncertainty = fields.Function(fields.Char('Uncertainty'),
+        'get_uncertainty')
     final_unit = fields.Function(fields.Many2One('product.uom',
         'Final unit'), 'get_nline_field')
     reference = fields.Function(fields.Char('Reference'), 'get_reference')
@@ -1515,6 +1517,15 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         for d in details:
             result[d.id] = (d.notebook_line and
                 d.notebook_line.get_formated_converted_result() or None)
+        return result
+
+    @classmethod
+    def get_uncertainty(cls, details, name):
+        result = {}
+        for d in details:
+            result[d.id] = (d.notebook_line and d.notebook_line._format_result(
+                d.notebook_line.uncertainty, d.notebook_line.decimals,
+                d.notebook_line.significant_digits) or None)
         return result
 
     @classmethod
