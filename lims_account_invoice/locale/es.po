@@ -218,16 +218,16 @@ msgid "Entry"
 msgstr "Ingreso"
 
 msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "Invoice Party"
+msgstr "Entidad facturación"
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
 msgid "Last Release date"
 msgstr "Última Fecha de publicación"
 
 msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
 msgid "Lines pending invoicing"
 msgstr "Líneas pendientes de facturación"
-
-msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
-msgid "Party"
-msgstr "Entidad"
 
 msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
 msgid "Print date:"
