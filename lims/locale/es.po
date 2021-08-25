@@ -1068,8 +1068,8 @@ msgid "Device domain"
 msgstr "Dominio para Equipo"
 
 msgctxt "field:lims.create_sample.service,divide:"
-msgid "Divide"
-msgstr "Dividir"
+msgid "Divide Report"
+msgstr "Dividir Informe"
 
 msgctxt "field:lims.create_sample.service,estimated_waiting_laboratory:"
 msgid "Number of days for Laboratory"
@@ -1078,6 +1078,14 @@ msgstr "Cantidad de días en Laboratorio"
 msgctxt "field:lims.create_sample.service,estimated_waiting_report:"
 msgid "Number of days for Reporting"
 msgstr "Cantidad de días para Informar"
+
+msgctxt "field:lims.create_sample.service,explode_analysis:"
+msgid "Load included analyzes individually"
+msgstr "Cargar análisis incluidos individualmente"
+
+msgctxt "field:lims.create_sample.service,explode_analysis_invisible:"
+msgid "Load included analyzes individually Invisible"
+msgstr "Cargar análisis incluidos individualmente Invisible"
 
 msgctxt "field:lims.create_sample.service,laboratory:"
 msgid "Laboratory"
@@ -5812,8 +5820,8 @@ msgid "Device"
 msgstr "Equipo"
 
 msgctxt "field:lims.service,divide:"
-msgid "Divide"
-msgstr "Dividir"
+msgid "Divide Report"
+msgstr "Dividir Informe"
 
 msgctxt "field:lims.service,entry:"
 msgid "Entry"
