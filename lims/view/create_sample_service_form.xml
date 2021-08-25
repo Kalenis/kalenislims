@@ -14,8 +14,12 @@
         <label name="priority"/>
         <field name="priority"/>
     </group>
-    <label name="divide"/>
-    <field name="divide"/>
+    <group id="checkboxes" colspan="2" col="4">
+        <label name="explode_analysis"/>
+        <field name="explode_analysis"/>
+        <label name="divide"/>
+        <field name="divide"/>
+    </group>
     <group id="estimated_waiting_laboratory" colspan="2" col="2">
         <label name="estimated_waiting_laboratory"/>
         <field name="estimated_waiting_laboratory"/>

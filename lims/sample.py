@@ -392,7 +392,7 @@ class Service(ModelSQL, ModelView):
     confirmed = fields.Function(fields.Boolean('Confirmed'), 'get_confirmed',
         searcher='search_confirmed')
     confirmation_date = fields.Date('Confirmation date', readonly=True)
-    divide = fields.Boolean('Divide')
+    divide = fields.Boolean('Divide Report')
     has_results_report = fields.Function(fields.Boolean('Results Report'),
         'get_has_results_report')
     manage_service_available = fields.Function(fields.Boolean(
@@ -5730,9 +5730,29 @@ class CreateSampleService(ModelView):
         states={'readonly': Bool(Eval('report_date_readonly'))},
         depends=['report_date_readonly'])
     report_date_readonly = fields.Boolean('Report deadline Readonly')
-    divide = fields.Boolean('Divide')
+    divide = fields.Boolean('Divide Report')
     analysis_locked = fields.Boolean('Analysis/Set/Group Locked')
     laboratory_locked = fields.Boolean('Laboratory Locked')
+    explode_analysis = fields.Boolean(
+        'Load included analyzes individually',
+        states={'invisible': Bool(Eval('explode_analysis_invisible'))},
+        depends=['explode_analysis_invisible'])
+    explode_analysis_invisible = fields.Boolean(
+        'Load included analyzes individually Invisible')
+
+    @staticmethod
+    def default_explode_analysis():
+        return False
+
+    @staticmethod
+    def default_explode_analysis_invisible():
+        ModelData = Pool().get('ir.model.data')
+        # check if called from wizard Create Sample
+        action_id = Transaction().context.get('action_id')
+        if (action_id and action_id == ModelData.get_id(
+                'lims', 'wiz_lims_create_sample')):
+            return False
+        return True
 
     @staticmethod
     def default_analysis_locked():
@@ -6034,23 +6054,44 @@ class CreateSample(Wizard):
                 estimated_waiting_report = (
                     hasattr(service, 'estimated_waiting_report') and
                     getattr(service, 'estimated_waiting_report') or None)
-                service_defaults = {
-                    'analysis': service.analysis.id,
-                    'laboratory': (service.laboratory.id if service.laboratory
-                        else None),
-                    'method': service.method.id if service.method else None,
-                    'device': service.device.id if service.device else None,
-                    'urgent': service.urgent,
-                    'priority': service.priority,
-                    'estimated_waiting_laboratory': (
-                        estimated_waiting_laboratory),
-                    'estimated_waiting_report': (
-                        estimated_waiting_report),
-                    'laboratory_date': service.laboratory_date,
-                    'report_date': service.report_date,
-                    'divide': service.divide,
-                    }
-                services_defaults.append(service_defaults)
+                if (service.explode_analysis and
+                        service.analysis.type in ('set', 'group')):
+                    for included_analysis in self._get_included_analysis(
+                            service.analysis):
+                        services_defaults.append({
+                            'analysis': included_analysis['analysis'],
+                            'laboratory': included_analysis['laboratory'],
+                            'method': included_analysis['method'],
+                            'device': included_analysis['device'],
+                            'urgent': service.urgent,
+                            'priority': service.priority,
+                            'estimated_waiting_laboratory': (
+                                estimated_waiting_laboratory),
+                            'estimated_waiting_report': (
+                                estimated_waiting_report),
+                            'laboratory_date': service.laboratory_date,
+                            'report_date': service.report_date,
+                            'divide': service.divide,
+                            })
+                else:
+                    services_defaults.append({
+                        'analysis': service.analysis.id,
+                        'laboratory': (service.laboratory.id
+                            if service.laboratory else None),
+                        'method': (service.method.id if service.method
+                            else None),
+                        'device': (service.device.id if service.device
+                            else None),
+                        'urgent': service.urgent,
+                        'priority': service.priority,
+                        'estimated_waiting_laboratory': (
+                            estimated_waiting_laboratory),
+                        'estimated_waiting_report': (
+                            estimated_waiting_report),
+                        'laboratory_date': service.laboratory_date,
+                        'report_date': service.report_date,
+                        'divide': service.divide,
+                        })
 
         # samples data
         samples_defaults = []
@@ -6097,6 +6138,46 @@ class CreateSample(Wizard):
             samples_defaults.append(sample_defaults)
 
         return samples_defaults
+
+    def _get_included_analysis(self, analysis):
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+
+        childs = []
+        if analysis.included_analysis:
+            for included in analysis.included_analysis:
+                if included.included_analysis.type == 'analysis':
+                    laboratory_id = included.laboratory.id
+
+                    method_id = (included.method.id
+                        if included.method else None)
+                    if not method_id:
+                        typifications = Typification.search([
+                            ('product_type', '=', self.start.product_type.id),
+                            ('matrix', '=', self.start.matrix.id),
+                            ('analysis', '=', included.included_analysis),
+                            ('by_default', '=', True),
+                            ('valid', '=', True),
+                            ])
+                        method_id = (typifications[0].method.id
+                            if typifications else None)
+
+                    device_id = None
+                    if included.included_analysis.devices:
+                        for d in included.included_analysis.devices:
+                            if (d.laboratory.id == laboratory_id and
+                                    d.by_default is True):
+                                device_id = d.device.id
+
+                    childs.append({
+                        'analysis': included.included_analysis.id,
+                        'laboratory': laboratory_id,
+                        'method': method_id,
+                        'device': device_id,
+                        })
+                childs.extend(self._get_included_analysis(
+                    included.included_analysis))
+        return childs
 
     def _get_labels_list(self, labels=None):
         if not labels:
