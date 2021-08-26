@@ -20,15 +20,16 @@ from trytond.i18n import gettext
 class NotebookLine(metaclass=PoolMeta):
     __name__ = 'lims.notebook.line'
 
-    imported_result = fields.Char('Result')
-    imported_literal_result = fields.Char('Literal result')
-    imported_end_date = fields.Date('End date')
-    imported_professionals = fields.Char('Professionals')
-    imported_chromatogram = fields.Char('Chromatogram')
-    imported_device = fields.Many2One('lims.lab.device', 'Device')
-    imported_dilution_factor = fields.Float('Dilution factor')
-    imported_rm_correction_formula = fields.Char('RM Correction Formula')
-    imported_inj_date = fields.Date('Inject date')
+    imported_result = fields.Char('Imported Result')
+    imported_literal_result = fields.Char('Imported Literal result')
+    imported_end_date = fields.Date('Imported End date')
+    imported_professionals = fields.Char('Imported Professionals')
+    imported_chromatogram = fields.Char('Imported Chromatogram')
+    imported_device = fields.Many2One('lims.lab.device', 'Imported Device')
+    imported_dilution_factor = fields.Float('Imported Dilution factor')
+    imported_rm_correction_formula = fields.Char(
+        'Imported RM Correction Formula')
+    imported_inj_date = fields.Date('Imported Inject date')
 
 
 class ResultsImport(ModelSQL, ModelView):
