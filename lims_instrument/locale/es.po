@@ -2,97 +2,49 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "model:ir.message,text:msg_end_date"
-msgid "End date cannot be empty"
-msgstr "La Fecha de finalización no puede estar vacía"
-
-msgctxt "model:ir.message,text:msg_end_date_start_date"
-msgid "End date cannot be lower than Start date"
-msgstr "La Fecha de finalización no puede ser menor que la Fecha de inicio"
-
-msgctxt "model:ir.message,text:msg_inj_date_start_date"
-msgid "Injection date cannot be lower than Start date"
-msgstr "La Fecha de inyección no puede ser menor que la Fecha de inicio"
-
-msgctxt "model:ir.message,text:msg_inj_date_end_date"
-msgid "Injection date cannot be upper than End date"
-msgstr "La Fecha de inyección no puede ser mayor que la Fecha de finalización"
-
-msgctxt "model:ir.message,text:msg_professionals"
-msgid "Professional(s) with code %(code)s not identified"
-msgstr "Profesional(es) no identificado(s): %(code)s"
-
-msgctxt "model:ir.message,text:msg_not_module"
-msgid "No module for importer type \"%(module)s\""
-msgstr "No se ha definido un módulo para el importador \"%(module)s\""
-
-msgctxt "model:ir.message,text:msg_not_implemented"
-msgid "The function \"%(function)s\" is not implemented for this importer"
-msgstr "La función \"%(function)s\" no está implementada para este importador"
-
-msgctxt "model:ir.message,text:msg_results_importer_unique_id"
-msgid "The results importer name must be unique"
-msgstr "El importador de resultados debe ser único"
-
 msgctxt "field:lims.notebook.line,imported_chromatogram:"
-msgid "Chromatogram"
-msgstr "Cromatograma"
+msgid "Imported Chromatogram"
+msgstr "Cromatograma importado"
 
 msgctxt "field:lims.notebook.line,imported_device:"
-msgid "Device"
-msgstr "Equipo"
+msgid "Imported Device"
+msgstr "Equipo importado"
 
 msgctxt "field:lims.notebook.line,imported_dilution_factor:"
-msgid "Dilution factor"
-msgstr "Factor de dilución"
+msgid "Imported Dilution factor"
+msgstr "Factor de dilución importado"
 
 msgctxt "field:lims.notebook.line,imported_end_date:"
-msgid "End date"
-msgstr "Fecha de finalización"
+msgid "Imported End date"
+msgstr "Fecha de finalización importada"
 
 msgctxt "field:lims.notebook.line,imported_inj_date:"
-msgid "Inject date"
-msgstr "Fecha de Inyección"
+msgid "Imported Inject date"
+msgstr "Fecha de Inyección importada"
 
 msgctxt "field:lims.notebook.line,imported_literal_result:"
-msgid "Literal result"
-msgstr "Resultado textual"
+msgid "Imported Literal result"
+msgstr "Resultado textual importado"
 
 msgctxt "field:lims.notebook.line,imported_professionals:"
-msgid "Professionals"
-msgstr "Profesionales"
+msgid "Imported Professionals"
+msgstr "Profesionales importados"
 
 msgctxt "field:lims.notebook.line,imported_result:"
-msgid "Result"
-msgstr "Resultado"
+msgid "Imported Result"
+msgstr "Resultado importado"
 
 msgctxt "field:lims.notebook.line,imported_rm_correction_formula:"
-msgid "RM Correction Formula"
-msgstr "Fórmula Corrección RM"
-
-msgctxt "field:lims.notebook.load_results_file.empty,id:"
-msgid "ID"
-msgstr "ID"
+msgid "Imported RM Correction Formula"
+msgstr "Fórmula Corrección RM importada"
 
 msgctxt "field:lims.notebook.load_results_file.export,file:"
 msgid "File"
 msgstr "Archivo"
 
-msgctxt "field:lims.notebook.load_results_file.export,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.notebook.load_results_file.result,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook.load_results_file.result,result_lines:"
 msgid "Lines"
 msgstr "Líneas"
-
-msgctxt "field:lims.notebook.load_results_file.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.notebook.load_results_file.start,infile_01:"
 msgid "File 01"
@@ -578,45 +530,17 @@ msgctxt "field:lims.notebook.load_results_file.start,results_importer:"
 msgid "Results importer"
 msgstr "Importador de resultados"
 
-msgctxt "field:lims.notebook.load_results_file.warning,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.notebook.load_results_file.warning,msg:"
 msgid "Message"
 msgstr "Mensaje"
-
-msgctxt "field:lims.resultsimport,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.resultsimport,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:lims.resultsimport,description:"
 msgid "Description"
 msgstr "Descripción"
 
-msgctxt "field:lims.resultsimport,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.resultsimport,name:"
 msgid "Name"
 msgstr "Nombre"
-
-msgctxt "field:lims.resultsimport,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.resultsimport,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.resultsimport,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "model:ir.action,name:act_lims_resultsimport_list"
 msgid "Results Importers"
@@ -625,6 +549,46 @@ msgstr "Importadores de resultados"
 msgctxt "model:ir.action,name:wiz_lims_notebook_load_results_file"
 msgid "Load Results from File"
 msgstr "Carga de resultados desde archivo"
+
+msgctxt "model:ir.message,text:msg_end_date"
+msgid "End date cannot be empty"
+msgstr "La Fecha de finalización no puede estar vacía"
+
+msgctxt "model:ir.message,text:msg_end_date_start_date"
+msgid "End date cannot be lower than Start date"
+msgstr "La Fecha de finalización no puede ser menor que la Fecha de inicio"
+
+msgctxt "model:ir.message,text:msg_inj_date_end_date"
+msgid "Injection date cannot be upper than End date"
+msgstr "La Fecha de inyección no puede ser mayor que la Fecha de finalización"
+
+msgctxt "model:ir.message,text:msg_inj_date_start_date"
+msgid "Injection date cannot be lower than Start date"
+msgstr "La Fecha de inyección no puede ser menor que la Fecha de inicio"
+
+msgctxt "model:ir.message,text:msg_invalid_alias"
+msgid "Invalid symbol \"%(symbol)s\" in formula \"%(name)s\"."
+msgstr ""
+
+msgctxt "model:ir.message,text:msg_invalid_store"
+msgid "Formula \"%(formula)s\" cannot be stored because type is not set."
+msgstr ""
+
+msgctxt "model:ir.message,text:msg_not_implemented"
+msgid "The function \"%(function)s\" is not implemented for this importer"
+msgstr "La función \"%(function)s\" no está implementada para este importador"
+
+msgctxt "model:ir.message,text:msg_not_module"
+msgid "No module for importer type \"%(module)s\""
+msgstr "No se ha definido un módulo para el importador \"%(module)s\""
+
+msgctxt "model:ir.message,text:msg_professionals"
+msgid "Professional(s) with code %(code)s not identified"
+msgstr "Profesional(es) no identificado(s): %(code)s"
+
+msgctxt "model:ir.message,text:msg_results_importer_unique_id"
+msgid "The results importer name must be unique"
+msgstr "El importador de resultados debe ser único"
 
 msgctxt "model:ir.ui.menu,name:lims_notebook_load_results_file_menu"
 msgid "Load Results from File"
