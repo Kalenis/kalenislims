@@ -6054,7 +6054,9 @@ class CreateSample(Wizard):
                 estimated_waiting_report = (
                     hasattr(service, 'estimated_waiting_report') and
                     getattr(service, 'estimated_waiting_report') or None)
-                if (service.explode_analysis and
+                explode_analysis = (hasattr(service, 'explode_analysis') and
+                    getattr(service, 'explode_analysis') or False)
+                if (explode_analysis and
                         service.analysis.type in ('set', 'group')):
                     for included_analysis in self._get_included_analysis(
                             service.analysis):
