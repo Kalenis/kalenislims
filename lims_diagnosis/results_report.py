@@ -99,6 +99,10 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
                 if not sample.diagnosis:
                     sample.diagnosis = content
                 sample.diagnosis_states = states
+        else:
+            states = {}
+            for sample in self.samples:
+                sample.diagnosis_states = states
 
     @classmethod
     def _get_fields_from_samples(cls, samples):
