@@ -503,6 +503,7 @@ class SendResultsReport(Wizard):
                 'sent': True, 'sent_date': datetime.now(),
                 'mailings': [('create', [{'addresses': addresses}])],
                 })
+            Transaction().commit()
 
         if reports_not_ready or reports_not_sent:
             logger.warning('Send Results Report: FAILED')
