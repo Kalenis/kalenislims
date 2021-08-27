@@ -53,6 +53,7 @@ class ResultsReport(metaclass=PoolMeta):
                     'INNER JOIN "' + ResultsVersion._table + '" rv '
                     'ON rd.report_version = rv.id '
                 'WHERE rv.results_report = %s '
+                    'AND rd.state != \'annulled\' '
                 'ORDER BY p.name', (r.id,))
             samples = [x[0] for x in cursor.fetchall()]
             if samples:
@@ -89,7 +90,8 @@ class ResultsReport(metaclass=PoolMeta):
                 'ON rs.version_detail = rd.id '
                 'INNER JOIN "' + ResultsVersion._table + '" rv '
                 'ON rd.report_version = rv.id '
-            'WHERE p.name ILIKE %s',
+            'WHERE p.name ILIKE %s '
+                'AND rd.state != \'annulled\'',
             (value,))
         details_ids = [x[0] for x in cursor.fetchall()]
         if not details_ids:
@@ -126,6 +128,7 @@ class ResultsReport(metaclass=PoolMeta):
                     'INNER JOIN "' + ResultsVersion._table + '" rv '
                     'ON rd.report_version = rv.id '
                 'WHERE rv.results_report = %s '
+                    'AND rd.state != \'annulled\' '
                 'ORDER BY e.name', (r.id,))
             samples = [x[0] for x in cursor.fetchall()]
             if samples:
@@ -159,7 +162,8 @@ class ResultsReport(metaclass=PoolMeta):
                 'ON rs.version_detail = rd.id '
                 'INNER JOIN "' + ResultsVersion._table + '" rv '
                 'ON rd.report_version = rv.id '
-            'WHERE e.name ILIKE %s',
+            'WHERE e.name ILIKE %s '
+                'AND rd.state != \'annulled\'',
             (value,))
         details_ids = [x[0] for x in cursor.fetchall()]
         if not details_ids:
@@ -199,6 +203,7 @@ class ResultsReport(metaclass=PoolMeta):
                     'INNER JOIN "' + ResultsVersion._table + '" rv '
                     'ON rd.report_version = rv.id '
                 'WHERE rv.results_report = %s '
+                    'AND rd.state != \'annulled\' '
                 'ORDER BY ct.name', (r.id,))
             samples = [x[0] for x in cursor.fetchall()]
             if samples:
@@ -235,7 +240,8 @@ class ResultsReport(metaclass=PoolMeta):
                 'ON rs.version_detail = rd.id '
                 'INNER JOIN "' + ResultsVersion._table + '" rv '
                 'ON rd.report_version = rv.id '
-            'WHERE ct.name ILIKE %s',
+            'WHERE ct.name ILIKE %s '
+                'AND rd.state != \'annulled\'',
             (value,))
         details_ids = [x[0] for x in cursor.fetchall()]
         if not details_ids:
