@@ -56,10 +56,11 @@ class Typification(ModelSQL, ModelView):
     limit_digits = fields.Integer('Limit digits')
     check_result_limits = fields.Boolean(
         'Validate limits directly on the result')
-    initial_concentration = fields.Char('Initial concentration')
+    initial_concentration = fields.Char('Initial concentration',
+        translate=True)
     start_uom = fields.Many2One('product.uom', 'Start UoM',
         domain=[('category.lims_only_available', '=', True)])
-    final_concentration = fields.Char('Final concentration')
+    final_concentration = fields.Char('Final concentration', translate=True)
     end_uom = fields.Many2One('product.uom', 'End UoM',
         domain=[('category.lims_only_available', '=', True)])
     default_repetitions = fields.Integer('Default repetitions',
@@ -494,6 +495,20 @@ class Typification(ModelSQL, ModelView):
                     'initial_concentration': str(
                         typification.initial_concentration or ''),
                     })
+
+    @classmethod
+    def get_valid_typification(cls, product_type, matrix, analysis, method):
+        cursor = Transaction().connection.cursor()
+        cursor.execute('SELECT id '
+            'FROM "' + cls._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s '
+                'AND analysis = %s '
+                'AND method = %s '
+                'AND valid',
+            (product_type, matrix, analysis, method))
+        res = cursor.fetchone()
+        return res and cls(res[0]) or None
 
 
 class TypificationAditional(ModelSQL):
