@@ -6,7 +6,7 @@ from io import BytesIO
 from datetime import datetime
 from PyPDF2 import PdfFileMerger
 
-from trytond.model import Workflow, ModelView, ModelSQL, fields
+from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     StateReport, Button
 from trytond.pool import Pool
@@ -1476,6 +1476,15 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
                     'AND nl.notebook = %s',
                 (detail_sample.id, detail_sample.version_detail.id,
                  detail_sample.notebook.id))
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        t = cls.__table__()
+        cls._sql_constraints += [
+            ('line_uniq', Unique(t, t.detail_sample, t.notebook_line),
+                'lims.msg_results_report_line_unique_id'),
+            ]
 
     @staticmethod
     def default_hide():

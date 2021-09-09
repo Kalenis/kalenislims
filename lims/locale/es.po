@@ -8358,6 +8358,10 @@ msgctxt "model:ir.message,text:msg_replace_number"
 msgid "Supplants the Results Report N° %(report)s"
 msgstr "Sustituye al informe de resultados N° %(report)s"
 
+msgctxt "model:ir.message,text:msg_results_report_line_unique_id"
+msgid "Duplicate line in results report"
+msgstr "Línea duplicada en el informe de resultados"
+
 msgctxt "model:ir.message,text:msg_rule_condition_field"
 msgid "Invalid field: %(field)s"
 msgstr "Campo inválido: %(field)s"
