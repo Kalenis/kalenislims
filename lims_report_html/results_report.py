@@ -386,9 +386,12 @@ class ResultReport(metaclass=PoolMeta):
 
     @classmethod
     def execute(cls, ids, data):
-        ResultsDetail = Pool().get('lims.results_report.version.detail')
         if len(ids) > 1:
             raise UserError(gettext('lims.msg_multiple_reports'))
+
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        CachedReport = pool.get('lims.results_report.cached_report')
 
         results_report = ResultsDetail(ids[0])
         if results_report.state == 'annulled':
@@ -397,47 +400,47 @@ class ResultReport(metaclass=PoolMeta):
         if data is None:
             data = {}
         current_data = data.copy()
+        current_data['alt_lang'] = results_report.report_language.code
 
         template = results_report.template
         if template and template.type == 'base':  # HTML
-            current_data['alt_lang'] = None
-            result_orig = cls.execute_html_results_report(ids, current_data)
-            current_data['alt_lang'] = 'en'
-            result_eng = cls.execute_html_results_report(ids, current_data)
+            result = cls.execute_html_results_report(ids, current_data)
         else:
             current_data['action_id'] = None
             if template and template.report:
                 current_data['action_id'] = template.report.id
-            current_data['alt_lang'] = None
-            result_orig = cls.execute_custom_results_report(ids, current_data)
-            current_data['alt_lang'] = 'en'
-            result_eng = cls.execute_custom_results_report(ids, current_data)
+            result = cls.execute_custom_results_report(ids, current_data)
 
-        save = False
-        if results_report.english_report:
-            if results_report.report_cache_eng:
-                result = (results_report.report_format_eng,
-                    results_report.report_cache_eng) + result_eng[2:]
-            else:
-                result = result_eng
-                if ('english_report' in current_data and
-                        current_data['english_report']):
-                    results_report.report_format_eng, \
-                        results_report.report_cache_eng = result_eng[:2]
-                    save = True
+        cached_reports = CachedReport.search([
+            ('version_detail', '=', results_report.id),
+            ('report_language', '=', results_report.report_language.id),
+            ['OR',
+                ('report_cache', '!=', None),
+                ('report_cache_id', '!=', None)],
+            ])
+        if cached_reports:
+            result = (cached_reports[0].report_format,
+                cached_reports[0].report_cache) + result[2:]
+
         else:
-            if results_report.report_cache:
-                result = (results_report.report_format,
-                    results_report.report_cache) + result_orig[2:]
-            else:
-                result = result_orig
-                if ('english_report' in current_data and
-                        not current_data['english_report']):
-                    results_report.report_format, \
-                        results_report.report_cache = result_orig[:2]
-                    save = True
-        if save:
-            results_report.save()
+            if current_data.get('save_cache', False):
+                cached_reports = CachedReport.search([
+                    ('version_detail', '=', results_report.id),
+                    ('report_language', '=',
+                        results_report.report_language.id),
+                    ])
+                if cached_reports:
+                    CachedReport.write(cached_reports, {
+                        'report_cache': result[1],
+                        'report_format': result[0],
+                        })
+                else:
+                    CachedReport.create([{
+                        'version_detail': results_report.id,
+                        'report_language': results_report.report_language.id,
+                        'report_cache': result[1],
+                        'report_format': result[0],
+                        }])
 
         return result
 
