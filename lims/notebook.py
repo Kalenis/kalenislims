@@ -820,9 +820,9 @@ class NotebookLine(ModelSQL, ModelView):
         None, None, 'Device domain'), 'on_change_with_device_domain')
     analysis_origin = fields.Char('Analysis origin', readonly=True)
     initial_concentration = fields.Char('Initial concentration',
-        states=_states, depends=_depends)
+        translate=True, states=_states, depends=_depends)
     final_concentration = fields.Char('Final concentration',
-        states=_states, depends=_depends)
+        translate=True, states=_states, depends=_depends)
     laboratory_professionals = fields.Many2Many(
         'lims.notebook.line-laboratory.professional', 'notebook_line',
         'professional', 'Preparation professionals',
@@ -1439,18 +1439,14 @@ class NotebookLine(ModelSQL, ModelView):
 
     @classmethod
     def get_typification_field(cls, notebook_lines, names):
-        Typification = Pool().get('lims.typification')
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+
         result = dict((name, {}) for name in names)
         for nl in notebook_lines:
-            typifications = Typification.search([
-                ('product_type', '=', nl.notebook.product_type.id),
-                ('matrix', '=', nl.notebook.matrix.id),
-                ('analysis', '=', nl.analysis.id),
-                ('method', '=', nl.method.id),
-                ('valid', '=', True),
-                ])
-            typification = (typifications[0] if len(typifications) == 1
-                else None)
+            typification = Typification.get_valid_typification(
+                nl.notebook.product_type.id, nl.notebook.matrix.id,
+                nl.analysis.id, nl.method.id)
             for name in names:
                 if typification:
                     result[name][nl.id] = getattr(typification, name, None)

@@ -1033,56 +1033,32 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         AnalysisLaboratory = pool.get('lims.analysis-laboratory')
         ProductType = pool.get('lims.product.type')
         Notebook = pool.get('lims.notebook')
+        NotebookLine = pool.get('lims.notebook.line')
+        Config = pool.get('lims.configuration')
+        Lang = pool.get('ir.lang')
 
-        def _str_value(val=None):
-            return str(val) if val is not None else None
+        with Transaction().set_user(0):
+            notebook, = Notebook.search([('fraction', '=', fraction.id)])
 
-        lines_create = []
+        lines_to_create = []
         for detail in details:
-            cursor.execute('SELECT default_repetitions, '
-                    'initial_concentration, final_concentration, start_uom, '
-                    'end_uom, detection_limit, quantification_limit, '
-                    'lower_limit, upper_limit, calc_decimals, '
-                    'significant_digits, scientific_notation, report '
-                'FROM "' + Typification._table + '" '
-                'WHERE product_type = %s '
-                    'AND matrix = %s '
-                    'AND analysis = %s '
-                    'AND method = %s '
-                    'AND valid',
-                (fraction.product_type.id, fraction.matrix.id,
-                    detail.analysis.id, detail.method.id))
-            typifications = cursor.fetchall()
-            typification = (typifications[0] if len(typifications) == 1
-                else None)
-            if typification:
-                repetitions = typification[0]
-                initial_concentration = _str_value(typification[1])
-                final_concentration = _str_value(typification[2])
-                initial_unit = typification[3] or None
-                final_unit = typification[4] or None
-                detection_limit = _str_value(typification[5])
-                quantification_limit = _str_value(typification[6])
-                lower_limit = _str_value(typification[7])
-                upper_limit = _str_value(typification[8])
-                decimals = typification[9]
-                significant_digits = typification[10]
-                scientific_notation = typification[11]
-                report = typification[12]
-            else:
-                repetitions = 0
-                initial_concentration = None
-                final_concentration = None
-                initial_unit = None
-                final_unit = None
-                detection_limit = None
-                quantification_limit = None
-                lower_limit = None
-                upper_limit = None
-                decimals = 2
-                significant_digits = None
-                scientific_notation = False
-                report = False
+            t = Typification.get_valid_typification(
+                fraction.product_type.id, fraction.matrix.id,
+                detail.analysis.id, detail.method.id)
+
+            repetitions = t and t.default_repetitions or 0
+            initial_concentration = t and t.initial_concentration or None
+            final_concentration = t and t.final_concentration or None
+            initial_unit = t and t.start_uom and t.start_uom.id or None
+            final_unit = t and t.end_uom and t.end_uom.id or None
+            detection_limit = t and t.detection_limit or None
+            quantification_limit = t and t.quantification_limit or None
+            lower_limit = t and t.lower_limit or None
+            upper_limit = t and t.upper_limit or None
+            decimals = t and t.calc_decimals or 2
+            significant_digits = t and t.significant_digits or None
+            scientific_notation = t and t.scientific_notation or False
+            report = t and t.report or False
 
             results_estimated_waiting = None
             cursor.execute('SELECT results_estimated_waiting '
@@ -1120,6 +1096,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
 
             for i in range(0, repetitions + 1):
                 notebook_line = {
+                    'notebook': notebook.id,
                     'analysis_detail': detail.id,
                     'service': detail.service.id,
                     'analysis': detail.analysis.id,
@@ -1128,7 +1105,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                     'repetition': i,
                     'laboratory': detail.laboratory.id,
                     'method': detail.method.id,
-                    'device': detail.device.id if detail.device else None,
+                    'device': detail.device and detail.device.id or None,
                     'initial_concentration': initial_concentration,
                     'final_concentration': final_concentration,
                     'initial_unit': initial_unit,
@@ -1144,15 +1121,32 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                     'results_estimated_waiting': results_estimated_waiting,
                     'department': department,
                     }
-                lines_create.append(notebook_line)
+                lines_to_create.append(notebook_line)
 
         with Transaction().set_user(0):
-            notebook = Notebook.search([
-                ('fraction', '=', fraction.id),
-                ])
-            Notebook.write(notebook, {
-                'lines': [('create', lines_create)],
-                })
+            lines = NotebookLine.create(lines_to_create)
+
+            # copy translated fields from typification
+            default_language = Config(1).results_report_language
+            for lang in Lang.search([
+                    ('translatable', '=', True),
+                    ('code', '!=', default_language.code),
+                    ]):
+                with Transaction().set_context(language=lang.code):
+                    lines_to_save = []
+                    for line in lines:
+                        t = Typification.get_valid_typification(
+                            line.product_type.id, line.matrix.id,
+                            line.analysis.id, line.method.id)
+                        if not t:
+                            continue
+                        line_lang = NotebookLine(line.id)
+                        line_lang.initial_concentration = (
+                            t.initial_concentration)
+                        line_lang.final_concentration = (
+                            t.final_concentration)
+                        lines_to_save.append(line_lang)
+                    NotebookLine.save(lines_to_save)
 
     @staticmethod
     def default_service_view():
