@@ -9,8 +9,8 @@
     <group id="type" colspan="2" col="4">
         <label name="type"/>
         <field name="type"/>
-        <label name="english_report"/>
-        <field name="english_report" xexpand="0"/>
+        <label name="report_language"/>
+        <field name="report_language" widget="selection" xexpand="0"/>
     </group>
     <label name="laboratory"/>
     <field name="laboratory"/>
@@ -80,6 +80,4 @@
         <button name="new_version" string="New Version"/>
         <button name="annul" string="Annull"/>
     </group>
-    <field name="report_cache" colspan="4" invisible="1"/>
-    <field name="report_cache_eng" colspan="4" invisible="1"/>
 </form>

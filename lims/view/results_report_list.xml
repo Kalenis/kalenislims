@@ -2,7 +2,7 @@
 <tree>
     <field name="number"/>
     <field name="versions"/>
-    <field name="english_report"/>
+    <field name="report_language"/>
     <field name="party"/>
     <field name="invoice_party"/>
     <field name="samples_list"/>

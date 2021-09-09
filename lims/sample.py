@@ -5497,8 +5497,10 @@ class CreateSampleStart(ModelView):
         domain=[('party', '=', Eval('party'))], depends=['party'])
     sample_client_description = fields.Char(
         'Product described by the client', required=True)
-    sample_client_description_eng = fields.Char(
-        'Product described by the client (English)')
+    sample_client_description_lang = fields.Char(
+        'Product described by the client (foreign language)',
+        states={'readonly': ~Eval('foreign_language')},
+        depends=['foreign_language'])
     product_type = fields.Many2One('lims.product.type', 'Product type',
         required=True, states={'readonly': Bool(Eval('services'))},
         domain=[('id', 'in', Eval('product_type_domain'))],
@@ -5520,9 +5522,14 @@ class CreateSampleStart(ModelView):
     obj_description_manual = fields.Char(
         'Manual Objective description', depends=['obj_description'],
         states={'readonly': Bool(Eval('obj_description'))})
-    obj_description_manual_eng = fields.Char(
-        'Manual Objective description (English)', depends=['obj_description'],
-        states={'readonly': Bool(Eval('obj_description'))})
+    obj_description_manual_lang = fields.Char(
+        'Manual Objective description (foreign language)',
+        states={
+            'readonly': Or(
+                Bool(Eval('obj_description')),
+                ~Eval('foreign_language')),
+            },
+        depends=['obj_description', 'foreign_language'])
     fraction_state = fields.Many2One('lims.packaging.integrity',
         'Package state', required=True)
     package_type = fields.Many2One('lims.packaging.type', 'Package type',
@@ -5560,6 +5567,7 @@ class CreateSampleStart(ModelView):
             'without_services'])
     without_services = fields.Boolean('Without services')
     attributes = fields.Dict('lims.sample.attribute', 'Attributes')
+    foreign_language = fields.Boolean('Foreign Language')
 
     @fields.depends('product_type', 'matrix', 'matrix_domain')
     def on_change_product_type(self):
@@ -5973,33 +5981,39 @@ class CreateSample(Wizard):
         defaults['party'] = party_id
         defaults['party_domain'] = party_domain
         defaults['multi_party'] = entry.multi_party
+        defaults['foreign_language'] = (entry.report_language !=
+            config_.results_report_language)
         return defaults
 
     def transition_create_(self):
         # TODO: Remove logs
         logger = logging.getLogger(__name__)
         logger.info('-- CreateSample().transition_create_():INIT --')
-        Sample = Pool().get('lims.sample')
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Entry = pool.get('lims.entry')
 
         entry_id = Transaction().context['active_id']
+        entry = Entry(entry_id)
         samples_defaults = self._get_samples_defaults(entry_id)
         logger.info('.. Sample.create(..)')
         sample, = Sample.create(samples_defaults)
 
-        if (hasattr(self.start, 'sample_client_description_eng') and
-                getattr(self.start, 'sample_client_description_eng')):
-            with Transaction().set_context(language='en'):
-                sample_eng = Sample(sample.id)
-                sample_eng.sample_client_description = (
-                    self.start.sample_client_description_eng)
-                sample_eng.save()
-        if (hasattr(self.start, 'obj_description_manual_eng') and
-                getattr(self.start, 'obj_description_manual_eng')):
-            with Transaction().set_context(language='en'):
-                sample_eng = Sample(sample.id)
-                sample_eng.obj_description_manual = (
-                    self.start.obj_description_manual_eng)
-                sample_eng.save()
+        foreign_language = entry.report_language.code
+        if (hasattr(self.start, 'sample_client_description_lang') and
+                getattr(self.start, 'sample_client_description_lang')):
+            with Transaction().set_context(language=foreign_language):
+                sample_lang = Sample(sample.id)
+                sample_lang.sample_client_description = (
+                    self.start.sample_client_description_lang)
+                sample_lang.save()
+        if (hasattr(self.start, 'obj_description_manual_lang') and
+                getattr(self.start, 'obj_description_manual_lang')):
+            with Transaction().set_context(language=foreign_language):
+                sample_lang = Sample(sample.id)
+                sample_lang.obj_description_manual = (
+                    self.start.obj_description_manual_lang)
+                sample_lang.save()
 
         labels_list = self._get_labels_list(self.start.labels)
         if len(labels_list) > 1:

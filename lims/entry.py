@@ -7,6 +7,7 @@ from datetime import datetime
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
+from sql import Literal
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateReport, \
@@ -89,7 +90,9 @@ class Entry(Workflow, ModelSQL, ModelView):
     email_report = fields.Boolean('Email report')
     single_sending_report = fields.Boolean('Single sending of report',
         select=True)
-    english_report = fields.Boolean('English report')
+    report_language = fields.Many2One('ir.lang',
+        'Results Report Language', required=True,
+        domain=[('translatable', '=', True)])
     no_acknowledgment_of_receipt = fields.Boolean(
         'No acknowledgment of receipt')
     samples = fields.One2Many('lims.sample', 'entry', 'Samples',
@@ -157,6 +160,44 @@ class Entry(Workflow, ModelSQL, ModelView):
                 },
             })
 
+    @classmethod
+    def __register__(cls, module_name):
+        entry_h = cls.__table_handler__(module_name)
+        english_report_exist = entry_h.column_exist('english_report')
+        super().__register__(module_name)
+        if english_report_exist:
+            cls._migrate_english_report()
+            entry_h.drop_column('english_report')
+
+    @classmethod
+    def _migrate_english_report(cls):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Configuration = pool.get('lims.configuration')
+        Lang = pool.get('ir.lang')
+
+        entry_table = cls.__table__()
+        configuration_table = Configuration.__table__()
+        lang_table = Lang.__table__()
+
+        cursor.execute(*configuration_table.select(
+            configuration_table.results_report_language,
+            where=Literal(True)))
+        default_language = cursor.fetchone()
+        if default_language:
+            cursor.execute(*entry_table.update(
+                [entry_table.report_language], [default_language[0]],
+                where=(entry_table.english_report == Literal(False))))
+
+        cursor.execute(*lang_table.select(
+            lang_table.id,
+            where=lang_table.code == Literal('en')))
+        english_language = cursor.fetchone()
+        if english_language:
+            cursor.execute(*entry_table.update(
+                [entry_table.report_language], [english_language[0]],
+                where=(entry_table.english_report == Literal(True))))
+
     @staticmethod
     def default_multi_party():
         return Transaction().context.get('multi_party', False)
@@ -174,8 +215,10 @@ class Entry(Workflow, ModelSQL, ModelView):
         return False
 
     @staticmethod
-    def default_english_report():
-        return False
+    def default_report_language():
+        Config = Pool().get('lims.configuration')
+        default_language = Config(1).results_report_language
+        return default_language and default_language.id or None
 
     @staticmethod
     def default_no_acknowledgment_of_receipt():
@@ -245,9 +288,9 @@ class Entry(Workflow, ModelSQL, ModelView):
 
         config_ = Config(1)
 
+        report_language = None
         email = False
         single_sending = False
-        english = False
         no_ack = False
 
         invoice_contacts = []
@@ -278,9 +321,9 @@ class Entry(Workflow, ModelSQL, ModelView):
                     a_acknowledgment_contacts.append(c.contact)
 
         if self.party:
+            report_language = self.party.report_language
             email = self.party.email_report
             single_sending = self.party.single_sending_report
-            english = self.party.english_report
             no_ack = self.party.no_acknowledgment_of_receipt
 
             if self.party.addresses:
@@ -295,9 +338,10 @@ class Entry(Workflow, ModelSQL, ModelView):
                             acknowledgment_contacts.append(
                                 AcknowledgmentContacts(contact=c))
 
+        if report_language:
+            self.report_language = report_language
         self.email_report = email
         self.single_sending_report = single_sending
-        self.english_report = english
         self.no_acknowledgment_of_receipt = no_ack
 
         self.invoice_contacts = invoice_contacts
@@ -480,7 +524,7 @@ class Entry(Workflow, ModelSQL, ModelView):
     def confirm(cls, entries):
         for entry in entries:
             entry.check_contacts()
-            entry.warn_english_report()
+            entry.warn_foreign_report()
             entry._confirm()
 
     @classmethod
@@ -518,7 +562,7 @@ class Entry(Workflow, ModelSQL, ModelView):
 
         for entry in entries:
             entry.check_contacts()
-            entry.warn_english_report()
+            entry.warn_foreign_report()
 
         fractions = Fraction.search([
             ('entry', 'in', [e.id for e in entries]),
@@ -550,13 +594,17 @@ class Entry(Workflow, ModelSQL, ModelView):
             raise UserError(gettext(
                 'lims.msg_missing_entry_contacts', entry=self.rec_name))
 
-    def warn_english_report(self):
-        Warning = Pool().get('res.user.warning')
+    def warn_foreign_report(self):
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        Warning = pool.get('res.user.warning')
 
-        if self.english_report:
-            key = 'lims_english_report@%s' % self.number
+        default_language = Config(1).results_report_language
+        if self.report_language != default_language:
+            key = 'lims_foreign_report@%s' % self.number
             if Warning.check(key):
-                raise UserWarning(key, gettext('lims.msg_english_report'))
+                raise UserWarning(key, gettext('lims.msg_foreign_report',
+                    lang=self.report_language.name))
 
     def print_report(self):
         if self.ack_report_cache:

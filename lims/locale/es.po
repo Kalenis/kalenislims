@@ -467,6 +467,10 @@ msgctxt "field:lims.configuration,referral_sequence:"
 msgid "Referral Sequence"
 msgstr "Secuencia de derivaciones"
 
+msgctxt "field:lims.configuration,results_report_language:"
+msgid "Results Report Language"
+msgstr "Idioma Informe de resultados"
+
 msgctxt "field:lims.configuration,rm_fraction_type:"
 msgid "RM fraction type"
 msgstr "Tipo de fracción RM"
@@ -1143,6 +1147,10 @@ msgctxt "field:lims.create_sample.start,date:"
 msgid "Date"
 msgstr "Fecha de ingreso"
 
+msgctxt "field:lims.create_sample.start,foreign_language:"
+msgid "Foreign Language"
+msgstr "Idioma extranjero"
+
 msgctxt "field:lims.create_sample.start,fraction_state:"
 msgid "Package state"
 msgstr "Estado del envase"
@@ -1175,9 +1183,9 @@ msgctxt "field:lims.create_sample.start,obj_description_manual:"
 msgid "Manual Objective description"
 msgstr "Descripción objetiva manual"
 
-msgctxt "field:lims.create_sample.start,obj_description_manual_eng:"
-msgid "Manual Objective description (English)"
-msgstr "Descripción objetiva manual (Inglés)"
+msgctxt "field:lims.create_sample.start,obj_description_manual_lang:"
+msgid "Manual Objective description (foreign language)"
+msgstr "Descripción objetiva manual (idioma extranjero)"
 
 msgctxt "field:lims.create_sample.start,package_type:"
 msgid "Package type"
@@ -1219,9 +1227,9 @@ msgctxt "field:lims.create_sample.start,sample_client_description:"
 msgid "Product described by the client"
 msgstr "Producto descripto por el cliente"
 
-msgctxt "field:lims.create_sample.start,sample_client_description_eng:"
-msgid "Product described by the client (English)"
-msgstr "Producto descripto por el cliente (Inglés)"
+msgctxt "field:lims.create_sample.start,sample_client_description_lang:"
+msgid "Product described by the client (foreign language)"
+msgstr "Producto descripto por el cliente (idioma extranjero)"
 
 msgctxt "field:lims.create_sample.start,services:"
 msgid "Services"
@@ -1359,10 +1367,6 @@ msgctxt "field:lims.entry,email_report:"
 msgid "Email report"
 msgstr "Informe por e-mail"
 
-msgctxt "field:lims.entry,english_report:"
-msgid "English report"
-msgstr "Informe en inglés"
-
 msgctxt "field:lims.entry,icon:"
 msgid "Icon"
 msgstr "Icono"
@@ -1426,6 +1430,10 @@ msgstr "Observaciones informe"
 msgctxt "field:lims.entry,report_contacts:"
 msgid "Report contacts"
 msgstr "Contactos informe"
+
+msgctxt "field:lims.entry,report_language:"
+msgid "Results Report Language"
+msgstr "Idioma Informe de resultados"
 
 msgctxt "field:lims.entry,result_cron:"
 msgid "Result cron"
@@ -4985,10 +4993,6 @@ msgctxt "field:lims.results_report,create_date2:"
 msgid "Create Date"
 msgstr "Fecha de creación"
 
-msgctxt "field:lims.results_report,english_report:"
-msgid "English report"
-msgstr "Informe en inglés"
-
 msgctxt "field:lims.results_report,entry:"
 msgid "Entry"
 msgstr "Ingreso"
@@ -5021,14 +5025,6 @@ msgctxt "field:lims.results_report,report_cache:"
 msgid "Report cache"
 msgstr "Cache informe"
 
-msgctxt "field:lims.results_report,report_cache_eng:"
-msgid "Report cache"
-msgstr "Cache informe"
-
-msgctxt "field:lims.results_report,report_cache_eng_id:"
-msgid "Report cache id"
-msgstr "ID Cache informe"
-
 msgctxt "field:lims.results_report,report_cache_id:"
 msgid "Report cache id"
 msgstr "ID Cache informe"
@@ -5037,13 +5033,13 @@ msgctxt "field:lims.results_report,report_format:"
 msgid "Report format"
 msgstr "Formato informe"
 
-msgctxt "field:lims.results_report,report_format_eng:"
-msgid "Report format"
-msgstr "Formato informe"
-
 msgctxt "field:lims.results_report,report_grouper:"
 msgid "Report Grouper"
 msgstr "Agrupador de informe"
+
+msgctxt "field:lims.results_report,report_language:"
+msgid "Language"
+msgstr "Idioma"
 
 msgctxt "field:lims.results_report,samples_list:"
 msgid "Samples"
@@ -5064,6 +5060,39 @@ msgstr "Laboratorios"
 msgctxt "field:lims.results_report,write_date2:"
 msgid "Write Date"
 msgstr "Fecha de modificación"
+
+msgctxt "field:lims.results_report.cached_report,report_cache:"
+msgid "Report cache"
+msgstr "Cache informe"
+
+msgctxt "field:lims.results_report.cached_report,report_cache_id:"
+msgid "Report cache id"
+msgstr "ID Cache informe"
+
+msgctxt "field:lims.results_report.cached_report,report_format:"
+msgid "Report format"
+msgstr "Formato informe"
+
+msgctxt "field:lims.results_report.cached_report,report_language:"
+msgid "Language"
+msgstr "Idioma"
+
+msgctxt "field:lims.results_report.cached_report,transcription_report_cache:"
+msgid "Transcription Report cache"
+msgstr "Cache transcripción informe"
+
+msgctxt ""
+"field:lims.results_report.cached_report,transcription_report_cache_id:"
+msgid "Transcription Report cache id"
+msgstr "ID Cache transcripción informe"
+
+msgctxt "field:lims.results_report.cached_report,transcription_report_format:"
+msgid "Transcription Report format"
+msgstr "Formato transcripción informe"
+
+msgctxt "field:lims.results_report.cached_report,version_detail:"
+msgid "Report Detail"
+msgstr "Detalle de informe"
 
 msgctxt "field:lims.results_report.version,details:"
 msgid "Detail lines"
@@ -5101,6 +5130,10 @@ msgctxt "field:lims.results_report.version.detail,annulment_uid:"
 msgid "Annulment user"
 msgstr "Usuario de anulación"
 
+msgctxt "field:lims.results_report.version.detail,cached_reports:"
+msgid "Cached Reports"
+msgstr "Informes cacheados"
+
 msgctxt "field:lims.results_report.version.detail,cie_fraction_type:"
 msgid "QA"
 msgstr "QA"
@@ -5116,10 +5149,6 @@ msgstr "Fecha de creación"
 msgctxt "field:lims.results_report.version.detail,date:"
 msgid "Date"
 msgstr "Fecha"
-
-msgctxt "field:lims.results_report.version.detail,english_report:"
-msgid "English report"
-msgstr "Informe en inglés"
 
 msgctxt "field:lims.results_report.version.detail,entry_summary:"
 msgid "Entry / Qty. Samples"
@@ -5157,53 +5186,13 @@ msgctxt "field:lims.results_report.version.detail,release_uid:"
 msgid "Release user"
 msgstr "Usuario de publicación"
 
-msgctxt "field:lims.results_report.version.detail,report_cache:"
-msgid "Report cache"
-msgstr "Cache informe"
+msgctxt "field:lims.results_report.version.detail,report_language:"
+msgid "Language"
+msgstr "Idioma"
 
-msgctxt "field:lims.results_report.version.detail,report_cache_eng:"
-msgid "Report cache"
-msgstr "Cache informe"
-
-msgctxt "field:lims.results_report.version.detail,report_cache_eng_id:"
-msgid "Report cache id"
-msgstr "ID Cache informe"
-
-msgctxt "field:lims.results_report.version.detail,report_cache_id:"
-msgid "Report cache id"
-msgstr "ID Cache informe"
-
-msgctxt "field:lims.results_report.version.detail,report_cache_odt:"
-msgid "Transcription Report cache"
-msgstr "Cache transcripción informe"
-
-msgctxt "field:lims.results_report.version.detail,report_cache_odt_eng:"
-msgid "Transcription Report cache"
-msgstr "Cache transcripción informe"
-
-msgctxt "field:lims.results_report.version.detail,report_cache_odt_eng_id:"
-msgid "Transcription Report cache id"
-msgstr "ID Cache transcripción informe"
-
-msgctxt "field:lims.results_report.version.detail,report_cache_odt_id:"
-msgid "Transcription Report cache id"
-msgstr "ID Cache transcripción informe"
-
-msgctxt "field:lims.results_report.version.detail,report_format:"
-msgid "Report format"
-msgstr "Formato informe"
-
-msgctxt "field:lims.results_report.version.detail,report_format_eng:"
-msgid "Report format"
-msgstr "Formato informe"
-
-msgctxt "field:lims.results_report.version.detail,report_format_odt:"
-msgid "Transcription Report format"
-msgstr "Formato transcripción informe"
-
-msgctxt "field:lims.results_report.version.detail,report_format_odt_eng:"
-msgid "Transcription Report format"
-msgstr "Formato transcripción informe"
+msgctxt "field:lims.results_report.version.detail,report_language_cached:"
+msgid "Report cached"
+msgstr "Informe cacheado"
 
 msgctxt "field:lims.results_report.version.detail,report_result_type:"
 msgid "Result type"
@@ -6588,10 +6577,6 @@ msgctxt "field:party.party,email_report:"
 msgid "Email report"
 msgstr "Informe por e-mail"
 
-msgctxt "field:party.party,english_report:"
-msgid "English report"
-msgstr "Informe en inglés"
-
 msgctxt "field:party.party,entry_zone:"
 msgid "Entry Zone"
 msgstr "Zona de Ingreso"
@@ -6607,6 +6592,10 @@ msgstr "Usuario Lims"
 msgctxt "field:party.party,no_acknowledgment_of_receipt:"
 msgid "No acknowledgment of receipt"
 msgstr "Sin acuse de recibo"
+
+msgctxt "field:party.party,report_language:"
+msgid "Results Report Language"
+msgstr "Idioma Informe de resultados"
 
 msgctxt "field:party.party,sample_producers:"
 msgid "Sample Producers"
@@ -7876,6 +7865,10 @@ msgctxt "model:ir.message,text:msg_description_uniq"
 msgid "Analysis description must be unique"
 msgstr "La descripción del análisis debe ser única"
 
+msgctxt "model:ir.message,text:msg_detail_language_unique_id"
+msgid "Cache already exists for the report"
+msgstr "Ya existe caché para el informe"
+
 msgctxt "model:ir.message,text:msg_detection_limit"
 msgid "(LoD = %(detection_limit)s %(initial_unit)s)"
 msgstr "(LD = %(detection_limit)s %(initial_unit)s)"
@@ -7940,10 +7933,6 @@ msgstr ""
 "La fecha de finalización no debe ser mayor que la fecha actual en "
 "\"%(analysis)s\""
 
-msgctxt "model:ir.message,text:msg_english_report"
-msgid "Do not forget to load the translations into English"
-msgstr "No olvide cargar las traducciones al Inglés"
-
 msgctxt "model:ir.message,text:msg_error_limits_allowed"
 msgid "The value of line \"%(line)s\" is outside the allowed limits"
 msgstr "El valor de la línea \"%(line)s\" está fuera de los límites permitidos"
@@ -7968,9 +7957,21 @@ msgctxt "model:ir.message,text:msg_final_unit_label_4"
 msgid "Expressed at dry matter"
 msgstr "Expresado a base seca"
 
+msgctxt "model:ir.message,text:msg_foreign_report"
+msgid "Do not forget to load the translations for the %(lang)s language."
+msgstr "No olvide cargar las traducciones para el idioma %(lang)s."
+
 msgctxt "model:ir.message,text:msg_fraction_type_code_unique_id"
 msgid "Fraction type code must be unique"
 msgstr "El código del tipo de fracción debe ser único"
+
+msgctxt "model:ir.message,text:msg_global_report_build"
+msgid "Build failed"
+msgstr "Falló la compilación del informe"
+
+msgctxt "model:ir.message,text:msg_global_report_cache"
+msgid "No details cached (%(language)s)"
+msgstr "No hay caché para el informe (%(language)s)"
 
 msgctxt "model:ir.message,text:msg_invalid_limits"
 msgid "Quantification limit must be greater than Detection limit"
@@ -9806,6 +9807,10 @@ msgstr "Relacionar análisis"
 msgctxt "model:lims.results_report,name:"
 msgid "Results Report"
 msgstr "Informe de resultados"
+
+msgctxt "model:lims.results_report.cached_report,name:"
+msgid "Cached Results Report"
+msgstr "Informe de resultados cacheados"
 
 msgctxt "model:lims.results_report.version,name:"
 msgid "Results Report Version"

@@ -5,8 +5,9 @@
 from io import BytesIO
 from datetime import datetime
 from PyPDF2 import PdfFileMerger
+from sql import Literal
 
-from trytond.model import Workflow, ModelView, ModelSQL, fields
+from trytond.model import Workflow, ModelView, ModelSQL, Unique, fields
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     StateReport, Button
 from trytond.pool import Pool
@@ -16,6 +17,7 @@ from trytond.report import Report
 from trytond.rpc import RPC
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
+from trytond import backend
 from .configuration import get_print_date
 from .notebook import NotebookLineRepeatAnalysis
 
@@ -37,7 +39,8 @@ class ResultsReport(ModelSQL, ModelView):
     report_grouper = fields.Integer('Report Grouper')
     generation_type = fields.Char('Generation type')
     cie_fraction_type = fields.Boolean('QA', readonly=True)
-    english_report = fields.Boolean('English report')
+    report_language = fields.Many2One('ir.lang', 'Language', required=True,
+        domain=[('translatable', '=', True)])
     single_sending_report = fields.Function(fields.Boolean(
         'Single sending'), 'get_entry_field',
         searcher='search_entry_field')
@@ -52,31 +55,65 @@ class ResultsReport(ModelSQL, ModelView):
     attachments = fields.One2Many('ir.attachment', 'resource', 'Attachments')
     samples_list = fields.Function(fields.Char('Samples'),
         'get_samples_list', searcher='search_samples_list')
-
-    # PDF Report Cache
     report_cache = fields.Binary('Report cache', readonly=True,
         file_id='report_cache_id', store_prefix='results_report')
     report_cache_id = fields.Char('Report cache id', readonly=True)
     report_format = fields.Char('Report format', readonly=True)
-    report_cache_eng = fields.Binary('Report cache', readonly=True,
-        file_id='report_cache_eng_id', store_prefix='results_report')
-    report_cache_eng_id = fields.Char('Report cache id', readonly=True)
-    report_format_eng = fields.Char('Report format', readonly=True)
 
     @classmethod
     def __register__(cls, module_name):
+        cursor = Transaction().connection.cursor()
+
         table_h = cls.__table_handler__(module_name)
         notebook_exist = table_h.column_exist('notebook')
         entry_exist = table_h.column_exist('entry')
+        english_report_exist = table_h.column_exist('english_report')
+
         super().__register__(module_name)
+
         if notebook_exist and not entry_exist:
-            cursor = Transaction().connection.cursor()
             cursor.execute('UPDATE "lims_results_report" r '
                 'SET entry = s.entry '
                 'FROM "lims_sample" s '
                 'INNER JOIN "lims_fraction" f ON s.id = f.sample '
                 'INNER JOIN "lims_notebook" n ON f.id = n.fraction '
                 'WHERE r.notebook = n.id')
+
+        if english_report_exist:
+            cls._migrate_english_report()
+            table_h.drop_column('english_report')
+            table_h.drop_column('report_cache_eng')
+            table_h.drop_column('report_cache_eng_id')
+            table_h.drop_column('report_format_eng')
+
+    @classmethod
+    def _migrate_english_report(cls):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Configuration = pool.get('lims.configuration')
+        Lang = pool.get('ir.lang')
+
+        report_table = cls.__table__()
+        configuration_table = Configuration.__table__()
+        lang_table = Lang.__table__()
+
+        cursor.execute(*configuration_table.select(
+            configuration_table.results_report_language,
+            where=Literal(True)))
+        default_language = cursor.fetchone()
+        if default_language:
+            cursor.execute(*report_table.update(
+                [report_table.report_language], [default_language[0]],
+                where=(report_table.english_report == Literal(False))))
+
+        cursor.execute(*lang_table.select(
+            lang_table.id,
+            where=lang_table.code == Literal('en')))
+        english_language = cursor.fetchone()
+        if english_language:
+            cursor.execute(*report_table.update(
+                [report_table.report_language], [english_language[0]],
+                where=(report_table.english_report == Literal(True))))
 
     @classmethod
     def __setup__(cls):
@@ -127,7 +164,7 @@ class ResultsReport(ModelSQL, ModelView):
             'report_grouper',
             'generation_type',
             'cie_fraction_type',
-            'english_report',
+            'report_language',
             'attachments',
             ]
 
@@ -200,9 +237,7 @@ class ResultsReport(ModelSQL, ModelView):
             result[r.id] = False
             if r.single_sending_report and not r.single_sending_report_ready:
                 continue
-            spanish_report = r.has_report_cached(english_report=False)
-            english_report = r.has_report_cached(english_report=True)
-            if not spanish_report and not english_report:
+            if not r.has_report_cached():
                 continue
             result[r.id] = True
         return result
@@ -215,6 +250,7 @@ class ResultsReport(ModelSQL, ModelView):
         ResultsReport = pool.get('lims.results_report')
         ResultsVersion = pool.get('lims.results_report.version')
         ResultsDetail = pool.get('lims.results_report.version.detail')
+        CachedReport = pool.get('lims.results_report.cached_report')
 
         excluded_ids = []
         cursor.execute('SELECT r.id '
@@ -229,14 +265,18 @@ class ResultsReport(ModelSQL, ModelView):
                     excluded_ids.append(report.id)
         excluded_ids = ', '.join(str(r) for r in [0] + excluded_ids)
 
-        cursor.execute('SELECT rv.results_report '
-            'FROM "' + ResultsDetail._table + '" rd '
+        cursor.execute('SELECT rr.id '
+            'FROM "' + CachedReport._table + '" cr '
+                'INNER JOIN "' + ResultsDetail._table + '" rd '
+                'ON cr.version_detail = rd.id '
                 'INNER JOIN "' + ResultsVersion._table + '" rv '
                 'ON rd.report_version = rv.id '
-            'WHERE rd.valid = TRUE '
-                'AND (rd.report_format = \'pdf\' '
-                'OR rd.report_format_eng = \'pdf\') '
-                'AND rv.results_report NOT IN (' + excluded_ids + ') ')
+                'INNER JOIN "' + ResultsReport._table + '" rr '
+                'ON rv.results_report = rr.id '
+            'WHERE rv.results_report NOT IN (' + excluded_ids + ') '
+                'AND rd.valid = TRUE '
+                'AND cr.report_language = rr.report_language '
+                'AND cr.report_format = \'pdf\'')
         ready_ids = [x[0] for x in cursor.fetchall()]
 
         field, op, operand = clause
@@ -263,45 +303,72 @@ class ResultsReport(ModelSQL, ModelView):
     def order_create_date2(cls, tables):
         return cls.create_date.convert_order('create_date', tables, cls)
 
-    def has_report_cached(self, english_report=False):
-        '''
-        Has Report Cached
-        :english_report: boolean
-        :return: boolean
-        '''
-        return bool(self._get_details_cached(english_report))
-
-    def details_cached(self, english_report=False):
-        '''
-        Details Cached
-        :english_report: boolean
-        :return: list of details
-        '''
-        pool = Pool()
-        ResultsDetail = pool.get('lims.results_report.version.detail')
-        with Transaction().set_user(0):
-            return ResultsDetail.browse(
-                self._get_details_cached(english_report))
-
-    def _get_details_cached(self, english_report=False):
+    def _get_details_cached(self):
         cursor = Transaction().connection.cursor()
         pool = Pool()
+        CachedReport = pool.get('lims.results_report.cached_report')
         ResultsDetail = pool.get('lims.results_report.version.detail')
         ResultsVersion = pool.get('lims.results_report.version')
 
-        format_field = 'report_format'
-        if english_report:
-            format_field = 'report_format_eng'
-
         cursor.execute('SELECT rd.id '
-            'FROM "' + ResultsDetail._table + '" rd '
+            'FROM "' + CachedReport._table + '" cr '
+                'INNER JOIN "' + ResultsDetail._table + '" rd '
+                'ON cr.version_detail = rd.id '
                 'INNER JOIN "' + ResultsVersion._table + '" rv '
                 'ON rd.report_version = rv.id '
             'WHERE rv.results_report = %s '
                 'AND rd.valid = TRUE '
-                'AND rd.' + format_field + ' = \'pdf\'',
-            (self.id,))
+                'AND cr.report_language = %s '
+                'AND cr.report_format = \'pdf\'',
+            (self.id, self.report_language.id))
         return [x[0] for x in cursor.fetchall()]
+
+    def has_report_cached(self):
+        return bool(self._get_details_cached())
+
+    def details_cached(self):
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        with Transaction().set_user(0):
+            return ResultsDetail.browse(self._get_details_cached())
+
+    def build_report(self):
+        details = self.details_cached()
+        if not details:
+            raise UserError(gettext('lims.msg_global_report_cache',
+                    language=self.report_language.name))
+
+        cache = self._get_global_report(details)
+        if not cache:
+            raise UserError(gettext('lims.msg_global_report_build'))
+
+        self.report_cache = cache
+        self.report_format = 'pdf'
+        self.save()
+
+    def _get_global_report(self, details):
+        pool = Pool()
+        CachedReport = pool.get('lims.results_report.cached_report')
+
+        all_cache = []
+        for detail in details:
+            cached_reports = CachedReport.search([
+                ('version_detail', '=', detail.id),
+                ('report_language', '=', self.report_language.id),
+                ('report_format', '=', 'pdf'),
+                ])
+            if cached_reports:
+                all_cache.append(cached_reports[0].report_cache)
+        if not all_cache:
+            return False
+
+        merger = PdfFileMerger(strict=False)
+        for cache in all_cache:
+            filedata = BytesIO(cache)
+            merger.append(filedata)
+        output = BytesIO()
+        merger.write(output)
+        return bytearray(output.getvalue())
 
     @classmethod
     def get_samples_list(cls, reports, name):
@@ -539,34 +606,12 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         ('result_range', 'Result and Ranges'),
         ('both_range', 'Both and Ranges'),
         ], 'Result type', sort=False), 'on_change_with_report_result_type')
-    english_report = fields.Function(fields.Boolean('English report'),
+    report_language = fields.Function(fields.Many2One('ir.lang', 'Language'),
         'get_report_field', searcher='search_report_field')
-
-    # PDF Report Cache
-    report_cache = fields.Binary('Report cache', readonly=True,
-        file_id='report_cache_id', store_prefix='results_report')
-    report_cache_id = fields.Char('Report cache id', readonly=True)
-    report_format = fields.Char('Report format', readonly=True)
-    report_cache_eng = fields.Binary('Report cache', readonly=True,
-        file_id='report_cache_eng_id', store_prefix='results_report')
-    report_cache_eng_id = fields.Char('Report cache id', readonly=True)
-    report_format_eng = fields.Char('Report format', readonly=True)
-
-    # ODT Report Cache
-    report_cache_odt = fields.Binary('Transcription Report cache',
-        readonly=True, file_id='report_cache_odt_id',
-        store_prefix='results_report')
-    report_cache_odt_id = fields.Char('Transcription Report cache id',
-        readonly=True)
-    report_format_odt = fields.Char('Transcription Report format',
-        readonly=True)
-    report_cache_odt_eng = fields.Binary('Transcription Report cache',
-        readonly=True, file_id='report_cache_odt_eng_id',
-        store_prefix='results_report')
-    report_cache_odt_eng_id = fields.Char('Transcription Report cache id',
-        readonly=True)
-    report_format_odt_eng = fields.Char('Transcription Report format',
-        readonly=True)
+    cached_reports = fields.One2Many('lims.results_report.cached_report',
+        'version_detail', 'Cached Reports', readonly=True)
+    report_language_cached = fields.Function(fields.Boolean(
+        'Report cached'), 'get_report_language_cached')
 
     del _states, _depends
 
@@ -595,21 +640,11 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                 'depends': ['state'],
                 },
             'release_all_lang': {
-                'invisible': If(Bool(Eval('english_report')),
-                    Bool(Or(
-                        Eval('state') != 'released',
-                        Bool(Eval('report_cache_eng')),
-                        Bool(Eval('report_cache_eng_id')),
-                        )),
-                    Bool(Or(
-                        Eval('state') != 'released',
-                        Bool(Eval('report_cache')),
-                        Bool(Eval('report_cache_id')),
-                        )),
+                'invisible': Or(
+                    Eval('state') != 'released',
+                    Bool(Eval('report_language_cached')),
                     ),
-                'depends': ['english_report', 'state',
-                    'report_cache', 'report_cache_id',
-                    'report_cache_eng', 'report_cache_eng_id'],
+                'depends': ['state', 'report_language_cached'],
                 },
             'annul': {
                 'invisible': Or(Eval('state') != 'released', ~Eval('valid')),
@@ -624,12 +659,95 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     @classmethod
     def __register__(cls, module_name):
         cursor = Transaction().connection.cursor()
+        TableHandler = backend.TableHandler
+
+        table_h = cls.__table_handler__(module_name)
+        report_cache_exist = table_h.column_exist('report_cache_id')
+        cached_report_table_exist = TableHandler.table_exist(
+            'lims_results_report_cached_report')
+
         super().__register__(module_name)
-        cursor.execute('UPDATE "' + cls._table + '" '
-            'SET state = \'released\' '
-            'WHERE state = \'revised\' '
-                'AND (report_cache_id IS NOT NULL OR '
-                'report_cache_eng_id IS NOT NULL)')
+
+        if report_cache_exist:
+            cursor.execute('UPDATE "' + cls._table + '" '
+                'SET state = \'released\' '
+                'WHERE state = \'revised\' '
+                    'AND (report_cache_id IS NOT NULL OR '
+                    'report_cache_eng_id IS NOT NULL)')
+
+        if report_cache_exist and cached_report_table_exist:
+            cls._migrate_report_cache()
+            table_h.drop_column('report_cache')
+            table_h.drop_column('report_cache_id')
+            table_h.drop_column('report_format')
+            table_h.drop_column('report_cache_eng')
+            table_h.drop_column('report_cache_eng_id')
+            table_h.drop_column('report_format_eng')
+            table_h.drop_column('report_cache_odt')
+            table_h.drop_column('report_cache_odt_id')
+            table_h.drop_column('report_format_odt')
+            table_h.drop_column('report_cache_odt_eng')
+            table_h.drop_column('report_cache_odt_eng_id')
+            table_h.drop_column('report_format_odt_eng')
+
+    @classmethod
+    def _migrate_report_cache(cls):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Configuration = pool.get('lims.configuration')
+        Lang = pool.get('ir.lang')
+        CachedReport = pool.get('lims.results_report.cached_report')
+
+        report_table = cls.__table__()
+        configuration_table = Configuration.__table__()
+        lang_table = Lang.__table__()
+        cached_report_table = CachedReport.__table__()
+
+        cursor.execute(*configuration_table.select(
+            configuration_table.results_report_language,
+            where=Literal(True)))
+        default_language = cursor.fetchone()
+
+        cursor.execute(*lang_table.select(
+            lang_table.id,
+            where=lang_table.code == Literal('en')))
+        english_language = cursor.fetchone()
+
+        cursor.execute(*report_table.select(
+            report_table.id,
+            report_table.report_cache,
+            report_table.report_cache_id,
+            report_table.report_format,
+            report_table.report_cache_eng,
+            report_table.report_cache_eng_id,
+            report_table.report_format_eng,
+            report_table.report_cache_odt,
+            report_table.report_cache_odt_id,
+            report_table.report_format_odt,
+            report_table.report_cache_odt_eng,
+            report_table.report_cache_odt_eng_id,
+            report_table.report_format_odt_eng,
+            where=Literal(True)))
+        for x in cursor.fetchall():
+            vals = []
+            if x[1] or x[2] or x[7] or x[8]:
+                vals.append([x[0], default_language[0],
+                    x[1], x[2], x[3], x[7], x[8], x[9]])
+            if x[4] or x[5] or x[10] or x[11]:
+                vals.append([x[0], english_language[0],
+                    x[4], x[5], x[6], x[10], x[11], x[12]])
+            if not vals:
+                continue
+            cursor.execute(*cached_report_table.insert([
+                    cached_report_table.version_detail,
+                    cached_report_table.report_language,
+                    cached_report_table.report_cache,
+                    cached_report_table.report_cache_id,
+                    cached_report_table.report_format,
+                    cached_report_table.transcription_report_cache,
+                    cached_report_table.transcription_report_cache_id,
+                    cached_report_table.transcription_report_format,
+                    ], vals))
 
     @staticmethod
     def default_valid():
@@ -795,6 +913,17 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
             return []
         return [p.id for p in professionals]
 
+    def get_report_language_cached(self, name=None):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        CachedReport = pool.get('lims.results_report.cached_report')
+        cursor.execute('SELECT cr.id '
+            'FROM "' + CachedReport._table + '" cr '
+            'WHERE cr.version_detail = %s '
+                'AND cr.report_language = %s',
+            (self.id, self.report_language.id))
+        return bool(cursor.fetchone())
+
     @classmethod
     @ModelView.button
     @Workflow.transition('draft')
@@ -950,12 +1079,8 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         ResultReportTranscription = pool.get(
             'lims.result_report.transcription', type='report')
 
-        ResultReport.execute([self.id], {
-            'english_report': self.english_report,
-            })
-        ResultReportTranscription.execute([self.id], {
-            'english_report': self.english_report,
-            })
+        ResultReport.execute([self.id], {'save_cache': True})
+        ResultReportTranscription.execute([self.id], {'save_cache': True})
 
     @classmethod
     @ModelView.button_action('lims.wiz_lims_results_report_annulation')
@@ -1054,7 +1179,12 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         result = {}
         for name in names:
             result[name] = {}
-            if name in ('cie_fraction_type', 'english_report'):
+            if cls._fields[name]._type == 'many2one':
+                for d in details:
+                    field = getattr(d.report_version.results_report, name,
+                        None)
+                    result[name][d.id] = field.id if field else None
+            elif cls._fields[name]._type == 'boolean':
                 for d in details:
                     field = getattr(d.report_version.results_report, name,
                         False)
@@ -1063,7 +1193,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                 for d in details:
                     field = getattr(d.report_version.results_report, name,
                         None)
-                    result[name][d.id] = field.id if field else None
+                    result[name][d.id] = field
         return result
 
     @classmethod
@@ -1306,6 +1436,37 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         if not details_ids:
             return [('id', '=', -1)]
         return [('id', 'in', details_ids)]
+
+
+class ResultsReportCachedReport(ModelSQL):
+    'Cached Results Report'
+    __name__ = 'lims.results_report.cached_report'
+
+    version_detail = fields.Many2One('lims.results_report.version.detail',
+        'Report Detail', required=True, ondelete='CASCADE', select=True)
+    report_language = fields.Many2One('ir.lang', 'Language', required=True)
+    report_cache = fields.Binary('Report cache', readonly=True,
+        file_id='report_cache_id', store_prefix='results_report')
+    report_cache_id = fields.Char('Report cache id', readonly=True)
+    report_format = fields.Char('Report format', readonly=True)
+    transcription_report_cache = fields.Binary(
+        'Transcription Report cache', readonly=True,
+        file_id='transcription_report_cache_id',
+        store_prefix='results_report')
+    transcription_report_cache_id = fields.Char(
+        'Transcription Report cache id', readonly=True)
+    transcription_report_format = fields.Char(
+        'Transcription Report format', readonly=True)
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        t = cls.__table__()
+        cls._sql_constraints += [
+            ('detail_language_report_uniq', Unique(t,
+                t.version_detail, t.report_language, t.report_format),
+                'lims.msg_detail_language_unique_id'),
+            ]
 
 
 class ResultsReportVersionDetailSample(ModelSQL, ModelView):
@@ -2272,8 +2433,8 @@ class GenerateResultsReport(Wizard):
                     'party': line.notebook.party.id,
                     'entry': line.notebook.fraction.entry.id,
                     'notebook': line.notebook.id,
-                    'english_report': (
-                        line.notebook.fraction.entry.english_report),
+                    'report_language': (
+                        line.notebook.fraction.entry.report_language.id),
                     'cie_fraction_type': (
                         line.notebook.fraction.cie_fraction_type),
                     'lines': [],
@@ -2311,7 +2472,7 @@ class GenerateResultsReport(Wizard):
                     'report_grouper': grouper,
                     'generation_type': 'aut',
                     'cie_fraction_type': notebook['cie_fraction_type'],
-                    'english_report': notebook['english_report'],
+                    'report_language': notebook['report_language'],
                     'versions': [('create', [versions])],
                     }
                 report_detail = self._get_results_report(reports, versions,
@@ -2472,8 +2633,8 @@ class GenerateResultsReport(Wizard):
                         parties[key] = {
                             'party': line.notebook.party.id,
                             'entry': line.notebook.fraction.entry.id,
-                            'english_report': (
-                                line.notebook.fraction.entry.english_report),
+                            'report_language': (
+                                line.notebook.fraction.entry.report_language.id),
                             'cie_fraction_type': (
                                 line.notebook.fraction.cie_fraction_type),
                             'lines': [],
@@ -2523,7 +2684,7 @@ class GenerateResultsReport(Wizard):
                             'report_grouper': grouper,
                             'generation_type': 'man',
                             'cie_fraction_type': party['cie_fraction_type'],
-                            'english_report': party['english_report'],
+                            'report_language': party['report_language'],
                             'versions': [('create', [versions])],
                             }
                         report_detail = self._get_results_report(reports,
@@ -2539,8 +2700,8 @@ class GenerateResultsReport(Wizard):
                             'party': line.notebook.party.id,
                             'entry': line.notebook.fraction.entry.id,
                             'notebook': line.notebook.id,
-                            'english_report': (
-                                line.notebook.fraction.entry.english_report),
+                            'report_language': (
+                                line.notebook.fraction.entry.report_language.id),
                             'cie_fraction_type': (
                                 line.notebook.fraction.cie_fraction_type),
                             'lines': [],
@@ -2582,7 +2743,7 @@ class GenerateResultsReport(Wizard):
                             'generation_type': 'man',
                             'cie_fraction_type': (
                                 notebook['cie_fraction_type']),
-                            'english_report': notebook['english_report'],
+                            'report_language': notebook['report_language'],
                             'versions': [('create', [versions])],
                             }
                         report_detail = self._get_results_report(reports,
@@ -3011,8 +3172,8 @@ class GenerateReport(Wizard):
                         'entry': notebook.fraction.entry.id,
                         'cie_fraction_type': (
                             notebook.fraction.cie_fraction_type),
-                        'english_report': (
-                            notebook.fraction.entry.english_report),
+                        'report_language': (
+                            notebook.fraction.entry.report_language.id),
                         'lines': [],
                         }
                 lines = notebook._get_lines_for_reporting(laboratory_id,
@@ -3066,7 +3227,7 @@ class GenerateReport(Wizard):
                         'notebook': None,
                         'report_grouper': grouper,
                         'cie_fraction_type': party['cie_fraction_type'],
-                        'english_report': party['english_report'],
+                        'report_language': party['report_language'],
                         'versions': [('create', [versions])],
                         }
                     report_detail = self._get_results_report(laboratory_id,
@@ -3480,7 +3641,9 @@ class ResultsReportAnnulation(Wizard):
     annul = StateTransition()
 
     def transition_annul(self):
-        ResultsDetail = Pool().get('lims.results_report.version.detail')
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        CachedReport = pool.get('lims.results_report.cached_report')
 
         details = ResultsDetail.search([
             ('id', 'in', Transaction().context['active_ids']),
@@ -3490,15 +3653,16 @@ class ResultsReportAnnulation(Wizard):
             ResultsDetail.write(details, {
                 'state': 'annulled',
                 'valid': False,
-                'report_cache': None,
-                'report_format': None,
-                'report_cache_eng': None,
-                'report_format_eng': None,
                 'annulment_uid': int(Transaction().user),
                 'annulment_date': datetime.now(),
                 'annulment_reason': self.start.annulment_reason,
                 'annulment_reason_print': self.start.annulment_reason_print,
                 })
+            cached_reports = CachedReport.search([
+                ('version_detail', 'in', [d.id for d in details]),
+                ])
+            if cached_reports:
+                CachedReport.delete(cached_reports)
         return 'end'
 
 
@@ -3623,9 +3787,12 @@ class ResultReport(Report):
 
     @classmethod
     def execute(cls, ids, data):
-        ResultsDetail = Pool().get('lims.results_report.version.detail')
         if len(ids) > 1:
             raise UserError(gettext('lims.msg_multiple_reports'))
+
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        CachedReport = pool.get('lims.results_report.cached_report')
 
         results_report = ResultsDetail(ids[0])
         if results_report.state == 'annulled':
@@ -3634,36 +3801,39 @@ class ResultReport(Report):
         if data is None:
             data = {}
         current_data = data.copy()
-        current_data['alt_lang'] = None
-        result_orig = super().execute(ids, current_data)
-        current_data['alt_lang'] = 'en'
-        result_eng = super().execute(ids, current_data)
+        current_data['alt_lang'] = results_report.report_language.code
+        result = super().execute(ids, current_data)
 
-        save = False
-        if results_report.english_report:
-            if results_report.report_cache_eng:
-                result = (results_report.report_format_eng,
-                    results_report.report_cache_eng) + result_eng[2:]
-            else:
-                result = result_eng
-                if ('english_report' in current_data and
-                        current_data['english_report']):
-                    results_report.report_format_eng, \
-                        results_report.report_cache_eng = result_eng[:2]
-                    save = True
+        cached_reports = CachedReport.search([
+            ('version_detail', '=', results_report.id),
+            ('report_language', '=', results_report.report_language.id),
+            ['OR',
+                ('report_cache', '!=', None),
+                ('report_cache_id', '!=', None)],
+            ])
+        if cached_reports:
+            result = (cached_reports[0].report_format,
+                cached_reports[0].report_cache) + result[2:]
+
         else:
-            if results_report.report_cache:
-                result = (results_report.report_format,
-                    results_report.report_cache) + result_orig[2:]
-            else:
-                result = result_orig
-                if ('english_report' in current_data and
-                        not current_data['english_report']):
-                    results_report.report_format, \
-                        results_report.report_cache = result_orig[:2]
-                    save = True
-        if save:
-            results_report.save()
+            if current_data.get('save_cache', False):
+                cached_reports = CachedReport.search([
+                    ('version_detail', '=', results_report.id),
+                    ('report_language', '=',
+                        results_report.report_language.id),
+                    ])
+                if cached_reports:
+                    CachedReport.write(cached_reports, {
+                        'report_cache': result[1],
+                        'report_format': result[0],
+                        })
+                else:
+                    CachedReport.create([{
+                        'version_detail': results_report.id,
+                        'report_language': results_report.report_language.id,
+                        'report_cache': result[1],
+                        'report_format': result[0],
+                        }])
 
         return result
 
@@ -4578,9 +4748,12 @@ class ResultReportTranscription(ResultReport):
 
     @classmethod
     def execute(cls, ids, data):
-        ResultsDetail = Pool().get('lims.results_report.version.detail')
         if len(ids) > 1:
             raise UserError(gettext('lims.msg_multiple_reports'))
+
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        CachedReport = pool.get('lims.results_report.cached_report')
 
         results_report = ResultsDetail(ids[0])
         if results_report.state == 'annulled':
@@ -4589,36 +4762,37 @@ class ResultReportTranscription(ResultReport):
         if data is None:
             data = {}
         current_data = data.copy()
-        current_data['alt_lang'] = None
-        result_orig = super(ResultReport, cls).execute(ids, current_data)
-        current_data['alt_lang'] = 'en'
-        result_eng = super(ResultReport, cls).execute(ids, current_data)
+        current_data['alt_lang'] = results_report.report_language.code
+        result = super(ResultReport, cls).execute(ids, current_data)
 
-        save = False
-        if results_report.english_report:
-            if results_report.report_cache_odt_eng:
-                result = (results_report.report_format_odt_eng,
-                    results_report.report_cache_odt_eng) + result_eng[2:]
-            else:
-                result = result_eng
-                if ('english_report' in current_data and
-                        current_data['english_report']):
-                    results_report.report_format_odt_eng, \
-                        results_report.report_cache_odt_eng = result_eng[:2]
-                    save = True
+        cached_reports = CachedReport.search([
+            ('version_detail', '=', results_report.id),
+            ('report_language', '=', results_report.report_language.id),
+            ('transcription_report_cache', '!=', None),
+            ])
+        if cached_reports:
+            result = (cached_reports[0].transcription_report_format,
+                cached_reports[0].transcription_report_cache) + result[2:]
+
         else:
-            if results_report.report_cache_odt:
-                result = (results_report.report_format_odt,
-                    results_report.report_cache_odt) + result_orig[2:]
-            else:
-                result = result_orig
-                if ('english_report' in current_data and
-                        not current_data['english_report']):
-                    results_report.report_format_odt, \
-                        results_report.report_cache_odt = result_orig[:2]
-                    save = True
-        if save:
-            results_report.save()
+            if current_data.get('save_cache', False):
+                cached_reports = CachedReport.search([
+                    ('version_detail', '=', results_report.id),
+                    ('report_language', '=',
+                        results_report.report_language.id),
+                    ])
+                if cached_reports:
+                    CachedReport.write(cached_reports, {
+                        'transcription_report_cache': result[1],
+                        'transcription_report_format': result[0],
+                        })
+                else:
+                    CachedReport.create([{
+                        'version_detail': results_report.id,
+                        'report_language': results_report.report_language.id,
+                        'transcription_report_cache': result[1],
+                        'transcription_report_format': result[0],
+                        }])
 
         return result
 
@@ -4635,51 +4809,11 @@ class PrintGlobalResultReport(Wizard):
         pass
 
     def transition_start(self):
-        pool = Pool()
-        ResultsReport = pool.get('lims.results_report')
-
+        ResultsReport = Pool().get('lims.results_report')
         for active_id in Transaction().context['active_ids']:
             results_report = ResultsReport(active_id)
-            details = results_report.details_cached(
-                results_report.english_report)
-            if not details:
-                raise UserError(gettext('lims.msg_empty_report'))
-
-            if results_report.english_report:
-                cache = self._get_global_report(details, True)
-                if not cache:
-                    raise UserError(gettext('lims.msg_empty_report'))
-                results_report.report_cache_eng = cache
-                results_report.report_format_eng = 'pdf'
-            else:
-                cache = self._get_global_report(details, False)
-                if not cache:
-                    raise UserError(gettext('lims.msg_empty_report'))
-                results_report.report_cache = cache
-                results_report.report_format = 'pdf'
-            results_report.save()
+            results_report.build_report()
         return 'print_'
-
-    def _get_global_report(self, details, english_report=False):
-        all_cache = []
-        if english_report:
-            for detail in details:
-                if detail.report_cache_eng:
-                    all_cache.append(detail.report_cache_eng)
-        else:
-            for detail in details:
-                if detail.report_cache:
-                    all_cache.append(detail.report_cache)
-        if not all_cache:
-            return False
-
-        merger = PdfFileMerger(strict=False)
-        for cache in all_cache:
-            filedata = BytesIO(cache)
-            merger.append(filedata)
-        output = BytesIO()
-        merger.write(output)
-        return bytearray(output.getvalue())
 
     def do_print_(self, action):
         data = {}
@@ -4699,21 +4833,15 @@ class GlobalResultReport(Report):
 
     @classmethod
     def execute(cls, ids, data):
-        ResultsReport = Pool().get('lims.results_report')
+        pool = Pool()
+        ResultsReport = pool.get('lims.results_report')
 
         result = super().execute(ids, data)
 
         results_report = ResultsReport(ids[0])
-        if results_report.english_report:
-            if results_report.report_cache_eng:
-                result = (results_report.report_format_eng,
-                    results_report.report_cache_eng) + result[2:]
-        else:
-            if results_report.report_cache:
-                result = (results_report.report_format,
-                    results_report.report_cache) + result[2:]
+        result = (results_report.report_format,
+            results_report.report_cache) + result[2:]
 
         report_name = '%s %s' % (result[3], results_report.number)
         result = result[:3] + (report_name,)
-
         return result

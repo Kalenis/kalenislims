@@ -20,9 +20,9 @@
                 <label name="sample_client_description"/>
                 <field name="sample_client_description"/>
             </group>
-            <group col="2" colspan="2" id="sample_client_description_eng">
-                <label name="sample_client_description_eng"/>
-                <field name="sample_client_description_eng"/>
+            <group col="2" colspan="2" id="sample_client_description_lang">
+                <label name="sample_client_description_lang"/>
+                <field name="sample_client_description_lang"/>
             </group>
             <group col="6" colspan="4" id="packaging">
                 <label name="packages_quantity"/>
@@ -57,8 +57,8 @@
                 <field name="obj_description"/>
                 <label name="obj_description_manual"/>
                 <field name="obj_description_manual"/>
-                <label name="obj_description_manual_eng"/>
-                <field name="obj_description_manual_eng"/>
+                <label name="obj_description_manual_lang"/>
+                <field name="obj_description_manual_lang"/>
             </group>
             <label name="zone"/>
             <field name="zone"/>
