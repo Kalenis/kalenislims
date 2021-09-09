@@ -56,17 +56,14 @@ class ResultsReport(metaclass=PoolMeta):
             ])
         return fields
 
-    def build_report(self, english_report=False):
-        res = super().build_report(english_report)
-        if not res:
-            return False
+    def build_report(self):
+        super().build_report()
         self.signed = True
         self.signed_date = datetime.now()
         self.save()
-        return True
 
-    def _get_global_report(self, details, english_report=False):
-        output = super()._get_global_report(details, english_report)
+    def _get_global_report(self, details):
+        output = super()._get_global_report(details)
         if not output:
             return False
         return self.sign_report(output)
