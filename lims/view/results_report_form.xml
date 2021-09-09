@@ -5,8 +5,8 @@
     <label name="party"/>
     <field name="party"/>
     <group col="8" colspan="4" id="fields_group">
-        <label name="english_report"/>
-        <field name="english_report"/>
+        <label name="report_language"/>
+        <field name="report_language" widget="selection" xexpand="0"/>
         <label name="single_sending_report"/>
         <field name="single_sending_report"/>
         <label name="single_sending_report_ready"/>

@@ -9,11 +9,11 @@
                 <field name="email_report"/>
                 <label name="single_sending_report"/>
                 <field name="single_sending_report"/>
-                <label name="english_report"/>
-                <field name="english_report"/>
                 <label name="no_acknowledgment_of_receipt"/>
                 <field name="no_acknowledgment_of_receipt"/>
             </group>
+            <label name="report_language"/>
+            <field name="report_language" widget="selection" xexpand="0"/>
             <field name="sample_producers" colspan="4"/>
             <label name="carrier"/>
             <field name="carrier"/>

@@ -224,6 +224,8 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         ], 'Acceptance of notebook lines')
     notebook_lines_acceptance_method = fields.Boolean(
         'Allow to accept the same analysis with different methods')
+    results_report_language = fields.Many2One('ir.lang',
+        'Results Report Language', domain=[('translatable', '=', True)])
 
     @staticmethod
     def default_brix_digits():
@@ -277,6 +279,15 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     @staticmethod
     def default_notebook_lines_acceptance_method():
         return False
+
+    @staticmethod
+    def default_results_report_language():
+        Lang = Pool().get('ir.lang')
+        langs = Lang.search([
+            ('translatable', '=', True),
+            ('code', '=', 'es'),
+            ])
+        return langs and langs[0].id or None
 
     def get_reagents(self):
         res = []

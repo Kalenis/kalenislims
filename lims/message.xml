@@ -109,8 +109,8 @@
         <record model="ir.message" id="msg_enac_acredited">
             <field name="text">The analysis marked with * are not covered by the Accreditation.</field>
         </record>
-        <record model="ir.message" id="msg_english_report">
-            <field name="text">Do not forget to load the translations into English</field>
+        <record model="ir.message" id="msg_foreign_report">
+            <field name="text">Do not forget to load the translations for the %(lang)s language.</field>
         </record>
         <record model="ir.message" id="msg_default_suspension_reason">
             <field name="text">There is already a default suspension reason</field>
@@ -279,6 +279,12 @@
         </record>
         <record model="ir.message" id="msg_empty_report">
             <field name="text">The report has not details to print</field>
+        </record>
+        <record model="ir.message" id="msg_global_report_cache">
+            <field name="text">No details cached (%(language)s)</field>
+        </record>
+        <record model="ir.message" id="msg_global_report_build">
+            <field name="text">Build failed</field>
         </record>
         <record model="ir.message" id="msg_delete_detail_not_draft">
             <field name="text">You can not delete a detail that is not in draft state</field>
@@ -504,6 +510,9 @@
         </record>
         <record model="ir.message" id="msg_trend_chart_analysis_qty">
             <field name="text">You can not exceed the quantity of %(qty)s analysis</field>
+        </record>
+        <record model="ir.message" id="msg_detail_language_unique_id">
+            <field name="text">Cache already exists for the report</field>
         </record>
         <record model="ir.message" id="msg_trend_chart_analysis_uom">
             <field name="text">Not all analysis share the same UoM</field>

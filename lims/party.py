@@ -4,10 +4,12 @@
 # the full copyright notices and license terms.
 import pytz
 from datetime import datetime
+from sql import Literal
 
 from trytond.model import fields, Unique
-from trytond.pool import PoolMeta
+from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Bool, Eval, Or
+from trytond.transaction import Transaction
 
 
 class Party(metaclass=PoolMeta):
@@ -15,7 +17,9 @@ class Party(metaclass=PoolMeta):
 
     email_report = fields.Boolean('Email report')
     single_sending_report = fields.Boolean('Single sending of report')
-    english_report = fields.Boolean('English report')
+    report_language = fields.Many2One('ir.lang',
+        'Results Report Language',
+        domain=[('translatable', '=', True)])
     no_acknowledgment_of_receipt = fields.Boolean(
         'No acknowledgment of receipt')
     sample_producers = fields.One2Many('lims.sample.producer', 'party',
@@ -36,6 +40,44 @@ class Party(metaclass=PoolMeta):
             ('lims_user_uniq', Unique(t, t.lims_user),
                 'lims.msg_party_lims_user_unique_id')]
 
+    @classmethod
+    def __register__(cls, module_name):
+        party_h = cls.__table_handler__(module_name)
+        english_report_exist = party_h.column_exist('english_report')
+        super().__register__(module_name)
+        if english_report_exist:
+            cls._migrate_english_report()
+            party_h.drop_column('english_report')
+
+    @classmethod
+    def _migrate_english_report(cls):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Configuration = pool.get('lims.configuration')
+        Lang = pool.get('ir.lang')
+
+        party_table = cls.__table__()
+        configuration_table = Configuration.__table__()
+        lang_table = Lang.__table__()
+
+        cursor.execute(*configuration_table.select(
+            configuration_table.results_report_language,
+            where=Literal(True)))
+        default_language = cursor.fetchone()
+        if default_language:
+            cursor.execute(*party_table.update(
+                [party_table.report_language], [default_language[0]],
+                where=(party_table.english_report == Literal(False))))
+
+        cursor.execute(*lang_table.select(
+            lang_table.id,
+            where=lang_table.code == Literal('en')))
+        english_language = cursor.fetchone()
+        if english_language:
+            cursor.execute(*party_table.update(
+                [party_table.report_language], [english_language[0]],
+                where=(party_table.english_report == Literal(True))))
+
     @staticmethod
     def default_email_report():
         return False
@@ -45,8 +87,10 @@ class Party(metaclass=PoolMeta):
         return False
 
     @staticmethod
-    def default_english_report():
-        return False
+    def default_report_language():
+        Config = Pool().get('lims.configuration')
+        default_language = Config(1).results_report_language
+        return default_language and default_language.id or None
 
     @staticmethod
     def default_no_acknowledgment_of_receipt():
