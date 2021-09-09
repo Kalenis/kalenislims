@@ -2,7 +2,6 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import logging
-from io import BytesIO
 from datetime import datetime
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
@@ -85,64 +84,16 @@ class ResultsReport(metaclass=PoolMeta):
         logger.info('Cron - Send Results Report: END')
         return True
 
-    def build_report(self, english_report=False):
-        '''
-        Build Results Report.
-        :english_report: boolean
-        '''
-        details = self.details_cached(english_report)
-        if not details:
-            logger.info('No %s details cached to build results report %s'
-                % (english_report and 'english' or 'spanish', self.number))
-            return False
-
-        output = self._get_global_report(details, english_report)
-        if not output:
-            return False
-
-        if english_report:
-            self.report_format_eng = 'pdf'
-            self.report_cache_eng = output
-        else:
-            self.report_format = 'pdf'
-            self.report_cache = output
-        self.save()
-        return True
-
-    def _get_global_report(self, details, english_report=False):
-        all_cache = []
-        if english_report:
-            for detail in details:
-                if detail.report_cache_eng:
-                    all_cache.append(detail.report_cache_eng)
-        else:
-            for detail in details:
-                if detail.report_cache:
-                    all_cache.append(detail.report_cache)
-        if not all_cache:
-            return False
-
-        merger = PdfFileMerger(strict=False)
-        for cache in all_cache:
-            filedata = BytesIO(cache)
-            merger.append(filedata)
-        output = BytesIO()
-        merger.write(output)
-        return bytearray(output.getvalue())
-
-    def attach_report(self, english_report=False):
+    def attach_report(self):
         '''
         Attach Report file from cache field.
         '''
         pool = Pool()
         Attachment = pool.get('ir.attachment')
 
-        data = self.report_cache
-        if english_report:
-            data = self.report_cache_eng
-
         name = '%s_%s.pdf' % ('informe-global-de-resultados',
-            'eng' if english_report else 'esp')
+            self.report_language.code)
+        data = self.report_cache
         resource = '%s,%s' % (self.__name__, self.id)
 
         values = {
@@ -160,7 +111,6 @@ class ResultsReport(metaclass=PoolMeta):
             Attachment.write(attachment, values)
         else:
             Attachment.create([values])
-        return True
 
     def clean_attached_reports(self):
         '''
@@ -180,25 +130,19 @@ class ResultsReport(metaclass=PoolMeta):
             Attachment.delete(attachment)
         return True
 
-    def get_attached_report(self, english_report=False):
-        filename = self._get_attached_report_filename(english_report)
+    def get_attached_report(self):
+        filename = self._get_attached_report_filename()
         data = {
-            'content': (
-                english_report and
-                self.report_cache_eng or
-                self.report_cache),
-            'format': (
-                english_report and
-                self.report_format_eng or
-                self.report_format),
+            'content': self.report_cache,
+            'format': self.report_format,
             'mimetype': 'pdf',
             'filename': '%s.pdf' % filename,
             'name': str(self.number),
             }
         return data
 
-    def _get_attached_report_filename(self, english_report=False):
-        suffix = 'eng' if english_report else 'esp'
+    def _get_attached_report_filename(self):
+        suffix = self.report_language.code
         #filename = str(self.number) + '-' + suffix
         filename = self.get_report_filename() + '-' + suffix
         return filename
@@ -420,39 +364,19 @@ class SendResultsReport(Wizard):
                         report.number)
                     continue
 
-                spanish_report = report.has_report_cached(
-                    english_report=False)
-                english_report = report.has_report_cached(
-                    english_report=True)
-                if not spanish_report and not english_report:
-                    logger.warning('Send Results Report: %s: '
-                        'IGNORED: HAS NO CACHED REPORTS',
-                        report.number)
-                    continue
-
-                ready = True
-                if spanish_report:
-                    ready = ready and report.build_report(
-                        english_report=False)
-                if english_report:
-                    ready = ready and report.build_report(
-                        english_report=True)
-                if not ready:
+                try:
+                    report.build_report()
+                except Exception as e:
                     reports_not_ready.append(report)
                     logger.warning('Send Results Report: %s: '
-                        'IGNORED: GLOBAL REPORT BUILD FAILED',
-                        report.number)
+                        'IGNORED: %s' % (report.number, str(e).upper()))
                     continue
 
                 logger.info('Send Results Report: %s: Build',
                     report.number)
-                group['reports_ready'].append(
-                    (report, spanish_report, english_report))
+                group['reports_ready'].append(report)
 
-                if spanish_report:
-                    report.attach_report(english_report=False)
-                if english_report:
-                    report.attach_report(english_report=True)
+                report.attach_report()
                 logger.info('Send Results Report: %s: Attached',
                     report.number)
 
@@ -468,38 +392,30 @@ class SendResultsReport(Wizard):
             # Email sending
             to_addrs = list(group['to_addrs'].keys())
             if not to_addrs:
-                reports_not_sent.extend(
-                    [r[0] for r in group['reports_ready']])
+                reports_not_sent.extend(group['reports_ready'])
                 logger.warning('Send Results Report: Missing addresses')
                 continue
             logger.info('Send Results Report: To addresses: %s',
                 ', '.join(to_addrs))
 
-            subject, body = self._get_subject_body(
-                [r[0] for r in group['reports_ready']])
+            subject, body = self._get_subject_body(group['reports_ready'])
 
             attachments_data = []
             for r in group['reports_ready']:
-                if r[1]:  # spanish_report
-                    attachments_data.append(r[0].get_attached_report(
-                        english_report=False))
-                if r[2]:  # english_report
-                    attachments_data.append(r[0].get_attached_report(
-                        english_report=True))
+                attachments_data.append(r.get_attached_report())
 
             msg = self._create_msg(from_addr, to_addrs, subject,
                 body, hide_recipients, attachments_data)
             sent = self._send_msg(from_addr, to_addrs, msg)
             if not sent:
-                reports_not_sent.extend(
-                    [r[0] for r in group['reports_ready']])
+                reports_not_sent.extend(group['reports_ready'])
                 logger.warning('Send Results Report: Not sent')
                 continue
             logger.info('Send Results Report: Sent')
 
             addresses = ', '.join(['"%s" <%s>' % (v, k)
                     for k, v in group['to_addrs'].items()])
-            ResultsReport.write([r[0] for r in group['reports_ready']], {
+            ResultsReport.write(group['reports_ready'], {
                 'sent': True, 'sent_date': datetime.now(),
                 'mailings': [('create', [{'addresses': addresses}])],
                 })
