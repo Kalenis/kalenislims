@@ -787,7 +787,7 @@ class Service(ModelSQL, ModelView):
             services_default = []
             for fraction_id, analysis in aditional_services.items():
                 for analysis_id, service_data in analysis.items():
-                    if not Service.search([
+                    if not EntryDetailAnalysis.search([
                             ('fraction', '=', fraction_id),
                             ('analysis', '=', analysis_id),
                             ]):
