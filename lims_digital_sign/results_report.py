@@ -12,6 +12,8 @@ from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.config import config as tconfig
 from .tokenclient import GetToken
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 logger = logging.getLogger(__name__)
 
@@ -56,24 +58,15 @@ class ResultsReport(metaclass=PoolMeta):
             ])
         return fields
 
-    def build_report(self):
-        super().build_report()
+    def build_report(self, language):
+        cache = super().build_report(language)
+        cache = self.sign_report(cache)
         self.signed = True
         self.signed_date = datetime.now()
         self.save()
+        return cache
 
-    def _get_global_report(self, details):
-        output = super()._get_global_report(details)
-        if not output:
-            return False
-        return self.sign_report(output)
-
-    def sign_report(self, output):
-        '''
-        Sign Report
-        :output: binary
-        :return: binary
-        '''
+    def sign_report(self, cache):
         listen = tconfig.get('token', 'listen')
         path = tconfig.get('token', 'path')
 
@@ -83,7 +76,7 @@ class ResultsReport(metaclass=PoolMeta):
 
         try:
             with open(os.path.join(path, origin), 'wb') as f:
-                f.write(output)
+                f.write(cache)
 
             token = GetToken(listen, origin, target)
             token.signDoc()
@@ -92,11 +85,9 @@ class ResultsReport(metaclass=PoolMeta):
                 f_target = f.read()
             return f_target
         except Exception as e:
-            logger.error('Send Results Report: '
-                'Unable to digitally sign results report %s',
-                self.number)
             logger.error(str(e))
-            return False
+            raise UserError(gettext('lims_digital_sign.msg_sign_report_error',
+                    report=self.number))
 
 
 class ResultsReportAnnulation(metaclass=PoolMeta):

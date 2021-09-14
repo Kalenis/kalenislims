@@ -84,16 +84,15 @@ class ResultsReport(metaclass=PoolMeta):
         logger.info('Cron - Send Results Report: END')
         return True
 
-    def attach_report(self):
+    def attach_report(self, report_cache, language):
         '''
-        Attach Report file from cache field.
+        Attach Report file from provided cache
         '''
         pool = Pool()
         Attachment = pool.get('ir.attachment')
 
-        name = '%s_%s.pdf' % ('informe-global-de-resultados',
-            self.report_language.code)
-        data = self.report_cache
+        name = '%s_%s.pdf' % ('informe-global-de-resultados', language.code)
+        data = report_cache
         resource = '%s,%s' % (self.__name__, self.id)
 
         values = {
@@ -130,19 +129,19 @@ class ResultsReport(metaclass=PoolMeta):
             Attachment.delete(attachment)
         return True
 
-    def get_attached_report(self):
-        filename = self._get_attached_report_filename()
+    def get_attached_report(self, report_cache, language):
+        filename = self._get_attached_report_filename(language)
         data = {
-            'content': self.report_cache,
-            'format': self.report_format,
+            'content': report_cache,
+            'format': 'pdf',
             'mimetype': 'pdf',
             'filename': '%s.pdf' % filename,
             'name': str(self.number),
             }
         return data
 
-    def _get_attached_report_filename(self):
-        suffix = self.report_language.code
+    def _get_attached_report_filename(self, language):
+        suffix = language.code
         #filename = str(self.number) + '-' + suffix
         filename = self.get_report_filename() + '-' + suffix
         return filename
@@ -322,6 +321,7 @@ class SendResultsReport(Wizard):
         pool = Pool()
         Config = pool.get('lims.configuration')
         ResultsReport = pool.get('lims.results_report')
+        Lang = pool.get('ir.lang')
 
         from_addr = tconfig.get('email', 'from')
         if not from_addr:
@@ -353,6 +353,7 @@ class SendResultsReport(Wizard):
         for group in self.get_grouped_reports(active_ids).values():
             group['reports_ready'] = []
             group['to_addrs'] = {}
+            group['attachments_data'] = []
 
             for report in group['reports']:
                 logger.info('Send Results Report: %s', report.number)
@@ -364,21 +365,40 @@ class SendResultsReport(Wizard):
                         report.number)
                     continue
 
-                try:
-                    report.build_report()
-                except Exception as e:
+                report_cache = {}
+                for lang in Lang.search([('translatable', '=', True)]):
+                    if not report.has_report_cached(lang):
+                        continue
+                    report_cache[lang] = None
+
+                    try:
+                        report_cache[lang] = report.build_report(lang)
+                    except Exception as e:
+                        break
+
+                if not report_cache:
+                    logger.warning('Send Results Report: %s: '
+                        'IGNORED: HAS NO CACHED REPORTS',
+                        report.number)
+                    continue
+
+                if None in report_cache.values():
                     reports_not_ready.append(report)
                     logger.warning('Send Results Report: %s: '
-                        'IGNORED: %s' % (report.number, str(e).upper()))
+                        'IGNORED: GLOBAL REPORT BUILD FAILED',
+                        report.number)
                     continue
 
                 logger.info('Send Results Report: %s: Build',
                     report.number)
                 group['reports_ready'].append(report)
 
-                report.attach_report()
-                logger.info('Send Results Report: %s: Attached',
-                    report.number)
+                for lang, cache in report_cache.items():
+                    report.attach_report(cache, lang)
+                    logger.info('Send Results Report: %s: Attached (%s)' % (
+                        report.number, lang.name))
+                    group['attachments_data'].append(
+                        report.get_attached_report(cache, lang))
 
                 if group['cie_fraction_type']:
                     group['to_addrs'][email_qa] = 'QA'
@@ -400,12 +420,8 @@ class SendResultsReport(Wizard):
 
             subject, body = self._get_subject_body(group['reports_ready'])
 
-            attachments_data = []
-            for r in group['reports_ready']:
-                attachments_data.append(r.get_attached_report())
-
             msg = self._create_msg(from_addr, to_addrs, subject,
-                body, hide_recipients, attachments_data)
+                body, hide_recipients, group['attachments_data'])
             sent = self._send_msg(from_addr, to_addrs, msg)
             if not sent:
                 reports_not_sent.extend(group['reports_ready'])

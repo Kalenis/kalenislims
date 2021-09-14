@@ -237,7 +237,7 @@ class ResultsReport(ModelSQL, ModelView):
             result[r.id] = False
             if r.single_sending_report and not r.single_sending_report_ready:
                 continue
-            if not r.has_report_cached():
+            if not r.has_report_cached(r.report_language):
                 continue
             result[r.id] = True
         return result
@@ -303,7 +303,7 @@ class ResultsReport(ModelSQL, ModelView):
     def order_create_date2(cls, tables):
         return cls.create_date.convert_order('create_date', tables, cls)
 
-    def _get_details_cached(self):
+    def _get_details_cached(self, language):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         CachedReport = pool.get('lims.results_report.cached_report')
@@ -320,33 +320,34 @@ class ResultsReport(ModelSQL, ModelView):
                 'AND rd.valid = TRUE '
                 'AND cr.report_language = %s '
                 'AND cr.report_format = \'pdf\'',
-            (self.id, self.report_language.id))
+            (self.id, language.id))
         return [x[0] for x in cursor.fetchall()]
 
-    def has_report_cached(self):
-        return bool(self._get_details_cached())
+    def has_report_cached(self, language):
+        return bool(self._get_details_cached(language))
 
-    def details_cached(self):
+    def details_cached(self, language):
         pool = Pool()
         ResultsDetail = pool.get('lims.results_report.version.detail')
         with Transaction().set_user(0):
-            return ResultsDetail.browse(self._get_details_cached())
+            return ResultsDetail.browse(self._get_details_cached(language))
 
-    def build_report(self):
-        details = self.details_cached()
+    def build_report(self, language):
+        details = self.details_cached(language)
         if not details:
             raise UserError(gettext('lims.msg_global_report_cache',
-                    language=self.report_language.name))
+                    language=language.name))
 
-        cache = self._get_global_report(details)
+        cache = self._get_global_report(details, language)
         if not cache:
             raise UserError(gettext('lims.msg_global_report_build'))
 
-        self.report_cache = cache
-        self.report_format = 'pdf'
-        self.save()
+        #self.report_cache = cache
+        #self.report_format = 'pdf'
+        #self.save()
+        return cache
 
-    def _get_global_report(self, details):
+    def _get_global_report(self, details, language):
         pool = Pool()
         CachedReport = pool.get('lims.results_report.cached_report')
 
@@ -354,7 +355,7 @@ class ResultsReport(ModelSQL, ModelView):
         for detail in details:
             cached_reports = CachedReport.search([
                 ('version_detail', '=', detail.id),
-                ('report_language', '=', self.report_language.id),
+                ('report_language', '=', language.id),
                 ('report_format', '=', 'pdf'),
                 ])
             if cached_reports:
@@ -4812,7 +4813,22 @@ class PrintGlobalResultReport(Wizard):
         ResultsReport = Pool().get('lims.results_report')
         for active_id in Transaction().context['active_ids']:
             results_report = ResultsReport(active_id)
-            results_report.build_report()
+
+            details = results_report.details_cached(
+                results_report.report_language)
+            if not details:
+                raise UserError(gettext('lims.msg_global_report_cache',
+                        language=results_report.report_language.name))
+
+            cache = results_report._get_global_report(details,
+                results_report.report_language)
+            if not cache:
+                raise UserError(gettext('lims.msg_global_report_build'))
+
+            results_report.report_language.report_cache = cache
+            results_report.report_language.report_format = 'pdf'
+            results_report.report_language.save()
+
         return 'print_'
 
     def do_print_(self, action):
