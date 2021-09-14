@@ -414,6 +414,112 @@ class SaleLine(metaclass=PoolMeta):
         self.product = product
         self.on_change_product()
 
+    @classmethod
+    def create(cls, vlist):
+        sale_lines = super().create(vlist)
+        cls.create_additional_services(sale_lines)
+        return sale_lines
+
+    @classmethod
+    def create_additional_services(cls, sale_lines):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+        Analysis = pool.get('lims.analysis')
+
+        additional_services = {}
+        for sale_line in sale_lines:
+            if (not sale_line.product_type or not sale_line.matrix or
+                    not sale_line.analysis):
+                continue
+
+            analysis = [(sale_line.analysis.id,
+                sale_line.method and sale_line.method.id or None)]
+            analysis.extend(Analysis.get_included_analysis_method(
+                sale_line.analysis.id))
+
+            for a in analysis:
+                clause = [
+                    ('product_type', '=', sale_line.product_type.id),
+                    ('matrix', '=', sale_line.matrix.id),
+                    ('analysis', '=', a[0]),
+                    ('valid', '=', True),
+                    ]
+                if a[1]:
+                    clause.append(('method', '=', a[1]))
+                else:
+                    clause.append(('by_default', '=', True))
+                typifications = Typification.search(clause)
+                if not typifications:
+                    continue
+                typification = typifications[0]
+                key = sale_line.sale.id
+
+                if typification.additional:
+                    additional = typification.additional
+                    if key not in additional_services:
+                        additional_services[key] = {}
+                    if additional.id not in additional_services[key]:
+
+                        additional_services[key][additional.id] = {
+                            'product': additional.product.id,
+                            'quantity': sale_line.quantity,
+                            'unit': additional.product.default_uom.id,
+                            'product_type': sale_line.product_type.id,
+                            'matrix': sale_line.matrix.id,
+                            'method': None,
+                            }
+
+                if typification.additionals:
+                    if key not in additional_services:
+                        additional_services[key] = {}
+                    for additional in typification.additionals:
+                        if additional.id not in additional_services[key]:
+
+                            cursor.execute('SELECT method '
+                                'FROM "' + Typification._table + '" '
+                                'WHERE product_type = %s '
+                                    'AND matrix = %s '
+                                    'AND analysis = %s '
+                                    'AND valid IS TRUE '
+                                    'AND by_default IS TRUE',
+                                (sale_line.product_type.id,
+                                    sale_line.matrix.id, additional.id))
+                            res = cursor.fetchone()
+                            method_id = res and res[0] or None
+
+                            additional_services[key][additional.id] = {
+                                'product': additional.product.id,
+                                'quantity': sale_line.quantity,
+                                'unit': additional.product.default_uom.id,
+                                'product_type': sale_line.product_type.id,
+                                'matrix': sale_line.matrix.id,
+                                'method': method_id,
+                                }
+
+        if additional_services:
+            sale_lines = []
+            for sale_id, analysis in additional_services.items():
+                for analysis_id, service_data in analysis.items():
+                    if cls.search([
+                            ('sale', '=', sale_id),
+                            ('analysis', '=', analysis_id),
+                            ]):
+                        continue
+                    sale_line = cls(
+                        quantity=service_data['quantity'],
+                        unit=service_data['unit'],
+                        product_type=service_data['product_type'],
+                        matrix=service_data['matrix'],
+                        analysis=analysis_id,
+                        product=service_data['product'],
+                        method=service_data['method'],
+                        sale=sale_id,
+                        )
+                    sale_line.on_change_product()
+                    sale_lines.append(sale_line)
+            cls.save(sale_lines)
+
 
 class SaleLoadServicesStart(ModelView):
     'Load Services from Entry'
