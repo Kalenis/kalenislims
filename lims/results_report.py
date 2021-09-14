@@ -4825,9 +4825,9 @@ class PrintGlobalResultReport(Wizard):
             if not cache:
                 raise UserError(gettext('lims.msg_global_report_build'))
 
-            results_report.report_language.report_cache = cache
-            results_report.report_language.report_format = 'pdf'
-            results_report.report_language.save()
+            results_report.report_cache = cache
+            results_report.report_format = 'pdf'
+            results_report.save()
 
         return 'print_'
 
