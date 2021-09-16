@@ -1046,19 +1046,34 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                 fraction.product_type.id, fraction.matrix.id,
                 detail.analysis.id, detail.method.id)
 
-            repetitions = t and t.default_repetitions or 0
-            initial_concentration = t and t.initial_concentration or None
-            final_concentration = t and t.final_concentration or None
-            initial_unit = t and t.start_uom and t.start_uom.id or None
-            final_unit = t and t.end_uom and t.end_uom.id or None
-            detection_limit = t and t.detection_limit or None
-            quantification_limit = t and t.quantification_limit or None
-            lower_limit = t and t.lower_limit or None
-            upper_limit = t and t.upper_limit or None
-            decimals = t and t.calc_decimals or 2
-            significant_digits = t and t.significant_digits or None
-            scientific_notation = t and t.scientific_notation or False
-            report = t and t.report or False
+            if t:
+                repetitions = t.default_repetitions
+                initial_concentration = t.initial_concentration
+                final_concentration = t.final_concentration
+                initial_unit = t.start_uom and t.start_uom.id or None
+                final_unit = t.end_uom and t.end_uom.id or None
+                detection_limit = t.detection_limit
+                quantification_limit = t.quantification_limit
+                lower_limit = t.lower_limit
+                upper_limit = t.upper_limit
+                decimals = t.calc_decimals
+                significant_digits = t.significant_digits
+                scientific_notation = t.scientific_notation
+                report = t.report
+            else:
+                repetitions = 0
+                initial_concentration = None
+                final_concentration = None
+                initial_unit = None
+                final_unit = None
+                detection_limit = None
+                quantification_limit = None
+                lower_limit = None
+                upper_limit = None
+                decimals = 2
+                significant_digits = None
+                scientific_notation = False
+                report = False
 
             results_estimated_waiting = None
             cursor.execute('SELECT results_estimated_waiting '
