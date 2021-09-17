@@ -312,6 +312,7 @@ class Equipment(ModelSQL, ModelView):
             ('serial_number',) + tuple(clause[1:]),
             ('brand.name',) + tuple(clause[1:]),
             ('plant.name',) + tuple(clause[1:]),
+            ('components.customer_description',) + tuple(clause[1:]),
             ]
 
     @fields.depends('plant', '_parent_plant.party')
