@@ -8,5 +8,6 @@
         <field name="acknowledgment_contact_default"/>
         <field name="invoice_contact"/>
         <field name="invoice_contact_default"/>
+        <field name="report"/>
     </xpath>
 </data>

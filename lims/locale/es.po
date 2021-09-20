@@ -6554,8 +6554,8 @@ msgid "Invoice contact by default"
 msgstr "Contacto facturación por defecto"
 
 msgctxt "field:party.address,report:"
-msgid "Report"
-msgstr "Informe"
+msgid "Results Report"
+msgstr "Informe de resultados"
 
 msgctxt "field:party.address,report_contact:"
 msgid "Report contact"
