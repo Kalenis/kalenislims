@@ -3879,15 +3879,8 @@ class ResultReport(Report):
                 report_context['replace_number'] = (
                     gettext('lims.msg_replace_number', report=prev_number))
         report_context['print_date'] = get_print_date()
-        report_context['party'] = (
-            report.report_version.results_report.party.rec_name)
-        try:
-            party_address = (
-                report.report_version.results_report.party.address_get(
-                    type='invoice'))
-        except AttributeError:
-            party_address = (
-                report.report_version.results_report.party.address_get())
+        report_context['party'] = report.party.rec_name
+        party_address = report.party.get_results_report_address()
 
         report_context['party_address'] = party_address.full_address.replace(
             '\n', ' - ')

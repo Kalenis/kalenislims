@@ -96,11 +96,40 @@ class Party(metaclass=PoolMeta):
     def default_no_acknowledgment_of_receipt():
         return False
 
+    def get_results_report_address(self):
+        pool = Pool()
+        Address = pool.get('party.address')
+
+        address = Address.search([
+            ('party', '=', self.id),
+            ('report', '=', True),
+            ])
+        if address:
+            return address[0]
+
+        try:
+            address = Address.search([
+                ('party', '=', self.id),
+                ('invoice', '=', True),
+                ])
+            if address:
+                return address[0]
+        except AttributeError:
+            pass
+
+        address = Address.search([
+            ('party', '=', self.id),
+            ])
+        if address:
+            return address[0]
+
+        return None
+
 
 class Address(metaclass=PoolMeta):
     __name__ = 'party.address'
 
-    report = fields.Boolean('Report')
+    report = fields.Boolean('Results Report')
     email = fields.Char('Email',
         states={
             'required': Or(
