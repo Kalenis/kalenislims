@@ -787,17 +787,23 @@ class Service(ModelSQL, ModelView):
             services_default = []
             for fraction_id, analysis in aditional_services.items():
                 for analysis_id, service_data in analysis.items():
-                    if not EntryDetailAnalysis.search([
+                    if EntryDetailAnalysis.search([
                             ('fraction', '=', fraction_id),
                             ('analysis', '=', analysis_id),
                             ]):
-                        services_default.append({
-                            'fraction': fraction_id,
-                            'analysis': analysis_id,
-                            'laboratory': service_data['laboratory'],
-                            'method': service_data['method'],
-                            'device': service_data['device'],
-                            })
+                        continue
+                    if Service.search([
+                            ('fraction', '=', fraction_id),
+                            ('analysis', '=', analysis_id),
+                            ]):
+                        continue
+                    services_default.append({
+                        'fraction': fraction_id,
+                        'analysis': analysis_id,
+                        'laboratory': service_data['laboratory'],
+                        'method': service_data['method'],
+                        'device': service_data['device'],
+                        })
             return Service.create(services_default)
 
     @classmethod
