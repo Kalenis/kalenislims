@@ -1731,7 +1731,7 @@ msgid ""
 msgstr ""
 
 msgctxt "selection:lims.project,stp_state:"
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Cancelado"
 
 msgctxt "selection:lims.project,stp_state:"
@@ -3629,7 +3629,7 @@ msgid "Unfinished"
 msgstr "No finalizado"
 
 msgctxt "selection:lims.project.glp_report.10.print.start,stp_state:"
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Cancelado"
 
 msgctxt "selection:lims.project.glp_report.10.print.start,stp_state:"

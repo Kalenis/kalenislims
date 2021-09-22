@@ -1000,7 +1000,7 @@ msgid "Active"
 msgstr "Activo"
 
 msgctxt "selection:lims.interface,state:"
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Cancelado"
 
 msgctxt "selection:lims.interface,state:"
@@ -1024,7 +1024,7 @@ msgid "Active"
 msgstr "Activo"
 
 msgctxt "selection:lims.interface.column,interface_state:"
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Cancelado"
 
 msgctxt "selection:lims.interface.column,interface_state:"

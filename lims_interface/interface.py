@@ -171,7 +171,7 @@ class Interface(Workflow, ModelSQL, ModelView):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('active', 'Active'),
-        ('canceled', 'Canceled'),
+        ('cancelled', 'Cancelled'),
         ], 'State', readonly=True, required=True)
     controller_name = fields.Selection([(None, '')], 'Controller Name',
         sort=False, states=_controller_states, depends=_depends)
@@ -267,7 +267,7 @@ class Interface(Workflow, ModelSQL, ModelView):
         super().__setup__()
         cls._transitions |= set((
             ('draft', 'active'),
-            ('active', 'canceled'),
+            ('active', 'cancelled'),
             ('active', 'draft'),
             ))
         cls._buttons.update({
@@ -286,6 +286,15 @@ class Interface(Workflow, ModelSQL, ModelView):
                 'invisible': Eval('state') != 'active',
                 },
             })
+
+    @classmethod
+    def __register__(cls, module_name):
+        cursor = Transaction().connection.cursor()
+        sql_table = cls.__table__()
+        super().__register__(module_name)
+        cursor.execute(*sql_table.update(
+                [sql_table.state], ['cancelled'],
+                where=sql_table.state == 'canceled'))
 
     @classmethod
     def view_attributes(cls):

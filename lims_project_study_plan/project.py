@@ -104,7 +104,7 @@ class Project(metaclass=PoolMeta):
         'on_change_with_stp_dev_amnd_prof_domain')
     stp_state = fields.Selection([
         ('', ''),
-        ('canceled', 'Canceled'),
+        ('cancelled', 'Cancelled'),
         ('finalized', 'Finalized'),
         ('initiated', 'Initiated'),
         ('pending', 'Pending'),
@@ -213,6 +213,15 @@ class Project(metaclass=PoolMeta):
                 'invisible': (Eval('stp_state') != 'finalized'),
                 },
             })
+
+    @classmethod
+    def __register__(cls, module_name):
+        cursor = Transaction().connection.cursor()
+        sql_table = cls.__table__()
+        super().__register__(module_name)
+        cursor.execute(*sql_table.update(
+                [sql_table.stp_state], ['cancelled'],
+                where=sql_table.stp_state == 'canceled'))
 
     @classmethod
     def view_attributes(cls):
@@ -1623,7 +1632,7 @@ class ProjectGLPReport10PrintStart(ModelView):
     date_from = fields.Date('Ingress date from', required=True)
     date_to = fields.Date('to', required=True)
     stp_state = fields.Selection([
-        ('canceled', 'Canceled'),
+        ('cancelled', 'Cancelled'),
         ('finalized', 'Finalized'),
         ('initiated', 'Initiated'),
         ('unfinished', 'Unfinished'),
@@ -1688,14 +1697,14 @@ class ProjectGLPReport10(Report):
             ('stp_date', '<=', data['date_to']),
             ]
 
-        if data['stp_state'] in ('canceled', 'finalized', 'initiated',
+        if data['stp_state'] in ('cancelled', 'finalized', 'initiated',
                 'pending', 'requested'):
             clause.append(('stp_state', '=', data['stp_state']))
         elif data['stp_state'] == 'unfinished':
             clause.append([
                 ('stp_state', '!=', 'finalized'),
                 ('stp_state', '!=', None),
-                ('stp_state', '!=', 'canceled')])
+                ('stp_state', '!=', 'cancelled')])
         elif data['stp_state'] == 'no_status':
             clause.append(('stp_state', '=', None))
 
