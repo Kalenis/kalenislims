@@ -7,7 +7,7 @@ from dateutil import rrule
 from sql import Null
 
 from trytond.model import ModelSingleton, ModelView, ModelSQL, fields
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Id
 from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
 from trytond.modules.company.model import (
@@ -170,16 +170,18 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     planification_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence', 'Planification Sequence', required=True,
         domain=[
+            ('sequence_type', '=',
+                Id('lims', 'seq_type_planification')),
             ('company', 'in',
                 [Eval('context', {}).get('company', -1), None]),
-            ('code', '=', 'lims.planification'),
             ]))
     referral_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence', 'Referral Sequence', required=True,
         domain=[
+            ('sequence_type', '=',
+                Id('lims', 'seq_type_referral')),
             ('company', 'in',
                 [Eval('context', {}).get('company', -1), None]),
-            ('code', '=', 'lims.referral'),
             ]))
     mcl_fraction_type = fields.Many2One('lims.fraction.type',
         'MCL fraction type')
@@ -327,13 +329,15 @@ class ConfigurationSequence(ModelSQL, CompanyValueMixin):
 
     planification_sequence = fields.Many2One('ir.sequence',
         'Planification Sequence', depends=['company'], domain=[
+            ('sequence_type', '=',
+                Id('lims', 'seq_type_planification')),
             ('company', 'in', [Eval('company', -1), None]),
-            ('code', '=', 'lims.planification'),
             ])
     referral_sequence = fields.Many2One('ir.sequence',
         'Referral Sequence', depends=['company'], domain=[
+            ('sequence_type', '=',
+                Id('lims', 'seq_type_referral')),
             ('company', 'in', [Eval('company', -1), None]),
-            ('code', '=', 'lims.referral'),
             ])
 
     @classmethod
@@ -376,30 +380,34 @@ class LabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
     entry_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence', 'Entry Sequence', required=True,
         domain=[
+            ('sequence_type', '=',
+                Id('lims', 'seq_type_entry')),
             ('company', 'in',
                 [Eval('context', {}).get('company', -1), None]),
-            ('code', '=', 'lims.entry'),
             ]))
     sample_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence', 'Sample Sequence', required=True,
         domain=[
+            ('sequence_type', '=',
+                Id('lims', 'seq_type_sample')),
             ('company', 'in',
                 [Eval('context', {}).get('company', -1), None]),
-            ('code', '=', 'lims.sample'),
             ]))
     service_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence', 'Service Sequence', required=True,
         domain=[
+            ('sequence_type', '=',
+                Id('lims', 'seq_type_service')),
             ('company', 'in',
                 [Eval('context', {}).get('company', -1), None]),
-            ('code', '=', 'lims.service'),
             ]))
     results_report_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence', 'Results Report Sequence', required=True,
         domain=[
+            ('sequence_type', '=',
+                Id('lims', 'seq_type_results_report')),
             ('company', 'in',
                 [Eval('context', {}).get('company', -1), None]),
-            ('code', '=', 'lims.results_report'),
             ]))
     sequences = fields.One2Many('lims.lab.workyear.sequence',
         'workyear', 'Sequences')
@@ -527,23 +535,27 @@ class LabWorkYearSequence(ModelSQL, CompanyValueMixin):
         ondelete='CASCADE', select=True)
     entry_sequence = fields.Many2One('ir.sequence',
         'Entry Sequence', depends=['company'], domain=[
+            ('sequence_type', '=',
+                Id('lims', 'seq_type_entry')),
             ('company', 'in', [Eval('company', -1), None]),
-            ('code', '=', 'lims.entry'),
             ])
     sample_sequence = fields.Many2One('ir.sequence',
         'Sample Sequence', depends=['company'], domain=[
+            ('sequence_type', '=',
+                Id('lims', 'seq_type_sample')),
             ('company', 'in', [Eval('company', -1), None]),
-            ('code', '=', 'lims.sample'),
             ])
     service_sequence = fields.Many2One('ir.sequence',
         'Service Sequence', depends=['company'], domain=[
+            ('sequence_type', '=',
+                Id('lims', 'seq_type_service')),
             ('company', 'in', [Eval('company', -1), None]),
-            ('code', '=', 'lims.service'),
             ])
     results_report_sequence = fields.Many2One('ir.sequence',
         'Results Report Sequence', depends=['company'], domain=[
+            ('sequence_type', '=',
+                Id('lims', 'seq_type_results_report')),
             ('company', 'in', [Eval('company', -1), None]),
-            ('code', '=', 'lims.results_report'),
             ])
 
     @classmethod

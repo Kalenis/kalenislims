@@ -3,7 +3,7 @@
 # the full copyright notices and license terms.
 
 from trytond.model import ModelSingleton, ModelSQL, ModelView, fields
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Id
 from trytond.pool import Pool
 from trytond.modules.company.model import (
     CompanyMultiValueMixin, CompanyValueMixin)
@@ -17,9 +17,10 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     task_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence', 'Task Sequence', required=True,
         domain=[
+            ('sequence_type', '=',
+                Id('lims_administrative_task', 'seq_type_task')),
             ('company', 'in',
                 [Eval('context', {}).get('company', -1), None]),
-            ('code', '=', 'lims.administrative.task'),
             ]))
     email_responsible_subject = fields.Char('Subject of the task'
         ' assignment email',
@@ -44,8 +45,9 @@ class ConfigurationSequence(ModelSQL, CompanyValueMixin):
 
     task_sequence = fields.Many2One('ir.sequence',
         'Task Sequence', depends=['company'], domain=[
+            ('sequence_type', '=',
+                Id('lims_administrative_task', 'seq_type_task')),
             ('company', 'in', [Eval('company', -1), None]),
-            ('code', '=', 'lims.administrative.task'),
             ])
 
     @classmethod

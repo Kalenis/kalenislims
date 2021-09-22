@@ -171,7 +171,6 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
     def create(cls, vlist):
         pool = Pool()
         Config = pool.get('lims.administrative.task.configuration')
-        Sequence = pool.get('ir.sequence')
 
         config = Config(1)
         sequence = config.task_sequence
@@ -181,7 +180,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
 
         vlist = [x.copy() for x in vlist]
         for values in vlist:
-            values['number'] = Sequence.get_id(sequence.id)
+            values['number'] = sequence.get()
         return super().create(vlist)
 
     @classmethod

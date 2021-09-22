@@ -44,7 +44,6 @@
 
         <record model="ir.sequence.type" id="sequence_type_quality">
             <field name="name">Quality Control</field>
-            <field name="code">lims.quality.test</field>
         </record>
         <record model="ir.sequence.type-res.group"
             id="sequence_type_quality_group_admin">
@@ -58,7 +57,7 @@
         </record>
         <record model="ir.sequence" id="sequence_quality">
             <field name="name">Quality Control</field>
-            <field name="code">lims.quality.test</field>
+            <field name="sequence_type" ref="sequence_type_quality"/>
         </record>
 
 <!-- Quality Value -->

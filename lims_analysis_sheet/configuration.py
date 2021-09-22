@@ -3,7 +3,7 @@
 # the full copyright notices and license terms.
 
 from trytond.model import fields
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Id
 from trytond.pool import Pool, PoolMeta
 
 
@@ -13,9 +13,10 @@ class Configuration(metaclass=PoolMeta):
     analysis_sheet_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence', 'Analysis Sheet Sequence', required=True,
         domain=[
+            ('sequence_type', '=',
+                Id('lims_analysis_sheet', 'seq_type_analysis_sheet')),
             ('company', 'in',
                 [Eval('context', {}).get('company', -1), None]),
-            ('code', '=', 'lims.analysis_sheet'),
             ]))
 
     @classmethod
@@ -36,8 +37,9 @@ class ConfigurationSequence(metaclass=PoolMeta):
 
     analysis_sheet_sequence = fields.Many2One('ir.sequence',
         'Analysis Sheet Sequence', depends=['company'], domain=[
+            ('sequence_type', '=',
+                Id('lims_analysis_sheet', 'seq_type_analysis_sheet')),
             ('company', 'in', [Eval('company', -1), None]),
-            ('code', '=', 'lims.analysis_sheet'),
             ])
 
     @classmethod

@@ -4,7 +4,7 @@
 
 from trytond.model import fields
 from trytond.pool import PoolMeta, Pool
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Id
 
 
 class Configuration(metaclass=PoolMeta):
@@ -13,9 +13,10 @@ class Configuration(metaclass=PoolMeta):
     sample_label_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence', 'Label Sequence', required=True,
         domain=[
+            ('sequence_type', '=',
+                Id('lims_sale_industry', 'seq_type_sample_label')),
             ('company', 'in',
                 [Eval('context', {}).get('company', -1), None]),
-            ('code', '=', 'lims.sample.label'),
             ]))
 
     @classmethod
@@ -36,8 +37,9 @@ class ConfigurationSequence(metaclass=PoolMeta):
 
     sample_label_sequence = fields.Many2One('ir.sequence',
         'Label Sequence', depends=['company'], domain=[
+            ('sequence_type', '=',
+                Id('lims_sale_industry', 'seq_type_sample_label')),
             ('company', 'in', [Eval('company', -1), None]),
-            ('code', '=', 'lims.sample.label'),
             ])
 
     @classmethod

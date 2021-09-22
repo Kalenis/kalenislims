@@ -6,7 +6,6 @@
 
         <record model="ir.sequence.type" id="seq_type_entry">
             <field name="name">Entry</field>
-            <field name="code">lims.entry</field>
         </record>
         <record model="ir.sequence.type-res.group"
             id="seq_type_entry_group_admin">
@@ -15,7 +14,7 @@
         </record>
         <record model="ir.sequence" id="seq_entry">
             <field name="name">Entry</field>
-            <field name="code">lims.entry</field>
+            <field name="sequence_type" ref="seq_type_entry"/>
             <field eval="7" name="padding"/>
         </record>
 

@@ -226,7 +226,6 @@ class Project(metaclass=PoolMeta):
     def create(cls, vlist):
         pool = Pool()
         LabWorkYear = pool.get('lims.lab.workyear')
-        Sequence = pool.get('ir.sequence.strict')
 
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
@@ -239,7 +238,7 @@ class Project(metaclass=PoolMeta):
         vlist = [x.copy() for x in vlist]
         for values in vlist:
             if values['type'] == 'study_plan':
-                values['stp_number'] = Sequence.get_id(sequence.id)
+                values['stp_number'] = sequence.get()
                 if values['stp_phase'] == 'study_plan':
                     values['code'] = values['stp_number']
         return super().create(vlist)
@@ -638,13 +637,11 @@ class ProjectSampleInCustody(ModelSQL, ModelView):
     def create(cls, vlist):
         pool = Pool()
         Config = pool.get('lims.configuration')
-        Sequence = pool.get('ir.sequence')
 
         vlist = [x.copy() for x in vlist]
         config = Config(1)
         for values in vlist:
-            values['sample'] = Sequence.get_id(
-                config.sample_in_custody_sequence.id)
+            values['sample'] = config.sample_in_custody_sequence.get()
         return super().create(vlist)
 
 

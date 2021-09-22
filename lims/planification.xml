@@ -6,7 +6,6 @@
 
         <record model="ir.sequence.type" id="seq_type_planification">
             <field name="name">Planification</field>
-            <field name="code">lims.planification</field>
         </record>
         <record model="ir.sequence.type-res.group"
             id="seq_type_planification_group_admin">
@@ -15,7 +14,7 @@
         </record>
         <record model="ir.sequence" id="seq_planification">
             <field name="name">Planification</field>
-            <field name="code">lims.planification</field>
+            <field name="sequence_type" ref="seq_type_planification"/>
         </record>
 
 <!-- Planification -->

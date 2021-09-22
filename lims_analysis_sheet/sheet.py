@@ -614,7 +614,6 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def set_number(cls, vlist):
         pool = Pool()
         Config = pool.get('lims.configuration')
-        Sequence = pool.get('ir.sequence')
 
         config = Config(1)
         if not config.analysis_sheet_sequence:
@@ -622,7 +621,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
         vlist = [x.copy() for x in vlist]
         for values in vlist:
-            number = Sequence.get_id(config.analysis_sheet_sequence.id)
+            number = config.analysis_sheet_sequence.get()
             values['number'] = number
         return vlist
 

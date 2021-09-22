@@ -6,7 +6,6 @@
 
         <record model="ir.sequence.type" id="seq_type_lot">
             <field name="name">Lot</field>
-            <field name="code">stock.lot</field>
         </record>
         <record model="ir.sequence.type-res.group"
             id="seq_type_lot_group_admin">
@@ -15,7 +14,7 @@
         </record>
         <record model="ir.sequence" id="seq_lot">
             <field name="name">Lot</field>
-            <field name="code">stock.lot</field>
+            <field name="sequence_type" ref="seq_type_lot"/>
         </record>
 
 <!-- Template -->

@@ -177,14 +177,13 @@ class Production(metaclass=PoolMeta):
     def create_lot(cls, productions):
         pool = Pool()
         Config = pool.get('production.configuration')
-        Sequence = pool.get('ir.sequence')
         Lot = pool.get('stock.lot')
         Move = pool.get('stock.move')
 
         config = Config(1)
         for production in productions:
             for move in production.outputs:
-                number = Sequence.get_id(config.lot_sequence.id)
+                number = config.lot_sequence.get()
                 lot = Lot(
                     number=number,
                     product=move.product,

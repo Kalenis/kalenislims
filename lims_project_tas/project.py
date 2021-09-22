@@ -106,7 +106,6 @@ class Project(metaclass=PoolMeta):
     def create(cls, vlist):
         pool = Pool()
         LabWorkYear = pool.get('lims.lab.workyear')
-        Sequence = pool.get('ir.sequence.strict')
 
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
@@ -119,7 +118,7 @@ class Project(metaclass=PoolMeta):
         vlist = [x.copy() for x in vlist]
         for values in vlist:
             if values['type'] == 'tas':
-                values['code'] = Sequence.get_id(sequence.id)
+                values['code'] = sequence.get()
         return super().create(vlist)
 
 

@@ -39,7 +39,8 @@ Create Quality Configuration::
 
     >>> Sequence = Model.get('ir.sequence')
     >>> Configuration = Model.get('lims.quality.configuration')
-    >>> quality_sequence, = Sequence.find([('code', '=', 'lims.quality.test')])
+    >>> quality_sequence, = Sequence.find(
+    ...     [('sequence_type.name', '=', "Quality Control")], limit=1)
     >>> sample_location, = Model.get('stock.location').find([
     ...     ('code', '=', 'STO')])
     >>> configuration = Configuration(1)

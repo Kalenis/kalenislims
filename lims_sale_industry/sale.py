@@ -368,7 +368,6 @@ class SalePrintLabel(Wizard):
         pool = Pool()
         Sale = pool.get('sale.sale')
         Config = pool.get('sale.configuration')
-        Sequence = pool.get('ir.sequence')
 
         config = Config(1)
         sequence = config.sample_label_sequence
@@ -385,10 +384,10 @@ class SalePrintLabel(Wizard):
                 quantity = int(line.quantity)
                 if quantity < 1:
                     continue
-                line.label_from = Sequence.get_id(sequence.id)
+                line.label_from = sequence.get()
                 line.label_to = line.label_from
                 for x in range(1, quantity):
-                    line.label_to = Sequence.get_id(sequence.id)
+                    line.label_to = sequence.get()
                 if not first_label:
                     first_label = line.label_from
                 if not last_label:
@@ -401,10 +400,10 @@ class SalePrintLabel(Wizard):
         else:
             if self.start.quantity < 1:
                 return 'end'
-            sale.label_from = Sequence.get_id(sequence.id)
+            sale.label_from = sequence.get()
             sale.label_to = sale.label_from
             for x in range(1, self.start.quantity):
-                sale.label_to = Sequence.get_id(sequence.id)
+                sale.label_to = sequence.get()
             Sale.save([sale])
 
         return 'print_'

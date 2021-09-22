@@ -44,11 +44,17 @@ def set_lims_configuration(company=None, config=None):
     default_notebook_view = _create_default_notebook_view(config)
 
     # Create required sequences
+    SequenceType = Model.get('ir.sequence.type', config=config)
     Sequence = Model.get('ir.sequence', config=config)
-    planification_sequence = Sequence()
-    planification_sequence.name = 'Planification Sequence'
-    planification_sequence.code = 'lims.planification'
-    planification_sequence.company = company
+
+    planification_sequence_type, = SequenceType.find([
+        ('name', '=', 'Planification'),
+        ], limit=1)
+    planification_sequence = Sequence(
+        name='Planification Sequence',
+        sequence_type=planification_sequence_type,
+        company=company,
+        )
     planification_sequence.save()
 
     # Set Lims configuration
@@ -92,26 +98,47 @@ def create_workyear(company=None, today=None, config=None):
         today = datetime.date.today()
 
     # Create sequences
+    SequenceType = Model.get('ir.sequence.type', config=config)
     Sequence = Model.get('ir.sequence', config=config)
-    entry_sequence = Sequence()
-    entry_sequence.name = 'Entry Sequence'
-    entry_sequence.code = 'lims.entry'
-    entry_sequence.company = company
+
+    entry_sequence_type, = SequenceType.find([
+        ('name', '=', 'Entry'),
+        ], limit=1)
+    entry_sequence = Sequence(
+        name='Entry Sequence',
+        sequence_type=entry_sequence_type,
+        company=company,
+        )
     entry_sequence.save()
-    sample_sequence = Sequence()
-    sample_sequence.name = 'Sample Sequence'
-    sample_sequence.code = 'lims.sample'
-    sample_sequence.company = company
+
+    sample_sequence_type, = SequenceType.find([
+        ('name', '=', 'Sample'),
+        ], limit=1)
+    sample_sequence = Sequence(
+        name='Sample Sequence',
+        sequence_type=sample_sequence_type,
+        company=company,
+        )
     sample_sequence.save()
-    service_sequence = Sequence()
-    service_sequence.name = 'Service Sequence'
-    service_sequence.code = 'lims.service'
-    service_sequence.company = company
+
+    service_sequence_type, = SequenceType.find([
+        ('name', '=', 'Service'),
+        ], limit=1)
+    service_sequence = Sequence(
+        name='Service Sequence',
+        sequence_type=service_sequence_type,
+        company=company,
+        )
     service_sequence.save()
-    results_report_sequence = Sequence()
-    results_report_sequence.name = 'Results Report Sequence'
-    results_report_sequence.code = 'lims.results_report'
-    results_report_sequence.company = company
+
+    results_report_sequence_type, = SequenceType.find([
+        ('name', '=', 'Results Report'),
+        ], limit=1)
+    results_report_sequence = Sequence(
+        name='Results Report Sequence',
+        sequence_type=results_report_sequence_type,
+        company=company,
+        )
     results_report_sequence.save()
 
     # Create Work Year

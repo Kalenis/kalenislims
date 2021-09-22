@@ -357,10 +357,10 @@ class QualityTest(Workflow, ModelSQL, ModelView):
     def set_number(cls, tests):
         pool = Pool()
         Config = pool.get('lims.quality.configuration')
-        Sequence = pool.get('ir.sequence')
+
         config = Config(1)
         for test in tests:
-            test.number = Sequence.get_id(config.quality_sequence.id)
+            test.number = config.quality_sequence.get()
             test.save()
 
     def apply_template_values(self):

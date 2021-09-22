@@ -14,11 +14,10 @@
 
         <record model="ir.sequence.type" id="seq_type_sample_label">
             <field name="name">Sample Label</field>
-            <field name="code">lims.sample.label</field>
         </record>
         <record model="ir.sequence" id="seq_sample_label">
             <field name="name">Sample Label</field>
-            <field name="code">lims.sample.label</field>
+            <field name="sequence_type" ref="seq_type_sample_label"/>
         </record>
 
     </data>

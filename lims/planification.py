@@ -225,13 +225,11 @@ class Planification(Workflow, ModelSQL, ModelView):
     def create(cls, vlist):
         pool = Pool()
         Config = pool.get('lims.configuration')
-        Sequence = pool.get('ir.sequence')
 
         vlist = [x.copy() for x in vlist]
         config = Config(1)
         for values in vlist:
-            values['code'] = Sequence.get_id(
-                config.planification_sequence.id)
+            values['code'] = config.planification_sequence.get()
         return super().create(vlist)
 
     @classmethod

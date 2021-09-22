@@ -6,7 +6,6 @@
 
         <record model="ir.sequence.type" id="seq_type_sample_in_custody">
             <field name="name">Sample in Custody</field>
-            <field name="code">lims.project.sample_in_custody</field>
         </record>
         <record model="ir.sequence.type-res.group"
             id="seq_type_sample_in_custody_group_admin">
@@ -15,14 +14,13 @@
         </record>
         <record model="ir.sequence" id="seq_sample_in_custody">
             <field name="name">Sample in Custody</field>
-            <field name="code">lims.project.sample_in_custody</field>
+            <field name="sequence_type" ref="seq_type_sample_in_custody"/>
         </record>
 
 <!-- Sequences for Project -->
 
         <record model="ir.sequence.type" id="seq_type_stp_project">
             <field name="name">Project</field>
-            <field name="code">lims.project</field>
         </record>
         <record model="ir.sequence.type-res.group"
             id="seq_type_stp_project_group_admin">

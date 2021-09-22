@@ -500,7 +500,6 @@ class Service(ModelSQL, ModelView):
     def create(cls, vlist):
         pool = Pool()
         LabWorkYear = pool.get('lims.lab.workyear')
-        Sequence = pool.get('ir.sequence')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Sample = pool.get('lims.sample')
 
@@ -513,7 +512,7 @@ class Service(ModelSQL, ModelView):
 
         vlist = [x.copy() for x in vlist]
         for values in vlist:
-            values['number'] = Sequence.get_id(sequence.id)
+            values['number'] = sequence.get()
         services = super().create(vlist)
 
         if not Transaction().context.get('copying', False):
@@ -2651,7 +2650,6 @@ class Sample(ModelSQL, ModelView):
     def create(cls, vlist):
         pool = Pool()
         LabWorkYear = pool.get('lims.lab.workyear')
-        Sequence = pool.get('ir.sequence')
 
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
@@ -2662,7 +2660,7 @@ class Sample(ModelSQL, ModelView):
 
         vlist = [x.copy() for x in vlist]
         for values in vlist:
-            values['number'] = Sequence.get_id(sequence.id)
+            values['number'] = sequence.get()
         samples = super().create(vlist)
         for sample in samples:
             sample.warn_duplicated_label()
@@ -6603,13 +6601,11 @@ class Referral(ModelSQL, ModelView):
     def create(cls, vlist):
         pool = Pool()
         Config = pool.get('lims.configuration')
-        Sequence = pool.get('ir.sequence')
 
         vlist = [x.copy() for x in vlist]
         config = Config(1)
         for values in vlist:
-            values['number'] = Sequence.get_id(
-                config.referral_sequence.id)
+            values['number'] = config.referral_sequence.get()
         return super().create(vlist)
 
 

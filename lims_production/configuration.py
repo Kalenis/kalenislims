@@ -5,7 +5,7 @@
 
 from trytond.model import ModelSQL, fields
 from trytond.pool import PoolMeta, Pool
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Id
 from trytond.modules.company.model import CompanyValueMixin
 
 
@@ -15,9 +15,10 @@ class ProductionConfiguration(metaclass=PoolMeta):
     lot_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence', 'Lot Sequence', required=True,
         domain=[
+            ('sequence_type', '=',
+                Id('lims_production', 'seq_type_lot')),
             ('company', 'in',
                 [Eval('context', {}).get('company', -1), None]),
-            ('code', '=', 'stock.lot'),
             ]))
 
     @classmethod
@@ -39,8 +40,9 @@ class ProductionConfigurationLotSequence(ModelSQL, CompanyValueMixin):
 
     lot_sequence = fields.Many2One('ir.sequence',
         'Lot Sequence', depends=['company'], domain=[
+            ('sequence_type', '=',
+                Id('lims_production', 'seq_type_lot')),
             ('company', 'in', [Eval('company', -1), None]),
-            ('code', '=', 'stock.lot'),
             ])
 
     @classmethod

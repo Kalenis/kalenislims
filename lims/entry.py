@@ -460,7 +460,6 @@ class Entry(Workflow, ModelSQL, ModelView):
     def create(cls, vlist):
         pool = Pool()
         LabWorkYear = pool.get('lims.lab.workyear')
-        Sequence = pool.get('ir.sequence')
 
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
@@ -471,7 +470,7 @@ class Entry(Workflow, ModelSQL, ModelView):
 
         vlist = [x.copy() for x in vlist]
         for values in vlist:
-            values['number'] = Sequence.get_id(sequence.id)
+            values['number'] = sequence.get()
             if values.get('party', None) is None:
                 values['party'] = values['invoice_party']
         return super().create(vlist)

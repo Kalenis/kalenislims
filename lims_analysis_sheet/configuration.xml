@@ -17,7 +17,6 @@
 
         <record model="ir.sequence.type" id="seq_type_analysis_sheet">
             <field name="name">Analysis Sheet</field>
-            <field name="code">lims.analysis_sheet</field>
         </record>
         <record model="ir.sequence.type-res.group"
             id="seq_type_analysis_sheet_group_admin">
@@ -26,7 +25,7 @@
         </record>
         <record model="ir.sequence" id="seq_analysis_sheet">
             <field name="name">Analysis Sheet</field>
-            <field name="code">lims.analysis_sheet</field>
+            <field name="sequence_type" ref="seq_type_analysis_sheet"/>
             <field name="padding" eval="8"/>
         </record>
 

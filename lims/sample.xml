@@ -6,7 +6,6 @@
 
         <record model="ir.sequence.type" id="seq_type_sample">
             <field name="name">Sample</field>
-            <field name="code">lims.sample</field>
         </record>
         <record model="ir.sequence.type-res.group"
             id="seq_type_sample_group_admin">
@@ -15,7 +14,7 @@
         </record>
         <record model="ir.sequence" id="seq_sample">
             <field name="name">Sample</field>
-            <field name="code">lims.sample</field>
+            <field name="sequence_type" ref="seq_type_sample"/>
             <field eval="7" name="padding"/>
         </record>
 
@@ -23,7 +22,6 @@
 
         <record model="ir.sequence.type" id="seq_type_service">
             <field name="name">Service</field>
-            <field name="code">lims.service</field>
         </record>
         <record model="ir.sequence.type-res.group"
             id="seq_type_service_group_admin">
@@ -32,7 +30,7 @@
         </record>
         <record model="ir.sequence" id="seq_service">
             <field name="name">Service</field>
-            <field name="code">lims.service</field>
+            <field name="sequence_type" ref="seq_type_service"/>
             <field eval="8" name="padding"/>
         </record>
 
@@ -40,7 +38,6 @@
 
         <record model="ir.sequence.type" id="seq_type_referral">
             <field name="name">Referral</field>
-            <field name="code">lims.referral</field>
         </record>
         <record model="ir.sequence.type-res.group"
             id="seq_type_referral_group_admin">
@@ -49,7 +46,7 @@
         </record>
         <record model="ir.sequence" id="seq_referral">
             <field name="name">Referral</field>
-            <field name="code">lims.referral</field>
+            <field name="sequence_type" ref="seq_type_referral"/>
         </record>
 
 <!-- Packaging Type -->

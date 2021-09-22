@@ -6,7 +6,6 @@
 
         <record model="ir.sequence.type" id="seq_type_results_report">
             <field name="name">Results Report</field>
-            <field name="code">lims.results_report</field>
         </record>
         <record model="ir.sequence.type-res.group"
             id="seq_type_results_report_group_admin">
