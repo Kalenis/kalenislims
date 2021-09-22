@@ -357,6 +357,9 @@ class CountersampleCreate(Wizard):
             move.company = company
             move.planned_date = fraction.countersample_date
             move.origin = fraction
+            if move.on_change_with_unit_price_required():
+                move.unit_price = 0
+                move.currency = company.currency
             move.state = 'draft'
             move.save()
             moves.append(move)

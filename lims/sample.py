@@ -2041,6 +2041,9 @@ class Fraction(ModelSQL, ModelView):
         move.company = company
         move.planned_date = today
         move.origin = self
+        if move.on_change_with_unit_price_required():
+            move.unit_price = 0
+            move.currency = company.currency
         move.state = 'draft'
         return move
 
@@ -4711,6 +4714,9 @@ class CountersampleStorage(Wizard):
             move.company = company
             move.planned_date = planned_date
             move.origin = fraction
+            if move.on_change_with_unit_price_required():
+                move.unit_price = 0
+                move.currency = company.currency
             move.state = 'draft'
             moves.append(move)
         return moves
@@ -4911,6 +4917,9 @@ class CountersampleStorageRevert(Wizard):
             move.company = company
             move.planned_date = today
             move.origin = fraction
+            if move.on_change_with_unit_price_required():
+                move.unit_price = 0
+                move.currency = company.currency
             move.state = 'draft'
             moves.append(move)
         return moves
@@ -5098,6 +5107,9 @@ class CountersampleDischarge(Wizard):
             move.company = company
             move.planned_date = planned_date
             move.origin = fraction
+            if move.on_change_with_unit_price_required():
+                move.unit_price = 0
+                move.currency = company.currency
             move.state = 'draft'
             moves.append(move)
         return moves
@@ -5290,6 +5302,9 @@ class FractionDischarge(Wizard):
             move.company = company
             move.planned_date = planned_date
             move.origin = fraction
+            if move.on_change_with_unit_price_required():
+                move.unit_price = 0
+                move.currency = company.currency
             move.state = 'draft'
             moves.append(move)
         return moves
@@ -5471,6 +5486,9 @@ class FractionDischargeRevert(Wizard):
             move.company = company
             move.planned_date = today
             move.origin = fraction
+            if move.on_change_with_unit_price_required():
+                move.unit_price = 0
+                move.currency = company.currency
             move.state = 'draft'
             moves.append(move)
         return moves
