@@ -1413,6 +1413,8 @@ class MultiSampleData(ModelView):
 
     @classmethod
     def fields_view_get(cls, view_id=None, view_type='form', level=None):
+        if Pool().test:
+            return
         pool = Pool()
         AnalysisSheet = pool.get('lims.analysis_sheet')
         Data = pool.get('lims.interface.data')
