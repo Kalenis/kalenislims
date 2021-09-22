@@ -64,6 +64,11 @@ def set_lims_configuration(company=None, config=None):
     lims_config.analysis_product_category = analysis_product_category
     lims_config.default_notebook_view = default_notebook_view
     lims_config.planification_sequence = planification_sequence
+    Lang = Model.get('ir.lang', config=config)
+    lang_en, = Lang.find([('code', '=', 'en')])
+    lang_en.translatable = True
+    lang_en.save()
+    lims_config.results_report_language = lang_en
     lims_config.save()
 
 
