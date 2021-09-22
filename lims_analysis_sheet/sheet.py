@@ -1224,13 +1224,13 @@ class AnalysisSheetReport(Report):
         return []
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         AnalysisSheet = pool.get('lims.analysis_sheet')
         Field = pool.get('lims.interface.table.field')
         Data = pool.get('lims.interface.data')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         sheet = AnalysisSheet(data.get('id'))
         print_expression_column = data.get('print_expression_column')

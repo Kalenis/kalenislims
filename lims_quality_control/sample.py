@@ -368,10 +368,10 @@ class SampleLabels(Report):
     __name__ = 'lims.sample.labels.report'
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         Sample = Pool().get('lims.sample')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
         labels = []
         if data.get('sample'):
             records = [Sample(data.get('sample'))]

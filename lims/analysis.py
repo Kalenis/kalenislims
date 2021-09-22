@@ -2505,9 +2505,9 @@ class CopyTypificationSpreadsheet(Report):
     __name__ = 'lims.report_typification_copy.spreadsheet'
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         Typification = Pool().get('lims.typification')
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
         report_context['new_typifications'] = Typification.browse(
             data['new_typifications'])
         report_context['existing_typifications'] = Typification.browse(

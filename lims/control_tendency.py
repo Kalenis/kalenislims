@@ -1217,12 +1217,12 @@ class ControlChartReport(Report):
     __name__ = 'lims.control_chart.report'
 
     @classmethod
-    def get_context(cls, reports, data):
-        report_context = super().get_context(reports, data)
+    def get_context(cls, records, header, data):
         pool = Pool()
         Company = pool.get('company.company')
         ControlTendency = pool.get('lims.control.tendency')
 
+        report_context = super().get_context(records, header, data)
         if 'id' in data:
             tendency = ControlTendency(data['id'])
         else:
@@ -1794,10 +1794,10 @@ class TrendChartReport(Report):
     __name__ = 'lims.trend.chart.report'
 
     @classmethod
-    def get_context(cls, reports, data):
+    def get_context(cls, records, header, data):
         TrendChart = Pool().get('lims.trend.chart')
 
-        report_context = super().get_context(reports, data)
+        report_context = super().get_context(records, header, data)
 
         chart_id = data.get('chart_id')
         chart = TrendChart(chart_id)

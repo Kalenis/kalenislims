@@ -1607,13 +1607,13 @@ class AcknowledgmentOfReceipt(Report):
         return result
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Company = pool.get('company.company')
         Service = pool.get('lims.service')
         Entry = pool.get('lims.entry')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
         if 'id' in data:
             entry = Entry(data['id'])
         else:
@@ -1805,13 +1805,13 @@ class EntryDetail(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
-        report_context = super().get_context(records, data)
+    def get_context(cls, records, header, data):
         Company = Pool().get('company.company')
+
+        report_context = super().get_context(records, header, data)
 
         company = Company(Transaction().context.get('company'))
         report_context['company'] = company
-
         return report_context
 
 
@@ -1820,8 +1820,8 @@ class EntryLabels(Report):
     __name__ = 'lims.entry.labels.report'
 
     @classmethod
-    def get_context(cls, records, data):
-        report_context = super().get_context(records, data)
+    def get_context(cls, records, header, data):
+        report_context = super().get_context(records, header, data)
         labels = []
         for entry in records:
             for sample in entry.samples:
@@ -1829,5 +1829,4 @@ class EntryLabels(Report):
                     for i in range(fraction.packages_quantity):
                         labels.append(fraction)
         report_context['labels'] = labels
-
         return report_context

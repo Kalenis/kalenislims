@@ -3850,7 +3850,7 @@ class ResultReport(Report):
         return result
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Company = pool.get('company.company')
         ResultsDetail = pool.get('lims.results_report.version.detail')
@@ -3859,7 +3859,7 @@ class ResultReport(Report):
         Sample = pool.get('lims.sample')
         RangeType = pool.get('lims.range.type')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         if data.get('alt_lang'):
             lang_code = data['alt_lang']

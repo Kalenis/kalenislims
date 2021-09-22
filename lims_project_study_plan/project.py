@@ -937,12 +937,11 @@ class ProjectGLPReport01(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         ProjectSampleInCustody = Pool().get(
             'lims.project.sample_in_custody')
 
-        report_context = super().get_context(
-            records, data)
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
         report_context['stp_number'] = records[0].stp_number
@@ -978,7 +977,7 @@ class ProjectGLPReport01(Report):
                     sample.file_operator_responsible.rec_name
                     if sample.file_operator_responsible else ''),
                 })
-        report_context['objects'] = objects
+        report_context['records'] = objects
 
         return report_context
 
@@ -1000,11 +999,10 @@ class ProjectGLPReport02(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         Fraction = Pool().get('lims.fraction')
 
-        report_context = super().get_context(
-            records, data)
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
         report_context['stp_number'] = records[0].stp_number
@@ -1045,7 +1043,7 @@ class ProjectGLPReport02(Report):
                 'comments': str(fraction.comments or '')
                 })
 
-        report_context['objects'] = objects
+        report_context['records'] = objects
         return report_context
 
 
@@ -1102,13 +1100,12 @@ class ProjectGLPReport03(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Project = pool.get('lims.project')
         Fraction = pool.get('lims.fraction')
 
-        report_context = super().get_context(
-            records, data)
+        report_context = super().get_context(records, header, data)
 
         project = Project(data['id'])
 
@@ -1141,7 +1138,7 @@ class ProjectGLPReport03(Report):
                 'countersample_date': fraction.countersample_date or '',
                 'comments': str(fraction.comments or ''),
                 })
-        report_context['objects'] = objects
+        report_context['records'] = objects
 
         return report_context
 
@@ -1163,12 +1160,12 @@ class ProjectGLPReport04(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Fraction = pool.get('lims.fraction')
         Move = pool.get('stock.move')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
         report_context['stp_number'] = records[0].stp_number
@@ -1211,7 +1208,7 @@ class ProjectGLPReport04(Report):
                     'shipment': move.shipment.number,
                     'responsible': move.create_uid.name,
                     })
-        report_context['objects'] = objects
+        report_context['records'] = objects
 
         return report_context
 
@@ -1269,12 +1266,12 @@ class ProjectGLPReport05(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Project = pool.get('lims.project')
         Fraction = pool.get('lims.fraction')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         project = Project(data['id'])
 
@@ -1305,7 +1302,7 @@ class ProjectGLPReport05(Report):
                 'discharge_date': fraction.discharge_date or '',
                 'comments': str(fraction.comments or ''),
                 })
-        report_context['objects'] = objects
+        report_context['records'] = objects
 
         return report_context
 
@@ -1327,14 +1324,14 @@ class ProjectGLPReport06(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         ProjectDevAndAmndmnt = pool.get(
             'lims.project.deviation_amendment')
         ProjectDevAndAmndmntProfessional = pool.get(
             'lims.project.deviation_amendment.professional')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
         report_context['stp_number'] = records[0].stp_number
@@ -1363,7 +1360,7 @@ class ProjectGLPReport06(Report):
                     'date': p.date or '',
                     } for p in professionals],
                 })
-        report_context['objects'] = objects
+        report_context['records'] = objects
 
         return report_context
 
@@ -1407,12 +1404,12 @@ class ProjectGLPReport07(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Entry = pool.get('lims.entry')
         Fraction = pool.get('lims.fraction')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
         report_context['stp_number'] = records[0].stp_number
@@ -1449,7 +1446,7 @@ class ProjectGLPReport07(Report):
                 'label': fraction.sample.label,
                 'storage_location': fraction.storage_location.code,
                 })
-        report_context['objects'] = objects
+        report_context['records'] = objects
 
         return report_context
 
@@ -1471,12 +1468,12 @@ class ProjectGLPReport08(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Entry = pool.get('lims.entry')
         Fraction = pool.get('lims.fraction')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
         report_context['stp_number'] = records[0].stp_number
@@ -1510,7 +1507,7 @@ class ProjectGLPReport08(Report):
                 'label': fraction.sample.label,
                 'sample_weight': fraction.sample.sample_weight,
                 })
-        report_context['objects'] = objects
+        report_context['records'] = objects
 
         return report_context
 
@@ -1532,7 +1529,7 @@ class ProjectGLPReport09(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         Fraction = pool.get('lims.fraction')
@@ -1541,7 +1538,7 @@ class ProjectGLPReport09(Report):
         ResultsReport = pool.get('lims.results_report')
         Analysis = pool.get('lims.analysis')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
         report_context['stp_number'] = records[0].stp_number
@@ -1614,7 +1611,7 @@ class ProjectGLPReport09(Report):
                     'result': re if re else '',
                     })
 
-        report_context['objects'] = objects
+        report_context['records'] = objects
 
         return report_context
 
@@ -1674,11 +1671,11 @@ class ProjectGLPReport10(Report):
     __name__ = 'lims.project.glp_report.10'
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Project = pool.get('lims.project')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
         report_context['date_from'] = data['date_from']
@@ -1781,7 +1778,7 @@ class ProjectGLPReport10(Report):
                         'comments': str(s.comments or ''),
                         } for s in project.stp_samples_in_custody],
                     })
-        report_context['objects'] = objects
+        report_context['records'] = objects
 
         return report_context
 
@@ -1825,11 +1822,11 @@ class ProjectGLPReport11(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         ProjectReferenceElement = Pool().get(
             'lims.project.reference_element')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
         report_context['stp_number'] = records[0].stp_number
@@ -1903,11 +1900,11 @@ class ProjectGLPReport12(Report):
     __name__ = 'lims.project.glp_report.12'
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         ProjectChangeLog = pool.get('lims.project.stp_changelog')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
         report_context['date_from'] = data['date_from']
@@ -1963,7 +1960,7 @@ class ProjectGLPReport12(Report):
                     } for p in project.stp_laboratory_professionals],
                 })
 
-        report_context['objects'] = objects
+        report_context['records'] = objects
 
         return report_context
 
@@ -1985,8 +1982,8 @@ class ProjectGLPReportStudyPlan(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
-        report_context = super().get_context(records, data)
+    def get_context(cls, records, header, data):
+        report_context = super().get_context(records, header, data)
 
         project = records[0]
 
@@ -2079,8 +2076,8 @@ class ProjectGLPReportFinalRP(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
-        report_context = super().get_context(records, data)
+    def get_context(cls, records, header, data):
+        report_context = super().get_context(records, header, data)
 
         project = records[0]
 
@@ -2319,8 +2316,8 @@ class ProjectGLPReportFinalFOR(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
-        report_context = super().get_context(records, data)
+    def get_context(cls, records, header, data):
+        report_context = super().get_context(records, header, data)
 
         project = records[0]
 
@@ -2564,8 +2561,8 @@ class ProjectGLPReportAnalyticalPhase(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
-        report_context = super().get_context(records, data)
+    def get_context(cls, records, header, data):
+        report_context = super().get_context(records, header, data)
 
         project = records[0]
 
@@ -2801,11 +2798,11 @@ class ProjectGLPReport13(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Fraction = pool.get('lims.fraction')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
         report_context['stp_matrix'] = records[0].stp_matrix_client_description
@@ -2826,7 +2823,7 @@ class ProjectGLPReport13(Report):
                 'label': fraction.sample.label,
                 'fraction_type': fraction.type.code,
                 })
-        report_context['objects'] = objects
+        report_context['records'] = objects
         return report_context
 
     @staticmethod

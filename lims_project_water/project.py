@@ -137,12 +137,12 @@ class ProjectWaterSampling(Report):
         return super().execute(ids, data)
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Project = pool.get('lims.project')
         Fraction = pool.get('lims.fraction')
         Entry = pool.get('lims.entry')
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         project = Project(data['id'])
         entry = Entry.search([
@@ -198,7 +198,7 @@ class ProjectWaterSampling(Report):
                 'results': (cls.get_results_insitu(fraction.id)),
                 })
 
-        report_context['objects'] = objects
+        report_context['records'] = objects
         return report_context
 
     @classmethod

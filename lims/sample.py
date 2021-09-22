@@ -6244,12 +6244,12 @@ class CountersampleStorageReport(Report):
     __name__ = 'lims.countersample.storage.report'
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Fraction = pool.get('lims.fraction')
         NotebookLine = pool.get('lims.notebook.line')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
         report_context['report_date_from'] = data['report_date_from']
@@ -6327,7 +6327,7 @@ class CountersampleStorageReport(Report):
         ordered_objects = sorted(list(objects.values()),
             key=lambda x: x['location'])
 
-        report_context['objects'] = ordered_objects
+        report_context['records'] = ordered_objects
         return report_context
 
     @classmethod
@@ -6439,11 +6439,11 @@ class CountersampleDischargeReport(Report):
     __name__ = 'lims.countersample.discharge.report'
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Fraction = pool.get('lims.fraction')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
         report_context['expiry_date_from'] = data['expiry_date_from']
@@ -6486,7 +6486,7 @@ class CountersampleDischargeReport(Report):
         ordered_objects = sorted(list(objects.values()),
             key=lambda x: x['location'])
 
-        report_context['objects'] = ordered_objects
+        report_context['records'] = ordered_objects
         return report_context
 
     @classmethod

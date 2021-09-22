@@ -659,12 +659,12 @@ class TestReport(CompanyReport):
         return result
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         Test = Pool().get('lims.quality.test')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
-        report_context['objects'] = Test.browse(data['ids'])
+        report_context['records'] = Test.browse(data['ids'])
         report_context['get_professionals'] = cls.get_professionals
 
         return report_context

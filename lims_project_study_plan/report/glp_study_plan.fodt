@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:officeooo="http://openoffice.org/2009/office" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2" office:mimetype="application/vnd.oasis.opendocument.text">
- <office:meta><meta:creation-date>2016-05-02T16:12:34.745782454</meta:creation-date><meta:editing-duration>P0D</meta:editing-duration><meta:editing-cycles>1</meta:editing-cycles><meta:generator>LibreOffice/6.0.5.1$Linux_X86_64 LibreOffice_project/00m0$Build-1</meta:generator><meta:document-statistic meta:character-count="2642" meta:image-count="0" meta:non-whitespace-character-count="2400" meta:object-count="0" meta:page-count="2" meta:paragraph-count="76" meta:table-count="3" meta:word-count="313"/><meta:user-defined meta:name="Info 1"/><meta:user-defined meta:name="Info 2"/><meta:user-defined meta:name="Info 3"/><meta:user-defined meta:name="Info 4"/></office:meta>
+ <office:meta><meta:creation-date>2016-05-02T16:12:34.745782454</meta:creation-date><meta:editing-duration>P0D</meta:editing-duration><meta:editing-cycles>1</meta:editing-cycles><meta:generator>LibreOffice/6.0.7.3$Linux_X86_64 LibreOffice_project/00m0$Build-3</meta:generator><meta:document-statistic meta:character-count="2642" meta:image-count="0" meta:non-whitespace-character-count="2400" meta:object-count="0" meta:page-count="2" meta:paragraph-count="76" meta:table-count="3" meta:word-count="313"/><meta:user-defined meta:name="Info 1"/><meta:user-defined meta:name="Info 2"/><meta:user-defined meta:name="Info 3"/><meta:user-defined meta:name="Info 4"/></office:meta>
  <office:settings>
   <config:config-item-set config:name="ooo:view-settings">
-   <config:config-item config:name="ViewAreaTop" config:type="long">0</config:config-item>
+   <config:config-item config:name="ViewAreaTop" config:type="long">46143</config:config-item>
    <config:config-item config:name="ViewAreaLeft" config:type="long">0</config:config-item>
-   <config:config-item config:name="ViewAreaWidth" config:type="long">28312</config:config-item>
-   <config:config-item config:name="ViewAreaHeight" config:type="long">12901</config:config-item>
+   <config:config-item config:name="ViewAreaWidth" config:type="long">34503</config:config-item>
+   <config:config-item config:name="ViewAreaHeight" config:type="long">14739</config:config-item>
    <config:config-item config:name="ShowRedlineChanges" config:type="boolean">true</config:config-item>
    <config:config-item config:name="InBrowseMode" config:type="boolean">false</config:config-item>
    <config:config-item-map-indexed config:name="Views">
     <config:config-item-map-entry>
      <config:config-item config:name="ViewId" config:type="string">view2</config:config-item>
-     <config:config-item config:name="ViewLeft" config:type="long">12894</config:config-item>
+     <config:config-item config:name="ViewLeft" config:type="long">15990</config:config-item>
      <config:config-item config:name="ViewTop" config:type="long">3600</config:config-item>
      <config:config-item config:name="VisibleLeft" config:type="long">0</config:config-item>
-     <config:config-item config:name="VisibleTop" config:type="long">0</config:config-item>
-     <config:config-item config:name="VisibleRight" config:type="long">28310</config:config-item>
-     <config:config-item config:name="VisibleBottom" config:type="long">12899</config:config-item>
+     <config:config-item config:name="VisibleTop" config:type="long">46143</config:config-item>
+     <config:config-item config:name="VisibleRight" config:type="long">34502</config:config-item>
+     <config:config-item config:name="VisibleBottom" config:type="long">60881</config:config-item>
      <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
      <config:config-item config:name="ViewLayoutColumns" config:type="short">0</config:config-item>
      <config:config-item config:name="ViewLayoutBookMode" config:type="boolean">false</config:config-item>
-     <config:config-item config:name="ZoomFactor" config:type="short">120</config:config-item>
+     <config:config-item config:name="ZoomFactor" config:type="short">100</config:config-item>
      <config:config-item config:name="IsSelectedFrame" config:type="boolean">false</config:config-item>
      <config:config-item config:name="AnchoredTextOverflowLegacy" config:type="boolean">false</config:config-item>
     </config:config-item-map-entry>
@@ -92,7 +92,7 @@
    <config:config-item config:name="UnxForceZeroExtLeading" config:type="boolean">false</config:config-item>
    <config:config-item config:name="TabAtLeftIndentForParagraphsInList" config:type="boolean">false</config:config-item>
    <config:config-item config:name="PrintRightPages" config:type="boolean">true</config:config-item>
-   <config:config-item config:name="Rsid" config:type="int">8126610</config:config-item>
+   <config:config-item config:name="Rsid" config:type="int">8188339</config:config-item>
    <config:config-item config:name="MathBaselineAlignment" config:type="boolean">false</config:config-item>
    <config:config-item config:name="MsWordCompTrailingBlanks" config:type="boolean">false</config:config-item>
    <config:config-item config:name="InvertBorderSpacing" config:type="boolean">false</config:config-item>
@@ -343,19 +343,19 @@
    <style:paragraph-properties fo:text-align="end" style:justify-single-word="false"/>
    <style:text-properties style:font-name="Liberation Sans1" fo:font-size="9pt" officeooo:rsid="001cbd64" officeooo:paragraph-rsid="003114dd" style:font-size-asian="9pt" style:font-size-complex="9pt"/>
   </style:style>
-  <style:style style:name="P3" style:family="paragraph" style:parent-style-name="Table_20_Contents">
+  <style:style style:name="P3" style:family="paragraph" style:parent-style-name="Header">
    <style:text-properties style:font-name="Liberation Sans1"/>
   </style:style>
-  <style:style style:name="P4" style:family="paragraph" style:parent-style-name="Table_20_Contents">
-   <style:paragraph-properties fo:text-align="end" style:justify-single-word="false"/>
-   <style:text-properties style:font-name="Liberation Sans1"/>
-  </style:style>
-  <style:style style:name="P5" style:family="paragraph" style:parent-style-name="Header">
-   <style:text-properties style:font-name="Liberation Sans1"/>
-  </style:style>
-  <style:style style:name="P6" style:family="paragraph" style:parent-style-name="Footer">
+  <style:style style:name="P4" style:family="paragraph" style:parent-style-name="Footer">
    <style:paragraph-properties fo:text-align="end" style:justify-single-word="false"/>
    <style:text-properties style:font-name="Liberation Sans1" fo:font-size="9pt" officeooo:rsid="001cbd64" officeooo:paragraph-rsid="003114dd" style:font-size-asian="9pt" style:font-size-complex="9pt"/>
+  </style:style>
+  <style:style style:name="P5" style:family="paragraph" style:parent-style-name="Table_20_Contents">
+   <style:text-properties style:font-name="Liberation Sans1"/>
+  </style:style>
+  <style:style style:name="P6" style:family="paragraph" style:parent-style-name="Table_20_Contents">
+   <style:paragraph-properties fo:text-align="end" style:justify-single-word="false"/>
+   <style:text-properties style:font-name="Liberation Sans1"/>
   </style:style>
   <style:style style:name="P7" style:family="paragraph" style:parent-style-name="Standard">
    <style:text-properties style:font-name="Liberation Sans1" fo:font-size="11pt" fo:language="zxx" fo:country="none" officeooo:rsid="00451303" officeooo:paragraph-rsid="00451303" style:font-size-asian="11pt" style:language-asian="zxx" style:country-asian="none" style:font-size-complex="11pt" style:language-complex="zxx" style:country-complex="none"/>
@@ -498,7 +498,11 @@
    <style:paragraph-properties fo:margin-left="1.245cm" fo:margin-right="0cm" fo:text-indent="0cm" style:auto-text-indent="false"/>
    <style:text-properties style:font-name="Liberation Sans1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="0044171c" officeooo:paragraph-rsid="00714a3f" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="P44" style:family="paragraph" style:parent-style-name="Table_20_Contents" style:master-page-name="Standard">
+  <style:style style:name="P44" style:family="paragraph" style:parent-style-name="Table_20_Contents" style:master-page-name="">
+   <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="1cm" loext:contextual-spacing="false" fo:text-align="center" style:justify-single-word="false" style:page-number="auto" fo:break-before="auto" fo:break-after="auto"/>
+   <style:text-properties style:font-name="Liberation Sans1" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="0052720f" officeooo:paragraph-rsid="0052720f" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="P45" style:family="paragraph" style:parent-style-name="Table_20_Contents" style:master-page-name="Standard">
    <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="1cm" loext:contextual-spacing="false" fo:text-align="center" style:justify-single-word="false" style:page-number="auto" fo:break-before="auto" fo:break-after="auto"/>
    <style:text-properties style:font-name="Liberation Sans1" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="0052720f" officeooo:paragraph-rsid="0052720f" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
@@ -558,17 +562,17 @@
      <table:table-column table:style-name="Header.A" table:number-columns-repeated="3"/>
      <table:table-row table:style-name="Header.1">
       <table:table-cell office:value-type="string">
-       <text:p text:style-name="P3"><draw:frame draw:style-name="fr1" draw:name="image: (company.logo, &apos;image/png&apos;, &apos;6cm&apos;, &apos;1.5cm&apos;)" text:anchor-type="paragraph" svg:x="0.06cm" svg:y="0.019cm" svg:width="6.001cm" draw:z-index="1">
+       <text:p text:style-name="P5"><draw:frame draw:style-name="fr1" draw:name="image: (company.logo, &apos;image/png&apos;, &apos;6cm&apos;, &apos;1.5cm&apos;)" text:anchor-type="paragraph" svg:x="0.06cm" svg:y="0.019cm" svg:width="6.001cm" draw:z-index="1">
          <draw:text-box fo:min-height="1.6cm">
           <text:p text:style-name="Frame_20_contents"/>
          </draw:text-box>
         </draw:frame></text:p>
       </table:table-cell>
       <table:table-cell office:value-type="string">
-       <text:p text:style-name="P3"/>
+       <text:p text:style-name="P5"/>
       </table:table-cell>
       <table:table-cell table:style-name="Header.C1" office:value-type="string">
-       <text:p text:style-name="P4"><text:span text:style-name="T1">Study plan </text:span><text:placeholder text:placeholder-type="text">&lt;code&gt;</text:placeholder></text:p>
+       <text:p text:style-name="P6"><text:span text:style-name="T1">Study plan </text:span><text:placeholder text:placeholder-type="text">&lt;code&gt;</text:placeholder></text:p>
       </table:table-cell>
      </table:table-row>
     </table:table>
@@ -589,7 +593,7 @@
     <text:sequence-decl text:display-outline-level="0" text:name="Text"/>
     <text:sequence-decl text:display-outline-level="0" text:name="Drawing"/>
    </text:sequence-decls>
-   <text:p text:style-name="P44">Study plan</text:p>
+   <text:p text:style-name="P45">Study plan</text:p>
    <text:p text:style-name="P13">Title:<text:span text:style-name="T3"> </text:span><text:span text:style-name="T3"><text:placeholder text:placeholder-type="text">&lt;stp_title&gt;</text:placeholder></text:span></text:p>
    <text:p text:style-name="P13">ID:<text:span text:style-name="T3"> </text:span><text:span text:style-name="T3"><text:placeholder text:placeholder-type="text">&lt;code&gt;</text:placeholder></text:span></text:p>
    <text:p text:style-name="P7"/>

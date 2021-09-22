@@ -5671,8 +5671,8 @@ class PlanificationSequenceReport(Report):
     __name__ = 'lims.planification.sequence.report'
 
     @classmethod
-    def get_context(cls, records, data):
-        report_context = super().get_context(records, data)
+    def get_context(cls, records, header, data):
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
 
@@ -5743,7 +5743,7 @@ class PlanificationSequenceReport(Report):
                     key=lambda x: x['order'])
                 objects[k1]['methods'][k2]['lines'] = sorted_lines
 
-        report_context['objects'] = objects
+        report_context['records'] = objects
 
         return report_context
 
@@ -5753,8 +5753,8 @@ class PlanificationWorksheetAnalysisReport(Report):
     __name__ = 'lims.planification.worksheet_analysis.report'
 
     @classmethod
-    def get_context(cls, records, data):
-        report_context = super().get_context(records, data)
+    def get_context(cls, records, header, data):
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
 
@@ -5867,8 +5867,8 @@ class PlanificationWorksheetMethodReport(Report):
     __name__ = 'lims.planification.worksheet_method.report'
 
     @classmethod
-    def get_context(cls, records, data):
-        report_context = super().get_context(records, data)
+    def get_context(cls, records, header, data):
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
 
@@ -6039,8 +6039,8 @@ class PlanificationWorksheetReport(Report):
     __name__ = 'lims.planification.worksheet.report'
 
     @classmethod
-    def get_context(cls, records, data):
-        report_context = super().get_context(records, data)
+    def get_context(cls, records, header, data):
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
 
@@ -6278,13 +6278,13 @@ class PendingServicesUnplannedReport(Report):
     __name__ = 'lims.pending_services_unplanned.report'
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Laboratory = pool.get('lims.laboratory')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         NotebookLine = pool.get('lims.notebook.line')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
         report_context['start_date'] = (data['start_date']
@@ -6404,7 +6404,7 @@ class PendingServicesUnplannedReport(Report):
                     objects[k1]['services'][k2]['parties'][k3]['lines'] = (
                         sorted_lines)
 
-        report_context['objects'] = objects
+        report_context['records'] = objects
         return report_context
 
     @classmethod
@@ -6444,12 +6444,12 @@ class PendingServicesUnplannedSpreadsheet(Report):
     __name__ = 'lims.pending_services_unplanned.spreadsheet'
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Laboratory = pool.get('lims.laboratory')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
         report_context['start_date'] = (data['start_date']
@@ -6552,7 +6552,7 @@ class PendingServicesUnplannedSpreadsheet(Report):
         objects = sorted(objects.values(), key=lambda x: (
                 x['laboratory'], x['service'], x['party'], x['order']))
 
-        report_context['objects'] = objects
+        report_context['records'] = objects
         return report_context
 
     @classmethod
@@ -6630,10 +6630,10 @@ class BlindSampleReport(Report):
     __name__ = 'lims.blind_sample_report'
 
     @classmethod
-    def get_context(cls, records, data):
-        report_context = super().get_context(records,
-                data)
+    def get_context(cls, records, header, data):
         BlindSample = Pool().get('lims.blind_sample')
+
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
 
@@ -6742,7 +6742,7 @@ class BlindSampleReport(Report):
                         record['error'] = round(result - max_value, 2)
             objects.append(record)
 
-        report_context['objects'] = objects
+        report_context['records'] = objects
 
         report_context['date_from'] = data['date_from']
         report_context['date_to'] = data['date_to']
@@ -6775,8 +6775,8 @@ class PlanificationSequenceAnalysisReport(Report):
     __name__ = 'lims.planification.sequence.analysis.report'
 
     @classmethod
-    def get_context(cls, records, data):
-        report_context = super().get_context(records, data)
+    def get_context(cls, records, header, data):
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = report_context['user'].company
 
@@ -6848,6 +6848,6 @@ class PlanificationSequenceAnalysisReport(Report):
                     key=lambda x: x['order'])
                 objects[k1]['methods'][k2]['lines'] = sorted_lines
 
-        report_context['objects'] = objects
+        report_context['records'] = objects
 
         return report_context

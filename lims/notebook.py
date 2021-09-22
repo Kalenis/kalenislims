@@ -5998,12 +5998,12 @@ class AnalysisPendingInform(Report):
     __name__ = 'lims.analysis_pending_inform'
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Laboratory = pool.get('lims.laboratory')
         Party = pool.get('party.party')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         today = get_print_date()
         report_context['today'] = today
@@ -6012,7 +6012,6 @@ class AnalysisPendingInform(Report):
         report_context['date_to'] = data['date_to']
         report_context['laboratory'] = Laboratory(data['laboratory']).rec_name
         report_context['party'] = ''
-
         if data['party']:
             report_context['party'] = Party(data['party']).rec_name
         report_context['include_comments_of_fraction'] = \
@@ -6145,12 +6144,12 @@ class AnalysisCheckedPendingInform(Report):
     __name__ = 'lims.analysis_checked_pending_inform'
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Laboratory = pool.get('lims.laboratory')
         Party = pool.get('party.party')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         today = get_print_date()
         report_context['today'] = today

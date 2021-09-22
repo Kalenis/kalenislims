@@ -68,11 +68,11 @@ class FamilyEquivalentReport(Report):
     __name__ = 'lims.family.equivalent.report'
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         pool = Pool()
         Company = pool.get('company.company')
 
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
 
         report_context['company'] = Company(Transaction().context['company'])
         report_context['records'] = cls._get_family_records(records)
