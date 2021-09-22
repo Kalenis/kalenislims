@@ -28,11 +28,10 @@
 
         <record model="ir.sequence.type" id="seq_type_task">
             <field name="name">Administrative Task</field>
-            <field name="code">lims.administrative.task</field>
         </record>
         <record model="ir.sequence" id="seq_task">
             <field name="name">Administrative Task</field>
-            <field name="code">lims.administrative.task</field>
+            <field name="sequence_type" ref="seq_type_task"/>
         </record>
 
     </data>
