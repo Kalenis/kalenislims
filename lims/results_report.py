@@ -2007,6 +2007,12 @@ class GenerateResultsReportResultAutNotebookLine(ModelSQL, ModelView):
     line = fields.Many2One('lims.notebook.line', 'Notebook Line',
         ondelete='CASCADE', select=True, required=True)
 
+    @classmethod
+    def __register__(cls, module_name):
+        super().__register__(module_name)
+        cursor = Transaction().connection.cursor()
+        cursor.execute('DELETE FROM "' + cls._table + '"')
+
 
 # TODO: remove
 class GenerateResultsReportResultAutExcludedNotebook(ModelSQL, ModelView):
@@ -2065,6 +2071,12 @@ class GenerateResultsReportResultAutExcludedNotebookLine(ModelSQL,
         'Notebook', ondelete='CASCADE', select=True, required=True)
     line = fields.Many2One('lims.notebook.line', 'Notebook Line',
         ondelete='CASCADE', select=True, required=True)
+
+    @classmethod
+    def __register__(cls, module_name):
+        super().__register__(module_name)
+        cursor = Transaction().connection.cursor()
+        cursor.execute('DELETE FROM "' + cls._table + '"')
 
 
 # TODO: remove

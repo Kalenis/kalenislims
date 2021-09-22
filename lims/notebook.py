@@ -2438,6 +2438,12 @@ class NotebookInternalRelationsCalc1Variable(ModelSQL):
     repetition = fields.Integer('Repetition', readonly=True)
     use = fields.Boolean('Use')
 
+    @classmethod
+    def __register__(cls, module_name):
+        super().__register__(module_name)
+        cursor = Transaction().connection.cursor()
+        cursor.execute('DELETE FROM "' + cls._table + '"')
+
 
 class NotebookInternalRelationsCalc1(Wizard):
     'Internal Relations Calculation'
