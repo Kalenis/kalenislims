@@ -18,7 +18,7 @@ class Plant(ModelSQL, ModelView):
         ondelete='CASCADE', select=True)
     name = fields.Char('Name', required=True)
     street = fields.Char('Street', required=True)
-    zip = fields.Char('Zip', required=True)
+    postal_code = fields.Char('Postal Code', required=True)
     city = fields.Char('City', required=True)
     subdivision = fields.Many2One('country.subdivision',
         'Subdivision', required=True, domain=[
@@ -47,6 +47,13 @@ class Plant(ModelSQL, ModelView):
             ('name_unique', Unique(t, t.party, t.name),
                 'lims_industry.msg_plant_name_unique'),
             ]
+
+    @classmethod
+    def __register__(cls, module_name):
+        table = cls.__table_handler__(module_name)
+        table.column_rename('zip', 'postal_code')
+        super().__register__(module_name)
+
 
     @staticmethod
     def default_country():

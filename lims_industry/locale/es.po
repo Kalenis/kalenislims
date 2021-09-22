@@ -390,6 +390,10 @@ msgctxt "field:lims.plant,party:"
 msgid "Party"
 msgstr "Tercero"
 
+msgctxt "field:lims.plant,postal_code:"
+msgid "Postal Code"
+msgstr "Código postal"
+
 msgctxt "field:lims.plant,street:"
 msgid "Street"
 msgstr "Calle"
@@ -397,10 +401,6 @@ msgstr "Calle"
 msgctxt "field:lims.plant,subdivision:"
 msgid "Subdivision"
 msgstr "Subdivisión"
-
-msgctxt "field:lims.plant,zip:"
-msgid "Zip"
-msgstr "Código postal"
 
 msgctxt "field:lims.product.type,attribute_set:"
 msgid "Attribute Set"
