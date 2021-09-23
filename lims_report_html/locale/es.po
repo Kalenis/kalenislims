@@ -22,6 +22,10 @@ msgctxt "field:lims.notebook,resultrange_origin:"
 msgid "Comparison range"
 msgstr "Rango de comparación"
 
+msgctxt "field:lims.notebook.generate_results_report.start,template:"
+msgid "Report Template"
+msgstr "Plantilla de Informe"
+
 msgctxt "field:lims.result_report.template,charts_x_row:"
 msgid "Charts per Row"
 msgstr "Gráficos por fila"

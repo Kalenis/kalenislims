@@ -105,11 +105,12 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
                 sample.diagnosis_states = states
 
     @classmethod
-    def _get_fields_from_samples(cls, samples):
+    def _get_fields_from_samples(cls, samples, generate_report_form=None):
         pool = Pool()
         Notebook = pool.get('lims.notebook')
         Diagnostician = pool.get('lims.diagnostician')
-        detail_default = super()._get_fields_from_samples(samples)
+        detail_default = super()._get_fields_from_samples(samples,
+            generate_report_form)
         for sample in samples:
             notebook = Notebook(sample['notebook'])
             if notebook.fraction.sample.diagnostician:

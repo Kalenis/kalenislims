@@ -25,11 +25,13 @@ def register():
         results_report.ResultsReportVersionDetailSection,
         results_report.ResultsReportVersionDetailTrendChart,
         results_report.ResultsReportVersionDetailSample,
+        results_report.GenerateReportStart,
         notebook.Notebook,
         module='lims_report_html', type_='model')
     Pool.register(
         action.ReportTranslationSet,
         sample.CreateSample,
+        results_report.GenerateReport,
         module='lims_report_html', type_='wizard')
     Pool.register(
         results_report.ResultReport,

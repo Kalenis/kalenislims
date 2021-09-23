@@ -1304,7 +1304,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         return 'lims-white'
 
     @classmethod
-    def _get_fields_from_samples(cls, samples):
+    def _get_fields_from_samples(cls, samples, generate_report_form=None):
         detail_default = {}
         if len(samples) > 1:
             detail_default['report_type_forced'] = 'polisample'
@@ -3228,7 +3228,7 @@ class GenerateReport(Wizard):
                         'samples': [('create', samples)],
                         }
                     details.update(ResultsDetail._get_fields_from_samples(
-                        samples))
+                        samples, self.start))
                     versions = {
                         'laboratory': laboratory_id,
                         'details': [('create', [details])],
