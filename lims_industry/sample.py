@@ -780,6 +780,9 @@ class EditSample(Wizard):
             if log:
                 SampleEditionLog.create(log)
 
+            if check_typifications:
+                self.update_laboratory_notebook(sample)
+
         for entry_id, samples_to_edit in samples_to_edit_party.items():
             self._edit_entry_party(entry_id, samples_to_edit)
             self._edit_results_report_party(samples_to_edit)
@@ -883,3 +886,38 @@ class EditSample(Wizard):
                         analysis=s.analysis.rec_name,
                         product_type=sample.product_type.rec_name,
                         matrix=sample.matrix.rec_name))
+
+    @classmethod
+    def update_laboratory_notebook(self, sample):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        Typification = pool.get('lims.typification')
+
+        lines_to_update = []
+        notebook_lines = NotebookLine.search([
+            ('notebook.fraction.sample', '=', sample.id),
+            ('annulled', '=', False),
+            ('end_date', '=', None),
+            ])
+        for nl in notebook_lines:
+            t = Typification.get_valid_typification(
+                sample.product_type.id, sample.matrix.id,
+                nl.analysis.id, nl.method.id)
+            if not t:
+                continue
+            nl.initial_concentration = t.initial_concentration
+            nl.final_concentration = t.final_concentration
+            nl.initial_unit = t.start_uom and t.start_uom.id or None
+            nl.final_unit = t.end_uom and t.end_uom.id or None
+            nl.detection_limit = t.detection_limit
+            nl.quantification_limit = t.quantification_limit
+            nl.lower_limit = t.lower_limit
+            nl.upper_limit = t.upper_limit
+            nl.decimals = t.calc_decimals
+            nl.significant_digits = t.significant_digits
+            nl.scientific_notation = t.scientific_notation
+            nl.report = t.report
+            lines_to_update.append(nl)
+
+        if lines_to_update:
+            NotebookLine.save(lines_to_update)
