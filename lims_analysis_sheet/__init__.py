@@ -25,7 +25,6 @@ def register():
         interface.Compilation,
         interface.Column,
         interface.Interface,
-        interface.Table,
         interface.Data,
         planification.Planification,
         planification.SearchAnalysisSheetStart,

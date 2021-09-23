@@ -83,6 +83,9 @@ class Adapter:
         obj = fields.Many2One('lims.interface.compilation', 'Compilation')
         obj.name = 'compilation'
         res['compilation'] = obj
+        obj = fields.Boolean('Annulled')
+        obj.name = 'annulled'
+        res['annulled'] = obj
         obj = fields.Many2One('lims.notebook.line', 'Notebook Line')
         obj.name = 'notebook_line'
         obj.readonly = True
@@ -191,6 +194,7 @@ class Data(ModelSQL, ModelView):
 
     compilation = fields.Many2One('lims.interface.compilation', 'Compilation',
         required=True, ondelete='CASCADE')
+    annulled = fields.Boolean('Annulled')
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
         readonly=True)
 
@@ -341,6 +345,16 @@ class Data(ModelSQL, ModelView):
                 readonly_ids.append(line.notebook_line.id)
         return readonly_ids
 
+    def set_field(self, value, field):
+        cursor = Transaction().connection.cursor()
+        try:
+            table = self.get_sql_table()
+            query = table.update([SqlColumn(table, field)], [value],
+                where=(table.id == self.id))
+            cursor.execute(*query)
+        except Exception:
+            pass
+
     @classmethod
     def fields_get(cls, fields_names=None, level=0):
         Model = Pool().get('ir.model')
@@ -446,6 +460,7 @@ class Data(ModelSQL, ModelView):
 
         fields_names = [
             'compilation',
+            'annulled',
             'notebook_line',
             ]
         groups = 0
