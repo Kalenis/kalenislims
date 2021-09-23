@@ -1,13 +1,10 @@
 # This file is part of lims_analysis_sheet module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-import sql
 
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Bool, Or, And
-from trytond.transaction import Transaction
-from trytond.modules.lims_interface.data import Adapter
 from trytond.modules.lims_interface.interface import FUNCTIONS
 from .function import custom_functions
 
@@ -147,64 +144,9 @@ class Interface(metaclass=PoolMeta):
     def default_export_field_separator():
         return 'semicolon'
 
-    def _get_fields_tree_view(self):
-        fields = super()._get_fields_tree_view()
-        fields.append('<field name="annulled"/>')
-        return fields
-
-
-class Table(metaclass=PoolMeta):
-    __name__ = 'lims.interface.table'
-
-    def create_table(self):
-        table = super().create_table()
-        table.add_column('annulled', fields.Boolean._sql_type)
-        return table
-
-
-class NewAdapter(Adapter):
-
-    def get_fields(self):
-        Data = Pool().get('lims.interface.data')
-        res = super().get_fields()
-        table = Data.get_table()
-        if not table:
-            return res
-        obj = fields.Boolean('Annulled')
-        obj.name = 'annulled'
-        res['annulled'] = obj
-        return res
-
 
 class Data(metaclass=PoolMeta):
     __name__ = 'lims.interface.data'
-
-    annulled = fields.Boolean('Annulled')
-
-    @classmethod
-    def __post_setup__(cls):
-        super().__post_setup__()
-        cls._fields = NewAdapter()
-
-    def set_field(self, value, field):
-        cursor = Transaction().connection.cursor()
-        try:
-            table = self.get_sql_table()
-            query = table.update([sql.Column(table, field)], [value],
-                where=(table.id == self.id))
-            cursor.execute(*query)
-        except Exception:
-            pass
-
-    @classmethod
-    def fields_get(cls, fields_names=None, level=0):
-        if not fields_names:
-            fields_names = []
-        fields_names.append('annulled')
-        res = super().fields_get(fields_names)
-        readonly = Transaction().context.get('lims_interface_readonly', False)
-        res['annulled']['readonly'] = bool(readonly)
-        return res
 
     @classmethod
     def delete(cls, records):

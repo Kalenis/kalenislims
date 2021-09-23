@@ -3,7 +3,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import formulas
-#import re
+import sql
 
 from trytond import backend
 from trytond.model import ModelSQL, ModelView, fields
@@ -49,6 +49,7 @@ class Table(ModelSQL, ModelView):
                 ('create_date', fields.Timestamp),
                 ('write_date', fields.Timestamp),
                 ('compilation', fields.Integer),
+                ('annulled', fields.Boolean),
                 ('notebook_line', fields.Integer),
                 ]:
             sql_type = field._sql_type
