@@ -52,5 +52,13 @@
             <field name="template_extension">results</field>
         </record>
 
+<!-- Wizard Generate Results Report -->
+
+        <record model="ir.ui.view" id="notebook_generate_results_report_view_form">
+            <field name="model">lims.notebook.generate_results_report.start</field>
+            <field name="inherit" ref="lims.notebook_generate_results_report_view_form"/>
+            <field name="name">notebook_generate_results_report_form</field>
+        </record>
+
     </data>
 </tryton>
