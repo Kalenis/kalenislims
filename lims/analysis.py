@@ -495,6 +495,20 @@ class Typification(ModelSQL, ModelView):
                         typification.initial_concentration or ''),
                     })
 
+    @classmethod
+    def get_valid_typification(cls, product_type, matrix, analysis, method):
+        cursor = Transaction().connection.cursor()
+        cursor.execute('SELECT id '
+            'FROM "' + cls._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s '
+                'AND analysis = %s '
+                'AND method = %s '
+                'AND valid',
+            (product_type, matrix, analysis, method))
+        res = cursor.fetchone()
+        return res and cls(res[0]) or None
+
 
 class TypificationAditional(ModelSQL):
     'Typification - Additional analysis'
