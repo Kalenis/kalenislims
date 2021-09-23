@@ -128,35 +128,48 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         cls.write(sections, {'sections': value})
 
     @classmethod
-    def _get_fields_from_samples(cls, samples):
-        Notebook = Pool().get('lims.notebook')
-        detail_default = super()._get_fields_from_samples(samples)
+    def _get_fields_from_samples(cls, samples, generate_report_form=None):
+        pool = Pool()
+        Notebook = pool.get('lims.notebook')
+
+        detail_default = super()._get_fields_from_samples(samples,
+            generate_report_form)
+
+        result_template = None
+        if generate_report_form and generate_report_form.template:
+            result_template = generate_report_form.template
+        resultrange_origin = None
+
         for sample in samples:
-            notebook = Notebook(sample['notebook'])
-            result_template = cls._get_result_template_from_sample(notebook)
-            if result_template:
-                detail_default['template'] = result_template.id
-                if result_template.resultrange_origin:
-                    detail_default['resultrange_origin'] = (
-                        result_template.resultrange_origin.id)
-                if result_template.trend_charts:
-                    detail_default['trend_charts'] = [('create', [{
-                        'chart': c.chart.id,
-                        'order': c.order,
-                        } for c in result_template.trend_charts])]
-                    detail_default['charts_x_row'] = (
-                        result_template.charts_x_row)
-                if result_template.sections:
-                    detail_default['sections'] = [('create', [{
-                        'name': s.name,
-                        'data': s.data,
-                        'data_id': s.data_id,
-                        'position': s.position,
-                        'order': s.order,
-                        } for s in result_template.sections])]
-            resultrange_origin = notebook.fraction.sample.resultrange_origin
-            if resultrange_origin:
-                detail_default['resultrange_origin'] = resultrange_origin.id
+            nb = Notebook(sample['notebook'])
+            if not result_template:
+                result_template = cls._get_result_template_from_sample(nb)
+            if not resultrange_origin:
+                resultrange_origin = nb.fraction.sample.resultrange_origin
+
+        if result_template:
+            detail_default['template'] = result_template.id
+            if not resultrange_origin:
+                resultrange_origin = result_template.resultrange_origin
+            if result_template.trend_charts:
+                detail_default['trend_charts'] = [('create', [{
+                    'chart': c.chart.id,
+                    'order': c.order,
+                    } for c in result_template.trend_charts])]
+                detail_default['charts_x_row'] = (
+                    result_template.charts_x_row)
+            if result_template.sections:
+                detail_default['sections'] = [('create', [{
+                    'name': s.name,
+                    'data': s.data,
+                    'data_id': s.data_id,
+                    'position': s.position,
+                    'order': s.order,
+                    } for s in result_template.sections])]
+
+        if resultrange_origin:
+            detail_default['resultrange_origin'] = resultrange_origin.id
+
         return detail_default
 
     @classmethod
@@ -763,3 +776,38 @@ class TemplateTranslations:
             return ReportTemplate.gettext(self.template, singular,
                 self.language)
         return singular
+
+
+class GenerateReportStart(metaclass=PoolMeta):
+    __name__ = 'lims.notebook.generate_results_report.start'
+
+    template = fields.Many2One('lims.result_report.template',
+        'Report Template', domain=[('type', 'in', [None, 'base'])],
+        states={'readonly': Bool(Eval('report'))},
+        depends=['report'])
+
+
+class GenerateReport(metaclass=PoolMeta):
+    __name__ = 'lims.notebook.generate_results_report'
+
+    def default_start(self, fields):
+        pool = Pool()
+        Notebook = pool.get('lims.notebook')
+
+        res = super().default_start(fields)
+        res['template'] = None
+
+        if res['report']:
+            return res
+
+        template = None
+        for notebook in Notebook.browse(Transaction().context['active_ids']):
+            if not notebook.fraction.sample.result_template:
+                continue
+            if not template:
+                template = notebook.fraction.sample.result_template.id
+            elif template != notebook.fraction.sample.result_template.id:
+                return res
+
+        res['template'] = template
+        return res
