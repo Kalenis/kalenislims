@@ -142,6 +142,10 @@ msgctxt "field:lims.interface.column,interface_state:"
 msgid "Interface State"
 msgstr "Estado interfaz"
 
+msgctxt "field:lims.interface.column,invisible:"
+msgid "Invisible"
+msgstr "Invisible"
+
 msgctxt "field:lims.interface.column,name:"
 msgid "Name"
 msgstr "Nombre"
@@ -245,6 +249,10 @@ msgstr "ID de archivo origen"
 msgctxt "field:lims.interface.copy_column.start,origin_interface:"
 msgid "Origin Interface"
 msgstr "Interfaz origen"
+
+msgctxt "field:lims.interface.data,annulled:"
+msgid "Annulled"
+msgstr "Anulado"
 
 msgctxt "field:lims.interface.data,compilation:"
 msgid "Compilation"
@@ -438,6 +446,10 @@ msgctxt "field:lims.interface.table.field,inputs:"
 msgid "On Change With Inputs"
 msgstr "Valores de entrada"
 
+msgctxt "field:lims.interface.table.field,invisible:"
+msgid "Invisible"
+msgstr "Invisible"
+
 msgctxt "field:lims.interface.table.field,name:"
 msgid "Name"
 msgstr "Nombre"
@@ -505,6 +517,10 @@ msgstr "Ayuda"
 msgctxt "field:lims.interface.table.grouped_field,inputs:"
 msgid "On Change With Inputs"
 msgstr "Valores de entrada"
+
+msgctxt "field:lims.interface.table.grouped_field,invisible:"
+msgid "Invisible"
+msgstr "Invisible"
 
 msgctxt "field:lims.interface.table.grouped_field,name:"
 msgid "Name"

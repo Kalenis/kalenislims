@@ -901,15 +901,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         'end_date': today,
                         'analysis_sheet': s.id,
                         }
-                    if line.annulled:
-                        data.update({
-                            'result_modifier': 'na',
-                            'annulled': True,
-                            'annulment_date': now,
-                            'report': False,
-                            })
                     # if already avoided in compilations then accept here
-                    elif (avoid_accept_result and
+                    if not line.annulled and (avoid_accept_result and
                             nb_line.laboratory.automatic_accept_result):
                         #data['end_date'] = today
                         data['accepted'] = True

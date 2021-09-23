@@ -585,6 +585,7 @@ class Interface(Workflow, ModelSQL, ModelView):
             fields.append('<field name="%s" %s/>' % (line.name,
                     ' '.join(attributes)))
 
+        fields.append('<field name="annulled"/>')
         fields.append('<field name="notebook_line"/>')
         return fields
 
@@ -2080,7 +2081,14 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         if nl_field == 'literal_result' and data[nl_field]:
                             data_eng[nl_field] = data[nl_field]
 
-                    if (not avoid_accept_result and
+                    if line.annulled:
+                        data.update({
+                            'result_modifier': 'na',
+                            'annulled': True,
+                            'annulment_date': now,
+                            'report': False,
+                            })
+                    elif (not avoid_accept_result and
                             nb_line.laboratory.automatic_accept_result):
                         #data['end_date'] = today
                         data['accepted'] = True
