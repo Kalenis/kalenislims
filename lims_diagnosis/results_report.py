@@ -109,20 +109,29 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         pool = Pool()
         Notebook = pool.get('lims.notebook')
         Diagnostician = pool.get('lims.diagnostician')
+        ReportTemplate = pool.get('lims.result_report.template')
+
         detail_default = super()._get_fields_from_samples(samples,
             generate_report_form)
+
+        diagnostician_id = None
         for sample in samples:
-            notebook = Notebook(sample['notebook'])
-            if notebook.fraction.sample.diagnostician:
-                diagnostician_id = notebook.fraction.sample.diagnostician.id
-            else:
-                diagnostician_id = Diagnostician.get_diagnostician()
-            if diagnostician_id:
-                detail_default['diagnostician'] = diagnostician_id
-            result_template = cls._get_result_template_from_sample(notebook)
-            if result_template and result_template.diagnosis_template:
+            nb = Notebook(sample['notebook'])
+            if not diagnostician_id:
+                if nb.fraction.sample.diagnostician:
+                    diagnostician_id = nb.fraction.sample.diagnostician.id
+                else:
+                    diagnostician_id = Diagnostician.get_diagnostician()
+
+        if 'template' in detail_default and detail_default['template']:
+            result_template = ReportTemplate(detail_default['template'])
+            if result_template.diagnosis_template:
                 detail_default['diagnosis_template'] = (
                     result_template.diagnosis_template.id)
+
+        if diagnostician_id:
+            detail_default['diagnostician'] = diagnostician_id
+
         return detail_default
 
     @classmethod
