@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<form>
-    <field name="notebooks" colspan="4"/>
-    <field name="excluded_notebooks" colspan="4"/>
-</form>

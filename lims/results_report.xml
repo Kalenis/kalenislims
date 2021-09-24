@@ -559,66 +559,6 @@
             <field name="action" ref="wiz_notebook_open_entry"/>
         </record>
 
-<!-- Wizard Generate Results Reports -->
-
-        <record model="ir.ui.view" id="lims_generate_results_report_start_view_form">
-            <field name="model">lims.generate_results_report.start</field>
-            <field name="type">form</field>
-            <field name="name">generate_results_report_start_form</field>
-        </record>
-        <record model="ir.ui.view" id="lims_generate_results_report_empty_view_form">
-            <field name="model">lims.generate_results_report.empty</field>
-            <field name="type">form</field>
-            <field name="name">generate_results_report_empty_form</field>
-        </record>
-        <record model="ir.ui.view" id="lims_generate_results_report_result_aut_view_form">
-            <field name="model">lims.generate_results_report.result_aut</field>
-            <field name="type">form</field>
-            <field name="name">generate_results_report_result_aut_form</field>
-        </record>
-        <record model="ir.ui.view" id="lims_generate_results_report_result_man_view_form">
-            <field name="model">lims.generate_results_report.result_man</field>
-            <field name="type">form</field>
-            <field name="name">generate_results_report_result_man_form</field>
-        </record>
-
-        <record model="ir.ui.view" id="lims_generate_results_report_result_aut_notebook_view_list">
-            <field name="model">lims.generate_results_report.aut.notebook</field>
-            <field name="type">tree</field>
-            <field name="name">generate_results_report_result_aut_notebook_list</field>
-        </record>
-        <record model="ir.ui.view" id="lims_generate_results_report_result_aut_notebook_view_form">
-            <field name="model">lims.generate_results_report.aut.notebook</field>
-            <field name="type">form</field>
-            <field name="name">generate_results_report_result_aut_notebook_form</field>
-        </record>
-
-        <record model="ir.ui.view" id="lims_generate_results_report_result_aut_excluded_notebook_view_list">
-            <field name="model">lims.generate_results_report.aut.excluded_notebook</field>
-            <field name="type">tree</field>
-            <field name="name">generate_results_report_result_aut_excluded_notebook_list</field>
-        </record>
-        <record model="ir.ui.view" id="lims_generate_results_report_result_aut_excluded_notebook_view_form">
-            <field name="model">lims.generate_results_report.aut.excluded_notebook</field>
-            <field name="type">form</field>
-            <field name="name">generate_results_report_result_aut_excluded_notebook_form</field>
-        </record>
-
-        <record model="ir.action.wizard" id="wiz_lims_generate_results_report">
-            <field name="name">Generate Reports</field>
-            <field name="wiz_name">lims.generate_results_report</field>
-        </record>
-
-        <menuitem action="wiz_lims_generate_results_report"
-            id="lims_generate_results_report_menu"
-            parent="lims_samples_pending_reporting_menu" sequence="10"/>
-
-        <record model="ir.ui.menu-res.group"
-            id="menu_generate_results_report_group_laboratory_reports">
-            <field name="menu" ref="lims_generate_results_report_menu"/>
-            <field name="group" ref="group_lims_laboratory_reports"/>
-        </record>
-
 <!-- Wizard Service Results Report -->
 
         <record model="ir.action.wizard" id="wiz_lims_service_results_report">

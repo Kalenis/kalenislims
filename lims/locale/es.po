@@ -2011,189 +2011,6 @@ msgctxt "field:lims.fractions_by_locations.start,location:"
 msgid "Location"
 msgstr "Ubicación"
 
-msgctxt "field:lims.generate_results_report.aut.excluded_notebook,date:"
-msgid "Date"
-msgstr "Fecha"
-
-msgctxt "field:lims.generate_results_report.aut.excluded_notebook,fraction:"
-msgid "Fraction"
-msgstr "Fracción"
-
-msgctxt ""
-"field:lims.generate_results_report.aut.excluded_notebook,fraction_type:"
-msgid "Fraction type"
-msgstr "Tipo de fracción"
-
-msgctxt "field:lims.generate_results_report.aut.excluded_notebook,label:"
-msgid "Label"
-msgstr "Rótulo"
-
-msgctxt "field:lims.generate_results_report.aut.excluded_notebook,lines:"
-msgid "Lines"
-msgstr "Líneas"
-
-msgctxt "field:lims.generate_results_report.aut.excluded_notebook,matrix:"
-msgid "Matrix"
-msgstr "Matriz"
-
-msgctxt "field:lims.generate_results_report.aut.excluded_notebook,notebook:"
-msgid "Notebook"
-msgstr "Cuaderno"
-
-msgctxt "field:lims.generate_results_report.aut.excluded_notebook,party:"
-msgid "Party"
-msgstr "Entidad"
-
-msgctxt ""
-"field:lims.generate_results_report.aut.excluded_notebook,product_type:"
-msgid "Product type"
-msgstr "Tipo de producto"
-
-msgctxt "field:lims.generate_results_report.aut.excluded_notebook,session_id:"
-msgid "Session ID"
-msgstr "ID Sesión"
-
-msgctxt "field:lims.generate_results_report.aut.excluded_notebook-line,line:"
-msgid "Notebook Line"
-msgstr "Línea de cuaderno"
-
-msgctxt ""
-"field:lims.generate_results_report.aut.excluded_notebook-line,notebook:"
-msgid "Notebook"
-msgstr "Cuaderno"
-
-msgctxt "field:lims.generate_results_report.aut.notebook,date:"
-msgid "Date"
-msgstr "Fecha"
-
-msgctxt "field:lims.generate_results_report.aut.notebook,fraction:"
-msgid "Fraction"
-msgstr "Fracción"
-
-msgctxt "field:lims.generate_results_report.aut.notebook,fraction_type:"
-msgid "Fraction type"
-msgstr "Tipo de fracción"
-
-msgctxt "field:lims.generate_results_report.aut.notebook,label:"
-msgid "Label"
-msgstr "Rótulo"
-
-msgctxt "field:lims.generate_results_report.aut.notebook,lines:"
-msgid "Lines"
-msgstr "Líneas"
-
-msgctxt "field:lims.generate_results_report.aut.notebook,matrix:"
-msgid "Matrix"
-msgstr "Matriz"
-
-msgctxt "field:lims.generate_results_report.aut.notebook,notebook:"
-msgid "Notebook"
-msgstr "Cuaderno"
-
-msgctxt "field:lims.generate_results_report.aut.notebook,party:"
-msgid "Party"
-msgstr "Entidad"
-
-msgctxt "field:lims.generate_results_report.aut.notebook,product_type:"
-msgid "Product type"
-msgstr "Tipo de producto"
-
-msgctxt "field:lims.generate_results_report.aut.notebook,session_id:"
-msgid "Session ID"
-msgstr "ID Sesión"
-
-msgctxt "field:lims.generate_results_report.aut.notebook-line,line:"
-msgid "Notebook Line"
-msgstr "Línea de cuaderno"
-
-msgctxt "field:lims.generate_results_report.aut.notebook-line,notebook:"
-msgid "Notebook"
-msgstr "Cuaderno"
-
-msgctxt "field:lims.generate_results_report.result_aut,excluded_notebooks:"
-msgid "Excluded Fractions"
-msgstr "Fracciones excluidas"
-
-msgctxt "field:lims.generate_results_report.result_aut,notebook_lines:"
-msgid "Results"
-msgstr "Resultados"
-
-msgctxt "field:lims.generate_results_report.result_aut,notebooks:"
-msgid "Results"
-msgstr "Resultados"
-
-msgctxt "field:lims.generate_results_report.result_aut,reports_details:"
-msgid "Reports details"
-msgstr "Detalles de informes"
-
-msgctxt "field:lims.generate_results_report.result_man,cie_fraction_type:"
-msgid "QA"
-msgstr "QA"
-
-msgctxt "field:lims.generate_results_report.result_man,laboratory:"
-msgid "Laboratory"
-msgstr "Laboratorio"
-
-msgctxt "field:lims.generate_results_report.result_man,notebook:"
-msgid "Laboratory notebook"
-msgstr "Cuaderno de laboratorio"
-
-msgctxt "field:lims.generate_results_report.result_man,notebook_lines:"
-msgid "Results"
-msgstr "Resultados"
-
-msgctxt "field:lims.generate_results_report.result_man,notebook_lines_domain:"
-msgid "Results domain"
-msgstr "Dominio para Resultados"
-
-msgctxt "field:lims.generate_results_report.result_man,party:"
-msgid "Party"
-msgstr "Entidad"
-
-msgctxt "field:lims.generate_results_report.result_man,report:"
-msgid "Report"
-msgstr "Informe"
-
-msgctxt "field:lims.generate_results_report.result_man,report_domain:"
-msgid "Reports domain"
-msgstr "Dominio para Informe"
-
-msgctxt "field:lims.generate_results_report.result_man,report_grouper:"
-msgid "Report Grouper"
-msgstr "Agrupador de informe"
-
-msgctxt "field:lims.generate_results_report.result_man,report_type:"
-msgid "Report type"
-msgstr "Tipo de informe"
-
-msgctxt "field:lims.generate_results_report.result_man,report_type_forced:"
-msgid "Force report type"
-msgstr "Forzar tipo de informe"
-
-msgctxt "field:lims.generate_results_report.result_man,reports_details:"
-msgid "Reports details"
-msgstr "Detalles de informes"
-
-msgctxt "field:lims.generate_results_report.start,date_from:"
-msgid "Date from"
-msgstr "Fecha desde"
-
-msgctxt "field:lims.generate_results_report.start,date_to:"
-msgid "Date to"
-msgstr "Fecha hasta"
-
-msgctxt "field:lims.generate_results_report.start,generation_type:"
-msgid "Generation type"
-msgstr "Tipo de generación"
-
-msgctxt "field:lims.generate_results_report.start,laboratory:"
-msgid "Laboratory"
-msgstr "Laboratorio"
-
-msgctxt "field:lims.generate_results_report.start,party:"
-msgid "Party"
-msgstr "Entidad"
-
 msgctxt "field:lims.lab.device,code:"
 msgid "Code"
 msgstr "Código"
@@ -7290,10 +7107,6 @@ msgctxt "model:ir.action,name:wiz_lims_fraction_results_report"
 msgid "Fraction Results Reports"
 msgstr "Informes de resultados de la Fracción"
 
-msgctxt "model:ir.action,name:wiz_lims_generate_results_report"
-msgid "Generate Reports"
-msgstr "Generar informes"
-
 msgctxt "model:ir.action,name:wiz_lims_load_services"
 msgid "Load Services"
 msgstr "Cargar servicios"
@@ -8703,10 +8516,6 @@ msgctxt "model:ir.ui.menu,name:lims_fractions_by_locations_menu"
 msgid "Fractions by Locations"
 msgstr "Fracciones por ubicaciones"
 
-msgctxt "model:ir.ui.menu,name:lims_generate_results_report_menu"
-msgid "Generate Reports"
-msgstr "Generar informes"
-
 msgctxt "model:ir.ui.menu,name:lims_lab_device_menu"
 msgid "Devices"
 msgstr "Equipos"
@@ -9282,38 +9091,6 @@ msgstr "Tipo de fracción"
 msgctxt "model:lims.fractions_by_locations.start,name:"
 msgid "Fractions by Locations"
 msgstr "Fracciones por ubicaciones"
-
-msgctxt "model:lims.generate_results_report.aut.excluded_notebook,name:"
-msgid "Excluded Notebook"
-msgstr "Cuaderno excluido"
-
-msgctxt "model:lims.generate_results_report.aut.excluded_notebook-line,name:"
-msgid "Excluded Notebook Line"
-msgstr "Línea de cuaderno excluida"
-
-msgctxt "model:lims.generate_results_report.aut.notebook,name:"
-msgid "Notebook"
-msgstr "Cuaderno"
-
-msgctxt "model:lims.generate_results_report.aut.notebook-line,name:"
-msgid "Notebook Line"
-msgstr "Línea de cuaderno"
-
-msgctxt "model:lims.generate_results_report.empty,name:"
-msgid "Generate Results Report"
-msgstr "Generar informe de resultados"
-
-msgctxt "model:lims.generate_results_report.result_aut,name:"
-msgid "Generate Results Report"
-msgstr "Generar informe de resultados"
-
-msgctxt "model:lims.generate_results_report.result_man,name:"
-msgid "Generate Results Report"
-msgstr "Generar informe de resultados"
-
-msgctxt "model:lims.generate_results_report.start,name:"
-msgid "Generate Results Report"
-msgstr "Generar informe de resultados"
 
 msgctxt "model:lims.lab.device,name:"
 msgid "Laboratory Device"
@@ -12560,29 +12337,6 @@ msgctxt "selection:lims.fraction,rm_type:"
 msgid "SLA"
 msgstr "SLA"
 
-msgctxt ""
-"selection:lims.generate_results_report.result_man,report_type_forced:"
-msgid "None"
-msgstr "Ninguno"
-
-msgctxt ""
-"selection:lims.generate_results_report.result_man,report_type_forced:"
-msgid "Normal"
-msgstr "Normal"
-
-msgctxt ""
-"selection:lims.generate_results_report.result_man,report_type_forced:"
-msgid "Polisample"
-msgstr "Polimuestra"
-
-msgctxt "selection:lims.generate_results_report.start,generation_type:"
-msgid "Automatic"
-msgstr "Automática"
-
-msgctxt "selection:lims.generate_results_report.start,generation_type:"
-msgid "Manual"
-msgstr "Manual"
-
 msgctxt "selection:lims.lab.professional.method,state:"
 msgid "Qualified"
 msgstr "Cualificado"
@@ -13879,30 +13633,6 @@ msgctxt "view:lims.fractions_by_locations.start:"
 msgid "Fractions by Locations"
 msgstr "Fracciones por ubicaciones"
 
-msgctxt "view:lims.generate_results_report.aut.excluded_notebook:"
-msgid "Time"
-msgstr "Hora"
-
-msgctxt "view:lims.generate_results_report.aut.notebook:"
-msgid "Time"
-msgstr "Hora"
-
-msgctxt "view:lims.generate_results_report.empty:"
-msgid "No results found"
-msgstr "Ningún resultado encontrado"
-
-msgctxt "view:lims.generate_results_report.result_aut:"
-msgid "Generate Reports"
-msgstr "Generar informes"
-
-msgctxt "view:lims.generate_results_report.result_man:"
-msgid "Generate Reports"
-msgstr "Generar informes"
-
-msgctxt "view:lims.generate_results_report.start:"
-msgid "Generate Reports"
-msgstr "Generar informes"
-
 msgctxt "view:lims.lab.device.laboratory:"
 msgid "Device laboratories"
 msgstr "Laboratorios de equipo"
@@ -14987,38 +14717,6 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.fractions_by_locations,start,open:"
 msgid "Open"
 msgstr "Abrir"
-
-msgctxt "wizard_button:lims.generate_results_report,empty,end:"
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgctxt "wizard_button:lims.generate_results_report,empty,start:"
-msgid "Search again"
-msgstr "Buscar nuevamente"
-
-msgctxt "wizard_button:lims.generate_results_report,result_aut,end:"
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgctxt "wizard_button:lims.generate_results_report,result_aut,generate:"
-msgid "Generate"
-msgstr "Generar"
-
-msgctxt "wizard_button:lims.generate_results_report,result_man,end:"
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgctxt "wizard_button:lims.generate_results_report,result_man,generate:"
-msgid "Generate"
-msgstr "Generar"
-
-msgctxt "wizard_button:lims.generate_results_report,start,end:"
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgctxt "wizard_button:lims.generate_results_report,start,search:"
-msgid "Search"
-msgstr "Buscar"
 
 msgctxt "wizard_button:lims.lab.device.relate_analysis,start,end:"
 msgid "Cancel"
