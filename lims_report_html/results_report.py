@@ -532,7 +532,8 @@ class ResultReport(metaclass=PoolMeta):
         if tfooter:
             stylesheets += cls.parse_stylesheets(tfooter)
 
-        page_orientation = record.template and record.template.page_orientation or 'portrait'
+        page_orientation = (record.template and
+            record.template.page_orientation or 'portrait')
 
         document = PdfGenerator(content,
             header_html=header, footer_html=footer,

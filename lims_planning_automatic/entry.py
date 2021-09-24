@@ -34,6 +34,7 @@ class AddSampleService(metaclass=PoolMeta):
         Planification.automatic_plan(entries=[new_service.entry])
         return new_service
 
+
 class EditSampleService(metaclass=PoolMeta):
     __name__ = 'lims.sample.edit_service'
 

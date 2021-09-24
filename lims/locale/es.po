@@ -5163,6 +5163,10 @@ msgctxt "field:lims.results_report.version.detail.line,start_date:"
 msgid "Start date"
 msgstr "Fecha de inicio"
 
+msgctxt "field:lims.results_report.version.detail.line,uncertainty:"
+msgid "Uncertainty"
+msgstr "Incertidumbre"
+
 msgctxt "field:lims.results_report.version.detail.line,urgent:"
 msgid "Urgent"
 msgstr "Urgente"
@@ -11170,7 +11174,7 @@ msgid "Urgent"
 msgstr "Urgente"
 
 msgctxt "report:lims.pending_services_unplanned.spreadsheet:"
-msgid "for each=\"line in objects\""
+msgid "for each=\"line in records\""
 msgstr ""
 
 msgctxt "report:lims.pending_services_unplanned.spreadsheet:"

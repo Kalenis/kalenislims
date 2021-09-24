@@ -169,9 +169,10 @@ class Template(Workflow, ModelSQL, ModelView):
     @Workflow.transition('not_active')
     def not_active(cls, templates):
         pass
-    
+
     @classmethod
-    @ModelView.button_action('lims_quality_control.wiz_quality_template_copy_line')
+    @ModelView.button_action(
+        'lims_quality_control.wiz_quality_template_copy_line')
     def copy_lines(cls, typifications):
         pass
 
@@ -724,24 +725,23 @@ class TestAttachmentReport(Report):
 class CopyQualityTemplateLineStart(ModelView):
     'Copy Quality Template Line'
     __name__ = 'lims.quality.template.copy_line.start'
-    
-    origin_quality_template = fields.Many2One('lims.quality.template', 'Origin Template',
-        required=True,
-        )
+
+    origin_quality_template = fields.Many2One('lims.quality.template',
+        'Origin Template', required=True)
 
 
 class CopyQualityTemplateLine(Wizard):
     'Copy Quality Template Line'
     __name__ = 'lims.quality.template.copy_line'
-    
+
     start = StateTransition()
     ask = StateView('lims.quality.template.copy_line.start',
         'lims_quality_control.quality_template_copy_line_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Copy', 'copy', 'tryton-ok', default=True),            
+            Button('Copy', 'copy', 'tryton-ok', default=True),
             ])
     copy = StateTransition()
-    
+
     def transition_start(self):
         QualityTemplate = Pool().get('lims.quality.template')
         quality_template_id = Transaction().context.get('active_id', None)
@@ -756,7 +756,9 @@ class CopyQualityTemplateLine(Wizard):
         Line = Pool().get('lims.typification')
 
         quality_template_id = Transaction().context.get('active_id', None)
-        count = Line.search_count([('quality_template', '=', quality_template_id)])
+        count = Line.search_count([
+            ('quality_template', '=', quality_template_id),
+            ])
 
         new_lines = []
         origin_lines = Line.search([
@@ -807,7 +809,8 @@ class CopyQualityTemplateLine(Wizard):
             'valid_value': origin.valid_value,
             'quality_test_report': origin.quality_test_report,
             'quality_order': origin.quality_order,
-            #problemas al copiar algunos registros que no tienen valor en quality_min
+            # problemas al copiar algunos registros que no tienen valor
+            # en quality_min
             'quality_min': origin.quality_min,
             'quality_max': origin.quality_max,
             }

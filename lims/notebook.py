@@ -1405,8 +1405,8 @@ class NotebookLine(ModelSQL, ModelView):
                         not self.literal_result and
                         (not self.converted_result_modifier or
                             not self.converted_result) and
-                        self.converted_result_modifier not in
-                            ('nd', 'pos', 'neg')):
+                        self.converted_result_modifier not in (
+                            'nd', 'pos', 'neg')):
                     self.accepted = False
                     self.not_accepted_message = gettext(
                         'lims.msg_not_accepted_7')

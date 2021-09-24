@@ -1226,7 +1226,7 @@ class ControlChartReport(Report):
         if 'id' in data:
             tendency = ControlTendency(data['id'])
         else:
-            tendency = ControlTendency(reports[0].id)
+            tendency = ControlTendency(records[0].id)
 
         company = Company(Transaction().context.get('company'))
         report_context['company'] = company

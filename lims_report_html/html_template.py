@@ -60,8 +60,8 @@ class ReportTemplate(ModelSQL, ModelView):
         ], 'Charts per Row')
     page_orientation = fields.Selection([
         ('portrait', 'Portrait'),
-        ('landscape','Landscape'),
-        ],'Page orientation',sort=False)
+        ('landscape', 'Landscape'),
+        ], 'Page orientation', sort=False)
     resultrange_origin = fields.Many2One('lims.range.type', 'Comparison range',
         domain=[('use', '=', 'result_range')])
 

@@ -4,8 +4,7 @@
 from dateutil import relativedelta
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields
-from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
-    Button
+from trytond.wizard import Wizard, StateAction
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.pyson import PYSONEncoder, Eval

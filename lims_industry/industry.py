@@ -54,7 +54,6 @@ class Plant(ModelSQL, ModelView):
         table.column_rename('zip', 'postal_code')
         super().__register__(module_name)
 
-
     @staticmethod
     def default_country():
         Company = Pool().get('company.company')
