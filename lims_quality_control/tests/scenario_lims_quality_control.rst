@@ -417,20 +417,20 @@ Add results and check success in lines::
 
 Create results report::
 
-    >>> generate_results_report = Wizard('lims.generate_results_report')
-    >>> generate_results_report.form.date_from = today
-    >>> generate_results_report.form.date_to = today
-    >>> generate_results_report.form.laboratory = laboratory
-    >>> generate_results_report.form.generation_type = 'aut'
-    >>> generate_results_report.execute('search')
-    >>> generate_results_report.execute('generate')
-    >>> results_report_version, = generate_results_report.actions[0]
-    >>> results_report_version.click('revise')
-    >>> results_report_version.state
-    'revised'
-    >>> results_report_version.click('release')
-    >>> results_report_version.state
-    'released'
+..     >>> generate_results_report = Wizard('lims.generate_results_report')
+..     >>> generate_results_report.form.date_from = today
+..     >>> generate_results_report.form.date_to = today
+..     >>> generate_results_report.form.laboratory = laboratory
+..     >>> generate_results_report.form.generation_type = 'aut'
+..     >>> generate_results_report.execute('search')
+..     >>> generate_results_report.execute('generate')
+..     >>> results_report_version, = generate_results_report.actions[0]
+..     >>> results_report_version.click('revise')
+..     >>> results_report_version.state
+..     'revised'
+..     >>> results_report_version.click('release')
+..     >>> results_report_version.state
+..     'released'
 
 Validate "failed" Test::
 
@@ -534,20 +534,20 @@ Add results and check success in lines::
 
 Create second results report::
 
-    >>> generate_results_report = Wizard('lims.generate_results_report')
-    >>> generate_results_report.form.date_from = today
-    >>> generate_results_report.form.date_to = today
-    >>> generate_results_report.form.laboratory = laboratory
-    >>> generate_results_report.form.generation_type = 'aut'
-    >>> generate_results_report.execute('search')
-    >>> generate_results_report.execute('generate')
-    >>> results_report_version, = generate_results_report.actions[0]
-    >>> results_report_version.click('revise')
-    >>> results_report_version.state
-    'revised'
-    >>> results_report_version.click('release')
-    >>> results_report_version.state
-    'released'
+..     >>> generate_results_report = Wizard('lims.generate_results_report')
+..     >>> generate_results_report.form.date_from = today
+..     >>> generate_results_report.form.date_to = today
+..     >>> generate_results_report.form.laboratory = laboratory
+..     >>> generate_results_report.form.generation_type = 'aut'
+..     >>> generate_results_report.execute('search')
+..     >>> generate_results_report.execute('generate')
+..     >>> results_report_version, = generate_results_report.actions[0]
+..     >>> results_report_version.click('revise')
+..     >>> results_report_version.state
+..     'revised'
+..     >>> results_report_version.click('release')
+..     >>> results_report_version.state
+..     'released'
 
 Validate "success" Test::
 
