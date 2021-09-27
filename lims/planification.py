@@ -1812,16 +1812,16 @@ class AddFractionControlStart(ModelView):
         '_parent_original_fraction.label',
         '_parent_concentration_level.description')
     def on_change_with_label(self, name=None):
-        Date = Pool().get('ir.date')
         if self.type == 'exist':
             return ''
         label = ''
+        date = get_print_date().strftime("%Y-%m-%d %H:%M:%S")
         if self.original_fraction:
             label += self.original_fraction.label
         if self.concentration_level:
             label += (' (' +
                     self.concentration_level.description + ')')
-        label += ' ' + str(Date.today())
+        label += ' ' + date
         return label
 
 
@@ -2284,10 +2284,10 @@ class AddFractionRMBMZStart(ModelView):
         '_parent_reference_fraction.label',
         '_parent_concentration_level.description')
     def on_change_with_label(self, name=None):
-        Date = Pool().get('ir.date')
         if self.rm_bmz_type == 'exist':
             return ''
         label = ''
+        date = get_print_date().strftime("%Y-%m-%d %H:%M:%S")
         if self.type == 'rm':
             label = 'RM'
             if self.concentration_level:
@@ -2299,9 +2299,9 @@ class AddFractionRMBMZStart(ModelView):
             if self.reference_fraction:
                 label += (' ' +
                        self.reference_fraction.label)
-            label += ' ' + str(Date.today())
+            label += ' ' + date
         elif self.rm_bmz_type == 'noref':
-            label += ' ' + str(Date.today())
+            label += ' ' + date
         return label
 
 
@@ -2923,11 +2923,11 @@ class AddFractionBREStart(ModelView):
 
     @fields.depends('type', 'product_type', 'matrix')
     def on_change_with_label(self, name=None):
-        Date = Pool().get('ir.date')
         if self.type == 'exist':
             return ''
         label = 'BRE'
-        label += ' ' + str(Date.today())
+        date = get_print_date().strftime("%Y-%m-%d %H:%M:%S")
+        label += ' ' + date
         return label
 
 
@@ -3288,11 +3288,11 @@ class AddFractionMRTStart(ModelView):
 
     @fields.depends('type', 'product_type', 'matrix')
     def on_change_with_label(self, name=None):
-        Date = Pool().get('ir.date')
         if self.type == 'exist':
             return ''
         label = 'MRT'
-        label += ' ' + str(Date.today())
+        date = get_print_date().strftime("%Y-%m-%d %H:%M:%S")
+        label += ' ' + date
         return label
 
 
