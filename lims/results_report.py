@@ -3612,7 +3612,7 @@ class ResultReport(Report):
                             res = initial_unit
                         else:
                             if (not detection_limit or detection_limit in (
-                                    '0', '0.0')):
+                                    '0', '0.0', '0.00')):
                                 res = initial_unit
                             else:
                                 res = gettext('lims.msg_detection_limit',
@@ -3656,7 +3656,7 @@ class ResultReport(Report):
             else:
                 if converted_result_modifier in ('nd', 'low'):
                     if (not detection_limit or detection_limit in (
-                            '0', '0.0')):
+                            '0', '0.0', '0.00')):
                         res = final_unit
                     else:
                         res = gettext('lims.msg_detection_limit',
@@ -3690,8 +3690,8 @@ class ResultReport(Report):
                     res = gettext('lims.msg_detection_limit_2',
                         detection_limit=detection_limit)
         else:
-            if (not detection_limit or detection_limit in ('0', '0.0') or
-                    literal_result):
+            if (not detection_limit or detection_limit in (
+                    '0', '0.0', '0.00') or literal_result):
                 res = '-'
             else:
                 res = detection_limit
