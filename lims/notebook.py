@@ -4443,6 +4443,7 @@ class NotebookLoadResultsExceptionalLine(ModelSQL, ModelView):
 
     line = fields.Many2One('lims.notebook.line', 'Analysis', readonly=True)
     result = fields.Char('Result')
+    literal_result = fields.Char('Literal result')
 
 
 class NotebookLoadResultsExceptional(Wizard):
@@ -4477,6 +4478,7 @@ class NotebookLoadResultsExceptional(Wizard):
             res_lines.append({
                 'line': line.id,
                 'result': None,
+                'literal_result': None,
                 })
 
         default = {}
@@ -4496,10 +4498,11 @@ class NotebookLoadResultsExceptional(Wizard):
         for line in self.result.lines:
             if not line.line:  # Avoid empty lines created with ENTER key
                 continue
-            if not line.result:
+            if not line.result and not line.literal_result:
                 continue
             notebook_line = NotebookLine(line.line.id)
             notebook_line.result = line.result
+            notebook_line.literal_result = line.literal_result
             notebook_line.start_date = start_date
             notebook_line.end_date = end_date
             notebook_line.exceptional_load = True
