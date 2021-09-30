@@ -4,4 +4,6 @@
     <field name="line"/>
     <label name="result"/>
     <field name="result"/>
+    <label name="literal_result"/>
+    <field name="literal_result"/>
 </form>
