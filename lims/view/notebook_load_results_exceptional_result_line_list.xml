@@ -2,4 +2,5 @@
 <tree editable="bottom">
     <field name="line"/>
     <field name="result"/>
+    <field name="literal_result"/>
 </tree>

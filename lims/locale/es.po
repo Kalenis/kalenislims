@@ -3487,6 +3487,10 @@ msgctxt "field:lims.notebook.load_results_exceptional.line,line:"
 msgid "Analysis"
 msgstr "Análisis"
 
+msgctxt "field:lims.notebook.load_results_exceptional.line,literal_result:"
+msgid "Literal result"
+msgstr "Resultado textual"
+
 msgctxt "field:lims.notebook.load_results_exceptional.line,result:"
 msgid "Result"
 msgstr "Resultado"
