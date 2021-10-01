@@ -1313,6 +1313,7 @@ class ControlChartReport(Report):
 
             ax.legend(loc='center left', bbox_to_anchor=(1.0, 0.5))
             ax.get_figure().savefig(output, bbox_inches='tight', dpi=300)
+            ax.clear()
             image = output.getvalue()
             output.close()
             return image
@@ -1551,6 +1552,7 @@ class TrendChart(ModelSQL, ModelView):
                     ax.set_ylabel(self.uom_y2.symbol)
 
             ax.get_figure().savefig(output, bbox_inches='tight', dpi=300)
+            ax.clear()
             image = output.getvalue()
             output.close()
             return image
