@@ -5,6 +5,7 @@
 import pandas as pd
 from io import BytesIO
 from math import sqrt
+import matplotlib.pyplot as plt
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import (Wizard, StateTransition, StateView, StateAction,
@@ -1313,7 +1314,6 @@ class ControlChartReport(Report):
 
             ax.legend(loc='center left', bbox_to_anchor=(1.0, 0.5))
             ax.get_figure().savefig(output, bbox_inches='tight', dpi=300)
-            ax.clear()
             image = output.getvalue()
             output.close()
             return image
@@ -1539,22 +1539,22 @@ class TrendChart(ModelSQL, ModelView):
 
         output = BytesIO()
         try:
-            ax = df.plot(kind='line', rot=45, fontsize=7,
-                figsize=(10, 7.5), marker='o', linestyle='-')
-            ax.set_xlabel(self.x_axis_string)
-            if self.uom:
-                ax.set_ylabel(self.uom.symbol)
-            if ds2:
-                ax = df2.plot(kind='line', rot=45, fontsize=7,
-                    figsize=(10, 7.5), marker='o', linestyle='-',
-                    secondary_y=True, ax=ax)
-                if self.uom_y2:
-                    ax.set_ylabel(self.uom_y2.symbol)
+            with plt.rc_context(rc={'figure.max_open_warning': 0}):
+                ax = df.plot(kind='line', rot=45, fontsize=7,
+                    figsize=(10, 7.5), marker='o', linestyle='-')
+                ax.set_xlabel(self.x_axis_string)
+                if self.uom:
+                    ax.set_ylabel(self.uom.symbol)
+                if ds2:
+                    ax = df2.plot(kind='line', rot=45, fontsize=7,
+                        figsize=(10, 7.5), marker='o', linestyle='-',
+                        secondary_y=True, ax=ax)
+                    if self.uom_y2:
+                        ax.set_ylabel(self.uom_y2.symbol)
 
-            ax.get_figure().savefig(output, bbox_inches='tight', dpi=300)
-            ax.clear()
-            image = output.getvalue()
-            output.close()
+                ax.get_figure().savefig(output, bbox_inches='tight', dpi=300)
+                image = output.getvalue()
+                output.close()
             return image
         except (TypeError, ModuleNotFoundError):
             return output.getvalue()
@@ -1796,7 +1796,6 @@ class DownloadTrendChart(Wizard):
 
     def transition_start(self):
         context = Transaction().context
-        print('context', context)
         if context.get('chart_id') and context.get('session_id'):
             return 'open'
         return 'end'
