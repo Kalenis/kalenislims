@@ -425,8 +425,7 @@ class LabDeviceLaboratory(ModelSQL, ModelView):
     __name__ = 'lims.lab.device.laboratory'
 
     device = fields.Many2One('lims.lab.device', 'Device', required=True,
-        ondelete='CASCADE', select=True,
-        domain=[('device_type.non_analytical', '=', False)])
+        ondelete='CASCADE', select=True)
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         required=True)
     physically_here = fields.Boolean('Physically here')
@@ -457,8 +456,7 @@ class LabDeviceCorrection(ModelSQL, ModelView):
     __name__ = 'lims.lab.device.correction'
 
     device = fields.Many2One('lims.lab.device', 'Device', required=True,
-        ondelete='CASCADE', select=True,
-        domain=[('device_type.non_analytical', '=', False)])
+        ondelete='CASCADE', select=True)
     result_from = fields.Char('From', required=True)
     result_to = fields.Char('To', required=True)
     formula = fields.Char('Correction Formula', required=True,
