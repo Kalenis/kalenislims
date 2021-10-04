@@ -455,7 +455,7 @@ class SaleLine(metaclass=PoolMeta):
                 typification = typifications[0]
                 key = sale_line.sale.id
 
-                if typification.additional:
+                if typification.additional and typification.additional.product:
                     additional = typification.additional
                     if key not in additional_services:
                         additional_services[key] = {}
@@ -474,6 +474,8 @@ class SaleLine(metaclass=PoolMeta):
                     if key not in additional_services:
                         additional_services[key] = {}
                     for additional in typification.additionals:
+                        if not additional.product:
+                            continue
                         if additional.id not in additional_services[key]:
 
                             cursor.execute('SELECT method '
