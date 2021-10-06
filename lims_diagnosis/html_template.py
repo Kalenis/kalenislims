@@ -4,6 +4,7 @@
 
 from trytond.model import ModelSQL, ModelView, fields, DictSchemaMixin
 from trytond.pool import PoolMeta
+from trytond.pyson import Eval
 
 
 class DiagnosisTemplate(ModelSQL, ModelView):
@@ -51,10 +52,14 @@ class DiagnosisTemplateState(ModelSQL):
         required=True, ondelete='CASCADE', select=True)
 
 
-class ReportTemplate(metaclass=PoolMeta):
-    __name__ = 'lims.result_report.template'
+class ResultsReportTemplate(metaclass=PoolMeta):
+    __name__ = 'lims.report.template'
 
     diagnosis_template = fields.Many2One('lims.diagnosis.template',
-        'Diagnosis Template')
+        'Diagnosis Template',
+        states={'invisible': Eval('type') != 'base'},
+        depends=['type'])
     diagnosis_length = fields.Integer('Diagnosis Length',
+        states={'invisible': Eval('type') != 'base'},
+        depends=['type'],
         help='Maximum number of characters in diagnosis')

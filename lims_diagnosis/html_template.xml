@@ -86,10 +86,10 @@
 
 <!-- Results Report Template -->
 
-        <record model="ir.ui.view" id="template_view_form">
-            <field name="model">lims.result_report.template</field>
-            <field name="inherit" ref="lims_report_html.template_view_form"/>
-            <field name="name">template_form</field>
+        <record model="ir.ui.view" id="result_template_view_form">
+            <field name="model">lims.report.template</field>
+            <field name="inherit" ref="lims_report_html.result_template_view_form"/>
+            <field name="name">result_template_form</field>
         </record>
 
     </data>

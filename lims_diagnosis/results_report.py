@@ -109,7 +109,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         pool = Pool()
         Notebook = pool.get('lims.notebook')
         Diagnostician = pool.get('lims.diagnostician')
-        ReportTemplate = pool.get('lims.result_report.template')
+        ReportTemplate = pool.get('lims.report.template')
 
         detail_default = super()._get_fields_from_samples(samples,
             generate_report_form)

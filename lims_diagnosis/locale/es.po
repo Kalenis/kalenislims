@@ -102,11 +102,11 @@ msgctxt "field:lims.product.type,diagnostician:"
 msgid "Diagnostician"
 msgstr "Diagnosticador"
 
-msgctxt "field:lims.result_report.template,diagnosis_length:"
+msgctxt "field:lims.report.template,diagnosis_length:"
 msgid "Diagnosis Length"
 msgstr "Longitud del diagnóstico"
 
-msgctxt "field:lims.result_report.template,diagnosis_template:"
+msgctxt "field:lims.report.template,diagnosis_template:"
 msgid "Diagnosis Template"
 msgstr "Plantilla de Diagnóstico"
 
@@ -251,7 +251,7 @@ msgctxt "help:lims.notebook.repeat_analysis.start,notify_acceptance:"
 msgid "Notify when analysis is ready"
 msgstr "Notificar cuando el análisis esté terminado"
 
-msgctxt "help:lims.result_report.template,diagnosis_length:"
+msgctxt "help:lims.report.template,diagnosis_length:"
 msgid "Maximum number of characters in diagnosis"
 msgstr "Cantidad máxima de caracteres en diagnóstico"
 
