@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<form>
+    <label name="name"/>
+    <field name="name"/>
+    <label name="type"/>
+    <field name="type"/>
+    <label name="report"/>
+    <field name="report"/>
+    <label name="page_orientation"/>
+    <field name="page_orientation"/>
+    <label name="clause_template"/>
+    <field name="clause_template"/>
+    <notebook>
+        <page name="content">
+            <field name="content" colspan="4" widget="html"/>
+        </page>
+        <page id="header_footer" string="Header and Footer">
+            <label name="header"/>
+            <field name="header"
+                view_ids="lims_sale.sale_report_template_view_list,lims_sale.sale_report_template_view_form"/>
+            <label name="footer"/>
+            <field name="footer"
+                view_ids="lims_sale.sale_report_template_view_list,lims_sale.sale_report_template_view_form"/>
+        </page>
+        <page name="translations">
+            <field name="translations" colspan="4"/>
+        </page>
+        <page name="sections">
+            <field name="previous_sections" colspan="4"/>
+            <field name="following_sections" colspan="4"/>
+        </page>
+    </notebook>
+</form>

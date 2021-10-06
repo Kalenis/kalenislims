@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Sale Clause Template -->
+
+        <record model="ir.ui.view" id="sale_clause_template_view_form">
+            <field name="model">sale.clause.template</field>
+            <field name="type">form</field>
+            <field name="name">sale_clause_template_form</field>
+        </record>
+        <record model="ir.ui.view" id="sale_clause_template_view_list">
+            <field name="model">sale.clause.template</field>
+            <field name="type">tree</field>
+            <field name="name">sale_clause_template_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_sale_clause_template">
+            <field name="name">Sale Clauses Templates</field>
+            <field name="res_model">sale.clause.template</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_sale_clause_template_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="sale_clause_template_view_list"/>
+            <field name="act_window" ref="act_sale_clause_template"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_sale_clause_template_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="sale_clause_template_view_form"/>
+            <field name="act_window" ref="act_sale_clause_template"/>
+        </record>
+
+        <menuitem action="act_sale_clause_template"
+            id="menu_sale_clause_template"
+            parent="sale.menu_configuration" sequence="30"/>
+
+<!-- Sale Report Template -->
+
+        <record model="ir.ui.view" id="sale_report_template_view_form">
+            <field name="model">lims.report.template</field>
+            <field name="type">form</field>
+            <field name="name">sale_report_template_form</field>
+        </record>
+        <record model="ir.ui.view" id="sale_report_template_view_list">
+            <field name="model">lims.report.template</field>
+            <field name="type">tree</field>
+            <field name="name">sale_report_template_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_sale_report_template">
+            <field name="name">Sale Report Templates</field>
+            <field name="res_model">lims.report.template</field>
+            <field name="domain" pyson="1"
+                eval="[('report_name', '=', 'sale.sale')]"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_sale_report_template_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="sale_report_template_view_list"/>
+            <field name="act_window" ref="act_sale_report_template"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_sale_report_template_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="sale_report_template_view_form"/>
+            <field name="act_window" ref="act_sale_report_template"/>
+        </record>
+
+        <menuitem action="act_sale_report_template"
+            id="menu_sale_report_template"
+            parent="sale.menu_configuration" sequence="20"
+            icon="tryton-list"/>
+
+    </data>
+</tryton>
