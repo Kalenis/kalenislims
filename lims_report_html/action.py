@@ -3,6 +3,7 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import PoolMeta
+from trytond.transaction import Transaction
 
 
 class ActionReport(metaclass=PoolMeta):
@@ -11,13 +12,21 @@ class ActionReport(metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super().__setup__()
-        results_option = ('results', 'Results Report')
-        if results_option not in cls.template_extension.selection:
-            cls.template_extension.selection.append(results_option)
+        lims_option = ('lims', 'Lims Report')
+        if lims_option not in cls.template_extension.selection:
+            cls.template_extension.selection.append(lims_option)
+
+    @classmethod
+    def __register__(cls, module_name):
+        cursor = Transaction().connection.cursor()
+        table = cls.__table__()
+        super().__register__(module_name)
+        cursor.execute(*table.update([table.template_extension], ['lims'],
+            where=(table.template_extension == 'results')))
 
 
 class ReportTranslationSet(metaclass=PoolMeta):
     __name__ = 'ir.translation.set'
 
-    def extract_report_results(self, content):
+    def extract_report_lims(self, content):
         return []

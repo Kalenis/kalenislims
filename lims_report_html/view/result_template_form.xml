@@ -6,19 +6,21 @@
     <field name="type"/>
     <label name="report"/>
     <field name="report"/>
-    <label name="resultrange_origin"/>
-    <field name="resultrange_origin"/>
     <label name="page_orientation"/>
     <field name="page_orientation"/>
+    <label name="resultrange_origin"/>
+    <field name="resultrange_origin"/>
     <notebook>
         <page name="content">
             <field name="content" colspan="4" widget="html"/>
         </page>
         <page id="header_footer" string="Header and Footer">
             <label name="header"/>
-            <field name="header"/>
+            <field name="header"
+                view_ids="lims_report_html.result_template_view_list,lims_report_html.result_template_view_form"/>
             <label name="footer"/>
-            <field name="footer"/>
+            <field name="footer"
+                view_ids="lims_report_html.result_template_view_list,lims_report_html.result_template_view_form"/>
         </page>
         <page name="translations">
             <field name="translations" colspan="4"/>

@@ -10,6 +10,6 @@ class Notebook(metaclass=PoolMeta):
     __name__ = 'lims.notebook'
 
     result_template = fields.Function(fields.Many2One(
-        'lims.result_report.template', 'Report Template'), 'get_sample_field')
+        'lims.report.template', 'Report Template'), 'get_sample_field')
     resultrange_origin = fields.Function(fields.Many2One('lims.range.type',
         'Comparison range'), 'get_sample_field')

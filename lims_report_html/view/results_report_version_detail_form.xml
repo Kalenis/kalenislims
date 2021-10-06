@@ -12,7 +12,8 @@
     <xpath expr="/form/field[@name='report_result_type']" position="replace"/>
     <xpath expr="/form/label[@name='resultrange_origin']" position="before">
         <label name="template"/>
-        <field name="template"/>
+        <field name="template"
+            view_ids="lims_report_html.result_template_view_list,lims_report_html.result_template_view_form"/>
     </xpath>
     <xpath expr="/form/notebook/page[@name='comments']" position="replace">
         <page id="comments_plain" string="Comments">
