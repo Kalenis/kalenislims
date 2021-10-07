@@ -377,9 +377,10 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         body += '\n%s: %s' % (
             gettext('lims_administrative_task.field_task_priority'),
             str(self.priority_string))
-        body += '\n%s: %s' % (
-            gettext('lims_administrative_task.field_task_origin'),
-            str(self.origin.rec_name))
+        if self.origin:
+            body += '\n%s: %s' % (
+                gettext('lims_administrative_task.field_task_origin'),
+                str(self.origin.rec_name))
         return subject, body
 
     def _get_task_url(self):
