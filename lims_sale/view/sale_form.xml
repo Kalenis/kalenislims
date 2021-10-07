@@ -21,12 +21,6 @@
             <button name="load_set_group"/>
         </group>
     </xpath>
-    <xpath
-        expr="/form/notebook/page[@id='other']/field[@name='shipment_method']"
-        position="after">
-        <label name="send_email"/>
-        <field name="send_email"/>
-    </xpath>
     <xpath expr="/form/notebook" position="inside">
         <page id="lims_report" string="Printing">
             <label name="template"/>
@@ -41,6 +35,11 @@
                     <field name="following_sections" colspan="4"/>
                 </page>
             </notebook>
+        </page>
+        <page id="lims_email" string="Mailing">
+            <label name="send_email"/>
+            <field name="send_email"/>
+            <field name="mailings" colspan="4"/>
         </page>
     </xpath>
 </data>

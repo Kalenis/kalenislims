@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form>
+    <image name="tryton-warning" xexpand="0" xfill="0"/>
+    <label string="Quotations sending failed! Solve the problem and try again."
+        id="failed" yalign="0.0" xalign="0.0" xexpand="1"/>
+    <field name="sales_not_sent" colspan="4"/>
+</form>

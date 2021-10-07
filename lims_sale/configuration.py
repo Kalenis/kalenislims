@@ -11,3 +11,15 @@ class Configuration(metaclass=PoolMeta):
 
     email_quotation_subject = fields.Char('Subject of the quotation email')
     email_quotation_body = fields.Text('Body of the quotation email')
+
+
+class Cron(metaclass=PoolMeta):
+    __name__ = 'ir.cron'
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls.method.selection.extend([
+                ('sale.sale|cron_send_quotation',
+                    "Send Quotations"),
+                ])

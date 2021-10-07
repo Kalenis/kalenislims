@@ -9,6 +9,11 @@
             <field name="inherit" ref="sale.sale_view_form"/>
             <field name="name">sale_form</field>
         </record>
+        <record model="ir.ui.view" id="sale_view_list">
+            <field name="model">sale.sale</field>
+            <field name="inherit" ref="sale.sale_view_tree"/>
+            <field name="name">sale_list</field>
+        </record>
 
         <record model="ir.model.button" id="sale_load_services_button">
             <field name="name">load_services</field>
@@ -19,6 +24,19 @@
             <field name="name">load_set_group</field>
             <field name="string">Load Analysis from Set/Group</field>
             <field name="model" search="[('model', '=', 'sale.sale')]"/>
+        </record>
+
+<!-- Sale Mailing -->
+
+        <record model="ir.ui.view" id="sale_mailing_view_list">
+            <field name="model">sale.sale.mailing</field>
+            <field name="type">tree</field>
+            <field name="name">sale_mailing_list</field>
+        </record>
+        <record model="ir.ui.view" id="sale_mailing_view_form">
+            <field name="model">sale.sale.mailing</field>
+            <field name="type">form</field>
+            <field name="name">sale_mailing_form</field>
         </record>
 
 <!-- Sale Section -->
@@ -78,6 +96,37 @@
             <field name="name">Load Analysis from Set/Group</field>
             <field name="wiz_name">sale.load_set_group</field>
             <field name="model">sale.sale</field>
+        </record>
+
+<!-- Wizard Send Quotation -->
+
+        <record model="ir.ui.view" id="send_quotation_start_view">
+            <field name="model">lims_sale.send_quotation.start</field>
+            <field name="type">form</field>
+            <field name="name">send_quotation_start_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="send_quotation_succeed_view">
+            <field name="model">lims_sale.send_quotation.succeed</field>
+            <field name="type">form</field>
+            <field name="name">send_quotation_succeed_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="send_quotation_failed_view">
+            <field name="model">lims_sale.send_quotation.failed</field>
+            <field name="type">form</field>
+            <field name="name">send_quotation_failed_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wizard_send_quotation">
+            <field name="name">Send Quotations</field>
+            <field name="wiz_name">lims_sale.send_quotation</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wizard_send_quotation_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">sale.sale,-1</field>
+            <field name="action" ref="wizard_send_quotation"/>
         </record>
 
 <!-- Sale Report -->

@@ -26,6 +26,14 @@ msgctxt "field:lims.sample-sale.line,sample:"
 msgid "Sample"
 msgstr "Muestra"
 
+msgctxt "field:lims_sale.send_quotation.failed,sales_not_sent:"
+msgid "Quotations not sent"
+msgstr "Presupuestos no enviados"
+
+msgctxt "field:lims_sale.send_quotation.start,summary:"
+msgid "Summary"
+msgstr "Resumen"
+
 msgctxt "field:party.party,internal_code:"
 msgid "Internal Code"
 msgstr "Código interno"
@@ -146,6 +154,10 @@ msgctxt "field:sale.sale,invoice_party_domain:"
 msgid "Invoice party domain"
 msgstr "Dominio para Tercero de facturación"
 
+msgctxt "field:sale.sale,mailings:"
+msgid "Mailings"
+msgstr "Envíos"
+
 msgctxt "field:sale.sale,previous_sections:"
 msgid "Previous Sections"
 msgstr "Secciones anteriores"
@@ -162,9 +174,29 @@ msgctxt "field:sale.sale,send_email:"
 msgid "Send automatically by Email"
 msgstr "Enviar automáticamente por email"
 
+msgctxt "field:sale.sale,sent:"
+msgid "Sent"
+msgstr "Enviado"
+
+msgctxt "field:sale.sale,sent_date:"
+msgid "Sent date"
+msgstr "Fecha de enviado"
+
 msgctxt "field:sale.sale,template:"
 msgid "Sale Template"
 msgstr "Plantilla de Presupuesto"
+
+msgctxt "field:sale.sale.mailing,addresses:"
+msgid "Addresses"
+msgstr "Direcciones"
+
+msgctxt "field:sale.sale.mailing,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:sale.sale.mailing,sale:"
+msgid "Sale"
+msgstr "Venta"
 
 msgctxt "field:sale.sale.section,data:"
 msgid "File"
@@ -222,6 +254,10 @@ msgctxt "model:ir.action,name:wiz_sale_load_set_group"
 msgid "Load Analysis from Set/Group"
 msgstr "Cargar análisis desde Set/Grupo"
 
+msgctxt "model:ir.action,name:wizard_send_quotation"
+msgid "Send Quotations"
+msgstr "Enviar Presupuestos"
+
 msgctxt "model:ir.model.button,string:sale_load_services_button"
 msgid "Load Services from Entry"
 msgstr "Cargar servicios desde partida"
@@ -242,6 +278,18 @@ msgctxt "model:lims.sample-sale.line,name:"
 msgid "Sample - Sale Line"
 msgstr "Muestra - Línea de venta"
 
+msgctxt "model:lims_sale.send_quotation.failed,name:"
+msgid "Send Quotation"
+msgstr "Enviar Presupuesto"
+
+msgctxt "model:lims_sale.send_quotation.start,name:"
+msgid "Send Quotation"
+msgstr "Enviar Presupuesto"
+
+msgctxt "model:lims_sale.send_quotation.succeed,name:"
+msgid "Send Quotation"
+msgstr "Enviar Presupuesto"
+
 msgctxt "model:sale.clause.template,name:"
 msgid "Sale Clause Template"
 msgstr "Plantilla de Cláusulas de presupuesto"
@@ -254,9 +302,17 @@ msgctxt "model:sale.load_set_group.start,name:"
 msgid "Load Analysis from Set/Group"
 msgstr "Cargar análisis desde Set/Grupo"
 
+msgctxt "model:sale.sale.mailing,name:"
+msgid "Sale Mailing"
+msgstr "Envío de Presupuesto"
+
 msgctxt "model:sale.sale.section,name:"
 msgid "Sale Section"
 msgstr "Sección de Presupuesto"
+
+msgctxt "selection:ir.cron,method:"
+msgid "Send Quotations"
+msgstr "Enviar Presupuestos"
 
 msgctxt "selection:sale.sale.section,position:"
 msgid "Following"
@@ -270,6 +326,19 @@ msgctxt "view:lims.report.template:"
 msgid "Header and Footer"
 msgstr "Encabezado y Pie de página"
 
+msgctxt "view:lims_sale.send_quotation.failed:"
+msgid "Quotations sending failed! Solve the problem and try again."
+msgstr ""
+"¡Envío de Presupuestos fallido! Resuelva el problema y vuelva a intentar."
+
+msgctxt "view:lims_sale.send_quotation.start:"
+msgid "Send the following Quotations?"
+msgstr "¿Desea enviar los siguientes Presupuestos?"
+
+msgctxt "view:lims_sale.send_quotation.succeed:"
+msgid "Quotations sent successfully!"
+msgstr "¡Envío de Presupuestos exitoso!"
+
 msgctxt "view:party.party:"
 msgid "Sale"
 msgstr "Venta"
@@ -282,9 +351,33 @@ msgctxt "view:sale.load_services.start:"
 msgid "Load Services from Entry"
 msgstr "Cargar servicios desde ingreso"
 
+msgctxt "view:sale.sale.mailing:"
+msgid "Time"
+msgstr "Hora"
+
+msgctxt "view:sale.sale:"
+msgid "Mailing"
+msgstr "Envío"
+
 msgctxt "view:sale.sale:"
 msgid "Printing"
 msgstr "Impresión"
+
+msgctxt "wizard_button:lims_sale.send_quotation,failed,end:"
+msgid "Ok"
+msgstr "Aceptar"
+
+msgctxt "wizard_button:lims_sale.send_quotation,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims_sale.send_quotation,start,send:"
+msgid "Send"
+msgstr "Enviar"
+
+msgctxt "wizard_button:lims_sale.send_quotation,succeed,end:"
+msgid "Ok"
+msgstr "Aceptar"
 
 msgctxt "wizard_button:sale.load_services,start,end:"
 msgid "Cancel"

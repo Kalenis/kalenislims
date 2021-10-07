@@ -3,19 +3,20 @@
 # the full copyright notices and license terms.
 import logging
 from io import BytesIO
-from PyPDF2 import PdfFileMerger
-from PyPDF2.utils import PdfReadError
+from datetime import datetime
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.header import Header
+from PyPDF2 import PdfFileMerger
+from PyPDF2.utils import PdfReadError
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval, Bool
 from trytond.transaction import Transaction
-from trytond.config import config
+from trytond.config import config as tconfig
 from trytond.tools import get_smtp_server
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
@@ -63,8 +64,12 @@ class Sale(metaclass=PoolMeta):
         states={'readonly': Eval('state') != 'draft'},
         depends=['state'])
     send_email = fields.Boolean('Send automatically by Email',
-        states={'readonly': Eval('state') != 'draft'},
+        states={'readonly': ~Eval('state').in_(['draft', 'quotation'])},
         depends=['state'])
+    sent = fields.Boolean('Sent', readonly=True)
+    sent_date = fields.DateTime('Sent date', readonly=True)
+    mailings = fields.One2Many('sale.sale.mailing',
+        'sale', 'Mailings', readonly=True)
 
     @classmethod
     def __setup__(cls):
@@ -156,91 +161,76 @@ class Sale(metaclass=PoolMeta):
         pass
 
     @classmethod
-    def quote(cls, sales):
-        super().quote(sales)
-        cls.send_email_party(s for s in sales if s.send_email)
+    def cron_send_quotation(cls):
+        '''
+        Cron - Send Quotation
+        '''
+        logger.info('Cron - Send Quotation: INIT')
+        SendQuotation = Pool().get('lims_sale.send_quotation',
+            type='wizard')
 
-    @classmethod
-    def send_email_party(cls, sales):
-        from_addr = config.get('email', 'from')
-        if not from_addr:
-            logger.error("Missing configuration to send emails")
-            return
+        sales = cls.search([
+            ('state', 'in', ['quotation', 'confirmed', 'processing']),
+            ('send_email', '=', True),
+            ('sent', '=', False),
+            ])
 
-        for sale in sales:
-            to_addr = 'contacto@silix.com.ar'  # sale.party.email
-            if not to_addr:
-                logger.error("Missing address for '%s' to send email",
-                    sale.party.rec_name)
-                continue
-            reply_to = sale.create_uid.email
+        session_id, _, _ = SendQuotation.create()
+        send_quotation = SendQuotation(session_id)
+        with Transaction().set_context(active_ids=[sale.id
+                for sale in sales]):
+            send_quotation.transition_send()
 
-            subject, body = sale._get_subject_body()
-            attachment_data = sale._get_attachment()
-            msg = cls.create_msg(from_addr, to_addr, reply_to, subject,
-                body, attachment_data)
-            cls.send_msg(from_addr, to_addr, msg, sale.number)
+        logger.info('Cron - Send Quotation: END')
+        return True
 
-    def _get_subject_body(self):
-        pool = Pool()
-        Config = pool.get('sale.configuration')
-
-        config = Config(1)
-        subject = str(config.email_quotation_subject)
-        body = str(config.email_quotation_body)
-        return subject, body
-
-    def _get_attachment(self):
+    def get_attached_report(self):
         pool = Pool()
         SaleReport = pool.get('sale.sale', type='report')
-        result = SaleReport.execute([self.id], {})
+        report = SaleReport.execute([self.id], {})
 
         data = {
-            'content': result[1],
-            'format': result[0],
-            'mimetype': (result[0] == 'pdf' and 'pdf' or
+            'content': report[1],
+            'format': report[0],
+            'mimetype': (report[0] == 'pdf' and 'pdf' or
                 'vnd.oasis.opendocument.text'),
-            'filename': '%s.%s' % (str(self.number), str(result[0])),
+            'filename': '%s.%s' % (str(self.number), str(report[0])),
             'name': str(self.number),
             }
         return data
 
-    @staticmethod
-    def create_msg(from_addr, to_addr, reply_to, subject, body,
-            attachment_data):
-        if not (from_addr or to_addr):
-            return None
 
-        msg = MIMEMultipart()
-        msg['From'] = from_addr
-        msg['To'] = to_addr
-        msg['Reply-to'] = reply_to
-        msg['Subject'] = Header(subject, 'utf-8')
+class SaleMailing(ModelSQL, ModelView):
+    'Sale Mailing'
+    __name__ = 'sale.sale.mailing'
 
-        msg_body = MIMEBase('text', 'plain')
-        msg_body.set_payload(body.encode('UTF-8'), 'UTF-8')
-        msg.attach(msg_body)
+    sale = fields.Many2One('sale.sale', 'Sale',
+        required=True, ondelete='CASCADE', select=True)
+    date = fields.Function(fields.DateTime('Date'),
+       'get_date', searcher='search_date')
+    addresses = fields.Char('Addresses', readonly=True)
 
-        attachment = MIMEApplication(attachment_data['content'],
-            Name=attachment_data['filename'], _subtype="pdf")
-        attachment.add_header('content-disposition', 'attachment',
-            filename=('utf-8', '', attachment_data['filename']))
-        msg.attach(attachment)
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._order.insert(0, ('date', 'DESC'))
 
-        return msg
+    def get_date(self, name):
+        return self.create_date.replace(microsecond=0)
 
-    @staticmethod
-    def send_msg(from_addr, to_addr, msg, task_number):
-        success = False
-        try:
-            server = get_smtp_server()
-            server.sendmail(from_addr, [to_addr], msg.as_string())
-            server.quit()
-            success = True
-        except Exception:
-            logger.error(
-                "Unable to deliver email for task '%s'" % (task_number))
-        return success
+    @classmethod
+    def search_date(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        operator_ = clause[1:2][0]
+        cursor.execute('SELECT id '
+            'FROM "' + cls._table + '" '
+            'WHERE create_date' + operator_ + ' %s',
+            clause[2:3])
+        return [('id', 'in', [x[0] for x in cursor.fetchall()])]
+
+    @classmethod
+    def order_date(cls, tables):
+        return cls.create_date.convert_order('create_date', tables, cls)
 
 
 class SaleSection(ModelSQL, ModelView):
@@ -625,6 +615,252 @@ class SaleLoadAnalysis(Wizard):
             sale_lines.append(sale_line)
         SaleLine.save(sale_lines)
         return 'end'
+
+
+class SendQuotationStart(ModelView):
+    'Send Quotation'
+    __name__ = 'lims_sale.send_quotation.start'
+
+    summary = fields.Text('Summary', readonly=True)
+
+
+class SendQuotationSucceed(ModelView):
+    'Send Quotation'
+    __name__ = 'lims_sale.send_quotation.succeed'
+
+
+class SendQuotationFailed(ModelView):
+    'Send Quotation'
+    __name__ = 'lims_sale.send_quotation.failed'
+
+    sales_not_sent = fields.Many2Many('sale.sale',
+        None, None, 'Quotations not sent', readonly=True)
+
+
+class SendQuotation(Wizard):
+    'Send Quotation'
+    __name__ = 'lims_sale.send_quotation'
+
+    start = StateView('lims_sale.send_quotation.start',
+        'lims_sale.send_quotation_start_view', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Send', 'send', 'tryton-ok', default=True),
+            ])
+    send = StateTransition()
+    succeed = StateView('lims_sale.send_quotation.succeed',
+        'lims_sale.send_quotation_succeed_view', [
+            Button('Ok', 'end', 'tryton-ok', default=True),
+            ])
+    failed = StateView('lims_sale.send_quotation.failed',
+        'lims_sale.send_quotation_failed_view', [
+            Button('Ok', 'end', 'tryton-ok', default=True),
+            ])
+
+    def default_start(self, fields):
+        Sale = Pool().get('sale.sale')
+
+        summary = ''
+
+        context = Transaction().context
+        model = context.get('active_model', None)
+        if model and model == 'ir.ui.menu':
+            # If it was executed from `menu item`, then search ids
+            sales = Sale.search([
+                ('state', 'in', ['quotation', 'confirmed', 'processing']),
+                ('send_email', '=', True),
+                ('sent', '=', False),
+                ])
+        else:
+            # If it was executed from `actions`, then use context ids
+            sales = Sale.browse(context['active_ids'])
+
+        for group in self.get_grouped_sales(sales).values():
+            group['sales_ready'] = []
+            group['to_addrs'] = {}
+
+            for sale in group['records']:
+                if sale.state in ['draft']:
+                    continue
+                group['sales_ready'].append(sale)
+                group['to_addrs'].update(self.get_sale_addrs(sale))
+
+            if not group['sales_ready']:
+                continue
+
+            addresses = ['"%s" <%s>' % (v, k)
+                for k, v in group['to_addrs'].items()]
+            summary += '%s\n - TO: %s\n\n' % (
+                ', '.join([r.number for r in group['sales_ready']]),
+                ', '.join(addresses))
+
+        default = {'summary': summary}
+        return default
+
+    def transition_send(self):
+        logger.info('Send Quotation: INIT')
+        Sale = Pool().get('sale.sale')
+
+        from_addr = tconfig.get('email', 'from')
+        if not from_addr:
+            logger.warning('Send Quotation: FAILED')
+            self.failed.sales_not_sent = []
+            return 'failed'
+
+        context = Transaction().context
+        model = context.get('active_model', None)
+        if model and model == 'ir.ui.menu':
+            # If it was executed from `menu item`, then search ids
+            sales = Sale.search([
+                ('state', 'in', ['quotation', 'confirmed', 'processing']),
+                ('send_email', '=', True),
+                ('sent', '=', False),
+                ])
+            logger.info('Send Quotation: '
+                'Processing all Quotations')
+        else:
+            # If it was executed from `actions` or `cron`, then use context ids
+            sales = Sale.browse(context['active_ids'])
+            logger.info('Send Quotation: '
+                'Processing context Quotations')
+
+        sales_not_sent = []
+        for group in self.get_grouped_sales(sales).values():
+            group['sales_ready'] = []
+            group['to_addrs'] = {}
+            group['reply_to'] = []
+
+            for sale in group['records']:
+                logger.info('Send Quotation: %s', sale.number)
+                if sale.state in ['draft']:
+                    continue
+                group['sales_ready'].append(sale)
+                group['to_addrs'].update(self.get_sale_addrs(sale))
+                group['reply_to'].append(sale.create_uid.email)
+
+            if not group['sales_ready']:
+                continue
+
+            # Email sending
+            to_addrs = list(set(group['to_addrs'].keys()))
+            if not to_addrs:
+                sales_not_sent.extend(group['sales_ready'])
+                logger.warning('Send Quotation: Missing addresses')
+                continue
+            logger.info('Send Quotation: To addresses: %s',
+                ', '.join(to_addrs))
+
+            reply_to = list(set(group['reply_to']))
+            subject, body = self._get_subject_body()
+
+            attachments_data = []
+            for r in group['sales_ready']:
+                attachments_data.append(r.get_attached_report())
+
+            msg = self._create_msg(from_addr, to_addrs, reply_to, subject,
+                body, attachments_data)
+            sent = self._send_msg(from_addr, to_addrs, msg)
+            if not sent:
+                sales_not_sent.extend(group['sales_ready'])
+                logger.warning('Send Quotation: Not sent')
+                continue
+            logger.info('Send Quotation: Sent')
+
+            addresses = ', '.join(['"%s" <%s>' % (v, k)
+                    for k, v in group['to_addrs'].items()])
+            Sale.write(group['sales_ready'], {
+                'sent': True, 'sent_date': datetime.now(),
+                'mailings': [('create', [{'addresses': addresses}])],
+                })
+            Transaction().commit()
+
+        if sales_not_sent:
+            logger.warning('Send Quotation: FAILED')
+            self.failed.sales_not_sent = sales_not_sent
+            return 'failed'
+
+        logger.info('Send Quotation: SUCCEED')
+        return 'succeed'
+
+    def get_grouped_sales(self, sales):
+        res = {}
+        for sale in sales:
+            key = sale.party.id
+            if key not in res:
+                res[key] = {
+                    'records': [],
+                    }
+            res[key]['records'].append(sale)
+        return res
+
+    def get_sale_addrs(self, sale):
+        to_addrs = {}
+        for contact in sale.party.addresses:
+            if contact.invoice_contact:
+                to_addrs[contact.email] = contact.party_full_name
+        return to_addrs
+
+    def _get_subject_body(self):
+        pool = Pool()
+        Config = pool.get('sale.configuration')
+        User = pool.get('res.user')
+        Lang = pool.get('ir.lang')
+
+        config = Config(1)
+
+        lang = User(Transaction().user).language
+        if not lang:
+            lang, = Lang.search([
+                    ('code', '=', 'en'),
+                    ], limit=1)
+
+        with Transaction().set_context(language=lang.code):
+            subject = str(config.email_quotation_subject)
+            body = str(config.email_quotation_body)
+        return subject, body
+
+    def _create_msg(self, from_addr, to_addrs, reply_to, subject, body,
+            attachments_data=[]):
+        if not to_addrs:
+            return None
+        print('body', body)
+
+        msg = MIMEMultipart()
+        msg['From'] = from_addr
+        msg['Reply-to'] = ', '.join(reply_to)
+        msg['To'] = ', '.join(to_addrs)
+        msg['Subject'] = Header(subject, 'utf-8')
+
+        msg_body = MIMEBase('text', 'plain')
+        msg_body.set_payload(body.encode('UTF-8'), 'UTF-8')
+        msg.attach(msg_body)
+
+        for attachment_data in attachments_data:
+            attachment = MIMEApplication(
+                attachment_data['content'],
+                Name=attachment_data['filename'], _subtype="pdf")
+            attachment.add_header('content-disposition', 'attachment',
+                filename=('utf-8', '', attachment_data['filename']))
+            msg.attach(attachment)
+        return msg
+
+    def _send_msg(self, from_addr, to_addrs, msg):
+        to_addrs = list(set(to_addrs))
+        success = False
+        try:
+            server = get_smtp_server()
+            server.sendmail(from_addr, to_addrs, msg.as_string())
+            server.quit()
+            success = True
+        except Exception as e:
+            logger.error('Send Quotation: Unable to deliver mail')
+            logger.error(str(e))
+        return success
+
+    def default_failed(self, fields):
+        default = {
+            'sales_not_sent': [f.id for f in self.failed.sales_not_sent],
+            }
+        return default
 
 
 class SaleReport(LimsReport, metaclass=PoolMeta):
