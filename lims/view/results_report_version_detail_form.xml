@@ -8,9 +8,9 @@
     </group>
     <group id="type" colspan="2" col="4">
         <label name="type"/>
-        <field name="type"/>
+        <field name="type" xexpand="1"/>
         <label name="report_language"/>
-        <field name="report_language" widget="selection" xexpand="0"/>
+        <field name="report_language" widget="selection" xexpand="1"/>
     </group>
     <label name="laboratory"/>
     <field name="laboratory"/>

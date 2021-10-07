@@ -13,7 +13,7 @@
                 <field name="no_acknowledgment_of_receipt"/>
             </group>
             <label name="report_language"/>
-            <field name="report_language" widget="selection" xexpand="0"/>
+            <field name="report_language" widget="selection"/>
             <field name="sample_producers" colspan="4"/>
             <label name="carrier"/>
             <field name="carrier"/>

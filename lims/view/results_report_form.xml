@@ -4,13 +4,13 @@
     <field name="number"/>
     <label name="party"/>
     <field name="party"/>
-    <group col="8" colspan="4" id="fields_group">
-        <label name="report_language"/>
-        <field name="report_language" widget="selection" xexpand="0"/>
+    <label name="report_language"/>
+    <field name="report_language" widget="selection"/>
+    <group col="6" colspan="2" id="fields_group">
         <label name="single_sending_report"/>
-        <field name="single_sending_report"/>
+        <field name="single_sending_report" xexpand="0" width="25"/>
         <label name="single_sending_report_ready"/>
-        <field name="single_sending_report_ready"/>
+        <field name="single_sending_report_ready" xexpand="0" width="25"/>
     </group>
     <group col="6" colspan="4" id="fields_group2">
         <label name="create_date2"/>
