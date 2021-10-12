@@ -2823,7 +2823,9 @@ class PrintResultReport(Wizard):
     print_ = StateReport('lims.result_report')
 
     def transition_start(self):
-        return 'print_'
+        if Transaction().context['active_ids']:
+            return 'print_'
+        return 'end'
 
     def do_print_(self, action):
         data = {}
@@ -3864,6 +3866,10 @@ class PrintGlobalResultReport(Wizard):
 
     def transition_start(self):
         ResultsReport = Pool().get('lims.results_report')
+
+        if not Transaction().context['active_ids']:
+            return 'end'
+
         for active_id in Transaction().context['active_ids']:
             results_report = ResultsReport(active_id)
 
