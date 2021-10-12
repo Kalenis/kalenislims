@@ -1401,9 +1401,9 @@ class Fraction(ModelSQL, ModelView):
         'on_change_with_typification_domain')
     product_type = fields.Function(fields.Many2One('lims.product.type',
         'Product type'),
-        'on_change_with_product_type')
+        'on_change_with_product_type', searcher='search_sample_field')
     matrix = fields.Function(fields.Many2One('lims.matrix', 'Matrix'),
-        'on_change_with_matrix')
+        'on_change_with_matrix', searcher='search_sample_field')
     button_manage_services_available = fields.Function(fields.Boolean(
         'Button manage services available'),
         'on_change_with_button_manage_services_available')
