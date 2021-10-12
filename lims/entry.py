@@ -910,7 +910,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     cie_max_value = fields.Char('Maximum value')
     cie_fraction_type = fields.Function(fields.Boolean('Blind Sample'),
         'get_cie_fraction_type')
-    plannable = fields.Boolean('Plannable', readonly=True, select=True)
+    plannable = fields.Boolean('Plannable', select=True)
     referable = fields.Boolean('Referred by default', select=True)
     referral = fields.Many2One('lims.referral', 'Referral',
         states={'readonly': True})
