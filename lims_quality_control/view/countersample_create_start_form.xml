@@ -2,8 +2,13 @@
 <form>
     <label name="location"/>
     <field name="location"/>
+    <newline/>
     <label name="quantity"/>
     <field name="quantity"/>
+    <label name="unit"/>
+    <field name="unit"/>
+    <field name="product_uom_category" invisible="1"/>
+    <field name="product_factor" invisible="1"/>
     <separator id="comments" string="Comments" colspan="4"/>
     <field name="comments" colspan="4"/>
 </form>
