@@ -1,0 +1,242 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:lims.configuration,mpi_fraction_type:"
+msgid "MPI fraction type"
+msgstr "Tipo de fracción MPI"
+
+msgctxt "field:lims.project,mpi_date:"
+msgid "Request date"
+msgstr "Fecha de requerimiento"
+
+msgctxt "field:lims.project,mpi_laboratory_date:"
+msgid "Date of delivery of report and procedure to the laboratory"
+msgstr "Fecha de entrega de informe y procedimiento al laboratorio"
+
+msgctxt "field:lims.project,mpi_matrixs:"
+msgid "Matrixs"
+msgstr "Matrices"
+
+msgctxt "field:lims.project,mpi_methods:"
+msgid "Methods"
+msgstr "Métodos"
+
+msgctxt "field:lims.project,mpi_product_types:"
+msgid "Product types"
+msgstr "Tipos de producto"
+
+msgctxt "field:lims.project,mpi_services:"
+msgid "Requested analysis"
+msgstr "Análisis requeridos"
+
+msgctxt "field:lims.project.solvent_reagent,purchase_date:"
+msgid "Purchase date"
+msgstr "Fecha de compra"
+
+msgctxt "model:ir.action,name:report_implementation"
+msgid "Implementation Projects"
+msgstr "Proyectos Implementación"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "("
+msgstr "("
+
+msgctxt "report:lims.project.implementation_report:"
+msgid ")"
+msgstr ")"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid ","
+msgstr ","
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "/"
+msgstr "/"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "/for"
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "/if"
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "00/00/0000"
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "00:00:00"
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "???"
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "Contact"
+msgstr "Contacto"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "Date of delivery of report and procedure to the laboratory"
+msgstr "Fecha de entrega de informe y procedimiento al laboratorio"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "Implementations"
+msgstr "Implementaciones"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "Matrixs"
+msgstr "Matrices"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "Methods"
+msgstr "Métodos"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "Party / Client"
+msgstr "Entidad / Cliente"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "Product types"
+msgstr "Tipos de producto"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "Proposed end date"
+msgstr "Fecha propuesta de fin"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "Página"
+msgstr "Página"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "Request date"
+msgstr "Fecha de requerimiento"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "Requested analysis"
+msgstr "Análisis requeridos"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "Supplies"
+msgstr "Insumos"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "Tests start date"
+msgstr "Fecha de inicio pruebas"
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "for each=\"line in record.comments.split('\\n')\""
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "for each=\"line in record.mpi_matrixs.split('\\n')\""
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "for each=\"line in record.mpi_methods.split('\\n')\""
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "for each=\"line in record.mpi_product_types.split('\\n')\""
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "for each=\"line in record.mpi_services.split('\\n')\""
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "for each=\"line in record.stp_solvents_and_reagents\""
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "for each=\"record in records\""
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "format_date(line.purchase_date, user.language)"
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "if test=\"line.purchase_date\""
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "if test=\"record.comments\""
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "if test=\"record.mpi_matrixs\""
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "if test=\"record.mpi_methods\""
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "if test=\"record.mpi_product_types\""
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "if test=\"record.mpi_services\""
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "line"
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "line.product and line.product.name or ''"
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "record.client and record.client.rec_name or ''"
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "record.mpi_date and format_date(record.mpi_date, user.language) or ''"
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid ""
+"record.mpi_laboratory_date and format_date(record.mpi_laboratory_date, "
+"user.language) or ''"
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid ""
+"record.start_date and format_date(record.start_date, user.language) or ''"
+msgstr ""
+
+msgctxt "report:lims.project.implementation_report:"
+msgid "record.stp_proposal_end_date"
+msgstr ""
+
+msgctxt "selection:lims.entry,project_type:"
+msgid "Implementation"
+msgstr "Implementación"
+
+msgctxt "selection:lims.project,type:"
+msgid "Implementation"
+msgstr "Implementación"
+
+msgctxt "view:lims.project:"
+msgid "Dates"
+msgstr "Fechas"
+
+msgctxt "view:lims.project:"
+msgid "General"
+msgstr "General"
+
+msgctxt "view:lims.project:"
+msgid "Samples"
+msgstr "Muestras"
+
+msgctxt "view:lims.project:"
+msgid "Supplies"
+msgstr "Insumos"

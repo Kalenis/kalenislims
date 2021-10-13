@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Project -->
+
+        <record model="ir.ui.view" id="lims_project_view_form">
+            <field name="model">lims.project</field>
+            <field name="inherit" ref="lims_project.lims_project_view_form"/>
+            <field name="name">project_form</field>
+        </record>
+
+<!-- Solvent and Reagent-->
+
+        <record model="ir.ui.view" id="lims_project_solvent_reagent_view_form">
+            <field name="model">lims.project.solvent_reagent</field>
+            <field name="type">form</field>
+            <field name="name">project_solvent_reagent_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_project_solvent_reagent_view_list">
+            <field name="model">lims.project.solvent_reagent</field>
+            <field name="type">tree</field>
+            <field name="name">project_solvent_reagent_list</field>
+        </record>
+
+<!-- Implementation Projects Report -->
+
+        <record model="ir.action.report" id="report_implementation">
+            <field name="name">Implementation Projects</field>
+            <field name="model">lims.project</field>
+            <field name="report_name">lims.project.implementation_report</field>
+            <field name="report">lims_project_implementation/report/implementations.fods</field>
+            <field name="extension">xls</field>
+        </record>
+
+        <record model="ir.action.keyword" id="report_implementation_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.project,-1</field>
+            <field name="action" ref="report_implementation"/>
+        </record>
+
+    </data>
+</tryton>
