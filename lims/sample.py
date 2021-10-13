@@ -1690,44 +1690,50 @@ class Fraction(ModelSQL, ModelView):
 
     @classmethod
     def search_special_type(cls, name, clause):
-        Config = Pool().get('lims.configuration')
         if clause[1] in ('=', '!='):
             types = [clause[2]]
         elif clause[1] in ('in', 'not in'):
             types = clause[2]
         else:
             return []
-        if types:
-            config = Config(1)
-            res_type = []
-            for type_ in types:
-                if type_ == 'mcl':
-                    res_type.append(config.mcl_fraction_type)
-                elif type_ == 'con':
-                    res_type.append(config.con_fraction_type)
-                elif type_ == 'bmz':
-                    res_type.append(config.bmz_fraction_type)
-                elif type_ == 'rm':
-                    res_type.append(config.rm_fraction_type)
-                elif type_ == 'bre':
-                    res_type.append(config.bre_fraction_type)
-                elif type_ == 'mrt':
-                    res_type.append(config.mrt_fraction_type)
-                elif type_ == 'coi':
-                    res_type.append(config.coi_fraction_type)
-                elif type_ == 'mrc':
-                    res_type.append(config.mrc_fraction_type)
-                elif type_ == 'sla':
-                    res_type.append(config.sla_fraction_type)
-                elif type_ == 'itc':
-                    res_type.append(config.itc_fraction_type)
-                elif type_ == 'itl':
-                    res_type.append(config.itl_fraction_type)
-            if clause[1] in ('=', '!='):
-                return [('type', clause[1], res_type[0])]
-            elif clause[1] in ('in', 'not in'):
-                return [('type', clause[1], res_type)]
+        if not types:
+            return []
+        res_type = cls._get_special_type(types)
+        if clause[1] in ('=', '!='):
+            return [('type', clause[1], res_type[0])]
+        elif clause[1] in ('in', 'not in'):
+            return [('type', clause[1], res_type)]
         return []
+
+    @classmethod
+    def _get_special_type(cls, types):
+        Config = Pool().get('lims.configuration')
+        config = Config(1)
+        res_type = []
+        for type_ in types:
+            if type_ == 'mcl':
+                res_type.append(config.mcl_fraction_type)
+            elif type_ == 'con':
+                res_type.append(config.con_fraction_type)
+            elif type_ == 'bmz':
+                res_type.append(config.bmz_fraction_type)
+            elif type_ == 'rm':
+                res_type.append(config.rm_fraction_type)
+            elif type_ == 'bre':
+                res_type.append(config.bre_fraction_type)
+            elif type_ == 'mrt':
+                res_type.append(config.mrt_fraction_type)
+            elif type_ == 'coi':
+                res_type.append(config.coi_fraction_type)
+            elif type_ == 'mrc':
+                res_type.append(config.mrc_fraction_type)
+            elif type_ == 'sla':
+                res_type.append(config.sla_fraction_type)
+            elif type_ == 'itc':
+                res_type.append(config.itc_fraction_type)
+            elif type_ == 'itl':
+                res_type.append(config.itl_fraction_type)
+        return res_type
 
     @fields.depends('sample', '_parent_sample.id')
     def on_change_with_sample_view(self, name=None):
