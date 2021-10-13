@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Configuration -->
+
+        <record model="ir.ui.view" id="lims_configuration_view">
+            <field name="model">lims.configuration</field>
+            <field name="inherit" ref="lims.lims_configuration_view"/>
+            <field name="name">configuration_form</field>
+        </record>
+
+    </data>
+</tryton>

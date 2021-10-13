@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='fraction_type']/field[@name='itl_fraction_type']"
+        position="after">
+        <label name="mpi_fraction_type"/>
+        <field name="mpi_fraction_type"/>
+    </xpath>
+</data>
