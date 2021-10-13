@@ -229,7 +229,15 @@ class CountersampleCreateStart(ModelView):
     __name__ = 'lims.countersample.create.start'
 
     location = fields.Many2One('stock.location', 'Location', required=True)
-    quantity = fields.Float('Quantity')
+    quantity = fields.Float('Quantity', required=True)
+    unit = fields.Many2One('product.uom', 'UoM', required=True,
+        domain=[
+            ('category', '=', Eval('product_uom_category')),
+            ('factor', '<=', Eval('product_factor')),
+            ])
+    product_uom_category = fields.Many2One('product.uom.category',
+        'Product Uom Category')
+    product_factor = fields.Float("Factor", digits=(12, 12))
     comments = fields.Text('Comments')
     countersamples = fields.Many2Many(
         'lims.sample', None, None, 'Countersamples')
@@ -247,6 +255,14 @@ class CountersampleCreate(Wizard):
             ])
     create_ = StateTransition()
     open_ = StateAction('lims_quality_control.act_lims_sample_list')
+
+    def default_ask(self, fields):
+        Sample = Pool().get('lims.sample')
+        res = {}
+        sample = Sample(Transaction().context['active_id'])
+        res['product_uom_category'] = sample.product.default_uom_category.id
+        res['product_factor'] = sample.product.default_uom.factor
+        return res
 
     def transition_start(self):
         Sample = Pool().get('lims.sample')
@@ -319,7 +335,8 @@ class CountersampleCreate(Wizard):
                 }
             new_fraction, = Fraction.create([fraction_default])
 
-            moves = self._get_stock_moves([new_fraction], self.ask.quantity)
+            moves = self._get_stock_moves([new_fraction],
+                self.ask.quantity, self.ask.unit)
             Move.do(moves)
             countersamples.append(new_countersample)
 
@@ -334,7 +351,7 @@ class CountersampleCreate(Wizard):
             'res_id': [self.ask.countersamples[0].id],
             }
 
-    def _get_stock_moves(self, fractions, quantity):
+    def _get_stock_moves(self, fractions, quantity, unit):
         pool = Pool()
         User = pool.get('res.user')
         Move = pool.get('stock.move')
@@ -349,7 +366,7 @@ class CountersampleCreate(Wizard):
             move.lot = fraction.sample.lot.id
             move.fraction = fraction.id
             move.quantity = quantity or 1
-            move.uom = fraction.sample.lot.product.default_uom
+            move.uom = unit
             move.from_location = \
                 fraction.sample.countersample_original_sample.fractions[
                     0].storage_location.id
