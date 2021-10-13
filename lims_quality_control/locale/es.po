@@ -30,9 +30,17 @@ msgctxt "field:lims.countersample.create.start,location:"
 msgid "Location"
 msgstr "Ubicación Destino"
 
+msgctxt "field:lims.countersample.create.start,product_uom_category:"
+msgid "Product Uom Category"
+msgstr "Categoría UdM del producto"
+
 msgctxt "field:lims.countersample.create.start,quantity:"
 msgid "Quantity"
 msgstr "Cantidad"
+
+msgctxt "field:lims.countersample.create.start,unit:"
+msgid "UoM"
+msgstr "UdM"
 
 msgctxt "field:lims.create.quality.test.start,date:"
 msgid "Date"
