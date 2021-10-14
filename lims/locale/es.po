@@ -4773,12 +4773,12 @@ msgid "Party"
 msgstr "Entidad"
 
 msgctxt "field:lims.print_analysis_pending_inform.start,date_from:"
-msgid "Date from"
-msgstr "Fecha desde"
+msgid "From confirmation date"
+msgstr "Desde fecha de confirmación"
 
 msgctxt "field:lims.print_analysis_pending_inform.start,date_to:"
-msgid "Date to"
-msgstr "Fecha hasta"
+msgid "To confirmation date"
+msgstr "Hasta fecha de confirmación"
 
 msgctxt ""
 "field:lims.print_analysis_pending_inform.start,include_comments_of_fraction:"

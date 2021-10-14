@@ -5961,8 +5961,8 @@ class PrintAnalysisPendingInformStart(ModelView):
     'Analysis Pending of Inform'
     __name__ = 'lims.print_analysis_pending_inform.start'
 
-    date_from = fields.Date('Date from', required=True)
-    date_to = fields.Date('Date to', required=True)
+    date_from = fields.Date('From confirmation date', required=True)
+    date_to = fields.Date('To confirmation date', required=True)
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         required=True)
     party = fields.Many2One('party.party', 'Party')
@@ -6056,7 +6056,7 @@ class AnalysisPendingInform(Report):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
-        Notebook = pool.get('lims.notebook')
+        Service = pool.get('lims.service')
         Fraction = pool.get('lims.fraction')
         Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
@@ -6069,10 +6069,10 @@ class AnalysisPendingInform(Report):
         cursor.execute('SELECT nl.notebook, nl.analysis, nl.method, '
                 'nl.accepted '
             'FROM "' + NotebookLine._table + '" nl '
-                'INNER JOIN "' + Notebook._table + '" n '
-                'ON n.id = nl.notebook '
+                'INNER JOIN "' + Service._table + '" srv '
+                'ON srv.id = nl.service '
                 'INNER JOIN "' + Fraction._table + '" f '
-                'ON f.id = n.fraction '
+                'ON f.id = srv.fraction '
                 'INNER JOIN "' + Sample._table + '" s '
                 'ON s.id = f.sample '
                 'INNER JOIN "' + Entry._table + '" e '
@@ -6080,8 +6080,8 @@ class AnalysisPendingInform(Report):
                 'INNER JOIN "' + FractionType._table + '" ft '
                 'ON ft.id = f.type '
             'WHERE ft.report = TRUE '
-                'AND s.date::date >= %s::date '
-                'AND s.date::date <= %s::date '
+                'AND srv.confirmation_date::date >= %s::date '
+                'AND srv.confirmation_date::date <= %s::date '
                 'AND nl.laboratory = %s '
                 'AND nl.report = TRUE '
                 'AND nl.annulled = FALSE ' +
