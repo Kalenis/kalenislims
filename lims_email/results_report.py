@@ -457,6 +457,12 @@ class SendResultsReport(Wizard):
 
         if not config.mail_ack_report_grouping:
             for report in results_reports:
+                if (report.invoice_party and
+                        hasattr(report.invoice_party,
+                        'block_reports_automatic_sending') and
+                        getattr(report.invoice_party,
+                        'block_reports_automatic_sending', False)):
+                    continue
                 res[report.id] = {
                     'cie_fraction_type': report.cie_fraction_type,
                     'reports': [report],
@@ -465,6 +471,12 @@ class SendResultsReport(Wizard):
 
         if config.mail_ack_report_grouping == 'party':
             for report in results_reports:
+                if (report.invoice_party and
+                        hasattr(report.invoice_party,
+                        'block_reports_automatic_sending') and
+                        getattr(report.invoice_party,
+                        'block_reports_automatic_sending', False)):
+                    continue
                 key = (report.party.id, report.cie_fraction_type)
                 if key not in res:
                     res[key] = {
