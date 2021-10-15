@@ -3,5 +3,5 @@
     <image name="tryton-info" xexpand="0" xfill="0"/>
     <label string="Send the following Results Reports?" id="ask"
         yalign="0.0" xalign="0.0" xexpand="1"/>
-    <field name="summary" colspan="2"/>
+    <field name="summary" colspan="2" height="400"/>
 </form>
