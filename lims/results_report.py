@@ -899,6 +899,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                 ('id', '!=', detail.id),
                 ('report_version', '=', detail.report_version.id),
                 ('valid', '=', True),
+                ('type', '!=', 'preliminary'),
                 ], limit=1)
             if not valid_details:
                 continue
