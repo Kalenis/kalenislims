@@ -540,11 +540,11 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         depends=['component'])
     free_precedents = fields.Boolean('Free precedents')
     precedent1_diagnosis = fields.Function(fields.Text(
-        'Diagnosis Precedent 1'), 'get_precedent_diagnosis')
+        'Diagnosis Precedent 1'), 'on_change_with_precedent1_diagnosis')
     precedent2_diagnosis = fields.Function(fields.Text(
-        'Diagnosis Precedent 2'), 'get_precedent_diagnosis')
+        'Diagnosis Precedent 2'), 'on_change_with_precedent2_diagnosis')
     precedent3_diagnosis = fields.Function(fields.Text(
-        'Diagnosis Precedent 3'), 'get_precedent_diagnosis')
+        'Diagnosis Precedent 3'), 'on_change_with_precedent3_diagnosis')
     precedent1_diagnosis_states = fields.Function(fields.Dict(
         'lims.diagnosis.state', 'Diagnosis States Precedent 1'),
         'get_precedent_diagnosis')
