@@ -208,6 +208,22 @@ class Sample(metaclass=PoolMeta):
     def search_plant(cls, name, clause):
         return [('equipment.plant',) + tuple(clause[1:])]
 
+    def _order_equipment_field(name):
+        def order_field(tables):
+            Equipment = Pool().get('lims.equipment')
+            field = Equipment._fields[name]
+            table, _ = tables[None]
+            equipment_tables = tables.get('equipment')
+            if equipment_tables is None:
+                equipment = Equipment.__table__()
+                equipment_tables = {
+                    None: (equipment, equipment.id == table.equipment),
+                    }
+                tables['equipment'] = equipment_tables
+            return field.convert_order(name, equipment_tables, Equipment)
+        return staticmethod(order_field)
+    order_plant = _order_equipment_field('plant')
+
     @classmethod
     def get_equipment_field(cls, samples, names):
         result = {}
@@ -336,13 +352,19 @@ class SampleEditionLog(ModelSQL, ModelView):
 class Fraction(metaclass=PoolMeta):
     __name__ = 'lims.fraction'
 
+    equipment = fields.Function(fields.Many2One('lims.equipment', 'Equipment'),
+        'get_sample_field', searcher='search_sample_field')
+    component = fields.Function(fields.Many2One('lims.component', 'Component'),
+        'get_sample_field', searcher='search_sample_field')
+    comercial_product = fields.Function(fields.Many2One(
+        'lims.comercial.product', 'Comercial Product'),
+        'get_sample_field', searcher='search_sample_field')
     ind_component = fields.Function(fields.Integer('Hs/Km Component'),
         'get_sample_field', searcher='search_sample_field')
 
     def _order_sample_field(name):
         def order_field(tables):
-            pool = Pool()
-            Sample = pool.get('lims.sample')
+            Sample = Pool().get('lims.sample')
             field = Sample._fields[name]
             table, _ = tables[None]
             sample_tables = tables.get('sample')
@@ -354,6 +376,9 @@ class Fraction(metaclass=PoolMeta):
                 tables['sample'] = sample_tables
             return field.convert_order(name, sample_tables, Sample)
         return staticmethod(order_field)
+    order_equipment = _order_sample_field('equipment')
+    order_component = _order_sample_field('component')
+    order_comercial_product = _order_sample_field('comercial_product')
     order_ind_component = _order_sample_field('ind_component')
 
 
