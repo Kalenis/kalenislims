@@ -597,6 +597,7 @@ class SendResultsReport(Wizard):
             body = str(config.mail_ack_report_body)
 
         body = body.replace('<SAMPLES>', '\n'.join(sample_list))
+        body = body.replace('&lt;SAMPLES&gt;', '\n'.join(sample_list))
         return subject, body
 
     def _get_sample_list(self, reports, language):
