@@ -19,6 +19,7 @@ def register():
         html_template.ReportTemplateSection,
         html_template.ResultsReportTemplate,
         html_template.ResultsReportTemplateTrendChart,
+        sample.Fraction,
         sample.Sample,
         sample.CreateSampleStart,
         analysis.Analysis,
