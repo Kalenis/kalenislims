@@ -61,6 +61,24 @@ class Notebook(metaclass=PoolMeta):
             return False
         return True
 
+    def _order_sample_field(name):
+        def order_field(tables):
+            pool = Pool()
+            Sample = pool.get('lims.sample')
+            Fraction = pool.get('lims.fraction')
+            field = Sample._fields[name]
+            table, _ = tables[None]
+            fraction_tables = tables.get('fraction')
+            if fraction_tables is None:
+                fraction = Fraction.__table__()
+                fraction_tables = {
+                    None: (fraction, fraction.id == table.fraction),
+                    }
+                tables['fraction'] = fraction_tables
+            return field.convert_order(name, fraction_tables, Fraction)
+        return staticmethod(order_field)
+    order_diagnostician = _order_sample_field('diagnostician')
+
 
 class NotebookLine(metaclass=PoolMeta):
     __name__ = 'lims.notebook.line'

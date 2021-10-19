@@ -3,7 +3,30 @@
 # the full copyright notices and license terms.
 
 from trytond.model import fields
-from trytond.pool import PoolMeta
+from trytond.pool import Pool, PoolMeta
+
+
+class Fraction(metaclass=PoolMeta):
+    __name__ = 'lims.fraction'
+
+    diagnostician = fields.Function(fields.Many2One('lims.diagnostician',
+        'Diagnostician'), 'get_sample_field', searcher='search_sample_field')
+
+    def _order_sample_field(name):
+        def order_field(tables):
+            Sample = Pool().get('lims.sample')
+            field = Sample._fields[name]
+            table, _ = tables[None]
+            sample_tables = tables.get('sample')
+            if sample_tables is None:
+                sample = Sample.__table__()
+                sample_tables = {
+                    None: (sample, sample.id == table.sample),
+                    }
+                tables['sample'] = sample_tables
+            return field.convert_order(name, sample_tables, Sample)
+        return staticmethod(order_field)
+    order_diagnostician = _order_sample_field('diagnostician')
 
 
 class Sample(metaclass=PoolMeta):
