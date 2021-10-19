@@ -129,6 +129,10 @@ class Notebook(ModelSQL, ModelView):
                 tables['fraction'] = fraction_tables
             return field.convert_order(name, fraction_tables, Fraction)
         return staticmethod(order_field)
+    order_party = _order_sample_field('party')
+    order_product_type = _order_sample_field('product_type')
+    order_matrix = _order_sample_field('matrix')
+    order_label = _order_sample_field('label')
     order_date = _order_sample_field('date')
 
     @classmethod
@@ -176,6 +180,23 @@ class Notebook(ModelSQL, ModelView):
         if name == 'fraction_type':
             name = 'type'
         return [('fraction.' + name,) + tuple(clause[1:])]
+
+    def _order_fraction_field(name):
+        def order_field(tables):
+            Fraction = Pool().get('lims.fraction')
+            field = Fraction._fields[name]
+            table, _ = tables[None]
+            fraction_tables = tables.get('fraction')
+            if fraction_tables is None:
+                fraction = Fraction.__table__()
+                fraction_tables = {
+                    None: (fraction, fraction.id == table.fraction),
+                    }
+                tables['fraction'] = fraction_tables
+            return field.convert_order(name, fraction_tables, Fraction)
+        return staticmethod(order_field)
+    order_fraction_type = _order_fraction_field('type')
+    order_shared = _order_fraction_field('shared')
 
     def get_divided_report(self, name):
         if not self.fraction or not self.fraction.services:
