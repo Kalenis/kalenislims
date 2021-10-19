@@ -310,6 +310,18 @@ msgctxt "field:lims.equipment.type,name:"
 msgid "Name"
 msgstr "Nombre"
 
+msgctxt "field:lims.fraction,comercial_product:"
+msgid "Comercial Product"
+msgstr "Producto comercial"
+
+msgctxt "field:lims.fraction,component:"
+msgid "Component"
+msgstr "Componente"
+
+msgctxt "field:lims.fraction,equipment:"
+msgid "Equipment"
+msgstr "Equipo"
+
 msgctxt "field:lims.fraction,ind_component:"
 msgid "Hs/Km Component"
 msgstr "Hs/Km Componente"

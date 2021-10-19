@@ -46,4 +46,7 @@ class Notebook(metaclass=PoolMeta):
                 tables['fraction'] = fraction_tables
             return field.convert_order(name, fraction_tables, Fraction)
         return staticmethod(order_field)
+    order_equipment = _order_sample_field('equipment')
+    order_component = _order_sample_field('component')
+    order_comercial_product = _order_sample_field('comercial_product')
     order_ind_component = _order_sample_field('ind_component')
