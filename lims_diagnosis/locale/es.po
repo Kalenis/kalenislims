@@ -58,6 +58,10 @@ msgctxt "field:lims.diagnostician,signature:"
 msgid "Signature"
 msgstr "Firma"
 
+msgctxt "field:lims.fraction,diagnostician:"
+msgid "Diagnostician"
+msgstr "Diagnosticador"
+
 msgctxt "field:lims.notebook,diagnosis_warning:"
 msgid "Diagnosis Warning"
 msgstr "Advertencia de diagnóstico"
