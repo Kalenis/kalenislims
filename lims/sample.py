@@ -1872,8 +1872,7 @@ class Fraction(ModelSQL, ModelView):
 
     def _order_sample_field(name):
         def order_field(tables):
-            pool = Pool()
-            Sample = pool.get('lims.sample')
+            Sample = Pool().get('lims.sample')
             field = Sample._fields[name]
             table, _ = tables[None]
             sample_tables = tables.get('sample')
@@ -1885,6 +1884,12 @@ class Fraction(ModelSQL, ModelView):
                 tables['sample'] = sample_tables
             return field.convert_order(name, sample_tables, Sample)
         return staticmethod(order_field)
+    # Redefine convert_order function with 'order_%s' % field
+    order_entry = _order_sample_field('entry')
+    order_party = _order_sample_field('party')
+    order_label = _order_sample_field('label')
+    order_product_type = _order_sample_field('product_type')
+    order_matrix = _order_sample_field('matrix')
     order_date = _order_sample_field('date')
 
     @classmethod
@@ -2202,27 +2207,6 @@ class Fraction(ModelSQL, ModelView):
     @classmethod
     def order_create_date2(cls, tables):
         return cls.create_date.convert_order('create_date', tables, cls)
-
-    def _order_sample_field(name):
-        def order_field(tables):
-            Sample = Pool().get('lims.sample')
-            field = Sample._fields[name]
-            table, _ = tables[None]
-            sample_tables = tables.get('sample')
-            if sample_tables is None:
-                sample = Sample.__table__()
-                sample_tables = {
-                    None: (sample, sample.id == table.sample),
-                    }
-                tables['sample'] = sample_tables
-            return field.convert_order(name, sample_tables, Sample)
-        return staticmethod(order_field)
-    # Redefine convert_order function with 'order_%s' % field
-    order_entry = _order_sample_field('entry')
-    order_party = _order_sample_field('party')
-    order_label = _order_sample_field('label')
-    order_product_type = _order_sample_field('product_type')
-    order_matrix = _order_sample_field('matrix')
 
     @classmethod
     def get_has_results_report(cls, fractions, names):
@@ -2933,6 +2917,22 @@ class Sample(ModelSQL, ModelView):
     def search_entry_field(cls, name, clause):
         return [('entry.' + name,) + tuple(clause[1:])]
 
+    def _order_entry_field(name):
+        def order_field(tables):
+            Entry = Pool().get('lims.entry')
+            field = Entry._fields[name]
+            table, _ = tables[None]
+            entry_tables = tables.get('entry')
+            if entry_tables is None:
+                entry = Entry.__table__()
+                entry_tables = {
+                    None: (entry, entry.id == table.entry),
+                    }
+                tables['entry'] = entry_tables
+            return field.convert_order(name, entry_tables, Entry)
+        return staticmethod(order_field)
+    order_invoice_party = _order_entry_field('invoice_party')
+
     @staticmethod
     def order_product_type_view(tables):
         ProductType = Pool().get('lims.product.type')
@@ -2999,20 +2999,6 @@ class Sample(ModelSQL, ModelView):
     @classmethod
     def order_create_date2(cls, tables):
         return cls.create_date.convert_order('create_date', tables, cls)
-
-    @staticmethod
-    def order_party(tables):
-        Entry = Pool().get('lims.entry')
-        field = Entry._fields['party']
-        table, _ = tables[None]
-        entry_tables = tables.get('entry')
-        if entry_tables is None:
-            entry = Entry.__table__()
-            entry_tables = {
-                None: (entry, entry.id == table.entry),
-                }
-            tables['entry'] = entry_tables
-        return field.convert_order('party', entry_tables, Entry)
 
     @classmethod
     def get_has_results_report(cls, samples, names):
@@ -3146,6 +3132,21 @@ class Sample(ModelSQL, ModelView):
     @classmethod
     def search_department(cls, name, clause):
         return [('product_type.' + name,) + tuple(clause[1:])]
+
+    @staticmethod
+    def order_department(tables):
+        ProductType = Pool().get('lims.product.type')
+        field = ProductType._fields['department']
+        table, _ = tables[None]
+        product_type_tables = tables.get('product_type')
+        if product_type_tables is None:
+            product_type = ProductType.__table__()
+            product_type_tables = {
+                None: (product_type, product_type.id == table.product_type),
+                }
+            tables['product_type'] = product_type_tables
+        return field.convert_order('department', product_type_tables,
+            ProductType)
 
     @classmethod
     def get_results_reports_list(cls, samples, name):
