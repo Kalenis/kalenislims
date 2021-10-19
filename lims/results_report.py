@@ -189,7 +189,8 @@ class ResultsReport(ModelSQL, ModelView):
 
     @classmethod
     def search_entry_field(cls, name, clause):
-        return [('entry.' + name,) + tuple(clause[1:])]
+        nested = clause[0].lstrip(name)
+        return [('entry.' + name + nested,) + tuple(clause[1:])]
 
     @classmethod
     def get_single_sending_report_ready(cls, reports, name):
