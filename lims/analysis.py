@@ -2351,6 +2351,8 @@ class CopyTypification(Wizard):
         Typification = pool.get('lims.typification')
         ProductType = pool.get('lims.product.type')
         Matrix = pool.get('lims.matrix')
+        TechnicalScopeVersionLine = pool.get(
+            'lims.technical.scope.version.line')
 
         clause = [
             ('valid', '=', True),
@@ -2432,7 +2434,10 @@ class CopyTypification(Wizard):
                             })
 
                     if origin not in to_copy:
-                        to_copy[origin] = []
+                        to_copy[origin] = {
+                            'typification': [],
+                            'scope_version': [],
+                            }
 
                     default = {
                         'valid': True,
@@ -2457,7 +2462,14 @@ class CopyTypification(Wizard):
                         default['by_default'] = True
                         new_by_defaults.append(ids_key)
 
-                    to_copy[origin].append(default)
+                    to_copy[origin]['typification'].append(default)
+
+                    scope_lines = TechnicalScopeVersionLine.search([
+                        ('typification', '=', origin.id),
+                        ])
+                    if scope_lines:
+                        to_copy[origin]['scope_version'].extend([l.version.id
+                            for l in scope_lines])
 
         if error_additionals:
             self.error.message = '%s\n%s' % (
@@ -2466,9 +2478,16 @@ class CopyTypification(Wizard):
             return 'error'
 
         for typification, defaults in to_copy.items():
-            for default in defaults:
+            for default in defaults['typification']:
                 t = Typification.copy([typification], default=default)
-                new_typifications.append(t[0].id)
+                t_id = t[0].id
+
+                new_typifications.append(t_id)
+                if defaults['scope_version']:
+                    TechnicalScopeVersionLine.create([{
+                        'typification': t_id,
+                        'version': v_id,
+                        } for v_id in defaults['scope_version']])
 
         self.result.message = '%s' % gettext(
             'lims.msg_typification_copy_new_typifications',
