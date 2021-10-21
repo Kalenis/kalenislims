@@ -1128,6 +1128,20 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         return detail_default
 
     @classmethod
+    def update_review_reason(cls, detail, review_reason,
+            review_reason_print):
+        valid_detail = cls.search([
+            ('report_version', '=', detail.report_version.id),
+            ('valid', '=', True),
+            ('type', '!=', 'preliminary'),
+            ], limit=1)
+        if valid_detail:
+            cls.write(valid_detail, {
+                'review_reason': review_reason,
+                'review_reason_print': review_reason_print,
+                })
+
+    @classmethod
     @ModelView.button
     def release_all_lang(cls, details):
         for detail in details:
@@ -2081,6 +2095,15 @@ class GenerateReportStart(ModelView):
         states={'invisible': ~Eval('type').in_([
             'complementary', 'corrective'])},
         depends=['type'])
+    review_reason = fields.Text('Review reason',
+        states={'invisible': ~Eval('type').in_([
+            'complementary', 'corrective'])},
+        depends=['type'])
+    review_reason_print = fields.Boolean(
+        'Print review reason in next version',
+        states={'invisible': ~Eval('type').in_([
+            'complementary', 'corrective'])},
+        depends=['type'])
     reports_created = fields.One2Many('lims.results_report.version.detail',
         None, 'Reports created')
     group_samples = fields.Boolean('Group samples in the same report',
@@ -2301,6 +2324,9 @@ class GenerateReport(Wizard):
                     details['report_version'] = actual_version.id
                     detail, = ResultsDetail.create([details])
                     ResultsDetail.update_from_valid_version([detail])
+                    ResultsDetail.update_review_reason(detail,
+                        self.start.review_reason,
+                        self.start.review_reason_print)
                     reports_details = [detail.id]
                 else:
                     draft_detail = draft_detail[0]
@@ -2479,6 +2505,9 @@ class GenerateReport(Wizard):
             details['report_version'] = actual_version.id
             detail, = ResultsDetail.create([details])
             ResultsDetail.update_from_valid_version([detail])
+            ResultsDetail.update_review_reason(detail,
+                self.start.review_reason,
+                self.start.review_reason_print)
             reports_details = [detail.id]
             return reports_details
 

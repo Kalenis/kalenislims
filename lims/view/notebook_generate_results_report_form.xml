@@ -18,6 +18,10 @@
     </group>
     <field name="notebooks" colspan="4" mode="tree,form"
         view_ids="lims.lims_samples_pending_reporting_view_list,lims.lims_samples_pending_reporting_view_form"/>
+    <separator name="review_reason" colspan="4"/>
+    <field name="review_reason" colspan="4"/>
+    <label name="review_reason_print"/>
+    <field name="review_reason_print"/>
     <group id="invisible" colspan="4" col="1">
         <field name="report_readonly" invisible="1"/>
         <field name="report_domain" invisible="1"
