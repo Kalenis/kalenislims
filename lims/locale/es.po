@@ -2727,6 +2727,15 @@ msgctxt "field:lims.notebook.generate_results_report.start,reports_created:"
 msgid "Reports created"
 msgstr "Informes creados"
 
+msgctxt "field:lims.notebook.generate_results_report.start,review_reason:"
+msgid "Review reason"
+msgstr "Motivo de revisión"
+
+msgctxt ""
+"field:lims.notebook.generate_results_report.start,review_reason_print:"
+msgid "Print review reason in next version"
+msgstr "Imprimir motivo de revisión en próxima versión"
+
 msgctxt "field:lims.notebook.generate_results_report.start,type:"
 msgid "Type"
 msgstr "Tipo"
