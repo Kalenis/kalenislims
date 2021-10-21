@@ -154,6 +154,22 @@ class ResultsReport(ModelSQL, ModelView):
     def search_entry_field(cls, name, clause):
         return [('entry.' + name,) + tuple(clause[1:])]
 
+    def _order_entry_field(name):
+        def order_field(tables):
+            Entry = Pool().get('lims.entry')
+            field = Entry._fields[name]
+            table, _ = tables[None]
+            entry_tables = tables.get('entry')
+            if entry_tables is None:
+                entry = Entry.__table__()
+                entry_tables = {
+                    None: (entry, entry.id == table.entry),
+                    }
+                tables['entry'] = entry_tables
+            return field.convert_order(name, entry_tables, Entry)
+        return staticmethod(order_field)
+    order_invoice_party = _order_entry_field('invoice_party')
+
     @classmethod
     def get_single_sending_report_ready(cls, reports, name):
         cursor = Transaction().connection.cursor()
@@ -384,6 +400,8 @@ class ResultsReportVersion(ModelSQL, ModelView):
         'report_version', 'Detail lines', readonly=True)
     report_type = fields.Function(fields.Char('Report type'),
         'get_report_type')
+    party = fields.Function(fields.Many2One('party.party', 'Party'),
+       'get_report_field', searcher='search_report_field')
 
     @classmethod
     def __setup__(cls):
@@ -425,6 +443,46 @@ class ResultsReportVersion(ModelSQL, ModelView):
             values['number'] = cls.get_number(values['results_report'],
                 values['laboratory'])
         return super().create(vlist)
+
+    @classmethod
+    def get_report_field(cls, versions, names):
+        result = {}
+        for name in names:
+            result[name] = {}
+            if cls._fields[name]._type == 'many2one':
+                for v in versions:
+                    field = getattr(v.results_report, name, None)
+                    result[name][v.id] = field.id if field else None
+            elif cls._fields[name]._type == 'boolean':
+                for v in versions:
+                    field = getattr(v.results_report, name, False)
+                    result[name][v.id] = field
+            else:
+                for v in versions:
+                    field = getattr(v.results_report, name, None)
+                    result[name][v.id] = field
+        return result
+
+    @classmethod
+    def search_report_field(cls, name, clause):
+        return [('results_report.' + name,) + tuple(clause[1:])]
+
+    def _order_report_field(name):
+        def order_field(tables):
+            ResultsReport = Pool().get('lims.results_report')
+            field = ResultsReport._fields[name]
+            table, _ = tables[None]
+            report_tables = tables.get('results_report')
+            if report_tables is None:
+                results_report = ResultsReport.__table__()
+                report_tables = {
+                    None: (results_report,
+                        results_report.id == table.results_report),
+                    }
+                tables['results_report'] = report_tables
+            return field.convert_order(name, report_tables, ResultsReport)
+        return staticmethod(order_field)
+    order_party = _order_report_field('party')
 
 
 class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
@@ -1041,21 +1099,52 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         result = {}
         for name in names:
             result[name] = {}
-            for d in details:
-                field = getattr(d.report_version, name, None)
-                result[name][d.id] = field.id if field else None
+            if cls._fields[name]._type == 'many2one':
+                for d in details:
+                    field = getattr(d.report_version, name, None)
+                    result[name][d.id] = field.id if field else None
+            elif cls._fields[name]._type == 'boolean':
+                for d in details:
+                    field = getattr(d.report_version, name, False)
+                    result[name][d.id] = field
+            else:
+                for d in details:
+                    field = getattr(d.report_version, name, None)
+                    result[name][d.id] = field
         return result
 
     @classmethod
     def search_version_field(cls, name, clause):
         return [('report_version.' + name,) + tuple(clause[1:])]
 
+    def _order_version_field(name):
+        def order_field(tables):
+            ResultsVersion = Pool().get('lims.results_report.version')
+            field = ResultsVersion._fields[name]
+            table, _ = tables[None]
+            version_tables = tables.get('report_version')
+            if version_tables is None:
+                report_version = ResultsVersion.__table__()
+                version_tables = {
+                    None: (report_version,
+                        report_version.id == table.report_version),
+                    }
+                tables['report_version'] = version_tables
+            return field.convert_order(name, version_tables, ResultsVersion)
+        return staticmethod(order_field)
+    order_laboratory = _order_version_field('laboratory')
+
     @classmethod
     def get_report_field(cls, details, names):
         result = {}
         for name in names:
             result[name] = {}
-            if name in ('cie_fraction_type', 'english_report'):
+            if cls._fields[name]._type == 'many2one':
+                for d in details:
+                    field = getattr(d.report_version.results_report, name,
+                        None)
+                    result[name][d.id] = field.id if field else None
+            elif cls._fields[name]._type == 'boolean':
                 for d in details:
                     field = getattr(d.report_version.results_report, name,
                         False)
@@ -1064,12 +1153,31 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                 for d in details:
                     field = getattr(d.report_version.results_report, name,
                         None)
-                    result[name][d.id] = field.id if field else None
+                    result[name][d.id] = field
         return result
 
     @classmethod
     def search_report_field(cls, name, clause):
         return [('report_version.results_report.' + name,) + tuple(clause[1:])]
+
+    def _order_report_field(name):
+        def order_field(tables):
+            pool = Pool()
+            ResultsReport = pool.get('lims.results_report')
+            ResultsVersion = pool.get('lims.results_report.version')
+            field = ResultsReport._fields[name]
+            table, _ = tables[None]
+            version_tables = tables.get('report_version')
+            if version_tables is None:
+                report_version = ResultsVersion.__table__()
+                version_tables = {
+                    None: (report_version,
+                        report_version.id == table.report_version),
+                    }
+                tables['report_version'] = version_tables
+            return field.convert_order(name, version_tables, ResultsVersion)
+        return staticmethod(order_field)
+    order_party = _order_report_field('party')
 
     @classmethod
     def get_entry_field(cls, details, names):
@@ -1083,6 +1191,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                             name, None) or None)
                     result[name][d.id] = field.id if field else None
             elif cls._fields[name]._type == 'boolean':
+                for d in details:
                     field = (d.report_version.results_report.entry and
                         getattr(d.report_version.results_report.entry,
                             name, False) or False)

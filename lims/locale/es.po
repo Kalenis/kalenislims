@@ -5081,6 +5081,10 @@ msgctxt "field:lims.results_report.version,number:"
 msgid "Number"
 msgstr "Número"
 
+msgctxt "field:lims.results_report.version,party:"
+msgid "Party"
+msgstr "Entidad"
+
 msgctxt "field:lims.results_report.version,report_type:"
 msgid "Report type"
 msgstr "Tipo de informe"
