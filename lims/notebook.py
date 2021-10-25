@@ -6045,6 +6045,7 @@ class AnalysisPendingInform(Report):
             data['laboratory'], data['party'])
 
         report_context['records'] = objects
+        report_context['get_notice'] = cls.get_notice
 
         return report_context
 
@@ -6126,6 +6127,28 @@ class AnalysisPendingInform(Report):
                 excluded_notebooks[n_id] = []
             excluded_notebooks[n_id].append(a_id)
         return excluded_notebooks
+
+    @classmethod
+    def get_notice(cls, line):
+        pool = Pool()
+        Date = pool.get('ir.date')
+        today = Date.today()
+
+        if line.report_date:
+            if line.report_date < today:
+                return 'Timed out'
+        if line.results_estimated_date and not line.report_date:
+            if line.results_estimated_date < today:
+                return 'Timed out'
+        if line.report_date:
+            if ((line.report_date - today).days < 3 and
+                    (line.report_date - today).days >= 0):
+                return 'To expire'
+        if line.results_estimated_date and not line.report_date:
+            if ((line.results_estimated_date - today).days < 3 and
+                    (line.results_estimated_date - today).days >= 0):
+                return 'To expire'
+        return ''
 
 
 class PrintAnalysisCheckedPendingInformStart(ModelView):
