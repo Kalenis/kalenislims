@@ -10,7 +10,7 @@ class Fraction(metaclass=PoolMeta):
     __name__ = 'lims.fraction'
 
     result_template = fields.Function(fields.Many2One(
-        'lims.report.template', 'Report Template'), 'get_sample_field')
+        'lims.result_report.template', 'Report Template'), 'get_sample_field')
 
     def _order_sample_field(name):
         def order_field(tables):
