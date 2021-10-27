@@ -2564,9 +2564,12 @@ class CopyCalculatedTypification(Wizard):
     confirm = StateTransition()
 
     def transition_confirm(self):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
         Analysis = pool.get('lims.analysis')
         Typification = pool.get('lims.typification')
+        TechnicalScopeVersionLine = pool.get(
+            'lims.technical.scope.version.line')
 
         included_analysis_ids = Analysis.get_included_analysis_analysis(
             self.start.origin_analysis.id)
@@ -2574,53 +2577,83 @@ class CopyCalculatedTypification(Wizard):
             return 'end'
 
         clause = [
+            ('valid', '=', True),
             ('product_type', '=', self.start.origin_product_type.id),
             ('matrix', '=', self.start.origin_matrix.id),
-            ('valid', '=', True),
             ('analysis', 'in', included_analysis_ids),
             ]
+
+        origins = Typification.search(clause)
 
         product_type_id = self.start.destination_product_type.id
         matrix_id = self.start.destination_matrix.id
 
-        origins = Typification.search(clause)
-
-        to_copy_1 = []
-        to_copy_2 = []
+        to_copy = {}
+        new_by_defaults = []
         for origin in origins:
-            if Typification.search_count([
-                    ('product_type', '=', product_type_id),
-                    ('matrix', '=', matrix_id),
-                    ('analysis', '=', origin.analysis.id),
-                    ('method', '=', origin.method.id)
-                    ]) != 0:
-                continue
-            if Typification.search_count([
-                    ('valid', '=', True),
-                    ('product_type', '=', product_type_id),
-                    ('matrix', '=', matrix_id),
-                    ('analysis', '=', origin.analysis.id),
-                    ('by_default', '=', True),
-                    ]) != 0:
-                to_copy_1.append(origin)
-            else:
-                to_copy_2.append(origin)
 
-        if to_copy_1:
+            # check if typification already exists
+            cursor.execute('SELECT id '
+                'FROM "' + Typification._table + '" '
+                'WHERE product_type = %s '
+                    'AND matrix = %s '
+                    'AND analysis = %s '
+                    'AND method = %s',
+                (product_type_id, matrix_id, origin.analysis.id,
+                    origin.method.id))
+            res = cursor.fetchone()
+            if res:
+                continue
+
+            if origin not in to_copy:
+                to_copy[origin] = {
+                    'typification': [],
+                    'scope_version': [],
+                    }
+
             default = {
                 'valid': True,
                 'product_type': product_type_id,
                 'matrix': matrix_id,
+                'method': origin.method.id,
                 }
-            Typification.copy(to_copy_1, default=default)
-        if to_copy_2:
-            default = {
-                'valid': True,
-                'product_type': product_type_id,
-                'matrix': matrix_id,
-                'by_default': True,
-                }
-            Typification.copy(to_copy_2, default=default)
+
+            ids_key = (product_type_id, matrix_id, origin.analysis.id)
+            cursor.execute('SELECT COUNT(*) '
+                'FROM "' + Typification._table + '" '
+                'WHERE valid '
+                    'AND product_type = %s '
+                    'AND matrix = %s '
+                    'AND analysis = %s '
+                    'AND by_default', ids_key)
+            if cursor.fetchone()[0] != 0:
+                default['by_default'] = False
+            elif ids_key in new_by_defaults:
+                default['by_default'] = False
+            else:
+                default['by_default'] = True
+                new_by_defaults.append(ids_key)
+
+            to_copy[origin]['typification'].append(default)
+
+            scope_lines = TechnicalScopeVersionLine.search([
+                ('typification', '=', origin.id),
+                ])
+            if scope_lines:
+                to_copy[origin]['scope_version'].extend([l.version.id
+                    for l in scope_lines])
+
+        for typification, defaults in to_copy.items():
+            for default in defaults['typification']:
+                t = Typification.copy([typification], default=default)
+                t_id = t[0].id
+
+                if defaults['scope_version']:
+                    TechnicalScopeVersionLine.create([{
+                        'typification': t_id,
+                        'version': v_id,
+                        } for v_id in defaults['scope_version']])
+
         return 'end'
 
 
