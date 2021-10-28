@@ -23,6 +23,9 @@ logger = logging.getLogger(__name__)
 class ResultsReportVersionDetail(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail'
 
+    sent_date = fields.Function(fields.DateTime('Sent date'),
+       'get_report_field', searcher='search_report_field')
+
     def unsend(self):
         results_report = self.report_version.results_report
         if results_report.sent:
