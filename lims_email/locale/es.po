@@ -54,6 +54,10 @@ msgctxt "field:lims.results_report.mailing,results_report:"
 msgid "Results Report"
 msgstr "Informe de resultados"
 
+msgctxt "field:lims.results_report.version.detail,sent_date:"
+msgid "Sent date"
+msgstr "Fecha de enviado"
+
 msgctxt "field:lims_email.send_results_report.failed,reports_not_ready:"
 msgid "Reports not ready"
 msgstr "Informes no listos"
@@ -163,6 +167,10 @@ msgid "Mail Acknowledgment Report"
 msgstr "Email Acuse de Informe"
 
 msgctxt "view:lims.results_report.mailing:"
+msgid "Time"
+msgstr "Hora"
+
+msgctxt "view:lims.results_report.version.detail:"
 msgid "Time"
 msgstr "Hora"
 

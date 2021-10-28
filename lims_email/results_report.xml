@@ -34,6 +34,14 @@
             <field name="name">results_report_mailing_form</field>
         </record>
 
+<!-- Results Report Version Detail -->
+
+        <record model="ir.ui.view" id="lims_results_report_version_detail_view_list">
+            <field name="model">lims.results_report.version.detail</field>
+            <field name="inherit" ref="lims.lims_results_report_version_detail_view_list"/>
+            <field name="name">results_report_version_detail_list</field>
+        </record>
+
 <!-- Wizard Send Results Report -->
 
         <record model="ir.ui.view" id="send_results_report_start_view">
