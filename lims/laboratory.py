@@ -586,7 +586,7 @@ class NotebookRule(ModelSQL, ModelView):
 
     name = fields.Char('Name', required=True)
     analysis = fields.Many2One('lims.analysis', 'Trigger Analysis',
-        required=True, domain=[
+        required=True, select=True, domain=[
             ('state', '=', 'active'),
             ('type', '=', 'analysis'),
             ('behavior', '!=', 'additional'),
