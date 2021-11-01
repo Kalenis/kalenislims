@@ -711,8 +711,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def confirm(cls, sheets):
         Compilation = Pool().get('lims.interface.compilation')
         cls.exec_sheet_wizards(sheets)
-        cls.check_results(sheets)
-        cls.check_controls(sheets)
+        #cls.check_results(sheets)  # already done in validate_()
+        #cls.check_controls(sheets)  # already done in validate_()
         with Transaction().set_context(avoid_accept_result=True):
             Compilation.confirm([s.compilation for s in sheets])
             cls.exec_notebook_wizards(sheets)
