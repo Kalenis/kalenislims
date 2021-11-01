@@ -2004,6 +2004,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
         Data = pool.get('lims.interface.data')
         Field = pool.get('lims.interface.table.field')
 
+        return  # TODO: check values and correct type
+
         for c in compilations:
             fields = {}
             columns = Field.search([
