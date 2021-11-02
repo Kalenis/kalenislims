@@ -775,8 +775,7 @@ class PlanificationDetail(ModelSQL, ModelView):
                 notebook_lines_to_write.append(sd.notebook_line)
 
         if services_to_write:
-            with Transaction().set_context(not_validate=True):
-                Service.write(services_to_write, {'urgent': value})
+            Service.write(services_to_write, {'urgent': value})
         if notebook_lines_to_write and value:
             NotebookLine.write(notebook_lines_to_write, {'urgent': value})
 

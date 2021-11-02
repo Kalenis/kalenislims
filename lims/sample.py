@@ -424,77 +424,55 @@ class Service(ModelSQL, ModelView):
         return False
 
     @classmethod
-    def validate(cls, services):
-        super().validate(services)
-        if Transaction().context.get('not_validate'):
-            return
-        for service in services:
-            service.check_duplicated_analysis()
-
-    def check_duplicated_analysis(self):
+    def check_duplicated_analysis(cls, new_services):
+        """
+        Checks that the new service is not already loaded for the sample
+        """
         cursor = Transaction().connection.cursor()
         pool = Pool()
+        Fraction = pool.get('lims.fraction')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Analysis = pool.get('lims.analysis')
         Typification = pool.get('lims.typification')
 
-        fraction_id = self.fraction.id
-        services = self.search([
-            ('fraction', '=', fraction_id),
-            ('annulled', '=', False),
-            ('id', '!=', self.id)
-            ])
-        if not services:
-            return
+        existing_analysis = []
+        for new_service in new_services:
 
-        analysis = []
-        for service in services:
-            analysis.append((service.analysis.id,
-                service.method and service.method.id or None))
-            analysis.extend(Analysis.get_included_analysis_method(
-                service.analysis.id))
-        analysis = [list(a) for a in analysis]
-        for a in analysis:
-            if a[1]:
-                continue
-            cursor.execute('SELECT method '
-                'FROM "' + Typification._table + '" '
-                'WHERE product_type = %s '
-                    'AND matrix = %s '
-                    'AND analysis = %s '
-                    'AND valid IS TRUE '
-                    'AND by_default IS TRUE',
-                (self.fraction.product_type.id, self.fraction.matrix.id, a[0]))
-            res = cursor.fetchone()
-            if res:
-                a[1] = res[0]
+            fraction = Fraction(new_service['fraction'])
+            details = EntryDetailAnalysis.search([
+                ('fraction', '=', fraction.id),
+                ('state', '!=', 'annulled'),
+                ])
+            for d in details:
+                existing_analysis.append([d.analysis.id, d.method.id])
 
-        new_analysis = [(self.analysis.id,
-            self.method and self.method.id or None)]
-        new_analysis.extend(Analysis.get_included_analysis_method(
-            self.analysis.id))
-        new_analysis = [list(a) for a in new_analysis]
-        for a in new_analysis:
-            if a[1]:
-                continue
-            cursor.execute('SELECT method '
-                'FROM "' + Typification._table + '" '
-                'WHERE product_type = %s '
-                    'AND matrix = %s '
-                    'AND analysis = %s '
-                    'AND valid IS TRUE '
-                    'AND by_default IS TRUE',
-                (self.fraction.product_type.id, self.fraction.matrix.id, a[0]))
-            res = cursor.fetchone()
-            if res:
-                a[1] = res[0]
+            new_analysis = [(new_service['analysis'], new_service['method'])]
+            new_analysis.extend(Analysis.get_included_analysis_method(
+                new_service['analysis']))
+            new_analysis = [list(a) for a in new_analysis]
+            for a in new_analysis:
+                if a[1]:
+                    continue
+                cursor.execute('SELECT method '
+                    'FROM "' + Typification._table + '" '
+                    'WHERE product_type = %s '
+                        'AND matrix = %s '
+                        'AND analysis = %s '
+                        'AND valid IS TRUE '
+                        'AND by_default IS TRUE',
+                    (fraction.product_type.id, fraction.matrix.id, a[0]))
+                res = cursor.fetchone()
+                if res:
+                    a[1] = res[0]
 
-        for a in new_analysis:
-            if a in analysis:
-                raise UserError(gettext(
-                    'lims.msg_duplicated_analysis_service',
-                    analysis=Analysis(a[0]).rec_name,
-                    fraction=self.fraction.rec_name,
-                    ))
+            for a in new_analysis:
+                if a in existing_analysis:
+                    raise UserError(gettext(
+                        'lims.msg_duplicated_analysis_service',
+                        analysis=Analysis(a[0]).rec_name,
+                        fraction=fraction.rec_name,
+                        ))
+            existing_analysis.extend(new_analysis)
 
     @classmethod
     def create(cls, vlist):
@@ -511,6 +489,7 @@ class Service(ModelSQL, ModelView):
                 work_year=workyear.rec_name))
 
         vlist = [x.copy() for x in vlist]
+        cls.check_duplicated_analysis(vlist)
         for values in vlist:
             values['number'] = sequence.get()
         services = super().create(vlist)
@@ -557,6 +536,11 @@ class Service(ModelSQL, ModelView):
                     change_detail = True
                     break
             if change_detail:
+                cls.check_duplicated_analysis([{
+                    'fraction': s.fraction.id,
+                    'analysis': s.analysis.id,
+                    'method': s.method.id,
+                    } for s in services])
                 cls.update_analysis_detail(services)
                 fractions_ids = list(set(s.fraction.id for s in services))
                 cls.set_shared_fraction(fractions_ids)
@@ -1259,7 +1243,8 @@ class Service(ModelSQL, ModelView):
     @classmethod
     def get_has_results_report(cls, services, names):
         cursor = Transaction().connection.cursor()
-        NotebookLine = Pool().get('lims.notebook.line')
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
 
         result = {}
         for name in names:
@@ -1277,8 +1262,8 @@ class Service(ModelSQL, ModelView):
         return result
 
     def get_manage_service_available(self, name=None):
-        NotebookLine = Pool().get('lims.notebook.line')
-
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
         planned_notebook_lines = NotebookLine.search([
             ('service', '=', self.id),
             ('planification', '!=', None),
@@ -3866,7 +3851,14 @@ class CompleteServices(Wizard):
     def transition_start(self):
         Fraction = Pool().get('lims.fraction')
         fraction = Fraction(Transaction().context['active_id'])
+        analysis_domain_ids = fraction.on_change_with_analysis_domain()
         for service in fraction.services:
+            if service.analysis.id not in analysis_domain_ids:
+                raise UserError(gettext('lims.msg_not_typified',
+                    analysis=service.analysis.rec_name,
+                    product_type=fraction.product_type.rec_name,
+                    matrix=fraction.matrix.rec_name,
+                    ))
             self.complete_analysis_detail(service)
         return 'end'
 
