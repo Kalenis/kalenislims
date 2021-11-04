@@ -1501,7 +1501,8 @@ class TrendChart(ModelSQL, ModelView):
         return res
 
     def get_plot(self, session_id):
-        TrendChartData = Pool().get('lims.trend.chart.data')
+        pool = Pool()
+        TrendChartData = pool.get('lims.trend.chart.data')
 
         index = []
         cols, cols_y2 = {}, {}
@@ -1651,6 +1652,7 @@ class OpenTrendChart(Wizard):
                     ('notebook', '=', notebook),
                     ('analysis', '=', a.analysis),
                     ('accepted', '=', True),
+                    ('result', 'not in', [None, '']),
                     ])
                 if line:
                     record['analysis%s' % str(i)] = line[0].result.replace(
@@ -1661,6 +1663,7 @@ class OpenTrendChart(Wizard):
                     ('notebook', '=', notebook),
                     ('analysis', '=', a.analysis),
                     ('accepted', '=', True),
+                    ('result', 'not in', [None, '']),
                     ])
                 if line:
                     record['analysis%s' % str(i)] = line[0].result.replace(
