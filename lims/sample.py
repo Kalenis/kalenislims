@@ -1497,28 +1497,6 @@ class Fraction(ModelSQL, ModelView):
         return False
 
     @classmethod
-    def get_next_number(cls, sample_id, f_count):
-        Sample = Pool().get('lims.sample')
-
-        samples = Sample.search([('id', '=', sample_id)])
-        sample_number = samples[0].number
-        fraction_number = cls.search_count([('sample', '=', sample_id)])
-        fraction_number += f_count
-        return '%s-%s' % (sample_number, fraction_number)
-
-    @classmethod
-    def create(cls, vlist):
-        vlist = [x.copy() for x in vlist]
-        f_count = {}
-        for values in vlist:
-            if not values['sample'] in f_count:
-                f_count[values['sample']] = 0
-            f_count[values['sample']] += 1
-            values['number'] = cls.get_next_number(values['sample'],
-                f_count[values['sample']])
-        return super().create(vlist)
-
-    @classmethod
     def view_attributes(cls):
         return [
             ('//group[@id="button_confirm"]', 'states', {
@@ -1543,6 +1521,56 @@ class Fraction(ModelSQL, ModelView):
                     'invisible': Not(Bool(Equal(Eval('special_type'), 'con'))),
                     }),
             ]
+
+    @classmethod
+    def get_next_number(cls, sample_id, f_count):
+        Sample = Pool().get('lims.sample')
+
+        samples = Sample.search([('id', '=', sample_id)])
+        sample_number = samples[0].number
+        fraction_number = cls.search_count([('sample', '=', sample_id)])
+        fraction_number += f_count
+        return '%s-%s' % (sample_number, fraction_number)
+
+    @classmethod
+    def create(cls, vlist):
+        vlist = [x.copy() for x in vlist]
+        f_count = {}
+        for values in vlist:
+            if not values['sample'] in f_count:
+                f_count[values['sample']] = 0
+            f_count[values['sample']] += 1
+            values['number'] = cls.get_next_number(values['sample'],
+                f_count[values['sample']])
+        return super().create(vlist)
+
+    @classmethod
+    def write(cls, *args):
+        super().write(*args)
+        actions = iter(args)
+        for fractions, vals in zip(actions, actions):
+            if vals.get('type'):
+                cls.update_details_plannable(fractions, vals.get('type'))
+
+    @classmethod
+    def update_details_plannable(cls, fractions, fraction_type_id):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        FractionType = pool.get('lims.fraction.type')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Service = pool.get('lims.service')
+
+        plannable = ('TRUE' if FractionType(fraction_type_id).plannable
+            else 'FALSE')
+        fractions_ids = ', '.join(str(f.id) for f in fractions)
+
+        cursor.execute('UPDATE "' + EntryDetailAnalysis._table + '" d '
+            'SET plannable = ' + plannable + ' FROM '
+            '"' + Service._table + '" srv '
+            'WHERE d.service = srv.id '
+            'AND d.state IN (\'draft\', \'unplanned\') '
+            'AND d.referable = FALSE '
+            'AND srv.fraction IN (' + fractions_ids + ')')
 
     @classmethod
     def copy(cls, fractions, default=None):
