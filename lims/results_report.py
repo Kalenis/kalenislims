@@ -627,10 +627,16 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     release_uid = fields.Many2One('res.user', 'Release user', readonly=True)
     release_date = fields.DateTime('Release date', readonly=True)
     review_reason = fields.Text('Review reason', translate=True,
-        states={'readonly': True})
+        states={
+            'readonly': Or(Bool(Eval('valid')), Eval('state') != 'released'),
+            },
+        depends=['state', 'valid'])
     review_reason_print = fields.Boolean(
         'Print review reason in next version',
-        states={'readonly': True})
+        states={
+            'readonly': Or(Bool(Eval('valid')), Eval('state') != 'released'),
+            },
+        depends=['state', 'valid'])
     annulment_uid = fields.Many2One('res.user', 'Annulment user',
         readonly=True)
     annulment_date = fields.DateTime('Annulment date', readonly=True)
