@@ -903,7 +903,7 @@ class EditSample(Wizard):
             ResultsReport.write(reports, {'party': party_id})
 
     def check_typifications(self, sample):
-        analysis_domain_ids = sample.on_change_with_analysis_domain()
+        analysis_domain_ids = self._get_analysis_domain(sample)
         for f in sample.fractions:
             for s in f.services:
                 if s.analysis.id not in analysis_domain_ids:
@@ -911,6 +911,51 @@ class EditSample(Wizard):
                         analysis=s.analysis.rec_name,
                         product_type=sample.product_type.rec_name,
                         matrix=sample.matrix.rec_name))
+
+    def _get_analysis_domain(self, sample):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+        CalculatedTypification = pool.get('lims.typification.calculated')
+        Analysis = pool.get('lims.analysis')
+
+        if not sample.product_type or not sample.matrix:
+            return []
+
+        cursor.execute('SELECT DISTINCT(analysis) '
+            'FROM "' + Typification._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s '
+                'AND valid',
+            (sample.product_type.id, sample.matrix.id))
+        typified_analysis = [a[0] for a in cursor.fetchall()]
+        if not typified_analysis:
+            return []
+
+        cursor.execute('SELECT id '
+            'FROM "' + Analysis._table + '" '
+            'WHERE type = \'analysis\' '
+                'AND behavior IN (\'normal\', \'internal_relation\') '
+                'AND state = \'active\'')
+        disabled_analysis = [a[0] for a in cursor.fetchall()]
+        if disabled_analysis:
+            typified_analysis = list(set(typified_analysis) -
+                set(disabled_analysis))
+
+        cursor.execute('SELECT DISTINCT(analysis) '
+            'FROM "' + CalculatedTypification._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s',
+            (sample.product_type.id, sample.matrix.id))
+        typified_sets_groups = [a[0] for a in cursor.fetchall()]
+
+        cursor.execute('SELECT id '
+            'FROM "' + Analysis._table + '" '
+            'WHERE behavior = \'additional\' '
+                'AND state = \'active\'')
+        additional_analysis = [a[0] for a in cursor.fetchall()]
+
+        return typified_analysis + typified_sets_groups + additional_analysis
 
     @classmethod
     def update_laboratory_notebook(self, sample):
