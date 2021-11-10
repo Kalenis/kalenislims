@@ -61,7 +61,7 @@
             <field name="estimated_waiting_report"/>
         </page>
     </notebook>
-    <group id="buttons" colspan="4" col="-1">
+    <group id="buttons" colspan="4" col="10">
         <label name="state"/>
         <field name="state"/>
         <button name="activate" string="Activate"/>
