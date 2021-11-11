@@ -116,6 +116,9 @@ class NotebookRule(metaclass=PoolMeta):
         if analysis_detail:
             EntryDetailAnalysis.create_notebook_lines(analysis_detail,
                 line.notebook_line.fraction)
+            EntryDetailAnalysis.write(analysis_detail, {
+                'state': 'unplanned',
+                })
             notebook_lines = NotebookLine.search([
                 ('analysis_detail', 'in', [d.id for d in analysis_detail])])
             sheet = AnalysisSheet(Transaction().context.get(
@@ -124,6 +127,10 @@ class NotebookRule(metaclass=PoolMeta):
                 nl.get_analysis_sheet_template() == sheet.template.id]
             if notebook_lines:
                 NotebookLine.write(notebook_lines, {'start_date': today})
+                analysis_details = [nl.analysis_detail
+                    for nl in notebook_lines]
+                EntryDetailAnalysis.write(analysis_details,
+                    {'state': 'planned'})
                 sheet.create_lines(notebook_lines)
 
     def _exec_sheet_edit(self, line):
