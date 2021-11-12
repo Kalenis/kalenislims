@@ -6,6 +6,10 @@ msgctxt "field:lims.analysis,result_template:"
 msgid "Report Template"
 msgstr "Plantilla de Informe"
 
+msgctxt "field:lims.configuration,result_template:"
+msgid "Default Report Template"
+msgstr "Plantilla de Informe por defecto"
+
 msgctxt "field:lims.create_sample.start,result_template:"
 msgid "Report Template"
 msgstr "Plantilla de Informe"
@@ -54,6 +58,10 @@ msgctxt "field:lims.result_report.template,name:"
 msgid "Name"
 msgstr "Nombre"
 
+msgctxt "field:lims.result_report.template,page_orientation:"
+msgid "Page orientation"
+msgstr "Orientación de la página"
+
 msgctxt "field:lims.result_report.template,previous_sections:"
 msgid "Previous Sections"
 msgstr "Secciones anteriores"
@@ -81,10 +89,6 @@ msgstr "Gráficos de tendencia"
 msgctxt "field:lims.result_report.template,type:"
 msgid "Type"
 msgstr "Tipo"
-
-msgctxt "field:lims.result_report.template,page_orientation:"
-msgid "Page orientation"
-msgstr "Orientación de la página"
 
 msgctxt "field:lims.result_report.template.section,data:"
 msgid "File"
@@ -282,6 +286,14 @@ msgctxt "selection:lims.result_report.template,charts_x_row:"
 msgid "2"
 msgstr "2"
 
+msgctxt "selection:lims.result_report.template,page_orientation:"
+msgid "Landscape"
+msgstr "Horizontal"
+
+msgctxt "selection:lims.result_report.template,page_orientation:"
+msgid "Portrait"
+msgstr "Vertical"
+
 msgctxt "selection:lims.result_report.template,type:"
 msgid "HTML"
 msgstr "HTML"
@@ -293,14 +305,6 @@ msgstr "HTML - Pie de página"
 msgctxt "selection:lims.result_report.template,type:"
 msgid "HTML - Header"
 msgstr "HTML - Encabezado"
-
-msgctxt "selection:lims.result_report.template,page_orientation:"
-msgid "Portrait"
-msgstr "Vertical"
-
-msgctxt "selection:lims.result_report.template,page_orientation:"
-msgid "Landscape"
-msgstr "Horizontal"
 
 msgctxt "selection:lims.result_report.template.section,position:"
 msgid "Following"

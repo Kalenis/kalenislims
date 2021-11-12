@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='general']/field[@name='results_report_language']"
+        position="after">
+        <label name="result_template"/>
+        <field name="result_template"/>
+    </xpath>
+</data>

@@ -174,7 +174,10 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
 
     @classmethod
     def _get_result_template_from_sample(cls, notebook):
-        Service = Pool().get('lims.service')
+        pool = Pool()
+        Service = pool.get('lims.service')
+        Configuration = pool.get('lims.configuration')
+
         result_template = notebook.fraction.sample.result_template
         if not result_template:
             ok = True
@@ -193,6 +196,11 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
                     ok = False
             if not ok:
                 result_template = None
+
+        if not result_template:
+            config_ = Configuration(1)
+            result_template = config_.result_template
+
         return result_template
 
     @classmethod
