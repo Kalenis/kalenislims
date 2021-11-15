@@ -3909,24 +3909,24 @@ class ResultReport(Report):
         return value or ''
 
     @classmethod
-    def get_grouped_lines(cls, sample, grouped_by=None):
+    def get_grouped_lines(cls, sample, grouped_by=None, lang=None):
         if not sample:
             return []
         if not grouped_by:
             grouped_by = 'none'
         try:
             return getattr(cls,
-                '_get_lines_grouped_by_%s' % grouped_by)(sample)
+                '_get_lines_grouped_by_%s' % grouped_by)(sample, lang)
         except AttributeError:
             return []
 
     @classmethod
-    def _get_lines_grouped_by_none(cls, sample):
+    def _get_lines_grouped_by_none(cls, sample, lang=None):
         res = sample.notebook_lines
         return res
 
     @classmethod
-    def _get_lines_grouped_by_origin(cls, sample):
+    def _get_lines_grouped_by_origin(cls, sample, lang=None):
         all_lines = {}
         for nl in sample.notebook_lines:
             key = nl.notebook_line.analysis_origin
