@@ -16,6 +16,8 @@
     <field name="deprecated_since"/>
     <label name="pnt"/>
     <field name="pnt"/>
+    <label name="equivalence_code"/>
+    <field name="equivalence_code"/>
     <notebook>
         <page id="times" string="Times">
             <label name="results_estimated_waiting"/>

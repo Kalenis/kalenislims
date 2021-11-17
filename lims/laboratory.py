@@ -154,6 +154,7 @@ class LabMethod(ModelSQL, ModelView):
         'Estimated number of days for results')
     results_waiting = fields.One2Many('lims.lab.method.results_waiting',
         'method', 'Waiting times per client')
+    equivalence_code = fields.Char('Equivalence Code')
 
     @classmethod
     def __setup__(cls):

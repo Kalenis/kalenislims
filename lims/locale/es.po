@@ -2115,6 +2115,10 @@ msgctxt "field:lims.lab.method,determination:"
 msgid "Determination"
 msgstr "Determinación"
 
+msgctxt "field:lims.lab.method,equivalence_code:"
+msgid "Equivalence Code"
+msgstr "Código de equivalencia"
+
 msgctxt "field:lims.lab.method,name:"
 msgid "Name"
 msgstr "Nombre"
