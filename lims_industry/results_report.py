@@ -824,7 +824,10 @@ class ResultsReportVersionDetailLine(metaclass=PoolMeta):
         precedent_line = NotebookLine.search([
             ('notebook', '=', precedent),
             ('analysis', '=', line.analysis),
-            ('method', '=', line.method),
+            ['OR', ('method', '=', line.method), [
+                ('method.equivalence_code', 'not in', [None, '']),
+                ('method.equivalence_code', '=', line.method.equivalence_code),
+                ]],
             ('accepted', '=', True),
             ])
         if not precedent_line:
