@@ -1945,13 +1945,16 @@ class NotebookInitialConcentrationCalc(Wizard):
     ok = StateTransition()
 
     def transition_ok(self):
-        Notebook = Pool().get('lims.notebook')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        for active_id in Transaction().context['active_ids']:
-            notebook = Notebook(active_id)
-            if not notebook.lines:
+        for notebook_id in Transaction().context['active_ids']:
+            with Transaction().set_context(_check_access=True):
+                notebook_lines = NotebookLine.search([
+                    ('notebook', '=', notebook_id),
+                    ])
+            if not notebook_lines:
                 continue
-            self.lines_initial_concentration_calc(notebook.lines)
+            self.lines_initial_concentration_calc(notebook_lines)
         return 'end'
 
     def lines_initial_concentration_calc(self, notebook_lines):
@@ -2147,13 +2150,16 @@ class NotebookResultsConversion(Wizard):
     ok = StateTransition()
 
     def transition_ok(self):
-        Notebook = Pool().get('lims.notebook')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        for active_id in Transaction().context['active_ids']:
-            notebook = Notebook(active_id)
-            if not notebook.lines:
+        for notebook_id in Transaction().context['active_ids']:
+            with Transaction().set_context(_check_access=True):
+                notebook_lines = NotebookLine.search([
+                    ('notebook', '=', notebook_id),
+                    ])
+            if not notebook_lines:
                 continue
-            self.lines_results_conversion(notebook.lines)
+            self.lines_results_conversion(notebook_lines)
         return 'end'
 
     def lines_results_conversion(self, notebook_lines):
@@ -2309,13 +2315,16 @@ class NotebookLimitsValidation(Wizard):
     ok = StateTransition()
 
     def transition_ok(self):
-        Notebook = Pool().get('lims.notebook')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        for active_id in Transaction().context['active_ids']:
-            notebook = Notebook(active_id)
-            if not notebook.lines:
+        for notebook_id in Transaction().context['active_ids']:
+            with Transaction().set_context(_check_access=True):
+                notebook_lines = NotebookLine.search([
+                    ('notebook', '=', notebook_id),
+                    ])
+            if not notebook_lines:
                 continue
-            self.lines_limits_validation(notebook.lines)
+            self.lines_limits_validation(notebook_lines)
         return 'end'
 
     def lines_limits_validation(self, notebook_lines):
@@ -2480,13 +2489,16 @@ class NotebookInternalRelationsCalc1(Wizard):
     confirm = StateTransition()
 
     def transition_search(self):
-        Notebook = Pool().get('lims.notebook')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        notebooks = Notebook.browse(Transaction().context['active_ids'])
-        for notebook in notebooks:
-            if not notebook.lines:
+        for notebook_id in Transaction().context['active_ids']:
+            with Transaction().set_context(_check_access=True):
+                notebook_lines = NotebookLine.search([
+                    ('notebook', '=', notebook_id),
+                    ])
+            if not notebook_lines:
                 continue
-            self.get_relations(notebook.lines)
+            self.get_relations(notebook_lines)
         return 'confirm'
 
     def get_relations(self, notebook_lines):
@@ -2934,14 +2946,16 @@ class NotebookInternalRelationsCalc2(Wizard):
     confirm = StateTransition()
 
     def transition_search(self):
-        Notebook = Pool().get('lims.notebook')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        for active_id in Transaction().context['active_ids']:
-            notebook = Notebook(active_id)
-            if not notebook.lines:
+        for notebook_id in Transaction().context['active_ids']:
+            with Transaction().set_context(_check_access=True):
+                notebook_lines = NotebookLine.search([
+                    ('notebook', '=', notebook_id),
+                    ])
+            if not notebook_lines:
                 continue
-
-            if self.get_relations(notebook.lines):
+            if self.get_relations(notebook_lines):
                 return 'next_'
         return 'end'
 
@@ -4490,11 +4504,12 @@ class NotebookLoadResultsExceptional(Wizard):
 
         today = Date.today()
         res_lines = []
-        lines = NotebookLine.search([
-            ('notebook', '=', self.start.notebook),
-            ('start_date', '=', None),
-            ],
-            order=[('analysis_order', 'ASC'), ('id', 'ASC')])
+        with Transaction().set_context(_check_access=True):
+            lines = NotebookLine.search([
+                ('notebook', '=', self.start.notebook),
+                ('start_date', '=', None),
+                ],
+                order=[('analysis_order', 'ASC'), ('id', 'ASC')])
         for line in lines:
             res_lines.append({
                 'line': line.id,
@@ -4560,18 +4575,24 @@ class NotebookAddInternalRelations(Wizard):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         Notebook = pool.get('lims.notebook')
+        NotebookLine = pool.get('lims.notebook.line')
         Analysis = pool.get('lims.analysis')
         Typification = pool.get('lims.typification')
 
-        notebook = Notebook(Transaction().context['active_id'])
         default = {
             'analysis_domain': [],
             }
-        if not notebook.lines:
+
+        notebook = Notebook(Transaction().context['active_id'])
+        with Transaction().set_context(_check_access=True):
+            notebook_lines = NotebookLine.search([
+                ('notebook', '=', notebook.id),
+                ])
+        if not notebook_lines:
             return default
 
         notebook_analysis = []
-        for notebook_line in notebook.lines:
+        for notebook_line in notebook_lines:
             notebook_analysis.append(notebook_line.analysis.code)
         notebook_analysis_codes = '\', \''.join(str(a) for a
             in notebook_analysis)
@@ -5071,26 +5092,29 @@ class NotebookAcceptLines(Wizard):
 
         notebook_lines_acceptance = Config(1).notebook_lines_acceptance
 
-        for active_id in Transaction().context['active_ids']:
+        for notebook_id in Transaction().context['active_ids']:
 
             if notebook_lines_acceptance == 'none':
                 repeated_analysis = []
-                repetitions = NotebookLine.search([
-                    ('notebook', '=', active_id),
-                    ('repetition', '>', 0),
-                    ])
+                with Transaction().set_context(_check_access=True):
+                    repetitions = NotebookLine.search([
+                        ('notebook', '=', notebook_id),
+                        ('repetition', '>', 0),
+                        ])
                 if repetitions:
                     repeated_analysis = [l.analysis.id for l in repetitions]
 
-                notebook_lines = NotebookLine.search([
-                    ('notebook', '=', active_id),
-                    ('analysis', 'not in', repeated_analysis),
-                    ])
+                with Transaction().set_context(_check_access=True):
+                    notebook_lines = NotebookLine.search([
+                        ('notebook', '=', notebook_id),
+                        ('analysis', 'not in', repeated_analysis),
+                        ])
 
             else:  # last
-                notebook_lines = NotebookLine.search([
-                    ('notebook', '=', active_id),
-                    ], order=[('repetition', 'DESC')])
+                with Transaction().set_context(_check_access=True):
+                    notebook_lines = NotebookLine.search([
+                        ('notebook', '=', notebook_id),
+                        ], order=[('repetition', 'DESC')])
 
             if not notebook_lines:
                 continue
@@ -5246,11 +5270,12 @@ class NotebookAnnulLines(Wizard):
     def transition_ok(self):
         NotebookLine = Pool().get('lims.notebook.line')
 
-        notebook_lines = NotebookLine.search([
-            ('notebook', 'in', Transaction().context['active_ids']),
-            ('accepted', '=', False),
-            ('annulled', '=', False),
-            ])
+        with Transaction().set_context(_check_access=True):
+            notebook_lines = NotebookLine.search([
+                ('notebook', 'in', Transaction().context['active_ids']),
+                ('accepted', '=', False),
+                ('annulled', '=', False),
+                ])
         if notebook_lines:
             self.lines_annul(notebook_lines)
         return 'end'
@@ -5297,11 +5322,12 @@ class NotebookUnannulLines(Wizard):
     def transition_ok(self):
         NotebookLine = Pool().get('lims.notebook.line')
 
-        for active_id in Transaction().context['active_ids']:
-            notebook_lines = NotebookLine.search([
-                ('notebook', '=', active_id),
-                ('annulled', '=', True),
-                ])
+        for notebook_id in Transaction().context['active_ids']:
+            with Transaction().set_context(_check_access=True):
+                notebook_lines = NotebookLine.search([
+                    ('notebook', '=', notebook_id),
+                    ('annulled', '=', True),
+                    ])
             if notebook_lines:
                 self.lines_unannul(notebook_lines)
         return 'end'
@@ -5369,13 +5395,16 @@ class NotebookResultsVerification(Wizard):
         return default
 
     def transition_ok(self):
-        Notebook = Pool().get('lims.notebook')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        for active_id in Transaction().context['active_ids']:
-            notebook = Notebook(active_id)
-            if not notebook.lines:
+        for notebook_id in Transaction().context['active_ids']:
+            with Transaction().set_context(_check_access=True):
+                notebook_lines = NotebookLine.search([
+                    ('notebook', '=', notebook_id),
+                    ])
+            if not notebook_lines:
                 continue
-            self.lines_results_verification(notebook.lines)
+            self.lines_results_verification(notebook_lines)
         return 'end'
 
     def lines_results_verification(self, notebook_lines):
@@ -5602,13 +5631,16 @@ class UncertaintyCalc(Wizard):
         return default
 
     def transition_ok(self):
-        Notebook = Pool().get('lims.notebook')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        for active_id in Transaction().context['active_ids']:
-            notebook = Notebook(active_id)
-            if not notebook.lines:
+        for notebook_id in Transaction().context['active_ids']:
+            with Transaction().set_context(_check_access=True):
+                notebook_lines = NotebookLine.search([
+                    ('notebook', '=', notebook_id),
+                    ])
+            if not notebook_lines:
                 continue
-            self.lines_uncertainty_calc(notebook.lines)
+            self.lines_uncertainty_calc(notebook_lines)
         return 'end'
 
     def lines_uncertainty_calc(self, notebook_lines):
@@ -5785,13 +5817,16 @@ class NotebookPrecisionControl(Wizard):
         return default
 
     def transition_ok(self):
-        Notebook = Pool().get('lims.notebook')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        notebook = Notebook(Transaction().context['active_id'])
-        if not notebook.lines:
+        with Transaction().set_context(_check_access=True):
+            notebook_lines = NotebookLine.search([
+                ('notebook', '=', Transaction().context['active_id']),
+                ])
+        if not notebook_lines:
             return 'end'
 
-        self.lines_precision_control(notebook.lines)
+        self.lines_precision_control(notebook_lines)
         return 'end'
 
     def lines_precision_control(self, notebook_lines):
@@ -5966,7 +6001,8 @@ class ChangeEstimatedDaysForResults(Wizard):
         if party_id:
             clause.append(('party', '=', party_id))
 
-        notebook_lines = NotebookLine.search(clause)
+        with Transaction().set_context(_check_access=True):
+            notebook_lines = NotebookLine.search(clause)
         if notebook_lines:
             lines_to_save = []
             for line in notebook_lines:
@@ -6321,11 +6357,16 @@ class NotebookEvaluateRules(Wizard):
     ok = StateTransition()
 
     def transition_ok(self):
-        Notebook = Pool().get('lims.notebook')
+        NotebookLine = Pool().get('lims.notebook.line')
 
-        for active_id in Transaction().context['active_ids']:
-            notebook = Notebook(active_id)
-            self.evaluate_rules(notebook.lines)
+        for notebook_id in Transaction().context['active_ids']:
+            with Transaction().set_context(_check_access=True):
+                notebook_lines = NotebookLine.search([
+                    ('notebook', '=', notebook_id),
+                    ])
+            if not notebook_lines:
+                continue
+            self.evaluate_rules(notebook_lines)
         return 'end'
 
     def evaluate_rules(self, notebook_lines):
