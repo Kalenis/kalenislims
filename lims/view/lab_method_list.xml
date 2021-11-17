@@ -9,4 +9,5 @@
     <field name="deprecated_since"/>
     <field name="pnt"/>
     <field name="results_estimated_waiting"/>
+    <field name="equivalence_code"/>
 </tree>
