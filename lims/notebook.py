@@ -4763,14 +4763,18 @@ class NotebookRepeatAnalysis(Wizard):
 
     def default_start(self, fields):
         pool = Pool()
-        Notebook = pool.get('lims.notebook')
+        NotebookLine = pool.get('lims.notebook.line')
         Analysis = pool.get('lims.analysis')
 
         analysis_domain = set()
         first = True
-        for notebook in Notebook.browse(Transaction().context['active_ids']):
+        for notebook_id in Transaction().context['active_ids']:
             analysis_origin_list = []
-            for nl in notebook.lines:
+            with Transaction().set_context(_check_access=True):
+                notebook_lines = NotebookLine.search([
+                    ('notebook', '=', notebook_id),
+                    ])
+            for nl in notebook_lines:
                 analysis_origin_list.extend(nl.analysis_origin.split(' > '))
                 analysis_origin_list.append(nl.analysis.code)
             analysis = Analysis.search([

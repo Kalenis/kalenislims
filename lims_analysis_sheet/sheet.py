@@ -833,7 +833,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def exec_notebook_wizards(cls, sheets):
         pool = Pool()
         Data = pool.get('lims.interface.data')
-        Notebook = pool.get('lims.notebook')
+        NotebookLine = pool.get('lims.notebook.line')
         EvaluateRules = pool.get('lims.notebook.evaluate_rules',
             type='wizard')
         CalculateInternalRelations = pool.get(
@@ -855,24 +855,33 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 # Evaluate Notebook Rules
                 session_id, _, _ = EvaluateRules.create()
                 evaluate_rules = EvaluateRules(session_id)
-                for active_id in list(set(notebook_ids)):
-                    notebook = Notebook(active_id)
-                    evaluate_rules.evaluate_rules(notebook.lines)
+                for notebook_id in list(set(notebook_ids)):
+                    with Transaction().set_context(_check_access=True):
+                        notebook_lines = NotebookLine.search([
+                            ('notebook', '=', notebook_id),
+                            ])
+                    evaluate_rules.evaluate_rules(notebook_lines)
 
                 # Calculate Internal Relations
                 session_id, _, _ = CalculateInternalRelations.create()
                 calculate_ir = CalculateInternalRelations(session_id)
-                for active_id in list(set(notebook_ids)):
-                    notebook = Notebook(active_id)
-                    if calculate_ir.get_relations(notebook.lines):
+                for notebook_id in list(set(notebook_ids)):
+                    with Transaction().set_context(_check_access=True):
+                        notebook_lines = NotebookLine.search([
+                            ('notebook', '=', notebook_id),
+                            ])
+                    if calculate_ir.get_relations(notebook_lines):
                         calculate_ir.transition_confirm()
 
             # Validate Limits
             session_id, _, _ = LimitsValidation.create()
             limits_validation = LimitsValidation(session_id)
-            for active_id in list(set(notebook_ids)):
-                notebook = Notebook(active_id)
-                limits_validation.lines_limits_validation(notebook.lines)
+            for notebook_id in list(set(notebook_ids)):
+                with Transaction().set_context(_check_access=True):
+                    notebook_lines = NotebookLine.search([
+                        ('notebook', '=', notebook_id),
+                        ])
+                limits_validation.lines_limits_validation(notebook_lines)
 
         return
 
