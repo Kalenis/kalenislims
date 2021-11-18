@@ -3081,7 +3081,7 @@ class ResultReport(Report):
                     int(report.number) - 1)
                 report_context['replace_number'] = (
                     gettext('lims.msg_replace_number', report=prev_number))
-        report_context['print_date'] = get_print_date()
+        report_context['print_date'] = get_print_date().date()
         report_context['party'] = report.party.rec_name
         party_address = report.party.get_results_report_address()
 
