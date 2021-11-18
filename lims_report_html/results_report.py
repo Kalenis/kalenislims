@@ -605,7 +605,7 @@ class ResultReport(metaclass=PoolMeta):
             env = cls.get_results_report_environment()
 
         report_template = env.from_string(template_string)
-        context = cls.get_context(records, data)
+        context = cls.get_context(records, [], data)
         context.update({
             'report': action,
             'get_image': cls.get_image,
