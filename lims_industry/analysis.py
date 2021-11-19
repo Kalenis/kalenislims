@@ -38,7 +38,7 @@ class SamplingType(ModelSQL, ModelView):
     __name__ = 'lims.sampling.type'
 
     name = fields.Char('Name', required=True)
-    description = fields.Char('Description', required=True)
+    description = fields.Char('Description', required=True, translate=True)
 
 
 class ProductType(metaclass=PoolMeta):
