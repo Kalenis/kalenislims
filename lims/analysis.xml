@@ -648,6 +648,25 @@
             <field name="action" ref="wiz_analysis_open_not_typified"/>
         </record>
 
+<!-- Wizard Update Calculated Typifications -->
+
+        <record model="ir.ui.view" id="update_typification_calculated_start_form">
+            <field name="model">lims.update_typification_calculated.start</field>
+            <field name="type">form</field>
+            <field name="name">update_typification_calculated_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_update_typification_calculated">
+            <field name="name">Update Calculated Typifications</field>
+            <field name="wiz_name">lims.update_typification_calculated</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_update_typification_calculated_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.analysis,-1</field>
+            <field name="action" ref="wiz_update_typification_calculated"/>
+        </record>
+
 <!-- Wizard Open Typifications -->
 
         <record model="ir.action.wizard" id="act_open_typifications">

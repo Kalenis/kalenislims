@@ -2937,6 +2937,41 @@ class OpenAnalysisNotTypified(Wizard):
         return action, {}
 
 
+class UpdateCalculatedTypificationStart(ModelView):
+    'Update Calculated Typifications'
+    __name__ = 'lims.update_typification_calculated.start'
+
+    analysis = fields.Many2One('lims.analysis', 'Set/Group', required=True,
+        domain=[('type', 'in', ['set', 'group'])])
+
+
+class UpdateCalculatedTypification(Wizard):
+    'Update Calculated Typifications'
+    __name__ = 'lims.update_typification_calculated'
+
+    start = StateView('lims.update_typification_calculated.start',
+        'lims.update_typification_calculated_start_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Update', 'update', 'tryton-ok', default=True),
+            ])
+    update = StateTransition()
+
+    def default_start(self, fields):
+        Analysis = Pool().get('lims.analysis')
+        res = {}
+        active_id = Transaction().context['active_id']
+        if active_id:
+            analysis = Analysis(active_id)
+            if analysis.type in ('set', 'group'):
+                res['analysis'] = analysis.id
+        return res
+
+    def transition_update(self):
+        Analysis = Pool().get('lims.analysis')
+        Analysis.create_typification_calculated([self.start.analysis])
+        return 'end'
+
+
 class OpenTypifications(Wizard):
     'Open Typifications'
     __name__ = 'lims.scope_version.open_typifications'
