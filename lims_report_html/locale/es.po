@@ -22,6 +22,10 @@ msgctxt "field:lims.fraction,result_template:"
 msgid "Report Template"
 msgstr "Plantilla de Informe"
 
+msgctxt "field:lims.laboratory,result_template:"
+msgid "Report Template"
+msgstr "Plantilla de Informe"
+
 msgctxt "field:lims.notebook,result_template:"
 msgid "Report Template"
 msgstr "Plantilla de Informe"
@@ -225,6 +229,10 @@ msgstr "Plantilla de Informe"
 msgctxt "field:lims.sample,resultrange_origin:"
 msgid "Comparison range"
 msgstr "Rango de comparación"
+
+msgctxt "field:party.party,result_template:"
+msgid "Report Template"
+msgstr "Plantilla de Informe"
 
 msgctxt "model:ir.action,name:act_html_template_list"
 msgid "Results Report Templates"

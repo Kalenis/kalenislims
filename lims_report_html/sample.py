@@ -62,6 +62,21 @@ class CreateSampleStart(metaclass=PoolMeta):
 class CreateSample(metaclass=PoolMeta):
     __name__ = 'lims.create_sample'
 
+    def default_start(self, fields):
+        Party = Pool().get('party.party')
+
+        defaults = super().default_start(fields)
+
+        party_id = defaults['party']
+        if party_id:
+            party = Party(party_id)
+            if party.result_template:
+                defaults['result_template'] = party.result_template.id
+                if party.result_template.resultrange_origin:
+                    defaults['resultrange_origin'] = (
+                        party.result_template.resultrange_origin.id)
+        return defaults
+
     def _get_samples_defaults(self, entry_id):
         samples_defaults = super()._get_samples_defaults(entry_id)
 

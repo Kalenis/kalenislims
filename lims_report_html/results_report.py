@@ -176,6 +176,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     def _get_result_template_from_sample(cls, notebook):
         pool = Pool()
         Service = pool.get('lims.service')
+        Laboratory = pool.get('lims.laboratory')
         Configuration = pool.get('lims.configuration')
 
         result_template = notebook.fraction.sample.result_template
@@ -196,6 +197,13 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
                     ok = False
             if not ok:
                 result_template = None
+
+        if not result_template:
+            laboratory_id = Transaction().context.get(
+                'samples_pending_reporting_laboratory', None)
+            if laboratory_id:
+                laboratory = Laboratory(laboratory_id)
+                result_template = laboratory.result_template
 
         if not result_template:
             config_ = Configuration(1)
