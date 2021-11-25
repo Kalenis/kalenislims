@@ -26,9 +26,25 @@ msgctxt "field:lims.project,mpi_product_types:"
 msgid "Product types"
 msgstr "Tipos de producto"
 
+msgctxt "field:lims.project,mpi_professionals:"
+msgid "Professionals"
+msgstr "Profesionales"
+
 msgctxt "field:lims.project,mpi_services:"
 msgid "Requested analysis"
 msgstr "Análisis requeridos"
+
+msgctxt "field:lims.project.mpi_professional,employee:"
+msgid "Employee"
+msgstr "Empleado"
+
+msgctxt "field:lims.project.mpi_professional,position:"
+msgid "Position"
+msgstr "Posición"
+
+msgctxt "field:lims.project.mpi_professional,project:"
+msgid "Implementation project"
+msgstr "Proyecto implementación"
 
 msgctxt "field:lims.project.solvent_reagent,purchase_date:"
 msgid "Purchase date"
@@ -37,6 +53,10 @@ msgstr "Fecha de compra"
 msgctxt "model:ir.action,name:report_implementation"
 msgid "Implementation Projects"
 msgstr "Proyectos Implementación"
+
+msgctxt "model:lims.project.mpi_professional,name:"
+msgid "Project Professional"
+msgstr "Profesional de proyecto"
 
 msgctxt "report:lims.project.implementation_report:"
 msgid "("
@@ -232,6 +252,10 @@ msgstr "Fechas"
 msgctxt "view:lims.project:"
 msgid "General"
 msgstr "General"
+
+msgctxt "view:lims.project:"
+msgid "Professionals"
+msgstr "Profesionales"
 
 msgctxt "view:lims.project:"
 msgid "Samples"

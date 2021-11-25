@@ -723,7 +723,7 @@ msgstr "Registro de cambios en proyecto"
 
 msgctxt "model:lims.project.stp_professional,name:"
 msgid "Project Professional"
-msgstr "Profesional de laboratorio"
+msgstr "Profesional de proyecto"
 
 msgctxt "model:lims.project.stp_professional.position,name:"
 msgid "Professional Position"

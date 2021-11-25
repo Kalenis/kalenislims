@@ -10,6 +10,19 @@
             <field name="name">project_form</field>
         </record>
 
+<!-- Project Professional-->
+
+        <record model="ir.ui.view" id="lims_project_mpi_professional_view_form">
+            <field name="model">lims.project.mpi_professional</field>
+            <field name="type">form</field>
+            <field name="name">project_mpi_professional_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_project_mpi_professional_view_list">
+            <field name="model">lims.project.mpi_professional</field>
+            <field name="type">tree</field>
+            <field name="name">project_mpi_professional_list</field>
+        </record>
+
 <!-- Solvent and Reagent-->
 
         <record model="ir.ui.view" id="lims_project_solvent_reagent_view_form">

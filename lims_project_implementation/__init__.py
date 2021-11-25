@@ -11,6 +11,7 @@ def register():
     Pool.register(
         configuration.Configuration,
         project.Project,
+        project.ProjectProfessional,
         project.ProjectSolventAndReagent,
         project.Entry,
         project.Fraction,

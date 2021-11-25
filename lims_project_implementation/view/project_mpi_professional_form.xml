@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form>
+    <label name="employee"/>
+    <field name="employee" colspan="3"/>
+    <label name="position"/>
+    <field name="position"/>
+</form>

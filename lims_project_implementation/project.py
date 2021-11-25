@@ -3,7 +3,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond.model import fields
+from trytond.model import ModelSQL, ModelView, fields
 from trytond.report import Report
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval, Equal, Bool, Not
@@ -23,6 +23,8 @@ class Project(metaclass=PoolMeta):
     mpi_methods = fields.Function(fields.Text('Methods'), 'get_mpi_methods')
     mpi_laboratory_date = fields.Date(
         'Date of delivery of report and procedure to the laboratory',)
+    mpi_professionals = fields.One2Many(
+        'lims.project.mpi_professional', 'project', 'Professionals')
 
     @classmethod
     def __setup__(cls):
@@ -30,6 +32,9 @@ class Project(metaclass=PoolMeta):
         project_type = ('implementation', 'Implementation')
         if project_type not in cls.type.selection:
             cls.type.selection.append(project_type)
+        cls.external_quality_control.states['invisible'] = Bool(
+            Equal(Eval('type'), 'implementation'))
+        cls.external_quality_control.depends = ['type']
 
     @classmethod
     def view_attributes(cls):
@@ -74,10 +79,35 @@ class Project(metaclass=PoolMeta):
         return '\n'.join(s.method.name for s in services if s.method)
 
 
+class ProjectProfessional(ModelSQL, ModelView):
+    'Project Professional'
+    __name__ = 'lims.project.mpi_professional'
+
+    project = fields.Many2One('lims.project', 'Implementation project',
+        ondelete='CASCADE', select=True, required=True)
+    employee = fields.Many2One('company.employee', 'Employee', required=True)
+    position = fields.Many2One('lims.project.stp_professional.position',
+        'Position')
+
+
 class ProjectSolventAndReagent(metaclass=PoolMeta):
     __name__ = 'lims.project.solvent_reagent'
 
     purchase_date = fields.Date('Purchase date')
+
+    @fields.depends('lot')
+    def on_change_lot(self, name=None):
+        pool = Pool()
+        Move = pool.get('stock.move')
+
+        if not self.lot:
+            return
+        purchases = Move.search([
+            ('lot', '=', self.lot),
+            ('from_location.type', '=', 'supplier'),
+            ], order=[('effective_date', 'ASC')], limit=1)
+        if purchases:
+            self.purchase_date = purchases[0].effective_date
 
 
 class Entry(metaclass=PoolMeta):
@@ -118,9 +148,9 @@ class ImplementationsReport(Report):
     __name__ = 'lims.project.implementation_report'
 
     @classmethod
-    def get_context(cls, records, data):
+    def get_context(cls, records, header, data):
         records = [r for r in records if r.type == 'implementation']
-        report_context = super().get_context(records, data)
+        report_context = super().get_context(records, header, data)
         report_context['company'] = report_context['user'].company
         report_context['records'] = records
         return report_context

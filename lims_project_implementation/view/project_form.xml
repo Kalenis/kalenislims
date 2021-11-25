@@ -25,6 +25,9 @@
                         <field name="mpi_laboratory_date"/>
                     </group>
                 </page>
+                <page string="Professionals" id="mpi_professionals">
+                    <field name="mpi_professionals" colspan="4"/>
+                </page>
                 <page string="Samples" id="samples">
                     <field name="stp_samples" colspan="4" mode="tree,form"
                         view_ids="lims_project_study_plan.lims_sample_view_list,lims_project_study_plan.lims_sample_view_form"/>
