@@ -274,6 +274,10 @@ class InvoiceLine(metaclass=PoolMeta):
             ('id', 'in', Eval('party_domain')), ('id', '!=', -1))]
         if 'party_domain' not in cls.party.depends:
             cls.party.depends.append('party_domain')
+        cls.product.states['readonly'] = Or(
+            Eval('invoice_state') != 'draft',
+            Bool(Eval('lims_service_sample')))
+        cls.product.depends.append('lims_service_sample')
 
     @classmethod
     def delete(cls, lines):
