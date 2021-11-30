@@ -20,6 +20,19 @@
             <field name="group" ref="lims.group_lims_planification"/>
         </record>
 
+<!-- Planification - Analysis Sheets -->
+
+        <record model="ir.ui.view" id="planification_analysis_sheet_view_list">
+            <field name="model">lims.planification.analysis_sheet</field>
+            <field name="type">tree</field>
+            <field name="name">planification_analysis_sheet_list</field>
+        </record>
+        <record model="ir.ui.view" id="planification_analysis_sheet_view_graph">
+            <field name="model">lims.planification.analysis_sheet</field>
+            <field name="type">form</field>
+            <field name="name">planification_analysis_sheet_form</field>
+        </record>
+
 <!-- Wizard Search Analysis Sheets -->
 
         <record model="ir.ui.view" id="planification_search_analysis_sheet_start_view_form">
