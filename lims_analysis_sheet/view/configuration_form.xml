@@ -5,5 +5,9 @@
         position="after">
         <label name="analysis_sheet_sequence"/>
         <field name="analysis_sheet_sequence"/>
+        <group id="planification_update_draft_sheet" colspan="2" col="2">
+            <label name="planification_update_draft_sheet"/>
+            <field name="planification_update_draft_sheet"/>
+        </group>
     </xpath>
 </data>

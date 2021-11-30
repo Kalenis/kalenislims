@@ -27,6 +27,7 @@ def register():
         interface.Interface,
         interface.Data,
         planification.Planification,
+        planification.PlanificationAnalysisSheet,
         planification.SearchAnalysisSheetStart,
         planification.SearchAnalysisSheetNext,
         planification.RelateTechniciansStart,
