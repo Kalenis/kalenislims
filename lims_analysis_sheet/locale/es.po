@@ -195,6 +195,10 @@ msgctxt "field:lims.configuration,analysis_sheet_sequence:"
 msgid "Analysis Sheet Sequence"
 msgstr "Secuencia de Hoja de análisis"
 
+msgctxt "field:lims.configuration,planification_update_draft_sheet:"
+msgid "Update draft sheets when planning analyzes"
+msgstr "Actualizar Hojas de análisis en borrador al planificar"
+
 msgctxt "field:lims.configuration.sequence,analysis_sheet_sequence:"
 msgid "Analysis Sheet Sequence"
 msgstr "Secuencia de Hoja de análisis"
@@ -250,6 +254,30 @@ msgstr "Cant. Hojas en Cola"
 msgctxt "field:lims.notebook.line,analysis_sheet:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
+
+msgctxt "field:lims.planification,analysis_sheets:"
+msgid "Analysis sheets to update"
+msgstr "Hojas de análisis para actualizar"
+
+msgctxt "field:lims.planification,planification_update_draft_sheet:"
+msgid "Update draft sheets"
+msgstr "Actualizar Hojas de análisis en borrador"
+
+msgctxt "field:lims.planification.analysis_sheet,analysis_sheet:"
+msgid "Analysis Sheet"
+msgstr "Hoja de análisis"
+
+msgctxt "field:lims.planification.analysis_sheet,planification:"
+msgid "Planification"
+msgstr "Planificación"
+
+msgctxt "field:lims.planification.analysis_sheet,professional:"
+msgid "Laboratory professional"
+msgstr "Profesional de laboratorio"
+
+msgctxt "field:lims.planification.analysis_sheet,template:"
+msgid "Template"
+msgstr "Plantilla"
 
 msgctxt "field:lims.planification.professional,name:"
 msgid "Name"
@@ -706,6 +734,10 @@ msgctxt "model:lims.interface.multi_sample_data,name:"
 msgid "Multi Sample Data"
 msgstr "Datos multi muestra"
 
+msgctxt "model:lims.planification.analysis_sheet,name:"
+msgid "Planification - Analysis Sheet"
+msgstr "Planificación - Hoja de análisis"
+
 msgctxt "model:lims.planification.professional,name:"
 msgid "Planification Professional"
 msgstr "Tareas por Profesional"
@@ -1161,6 +1193,10 @@ msgstr "Exportación:"
 msgctxt "view:lims.interface:"
 msgid "Export"
 msgstr "Exportación"
+
+msgctxt "view:lims.planification:"
+msgid "Analysis sheets"
+msgstr "Hojas de análisis"
 
 msgctxt "view:lims.planification:"
 msgid "Search Analysis Sheets"

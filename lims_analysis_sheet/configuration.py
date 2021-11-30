@@ -18,6 +18,12 @@ class Configuration(metaclass=PoolMeta):
             ('company', 'in',
                 [Eval('context', {}).get('company', -1), None]),
             ]))
+    planification_update_draft_sheet = fields.Boolean(
+        'Update draft sheets when planning analyzes')
+
+    @staticmethod
+    def default_planification_update_draft_sheet():
+        return False
 
     @classmethod
     def default_analysis_sheet_sequence(cls, **pattern):

@@ -5,4 +5,12 @@
         position="before">
         <button name="search_analysis_sheet" string="Search Analysis Sheets"/>
     </xpath>
+    <xpath expr="/form/notebook/page[@id='controls']" position="after">
+        <page string="Analysis sheets" id="analysis_sheets">
+            <label name="planification_update_draft_sheet"/>
+            <field name="planification_update_draft_sheet"/>
+            <newline/>
+            <field name="analysis_sheets" colspan="4"/>
+        </page>
+    </xpath>
 </data>

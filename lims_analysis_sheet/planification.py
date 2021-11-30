@@ -17,6 +17,17 @@ from trytond.transaction import Transaction
 class Planification(metaclass=PoolMeta):
     __name__ = 'lims.planification'
 
+    planification_update_draft_sheet = fields.Boolean(
+        'Update draft sheets')
+    analysis_sheets = fields.One2Many('lims.planification.analysis_sheet',
+        'planification', 'Analysis sheets to update', depends=['state'],
+        states={'readonly': Eval('state') != 'preplanned'})
+
+    @staticmethod
+    def default_planification_update_draft_sheet():
+        Config = Pool().get('lims.configuration')
+        return Config(1).planification_update_draft_sheet
+
     @classmethod
     def __setup__(cls):
         super().__setup__()
@@ -32,6 +43,59 @@ class Planification(metaclass=PoolMeta):
         pass
 
     @classmethod
+    @ModelView.button_action('lims.wiz_lims_technicians_qualification')
+    def confirm(cls, planifications):
+        super().confirm(planifications)
+        for planification in planifications:
+            planification.load_analysis_sheets()
+
+    def load_analysis_sheets(self):
+        pool = Pool()
+        PlanificationServiceDetail = pool.get(
+            'lims.planification.service_detail')
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        PlanificationAnalysisSheet = pool.get(
+            'lims.planification.analysis_sheet')
+
+        if not self.planification_update_draft_sheet:
+            return
+
+        analysis_sheets = {}
+        service_details = PlanificationServiceDetail.search([
+            ('detail.planification', '=', self.id),
+            ('notebook_line', '!=', None),
+            ])
+        for service_detail in service_details:
+            nl = service_detail.notebook_line
+            template_id = nl.get_analysis_sheet_template()
+            if not template_id:
+                continue
+            key = (template_id, service_detail.staff_responsible[0])
+            if key not in analysis_sheets:
+                analysis_sheets[key] = []
+            analysis_sheets[key].append(nl)
+
+        for key, values in analysis_sheets.items():
+            if PlanificationAnalysisSheet.search([
+                    ('planification', '=', self.id),
+                    ('professional', '=', key[1]),
+                    ('analysis_sheet.template', '=', key[0]),
+                    ]):
+                continue
+            draft_sheet = AnalysisSheet.search([
+                ('template', '=', key[0]),
+                ('professional', '=', key[1]),
+                ('state', '=', 'draft'),
+                ])
+            if not draft_sheet:
+                continue
+            PlanificationAnalysisSheet.create([{
+                'planification': self.id,
+                'professional': key[1],
+                'analysis_sheet': draft_sheet[0].id,
+                }])
+
+    @classmethod
     def do_confirm(cls, planifications):
         super().do_confirm(planifications)
         for planification in planifications:
@@ -42,6 +106,8 @@ class Planification(metaclass=PoolMeta):
         PlanificationServiceDetail = pool.get(
             'lims.planification.service_detail')
         AnalysisSheet = pool.get('lims.analysis_sheet')
+        PlanificationAnalysisSheet = pool.get(
+            'lims.planification.analysis_sheet')
 
         analysis_sheets = {}
         service_details = PlanificationServiceDetail.search([
@@ -61,16 +127,48 @@ class Planification(metaclass=PoolMeta):
         date_time = datetime.combine(self.start_date, self.create_date.time())
 
         for key, values in analysis_sheets.items():
-            sheet = AnalysisSheet()
-            sheet.template = key[0]
-            sheet.compilation = sheet.get_new_compilation(
-                {'date_time': date_time})
-            sheet.professional = key[1]
-            sheet.laboratory = self.laboratory.id
-            sheet.planification = self.id
-            sheet.save()
+            planification_sheet = PlanificationAnalysisSheet.search([
+                ('planification', '=', self.id),
+                ('professional', '=', key[1]),
+                ('analysis_sheet.template', '=', key[0]),
+                ('analysis_sheet.state', 'in', ['draft', 'active']),
+                ])
+            if planification_sheet:
+                sheet = AnalysisSheet(planification_sheet[0].analysis_sheet.id)
+            else:
+                sheet = AnalysisSheet()
+                sheet.template = key[0]
+                sheet.compilation = sheet.get_new_compilation(
+                    {'date_time': date_time})
+                sheet.professional = key[1]
+                sheet.laboratory = self.laboratory.id
+                sheet.planification = self.id
+                sheet.save()
             sheet.create_lines(values)
-            #sheet.activate([sheet])
+
+
+class PlanificationAnalysisSheet(ModelSQL, ModelView):
+    'Planification - Analysis Sheet'
+    __name__ = 'lims.planification.analysis_sheet'
+
+    planification = fields.Many2One('lims.planification', 'Planification',
+        ondelete='CASCADE', select=True, required=True)
+    professional = fields.Many2One('lims.laboratory.professional',
+        'Laboratory professional', required=True)
+    analysis_sheet = fields.Many2One('lims.analysis_sheet',
+        'Analysis Sheet', required=True,
+        domain=['OR', ('id', '=', Eval('analysis_sheet')),
+            [('state', 'in', ['draft', 'active']),
+                ('professional', '=', Eval('professional'))]],
+        depends=['professional'])
+    template = fields.Function(fields.Many2One('lims.template.analysis_sheet',
+        'Template'), 'on_change_with_template')
+
+    @fields.depends('analysis_sheet')
+    def on_change_with_template(self, name=None):
+        if self.analysis_sheet:
+            return self.analysis_sheet.template.id
+        return None
 
 
 class SearchAnalysisSheetStart(ModelView):
