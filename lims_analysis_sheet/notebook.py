@@ -1698,3 +1698,101 @@ class EditMultiSampleData(Wizard):
 
     def _save(self):
         pass
+
+
+class MoveDataStart(ModelView):
+    'Move Data'
+    __name__ = 'lims.analysis_sheet.move_data.start'
+
+    move_to = fields.Selection([
+        ('new', 'New sheet'),
+        ('exist', 'Existing sheet'),
+        ], 'Move to', required=True)
+    analysis_sheet = fields.Many2One('lims.analysis_sheet',
+        'Analysis Sheet', required=True,
+        domain=[
+            ('compilation.table', '=', Eval('table')),
+            ('state', 'in', ['draft', 'active']),
+            ],
+        states={
+            'invisible': Eval('move_to') != 'exist',
+            'required': Eval('move_to') == 'exist',
+            },
+        depends=['move_to', 'table'])
+    table = fields.Many2One('lims.interface.table', 'Table')
+
+
+class MoveData(Wizard):
+    'Move Data'
+    __name__ = 'lims.analysis_sheet.move_data'
+
+    start_state = 'check'
+    check = StateTransition()
+    start = StateView('lims.analysis_sheet.move_data.start',
+        'lims_analysis_sheet.analysis_sheet_move_data_start_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Move', 'move', 'tryton-ok', default=True),
+            ])
+    move = StateTransition()
+
+    def _get_analysis_sheet_id(self):
+        return Transaction().context.get('lims_analysis_sheet', None)
+
+    def transition_check(self):
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
+
+        line_ids = Transaction().context.get('active_ids', None)
+        sheet_id = self._get_analysis_sheet_id()
+        if line_ids and sheet_id:
+            sheet = AnalysisSheet(sheet_id)
+            if sheet.state == 'active':
+                return 'start'
+
+        return 'end'
+
+    def default_start(self, fields):
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
+
+        sheet_id = self._get_analysis_sheet_id()
+        sheet = AnalysisSheet(sheet_id)
+
+        defaults = {
+            'move_to': 'new',
+            'table': sheet.compilation.table.id,
+            }
+        return defaults
+
+    def transition_move(self):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+
+        line_ids = Transaction().context.get('active_ids', None)
+        sheet_id = self._get_analysis_sheet_id()
+        sheet = AnalysisSheet(sheet_id)
+
+        if self.start.move_to == 'new':
+            with Transaction().set_user(0):
+                target = AnalysisSheet()
+                target.template = sheet.template
+                target.compilation = sheet.get_new_compilation()
+                target.professional = sheet.professional
+                target.laboratory = sheet.laboratory
+                target.save()
+        else:
+            target = self.start.analysis_sheet
+
+        with Transaction().set_context(
+                lims_interface_table=sheet.compilation.table.id):
+            lines = Data.search([
+                ('compilation', '=', sheet.compilation.id),
+                ('id', 'in', line_ids),
+                ])
+            Data.write(lines, {
+                'compilation': target.compilation.id,
+                })
+
+        return 'end'
+
+    def end(self):
+        return 'reload'

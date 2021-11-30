@@ -147,6 +147,18 @@ msgctxt "field:lims.analysis_sheet.import_file.start,origin_file:"
 msgid "Origin File"
 msgstr "Archivo origen"
 
+msgctxt "field:lims.analysis_sheet.move_data.start,analysis_sheet:"
+msgid "Analysis Sheet"
+msgstr "Hoja de análisis"
+
+msgctxt "field:lims.analysis_sheet.move_data.start,move_to:"
+msgid "Move to"
+msgstr "Mover a"
+
+msgctxt "field:lims.analysis_sheet.move_data.start,table:"
+msgid "Table"
+msgstr "Tabla"
+
 msgctxt "field:lims.analysis_sheet.print_report.ask,print_expression_column:"
 msgid "Print formula column"
 msgstr "Incluir columnas con fórmulas"
@@ -568,6 +580,10 @@ msgctxt "model:ir.action,name:wiz_analysis_sheet_limits_validation"
 msgid "Limits Validation"
 msgstr "05) Validación de límites"
 
+msgctxt "model:ir.action,name:wiz_analysis_sheet_move_data"
+msgid "Move Data"
+msgstr "Mover datos"
+
 msgctxt "model:ir.action,name:wiz_analysis_sheet_open_data"
 msgid "Open Analysis Sheet Data"
 msgstr "Abrir datos de Hoja de análisis"
@@ -713,6 +729,10 @@ msgstr "Exportar Hoja de análisis"
 msgctxt "model:lims.analysis_sheet.import_file.start,name:"
 msgid "Import Analysis Sheet File"
 msgstr "Importar archivo de datos"
+
+msgctxt "model:lims.analysis_sheet.move_data.start,name:"
+msgid "Move Data"
+msgstr "Mover datos"
 
 msgctxt "model:lims.analysis_sheet.print_report.ask,name:"
 msgid "Analysis Sheet Report"
@@ -1058,6 +1078,14 @@ msgctxt "selection:lims.analysis_sheet.add_control.start,type:"
 msgid "RM"
 msgstr "RM"
 
+msgctxt "selection:lims.analysis_sheet.move_data.start,move_to:"
+msgid "Existing sheet"
+msgstr "Hoja existente"
+
+msgctxt "selection:lims.analysis_sheet.move_data.start,move_to:"
+msgid "New sheet"
+msgstr "Nueva hoja"
+
 msgctxt "selection:lims.interface,export_field_separator:"
 msgid "Colon (:)"
 msgstr "Dos puntos (:)"
@@ -1249,6 +1277,14 @@ msgstr "Importar datos"
 msgctxt "wizard_button:lims.analysis_sheet.import_file,ask_file,end:"
 msgid "Cancel"
 msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.analysis_sheet.move_data,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.analysis_sheet.move_data,start,move:"
+msgid "Move"
+msgstr "Mover"
 
 msgctxt "wizard_button:lims.analysis_sheet.print_report,ask,end:"
 msgid "Cancel"
