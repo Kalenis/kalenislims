@@ -1527,9 +1527,13 @@ class TrendChart(ModelSQL, ModelView):
         for r in records:
             index.append(r.x_axis)
             for a_name, a_description in cols.items():
-                ds[a_description].append(float(getattr(r, a_name) or 0))
+                val = getattr(r, a_name, None)
+                ds[a_description].append(float(val)
+                    if val is not None else None)
             for a_name, a_description in cols_y2.items():
-                ds2[a_description].append(float(getattr(r, a_name) or 0))
+                val = getattr(r, a_name, None)
+                ds2[a_description].append(float(val)
+                    if val is not None else None)
 
         df = pd.DataFrame(ds, index=index)
         df = df.reindex(cols.values(), axis=1)
@@ -1546,11 +1550,14 @@ class TrendChart(ModelSQL, ModelView):
                 if self.uom:
                     ax.set_ylabel(self.uom.symbol)
                 if ds2:
-                    ax = df2.plot(kind='line', rot=45, fontsize=7,
-                        figsize=(10, 7.5), marker='o', linestyle='-',
-                        secondary_y=True, ax=ax)
-                    if self.uom_y2:
-                        ax.set_ylabel(self.uom_y2.symbol)
+                    try:
+                        ax = df2.plot(kind='line', rot=45, fontsize=7,
+                            figsize=(10, 7.5), marker='o', linestyle='-',
+                            secondary_y=True, ax=ax)
+                        if self.uom_y2:
+                            ax.set_ylabel(self.uom_y2.symbol)
+                    except TypeError:
+                        pass
 
                 ax.get_figure().savefig(output, bbox_inches='tight', dpi=300)
                 image = output.getvalue()
