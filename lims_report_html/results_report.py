@@ -319,7 +319,7 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
             plot = tc.chart.get_plot(session_id)
             charts.append(plot)
 
-        div_row = '<div>'
+        div_row = '<div style="clear:both;">'
         charts_x_row = int(self.version_detail.charts_x_row) or 1
         if charts_x_row == 1:
             div_col = '<div style="float:left; width:100%;">'
