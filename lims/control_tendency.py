@@ -1637,6 +1637,7 @@ class OpenTrendChart(Wizard):
         chart = self.start.chart
         clause = self._get_clause()
         order = self._get_order()
+        reportable_analysis = self._get_reportable_analysis()
 
         records = []
         notebooks = Notebook.search(clause, order=order, limit=chart.quantity)
@@ -1648,6 +1649,10 @@ class OpenTrendChart(Wizard):
                 }
             i = 1
             for a in chart.analysis:
+                if a.analysis.id not in reportable_analysis:
+                    record['analysis%s' % str(i)] = None
+                    i += 1
+                    continue
                 line = NotebookLine.search([
                     ('notebook', '=', notebook),
                     ('analysis', '=', a.analysis),
@@ -1659,6 +1664,10 @@ class OpenTrendChart(Wizard):
                         ',', '.')
                 i += 1
             for a in chart.analysis_y2:
+                if a.analysis.id not in reportable_analysis:
+                    record['analysis%s' % str(i)] = None
+                    i += 1
+                    continue
                 line = NotebookLine.search([
                     ('notebook', '=', notebook),
                     ('analysis', '=', a.analysis),
@@ -1699,6 +1708,16 @@ class OpenTrendChart(Wizard):
         if chart.x_axis == 'date':
             return [('date', 'DESC')]
         return []
+
+    def _get_reportable_analysis(self):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+
+        lines = NotebookLine.search([
+            ('notebook', '=', self.start.notebook),
+            ('report', '=', True)
+            ])
+        return [l.analysis.id for l in lines]
 
     def _get_x_axis(self, notebook):
         chart = self.start.chart
