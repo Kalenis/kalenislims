@@ -525,8 +525,9 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         'lims.laboratory.professional', None, None, 'Signer domain'),
         'on_change_with_signer_domain')
     resultrange_origin = fields.Many2One('lims.range.type', 'Origin',
-        domain=[('use', '=', 'result_range')],
-        depends=['report_result_type', 'state'],
+        domain=['OR', ('id', '=', Eval('resultrange_origin')),
+            ('id', 'in', Eval('resultrange_origin_domain'))],
+        depends=['resultrange_origin_domain', 'report_result_type', 'state'],
         states={
             'invisible': Not(Eval('report_result_type').in_([
                 'result_range', 'both_range'])),
@@ -534,6 +535,9 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                 'result_range', 'both_range']),
             'readonly': Eval('state') != 'draft',
             })
+    resultrange_origin_domain = fields.Function(fields.Many2Many(
+        'lims.range.type', None, None, 'Origin domain'),
+        'on_change_with_resultrange_origin_domain')
     comments = fields.Text('Comments', translate=True, depends=_depends,
         states={'readonly': ~Eval('state').in_(['draft', 'revised'])})
     fractions_comments = fields.Function(fields.Text('Fractions comments'),
@@ -858,6 +862,28 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         if not professionals:
             return []
         return [p.id for p in professionals]
+
+    @fields.depends('samples')
+    def on_change_with_resultrange_origin_domain(self, name=None):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Range = pool.get('lims.range')
+        RangeType = pool.get('lims.range.type')
+
+        if not self.samples:
+            return []
+
+        product_type_id = self.samples[0].product_type.id
+        matrix_id = self.samples[0].matrix.id
+        cursor.execute('SELECT DISTINCT(rt.id) '
+            'FROM "' + RangeType._table + '" rt '
+                'INNER JOIN "' + Range._table + '" r '
+                'ON rt.id = r.range_type '
+            'WHERE rt.use = \'result_range\' '
+                'AND r.product_type = %s '
+                'AND r.matrix = %s',
+            (product_type_id, matrix_id))
+        return [x[0] for x in cursor.fetchall()]
 
     @classmethod
     @ModelView.button

@@ -5254,6 +5254,10 @@ msgctxt "field:lims.results_report.version.detail,resultrange_origin:"
 msgid "Origin"
 msgstr "Origen"
 
+msgctxt "field:lims.results_report.version.detail,resultrange_origin_domain:"
+msgid "Origin domain"
+msgstr "Dominio para Origen"
+
 msgctxt "field:lims.results_report.version.detail,review_reason:"
 msgid "Review reason"
 msgstr "Motivo de revisión"
