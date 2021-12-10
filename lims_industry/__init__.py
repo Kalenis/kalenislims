@@ -19,6 +19,8 @@ def register():
         industry.Plant,
         industry.EquipmentType,
         industry.Brand,
+        industry.ComponentKind,
+        industry.ComponentLocation,
         industry.ComponentType,
         industry.EquipmentTemplate,
         industry.EquipmentTemplateComponentType,

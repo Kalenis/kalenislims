@@ -86,6 +86,26 @@ msgctxt "field:lims.component,year_manufacturing:"
 msgid "Year of manufacturing"
 msgstr "Año de fabricación"
 
+msgctxt "field:lims.component.kind,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.component.kind,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.component.location,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.component.type,kind:"
+msgid "Kind"
+msgstr "Clase"
+
+msgctxt "field:lims.component.type,location:"
+msgid "Location"
+msgstr "Ubicación"
+
 msgctxt "field:lims.component.type,name:"
 msgid "Name"
 msgstr "Nombre"
@@ -851,6 +871,14 @@ msgctxt "model:ir.action,name:act_component_from_party"
 msgid "Components"
 msgstr "Componentes"
 
+msgctxt "model:ir.action,name:act_component_kind"
+msgid "Component Kinds"
+msgstr "Clases de componente"
+
+msgctxt "model:ir.action,name:act_component_location"
+msgid "Component Locations"
+msgstr "Ubicaciones de componente"
+
 msgctxt "model:ir.action,name:act_component_type"
 msgid "Component Types"
 msgstr "Tipos de componente"
@@ -918,6 +946,10 @@ msgstr "Faltan datos en Muestra"
 msgctxt "model:ir.message,text:msg_brand_name_unique"
 msgid "There is already a brand with the same name"
 msgstr "Ya existe una marca con el mismo nombre"
+
+msgctxt "model:ir.message,text:msg_component_kind_name_unique"
+msgid "There is already a component kind with the same name"
+msgstr "Ya existe una clase de componente con el mismo nombre"
 
 msgctxt "model:ir.message,text:msg_component_type_name_unique"
 msgid "There is already a component type with the same name"
@@ -1001,6 +1033,14 @@ msgctxt "model:ir.ui.menu,name:menu_component"
 msgid "Components"
 msgstr "Componentes"
 
+msgctxt "model:ir.ui.menu,name:menu_component_kind"
+msgid "Component Kinds"
+msgstr "Clases de componente"
+
+msgctxt "model:ir.ui.menu,name:menu_component_location"
+msgid "Component Locations"
+msgstr "Ubicaciones de componente"
+
 msgctxt "model:ir.ui.menu,name:menu_component_type"
 msgid "Component Types"
 msgstr "Tipos de componente"
@@ -1052,6 +1092,14 @@ msgstr "Marca de Producto comercial"
 msgctxt "model:lims.component,name:"
 msgid "Component"
 msgstr "Componente"
+
+msgctxt "model:lims.component.kind,name:"
+msgid "Component Kind"
+msgstr "Clase de componente"
+
+msgctxt "model:lims.component.location,name:"
+msgid "Component Location"
+msgstr "Ubicación de componente"
 
 msgctxt "model:lims.component.type,name:"
 msgid "Component Type"
