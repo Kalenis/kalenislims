@@ -4,8 +4,4 @@
     <field name="name" xexpand="1"/>
     <label name="product_type"/>
     <field name="product_type"/>
-    <label name="kind"/>
-    <field name="kind"/>
-    <label name="location"/>
-    <field name="location"/>
 </form>

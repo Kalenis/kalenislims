@@ -109,6 +109,72 @@
         <menuitem action="act_component_type" id="menu_component_type"
             parent="menu_config" sequence="30"/>
 
+<!-- Component Kind -->
+
+        <record model="ir.ui.view" id="component_kind_view_list">
+            <field name="model">lims.component.kind</field>
+            <field name="type">tree</field>
+            <field name="name">component_kind_list</field>
+        </record>
+        <record model="ir.ui.view" id="component_kind_view_form">
+            <field name="model">lims.component.kind</field>
+            <field name="type">form</field>
+            <field name="name">component_kind_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_component_kind">
+            <field name="name">Component Kinds</field>
+            <field name="res_model">lims.component.kind</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_component_kind_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="component_kind_view_list"/>
+            <field name="act_window" ref="act_component_kind"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_component_kind_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="component_kind_view_form"/>
+            <field name="act_window" ref="act_component_kind"/>
+        </record>
+
+        <menuitem action="act_component_kind" id="menu_component_kind"
+            parent="menu_config" sequence="32"/>
+
+<!-- Component Location -->
+
+        <record model="ir.ui.view" id="component_location_view_list">
+            <field name="model">lims.component.location</field>
+            <field name="type">tree</field>
+            <field name="name">component_location_list</field>
+        </record>
+        <record model="ir.ui.view" id="component_location_view_form">
+            <field name="model">lims.component.location</field>
+            <field name="type">form</field>
+            <field name="name">component_location_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_component_location">
+            <field name="name">Component Locations</field>
+            <field name="res_model">lims.component.location</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_component_location_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="component_location_view_list"/>
+            <field name="act_window" ref="act_component_location"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_component_location_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="component_location_view_form"/>
+            <field name="act_window" ref="act_component_location"/>
+        </record>
+
+        <menuitem action="act_component_location" id="menu_component_location"
+            parent="menu_config" sequence="34"/>
+
 <!-- Equipment Template -->
 
         <record model="ir.ui.view" id="equipment_template_view_list">

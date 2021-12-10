@@ -134,6 +134,44 @@ class Brand(ModelSQL, ModelView):
         return new_records
 
 
+class ComponentKind(ModelSQL, ModelView):
+    'Component Kind'
+    __name__ = 'lims.component.kind'
+
+    name = fields.Char('Name', required=True)
+    product_type = fields.Many2One('lims.product.type', 'Product type',
+        required=True)
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        t = cls.__table__()
+        cls._sql_constraints = [
+            ('name_unique', Unique(t, t.name),
+                'lims_industry.msg_component_kind_name_unique'),
+            ]
+
+    @classmethod
+    def copy(cls, records, default=None):
+        if default is None:
+            default = {}
+        current_default = default.copy()
+
+        new_records = []
+        for record in records:
+            current_default['name'] = '%s (copy)' % record.name
+            new_record, = super().copy([record], default=current_default)
+            new_records.append(new_record)
+        return new_records
+
+
+class ComponentLocation(ModelSQL, ModelView):
+    'Component Location'
+    __name__ = 'lims.component.location'
+
+    name = fields.Char('Name', required=True)
+
+
 class ComponentType(ModelSQL, ModelView):
     'Component Type'
     __name__ = 'lims.component.type'
@@ -141,6 +179,8 @@ class ComponentType(ModelSQL, ModelView):
     name = fields.Char('Name', required=True)
     product_type = fields.Many2One('lims.product.type', 'Product type',
         required=True)
+    kind = fields.Many2One('lims.component.kind', 'Kind')
+    location = fields.Many2One('lims.component.location', 'Location')
 
     @classmethod
     def __setup__(cls):
