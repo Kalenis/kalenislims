@@ -2,6 +2,4 @@
 <tree>
     <field name="name" expand="1"/>
     <field name="product_type" expand="1"/>
-    <field name="kind"/>
-    <field name="location"/>
 </tree>
