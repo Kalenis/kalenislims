@@ -416,25 +416,10 @@
 
 <!-- Wizard Divide Reports -->
 
-        <record model="ir.ui.view" id="lims_divide_reports_result_view_form">
-            <field name="model">lims.divide_reports.result</field>
+        <record model="ir.ui.view" id="lims_divide_reports_start_view_form">
+            <field name="model">lims.divide_reports.start</field>
             <field name="type">form</field>
-            <field name="name">service_divide_reports_result_form</field>
-        </record>
-        <record model="ir.ui.view" id="lims_divide_reports_process_view_form">
-            <field name="model">lims.divide_reports.process</field>
-            <field name="type">form</field>
-            <field name="name">service_divide_reports_process_form</field>
-        </record>
-        <record model="ir.ui.view" id="lims_divide_reports_detail_view_form">
-            <field name="model">lims.divide_reports.detail</field>
-            <field name="type">form</field>
-            <field name="name">service_divide_reports_detail_form</field>
-        </record>
-        <record model="ir.ui.view" id="lims_divide_reports_detail_view_list">
-            <field name="model">lims.divide_reports.detail</field>
-            <field name="type">tree</field>
-            <field name="name">service_divide_reports_detail_list</field>
+            <field name="name">service_divide_reports_start_form</field>
         </record>
 
         <record model="ir.action.wizard" id="wiz_lims_divide_reports">
@@ -442,19 +427,15 @@
             <field name="wiz_name">lims.divide_reports</field>
         </record>
 
-        <record model="ir.action.keyword" id="lims_divide_reports_keyword">
+        <record model="ir.action.keyword" id="lims_divide_reports_entry_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.entry,-1</field>
             <field name="action" ref="wiz_lims_divide_reports"/>
         </record>
-
-        <record model="ir.model.field.access" id="access_divide_reports_process_analysis_detail">
-            <field name="field"
-                search="[('name', '=', 'analysis_detail'), ('model.model', '=', 'lims.divide_reports.process')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
+        <record model="ir.action.keyword" id="lims_divide_reports_detail_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.entry.detail.analysis,-1</field>
+            <field name="action" ref="wiz_lims_divide_reports"/>
         </record>
 
 <!-- Samples Pending Reporting -->

@@ -177,9 +177,7 @@ def register():
         control_tendency.TrendChartData,
         module='lims', type_='model')
     Pool.register(
-        results_report.DivideReportsResult,
-        results_report.DivideReportsDetail,
-        results_report.DivideReportsProcess,
+        results_report.DivideReportsStart,
         results_report.OpenSamplesPendingReportingStart,
         results_report.GenerateReportStart,
         certification.DuplicateAnalysisFamilyStart,

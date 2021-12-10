@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<form>
+    <label name="report_grouper"/>
+    <field name="report_grouper"/>
+    <field name="analysis_detail" colspan="4"/>
+</form>

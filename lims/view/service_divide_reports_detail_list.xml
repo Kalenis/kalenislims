@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<tree editable="1">
-    <field name="analysis_origin"/>
-    <field name="analysis"/>
-    <field name="laboratory"/>
-    <field name="report_grouper"/>
-</tree>

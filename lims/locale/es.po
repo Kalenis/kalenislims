@@ -1267,57 +1267,17 @@ msgctxt "field:lims.create_sample.start,zone_required:"
 msgid "Zone required"
 msgstr "Zona requerida"
 
-msgctxt "field:lims.divide_reports.detail,analysis:"
-msgid "Analysis"
-msgstr "Análisis"
-
-msgctxt "field:lims.divide_reports.detail,analysis_origin:"
-msgid "Analysis origin"
-msgstr "Análisis origen"
-
-msgctxt "field:lims.divide_reports.detail,detail_id:"
-msgid "Detail ID"
-msgstr "ID Detalle"
-
-msgctxt "field:lims.divide_reports.detail,laboratory:"
-msgid "Laboratory"
-msgstr "Laboratorio"
-
-msgctxt "field:lims.divide_reports.detail,report_grouper:"
-msgid "Report Grouper"
-msgstr "Agrupador de informe"
-
-msgctxt "field:lims.divide_reports.detail,session_id:"
-msgid "Session ID"
-msgstr "ID Sesión"
-
-msgctxt "field:lims.divide_reports.process,analysis:"
-msgid "Analysis"
-msgstr "Análisis"
-
-msgctxt "field:lims.divide_reports.process,analysis_detail:"
+msgctxt "field:lims.divide_reports.start,analysis_detail:"
 msgid "Analysis detail"
 msgstr "Detalle de análisis"
 
-msgctxt "field:lims.divide_reports.process,fraction:"
-msgid "Fraction"
-msgstr "Fracción"
+msgctxt "field:lims.divide_reports.start,analysis_detail_domain:"
+msgid "Analysis detail domain"
+msgstr "Dominio para Detalle de análisis"
 
-msgctxt "field:lims.divide_reports.process,service:"
-msgid "Service"
-msgstr "Servicio"
-
-msgctxt "field:lims.divide_reports.result,index:"
-msgid "Index"
-msgstr "Índice"
-
-msgctxt "field:lims.divide_reports.result,services:"
-msgid "Services"
-msgstr "Servicios"
-
-msgctxt "field:lims.divide_reports.result,total:"
-msgid "Total"
-msgstr "Total"
+msgctxt "field:lims.divide_reports.start,report_grouper:"
+msgid "Report Grouper"
+msgstr "Agrupador de informe"
 
 msgctxt "field:lims.entry,ack_report_cache:"
 msgid "Acknowledgment report cache"
@@ -8937,15 +8897,7 @@ msgctxt "model:lims.create_sample.start,name:"
 msgid "Create Sample"
 msgstr "Crear muestra"
 
-msgctxt "model:lims.divide_reports.detail,name:"
-msgid "Analysis Detail"
-msgstr "Detalle de análisis"
-
-msgctxt "model:lims.divide_reports.process,name:"
-msgid "Divide Reports"
-msgstr "Dividir informes"
-
-msgctxt "model:lims.divide_reports.result,name:"
+msgctxt "model:lims.divide_reports.start,name:"
 msgid "Divide Reports"
 msgstr "Dividir informes"
 
@@ -13450,18 +13402,6 @@ msgctxt "view:lims.create_sample.start:"
 msgid "Report comments"
 msgstr "Observaciones informe"
 
-msgctxt "view:lims.divide_reports.detail:"
-msgid "Analysis Detail"
-msgstr "Detalle de análisis"
-
-msgctxt "view:lims.divide_reports.process:"
-msgid "Divide Reports"
-msgstr "Dividir informes"
-
-msgctxt "view:lims.divide_reports.result:"
-msgid "Divide Reports"
-msgstr "Dividir informes"
-
 msgctxt "view:lims.entry.acknowledgment_contacts:"
 msgid "Acknowledgment Contact"
 msgstr "Contacto acuse de recibo"
@@ -14675,13 +14615,13 @@ msgctxt "wizard_button:lims.create_sample,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
-msgctxt "wizard_button:lims.divide_reports,process,end:"
+msgctxt "wizard_button:lims.divide_reports,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
-msgctxt "wizard_button:lims.divide_reports,process,next_:"
-msgid "Next"
-msgstr "Siguiente"
+msgctxt "wizard_button:lims.divide_reports,start,ok:"
+msgid "Ok"
+msgstr "Aceptar"
 
 msgctxt "wizard_button:lims.entry.change_invoice_party,error,end:"
 msgid "Cancel"

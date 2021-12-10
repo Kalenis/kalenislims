@@ -1940,127 +1940,61 @@ class ResultsLineRepeatAnalysis(NotebookLineRepeatAnalysis):
         return super().default_start(fields)
 
 
-class DivideReportsResult(ModelView):
+class DivideReportsStart(ModelView):
     'Divide Reports'
-    __name__ = 'lims.divide_reports.result'
+    __name__ = 'lims.divide_reports.start'
 
-    services = fields.Many2Many('lims.service', None, None, 'Services')
-    total = fields.Integer('Total')
-    index = fields.Integer('Index')
-
-
-class DivideReportsDetail(ModelSQL, ModelView):
-    'Analysis Detail'
-    __name__ = 'lims.divide_reports.detail'
-
-    detail_id = fields.Integer('Detail ID')
-    analysis_origin = fields.Char('Analysis origin', readonly=True)
-    analysis = fields.Many2One('lims.analysis', 'Analysis', readonly=True)
-    laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        readonly=True)
     report_grouper = fields.Integer('Report Grouper')
-    session_id = fields.Integer('Session ID')
-
-    @classmethod
-    def __register__(cls, module_name):
-        super().__register__(module_name)
-        cursor = Transaction().connection.cursor()
-        cursor.execute('DELETE FROM "' + cls._table + '"')
-
-
-class DivideReportsProcess(ModelView):
-    'Divide Reports'
-    __name__ = 'lims.divide_reports.process'
-
-    fraction = fields.Many2One('lims.fraction', 'Fraction', readonly=True)
-    service = fields.Many2One('lims.service', 'Service', readonly=True)
-    analysis = fields.Many2One('lims.analysis', 'Analysis', readonly=True)
-    analysis_detail = fields.One2Many('lims.divide_reports.detail',
-        None, 'Analysis detail')
+    analysis_detail = fields.Many2Many('lims.entry.detail.analysis',
+        None, None, 'Analysis detail',
+        domain=[('id', 'in', Eval('analysis_detail_domain'))],
+        depends=['analysis_detail_domain'])
+    analysis_detail_domain = fields.One2Many('lims.entry.detail.analysis',
+        None, 'Analysis detail domain')
 
 
 class DivideReports(Wizard):
     'Divide Reports'
     __name__ = 'lims.divide_reports'
 
-    start_state = 'search'
-    search = StateTransition()
-    result = StateView('lims.divide_reports.result',
-        'lims.lims_divide_reports_result_view_form', [])
-    next_ = StateTransition()
-    process = StateView('lims.divide_reports.process',
-        'lims.lims_divide_reports_process_view_form', [
+    start = StateView('lims.divide_reports.start',
+        'lims.lims_divide_reports_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Next', 'next_', 'tryton-forward', default=True),
+            Button('Ok', 'ok', 'tryton-ok', default=True),
             ])
-    confirm = StateTransition()
+    ok = StateTransition()
 
-    def transition_search(self):
-        Service = Pool().get('lims.service')
+    def default_start(self, fields):
+        EntryDetailAnalysis = Pool().get('lims.entry.detail.analysis')
 
-        services = Service.search([
-            ('entry', '=', Transaction().context['active_id']),
-            ('divide', '=', True),
-            ('annulled', '=', False),
-            ])
-        if services:
-            self.result.services = services
-            self.result.total = len(self.result.services)
-            self.result.index = 0
-            return 'next_'
-        return 'end'
+        default = {
+            'report_grouper': 0,
+            'analysis_detail': [],
+            'analysis_detail_domain': [],
+            }
 
-    def transition_next_(self):
-        has_prev = (hasattr(self.process, 'analysis_detail') and
-            getattr(self.process, 'analysis_detail'))
-        if has_prev:
-            for detail in self.process.analysis_detail:
-                detail.save()
+        context = Transaction().context
+        model = context.get('active_model', None)
 
-        if self.result.index < self.result.total:
-            service = self.result.services[self.result.index]
-            self.process.service = service.id
-            self.process.analysis_detail = None
-            self.result.index += 1
-            return 'process'
-        return 'confirm'
+        if model == 'lims.entry':
+            analysis_detail = EntryDetailAnalysis.search([
+                ('entry', 'in', context['active_ids']),
+                ])
+            default['analysis_detail_domain'] = [e.id for e in analysis_detail]
 
-    def default_process(self, fields):
-        DivideReportsDetail = Pool().get(
-            'lims.divide_reports.detail')
+        elif model == 'lims.entry.detail.analysis':
+            analysis_detail = EntryDetailAnalysis.search([
+                ('id', 'in', context['active_ids']),
+                ])
+            default['analysis_detail_domain'] = [e.id for e in analysis_detail]
+            default['analysis_detail'] = default['analysis_detail_domain']
 
-        if not self.process.service:
-            return {}
-
-        default = {}
-        default['fraction'] = self.process.service.fraction.id
-        default['service'] = self.process.service.id
-        default['analysis'] = self.process.service.analysis.id
-        details = DivideReportsDetail.create([{
-            'detail_id': d.id,
-            'analysis_origin': d.analysis_origin,
-            'analysis': d.analysis.id,
-            'laboratory': d.laboratory.id,
-            'report_grouper': d.report_grouper,
-            'session_id': self._session_id,
-            } for d in self.process.service.analysis_detail])
-        if details:
-            default['analysis_detail'] = [d.id for d in details]
         return default
 
-    def transition_confirm(self):
-        pool = Pool()
-        DivideReportsDetail = pool.get(
-            'lims.divide_reports.detail')
-        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
-
-        details = DivideReportsDetail.search([
-            ('session_id', '=', self._session_id),
-            ])
-        for detail in details:
-            analysis_detail = EntryDetailAnalysis(detail.detail_id)
-            analysis_detail.report_grouper = detail.report_grouper
-            analysis_detail.save()
+    def transition_ok(self):
+        EntryDetailAnalysis = Pool().get('lims.entry.detail.analysis')
+        EntryDetailAnalysis.write(list(self.start.analysis_detail),
+            {'report_grouper': self.start.report_grouper})
         return 'end'
 
 
