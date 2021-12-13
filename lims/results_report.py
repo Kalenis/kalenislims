@@ -1978,7 +1978,9 @@ class DivideReports(Wizard):
 
         if model == 'lims.entry':
             analysis_detail = EntryDetailAnalysis.search([
-                ('entry', 'in', context['active_ids']),
+                ('entry', '=', context['active_id']),
+                ('service.divide', '=', True),
+                ('service.annulled', '=', False),
                 ])
             default['analysis_detail_domain'] = [e.id for e in analysis_detail]
 
