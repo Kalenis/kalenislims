@@ -5,7 +5,7 @@
 
 from trytond.model import fields
 from trytond.pool import PoolMeta, Pool
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Id
 
 
 class LabWorkYear(metaclass=PoolMeta):
@@ -14,9 +14,10 @@ class LabWorkYear(metaclass=PoolMeta):
     project_tas_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence.strict', 'TAS Projects Sequence', required=True,
         domain=[
+            ('sequence_type', '=',
+                Id('lims_project_study_plan', 'seq_type_stp_project')),
             ('company', 'in',
                 [Eval('context', {}).get('company', -1), None]),
-            ('code', '=', 'lims.project'),
             ]))
 
     @classmethod
@@ -32,6 +33,7 @@ class LabWorkYearSequence(metaclass=PoolMeta):
 
     project_tas_sequence = fields.Many2One('ir.sequence.strict',
         'TAS Projects Sequence', depends=['company'], domain=[
+            ('sequence_type', '=',
+                Id('lims_project_study_plan', 'seq_type_stp_project')),
             ('company', 'in', [Eval('company', -1), None]),
-            ('code', '=', 'lims.project'),
             ])
