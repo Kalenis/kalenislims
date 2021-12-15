@@ -24,4 +24,5 @@
     <field name="referable"/>
     <field name="by_default"/>
     <field name="valid_view"/>
+    <field name="laboratory"/>
 </tree>

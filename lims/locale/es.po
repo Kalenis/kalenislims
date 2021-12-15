@@ -5926,6 +5926,10 @@ msgctxt "field:lims.typification,initial_concentration:"
 msgid "Initial concentration"
 msgstr "Concentración inicial"
 
+msgctxt "field:lims.typification,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
 msgctxt "field:lims.typification,limit_digits:"
 msgid "Limit digits"
 msgstr "Dígitos de límite"

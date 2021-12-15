@@ -100,6 +100,7 @@ class Typification(ModelSQL, ModelView):
     valid_readonly = fields.Function(fields.Boolean(
         'Field active readonly'),
         'on_change_with_valid_readonly')
+    laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
 
     @classmethod
     def __setup__(cls):
