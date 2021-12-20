@@ -100,7 +100,11 @@ class Typification(ModelSQL, ModelView):
     valid_readonly = fields.Function(fields.Boolean(
         'Field active readonly'),
         'on_change_with_valid_readonly')
-    laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
+    laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
+        domain=[('id', 'in', Eval('laboratory_domain'))],
+        depends=['laboratory_domain'])
+    laboratory_domain = fields.Function(fields.Many2Many('lims.laboratory',
+        None, None, 'Laboratory domain'), 'on_change_with_laboratory_domain')
 
     @classmethod
     def __setup__(cls):
@@ -202,6 +206,12 @@ class Typification(ModelSQL, ModelView):
         if self.analysis and self.analysis.state == 'disabled':
             return True
         return False
+
+    @fields.depends('analysis')
+    def on_change_with_laboratory_domain(self, name=None):
+        if self.analysis and self.analysis.laboratories:
+            return [l.laboratory.id for l in self.analysis.laboratories]
+        return []
 
     @fields.depends('analysis')
     def on_change_analysis(self):

@@ -5930,6 +5930,10 @@ msgctxt "field:lims.typification,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
 
+msgctxt "field:lims.typification,laboratory_domain:"
+msgid "Laboratory domain"
+msgstr "Dominio para Laboratorio"
+
 msgctxt "field:lims.typification,limit_digits:"
 msgid "Limit digits"
 msgstr "Dígitos de límite"
