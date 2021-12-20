@@ -24,7 +24,17 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail'
 
     sent_date = fields.Function(fields.DateTime('Sent date'),
-       'get_report_field', searcher='search_report_field')
+       'get_sent_date')
+
+    @classmethod
+    def get_sent_date(cls, details, name):
+        result = {}
+        for d in details:
+            if d.state not in ('released', 'annulled'):
+                result[d.id] = None
+            else:
+                result[d.id] = d.report_version.results_report.sent_date
+        return result
 
     def unsend(self):
         results_report = self.report_version.results_report
