@@ -932,16 +932,6 @@ class EditSample(Wizard):
         if not typified_analysis:
             return []
 
-        cursor.execute('SELECT id '
-            'FROM "' + Analysis._table + '" '
-            'WHERE type = \'analysis\' '
-                'AND behavior IN (\'normal\', \'internal_relation\') '
-                'AND state = \'active\'')
-        disabled_analysis = [a[0] for a in cursor.fetchall()]
-        if disabled_analysis:
-            typified_analysis = list(set(typified_analysis) -
-                set(disabled_analysis))
-
         cursor.execute('SELECT DISTINCT(analysis) '
             'FROM "' + CalculatedTypification._table + '" '
             'WHERE product_type = %s '
