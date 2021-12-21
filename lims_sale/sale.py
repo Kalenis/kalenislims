@@ -265,6 +265,7 @@ class SaleLine(metaclass=PoolMeta):
         depends=['sale_state'])
     samples = fields.Many2Many('lims.sample-sale.line',
         'sale_line', 'sample', 'Samples', readonly=True)
+    additional_origin = fields.Many2One('sale.line', 'Origin of additional')
 
     @staticmethod
     def default_product_type_domain():
@@ -468,6 +469,7 @@ class SaleLine(metaclass=PoolMeta):
                             'product_type': sale_line.product_type.id,
                             'matrix': sale_line.matrix.id,
                             'method': None,
+                            'additional_origin': sale_line.id,
                             }
 
                 if typification.additionals:
@@ -497,6 +499,7 @@ class SaleLine(metaclass=PoolMeta):
                                 'product_type': sale_line.product_type.id,
                                 'matrix': sale_line.matrix.id,
                                 'method': method_id,
+                                'additional_origin': sale_line.id,
                                 }
 
         if additional_services:
@@ -516,11 +519,28 @@ class SaleLine(metaclass=PoolMeta):
                         analysis=analysis_id,
                         product=service_data['product'],
                         method=service_data['method'],
+                        additional_origin=service_data['additional_origin'],
                         sale=sale_id,
                         )
                     sale_line.on_change_product()
                     sale_lines.append(sale_line)
             cls.save(sale_lines)
+
+    @classmethod
+    def delete(cls, sale_lines):
+        cls.delete_additional_services(sale_lines)
+        super().delete(sale_lines)
+
+    @classmethod
+    def delete_additional_services(cls, sale_lines):
+        lines_to_delete = [l.id for l in sale_lines]
+        additionals = cls.search([
+            ('additional_origin', 'in', lines_to_delete),
+            ])
+        additionals_to_delete = [l for l in additionals
+            if l.id not in lines_to_delete]
+        if additionals_to_delete:
+            cls.delete(additionals_to_delete)
 
 
 class SaleLoadServicesStart(ModelView):

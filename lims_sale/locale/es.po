@@ -46,6 +46,10 @@ msgctxt "field:sale.configuration,email_quotation_subject:"
 msgid "Subject of the quotation email"
 msgstr "Asunto del email de presupuesto"
 
+msgctxt "field:sale.line,additional_origin:"
+msgid "Origin of additional"
+msgstr "Origen de adicional"
+
 msgctxt "field:sale.line,analysis:"
 msgid "Service"
 msgstr "Servicio"
