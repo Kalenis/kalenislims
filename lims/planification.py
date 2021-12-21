@@ -691,9 +691,10 @@ class PlanificationDetail(ModelSQL, ModelView):
     label = fields.Function(fields.Char('Label'), 'get_fraction_field',
         searcher='search_fraction_field')
     product_type = fields.Function(fields.Many2One('lims.product.type',
-        'Product type'), 'get_fraction_field')
+        'Product type'), 'get_fraction_field',
+        searcher='search_fraction_field')
     matrix = fields.Function(fields.Many2One('lims.matrix', 'Matrix'),
-        'get_fraction_field')
+        'get_fraction_field', searcher='search_fraction_field')
     details = fields.One2Many('lims.planification.service_detail',
         'detail', 'Planification detail', states={'readonly': True})
     urgent = fields.Function(fields.Boolean('Urgent'), 'get_service_field',
@@ -735,6 +736,25 @@ class PlanificationDetail(ModelSQL, ModelView):
         if name == 'fraction_type':
             name = 'type'
         return [('fraction.' + name,) + tuple(clause[1:])]
+
+    def _order_sample_field(name):
+        def order_field(tables):
+            pool = Pool()
+            Sample = pool.get('lims.sample')
+            Fraction = pool.get('lims.fraction')
+            field = Sample._fields[name]
+            table, _ = tables[None]
+            fraction_tables = tables.get('fraction')
+            if fraction_tables is None:
+                fraction = Fraction.__table__()
+                fraction_tables = {
+                    None: (fraction, fraction.id == table.fraction),
+                    }
+                tables['fraction'] = fraction_tables
+            return field.convert_order(name, fraction_tables, Fraction)
+        return staticmethod(order_field)
+    order_product_type = _order_sample_field('product_type')
+    order_matrix = _order_sample_field('matrix')
 
     @classmethod
     def get_service_field(cls, details, names):
