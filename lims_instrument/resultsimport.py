@@ -424,8 +424,9 @@ class NotebookLoadResultsFile(Wizard):
                 'WHERE code = %s '
                 'LIMIT 1', (professional,))
             prof = cursor.fetchone()
-            if prof:
-                res.append(prof)
+            if not prof:
+                return []
+            res.append(prof)
         return res
 
     def check_professionals(self, professionals, method):
