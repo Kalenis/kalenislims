@@ -2,10 +2,10 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import logging
+from email import encoders
 from email.mime.base import MIMEBase
+from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from email.mime.application import MIMEApplication
-from email.header import Header
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.wizard import Wizard, StateView, StateTransition, Button
@@ -155,22 +155,22 @@ class Sale(metaclass=PoolMeta):
         if not (from_addr or to_addr):
             return None
 
-        msg = MIMEMultipart()
+        msg = MIMEMultipart('mixed')
         msg['From'] = from_addr
         msg['To'] = to_addr
         msg['Reply-to'] = reply_to
-        msg['Subject'] = Header(subject, 'utf-8')
+        msg['Subject'] = subject
 
-        msg_body = MIMEBase('text', 'plain')
+        msg_body = MIMEText('text', 'plain')
         msg_body.set_payload(body.encode('UTF-8'), 'UTF-8')
         msg.attach(msg_body)
 
-        attachment = MIMEApplication(attachment_data['content'],
-            Name=attachment_data['filename'], _subtype="pdf")
-        attachment.add_header('content-disposition', 'attachment',
-            filename=('utf-8', '', attachment_data['filename']))
+        attachment = MIMEBase('application', 'octet-stream')
+        attachment.set_payload(attachment_data['content'])
+        encoders.encode_base64(attachment)
+        attachment.add_header('Content-Disposition', 'attachment',
+            filename=attachment_data['filename'])
         msg.attach(attachment)
-
         return msg
 
     @staticmethod
