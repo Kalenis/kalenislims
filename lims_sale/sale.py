@@ -4,10 +4,10 @@
 import logging
 from io import BytesIO
 from datetime import datetime
+from email import encoders
 from email.mime.base import MIMEBase
+from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from email.mime.application import MIMEApplication
-from email.header import Header
 from PyPDF2 import PdfFileMerger
 from PyPDF2.utils import PdfReadError
 
@@ -822,24 +822,23 @@ class SendQuotation(Wizard):
             attachments_data=[]):
         if not to_addrs:
             return None
-        print('body', body)
 
-        msg = MIMEMultipart()
+        msg = MIMEMultipart('mixed')
         msg['From'] = from_addr
         msg['Reply-to'] = ', '.join(reply_to)
         msg['To'] = ', '.join(to_addrs)
-        msg['Subject'] = Header(subject, 'utf-8')
+        msg['Subject'] = subject
 
-        msg_body = MIMEBase('text', 'plain')
+        msg_body = MIMEText('text', 'plain')
         msg_body.set_payload(body.encode('UTF-8'), 'UTF-8')
         msg.attach(msg_body)
 
         for attachment_data in attachments_data:
-            attachment = MIMEApplication(
-                attachment_data['content'],
-                Name=attachment_data['filename'], _subtype="pdf")
-            attachment.add_header('content-disposition', 'attachment',
-                filename=('utf-8', '', attachment_data['filename']))
+            attachment = MIMEBase('application', 'octet-stream')
+            attachment.set_payload(attachment_data['content'])
+            encoders.encode_base64(attachment)
+            attachment.add_header('Content-Disposition', 'attachment',
+                filename=attachment_data['filename'])
             msg.attach(attachment)
         return msg
 
