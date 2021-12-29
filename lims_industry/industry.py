@@ -8,6 +8,7 @@ from trytond.pyson import Eval, If
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
+from trytond import backend
 
 
 class Plant(ModelSQL, ModelView):
@@ -219,9 +220,9 @@ class EquipmentTemplate(ModelSQL, ModelView):
     brand = fields.Many2One('lims.brand', 'Brand', required=True)
     model = fields.Char('Model')
     power = fields.Char('Power')
-    component_types = fields.Many2Many(
-        'lims.equipment.template-component.type',
-        'template', 'type', 'Component types')
+    component_kinds = fields.Many2Many(
+        'lims.equipment.template-component.kind',
+        'template', 'kind', 'Component kinds')
 
     @classmethod
     def __setup__(cls):
@@ -263,15 +264,35 @@ class EquipmentTemplate(ModelSQL, ModelView):
         return new_records
 
 
-class EquipmentTemplateComponentType(ModelSQL):
-    'Equipment Template - Component Type'
-    __name__ = 'lims.equipment.template-component.type'
-    _table = 'lims_equipment_template_component_type'
+class EquipmentTemplateComponentKind(ModelSQL):
+    'Equipment Template - Component Kind'
+    __name__ = 'lims.equipment.template-component.kind'
+    _table = 'lims_equipment_template_component_kind'
 
     template = fields.Many2One('lims.equipment.template', 'Template',
         required=True, ondelete='CASCADE', select=True)
-    type = fields.Many2One('lims.component.type', 'Type',
+    kind = fields.Many2One('lims.component.kind', 'Kind',
         required=True, ondelete='CASCADE', select=True)
+
+    @classmethod
+    def __register__(cls, module_name):
+        cursor = Transaction().connection.cursor()
+        TableHandler = backend.get('TableHandler')
+        sql_table = cls.__table__()
+        super().__register__(module_name)
+        old_table_name = 'lims_equipment_template_component_type'
+        if TableHandler.table_exist(old_table_name):
+            cursor.execute('SELECT etct.template, ct.kind '
+                'FROM lims_equipment_template_component_type etct '
+                'INNER JOIN lims_component_type ct '
+                    'ON ct.id = etct.type '
+                'WHERE ct.kind IS NOT NULL')
+            res = cursor.fetchall()
+            if res:
+                cursor.execute(*sql_table.insert(
+                    columns=[sql_table.template, sql_table.kind],
+                    values=[[x[0], x[1]] for x in res]))
+            TableHandler.drop_table('', old_table_name)
 
 
 class Equipment(ModelSQL, ModelView):
@@ -413,15 +434,15 @@ class Equipment(ModelSQL, ModelView):
 
         if not self.template:
             return
-        current_components_ids = [component.type.id
+        current_components_ids = [component.kind.id
             for component in self.components]
         components = list(self.components)
-        for type in self.template.component_types:
-            if type.id in current_components_ids:
+        for kind in self.template.component_kinds:
+            if kind.id in current_components_ids:
                 continue
             value = Component(**Component.default_get(
                 list(Component._fields.keys()), with_rec_name=False))
-            value.type = type.id
+            value.kind = kind.id
             components.append(value)
         self.model = self.template.model
         self.power = self.template.power
@@ -447,8 +468,8 @@ class Component(ModelSQL, ModelView):
 
     equipment = fields.Many2One('lims.equipment', 'Equipment',
         required=True, ondelete='CASCADE', select=True)
-    type = fields.Many2One('lims.component.type', 'Type',
-        required=True)
+    kind = fields.Many2One('lims.component.kind', 'Kind', required=True)
+    location = fields.Many2One('lims.component.location', 'Location')
     product_type = fields.Function(fields.Many2One('lims.product.type',
         'Product type'), 'get_product_type')
     comercial_product = fields.Many2One('lims.comercial.product',
@@ -471,19 +492,29 @@ class Component(ModelSQL, ModelView):
     def __setup__(cls):
         super().__setup__()
         cls._order.insert(0, ('equipment', 'ASC'))
-        cls._order.insert(1, ('type', 'ASC'))
+        cls._order.insert(1, ('kind', 'ASC'))
         t = cls.__table__()
         cls._sql_constraints = [
-            ('type_description_unique', Unique(t, t.equipment, t.type,
-                    t.customer_description),
+            ('kind_location_description_unique', Unique(t, t.equipment,
+                    t.kind, t.location, t.customer_description),
                 'lims_industry.msg_component_unique'),
             ]
 
     @classmethod
     def __register__(cls, module_name):
+        table_h = cls.__table_handler__(module_name)
+        type_exist = table_h.column_exist('type')
         super().__register__(module_name)
-        table = cls.__table_handler__(module_name)
-        table.drop_constraint('type_unique')
+        if type_exist:
+            cursor = Transaction().connection.cursor()
+            ComponentType = Pool().get('lims.component.type')
+            cursor.execute('UPDATE "' + cls._table + '" c '
+                'SET kind = ct.kind, location = ct.location '
+                'FROM "' + ComponentType._table + '" ct '
+                'WHERE ct.id = c.type')
+            table_h.drop_constraint('type_unique')
+            table_h.drop_constraint('type_description_unique')
+            table_h.drop_column('type')
 
     @classmethod
     def create(cls, vlist):
@@ -526,7 +557,9 @@ class Component(ModelSQL, ModelView):
                     component=component.get_rec_name(None)))
 
     def get_rec_name(self, name):
-        res = self.type.rec_name
+        res = self.kind.rec_name
+        if self.location:
+            res += ' ' + self.location.name
         if self.brand:
             res += ' - ' + self.brand.rec_name
         if self.model:
@@ -538,7 +571,7 @@ class Component(ModelSQL, ModelView):
     @classmethod
     def search_rec_name(cls, name, clause):
         return ['OR',
-            ('type.name',) + tuple(clause[1:]),
+            ('kind.name',) + tuple(clause[1:]),
             ('brand.name',) + tuple(clause[1:]),
             ('model',) + tuple(clause[1:]),
             ]
@@ -565,7 +598,7 @@ class Component(ModelSQL, ModelView):
     def search_party(cls, name, clause):
         return [('equipment.plant.party',) + tuple(clause[1:])]
 
-    @fields.depends('type', '_parent_type.product_type')
+    @fields.depends('kind', '_parent_kind.product_type')
     def on_change_with_product_type(self, name=None):
         return self.get_product_type([self], name)[self.id]
 
@@ -573,7 +606,7 @@ class Component(ModelSQL, ModelView):
     def get_product_type(cls, components, name):
         result = {}
         for c in components:
-            result[c.id] = c.type and c.type.product_type.id or None
+            result[c.id] = c.kind and c.kind.product_type.id or None
         return result
 
 

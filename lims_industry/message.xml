@@ -20,7 +20,7 @@
             <field name="text">Missing data in Sample</field>
         </record>
         <record model="ir.message" id="msg_component_unique">
-            <field name="text">A component of the same type and description already exists for the equipment</field>
+            <field name="text">A component of the same kind, location and description already exists for the equipment</field>
         </record>
         <record model="ir.message" id="msg_equipment_name_unique">
             <field name="text">There is already an equipment with the same name for the plant</field>

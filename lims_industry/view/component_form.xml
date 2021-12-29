@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <form>
-    <label name="type"/>
-    <field name="type"/>
+    <label name="kind"/>
+    <field name="kind"/>
+    <label name="location"/>
+    <field name="location"/>
     <label name="equipment"/>
     <field name="equipment"/>
     <label name="plant"/>
