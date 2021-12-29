@@ -23,7 +23,7 @@ def register():
         industry.ComponentLocation,
         industry.ComponentType,
         industry.EquipmentTemplate,
-        industry.EquipmentTemplateComponentType,
+        industry.EquipmentTemplateComponentKind,
         industry.Equipment,
         industry.Component,
         industry.ComercialProductBrand,
