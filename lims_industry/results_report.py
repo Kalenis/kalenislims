@@ -227,7 +227,7 @@ class ResultsReport(metaclass=PoolMeta):
         cursor.execute('SELECT rv.results_report '
             'FROM "' + ComponentKind._table + '" ct '
                 'INNER JOIN "' + Component._table + '" c '
-                'ON ct.id = c.type '
+                'ON ct.id = c.kind '
                 'INNER JOIN "' + Sample._table + '" s '
                 'ON c.id = s.component '
                 'INNER JOIN "' + Fraction._table + '" f '
@@ -277,7 +277,7 @@ class ResultsReport2(metaclass=PoolMeta):
             'component_customer_description': (sample and sample.component and
                 sample.component.customer_description or ''),
             'component_type': (sample and sample.component and
-                sample.component.type.name or ''),
+                sample.component.kind.name or ''),
             'ind_equipment': (sample and
                 sample.notebook.fraction.sample.ind_equipment and
                 (str(sample.notebook.fraction.sample.ind_equipment) +
@@ -438,7 +438,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             cursor.execute('SELECT DISTINCT(ct.name) '
                 'FROM "' + ComponentKind._table + '" ct '
                     'INNER JOIN "' + Component._table + '" c '
-                    'ON ct.id = c.type '
+                    'ON ct.id = c.kind '
                     'INNER JOIN "' + Sample._table + '" s '
                     'ON c.id = s.component '
                     'INNER JOIN "' + Fraction._table + '" f '
@@ -469,7 +469,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         cursor.execute('SELECT rs.version_detail '
             'FROM "' + ComponentKind._table + '" ct '
                 'INNER JOIN "' + Component._table + '" c '
-                'ON ct.id = c.type '
+                'ON ct.id = c.kind '
                 'INNER JOIN "' + Sample._table + '" s '
                 'ON c.id = s.component '
                 'INNER JOIN "' + Fraction._table + '" f '
