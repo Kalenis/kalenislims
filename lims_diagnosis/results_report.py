@@ -96,8 +96,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             for state in self.diagnosis_template.diagnosis_states:
                 states[state.name] = '*'
             for sample in self.samples:
-                if not sample.diagnosis:
-                    sample.diagnosis = content
+                sample.diagnosis = content
                 sample.diagnosis_states = states
         else:
             states = {}
