@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <tree>
     <field name="equipment" expand="1"/>
-    <field name="type" expand="1"/>
+    <field name="kind" expand="1"/>
+    <field name="location" expand="1"/>
     <field name="product_type"/>
     <field name="comercial_product"/>
     <field name="brand"/>

@@ -174,7 +174,7 @@ class ResultsReport(metaclass=PoolMeta):
     def get_components_list(cls, reports, name):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        ComponentType = pool.get('lims.component.type')
+        ComponentKind = pool.get('lims.component.kind')
         Component = pool.get('lims.component')
         Sample = pool.get('lims.sample')
         Fraction = pool.get('lims.fraction')
@@ -187,9 +187,9 @@ class ResultsReport(metaclass=PoolMeta):
         for r in reports:
             result[r.id] = ''
             cursor.execute('SELECT DISTINCT(ct.name) '
-                'FROM "' + ComponentType._table + '" ct '
+                'FROM "' + ComponentKind._table + '" ct '
                     'INNER JOIN "' + Component._table + '" c '
-                    'ON ct.id = c.type '
+                    'ON ct.id = c.kind '
                     'INNER JOIN "' + Sample._table + '" s '
                     'ON c.id = s.component '
                     'INNER JOIN "' + Fraction._table + '" f '
@@ -214,7 +214,7 @@ class ResultsReport(metaclass=PoolMeta):
     def search_components_list(cls, name, clause):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        ComponentType = pool.get('lims.component.type')
+        ComponentKind = pool.get('lims.component.kind')
         Component = pool.get('lims.component')
         Sample = pool.get('lims.sample')
         Fraction = pool.get('lims.fraction')
@@ -225,7 +225,7 @@ class ResultsReport(metaclass=PoolMeta):
 
         value = clause[2]
         cursor.execute('SELECT rv.results_report '
-            'FROM "' + ComponentType._table + '" ct '
+            'FROM "' + ComponentKind._table + '" ct '
                 'INNER JOIN "' + Component._table + '" c '
                 'ON ct.id = c.type '
                 'INNER JOIN "' + Sample._table + '" s '
@@ -425,7 +425,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     def get_components_list(cls, details, name):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        ComponentType = pool.get('lims.component.type')
+        ComponentKind = pool.get('lims.component.kind')
         Component = pool.get('lims.component')
         Sample = pool.get('lims.sample')
         Fraction = pool.get('lims.fraction')
@@ -436,7 +436,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         for d in details:
             result[d.id] = ''
             cursor.execute('SELECT DISTINCT(ct.name) '
-                'FROM "' + ComponentType._table + '" ct '
+                'FROM "' + ComponentKind._table + '" ct '
                     'INNER JOIN "' + Component._table + '" c '
                     'ON ct.id = c.type '
                     'INNER JOIN "' + Sample._table + '" s '
@@ -458,7 +458,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     def search_components_list(cls, name, clause):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        ComponentType = pool.get('lims.component.type')
+        ComponentKind = pool.get('lims.component.kind')
         Component = pool.get('lims.component')
         Sample = pool.get('lims.sample')
         Fraction = pool.get('lims.fraction')
@@ -467,7 +467,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
 
         value = clause[2]
         cursor.execute('SELECT rs.version_detail '
-            'FROM "' + ComponentType._table + '" ct '
+            'FROM "' + ComponentKind._table + '" ct '
                 'INNER JOIN "' + Component._table + '" c '
                 'ON ct.id = c.type '
                 'INNER JOIN "' + Sample._table + '" s '

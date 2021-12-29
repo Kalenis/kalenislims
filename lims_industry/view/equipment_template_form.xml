@@ -8,5 +8,5 @@
     <field name="model"/>
     <label name="power"/>
     <field name="power"/>
-    <field name="component_types" colspan="4"/>
+    <field name="component_kinds" colspan="4"/>
 </form>
