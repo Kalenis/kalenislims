@@ -4211,8 +4211,9 @@ class NotebookLoadResultsManual(Wizard):
             ('start_date', '=', self.start.start_date),
             ]
 
-        lines = NotebookLine.search(clause, order=[
-            ('analysis_order', 'ASC'), ('id', 'ASC')])
+        with Transaction().set_context(_check_access=True):
+            lines = NotebookLine.search(clause,
+                order=[('analysis_order', 'ASC'), ('id', 'ASC')])
         if lines:
             res_lines = []
             for line in lines:
