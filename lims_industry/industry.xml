@@ -270,6 +270,19 @@
         <menuitem action="act_equipment" id="menu_equipment"
             parent="menu_industry" sequence="30"/>
 
+<!-- Equipment actions related -->
+
+        <record model="ir.action.act_window" id="act_lims_sample_relate_equipment">
+            <field name="name">Samples</field>
+            <field name="res_model">lims.sample</field>
+            <field name="domain" eval="[('equipment', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_sample_equipment_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.equipment,-1</field>
+            <field name="action" ref="act_lims_sample_relate_equipment"/>
+        </record>
+
 <!-- Equipment from Party -->
 
         <record model="ir.action.act_window" id="act_equipment_from_party">
@@ -327,6 +340,19 @@
 
         <menuitem action="act_component" id="menu_component"
             parent="menu_industry" sequence="40"/>
+
+<!-- Component actions related -->
+
+        <record model="ir.action.act_window" id="act_lims_sample_relate_component">
+            <field name="name">Samples</field>
+            <field name="res_model">lims.sample</field>
+            <field name="domain" eval="[('component', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_sample_component_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.component,-1</field>
+            <field name="action" ref="act_lims_sample_relate_component"/>
+        </record>
 
 <!-- Component from Party -->
 
