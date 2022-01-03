@@ -903,6 +903,14 @@ msgctxt "model:ir.action,name:act_equipment_type"
 msgid "Equipment Types"
 msgstr "Tipos de equipo"
 
+msgctxt "model:ir.action,name:act_lims_sample_relate_component"
+msgid "Samples"
+msgstr "Muestras"
+
+msgctxt "model:ir.action,name:act_lims_sample_relate_equipment"
+msgid "Samples"
+msgstr "Muestras"
+
 msgctxt "model:ir.action,name:act_plant"
 msgid "Plants"
 msgstr "Plantas"
