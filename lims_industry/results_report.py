@@ -695,7 +695,11 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
             ('component', '=', sample.component),
             ('fraction.sample.state', '!=', 'annulled'),
             ('invoice_party', '=', sample.notebook.invoice_party),
-            ], order=[('id', 'DESC')], limit=3)
+            ], order=[
+            ('fraction.sample.ind_sampling_date', 'DESC'),
+            ('fraction.sample.ind_equipment', 'DESC'),
+            ('fraction.sample.date', 'DESC'),
+            ], limit=3)
         return precedents
 
     @classmethod
