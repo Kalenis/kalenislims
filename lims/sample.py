@@ -531,17 +531,23 @@ class Service(ModelSQL, ModelView):
         super().write(*args)
         actions = iter(args)
         for services, vals in zip(actions, actions):
+            check_duplicated = False
+            for field in ('analysis', 'method'):
+                if vals.get(field):
+                    check_duplicated = True
+                    break
+            if check_duplicated:
+                cls.check_duplicated_analysis([{
+                    'fraction': s.fraction.id,
+                    'analysis': s.analysis.id,
+                    'method': s.method.id,
+                    } for s in services])
             change_detail = False
             for field in ('analysis', 'laboratory', 'method', 'device'):
                 if vals.get(field):
                     change_detail = True
                     break
             if change_detail:
-                cls.check_duplicated_analysis([{
-                    'fraction': s.fraction.id,
-                    'analysis': s.analysis.id,
-                    'method': s.method.id,
-                    } for s in services])
                 cls.update_analysis_detail(services)
                 fractions_ids = list(set(s.fraction.id for s in services))
                 cls.set_shared_fraction(fractions_ids)
