@@ -10,5 +10,7 @@
     <field name="fraction_type"/>
     <field name="chromatogram"/>
     <field name="literal_result"/>
+    <field name="device"/>
+    <field name="uncertainty"/>
     <field name="comments"/>
 </tree>

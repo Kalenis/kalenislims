@@ -3535,6 +3535,14 @@ msgctxt "field:lims.notebook.load_results_manual.line,comments:"
 msgid "Comments"
 msgstr "Observaciones"
 
+msgctxt "field:lims.notebook.load_results_manual.line,device:"
+msgid "Device"
+msgstr "Equipo"
+
+msgctxt "field:lims.notebook.load_results_manual.line,device_domain:"
+msgid "Device domain"
+msgstr "Dominio para Equipo"
+
 msgctxt "field:lims.notebook.load_results_manual.line,end_date:"
 msgid "End date"
 msgstr "Fecha de finalización"
@@ -3574,6 +3582,10 @@ msgstr "Modificador de resultado"
 msgctxt "field:lims.notebook.load_results_manual.line,session_id:"
 msgid "Session ID"
 msgstr "ID Sesión"
+
+msgctxt "field:lims.notebook.load_results_manual.line,uncertainty:"
+msgid "Uncertainty"
+msgstr "Incertidumbre"
 
 msgctxt "field:lims.notebook.load_results_manual.result,lines:"
 msgid "Lines"

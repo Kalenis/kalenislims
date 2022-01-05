@@ -4094,7 +4094,7 @@ class NotebookLoadResultsManualResult(ModelView):
     method = fields.Many2One('lims.lab.method', 'Method', readonly=True)
     start_date = fields.Date('Start date', readonly=True)
     professional = fields.Many2One('lims.laboratory.professional',
-        'Laboratory professional', required=True, readonly=True)
+        'Laboratory professional', required=True)
     lines = fields.One2Many('lims.notebook.load_results_manual.line',
         None, 'Lines')
 
@@ -4127,6 +4127,12 @@ class NotebookLoadResultsManualLine(ModelSQL, ModelView):
     literal_result = fields.Char('Literal result')
     fraction_type = fields.Many2One('lims.fraction.type', 'Fraction type',
         readonly=True)
+    device = fields.Many2One('lims.lab.device', 'Device',
+        domain=[('id', 'in', Eval('device_domain'))],
+        depends=['device_domain'])
+    device_domain = fields.Function(fields.Many2Many('lims.lab.device',
+        None, None, 'Device domain'), 'on_change_with_device_domain')
+    uncertainty = fields.Char('Uncertainty')
     session_id = fields.Integer('Session ID')
 
     @classmethod
@@ -4145,6 +4151,22 @@ class NotebookLoadResultsManualLine(ModelSQL, ModelView):
                 self.result_modifier not in ('eq', 'low')):
             return Date.today()
         return None
+
+    @fields.depends('line')
+    def on_change_with_device_domain(self, name=None):
+        cursor = Transaction().connection.cursor()
+        AnalysisDevice = Pool().get('lims.analysis.device')
+
+        cursor.execute('SELECT DISTINCT(device) '
+            'FROM "' + AnalysisDevice._table + '" '
+            'WHERE active IS TRUE '
+                'AND analysis = %s  '
+                'AND laboratory = %s',
+            (self.line.analysis.id, self.line.laboratory.id))
+        res = cursor.fetchall()
+        if not res:
+            return []
+        return [x[0] for x in res]
 
 
 class NotebookLoadResultsManualSit1(ModelView):
@@ -4231,6 +4253,9 @@ class NotebookLoadResultsManual(Wizard):
                     'fraction': line.fraction.id,
                     'fraction_type': line.fraction_type.id,
                     'literal_result': line.literal_result,
+                    'device': (line.device.id if
+                        line.device else None),
+                    'uncertainty': line.uncertainty,
                     }])
                 res_lines.append(res_line.id)
 
@@ -4339,7 +4364,9 @@ class NotebookLoadResultsManual(Wizard):
                 'converted_result_modifier': 'eq',
                 'backup': None,
                 'verification': None,
-                'uncertainty': None,
+                'uncertainty': data.uncertainty,
+                'device': (data.device.id if
+                    data.device else None),
                 }
             if (not (data.result_modifier == 'eq' and not data.result) or
                     data.literal_result):
