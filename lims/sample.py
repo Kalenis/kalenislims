@@ -6592,6 +6592,7 @@ class Referral(ModelSQL, ModelView):
             details = [s for s in referral.services]
             lines = NotebookLine.search([
                 ('analysis_detail', 'in', details),
+                ('end_date', '=', None),
                 ])
             NotebookLine.write(lines, {'start_date': referral.date})
             EntryDetailAnalysis.write(details, {'state': 'referred'})
