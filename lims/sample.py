@@ -350,8 +350,7 @@ class Service(ModelSQL, ModelView):
     report_date_readonly = fields.Function(fields.Boolean(
         'Report deadline Readonly'), 'get_report_date_readonly')
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        domain=['OR', ('id', '=', Eval('laboratory')),
-            ('id', 'in', Eval('laboratory_domain'))],
+        domain=[('id', 'in', Eval('laboratory_domain'))],
         states={
             'required': Bool(Eval('laboratory_domain')),
             'readonly': Bool(Eval('context', {}).get('readonly', True)),
@@ -923,9 +922,9 @@ class Service(ModelSQL, ModelView):
         method = None
         device = None
         if self.analysis:
-            laboratories = self.on_change_with_laboratory_domain()
-            if len(laboratories) == 1:
-                laboratory = laboratories[0]
+            default_laboratory = self._get_default_laboratory()
+            if default_laboratory:
+                laboratory = default_laboratory
             methods = self.on_change_with_method_domain()
             if len(methods) == 1:
                 method = methods[0]
@@ -1073,22 +1072,22 @@ class Service(ModelSQL, ModelView):
 
     @fields.depends('analysis', '_parent_fraction.product_type',
         '_parent_fraction.matrix')
-    def on_change_with_laboratory_domain(self, name=None):
+    def _get_default_laboratory(self):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         AnalysisLaboratory = pool.get('lims.analysis-laboratory')
         Typification = pool.get('lims.typification')
 
         if not self.analysis:
-            return []
+            return None
 
-        cursor.execute('SELECT DISTINCT(laboratory) '
+        cursor.execute('SELECT laboratory '
             'FROM "' + AnalysisLaboratory._table + '" '
-            'WHERE analysis = %s',
-            (self.analysis.id,))
+            'WHERE analysis = %s '
+            'ORDER BY id', (self.analysis.id,))
         res = cursor.fetchall()
         if not res:
-            return []
+            return None
 
         laboratories = [x[0] for x in res]
         if len(laboratories) > 1:
@@ -1103,8 +1102,27 @@ class Service(ModelSQL, ModelView):
                     self.analysis.id))
             res = cursor.fetchone()
             if res and res[0] in laboratories:
-                return [res[0]]
-        return laboratories
+                return res[0]
+        return laboratories[0]
+
+    @fields.depends('analysis', '_parent_fraction.product_type',
+        '_parent_fraction.matrix')
+    def on_change_with_laboratory_domain(self, name=None):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        AnalysisLaboratory = pool.get('lims.analysis-laboratory')
+
+        if not self.analysis:
+            return []
+
+        cursor.execute('SELECT DISTINCT(laboratory) '
+            'FROM "' + AnalysisLaboratory._table + '" '
+            'WHERE analysis = %s',
+            (self.analysis.id,))
+        res = cursor.fetchall()
+        if not res:
+            return []
+        return [x[0] for x in res]
 
     @fields.depends('analysis', 'typification_domain')
     def on_change_with_method_domain(self, name=None):
@@ -5874,10 +5892,11 @@ class CreateSampleService(ModelView):
         device_id = None
         device_domain = []
         if analysis_id:
-            laboratory_domain = self._get_laboratory_domain(analysis_id,
+            default_laboratory = self._get_default_laboratory(analysis_id,
                 product_type_id, matrix_id)
-            if len(laboratory_domain) == 1:
-                laboratory_id = laboratory_domain[0]
+            if default_laboratory:
+                laboratory_id = default_laboratory
+            laboratory_domain = self._get_laboratory_domain(analysis_id)
             method_domain = self._get_method_domain(analysis_id,
                 product_type_id, matrix_id)
             if len(method_domain) == 1:
@@ -5920,19 +5939,19 @@ class CreateSampleService(ModelView):
         self.laboratory_locked = False
 
     @staticmethod
-    def _get_laboratory_domain(analysis_id, product_type_id, matrix_id):
+    def _get_default_laboratory(analysis_id, product_type_id, matrix_id):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         AnalysisLaboratory = pool.get('lims.analysis-laboratory')
         Typification = pool.get('lims.typification')
 
-        cursor.execute('SELECT DISTINCT(laboratory) '
+        cursor.execute('SELECT laboratory '
             'FROM "' + AnalysisLaboratory._table + '" '
-            'WHERE analysis = %s',
-            (analysis_id,))
+            'WHERE analysis = %s '
+            'ORDER BY id', (analysis_id,))
         res = cursor.fetchall()
         if not res:
-            return []
+            return None
 
         laboratories = [x[0] for x in res]
         if len(laboratories) > 1:
@@ -5946,8 +5965,23 @@ class CreateSampleService(ModelView):
                 (product_type_id, matrix_id, analysis_id))
             res = cursor.fetchone()
             if res and res[0] in laboratories:
-                return [res[0]]
-        return laboratories
+                return res[0]
+        return laboratories[0]
+
+    @staticmethod
+    def _get_laboratory_domain(analysis_id):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        AnalysisLaboratory = pool.get('lims.analysis-laboratory')
+
+        cursor.execute('SELECT DISTINCT(laboratory) '
+            'FROM "' + AnalysisLaboratory._table + '" '
+            'WHERE analysis = %s',
+            (analysis_id,))
+        res = cursor.fetchall()
+        if not res:
+            return []
+        return [x[0] for x in res]
 
     @staticmethod
     def _get_method_domain(analysis_id, product_type_id, matrix_id):
