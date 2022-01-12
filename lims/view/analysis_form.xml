@@ -17,7 +17,7 @@
     <label name="product"/>
     <field name="product"/>
     <label name="order"/>
-    <field name="order"/>
+    <field name="order" width="200"/>
     <label name="formula"/>
     <field name="formula"/>
     <label name="planning_legend"/>
