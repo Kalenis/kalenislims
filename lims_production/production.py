@@ -194,6 +194,7 @@ class Production(metaclass=PoolMeta):
                         production.technician else None),
                     solvent=(production.solvent.id if production.solvent
                         else None),
+                    production=production,
                     )
                 if lot:
                     lot.save()

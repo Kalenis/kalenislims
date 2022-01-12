@@ -338,6 +338,10 @@ msgctxt "field:stock.lot,preparation_date:"
 msgid "Preparation date"
 msgstr "Fecha de preparación"
 
+msgctxt "field:stock.lot,production:"
+msgid "Production origin"
+msgstr "Producción origen"
+
 msgctxt "field:stock.lot,purity_degree:"
 msgid "Purity Degree"
 msgstr "Grado de pureza"

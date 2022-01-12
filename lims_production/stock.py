@@ -200,6 +200,8 @@ class Lot(metaclass=PoolMeta):
         depends=['special_category'], states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod')))})
+    production = fields.Many2One('production', 'Production origin',
+        readonly=True)
 
     @classmethod
     def __setup__(cls):

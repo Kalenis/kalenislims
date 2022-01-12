@@ -24,5 +24,6 @@
         <field name="exclusive_glp"/>
         <field name="solvent"/>
         <field name="technician"/>
+        <field name="production"/>
     </xpath>
 </data>
