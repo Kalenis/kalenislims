@@ -262,7 +262,7 @@ class NotebookLine(metaclass=PoolMeta):
     def get_test_result(cls, lines, name):
         result = {}
         for line in lines:
-            result[line.id] = line.get_formated_result()
+            result[line.id] = line.formated_result
         return result
 
     @classmethod

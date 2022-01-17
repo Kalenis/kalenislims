@@ -883,6 +883,8 @@ class NotebookLine(ModelSQL, ModelView):
         states=_states, depends=_depends)
     converted_result = fields.Char('Converted result',
         states=_states, depends=_depends)
+    formated_result = fields.Function(fields.Char('Result to report'),
+        'get_formated_result')
     detection_limit = fields.Char('Detection limit',
         states=_states, depends=_depends)
     quantification_limit = fields.Char('Quantification limit',
@@ -1582,7 +1584,7 @@ class NotebookLine(ModelSQL, ModelView):
             return self.planification.comments
         return ''
 
-    def get_formated_result(self):
+    def get_formated_result(self, name=None):
         res = ''
         result_modifier = self.result_modifier
         if self.literal_result:
@@ -1726,6 +1728,8 @@ class NotebookLineAllFields(ModelSQL, ModelView):
         'converted_result_modifier')
     result = fields.Char('Result', readonly=True)
     converted_result = fields.Char('Converted result', readonly=True)
+    formated_result = fields.Function(fields.Char('Result to report'),
+        'get_line_field')
     detection_limit = fields.Char('Detection limit', readonly=True)
     quantification_limit = fields.Char('Quantification limit', readonly=True)
     lower_limit = fields.Char('Lower limit allowed', readonly=True)

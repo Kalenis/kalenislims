@@ -838,7 +838,7 @@ class ResultsReportVersionDetailLine(metaclass=PoolMeta):
             ])
         if not precedent_line:
             return ''
-        return precedent_line[0].get_formated_result()
+        return precedent_line[0].formated_result
 
 
 class OpenResultsDetailPrecedent(Wizard):

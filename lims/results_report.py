@@ -1821,7 +1821,7 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         result = {}
         for d in details:
             result[d.id] = (d.notebook_line and
-                d.notebook_line.get_formated_result() or None)
+                d.notebook_line.formated_result or None)
         return result
 
     @classmethod

@@ -423,8 +423,7 @@ class SamplesComparatorLine(ModelSQL, ModelView):
             result[name] = {}
             if name == 'result':
                 for l in lines:
-                    result[name][l.id] = (
-                        l.notebook_line.get_formated_result())
+                    result[name][l.id] = l.notebook_line.formated_result
             elif name == 'converted_result':
                 for l in lines:
                     result[name][l.id] = (
@@ -462,7 +461,7 @@ class SamplesComparatorLine(ModelSQL, ModelView):
             ])
         if not notebook_line:
             return None
-        return notebook_line[0].get_formated_result()
+        return notebook_line[0].formated_result
 
 
 class Cron(metaclass=PoolMeta):

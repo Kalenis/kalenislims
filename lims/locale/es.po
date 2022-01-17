@@ -2789,6 +2789,10 @@ msgctxt "field:lims.notebook.line,final_unit:"
 msgid "Final unit"
 msgstr "Unidad final"
 
+msgctxt "field:lims.notebook.line,formated_result:"
+msgid "Result to report"
+msgstr "Resultado a informar"
+
 msgctxt "field:lims.notebook.line,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
@@ -3096,6 +3100,10 @@ msgstr "Concentración final"
 msgctxt "field:lims.notebook.line.all_fields,final_unit:"
 msgid "Final unit"
 msgstr "Unidad final"
+
+msgctxt "field:lims.notebook.all_fields,formated_result:"
+msgid "Result to report"
+msgstr "Resultado a informar"
 
 msgctxt "field:lims.notebook.line.all_fields,fraction:"
 msgid "Fraction"

@@ -24,6 +24,7 @@
     <field name="converted_result_modifier"/>
     <field name="result"/>
     <field name="converted_result"/>
+    <field name="formated_result"/>
     <field name="detection_limit"/>
     <field name="quantification_limit"/>
     <field name="lower_limit"/>
