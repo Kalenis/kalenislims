@@ -3101,7 +3101,7 @@ msgctxt "field:lims.notebook.line.all_fields,final_unit:"
 msgid "Final unit"
 msgstr "Unidad final"
 
-msgctxt "field:lims.notebook.all_fields,formated_result:"
+msgctxt "field:lims.notebook.line.all_fields,formated_result:"
 msgid "Result to report"
 msgstr "Resultado a informar"
 
@@ -8204,6 +8204,14 @@ msgstr "Campo inválido: %(field)s"
 msgctxt "model:ir.message,text:msg_rule_condition_value"
 msgid "Invalid value: %(value)s"
 msgstr "Valor inválido: %(value)s"
+
+msgctxt "model:ir.message,text:msg_service_default_laboratory"
+msgid ""
+"You cannot copy service \"%(analysis)s\" because the assigned laboratory "
+"(%(laboratory)s) is not the default one."
+msgstr ""
+"No puede copiar el servicio \"%(analysis)s\" porque el laboratorio asignado "
+"(%(laboratory)s) no es el predeterminado."
 
 msgctxt "model:ir.message,text:msg_set_laboratories"
 msgid "A Set can be assigned to a single laboratory"

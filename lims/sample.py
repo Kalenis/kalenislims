@@ -857,6 +857,11 @@ class Service(ModelSQL, ModelView):
 
         new_services = []
         for service in sorted(services, key=lambda x: x.number):
+            if (service.laboratory and
+                    service.laboratory.id != service._get_default_laboratory()):
+                raise UserError(gettext('lims.msg_service_default_laboratory',
+                    analysis=service.analysis.rec_name,
+                    laboratory=service.laboratory.rec_name))
             with Transaction().set_context(copying=True):
                 new_service, = super().copy([service],
                     default=current_default)
@@ -914,8 +919,8 @@ class Service(ModelSQL, ModelView):
 
     @fields.depends('analysis', 'fraction', 'typification_domain',
         'laboratory', '_parent_fraction.id',
-        methods=['on_change_with_laboratory_domain',
-        'on_change_with_method_domain', '_on_change_with_device_domain'])
+        methods=['_get_default_laboratory', 'on_change_with_method_domain',
+        '_on_change_with_device_domain'])
     def on_change_analysis(self):
         Laboratory = Pool().get('lims.laboratory')
         laboratory = None

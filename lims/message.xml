@@ -562,5 +562,8 @@
         <record model="ir.message" id="msg_invalid_report_state">
             <field name="text">The target Results Report does not have a valid state</field>
         </record>
+        <record model="ir.message" id="msg_service_default_laboratory">
+            <field name="text">You cannot copy service "%(analysis)s" because the assigned laboratory (%(laboratory)s) is not the default one.</field>
+        </record>
     </data>
 </tryton>
