@@ -150,6 +150,10 @@ msgctxt "field:lims.analysis-laboratory,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
 
+msgctxt "field:lims.analysis-laboratory,by_default:"
+msgid "By default"
+msgstr "Por defecto"
+
 msgctxt "field:lims.analysis-laboratory,department:"
 msgid "Department"
 msgstr "Departamento"
@@ -7631,6 +7635,10 @@ msgstr "Detectado"
 msgctxt "model:ir.message,text:msg_data_not_specified"
 msgid "NOT SPECIFIED BY THE CLIENT"
 msgstr "NO ESPECIFICADO POR EL CLIENTE"
+
+msgctxt "model:ir.message,text:msg_default_analysis_laboratory"
+msgid "There is already a default laboratory for this analysis"
+msgstr "Ya existe un laboratorio por defecto para este análisis"
 
 msgctxt "model:ir.message,text:msg_default_department"
 msgid "There is already a default department for this user"

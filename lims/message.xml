@@ -142,6 +142,9 @@
         <record model="ir.message" id="msg_number_expected">
             <field name="text">Expecting to find a number at character %(index)s but instead there is a "%(character)s"</field>
         </record>
+        <record model="ir.message" id="msg_default_analysis_laboratory">
+            <field name="text">There is already a default laboratory for this analysis</field>
+        </record>
         <record model="ir.message" id="msg_physically_elsewhere">
             <field name="text">This Device is physically in another Laboratory</field>
         </record>

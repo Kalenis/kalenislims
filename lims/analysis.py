@@ -2102,6 +2102,28 @@ class AnalysisLaboratory(ModelSQL, ModelView):
     department = fields.Many2One('company.department', 'Department',
         states={'readonly': ~Equal(Eval('context', {}).get('type', ''),
             'analysis')})
+    by_default = fields.Boolean('By default')
+
+    @staticmethod
+    def default_by_default():
+        return True
+
+    @classmethod
+    def validate(cls, analysis_labs):
+        super().validate(analysis_labs)
+        for l in analysis_labs:
+            l.check_default()
+
+    def check_default(self):
+        if self.by_default:
+            analysis_labs = self.search([
+                ('analysis', '=', self.analysis.id),
+                ('by_default', '=', True),
+                ('id', '!=', self.id),
+                ])
+            if analysis_labs:
+                raise UserError(gettext(
+                    'lims.msg_default_analysis_laboratory'))
 
 
 class AnalysisLabMethod(ModelSQL):

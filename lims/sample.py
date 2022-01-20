@@ -858,7 +858,8 @@ class Service(ModelSQL, ModelView):
         new_services = []
         for service in sorted(services, key=lambda x: x.number):
             if (service.laboratory and
-                    service.laboratory.id != service._get_default_laboratory()):
+                    service.laboratory.id !=
+                    service._get_default_laboratory()):
                 raise UserError(gettext('lims.msg_service_default_laboratory',
                     analysis=service.analysis.rec_name,
                     laboratory=service.laboratory.rec_name))
@@ -1087,28 +1088,29 @@ class Service(ModelSQL, ModelView):
             return None
 
         cursor.execute('SELECT laboratory '
+            'FROM "' + Typification._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s '
+                'AND analysis = %s '
+                'AND valid IS TRUE '
+                'AND by_default IS TRUE '
+                'AND laboratory IS NOT NULL',
+            (self.fraction.product_type.id, self.fraction.matrix.id,
+                self.analysis.id))
+        res = cursor.fetchone()
+        if res:
+            return res[0]
+
+        cursor.execute('SELECT laboratory '
             'FROM "' + AnalysisLaboratory._table + '" '
             'WHERE analysis = %s '
+                'AND by_default = TRUE '
             'ORDER BY id', (self.analysis.id,))
-        res = cursor.fetchall()
-        if not res:
-            return None
+        res = cursor.fetchone()
+        if res:
+            return res[0]
 
-        laboratories = [x[0] for x in res]
-        if len(laboratories) > 1:
-            cursor.execute('SELECT laboratory '
-                'FROM "' + Typification._table + '" '
-                'WHERE product_type = %s '
-                    'AND matrix = %s '
-                    'AND analysis = %s '
-                    'AND valid IS TRUE '
-                    'AND by_default IS TRUE',
-                (self.fraction.product_type.id, self.fraction.matrix.id,
-                    self.analysis.id))
-            res = cursor.fetchone()
-            if res and res[0] in laboratories:
-                return res[0]
-        return laboratories[0]
+        return None
 
     @fields.depends('analysis', '_parent_fraction.product_type',
         '_parent_fraction.matrix')
@@ -5951,27 +5953,28 @@ class CreateSampleService(ModelView):
         Typification = pool.get('lims.typification')
 
         cursor.execute('SELECT laboratory '
+            'FROM "' + Typification._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s '
+                'AND analysis = %s '
+                'AND valid IS TRUE '
+                'AND by_default IS TRUE '
+                'AND laboratory IS NOT NULL',
+            (product_type_id, matrix_id, analysis_id))
+        res = cursor.fetchone()
+        if res:
+            return res[0]
+
+        cursor.execute('SELECT laboratory '
             'FROM "' + AnalysisLaboratory._table + '" '
             'WHERE analysis = %s '
+                'AND by_default = TRUE '
             'ORDER BY id', (analysis_id,))
-        res = cursor.fetchall()
-        if not res:
-            return None
+        res = cursor.fetchone()
+        if res:
+            return res[0]
 
-        laboratories = [x[0] for x in res]
-        if len(laboratories) > 1:
-            cursor.execute('SELECT laboratory '
-                'FROM "' + Typification._table + '" '
-                'WHERE product_type = %s '
-                    'AND matrix = %s '
-                    'AND analysis = %s '
-                    'AND valid IS TRUE '
-                    'AND by_default IS TRUE',
-                (product_type_id, matrix_id, analysis_id))
-            res = cursor.fetchone()
-            if res and res[0] in laboratories:
-                return res[0]
-        return laboratories[0]
+        return None
 
     @staticmethod
     def _get_laboratory_domain(analysis_id):

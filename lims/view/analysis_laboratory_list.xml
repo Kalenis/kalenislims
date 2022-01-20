@@ -2,4 +2,5 @@
 <tree>
     <field name="laboratory"/>
     <field name="department"/>
+    <field name="by_default"/>
 </tree>

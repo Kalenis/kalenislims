@@ -4,4 +4,6 @@
     <field name="laboratory"/>
     <label name="department"/>
     <field name="department"/>
+    <label name="by_default"/>
+    <field name="by_default"/>
 </form>
