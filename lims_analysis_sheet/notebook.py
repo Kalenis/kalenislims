@@ -1082,12 +1082,12 @@ class LimitsValidation(Wizard):
         result_modifier_field = result_modifier_column.name
 
         with Transaction().set_context(lims_interface_table=table_id):
-            lines = Data.search([('compilation', '=', sheet.compilation.id)])
+            lines = Data.search([
+                ('compilation', '=', sheet.compilation.id),
+                ('notebook_line', '!=', None),
+                ])
             for line in lines:
                 nl = line.notebook_line
-                if not nl:
-                    continue
-
                 result = getattr(line, result_field)
                 if result is None:
                     continue
@@ -1181,7 +1181,10 @@ class EvaluateRules(Wizard):
                 lims_interface_table=sheet.compilation.table.id,
                 lims_interface_compilation=sheet.compilation.id,
                 lims_analysis_sheet=sheet.id):
-            lines = Data.search([('compilation', '=', sheet.compilation.id)])
+            lines = Data.search([
+                ('compilation', '=', sheet.compilation.id),
+                ('notebook_line', '!=', None),
+                ])
             for line in lines:
                 rules = NotebookRule.search([
                     ('analysis', '=', line.notebook_line.analysis),
