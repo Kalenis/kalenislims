@@ -4454,8 +4454,7 @@ class ResultReport(Report):
                 else:
                     if result:
                         res = round(float(result), decimals)
-                        if decimals == 0:
-                            res = int(res)
+                        res = format(res, '.{}f'.format(decimals))
                     else:
                         res = ''
                     if result_modifier == 'eq':
@@ -4485,8 +4484,7 @@ class ResultReport(Report):
                 else:
                     if result:
                         res = round(float(result), decimals)
-                        if decimals == 0:
-                            res = int(res)
+                        res = format(res, '.{}f'.format(decimals))
                     else:
                         res = ''
                     if result_modifier == 'eq':
@@ -4538,8 +4536,7 @@ class ResultReport(Report):
                 else:
                     if converted_result and converted_result_modifier != 'ni':
                         res = round(float(converted_result), decimals)
-                        if decimals == 0:
-                            res = int(res)
+                        res = format(res, '.{}f'.format(decimals))
                         if converted_result_modifier == 'low':
                             res = gettext(
                                 'lims.msg_quantification_limit', loq=res)
@@ -4566,8 +4563,7 @@ class ResultReport(Report):
                 if (not literal_result and result_modifier == 'eq' and
                         uncertainty and float(uncertainty) != 0):
                     res = round(float(uncertainty), decimals)
-                    if decimals == 0:
-                        res = int(res)
+                    res = format(res, '.{}f'.format(decimals))
                     res = gettext(
                         'lims.msg_uncertainty', res=res, initial_unit='')
                     obs_uncert = True
@@ -4593,8 +4589,7 @@ class ResultReport(Report):
                         if (not converted_result and uncertainty and
                                 float(uncertainty) != 0):
                             res = round(float(uncertainty), decimals)
-                            if decimals == 0:
-                                res = int(res)
+                            res = format(res, '.{}f'.format(decimals))
                             res = gettext('lims.msg_uncertainty',
                                 res=res, initial_unit=initial_unit)
                             obs_uncert = True
@@ -4639,8 +4634,7 @@ class ResultReport(Report):
                     else:
                         if uncertainty and float(uncertainty) != 0:
                             res = round(float(uncertainty), decimals)
-                            if decimals == 0:
-                                res = int(res)
+                            res = format(res, '.{}f'.format(decimals))
                             res = gettext('lims.msg_uncertainty',
                                 res=res, initial_unit=final_unit)
                             obs_uncert = True

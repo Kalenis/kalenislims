@@ -1661,9 +1661,7 @@ class NotebookLine(ModelSQL, ModelView):
                         res = res.ljust(significant_digits + 2, '0')
             else:
                 res = round(float(result), decimals)
-                if decimals == 0:
-                    res = int(res)
-                res = str(res)
+                res = format(res, '.{}f'.format(decimals))
         except (TypeError, ValueError):
             pass
         return res
