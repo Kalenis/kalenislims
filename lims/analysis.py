@@ -2638,6 +2638,22 @@ class CopyCalculatedTypification(Wizard):
             if res:
                 continue
 
+            # check if additionals are typified
+            for a in origin.additionals:
+                cursor.execute('SELECT COUNT(*) '
+                    'FROM "' + Typification._table + '" '
+                    'WHERE product_type = %s '
+                        'AND matrix = %s '
+                        'AND analysis = %s '
+                        'AND valid IS TRUE',
+                    (product_type_id, matrix_id, a.id))
+                if cursor.fetchone()[0] == 0:
+                    raise UserError(gettext('lims.msg_not_typified',
+                        analysis=a.rec_name,
+                        product_type=(
+                            self.start.destination_product_type.rec_name),
+                        matrix=self.start.destination_matrix.rec_name))
+
             if origin not in to_copy:
                 to_copy[origin] = {
                     'typification': [],
