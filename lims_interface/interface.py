@@ -2071,12 +2071,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                             if not nb_line.significant_digits:
                                 decimals = nb_line.decimals or 0
                                 result = round(float(data[nl_field]), decimals)
-                                if decimals == 0:
-                                    data[nl_field] = str(int(result))
-                                else:
-                                    integer, decimal = str(result).split('.')
-                                    data[nl_field] = '%s.%s' % (integer,
-                                        decimal.ljust(decimals, '0'))
+                                data[nl_field] = format(result,
+                                    '.{}f'.format(decimals))
                         if (nl_field == 'result_modifier' and
                                 not data[nl_field]):
                             data[nl_field] = 'eq'
