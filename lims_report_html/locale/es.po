@@ -150,7 +150,7 @@ msgctxt "field:lims.results_report.version.detail,charts_x_row:"
 msgid "Charts per Row"
 msgstr "Gráficos por fila"
 
-msgctxt "field:lims.results_report.version.detail,comments_plain:"
+msgctxt "field:lims.results_report.version.detail,comments_html:"
 msgid "Comments"
 msgstr "Observaciones"
 

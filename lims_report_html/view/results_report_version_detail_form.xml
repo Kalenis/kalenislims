@@ -15,12 +15,12 @@
         <field name="template"/>
     </xpath>
     <xpath expr="/form/notebook/page[@name='comments']" position="replace">
-        <page id="comments_plain" string="Comments">
-            <field name="comments_plain" colspan="4" widget="text"/>
+        <page id="comments" string="Comments">
+            <field name="comments" colspan="4" widget="text"/>
            <field name="template_type" colspan="4" invisible="1"/>
         </page>
-        <page id="comments" string="Comments">
-            <field name="comments" colspan="4" widget="html"/>
+        <page id="comments_html" string="Comments">
+            <field name="comments_html" colspan="4" widget="html"/>
             <field name="template_type" colspan="4" invisible="1"/>
         </page>
         <page name="sections">

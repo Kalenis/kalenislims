@@ -4912,6 +4912,18 @@ msgctxt "field:lims.results_report.cached_report,version_detail:"
 msgid "Report Detail"
 msgstr "Detalle de informe"
 
+msgctxt "field:lims.results_report.comment,comments:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "field:lims.results_report.comment,report_language:"
+msgid "Language"
+msgstr "Idioma"
+
+msgctxt "field:lims.results_report.comment,version_detail:"
+msgid "Report Detail"
+msgstr "Detalle de informe"
+
 msgctxt "field:lims.results_report.version,details:"
 msgid "Detail lines"
 msgstr "Líneas de detalle"
@@ -9621,6 +9633,10 @@ msgstr "Informe de resultados"
 msgctxt "model:lims.results_report.cached_report,name:"
 msgid "Cached Results Report"
 msgstr "Informe de resultados cacheados"
+
+msgctxt "model:lims.results_report.comment,name:"
+msgid "Results Report Comment"
+msgstr "Comentario de Informe de resultados"
 
 msgctxt "model:lims.results_report.version,name:"
 msgid "Results Report Version"

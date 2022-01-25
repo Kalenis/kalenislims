@@ -606,8 +606,9 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     resultrange_origin_domain = fields.Function(fields.Many2Many(
         'lims.range.type', None, None, 'Origin domain'),
         'on_change_with_resultrange_origin_domain')
-    comments = fields.Text('Comments', translate=True, depends=_depends,
-        states={'readonly': ~Eval('state').in_(['draft', 'revised'])})
+    comments = fields.Function(fields.Text('Comments',
+        states={'readonly': ~Eval('state').in_(['draft', 'revised'])},
+        depends=_depends), 'get_comments', setter='set_comments')
     fractions_comments = fields.Function(fields.Text('Fractions comments'),
         'get_fractions_comments')
     cie_fraction_type = fields.Function(fields.Boolean('QA'),
@@ -1014,6 +1015,39 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                 'AND cr.report_language = %s',
             (self.id, self.report_language.id))
         return bool(cursor.fetchone())
+
+    def get_comments(self, name):
+        pool = Pool()
+        ReportComment = pool.get('lims.results_report.comment')
+
+        comments = ReportComment.search([
+            ('version_detail', '=', self.id),
+            ('report_language', '=', self.report_language.id),
+            ])
+        if comments:
+            return comments[0].comments
+        return None
+
+    @classmethod
+    def set_comments(cls, details, name, value):
+        pool = Pool()
+        ReportComment = pool.get('lims.results_report.comment')
+
+        detail_id = details[0].id
+        report_language_id = details[0].report_language.id
+
+        comments = ReportComment.search([
+            ('version_detail', '=', detail_id),
+            ('report_language', '=', report_language_id),
+            ])
+        ReportComment.delete(comments)
+        if not value:
+            return
+        ReportComment.create([{
+            'version_detail': detail_id,
+            'report_language': report_language_id,
+            'comments': value,
+            }])
 
     @classmethod
     @ModelView.button
@@ -1619,6 +1653,54 @@ class ResultsReportCachedReport(ModelSQL):
                 t.version_detail, t.report_language, t.report_format),
                 'lims.msg_detail_language_unique_id'),
             ]
+
+
+class ResultsReportComment(ModelSQL):
+    'Results Report Comment'
+    __name__ = 'lims.results_report.comment'
+
+    version_detail = fields.Many2One('lims.results_report.version.detail',
+        'Report Detail', ondelete='CASCADE', select=True, required=True)
+    report_language = fields.Many2One('ir.lang', 'Language', required=True)
+    comments = fields.Text('Comments')
+
+    @classmethod
+    def __register__(cls, module_name):
+        TableHandler = backend.TableHandler
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
+
+        comments_table_exist = TableHandler.table_exist(cls._table)
+        detail_table_h = ResultsDetail.__table_handler__(module_name)
+        comments_exist = detail_table_h.column_exist('comments')
+
+        super().__register__(module_name)
+        if comments_exist and not comments_table_exist:
+            cls._migrate_report_comment()
+
+    @classmethod
+    def _migrate_report_comment(cls):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        ResultsReport = pool.get('lims.results_report')
+        ResultsVersion = pool.get('lims.results_report.version')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+
+        table = cls.__table__()
+
+        cursor.execute('SELECT rd.id, rr.report_language, rd.comments '
+            'FROM "' + ResultsDetail._table + '" rd '
+                'INNER JOIN "' + ResultsVersion._table + '" rv '
+                'ON rd.report_version = rv.id '
+                'INNER JOIN "' + ResultsReport._table + '" rr '
+                'ON rv.results_report = rr.id '
+            'WHERE rd.comments IS NOT NULL')
+        res = cursor.fetchall()
+        if res:
+            cursor.execute(*table.insert([
+                    table.version_detail,
+                    table.report_language,
+                    table.comments,
+                    ], res))
 
 
 class ResultsReportVersionDetailSample(ModelSQL, ModelView):

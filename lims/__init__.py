@@ -88,6 +88,7 @@ def register():
         results_report.ResultsReportVersion,
         results_report.ResultsReportVersionDetail,
         results_report.ResultsReportCachedReport,
+        results_report.ResultsReportComment,
         results_report.ResultsReportVersionDetailSample,
         results_report.ResultsReportVersionDetailLine,
         certification.AnalysisFamily,

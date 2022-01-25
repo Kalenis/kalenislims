@@ -56,8 +56,9 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         ('1', '1'),
         ('2', '2'),
         ], 'Charts per Row')
-    comments_plain = fields.Function(fields.Text('Comments', translate=True),
-        'get_comments_plain', setter='set_comments_plain')
+    comments_html = fields.Function(fields.Text('Comments',
+        states={'readonly': ~Eval('state').in_(['draft', 'revised'])},
+        depends=['state']), 'get_comments', setter='set_comments')
 
     @classmethod
     def __setup__(cls):
@@ -70,10 +71,10 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     @classmethod
     def view_attributes(cls):
         return super().view_attributes() + [
-            ('//page[@id="comments"]', 'states', {
+            ('//page[@id="comments_html"]', 'states', {
                     'invisible': Not(Bool(Eval('template_type'))),
                     }),
-            ('//page[@id="comments_plain"]', 'states', {
+            ('//page[@id="comments"]', 'states', {
                     'invisible': Eval('template_type') == 'base',
                     }),
             ]
@@ -238,13 +239,6 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
                 'order': s.order,
                 } for s in detail.sections])]
         return detail_default
-
-    def get_comments_plain(self, name):
-        return self.comments
-
-    @classmethod
-    def set_comments_plain(cls, records, name, value):
-        cls.write(records, {'comments': value})
 
 
 class ResultsReportVersionDetailSection(ModelSQL, ModelView):
