@@ -1563,7 +1563,25 @@ class TrendChart(ModelSQL, ModelView):
                 image = output.getvalue()
                 output.close()
             return image
+
         except (TypeError, ModuleNotFoundError):
+            if ds2:
+                try:
+                    ax = df2.plot(kind='line', rot=45, fontsize=7,
+                        figsize=(10, 7.5), marker='o', linestyle='-',
+                        secondary_y=True)
+                    ax.set_xlabel(self.x_axis_string)
+                    if self.uom_y2:
+                        ax.set_ylabel(self.uom_y2.symbol)
+
+                    ax.get_figure().savefig(output, bbox_inches='tight',
+                        dpi=300)
+                    image = output.getvalue()
+                    output.close()
+                    return image
+
+                except (TypeError, ModuleNotFoundError):
+                    pass
             return output.getvalue()
 
     @classmethod
