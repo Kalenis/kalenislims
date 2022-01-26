@@ -1317,6 +1317,10 @@ msgctxt "selection:lims.trend.chart,x_axis:"
 msgid "Hs/Km Component"
 msgstr "Hs/Km Componente"
 
+msgctxt "selection:lims.trend.chart,x_axis:"
+msgid "Hs/Km Oil"
+msgstr "Hs/Km Aceite"
+
 msgctxt "view:lims.create_sample.start:"
 msgid "Industry"
 msgstr "Industria"
