@@ -34,9 +34,9 @@ class TemplateAnalysisSheet(DeactivableMixin, ModelSQL, ModelView):
         states={'readonly': Bool(Eval('interface'))})
     name = fields.Char('Name', required=True)
     analysis = fields.One2Many('lims.template.analysis_sheet.analysis',
-        'template', 'Analysis', required=True,
+        'template', 'Analysis', states={'required': Bool(Eval('active'))},
         context={'interface_id': Eval('interface')},
-        depends=['interface'])
+        depends=['interface', 'active'])
     comments = fields.Text('Comments')
     pending_fractions = fields.Function(fields.Integer('Pending fractions'),
         'get_fields')
