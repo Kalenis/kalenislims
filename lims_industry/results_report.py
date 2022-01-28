@@ -524,20 +524,35 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
             [('fraction.sample.state', '!=', 'annulled')])],
         depends=['free_precedents', 'component'])
     precedent4 = fields.Many2One('lims.notebook', 'Precedent 4',
-        domain=[('component', '=', Eval('component'))],
-        depends=['component'])
+        domain=[If(~Eval('free_precedents'),
+            [('component', '=', Eval('component')),
+            ('fraction.sample.state', '!=', 'annulled')],
+            [('fraction.sample.state', '!=', 'annulled')])],
+        depends=['free_precedents', 'component'])
     precedent5 = fields.Many2One('lims.notebook', 'Precedent 5',
-        domain=[('component', '=', Eval('component'))],
-        depends=['component'])
+        domain=[If(~Eval('free_precedents'),
+            [('component', '=', Eval('component')),
+            ('fraction.sample.state', '!=', 'annulled')],
+            [('fraction.sample.state', '!=', 'annulled')])],
+        depends=['free_precedents', 'component'])
     precedent6 = fields.Many2One('lims.notebook', 'Precedent 6',
-        domain=[('component', '=', Eval('component'))],
-        depends=['component'])
+        domain=[If(~Eval('free_precedents'),
+            [('component', '=', Eval('component')),
+            ('fraction.sample.state', '!=', 'annulled')],
+            [('fraction.sample.state', '!=', 'annulled')])],
+        depends=['free_precedents', 'component'])
     precedent7 = fields.Many2One('lims.notebook', 'Precedent 7',
-        domain=[('component', '=', Eval('component'))],
-        depends=['component'])
+        domain=[If(~Eval('free_precedents'),
+            [('component', '=', Eval('component')),
+            ('fraction.sample.state', '!=', 'annulled')],
+            [('fraction.sample.state', '!=', 'annulled')])],
+        depends=['free_precedents', 'component'])
     precedent8 = fields.Many2One('lims.notebook', 'Precedent 8',
-        domain=[('component', '=', Eval('component'))],
-        depends=['component'])
+        domain=[If(~Eval('free_precedents'),
+            [('component', '=', Eval('component')),
+            ('fraction.sample.state', '!=', 'annulled')],
+            [('fraction.sample.state', '!=', 'annulled')])],
+        depends=['free_precedents', 'component'])
     free_precedents = fields.Boolean('Free precedents')
     precedent1_diagnosis = fields.Function(fields.Text(
         'Diagnosis Precedent 1'), 'on_change_with_precedent1_diagnosis')
