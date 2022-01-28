@@ -867,6 +867,8 @@ class Service(ModelSQL, ModelView):
                 new_service, = super().copy([service],
                     default=current_default)
             detail_default['service'] = new_service.id
+            detail_default['state'] = ('annulled' if service.annulled
+                else 'draft')
             EntryDetailAnalysis.copy(service.analysis_detail,
                 default=detail_default)
             new_services.append(new_service)
@@ -2034,7 +2036,10 @@ class Fraction(ModelSQL, ModelView):
         fractions_to_save = []
         stock_moves_to_create = []
         for fraction in fractions:
-            services = Service.search([('fraction', '=', fraction.id)])
+            services = Service.search([
+                ('fraction', '=', fraction.id),
+                ('annulled', '=', False),
+                ])
             if not services and not fraction.type.without_services:
                 companies = Company.search([])
                 if fraction.party.id not in [c.party.id for c in companies]:
@@ -2044,7 +2049,9 @@ class Fraction(ModelSQL, ModelView):
             Service.set_confirmation_date(services)
             fraction.create_laboratory_notebook()
             analysis_detail = EntryDetailAnalysis.search([
-                ('fraction', '=', fraction.id)])
+                ('fraction', '=', fraction.id),
+                ('state', '!=', 'annulled'),
+                ])
             if analysis_detail:
                 EntryDetailAnalysis.create_notebook_lines(analysis_detail,
                     fraction)
@@ -2380,6 +2387,7 @@ class Fraction(ModelSQL, ModelView):
 
         analysis_details = EntryDetailAnalysis.search([
             ('fraction', '=', self.id),
+            ('state', '!=', 'annulled'),
             ])
         if analysis_details:
             EntryDetailAnalysis.write(analysis_details, {
