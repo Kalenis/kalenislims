@@ -134,6 +134,10 @@ msgctxt "field:sale.load_set_group.start,analysis:"
 msgid "Set/Group"
 msgstr "Set/Grupo"
 
+msgctxt "field:sale.sale,clause_template:"
+msgid "Clauses Template"
+msgstr "Plantilla de Cláusulas"
+
 msgctxt "field:sale.sale,clauses:"
 msgid "Clauses"
 msgstr "Cláusulas"

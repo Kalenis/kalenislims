@@ -26,6 +26,8 @@
             <label name="template"/>
             <field name="template"
                 view_ids="lims_sale.sale_report_template_view_list,lims_sale.sale_report_template_view_form"/>
+            <label name="clause_template"/>
+            <field name="clause_template"/>
             <notebook colspan="4">
                 <page name="clauses">
                     <field name="clauses" colspan="4" widget="html"/>

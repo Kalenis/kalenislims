@@ -51,6 +51,9 @@ class Sale(metaclass=PoolMeta):
             ],
         states={'readonly': Eval('state') != 'draft'},
         depends=['state'])
+    clause_template = fields.Many2One('sale.clause.template',
+        'Clauses Template', depends=['state'],
+        states={'readonly': Eval('state') != 'draft'})
     sections = fields.One2Many('sale.sale.section', 'sale', 'Sections')
     previous_sections = fields.Function(fields.One2Many(
         'sale.sale.section', 'sale', 'Previous Sections',
@@ -116,7 +119,8 @@ class Sale(metaclass=PoolMeta):
                 type='invoice')
 
     @fields.depends('template', '_parent_template.sections', 'sections',
-        '_parent_template.clause_template')
+        '_parent_template.clause_template',
+        methods=['on_change_clause_template'])
     def on_change_template(self):
         if self.template and self.template.sections:
             sections = {}
@@ -130,7 +134,13 @@ class Sale(metaclass=PoolMeta):
                     }
             self.sections = sections.values()
         if self.template and self.template.clause_template:
-            self.clauses = self.template.clause_template.content
+            self.clause_template = self.template.clause_template
+            self.on_change_clause_template()
+
+    @fields.depends('clause_template', '_parent_clause_template.content')
+    def on_change_clause_template(self):
+        if self.clause_template:
+            self.clauses = self.clause_template.content
 
     def get_previous_sections(self, name):
         return [s.id for s in self.sections if s.position == 'previous']
