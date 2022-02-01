@@ -146,6 +146,10 @@ class Entry(Workflow, ModelSQL, ModelView):
             ('ongoing', 'closed'),
             ))
         cls._buttons.update({
+            'pre_assign_sample': {
+                'invisible': ~Eval('state').in_(['draft']),
+                'depends': ['state'],
+                },
             'create_sample': {
                 'invisible': ~Eval('state').in_(['draft']),
                 'depends': ['state'],
@@ -514,6 +518,11 @@ class Entry(Workflow, ModelSQL, ModelView):
         return new_entries
 
     @classmethod
+    @ModelView.button_action('lims.wiz_lims_pre_assign_sample')
+    def pre_assign_sample(cls, entries):
+        pass
+
+    @classmethod
     @ModelView.button_action('lims.wiz_lims_create_sample')
     def create_sample(cls, entries):
         pass
@@ -800,6 +809,86 @@ class EntryAcknowledgmentContact(ModelSQL, ModelView):
                 Eval('_parent_entry', {}).get('invoice_party')]),
             ('acknowledgment_contact', '=', True),
         ])
+
+
+class EntryPreAssignedSample(ModelSQL):
+    'Entry Pre-Assigned Sample'
+    __name__ = 'lims.entry.pre_assigned_sample'
+
+    entry = fields.Many2One('lims.entry', 'Entry',
+        ondelete='CASCADE', select=True, required=True)
+    number = fields.Char('Number')
+    used = fields.Boolean('Used')
+
+    @staticmethod
+    def default_used():
+        return False
+
+    @classmethod
+    def get_next_number(cls, entry_id):
+        next_number = cls.search([
+            ('entry', '=', entry_id),
+            ('used', '=', False),
+            ], order=[('number', 'ASC')], limit=1)
+        if next_number:
+            cls.write(next_number, {'used': True})
+            return next_number[0].number
+        return None
+
+
+class PreAssignSampleStart(ModelView):
+    'Pre-Assign Sample'
+    __name__ = 'lims.entry.pre_assign_sample.start'
+
+    quantity = fields.Integer('Samples quantity', required=True)
+
+
+class PreAssignSample(Wizard):
+    'Pre-Assign Sample'
+    __name__ = 'lims.entry.pre_assign_sample'
+
+    start_state = 'check'
+    check = StateTransition()
+    start = StateView('lims.entry.pre_assign_sample.start',
+        'lims.lims_pre_assign_sample_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Pre-Assign', 'confirm', 'tryton-ok', default=True),
+            ])
+    confirm = StateTransition()
+
+    def transition_check(self):
+        EntryPreAssignedSample = Pool().get('lims.entry.pre_assigned_sample')
+
+        entry_id = Transaction().context['active_id']
+
+        if EntryPreAssignedSample.search_count([
+                ('entry', '=', entry_id)
+                ]) > 0:
+            return 'end'
+        return 'start'
+
+    def transition_confirm(self):
+        pool = Pool()
+        LabWorkYear = pool.get('lims.lab.workyear')
+        EntryPreAssignedSample = pool.get('lims.entry.pre_assigned_sample')
+
+        workyear_id = LabWorkYear.find()
+        workyear = LabWorkYear(workyear_id)
+        sequence = workyear.get_sequence('sample')
+        if not sequence:
+            raise UserError(gettext('lims.msg_no_sample_sequence',
+                work_year=workyear.rec_name))
+
+        entry_id = Transaction().context['active_id']
+        records = []
+        for i in range(self.start.quantity):
+            records.append({
+                'entry': entry_id,
+                'number': sequence.get(),
+                'used': False,
+                })
+        EntryPreAssignedSample.create(records)
+        return 'end'
 
 
 class EntrySuspensionReason(ModelSQL, ModelView):

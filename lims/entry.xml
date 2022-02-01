@@ -94,6 +94,17 @@
             <field name="group" ref="group_lims_entry"/>
         </record>
 
+        <record model="ir.model.button" id="entry_pre_assign_sample_button">
+            <field name="name">pre_assign_sample</field>
+            <field name="string">Pre-assign sample numbers</field>
+            <field name="model" search="[('model', '=', 'lims.entry')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="entry_pre_assign_sample_button_group_lims_entry">
+            <field name="button" ref="entry_pre_assign_sample_button"/>
+            <field name="group" ref="group_lims_entry"/>
+        </record>
+
         <record model="ir.model.button" id="entry_create_sample_button">
             <field name="name">create_sample</field>
             <field name="model" search="[('model', '=', 'lims.entry')]"/>
@@ -275,6 +286,19 @@
             <field name="model">lims.entry.acknowledgment_contacts</field>
             <field name="type">tree</field>
             <field name="name">entry_acknowledgment_contacts_list</field>
+        </record>
+
+<!-- Wizard Pre-Assign Samples -->
+
+        <record model="ir.ui.view" id="lims_pre_assign_sample_start_view_form">
+            <field name="model">lims.entry.pre_assign_sample.start</field>
+            <field name="type">form</field>
+            <field name="name">pre_assign_sample_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_pre_assign_sample">
+            <field name="name">Pre-Assign Samples</field>
+            <field name="wiz_name">lims.entry.pre_assign_sample</field>
         </record>
 
 <!-- Entry Suspension Reason -->

@@ -70,6 +70,8 @@ def register():
         sample.PackagingIntegrity,
         entry.EntrySuspensionReason,
         entry.Entry,
+        entry.EntryPreAssignedSample,
+        entry.PreAssignSampleStart,
         sample.Zone,
         sample.Variety,
         sample.SampleProducer,
@@ -273,6 +275,7 @@ def register():
         planification.PrintPendingServicesUnplannedReportStart,
         module='lims', type_='model')
     Pool.register(
+        entry.PreAssignSample,
         entry.PrintAcknowledgmentOfReceipt,
         control_tendency.PrintControlChart,
         sample.CountersampleStoragePrint,
