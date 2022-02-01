@@ -2644,6 +2644,7 @@ class Sample(ModelSQL, ModelView):
         pool = Pool()
         LabWorkYear = pool.get('lims.lab.workyear')
         Sequence = pool.get('ir.sequence')
+        EntryPreAssignedSample = pool.get('lims.entry.pre_assigned_sample')
 
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
@@ -2654,7 +2655,10 @@ class Sample(ModelSQL, ModelView):
 
         vlist = [x.copy() for x in vlist]
         for values in vlist:
-            values['number'] = Sequence.get_id(sequence.id)
+            number = EntryPreAssignedSample.get_next_number(values['entry'])
+            if not number:
+                number = Sequence.get_id(sequence.id)
+            values['number'] = number
         samples = super().create(vlist)
         for sample in samples:
             sample.warn_duplicated_label()

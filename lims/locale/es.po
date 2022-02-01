@@ -1595,6 +1595,22 @@ msgctxt "field:lims.entry.invoice_contacts,entry:"
 msgid "Entry"
 msgstr "Ingreso"
 
+msgctxt "field:lims.entry.pre_assign_sample.start,quantity:"
+msgid "Samples quantity"
+msgstr "Cantidad de muestras"
+
+msgctxt "field:lims.entry.pre_assigned_sample,entry:"
+msgid "Entry"
+msgstr "Ingreso"
+
+msgctxt "field:lims.entry.pre_assigned_sample,number:"
+msgid "Number"
+msgstr "Número"
+
+msgctxt "field:lims.entry.pre_assigned_sample,used:"
+msgid "Used"
+msgstr "Utilizado"
+
 msgctxt "field:lims.entry.report_contacts,contact:"
 msgid "Contact"
 msgstr "Contacto"
@@ -7461,6 +7477,10 @@ msgctxt "model:ir.action,name:wiz_lims_notebook_uncertainty_calc"
 msgid "Uncertainty Calculation"
 msgstr "08) Cálculo de incertidumbre"
 
+msgctxt "model:ir.action,name:wiz_lims_pre_assign_sample"
+msgid "Pre-Assign Samples"
+msgstr "Preasignar muestras"
+
 msgctxt "model:ir.action,name:wiz_lims_relate_analysis"
 msgid "Relate Analysis"
 msgstr "Relacionar análisis"
@@ -8531,6 +8551,10 @@ msgctxt "model:ir.message,text:msg_zone_code_unique_id"
 msgid "Zone code must be unique"
 msgstr "El código de la zona debe ser único"
 
+msgctxt "model:ir.model.button,string:entry_pre_assign_sample_button"
+msgid "Pre-assign sample numbers"
+msgstr "Preasignar números de muestras"
+
 msgctxt "model:ir.rule.group,name:rule_group_analysis_device"
 msgid "User in laboratory"
 msgstr ""
@@ -9162,6 +9186,14 @@ msgstr "Copiar muestra"
 msgctxt "model:lims.entry.invoice_contacts,name:"
 msgid "Entry Invoice Contact"
 msgstr "Contacto facturación de Ingreso"
+
+msgctxt "model:lims.entry.pre_assign_sample.start,name:"
+msgid "Pre-Assign Sample"
+msgstr "Preasignar muestra"
+
+msgctxt "model:lims.entry.pre_assigned_sample,name:"
+msgid "Entry Pre-Assigned Sample"
+msgstr "Muestra preasignada"
 
 msgctxt "model:lims.entry.report_contacts,name:"
 msgid "Entry Report Contact"
@@ -14957,6 +14989,14 @@ msgid "Copy"
 msgstr "Copiar"
 
 msgctxt "wizard_button:lims.entry.duplicate_sample,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.entry.pre_assign_sample,start,confirm:"
+msgid "Pre-Assign"
+msgstr "Preasignar"
+
+msgctxt "wizard_button:lims.entry.pre_assign_sample,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 

@@ -20,10 +20,11 @@
                 <label name="no_acknowledgment_of_receipt"/>
                 <field name="no_acknowledgment_of_receipt"/>
             </group>
-            <group id="create_sample_spacer" colspan="3">
+            <group id="create_sample_spacer" colspan="2">
             </group>
             <button name="create_sample" string="CREATE SAMPLES"
                 colspan="1" icon="tryton-add"/>
+            <button name="pre_assign_sample"/>
             <field name="samples" colspan="4"/>
         </page>
         <page string="Additional Information" id="additional_information">
