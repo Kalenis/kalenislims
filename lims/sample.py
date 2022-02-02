@@ -847,6 +847,7 @@ class Service(ModelSQL, ModelView):
             default = {}
         current_default = default.copy()
         current_default['confirmation_date'] = None
+        current_default['report_date'] = None
         current_default['analysis_detail'] = None
 
         detail_default = {}
