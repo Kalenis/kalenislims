@@ -400,6 +400,9 @@
         <record model="ir.message" id="msg_not_divided">
             <field name="text">You can not confirm fraction because is not yet divided</field>
         </record>
+        <record model="ir.message" id="msg_divide_report">
+            <field name="text">Remember to load the report grouper in the analyzes</field>
+        </record>
         <record model="ir.message" id="msg_no_sample_sequence">
             <field name="text">There is no sample sequence for the work year "%(work_year)s".</field>
         </record>

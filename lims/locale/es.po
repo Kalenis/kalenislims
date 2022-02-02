@@ -5730,6 +5730,10 @@ msgctxt "field:lims.service,method_view:"
 msgid "Method"
 msgstr "Método"
 
+msgctxt "field:lims.service,not_divided_message:"
+msgid "Message"
+msgstr "Mensaje"
+
 msgctxt "field:lims.service,number:"
 msgid "Number"
 msgstr "Número"
@@ -6507,13 +6511,21 @@ msgctxt "field:res.user,printer:"
 msgid "Printer"
 msgstr "Impresora"
 
+msgctxt "field:stock.location,internal_shipment_to_location_restrictions:"
+msgid "Internal Shipment To Location Restrictions"
+msgstr "Restricciones de Destinos de Envíos Internos"
+
 msgctxt "field:stock.location,storage_time:"
 msgid "Storage time (in months)"
 msgstr "Tiempo de almacenamiento (en meses)"
 
-msgctxt "field:stock.location,internal_shipment_to_location_restrictions:"
-msgid "Internal Shipment To Location Restrictions"
-msgstr "Restricciones de Destinos de Envíos Internos"
+msgctxt "field:stock.location-stock.location,from_location:"
+msgid "Input location"
+msgstr "Origen"
+
+msgctxt "field:stock.location-stock.location,to_location:"
+msgid "Output location"
+msgstr "Destino"
 
 msgctxt "field:stock.move,fraction:"
 msgid "Fraction"
@@ -6526,14 +6538,6 @@ msgstr "Fracción solo lectura"
 msgctxt "field:stock.shipment.internal,to_location_domain:"
 msgid "Internal Shipment To Location Restrictions Domain"
 msgstr "Dominio de Restricciones de Destinos de Envíos Internos"
-
-msgctxt "field:stock.location-stock.location,from_location:"
-msgid "Input location"
-msgstr "Origen"
-
-msgctxt "field:stock.location-stock.location,to_location:"
-msgid "Output location"
-msgstr "Destino"
 
 msgctxt "field:user.department,default:"
 msgid "By default"
@@ -7782,6 +7786,10 @@ msgstr "Los campos Desde y Hasta deben ser numéricos"
 msgctxt "model:ir.message,text:msg_device_type_code_unique_id"
 msgid "Device type code must be unique"
 msgstr "El código del tipo de equipo debe ser único"
+
+msgctxt "model:ir.message,text:msg_divide_report"
+msgid "Remember to load the report grouper in the analyzes"
+msgstr "Recuerde cargar el agrupador de informe en los análisis"
 
 msgctxt "model:ir.message,text:msg_division_zero"
 msgid "Division by 0 (occured at index %(index)s)"
@@ -10001,6 +10009,10 @@ msgstr "Lims Gráficos de tendencia Admin"
 msgctxt "model:res.group,name:group_notebook_repeat_analysis"
 msgid "Lims Analysis repetition"
 msgstr "Lims Repetición de análisis"
+
+msgctxt "model:stock.location-stock.location,name:"
+msgid "Location restriction"
+msgstr "Restricción de Destino"
 
 msgctxt "model:user.department,name:"
 msgid "User Department"

@@ -36,6 +36,7 @@
             <field name="divide"/>
             <label name="confirmation_date"/>
             <field name="confirmation_date"/>
+            <field name="not_divided_message" colspan="4" yexpand="0"/>
             <group id="estimated_waiting_laboratory" colspan="2" col="2">
                 <label name="estimated_waiting_laboratory"/>
                 <field name="estimated_waiting_laboratory"/>

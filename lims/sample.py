@@ -393,6 +393,8 @@ class Service(ModelSQL, ModelView):
         searcher='search_confirmed')
     confirmation_date = fields.Date('Confirmation date', readonly=True)
     divide = fields.Boolean('Divide Report')
+    not_divided_message = fields.Char('Message', readonly=True,
+        states={'invisible': Not(Bool(Eval('not_divided_message')))})
     has_results_report = fields.Function(fields.Boolean('Results Report'),
         'get_has_results_report')
     manage_service_available = fields.Function(fields.Boolean(
@@ -530,6 +532,8 @@ class Service(ModelSQL, ModelView):
         super().write(*args)
         actions = iter(args)
         for services, vals in zip(actions, actions):
+            if vals.get('not_divided_message'):
+                cls.write(services, {'not_divided_message': None})
             check_duplicated = False
             for field in ('analysis', 'method'):
                 if vals.get(field):
@@ -1186,6 +1190,13 @@ class Service(ModelSQL, ModelView):
         if not res:
             return []
         return [x[0] for x in res]
+
+    @fields.depends('divide')
+    def on_change_divide(self):
+        if self.divide:
+            self.not_divided_message = gettext('lims.msg_divide_report')
+        else:
+            self.not_divided_message = ''
 
     @classmethod
     def get_views_field(cls, services, names):
