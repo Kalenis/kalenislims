@@ -39,6 +39,10 @@
         <page name="fractions_comments">
             <field name="fractions_comments" colspan="4"/>
         </page>
+        <page id="waiting" string="Waiting">
+            <separator name="waiting_reason" colspan="4"/>
+            <field name="waiting_reason" colspan="4"/>
+        </page>
         <page id="annulation" string="Annulation">
             <separator name="annulment_reason" colspan="4"/>
             <field name="annulment_reason" colspan="4"/>

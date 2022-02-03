@@ -183,9 +183,18 @@
             <field name="act_window" ref="act_lims_results_report_version_detail"/>
         </record>
         <record model="ir.action.act_window.domain"
+                id="act_lims_results_report_version_detail_domain_waiting">
+            <field name="name">Waiting</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain"
+                eval="[('state', '=', 'waiting')]" pyson="1"/>
+            <field name="count" eval="True"/>
+            <field name="act_window" ref="act_lims_results_report_version_detail"/>
+        </record>
+        <record model="ir.action.act_window.domain"
                 id="act_lims_results_report_version_detail_domain_revised">
             <field name="name">Revised</field>
-            <field name="sequence" eval="20"/>
+            <field name="sequence" eval="30"/>
             <field name="domain"
                 eval="[('state', '=', 'revised')]" pyson="1"/>
             <field name="count" eval="True"/>
@@ -194,7 +203,7 @@
         <record model="ir.action.act_window.domain"
                 id="act_lims_results_report_version_detail_domain_released">
             <field name="name">Released</field>
-            <field name="sequence" eval="30"/>
+            <field name="sequence" eval="40"/>
             <field name="domain"
                 eval="[('state', '=', 'released')]" pyson="1"/>
             <field name="act_window" ref="act_lims_results_report_version_detail"/>
@@ -202,7 +211,7 @@
         <record model="ir.action.act_window.domain"
                 id="act_lims_results_report_version_detail_domain_annulled">
             <field name="name">Annulled</field>
-            <field name="sequence" eval="40"/>
+            <field name="sequence" eval="50"/>
             <field name="domain"
                 eval="[('state', '=', 'annulled')]" pyson="1"/>
             <field name="act_window" ref="act_lims_results_report_version_detail"/>
@@ -691,6 +700,25 @@
         <record model="ir.action.wizard" id="wiz_results_report_version_detail_new_version">
             <field name="name">New Results Report Version</field>
             <field name="wiz_name">lims.results_report.version.detail.new_version</field>
+        </record>
+
+<!-- Wizard Report Waiting -->
+
+        <record model="ir.ui.view" id="lims_results_report_waiting_start_view_form">
+            <field name="model">lims.results_report_waiting.start</field>
+            <field name="type">form</field>
+            <field name="name">results_report_waiting_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_results_report_waiting">
+            <field name="name">Report Waiting</field>
+            <field name="wiz_name">lims.results_report_waiting</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_lims_results_report_waiting_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.results_report.version.detail,-1</field>
+            <field name="action" ref="wiz_lims_results_report_waiting"/>
         </record>
 
 <!-- Wizard Repeat Analysis -->
