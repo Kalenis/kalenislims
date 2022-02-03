@@ -853,6 +853,9 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
             ('//page[@id="waiting"]', 'states', {
                     'invisible': Eval('state') != 'waiting',
                     }),
+            ('//page[@id="annulation"]', 'states', {
+                    'invisible': Eval('state') != 'annulled',
+                    }),
             ]
 
     @classmethod
