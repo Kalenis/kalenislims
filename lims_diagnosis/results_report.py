@@ -28,6 +28,8 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         if diagnosed_state not in cls.state.selection:
             cls.state.selection.append(diagnosed_state)
         cls._transitions = set((
+            ('draft', 'waiting'),
+            ('waiting', 'draft'),
             ('draft', 'diagnosed'),
             ('diagnosed', 'draft'),
             ('diagnosed', 'revised'),

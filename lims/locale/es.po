@@ -5318,6 +5318,10 @@ msgctxt "field:lims.results_report.version.detail,valid:"
 msgid "Active"
 msgstr "Activo"
 
+msgctxt "field:lims.results_report.version.detail,waiting_reason:"
+msgid "Waiting reason"
+msgstr "Motivo de espera"
+
 msgctxt "field:lims.results_report.version.detail,write_date2:"
 msgid "Write Date"
 msgstr "Fecha de modificación"
@@ -5482,6 +5486,10 @@ msgstr "Motivo de anulación"
 msgctxt "field:lims.results_report_annulation.start,annulment_reason_print:"
 msgid "Print annulment reason in next version"
 msgstr "Imprimir motivo de anulación en próxima versión"
+
+msgctxt "field:lims.results_report_waiting.start,waiting_reason:"
+msgid "Waiting reason"
+msgstr "Motivo de espera"
 
 msgctxt "field:lims.rule,action:"
 msgid "Action"
@@ -7505,6 +7513,10 @@ msgctxt "model:ir.action,name:wiz_lims_results_report_annulation"
 msgid "Report Annulation"
 msgstr "Anulación de Informe"
 
+msgctxt "model:ir.action,name:wiz_lims_results_report_waiting"
+msgid "Report Waiting"
+msgstr "Informe en espera"
+
 msgctxt "model:ir.action,name:wiz_lims_sample_results_report"
 msgid "Sample Results Reports"
 msgstr "Informes de resultados de la Muestra"
@@ -7715,6 +7727,11 @@ msgctxt ""
 "model:ir.action.act_window.domain,name:act_lims_results_report_version_detail_domain_revised"
 msgid "Revised"
 msgstr "Revisado"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_results_report_version_detail_domain_waiting"
+msgid "Waiting"
+msgstr "En espera"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_lims_samples_pending_reporting_domain_complete"
@@ -9895,6 +9912,10 @@ msgstr "Muestra de detalle de versión de informe de resultados"
 msgctxt "model:lims.results_report_annulation.start,name:"
 msgid "Report Annulation"
 msgstr "Anulación de Informe"
+
+msgctxt "model:lims.results_report_waiting.start,name:"
+msgid "Results Report Waiting"
+msgstr "Informe de resultados en espera"
 
 msgctxt "model:lims.rule,name:"
 msgid "Notebook Rule"
@@ -13299,6 +13320,10 @@ msgctxt "selection:lims.results_report.version.detail,state:"
 msgid "Revised"
 msgstr "Revisado"
 
+msgctxt "selection:lims.results_report.version.detail,state:"
+msgid "Waiting"
+msgstr "En espera"
+
 msgctxt "selection:lims.results_report.version.detail,type:"
 msgid "Complementary"
 msgstr "Complementario"
@@ -14631,6 +14656,10 @@ msgctxt "view:lims.results_report.version.detail:"
 msgid "Time"
 msgstr "Hora"
 
+msgctxt "view:lims.results_report.version.detail:"
+msgid "Waiting"
+msgstr "En espera"
+
 msgctxt "view:lims.results_report.version:"
 msgid "Laboratories"
 msgstr "Laboratorios"
@@ -15692,6 +15721,14 @@ msgid "Annul"
 msgstr "Anular"
 
 msgctxt "wizard_button:lims.results_report_annulation,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.results_report_waiting,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.results_report_waiting,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 

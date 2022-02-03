@@ -501,6 +501,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     valid = fields.Boolean('Active', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
+        ('waiting', 'Waiting'),
         ('revised', 'Revised'),
         ('released', 'Released'),
         ('annulled', 'Annulled'),
@@ -579,6 +580,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         states={'readonly': Eval('state') != 'annulled'}, depends=_depends)
     annulment_reason_print = fields.Boolean('Print annulment reason',
         states={'readonly': Eval('state') != 'annulled'}, depends=_depends)
+    waiting_reason = fields.Text('Waiting reason', readonly=True)
 
     # Report format
     report_section = fields.Function(fields.Char('Section'),
@@ -644,6 +646,8 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         cls._order.insert(0, ('report_version', 'DESC'))
         cls._order.insert(1, ('number', 'DESC'))
         cls._transitions = set((
+            ('draft', 'waiting'),
+            ('waiting', 'draft'),
             ('draft', 'revised'),
             ('revised', 'draft'),
             ('revised', 'released'),
@@ -651,7 +655,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
             ))
         cls._buttons.update({
             'draft': {
-                'invisible': Eval('state') != 'revised',
+                'invisible': ~Eval('state').in_(['waiting', 'revised']),
                 'depends': ['state'],
                 },
             'revise': {
@@ -722,6 +726,14 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     @staticmethod
     def default_report_result_type_forced():
         return 'none'
+
+    @classmethod
+    def view_attributes(cls):
+        return super().view_attributes() + [
+            ('//page[@id="waiting"]', 'states', {
+                    'invisible': Eval('state') != 'waiting',
+                    }),
+            ]
 
     @classmethod
     def get_next_number(cls, report_version_id, d_count):
@@ -3780,6 +3792,55 @@ class NewResultsReportVersion(Wizard):
 
     def transition_open_(self):
         return 'end'
+
+
+class ResultsReportWaitingStart(ModelView):
+    'Results Report Waiting'
+    __name__ = 'lims.results_report_waiting.start'
+
+    waiting_reason = fields.Text('Waiting reason', required=True)
+
+
+class ResultsReportWaiting(Wizard):
+    'Results Report Waiting'
+    __name__ = 'lims.results_report_waiting'
+
+    start_state = 'check'
+    check = StateTransition()
+    start = StateView('lims.results_report_waiting.start',
+        'lims.lims_results_report_waiting_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Confirm', 'confirm', 'tryton-ok', default=True),
+            ])
+    confirm = StateTransition()
+
+    def transition_check(self):
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
+
+        details = ResultsDetail.search([
+            ('id', 'in', Transaction().context['active_ids']),
+            ('state', '=', 'draft'),
+            ])
+        if details:
+            return 'start'
+        return 'end'
+
+    def transition_confirm(self):
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
+
+        details = ResultsDetail.search([
+            ('id', 'in', Transaction().context['active_ids']),
+            ('state', '=', 'draft'),
+            ])
+        if details:
+            ResultsDetail.write(details, {
+                'state': 'waiting',
+                'waiting_reason': self.start.waiting_reason,
+                })
+        return 'end'
+
+    def end(self):
+        return 'reload'
 
 
 class PrintResultReport(Wizard):

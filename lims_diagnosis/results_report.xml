@@ -48,7 +48,7 @@
         <record model="ir.action.act_window.domain"
                 id="act_lims_results_report_version_detail_domain_diagnosed">
             <field name="name">Diagnosed</field>
-            <field name="sequence" eval="15"/>
+            <field name="sequence" eval="25"/>
             <field name="domain"
                 eval="[('state', '=', 'diagnosed')]" pyson="1"/>
             <field name="count" eval="True"/>
