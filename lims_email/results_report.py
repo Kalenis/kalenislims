@@ -31,10 +31,10 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     def get_sent_date(cls, details, name):
         result = {}
         for d in details:
-            if d.state not in ('released', 'annulled'):
-                result[d.id] = None
-            else:
+            if d.valid:
                 result[d.id] = d.report_version.results_report.sent_date
+            else:
+                result[d.id] = None
         return result
 
     def unsend(self):
