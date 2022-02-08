@@ -922,7 +922,7 @@ class NotebookLine(ModelSQL, ModelView):
     rm_correction_formula = fields.Char('RM Correction Formula',
         states=_states, depends=_depends)
     report = fields.Boolean('Report',
-        states=_states, depends=_depends)
+        states=_states, depends=_depends, select=True)
     uncertainty = fields.Char('Uncertainty',
         states=_states, depends=_depends)
     verification = fields.Char('Verification',
