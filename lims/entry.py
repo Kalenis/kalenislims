@@ -1073,6 +1073,38 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     def default_referable():
         return False
 
+    def _get_default_laboratory(self):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        AnalysisLaboratory = pool.get('lims.analysis-laboratory')
+        Typification = pool.get('lims.typification')
+
+        cursor.execute('SELECT laboratory '
+            'FROM "' + Typification._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s '
+                'AND analysis = %s '
+                'AND valid IS TRUE '
+                'AND by_default IS TRUE '
+                'AND laboratory IS NOT NULL',
+            (self.service.fraction.product_type.id,
+                self.service.fraction.matrix.id,
+                self.analysis.id))
+        res = cursor.fetchone()
+        if res:
+            return res[0]
+
+        cursor.execute('SELECT laboratory '
+            'FROM "' + AnalysisLaboratory._table + '" '
+            'WHERE analysis = %s '
+                'AND by_default = TRUE '
+            'ORDER BY id', (self.analysis.id,))
+        res = cursor.fetchone()
+        if res:
+            return res[0]
+
+        return None
+
     @classmethod
     def view_attributes(cls):
         return super().view_attributes() + [
@@ -1096,8 +1128,14 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
             default = {}
         current_default = default.copy()
         current_default['confirmation_date'] = None
-        return super().copy(details,
-            default=current_default)
+        for detail in details:
+            if (detail.laboratory and
+                    detail.laboratory.id !=
+                    detail._get_default_laboratory()):
+                raise UserError(gettext('lims.msg_service_default_laboratory',
+                    analysis=detail.analysis.rec_name,
+                    laboratory=detail.laboratory.rec_name))
+        return super().copy(details, default=current_default)
 
     @classmethod
     def check_delete(cls, details):

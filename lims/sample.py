@@ -862,12 +862,6 @@ class Service(ModelSQL, ModelView):
 
         new_services = []
         for service in sorted(services, key=lambda x: x.number):
-            if (service.laboratory and
-                    service.laboratory.id !=
-                    service._get_default_laboratory()):
-                raise UserError(gettext('lims.msg_service_default_laboratory',
-                    analysis=service.analysis.rec_name,
-                    laboratory=service.laboratory.rec_name))
             with Transaction().set_context(copying=True):
                 new_service, = super().copy([service],
                     default=current_default)
