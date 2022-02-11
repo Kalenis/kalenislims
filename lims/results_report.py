@@ -7,7 +7,8 @@ from datetime import datetime
 from PyPDF2 import PdfFileMerger
 from sql import Literal
 
-from trytond.model import Workflow, ModelView, ModelSQL, Unique, fields
+from trytond.model import Workflow, ModelView, ModelSQL, fields, \
+    sequence_ordered, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     StateReport, Button
 from trytond.pool import Pool
@@ -1718,7 +1719,8 @@ class ResultsReportComment(ModelSQL):
                     ], res))
 
 
-class ResultsReportVersionDetailSample(ModelSQL, ModelView):
+class ResultsReportVersionDetailSample(
+        sequence_ordered(), ModelSQL, ModelView):
     'Results Report Version Detail Sample'
     __name__ = 'lims.results_report.version.detail.sample'
 
@@ -1746,7 +1748,7 @@ class ResultsReportVersionDetailSample(ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super().__setup__()
-        cls._order.insert(0, ('notebook', 'ASC'))
+        cls._order.insert(1, ('notebook', 'ASC'))
 
     def get_rec_name(self, name):
         return self.notebook.rec_name
