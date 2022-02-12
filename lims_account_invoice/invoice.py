@@ -8,6 +8,8 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from time import time
+from sql import Literal
+from sql.functions import Substring, Position
 import logging
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields
@@ -312,6 +314,25 @@ class InvoiceLine(metaclass=PoolMeta):
     def search_fraction_field(cls, name, clause):
         return [('origin.fraction.' + name[13:],) + tuple(clause[1:]) +
                 ('lims.service',)]
+
+    def _order_service_field(name):
+        def order_field(tables):
+            Service = Pool().get('lims.service')
+            field = Service._fields[name]
+            table, _ = tables[None]
+            service_tables = tables.get('service')
+            if service_tables is None:
+                service = Service.__table__()
+                service_tables = {
+                    None: (service, (table.origin.like('lims.service,%') &
+                        (Service.id.sql_cast(Substring(table.origin,
+                        Position(',', table.origin) + Literal(1))) ==
+                        service.id))),
+                    }
+                tables['service'] = service_tables
+            return field.convert_order(name, service_tables, Service)
+        return staticmethod(order_field)
+    order_lims_service_entry = _order_service_field('entry')
 
     @classmethod
     def get_results_reports(cls, lines, name):
