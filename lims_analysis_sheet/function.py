@@ -2,6 +2,7 @@
 # This file is part of lims_analysis_sheet module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import formulas
 
 from trytond.pool import Pool
 from trytond.transaction import Transaction
@@ -20,6 +21,15 @@ def device_correction(device_id, value):
 
 
 custom_functions['DEVICE_CORRECTION'] = device_correction
+
+
+def _get_column_name(alias, iteration=None):
+    if not iteration:
+        return alias
+    parser = formulas.Parser()
+    ast = parser.ast('=%s' % str(iteration))[1].compile()
+    iteration = str(ast())
+    return '%s_%s' % (alias, iteration)
 
 
 def _get_result_column(table_id=None):
@@ -115,7 +125,8 @@ def get_nline_analysis(analysis_code, alias=None, notebook_line=None):
 custom_functions['NL'] = get_nline_analysis
 
 
-def get_sheet_analysis(analysis_code, alias=None, notebook_line=None):
+def get_sheet_analysis(analysis_code, alias=None, notebook_line=None,
+        iteration=None):
     pool = Pool()
     NotebookLine = pool.get('lims.notebook.line')
     AnalysisSheet = pool.get('lims.analysis_sheet')
@@ -170,8 +181,8 @@ def get_sheet_analysis(analysis_code, alias=None, notebook_line=None):
             if not target_line:
                 continue
 
-            target_field = alias or _get_result_column(
-                s.compilation.table.id)
+            target_field = (_get_column_name(alias, iteration) or
+                _get_result_column(s.compilation.table.id))
             if not hasattr(target_line, target_field):
                 return None
 
