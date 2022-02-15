@@ -178,24 +178,25 @@ class Planification(Workflow, ModelSQL, ModelView):
                 'INNER JOIN "' + Analysis._table + '" a '
                 'ON a.id = al.analysis '
             'WHERE al.laboratory = %s '
+                'AND a.type = \'analysis\' '
                 'AND a.behavior != \'internal_relation\'',
             (laboratory.id,))
-        analysis_sets_list = [a[0] for a in cursor.fetchall()]
+        analyzes_list = [a[0] for a in cursor.fetchall()]
 
-        groups_list = []
+        others_list = []
         cursor.execute('SELECT id '
             'FROM "' + Analysis._table + '" '
-            'WHERE type = \'group\'')
-        groups_list_ids = [g[0] for g in cursor.fetchall()]
-        for group_id in groups_list_ids:
-            if Planification._get_group_available(group_id,
-                    analysis_sets_list):
-                groups_list.append(group_id)
+            'WHERE type != \'analysis\'')
+        others_list_ids = [x[0] for x in cursor.fetchall()]
+        for set_group_id in others_list_ids:
+            if Planification._get_set_group_available(set_group_id,
+                    analyzes_list):
+                others_list.append(set_group_id)
 
-        return analysis_sets_list + groups_list
+        return analyzes_list + others_list
 
     @staticmethod
-    def _get_group_available(group_id, analysis_sets_list):
+    def _get_set_group_available(set_group_id, analyzes_list):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         AnalysisIncluded = pool.get('lims.analysis.included')
@@ -207,17 +208,17 @@ class Planification(Workflow, ModelSQL, ModelView):
                 'ON a.id = ia.included_analysis '
             'WHERE ia.analysis = %s '
                 'AND a.behavior != \'internal_relation\'',
-            (group_id,))
+            (set_group_id,))
         included_analysis = cursor.fetchall()
         if not included_analysis:
             return False
         for analysis in included_analysis:
-            if (analysis[1] != 'group' and analysis[0] not in
-                    analysis_sets_list):
+            if (analysis[1] == 'analysis' and analysis[0] not in
+                    analyzes_list):
                 return False
-            if (analysis[1] == 'group' and not
-                    Planification._get_group_available(analysis[0],
-                    analysis_sets_list)):
+            if (analysis[1] != 'analysis' and not
+                    Planification._get_set_group_available(analysis[0],
+                    analyzes_list)):
                 return False
         return True
 
@@ -4508,41 +4509,41 @@ class CreateFractionControlStart(ModelView):
         if not self.laboratory or not self.product_type or not self.matrix:
             return []
 
-        cursor.execute('SELECT DISTINCT(analysis) '
-            'FROM "' + AnalysisLaboratory._table + '" '
-            'WHERE laboratory = %s', (self.laboratory.id,))
-        analysis_sets_list = [a[0] for a in cursor.fetchall()]
-        if not analysis_sets_list:
+        cursor.execute('SELECT DISTINCT(al.analysis) '
+            'FROM "' + AnalysisLaboratory._table + '" al '
+                'INNER JOIN "' + Analysis._table + '" a '
+                'ON a.id = al.analysis '
+            'WHERE al.laboratory = %s '
+                'AND a.type = \'analysis\'',
+            (self.laboratory.id,))
+        analyzes_list = [a[0] for a in cursor.fetchall()]
+        if not analyzes_list:
             return []
-        lab_analysis_ids = ', '.join(str(a) for a in
-                analysis_sets_list)
+        lab_analysis_ids = ', '.join(str(a) for a in analyzes_list)
 
-        groups_list = []
-        groups = Analysis.search([
-            ('type', '=', 'group'),
+        others_list = []
+        others = Analysis.search([
+            ('type', '!=', 'analysis'),
             ])
-        if groups:
-            for group in groups:
-                available = True
+        for set_group in others:
+            available = True
 
-                ia = Analysis.get_included_analysis_analysis(
-                    group.id)
-                if not ia:
-                    continue
-                included_ids = ', '.join(str(a) for a in ia)
+            ia = Analysis.get_included_analysis_analysis(set_group.id)
+            if not ia:
+                continue
+            included_ids = ', '.join(str(a) for a in ia)
 
-                cursor.execute('SELECT id '
-                    'FROM "' + Analysis._table + '" '
-                    'WHERE id IN (' + included_ids + ') '
-                        'AND id NOT IN (' + lab_analysis_ids +
-                        ')')
-                if cursor.fetchone():
-                    available = False
+            cursor.execute('SELECT id '
+                'FROM "' + Analysis._table + '" '
+                'WHERE id IN (' + included_ids + ') '
+                    'AND id NOT IN (' + lab_analysis_ids + ')')
+            if cursor.fetchone():
+                available = False
 
-                if available:
-                    groups_list.append(group.id)
+            if available:
+                others_list.append(set_group.id)
 
-        analysis_domain = analysis_sets_list + groups_list
+        analysis_domain = analyzes_list + others_list
         analysis_domain_ids = ', '.join(str(a) for a in analysis_domain)
 
         cursor.execute('SELECT DISTINCT(typ.analysis) '

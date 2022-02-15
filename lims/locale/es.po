@@ -238,14 +238,6 @@ msgctxt "field:lims.analysis.included,included_analysis:"
 msgid "Included analysis"
 msgstr "Análisis incluido"
 
-msgctxt "field:lims.analysis.included,laboratory:"
-msgid "Laboratory"
-msgstr "Laboratorio"
-
-msgctxt "field:lims.analysis.included,laboratory_domain:"
-msgid "Laboratory domain"
-msgstr "Dominio para Laboratorio"
-
 msgctxt "field:lims.analysis.included,method:"
 msgid "Method"
 msgstr "Método"
@@ -7634,12 +7626,6 @@ msgctxt "model:ir.message,text:msg_analysis_family_code_unique_id"
 msgid "Analysis family code must be unique"
 msgstr "El código de la familia de análisis debe ser único"
 
-msgctxt "model:ir.message,text:msg_analysis_laboratory"
-msgid "The \"%(analysis)s\" analysis is not defined in laboratory \"%(laboratory)s\""
-msgstr ""
-"El análisis \"%(analysis)s\" no está definido para el laboratorio "
-"\"%(laboratory)s\""
-
 msgctxt "model:ir.message,text:msg_annul_analysis"
 msgid "The analysis \"%(analysis)s\" is already reported"
 msgstr "El análisis \"%(analysis)s\" ya fue informado"
@@ -8121,26 +8107,10 @@ msgctxt "model:ir.message,text:msg_not_fraction"
 msgid "You can not confirm entry \"%(entry)s\" because has not fractions"
 msgstr "No puede confirmar el ingreso «%(entry)s» porque no posee fracciones"
 
-msgctxt "model:ir.message,text:msg_not_laboratory"
-msgid "Must define a Laboratory"
-msgstr "Debe definir un laboratorio"
-
-msgctxt "model:ir.message,text:msg_not_laboratory_change"
-msgid ""
-"You can not change the laboratory because the analysis is included in a "
-"set/group with this laboratory"
-msgstr ""
-"No puede cambiar el laboratorio porque el análisis está incluido en un "
-"set/grupo con este laboratorio"
-
 msgctxt "model:ir.message,text:msg_not_services"
 msgid "You can not confirm fraction \"%(fraction)s\" because has not services"
 msgstr ""
 "No puede confirmar la fracción «%(fraction)s» porque no posee servicios"
-
-msgctxt "model:ir.message,text:msg_not_set_laboratory"
-msgid "No Laboratory loaded for the Set"
-msgstr "Ningún laboratorio definido para el Set"
 
 msgctxt "model:ir.message,text:msg_not_start_date"
 msgid "The planification must have a start date"
@@ -8294,10 +8264,6 @@ msgstr ""
 "No puede copiar el servicio \"%(analysis)s\" porque el laboratorio asignado "
 "(%(laboratory)s) no es el predeterminado."
 
-msgctxt "model:ir.message,text:msg_set_laboratories"
-msgid "A Set can be assigned to a single laboratory"
-msgstr "Un Set puede ser asignado a un único laboratorio"
-
 msgctxt "model:ir.message,text:msg_suspension_reason_unique_id"
 msgid "Suspension reason code must be unique"
 msgstr "El código del motivo de suspensión debe ser único"
@@ -8431,10 +8397,6 @@ msgid "Pre-assign sample numbers"
 msgstr "Preasignar números de muestras"
 
 msgctxt "model:ir.rule.group,name:rule_group_analysis_device"
-msgid "User in laboratory"
-msgstr ""
-
-msgctxt "model:ir.rule.group,name:rule_group_analysis_included"
 msgid "User in laboratory"
 msgstr ""
 

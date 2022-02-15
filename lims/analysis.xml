@@ -426,18 +426,6 @@
             <field name="name">analysis_included_list</field>
         </record>
 
-        <record model="ir.rule.group" id="rule_group_analysis_included">
-            <field name="name">User in laboratory</field>
-            <field name="model" search="[('model', '=', 'lims.analysis.included')]"/>
-            <field name="global_p" eval="True"/>
-        </record>
-        <record model="ir.rule" id="rule_analysis_included">
-            <field name="domain"
-                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
-                pyson="1"/>
-            <field name="rule_group" ref="rule_group_analysis_included"/>
-        </record>
-
 <!-- Analysis Device -->
 
         <record model="ir.ui.view" id="lims_analysis_device_view_form">

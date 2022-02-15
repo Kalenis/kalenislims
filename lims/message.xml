@@ -19,18 +19,6 @@
         <record model="ir.message" id="msg_description_uniq">
             <field name="text">Analysis description must be unique</field>
         </record>
-        <record model="ir.message" id="msg_not_laboratory">
-            <field name="text">Must define a Laboratory</field>
-        </record>
-        <record model="ir.message" id="msg_set_laboratories">
-            <field name="text">A Set can be assigned to a single laboratory</field>
-        </record>
-        <record model="ir.message" id="msg_analysis_laboratory">
-            <field name="text">The "%(analysis)s" analysis is not defined in laboratory "%(laboratory)s"</field>
-        </record>
-        <record model="ir.message" id="msg_not_laboratory_change">
-            <field name="text">You can not change the laboratory because the analysis is included in a set/group with this laboratory</field>
-        </record>
         <record model="ir.message" id="msg_end_date">
             <field name="text">The leaving date cannot be lower than entry date</field>
         </record>
@@ -39,9 +27,6 @@
         </record>
         <record model="ir.message" id="msg_duplicated_analysis">
             <field name="text">The analysis "%(analysis)s" is already included</field>
-        </record>
-        <record model="ir.message" id="msg_not_set_laboratory">
-            <field name="text">No Laboratory loaded for the Set</field>
         </record>
         <record model="ir.message" id="msg_typificated_method">
             <field name="text">You can not delete method "%(method)s" because is typificated</field>

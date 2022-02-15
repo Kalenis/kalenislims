@@ -640,7 +640,9 @@ class Service(ModelSQL, ModelView):
     @staticmethod
     def _get_included_analysis(analysis, analysis_origin='',
             service_context=None):
-        Typification = Pool().get('lims.typification')
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Typification = pool.get('lims.typification')
 
         childs = []
         if analysis.included_analysis:
@@ -651,24 +653,45 @@ class Service(ModelSQL, ModelView):
                 else:
                     origin = (analysis_origin + ' > ' +
                         included.included_analysis.code)
+
                 if included.included_analysis.type == 'analysis':
 
-                    laboratory_id = included.laboratory.id
+                    laboratory_id = None
+                    cursor.execute('SELECT laboratory '
+                        'FROM "' + Typification._table + '" '
+                        'WHERE product_type = %s '
+                            'AND matrix = %s '
+                            'AND analysis = %s '
+                            'AND valid IS TRUE '
+                            'AND by_default IS TRUE '
+                            'AND laboratory IS NOT NULL',
+                        (service_context['product_type'],
+                            service_context['matrix'],
+                            included.included_analysis.id))
+                    res = cursor.fetchone()
+                    if res:
+                        laboratory_id = res[0]
+                    if not laboratory_id:
+                        for l in included.included_analysis.laboratories:
+                            if l.by_default is True:
+                                laboratory_id = l.laboratory.id
 
                     method_id = (included.method.id
                         if included.method else None)
-
                     if not method_id:
-                        typifications = Typification.search([
-                            ('product_type', '=',
-                                service_context['product_type']),
-                            ('matrix', '=', service_context['matrix']),
-                            ('analysis', '=', included.included_analysis),
-                            ('by_default', '=', True),
-                            ('valid', '=', True),
-                            ])
-                        method_id = (typifications[0].method.id
-                            if typifications else None)
+                        cursor.execute('SELECT method '
+                            'FROM "' + Typification._table + '" '
+                            'WHERE product_type = %s '
+                                'AND matrix = %s '
+                                'AND analysis = %s '
+                                'AND valid IS TRUE '
+                                'AND by_default IS TRUE',
+                            (service_context['product_type'],
+                                service_context['matrix'],
+                                included.included_analysis.id))
+                        res = cursor.fetchone()
+                        if res:
+                            method_id = res[0]
 
                     device_id = None
                     if included.included_analysis.devices:
@@ -827,12 +850,13 @@ class Service(ModelSQL, ModelView):
     @classmethod
     def _get_analysis_included_labs(cls, analysis):
         childs = []
-        if analysis.included_analysis:
-            for included in analysis.included_analysis:
-                if included.included_analysis.type == 'analysis':
-                    childs.append(included.laboratory.id)
-                childs.extend(cls._get_analysis_included_labs(
-                    included.included_analysis))
+        for included in analysis.included_analysis:
+            if included.included_analysis.type == 'analysis':
+                for l in included.included_analysis.laboratories:
+                    if l.by_default is True:
+                        childs.append(l.laboratory.id)
+            childs.extend(cls._get_analysis_included_labs(
+                included.included_analysis))
         return childs
 
     @classmethod
@@ -1085,7 +1109,7 @@ class Service(ModelSQL, ModelView):
         AnalysisLaboratory = pool.get('lims.analysis-laboratory')
         Typification = pool.get('lims.typification')
 
-        if not self.analysis:
+        if not self.analysis or self.analysis.type != 'analysis':
             return None
 
         cursor.execute('SELECT laboratory '
@@ -1120,7 +1144,7 @@ class Service(ModelSQL, ModelView):
         pool = Pool()
         AnalysisLaboratory = pool.get('lims.analysis-laboratory')
 
-        if not self.analysis:
+        if not self.analysis or self.analysis.type != 'analysis':
             return []
 
         cursor.execute('SELECT DISTINCT(laboratory) '
@@ -5967,8 +5991,12 @@ class CreateSampleService(ModelView):
     def _get_default_laboratory(analysis_id, product_type_id, matrix_id):
         cursor = Transaction().connection.cursor()
         pool = Pool()
+        Analysis = pool.get('lims.analysis')
         AnalysisLaboratory = pool.get('lims.analysis-laboratory')
         Typification = pool.get('lims.typification')
+
+        if Analysis(analysis_id).type != 'analysis':
+            return None
 
         cursor.execute('SELECT laboratory '
             'FROM "' + Typification._table + '" '
@@ -5998,7 +6026,11 @@ class CreateSampleService(ModelView):
     def _get_laboratory_domain(analysis_id):
         cursor = Transaction().connection.cursor()
         pool = Pool()
+        Analysis = pool.get('lims.analysis')
         AnalysisLaboratory = pool.get('lims.analysis-laboratory')
+
+        if Analysis(analysis_id).type != 'analysis':
+            return []
 
         cursor.execute('SELECT DISTINCT(laboratory) '
             'FROM "' + AnalysisLaboratory._table + '" '
@@ -6307,6 +6339,7 @@ class CreateSample(Wizard):
         return samples_defaults
 
     def _get_included_analysis(self, analysis):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
         Typification = pool.get('lims.typification')
 
@@ -6314,20 +6347,43 @@ class CreateSample(Wizard):
         if analysis.included_analysis:
             for included in analysis.included_analysis:
                 if included.included_analysis.type == 'analysis':
-                    laboratory_id = included.laboratory.id
+
+                    laboratory_id = None
+                    cursor.execute('SELECT laboratory '
+                        'FROM "' + Typification._table + '" '
+                        'WHERE product_type = %s '
+                            'AND matrix = %s '
+                            'AND analysis = %s '
+                            'AND valid IS TRUE '
+                            'AND by_default IS TRUE '
+                            'AND laboratory IS NOT NULL',
+                        (self.start.product_type.id,
+                            self.start.matrix.id,
+                            included.included_analysis.id))
+                    res = cursor.fetchone()
+                    if res:
+                        laboratory_id = res[0]
+                    if not laboratory_id:
+                        for l in included.included_analysis.laboratories:
+                            if l.by_default is True:
+                                laboratory_id = l.laboratory.id
 
                     method_id = (included.method.id
                         if included.method else None)
                     if not method_id:
-                        typifications = Typification.search([
-                            ('product_type', '=', self.start.product_type.id),
-                            ('matrix', '=', self.start.matrix.id),
-                            ('analysis', '=', included.included_analysis),
-                            ('by_default', '=', True),
-                            ('valid', '=', True),
-                            ])
-                        method_id = (typifications[0].method.id
-                            if typifications else None)
+                        cursor.execute('SELECT method '
+                            'FROM "' + Typification._table + '" '
+                            'WHERE product_type = %s '
+                                'AND matrix = %s '
+                                'AND analysis = %s '
+                                'AND valid IS TRUE '
+                                'AND by_default IS TRUE',
+                            (self.start.product_type.id,
+                                self.start.matrix.id,
+                                included.included_analysis.id))
+                        res = cursor.fetchone()
+                        if res:
+                            method_id = res[0]
 
                     device_id = None
                     if included.included_analysis.devices:

@@ -862,10 +862,10 @@ class Analysis(Workflow, ModelSQL, ModelView):
         'Laboratories', context={'type': Eval('type')},
         states={
             'invisible': Or(
-                Eval('type').in_(['group']),
+                Eval('type') != 'analysis',
                 Bool(Equal(Eval('behavior'), 'additional'))),
             'required': Not(Or(
-                Eval('type').in_(['set', 'group']),
+                Eval('type') != 'analysis',
                 Bool(Equal(Eval('behavior'), 'additional')))),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
             }, depends=['type', 'behavior', 'state'])
@@ -892,13 +892,12 @@ class Analysis(Workflow, ModelSQL, ModelView):
     start_date = fields.Date('Entry date', readonly=True)
     end_date = fields.Date('Leaving date', readonly=True)
     included_analysis = fields.One2Many('lims.analysis.included', 'analysis',
-        'Included analysis', context={
-            'analysis': Eval('id'), 'type': Eval('type'),
-            'laboratory_domain': Eval('laboratory_domain')},
+        'Included analysis', depends=['type', 'state'],
+        context={'analysis': Eval('id'), 'type': Eval('type')},
         states={
             'invisible': Bool(Equal(Eval('type'), 'analysis')),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
-            }, depends=['type', 'laboratory_domain', 'state'])
+            })
     all_included_analysis = fields.Function(fields.One2Many('lims.analysis',
         None, 'All included analysis'),
         'on_change_with_all_included_analysis',
@@ -1091,7 +1090,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
             ('//page[@id="laboratories"]',
                 'states', {
                     'invisible': Or(
-                        Eval('type').in_(['group']),
+                        Eval('type') != 'analysis',
                         Bool(Equal(Eval('behavior'), 'additional'))),
                     }),
             ]
@@ -1099,7 +1098,8 @@ class Analysis(Workflow, ModelSQL, ModelView):
     @classmethod
     def get_included_analysis(cls, analysis_id):
         cursor = Transaction().connection.cursor()
-        AnalysisIncluded = Pool().get('lims.analysis.included')
+        pool = Pool()
+        AnalysisIncluded = pool.get('lims.analysis.included')
 
         childs = []
         cursor.execute('SELECT included_analysis '
@@ -1135,7 +1135,8 @@ class Analysis(Workflow, ModelSQL, ModelView):
     @classmethod
     def get_included_analysis_method(cls, analysis_id):
         cursor = Transaction().connection.cursor()
-        AnalysisIncluded = Pool().get('lims.analysis.included')
+        pool = Pool()
+        AnalysisIncluded = pool.get('lims.analysis.included')
 
         childs = []
         cursor.execute('SELECT included_analysis, method '
@@ -1191,7 +1192,6 @@ class Analysis(Workflow, ModelSQL, ModelView):
         super().validate(analysis)
         for a in analysis:
             cls.check_duplicate_description(a.type, a.description, a.id)
-            a.check_set()
             a.check_end_date()
 
     @classmethod
@@ -1204,23 +1204,6 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 ]) > 0:
             raise UserError(gettext('lims.msg_description_uniq'))
 
-    def check_set(self):
-        if self.type == 'set':
-            if self.laboratories and len(self.laboratories) > 1:
-                raise UserError(gettext('lims.msg_set_laboratories'))
-            if self.included_analysis and not self.laboratories:
-                raise UserError(gettext('lims.msg_not_laboratory'))
-            if self.included_analysis:
-                set_laboratory = self.laboratories[0].laboratory
-                for ia in self.included_analysis:
-                    included_analysis_laboratories = [lab.laboratory
-                        for lab in ia.included_analysis.laboratories]
-                    if (set_laboratory not in included_analysis_laboratories):
-                        raise UserError(gettext('lims.msg_analysis_laboratory',
-                            analysis=ia.included_analysis.rec_name,
-                            laboratory=set_laboratory.rec_name,
-                            ))
-
     def check_end_date(self):
         if self.end_date:
             if not self.start_date or self.end_date < self.start_date:
@@ -1232,30 +1215,11 @@ class Analysis(Workflow, ModelSQL, ModelView):
     def write(cls, *args):
         actions = iter(args)
         for analysis, vals in zip(actions, actions):
-            if vals.get('laboratories'):
-                cls.check_laboratory_change(analysis, vals['laboratories'])
             if vals.get('description'):
                 for a in analysis:
                     cls.check_duplicate_description(vals.get('type', a.type),
                         vals['description'], a.id)
         super().write(*args)
-
-    @classmethod
-    def check_laboratory_change(cls, analysis, laboratories):
-        AnalysisIncluded = Pool().get('lims.analysis.included')
-
-        for a in analysis:
-            if a.type == 'analysis':
-                for operation in laboratories:
-                    if operation[0] == 'unlink':
-                        for laboratory in operation[1]:
-                            parent = AnalysisIncluded.search([
-                                ('included_analysis', '=', a.id),
-                                ('laboratory', '=', laboratory),
-                                ])
-                            if parent:
-                                raise UserError(
-                                    gettext('lims.msg_not_laboratory_change'))
 
     @classmethod
     @ModelView.button_action('lims.wiz_lims_relate_analysis')
@@ -1444,7 +1408,6 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 backup.append({
                     'analysis': ia.analysis.id,
                     'included_analysis': ia.included_analysis.id,
-                    'laboratory': ia.laboratory and ia.laboratory.id or None,
                     'method': ia.method and ia.method.id or None,
                     })
             a.included_analysis_backup = json.dumps(backup)
@@ -1705,22 +1668,6 @@ class AnalysisIncluded(ModelSQL, ModelView):
         ('group', 'Group'),
         ], 'Type', sort=False),
         'on_change_with_analysis_type')
-    laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        domain=[('id', 'in', Eval('laboratory_domain'))],
-        states={
-            'required': Or(
-                Bool(Equal(Eval('_parent_analysis', {}).get('type'), 'set')),
-                And(Bool(Equal(Eval('_parent_analysis', {}).get('type'),
-                    'group')),
-                    Bool(Equal(Eval('analysis_type'), 'analysis'))),
-                Bool(Eval('laboratory_domain'))),
-            'readonly': Bool(
-                Equal(Eval('_parent_analysis', {}).get('type'), 'set')),
-            'invisible': Eval('analysis_type').in_(['set', 'group']),
-            },
-        depends=['laboratory_domain', 'analysis_type'])
-    laboratory_domain = fields.Function(fields.Many2Many('lims.laboratory',
-        None, None, 'Laboratory domain'), 'on_change_with_laboratory_domain')
     method = fields.Many2One('lims.lab.method', 'Method',
         domain=[('id', 'in', Eval('method_domain'))],
         states={
@@ -1762,16 +1709,6 @@ class AnalysisIncluded(ModelSQL, ModelView):
             raise UserError(gettext('lims.msg_duplicated_analysis',
                 analysis=self.included_analysis.rec_name))
 
-    @fields.depends('included_analysis', 'analysis', 'laboratory',
-        '_parent_analysis.type', '_parent_analysis.laboratories')
-    def on_change_included_analysis(self):
-        laboratory = None
-        if self.included_analysis:
-            laboratories = self.on_change_with_laboratory_domain()
-            if len(laboratories) == 1:
-                laboratory = laboratories[0]
-        self.laboratory = laboratory
-
     @fields.depends('included_analysis', '_parent_included_analysis.type')
     def on_change_with_analysis_type(self, name=None):
         res = ''
@@ -1784,93 +1721,32 @@ class AnalysisIncluded(ModelSQL, ModelView):
         AnalysisIncluded = Pool().get('lims.analysis.included')
         context = Transaction().context
         analysis_id = context.get('analysis', None)
-        analysis_type = context.get('type', None)
-        laboratories = context.get('laboratory_domain', [])
-        return AnalysisIncluded.get_analysis_domain(analysis_id,
-            analysis_type, laboratories)
+        return AnalysisIncluded.get_analysis_domain(analysis_id)
 
-    @fields.depends('analysis', '_parent_analysis.type',
-        '_parent_analysis.laboratories')
+    @fields.depends('analysis')
     def on_change_with_analysis_domain(self, name=None):
         analysis_id = self.analysis.id if self.analysis else None
-        analysis_type = self.analysis.type if self.analysis else None
-        laboratories = []
-        if self.analysis and self.analysis.laboratories:
-            laboratories = [l.laboratory.id
-                for l in self.analysis.laboratories]
-        return self.get_analysis_domain(analysis_id,
-            analysis_type, laboratories)
+        return self.get_analysis_domain(analysis_id)
 
     @staticmethod
-    def get_analysis_domain(analysis_id=None, analysis_type=None,
-            laboratories=[]):
+    def get_analysis_domain(analysis_id=None):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         Analysis = pool.get('lims.analysis')
-        AnalysisLaboratory = pool.get('lims.analysis-laboratory')
 
-        if not analysis_type:
+        not_parent_clause = ''
+        if analysis_id:
+            not_parent_clause = 'AND id != ' + str(analysis_id)
+        cursor.execute('SELECT id '
+            'FROM "' + Analysis._table + '" '
+            'WHERE state = \'active\' '
+                'AND type != \'group\' '
+                'AND end_date IS NULL ' +
+                not_parent_clause)
+        res = cursor.fetchall()
+        if not res:
             return []
-
-        if analysis_type == 'set':
-            if len(laboratories) != 1:
-                raise UserError(gettext('lims.msg_not_set_laboratory'))
-            set_laboratory_id = laboratories[0]
-            not_parent_clause = ''
-            if analysis_id:
-                not_parent_clause = 'AND al.analysis != ' + str(analysis_id)
-
-            cursor.execute('SELECT DISTINCT(al.analysis) '
-                'FROM "' + AnalysisLaboratory._table + '" al '
-                    'INNER JOIN "' + Analysis._table + '" a '
-                    'ON a.id = al.analysis '
-                'WHERE al.laboratory = %s '
-                    'AND a.state = \'active\' '
-                    'AND a.type = \'analysis\' '
-                    'AND a.end_date IS NULL ' +
-                    not_parent_clause,
-                (set_laboratory_id,))
-            res = cursor.fetchall()
-            if not res:
-                return []
-            return [x[0] for x in res]
-        else:
-            not_parent_clause = ''
-            if analysis_id:
-                not_parent_clause = 'AND id != ' + str(analysis_id)
-            cursor.execute('SELECT id '
-                'FROM "' + Analysis._table + '" '
-                'WHERE state = \'active\' '
-                    'AND type != \'group\' '
-                    'AND end_date IS NULL ' +
-                    not_parent_clause)
-            res = cursor.fetchall()
-            if not res:
-                return []
-            return [x[0] for x in res]
-
-    @staticmethod
-    def default_laboratory_domain():
-        return Transaction().context.get('laboratory_domain', [])
-
-    @fields.depends('included_analysis', 'analysis', '_parent_analysis.type',
-        '_parent_analysis.laboratories', 'laboratory')
-    def on_change_with_laboratory_domain(self, name=None):
-        laboratories = []
-        analysis_laboratories = []
-        if self.included_analysis and self.included_analysis.laboratories:
-            analysis_laboratories = [l.laboratory.id
-                for l in self.included_analysis.laboratories]
-        if self.analysis and self.analysis.type == 'set':
-            if self.analysis.laboratories:
-                set_laboratory = self.analysis.laboratories[0].laboratory.id
-                if set_laboratory in analysis_laboratories:
-                    laboratories = [set_laboratory]
-        else:
-            laboratories = analysis_laboratories
-        if not laboratories and self.laboratory:
-            laboratories = [self.laboratory.id]
-        return laboratories
+        return [x[0] for x in res]
 
     @fields.depends('included_analysis', '_parent_included_analysis.methods')
     def on_change_with_method_domain(self, name=None):
@@ -2812,38 +2688,28 @@ class RelateAnalysis(Wizard):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         Analysis = pool.get('lims.analysis')
-        AnalysisLaboratory = pool.get('lims.analysis-laboratory')
 
-        analysis = Analysis(Transaction().context['active_id'])
         default = {
             'analysis_domain': [],
             }
-        if len(analysis.laboratories) != 1:
-            raise UserError(gettext('lims.msg_not_set_laboratory'))
-
-        cursor.execute('SELECT DISTINCT(al.analysis) '
-            'FROM "' + AnalysisLaboratory._table + '" al '
-                'INNER JOIN "' + Analysis._table + '" a '
-                'ON a.id = al.analysis '
-            'WHERE al.laboratory = %s '
-                'AND a.state = \'active\' '
-                'AND a.type = \'analysis\' '
-                'AND a.end_date IS NULL '
-                'AND al.analysis != %s',
-            (analysis.laboratories[0].laboratory.id, analysis.id,))
+        cursor.execute('SELECT id '
+            'FROM "' + Analysis._table + '" '
+            'WHERE state = \'active\' '
+                'AND type = \'analysis\' '
+                'AND end_date IS NULL')
         res = cursor.fetchall()
         if res:
             default['analysis_domain'] = [x[0] for x in res]
         return default
 
     def transition_relate(self):
-        Analysis = Pool().get('lims.analysis')
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
         analysis = Analysis(Transaction().context['active_id'])
 
         to_create = [{
             'analysis': analysis.id,
             'included_analysis': al.id,
-            'laboratory': analysis.laboratories[0].laboratory.id,
             } for al in self.start.analysis]
         Analysis.write([analysis], {
             'included_analysis': [('create', to_create)],
