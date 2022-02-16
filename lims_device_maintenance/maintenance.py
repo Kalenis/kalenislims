@@ -40,8 +40,30 @@ class LabDeviceMaintenanceProgram(EventCreator, ModelSQL, ModelView):
     'Device Maintenance Program'
     __name__ = 'lims.lab.device.maintenance.program'
 
-    device = fields.Many2One('lims.lab.device', 'Device', required=True,
-        ondelete='CASCADE', select=True)
+    asset = fields.Selection([
+        ('device', 'Device'),
+        ('product', 'Product'),
+        ], 'Asset', select=True, required=True)
+    device = fields.Many2One('lims.lab.device', 'Device',
+        select=True, depends=['asset'],
+        states={
+            'required': Eval('asset') == 'device',
+            'invisible': Eval('asset') != 'device',
+            })
+    product = fields.Many2One('product.product', 'Product',
+        domain=[('type', 'in', ['goods', 'assets'])],
+        depends=['asset'],
+        states={
+            'required': Eval('asset') == 'product',
+            'invisible': Eval('asset') != 'product',
+            })
+    lot = fields.Many2One('stock.lot', 'Lot',
+        domain=[('product', '=', Eval('product'))],
+        depends=['asset', 'product'],
+        states={
+            'required': Eval('asset') == 'product',
+            'invisible': Eval('asset') != 'product',
+            })
     activity = fields.Many2One('lims.lab.device.maintenance.activity',
         'Activity', required=True)
     responsible = fields.Many2One('res.user', 'Responsible User')
@@ -78,19 +100,38 @@ class LabDeviceMaintenanceProgram(EventCreator, ModelSQL, ModelView):
                 'WHERE frequency = \'yearly\'')
             table_h.drop_column('frequency')
 
+    @staticmethod
+    def default_asset():
+        return 'device'
+
     def get_rec_name(self, name):
-        return '%s - %s' % (self.activity.rec_name, self.device.description)
+        asset_name = (self.product.rec_name
+            if self.asset == 'product'
+            else self.device.description)
+        return '%s - %s' % (self.activity.rec_name, asset_name)
 
     @classmethod
     def get_latest_date(cls, programs, name):
-        Maintenance = Pool().get('lims.lab.device.maintenance')
+        pool = Pool()
+        Maintenance = pool.get('lims.lab.device.maintenance')
+
         result = {}
         for p in programs:
-            latest_maintenance = Maintenance.search([
-                ('device', '=', p.device),
+            clause = [
                 ('activity', '=', p.activity),
                 ('state', '=', 'pending'),
-                ], order=[('date', 'DESC')], limit=1)
+                ]
+            if p.asset == 'product':
+                clause.extend([
+                    ('product', '=', p.product),
+                    ('lot', '=', p.lot),
+                    ])
+            else:
+                clause.extend([
+                    ('device', '=', p.device),
+                    ])
+            latest_maintenance = Maintenance.search(clause,
+                order=[('date', 'DESC')], limit=1)
             result[p.id] = (latest_maintenance and
                 latest_maintenance[0].date or None)
         return result
@@ -115,7 +156,10 @@ class LabDeviceMaintenanceProgram(EventCreator, ModelSQL, ModelView):
         Maintenance = pool.get('lims.lab.device.maintenance')
 
         maintenance = Maintenance()
+        maintenance.asset = program.asset
         maintenance.device = program.device
+        maintenance.product = program.product
+        maintenance.lot = program.lot
         maintenance.activity = program.activity
         maintenance.responsible = program.responsible
         maintenance.date = schedule_info['scheduled_date'].date()
@@ -133,8 +177,35 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
     _states = {'readonly': Eval('state') != 'draft'}
     _depends = ['state']
 
-    device = fields.Many2One('lims.lab.device', 'Device', required=True,
+    asset = fields.Selection([
+        ('device', 'Device'),
+        ('product', 'Product'),
+        ], 'Asset', select=True, required=True,
         states=_states, depends=_depends)
+    device = fields.Many2One('lims.lab.device', 'Device',
+        select=True, depends=['asset', 'state'],
+        states={
+            'required': Eval('asset') == 'device',
+            'invisible': Eval('asset') != 'device',
+            'readonly': Eval('state') != 'draft',
+            })
+    product = fields.Many2One('product.product', 'Product',
+        domain=[('type', 'in', ['goods', 'assets'])],
+        depends=['asset', 'state'],
+        states={
+            'required': Eval('asset') == 'product',
+            'invisible': Eval('asset') != 'product',
+            'readonly': Eval('state') != 'draft',
+            })
+    lot = fields.Many2One('stock.lot', 'Lot',
+        domain=[('product', '=', Eval('product'))],
+        depends=['asset', 'product', 'state'],
+        states={
+            'required': Eval('asset') == 'product',
+            'invisible': Eval('asset') != 'product',
+            'readonly': Eval('state') != 'draft',
+            })
+    asset_name = fields.Function(fields.Char('Asset'), 'get_asset_name')
     activity = fields.Many2One('lims.lab.device.maintenance.activity',
         'Activity', required=True, states=_states, depends=_depends)
     date = fields.Date('Date', required=True, states=_states, depends=_depends)
@@ -174,11 +245,22 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
             })
 
     @staticmethod
+    def default_asset():
+        return 'device'
+
+    @staticmethod
     def default_state():
         return 'draft'
 
+    def get_asset_name(self, name=None):
+        asset_name = (self.product.rec_name
+            if self.asset == 'product'
+            else self.device.description)
+        return asset_name
+
     def get_rec_name(self, name):
-        return '%s - %s' % (self.activity.rec_name, self.device.description)
+        asset_name = self.get_asset_name()
+        return '%s - %s' % (self.activity.rec_name, asset_name)
 
     def get_color(self, name):
         if self.state in ('done', 'discarded'):

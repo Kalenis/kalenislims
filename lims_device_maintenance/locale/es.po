@@ -10,6 +10,14 @@ msgctxt "field:lims.lab.device.maintenance,activity:"
 msgid "Activity"
 msgstr "Actividad"
 
+msgctxt "field:lims.lab.device.maintenance,asset:"
+msgid "Asset"
+msgstr "Activo"
+
+msgctxt "field:lims.lab.device.maintenance,asset_name:"
+msgid "Asset"
+msgstr "Activo"
+
 msgctxt "field:lims.lab.device.maintenance,color:"
 msgid "Color"
 msgstr "Color"
@@ -26,9 +34,17 @@ msgctxt "field:lims.lab.device.maintenance,device:"
 msgid "Device"
 msgstr "Equipo"
 
+msgctxt "field:lims.lab.device.maintenance,lot:"
+msgid "Lot"
+msgstr "Lote"
+
 msgctxt "field:lims.lab.device.maintenance,notice_date:"
 msgid "Notice Date"
 msgstr "Fecha de aviso"
+
+msgctxt "field:lims.lab.device.maintenance,product:"
+msgid "Product"
+msgstr "Producto"
 
 msgctxt "field:lims.lab.device.maintenance,responsible:"
 msgid "Responsible User"
@@ -49,6 +65,10 @@ msgstr "Tipo"
 msgctxt "field:lims.lab.device.maintenance.program,activity:"
 msgid "Activity"
 msgstr "Actividad"
+
+msgctxt "field:lims.lab.device.maintenance.program,asset:"
+msgid "Asset"
+msgstr "Activo"
 
 msgctxt "field:lims.lab.device.maintenance.program,detail_frequence:"
 msgid "Frequence"
@@ -83,6 +103,10 @@ msgctxt "field:lims.lab.device.maintenance.program,latest_date:"
 msgid "Latest scheduled date"
 msgstr "Última fecha programada"
 
+msgctxt "field:lims.lab.device.maintenance.program,lot:"
+msgid "Lot"
+msgstr "Lote"
+
 msgctxt "field:lims.lab.device.maintenance.program,notice_days:"
 msgid "Days to notify"
 msgstr "Días para el aviso"
@@ -90,6 +114,10 @@ msgstr "Días para el aviso"
 msgctxt "field:lims.lab.device.maintenance.program,only_workdays:"
 msgid "Allow working days only"
 msgstr "Permitir solamente días laborables"
+
+msgctxt "field:lims.lab.device.maintenance.program,product:"
+msgid "Product"
+msgstr "Producto"
 
 msgctxt "field:lims.lab.device.maintenance.program,responsible:"
 msgid "Responsible User"
@@ -214,6 +242,14 @@ msgctxt "selection:ir.cron,method:"
 msgid "Device Maintenance Calendar Notice"
 msgstr "Aviso de Calendario de mantenimiento de Equipo"
 
+msgctxt "selection:lims.lab.device.maintenance,asset:"
+msgid "Device"
+msgstr "Equipo"
+
+msgctxt "selection:lims.lab.device.maintenance,asset:"
+msgid "Product"
+msgstr "Producto"
+
 msgctxt "selection:lims.lab.device.maintenance,state:"
 msgid "Discarded"
 msgstr "Descartado"
@@ -229,6 +265,14 @@ msgstr "Borrador"
 msgctxt "selection:lims.lab.device.maintenance,state:"
 msgid "Pending"
 msgstr "Pendiente"
+
+msgctxt "selection:lims.lab.device.maintenance.program,asset:"
+msgid "Device"
+msgstr "Equipo"
+
+msgctxt "selection:lims.lab.device.maintenance.program,asset:"
+msgid "Product"
+msgstr "Producto"
 
 msgctxt ""
 "selection:lims.lab.device.maintenance.program,detail_frequence_selection:"

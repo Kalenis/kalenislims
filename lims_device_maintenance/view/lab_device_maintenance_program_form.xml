@@ -1,7 +1,13 @@
 <?xml version="1.0"?>
 <form>
+    <label name="asset"/>
+    <field name="asset"/>
     <label name="device"/>
     <field name="device"/>
+    <label name="product"/>
+    <field name="product"/>
+    <label name="lot"/>
+    <field name="lot"/>
     <label name="activity"/>
     <field name="activity"/>
     <label name="responsible"/>
