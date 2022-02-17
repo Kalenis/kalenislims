@@ -131,6 +131,8 @@ class Entry(Workflow, ModelSQL, ModelView):
     block_entry_confirmation = fields.Function(fields.Boolean(
         'Block Entry Confirmation'), 'get_block_entry_confirmation')
     multi_party = fields.Boolean('Multi Party', readonly=True, select=True)
+    pre_assigned_samples = fields.Function(fields.Integer(
+        'Pre-Assigned Samples'), 'get_pre_assigned_samples')
 
     @classmethod
     def __setup__(cls):
@@ -720,6 +722,11 @@ class Entry(Workflow, ModelSQL, ModelView):
     def get_block_entry_confirmation(self, name=None):
         return (self.invoice_party and
             self.invoice_party.block_entry_confirmation or False)
+
+    def get_pre_assigned_samples(self, name=None):
+        pool = Pool()
+        EntryPreAssignedSample = pool.get('lims.entry.pre_assigned_sample')
+        return EntryPreAssignedSample.search_count([('entry', '=', self.id)])
 
 
 class EntryInvoiceContact(ModelSQL, ModelView):

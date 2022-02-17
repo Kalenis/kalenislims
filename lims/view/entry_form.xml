@@ -36,6 +36,8 @@
             <field name="package_state"/>
             <label name="packages_quantity"/>
             <field name="packages_quantity"/>
+            <label name="pre_assigned_samples"/>
+            <field name="pre_assigned_samples"/>
         </page>
         <page string="Contacts" id="contacts">
             <field name="invoice_contacts" colspan="4"/>
