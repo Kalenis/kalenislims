@@ -1379,6 +1379,10 @@ msgctxt "field:lims.entry,pending_reason:"
 msgid "Pending reason"
 msgstr "Razón de la espera"
 
+msgctxt "field:lims.entry,pre_assigned_samples:"
+msgid "Pre-Assigned Samples"
+msgstr "Muestras preasignadas"
+
 msgctxt "field:lims.entry,report_comments:"
 msgid "Report comments"
 msgstr "Observaciones informe"
