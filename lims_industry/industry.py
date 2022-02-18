@@ -220,9 +220,9 @@ class EquipmentTemplate(ModelSQL, ModelView):
     brand = fields.Many2One('lims.brand', 'Brand', required=True)
     model = fields.Char('Model')
     power = fields.Char('Power')
-    component_kinds = fields.Many2Many(
+    component_kinds = fields.One2Many(
         'lims.equipment.template-component.kind',
-        'template', 'kind', 'Component kinds')
+        'template', 'Component kinds')
 
     @classmethod
     def __setup__(cls):
@@ -264,7 +264,7 @@ class EquipmentTemplate(ModelSQL, ModelView):
         return new_records
 
 
-class EquipmentTemplateComponentKind(ModelSQL):
+class EquipmentTemplateComponentKind(ModelSQL, ModelView):
     'Equipment Template - Component Kind'
     __name__ = 'lims.equipment.template-component.kind'
     _table = 'lims_equipment_template_component_kind'
@@ -273,6 +273,7 @@ class EquipmentTemplateComponentKind(ModelSQL):
         required=True, ondelete='CASCADE', select=True)
     kind = fields.Many2One('lims.component.kind', 'Kind',
         required=True, ondelete='CASCADE', select=True)
+    location = fields.Many2One('lims.component.location', 'Location')
 
     @classmethod
     def __register__(cls, module_name):
@@ -282,7 +283,7 @@ class EquipmentTemplateComponentKind(ModelSQL):
         super().__register__(module_name)
         old_table_name = 'lims_equipment_template_component_type'
         if TableHandler.table_exist(old_table_name):
-            cursor.execute('SELECT etct.template, ct.kind '
+            cursor.execute('SELECT etct.template, ct.kind, ct.location '
                 'FROM lims_equipment_template_component_type etct '
                 'INNER JOIN lims_component_type ct '
                     'ON ct.id = etct.type '
@@ -290,8 +291,9 @@ class EquipmentTemplateComponentKind(ModelSQL):
             res = cursor.fetchall()
             if res:
                 cursor.execute(*sql_table.insert(
-                    columns=[sql_table.template, sql_table.kind],
-                    values=[[x[0], x[1]] for x in res]))
+                    columns=[sql_table.template, sql_table.kind,
+                        sql_table.location],
+                    values=[[x[0], x[1], x[2]] for x in res]))
             TableHandler.drop_table('', old_table_name)
 
 
@@ -434,15 +436,19 @@ class Equipment(ModelSQL, ModelView):
 
         if not self.template:
             return
-        current_components_ids = [component.kind.id
+        current_components_ids = [(component.kind.id,
+            component.location and component.location.id or None)
             for component in self.components]
         components = list(self.components)
-        for kind in self.template.component_kinds:
-            if kind.id in current_components_ids:
+        for record in self.template.component_kinds:
+            kind_id = record.kind.id
+            location_id = record.location and record.location.id or None
+            if (kind_id, location_id) in current_components_ids:
                 continue
             value = Component(**Component.default_get(
                 list(Component._fields.keys()), with_rec_name=False))
-            value.kind = kind.id
+            value.kind = kind_id
+            value.location = location_id
             components.append(value)
         self.model = self.template.model
         self.power = self.template.power
