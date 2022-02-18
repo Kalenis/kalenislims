@@ -326,6 +326,10 @@ msgctxt "field:lims.equipment.template-component.kind,kind:"
 msgid "Kind"
 msgstr "Clase"
 
+msgctxt "field:lims.equipment.template-component.kind,location:"
+msgid "Location"
+msgstr "Ubicación"
+
 msgctxt "field:lims.equipment.template-component.kind,template:"
 msgid "Template"
 msgstr "Plantilla"
