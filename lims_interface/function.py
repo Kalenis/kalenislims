@@ -69,6 +69,9 @@ def _get_column_name(alias, iteration=None):
     return '%s_%s' % (alias, iteration)
 
 
+custom_functions['ITER'] = _get_column_name
+
+
 def get_column_value(notebook_line, alias, iteration=None):
     pool = Pool()
     NotebookLine = pool.get('lims.notebook.line')
