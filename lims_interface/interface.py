@@ -388,6 +388,7 @@ class Interface(Workflow, ModelSQL, ModelView):
             if not formula or not formula.startswith('='):
                 return None
             formula = _clean_v_function(formula)
+            formula = _clean_iter_function(formula)
             parser = formulas.Parser()
             ast = parser.ast(formula)[1].compile()
             return (' '.join([x for x in ast.inputs])).lower()
