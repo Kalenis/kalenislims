@@ -30,7 +30,7 @@
 
         <record model="lims.interface.function" id="function_xs_a">
             <field name="name">XS_A</field>
-            <field name="parameters">analysis_code, alias=None, notebook_line=None, iteration=None</field>
+            <field name="parameters">analysis_code, alias=None, notebook_line=None</field>
             <field name="help">Obtains the value of a given column (by default the result field) for an indicated analysis, from any analysis sheet.</field>
         </record>
 
