@@ -11,6 +11,13 @@ from trytond.transaction import Transaction
 custom_functions = {}
 
 
+def dummy_iter(alias, iteration=None):
+    return alias
+
+
+custom_functions['ITER'] = dummy_iter
+
+
 def to_str(value):
     return value and str(value) or ''
 
@@ -67,9 +74,6 @@ def _get_column_name(alias, iteration=None):
     ast = parser.ast('=%s' % str(iteration))[1].compile()
     iteration = str(ast())
     return '%s_%s' % (alias, iteration)
-
-
-custom_functions['ITER'] = _get_column_name
 
 
 def get_column_value(notebook_line, alias, iteration=None):
