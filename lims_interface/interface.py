@@ -360,10 +360,28 @@ class Interface(Workflow, ModelSQL, ModelView):
                 formula = formula.replace(v_func, v_var)
             return formula
 
+        def _clean_iter_function(formula):
+            formula = formula.replace(' ', '')
+            parser = formulas.Parser()
+            column_pattern = 'ITER\("[a-zA-Z\_0-9]+'
+            iter_pattern = '","[0-9\+\-\*0-9]+"\)'
+            for iter_func in re.findall(column_pattern + iter_pattern,
+                    formula):
+                part1 = re.findall(column_pattern, iter_func)[0]
+                column = part1.replace('ITER("', '')
+                part2 = re.findall(iter_pattern, iter_func)[0]
+                iteration = part2.replace('","', '').replace('")', '')
+                ast = parser.ast('=%s' % str(iteration))[1].compile()
+                iteration = str(int(ast()))
+                iter_var = '%s_%s' % (column, iteration)
+                formula = formula.replace(iter_func, iter_var)
+            return formula
+
         def get_formula(formula):
             if not formula or not formula.startswith('='):
                 return None
             formula = _clean_v_function(formula)
+            formula = _clean_iter_function(formula)
             return formula
 
         def get_inputs(formula):
