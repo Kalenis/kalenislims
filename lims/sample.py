@@ -350,7 +350,8 @@ class Service(ModelSQL, ModelView):
     report_date_readonly = fields.Function(fields.Boolean(
         'Report deadline Readonly'), 'get_report_date_readonly')
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        domain=[('id', 'in', Eval('laboratory_domain'))],
+        domain=['OR', ('id', '=', Eval('laboratory')),
+            ('id', 'in', Eval('laboratory_domain'))],
         states={
             'required': Bool(Eval('laboratory_domain')),
             'readonly': Bool(Eval('context', {}).get('readonly', True)),
