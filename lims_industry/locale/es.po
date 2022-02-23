@@ -390,6 +390,10 @@ msgctxt "field:lims.notebook,ind_component:"
 msgid "Hs/Km Component"
 msgstr "Hs/Km Componente"
 
+msgctxt "field:lims.notebook,ind_equipment:"
+msgid "Hs/Km Equipment"
+msgstr "Hs/Km Equipo"
+
 msgctxt "field:lims.notebook,plant:"
 msgid "Plant"
 msgstr "Planta"
@@ -1317,9 +1321,17 @@ msgctxt "selection:lims.trend.chart,filter:"
 msgid "Same Component"
 msgstr "Mismo Componente"
 
+msgctxt "selection:lims.trend.chart,filter:"
+msgid "Same Equipment"
+msgstr "Mismo Equipo"
+
 msgctxt "selection:lims.trend.chart,x_axis:"
 msgid "Hs/Km Component"
 msgstr "Hs/Km Componente"
+
+msgctxt "selection:lims.trend.chart,x_axis:"
+msgid "Hs/Km Equipment"
+msgstr "Hs/Km Equipo"
 
 msgctxt "selection:lims.trend.chart,x_axis:"
 msgid "Hs/Km Oil"
