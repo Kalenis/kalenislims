@@ -27,6 +27,8 @@ class Notebook(metaclass=PoolMeta):
     comercial_product = fields.Function(fields.Many2One(
         'lims.comercial.product', 'Comercial Product'),
         'get_sample_field', searcher='search_sample_field')
+    ind_equipment = fields.Function(fields.Integer('Hs/Km Equipment'),
+        'get_sample_field', searcher='search_sample_field')
     ind_component = fields.Function(fields.Integer('Hs/Km Component'),
         'get_sample_field', searcher='search_sample_field')
 
@@ -49,4 +51,5 @@ class Notebook(metaclass=PoolMeta):
     order_equipment = _order_sample_field('equipment')
     order_component = _order_sample_field('component')
     order_comercial_product = _order_sample_field('comercial_product')
+    order_ind_equipment = _order_sample_field('ind_equipment')
     order_ind_component = _order_sample_field('ind_component')
