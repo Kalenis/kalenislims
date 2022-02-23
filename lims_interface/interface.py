@@ -373,7 +373,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                 iteration = part2.replace('","', '').replace('")', '')
                 ast = parser.ast('=%s' % str(iteration))[1].compile()
                 iteration = str(int(ast()))
-                iter_var = '%s_%s' % (column, iteration)
+                iter_var = '"%s_%s"' % (column, iteration)
                 formula = formula.replace(iter_func, iter_var)
             return formula
 
