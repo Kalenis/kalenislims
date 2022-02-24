@@ -4890,6 +4890,30 @@ class NotebookLineRepeatAnalysisStart(ModelView):
     analysis_domain = fields.One2Many('lims.analysis', None,
         'Analysis domain')
     repetition_reason = fields.Char('Reason')
+    analysis_type = fields.Function(fields.Selection([
+        ('analysis', 'Analysis'),
+        ('set', 'Set'),
+        ('group', 'Group'),
+        ], 'Type', sort=False),
+        'on_change_with_analysis_type')
+    method = fields.Many2One('lims.lab.method', 'Method',
+        domain=[('id', 'in', Eval('method_domain'))],
+        states={'invisible': Eval('analysis_type') != 'analysis'},
+        depends=['method_domain', 'analysis_type'])
+    method_domain = fields.Function(fields.Many2Many('lims.lab.method',
+        None, None, 'Method domain'),
+        'on_change_with_method_domain')
+
+    @fields.depends('analysis')
+    def on_change_with_analysis_type(self, name=None):
+        return self.analysis and self.analysis.type or None
+
+    @fields.depends('analysis')
+    def on_change_with_method_domain(self, name=None):
+        methods = []
+        if self.analysis and self.analysis.methods:
+            methods = [m.id for m in self.analysis.methods]
+        return methods
 
 
 class NotebookLineRepeatAnalysis(Wizard):
@@ -4916,6 +4940,8 @@ class NotebookLineRepeatAnalysis(Wizard):
         Analysis = pool.get('lims.analysis')
 
         line_id = self._get_notebook_line_id()
+        if not line_id:
+            return {}
         notebook_line = NotebookLine(line_id)
 
         analysis_origin = notebook_line.analysis_origin
@@ -4948,7 +4974,8 @@ class NotebookLineRepeatAnalysis(Wizard):
         Config = pool.get('lims.configuration')
 
         analysis = self.start.analysis
-        if analysis.type == 'analysis':
+        analysis_type = analysis.type
+        if analysis_type == 'analysis':
             analysis_to_repeat = [analysis.id]
         else:
             analysis_to_repeat = Analysis.get_included_analysis_analysis(
@@ -4978,6 +5005,8 @@ class NotebookLineRepeatAnalysis(Wizard):
             nline_to_repeat = nlines[0]
 
             defaults = self._get_repetition_defaults(nline_to_repeat)
+            if analysis_type == 'analysis' and self.start.method:
+                defaults['method'] = self.start.method.id
             if rm_type:
                 defaults['final_concentration'] = None
                 defaults['initial_unit'] = rm_start_uom

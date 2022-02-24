@@ -3512,6 +3512,18 @@ msgctxt "field:lims.notebook.line.repeat_analysis.start,analysis_domain:"
 msgid "Analysis domain"
 msgstr "Dominio para Análisis"
 
+msgctxt "field:lims.notebook.line.repeat_analysis.start,analysis_type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.notebook.line.repeat_analysis.start,method:"
+msgid "Method"
+msgstr "Método"
+
+msgctxt "field:lims.notebook.line.repeat_analysis.start,method_domain:"
+msgid "Method domain"
+msgstr "Dominio para Método"
+
 msgctxt "field:lims.notebook.line.repeat_analysis.start,repetition_reason:"
 msgid "Reason"
 msgstr "Motivo"
@@ -12976,6 +12988,18 @@ msgstr "nd"
 msgctxt "selection:lims.notebook.line.all_fields,result_modifier:"
 msgid "ni"
 msgstr "ni"
+
+msgctxt "selection:lims.notebook.line.repeat_analysis.start,analysis_type:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "selection:lims.notebook.line.repeat_analysis.start,analysis_type:"
+msgid "Group"
+msgstr "Grupo"
+
+msgctxt "selection:lims.notebook.line.repeat_analysis.start,analysis_type:"
+msgid "Set"
+msgstr "Set"
 
 msgctxt "selection:lims.notebook.load_results_formula.action,result_modifier:"
 msgid "<"

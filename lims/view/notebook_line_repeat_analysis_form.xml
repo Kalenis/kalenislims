@@ -4,4 +4,8 @@
     <field name="analysis"/>
     <label name="repetition_reason"/>
     <field name="repetition_reason"/>
+    <label name="method"/>
+    <field name="method"/>
+    <field name="analysis_type" invisible="1"/>
+    <field name="method_domain" invisible="1"/>
 </form>
