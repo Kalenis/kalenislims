@@ -106,6 +106,101 @@ class Range(ModelSQL, ModelView):
         'High level coefficient of variation', digits=(16, 3))
 
 
+class CopyRangeStart(ModelView):
+    'Copy Range'
+    __name__ = 'lims.range.copy.start'
+
+    origin_range_type = fields.Many2One('lims.range.type', 'Range type',
+        required=True)
+    origin_product_type = fields.Many2One('lims.product.type', 'Product type',
+        required=True)
+    origin_matrix = fields.Many2One('lims.matrix', 'Matrix', required=True)
+    destination_type = fields.Many2One('lims.range.type', 'Range type',
+        required=True)
+    destination_product_type = fields.Many2One('lims.product.type',
+        'Product type', required=True)
+    destination_matrix = fields.Many2One('lims.matrix', 'Matrix',
+        required=True)
+
+
+class CopyRangeResult(ModelView):
+    'Copy Range'
+    __name__ = 'lims.range.copy.result'
+
+    message = fields.Text('Message', readonly=True)
+
+
+class CopyRange(Wizard):
+    'Copy Range'
+    __name__ = 'lims.range.copy'
+
+    start = StateView('lims.range.copy.start',
+        'lims.copy_range_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Confirm', 'confirm', 'tryton-ok', default=True),
+            ])
+    confirm = StateTransition()
+    result = StateView('lims.range.copy.result',
+        'lims.copy_range_result_view_form', [
+            Button('Ok', 'end', 'tryton-ok', default=True),
+            ])
+
+    def transition_confirm(self):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Range = pool.get('lims.range')
+
+        clause = [
+            ('range_type', '=', self.start.origin_range_type.id),
+            ('product_type', '=', self.start.origin_product_type.id),
+            ('matrix', '=', self.start.origin_matrix.id),
+            ]
+        origins = Range.search(clause)
+
+        range_type_id = self.start.destination_type.id
+        product_type_id = self.start.destination_product_type.id
+        matrix_id = self.start.destination_matrix.id
+
+        existing_ranges = []
+        new_ranges = []
+        for origin in origins:
+            # check if range already exists
+            cursor.execute('SELECT id '
+                'FROM "' + Range._table + '" '
+                'WHERE range_type = %s '
+                    'AND product_type = %s '
+                    'AND matrix = %s '
+                    'AND analysis = %s',
+                (range_type_id, product_type_id, matrix_id,
+                    origin.analysis.id))
+            res = cursor.fetchone()
+            if res:
+                existing_ranges.append(res[0])
+                continue
+
+            default = {
+                'range_type': range_type_id,
+                'product_type': product_type_id,
+                'matrix': matrix_id,
+                }
+            r = Range.copy([origin], default=default)
+            new_ranges.append(r[0].id)
+
+        self.result.message = '%s' % gettext(
+            'lims.msg_range_copy_new_ranges',
+            qty=len(new_ranges))
+        if len(existing_ranges) > 0:
+            self.result.message += '\n%s' % gettext(
+                'lims.msg_range_copy_existing_ranges',
+                qty=len(existing_ranges))
+        return 'result'
+
+    def default_result(self, fields):
+        return {
+            'message': self.result.message,
+            }
+
+
 class ControlTendency(ModelSQL, ModelView):
     'Control Chart Tendency'
     __name__ = 'lims.control.tendency'

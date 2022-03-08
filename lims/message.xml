@@ -556,5 +556,11 @@
         <record model="ir.message" id="msg_service_default_laboratory">
             <field name="text">You cannot copy service "%(analysis)s" because the assigned laboratory (%(laboratory)s) is not the default one.</field>
         </record>
+        <record model="ir.message" id="msg_range_copy_new_ranges">
+            <field name="text">%(qty)s Ranges were created</field>
+        </record>
+        <record model="ir.message" id="msg_range_copy_existing_ranges">
+            <field name="text">%(qty)s Ranges already existed</field>
+        </record>
     </data>
 </tryton>

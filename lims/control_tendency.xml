@@ -97,6 +97,30 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
+<!-- Wizard Copy Ranges -->
+
+        <record model="ir.ui.view" id="copy_range_start_view_form">
+            <field name="model">lims.range.copy.start</field>
+            <field name="type">form</field>
+            <field name="name">range_copy_start_form</field>
+        </record>
+        <record model="ir.ui.view" id="copy_range_result_view_form">
+            <field name="model">lims.range.copy.result</field>
+            <field name="type">form</field>
+            <field name="name">range_copy_result_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_copy_range">
+            <field name="name">Copy Ranges</field>
+            <field name="wiz_name">lims.range.copy</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_copy_range_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.range,-1</field>
+            <field name="action" ref="wiz_copy_range"/>
+        </record>
+
 <!-- Tendency -->
 
         <record model="ir.ui.view" id="lims_control_tendency_view_list">

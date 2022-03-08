@@ -4743,6 +4743,34 @@ msgctxt "field:lims.range,uom:"
 msgid "UoM"
 msgstr "UdM"
 
+msgctxt "field:lims.range.copy.result,message:"
+msgid "Message"
+msgstr "Mensaje"
+
+msgctxt "field:lims.range.copy.start,destination_matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.range.copy.start,destination_product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.range.copy.start,destination_type:"
+msgid "Range type"
+msgstr "Tipo de rango"
+
+msgctxt "field:lims.range.copy.start,origin_matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.range.copy.start,origin_product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.range.copy.start,origin_range_type:"
+msgid "Range type"
+msgstr "Tipo de rango"
+
 msgctxt "field:lims.range.type,by_default:"
 msgid "By default"
 msgstr "Por defecto"
@@ -7084,6 +7112,10 @@ msgctxt "model:ir.action,name:wiz_control_chart_print"
 msgid "Control Chart"
 msgstr "Carta de Control"
 
+msgctxt "model:ir.action,name:wiz_copy_range"
+msgid "Copy Ranges"
+msgstr "Copiar rangos"
+
 msgctxt "model:ir.action,name:wiz_edit_sample_service"
 msgid "Edit Sample Services"
 msgstr "Modificar servicios de muestras"
@@ -8239,6 +8271,14 @@ msgstr "La entidad ya está asociada a un profesional"
 msgctxt "model:ir.message,text:msg_quantification_limit"
 msgid "< LoQ = %(loq)s"
 msgstr "< LC = %(loq)s"
+
+msgctxt "model:ir.message,text:msg_range_copy_existing_ranges"
+msgid "%(qty)s Ranges already existed"
+msgstr "%(qty)s rangos ya existían"
+
+msgctxt "model:ir.message,text:msg_range_copy_new_ranges"
+msgid "%(qty)s Ranges were created"
+msgstr "Se crearon %(qty)s rangos"
 
 msgctxt "model:ir.message,text:msg_reference"
 msgid "Countersamples Storage"
@@ -9660,6 +9700,14 @@ msgstr "Tipo de producto"
 msgctxt "model:lims.range,name:"
 msgid "Range"
 msgstr "Rango"
+
+msgctxt "model:lims.range.copy.result,name:"
+msgid "Copy Range"
+msgstr "Copiar rango"
+
+msgctxt "model:lims.range.copy.start,name:"
+msgid "Copy Range"
+msgstr "Copiar rango"
 
 msgctxt "model:lims.range.type,name:"
 msgid "Origins"
@@ -14333,6 +14381,14 @@ msgctxt "view:lims.product.type:"
 msgid "Product types"
 msgstr "Tipos de producto"
 
+msgctxt "view:lims.range.copy.start:"
+msgid "Destination:"
+msgstr "Destino:"
+
+msgctxt "view:lims.range.copy.start:"
+msgid "Origin:"
+msgstr "Origen:"
+
 msgctxt "view:lims.range.type:"
 msgid "Origin"
 msgstr "Origen"
@@ -15408,6 +15464,18 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.print_blind_sample_report,start,print_:"
 msgid "Print"
 msgstr "Imprimir"
+
+msgctxt "wizard_button:lims.range.copy,result,end:"
+msgid "Ok"
+msgstr "Aceptar"
+
+msgctxt "wizard_button:lims.range.copy,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.range.copy,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:lims.referral.service,start,confirm:"
 msgid "Confirm"
