@@ -4874,7 +4874,8 @@ class NotebookRepeatAnalysis(Wizard):
                     defaults['lower_limit'] = None
                     defaults['upper_limit'] = None
                 to_create.append(defaults)
-                to_update.append(nline_to_repeat)
+                if not nline_to_repeat.results_report:
+                    to_update.append(nline_to_repeat)
                 details_to_update.append(nline_to_repeat.analysis_detail.id)
 
             Notebook.write([notebook], {
@@ -5069,7 +5070,8 @@ class NotebookLineRepeatAnalysis(Wizard):
                 defaults['lower_limit'] = None
                 defaults['upper_limit'] = None
             to_create.append(defaults)
-            to_update.append(nline_to_repeat)
+            if not nline_to_repeat.results_report:
+                to_update.append(nline_to_repeat)
             details_to_update.append(nline_to_repeat.analysis_detail.id)
 
         Notebook.write([notebook], {
