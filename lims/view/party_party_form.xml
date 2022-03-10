@@ -9,6 +9,8 @@
                 <field name="email_report"/>
                 <label name="single_sending_report"/>
                 <field name="single_sending_report"/>
+                <label name="entry_single_sending_report"/>
+                <field name="entry_single_sending_report"/>
                 <label name="no_acknowledgment_of_receipt"/>
                 <field name="no_acknowledgment_of_receipt"/>
             </group>

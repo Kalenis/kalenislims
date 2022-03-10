@@ -89,8 +89,10 @@ class Entry(Workflow, ModelSQL, ModelView):
         'Package state')
     packages_quantity = fields.Integer('Packages quantity')
     email_report = fields.Boolean('Email report')
-    single_sending_report = fields.Boolean('Single sending of report',
-        select=True)
+    single_sending_report = fields.Boolean(
+        'Single sending of report per Sample', select=True)
+    entry_single_sending_report = fields.Boolean(
+        'Single sending of report per Entry', select=True)
     report_language = fields.Many2One('ir.lang',
         'Results Report Language', required=True,
         domain=[('translatable', '=', True)])
@@ -222,6 +224,10 @@ class Entry(Workflow, ModelSQL, ModelView):
         return False
 
     @staticmethod
+    def default_entry_single_sending_report():
+        return False
+
+    @staticmethod
     def default_report_language():
         Config = Pool().get('lims.configuration')
         default_language = Config(1).results_report_language
@@ -298,6 +304,7 @@ class Entry(Workflow, ModelSQL, ModelView):
         report_language = None
         email = False
         single_sending = False
+        entry_single_sending = False
         no_ack = False
 
         invoice_contacts = []
@@ -331,6 +338,7 @@ class Entry(Workflow, ModelSQL, ModelView):
             report_language = self.party.report_language
             email = self.party.email_report
             single_sending = self.party.single_sending_report
+            entry_single_sending = self.party.entry_single_sending_report
             no_ack = self.party.no_acknowledgment_of_receipt
 
             if self.party.addresses:
@@ -349,6 +357,7 @@ class Entry(Workflow, ModelSQL, ModelView):
             self.report_language = report_language
         self.email_report = email
         self.single_sending_report = single_sending
+        self.entry_single_sending_report = entry_single_sending
         self.no_acknowledgment_of_receipt = no_ack
 
         self.invoice_contacts = invoice_contacts

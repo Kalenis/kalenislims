@@ -16,7 +16,10 @@ class Party(metaclass=PoolMeta):
     __name__ = 'party.party'
 
     email_report = fields.Boolean('Email report')
-    single_sending_report = fields.Boolean('Single sending of report')
+    single_sending_report = fields.Boolean(
+        'Single sending of report per Sample')
+    entry_single_sending_report = fields.Boolean(
+        'Single sending of report per Entry')
     report_language = fields.Many2One('ir.lang',
         'Results Report Language',
         domain=[('translatable', '=', True)])
@@ -84,6 +87,10 @@ class Party(metaclass=PoolMeta):
 
     @staticmethod
     def default_single_sending_report():
+        return False
+
+    @staticmethod
+    def default_entry_single_sending_report():
         return False
 
     @staticmethod

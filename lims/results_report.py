@@ -43,10 +43,17 @@ class ResultsReport(ModelSQL, ModelView):
     report_language = fields.Many2One('ir.lang', 'Language', required=True,
         domain=[('translatable', '=', True)])
     single_sending_report = fields.Function(fields.Boolean(
-        'Single sending'), 'get_entry_field',
+        'Single sending per Sample'), 'get_entry_field',
         searcher='search_entry_field')
     single_sending_report_ready = fields.Function(fields.Boolean(
-        'Single sending Ready'), 'get_single_sending_report_ready')
+        'Single sending per Sample Ready'),
+        'get_single_sending_report_ready')
+    entry_single_sending_report = fields.Function(fields.Boolean(
+        'Single sending per Entry'), 'get_entry_field',
+        searcher='search_entry_field')
+    entry_single_sending_report_ready = fields.Function(fields.Boolean(
+        'Single sending per Entry Ready'),
+        'get_entry_single_sending_report_ready')
     ready_to_send = fields.Function(fields.Boolean(
         'Ready to Send'), 'get_ready_to_send',
         searcher='search_ready_to_send')
@@ -248,11 +255,50 @@ class ResultsReport(ModelSQL, ModelView):
         return result
 
     @classmethod
+    def get_entry_single_sending_report_ready(cls, reports, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
+        Service = pool.get('lims.service')
+        Fraction = pool.get('lims.fraction')
+        Sample = pool.get('lims.sample')
+
+        result = {}
+        for r in reports:
+            result[r.id] = False
+            if not r.entry_single_sending_report:
+                continue
+            cursor.execute('SELECT COUNT(*) '
+                'FROM "' + EntryDetailAnalysis._table + '" ad '
+                    'INNER JOIN "' + NotebookLine._table + '" nl '
+                    'ON ad.id = nl.analysis_detail '
+                    'INNER JOIN "' + Service._table + '" srv '
+                    'ON srv.id = nl.service '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = srv.fraction '
+                    'INNER JOIN "' + Sample._table + '" s '
+                    'ON s.id = f.sample '
+                'WHERE s.entry = %s '
+                    'AND ad.report_grouper = %s '
+                    'AND nl.report = TRUE '
+                    'AND nl.annulled = FALSE '
+                    'AND nl.results_report IS NULL',
+                (r.entry.id, r.report_grouper,))
+            if cursor.fetchone()[0] > 0:
+                continue
+            result[r.id] = True
+        return result
+
+    @classmethod
     def get_ready_to_send(cls, reports, name):
         result = {}
         for r in reports:
             result[r.id] = False
             if r.single_sending_report and not r.single_sending_report_ready:
+                continue
+            if (r.entry_single_sending_report and
+                    not r.entry_single_sending_report_ready):
                 continue
             if not r.has_report_cached(r.report_language):
                 continue
@@ -274,12 +320,17 @@ class ResultsReport(ModelSQL, ModelView):
             'FROM "' + ResultsReport._table + '" r '
                 'INNER JOIN "' + Entry._table + '" e '
                 'ON r.entry = e.id '
-            'WHERE e.single_sending_report = TRUE')
+            'WHERE e.single_sending_report = TRUE '
+                'OR e.entry_single_sending_report = TRUE')
         single_sending_ids = [x[0] for x in cursor.fetchall()]
         with Transaction().set_user(0):
-            for report in ResultsReport.browse(single_sending_ids):
-                if not report.single_sending_report_ready:
-                    excluded_ids.append(report.id)
+            for r in ResultsReport.browse(single_sending_ids):
+                if (r.single_sending_report and
+                        not r.single_sending_report_ready):
+                    excluded_ids.append(r.id)
+                if (r.entry_single_sending_report and
+                        not r.entry_single_sending_report_ready):
+                    excluded_ids.append(r.id)
         excluded_ids = ', '.join(str(r) for r in [0] + excluded_ids)
 
         cursor.execute('SELECT rr.id '

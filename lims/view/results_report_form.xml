@@ -6,17 +6,21 @@
     <field name="party"/>
     <label name="report_language"/>
     <field name="report_language" widget="selection"/>
-    <group col="6" colspan="2" id="fields_group">
-        <label name="single_sending_report"/>
-        <field name="single_sending_report" xexpand="0" width="25"/>
-        <label name="single_sending_report_ready"/>
-        <field name="single_sending_report_ready" xexpand="0" width="25"/>
-    </group>
-    <group col="6" colspan="4" id="fields_group2">
+    <group col="4" colspan="2" id="fields_group2">
         <label name="create_date2"/>
         <field name="create_date2"/>
         <label name="write_date2"/>
         <field name="write_date2"/>
+    </group>
+    <group col="8" colspan="4" id="single_sending">
+        <label name="single_sending_report"/>
+        <field name="single_sending_report" xexpand="0" width="25"/>
+        <label name="single_sending_report_ready"/>
+        <field name="single_sending_report_ready" xexpand="0" width="25"/>
+        <label name="entry_single_sending_report"/>
+        <field name="entry_single_sending_report" xexpand="0" width="25"/>
+        <label name="entry_single_sending_report_ready"/>
+        <field name="entry_single_sending_report_ready" xexpand="0" width="25"/>
     </group>
     <field name="versions" colspan="4"/>
 </form>

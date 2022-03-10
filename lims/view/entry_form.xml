@@ -10,13 +10,15 @@
     <field name="invoice_party"/>
     <notebook>
         <page string="General" id="general">
-            <group col="8" colspan="4" id="options_holder">
+            <group col="10" colspan="4" id="options_holder">
                 <label name="report_language"/>
                 <field name="report_language" widget="selection"/>
                 <label name="email_report"/>
                 <field name="email_report" xexpand="0" width="25"/>
                 <label name="single_sending_report"/>
                 <field name="single_sending_report" xexpand="0" width="25"/>
+                <label name="entry_single_sending_report"/>
+                <field name="entry_single_sending_report" xexpand="0" width="25"/>
                 <label name="no_acknowledgment_of_receipt"/>
                 <field name="no_acknowledgment_of_receipt" xexpand="0" width="25"/>
             </group>

@@ -378,6 +378,13 @@ class SendResultsReport(Wizard):
                         report.number)
                     continue
 
+                if (report.entry_single_sending_report and not
+                        report.entry_single_sending_report_ready):
+                    logger.warning('Send Results Report: %s: '
+                        'IGNORED: NOT READY TO SINGLE SENDING',
+                        report.number)
+                    continue
+
                 report_cache = {}
                 for lang in Lang.search([('translatable', '=', True)]):
                     if not report.has_report_cached(lang):
