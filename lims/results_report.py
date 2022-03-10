@@ -1799,7 +1799,7 @@ class ResultsReportVersionDetailSample(
     @classmethod
     def __setup__(cls):
         super().__setup__()
-        cls._order.insert(1, ('notebook', 'ASC'))
+        cls._order.insert(1, ('notebook.fraction', 'ASC'))
 
     def get_rec_name(self, name):
         return self.notebook.rec_name
