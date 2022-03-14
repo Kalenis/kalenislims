@@ -4929,7 +4929,7 @@ class NotebookRepeatAnalysis(Wizard):
             'upper_limit': line.upper_limit,
             }
         defaults['repetition_reason'] = self.start.repetition_reason
-        if line.accepted and not self._unaccept_original():
+        if line.results_report:
             defaults['report'] = False
         return defaults
 
@@ -5125,7 +5125,7 @@ class NotebookLineRepeatAnalysis(Wizard):
             'upper_limit': line.upper_limit,
             }
         defaults['repetition_reason'] = self.start.repetition_reason
-        if line.accepted and not self._unaccept_original():
+        if line.results_report:
             defaults['report'] = False
         return defaults
 
