@@ -711,7 +711,7 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
             ('fraction.sample.state', '!=', 'annulled'),
             ('invoice_party', '=', sample.notebook.invoice_party),
             ], order=[
-            ('fraction.sample.date', 'DESC'),
+            ('fraction.sample.number', 'DESC'),
             ], limit=3)
         return precedents
 
