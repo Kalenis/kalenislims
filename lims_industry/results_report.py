@@ -276,7 +276,7 @@ class ResultsReport2(metaclass=PoolMeta):
             'plant_name': sample and sample.plant and sample.plant.name or '',
             'component_customer_description': (sample and sample.component and
                 sample.component.customer_description or ''),
-            'component_type': (sample and sample.component and
+            'component_kind': (sample and sample.component and
                 sample.component.kind.name or ''),
             'ind_equipment': (sample and
                 sample.notebook.fraction.sample.ind_equipment and
@@ -990,5 +990,5 @@ class ReportNameFormat(metaclass=PoolMeta):
             "\n- ${equipment_type}"
             "\n- ${plant_name}"
             "\n- ${component_customer_description}"
-            "\n- ${component_type}"
+            "\n- ${component_kind}"
             "\n- ${ind_equipment}")
