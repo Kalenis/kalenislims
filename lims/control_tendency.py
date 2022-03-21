@@ -1537,9 +1537,11 @@ class TrendChart(ModelSQL, ModelView):
 
         df = pd.DataFrame(ds, index=index)
         df = df.reindex(cols.values(), axis=1)
+        df = df.interpolate()
         if ds2:
             df2 = pd.DataFrame(ds2, index=index)
             df2 = df2.reindex(cols_y2.values(), axis=1)
+            df2 = df2.interpolate()
 
         output = BytesIO()
         try:
@@ -1676,8 +1678,8 @@ class OpenTrendChart(Wizard):
                 }
             i = 1
             for a in chart.analysis:
+                record['analysis%s' % str(i)] = None
                 if a.analysis.id not in reportable_analysis:
-                    record['analysis%s' % str(i)] = None
                     i += 1
                     continue
                 line = NotebookLine.search([
@@ -1691,8 +1693,8 @@ class OpenTrendChart(Wizard):
                         ',', '.')
                 i += 1
             for a in chart.analysis_y2:
+                record['analysis%s' % str(i)] = None
                 if a.analysis.id not in reportable_analysis:
-                    record['analysis%s' % str(i)] = None
                     i += 1
                     continue
                 line = NotebookLine.search([
