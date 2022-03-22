@@ -572,8 +572,10 @@ class Component(ModelSQL, ModelView):
     def search_rec_name(cls, name, clause):
         return ['OR',
             ('kind.name',) + tuple(clause[1:]),
+            ('location.name',) + tuple(clause[1:]),
             ('brand.name',) + tuple(clause[1:]),
             ('model',) + tuple(clause[1:]),
+            ('customer_description',) + tuple(clause[1:]),
             ]
 
     @classmethod
