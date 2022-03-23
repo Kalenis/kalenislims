@@ -929,6 +929,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
         select=True, states={'readonly': True})
     analysis_type = fields.Function(fields.Selection([
+        (None, ''),
         ('analysis', 'Analysis'),
         ('set', 'Set'),
         ('group', 'Group'),
@@ -1217,9 +1218,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
 
     @fields.depends('analysis', '_parent_analysis.type')
     def on_change_with_analysis_type(self, name=None):
-        if self.analysis:
-            return self.analysis.type
-        return ''
+        return self.analysis and self.analysis.type or None
 
     @classmethod
     def get_service_field(cls, details, names):

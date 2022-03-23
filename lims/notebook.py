@@ -4891,6 +4891,7 @@ class NotebookLineRepeatAnalysisStart(ModelView):
         'Analysis domain')
     repetition_reason = fields.Char('Reason')
     analysis_type = fields.Function(fields.Selection([
+        (None, ''),
         ('analysis', 'Analysis'),
         ('set', 'Set'),
         ('group', 'Group'),
