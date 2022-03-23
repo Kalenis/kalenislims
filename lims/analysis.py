@@ -1663,6 +1663,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
         None, None, 'Analysis domain'),
         'on_change_with_analysis_domain')
     analysis_type = fields.Function(fields.Selection([
+        (None, ''),
         ('analysis', 'Analysis'),
         ('set', 'Set'),
         ('group', 'Group'),
@@ -1711,10 +1712,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
 
     @fields.depends('included_analysis', '_parent_included_analysis.type')
     def on_change_with_analysis_type(self, name=None):
-        res = ''
-        if self.included_analysis:
-            res = self.included_analysis.type
-        return res
+        return self.included_analysis and self.included_analysis.type or None
 
     @staticmethod
     def default_analysis_domain():
