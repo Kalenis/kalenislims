@@ -4,5 +4,7 @@
         position="after">
         <label name="diagnostician"/>
         <field name="diagnostician"/>
+        <label name="diagnosis_template"/>
+        <field name="diagnosis_template"/>
     </xpath>
 </data>

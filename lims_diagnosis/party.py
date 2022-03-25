@@ -47,3 +47,5 @@ class Party(metaclass=PoolMeta):
     __name__ = 'party.party'
 
     diagnostician = fields.Many2One('lims.diagnostician', 'Diagnostician')
+    diagnosis_template = fields.Many2One('lims.diagnosis.template',
+        'Diagnosis Template')

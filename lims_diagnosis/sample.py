@@ -33,6 +33,8 @@ class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
 
     diagnostician = fields.Many2One('lims.diagnostician', 'Diagnostician')
+    diagnosis_template = fields.Many2One('lims.diagnosis.template',
+        'Diagnosis Template')
 
     @classmethod
     def create(cls, vlist):
@@ -40,6 +42,8 @@ class Sample(metaclass=PoolMeta):
         for sample in samples:
             if not sample.diagnostician:
                 sample.diagnostician = cls.get_default_diagnostician(sample)
+                sample.diagnosis_template = (sample.party.diagnosis_template
+                    and sample.party.diagnosis_template.id or None)
                 sample.save()
         return samples
 

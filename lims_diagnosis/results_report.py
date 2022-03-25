@@ -116,6 +116,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             generate_report_form)
 
         diagnostician_id = None
+        diagnosis_template_id = None
         for sample in samples:
             nb = Notebook(sample['notebook'])
             if not diagnostician_id:
@@ -123,8 +124,14 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
                     diagnostician_id = nb.fraction.sample.diagnostician.id
                 else:
                     diagnostician_id = Diagnostician.get_diagnostician()
+            if (not diagnosis_template_id and
+                    nb.fraction.sample.diagnosis_template):
+                diagnosis_template_id = (
+                    nb.fraction.sample.diagnosis_template.id)
 
-        if 'template' in detail_default and detail_default['template']:
+        if diagnosis_template_id:
+            detail_default['diagnosis_template'] = diagnosis_template_id
+        elif 'template' in detail_default and detail_default['template']:
             result_template = ReportTemplate(detail_default['template'])
             if result_template.diagnosis_template:
                 detail_default['diagnosis_template'] = (
@@ -199,12 +206,17 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
     def create(cls, vlist):
         samples = super().create(vlist)
         for sample in samples:
-            template = sample.version_detail.template
-            if not template or not template.diagnosis_template:
+            diagnosis_template = None
+            report = sample.version_detail
+            if report.diagnosis_template:
+                diagnosis_template = report.diagnosis_template
+            elif report.template and report.template.diagnosis_template:
+                diagnosis_template = report.template.diagnosis_template
+            if not diagnosis_template:
                 continue
             save = False
             if not sample.diagnosis:
-                content = template.diagnosis_template.content
+                content = diagnosis_template.content
                 sample.diagnosis = content
                 save = True
             if not sample.diagnosis_states:

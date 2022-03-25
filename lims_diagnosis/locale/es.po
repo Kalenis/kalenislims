@@ -151,6 +151,10 @@ msgctxt "field:lims.results_report.version.detail.sample,template_type:"
 msgid "Report Template Type"
 msgstr "Tipo de Plantilla de Informe"
 
+msgctxt "field:lims.sample,diagnosis_template:"
+msgid "Diagnosis Template"
+msgstr "Plantilla de Diagnóstico"
+
 msgctxt "field:lims.sample,diagnostician:"
 msgid "Diagnostician"
 msgstr "Diagnosticador"
@@ -238,6 +242,10 @@ msgstr "Resultado"
 msgctxt "field:lims.samples_comparator.line,sample:"
 msgid "Sample"
 msgstr "Muestra"
+
+msgctxt "field:party.party,diagnosis_template:"
+msgid "Diagnosis Template"
+msgstr "Plantilla de Diagnóstico"
 
 msgctxt "field:party.party,diagnostician:"
 msgid "Diagnostician"
