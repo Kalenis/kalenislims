@@ -2330,6 +2330,7 @@ class GenerateReport(Wizard):
                 existing_details = ResultsDetail.search([
                     ('laboratory', '=', laboratory_id),
                     ('samples.notebook', '=', notebook.id),
+                    ('state', '!=', 'annulled'),
                     ])
                 if existing_details:
                     existing_reports = [d.report_version.results_report.id
@@ -2567,6 +2568,7 @@ class GenerateReport(Wizard):
         existing_details = ResultsDetail.search([
             ('laboratory', '=', laboratory_id),
             ('samples.notebook', '=', samples[0]['notebook']),
+            ('state', '!=', 'annulled'),
             ])
         if existing_details:
             current_reports = [d.report_version.results_report.id
