@@ -94,15 +94,16 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     def on_change_diagnosis_template(self):
         if self.diagnosis_template:
             content = self.diagnosis_template.content
-            states = {}
-            for state in self.diagnosis_template.diagnosis_states:
-                states[state.name] = '*'
             for sample in self.samples:
                 sample.diagnosis = content
+                states = {}
+                for state in self.diagnosis_template.diagnosis_states:
+                    states[state.name] = sample.get_default_diagnosis_state(
+                            sample, state.name)
                 sample.diagnosis_states = states
         else:
-            states = {}
             for sample in self.samples:
+                states = {}
                 sample.diagnosis_states = states
 
     @classmethod
@@ -221,8 +222,9 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
                 save = True
             if not sample.diagnosis_states:
                 states = {}
-                for state in template.diagnosis_template.diagnosis_states:
-                    states[state.name] = '*'
+                for state in diagnosis_template.diagnosis_states:
+                    states[state.name] = cls.get_default_diagnosis_state(
+                        sample, state.name)
                 sample.diagnosis_states = states
                 save = True
             if save:
@@ -246,6 +248,10 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         sample_default['diagnosis'] = sample.diagnosis
         sample_default['diagnosis_states'] = sample.diagnosis_states
         return sample_default
+
+    @classmethod
+    def get_default_diagnosis_state(cls, sample, state_name):
+        return '*'
 
 
 class ResultsReportVersionDetailLine(metaclass=PoolMeta):
