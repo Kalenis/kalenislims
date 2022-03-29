@@ -1409,6 +1409,9 @@ class Fraction(ModelSQL, ModelView):
     __name__ = 'lims.fraction'
     _rec_name = 'number'
 
+    _states = {'readonly': Bool(Eval('confirmed'))}
+    _depends = ['confirmed']
+
     number = fields.Char('Number', select=True, readonly=True)
     create_date2 = fields.Function(fields.DateTime('Create Date'),
        'get_create_date2', searcher='search_create_date2')
@@ -1429,20 +1432,23 @@ class Fraction(ModelSQL, ModelView):
     date = fields.Function(fields.DateTime('Date'), 'get_sample_field',
         searcher='search_sample_field')
     type = fields.Many2One('lims.fraction.type', 'Fraction type',
-        required=True, select=True)
+        required=True, select=True, states=_states, depends=_depends)
     storage_location = fields.Many2One('stock.location', 'Storage location',
-        required=True, domain=[('type', '=', 'storage')])
-    storage_time = fields.Integer('Storage time (in months)', required=True)
-    packages_quantity = fields.Integer('Packages quantity', required=True)
+        required=True, domain=[('type', '=', 'storage')],
+        states=_states, depends=_depends)
+    storage_time = fields.Integer('Storage time (in months)', required=True,
+        states=_states, depends=_depends)
+    packages_quantity = fields.Integer('Packages quantity', required=True,
+        states=_states, depends=_depends)
     package_type = fields.Many2One('lims.packaging.type', 'Package type',
-        required=True)
+        required=True, states=_states, depends=_depends)
     expiry_date = fields.Date('Expiry date', states={'readonly': True})
-    discharge_date = fields.Date('Discharge date')
+    discharge_date = fields.Date('Discharge date', readonly=True)
     countersample_location = fields.Many2One('stock.location',
         'Countersample location', readonly=True)
     countersample_date = fields.Date('Countersample date', readonly=True)
     fraction_state = fields.Many2One('lims.packaging.integrity',
-        'Fraction state', required=True)
+        'Fraction state', required=True, states=_states, depends=_depends)
     services = fields.One2Many('lims.service', 'fraction', 'Services',
         states={'readonly': Bool(Eval('button_manage_services_available'))},
         context={
@@ -1541,6 +1547,8 @@ class Fraction(ModelSQL, ModelView):
     cie_original_fraction = fields.Many2One('lims.fraction',
         'Original fraction', states={'readonly': Bool(Eval('confirmed'))},
         depends=['confirmed'])
+
+    del _states, _depends
 
     @classmethod
     def __setup__(cls):
