@@ -642,6 +642,9 @@ class Entry(Workflow, ModelSQL, ModelView):
         return success
 
     def mail_acknowledgment_of_receipt(self):
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+
         if not self.ack_report_cache:
             return
 
@@ -650,10 +653,13 @@ class Entry(Workflow, ModelSQL, ModelView):
         if not (from_addr and to_addrs):
             return
 
+        config = Config(1)
+        hide_recipients = config.mail_ack_hide_recipients
+
         subject, body = self.subject_body()
         attachment_data = self.attachment()
         msg = self.create_msg(from_addr, to_addrs, subject,
-            body, attachment_data)
+            body, hide_recipients, attachment_data)
         return self.send_msg(from_addr, to_addrs, msg)
 
     def subject_body(self):
@@ -691,14 +697,14 @@ class Entry(Workflow, ModelSQL, ModelView):
             }
         return data
 
-    def create_msg(self, from_addr, to_addrs, subject, body, attachment_data):
+    def create_msg(self, from_addr, to_addrs, subject, body,
+            hide_recipients, attachment_data):
         if not to_addrs:
             return None
 
         msg = MIMEMultipart('mixed')
         msg['From'] = from_addr
-        hidden = True  # TODO: HARDCODE!
-        if not hidden:
+        if not hide_recipients:
             msg['To'] = ', '.join(to_addrs)
         msg['Subject'] = subject
 

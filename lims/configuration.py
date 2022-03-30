@@ -152,6 +152,7 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         help="In the text will be added suffix with the entry report number")
     mail_ack_body = fields.Text('Email body of Acknowledgment of Samples'
         ' Receipt')
+    mail_ack_hide_recipients = fields.Boolean('Hide recipients')
     microbiology_laboratories = fields.Many2Many(
         'lims.configuration-laboratory', 'configuration',
         'laboratory', 'Microbiology Laboratories')
@@ -244,6 +245,10 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     @staticmethod
     def default_entry_confirm_background():
         return False
+
+    @staticmethod
+    def default_mail_ack_hide_recipients():
+        return True
 
     @classmethod
     def multivalue_model(cls, field):

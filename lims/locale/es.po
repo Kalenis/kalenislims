@@ -423,6 +423,10 @@ msgctxt "field:lims.configuration,mail_ack_body:"
 msgid "Email body of Acknowledgment of Samples Receipt"
 msgstr "Cuerpo del correo de Acuse de recibo de muestras"
 
+msgctxt "field:lims.configuration,mail_ack_hide_recipients:"
+msgid "Hide recipients"
+msgstr "Ocultar destinatarios"
+
 msgctxt "field:lims.configuration,mail_ack_subject:"
 msgid "Email subject of Acknowledgment of Samples Receipt"
 msgstr "Asunto del correo de Acuse de recibo de muestras"

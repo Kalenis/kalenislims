@@ -67,6 +67,8 @@
         </page>
         <page string="Mail Acknowledgment of Samples Receipt"
                 id="mail_ack_samples" col="6">
+            <label name="mail_ack_hide_recipients"/>
+            <field name="mail_ack_hide_recipients"/>
             <separator string="Email body of Acknowledgment of Samples Receipt"
                 colspan="4" id="mail_ack_body"/>
             <field name="mail_ack_subject" colspan="4"/>
