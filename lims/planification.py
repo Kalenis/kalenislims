@@ -719,17 +719,17 @@ class PlanificationDetail(ModelSQL, ModelView):
         result = {}
         for name in names:
             result[name] = {}
-            if (name == 'label' or name == 'comments'):
-                for d in details:
-                    result[name][d.id] = getattr(d.fraction, name, None)
-            elif name == 'fraction_type':
+            if name == 'fraction_type':
                 for d in details:
                     field = getattr(d.fraction, 'type', None)
                     result[name][d.id] = field.id if field else None
-            else:
+            elif cls._fields[name]._type == 'many2one':
                 for d in details:
                     field = getattr(d.fraction, name, None)
                     result[name][d.id] = field.id if field else None
+            else:
+                for d in details:
+                    result[name][d.id] = getattr(d.fraction, name, None)
         return result
 
     @classmethod
@@ -3817,13 +3817,13 @@ class SearchFractionsDetail(ModelSQL, ModelView):
         result = {}
         for name in names:
             result[name] = {}
-            if name in ('label', 'create_date2'):
-                for d in details:
-                    result[name][d.id] = getattr(d.fraction, name, None)
-            else:
+            if cls._fields[name]._type == 'many2one':
                 for d in details:
                     field = getattr(d.fraction, name, None)
                     result[name][d.id] = field.id if field else None
+            else:
+                for d in details:
+                    result[name][d.id] = getattr(d.fraction, name, None)
         return result
 
     @classmethod
