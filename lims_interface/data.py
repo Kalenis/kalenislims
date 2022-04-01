@@ -20,7 +20,7 @@ from trytond.rpc import RPC
 from trytond.exceptions import UserError
 from trytond.model.modelsql import convert_from
 from .interface import FIELD_TYPE_TRYTON, FIELD_TYPE_CAST
-
+import datetime
 
 class Adapter:
     def __getattr__(self, name):
@@ -66,6 +66,10 @@ class Adapter:
                 obj = fields.DateTime(field.string)
             elif field.type == 'timestamp':
                 obj = fields.Timestamp(field.string)
+            elif field.type == 'time':
+                obj = fields.Time(field.string)
+            elif field.type == 'timedelta':
+                obj = fields.TimeDelta(field.string)
             elif field.type == 'many2one':
                 obj = fields.Many2One(field.related_model.model, field.string)
             elif field.type in ('binary', 'icon'):
@@ -140,6 +144,10 @@ class GroupedAdapter:
                 obj = fields.DateTime(field.string)
             elif field.type == 'timestamp':
                 obj = fields.Timestamp(field.string)
+            elif field.type == 'time':
+                obj = fields.Time(field.string)
+            elif field.type == 'timedelta':
+                obj = fields.TimeDelta(field.string)
             elif field.type == 'many2one':
                 obj = fields.Many2One(field.related_model.model, field.string)
             elif field.type in ('binary', 'icon'):
@@ -263,15 +271,13 @@ class Data(ModelSQL, ModelView):
                         found = True
                 if not found:
                     inputs.append(getattr(self, input_))
-
             try:
                 value = ast(*inputs)
             except schedula.utils.exc.DispatcherError as e:
                 raise UserError(e.args[0] % e.args[1:])
-
             if isinstance(value, list):
                 value = str(value)
-            elif not isinstance(value, (str, int, float, Decimal, type(None))):
+            elif not isinstance(value, (str, int, float, Decimal,datetime.time,datetime.timedelta, type(None))):
                 value = value.tolist()
             if isinstance(value, formulas.tokens.operand.XlError):
                 value = None
@@ -313,15 +319,13 @@ class Data(ModelSQL, ModelView):
                         found = True
                 if not found:
                     inputs.append(getattr(self, input_))
-
             try:
                 value = ast(*inputs)
             except schedula.utils.exc.DispatcherError as e:
                 raise UserError(e.args[0] % e.args[1:])
-
             if isinstance(value, list):
                 value = str(value)
-            elif not isinstance(value, (str, int, float, Decimal, type(None))):
+            elif not isinstance(value, (str, int, float, Decimal,datetime.time,datetime.timedelta, type(None))):
                 value = value.tolist()
             if isinstance(value, formulas.tokens.operand.XlError):
                 value = None
@@ -359,7 +363,7 @@ class Data(ModelSQL, ModelView):
     def fields_get(cls, fields_names=None, level=0):
         Model = Pool().get('ir.model')
         res = super().fields_get(fields_names)
-
+        GroupedData = Pool().get('lims.interface.grouped_data')
         table = cls.get_table()
         interface = cls.get_interface()
 
@@ -714,7 +718,7 @@ class Data(ModelSQL, ModelView):
 
         if isinstance(value, list):
             value = str(value)
-        elif not isinstance(value, (str, int, float, Decimal, type(None))):
+        elif not isinstance(value, (str, int, float, Decimal,datetime.time,datetime.timedelta, type(None))):
             value = value.tolist()
         if isinstance(value, formulas.tokens.operand.XlError):
             value = None
@@ -853,7 +857,7 @@ class GroupedData(ModelView):
 
             if isinstance(value, list):
                 value = str(value)
-            elif not isinstance(value, (str, int, float, Decimal, type(None))):
+            elif not isinstance(value, (str, int, float, Decimal,datetime.time,datetime.timedelta, type(None))):
                 value = value.tolist()
             if isinstance(value, formulas.tokens.operand.XlError):
                 value = None
@@ -883,7 +887,7 @@ class GroupedData(ModelView):
 
             if isinstance(value, list):
                 value = str(value)
-            elif not isinstance(value, (str, int, float, Decimal, type(None))):
+            elif not isinstance(value, (str, int, float, Decimal,datetime.time,datetime.timedelta, type(None))):
                 value = value.tolist()
             if isinstance(value, formulas.tokens.operand.XlError):
                 value = None

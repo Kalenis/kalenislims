@@ -7,6 +7,7 @@ import formulas
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool
 from trytond.transaction import Transaction
+import datetime
 
 custom_functions = {}
 
@@ -108,6 +109,20 @@ def get_column_value(notebook_line, alias, iteration=None):
 
 custom_functions['V'] = get_column_value
 
+def time_diff(time_1,time_2,return_delta=False):
+    if not time_1 or not time_2 or time_1 < time_2:
+        return None
+    datetime1 = datetime.datetime.combine(datetime.date.today(), time_1)
+    datetime2 = datetime.datetime.combine(datetime.date.today(), time_2)
+    delta_difference = datetime1 - datetime2
+    hours, remainder = divmod(delta_difference.seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    if return_delta:
+        return delta_difference
+    return datetime.time(hours, minutes,seconds)
+    
+
+custom_functions['TIMEDIF'] = time_diff
 
 class Function(ModelSQL, ModelView):
     'Interface Function'
