@@ -109,20 +109,52 @@ def get_column_value(notebook_line, alias, iteration=None):
 
 custom_functions['V'] = get_column_value
 
-def time_diff(time_1,time_2,return_delta=False):
+def _td_to_time(td_value):
+    hours, remainder = divmod(td_value.seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    return datetime.time(hours, minutes,seconds)
+
+def time_diff(time_1,time_2,uom=False,return_delta=False):
+    uoms = {
+        'H':lambda x: x.seconds/3600,
+        'M':lambda x: x.seconds/60,
+        'S':lambda x: x.seconds,
+        'MS':lambda x: x.seconds*1000,
+    }
     if not time_1 or not time_2 or time_1 < time_2:
         return None
     datetime1 = datetime.datetime.combine(datetime.date.today(), time_1)
     datetime2 = datetime.datetime.combine(datetime.date.today(), time_2)
     delta_difference = datetime1 - datetime2
-    hours, remainder = divmod(delta_difference.seconds, 3600)
-    minutes, seconds = divmod(remainder, 60)
+    if uom:
+        if uom not in uoms:
+            return None
+        return uoms[uom](delta_difference)
     if return_delta:
         return delta_difference
-    return datetime.time(hours, minutes,seconds)
+    return _td_to_time(delta_difference)
+    
     
 
 custom_functions['TIMEDIF'] = time_diff
+
+def to_time(value,uom):
+    uoms = {
+        'H':lambda x: datetime.timedelta(hours=x),
+        'M':lambda x: datetime.timedelta(minutes=x),
+        'S':lambda x: datetime.timedelta(seconds=x),
+        'MS':lambda x: datetime.timedelta(seconds=x/1000),
+    }
+    if value == 0:
+        return 0
+    if not value or not uom or uom not in uoms:
+        return None
+    
+    td = uoms[uom](value)
+
+    return _td_to_time(td)
+
+custom_functions['TOTIME'] = to_time
 
 class Function(ModelSQL, ModelView):
     'Interface Function'
