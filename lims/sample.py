@@ -877,6 +877,8 @@ class Service(ModelSQL, ModelView):
             default = {}
         current_default = default.copy()
         current_default['confirmation_date'] = None
+        if not Transaction().context.get('create_sample', False):
+            current_default['report_date'] = None
         current_default['analysis_detail'] = None
 
         detail_default = {}
@@ -6211,9 +6213,10 @@ class CreateSample(Wizard):
             for label in labels_list[1:]:
                 if not label:
                     continue
-                Sample.copy([sample], default={
-                    'label': label,
-                    })
+                with Transaction().set_context(create_sample=True):
+                    Sample.copy([sample], default={
+                        'label': label,
+                        })
 
         logger.info('-- CreateSample().transition_create_():END --')
         return 'end'
