@@ -110,28 +110,23 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     def _get_fields_from_samples(cls, samples, generate_report_form=None):
         pool = Pool()
         Notebook = pool.get('lims.notebook')
-        Diagnostician = pool.get('lims.diagnostician')
         ReportTemplate = pool.get('lims.result_report.template')
 
         detail_default = super()._get_fields_from_samples(samples,
             generate_report_form)
 
         diagnostician_id = None
-        diagnosis_template_id = None
+        diagnosis_template = None
         for sample in samples:
             nb = Notebook(sample['notebook'])
             if not diagnostician_id:
-                if nb.fraction.sample.diagnostician:
-                    diagnostician_id = nb.fraction.sample.diagnostician.id
-                else:
-                    diagnostician_id = Diagnostician.get_diagnostician()
-            if (not diagnosis_template_id and
-                    nb.fraction.sample.diagnosis_template):
-                diagnosis_template_id = (
-                    nb.fraction.sample.diagnosis_template.id)
+                diagnostician_id = cls._get_diagnostician_from_sample(nb)
+            if not diagnosis_template:
+                diagnosis_template = (
+                    cls._get_diagnosis_template_from_sample(nb))
 
-        if diagnosis_template_id:
-            detail_default['diagnosis_template'] = diagnosis_template_id
+        if diagnosis_template:
+            detail_default['diagnosis_template'] = diagnosis_template.id
         elif 'template' in detail_default and detail_default['template']:
             result_template = ReportTemplate(detail_default['template'])
             if result_template.diagnosis_template:
@@ -142,6 +137,44 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             detail_default['diagnostician'] = diagnostician_id
 
         return detail_default
+
+    @classmethod
+    def _get_diagnostician_from_sample(cls, notebook):
+        pool = Pool()
+        Diagnostician = pool.get('lims.diagnostician')
+
+        if notebook.fraction.sample.diagnostician:
+            diagnostician_id = notebook.fraction.sample.diagnostician.id
+        else:
+            diagnostician_id = Diagnostician.get_diagnostician()
+        return diagnostician_id
+
+    @classmethod
+    def _get_diagnosis_template_from_sample(cls, notebook):
+        pool = Pool()
+        Service = pool.get('lims.service')
+
+        diagnosis_template = notebook.fraction.sample.diagnosis_template
+        if not diagnosis_template:
+            ok = True
+            services = Service.search([
+                ('fraction', '=', notebook.fraction),
+                ('analysis.type', '=', 'group'),
+                ('annulled', '=', False),
+                ])
+            for service in services:
+                if service.analysis.diagnosis_template:
+                    if not diagnosis_template:
+                        diagnosis_template = (
+                            service.analysis.diagnosis_template)
+                    elif (diagnosis_template !=
+                            service.analysis.diagnosis_template):
+                        ok = False
+                elif diagnosis_template:
+                    ok = False
+            if not ok:
+                diagnosis_template = None
+        return diagnosis_template
 
     @classmethod
     def _get_fields_not_overwrite(cls):

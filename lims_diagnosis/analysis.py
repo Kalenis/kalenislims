@@ -4,6 +4,7 @@
 
 from trytond.model import fields
 from trytond.pool import PoolMeta
+from trytond.pyson import Eval
 
 
 class Analysis(metaclass=PoolMeta):
@@ -12,6 +13,9 @@ class Analysis(metaclass=PoolMeta):
     diagnostician = fields.Many2One('lims.diagnostician', 'Diagnostician')
     not_block_diagnosis = fields.Boolean('Does not block diagnosis',
         help="This analysis is not necessary to begin diagnosing the sample")
+    diagnosis_template = fields.Many2One('lims.diagnosis.template',
+        'Diagnosis Template', states={'readonly': Eval('type') != 'group'},
+        depends=['type'])
 
 
 class ProductType(metaclass=PoolMeta):

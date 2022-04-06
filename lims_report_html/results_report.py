@@ -146,7 +146,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             if not result_template:
                 result_template = cls._get_result_template_from_sample(nb)
             if not resultrange_origin:
-                resultrange_origin = nb.fraction.sample.resultrange_origin
+                resultrange_origin = cls._get_resultrange_from_sample(nb)
 
         if result_template:
             detail_default['template'] = result_template.id
@@ -211,6 +211,10 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             result_template = config_.result_template
 
         return result_template
+
+    @classmethod
+    def _get_resultrange_from_sample(cls, notebook):
+        return notebook.fraction.sample.resultrange_origin
 
     @classmethod
     def _get_fields_not_overwrite(cls):
