@@ -2,6 +2,10 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "field:lims.analysis,diagnosis_template:"
+msgid "Diagnosis Template"
+msgstr "Plantilla de Diagnóstico"
+
 msgctxt "field:lims.analysis,diagnostician:"
 msgid "Diagnostician"
 msgstr "Diagnosticador"
