@@ -241,6 +241,26 @@ class Sample(metaclass=PoolMeta):
         return result
 
     @classmethod
+    def order_component(cls, tables):
+        Component = Pool().get('lims.component')
+        kind_field = Component._fields['kind']
+        location_field = Component._fields['location']
+        sample, _ = tables[None]
+        component_tables = tables.get('component')
+        if component_tables is None:
+            component = Component.__table__()
+            component_tables = {
+                None: (component, component.id == sample.component),
+                }
+            tables['component'] = component_tables
+        order = (
+            kind_field.convert_order('kind',
+            component_tables, Component) +
+            location_field.convert_order('location',
+            component_tables, Component))
+        return order
+
+    @classmethod
     def _confirm_samples(cls, samples):
         TaskTemplate = Pool().get('lims.administrative.task.template')
         for sample in samples:
