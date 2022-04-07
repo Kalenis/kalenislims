@@ -17,7 +17,7 @@ from trytond.pool import Pool
 from trytond.pyson import Eval, Equal, Bool, Not, If
 from trytond.transaction import Transaction
 from trytond.tools import get_smtp_server
-from trytond.config import config
+from trytond.config import config as tconfig
 from trytond.report import Report
 from trytond.rpc import RPC
 from trytond.exceptions import UserError, UserWarning
@@ -648,7 +648,7 @@ class Entry(Workflow, ModelSQL, ModelView):
         if not self.ack_report_cache:
             return
 
-        from_addr = config.get('email', 'from')
+        from_addr = tconfig.get('email', 'from')
         to_addrs = [c.contact.email for c in self.acknowledgment_contacts]
         if not (from_addr and to_addrs):
             return
