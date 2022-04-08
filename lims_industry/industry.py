@@ -562,6 +562,20 @@ class Component(ModelSQL, ModelView):
                 raise UserError(gettext('lims_industry.msg_delete_component',
                     component=component.get_rec_name(None)))
 
+    @classmethod
+    def copy(cls, records, default=None):
+        if default is None:
+            default = {}
+        current_default = default.copy()
+
+        new_records = []
+        for record in records:
+            current_default['customer_description'] = '%s (copy)' % (
+                record.customer_description)
+            new_record, = super().copy([record], default=current_default)
+            new_records.append(new_record)
+        return new_records
+
     def get_rec_name(self, name):
         res = self.kind.rec_name
         if self.location:
