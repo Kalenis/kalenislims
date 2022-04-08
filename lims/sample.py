@@ -1410,8 +1410,8 @@ class Fraction(ModelSQL, ModelView):
     __name__ = 'lims.fraction'
     _rec_name = 'number'
 
-    _states = {'readonly': Bool(Eval('confirmed'))}
-    _depends = ['confirmed']
+    _states = {'readonly': Bool(Eval('has_results_report'))}
+    _depends = ['has_results_report']
 
     number = fields.Char('Number', select=True, readonly=True)
     create_date2 = fields.Function(fields.DateTime('Create Date'),
