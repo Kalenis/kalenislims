@@ -4,7 +4,7 @@
 import formulas
 import schedula
 from decimal import Decimal
-from datetime import datetime
+from datetime import datetime, time, timedelta
 from itertools import chain
 from collections import defaultdict
 #from dateutil.relativedelta import relativedelta
@@ -791,8 +791,8 @@ class CalculateExpressions(Wizard):
 
                         if isinstance(value, list):
                             value = str(value)
-                        elif not isinstance(value,
-                                (str, int, float, Decimal,datetime.time,datetime.timedelta, type(None))):
+                        elif not isinstance(value, (str, int, float, Decimal,
+                                time, timedelta, type(None))):
                             value = value.tolist()
                         if isinstance(value, formulas.tokens.operand.XlError):
                             value = None
@@ -1321,8 +1321,8 @@ class EditGroupedData(Wizard):
 
                     if isinstance(value, list):
                         value = str(value)
-                    elif not isinstance(value,
-                            (str, int, float, Decimal,datetime.time,datetime.timedelta, type(None))):
+                    elif not isinstance(value, (str, int, float, Decimal,
+                            time, timedelta, type(None))):
                         value = value.tolist()
                     if isinstance(value, formulas.tokens.operand.XlError):
                         value = None
@@ -1346,16 +1346,16 @@ class EditGroupedData(Wizard):
 
                             if isinstance(value, list):
                                 value = str(value)
-                            elif not isinstance(value,
-                                    (str, int, float, Decimal,datetime.time,datetime.timedelta, type(None))):
+                            elif not isinstance(value, (str, int, float,
+                                    Decimal, time, timedelta, type(None))):
                                 value = value.tolist()
-                            if isinstance(
-                                    value, formulas.tokens.operand.XlError):
+                            if isinstance(value,
+                                    formulas.tokens.operand.XlError):
                                 value = None
                             elif isinstance(value, list):
                                 for x in chain(*value):
-                                    if isinstance(
-                                            x, formulas.tokens.operand.XlError):
+                                    if isinstance(x,
+                                            formulas.tokens.operand.XlError):
                                         value = None
                             res[field_name] = value
 
@@ -1569,7 +1569,8 @@ class MultiSampleData(ModelView):
 
             if isinstance(value, list):
                 value = str(value)
-            elif not isinstance(value, (str, int, float, Decimal,datetime.time,datetime.timedelta, type(None))):
+            elif not isinstance(value, (str, int, float, Decimal,
+                    time, timedelta, type(None))):
                 value = value.tolist()
             if isinstance(value, formulas.tokens.operand.XlError):
                 value = None
