@@ -3,6 +3,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import formulas
+import numpy as np
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool
@@ -155,6 +156,24 @@ def to_time(value,uom):
     return _td_to_time(td)
 
 custom_functions['TOTIME'] = to_time
+
+
+def slope(yp, xp):
+    items_to_delete = []
+    i = 0
+    for y1 in yp:
+        for y2 in y1:
+            if y2 is None:
+                items_to_delete.append(i)
+            i += 1
+    if items_to_delete:
+        yp = np.delete(yp, items_to_delete, axis=1)
+        xp = np.delete(xp, items_to_delete, axis=1)
+    return formulas.functions.wrap_func(formulas.functions.stat.xslope)(yp, xp)
+
+
+custom_functions['SLOPE'] = slope
+
 
 class Function(ModelSQL, ModelView):
     'Interface Function'
