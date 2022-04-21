@@ -510,6 +510,11 @@ class CreateSampleStart(metaclass=PoolMeta):
                 return True
         return False
 
+    @fields.depends('equipment', 'component')
+    def on_change_equipment(self):
+        if not self.equipment and self.component:
+            self.component = None
+
     @fields.depends('component')
     def on_change_component(self):
         if self.component:
