@@ -405,6 +405,7 @@ class Service(ModelSQL, ModelView):
     planned = fields.Function(fields.Boolean('Planned'), 'get_planned',
         searcher='search_planned')
     annulled = fields.Boolean('Annulled', states={'readonly': True})
+    additional_origin = fields.Many2One('lims.service', 'Origin of additional')
 
     @classmethod
     def __setup__(cls):
@@ -573,6 +574,7 @@ class Service(ModelSQL, ModelView):
             cls.check_delete(services)
         fractions_ids = list(set(s.fraction.id for s in services))
         sample_ids = list(set(s.sample.id for s in services))
+        cls.delete_additional_services(services)
         super().delete(services)
         cls.set_shared_fraction(fractions_ids)
         Sample.update_samples_state(sample_ids)
@@ -583,6 +585,16 @@ class Service(ModelSQL, ModelView):
             if service.fraction and service.fraction.confirmed:
                 raise UserError(gettext(
                     'lims.msg_delete_service', service=service.rec_name))
+
+    @classmethod
+    def delete_additional_services(cls, services):
+        services_to_delete = [s.id for s in services]
+        additionals_to_delete = cls.search([
+            ('additional_origin.id', 'in', services_to_delete),
+            ('id', 'not in', services_to_delete),
+            ])
+        if additionals_to_delete:
+            cls.delete(additionals_to_delete)
 
     @staticmethod
     def update_analysis_detail(services):
@@ -751,6 +763,7 @@ class Service(ModelSQL, ModelView):
                             'laboratory': None,
                             'method': None,
                             'device': None,
+                            'additional_origin': service.id,
                             }
 
                 if typification.additionals:
@@ -762,7 +775,9 @@ class Service(ModelSQL, ModelView):
 
                             cursor.execute('SELECT laboratory '
                                 'FROM "' + AnalysisLaboratory._table + '" '
-                                'WHERE analysis = %s', (additional.id,))
+                                'WHERE analysis = %s '
+                                    'AND by_default = TRUE '
+                                'ORDER BY id', (additional.id,))
                             res = cursor.fetchone()
                             laboratory_id = res and res[0] or None
 
@@ -799,6 +814,7 @@ class Service(ModelSQL, ModelView):
                                 'laboratory': laboratory_id,
                                 'method': method_id,
                                 'device': device_id,
+                                'additional_origin': service.id,
                                 }
 
         if aditional_services:
@@ -821,6 +837,7 @@ class Service(ModelSQL, ModelView):
                         'laboratory': service_data['laboratory'],
                         'method': service_data['method'],
                         'device': service_data['device'],
+                        'additional_origin': service_data['additional_origin'],
                         })
             return Service.create(services_default)
 
@@ -880,6 +897,7 @@ class Service(ModelSQL, ModelView):
         if not Transaction().context.get('create_sample', False):
             current_default['report_date'] = None
         current_default['analysis_detail'] = None
+        current_default['additional_origin'] = None
 
         detail_default = {}
         if current_default.get('method', None):

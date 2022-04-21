@@ -5674,6 +5674,10 @@ msgctxt ""
 msgid "Typifications domain"
 msgstr "Dominio para Tipificaciones"
 
+msgctxt "field:lims.service,additional_origin:"
+msgid "Origin of additional"
+msgstr "Origen de adicional"
+
 msgctxt "field:lims.service,analysis:"
 msgid "Analysis/Set/Group"
 msgstr "Análisis/Set/Grupo"
