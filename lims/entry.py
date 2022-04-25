@@ -1184,7 +1184,6 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         Notebook = pool.get('lims.notebook')
         NotebookLine = pool.get('lims.notebook.line')
         Config = pool.get('lims.configuration')
-        Lang = pool.get('ir.lang')
 
         with Transaction().set_user(0):
             notebook, = Notebook.search([('fraction', '=', fraction.id)])
@@ -1292,25 +1291,27 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
 
             # copy translated fields from typification
             default_language = Config(1).results_report_language
-            for lang in Lang.search([
-                    ('translatable', '=', True),
-                    ('code', '!=', default_language.code),
-                    ]):
-                with Transaction().set_context(language=lang.code):
-                    lines_to_save = []
-                    for line in lines:
-                        t = Typification.get_valid_typification(
-                            line.product_type.id, line.matrix.id,
-                            line.analysis.id, line.method.id)
-                        if not t:
-                            continue
-                        line_lang = NotebookLine(line.id)
-                        line_lang.initial_concentration = (
-                            t.initial_concentration)
-                        line_lang.final_concentration = (
-                            t.final_concentration)
-                        lines_to_save.append(line_lang)
-                    NotebookLine.save(lines_to_save)
+            for line in lines:
+                t = Typification.get_valid_typification(
+                    line.product_type.id, line.matrix.id,
+                    line.analysis.id, line.method.id)
+                if not t:
+                    continue
+                for field in ['initial_concentration', 'final_concentration']:
+                    cursor.execute("SELECT lang, src, value "
+                        "FROM ir_translation "
+                        "WHERE name = %s "
+                            "AND res_id = %s "
+                            "AND type = 'model' "
+                            "AND lang != %s",
+                        ('lims.typification,' + field, str(t.id),
+                            default_language.code))
+                    for x in cursor.fetchall():
+                        cursor.execute("INSERT INTO ir_translation "
+                            "(name, res_id, type, lang, src, value) "
+                            "VALUES (%s, %s, 'model', %s, %s, %s)",
+                            ('lims.notebook.line,' + field, str(line.id),
+                                x[0], x[1], x[2]))
 
     @staticmethod
     def default_service_view():
