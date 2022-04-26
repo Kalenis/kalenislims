@@ -81,14 +81,13 @@ def _get_column_name(alias, iteration=None):
 
 def get_column_value(notebook_line, alias, iteration=None):
     pool = Pool()
-    NotebookLine = pool.get('lims.notebook.line')
     Data = pool.get('lims.interface.data')
 
     if not notebook_line or not alias:
         return None
 
-    if isinstance(notebook_line, int):
-        notebook_line = NotebookLine(notebook_line)
+    if not isinstance(notebook_line, int):
+        notebook_line = notebook_line.id
 
     compilation_id = Transaction().context.get('lims_interface_compilation')
     if not compilation_id:
@@ -96,7 +95,7 @@ def get_column_value(notebook_line, alias, iteration=None):
 
     lines = Data.search([
         ('compilation', '=', compilation_id),
-        ('notebook_line', '=', notebook_line.id),
+        ('notebook_line', '=', notebook_line),
         ], limit=1)
     target_line = lines and lines[0] or None
     if not target_line:
