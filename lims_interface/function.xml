@@ -57,6 +57,11 @@
             <field name="parameters">value[float], uom[H,M,S,MS]</field>
             <field name="help">Convert float value to time object, using the provided uom.</field>
         </record>
+        <record model="lims.interface.function" id="function_dateadd">
+            <field name="name">DATEADD</field>
+            <field name="parameters">base_date[date,datetime], value[float,int], uom[MO,W,D,H,M,S]</field>
+            <field name="help">Adds value to the base date, considering the unit of measure. Negative numbers are allowed. If a float month it`s provided, will be treated as int.</field>
+        </record>
 
     </data>
 </tryton>

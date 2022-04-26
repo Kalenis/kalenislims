@@ -9,6 +9,7 @@ from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool
 from trytond.transaction import Transaction
 import datetime
+from dateutil.relativedelta import relativedelta
 
 custom_functions = {}
 
@@ -151,7 +152,7 @@ def to_time(value, uom):
     res = None
     try:
         value = float(value)
-    except (ValueError,TypeError):
+    except (ValueError, TypeError):
         value = False
 
     if type(value) is float and value == 0:
@@ -160,11 +161,45 @@ def to_time(value, uom):
         res = None
     else:
         res = _td_to_time(uoms[uom](value))
-    
+
     return res
 
 
 custom_functions['TOTIME'] = to_time
+
+
+def float_to_delta(value, uom):
+    uoms = {
+        'MO': lambda x: relativedelta(months=x),
+        'W': lambda x: datetime.timedelta(days=x*7),
+        'D': lambda x: datetime.timedelta(days=x),
+        'H': lambda x: datetime.timedelta(hours=x),
+        'M': lambda x: datetime.timedelta(minutes=x),
+        'S': lambda x: datetime.timedelta(seconds=x),
+    }
+    return uoms.get(uom, lambda x: False)(value)
+
+
+def date_add(base_date, value, uom):
+    res = None
+    try:
+        value = float(value)
+    except (ValueError, TypeError):
+        return None
+
+    if not type(base_date) in [datetime.date, datetime.datetime]:
+        return None
+    if type(base_date) is datetime.date and uom in ['H', 'M', 'S']:
+        return base_date
+    # Float is not allowed for month values, because its ambiguos
+    if uom == 'MO':
+        value = int(value)
+    delta = float_to_delta(value, uom)
+    res = base_date + delta if delta else None
+    return res
+
+
+custom_functions['DATEADD'] = date_add
 
 
 def slope(yp, xp):

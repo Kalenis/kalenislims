@@ -22,6 +22,11 @@ from trytond.model.modelsql import convert_from
 from .interface import FIELD_TYPE_TRYTON, FIELD_TYPE_CAST
 import datetime
 
+
+ALLOWED_RESULT_TYPES = (str, int, float, Decimal, datetime.time,
+                        datetime.date, datetime.timedelta, type(None))
+
+
 class Adapter:
     def __getattr__(self, name):
         fields = self.get_fields()
@@ -277,7 +282,7 @@ class Data(ModelSQL, ModelView):
                 raise UserError(e.args[0] % e.args[1:])
             if isinstance(value, list):
                 value = str(value)
-            elif not isinstance(value, (str, int, float, Decimal,datetime.time,datetime.timedelta, type(None))):
+            elif not isinstance(value, ALLOWED_RESULT_TYPES):
                 value = value.tolist()
             if isinstance(value, formulas.tokens.operand.XlError):
                 value = None
@@ -325,7 +330,7 @@ class Data(ModelSQL, ModelView):
                 raise UserError(e.args[0] % e.args[1:])
             if isinstance(value, list):
                 value = str(value)
-            elif not isinstance(value, (str, int, float, Decimal,datetime.time,datetime.timedelta, type(None))):
+            elif not isinstance(value, ALLOWED_RESULT_TYPES):
                 value = value.tolist()
             if isinstance(value, formulas.tokens.operand.XlError):
                 value = None
@@ -718,7 +723,7 @@ class Data(ModelSQL, ModelView):
 
         if isinstance(value, list):
             value = str(value)
-        elif not isinstance(value, (str, int, float, Decimal,datetime.time,datetime.timedelta, type(None))):
+        elif not isinstance(value, ALLOWED_RESULT_TYPES):
             value = value.tolist()
         if isinstance(value, formulas.tokens.operand.XlError):
             value = None
@@ -857,7 +862,7 @@ class GroupedData(ModelView):
 
             if isinstance(value, list):
                 value = str(value)
-            elif not isinstance(value, (str, int, float, Decimal,datetime.time,datetime.timedelta, type(None))):
+            elif not isinstance(value, ALLOWED_RESULT_TYPES):
                 value = value.tolist()
             if isinstance(value, formulas.tokens.operand.XlError):
                 value = None
@@ -887,7 +892,7 @@ class GroupedData(ModelView):
 
             if isinstance(value, list):
                 value = str(value)
-            elif not isinstance(value, (str, int, float, Decimal,datetime.time,datetime.timedelta, type(None))):
+            elif not isinstance(value, ALLOWED_RESULT_TYPES):
                 value = value.tolist()
             if isinstance(value, formulas.tokens.operand.XlError):
                 value = None
