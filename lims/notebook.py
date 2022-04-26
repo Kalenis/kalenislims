@@ -4686,6 +4686,7 @@ class NotebookAddInternalRelations(Wizard):
         return 'end'
 
     def _create_service(self, analysis, fraction):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
         Typification = pool.get('lims.typification')
         Service = pool.get('lims.service')
@@ -4693,18 +4694,36 @@ class NotebookAddInternalRelations(Wizard):
 
         divide, report_grouper = self._get_report_grouper(analysis)
 
-        laboratory_id = (analysis.laboratories[0].laboratory.id if
-            analysis.laboratories else None)
+        laboratory_id = None
+        cursor.execute('SELECT laboratory '
+            'FROM "' + Typification._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s '
+                'AND analysis = %s '
+                'AND valid IS TRUE '
+                'AND by_default IS TRUE '
+                'AND laboratory IS NOT NULL',
+            (fraction.product_type.id, fraction.matrix.id, analysis.id))
+        res = cursor.fetchone()
+        if res:
+            laboratory_id = res[0]
+        if not laboratory_id and analysis.laboratories:
+            for l in analysis.laboratories:
+                if l.by_default is True:
+                    laboratory_id = l.laboratory.id
 
-        typifications = Typification.search([
-            ('product_type', '=', fraction.product_type.id),
-            ('matrix', '=', fraction.matrix.id),
-            ('analysis', '=', analysis.id),
-            ('by_default', '=', True),
-            ('valid', '=', True),
-            ])
-        method_id = (typifications[0].method.id if typifications
-            else None)
+        method_id = None
+        cursor.execute('SELECT method '
+            'FROM "' + Typification._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s '
+                'AND analysis = %s '
+                'AND valid IS TRUE '
+                'AND by_default IS TRUE',
+            (fraction.product_type.id, fraction.matrix.id, analysis.id))
+        res = cursor.fetchone()
+        if res:
+            method_id = res[0]
 
         device_id = None
         if analysis.devices:
