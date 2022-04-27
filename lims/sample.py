@@ -1576,9 +1576,11 @@ class Fraction(ModelSQL, ModelView):
         cls._buttons.update({
             'manage_services': {
                 'invisible': ~Eval('button_manage_services_available'),
+                'readonly': Bool(Eval('context', {}).get('from_entry', False)),
                 },
             'complete_services': {
                 'invisible': ~Eval('button_manage_services_available'),
+                'readonly': Bool(Eval('context', {}).get('from_entry', False)),
                 },
             'confirm': {
                 'invisible': ~Eval('button_confirm_available'),
@@ -1586,6 +1588,7 @@ class Fraction(ModelSQL, ModelView):
             'load_services': {
                 'invisible': Or(Bool(Eval('button_manage_services_available')),
                     Bool(Eval('services'))),
+                'readonly': Bool(Eval('context', {}).get('from_entry', False)),
                 },
             })
 
