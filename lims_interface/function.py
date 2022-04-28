@@ -244,6 +244,30 @@ def date_add(base_date, value, uom):
 custom_functions['DATEADD'] = date_add
 
 
+def date_diff(date_1, date_2, uom, return_delta=False):
+    uoms = {
+        'D': lambda x: x.days,
+        'W': lambda x: round((x.days / 7), 2),
+        'MO': lambda x: round((x.days / 30), 2),
+        'Y': lambda x: round((x.days / 365), 2),
+    }
+    if not date_1 or not date_2 or date_1 < date_2:
+        return None
+    if not type(date_1) is datetime.date or not type(date_2) is datetime.date:
+        return None
+    delta_difference = date_1 - date_2
+    if uom:
+        if uom not in uoms:
+            return None
+        res = uoms[uom](delta_difference)
+    if return_delta:
+        res = delta_difference
+    return res
+
+
+custom_functions['DATEDIFF'] = date_diff
+
+
 def slope(yp, xp):
     items_to_delete = []
     i = 0

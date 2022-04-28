@@ -65,6 +65,11 @@
             <field name="parameters">base_date[date,datetime], value[float,int], uom[MO,W,D,H,M,S]</field>
             <field name="help">Adds value to the base date, considering the unit of measure. Negative numbers are allowed. If a float month it`s provided, will be treated as int.</field>
         </record>
+        <record model="lims.interface.function" id="function_datediff">
+            <field name="name">DATEDIFF</field>
+            <field name="parameters">date_1[date], date_2[date], uom[D,W,MO,W], delta=False</field>
+            <field name="help">Return Diff[int] bewtween date_1 and date_2, expressed in uom. If delta=true, a timedelta object is returned.</field>
+        </record>
 
         <record model="lims.interface.function" id="function_scientific_notation">
             <field name="name">SCIENTIFIC_NOTATION</field>
