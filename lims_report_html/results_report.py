@@ -701,6 +701,8 @@ class ResultReport(metaclass=PoolMeta):
 
         @contextfilter
         def subrender(context, value, subobj=None):
+            if value is None or value == '':
+                return ''
             _template = context.eval_ctx.environment.from_string(value)
             if subobj:
                 new_context = {'subobj': subobj}
