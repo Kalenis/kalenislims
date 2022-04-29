@@ -5738,6 +5738,7 @@ class PlanificationSequenceReport(Report):
                     trace_report = fraction.sample.trace_report
                     sample_client_description = (
                         fraction.sample.sample_client_description)
+                    party = notebook_line.party.name
                     key = (number, product_type, matrix, fraction_type,
                         analysis_origin, priority, trace_report)
                     if key not in objects[date]['methods'][method_id]['lines']:
@@ -5755,6 +5756,7 @@ class PlanificationSequenceReport(Report):
                             'comments': comments,
                             'sample_client_description': (
                                 sample_client_description),
+                            'party': party,
                             }
 
         for k1 in objects.keys():
