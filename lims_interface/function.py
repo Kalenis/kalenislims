@@ -268,6 +268,42 @@ def date_diff(date_1, date_2, uom, return_delta=False):
 custom_functions['DATEDIFF'] = date_diff
 
 
+def get_date_list(dates):
+    date_list = []
+
+    def isValid(date):
+        return isinstance(date, datetime.date) or isinstance(date, datetime.datetime)
+    try:
+        date_list = [date for date in dates[0] if isValid(date)]
+    except IndexError:
+        return date_list
+    return date_list
+
+
+def max_date(dates):
+    res = ""
+    date_list = get_date_list(dates)
+    if len(date_list):
+        res = max(d for d in date_list)
+
+    return res
+
+
+custom_functions['MAXDATE'] = max_date
+
+
+def min_date(dates):
+    res = ""
+    date_list = get_date_list(dates)
+    if len(date_list):
+        res = min(d for d in date_list)
+
+    return res
+
+
+custom_functions['MINDATE'] = min_date
+
+
 def slope(yp, xp):
     items_to_delete = []
     i = 0
