@@ -18,6 +18,7 @@ from trytond.rpc import RPC
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.modules.lims.formula_parser import FormulaParser
+from trytond.modules.lims_interface.data import ALLOWED_RESULT_TYPES
 
 
 class NotebookLine(metaclass=PoolMeta):
@@ -791,8 +792,7 @@ class CalculateExpressions(Wizard):
 
                         if isinstance(value, list):
                             value = str(value)
-                        elif not isinstance(value, (str, int, float, Decimal,
-                                time, timedelta, type(None))):
+                        elif not isinstance(value, ALLOWED_RESULT_TYPES):
                             value = value.tolist()
                         if isinstance(value, formulas.tokens.operand.XlError):
                             value = None
@@ -1321,8 +1321,7 @@ class EditGroupedData(Wizard):
 
                     if isinstance(value, list):
                         value = str(value)
-                    elif not isinstance(value, (str, int, float, Decimal,
-                            time, timedelta, type(None))):
+                    elif not isinstance(value, ALLOWED_RESULT_TYPES):
                         value = value.tolist()
                     if isinstance(value, formulas.tokens.operand.XlError):
                         value = None
@@ -1346,8 +1345,7 @@ class EditGroupedData(Wizard):
 
                             if isinstance(value, list):
                                 value = str(value)
-                            elif not isinstance(value, (str, int, float,
-                                    Decimal, time, timedelta, type(None))):
+                            elif not isinstance(value, ALLOWED_RESULT_TYPES):
                                 value = value.tolist()
                             if isinstance(value,
                                     formulas.tokens.operand.XlError):
@@ -1569,8 +1567,7 @@ class MultiSampleData(ModelView):
 
             if isinstance(value, list):
                 value = str(value)
-            elif not isinstance(value, (str, int, float, Decimal,
-                    time, timedelta, type(None))):
+            elif not isinstance(value, ALLOWED_RESULT_TYPES):
                 value = value.tolist()
             if isinstance(value, formulas.tokens.operand.XlError):
                 value = None
