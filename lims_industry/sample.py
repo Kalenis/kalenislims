@@ -887,6 +887,7 @@ class EditSample(Wizard):
 
             new_entry, = Entry.copy([entry], new_vals)
             new_entry.state = entry.state
+            new_entry.result_cron = entry.result_cron
             new_entry.save()
             Sample.write(samples, {'entry': new_entry.id, 'party': party_id})
 
