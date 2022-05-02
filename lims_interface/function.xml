@@ -67,6 +67,16 @@
             <field name="parameters">date_1[date], date_2[date], uom[D,W,MO,W], delta=False</field>
             <field name="help">Return Diff[int] bewtween date_1 and date_2, expressed in uom. If delta=true, a timedelta object is returned.</field>
         </record>
+        <record model="lims.interface.function" id="function_maxdate">
+            <field name="name">MAXDATE</field>
+            <field name="parameters">{dates} [list of date or datetimes]</field>
+            <field name="help">Returns max date/datetime from {dates}</field>
+        </record>
+        <record model="lims.interface.function" id="function_mindate">
+            <field name="name">MINDATE</field>
+            <field name="parameters">{dates} [list of date or datetimes]</field>
+            <field name="help">Returns min date/datetime from {dates}</field>
+        </record>
 
     </data>
 </tryton>
