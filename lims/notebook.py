@@ -4105,7 +4105,8 @@ class NotebookLoadResultsManualLine(ModelSQL, ModelView):
     'Load Results Manually'
     __name__ = 'lims.notebook.load_results_manual.line'
 
-    line = fields.Many2One('lims.notebook.line', 'Analysis', readonly=True)
+    line = fields.Many2One('lims.notebook.line', 'Analysis', readonly=True,
+        ondelete='CASCADE')
     repetition = fields.Integer('Repetition', readonly=True)
     fraction = fields.Many2One('lims.fraction', 'Fraction', readonly=True)
     result = fields.Char('Result')
