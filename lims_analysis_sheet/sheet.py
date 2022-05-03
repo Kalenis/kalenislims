@@ -396,6 +396,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         ], 'State', required=True, readonly=True)
     planification = fields.Many2One('lims.planification', 'Planification',
         readonly=True)
+    planning_date = fields.Function(fields.Date('Planning Date'),
+        'get_planning_date', searcher='search_planning_date')
     partial_analysys = fields.Function(fields.Boolean('Partial analysis'),
         'get_fields')
     completion_percentage = fields.Function(fields.Numeric('Complete',
@@ -408,6 +410,9 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         file_id='report_cache_id', store_prefix='analysis_sheet')
     report_cache_id = fields.Char('Report ID', readonly=True)
     report_format = fields.Char('Report Format', readonly=True)
+    activated_by = fields.Many2One('lims.laboratory.professional',
+        'Activated By', readonly=True)
+    activated_date = fields.DateTime('Activated Date', readonly=True)
     validated_by = fields.Many2One('lims.laboratory.professional',
         'Validated By', readonly=True)
     validated_date = fields.DateTime('Validated Date', readonly=True)
@@ -488,6 +493,13 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             tables['compilation'] = compilation_tables
         return field.convert_order('date_time', compilation_tables,
             Compilation)
+
+    def get_planning_date(self, name):
+        return self.planification and self.planification.date or None
+
+    @classmethod
+    def search_planning_date(cls, name, clause):
+        return [('planification.date',) + tuple(clause[1:])]
 
     @classmethod
     def get_fields(cls, sheets, names):
@@ -649,6 +661,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     @classmethod
     @ModelView.button
     @Workflow.transition('active')
+    @set_state_info('activated')
     def activate(cls, sheets):
         pool = Pool()
         Data = pool.get('lims.interface.data')
