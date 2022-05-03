@@ -2,6 +2,14 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "field:lims.analysis_sheet,activated_by:"
+msgid "Activated By"
+msgstr "Activada por"
+
+msgctxt "field:lims.analysis_sheet,activated_date:"
+msgid "Activated Date"
+msgstr "Fecha Activación"
+
 msgctxt "field:lims.analysis_sheet,compilation:"
 msgid "Compilation"
 msgstr "Compilación"
@@ -41,6 +49,10 @@ msgstr "Análisis parciales"
 msgctxt "field:lims.analysis_sheet,planification:"
 msgid "Planification"
 msgstr "Planificación"
+
+msgctxt "field:lims.analysis_sheet,planning_date:"
+msgid "Planning Date"
+msgstr "Fecha Planificación"
 
 msgctxt "field:lims.analysis_sheet,professional:"
 msgid "Professional"

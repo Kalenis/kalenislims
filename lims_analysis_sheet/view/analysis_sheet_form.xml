@@ -24,7 +24,13 @@
             <field name="compilation"/>
             <label name="planification"/>
             <field name="planification"/>
+            <label name="planning_date"/>
+            <field name="planning_date"/>
             <separator string="Other Info" id="other" colspan="4"/>
+            <label name="activated_by"/>
+            <field name="activated_by"/>
+            <label name="activated_date"/>
+            <field name="activated_date"/>
             <label name="validated_by"/>
             <field name="validated_by"/>
             <label name="validated_date"/>
