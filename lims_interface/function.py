@@ -281,7 +281,7 @@ def get_date_list(dates):
 
 
 def max_date(dates):
-    res = ""
+    res = None
     date_list = get_date_list(dates)
     if len(date_list):
         res = max(d for d in date_list)
@@ -293,7 +293,7 @@ custom_functions['MAXDATE'] = max_date
 
 
 def min_date(dates):
-    res = ""
+    res = None
     date_list = get_date_list(dates)
     if len(date_list):
         res = min(d for d in date_list)
