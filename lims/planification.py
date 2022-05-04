@@ -5738,7 +5738,7 @@ class PlanificationSequenceReport(Report):
                     trace_report = fraction.sample.trace_report
                     sample_client_description = (
                         fraction.sample.sample_client_description)
-                    party = notebook_line.party.name
+                    party = notebook_line.party.code
                     key = (number, product_type, matrix, fraction_type,
                         analysis_origin, priority, trace_report)
                     if key not in objects[date]['methods'][method_id]['lines']:
