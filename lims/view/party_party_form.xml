@@ -13,6 +13,8 @@
                 <field name="entry_single_sending_report"/>
                 <label name="no_acknowledgment_of_receipt"/>
                 <field name="no_acknowledgment_of_receipt"/>
+                <label name="trace_report"/>
+                <field name="trace_report"/>
             </group>
             <label name="report_language"/>
             <field name="report_language" widget="selection"/>

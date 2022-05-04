@@ -34,6 +34,7 @@ class Party(metaclass=PoolMeta):
     entry_zone = fields.Many2One('lims.zone', 'Entry Zone')
     block_entry_confirmation = fields.Boolean('Block Entry Confirmation')
     carrier = fields.Many2One('carrier', 'Carrier')
+    trace_report = fields.Boolean('Trace report')
 
     @classmethod
     def __setup__(cls):
@@ -101,6 +102,10 @@ class Party(metaclass=PoolMeta):
 
     @staticmethod
     def default_no_acknowledgment_of_receipt():
+        return False
+
+    @staticmethod
+    def default_trace_report():
         return False
 
     def get_results_report_address(self):

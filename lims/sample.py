@@ -2695,6 +2695,10 @@ class Sample(ModelSQL, ModelView):
 
     @staticmethod
     def default_trace_report():
+        Party = Pool().get('party.party')
+        if (Transaction().context.get('party', 0) > 0):
+            party = Party(Transaction().context.get('party'))
+            return party.trace_report
         return False
 
     @staticmethod
@@ -6162,7 +6166,6 @@ class CreateSample(Wizard):
             'date': datetime.now(),
             'restricted_entry': False,
             'zone_required': config_.zone_required,
-            'trace_report': False,
             'storage_time': 3,
             'without_services': False,
             }
@@ -6181,6 +6184,7 @@ class CreateSample(Wizard):
             party_domain = [entry.party.id]
             party_id = entry.party.id
 
+        defaults['trace_report'] = entry.party.trace_report
         if entry.party.entry_zone:
             defaults['zone'] = entry.party.entry_zone.id
 

@@ -6547,6 +6547,10 @@ msgctxt "field:party.party,single_sending_report:"
 msgid "Single sending of report per Sample"
 msgstr "Envío único de Informe por Muestra"
 
+msgctxt "field:party.party,trace_report:"
+msgid "Trace report"
+msgstr "Informar traza"
+
 msgctxt "field:product.uom,maximum_concentration:"
 msgid "Maximum concentration"
 msgstr "Concentración máxima"
