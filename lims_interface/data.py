@@ -2,7 +2,7 @@
 # This file is part of lims_interface module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-from sql import (Table, Column as SqlColumn, Literal,
+from sql import (Table as SqlTable, Column as SqlColumn, Literal,
     Desc, Asc, NullsFirst, NullsLast)
 from sql.aggregate import Count
 import formulas
@@ -660,17 +660,28 @@ class Data(ModelSQL, ModelView):
 
     @classmethod
     def update_formulas(cls, records=None):
-        Column = Pool().get('lims.interface.column')
         cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Compilation = Pool().get('lims.interface.compilation')
+        TableField = pool.get('lims.interface.table.field')
+        Column = pool.get('lims.interface.column')
 
-        table = cls.get_table()
-        sql_table = cls.get_sql_table()
-        interface = cls.get_interface()
+        compilation_id = Transaction().context.get(
+            'lims_interface_compilation')
+        if not compilation_id:
+            return
+
+        compilation = Compilation(compilation_id)
+        table = compilation.table
+        interface = compilation.interface
+        sql_table = SqlTable(table.name)
 
         formula_fields = []
-        for field in table.fields_:
-            if not field.formula:
-                continue
+        fields = TableField.search([
+            ('table', '=', table),
+            ('formula', 'not in', [None, '']),
+            ])
+        for field in fields:
             col = Column.search([
                 ('interface', '=', interface),
                 ('alias', '=', field.name),
@@ -682,6 +693,7 @@ class Data(ModelSQL, ModelView):
                 })
         if not formula_fields:
             return
+        formula_fields = sorted(formula_fields, key=lambda x: x['order'])
 
         if not records:
             records = cls.search([])
@@ -689,7 +701,10 @@ class Data(ModelSQL, ModelView):
             vals = {}
             fields = []
             values = []
-            for field in sorted(formula_fields, key=lambda x: x['order']):
+            for field in formula_fields:
+                for x in (field['field'].inputs or '').split():
+                    if x not in vals:
+                        vals[x] = getattr(record, x)
                 field_name = field['field'].name
                 value = record.get_formula_value(field['field'], vals)
                 if value is None:
@@ -707,9 +722,8 @@ class Data(ModelSQL, ModelView):
     def get_formula_value(self, field, vals={}):
         ast = field.get_ast()
         inputs = []
-        if field.inputs:
-            for x in field.inputs.split():
-                inputs.append(vals.get(x, getattr(self, x)))
+        for x in (field.inputs or '').split():
+            inputs.append(vals.get(x))
         try:
             value = ast(*inputs)
         except schedula.utils.exc.DispatcherError as e:
@@ -781,7 +795,7 @@ class Data(ModelSQL, ModelView):
     def get_sql_table(cls):
         table = cls.get_table()
         if table:
-            return Table(table.name)
+            return SqlTable(table.name)
         return super().__table__()
 
     @classmethod
