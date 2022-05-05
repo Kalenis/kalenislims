@@ -8,6 +8,10 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal
 from sql.conditionals import Case
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 from trytond.model import ModelView, ModelSQL, fields, Unique, DictSchemaMixin
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
@@ -19,6 +23,8 @@ from trytond.report import Report
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.rpc import RPC
+from trytond.config import config as tconfig
+from trytond.tools import get_smtp_server
 
 
 class Zone(ModelSQL, ModelView):
@@ -6818,6 +6824,17 @@ class Referral(ModelSQL, ModelView):
             self.carrier = self.laboratory.carrier
 
     @classmethod
+    def create(cls, vlist):
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+
+        config_ = Config(1)
+        vlist = [x.copy() for x in vlist]
+        for values in vlist:
+            values['number'] = config_.referral_sequence.get()
+        return super().create(vlist)
+
+    @classmethod
     @ModelView.button
     def send(cls, referrals):
         pool = Pool()
@@ -6835,17 +6852,99 @@ class Referral(ModelSQL, ModelView):
             EntryDetailAnalysis.write(details, {'state': 'referred'})
 
         cls.write(referrals, {'state': 'sent', 'sent_date': Date.today()})
+        cls.send_email_laboratory(referrals)
 
     @classmethod
-    def create(cls, vlist):
+    def send_email_laboratory(cls, referrals):
+        from_addr = tconfig.get('email', 'from')
+        if not from_addr:
+            return
+        for referral in referrals:
+            to_addrs = referral.get_mail_recipients()
+            if not to_addrs:
+                continue
+            subject, body = referral.get_mail_subject_body()
+            attachment_data = referral.get_mail_attachment()
+            msg = referral.create_msg(from_addr, to_addrs, subject,
+                body, attachment_data)
+            referral.send_msg(from_addr, to_addrs, msg)
+
+    def get_mail_recipients(self):
+        address = self.laboratory.address_get('delivery')
+        if address:
+            return [address.email]
+        return []
+
+    def get_mail_subject_body(self):
         pool = Pool()
         Config = pool.get('lims.configuration')
+        User = pool.get('res.user')
+        Lang = pool.get('ir.lang')
 
-        vlist = [x.copy() for x in vlist]
-        config = Config(1)
-        for values in vlist:
-            values['number'] = config.referral_sequence.get()
-        return super().create(vlist)
+        config_ = Config(1)
+
+        lang = User(Transaction().user).language
+        if not lang:
+            lang, = Lang.search([
+                    ('code', '=', 'en'),
+                    ], limit=1)
+
+        with Transaction().set_context(language=lang.code):
+            subject = str('%s %s' % (config_.mail_referral_subject,
+                    self.number)).strip()
+            body = str(config_.mail_referral_body)
+
+        return subject, body
+
+    def get_mail_attachment(self):
+        ReferralReport = Pool().get('lims.referral.report', type='report')
+
+        result = ReferralReport.execute([self.id], {})
+        report_format, report_cache = result[:2]
+
+        data = {
+            'content': report_cache,
+            'format': report_format,
+            'mimetype': (report_format == 'pdf' and 'pdf' or
+                'vnd.oasis.opendocument.text'),
+            'filename': '%s.%s' % (str(self.number), str(report_format)),
+            'name': str(self.number),
+            }
+        return data
+
+    def create_msg(self, from_addr, to_addrs, subject, body, attachment_data):
+        if not to_addrs:
+            return None
+
+        msg = MIMEMultipart('mixed')
+        msg['From'] = from_addr
+        msg['To'] = ', '.join(to_addrs)
+        msg['Subject'] = subject
+
+        msg_body = MIMEText('text', 'plain')
+        msg_body.set_payload(body.encode('UTF-8'), 'UTF-8')
+        msg.attach(msg_body)
+
+        attachment = MIMEBase('application', 'octet-stream')
+        attachment.set_payload(attachment_data['content'])
+        encoders.encode_base64(attachment)
+        attachment.add_header('Content-Disposition', 'attachment',
+            filename=attachment_data['filename'])
+        msg.attach(attachment)
+        return msg
+
+    def send_msg(self, from_addr, to_addrs, msg):
+        to_addrs = list(set(to_addrs))
+        success = False
+        try:
+            server = get_smtp_server()
+            server.sendmail(from_addr, to_addrs, msg.as_string())
+            server.quit()
+            success = True
+        except Exception:
+            logging.getLogger('lims').error(
+                'Unable to deliver mail for referral %s' % (self.number))
+        return success
 
 
 class ReferralReport(Report):

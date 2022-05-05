@@ -74,6 +74,12 @@
             <field name="mail_ack_subject" colspan="4"/>
             <field name="mail_ack_body" colspan="4"/>
         </page>
+        <page string="Mail Referral of Samples" id="mail_referral" col="6">
+            <separator string="Email subject of Referral of Samples"
+                colspan="4" id="mail_referral_subject"/>
+            <field name="mail_referral_subject" colspan="4"/>
+            <field name="mail_referral_body" colspan="4"/>
+        </page>
         <page string="Volume Conversion" id="volume_conversion" col="6">
             <label name="brix_digits"/>
             <field name="brix_digits"/>

@@ -229,6 +229,9 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         'Allow to accept the same analysis with different methods')
     results_report_language = fields.Many2One('ir.lang',
         'Results Report Language', domain=[('translatable', '=', True)])
+    mail_referral_subject = fields.Char('Email subject of Referral of Samples',
+        help="A suffix with the referral number will be added to the text")
+    mail_referral_body = fields.Text('Email body of Referral of Samples')
 
     @staticmethod
     def default_brix_digits():
