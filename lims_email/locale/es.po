@@ -30,6 +30,10 @@ msgctxt "field:lims.result_report.format,name:"
 msgid "Name"
 msgstr "Nombre"
 
+msgctxt "field:lims.results_report,mail_attachments:"
+msgid "Attachments"
+msgstr "Adjuntos"
+
 msgctxt "field:lims.results_report,mailings:"
 msgid "Mailings"
 msgstr "Envíos"
@@ -42,6 +46,22 @@ msgctxt "field:lims.results_report,sent_date:"
 msgid "Sent date"
 msgstr "Fecha de enviado"
 
+msgctxt "field:lims.results_report.attachment,data:"
+msgid "File"
+msgstr "Archivo"
+
+msgctxt "field:lims.results_report.attachment,file_id:"
+msgid "File ID"
+msgstr "Identificador del fichero"
+
+msgctxt "field:lims.results_report.attachment,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.results_report.attachment,results_report:"
+msgid "Results Report"
+msgstr "Informe de resultados"
+
 msgctxt "field:lims.results_report.mailing,addresses:"
 msgid "Addresses"
 msgstr "Direcciones"
@@ -53,6 +73,10 @@ msgstr "Fecha"
 msgctxt "field:lims.results_report.mailing,results_report:"
 msgid "Results Report"
 msgstr "Informe de resultados"
+
+msgctxt "field:lims.results_report.version.detail,mail_attachments:"
+msgid "Attachments"
+msgstr "Adjuntos"
 
 msgctxt "field:lims.results_report.version.detail,sent_date:"
 msgid "Sent date"
@@ -121,6 +145,10 @@ msgstr "Enviar Informes de resultados"
 msgctxt "model:lims.result_report.format,name:"
 msgid "Results Report Name Format"
 msgstr "Formato de nombre para Informe de resultados"
+
+msgctxt "model:lims.results_report.attachment,name:"
+msgid "Results Report Attachment"
+msgstr "Adjunto de Informe de resultados"
 
 msgctxt "model:lims.results_report.mailing,name:"
 msgid "Results Report Mailing"

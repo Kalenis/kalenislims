@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<form>
+    <label name="data"/>
+    <field name="data" filename_visible="1"/>
+</form>

@@ -2,16 +2,17 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import logging
+import mimetypes
 from datetime import datetime
-from email import encoders
 from email.mime.base import MIMEBase
-from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
 from string import Template
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.pool import Pool, PoolMeta
+from trytond.pyson import Eval
 from trytond.transaction import Transaction
 from trytond.tools import get_smtp_server
 from trytond.config import config as tconfig
@@ -24,8 +25,26 @@ logger = logging.getLogger(__name__)
 class ResultsReportVersionDetail(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail'
 
+    mail_attachments = fields.Function(fields.One2Many(
+        'lims.results_report.attachment', None, 'Attachments',
+        states={'readonly': Eval('state').in_(['released', 'annulled'])},
+        depends=['state']), 'get_mail_attachments',
+        setter='set_mail_attachments')
     sent_date = fields.Function(fields.DateTime('Sent date'),
        'get_sent_date')
+
+    def get_mail_attachments(self, name=None):
+        attachments = [a.id
+            for a in self.report_version.results_report.mail_attachments]
+        return attachments
+
+    @classmethod
+    def set_mail_attachments(cls, details, name, value):
+        ResultsReport = Pool().get('lims.results_report')
+        if not value:
+            return
+        reports = [d.report_version.results_report for d in details]
+        ResultsReport.write(reports, {'mail_attachments': value})
 
     @classmethod
     def get_sent_date(cls, details, name):
@@ -62,6 +81,8 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
 class ResultsReport(metaclass=PoolMeta):
     __name__ = 'lims.results_report'
 
+    mail_attachments = fields.One2Many('lims.results_report.attachment',
+        'results_report', 'Attachments')
     sent = fields.Boolean('Sent', readonly=True)
     sent_date = fields.DateTime('Sent date', readonly=True)
     mailings = fields.One2Many('lims.results_report.mailing',
@@ -186,6 +207,33 @@ class ResultsReport(metaclass=PoolMeta):
         for key, value in list(substitutions.items()):
             substitutions[key.upper()] = value.upper()
         return substitutions
+
+
+class ResultsReportAttachment(ModelSQL, ModelView):
+    'Results Report Attachment'
+    __name__ = 'lims.results_report.attachment'
+
+    results_report = fields.Many2One('lims.results_report', 'Results Report',
+        required=True, ondelete='CASCADE', select=True)
+    name = fields.Char('Name', required=True)
+    data = fields.Binary('File', filename='name', required=True,
+        file_id='file_id', store_prefix='report_attachment')
+    file_id = fields.Char('File ID', readonly=True)
+
+    def get_attachment_data(self):
+        name = self.name
+        mimetype, _ = mimetypes.guess_type(name)
+        if not mimetype:
+            return
+        extension = mimetypes.guess_extension(mimetype)[1:]
+        data = {
+            'content': self.data,
+            'format': extension,
+            'mimetype': mimetype.split('/')[1],
+            'filename': name,
+            'name': name,
+            }
+        return data
 
 
 class ResultsReportMailing(ModelSQL, ModelView):
@@ -420,6 +468,11 @@ class SendResultsReport(Wizard):
                     group['attachments_data'].append(
                         report.get_attached_report(cache, lang))
 
+                for attachment in report.mail_attachments:
+                    data = attachment.get_attachment_data()
+                    if data:
+                        group['attachments_data'].append(data)
+
                 if group['cie_fraction_type']:
                     group['to_addrs'][email_qa] = 'QA'
                 else:
@@ -586,22 +639,23 @@ class SendResultsReport(Wizard):
         if not to_addrs:
             return None
 
-        msg = MIMEMultipart('mixed')
+        msg = MIMEMultipart()
         msg['From'] = from_addr
         if not hide_recipients:
             msg['To'] = ', '.join(to_addrs)
         msg['Subject'] = subject
 
-        msg_body = MIMEText('text', 'plain')
+        msg_body = MIMEBase('text', 'plain')
         msg_body.set_payload(body.encode('UTF-8'), 'UTF-8')
         msg.attach(msg_body)
 
         for attachment_data in attachments_data:
-            attachment = MIMEBase('application', 'octet-stream')
-            attachment.set_payload(attachment_data['content'])
-            encoders.encode_base64(attachment)
-            attachment.add_header('Content-Disposition', 'attachment',
-                filename=attachment_data['filename'])
+            attachment = MIMEApplication(
+                attachment_data['content'],
+                Name=attachment_data['filename'],
+                _subtype=attachment_data['mimetype'])
+            attachment.add_header('content-disposition', 'attachment',
+                filename=('utf-8', '', attachment_data['filename']))
             msg.attach(attachment)
         return msg
 
