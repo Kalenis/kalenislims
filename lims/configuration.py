@@ -224,6 +224,9 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         ], 'Acceptance of notebook lines')
     notebook_lines_acceptance_method = fields.Boolean(
         'Allow to accept the same analysis with different methods')
+    mail_referral_subject = fields.Char('Email subject of Referral of Samples',
+        help="A suffix with the referral number will be added to the text")
+    mail_referral_body = fields.Text('Email body of Referral of Samples')
 
     @staticmethod
     def default_brix_digits():

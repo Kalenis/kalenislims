@@ -431,6 +431,14 @@ msgctxt "field:lims.configuration,mail_ack_subject:"
 msgid "Email subject of Acknowledgment of Samples Receipt"
 msgstr "Asunto del correo de Acuse de recibo de muestras"
 
+msgctxt "field:lims.configuration,mail_referral_body:"
+msgid "Email body of Referral of Samples"
+msgstr "Cuerpo del correo de Derivación de muestras"
+
+msgctxt "field:lims.configuration,mail_referral_subject:"
+msgid "Email subject of Referral of Samples"
+msgstr "Asunto del correo de Derivación de muestras"
+
 msgctxt "field:lims.configuration,mcl_fraction_type:"
 msgid "MCL fraction type"
 msgstr "Tipo de fracción MCL"
@@ -6757,6 +6765,10 @@ msgstr "De qué Entidad se toman los contactos en el Ingreso"
 msgctxt "help:lims.configuration,mail_ack_subject:"
 msgid "In the text will be added suffix with the entry report number"
 msgstr "En el texto se añadirá sufijo con el número de ingreso del informe"
+
+msgctxt "help:lims.configuration,mail_referral_subject:"
+msgid "A suffix with the referral number will be added to the text"
+msgstr "Se agregará al texto un sufijo con el número de derivación"
 
 msgctxt "help:lims.configuration,samples_in_progress:"
 msgid "Samples allowed for preliminary reports"
@@ -13617,6 +13629,10 @@ msgid "Email body of Acknowledgment of Samples Receipt"
 msgstr "Cuerpo del correo de Acuse de recibo de muestras"
 
 msgctxt "view:lims.configuration:"
+msgid "Email subject of Referral of Samples"
+msgstr "Asunto del correo de Derivación de muestras"
+
+msgctxt "view:lims.configuration:"
 msgid "Fraction Types"
 msgstr "Tipos de fracción"
 
@@ -13627,6 +13643,10 @@ msgstr "General"
 msgctxt "view:lims.configuration:"
 msgid "Mail Acknowledgment of Samples Receipt"
 msgstr "Email Acuse de Muestras"
+
+msgctxt "view:lims.configuration:"
+msgid "Mail Referral of Samples"
+msgstr "Email Derivación de muestras"
 
 msgctxt "view:lims.configuration:"
 msgid "Reagents"
