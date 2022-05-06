@@ -385,18 +385,6 @@
             <field name="group" ref="group_lims_conf_base_tables_admin"/>
         </record>
 
-        <record model="ir.rule.group" id="rule_group_analysis_laboratory">
-            <field name="name">User in laboratory</field>
-            <field name="model" search="[('model', '=', 'lims.analysis-laboratory')]"/>
-            <field name="global_p" eval="True"/>
-        </record>
-        <record model="ir.rule" id="rule_analysis_laboratory">
-            <field name="domain"
-                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
-                pyson="1"/>
-            <field name="rule_group" ref="rule_group_analysis_laboratory"/>
-        </record>
-
         <record model="ir.model.access" id="access_analysis">
             <field name="model" search="[('model', '=', 'lims.analysis')]"/>
             <field name="perm_read" eval="True"/>
@@ -437,18 +425,6 @@
             <field name="model">lims.analysis.device</field>
             <field name="type">tree</field>
             <field name="name">analysis_device_list</field>
-        </record>
-
-        <record model="ir.rule.group" id="rule_group_analysis_device">
-            <field name="name">User in laboratory</field>
-            <field name="model" search="[('model', '=', 'lims.analysis.device')]"/>
-            <field name="global_p" eval="True"/>
-        </record>
-        <record model="ir.rule" id="rule_analysis_device">
-            <field name="domain"
-                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
-                pyson="1"/>
-            <field name="rule_group" ref="rule_group_analysis_device"/>
         </record>
 
 <!-- Analysis Laboratory -->

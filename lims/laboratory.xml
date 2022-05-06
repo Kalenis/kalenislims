@@ -33,18 +33,6 @@
         <menuitem action="act_lims_laboratory_list" id="lims_laboratory_menu"
             parent="lims_config_laboratory" sequence="10"/>
 
-        <record model="ir.rule.group" id="rule_group_laboratory">
-            <field name="name">User in laboratory</field>
-            <field name="model" search="[('model', '=', 'lims.laboratory')]"/>
-            <field name="global_p" eval="True"/>
-        </record>
-        <record model="ir.rule" id="rule_laboratory">
-            <field name="domain"
-                eval="[If(Bool(Eval('user', {}).get('laboratories', False)), ('id', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0))]"
-                pyson="1"/>
-            <field name="rule_group" ref="rule_group_laboratory"/>
-        </record>
-
         <record model="ir.model.access" id="access_laboratory">
             <field name="model" search="[('model', '=', 'lims.laboratory')]"/>
             <field name="perm_read" eval="True"/>
