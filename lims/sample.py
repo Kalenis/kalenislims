@@ -26,6 +26,8 @@ from trytond.rpc import RPC
 from trytond.config import config as tconfig
 from trytond.tools import get_smtp_server
 
+logger = logging.getLogger(__name__)
+
 
 class Zone(ModelSQL, ModelView):
     'Zone/Region'
@@ -2076,7 +2078,6 @@ class Fraction(ModelSQL, ModelView):
         Cron - Confirm Waiting Fractions
         '''
         Move = Pool().get('stock.move')
-        logger = logging.getLogger('lims')
 
         fractions = cls.search([
             ('waiting_confirmation', '=', True),
@@ -2556,12 +2557,11 @@ class Sample(ModelSQL, ModelView):
         super().__register__(module_name)
         if (not qty_lines_pending_exist or
                 not qty_lines_pending_acceptance_exist):
-            logging.getLogger(__name__).info(
-                'Updating Pending lines in Samples...')
+            logger.info('Updating Pending lines in Samples...')
             for sample in cls.search([]):
                 sample.update_qty_lines()
         if not party_exist:
-            logging.getLogger(__name__).info('Updating Party in Samples...')
+            logger.info('Updating Party in Samples...')
             cursor.execute('UPDATE "' + cls._table + '" s '
                 'SET party = e.party FROM '
                 '"' + Entry._table + '" e '
@@ -6009,7 +6009,6 @@ class CreateSample(Wizard):
 
     def transition_create_(self):
         # TODO: Remove logs
-        logger = logging.getLogger(__name__)
         logger.info('-- CreateSample().transition_create_():INIT --')
         Sample = Pool().get('lims.sample')
 
@@ -6630,36 +6629,35 @@ class Referral(ModelSQL, ModelView):
     def send_email_laboratory(cls, referrals):
         from_addr = tconfig.get('email', 'from')
         if not from_addr:
+            logger.error("Missing configuration to send emails")
             return
-        for referral in referrals:
-            to_addrs = referral.get_mail_recipients()
-            if not to_addrs:
-                continue
-            subject, body = referral.get_mail_subject_body()
-            attachment_data = referral.get_mail_attachment()
-            msg = referral.create_msg(from_addr, to_addrs, subject,
-                body, attachment_data)
-            referral.send_msg(from_addr, to_addrs, msg)
 
-    def get_mail_recipients(self):
+        for referral in referrals:
+            to_addrs = referral._get_mail_recipients()
+            if not to_addrs:
+                logger.error("Missing address for '%s' to send email",
+                    referral.laboratory.rec_name)
+                continue
+
+            subject, body = referral._get_mail_subject_body()
+            attachment_data = referral._get_mail_attachment()
+            msg = cls.create_msg(from_addr, to_addrs, subject,
+                body, attachment_data)
+            cls.send_msg(from_addr, to_addrs, msg, referral.number)
+
+    def _get_mail_recipients(self):
         address = self.laboratory.address_get('delivery')
         if address:
             return [address.email]
         return []
 
-    def get_mail_subject_body(self):
+    def _get_mail_subject_body(self):
         pool = Pool()
         Config = pool.get('lims.configuration')
-        User = pool.get('res.user')
         Lang = pool.get('ir.lang')
 
         config_ = Config(1)
-
-        lang = User(Transaction().user).language
-        if not lang:
-            lang, = Lang.search([
-                    ('code', '=', 'en'),
-                    ], limit=1)
+        lang = Lang.get()
 
         with Transaction().set_context(language=lang.code):
             subject = str('%s %s' % (config_.mail_referral_subject,
@@ -6668,7 +6666,7 @@ class Referral(ModelSQL, ModelView):
 
         return subject, body
 
-    def get_mail_attachment(self):
+    def _get_mail_attachment(self):
         ReferralReport = Pool().get('lims.referral.report', type='report')
 
         result = ReferralReport.execute([self.id], {})
@@ -6684,8 +6682,9 @@ class Referral(ModelSQL, ModelView):
             }
         return data
 
-    def create_msg(self, from_addr, to_addrs, subject, body, attachment_data):
-        if not to_addrs:
+    @staticmethod
+    def create_msg(from_addr, to_addrs, subject, body, attachment_data):
+        if not (from_addr and to_addrs):
             return None
 
         msg = MIMEMultipart('mixed')
@@ -6705,7 +6704,8 @@ class Referral(ModelSQL, ModelView):
         msg.attach(attachment)
         return msg
 
-    def send_msg(self, from_addr, to_addrs, msg):
+    @staticmethod
+    def send_msg(from_addr, to_addrs, msg, referral_number):
         to_addrs = list(set(to_addrs))
         success = False
         try:
@@ -6714,8 +6714,8 @@ class Referral(ModelSQL, ModelView):
             server.quit()
             success = True
         except Exception:
-            logging.getLogger('lims').error(
-                'Unable to deliver mail for referral %s' % (self.number))
+            logger.error(
+                "Unable to deliver mail for referral '%s'" % (referral_number))
         return success
 
 
