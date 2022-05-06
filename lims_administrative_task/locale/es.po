@@ -297,6 +297,14 @@ msgctxt "model:ir.message,text:field_task_url"
 msgid "URL"
 msgstr "URL"
 
+msgctxt "model:ir.message,text:lbl_overdue_task_body"
+msgid "Your overdue tasks are listed below:"
+msgstr "Sus tareas atrasadas se listan a continuación:"
+
+msgctxt "model:ir.message,text:lbl_overdue_task_subject"
+msgid "Notice of overdue tasks"
+msgstr "Aviso de tareas atrasadas"
+
 msgctxt "model:ir.message,text:msg_delete_task"
 msgid "You can not delete task \"%(task)s\" because it is not in draft state"
 msgstr ""
@@ -389,6 +397,10 @@ msgstr "Lims Tarea administrativa"
 msgctxt "model:res.group,name:group_administrative_task_admin"
 msgid "Lims Administrative Task Admin"
 msgstr "Lims Tarea administrativa Admin"
+
+msgctxt "selection:ir.cron,method:"
+msgid "Control Overdue Administrative Tasks"
+msgstr "Controlar Tareas administrativas atrasadas"
 
 msgctxt "selection:lims.administrative.task,priority:"
 msgid "High"

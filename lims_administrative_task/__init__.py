@@ -15,6 +15,7 @@ def register():
         task.AdministrativeTask,
         task.EditAdministrativeTaskStart,
         task.AdministrativeTaskProgram,
+        task.Cron,
         department.Department,
         user.User,
         configuration.Configuration,
