@@ -9,13 +9,13 @@ from email.header import Header
 
 from trytond.model import Workflow, ModelSQL, ModelView, fields
 from trytond.pyson import PYSONEncoder, Eval
-from trytond.pool import Pool
+from trytond.pool import Pool, PoolMeta
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
-from trytond.config import config
+from trytond.config import config as tconfig
 from trytond.tools import get_smtp_server
 from trytond.modules.lims_tools.event_creator import EventCreator
 
@@ -333,7 +333,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def send_email_responsible(cls, tasks):
-        from_addr = config.get('email', 'from')
+        from_addr = tconfig.get('email', 'from')
         if not from_addr:
             logger.error("Missing configuration to send emails")
             return
@@ -347,19 +347,19 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
             if task.scheduled:
                 continue
 
-            subject, body = task._get_subject_body()
+            subject, body = task._get_mail_subject_body()
             msg = cls.create_msg(from_addr, to_addr, subject, body)
             cls.send_msg(from_addr, to_addr, msg, task.number)
 
-    def _get_subject_body(self):
+    def _get_mail_subject_body(self):
         pool = Pool()
         Config = pool.get('lims.administrative.task.configuration')
         Lang = pool.get('ir.lang')
 
-        config = Config(1)
+        config_ = Config(1)
         lang = Lang.get()
 
-        subject = str('%s (%s)' % (config.email_responsible_subject,
+        subject = str('%s (%s)' % (config_.email_responsible_subject,
             self.number)).strip()
 
         body = str(self.description)
@@ -382,6 +382,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
             body += '\n%s: %s' % (
                 gettext('lims_administrative_task.field_task_origin'),
                 str(self.origin.rec_name))
+
         return subject, body
 
     def _get_task_url(self):
@@ -399,7 +400,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
 
     @staticmethod
     def create_msg(from_addr, to_addr, subject, body):
-        if not (from_addr or to_addr):
+        if not (from_addr and to_addr):
             return None
 
         msg = MIMEMultipart()
@@ -410,7 +411,6 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         msg_body = MIMEBase('text', 'plain')
         msg_body.set_payload(body.encode('UTF-8'), 'UTF-8')
         msg.attach(msg_body)
-
         return msg
 
     @staticmethod
@@ -425,6 +425,45 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
             logger.error(
                 "Unable to deliver email for task '%s'" % (task_number))
         return success
+
+    @classmethod
+    def control_overdue_tasks(cls):
+        pool = Pool()
+        Date = pool.get('ir.date')
+
+        from_addr = tconfig.get('email', 'from')
+        if not from_addr:
+            logger.error("Missing configuration to send emails")
+            return
+
+        today = Date.today()
+
+        grouped_tasks = {}
+        overdue_tasks = cls.search([
+            ('state', 'in', ['pending', 'rejected', 'ongoing', 'standby']),
+            ('expiration_date', '<', today),
+            ], order=[('expiration_date', 'ASC')])
+        for task in overdue_tasks:
+            key = task.responsible.email
+            if not key:
+                continue
+            if key not in grouped_tasks:
+                grouped_tasks[key] = []
+            grouped_tasks[key].append(task)
+        if not grouped_tasks:
+            return
+
+        subject = gettext('lims_administrative_task.lbl_overdue_task_subject')
+        body = gettext('lims_administrative_task.lbl_overdue_task_body')
+        for to_addr, tasks in grouped_tasks.items():
+            body_ = body + '\n'
+            for task in tasks:
+                body_ += '\n [%s] (%s) %s' % (
+                    task.expiration_date.strftime('%d/%m/%Y'),
+                    task.number, task.description)
+            body_ += '\n\nTotal: %s' % len(tasks)
+            msg = cls.create_msg(from_addr, to_addr, subject, body_)
+            cls.send_msg(from_addr, to_addr, msg, task.number)
 
 
 class EditAdministrativeTaskStart(ModelView):
@@ -577,3 +616,15 @@ class GenerateAdministrativeTask(Wizard):
 
     def transition_open(self):
         return 'end'
+
+
+class Cron(metaclass=PoolMeta):
+    __name__ = 'ir.cron'
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls.method.selection.extend([
+            ('lims.administrative.task|control_overdue_tasks',
+                'Control Overdue Administrative Tasks'),
+            ])

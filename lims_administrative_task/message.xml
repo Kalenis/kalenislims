@@ -7,6 +7,12 @@
         <record model="ir.message" id="msg_no_task_sequence">
             <field name="text">There is no task sequence configured</field>
         </record>
+        <record model="ir.message" id="lbl_overdue_task_subject">
+            <field name="text">Notice of overdue tasks</field>
+        </record>
+        <record model="ir.message" id="lbl_overdue_task_body">
+            <field name="text">Your overdue tasks are listed below:</field>
+        </record>
         <record model="ir.message" id="field_task_number">
             <field name="text">Task Number</field>
         </record>
