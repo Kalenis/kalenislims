@@ -10,7 +10,10 @@ from trytond.pyson import Eval
 class Analysis(metaclass=PoolMeta):
     __name__ = 'lims.analysis'
 
-    result_template = fields.Many2One('lims.result_report.template',
-        'Report Template', domain=[('type', 'in', [None, 'base'])],
+    result_template = fields.Many2One('lims.report.template',
+        'Report Template', domain=[
+            ('report_name', '=', 'lims.result_report'),
+            ('type', 'in', [None, 'base']),
+            ],
         states={'readonly': Eval('type') != 'group'},
         depends=['type'])

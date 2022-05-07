@@ -10,7 +10,7 @@ class Fraction(metaclass=PoolMeta):
     __name__ = 'lims.fraction'
 
     result_template = fields.Function(fields.Many2One(
-        'lims.result_report.template', 'Report Template'), 'get_sample_field')
+        'lims.report.template', 'Report Template'), 'get_sample_field')
 
     def _order_sample_field(name):
         def order_field(tables):
@@ -32,8 +32,11 @@ class Fraction(metaclass=PoolMeta):
 class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
 
-    result_template = fields.Many2One('lims.result_report.template',
-        'Report Template', domain=[('type', 'in', [None, 'base'])])
+    result_template = fields.Many2One('lims.report.template',
+        'Report Template', domain=[
+            ('report_name', '=', 'lims.result_report'),
+            ('type', 'in', [None, 'base']),
+            ])
     resultrange_origin = fields.Many2One('lims.range.type', 'Comparison range',
         domain=[('use', '=', 'result_range')])
 
@@ -47,8 +50,11 @@ class Sample(metaclass=PoolMeta):
 class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
 
-    result_template = fields.Many2One('lims.result_report.template',
-        'Report Template', domain=[('type', 'in', [None, 'base'])])
+    result_template = fields.Many2One('lims.report.template',
+        'Report Template', domain=[
+            ('report_name', '=', 'lims.result_report'),
+            ('type', 'in', [None, 'base']),
+            ])
     resultrange_origin = fields.Many2One('lims.range.type', 'Comparison range',
         domain=[('use', '=', 'result_range')])
 

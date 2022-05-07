@@ -2,6 +2,7 @@
 <data>
     <xpath expr="/form/group[@id='append_samples']" position="after">
         <label name="template"/>
-        <field name="template"/>
+        <field name="template"
+            view_ids="lims_report_html.result_template_view_list,lims_report_html.result_template_view_form"/>
     </xpath>
 </data>

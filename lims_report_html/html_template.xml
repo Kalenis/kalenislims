@@ -2,73 +2,76 @@
 <tryton>
     <data>
 
-<!-- Results Report Template -->
-
-        <record model="ir.ui.view" id="template_view_form">
-            <field name="model">lims.result_report.template</field>
-            <field name="type">form</field>
-            <field name="name">template_form</field>
-        </record>
-        <record model="ir.ui.view" id="template_view_list">
-            <field name="model">lims.result_report.template</field>
-            <field name="type">tree</field>
-            <field name="name">template_list</field>
-        </record>
-
-        <record model="ir.action.act_window" id="act_html_template_list">
-            <field name="name">Results Report Templates</field>
-            <field name="res_model">lims.result_report.template</field>
-        </record>
-        <record model="ir.action.act_window.view" id="act_html_template_view_list">
-            <field name="sequence" eval="10"/>
-            <field name="view" ref="template_view_list"/>
-            <field name="act_window" ref="act_html_template_list"/>
-        </record>
-        <record model="ir.action.act_window.view" id="act_html_template_view_form">
-            <field name="sequence" eval="20"/>
-            <field name="view" ref="template_view_form"/>
-            <field name="act_window" ref="act_html_template_list"/>
-        </record>
-
-        <menuitem action="act_html_template_list"
-            id="menu_html_template_list"
-            parent="lims.lims_config_report" sequence="10"/>
-
-<!-- Results Report Template Translation -->
+<!-- Report Template Translation -->
 
         <record model="ir.ui.view" id="template_translation_view_form">
-            <field name="model">lims.result_report.template.translation</field>
+            <field name="model">lims.report.template.translation</field>
             <field name="type">form</field>
             <field name="name">template_translation_form</field>
         </record>
         <record model="ir.ui.view" id="template_translation_view_list">
-            <field name="model">lims.result_report.template.translation</field>
+            <field name="model">lims.report.template.translation</field>
             <field name="type">tree</field>
             <field name="name">template_translation_list</field>
         </record>
 
-<!-- Results Report Template Section -->
+<!-- Report Template Section -->
 
         <record model="ir.ui.view" id="template_section_view_form">
-            <field name="model">lims.result_report.template.section</field>
+            <field name="model">lims.report.template.section</field>
             <field name="type">form</field>
             <field name="name">template_section_form</field>
         </record>
         <record model="ir.ui.view" id="template_section_view_list">
-            <field name="model">lims.result_report.template.section</field>
+            <field name="model">lims.report.template.section</field>
             <field name="type">tree</field>
             <field name="name">template_section_list</field>
         </record>
 
+<!-- Results Report Template -->
+
+        <record model="ir.ui.view" id="result_template_view_form">
+            <field name="model">lims.report.template</field>
+            <field name="type">form</field>
+            <field name="name">result_template_form</field>
+        </record>
+        <record model="ir.ui.view" id="result_template_view_list">
+            <field name="model">lims.report.template</field>
+            <field name="type">tree</field>
+            <field name="name">result_template_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_result_template_list">
+            <field name="name">Results Report Templates</field>
+            <field name="res_model">lims.report.template</field>
+            <field name="domain" pyson="1"
+                eval="[('report_name', '=', 'lims.result_report')]"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_result_template_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="result_template_view_list"/>
+            <field name="act_window" ref="act_result_template_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_result_template_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="result_template_view_form"/>
+            <field name="act_window" ref="act_result_template_list"/>
+        </record>
+
+        <menuitem action="act_result_template_list"
+            id="menu_result_template_list"
+            parent="lims.lims_config_report" sequence="10"
+            icon="tryton-list"/>
+
 <!-- Results Report Template Trend Chart -->
 
         <record model="ir.ui.view" id="template_trend_chart_view_form">
-            <field name="model">lims.result_report.template.trend.chart</field>
+            <field name="model">lims.report.template.trend.chart</field>
             <field name="type">form</field>
             <field name="name">template_trend_chart_form</field>
         </record>
         <record model="ir.ui.view" id="template_trend_chart_view_list">
-            <field name="model">lims.result_report.template.trend.chart</field>
+            <field name="model">lims.report.template.trend.chart</field>
             <field name="type">tree</field>
             <field name="name">template_trend_chart_list</field>
         </record>

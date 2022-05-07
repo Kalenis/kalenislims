@@ -4,6 +4,7 @@
         expr="/form/notebook/page[@id='general']/field[@name='results_report_language']"
         position="after">
         <label name="result_template"/>
-        <field name="result_template"/>
+        <field name="result_template"
+            view_ids="lims_report_html.result_template_view_list,lims_report_html.result_template_view_form"/>
     </xpath>
 </data>

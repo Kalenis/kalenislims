@@ -24,7 +24,7 @@ def register():
         html_template.DiagnosisStateImage,
         html_template.DiagnosisTemplate,
         html_template.DiagnosisTemplateState,
-        html_template.ReportTemplate,
+        html_template.ResultsReportTemplate,
         sample.Fraction,
         sample.Sample,
         sample.CreateSampleStart,

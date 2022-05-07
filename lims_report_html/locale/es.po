@@ -38,111 +38,115 @@ msgctxt "field:lims.notebook.generate_results_report.start,template:"
 msgid "Report Template"
 msgstr "Plantilla de Informe"
 
-msgctxt "field:lims.result_report.template,charts_x_row:"
+msgctxt "field:lims.report.template,charts_x_row:"
 msgid "Charts per Row"
 msgstr "Gráficos por fila"
 
-msgctxt "field:lims.result_report.template,content:"
+msgctxt "field:lims.report.template,content:"
 msgid "Content"
 msgstr "Contenido"
 
-msgctxt "field:lims.result_report.template,following_sections:"
+msgctxt "field:lims.report.template,following_sections:"
 msgid "Following Sections"
 msgstr "Secciones siguientes"
 
-msgctxt "field:lims.result_report.template,footer:"
+msgctxt "field:lims.report.template,footer:"
 msgid "Footer"
 msgstr "Pie de página"
 
-msgctxt "field:lims.result_report.template,header:"
+msgctxt "field:lims.report.template,header:"
 msgid "Header"
 msgstr "Encabezado"
 
-msgctxt "field:lims.result_report.template,name:"
+msgctxt "field:lims.report.template,name:"
 msgid "Name"
 msgstr "Nombre"
 
-msgctxt "field:lims.result_report.template,page_orientation:"
+msgctxt "field:lims.report.template,page_orientation:"
 msgid "Page orientation"
 msgstr "Orientación de la página"
 
-msgctxt "field:lims.result_report.template,previous_sections:"
+msgctxt "field:lims.report.template,previous_sections:"
 msgid "Previous Sections"
 msgstr "Secciones anteriores"
 
-msgctxt "field:lims.result_report.template,report:"
+msgctxt "field:lims.report.template,report:"
 msgid "Report"
 msgstr "Informe"
 
-msgctxt "field:lims.result_report.template,resultrange_origin:"
+msgctxt "field:lims.report.template,report_name:"
+msgid "Internal Name"
+msgstr "Nombre interno"
+
+msgctxt "field:lims.report.template,resultrange_origin:"
 msgid "Comparison range"
 msgstr "Rango de comparación"
 
-msgctxt "field:lims.result_report.template,sections:"
+msgctxt "field:lims.report.template,sections:"
 msgid "Sections"
 msgstr "Secciones"
 
-msgctxt "field:lims.result_report.template,translations:"
+msgctxt "field:lims.report.template,translations:"
 msgid "Translations"
 msgstr "Traducciones"
 
-msgctxt "field:lims.result_report.template,trend_charts:"
+msgctxt "field:lims.report.template,trend_charts:"
 msgid "Trend Charts"
 msgstr "Gráficos de tendencia"
 
-msgctxt "field:lims.result_report.template,type:"
+msgctxt "field:lims.report.template,type:"
 msgid "Type"
 msgstr "Tipo"
 
-msgctxt "field:lims.result_report.template.section,data:"
+msgctxt "field:lims.report.template.section,data:"
 msgid "File"
 msgstr "Archivo"
 
-msgctxt "field:lims.result_report.template.section,data_id:"
+msgctxt "field:lims.report.template.section,data_id:"
 msgid "File ID"
 msgstr "ID Archivo"
 
-msgctxt "field:lims.result_report.template.section,name:"
+msgctxt "field:lims.report.template.section,name:"
 msgid "Name"
 msgstr "Nombre"
 
-msgctxt "field:lims.result_report.template.section,order:"
+msgctxt "field:lims.report.template.section,order:"
 msgid "Order"
 msgstr "Orden"
 
-msgctxt "field:lims.result_report.template.section,position:"
+msgctxt "field:lims.report.template.section,position:"
 msgid "Position"
 msgstr "Posición"
 
-msgctxt "field:lims.result_report.template.section,template:"
+msgctxt "field:lims.report.template.section,template:"
 msgid "Template"
 msgstr "Plantilla"
 
-msgctxt "field:lims.result_report.template.translation,lang:"
+msgctxt "field:lims.report.template.translation,lang:"
 msgid "Language"
 msgstr "Idioma"
 
-msgctxt "field:lims.result_report.template.translation,src:"
+msgctxt "field:lims.report.template.translation,src:"
 msgid "Source"
 msgstr "Original"
 
-msgctxt "field:lims.result_report.template.translation,template:"
+msgctxt "field:lims.report.template.translation,template:"
 msgid "Template"
 msgstr "Plantilla"
 
-msgctxt "field:lims.result_report.template.translation,value:"
+msgctxt "field:lims.report.template.translation,value:"
 msgid "Translation Value"
 msgstr "Traducción"
 
-msgctxt "field:lims.result_report.template.trend.chart,chart:"
+msgctxt "field:lims.report.template.trend.chart,chart:"
 msgid "Trend Chart"
 msgstr "Gráfico de tendencia"
 
-msgctxt "field:lims.result_report.template.trend.chart,order:"
+msgctxt "field:lims.report.template.trend.chart,order:"
 msgid "Order"
 msgstr "Orden"
 
-msgctxt "field:lims.result_report.template.trend.chart,template:"
+msgctxt "field:lims.report.template.trend.chart,template:"
 msgid "Template"
 msgstr "Plantilla"
 
@@ -150,7 +154,7 @@ msgctxt "field:lims.results_report.version.detail,charts_x_row:"
 msgid "Charts per Row"
 msgstr "Gráficos por fila"
 
-msgctxt "field:lims.results_report.version.detail,comments_html:"
+msgctxt "field:lims.results_report.version.detail,comments_plain:"
 msgid "Comments"
 msgstr "Observaciones"
 
@@ -234,11 +238,11 @@ msgctxt "field:party.party,result_template:"
 msgid "Report Template"
 msgstr "Plantilla de Informe"
 
-msgctxt "model:ir.action,name:act_html_template_list"
+msgctxt "model:ir.action,name:act_result_template_list"
 msgid "Results Report Templates"
 msgstr "Plantillas de Informe de resultados"
 
-msgctxt "model:ir.action,name:report_result_report"
+msgctxt "model:ir.action,name:report_result_report_html"
 msgid "Results Report"
 msgstr "Informe de resultados"
 
@@ -250,6 +254,10 @@ msgctxt "model:ir.message,text:msg_no_template"
 msgid "The report has no template"
 msgstr "El informe no tiene ninguna plantilla"
 
+msgctxt "model:ir.message,text:msg_print_multiple_record"
+msgid "Please, select only one record to print"
+msgstr "Por favor, seleccione un solo registro para imprimir"
+
 msgctxt "model:ir.message,text:msg_section_pdf"
 msgid "Section files must be in PDF format"
 msgstr "Los archivos de secciones deben ser PDF"
@@ -258,23 +266,23 @@ msgctxt "model:ir.message,text:msg_yes"
 msgid "Yes"
 msgstr "Sí"
 
-msgctxt "model:ir.ui.menu,name:menu_html_template_list"
+msgctxt "model:ir.ui.menu,name:menu_result_template_list"
 msgid "Results Report Templates"
 msgstr "Plantillas de Informe"
 
-msgctxt "model:lims.result_report.template,name:"
-msgid "Results Report Template"
-msgstr "Plantilla de Informe de resultados"
+msgctxt "model:lims.report.template,name:"
+msgid "Report Template"
+msgstr "Plantilla de Informe"
 
-msgctxt "model:lims.result_report.template.section,name:"
-msgid "Results Report Template Section"
-msgstr "Sección de Plantilla de Informe de resultados"
+msgctxt "model:lims.report.template.section,name:"
+msgid "Report Template Section"
+msgstr "Sección de Plantilla de Informe"
 
-msgctxt "model:lims.result_report.template.translation,name:"
-msgid "Results Report Template Translation"
-msgstr "Traducción de Plantilla de Informe de resultados"
+msgctxt "model:lims.report.template.translation,name:"
+msgid "Report Template Translation"
+msgstr "Traducción de Plantilla de Informe"
 
-msgctxt "model:lims.result_report.template.trend.chart,name:"
+msgctxt "model:lims.report.template.trend.chart,name:"
 msgid "Results Report Template Trend Chart"
 msgstr "Gráfico de tendencia de Plantilla de Informe de resultados"
 
@@ -286,39 +294,39 @@ msgctxt "model:lims.results_report.version.detail.trend.chart,name:"
 msgid "Results Report Version Detail Trend Chart"
 msgstr "Gráfico de tendencia de Detalle de versión de Informe de resultados"
 
-msgctxt "selection:lims.result_report.template,charts_x_row:"
+msgctxt "selection:lims.report.template,charts_x_row:"
 msgid "1"
 msgstr "1"
 
-msgctxt "selection:lims.result_report.template,charts_x_row:"
+msgctxt "selection:lims.report.template,charts_x_row:"
 msgid "2"
 msgstr "2"
 
-msgctxt "selection:lims.result_report.template,page_orientation:"
+msgctxt "selection:lims.report.template,page_orientation:"
 msgid "Landscape"
 msgstr "Horizontal"
 
-msgctxt "selection:lims.result_report.template,page_orientation:"
+msgctxt "selection:lims.report.template,page_orientation:"
 msgid "Portrait"
 msgstr "Vertical"
 
-msgctxt "selection:lims.result_report.template,type:"
+msgctxt "selection:lims.report.template,type:"
 msgid "HTML"
 msgstr "HTML"
 
-msgctxt "selection:lims.result_report.template,type:"
+msgctxt "selection:lims.report.template,type:"
 msgid "HTML - Footer"
 msgstr "HTML - Pie de página"
 
-msgctxt "selection:lims.result_report.template,type:"
+msgctxt "selection:lims.report.template,type:"
 msgid "HTML - Header"
 msgstr "HTML - Encabezado"
 
-msgctxt "selection:lims.result_report.template.section,position:"
+msgctxt "selection:lims.report.template.section,position:"
 msgid "Following"
 msgstr "Siguiente"
 
-msgctxt "selection:lims.result_report.template.section,position:"
+msgctxt "selection:lims.report.template.section,position:"
 msgid "Previous"
 msgstr "Anterior"
 
@@ -354,7 +362,7 @@ msgctxt "view:lims.analysis:"
 msgid "Report"
 msgstr "Informe"
 
-msgctxt "view:lims.result_report.template:"
+msgctxt "view:lims.report.template:"
 msgid "Header and Footer"
 msgstr "Encabezado y Pie de página"
 

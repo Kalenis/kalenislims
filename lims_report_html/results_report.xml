@@ -43,13 +43,13 @@
 
 <!-- Results Report -->
 
-        <record model="ir.action.report" id="report_result_report">
+        <record model="ir.action.report" id="report_result_report_html">
             <field name="name">Results Report</field>
             <field name="model">lims.results_report.version.detail</field>
             <field name="report_name">lims.result_report</field>
             <field name="report">lims_report_html/report/results_report.html</field>
             <field name="extension">pdf</field>
-            <field name="template_extension">results</field>
+            <field name="template_extension">lims</field>
         </record>
 
 <!-- Wizard Generate Results Report -->

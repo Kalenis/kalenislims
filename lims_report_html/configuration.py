@@ -9,5 +9,8 @@ from trytond.pool import PoolMeta
 class Configuration(metaclass=PoolMeta):
     __name__ = 'lims.configuration'
 
-    result_template = fields.Many2One('lims.result_report.template',
-        'Default Report Template', domain=[('type', 'in', [None, 'base'])])
+    result_template = fields.Many2One('lims.report.template',
+        'Default Report Template', domain=[
+            ('report_name', '=', 'lims.result_report'),
+            ('type', 'in', [None, 'base']),
+            ])

@@ -110,7 +110,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     def _get_fields_from_samples(cls, samples, generate_report_form=None):
         pool = Pool()
         Notebook = pool.get('lims.notebook')
-        ReportTemplate = pool.get('lims.result_report.template')
+        ReportTemplate = pool.get('lims.report.template')
 
         detail_default = super()._get_fields_from_samples(samples,
             generate_report_form)
@@ -476,7 +476,8 @@ class SamplesComparatorLine(ModelSQL, ModelView):
             result[name] = {}
             if name == 'result':
                 for l in lines:
-                    result[name][l.id] = l.notebook_line.formated_result
+                    result[name][l.id] = (
+                        l.notebook_line.get_formated_result())
             elif name == 'converted_result':
                 for l in lines:
                     result[name][l.id] = (
@@ -514,7 +515,7 @@ class SamplesComparatorLine(ModelSQL, ModelView):
             ])
         if not notebook_line:
             return None
-        return notebook_line[0].formated_result
+        return notebook_line[0].get_formated_result()
 
 
 class Cron(metaclass=PoolMeta):
@@ -533,8 +534,8 @@ class ResultReport(metaclass=PoolMeta):
     __name__ = 'lims.result_report'
 
     @classmethod
-    def get_context(cls, records, header, data):
-        report_context = super().get_context(records, header, data)
+    def get_context(cls, records, data):
+        report_context = super().get_context(records, data)
         report_context['state_image'] = cls.get_state_image
         return report_context
 
