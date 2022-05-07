@@ -278,7 +278,7 @@ class EquipmentTemplateComponentKind(ModelSQL, ModelView):
     @classmethod
     def __register__(cls, module_name):
         cursor = Transaction().connection.cursor()
-        TableHandler = backend.get('TableHandler')
+        TableHandler = backend.TableHandler
         sql_table = cls.__table__()
         super().__register__(module_name)
         old_table_name = 'lims_equipment_template_component_type'
