@@ -1633,34 +1633,53 @@ class TrendChart(ModelSQL, ModelView):
         df = pd.DataFrame(ds, index=index)
         df = df.reindex(cols.values(), axis=1)
         try:
-            df = df.interpolate()
+            df_interpolated = df.interpolate()
         except TypeError:
             pass
         if ds2:
             df2 = pd.DataFrame(ds2, index=index)
             df2 = df2.reindex(cols_y2.values(), axis=1)
             try:
-                df2 = df2.interpolate()
+                df2_interpolated = df2.interpolate()
             except TypeError:
                 pass
 
         output = BytesIO()
         try:
             with plt.rc_context(rc={'figure.max_open_warning': 0}):
-                ax = df.plot(kind='line', rot=45, fontsize=7,
-                    figsize=(10, 7.5), marker='o', linestyle='-')
+                ax = df_interpolated.plot(kind='line',
+                    rot=45, fontsize=7, figsize=(10, 7.5),
+                    linestyle='-', marker=None, legend=None)
+                ax = df.plot(kind='line',
+                    rot=45, fontsize=7, figsize=(10, 7.5),
+                    linestyle='', marker='o', color='black',
+                    legend=None, ax=ax)
                 ax.set_xlabel(self.x_axis_string)
                 if self.uom:
                     ax.set_ylabel(self.uom.symbol)
                 if ds2:
                     try:
-                        ax = df2.plot(kind='line', rot=45, fontsize=7,
-                            figsize=(10, 7.5), marker='o', linestyle='-',
+                        ax = df2_interpolated.plot(kind='line',
+                            rot=45, fontsize=7, figsize=(10, 7.5),
+                            linestyle='-', marker=None, legend=None,
                             secondary_y=True, ax=ax)
+                        ax = df2.plot(kind='line',
+                            rot=45, fontsize=7, figsize=(10, 7.5),
+                            linestyle='', marker='o', color='black',
+                            legend=None, secondary_y=True, ax=ax)
                         if self.uom_y2:
                             ax.set_ylabel(self.uom_y2.symbol)
                     except TypeError:
                         pass
+
+                handles, labels = [], []
+                for ax in ax.figure.axes:
+                    for h, l in zip(*ax.get_legend_handles_labels()):
+                        if l in labels:
+                            continue
+                        handles.append(h)
+                        labels.append(l)
+                ax.legend(handles, labels)
 
                 ax.get_figure().savefig(output, bbox_inches='tight', dpi=300)
                 image = output.getvalue()
@@ -1670,12 +1689,26 @@ class TrendChart(ModelSQL, ModelView):
         except (TypeError, ModuleNotFoundError):
             if ds2:
                 try:
-                    ax = df2.plot(kind='line', rot=45, fontsize=7,
-                        figsize=(10, 7.5), marker='o', linestyle='-',
+                    ax = df2_interpolated.plot(kind='line',
+                        rot=45, fontsize=7, figsize=(10, 7.5),
+                        linestyle='-', marker=None, legend=None,
                         secondary_y=True)
+                    ax = df2.plot(kind='line',
+                        rot=45, fontsize=7, figsize=(10, 7.5),
+                        linestyle='', marker='o', color='black',
+                        legend=None, secondary_y=True, ax=ax)
                     ax.set_xlabel(self.x_axis_string)
                     if self.uom_y2:
                         ax.set_ylabel(self.uom_y2.symbol)
+
+                    handles, labels = [], []
+                    for ax in ax.figure.axes:
+                        for h, l in zip(*ax.get_legend_handles_labels()):
+                            if l in labels:
+                                continue
+                            handles.append(h)
+                            labels.append(l)
+                    ax.legend(handles, labels)
 
                     ax.get_figure().savefig(output, bbox_inches='tight',
                         dpi=300)
