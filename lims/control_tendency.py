@@ -1577,14 +1577,16 @@ class TrendChart(ModelSQL, ModelView):
                     except TypeError:
                         pass
 
-                handles, labels = [], []
-                for ax in ax.figure.axes:
-                    for h, l in zip(*ax.get_legend_handles_labels()):
+                loc, i = ['upper left', 'upper right'], 0
+                for axis in ax.figure.axes:
+                    handles, labels = [], []
+                    for h, l in zip(*axis.get_legend_handles_labels()):
                         if l in labels:
                             continue
                         handles.append(h)
                         labels.append(l)
-                ax.legend(handles, labels)
+                    axis.legend(handles, labels, loc=loc[i])
+                    i += 1
 
                 ax.get_figure().savefig(output, bbox_inches='tight', dpi=300)
                 image = output.getvalue()
@@ -1606,14 +1608,16 @@ class TrendChart(ModelSQL, ModelView):
                     if self.uom_y2:
                         ax.set_ylabel(self.uom_y2.symbol)
 
-                    handles, labels = [], []
-                    for ax in ax.figure.axes:
-                        for h, l in zip(*ax.get_legend_handles_labels()):
+                    loc, i = ['upper left', 'upper right'], 0
+                    for axis in ax.figure.axes:
+                        handles, labels = [], []
+                        for h, l in zip(*axis.get_legend_handles_labels()):
                             if l in labels:
                                 continue
                             handles.append(h)
                             labels.append(l)
-                    ax.legend(handles, labels)
+                        axis.legend(handles, labels, loc=loc[i])
+                        i += 1
 
                     ax.get_figure().savefig(output, bbox_inches='tight',
                         dpi=300)
