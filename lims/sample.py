@@ -3793,7 +3793,13 @@ class ManageServices(Wizard):
         delete_ack_report_cache = False
         fraction = Fraction(Transaction().context['active_id'])
 
-        actual_services = self.start.services
+        actual_services_ids = [s.id for s in self.start.services]
+        actual_services = []
+        for s in self.start.services:
+            if (s.additional_origin and
+                    s.additional_origin.id not in actual_services_ids):
+                continue
+            actual_services.append(s)
         original_services = [s for s in fraction.services if
             s.manage_service_available]
         services_to_delete = []
@@ -3826,23 +3832,6 @@ class ManageServices(Wizard):
             entry.ack_report_format = None
             entry.ack_report_cache = None
             entry.save()
-
-        original_services = [s for s in fraction.services if not s.planned]
-        actual_services = self.start.services
-
-        for original_service in original_services:
-            for actual_service in actual_services:
-                if original_service == actual_service:
-                    update_cie_data = True
-                    for field in ('analysis', 'laboratory', 'method',
-                            'device'):
-                        if (getattr(original_service, field) !=
-                                getattr(actual_service, field)):
-                            update_cie_data = False
-                            break
-                    if update_cie_data:
-                        for detail in actual_service.analysis_detail:
-                            detail.save()
 
         if self._send_ack_of_receipt():
             return 'send_ack_of_receipt'
