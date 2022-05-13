@@ -1635,14 +1635,14 @@ class TrendChart(ModelSQL, ModelView):
         try:
             df_interpolated = df.interpolate()
         except TypeError:
-            pass
+            df_interpolated = df
         if ds2:
             df2 = pd.DataFrame(ds2, index=index)
             df2 = df2.reindex(cols_y2.values(), axis=1)
             try:
                 df2_interpolated = df2.interpolate()
             except TypeError:
-                pass
+                df2_interpolated = df2
 
         output = BytesIO()
         try:
