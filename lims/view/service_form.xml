@@ -61,5 +61,6 @@
     </notebook>
     <group colspan="4" id="invisible_fields">
         <field name="typification_domain"/>
+        <field name="additional_origin"/>
     </group>
 </form>
