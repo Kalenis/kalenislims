@@ -40,5 +40,11 @@
             <field name="help">Obtains the value of a given field (by default the result field) for an indicated analysis, from the laboratory notebook.</field>
         </record>
 
+        <record model="lims.interface.function" id="function_reference">
+            <field name="name">REFERENCE_VALUE</field>
+            <field name="parameters">fraction_type, product_type, matrix, analysis, target_field</field>
+            <field name="help">Obtains the value of a given field ('id', 'result' or alias) for the line matching 'fraction type', 'product type', 'matrix' and 'analysis' indicated.</field>
+        </record>
+
     </data>
 </tryton>
