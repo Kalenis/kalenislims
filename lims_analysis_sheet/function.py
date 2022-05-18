@@ -207,3 +207,83 @@ def convert_brix_to_soluble_solids(value=None):
 
 
 custom_functions['T'] = convert_brix_to_soluble_solids
+
+
+def get_reference_value(fraction_type=None, product_type=None, matrix=None,
+        analysis=None, target_field=None):
+    cursor = Transaction().connection.cursor()
+    pool = Pool()
+    Date = pool.get('ir.date')
+    NotebookLine = pool.get('lims.notebook.line')
+    Analysis = pool.get('lims.analysis')
+    Notebook = pool.get('lims.notebook')
+    Fraction = pool.get('lims.fraction')
+    Sample = pool.get('lims.sample')
+    FractionType = pool.get('lims.fraction.type')
+    ProductType = pool.get('lims.product.type')
+    Matrix = pool.get('lims.matrix')
+    AnalysisSheet = pool.get('lims.analysis_sheet')
+    Data = pool.get('lims.interface.data')
+
+    if (not fraction_type or not product_type or not matrix or not analysis
+            or not target_field):
+        return None
+
+    today = Date.today()
+
+    cursor.execute('SELECT f.id, nl.result, nl.analysis_sheet, nl.id '
+        'FROM "' + NotebookLine._table + '" nl '
+            'INNER JOIN "' + Analysis._table + '" a '
+            'ON a.id = nl.analysis '
+            'INNER JOIN "' + Notebook._table + '" n '
+            'ON n.id = nl.notebook '
+            'INNER JOIN "' + Fraction._table + '" f '
+            'ON f.id = n.fraction '
+            'INNER JOIN "' + FractionType._table + '" ft '
+            'ON ft.id = f.type '
+            'INNER JOIN "' + Sample._table + '" s '
+            'ON s.id = f.sample '
+            'INNER JOIN "' + ProductType._table + '" pt '
+            'ON pt.id = s.product_type '
+            'INNER JOIN "' + Matrix._table + '" m '
+            'ON m.id = s.matrix '
+        'WHERE ft.code = %s '
+            'AND pt.code = %s '
+            'AND m.code = %s '
+            'AND a.code = %s '
+            'AND (f.expiry_date IS NULL OR f.expiry_date::date > %s::date) '
+            'AND nl.accepted = TRUE '
+        'ORDER BY s.date DESC LIMIT 1',
+        (fraction_type, product_type, matrix, analysis, today,))
+    reference_line = cursor.fetchall()
+    if not reference_line:
+        return None
+    reference_line = reference_line[0]
+
+    if target_field == 'id':
+        return reference_line[0]
+    if target_field == 'result':
+        return reference_line[1]
+
+    sheet_id = reference_line[2]
+    if not sheet_id:
+        return None
+    sheet = AnalysisSheet(sheet_id)
+
+    with Transaction().set_context(
+            lims_interface_table=sheet.compilation.table.id):
+        lines = Data.search([
+            ('compilation', '=', sheet.compilation.id),
+            ('notebook_line', '=', reference_line[3]),
+            ], limit=1)
+        target_line = lines and lines[0] or None
+        if not target_line:
+            return None
+
+        if not hasattr(target_line, target_field):
+            return None
+
+        return getattr(target_line, target_field)
+
+
+custom_functions['REFERENCE_VALUE'] = get_reference_value
