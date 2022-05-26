@@ -13496,6 +13496,10 @@ msgctxt "selection:lims.trend.chart,x_axis:"
 msgid "Date"
 msgstr "Fecha"
 
+msgctxt "selection:lims.trend.chart,x_axis:"
+msgid "Sample"
+msgstr "Muestra"
+
 msgctxt "selection:lims.typification,report_result_type:"
 msgid "Both"
 msgstr "Ambos"
