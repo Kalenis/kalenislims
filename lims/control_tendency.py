@@ -1437,6 +1437,7 @@ class TrendChart(ModelSQL, ModelView):
         ], 'Precedents Filter', sort=False, required=True)
     x_axis = fields.Selection([
         ('date', 'Date'),
+        ('number', 'Sample'),
         ], 'X Axis', sort=False, required=True)
     x_axis_string = x_axis.translated('x_axis')
     active = fields.Boolean('Active', help='Check to include in future use')
@@ -1868,12 +1869,17 @@ class OpenTrendChart(Wizard):
 
         if chart.x_axis == 'date':
             clause.append(('date', '<=', notebook.date))
+        elif chart.x_axis == 'number':
+            clause.append(('fraction.sample.number', '<=',
+                notebook.fraction.sample.number))
         return clause
 
     def _get_order(self):
         chart = self.start.chart
         if chart.x_axis == 'date':
             return [('date', 'DESC')]
+        elif chart.x_axis == 'number':
+            return [('fraction.sample.number', 'DESC')]
         return []
 
     def _get_reportable_analysis(self):
