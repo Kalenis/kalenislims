@@ -1,7 +1,10 @@
 # This file is part of lims_analysis_sheet module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import formulas
+import schedula
 import functools
+from itertools import chain
 from io import StringIO
 from decimal import Decimal
 from datetime import datetime, date
@@ -21,6 +24,7 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.modules.lims_interface.interface import str2date, \
     get_model_resource
+from trytond.modules.lims_interface.data import ALLOWED_RESULT_TYPES
 
 
 class TemplateAnalysisSheet(DeactivableMixin, ModelSQL, ModelView):
@@ -941,25 +945,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         Data = Pool().get('lims.interface.data')
 
         interface = self.template.interface
-
-        defaults = {}
         schema, _ = self.compilation._get_schema()
-        for k in list(schema.keys()):
-            if schema[k]['default_value'] is None:
-                continue
-            value = schema[k]['default_value']
-            if value.startswith('='):
-                continue
-            if schema[k]['type'] == 'boolean':
-                defaults[k] = bool(value)
-            elif schema[k]['type'] == 'date':
-                defaults[k] = str2date(value, interface.language)
-            elif schema[k]['type'] == 'many2one':
-                resource = get_model_resource(schema[k]['model_name'],
-                    value, schema[k]['field_name'])
-                defaults[k] = resource and resource[0].id
-            else:
-                defaults[k] = value
+        defaults = self.get_data_defaults()
 
         with Transaction().set_context(
                 lims_interface_table=self.compilation.table.id):
@@ -973,7 +960,9 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
                 for k in list(schema.keys()):
                     if (schema[k]['default_value'] is not None and
-                            schema[k]['default_value'].startswith('=')):
+                            schema[k]['default_value'].startswith('=') and
+                            not schema[k]['default_value'].startswith(
+                                '=REFERENCE_VALUE')):
                         path = schema[k]['default_value'][1:].split('.')
                         field = path.pop(0)
                         try:
@@ -1009,6 +998,56 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
             if data:
                 Data.create(data)
+
+    def get_data_defaults(self):
+        defaults = {}
+        schema, _ = self.compilation._get_schema()
+        for k in list(schema.keys()):
+            value = schema[k]['default_value']
+            if value in (None, ''):
+                continue
+            if value.startswith('=REFERENCE_VALUE'):
+                parser = formulas.Parser()
+                ast = parser.ast(value)[1].compile()
+                try:
+                    value = ast()
+                except schedula.utils.exc.DispatcherError as e:
+                    raise UserError(e.args[0] % e.args[1:])
+                if isinstance(value, list):
+                    value = str(value)
+                elif not isinstance(value, ALLOWED_RESULT_TYPES):
+                    value = value.tolist()
+                if isinstance(value, formulas.tokens.operand.XlError):
+                    value = None
+                elif isinstance(value, list):
+                    for x in chain(*value):
+                        if isinstance(x, formulas.tokens.operand.XlError):
+                            value = None
+                defaults[k] = value
+                continue
+            if value.startswith('='):
+                continue
+
+            if schema[k]['type'] == 'integer':
+                defaults[k] = int(value)
+            elif schema[k]['type'] == 'float':
+                defaults[k] = float(value)
+            elif schema[k]['type'] == 'numeric':
+                defaults[k] = Decimal(str(value))
+            elif schema[k]['type'] == 'boolean':
+                defaults[k] = bool(value)
+            elif schema[k]['type'] == 'date':
+                defaults[k] = str2date(value,
+                    self.compilation.interface.language)
+            elif schema[k]['type'] == 'many2one':
+                resource = get_model_resource(
+                    schema[k]['model_name'], value,
+                    schema[k]['field_name'])
+                defaults[k] = resource and resource[0].id
+            else:
+                defaults[k] = str(value)
+
+        return defaults
 
 
 class OpenAnalysisSheetData(Wizard):
