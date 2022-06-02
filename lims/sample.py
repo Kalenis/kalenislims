@@ -25,6 +25,7 @@ from trytond.i18n import gettext
 from trytond.rpc import RPC
 from trytond.config import config as tconfig
 from trytond.tools import get_smtp_server
+from trytond import backend
 
 logger = logging.getLogger(__name__)
 
@@ -413,12 +414,39 @@ class Service(ModelSQL, ModelView):
     planned = fields.Function(fields.Boolean('Planned'), 'get_planned',
         searcher='search_planned')
     annulled = fields.Boolean('Annulled', states={'readonly': True})
-    additional_origin = fields.Many2One('lims.service', 'Origin of additional')
+    is_additional = fields.Boolean('Is Additional', readonly=True)
+    additional_origins = fields.Many2Many('lims.service.additional_origin',
+        'service', 'origin', 'Origins of additional')
 
     @classmethod
     def __setup__(cls):
         super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
+
+    @classmethod
+    def __register__(cls, module_name):
+        cursor = Transaction().connection.cursor()
+        TableHandler = backend.TableHandler
+
+        table_h = cls.__table_handler__(module_name)
+        migrate_additional_origin = (
+            table_h.column_exist('additional_origin') and
+            TableHandler.table_exist('lims_service_additional_origin'))
+
+        super().__register__(module_name)
+
+        if migrate_additional_origin:
+            cursor.execute(
+                'INSERT INTO "lims_service_additional_origin" '
+                '(service, origin) '
+                'SELECT id, additional_origin '
+                'FROM lims_service '
+                'WHERE additional_origin IS NOT NULL')
+            cursor.execute(
+                'UPDATE lims_service '
+                'SET is_additional = TRUE '
+                'WHERE additional_origin IS NOT NULL')
+            table_h.drop_column('additional_origin')
 
     @staticmethod
     def default_urgent():
@@ -582,8 +610,8 @@ class Service(ModelSQL, ModelView):
             cls.check_delete(services)
         fractions_ids = list(set(s.fraction.id for s in services))
         sample_ids = list(set(s.sample.id for s in services))
-        cls.delete_additional_services(services)
         super().delete(services)
+        cls.delete_additional_services()
         cls.set_shared_fraction(fractions_ids)
         Sample.update_samples_state(sample_ids)
 
@@ -595,11 +623,10 @@ class Service(ModelSQL, ModelView):
                     'lims.msg_delete_service', service=service.rec_name))
 
     @classmethod
-    def delete_additional_services(cls, services):
-        services_to_delete = [s.id for s in services]
+    def delete_additional_services(cls):
         additionals_to_delete = cls.search([
-            ('additional_origin.id', 'in', services_to_delete),
-            ('id', 'not in', services_to_delete),
+            ('is_additional', '=', True),
+            ('additional_origins', '=', None),
             ])
         if additionals_to_delete:
             cls.delete(additionals_to_delete)
@@ -771,8 +798,11 @@ class Service(ModelSQL, ModelView):
                             'laboratory': None,
                             'method': None,
                             'device': None,
-                            'additional_origin': service.id,
+                            'additional_origins': set(),
                             }
+                    aditional_services[service.fraction.id][
+                        typification.additional.id]['additional_origins'].add(
+                            service.id)
 
                 if typification.additionals:
                     if service.fraction.id not in aditional_services:
@@ -822,8 +852,11 @@ class Service(ModelSQL, ModelView):
                                 'laboratory': laboratory_id,
                                 'method': method_id,
                                 'device': device_id,
-                                'additional_origin': service.id,
+                                'additional_origins': set(),
                                 }
+                        aditional_services[service.fraction.id][
+                            additional.id]['additional_origins'].add(
+                                service.id)
 
         if aditional_services:
             services_default = []
@@ -845,7 +878,9 @@ class Service(ModelSQL, ModelView):
                         'laboratory': service_data['laboratory'],
                         'method': service_data['method'],
                         'device': service_data['device'],
-                        'additional_origin': service_data['additional_origin'],
+                        'is_additional': True,
+                        'additional_origins': [('add', list(
+                            service_data['additional_origins']))],
                         })
             return Service.create(services_default)
 
@@ -905,7 +940,8 @@ class Service(ModelSQL, ModelView):
         if not Transaction().context.get('create_sample', False):
             current_default['report_date'] = None
         current_default['analysis_detail'] = None
-        current_default['additional_origin'] = None
+        current_default['is_additional'] = False
+        current_default['additional_origins'] = None
 
         detail_default = {}
         if current_default.get('method', None):
@@ -1429,6 +1465,16 @@ class Service(ModelSQL, ModelView):
         if service:
             return service[0].urgent
         return False
+
+
+class ServiceOrigin(ModelSQL):
+    'Service Origin'
+    __name__ = 'lims.service.additional_origin'
+
+    service = fields.Many2One('lims.service', 'Service',
+        ondelete='CASCADE', select=True, required=True)
+    origin = fields.Many2One('lims.service', 'Origin',
+        ondelete='CASCADE', select=True, required=True)
 
 
 class Fraction(ModelSQL, ModelView):
@@ -3796,10 +3842,13 @@ class ManageServices(Wizard):
         actual_services_ids = [s.id for s in self.start.services]
         actual_services = []
         for s in self.start.services:
-            if (s.additional_origin and
-                    s.additional_origin.id not in actual_services_ids):
-                continue
-            actual_services.append(s)
+            if not s.is_additional:
+                actual_services.append(s)
+            else:
+                for origin in s.additional_origins:
+                    if origin.id in actual_services_ids:
+                        actual_services.append(s)
+                        break
         original_services = [s for s in fraction.services if
             s.manage_service_available]
         services_to_delete = []

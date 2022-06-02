@@ -79,6 +79,7 @@ def register():
         sample.Sample,
         sample.Fraction,
         sample.Service,
+        sample.ServiceOrigin,
         uom.ConcentrationLevel,
         entry.EntryDetailAnalysis,
         notebook.Notebook,
