@@ -1010,10 +1010,12 @@ class Service(ModelSQL, ModelView):
 
     @fields.depends('analysis', 'fraction', 'typification_domain',
         'laboratory', '_parent_fraction.id',
-        methods=['_get_default_laboratory', 'on_change_with_method_domain',
-        '_on_change_with_device_domain'])
+        methods=['_get_default_laboratory', '_get_default_method',
+        'on_change_with_method_domain', '_on_change_with_device_domain'])
     def on_change_analysis(self):
-        Laboratory = Pool().get('lims.laboratory')
+        pool = Pool()
+        Laboratory = pool.get('lims.laboratory')
+
         laboratory = None
         method = None
         device = None
@@ -1021,9 +1023,13 @@ class Service(ModelSQL, ModelView):
             default_laboratory = self._get_default_laboratory()
             if default_laboratory:
                 laboratory = default_laboratory
-            methods = self.on_change_with_method_domain()
-            if len(methods) == 1:
-                method = methods[0]
+            default_method = self._get_default_method()
+            if default_method:
+                method = default_method
+            else:
+                methods = self.on_change_with_method_domain()
+                if len(methods) == 1:
+                    method = methods[0]
             devices = self._on_change_with_device_domain(self.analysis,
                 Laboratory(laboratory), True)
             if len(devices) == 1:
@@ -1219,10 +1225,36 @@ class Service(ModelSQL, ModelView):
             return []
         return [x[0] for x in res]
 
+    @fields.depends('analysis', '_parent_fraction.product_type',
+        '_parent_fraction.matrix')
+    def _get_default_method(self):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+
+        if not self.analysis or self.analysis.type != 'analysis':
+            return None
+
+        cursor.execute('SELECT method '
+            'FROM "' + Typification._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s '
+                'AND analysis = %s '
+                'AND valid IS TRUE '
+                'AND by_default IS TRUE',
+            (self.fraction.product_type.id, self.fraction.matrix.id,
+                self.analysis.id))
+        res = cursor.fetchone()
+        if res:
+            return res[0]
+
+        return None
+
     @fields.depends('analysis', 'typification_domain')
     def on_change_with_method_domain(self, name=None):
         cursor = Transaction().connection.cursor()
-        Typification = Pool().get('lims.typification')
+        pool = Pool()
+        Typification = pool.get('lims.typification')
 
         if not self.analysis:
             return []
@@ -6024,9 +6056,13 @@ class CreateSampleService(ModelView):
             if default_laboratory:
                 laboratory_id = default_laboratory
             laboratory_domain = self._get_laboratory_domain(analysis_id)
+            default_method = self._get_default_method(analysis_id,
+                product_type_id, matrix_id)
             method_domain = self._get_method_domain(analysis_id,
                 product_type_id, matrix_id)
-            if len(method_domain) == 1:
+            if default_method:
+                method_id = default_method
+            elif len(method_domain) == 1:
                 method_id = method_domain[0]
             if laboratory_id:
                 device_domain = self._get_device_domain(analysis_id,
@@ -6118,6 +6154,30 @@ class CreateSampleService(ModelView):
         if not res:
             return []
         return [x[0] for x in res]
+
+    @staticmethod
+    def _get_default_method(analysis_id, product_type_id, matrix_id):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        Typification = pool.get('lims.typification')
+
+        if Analysis(analysis_id).type != 'analysis':
+            return None
+
+        cursor.execute('SELECT method '
+            'FROM "' + Typification._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s '
+                'AND analysis = %s '
+                'AND valid IS TRUE '
+                'AND by_default IS TRUE',
+            (product_type_id, matrix_id, analysis_id))
+        res = cursor.fetchone()
+        if res:
+            return res[0]
+
+        return None
 
     @staticmethod
     def _get_method_domain(analysis_id, product_type_id, matrix_id):
