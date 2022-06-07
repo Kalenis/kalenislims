@@ -2,6 +2,8 @@
 # This file is part of lims_interface module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import formulas
+import numpy as np
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool
@@ -56,6 +58,23 @@ def get_variable(notebook_line, variable):
 
 
 custom_functions['VAR'] = get_variable
+
+
+def slope(yp, xp):
+    items_to_delete = []
+    i = 0
+    for y1 in yp:
+        for y2 in y1:
+            if y2 is None:
+                items_to_delete.append(i)
+            i += 1
+    if items_to_delete:
+        yp = np.delete(yp, items_to_delete, axis=1)
+        xp = np.delete(xp, items_to_delete, axis=1)
+    return formulas.functions.wrap_func(formulas.functions.stat.xslope)(yp, xp)
+
+
+custom_functions['SLOPE'] = slope
 
 
 def intercept(y, x):
