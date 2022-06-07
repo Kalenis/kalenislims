@@ -278,6 +278,25 @@ def slope(yp, xp):
 custom_functions['SLOPE'] = slope
 
 
+def intercept(y, x):
+    if not y or not x:
+        return None
+
+    def _mean(l):
+        return sum(l) / len(l)
+
+    def _multiply(l1, l2):
+        return [a * b for a, b in zip(l1, l2)]
+
+    m = ((_mean(x) * _mean(y) - _mean(_multiply(x, y))) /
+        (_mean(x) ** 2 - _mean(_multiply(x, x))))
+    b = _mean(y) - m * _mean(x)
+    return b
+
+
+custom_functions['INTERCEPT'] = intercept
+
+
 class Function(ModelSQL, ModelView):
     'Interface Function'
     __name__ = 'lims.interface.function'
