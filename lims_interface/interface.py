@@ -2039,12 +2039,11 @@ class Compilation(Workflow, ModelSQL, ModelView):
             with Transaction().set_context(lims_interface_table=c.table):
                 lines = Data.search([('compilation', '=', c.id)])
                 for line in lines:
-                    nb_line = line.notebook_line
-                    if not nb_line:
+                    if not cls._allow_confirm_line(line):
                         continue
-                    for alias, field in fields.items():
-                        # TODO: check values and correct type
-                        value = getattr(line, alias)
+                    # TODO: check values and correct type
+                    #for alias, field in fields.items():
+                        #value = getattr(line, alias)
 
     @classmethod
     @ModelView.button
@@ -2073,11 +2072,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
             with Transaction().set_context(lims_interface_table=c.table):
                 lines = Data.search([('compilation', '=', c.id)])
                 for line in lines:
+                    if not cls._allow_confirm_line(line):
+                        continue
                     nb_line = line.notebook_line
-                    if not nb_line:
-                        continue
-                    if nb_line.end_date:
-                        continue
                     data = {
                         'compilation': c.id,
                         }
@@ -2113,6 +2110,15 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     if data_eng:
                         with Transaction().set_context(language='en'):
                             NotebookLine.write([nb_line], data_eng)
+
+    @classmethod
+    def _allow_confirm_line(cls, line):
+        nb_line = line.notebook_line
+        if not nb_line:
+            return False
+        if nb_line.end_date:
+            return False
+        return True
 
     @classmethod
     def delete(cls, compilations):

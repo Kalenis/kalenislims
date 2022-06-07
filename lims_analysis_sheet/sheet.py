@@ -740,6 +740,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         pool = Pool()
         Field = pool.get('lims.interface.table.field')
         Data = pool.get('lims.interface.data')
+        Compilation = pool.get('lims.interface.compilation')
 
         for s in sheets:
             table_id = s.compilation.table.id
@@ -776,12 +777,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     raise UserError(gettext(
                         'lims_analysis_sheet.msg_sheet_not_lines'))
                 for line in lines:
-                    nb_line = line.notebook_line
-                    if not nb_line:
+                    if not Compilation._allow_confirm_line(line):
                         continue
-                    if nb_line.end_date:
-                        continue
-
                     if line.annulled:
                         continue
                     if getattr(line, result_field) not in (None, ''):
@@ -800,6 +797,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def check_controls(cls, sheets):
         pool = Pool()
         Data = pool.get('lims.interface.data')
+        Compilation = pool.get('lims.interface.compilation')
 
         for s in sheets:
             if not s.template.controls_required:
@@ -811,11 +809,9 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 ok = False
                 lines = Data.search([('compilation', '=', s.compilation.id)])
                 for line in lines:
+                    if not Compilation._allow_confirm_line(line):
+                        continue
                     nb_line = line.notebook_line
-                    if not nb_line:
-                        continue
-                    if nb_line.end_date:
-                        continue
                     if nb_line.fraction.special_type in controls_allowed:
                         ok = True
                         break
@@ -899,6 +895,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         pool = Pool()
         Data = pool.get('lims.interface.data')
         NotebookLine = pool.get('lims.notebook.line')
+        Compilation = pool.get('lims.interface.compilation')
 
         avoid_accept_result = Transaction().context.get('avoid_accept_result',
             False)
@@ -910,11 +907,9 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     lims_interface_table=s.compilation.table.id):
                 lines = Data.search([('compilation', '=', s.compilation.id)])
                 for line in lines:
+                    if not Compilation._allow_confirm_line(line):
+                        continue
                     nb_line = line.notebook_line
-                    if not nb_line:
-                        continue
-                    if nb_line.end_date:
-                        continue
                     data = {
                         'end_date': today,
                         'analysis_sheet': s.id,
