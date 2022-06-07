@@ -96,6 +96,18 @@ def intercept(y, x):
 custom_functions['INTERCEPT'] = intercept
 
 
+def rsq(y, x):
+    if not y or not x:
+        return None
+    zx = (x - np.mean(x)) / np.std(x, ddof=1)
+    zy = (y - np.mean(y)) / np.std(y, ddof=1)
+    r = np.sum(zx * zy) / (len(x) - 1)
+    return r ** 2
+
+
+custom_functions['RSQ'] = rsq
+
+
 class Function(ModelSQL, ModelView):
     'Interface Function'
     __name__ = 'lims.interface.function'
