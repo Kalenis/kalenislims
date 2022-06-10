@@ -2300,6 +2300,7 @@ class GenerateReport(Wizard):
         report_grouper = None
         cie_fraction_type = None
         current_reports = []
+        default_report_only_current = True
 
         for notebook in Notebook.browse(Transaction().context['active_ids']):
             res['notebooks'].append(notebook.id)
@@ -2369,14 +2370,21 @@ class GenerateReport(Wizard):
                     res['report_domain'] = [r.id for r in reports]
 
         if res['report_domain'] and entry != -1:
-            clause = [
-                ('report_version.results_report.id', 'in',
-                    res['report_domain']),
-                ('state', '=', 'draft'),
-                ]
-            if not current_reports:
-                clause.append(('laboratory', '=', laboratory_id))
-
+            if current_reports:
+                clause = [
+                    ('report_version.results_report.id', 'in',
+                        res['report_domain']),
+                    ('state', '=', 'draft'),
+                    ]
+            elif not default_report_only_current:
+                clause = [
+                    ('report_version.results_report.id', 'in',
+                        res['report_domain']),
+                    ('state', '=', 'draft'),
+                    ('laboratory', '=', laboratory_id),
+                    ]
+            else:
+                clause = [('id', '=', -1)]
             draft_detail = ResultsDetail.search(clause)
             if draft_detail and len(draft_detail) == 1:
                 res['report'] = (
