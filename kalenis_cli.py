@@ -11,7 +11,7 @@ ERROR_COLOR = 'red'
 OK_COLOR = 'green'
 MODULES = {
     'qc': ['lims_quality_control'],
-    'services': ['lims'],
+    'services': ['lims_analysis_sheet'],
     }
 
 
@@ -67,6 +67,8 @@ def setup(database, language, industry):
     click.echo('Installing modules...')
     subprocess.run(['trytond-admin', '-d', database, '-c', config_file, '-u',
         ' '.join(MODULES[industry]), '--activate-dependencies'])
+    subprocess.run(['trytond-admin', '-d', database, '-c', config_file, '-u',
+        'user_view'])
 
     if language == 'es':
         click.echo('Loading translations for spanish language...')
