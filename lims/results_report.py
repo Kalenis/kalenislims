@@ -2295,7 +2295,7 @@ class GenerateReport(Wizard):
             'append_samples': True,
             }
 
-        party = None
+        invoice_party = None
         entry = None
         report_grouper = None
         cie_fraction_type = None
@@ -2308,10 +2308,10 @@ class GenerateReport(Wizard):
                     entry = notebook.fraction.sample.entry.id
                 elif entry != notebook.fraction.sample.entry.id:
                     entry = -1
-                # same party
-                if not party:
-                    party = notebook.party.id
-                elif party != notebook.party.id:
+                # same invoice party
+                if not invoice_party:
+                    invoice_party = notebook.invoice_party.id
+                elif invoice_party != notebook.invoice_party.id:
                     res['report_readonly'] = True
                 # same report_grouper
                 for line in notebook._get_lines_for_reporting(
@@ -2346,7 +2346,7 @@ class GenerateReport(Wizard):
         if not res['report_readonly']:
             if res['preliminary']:
                 last_detail = ResultsDetail.search([
-                    ('party', '=', party),
+                    ('invoice_party', '=', invoice_party),
                     ('laboratory', '=', laboratory_id),
                     ], order=[('id', 'DESC')], limit=1)
                 if last_detail and last_detail[0].state == 'preliminary':
@@ -2357,7 +2357,7 @@ class GenerateReport(Wizard):
                     clause = [('id', 'in', current_reports)]
                 else:
                     clause = [
-                        ('party', '=', party),
+                        ('invoice_party', '=', invoice_party),
                         ('report_grouper', '=', report_grouper),
                         ('cie_fraction_type', '=', cie_fraction_type),
                         ]
@@ -2369,6 +2369,7 @@ class GenerateReport(Wizard):
             draft_detail = ResultsDetail.search([
                 ('report_version.results_report.id', 'in',
                     res['report_domain']),
+                ('laboratory', '=', laboratory_id),
                 ('state', '=', 'draft'),
                 ])
             if draft_detail and len(draft_detail) == 1:
@@ -2475,7 +2476,7 @@ class GenerateReport(Wizard):
             for notebook in self.start.notebooks:
                 key = notebook.id
                 if self.start.group_samples:
-                    key = (notebook.party.id,
+                    key = (notebook.invoice_party.id,
                         notebook.fraction.cie_fraction_type)
                 if key not in parties:
                     parties[key] = {
