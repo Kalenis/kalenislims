@@ -78,8 +78,11 @@ custom_functions['SLOPE'] = slope
 
 
 def intercept(y, x):
-    if not y or not x:
+    if any(val is None for y1 in y for val in y1):
         return None
+    if any(val is None for x1 in x for val in x1):
+        return None
+    y, x = y[0].astype(float), x[0].astype(float)
 
     def _mean(l):
         return sum(l) / len(l)
@@ -97,8 +100,11 @@ custom_functions['INTERCEPT'] = intercept
 
 
 def rsq(y, x):
-    if not y or not x:
+    if any(val is None for y1 in y for val in y1):
         return None
+    if any(val is None for x1 in x for val in x1):
+        return None
+    y, x = y[0].astype(float), x[0].astype(float)
     zx = (x - np.mean(x)) / np.std(x, ddof=1)
     zy = (y - np.mean(y)) / np.std(y, ddof=1)
     r = np.sum(zx * zy) / (len(x) - 1)
