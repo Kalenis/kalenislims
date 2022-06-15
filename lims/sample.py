@@ -3872,6 +3872,8 @@ class ManageServices(Wizard):
         fraction = Fraction(Transaction().context['active_id'])
 
         actual_services_ids = [s.id for s in self.start.services]
+        other_services_ids = [s.id for s in fraction.services if
+            not s.manage_service_available]
         actual_services = []
         for s in self.start.services:
             if not s.is_additional:
@@ -3879,6 +3881,9 @@ class ManageServices(Wizard):
             else:
                 for origin in s.additional_origins:
                     if origin.id in actual_services_ids:
+                        actual_services.append(s)
+                        break
+                    if origin.id in other_services_ids:
                         actual_services.append(s)
                         break
         original_services = [s for s in fraction.services if
