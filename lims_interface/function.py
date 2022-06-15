@@ -61,16 +61,18 @@ custom_functions['VAR'] = get_variable
 
 
 def slope(yp, xp):
-    items_to_delete = []
-    i = 0
+    items_to_delete, i = [], 0
     for y1 in yp:
-        for y2 in y1:
-            if y2 is None:
+        for val in y1:
+            if val is None:
                 items_to_delete.append(i)
             i += 1
     if items_to_delete:
         yp = np.delete(yp, items_to_delete, axis=1)
         xp = np.delete(xp, items_to_delete, axis=1)
+    if any(val is None for x1 in xp for val in x1):
+        return None
+
     return formulas.functions.wrap_func(formulas.functions.stat.xslope)(yp, xp)
 
 
@@ -78,11 +80,21 @@ custom_functions['SLOPE'] = slope
 
 
 def intercept(y, x):
-    if any(val is None for y1 in y for val in y1):
-        return None
+    items_to_delete, i = [], 0
+    for y1 in y:
+        for val in y1:
+            if val is None:
+                items_to_delete.append(i)
+            i += 1
+    if items_to_delete:
+        y = np.delete(y, items_to_delete, axis=1)
+        x = np.delete(x, items_to_delete, axis=1)
     if any(val is None for x1 in x for val in x1):
         return None
+
     y, x = y[0].astype(float), x[0].astype(float)
+    if len(y) < 2 or len(x) < 2:
+        return None
 
     def _mean(l):
         return sum(l) / len(l)
@@ -100,11 +112,22 @@ custom_functions['INTERCEPT'] = intercept
 
 
 def rsq(y, x):
-    if any(val is None for y1 in y for val in y1):
-        return None
+    items_to_delete, i = [], 0
+    for y1 in y:
+        for val in y1:
+            if val is None:
+                items_to_delete.append(i)
+            i += 1
+    if items_to_delete:
+        y = np.delete(y, items_to_delete, axis=1)
+        x = np.delete(x, items_to_delete, axis=1)
     if any(val is None for x1 in x for val in x1):
         return None
+
     y, x = y[0].astype(float), x[0].astype(float)
+    if len(y) < 2 or len(x) < 2:
+        return None
+
     zx = (x - np.mean(x)) / np.std(x, ddof=1)
     zy = (y - np.mean(y)) / np.std(y, ddof=1)
     r = np.sum(zx * zy) / (len(x) - 1)
