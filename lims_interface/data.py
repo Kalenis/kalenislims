@@ -674,13 +674,15 @@ class Data(ModelSQL, ModelView):
 
         compilation_id = Transaction().context.get(
             'lims_interface_compilation')
-        if not compilation_id:
-            return
-
-        compilation = Compilation(compilation_id)
-        table = compilation.table
-        interface = compilation.interface
-        sql_table = SqlTable(table.name)
+        if compilation_id:
+            compilation = Compilation(compilation_id)
+            table = compilation.table
+            interface = compilation.interface
+            sql_table = SqlTable(table.name)
+        else:
+            table = cls.get_table()
+            sql_table = cls.get_sql_table()
+            interface = cls.get_interface()
 
         formula_fields = []
         fields = TableField.search([
