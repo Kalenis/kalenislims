@@ -425,8 +425,7 @@ class ControlTendencyDetail(ModelSQL, ModelView):
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line')
     date = fields.Date('Date')
     fraction = fields.Many2One('lims.fraction', 'Fraction')
-    device = fields.Many2One('lims.lab.device', 'Device',
-        domain=[('device_type.non_analytical', '=', False)])
+    device = fields.Many2One('lims.lab.device', 'Device')
     result = fields.Float('Result')
     rule = fields.Char('Rule')
     rules = fields.One2Many('lims.control.tendency.detail.rule',
@@ -666,8 +665,7 @@ class ControlResultLineDetail(ModelSQL, ModelView):
         ondelete='CASCADE', select=True, required=True)
     date = fields.Date('Date')
     fraction = fields.Many2One('lims.fraction', 'Fraction')
-    device = fields.Many2One('lims.lab.device', 'Device',
-        domain=[('device_type.non_analytical', '=', False)])
+    device = fields.Many2One('lims.lab.device', 'Device')
     result = fields.Float('Result')
     #
     mr = fields.Float('Mobile Range')
