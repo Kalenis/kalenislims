@@ -77,15 +77,16 @@ class TableField(ModelSQL, ModelView):
     __name__ = 'lims.interface.table.field'
 
     table = fields.Many2One('lims.interface.table', 'Table',
-        required=True, ondelete='CASCADE')
+        required=True, ondelete='CASCADE', select=True)
     name = fields.Char('Name', required=True)
     string = fields.Char('String', required=True)
     type = fields.Selection(
         [(None, ''), ('one2many', 'One2Many')] + FIELD_TYPE_SELECTION,
         'Field Type', required=False)
     help = fields.Text('Help')
-    transfer_field = fields.Boolean('Is a transfer field')
-    related_line_field = fields.Many2One('ir.model.field', 'Related Field')
+    transfer_field = fields.Boolean('Is a transfer field', select=True)
+    related_line_field = fields.Many2One('ir.model.field', 'Related Field',
+        select=True)
     related_model = fields.Many2One('ir.model', 'Related Model')
     selection = fields.Text('Selection')
     domain = fields.Char('Domain Value')
