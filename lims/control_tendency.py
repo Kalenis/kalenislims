@@ -1554,10 +1554,10 @@ class TrendChart(ModelSQL, ModelView):
         try:
             with plt.rc_context(rc={'figure.max_open_warning': 0}):
                 ax = df_interpolated.plot(kind='line',
-                    rot=45, fontsize=7, figsize=(10, 7.5),
+                    rot=45, fontsize=10, figsize=(10, 7.5),
                     linestyle='-', marker=None, legend=None)
                 ax = df.plot(kind='line',
-                    rot=45, fontsize=7, figsize=(10, 7.5),
+                    rot=45, fontsize=10, figsize=(10, 7.5),
                     linestyle='', marker='o', color='black',
                     legend=None, ax=ax)
                 ax.set_xlabel(self.x_axis_string)
@@ -1566,11 +1566,11 @@ class TrendChart(ModelSQL, ModelView):
                 if ds2:
                     try:
                         ax = df2_interpolated.plot(kind='line',
-                            rot=45, fontsize=7, figsize=(10, 7.5),
+                            rot=45, fontsize=10, figsize=(10, 7.5),
                             linestyle='-', marker=None, legend=None,
                             secondary_y=True, ax=ax)
                         ax = df2.plot(kind='line',
-                            rot=45, fontsize=7, figsize=(10, 7.5),
+                            rot=45, fontsize=10, figsize=(10, 7.5),
                             linestyle='', marker='o', color='black',
                             legend=None, secondary_y=True, ax=ax)
                         if self.uom_y2:
@@ -1598,11 +1598,11 @@ class TrendChart(ModelSQL, ModelView):
             if ds2:
                 try:
                     ax = df2_interpolated.plot(kind='line',
-                        rot=45, fontsize=7, figsize=(10, 7.5),
+                        rot=45, fontsize=10, figsize=(10, 7.5),
                         linestyle='-', marker=None, legend=None,
                         secondary_y=True)
                     ax = df2.plot(kind='line',
-                        rot=45, fontsize=7, figsize=(10, 7.5),
+                        rot=45, fontsize=10, figsize=(10, 7.5),
                         linestyle='', marker='o', color='black',
                         legend=None, secondary_y=True, ax=ax)
                     ax.set_xlabel(self.x_axis_string)
