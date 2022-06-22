@@ -1439,6 +1439,20 @@ msgctxt "field:lims.entry.acknowledgment_contacts,contact:"
 msgid "Contact"
 msgstr "Contacto"
 
+msgctxt ""
+"field:lims.entry.acknowledgment_contacts,contact_acknowledgment_contact:"
+msgid "Acknowledgment contact"
+msgstr "Contacto acuse de recibo"
+
+msgctxt ""
+"field:lims.entry.acknowledgment_contacts,contact_acknowledgment_contact_default:"
+msgid "Acknowledgment contact by default"
+msgstr "Contacto acuse de recibo por defecto"
+
+msgctxt "field:lims.entry.acknowledgment_contacts,contact_email:"
+msgid "Email"
+msgstr "Correo electrónico"
+
 msgctxt "field:lims.entry.acknowledgment_contacts,entry:"
 msgid "Entry"
 msgstr "Ingreso"
@@ -1575,6 +1589,18 @@ msgctxt "field:lims.entry.invoice_contacts,contact:"
 msgid "Contact"
 msgstr "Contacto"
 
+msgctxt "field:lims.entry.invoice_contacts,contact_email:"
+msgid "Email"
+msgstr "Correo electrónico"
+
+msgctxt "field:lims.entry.invoice_contacts,contact_invoice_contact:"
+msgid "Invoice contact"
+msgstr "Contacto facturación"
+
+msgctxt "field:lims.entry.invoice_contacts,contact_invoice_contact_default:"
+msgid "Invoice contact by default"
+msgstr "Contacto facturación por defecto"
+
 msgctxt "field:lims.entry.invoice_contacts,entry:"
 msgid "Entry"
 msgstr "Ingreso"
@@ -1598,6 +1624,18 @@ msgstr "Utilizado"
 msgctxt "field:lims.entry.report_contacts,contact:"
 msgid "Contact"
 msgstr "Contacto"
+
+msgctxt "field:lims.entry.report_contacts,contact_email:"
+msgid "Email"
+msgstr "Correo electrónico"
+
+msgctxt "field:lims.entry.report_contacts,contact_report_contact:"
+msgid "Report contact"
+msgstr "Contacto informe"
+
+msgctxt "field:lims.entry.report_contacts,contact_report_contact_default:"
+msgid "Report contact by default"
+msgstr "Contacto informe por defecto"
 
 msgctxt "field:lims.entry.report_contacts,entry:"
 msgid "Entry"

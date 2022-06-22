@@ -10,7 +10,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from sql import Literal
 
-from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
+from trytond.model import Workflow, Model, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateReport, \
     Button
 from trytond.pool import Pool
@@ -21,7 +21,7 @@ from trytond.config import config as tconfig
 from trytond.report import Report
 from trytond.rpc import RPC
 from trytond.exceptions import UserError, UserWarning
-from trytond.i18n import gettext
+from trytond.i18n import gettext, lazy_gettext
 
 
 # Genshi fix: https://genshi.edgewall.org/ticket/582
@@ -792,7 +792,45 @@ class Entry(Workflow, ModelSQL, ModelView):
         return EntryPreAssignedSample.search_count([('entry', '=', self.id)])
 
 
-class EntryInvoiceContact(ModelSQL, ModelView):
+class EntryContactMixin(Model):
+    __slots__ = ()
+
+    @classmethod
+    def get_contact_field(cls, contacts, names):
+        result = {}
+        for name in names:
+            field_name = name[8:]
+            result[name] = {}
+            if cls._fields[name]._type == 'many2one':
+                for c in contacts:
+                    field = getattr(c.contact, field_name, None)
+                    result[name][c.id] = field.id if field else None
+            elif cls._fields[name]._type == 'boolean':
+                for c in contacts:
+                    result[name][c.id] = getattr(c.contact, field_name, False)
+            else:
+                for c in contacts:
+                    result[name][c.id] = getattr(c.contact, field_name, None)
+        return result
+
+
+def _order_entry_contact_field(name):
+    def order_field(tables):
+        Contact = Pool().get('party.address')
+        field = Contact._fields[name]
+        table, _ = tables[None]
+        contact_tables = tables.get('contact')
+        if contact_tables is None:
+            contact = Contact.__table__()
+            contact_tables = {
+                None: (contact, contact.id == table.contact),
+                }
+            tables['contact'] = contact_tables
+        return field.convert_order(name, contact_tables, Contact)
+    return staticmethod(order_field)
+
+
+class EntryInvoiceContact(EntryContactMixin, ModelSQL, ModelView):
     'Entry Invoice Contact'
     __name__ = 'lims.entry.invoice_contacts'
 
@@ -804,9 +842,24 @@ class EntryInvoiceContact(ModelSQL, ModelView):
                 Eval('_parent_entry', {}).get('invoice_party')]),
             ('invoice_contact', '=', True),
         ])
+    contact_email = fields.Function(fields.Char('Email'),
+        'get_contact_field')
+    contact_invoice_contact = fields.Function(fields.Boolean(
+        'Invoice contact'), 'get_contact_field')
+    contact_invoice_contact_default = fields.Function(fields.Boolean(
+        'Invoice contact by default'), 'get_contact_field')
+    contact_active = fields.Function(fields.Boolean(
+        lazy_gettext('ir.msg_active')), 'get_contact_field')
+
+    order_contact_email = _order_entry_contact_field('email')
+    order_contact_invoice_contact = _order_entry_contact_field(
+        'invoice_contact')
+    order_contact_invoice_contact_default = _order_entry_contact_field(
+        'invoice_contact_default')
+    order_contact_active = _order_entry_contact_field('active')
 
 
-class EntryReportContact(ModelSQL, ModelView):
+class EntryReportContact(EntryContactMixin, ModelSQL, ModelView):
     'Entry Report Contact'
     __name__ = 'lims.entry.report_contacts'
 
@@ -818,9 +871,24 @@ class EntryReportContact(ModelSQL, ModelView):
                 Eval('_parent_entry', {}).get('invoice_party')]),
             ('report_contact', '=', True),
         ])
+    contact_email = fields.Function(fields.Char('Email'),
+        'get_contact_field')
+    contact_report_contact = fields.Function(fields.Boolean(
+        'Report contact'), 'get_contact_field')
+    contact_report_contact_default = fields.Function(fields.Boolean(
+        'Report contact by default'), 'get_contact_field')
+    contact_active = fields.Function(fields.Boolean(
+        lazy_gettext('ir.msg_active')), 'get_contact_field')
+
+    order_contact_email = _order_entry_contact_field('email')
+    order_contact_report_contact = _order_entry_contact_field(
+        'report_contact')
+    order_contact_report_contact_default = _order_entry_contact_field(
+        'report_contact_default')
+    order_contact_active = _order_entry_contact_field('active')
 
 
-class EntryAcknowledgmentContact(ModelSQL, ModelView):
+class EntryAcknowledgmentContact(EntryContactMixin, ModelSQL, ModelView):
     'Entry Acknowledgment Contact'
     __name__ = 'lims.entry.acknowledgment_contacts'
 
@@ -832,6 +900,21 @@ class EntryAcknowledgmentContact(ModelSQL, ModelView):
                 Eval('_parent_entry', {}).get('invoice_party')]),
             ('acknowledgment_contact', '=', True),
         ])
+    contact_email = fields.Function(fields.Char('Email'),
+        'get_contact_field')
+    contact_acknowledgment_contact = fields.Function(fields.Boolean(
+        'Acknowledgment contact'), 'get_contact_field')
+    contact_acknowledgment_contact_default = fields.Function(fields.Boolean(
+        'Acknowledgment contact by default'), 'get_contact_field')
+    contact_active = fields.Function(fields.Boolean(
+        lazy_gettext('ir.msg_active')), 'get_contact_field')
+
+    order_contact_email = _order_entry_contact_field('email')
+    order_contact_acknowledgment_contact = _order_entry_contact_field(
+        'acknowledgment_contact')
+    order_contact_acknowledgment_contact_default = _order_entry_contact_field(
+        'acknowledgment_contact_default')
+    order_contact_active = _order_entry_contact_field('active')
 
 
 class EntryPreAssignedSample(ModelSQL):
