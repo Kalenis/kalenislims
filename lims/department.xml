@@ -2,6 +2,59 @@
 <tryton>
     <data>
 
+<!-- Headquarters -->
+
+        <record model="ir.ui.view" id="company_headquarters_view_form">
+            <field name="model">company.headquarters</field>
+            <field name="type">form</field>
+            <field name="name">headquarters_form</field>
+        </record>
+        <record model="ir.ui.view" id="company_headquarters_view_list">
+            <field name="model">company.headquarters</field>
+            <field name="type">tree</field>
+            <field name="name">headquarters_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_company_headquarters_list">
+            <field name="name">Headquarters</field>
+            <field name="res_model">company.headquarters</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_company_headquarters_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="company_headquarters_view_list"/>
+            <field name="act_window" ref="act_company_headquarters_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_company_headquarters_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="company_headquarters_view_form"/>
+            <field name="act_window" ref="act_company_headquarters_list"/>
+        </record>
+
+        <menuitem action="act_company_headquarters_list"
+            id="company_headquarters_menu"
+            parent="party.menu_configuration"/>
+
+        <record model="ir.ui.menu-res.group" id="menu_company_headquarters_group_party_admin">
+            <field name="menu" ref="company_headquarters_menu"/>
+            <field name="group" ref="party.group_party_admin"/>
+        </record>
+
+        <record model="ir.model.access" id="access_headquarters">
+            <field name="model" search="[('model', '=', 'company.headquarters')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_headquarters_group_party_admin">
+            <field name="model" search="[('model', '=', 'company.headquarters')]"/>
+            <field name="group" ref="party.group_party_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
 <!-- Department -->
 
         <record model="ir.ui.view" id="company_department_view_form">

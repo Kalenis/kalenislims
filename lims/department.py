@@ -8,12 +8,20 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
 
+class Headquarters(ModelSQL, ModelView):
+    'Headquarters'
+    __name__ = 'company.headquarters'
+
+    name = fields.Char('Name', required=True)
+
+
 class Department(ModelSQL, ModelView):
     'Department'
     __name__ = 'company.department'
 
     code = fields.Char('Code', required=True)
     name = fields.Char('Name', required=True)
+    headquarters = fields.Many2One('company.headquarters', 'Headquarters')
     default_location = fields.Many2One('stock.location', 'Default Location',
         domain=[('type', '=', 'storage')])
 

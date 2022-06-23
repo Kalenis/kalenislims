@@ -23,6 +23,7 @@ from . import party
 def register():
     Pool.register(
         formula_parser.FormulaParser,
+        department.Headquarters,
         department.Department,
         department.UserDepartment,
         configuration.NotebookView,

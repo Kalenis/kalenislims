@@ -3313,7 +3313,9 @@ class ResultReport(Report):
         comments = {}
         fractions = {}
         methods = {}
+        methods_by_hq = {}
         pnt_methods = {}
+        pnt_methods_by_hq = {}
         notebook_lines = ResultsLine.search([
             ('detail_sample.version_detail.id', '=', report.id),
             ('hide', '=', False),
@@ -3494,6 +3496,32 @@ class ResultReport(Report):
                     'method': t_line.method.name,
                     }
 
+            headquarters = t_line.department and t_line.department.headquarters
+            hq_id = headquarters and headquarters.id or None
+            if hq_id not in methods_by_hq:
+                methods_by_hq[hq_id] = {
+                    'headquarters': headquarters and headquarters.name or '',
+                    'methods': {},
+                    }
+            if method_id not in methods_by_hq[hq_id]['methods']:
+                methods_by_hq[hq_id]['methods'][method_id] = {
+                    'method': t_line.method.name,
+                    'analysis': [],
+                    }
+            methods_by_hq[hq_id]['methods'][method_id]['analysis'].append(
+                record['analysis'])
+
+            if hq_id not in pnt_methods_by_hq:
+                pnt_methods_by_hq[hq_id] = {
+                    'headquarters': headquarters and headquarters.name or '',
+                    'methods': {},
+                    }
+            if record['pnt'] not in pnt_methods_by_hq[hq_id]['methods']:
+                pnt_methods_by_hq[hq_id]['methods'][record['pnt']] = {
+                    'pnt': record['pnt'],
+                    'method': t_line.method.name,
+                    }
+
             if not reference_sample or sample.date < reference_sample.date:
                 with Transaction().set_context(language=lang_code):
                     reference_sample = Sample(sample.id)
@@ -3668,6 +3696,26 @@ class ResultReport(Report):
             report_context['methods'].append(method)
 
         report_context['pnt_methods'] = [m for m in pnt_methods.values()]
+
+        report_context['methods_by_hq'] = []
+        for hq in methods_by_hq.values():
+            record = {
+                'name': hq['headquarters'],
+                'methods': [],
+                }
+            for method in hq['methods'].values():
+                concat_lines = ', '.join(list(set(method['analysis'])))
+                method['analysis'] = concat_lines
+                record['methods'].append(method)
+            report_context['methods_by_hq'].append(record)
+
+        report_context['pnt_methods_by_hq'] = []
+        for hq in pnt_methods_by_hq.values():
+            record = {
+                'name': hq['headquarters'],
+                'methods': [m for m in hq['methods'].values()],
+                }
+            report_context['pnt_methods_by_hq'].append(record)
 
         report_context['enac'] = 'True' if enac else 'False'
         if enac:

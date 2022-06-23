@@ -18,7 +18,15 @@ msgctxt "field:company.department,default_location:"
 msgid "Default Location"
 msgstr "Ubicación por defecto"
 
+msgctxt "field:company.department,headquarters:"
+msgid "Headquarters"
+msgstr "Sede"
+
 msgctxt "field:company.department,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:company.headquarters,name:"
 msgid "Name"
 msgstr "Nombre"
 
@@ -6754,6 +6762,10 @@ msgctxt "model:company.department,name:"
 msgid "Department"
 msgstr "Departamento"
 
+msgctxt "model:company.headquarters,name:"
+msgid "Headquarters"
+msgstr "Sede"
+
 msgctxt "model:ir.action,name:"
 msgid "Acknowledgment of Samples Receipt"
 msgstr "Acuse de recibo de muestras"
@@ -6769,6 +6781,10 @@ msgstr "Adjuntos"
 msgctxt "model:ir.action,name:act_company_department_list"
 msgid "Departments"
 msgstr "Departamentos"
+
+msgctxt "model:ir.action,name:act_company_headquarters_list"
+msgid "Headquarters"
+msgstr "Sedes"
 
 msgctxt "model:ir.action,name:act_lims_analysis_family_certificant_list"
 msgid "Certificant Party - Product Type - Matrix"
@@ -8633,6 +8649,10 @@ msgstr "Cuaderno de laboratorio"
 msgctxt "model:ir.ui.menu,name:company_department_menu"
 msgid "Departments"
 msgstr "Departamentos"
+
+msgctxt "model:ir.ui.menu,name:company_headquarters_menu"
+msgid "Headquarters"
+msgstr "Sedes"
 
 msgctxt "model:ir.ui.menu,name:lims_analysis_family_menu"
 msgid "Analysis Families"

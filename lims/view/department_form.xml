@@ -4,6 +4,8 @@
     <field name="code"/>
     <label name="name"/>
     <field name="name"/>
+    <label name="headquarters"/>
+    <field name="headquarters"/>
     <label name="default_location"/>
     <field name="default_location"/>
 </form>
