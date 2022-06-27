@@ -4,5 +4,8 @@
         <record model="ir.message" id="msg_sign_report_error">
             <field name="text">Unable to digitally sign results report %(report)s</field>
         </record>
+        <record model="ir.message" id="msg_sign_attachment_error">
+            <field name="text">Unable to digitally sign attachment "%(name)s" in results report %(report)s</field>
+        </record>
     </data>
 </tryton>

@@ -459,7 +459,6 @@ class SendResultsReport(Wizard):
 
                 logger.info('Send Results Report: %s: Build',
                     report.number)
-                group['reports_ready'].append(report)
 
                 for lang, cache in report_cache.items():
                     report.attach_report(cache, lang)
@@ -468,10 +467,23 @@ class SendResultsReport(Wizard):
                     group['attachments_data'].append(
                         report.get_attached_report(cache, lang))
 
-                for attachment in report.mail_attachments:
-                    data = attachment.get_attachment_data()
-                    if data:
+                try:
+                    for attachment in report.mail_attachments:
+                        data = attachment.get_attachment_data()
+                        if not data:
+                            continue
+                        logger.info(
+                            'Send Results Report: %s: Extra attachment (%s)' %
+                            (report.number, attachment.name))
                         group['attachments_data'].append(data)
+                except Exception as e:
+                    reports_not_ready.append(report)
+                    logger.warning('Send Results Report: %s: '
+                        'IGNORED: EXTRA ATTACHMENT FAILED',
+                        report.number)
+                    continue
+
+                group['reports_ready'].append(report)
 
                 if group['cie_fraction_type']:
                     group['to_addrs'][email_qa] = 'QA'

@@ -10,6 +10,7 @@ def register():
     Pool.register(
         results_report.ResultsReportVersionDetail,
         results_report.ResultsReport,
+        results_report.ResultsReportAttachment,
         module='lims_digital_sign', type_='model')
     Pool.register(
         results_report.ResultsReportAnnulation,

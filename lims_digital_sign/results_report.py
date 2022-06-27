@@ -90,6 +90,41 @@ class ResultsReport(metaclass=PoolMeta):
                     report=self.number))
 
 
+class ResultsReportAttachment(metaclass=PoolMeta):
+    __name__ = 'lims.results_report.attachment'
+
+    def get_attachment_data(self):
+        data = super().get_attachment_data()
+        if data['format'] == 'pdf':
+            signed_content = self.sign_attachment(data['content'])
+            data['content'] = signed_content
+        return data
+
+    def sign_attachment(self, cache):
+        listen = tconfig.get('token', 'listen')
+        path = tconfig.get('token', 'path')
+
+        t = time.strftime("%Y%m%d%H%M%S")
+        origin = ''.join(['origin', t, '.pdf'])
+        target = ''.join(['target', t, '.pdf'])
+
+        try:
+            with open(os.path.join(path, origin), 'wb') as f:
+                f.write(cache)
+
+            token = GetToken(listen, origin, target)
+            token.signDoc()
+
+            with open(os.path.join(path, target), 'rb') as f:
+                f_target = f.read()
+            return f_target
+        except Exception as e:
+            logger.error(str(e))
+            raise UserError(gettext(
+                'lims_digital_sign.msg_sign_attachment_error',
+                name=self.name, report=self.results_report.number))
+
+
 class ResultsReportAnnulation(metaclass=PoolMeta):
     __name__ = 'lims.results_report_annulation'
 
