@@ -3643,7 +3643,7 @@
        <table:table-column table:style-name="Tabla11.A"/>
        <table:table-row>
         <table:table-cell table:style-name="Tabla11.A1" office:value-type="string">
-         <text:p text:style-name="P109"><text:placeholder text:placeholder-type="text">&lt;for each=&quot;hg in pnt_methods_by_hq&quot;&gt;</text:placeholder></text:p>
+         <text:p text:style-name="P109"><text:placeholder text:placeholder-type="text">&lt;for each=&quot;hq in pnt_methods_by_hq&quot;&gt;</text:placeholder></text:p>
         </table:table-cell>
        </table:table-row>
        <table:table-row>
