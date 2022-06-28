@@ -327,6 +327,18 @@ class ChangeSampleDiagnostician(Wizard):
         return 'end'
 
 
+class ResultsReportRelease(metaclass=PoolMeta):
+    __name__ = 'lims.results_report_release'
+
+    def _process_transitions(self, detail):
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
+        if detail.state == 'draft':
+            ResultsDetail.diagnose([detail])
+        elif detail.state == 'diagnosed':
+            ResultsDetail.revise([detail])
+        super()._process_transitions(detail)
+
+
 class OpenSamplesComparatorAsk(ModelView):
     'Samples Comparator'
     __name__ = 'lims.samples_comparator.ask'

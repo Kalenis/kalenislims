@@ -50,6 +50,7 @@ def register():
     Pool.register(
         sample.CreateSample,
         results_report.ChangeSampleDiagnostician,
+        results_report.ResultsReportRelease,
         results_report.OpenSamplesComparator,
         notebook.NotebookRepeatAnalysis,
         notebook.NotebookLineRepeatAnalysis,
