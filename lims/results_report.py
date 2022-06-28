@@ -3651,15 +3651,24 @@ class ResultsReportRelease(Wizard):
 
     def transition_start(self):
         ResultsDetail = Pool().get('lims.results_report.version.detail')
-        details_to_release = []
         for active_id in Transaction().context['active_ids']:
             detail = ResultsDetail(active_id)
-            if detail.state != 'revised':
+            if detail.state in ['released', 'annulled']:
                 continue
-            details_to_release.append(detail)
-        if details_to_release:
-            ResultsDetail.release(details_to_release)
+            self._process_transitions(detail)
         return 'end'
+
+    def _process_transitions(self, detail):
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
+        if detail.state == 'waiting':
+            ResultsDetail.draft([detail])
+        elif detail.state == 'draft':
+            ResultsDetail.revise([detail])
+        elif detail.state == 'revised':
+            ResultsDetail.release([detail])
+        # if not final state process again
+        if detail.state != 'released':
+            self._process_transitions(detail)
 
     def end(self):
         return 'reload'
