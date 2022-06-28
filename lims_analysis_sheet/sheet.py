@@ -527,7 +527,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 condition=sql_table.notebook_line == notebook_line.id)
 
             cursor.execute(*sql_table.select(Count(Literal('*')),
-                where=sql_table.compilation == s.compilation.id))
+                where=((sql_table.compilation == s.compilation.id) &
+                    (sql_table.notebook_line != Null))))
             total = cursor.fetchone()[0]
 
             results = _ZERO
