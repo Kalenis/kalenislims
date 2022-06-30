@@ -12,4 +12,6 @@
     <field name="destination_product_type"/>
     <label name="destination_matrix"/>
     <field name="destination_matrix"/>
+    <label name="typify_additionals"/>
+    <field name="typify_additionals"/>
 </form>

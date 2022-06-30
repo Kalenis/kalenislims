@@ -22,5 +22,7 @@
         <field name="destination_matrices" colspan="2"/>
         <label name="destination_method"/>
         <field name="destination_method"/>
+        <label name="typify_additionals"/>
+        <field name="typify_additionals"/>
     </group>
 </form>

@@ -6220,6 +6220,27 @@ msgctxt "field:lims.typification.calculated,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
+msgctxt "field:lims.typification.calculated.copy.confirm,summary:"
+msgid "Summary"
+msgstr "Resumen"
+
+msgctxt "field:lims.typification.calculated.copy.error,message:"
+msgid "Message"
+msgstr "Mensaje"
+
+msgctxt ""
+"field:lims.typification.calculated.copy.result,existing_typifications:"
+msgid "Existing Typifications"
+msgstr "Tipificaciones existentes"
+
+msgctxt "field:lims.typification.calculated.copy.result,message:"
+msgid "Message"
+msgstr "Mensaje"
+
+msgctxt "field:lims.typification.calculated.copy.result,new_typifications:"
+msgid "New Typifications"
+msgstr "Tipificaciones nuevas"
+
 msgctxt "field:lims.typification.calculated.copy.start,destination_matrix:"
 msgid "Matrix"
 msgstr "Matriz"
@@ -6240,6 +6261,10 @@ msgstr "Matriz"
 msgctxt "field:lims.typification.calculated.copy.start,origin_product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
+
+msgctxt "field:lims.typification.calculated.copy.start,typify_additionals:"
+msgid "Typify missing additionals"
+msgstr "Tipificar adicionales faltantes"
 
 msgctxt "field:lims.typification.calculated.readonly,analysis:"
 msgid "Analysis"
@@ -6312,6 +6337,10 @@ msgstr "Método"
 msgctxt "field:lims.typification.copy.start,origin_product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
+
+msgctxt "field:lims.typification.copy.start,typify_additionals:"
+msgid "Typify missing additionals"
+msgstr "Tipificar adicionales faltantes"
 
 msgctxt "field:lims.typification.readonly,analysis:"
 msgid "Analysis"
@@ -8442,6 +8471,10 @@ msgctxt "model:ir.message,text:msg_typificated_method"
 msgid "You can not delete method \"%(method)s\" because is typificated"
 msgstr "No puede eliminar el método «%(method)s» porque está tipificado"
 
+msgctxt "model:ir.message,text:msg_typification_calculated_copy_action"
+msgid "You are going to COPY"
+msgstr "Está por COPIAR"
+
 msgctxt "model:ir.message,text:msg_typification_copy_action"
 msgid "You are going to %(action)s"
 msgstr "Está por %(action)s"
@@ -9978,6 +10011,18 @@ msgstr "Tipificación - Análisis adicional"
 msgctxt "model:lims.typification.calculated,name:"
 msgid "Calculated Typification"
 msgstr "Tipificación calculada"
+
+msgctxt "model:lims.typification.calculated.copy.confirm,name:"
+msgid "Copy Typification"
+msgstr "Copiar tipificación"
+
+msgctxt "model:lims.typification.calculated.copy.error,name:"
+msgid "Copy Typification"
+msgstr "Copiar tipificación"
+
+msgctxt "model:lims.typification.calculated.copy.result,name:"
+msgid "Copy Typification"
+msgstr "Copiar tipificación"
 
 msgctxt "model:lims.typification.calculated.copy.start,name:"
 msgid "Copy Typification"
@@ -15727,9 +15772,29 @@ msgctxt "wizard_button:lims.trend.chart.open,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
-msgctxt "wizard_button:lims.typification.calculated.copy,start,confirm:"
+msgctxt "wizard_button:lims.typification.calculated.copy,ask,confirm:"
 msgid "Confirm"
 msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.typification.calculated.copy,ask,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.typification.calculated.copy,error,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.typification.calculated.copy,result,end:"
+msgid "Ok"
+msgstr "Aceptar"
+
+msgctxt "wizard_button:lims.typification.calculated.copy,result,save:"
+msgid "Save"
+msgstr "Guardar"
+
+msgctxt "wizard_button:lims.typification.calculated.copy,start,ask:"
+msgid "Continue"
+msgstr "Continuar"
 
 msgctxt "wizard_button:lims.typification.calculated.copy,start,end:"
 msgid "Cancel"

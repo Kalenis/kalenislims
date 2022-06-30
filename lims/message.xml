@@ -508,6 +508,9 @@
         <record model="ir.message" id="msg_trend_chart_analysis_uom">
             <field name="text">Not all analysis share the same UoM</field>
         </record>
+        <record model="ir.message" id="msg_typification_calculated_copy_action">
+            <field name="text">You are going to COPY</field>
+        </record>
         <record model="ir.message" id="msg_typification_copy_action">
             <field name="text">You are going to %(action)s</field>
         </record>

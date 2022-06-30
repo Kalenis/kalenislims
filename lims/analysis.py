@@ -2129,10 +2129,15 @@ class CopyTypificationStart(ModelView):
         ], 'Action', required=True,
         help='If choose <Move>, the origin typifications will be deactivated')
     action_string = action.translated('action')
+    typify_additionals = fields.Boolean('Typify missing additionals')
 
     @staticmethod
     def default_action():
         return 'copy'
+
+    @staticmethod
+    def default_typify_additionals():
+        return True
 
 
 class CopyTypificationConfirm(ModelView):
@@ -2284,13 +2289,14 @@ class CopyTypification(Wizard):
         method_id = (self.start.destination_method.id if
             self.start.destination_method else None)
 
-        error_additionals = ''
         existing_typifications = []
-        new_typifications = []
+        typify_additionals = self.start.typify_additionals
+        error_additionals = ''
 
         to_copy = {}
         new_by_defaults = []
         for origin in origins:
+
             # check destination method available in analysis
             if method_id:
                 method_domain = [m.id for m in origin.analysis.methods]
@@ -2303,6 +2309,7 @@ class CopyTypification(Wizard):
                     matrix = Matrix(matrix_id)
 
                     # check if typification already exists
+                    already_exists = False
                     cursor.execute('SELECT id '
                         'FROM "' + Typification._table + '" '
                         'WHERE product_type = %s '
@@ -2314,7 +2321,9 @@ class CopyTypification(Wizard):
                     res = cursor.fetchone()
                     if res:
                         existing_typifications.append(res[0])
-                        continue
+                        if not typify_additionals:
+                            continue
+                        already_exists = True
 
                     # check if additionals are typified
                     for a in origin.additionals:
@@ -2326,12 +2335,43 @@ class CopyTypification(Wizard):
                                 'AND valid IS TRUE',
                             (product_type_id, matrix_id, a.id))
                         if cursor.fetchone()[0] == 0:
+                            # Typify missing additionals
+                            if typify_additionals:
+                                additional_origin = Typification.search([
+                                    ('product_type', '=',
+                                        self.start.origin_product_type.id),
+                                    ('matrix', '=',
+                                        self.start.origin_matrix.id),
+                                    ('analysis', '=', a.id),
+                                    ('valid', '=', True),
+                                    ('by_default', '=', True),
+                                    ])
+                                if additional_origin:
+                                    additional_origin = additional_origin[0]
+
+                                    if additional_origin not in to_copy:
+                                        to_copy[additional_origin] = {
+                                            'typification': [],
+                                            'scope_version': [],
+                                            }
+                                    default = {
+                                        'valid': True,
+                                        'product_type': product_type_id,
+                                        'matrix': matrix_id,
+                                        'analysis': a.id,
+                                        'by_default': True,
+                                        }
+                                    to_copy[additional_origin][
+                                        'typification'].append(default)
+                                    continue
+
                             error_additionals += '* %s\n' % gettext(
                                 'lims.msg_not_typified',
                                 analysis=a.rec_name,
                                 product_type=product_type.rec_name,
                                 matrix=matrix.rec_name)
-                    if error_additionals:
+
+                    if already_exists or error_additionals:
                         continue
 
                     if self.start.action == 'move':
@@ -2384,6 +2424,7 @@ class CopyTypification(Wizard):
                 error_additionals)
             return 'error'
 
+        new_typifications = []
         for typification, defaults in to_copy.items():
             for default in defaults['typification']:
                 t = Typification.copy([typification], default=default)
@@ -2457,6 +2498,36 @@ class CopyCalculatedTypificationStart(ModelView):
         'Product type', required=True)
     destination_matrix = fields.Many2One('lims.matrix', 'Matrix',
         required=True)
+    typify_additionals = fields.Boolean('Typify missing additionals')
+
+    @staticmethod
+    def default_typify_additionals():
+        return True
+
+
+class CopyCalculatedTypificationConfirm(ModelView):
+    'Copy Typification'
+    __name__ = 'lims.typification.calculated.copy.confirm'
+
+    summary = fields.Text('Summary', readonly=True)
+
+
+class CopyCalculatedTypificationError(ModelView):
+    'Copy Typification'
+    __name__ = 'lims.typification.calculated.copy.error'
+
+    message = fields.Text('Message', readonly=True)
+
+
+class CopyCalculatedTypificationResult(ModelView):
+    'Copy Typification'
+    __name__ = 'lims.typification.calculated.copy.result'
+
+    message = fields.Text('Message', readonly=True)
+    existing_typifications = fields.Many2Many('lims.typification',
+        None, None, 'Existing Typifications')
+    new_typifications = fields.Many2Many('lims.typification',
+        None, None, 'New Typifications')
 
 
 class CopyCalculatedTypification(Wizard):
@@ -2466,9 +2537,64 @@ class CopyCalculatedTypification(Wizard):
     start = StateView('lims.typification.calculated.copy.start',
         'lims.lims_copy_calculated_typification_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Continue', 'ask', 'tryton-ok', default=True),
+            ])
+    ask = StateView('lims.typification.calculated.copy.confirm',
+        'lims.lims_copy_calculated_typification_confirm_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
             Button('Confirm', 'confirm', 'tryton-ok', default=True),
             ])
     confirm = StateTransition()
+    error = StateView('lims.typification.calculated.copy.error',
+        'lims.lims_copy_calculated_typification_error_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel', default=True),
+            ])
+    result = StateView('lims.typification.calculated.copy.result',
+        'lims.lims_copy_calculated_typification_result_view_form', [
+            Button('Save', 'save', 'tryton-save'),
+            Button('Ok', 'end', 'tryton-ok', default=True),
+            ])
+    save = StateAction('lims.report_typification_copy_spreadsheet')
+
+    def default_ask(self, fields):
+        summary = '%s\n' % gettext(
+            'lims.msg_typification_calculated_copy_action')
+
+        # FROM
+        summary += '\n%s\n' % gettext('lims.msg_typification_copy_from')
+
+        # Product type
+        summary += '%s\n' % gettext(
+            'lims.msg_typification_copy_product_type',
+            product_type=self.start.origin_product_type.description)
+
+        # Matrix
+        summary += '%s\n' % gettext(
+            'lims.msg_typification_copy_matrix',
+            matrix=self.start.origin_matrix.description)
+
+        # Analysis
+        summary += '%s\n' % gettext(
+            'lims.msg_typification_copy_analysis',
+            analysis=self.start.origin_analysis.description)
+
+        # TO
+        summary += '\n%s\n' % gettext('lims.msg_typification_copy_to')
+
+        # Product type
+        summary += '%s\n' % gettext(
+            'lims.msg_typification_copy_product_type',
+            product_type=self.start.destination_product_type.description)
+
+        # Matrix
+        summary += '%s\n' % gettext(
+            'lims.msg_typification_copy_matrix',
+            matrix=self.start.destination_matrix.description)
+
+        return {'summary': summary}
+
+    def default_error(self, fields):
+        return {'message': self.error.message}
 
     def transition_confirm(self):
         cursor = Transaction().connection.cursor()
@@ -2492,14 +2618,21 @@ class CopyCalculatedTypification(Wizard):
 
         origins = Typification.search(clause)
 
-        product_type_id = self.start.destination_product_type.id
-        matrix_id = self.start.destination_matrix.id
+        product_type = self.start.destination_product_type
+        product_type_id = product_type.id
+        matrix = self.start.destination_matrix
+        matrix_id = matrix.id
+
+        existing_typifications = []
+        typify_additionals = self.start.typify_additionals
+        error_additionals = ''
 
         to_copy = {}
         new_by_defaults = []
         for origin in origins:
 
             # check if typification already exists
+            already_exists = False
             cursor.execute('SELECT id '
                 'FROM "' + Typification._table + '" '
                 'WHERE product_type = %s '
@@ -2510,7 +2643,10 @@ class CopyCalculatedTypification(Wizard):
                     origin.method.id))
             res = cursor.fetchone()
             if res:
-                continue
+                existing_typifications.append(res[0])
+                if not typify_additionals:
+                    continue
+                already_exists = True
 
             # check if additionals are typified
             for a in origin.additionals:
@@ -2522,11 +2658,44 @@ class CopyCalculatedTypification(Wizard):
                         'AND valid IS TRUE',
                     (product_type_id, matrix_id, a.id))
                 if cursor.fetchone()[0] == 0:
-                    raise UserError(gettext('lims.msg_not_typified',
+                    # Typify missing additionals
+                    if typify_additionals:
+                        additional_origin = Typification.search([
+                            ('product_type', '=',
+                                self.start.origin_product_type.id),
+                            ('matrix', '=',
+                                self.start.origin_matrix.id),
+                            ('analysis', '=', a.id),
+                            ('valid', '=', True),
+                            ('by_default', '=', True),
+                            ])
+                        if additional_origin:
+                            additional_origin = additional_origin[0]
+
+                            if additional_origin not in to_copy:
+                                to_copy[additional_origin] = {
+                                    'typification': [],
+                                    'scope_version': [],
+                                    }
+                            default = {
+                                'valid': True,
+                                'product_type': product_type_id,
+                                'matrix': matrix_id,
+                                'analysis': a.id,
+                                'by_default': True,
+                                }
+                            to_copy[additional_origin][
+                                'typification'].append(default)
+                            continue
+
+                    error_additionals += '* %s\n' % gettext(
+                        'lims.msg_not_typified',
                         analysis=a.rec_name,
-                        product_type=(
-                            self.start.destination_product_type.rec_name),
-                        matrix=self.start.destination_matrix.rec_name))
+                        product_type=product_type.rec_name,
+                        matrix=matrix.rec_name)
+
+            if already_exists or error_additionals:
+                continue
 
             if origin not in to_copy:
                 to_copy[origin] = {
@@ -2566,18 +2735,53 @@ class CopyCalculatedTypification(Wizard):
                 to_copy[origin]['scope_version'].extend([l.version.id
                     for l in scope_lines])
 
+        if error_additionals:
+            self.error.message = '%s\n%s' % (
+                gettext('lims.msg_typification_copy_additional'),
+                error_additionals)
+            return 'error'
+
+        new_typifications = []
         for typification, defaults in to_copy.items():
             for default in defaults['typification']:
                 t = Typification.copy([typification], default=default)
                 t_id = t[0].id
 
+                new_typifications.append(t_id)
                 if defaults['scope_version']:
                     TechnicalScopeVersionLine.create([{
                         'typification': t_id,
                         'version': v_id,
                         } for v_id in defaults['scope_version']])
 
-        return 'end'
+        self.result.message = '%s' % gettext(
+            'lims.msg_typification_copy_new_typifications',
+            qty=len(new_typifications))
+        if len(existing_typifications) > 0:
+            self.result.message += '\n%s' % gettext(
+                'lims.msg_typification_copy_existing_typifications',
+                qty=len(existing_typifications))
+        self.result.existing_typifications = existing_typifications
+        self.result.new_typifications = new_typifications
+        return 'result'
+
+    def default_result(self, fields):
+        return {
+            'message': self.result.message,
+            'existing_typifications': [t.id
+                for t in self.result.existing_typifications],
+            'new_typifications': [t.id
+                for t in self.result.new_typifications],
+            }
+
+    def do_save(self, action):
+        data = {
+            'existing_typifications': [t.id
+                for t in self.result.existing_typifications],
+            'new_typifications': [t.id
+                for t in self.result.new_typifications],
+            }
+        return action, data
 
 
 class UpdateTypificationStart(ModelView):
