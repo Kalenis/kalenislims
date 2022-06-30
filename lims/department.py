@@ -12,7 +12,7 @@ class Headquarters(ModelSQL, ModelView):
     'Headquarters'
     __name__ = 'company.headquarters'
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, translate=True)
 
 
 class Department(ModelSQL, ModelView):
