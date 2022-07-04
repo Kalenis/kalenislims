@@ -2130,6 +2130,10 @@ class CopyTypificationStart(ModelView):
         help='If choose <Move>, the origin typifications will be deactivated')
     action_string = action.translated('action')
     typify_additionals = fields.Boolean('Typify missing additionals')
+    include_accreditation_scope = fields.Selection([
+        ('yes', 'Include accreditation scope'),
+        ('no', 'Do not include accreditation scope'),
+        ], 'Accreditation scope', required=True)
 
 
 class CopyTypificationConfirm(ModelView):
@@ -2298,6 +2302,8 @@ class CopyTypification(Wizard):
         existing_typifications = []
         typify_additionals = self.start.typify_additionals
         error_additionals = ''
+        include_accreditation_scope = (
+            self.start.include_accreditation_scope == 'yes')
 
         to_copy = {}
         new_by_defaults = []
@@ -2417,12 +2423,13 @@ class CopyTypification(Wizard):
 
                     to_copy[origin]['typification'].append(default)
 
-                    scope_lines = TechnicalScopeVersionLine.search([
-                        ('typification', '=', origin.id),
-                        ])
-                    if scope_lines:
-                        to_copy[origin]['scope_version'].extend([l.version.id
-                            for l in scope_lines])
+                    if include_accreditation_scope:
+                        scope_lines = TechnicalScopeVersionLine.search([
+                            ('typification', '=', origin.id),
+                            ])
+                        if scope_lines:
+                            to_copy[origin]['scope_version'].extend([
+                                l.version.id for l in scope_lines])
 
         if error_additionals:
             self.error.message = '%s\n%s' % (
@@ -2505,6 +2512,10 @@ class CopyCalculatedTypificationStart(ModelView):
     destination_matrix = fields.Many2One('lims.matrix', 'Matrix',
         required=True)
     typify_additionals = fields.Boolean('Typify missing additionals')
+    include_accreditation_scope = fields.Selection([
+        ('yes', 'Include accreditation scope'),
+        ('no', 'Do not include accreditation scope'),
+        ], 'Accreditation scope', required=True)
 
     @staticmethod
     def default_typify_additionals():
@@ -2646,6 +2657,8 @@ class CopyCalculatedTypification(Wizard):
         existing_typifications = []
         typify_additionals = self.start.typify_additionals
         error_additionals = ''
+        include_accreditation_scope = (
+            self.start.include_accreditation_scope == 'yes')
 
         to_copy = {}
         new_by_defaults = []
@@ -2748,12 +2761,13 @@ class CopyCalculatedTypification(Wizard):
 
             to_copy[origin]['typification'].append(default)
 
-            scope_lines = TechnicalScopeVersionLine.search([
-                ('typification', '=', origin.id),
-                ])
-            if scope_lines:
-                to_copy[origin]['scope_version'].extend([l.version.id
-                    for l in scope_lines])
+            if include_accreditation_scope:
+                scope_lines = TechnicalScopeVersionLine.search([
+                    ('typification', '=', origin.id),
+                    ])
+                if scope_lines:
+                    to_copy[origin]['scope_version'].extend([
+                        l.version.id for l in scope_lines])
 
         if error_additionals:
             self.error.message = '%s\n%s' % (

@@ -24,5 +24,7 @@
         <field name="destination_method"/>
         <label name="typify_additionals"/>
         <field name="typify_additionals"/>
+        <label name="include_accreditation_scope"/>
+        <field name="include_accreditation_scope"/>
     </group>
 </form>
