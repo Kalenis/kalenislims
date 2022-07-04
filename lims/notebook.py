@@ -844,6 +844,8 @@ class NotebookLine(ModelSQL, ModelView):
         translate=True, states=_states, depends=_depends)
     final_concentration = fields.Char('Final concentration',
         translate=True, states=_states, depends=_depends)
+    literal_final_concentration = fields.Char('Literal Final concentration',
+        translate=True, states=_states, depends=_depends)
     laboratory_professionals = fields.Many2Many(
         'lims.notebook.line-laboratory.professional', 'notebook_line',
         'professional', 'Preparation professionals',
@@ -1694,6 +1696,8 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     priority = fields.Integer('Priority', readonly=True)
     initial_concentration = fields.Char('Initial concentration', readonly=True)
     final_concentration = fields.Char('Final concentration', readonly=True)
+    literal_final_concentration = fields.Char('Literal Final concentration',
+        readonly=True)
     laboratory_professionals = fields.Function(fields.Many2Many(
         'lims.laboratory.professional', None, None,
         'Preparation professionals'), 'get_line_field',
@@ -1842,6 +1846,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
             service.priority,
             line.initial_concentration,
             line.final_concentration,
+            line.literal_final_concentration,
             line.initial_unit,
             line.final_unit,
             line.result_modifier,
@@ -4887,6 +4892,7 @@ class NotebookRepeatAnalysis(Wizard):
                 defaults = self._get_repetition_defaults(nline_to_repeat)
                 if rm_type:
                     defaults['final_concentration'] = None
+                    defaults['literal_final_concentration'] = None
                     defaults['initial_unit'] = rm_start_uom
                     defaults['final_unit'] = None
                     defaults['detection_limit'] = None
@@ -4940,6 +4946,7 @@ class NotebookRepeatAnalysis(Wizard):
                 if line.concentration_level else None),
             'initial_concentration': line.initial_concentration,
             'final_concentration': line.final_concentration,
+            'literal_final_concentration': line.literal_final_concentration,
             'initial_unit': (line.initial_unit.id
                 if line.initial_unit else None),
             'final_unit': line.final_unit.id if line.final_unit else None,
@@ -5084,6 +5091,7 @@ class NotebookLineRepeatAnalysis(Wizard):
                 defaults['method'] = self.start.method.id
             if rm_type:
                 defaults['final_concentration'] = None
+                defaults['literal_final_concentration'] = None
                 defaults['initial_unit'] = rm_start_uom
                 defaults['final_unit'] = None
                 defaults['detection_limit'] = None
@@ -5137,6 +5145,7 @@ class NotebookLineRepeatAnalysis(Wizard):
                 if line.concentration_level else None),
             'initial_concentration': line.initial_concentration,
             'final_concentration': line.final_concentration,
+            'literal_final_concentration': line.literal_final_concentration,
             'initial_unit': (line.initial_unit.id
                 if line.initial_unit else None),
             'final_unit': line.final_unit.id if line.final_unit else None,

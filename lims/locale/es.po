@@ -2907,6 +2907,10 @@ msgctxt "field:lims.notebook.line,laboratory_professionals:"
 msgid "Preparation professionals"
 msgstr "Profesionales de preparación"
 
+msgctxt "field:lims.notebook.line,literal_final_concentration:"
+msgid "Literal Final concentration"
+msgstr "Concentración final textual"
+
 msgctxt "field:lims.notebook.line,literal_result:"
 msgid "Literal result"
 msgstr "Resultado textual"
@@ -3218,6 +3222,10 @@ msgstr "Profesionales de preparación"
 msgctxt "field:lims.notebook.line.all_fields,line:"
 msgid "Notebook Line"
 msgstr "Línea de cuaderno"
+
+msgctxt "field:lims.notebook.line.all_fields,literal_final_concentration:"
+msgid "Literal Final concentration"
+msgstr "Concentración final textual"
 
 msgctxt "field:lims.notebook.line.all_fields,literal_result:"
 msgid "Literal result"
@@ -6123,6 +6131,10 @@ msgstr "Dominio para Laboratorio"
 msgctxt "field:lims.typification,limit_digits:"
 msgid "Limit digits"
 msgstr "Dígitos de límite"
+
+msgctxt "field:lims.typification,literal_final_concentration:"
+msgid "Literal Final concentration"
+msgstr "Concentración final textual"
 
 msgctxt "field:lims.typification,lower_limit:"
 msgid "Lower limit allowed"

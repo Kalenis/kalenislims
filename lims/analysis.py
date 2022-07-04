@@ -61,6 +61,8 @@ class Typification(ModelSQL, ModelView):
     start_uom = fields.Many2One('product.uom', 'Start UoM',
         domain=[('category.lims_only_available', '=', True)])
     final_concentration = fields.Char('Final concentration', translate=True)
+    literal_final_concentration = fields.Char('Literal Final concentration',
+        translate=True)
     end_uom = fields.Many2One('product.uom', 'End UoM',
         domain=[('category.lims_only_available', '=', True)])
     default_repetitions = fields.Integer('Default repetitions',
@@ -442,8 +444,9 @@ class Typification(ModelSQL, ModelView):
 
             fields_check = ('detection_limit', 'quantification_limit',
                 'lower_limit', 'upper_limit', 'initial_concentration',
-                'final_concentration', 'start_uom', 'end_uom',
-                'calc_decimals', 'significant_digits', 'scientific_notation')
+                'final_concentration', 'literal_final_concentration',
+                'start_uom', 'end_uom', 'calc_decimals', 'significant_digits',
+                'scientific_notation')
             for field in fields_check:
                 if field in vals:
                     cls.update_laboratory_notebook(typifications)
@@ -482,6 +485,8 @@ class Typification(ModelSQL, ModelView):
                         typification.initial_concentration),
                     'final_concentration': _str_value(
                         typification.final_concentration),
+                    'literal_final_concentration': _str_value(
+                        typification.literal_final_concentration),
                     'initial_unit': (typification.start_uom and
                         typification.start_uom.id or None),
                     'final_unit': (typification.end_uom and

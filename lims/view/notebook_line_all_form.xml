@@ -34,6 +34,8 @@
     <field name="initial_concentration"/>
     <label name="final_concentration"/>
     <field name="final_concentration"/>
+    <label name="literal_final_concentration"/>
+    <field name="literal_final_concentration"/>
     <newline/>
     <field name="laboratory_professionals" colspan="4"/>
     <label name="initial_unit"/>

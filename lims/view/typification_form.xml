@@ -32,6 +32,8 @@
     <field name="final_concentration"/>
     <label name="end_uom"/>
     <field name="end_uom"/>
+    <label name="literal_final_concentration"/>
+    <field name="literal_final_concentration"/>
     <group id="decimals" colspan="4" col="6">
         <label name="calc_decimals"/>
         <field name="calc_decimals"/>

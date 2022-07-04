@@ -3466,6 +3466,8 @@ class ResultReport(Report):
                 record['corrected'] = ''
             else:
                 record['corrected'] = ''
+            record['literal_final_concentration'] = (
+                t_line.literal_final_concentration)
 
             conc = getattr(t_line, group_field)
             if conc not in fractions[key]['concentrations']:
@@ -3666,35 +3668,45 @@ class ResultReport(Report):
                                     ))
 
                     show_unit_label = False
+                    literal_final_concentration = None
                     for line in sorted_lines:
+                        if (literal_final_concentration is None and
+                                line['literal_final_concentration']):
+                            literal_final_concentration = line[
+                                'literal_final_concentration']
                         if line['converted_result']:
                             show_unit_label = True
                             break
                     if show_unit_label:
-                        if dry_matter:
+                        if literal_final_concentration is not None:
                             fraction['concentrations'][conc][
                                     'unit_label'] = (
-                                gettext('lims.msg_final_unit_label_4'))
+                                literal_final_concentration)
                         else:
-                            if conc_is_numeric:
-                                if alcohol:
-                                    fraction['concentrations'][conc][
-                                            'unit_label'] = (
-                                        gettext(
-                                            'lims.msg_final_unit_label_1',
-                                            concentration=conc))
+                            if dry_matter:
+                                fraction['concentrations'][conc][
+                                        'unit_label'] = (
+                                    gettext('lims.msg_final_unit_label_4'))
+                            else:
+                                if conc_is_numeric:
+                                    if alcohol:
+                                        fraction['concentrations'][conc][
+                                                'unit_label'] = (
+                                            gettext(
+                                                'lims.msg_final_unit_label_1',
+                                                concentration=conc))
+                                    else:
+                                        fraction['concentrations'][conc][
+                                                'unit_label'] = (
+                                            gettext(
+                                                'lims.msg_final_unit_label_3',
+                                                concentration=conc))
                                 else:
                                     fraction['concentrations'][conc][
                                             'unit_label'] = (
                                         gettext(
-                                            'lims.msg_final_unit_label_3',
+                                            'lims.msg_final_unit_label_2',
                                             concentration=conc))
-                            else:
-                                fraction['concentrations'][conc][
-                                        'unit_label'] = (
-                                    gettext(
-                                        'lims.msg_final_unit_label_2',
-                                        concentration=conc))
 
         report_context['fractions'] = sorted_fractions
 

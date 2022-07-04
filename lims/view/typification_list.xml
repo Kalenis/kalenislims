@@ -13,6 +13,7 @@
     <field name="start_uom"/>
     <field name="final_concentration"/>
     <field name="end_uom"/>
+    <field name="literal_final_concentration"/>
     <field name="default_repetitions"/>
     <field name="technical_scope_versions"/>
     <field name="comments"/>

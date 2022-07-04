@@ -2055,6 +2055,8 @@ class AddFractionControl(Wizard):
                 'device': nline.device.id if nline.device else None,
                 'initial_concentration': nline.initial_concentration,
                 'final_concentration': nline.final_concentration,
+                'literal_final_concentration': (
+                    nline.literal_final_concentration),
                 'initial_unit': (nline.initial_unit.id if
                     nline.initial_unit else None),
                 'final_unit': (nline.final_unit.id if
@@ -2494,6 +2496,7 @@ class AddFractionRMBMZ(Wizard):
             if notebook_lines:
                 defaults = {
                     'final_concentration': None,
+                    'literal_final_concentration': None,
                     'final_unit': None,
                     'detection_limit': None,
                     'quantification_limit': None,
@@ -2674,6 +2677,7 @@ class AddFractionRMBMZ(Wizard):
             if notebook_lines:
                 defaults = {
                     'final_concentration': None,
+                    'literal_final_concentration': None,
                     'final_unit': None,
                     'detection_limit': None,
                     'quantification_limit': None,
@@ -2735,6 +2739,8 @@ class AddFractionRMBMZ(Wizard):
                     'device': nline.device.id if nline.device else None,
                     'initial_concentration': nline.initial_concentration,
                     'final_concentration': nline.final_concentration,
+                    'literal_final_concentration': (
+                        nline.literal_final_concentration),
                     'initial_unit': (nline.initial_unit.id if
                         nline.initial_unit else None),
                     'final_unit': (nline.final_unit.id if
@@ -3535,6 +3541,8 @@ class AddFractionMRT(Wizard):
                     'device': nline.device.id if nline.device else None,
                     'initial_concentration': nline.initial_concentration,
                     'final_concentration': nline.final_concentration,
+                    'literal_final_concentration': (
+                        nline.literal_final_concentration),
                     'initial_unit': (nline.initial_unit.id if
                         nline.initial_unit else None),
                     'final_unit': (nline.final_unit.id if

@@ -619,13 +619,13 @@ class NotebookRule(ModelSQL, ModelView):
     def _target_fields(cls):
         field_list = [
             'end_date', 'method', 'device', 'initial_concentration',
-            'final_concentration', 'initial_unit', 'final_unit',
-            'result_modifier', 'result', 'converted_result_modifier',
-            'converted_result', 'detection_limit', 'quantification_limit',
-            'dilution_factor', 'chromatogram', 'comments',
-            'theoretical_concentration', 'concentration_level', 'decimals',
-            'backup', 'reference', 'literal_result', 'rm_correction_formula',
-            'report', 'uncertainty', 'verification',
+            'final_concentration', 'literal_final_concentration',
+            'initial_unit', 'final_unit', 'result_modifier', 'result',
+            'converted_result_modifier', 'converted_result', 'detection_limit',
+            'quantification_limit', 'dilution_factor', 'chromatogram',
+            'comments', 'theoretical_concentration', 'concentration_level',
+            'decimals', 'backup', 'reference', 'literal_result',
+            'rm_correction_formula', 'report', 'uncertainty', 'verification',
             ]
         return field_list
 

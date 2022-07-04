@@ -1282,6 +1282,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                 repetitions = t.default_repetitions
                 initial_concentration = t.initial_concentration
                 final_concentration = t.final_concentration
+                literal_final_concentration = t.literal_final_concentration
                 initial_unit = t.start_uom and t.start_uom.id or None
                 final_unit = t.end_uom and t.end_uom.id or None
                 detection_limit = t.detection_limit
@@ -1296,6 +1297,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                 repetitions = 0
                 initial_concentration = None
                 final_concentration = None
+                literal_final_concentration = None
                 initial_unit = None
                 final_unit = None
                 detection_limit = None
@@ -1355,6 +1357,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                     'device': detail.device and detail.device.id or None,
                     'initial_concentration': initial_concentration,
                     'final_concentration': final_concentration,
+                    'literal_final_concentration': literal_final_concentration,
                     'initial_unit': initial_unit,
                     'final_unit': final_unit,
                     'detection_limit': detection_limit,
@@ -1381,7 +1384,8 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                     line.analysis.id, line.method.id)
                 if not t:
                     continue
-                for field in ['initial_concentration', 'final_concentration']:
+                for field in ['initial_concentration', 'final_concentration',
+                        'literal_final_concentration']:
                     cursor.execute("SELECT lang, src, value "
                         "FROM ir_translation "
                         "WHERE name = %s "

@@ -15,6 +15,7 @@
     <field name="report_date"/>
     <field name="initial_concentration"/>
     <field name="final_concentration"/>
+    <field name="literal_final_concentration"/>
     <field name="planification"/>
     <field name="controls"/>
     <field name="laboratory_professionals"/>
