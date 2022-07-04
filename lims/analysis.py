@@ -2131,14 +2131,6 @@ class CopyTypificationStart(ModelView):
     action_string = action.translated('action')
     typify_additionals = fields.Boolean('Typify missing additionals')
 
-    @staticmethod
-    def default_action():
-        return 'copy'
-
-    @staticmethod
-    def default_typify_additionals():
-        return True
-
 
 class CopyTypificationConfirm(ModelView):
     'Copy/Move Typification'
@@ -2190,6 +2182,20 @@ class CopyTypification(Wizard):
             Button('Ok', 'end', 'tryton-ok', default=True),
             ])
     save = StateAction('lims.report_typification_copy_spreadsheet')
+
+    def default_start(self, fields):
+        Typification = Pool().get('lims.typification')
+
+        res = {
+            'action': 'copy',
+            'typify_additionals': True,
+            }
+        active_id = Transaction().context['active_id']
+        if active_id:
+            typification = Typification(active_id)
+            res['origin_product_type'] = typification.product_type.id
+            res['origin_matrix'] = typification.matrix.id
+        return res
 
     def default_ask(self, fields):
         summary = '%s\n' % gettext(
@@ -2555,6 +2561,20 @@ class CopyCalculatedTypification(Wizard):
             Button('Ok', 'end', 'tryton-ok', default=True),
             ])
     save = StateAction('lims.report_typification_copy_spreadsheet')
+
+    def default_start(self, fields):
+        CalculatedTypification = Pool().get(
+            'lims.typification.calculated.readonly')
+
+        res = {
+            'typify_additionals': True,
+            }
+        active_id = Transaction().context['active_id']
+        if active_id:
+            typification = CalculatedTypification(active_id)
+            res['origin_product_type'] = typification.product_type.id
+            res['origin_matrix'] = typification.matrix.id
+        return res
 
     def default_ask(self, fields):
         summary = '%s\n' % gettext(
