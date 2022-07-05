@@ -2380,6 +2380,12 @@ class CopyTypification(Wizard):
                                         }
                                     to_copy[additional_origin][
                                         'typification'].append(default)
+
+                                    if include_accreditation_scope:
+                                        to_copy[additional_origin][
+                                            'scope_version'].extend(
+                                                self._get_typification_scope(
+                                                    additional_origin))
                                     continue
 
                             error_additionals += '* %s\n' % gettext(
@@ -2429,12 +2435,8 @@ class CopyTypification(Wizard):
                     to_copy[origin]['typification'].append(default)
 
                     if include_accreditation_scope:
-                        scope_lines = TechnicalScopeVersionLine.search([
-                            ('typification', '=', origin.id),
-                            ])
-                        if scope_lines:
-                            to_copy[origin]['scope_version'].extend([
-                                l.version.id for l in scope_lines])
+                        to_copy[origin]['scope_version'].extend(
+                            self._get_typification_scope(origin))
 
         if error_additionals:
             self.error.message = '%s\n%s' % (
@@ -2465,6 +2467,16 @@ class CopyTypification(Wizard):
         self.result.existing_typifications = existing_typifications
         self.result.new_typifications = new_typifications
         return 'result'
+
+    def _get_typification_scope(self, typification):
+        pool = Pool()
+        TechnicalScopeVersionLine = pool.get(
+            'lims.technical.scope.version.line')
+
+        scope_lines = TechnicalScopeVersionLine.search([
+            ('typification', '=', typification.id),
+            ])
+        return [l.version.id for l in scope_lines]
 
     def default_result(self, fields):
         return {
@@ -2724,6 +2736,12 @@ class CopyCalculatedTypification(Wizard):
                                 }
                             to_copy[additional_origin][
                                 'typification'].append(default)
+
+                            if include_accreditation_scope:
+                                to_copy[additional_origin][
+                                    'scope_version'].extend(
+                                        self._get_typification_scope(
+                                            additional_origin))
                             continue
 
                     error_additionals += '* %s\n' % gettext(
@@ -2767,12 +2785,8 @@ class CopyCalculatedTypification(Wizard):
             to_copy[origin]['typification'].append(default)
 
             if include_accreditation_scope:
-                scope_lines = TechnicalScopeVersionLine.search([
-                    ('typification', '=', origin.id),
-                    ])
-                if scope_lines:
-                    to_copy[origin]['scope_version'].extend([
-                        l.version.id for l in scope_lines])
+                to_copy[origin]['scope_version'].extend(
+                    self._get_typification_scope(origin))
 
         if error_additionals:
             self.error.message = '%s\n%s' % (
@@ -2803,6 +2817,16 @@ class CopyCalculatedTypification(Wizard):
         self.result.existing_typifications = existing_typifications
         self.result.new_typifications = new_typifications
         return 'result'
+
+    def _get_typification_scope(self, typification):
+        pool = Pool()
+        TechnicalScopeVersionLine = pool.get(
+            'lims.technical.scope.version.line')
+
+        scope_lines = TechnicalScopeVersionLine.search([
+            ('typification', '=', typification.id),
+            ])
+        return [l.version.id for l in scope_lines]
 
     def default_result(self, fields):
         return {
