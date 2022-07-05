@@ -805,7 +805,7 @@ class PlanificationServiceDetail(ModelSQL, ModelView):
     is_replanned = fields.Boolean('Is Replanned', select=True)
     planned_service = fields.Many2One('lims.analysis', 'Planned service')
     repetition = fields.Function(fields.Integer('Repetition'),
-        'get_repetition')
+        'get_notebook_line_field')
 
     @staticmethod
     def default_is_control():
@@ -825,10 +825,33 @@ class PlanificationServiceDetail(ModelSQL, ModelView):
     def search_planification(cls, name, clause):
         return [('detail.' + name,) + tuple(clause[1:])]
 
-    def get_repetition(self, name=None):
-        if self.notebook_line:
-            return self.notebook_line.repetition
-        return None
+    @classmethod
+    def get_notebook_line_field(cls, details, names):
+        result = {}
+        for name in names:
+            result[name] = {}
+            if cls._fields[name]._type == 'many2one':
+                for d in details:
+                    if d.notebook_line:
+                        field = getattr(d.notebook_line, name, None)
+                        result[name][d.id] = field.id if field else None
+                    else:
+                        result[name][d.id] = None
+            elif cls._fields[name]._type == 'boolean':
+                for d in details:
+                    if d.notebook_line:
+                        result[name][d.id] = getattr(d.notebook_line,
+                            name, False)
+                    else:
+                        result[name][d.id] = False
+            else:
+                for d in details:
+                    if d.notebook_line:
+                        result[name][d.id] = getattr(d.notebook_line,
+                            name, None)
+                    else:
+                        result[name][d.id] = None
+        return result
 
 
 class PlanificationServiceDetailLaboratoryProfessional(ModelSQL):
@@ -3811,6 +3834,61 @@ class SearchFractionsDetail(ModelSQL, ModelView):
         for d in details:
             result[d.id] = getattr(d.fraction.sample, 'state', None)
         return result
+
+    @classmethod
+    def get_entry_field(cls, details, names):
+        result = {}
+        for name in names:
+            result[name] = {}
+            if cls._fields[name]._type == 'many2one':
+                for d in details:
+                    field = getattr(d.fraction.sample.entry, name, None)
+                    result[name][d.id] = field.id if field else None
+            else:
+                for d in details:
+                    result[name][d.id] = getattr(
+                        d.fraction.sample.entry, name, None)
+        return result
+
+    @classmethod
+    def search_entry_field(cls, name, clause):
+        return [('fraction.sample.entry.' + name,) + tuple(clause[1:])]
+
+    @classmethod
+    def get_sample_field(cls, details, names):
+        result = {}
+        for name in names:
+            result[name] = {}
+            if cls._fields[name]._type == 'many2one':
+                for d in details:
+                    field = getattr(d.fraction.sample, name, None)
+                    result[name][d.id] = field.id if field else None
+            else:
+                for d in details:
+                    result[name][d.id] = getattr(d.fraction.sample, name, None)
+        return result
+
+    @classmethod
+    def search_sample_field(cls, name, clause):
+        return [('fraction.sample.' + name,) + tuple(clause[1:])]
+
+    def _order_sample_field(name):
+        def order_field(tables):
+            pool = Pool()
+            Sample = pool.get('lims.sample')
+            Fraction = pool.get('lims.fraction')
+            field = Sample._fields[name]
+            table, _ = tables[None]
+            fraction_tables = tables.get('fraction')
+            if fraction_tables is None:
+                fraction = Fraction.__table__()
+                fraction_tables = {
+                    None: (fraction, fraction.id == table.fraction),
+                    }
+                tables['fraction'] = fraction_tables
+            return field.convert_order(name, fraction_tables, Fraction)
+        return staticmethod(order_field)
+    order_equipment = _order_sample_field('equipment')
 
     @classmethod
     def get_fraction_field(cls, details, names):
