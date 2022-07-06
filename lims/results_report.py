@@ -3859,107 +3859,21 @@ class ResultReport(Report):
 
     @classmethod
     def get_result(cls, report_section, notebook_line, obs_ql, language):
-        literal_result = notebook_line.literal_result
-        result = notebook_line.result
-        decimals = notebook_line.decimals
-        result_modifier = notebook_line.result_modifier
-
-        with Transaction().set_context(language=language):
-            res = ''
-            if report_section in ('amb', 'for', 'rp', 'sq'):
-                if literal_result:
-                    res = literal_result
-                else:
-                    if result:
-                        res = round(float(result), decimals)
-                        res = format(res, '.{}f'.format(decimals))
-                    else:
-                        res = ''
-                    if result_modifier == 'eq':
-                        res = res
-                    elif result_modifier == 'low':
-                        res = gettext('lims.msg_quantification_limit', loq=res)
-                        obs_ql = True
-                    elif result_modifier == 'd':
-                        res = gettext('lims.msg_d')
-                    elif result_modifier == 'nd':
-                        res = gettext('lims.msg_nd')
-                    elif result_modifier == 'ni':
-                        res = ''
-                    elif result_modifier == 'pos':
-                        res = gettext('lims.msg_pos')
-                    elif result_modifier == 'neg':
-                        res = gettext('lims.msg_neg')
-                    elif result_modifier == 'pre':
-                        res = gettext('lims.msg_pre')
-                    elif result_modifier == 'abs':
-                        res = gettext('lims.msg_abs')
-                    else:
-                        res = result_modifier
-            elif report_section == 'mi':
-                if literal_result:
-                    res = literal_result
-                else:
-                    if result:
-                        res = round(float(result), decimals)
-                        res = format(res, '.{}f'.format(decimals))
-                    else:
-                        res = ''
-                    if result_modifier == 'eq':
-                        res = res
-                    elif result_modifier == 'low':
-                        res = '< %s' % res
-                    elif result_modifier == 'd':
-                        res = gettext('lims.msg_d')
-                    elif result_modifier == 'nd':
-                        res = gettext('lims.msg_nd')
-                    elif result_modifier == 'pos':
-                        res = gettext('lims.msg_pos')
-                    elif result_modifier == 'neg':
-                        res = gettext('lims.msg_neg')
-                    elif result_modifier == 'pre':
-                        res = gettext('lims.msg_pre')
-                    elif result_modifier == 'abs':
-                        res = gettext('lims.msg_abs')
-            return res, obs_ql
+        res = notebook_line.formated_result
+        if (report_section in ('amb', 'for', 'rp', 'sq') and
+                notebook_line.result_modifier == 'low'):
+            obs_ql = True
+        return res, obs_ql
 
     @classmethod
     def get_converted_result(cls, report_section, report_result_type,
             notebook_line, obs_ql, language):
-        if (report_section in ('for', 'mi', 'rp') or
-                report_result_type not in ('both', 'both_range')):
-            return '', obs_ql
-
-        literal_result = notebook_line.literal_result
-        converted_result = notebook_line.converted_result
-        analysis = notebook_line.analysis.code
-        decimals = notebook_line.decimals
-        converted_result_modifier = notebook_line.converted_result_modifier
-
-        with Transaction().set_context(language=language):
-            res = ''
-            if analysis != '0001' and not literal_result:
-                if converted_result_modifier == 'neg':
-                    res = gettext('lims.msg_neg')
-                elif converted_result_modifier == 'pos':
-                    res = gettext('lims.msg_pos')
-                elif converted_result_modifier == 'pre':
-                    res = gettext('lims.msg_pre')
-                elif converted_result_modifier == 'abs':
-                    res = gettext('lims.msg_abs')
-                elif converted_result_modifier == 'd':
-                    res = gettext('lims.msg_d')
-                elif converted_result_modifier == 'nd':
-                    res = gettext('lims.msg_nd')
-                else:
-                    if converted_result and converted_result_modifier != 'ni':
-                        res = round(float(converted_result), decimals)
-                        res = format(res, '.{}f'.format(decimals))
-                        if converted_result_modifier == 'low':
-                            res = gettext(
-                                'lims.msg_quantification_limit', loq=res)
-                            obs_ql = True
-            return res, obs_ql
+        res = notebook_line.get_formated_converted_result()
+        if (notebook_line.analysis.code != '0001' and
+                not notebook_line.literal_result
+                and notebook_line.converted_result_modifier == 'low'):
+            obs_ql = True
+        return res, obs_ql
 
     @classmethod
     def get_initial_unit(cls, report_section, report_result_type,
