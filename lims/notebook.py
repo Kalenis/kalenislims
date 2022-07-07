@@ -4880,11 +4880,13 @@ class NotebookRepeatAnalysis(Wizard):
             to_update = []
             details_to_update = []
             for analysis_id in analysis_to_repeat:
-                nlines = NotebookLine.search([
+                clause = [
                     ('notebook', '=', notebook.id),
                     ('analysis', '=', analysis_id),
                     ('analysis.behavior', '=', 'normal'),
-                    ], order=[('repetition', 'DESC')], limit=1)
+                    ]
+                nlines = NotebookLine.search(clause,
+                    order=[('repetition', 'DESC')], limit=1)
                 if not nlines:
                     continue
                 nline_to_repeat = nlines[0]
@@ -5041,7 +5043,8 @@ class NotebookLineRepeatAnalysis(Wizard):
             'analysis_domain': notebook_analysis,
             }
         if len(notebook_analysis) == 1:
-            default['analysis'] = notebook_analysis[0]
+            default['analysis'] = notebook_line.analysis.id
+            default['method'] = notebook_line.method.id
         return default
 
     def _unaccept_original(self):
@@ -5077,11 +5080,15 @@ class NotebookLineRepeatAnalysis(Wizard):
         to_update = []
         details_to_update = []
         for analysis_id in analysis_to_repeat:
-            nlines = NotebookLine.search([
+            clause = [
                 ('notebook', '=', notebook.id),
                 ('analysis', '=', analysis_id),
                 ('analysis.behavior', '=', 'normal'),
-                ], order=[('repetition', 'DESC')], limit=1)
+                ]
+            if self.start.method:
+                clause.append(('method', '=', self.start.method.id))
+            nlines = NotebookLine.search(clause,
+                order=[('repetition', 'DESC')], limit=1)
             if not nlines:
                 continue
             nline_to_repeat = nlines[0]
