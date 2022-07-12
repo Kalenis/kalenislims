@@ -2747,6 +2747,40 @@ class RelateAnalysis(Wizard):
         return 'end'
 
 
+class RelateMethodStart(ModelView):
+    'Relate Method'
+    __name__ = 'lims.relate_method.start'
+
+    method = fields.Many2One('lims.lab.method', 'Method',
+        required=True)
+
+
+class RelateMethod(Wizard):
+    'Relate Method'
+    __name__ = 'lims.relate_method'
+
+    start = StateView('lims.relate_method.start',
+        'lims.lims_relate_method_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Relate', 'relate', 'tryton-ok', default=True),
+            ])
+    relate = StateTransition()
+
+    def transition_relate(self):
+        Analysis = Pool().get('lims.analysis')
+
+        analyzes = Analysis.search([
+            ('id', 'in', Transaction().context['active_ids']),
+            ('type', '=', 'analysis'),
+            ('behavior', '!=', 'additional'),
+            ])
+        if analyzes:
+            Analysis.write(analyzes, {
+                'methods': [('add', [self.start.method.id])],
+                })
+        return 'end'
+
+
 class CreateAnalysisProduct(Wizard):
     'Create Analysis Product'
     __name__ = 'lims.create_analysis_product'
