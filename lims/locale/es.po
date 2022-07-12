@@ -2827,6 +2827,10 @@ msgctxt "field:lims.notebook.line,department:"
 msgid "Department"
 msgstr "Departamento"
 
+msgctxt "field:lims.notebook.line,department_domain:"
+msgid "Department domain"
+msgstr "Dominio para Departamento"
+
 msgctxt "field:lims.notebook.line,detection_limit:"
 msgid "Detection limit"
 msgstr "Límite de detección"

@@ -985,7 +985,11 @@ class NotebookLine(ModelSQL, ModelView):
     report_date = fields.Function(fields.Date('Date agreed for result'),
         'get_service_field', searcher='search_service_field')
     department = fields.Many2One('company.department', 'Department',
-        readonly=True)
+        domain=['OR', ('id', '=', Eval('department')),
+            ('id', 'in', Eval('department_domain'))],
+        states=_states, depends=_depends + ['department_domain'])
+    department_domain = fields.Function(fields.Many2Many('company.department',
+        None, None, 'Department domain'), 'on_change_with_department_domain')
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
     planning_comments = fields.Function(fields.Text('Planification comments'),
         'get_planning_comments')
@@ -1569,6 +1573,24 @@ class NotebookLine(ModelSQL, ModelView):
             'FROM "' + AnalysisDevice._table + '" '
             'WHERE active IS TRUE '
                 'AND analysis = %s  '
+                'AND laboratory = %s',
+            (self.analysis.id, self.laboratory.id))
+        res = cursor.fetchall()
+        if not res:
+            return []
+        return [x[0] for x in res]
+
+    @fields.depends('analysis', 'laboratory')
+    def on_change_with_department_domain(self, name=None):
+        cursor = Transaction().connection.cursor()
+        AnalysisLaboratory = Pool().get('lims.analysis-laboratory')
+
+        if not self.analysis or not self.laboratory:
+            return []
+
+        cursor.execute('SELECT DISTINCT(department) '
+            'FROM "' + AnalysisLaboratory._table + '" '
+            'WHERE analysis = %s  '
                 'AND laboratory = %s',
             (self.analysis.id, self.laboratory.id))
         res = cursor.fetchall()
