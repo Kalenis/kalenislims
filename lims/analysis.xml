@@ -595,6 +595,25 @@
             <field name="wiz_name">lims.relate_analysis</field>
         </record>
 
+<!-- Wizard Relate Method -->
+
+        <record model="ir.ui.view" id="lims_relate_method_start_view_form">
+            <field name="model">lims.relate_method.start</field>
+            <field name="type">form</field>
+            <field name="name">analysis_relate_method_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_relate_method">
+            <field name="name">Relate Method</field>
+            <field name="wiz_name">lims.relate_method</field>
+        </record>
+
+        <record model="ir.action.keyword" id="lims_relate_method_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.analysis,-1</field>
+            <field name="action" ref="wiz_lims_relate_method"/>
+        </record>
+
 <!-- Wizard Create Analysis Product -->
 
         <record model="ir.action.wizard" id="wiz_lims_create_analysis_product">

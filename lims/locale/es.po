@@ -4925,6 +4925,10 @@ msgctxt "field:lims.relate_analysis.start,analysis_domain:"
 msgid "Analysis domain"
 msgstr "Dominio para Análisis"
 
+msgctxt "field:lims.relate_method.start,method:"
+msgid "Method"
+msgstr "Método"
+
 msgctxt "field:lims.results_report,attachments:"
 msgid "Attachments"
 msgstr "Adjuntos"
@@ -7523,6 +7527,10 @@ msgctxt "model:ir.action,name:wiz_lims_relate_analysis"
 msgid "Relate Analysis"
 msgstr "Relacionar análisis"
 
+msgctxt "model:ir.action,name:wiz_lims_relate_method"
+msgid "Relate Method"
+msgstr "Relacionar método"
+
 msgctxt "model:ir.action,name:wiz_lims_relate_technicians"
 msgid "Relate Technicians"
 msgstr "Relacionar técnicos"
@@ -9892,6 +9900,10 @@ msgstr "Derivar Servicio"
 msgctxt "model:lims.relate_analysis.start,name:"
 msgid "Relate Analysis"
 msgstr "Relacionar análisis"
+
+msgctxt "model:lims.relate_method.start,name:"
+msgid "Relate Method"
+msgstr "Relacionar método"
 
 msgctxt "model:lims.results_report,name:"
 msgid "Results Report"
@@ -15704,6 +15716,14 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 msgctxt "wizard_button:lims.relate_analysis,start,relate:"
+msgid "Relate"
+msgstr "Relacionar"
+
+msgctxt "wizard_button:lims.relate_method,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.relate_method,start,relate:"
 msgid "Relate"
 msgstr "Relacionar"
 
