@@ -6403,6 +6403,8 @@ class PendingServicesUnplannedReport(Report):
 
         if report_context['user'].laboratory:
             labs = [report_context['user'].laboratory.id]
+        elif report_context['user'].laboratories:
+            labs = [l.id for l in report_context['user'].laboratories]
         else:
             labs = [l.id for l in Laboratory.search([])]
 
@@ -6568,6 +6570,8 @@ class PendingServicesUnplannedSpreadsheet(Report):
 
         if report_context['user'].laboratory:
             labs = [report_context['user'].laboratory.id]
+        elif report_context['user'].laboratories:
+            labs = [l.id for l in report_context['user'].laboratories]
         else:
             labs = [l.id for l in Laboratory.search([])]
 
