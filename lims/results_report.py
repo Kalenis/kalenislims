@@ -3868,7 +3868,8 @@ class ResultReport(Report):
     @classmethod
     def get_converted_result(cls, report_section, report_result_type,
             notebook_line, obs_ql, language):
-        res = notebook_line.get_formated_converted_result()
+        with Transaction().set_context(language=language):
+            res = notebook_line.get_formated_converted_result()
         if (notebook_line.analysis.code != '0001' and
                 not notebook_line.literal_result
                 and notebook_line.converted_result_modifier == 'low'):
