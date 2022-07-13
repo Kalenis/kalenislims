@@ -5114,6 +5114,10 @@ msgctxt "field:lims.results_report.version.detail,comments:"
 msgid "Comments"
 msgstr "Observaciones"
 
+msgctxt "field:lims.results_report.version.detail,comments_readonly:"
+msgid "Comments readonly"
+msgstr "Observaciones sólo lectura"
+
 msgctxt "field:lims.results_report.version.detail,create_date2:"
 msgid "Create Date"
 msgstr "Fecha de creación"

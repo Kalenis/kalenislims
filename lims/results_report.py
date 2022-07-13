@@ -660,8 +660,10 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         'lims.range.type', None, None, 'Origin domain'),
         'on_change_with_resultrange_origin_domain')
     comments = fields.Function(fields.Text('Comments',
-        states={'readonly': ~Eval('state').in_(['draft', 'revised'])},
-        depends=_depends), 'get_comments', setter='set_comments')
+        states={'readonly': Bool(Eval('comments_readonly'))},
+        depends=['comments_readonly']), 'get_comments', setter='set_comments')
+    comments_readonly = fields.Function(fields.Boolean(
+        'Comments readonly'), 'get_comments_readonly')
     fractions_comments = fields.Function(fields.Text('Fractions comments'),
         'get_fractions_comments')
     cie_fraction_type = fields.Function(fields.Boolean('QA'),
@@ -1115,6 +1117,9 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
             'report_language': report_language_id,
             'comments': value,
             }])
+
+    def get_comments_readonly(self, name):
+        return self.get_report_language_cached()
 
     @classmethod
     @ModelView.button
