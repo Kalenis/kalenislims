@@ -562,8 +562,8 @@ class Service(ModelSQL, ModelView):
         actions = iter(args)
         for services, vals in zip(actions, actions):
             change_detail = False
-            for field in ('analysis', 'laboratory', 'method', 'device'):
-                if vals.get(field):
+            for field in cls._get_update_details():
+                if field in vals:
                     change_detail = True
                     break
             if change_detail:
@@ -579,6 +579,10 @@ class Service(ModelSQL, ModelView):
             if update_samples_state:
                 sample_ids = list(set(s.sample.id for s in services))
                 Sample.update_samples_state(sample_ids)
+
+    @classmethod
+    def _get_update_details(cls):
+        return ('analysis', 'laboratory', 'method', 'device')
 
     @classmethod
     def delete(cls, services):
@@ -3692,7 +3696,7 @@ class ManageServices(Wizard):
                             self.update_service(original_service,
                                 actual_service, fraction, field)
                             delete_ack_report_cache = True
-                            break
+                            #break
 
         if delete_ack_report_cache:
             entry = Entry(fraction.entry.id)
@@ -3780,8 +3784,8 @@ class ManageServices(Wizard):
         service_write[field_changed] = getattr(actual_service, field_changed)
         Service.write([original_service], service_write)
 
-        update_details = True if field_changed in ('analysis', 'laboratory',
-            'method', 'device') else False
+        update_details = (True if field_changed in self._get_update_details()
+            else False)
 
         if update_details:
             notebook_lines = NotebookLine.search([
@@ -3801,6 +3805,9 @@ class ManageServices(Wizard):
                     })
             if fraction.cie_fraction_type:
                 self._create_blind_samples(analysis_detail, fraction)
+
+    def _get_update_details(self):
+        return ('analysis', 'laboratory', 'method', 'device')
 
     def _create_blind_samples(self, analysis_detail, fraction):
         pool = Pool()
