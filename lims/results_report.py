@@ -3281,7 +3281,7 @@ class ResultReport(Report):
         report_context['report_section'] = report.report_section
         report_context['report_type'] = report.report_type
         report_context['report_result_type'] = report.report_result_type
-        group_field = ('final_concentration' if
+        group_field = ('literal_final_concentration' if
             report.report_result_type in ('both', 'both_range') else
             'initial_concentration')
 
@@ -3475,6 +3475,8 @@ class ResultReport(Report):
                 t_line.literal_final_concentration)
 
             conc = getattr(t_line, group_field)
+            if not conc and group_field == 'literal_final_concentration':
+                conc = getattr(t_line, 'final_concentration')
             if conc not in fractions[key]['concentrations']:
                 fractions[key]['concentrations'][conc] = []
             fractions[key]['concentrations'][conc].append(record)
