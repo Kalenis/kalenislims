@@ -3627,12 +3627,16 @@ class ManageServices(Wizard):
             ])
     send_ack = StateTransition()
 
+    def _get_fraction_id(self):
+        return Transaction().context.get('active_id', None)
+
     def default_start(self, fields):
         Fraction = Pool().get('lims.fraction')
 
-        fraction = Fraction(Transaction().context['active_id'])
-        if not fraction:
+        fraction_id = self._get_fraction_id()
+        if not fraction_id:
             return {}
+        fraction = Fraction(fraction_id)
 
         not_planned_services_ids = [s.id for s in fraction.services if
             s.manage_service_available]
@@ -3655,7 +3659,10 @@ class ManageServices(Wizard):
     def transition_check(self):
         Fraction = Pool().get('lims.fraction')
 
-        fraction = Fraction(Transaction().context['active_id'])
+        fraction_id = self._get_fraction_id()
+        if not fraction_id:
+            return 'end'
+        fraction = Fraction(fraction_id)
         if fraction.countersample_date is None:
             return 'start'
         else:
@@ -3667,13 +3674,14 @@ class ManageServices(Wizard):
         Entry = pool.get('lims.entry')
         Fraction = pool.get('lims.fraction')
 
-        delete_ack_report_cache = False
-        fraction = Fraction(Transaction().context['active_id'])
+        fraction_id = self._get_fraction_id()
+        fraction = Fraction(fraction_id)
 
         actual_services = self.start.services
         original_services = [s for s in fraction.services if
             s.manage_service_available]
         services_to_delete = []
+        delete_ack_report_cache = False
 
         for service in original_services:
             if service not in actual_services:
@@ -3872,7 +3880,8 @@ class ManageServices(Wizard):
         ForwardAcknowledgmentOfReceipt = pool.get(
             'lims.entry.acknowledgment.forward', type='wizard')
 
-        fraction = Fraction(Transaction().context['active_id'])
+        fraction_id = self._get_fraction_id()
+        fraction = Fraction(fraction_id)
         entry_ids = [fraction.sample.entry.id]
 
         session_id, _, _ = ForwardAcknowledgmentOfReceipt.create()
