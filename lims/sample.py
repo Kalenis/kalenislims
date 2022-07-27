@@ -7107,7 +7107,6 @@ class ReferService(Wizard):
         EntryDetailAnalysis = Pool().get('lims.entry.detail.analysis')
         details = EntryDetailAnalysis.search([
             ('id', 'in', Transaction().context['active_ids']),
-            ('referable', '=', True),
             ('referral', '=', None),
             ('state', '=', 'unplanned'),
             ])
