@@ -3027,8 +3027,8 @@ class NewResultsReportVersionStart(ModelView):
         translate=True)
     review_reason_print = fields.Boolean(
         'Print review reason in next version')
-    report_created = fields.Many2One('lims.results_report.version.detail',
-        'Report created')
+    reports_created = fields.Many2Many('lims.results_report.version.detail',
+        None, None, 'Reports created')
 
     @staticmethod
     def default_review_reason_print():
@@ -3047,6 +3047,8 @@ class NewResultsReportVersion(Wizard):
     'New Results Report Version'
     __name__ = 'lims.results_report.version.detail.new_version'
 
+    start_state = 'check'
+    check = StateTransition()
     start = StateView('lims.results_report.version.detail.new_version.start',
         'lims.results_report_version_detail_new_version_start_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
@@ -3054,6 +3056,18 @@ class NewResultsReportVersion(Wizard):
             ])
     generate = StateTransition()
     open_ = StateAction('lims.act_lims_results_report_version_detail')
+
+    def transition_check(self):
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
+
+        valid_details = ResultsDetail.search([
+            ('id', 'in', Transaction().context['active_ids']),
+            ('state', '=', 'released'),
+            ('valid', '=', True),
+            ])
+        if valid_details:
+            return 'start'
+        return 'end'
 
     def default_start(self, fields):
         ResultsDetail = Pool().get('lims.results_report.version.detail')
@@ -3063,38 +3077,54 @@ class NewResultsReportVersion(Wizard):
             'preliminary': False,
             'corrective': False,
             }
-        valid_detail = ResultsDetail(Transaction().context['active_id'])
-        if valid_detail.type == 'preliminary':
-            res['preliminary'] = True
-            res['type'] = 'preliminary'
+        valid_details = ResultsDetail.search([
+            ('id', 'in', Transaction().context['active_ids']),
+            ('state', '=', 'released'),
+            ('valid', '=', True),
+            ])
+        for valid_detail in valid_details:
+            if valid_detail.type == 'preliminary':
+                res['preliminary'] = True
+                res['type'] = 'preliminary'
         return res
 
     def transition_generate(self):
         ResultsDetail = Pool().get('lims.results_report.version.detail')
 
-        valid_detail = ResultsDetail(Transaction().context['active_id'])
-        defaults = {
-            'report_version': valid_detail.report_version.id,
-            'type': self.start.type,
-            }
-        new_version, = ResultsDetail.create([defaults])
-        ResultsDetail.update_from_valid_version([new_version])
-        self.start.report_created = new_version
+        reports_created = []
 
-        ResultsDetail.write([valid_detail], {
+        valid_details = ResultsDetail.search([
+            ('id', 'in', Transaction().context['active_ids']),
+            ('state', '=', 'released'),
+            ('valid', '=', True),
+            ])
+        for valid_detail in valid_details:
+            defaults = {
+                'report_version': valid_detail.report_version.id,
+                'type': self.start.type,
+                }
+            new_version, = ResultsDetail.create([defaults])
+            ResultsDetail.update_from_valid_version([new_version])
+            reports_created.append(new_version.id)
+
+        ResultsDetail.write(valid_details, {
             'review_reason': self.start.review_reason,
             'review_reason_print': self.start.review_reason_print,
             })
+        self.start.reports_created = reports_created
         return 'open_'
 
     def do_open_(self, action):
         action['pyson_domain'] = PYSONEncoder().encode([
-            ('id', '=', self.start.report_created.id),
+            ('id', 'in', [r.id for r in self.start.reports_created]),
             ])
         return action, {}
 
     def transition_open_(self):
         return 'end'
+
+    def end(self):
+        return 'reload'
 
 
 class ResultsReportWaitingStart(ModelView):

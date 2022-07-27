@@ -698,8 +698,14 @@
         </record>
 
         <record model="ir.action.wizard" id="wiz_results_report_version_detail_new_version">
-            <field name="name">New Results Report Version</field>
+            <field name="name">New Report Version</field>
             <field name="wiz_name">lims.results_report.version.detail.new_version</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_results_report_version_detail_new_version_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.results_report.version.detail,-1</field>
+            <field name="action" ref="wiz_results_report_version_detail_new_version"/>
         </record>
 
 <!-- Wizard Report Waiting -->
