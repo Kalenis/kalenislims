@@ -15116,6 +15116,10 @@ msgctxt "wizard_button:lims.create_sample,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
+msgctxt "wizard_button:lims.divide_reports,start,continue_:"
+msgid "Ok and Continue"
+msgstr "Aceptar y continuar"
+
 msgctxt "wizard_button:lims.divide_reports,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"

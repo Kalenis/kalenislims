@@ -2116,8 +2116,10 @@ class DivideReports(Wizard):
         'lims.lims_divide_reports_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
             Button('Ok', 'ok', 'tryton-ok', default=True),
+            Button('Ok and Continue', 'continue_', 'tryton-ok'),
             ])
     ok = StateTransition()
+    continue_ = StateTransition()
 
     def default_start(self, fields):
         EntryDetailAnalysis = Pool().get('lims.entry.detail.analysis')
@@ -2136,6 +2138,7 @@ class DivideReports(Wizard):
                 ('entry', '=', context['active_id']),
                 ('service.divide', '=', True),
                 ('service.annulled', '=', False),
+                ('report_grouper', '=', 0),
                 ])
             default['analysis_detail_domain'] = [e.id for e in analysis_detail]
 
@@ -2153,6 +2156,10 @@ class DivideReports(Wizard):
         EntryDetailAnalysis.write(list(self.start.analysis_detail),
             {'report_grouper': self.start.report_grouper})
         return 'end'
+
+    def transition_continue_(self):
+        self.transition_ok()
+        return 'start'
 
 
 class OpenSamplesPendingReportingStart(ModelView):
