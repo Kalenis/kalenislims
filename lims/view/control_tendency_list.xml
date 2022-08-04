@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <tree>
+    <field name="family"/>
     <field name="product_type"/>
     <field name="matrix"/>
     <field name="fraction_type"/>
@@ -21,4 +22,8 @@
     <field name="lwl"/>
     <field name="lpl"/>
     <field name="cl"/>
+    <field name="date_from"/>
+    <field name="date_to"/>
+    <field name="range_min"/>
+    <field name="range_max"/>
 </tree>

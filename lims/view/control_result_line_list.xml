@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <tree editable="1">
     <field name="update"/>
+    <field name="family"/>
     <field name="product_type"/>
     <field name="matrix"/>
     <field name="fraction_type"/>

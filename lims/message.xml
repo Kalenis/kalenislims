@@ -565,5 +565,11 @@
         <record model="ir.message" id="msg_range_copy_existing_ranges">
             <field name="text">%(qty)s Ranges already existed</field>
         </record>
+        <record model="ir.message" id="msg_rules_description">
+            <field name="text">Rule 1: 8 consecutive values above or below the mean.
+Rule 2: 4 of 5 consecutive values above or below the mean +/- 1 deviation.
+Rule 3: 2 of 3 consecutive values above or below the mean +/- 2 deviations.
+Rule 4: 1 value above or below the mean +/- 3 deviations.</field>
+        </record>
     </data>
 </tryton>

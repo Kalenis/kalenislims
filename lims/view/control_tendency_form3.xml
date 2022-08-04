@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <form>
     <label name="fraction_type"/>
-    <field name="fraction_type" colspan="3"/>
+    <field name="fraction_type"/>
+    <label name="family"/>
+    <field name="family"/>
     <label name="product_type"/>
     <field name="product_type"/>
     <label name="matrix"/>
@@ -56,6 +58,9 @@
                 <field name="rule_4_count"/>
             </group>
             <field name="details" colspan="4"/>
+        </page>
+        <page string="Rules" id="rules">
+            <field name="rules_description" colspan="4"/>
         </page>
     </notebook>
 </form>

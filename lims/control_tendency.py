@@ -207,10 +207,12 @@ class ControlTendency(ModelSQL, ModelView):
 
     _states = {'readonly': Bool(Eval('context', {}).get('readonly', False))}
 
+    family = fields.Many2One('lims.analysis.family', 'Family',
+        states=_states)
     product_type = fields.Many2One('lims.product.type', 'Product type',
-        required=True, states=_states)
+        states=_states)
     matrix = fields.Many2One('lims.matrix', 'Matrix',
-        required=True, states=_states)
+        states=_states)
     fraction_type = fields.Many2One('lims.fraction.type', 'Fraction type',
         required=True, states=_states)
     analysis = fields.Many2One('lims.analysis', 'Analysis',
@@ -279,6 +281,13 @@ class ControlTendency(ModelSQL, ModelView):
         depends=['mr_avg_abs_diff', 'mr_d3']), 'get_mr_ll')
     mr_ul = fields.Function(fields.Float('MR UL',
         depends=['mr_avg_abs_diff', 'mr_d4']), 'get_mr_ul')
+    # Info
+    date_from = fields.Date('Date from', readonly=True)
+    date_to = fields.Date('Date to', readonly=True)
+    range_min = fields.Float('Range Minimum', digits=(16, 3), readonly=True)
+    range_max = fields.Float('Range Maximum', digits=(16, 3), readonly=True)
+    rules_description = fields.Function(fields.Text('Rules description'),
+        'get_rules_description')
 
     del _states
 
@@ -289,10 +298,11 @@ class ControlTendency(ModelSQL, ModelView):
         cls._order.insert(1, ('rule_3_count', 'DESC'))
         cls._order.insert(2, ('rule_2_count', 'DESC'))
         cls._order.insert(3, ('rule_1_count', 'DESC'))
-        cls._order.insert(4, ('product_type', 'ASC'))
-        cls._order.insert(5, ('matrix', 'ASC'))
-        cls._order.insert(6, ('analysis', 'ASC'))
-        cls._order.insert(7, ('concentration_level', 'ASC'))
+        cls._order.insert(4, ('family', 'ASC'))
+        cls._order.insert(5, ('product_type', 'ASC'))
+        cls._order.insert(6, ('matrix', 'ASC'))
+        cls._order.insert(7, ('analysis', 'ASC'))
+        cls._order.insert(8, ('concentration_level', 'ASC'))
 
     @staticmethod
     def default_rule_1_count():
@@ -415,6 +425,9 @@ class ControlTendency(ModelSQL, ModelView):
             return round(self.mr_avg_abs_diff * self.mr_d4, self.digits)
         return 0
 
+    def get_rules_description(self, name=None):
+        return gettext('lims.msg_rules_description')
+
 
 class ControlTendencyDetail(ModelSQL, ModelView):
     'Control Chart Tendency Detail'
@@ -472,24 +485,33 @@ class MeansDeviationsCalcStart(ModelView):
     'Calculation of Means and Deviations'
     __name__ = 'lims.control.means_deviations_calc.start'
 
-    date_from = fields.Date('Date from', required=True)
-    date_to = fields.Date('Date to', required=True)
+    fraction_type = fields.Many2One('lims.fraction.type', 'Fraction type',
+        domain=[('control_charts', '=', True)], required=True)
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         required=True)
+    date_from = fields.Date('Date from', required=True)
+    date_to = fields.Date('Date to', required=True)
     family = fields.Many2One('lims.analysis.family', 'Family')
+    group_by_family = fields.Boolean('Group by Family')
     product_type = fields.Many2One('lims.product.type', 'Product type',
         domain=[('id', 'in', Eval('product_type_domain'))],
-        depends=['product_type_domain'])
+        states={'invisible': Bool(Eval('group_by_family'))},
+        depends=['product_type_domain', 'group_by_family'])
     product_type_domain = fields.Function(fields.Many2Many(
         'lims.product.type', None, None, 'Product type domain'),
         'on_change_with_product_type_domain')
     matrix = fields.Many2One('lims.matrix', 'Matrix',
         domain=[('id', 'in', Eval('matrix_domain'))],
-        depends=['matrix_domain'])
+        states={'invisible': Bool(Eval('group_by_family'))},
+        depends=['matrix_domain', 'group_by_family'])
     matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
         None, None, 'Matrix domain'), 'on_change_with_matrix_domain')
-    fraction_type = fields.Many2One('lims.fraction.type', 'Fraction type',
-        domain=[('control_charts', '=', True)], required=True)
+    range_min = fields.Float('Range Minimum', digits=(16, 3))
+    range_max = fields.Float('Range Maximum', digits=(16, 3))
+
+    @staticmethod
+    def default_group_by_family():
+        return False
 
     @staticmethod
     def default_product_type_domain():
@@ -559,6 +581,8 @@ class ControlResultLine(ModelSQL, ModelView):
     'Control Chart Result Line'
     __name__ = 'lims.control.result_line'
 
+    family = fields.Many2One('lims.analysis.family', 'Family',
+        readonly=True)
     product_type = fields.Many2One('lims.product.type', 'Product type',
         readonly=True)
     matrix = fields.Many2One('lims.matrix', 'Matrix', readonly=True)
@@ -603,6 +627,11 @@ class ControlResultLine(ModelSQL, ModelView):
         'Previous Average of Absolute Differences', depends=[
             'product_type', 'matrix', 'fraction_type', 'analysis',
             'concentration_level', ]), 'get_prev_field')
+    # Info
+    date_from = fields.Date('Date from', readonly=True)
+    date_to = fields.Date('Date to', readonly=True)
+    range_min = fields.Float('Range Minimum', digits=(16, 3), readonly=True)
+    range_max = fields.Float('Range Maximum', digits=(16, 3), readonly=True)
 
     @classmethod
     def __register__(cls, module_name):
@@ -613,10 +642,11 @@ class ControlResultLine(ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super().__setup__()
-        cls._order.insert(0, ('product_type', 'ASC'))
-        cls._order.insert(1, ('matrix', 'ASC'))
-        cls._order.insert(2, ('analysis', 'ASC'))
-        cls._order.insert(3, ('concentration_level', 'ASC'))
+        cls._order.insert(0, ('family', 'ASC'))
+        cls._order.insert(1, ('product_type', 'ASC'))
+        cls._order.insert(2, ('matrix', 'ASC'))
+        cls._order.insert(3, ('analysis', 'ASC'))
+        cls._order.insert(4, ('concentration_level', 'ASC'))
 
     @staticmethod
     def default_update():
@@ -638,7 +668,9 @@ class ControlResultLine(ModelSQL, ModelView):
 
     @classmethod
     def get_prev_field(cls, tendencies, names):
-        ControlTendency = Pool().get('lims.control.tendency')
+        pool = Pool()
+        ControlTendency = pool.get('lims.control.tendency')
+
         result = {}
         for name in names:
             field_name = name[5:]
@@ -646,10 +678,11 @@ class ControlResultLine(ModelSQL, ModelView):
             for t in tendencies:
                 result[name][t.id] = 0.0
                 prev_tendency = ControlTendency.search([
-                    ('product_type', '=', t.product_type.id),
-                    ('matrix', '=', t.matrix.id),
-                    ('fraction_type', '=', t.fraction_type.id),
-                    ('analysis', '=', t.analysis.id),
+                    ('family', '=', t.family),
+                    ('product_type', '=', t.product_type),
+                    ('matrix', '=', t.matrix),
+                    ('fraction_type', '=', t.fraction_type),
+                    ('analysis', '=', t.analysis),
                     ('concentration_level', '=', t.concentration_level),
                     ])
                 if prev_tendency:
@@ -713,7 +746,8 @@ class MeansDeviationsCalc(Wizard):
 
     def default_start(self, fields):
         res = {}
-        for field in ('date_from', 'date_to'):
+        for field in ('date_from', 'date_to', 'range_min', 'range_max',
+                'group_by_family'):
             if (hasattr(self.start, field) and getattr(self.start, field)):
                 res[field] = getattr(self.start, field)
         for field in ('family', 'laboratory', 'product_type', 'matrix',
@@ -727,6 +761,17 @@ class MeansDeviationsCalc(Wizard):
         return res
 
     def transition_search(self):
+        if self.start.group_by_family:
+            res_lines = self._create_grouped_lines()
+        else:
+            res_lines = self._create_lines()
+
+        if res_lines:
+            self.result.lines = res_lines
+            return 'result'
+        return 'empty'
+
+    def _create_lines(self):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         ControlResultLine = pool.get('lims.control.result_line')
@@ -748,47 +793,189 @@ class MeansDeviationsCalc(Wizard):
                 self.start.product_type.id))
         if self.start.matrix:
             clause.append(('notebook.matrix', '=', self.start.matrix.id))
-        check_family = False
+
+        lines = NotebookLine.search(clause,
+            order=[('end_date', 'ASC'), ('id', 'ASC')])
+        if not lines:
+            return []
+
+        range_min = self.start.range_min
+        range_max = self.start.range_max
+
+        check_line_family = False
         if self.start.family:
-            check_family = True
-            families = []
+            check_line_family = True
             cursor.execute('SELECT product_type, matrix '
                 'FROM "' + AnalysisFamilyCertificant._table + '" '
                 'WHERE family = %s',
                 (self.start.family.id,))
             res = cursor.fetchall()
-            if res:
-                families = [(x[0], x[1]) for x in res]
+            families = [(x[0], x[1]) for x in res]
+
+        records = {}
+        for line in lines:
+            if check_line_family:
+                family_key = (line.notebook.product_type.id,
+                    line.notebook.matrix.id)
+                if family_key not in families:
+                    continue
+            try:
+                result = float(line.result or None)
+            except (TypeError, ValueError):
+                continue
+            if range_min and result < range_min:
+                continue
+            if range_max and result > range_max:
+                continue
+
+            product_type_id = line.notebook.product_type.id
+            matrix_id = line.notebook.matrix.id
+            fraction_type_id = line.notebook.fraction_type.id
+            analysis_id = line.analysis.id
+            concentration_level_id = (line.concentration_level.id if
+                line.concentration_level else None)
+
+            key = (product_type_id, matrix_id, analysis_id,
+                concentration_level_id)
+            if key not in records:
+                records[key] = {
+                    'product_type': product_type_id,
+                    'matrix': matrix_id,
+                    'fraction_type': fraction_type_id,
+                    'analysis': analysis_id,
+                    'concentration_level': concentration_level_id,
+                    'details': {},
+                    'mr_last_result': None,
+                    }
+            mr = (records[key]['mr_last_result'] and
+                abs(result - records[key]['mr_last_result']) or 0.0)
+            records[key]['mr_last_result'] = result
+            records[key]['details'][line.id] = {
+                'date': line.end_date,
+                'fraction': line.notebook.fraction.id,
+                'device': line.device.id if line.device else None,
+                'result': result,
+                'mr': mr,
+                }
+        if not records:
+            return []
+
+        to_create = []
+        for record in records.values():
+            details = [d for d in record['details'].values()]
+            to_create.append({
+                'session_id': self._session_id,
+                'family': None,
+                'product_type': record['product_type'],
+                'matrix': record['matrix'],
+                'fraction_type': record['fraction_type'],
+                'analysis': record['analysis'],
+                'concentration_level': record['concentration_level'],
+                'details': [('create', details)],
+                'date_from': self.start.date_from,
+                'date_to': self.start.date_to,
+                'range_min': range_min,
+                'range_max': range_max,
+                })
+        if to_create:
+            res_lines = ControlResultLine.create(to_create)
+
+            to_save = []
+            for line in res_lines:
+                count = 0
+                total = 0.00
+                mr_abs_diff = 0.00
+                for detail in line.details:
+                    count += 1
+                    total += detail.result
+                    mr_abs_diff += detail.mr
+                if count > 2:
+                    mr_avg_abs_diff = round(
+                        mr_abs_diff / (count - 1), 2)
+                else:
+                    mr_avg_abs_diff = mr_abs_diff
+                mean = round(total / count, 2)
+                total = 0.00
+                for detail in line.details:
+                    total += (detail.result - mean) ** 2
+                # Se toma correcion poblacional Bessel n-1
+                if count > 1:
+                    deviation = round(sqrt(total / (count - 1)), 2)
+                else:
+                    deviation = 0.00
+                line.mean = mean
+                line.deviation = deviation
+                line.mr_avg_abs_diff = mr_avg_abs_diff
+                to_save.append(line)
+            ControlResultLine.save(to_save)
+            return res_lines
+        return []
+
+    def _create_grouped_lines(self):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        ControlResultLine = pool.get('lims.control.result_line')
+        AnalysisFamily = pool.get('lims.analysis.family')
+        AnalysisFamilyCertificant = pool.get(
+            'lims.analysis.family.certificant')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        clause = [
+            ('laboratory', '=', self.start.laboratory.id),
+            ('end_date', '>=', self.start.date_from),
+            ('end_date', '<=', self.start.date_to),
+            ('notebook.fraction.type', '=', self.start.fraction_type.id),
+            ('analysis.behavior', '=', 'normal'),
+            ('result', 'not in', [None, '']),
+            ('annulled', '=', False),
+            ]
 
         lines = NotebookLine.search(clause,
             order=[('end_date', 'ASC'), ('id', 'ASC')])
-        if lines:
-            records = {}
+        if not lines:
+            return []
+
+        range_min = self.start.range_min
+        range_max = self.start.range_max
+
+        if self.start.family:
+            all_families = [self.start.family]
+        else:
+            all_families = AnalysisFamily.search([])
+
+        records = {}
+        for family in all_families:
+            cursor.execute('SELECT product_type, matrix '
+                'FROM "' + AnalysisFamilyCertificant._table + '" '
+                'WHERE family = %s',
+                (family.id,))
+            res = cursor.fetchall()
+            families = [(x[0], x[1]) for x in res]
+
             for line in lines:
+                family_key = (line.notebook.product_type.id,
+                    line.notebook.matrix.id)
+                if family_key not in families:
+                    continue
                 try:
                     result = float(line.result or None)
                 except (TypeError, ValueError):
                     continue
+                if range_min and result < range_min:
+                    continue
+                if range_max and result > range_max:
+                    continue
 
-                if check_family:
-                    family_key = (line.notebook.product_type.id,
-                        line.notebook.matrix.id)
-                    if family_key not in families:
-                        continue
-
-                product_type_id = line.notebook.product_type.id
-                matrix_id = line.notebook.matrix.id
+                family_id = family.id
                 fraction_type_id = line.notebook.fraction_type.id
                 analysis_id = line.analysis.id
                 concentration_level_id = (line.concentration_level.id if
                     line.concentration_level else None)
 
-                key = (product_type_id, matrix_id, analysis_id,
-                    concentration_level_id)
+                key = (family_id, analysis_id, concentration_level_id)
                 if key not in records:
                     records[key] = {
-                        'product_type': product_type_id,
-                        'matrix': matrix_id,
+                        'family': family_id,
                         'fraction_type': fraction_type_id,
                         'analysis': analysis_id,
                         'concentration_level': concentration_level_id,
@@ -805,54 +992,59 @@ class MeansDeviationsCalc(Wizard):
                     'result': result,
                     'mr': mr,
                     }
-            if records:
-                to_create = []
-                for record in records.values():
-                    details = [d for d in record['details'].values()]
-                    to_create.append({
-                        'session_id': self._session_id,
-                        'product_type': record['product_type'],
-                        'matrix': record['matrix'],
-                        'fraction_type': record['fraction_type'],
-                        'analysis': record['analysis'],
-                        'concentration_level': record['concentration_level'],
-                        'details': [('create', details)],
-                        })
-                if to_create:
-                    res_lines = ControlResultLine.create(to_create)
+        if not records:
+            return []
 
-                    to_save = []
-                    for line in res_lines:
-                        count = 0
-                        total = 0.00
-                        mr_abs_diff = 0.00
-                        for detail in line.details:
-                            count += 1
-                            total += detail.result
-                            mr_abs_diff += detail.mr
-                        if count > 2:
-                            mr_avg_abs_diff = round(
-                                mr_abs_diff / (count - 1), 2)
-                        else:
-                            mr_avg_abs_diff = mr_abs_diff
-                        mean = round(total / count, 2)
-                        total = 0.00
-                        for detail in line.details:
-                            total += (detail.result - mean) ** 2
-                        # Se toma correcion poblacional Bessel n-1
-                        if count > 1:
-                            deviation = round(sqrt(total / (count - 1)), 2)
-                        else:
-                            deviation = 0.00
-                        line.mean = mean
-                        line.deviation = deviation
-                        line.mr_avg_abs_diff = mr_avg_abs_diff
-                        to_save.append(line)
-                    ControlResultLine.save(to_save)
+        to_create = []
+        for record in records.values():
+            details = [d for d in record['details'].values()]
+            to_create.append({
+                'session_id': self._session_id,
+                'family': record['family'],
+                'product_type': None,
+                'matrix': None,
+                'fraction_type': record['fraction_type'],
+                'analysis': record['analysis'],
+                'concentration_level': record['concentration_level'],
+                'details': [('create', details)],
+                'date_from': self.start.date_from,
+                'date_to': self.start.date_to,
+                'range_min': range_min,
+                'range_max': range_max,
+                })
+        if to_create:
+            res_lines = ControlResultLine.create(to_create)
 
-                    self.result.lines = res_lines
-                    return 'result'
-        return 'empty'
+            to_save = []
+            for line in res_lines:
+                count = 0
+                total = 0.00
+                mr_abs_diff = 0.00
+                for detail in line.details:
+                    count += 1
+                    total += detail.result
+                    mr_abs_diff += detail.mr
+                if count > 2:
+                    mr_avg_abs_diff = round(
+                        mr_abs_diff / (count - 1), 2)
+                else:
+                    mr_avg_abs_diff = mr_abs_diff
+                mean = round(total / count, 2)
+                total = 0.00
+                for detail in line.details:
+                    total += (detail.result - mean) ** 2
+                # Se toma correcion poblacional Bessel n-1
+                if count > 1:
+                    deviation = round(sqrt(total / (count - 1)), 2)
+                else:
+                    deviation = 0.00
+                line.mean = mean
+                line.deviation = deviation
+                line.mr_avg_abs_diff = mr_avg_abs_diff
+                to_save.append(line)
+            ControlResultLine.save(to_save)
+            return res_lines
+        return []
 
     def default_result(self, fields):
         lines = [l.id for l in self.result.lines]
@@ -896,10 +1088,11 @@ class MeansDeviationsCalc(Wizard):
             concentration_level_id = (line.concentration_level.id if
                 line.concentration_level else None)
             tendency = ControlTendency.search([
-                ('product_type', '=', line.product_type.id),
-                ('matrix', '=', line.matrix.id),
-                ('fraction_type', '=', line.fraction_type.id),
-                ('analysis', '=', line.analysis.id),
+                ('family', '=', line.family),
+                ('product_type', '=', line.product_type),
+                ('matrix', '=', line.matrix),
+                ('fraction_type', '=', line.fraction_type),
+                ('analysis', '=', line.analysis),
                 ('concentration_level', '=', concentration_level_id),
                 ])
             if tendency:
@@ -915,12 +1108,17 @@ class MeansDeviationsCalc(Wizard):
                     'rule_3_count': 0,
                     'rule_4_count': 0,
                     'mr_avg_abs_diff': line.mr_avg_abs_diff,
+                    'date_from': line.date_from,
+                    'date_to': line.date_to,
+                    'range_min': line.range_min,
+                    'range_max': line.range_max,
                     })
                 tendencies.extend(tendency)
             else:
                 tendency, = ControlTendency.create([{
-                    'product_type': line.product_type.id,
-                    'matrix': line.matrix.id,
+                    'family': line.family and line.family.id,
+                    'product_type': line.product_type and line.product_type.id,
+                    'matrix': line.matrix and line.matrix.id,
                     'fraction_type': line.fraction_type.id,
                     'analysis': line.analysis.id,
                     'concentration_level': concentration_level_id,
@@ -931,6 +1129,10 @@ class MeansDeviationsCalc(Wizard):
                     'min_cv_corr_fact': min_cv_corr_fact,
                     'max_cv_corr_fact': max_cv_corr_fact,
                     'mr_avg_abs_diff': line.mr_avg_abs_diff,
+                    'date_from': line.date_from,
+                    'date_to': line.date_to,
+                    'range_min': line.range_min,
+                    'range_max': line.range_max,
                     }])
                 tendencies.append(tendency)
         self.result2.tendencies = tendencies
@@ -951,24 +1153,31 @@ class TendenciesAnalysisStart(ModelView):
     'Tendencies Analysis'
     __name__ = 'lims.control.tendencies_analysis.start'
 
+    fraction_type = fields.Many2One('lims.fraction.type', 'Fraction type',
+        domain=[('control_charts', '=', True)], required=True)
+    laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
+        required=True)
     date_from = fields.Date('Date from', required=True)
     date_to = fields.Date('Date to', required=True)
     family = fields.Many2One('lims.analysis.family', 'Family')
-    laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        required=True)
+    group_by_family = fields.Boolean('Group by Family')
     product_type = fields.Many2One('lims.product.type', 'Product type',
         domain=[('id', 'in', Eval('product_type_domain'))],
-        depends=['product_type_domain'])
+        states={'invisible': Bool(Eval('group_by_family'))},
+        depends=['product_type_domain', 'group_by_family'])
     product_type_domain = fields.Function(fields.Many2Many(
         'lims.product.type', None, None, 'Product type domain'),
         'on_change_with_product_type_domain')
     matrix = fields.Many2One('lims.matrix', 'Matrix',
         domain=[('id', 'in', Eval('matrix_domain'))],
-        depends=['matrix_domain'])
+        states={'invisible': Bool(Eval('group_by_family'))},
+        depends=['matrix_domain', 'group_by_family'])
     matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
         None, None, 'Matrix domain'), 'on_change_with_matrix_domain')
-    fraction_type = fields.Many2One('lims.fraction.type', 'Fraction type',
-        domain=[('control_charts', '=', True)], required=True)
+
+    @staticmethod
+    def default_group_by_family():
+        return False
 
     @staticmethod
     def default_product_type_domain():
@@ -1058,129 +1267,168 @@ class TendenciesAnalysis(Wizard):
         clause = [
             ('fraction_type', '=', self.start.fraction_type.id),
             ]
-        if self.start.product_type:
-            clause.append(('product_type', '=', self.start.product_type.id))
-        if self.start.matrix:
-            clause.append(('matrix', '=', self.start.matrix.id))
+        if self.start.group_by_family:
+            if self.start.family:
+                clause.append(('family', '=', self.start.family.id))
+            else:
+                clause.append(('family', '!=', None))
+        else:
+            clause.append(('family', '=', None))
+            if self.start.product_type:
+                clause.append(('product_type', '=',
+                    self.start.product_type.id))
+            if self.start.matrix:
+                clause.append(('matrix', '=', self.start.matrix.id))
 
         tendencies = ControlTendency.search(clause)
-        if tendencies:
-            check_family = False
-            if self.start.family:
-                check_family = True
-                families = []
+        if not tendencies:
+            return 'end'
+
+        check_tendency_family = False
+        if self.start.family and not self.start.group_by_family:
+            check_tendency_family = True
+            cursor.execute('SELECT product_type, matrix '
+                'FROM "' + AnalysisFamilyCertificant._table + '" '
+                'WHERE family = %s',
+                (self.start.family.id,))
+            res = cursor.fetchall()
+            families = [(x[0], x[1]) for x in res]
+
+        for tendency in tendencies:
+            if check_tendency_family:
+                family_key = (tendency.product_type.id, tendency.matrix.id)
+                if family_key not in families:
+                    continue
+
+            old_details = ControlTendencyDetail.search([
+                ('tendency', '=', tendency.id),
+                ])
+            if old_details:
+                ControlTendencyDetail.delete(old_details)
+
+            check_line_family = False
+            if tendency.family:
+                check_line_family = True
                 cursor.execute('SELECT product_type, matrix '
                     'FROM "' + AnalysisFamilyCertificant._table + '" '
                     'WHERE family = %s',
-                    (self.start.family.id,))
+                    (tendency.family.id,))
                 res = cursor.fetchall()
-                if res:
-                    families = [(x[0], x[1]) for x in res]
+                tendency_families = [(x[0], x[1]) for x in res]
 
-            for tendency in tendencies:
-                if check_family:
-                    family_key = (tendency.product_type.id, tendency.matrix.id)
-                    if family_key not in families:
-                        continue
-
-                old_details = ControlTendencyDetail.search([
-                    ('tendency', '=', tendency.id),
-                    ])
-                if old_details:
-                    ControlTendencyDetail.delete(old_details)
-
-                concentration_level_id = (tendency.concentration_level.id if
-                    tendency.concentration_level else None)
-                clause = [
-                    ('laboratory', '=', self.start.laboratory.id),
-                    ('notebook.fraction.type', '=', tendency.fraction_type.id),
+            concentration_level_id = (tendency.concentration_level.id if
+                tendency.concentration_level else None)
+            clause = [
+                ('laboratory', '=', self.start.laboratory.id),
+                ('notebook.fraction.type', '=', tendency.fraction_type.id),
+                ('analysis', '=', tendency.analysis.id),
+                ('concentration_level', '=', concentration_level_id),
+                ('result', 'not in', [None, '']),
+                ('annulled', '=', False),
+                ]
+            if not check_line_family:
+                clause.extend([
                     ('notebook.product_type', '=', tendency.product_type.id),
                     ('notebook.matrix', '=', tendency.matrix.id),
-                    ('analysis', '=', tendency.analysis.id),
-                    ('concentration_level', '=', concentration_level_id),
-                    ('result', 'not in', [None, '']),
-                    ('annulled', '=', False),
-                    ]
+                    ])
 
-                rule_1_count = 0
-                rule_2_count = 0
-                rule_3_count = 0
-                rule_4_count = 0
-                lines = NotebookLine.search(clause + [
-                        ('end_date', '>=', self.start.date_from),
-                        ('end_date', '<=', self.start.date_to),
-                        ], order=[('end_date', 'ASC'), ('id', 'ASC')])
-                if lines:
-                    results = []
-                    prevs = 8 - len(lines)  # Qty of previous results required
-                    if prevs > 0:
-                        prev_lines = NotebookLine.search(clause + [
-                                ('end_date', '<', self.start.date_from),
-                                ], order=[('end_date', 'ASC'), ('id', 'ASC')],
-                                limit=prevs)
-                        if prev_lines:
-                            for line in prev_lines:
-                                try:
-                                    result = float(line.result if
-                                        line.result else None)
-                                except(TypeError, ValueError):
-                                    continue
-                                results.append(result)
-
-                    mr_last_result = None
-                    to_create = []
-                    for line in lines:
-                        try:
-                            result = float(line.result if
-                                line.result else None)
-                        except(TypeError, ValueError):
-                            continue
-                        mr = (mr_last_result and
-                              abs(result - mr_last_result) or 0.0)
-                        mr_last_result = result
-                        results.append(result)
-                        rules = self.get_rules(results, tendency)
-                        rules_to_create = []
-                        for r in rules:
-                            if r == '':
+            rule_1_count = 0
+            rule_2_count = 0
+            rule_3_count = 0
+            rule_4_count = 0
+            all_lines = NotebookLine.search(clause + [
+                    ('end_date', '>=', self.start.date_from),
+                    ('end_date', '<=', self.start.date_to),
+                    ], order=[('end_date', 'ASC'), ('id', 'ASC')])
+            if not check_line_family:
+                lines = all_lines
+            else:
+                lines = []
+                for line in all_lines:
+                    family_key = (line.notebook.product_type.id,
+                        line.notebook.matrix.id)
+                    if family_key in tendency_families:
+                        lines.append(line)
+            if lines:
+                results = []
+                prevs = 8 - len(lines)  # Qty of previous results required
+                if prevs > 0:
+                    all_prev_lines = NotebookLine.search(clause + [
+                            ('end_date', '<', self.start.date_from),
+                            ], order=[('end_date', 'ASC'), ('id', 'ASC')],
+                            limit=prevs)
+                    if not check_line_family:
+                        prev_lines = all_prev_lines
+                    else:
+                        prev_lines = []
+                        for line in all_prev_lines:
+                            family_key = (line.notebook.product_type.id,
+                                line.notebook.matrix.id)
+                            if family_key in tendency_families:
+                                prev_lines.append(line)
+                    if prev_lines:
+                        for line in prev_lines:
+                            try:
+                                result = float(line.result if
+                                    line.result else None)
+                            except(TypeError, ValueError):
                                 continue
-                            rules_to_create.append({'rule': r})
-                            if r == '1':
-                                rule_1_count += 1
-                            elif r == '2':
-                                rule_2_count += 1
-                            elif r == '3':
-                                rule_3_count += 1
-                            elif r == '4':
-                                rule_4_count += 1
+                            results.append(result)
 
-                        record = {
-                            'notebook_line': line.id,
-                            'tendency': tendency.id,
-                            'date': line.end_date,
-                            'fraction': line.notebook.fraction.id,
-                            'device': line.device.id if line.device else None,
-                            'result': result,
-                            'rule': rules[0],
-                            'mr': mr,
-                            }
-                        if rules_to_create:
-                            record['rules'] = [('create', rules_to_create)]
-                        to_create.append(record)
+                mr_last_result = None
+                to_create = []
+                for line in lines:
+                    try:
+                        result = float(line.result if
+                            line.result else None)
+                    except(TypeError, ValueError):
+                        continue
+                    mr = (mr_last_result and
+                          abs(result - mr_last_result) or 0.0)
+                    mr_last_result = result
+                    results.append(result)
+                    rules = self.get_rules(results, tendency)
+                    rules_to_create = []
+                    for r in rules:
+                        if r == '':
+                            continue
+                        rules_to_create.append({'rule': r})
+                        if r == '1':
+                            rule_1_count += 1
+                        elif r == '2':
+                            rule_2_count += 1
+                        elif r == '3':
+                            rule_3_count += 1
+                        elif r == '4':
+                            rule_4_count += 1
 
-                    ControlTendencyDetail.create(to_create)
-                    tendency_result.append(tendency)
+                    record = {
+                        'notebook_line': line.id,
+                        'tendency': tendency.id,
+                        'date': line.end_date,
+                        'fraction': line.notebook.fraction.id,
+                        'device': line.device.id if line.device else None,
+                        'result': result,
+                        'rule': rules[0],
+                        'mr': mr,
+                        }
+                    if rules_to_create:
+                        record['rules'] = [('create', rules_to_create)]
+                    to_create.append(record)
 
-                ControlTendency.write([tendency], {
-                    'rule_1_count': rule_1_count,
-                    'rule_2_count': rule_2_count,
-                    'rule_3_count': rule_3_count,
-                    'rule_4_count': rule_4_count,
-                    })
+                ControlTendencyDetail.create(to_create)
+                tendency_result.append(tendency)
 
-            if tendency_result:
-                self.result.tendencies = tendency_result
-                return 'open'
+            ControlTendency.write([tendency], {
+                'rule_1_count': rule_1_count,
+                'rule_2_count': rule_2_count,
+                'rule_3_count': rule_3_count,
+                'rule_4_count': rule_4_count,
+                })
+
+        if tendency_result:
+            self.result.tendencies = tendency_result
+            return 'open'
         return 'end'
 
     def get_rules(self, results, tendency):
