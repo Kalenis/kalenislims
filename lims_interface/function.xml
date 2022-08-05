@@ -77,6 +77,11 @@
             <field name="parameters">{dates} [list of date or datetimes]</field>
             <field name="help">Returns min date/datetime from {dates}</field>
         </record>
+        <record model="lims.interface.function" id="function_scientific_notation">
+            <field name="name">SCIENTIFIC_NOTATION</field>
+            <field name="parameters">value, decimals=2</field>
+            <field name="help">Returns the given number in scientific notation</field>
+        </record>
 
     </data>
 </tryton>
