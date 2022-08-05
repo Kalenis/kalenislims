@@ -47,6 +47,11 @@
             <field name="parameters">notebook_line, variable</field>
             <field name="help">Obtains the value of a given variable, setted for the analysis, product type, matrix and method indicated.</field>
         </record>
+        <record model="lims.interface.function" id="function_scientific_notation">
+            <field name="name">SCIENTIFIC_NOTATION</field>
+            <field name="parameters">value, decimals=2</field>
+            <field name="help">Returns the given number in scientific notation</field>
+        </record>
 
     </data>
 </tryton>

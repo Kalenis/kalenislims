@@ -137,6 +137,20 @@ def rsq(y, x):
 custom_functions['RSQ'] = rsq
 
 
+def scientific_notation(value, decimals=2):
+    res = ''
+    if not value:
+        return res
+    try:
+        res = ("{0:.%ie}" % (decimals)).format(float(value))
+    except (TypeError, ValueError):
+        pass
+    return res
+
+
+custom_functions['SCIENTIFIC_NOTATION'] = scientific_notation
+
+
 class Function(ModelSQL, ModelView):
     'Interface Function'
     __name__ = 'lims.interface.function'
