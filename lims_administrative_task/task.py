@@ -387,6 +387,8 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
 
     def _get_task_url(self):
         tr = Transaction()
+        if '_request' not in tr.context:
+            return ''
         url_part = {}
         hostname = '%s://%s/' % (
             str(tr.context['_request']['scheme']),
