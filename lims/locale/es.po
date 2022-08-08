@@ -8604,6 +8604,10 @@ msgctxt "model:ir.message,text:msg_zone_code_unique_id"
 msgid "Zone code must be unique"
 msgstr "El código de la zona debe ser único"
 
+msgctxt "model:ir.model.button,confirm:entry_confirm_button"
+msgid "Are you sure you want to confirm the entry?"
+msgstr "¿Está seguro que desea confirmar el ingreso?"
+
 msgctxt "model:ir.model.button,string:entry_pre_assign_sample_button"
 msgid "Pre-assign sample numbers"
 msgstr "Preasignar números de muestras"
