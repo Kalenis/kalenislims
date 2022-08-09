@@ -128,4 +128,6 @@
     </group>
     <label name="exceptional_load_uid"/>
     <field name="exceptional_load_uid"/>
+    <label name="trace_report"/>
+    <field name="trace_report"/>
 </form>

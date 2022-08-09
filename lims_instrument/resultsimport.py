@@ -30,6 +30,7 @@ class NotebookLine(metaclass=PoolMeta):
     imported_rm_correction_formula = fields.Char(
         'Imported RM Correction Formula')
     imported_inj_date = fields.Date('Imported Inject date')
+    imported_trace_report = fields.Boolean('Imported Trace report')
 
 
 class BaseImport(object):
@@ -398,6 +399,8 @@ class NotebookLoadResultsFile(Wizard):
             if 'rm_correction_formula' in data:
                 res['imported_rm_correction_formula'] = (
                     data['rm_correction_formula'])
+            if 'trace_report' in data:
+                res['imported_trace_report'] = data['trace_report']
         return res
 
     def default_result(self, fields):
@@ -532,6 +535,8 @@ class NotebookLoadResultsFile(Wizard):
             values.append(line.imported_dilution_factor)
             columns.append(sql_table.rm_correction_formula)
             values.append(line.imported_rm_correction_formula)
+            columns.append(sql_table.trace_report)
+            values.append(line.imported_trace_report)
 
             line_previous_professionals = []
             if line.imported_professionals:
@@ -594,6 +599,8 @@ class NotebookLoadResultsFile(Wizard):
                 values.append(Null)
                 columns.append(sql_table.imported_inj_date)
                 values.append(Null)
+                columns.append(sql_table.imported_trace_report)
+                values.append(Literal(False))
                 # Write Results to Notebook lines
                 cursor.execute(*sql_table.update(
                     columns, values,
@@ -623,6 +630,7 @@ class NotebookLoadResultsFile(Wizard):
             'imported_dilution_factor': None,
             'imported_rm_correction_formula': None,
             'imported_inj_date': None,
+            'imported_trace_report': False,
             }
         NotebookLine.write(
             list(self.result.result_lines), notebook_line_clean)

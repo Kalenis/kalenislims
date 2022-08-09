@@ -679,6 +679,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         'get_samples_list', searcher='search_samples_list')
     entry_summary = fields.Function(fields.Char('Entry / Qty. Samples'),
         'get_entry_summary', searcher='search_entry_summary')
+    trace_report = fields.Boolean('Trace report')
 
     # State changes
     revision_uid = fields.Many2One('res.user', 'Revision user', readonly=True)
@@ -1563,11 +1564,21 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def _get_fields_from_samples(cls, samples, generate_report_form=None):
+        pool = Pool()
+        Notebook = pool.get('lims.notebook')
+
         detail_default = {}
         if len(samples) > 1:
             detail_default['report_type_forced'] = 'polisample'
         else:
             detail_default['report_type_forced'] = 'normal'
+
+        detail_default['trace_report'] = False
+        for sample in samples:
+            nb = Notebook(sample['notebook'])
+            if nb.fraction.sample.trace_report:
+                detail_default['trace_report'] = True
+
         return detail_default
 
     @classmethod
@@ -1909,6 +1920,8 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
     reference = fields.Function(fields.Char('Reference'), 'get_reference')
     comments = fields.Function(fields.Text('Entry comments'),
         'get_nline_field')
+    trace_report = fields.Function(fields.Boolean('Trace report'),
+        'get_nline_field')
 
     @classmethod
     def __register__(cls, module_name):
@@ -1965,6 +1978,10 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
                         result[name][d.id] = field.id if field else None
                     else:
                         result[name][d.id] = None
+            elif cls._fields[name]._type == 'boolean':
+                for d in details:
+                    result[name][d.id] = (d.notebook_line and
+                        getattr(d.notebook_line, name, False) or False)
             else:
                 for d in details:
                     result[name][d.id] = (d.notebook_line and

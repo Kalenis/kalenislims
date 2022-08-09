@@ -16,6 +16,7 @@
     <field name="converted_result"/>
     <field name="final_unit"/>
     <field name="comments"/>
+    <field name="trace_report"/>
     <field name="corrected"/>
     <field name="hide"/>
 </tree>

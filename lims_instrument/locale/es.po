@@ -38,6 +38,10 @@ msgctxt "field:lims.notebook.line,imported_rm_correction_formula:"
 msgid "Imported RM Correction Formula"
 msgstr "Fórmula Corrección RM importada"
 
+msgctxt "field:lims.notebook.line,imported_trace_report:"
+msgid "Imported Trace report"
+msgstr "Traza importada"
+
 msgctxt "field:lims.notebook.load_results_file.export,file:"
 msgid "File"
 msgstr "Archivo"

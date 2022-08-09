@@ -13,4 +13,5 @@
     <field name="imported_rm_correction_formula"/>
     <field name="imported_literal_result"/>
     <field name="imported_inj_date"/>
+    <field name="imported_trace_report"/>
 </tree>

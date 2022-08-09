@@ -1007,6 +1007,7 @@ class NotebookLine(ModelSQL, ModelView):
         readonly=True)
     exceptional_load_uid = fields.Many2One('res.user',
         'Exceptional loading of results User', readonly=True)
+    trace_report = fields.Boolean('Trace report')
 
     del _states, _depends
 
@@ -1812,6 +1813,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
         readonly=True)
     exceptional_load_uid = fields.Many2One('res.user',
         'Exceptional loading of results User', readonly=True)
+    trace_report = fields.Boolean('Trace report', readonly=True)
 
     @classmethod
     def __setup__(cls):
@@ -1913,6 +1915,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
             line.repetition_reason,
             line.exceptional_load,
             line.exceptional_load_uid,
+            line.trace_report,
             ]
         where = Literal(True)
         return join6.select(*columns, where=where)

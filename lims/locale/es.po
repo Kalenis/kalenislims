@@ -3119,6 +3119,10 @@ msgctxt "field:lims.notebook.line,theoretical_concentration:"
 msgid "Theoretical concentration"
 msgstr "Concentración teórica"
 
+msgctxt "field:lims.notebook.line,trace_report:"
+msgid "Trace report"
+msgstr "Traza"
+
 msgctxt "field:lims.notebook.line,uncertainty:"
 msgid "Uncertainty"
 msgstr "Incertidumbre"
@@ -3410,6 +3414,10 @@ msgstr "Fecha de inicio"
 msgctxt "field:lims.notebook.line.all_fields,theoretical_concentration:"
 msgid "Theoretical concentration"
 msgstr "Concentración teórica"
+
+msgctxt "field:lims.notebook.line.all_fields,trace_report:"
+msgid "Trace report"
+msgstr "Traza"
 
 msgctxt "field:lims.notebook.line.all_fields,uncertainty:"
 msgid "Uncertainty"
@@ -5306,6 +5314,10 @@ msgctxt "field:lims.results_report.version.detail,state:"
 msgid "State"
 msgstr "Estado"
 
+msgctxt "field:lims.results_report.version.detail,trace_report:"
+msgid "Trace report"
+msgstr "Informar traza"
+
 msgctxt "field:lims.results_report.version.detail,type:"
 msgid "Type"
 msgstr "Tipo"
@@ -5397,6 +5409,10 @@ msgstr "Resultado"
 msgctxt "field:lims.results_report.version.detail.line,start_date:"
 msgid "Start date"
 msgstr "Fecha de inicio"
+
+msgctxt "field:lims.results_report.version.detail.line,trace_report:"
+msgid "Trace report"
+msgstr "Traza"
 
 msgctxt "field:lims.results_report.version.detail.line,uncertainty:"
 msgid "Uncertainty"
