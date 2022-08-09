@@ -1984,7 +1984,7 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         result = {}
         for d in details:
             result[d.id] = (d.notebook_line and
-                d.notebook_line.get_formated_converted_result() or None)
+                d.notebook_line.formated_converted_result or None)
         return result
 
     @classmethod
@@ -3912,8 +3912,7 @@ class ResultReport(Report):
     @classmethod
     def get_converted_result(cls, report_section, report_result_type,
             notebook_line, obs_ql, language):
-        with Transaction().set_context(language=language):
-            res = notebook_line.get_formated_converted_result()
+        res = notebook_line.formated_converted_result
         if (notebook_line.analysis.code != '0001' and
                 not notebook_line.literal_result
                 and notebook_line.converted_result_modifier == 'low'):

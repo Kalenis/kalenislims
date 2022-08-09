@@ -2931,6 +2931,10 @@ msgctxt "field:lims.notebook.line,final_unit:"
 msgid "Final unit"
 msgstr "Unidad final"
 
+msgctxt "field:lims.notebook.line,formated_converted_result:"
+msgid "Converted result to report"
+msgstr "Resultado convertido a informar"
+
 msgctxt "field:lims.notebook.line,formated_result:"
 msgid "Result to report"
 msgstr "Resultado a informar"
@@ -3246,6 +3250,10 @@ msgstr "Concentración final"
 msgctxt "field:lims.notebook.line.all_fields,final_unit:"
 msgid "Final unit"
 msgstr "Unidad final"
+
+msgctxt "field:lims.notebook.line.all_fields,formated_converted_result:"
+msgid "Converted result to report"
+msgstr "Resultado convertido a informar"
 
 msgctxt "field:lims.notebook.line.all_fields,formated_result:"
 msgid "Result to report"

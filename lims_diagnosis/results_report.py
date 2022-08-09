@@ -493,7 +493,7 @@ class SamplesComparatorLine(ModelSQL, ModelView):
             elif name == 'converted_result':
                 for l in lines:
                     result[name][l.id] = (
-                        l.notebook_line.get_formated_converted_result())
+                        l.notebook_line.formated_converted_result)
         return result
 
     @classmethod
