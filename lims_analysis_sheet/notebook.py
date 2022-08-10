@@ -1774,7 +1774,10 @@ class MoveData(Wizard):
             with Transaction().set_user(0):
                 target = AnalysisSheet()
                 target.template = sheet.template
-                target.compilation = sheet.get_new_compilation()
+                target.compilation = sheet.get_new_compilation({
+                    'table': sheet.compilation.table.id,
+                    'revision': sheet.compilation.revision,
+                    })
                 target.professional = sheet.professional
                 target.laboratory = sheet.laboratory
                 target.save()
