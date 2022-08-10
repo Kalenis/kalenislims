@@ -12130,16 +12130,56 @@ msgid "???"
 msgstr ""
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Additional analysis"
+msgstr "Análisis adicionales"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
 msgid "Analysis"
 msgstr "Análisis"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "By default"
+msgstr "Por defecto"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Comments"
+msgstr "Observaciones"
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"
 msgid "Date:"
 msgstr "Fecha:"
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Default repetitions"
+msgstr "Repeticiones por defecto"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Detection limit"
+msgstr "Límite de detección"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "End UoM"
+msgstr "UdM final"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
 msgid "Existing Typifications"
 msgstr "Tipificaciones existentes"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Final concentration"
+msgstr "Concentración final"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Initial concentration"
+msgstr "Concentración inicial"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Literal Final concentration"
+msgstr "Concentración final textual"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Lower limit allowed"
+msgstr "Límite inferior permitido"
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"
 msgid "Matrix"
@@ -12162,12 +12202,56 @@ msgid "Product type"
 msgstr "Tipo de producto"
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Quantification limit"
+msgstr "Límite de cuantificación"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Referred by default"
+msgstr "Derivado por defecto"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Report"
+msgstr "Informar"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Start UoM"
+msgstr "UdM inicial"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Technical scope versions"
+msgstr "Versiones de alcance técnico"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
 msgid "Typifications Copied/Moved"
 msgstr "Tipificaciones copiadas/movidas"
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Upper limit allowed"
+msgstr "Límite superior permitido"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
 msgid "User:"
 msgstr "Usuario:"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Validate limits directly on the result"
+msgstr "Validar límites directamente en el resultado"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "a.rec_name"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "c"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "for each=\"a in line.additionals\""
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "for each=\"c in line.comments.split('\\n')\""
+msgstr ""
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"
 msgid "for each=\"line in existing_typifications\""
@@ -12175,6 +12259,10 @@ msgstr ""
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"
 msgid "for each=\"line in new_typifications\""
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "for each=\"tsv in line.technical_scope_versions\""
 msgstr ""
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"
@@ -12190,7 +12278,47 @@ msgid "if test=\"new_typifications\""
 msgstr ""
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.additional and line.additional.rec_name or ''"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
 msgid "line.analysis.rec_name"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.by_default and 'X' or ''"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.check_result_limits and 'X' or ''"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.default_repetitions"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.detection_limit"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.end_uom and line.end_uom.name or ''"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.final_concentration"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.initial_concentration"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.literal_final_concentration"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.lower_limit"
 msgstr ""
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"
@@ -12203,6 +12331,30 @@ msgstr ""
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"
 msgid "line.product_type.rec_name"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.quantification_limit"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.referable and 'X' or ''"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.report and 'X' or ''"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.start_uom and line.start_uom.name or ''"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.upper_limit"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "tsv.number"
 msgstr ""
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"

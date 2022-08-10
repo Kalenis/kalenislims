@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:presentation="urn:oasis:names:tc:opendocument:xmlns:presentation:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2" office:mimetype="application/vnd.oasis.opendocument.spreadsheet">
- <office:meta><meta:creation-date>2009-04-16T11:32:48.390000000</meta:creation-date><meta:editing-duration>P9DT18H57M2S</meta:editing-duration><meta:editing-cycles>21</meta:editing-cycles><meta:generator>LibreOffice/6.0.7.3$Linux_X86_64 LibreOffice_project/00m0$Build-3</meta:generator><dc:date>2019-05-29T16:39:23.195575724</dc:date><meta:document-statistic meta:table-count="1" meta:cell-count="29" meta:object-count="0"/><meta:user-defined meta:name="Info 1"/><meta:user-defined meta:name="Info 2"/><meta:user-defined meta:name="Info 3"/><meta:user-defined meta:name="Info 4"/></office:meta>
+ <office:meta><meta:creation-date>2009-04-16T11:32:48.390000000</meta:creation-date><meta:editing-duration>P9DT18H57M2S</meta:editing-duration><meta:editing-cycles>21</meta:editing-cycles><meta:generator>LibreOffice/6.0.7.3$Linux_X86_64 LibreOffice_project/00m0$Build-3</meta:generator><dc:date>2019-05-29T16:39:23.195575724</dc:date><meta:document-statistic meta:table-count="1" meta:cell-count="101" meta:object-count="0"/><meta:user-defined meta:name="Info 1"/><meta:user-defined meta:name="Info 2"/><meta:user-defined meta:name="Info 3"/><meta:user-defined meta:name="Info 4"/></office:meta>
  <office:settings>
   <config:config-item-set config:name="ooo:view-settings">
    <config:config-item config:name="VisibleAreaTop" config:type="int">451</config:config-item>
    <config:config-item config:name="VisibleAreaLeft" config:type="int">0</config:config-item>
-   <config:config-item config:name="VisibleAreaWidth" config:type="int">16002</config:config-item>
-   <config:config-item config:name="VisibleAreaHeight" config:type="int">8954</config:config-item>
+   <config:config-item config:name="VisibleAreaWidth" config:type="int">88011</config:config-item>
+   <config:config-item config:name="VisibleAreaHeight" config:type="int">8950</config:config-item>
    <config:config-item-map-indexed config:name="Views">
     <config:config-item-map-entry>
      <config:config-item config:name="ViewId" config:type="string">view1</config:config-item>
@@ -32,7 +32,7 @@
       </config:config-item-map-entry>
      </config:config-item-map-named>
      <config:config-item config:name="ActiveTable" config:type="string">Sheet1</config:config-item>
-     <config:config-item config:name="HorizontalScrollbarWidth" config:type="int">848</config:config-item>
+     <config:config-item config:name="HorizontalScrollbarWidth" config:type="int">1305</config:config-item>
      <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
      <config:config-item config:name="ZoomValue" config:type="int">100</config:config-item>
      <config:config-item config:name="PageViewZoomValue" config:type="int">60</config:config-item>
@@ -216,6 +216,9 @@
   <style:style style:name="ro4" style:family="table-row">
    <style:table-row-properties style:row-height="4.87mm" fo:break-before="auto" style:use-optimal-row-height="true"/>
   </style:style>
+  <style:style style:name="ro5" style:family="table-row">
+   <style:table-row-properties style:row-height="4.5mm" fo:break-before="auto" style:use-optimal-row-height="false"/>
+  </style:style>
   <style:style style:name="ta1" style:family="table" style:master-page-name="Default">
    <style:table-properties table:display="true" style:writing-mode="lr-tb"/>
   </style:style>
@@ -300,7 +303,7 @@
      <text:p><text:sheet-name>???</text:sheet-name><text:s/>(<text:title>???</text:title>)</text:p>
     </style:region-left>
     <style:region-right>
-     <text:p><text:date style:data-style-name="N2" text:date-value="2021-07-07">00/00/0000</text:date>, <text:time style:data-style-name="N2" text:time-value="12:40:11.149724608">00:00:00</text:time></text:p>
+     <text:p><text:date style:data-style-name="N2" text:date-value="2022-08-10">00/00/0000</text:date>, <text:time style:data-style-name="N2" text:time-value="19:24:48.737014744">00:00:00</text:time></text:p>
     </style:region-right>
    </style:header>
    <style:header-left style:display="false"/>
@@ -313,10 +316,9 @@
  <office:body>
   <office:spreadsheet>
    <table:table table:name="Sheet1" table:style-name="ta1" table:print="false">
-    <table:table-column table:style-name="co1" table:number-columns-repeated="4" table:default-cell-style-name="Default"/>
-    <table:table-column table:style-name="co2" table:number-columns-repeated="13" table:default-cell-style-name="Default"/>
+    <table:table-column table:style-name="co1" table:number-columns-repeated="22" table:default-cell-style-name="Default"/>
     <table:table-row table:style-name="ro1">
-     <table:table-cell table:number-columns-repeated="17"/>
+     <table:table-cell table:number-columns-repeated="22"/>
     </table:table-row>
     <table:table-row table:style-name="ro2">
      <table:table-cell table:style-name="ce1" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="4" table:number-rows-spanned="1">
@@ -324,32 +326,32 @@
      </table:table-cell>
      <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce7"/>
      <table:covered-table-cell/>
-     <table:table-cell table:number-columns-repeated="13"/>
+     <table:table-cell table:number-columns-repeated="18"/>
     </table:table-row>
     <table:table-row table:style-name="ro3">
      <table:table-cell table:style-name="ce2" office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T1">Date: </text:span><text:span text:style-name="T1"><text:a xlink:href="relatorio://format_date(datetime.date.today(),%20user.language)" xlink:type="simple">format_date(datetime.date.today(), user.language)</text:a></text:span></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="16"/>
+     <table:table-cell table:number-columns-repeated="21"/>
     </table:table-row>
     <table:table-row table:style-name="ro3">
      <table:table-cell table:style-name="ce2" office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T2">User: </text:span><text:span text:style-name="T2"><text:a xlink:href="relatorio://user.rec_name" xlink:type="simple">user.rec_name</text:a></text:span></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="16"/>
+     <table:table-cell table:number-columns-repeated="21"/>
     </table:table-row>
     <table:table-row table:style-name="ro4">
      <table:table-cell table:style-name="ce19"/>
-     <table:table-cell table:number-columns-repeated="16"/>
+     <table:table-cell table:number-columns-repeated="21"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce20" office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://if%20test=%22new_typifications%22" xlink:type="simple">if test=&quot;new_typifications&quot;</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="16"/>
+     <table:table-cell table:number-columns-repeated="21"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce5" office:value-type="string" calcext:value-type="string">
       <text:p>New Typifications</text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="16"/>
+     <table:table-cell table:number-columns-repeated="21"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell office:value-type="string" calcext:value-type="string">
@@ -364,15 +366,64 @@
      <table:table-cell office:value-type="string" calcext:value-type="string">
       <text:p>Method</text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="11"/>
-     <table:table-cell table:style-name="ce23" table:number-columns-repeated="2"/>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Detection limit</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Quantification limit</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Lower limit allowed</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Upper limit allowed</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Validate limits directly on the result</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Initial concentration</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Start UoM</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Final concentration</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>End UoM</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Literal Final concentration</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Default repetitions</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce23" office:value-type="string" calcext:value-type="string">
+      <text:p>Technical scope versions</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce23" office:value-type="string" calcext:value-type="string">
+      <text:p>Comments</text:p>
+     </table:table-cell>
+     <table:table-cell table:number-columns-repeated="2" office:value-type="string" calcext:value-type="string">
+      <text:p>Additional analysis</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Report</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Referred by default</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>By default</text:p>
+     </table:table-cell>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce6" office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://for%20each=%22line%20in%20new_typifications%22" xlink:type="simple">for each=&quot;line in new_typifications&quot;</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="16"/>
+     <table:table-cell table:number-columns-repeated="21"/>
     </table:table-row>
-    <table:table-row table:style-name="ro1">
+    <table:table-row table:style-name="ro5">
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.product_type.rec_name" xlink:type="simple">line.product_type.rec_name</text:a></text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.matrix.rec_name" xlink:type="simple">line.matrix.rec_name</text:a></text:p>
@@ -381,31 +432,66 @@
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.method.rec_name" xlink:type="simple">line.method.rec_name</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="13"/>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.detection_limit" xlink:type="simple">line.detection_limit</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.quantification_limit" xlink:type="simple">line.quantification_limit</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.lower_limit" xlink:type="simple">line.lower_limit</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.upper_limit" xlink:type="simple">line.upper_limit</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.check_result_limits%20and%20&apos;X&apos;%20or%20&apos;&apos;" xlink:type="simple">line.check_result_limits and &apos;X&apos; or &apos;&apos;</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.initial_concentration" xlink:type="simple">line.initial_concentration</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.start_uom%20and%20line.start_uom.name%20or%20&apos;&apos;" xlink:type="simple">line.start_uom and line.start_uom.name or &apos;&apos;</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.final_concentration" xlink:type="simple">line.final_concentration</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.end_uom%20and%20line.end_uom.name%20or%20&apos;&apos;" xlink:type="simple">line.end_uom and line.end_uom.name or &apos;&apos;</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.literal_final_concentration" xlink:type="simple">line.literal_final_concentration</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.default_repetitions" xlink:type="simple">line.default_repetitions</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://for%20each=%22tsv%20in%20line.technical_scope_versions%22" xlink:type="simple">for each=&quot;tsv in line.technical_scope_versions&quot;</text:a></text:p><text:p><text:a xlink:href="relatorio://tsv.number" xlink:type="simple">tsv.number</text:a></text:p><text:p><text:a xlink:href="relatorio:///for" xlink:type="simple">/for</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://for%20each=%22c%20in%20line.comments.split(&apos;%5Cn&apos;)%22" xlink:type="simple">for each=&quot;c in line.comments.split(&apos;\n&apos;)&quot;</text:a></text:p><text:p><text:a xlink:href="relatorio://c" xlink:type="simple">c</text:a></text:p><text:p><text:a xlink:href="relatorio:///for" xlink:type="simple">/for</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.additional%20and%20line.additional.rec_name%20or%20&apos;&apos;" xlink:type="simple">line.additional and line.additional.rec_name or &apos;&apos;</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://for%20each=%22a%20in%20line.additionals%22" xlink:type="simple">for each=&quot;a in line.additionals&quot;</text:a></text:p><text:p><text:a xlink:href="relatorio://a.rec_name" xlink:type="simple">a.rec_name</text:a></text:p><text:p><text:a xlink:href="relatorio:///for" xlink:type="simple">/for</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.report%20and%20&apos;X&apos;%20or%20&apos;&apos;" xlink:type="simple">line.report and &apos;X&apos; or &apos;&apos;</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.referable%20and%20&apos;X&apos;%20or%20&apos;&apos;" xlink:type="simple">line.referable and &apos;X&apos; or &apos;&apos;</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.by_default%20and%20&apos;X&apos;%20or%20&apos;&apos;" xlink:type="simple">line.by_default and &apos;X&apos; or &apos;&apos;</text:a></text:p>
+     </table:table-cell>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce6" office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio:///for" xlink:type="simple">/for</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="16"/>
+     <table:table-cell table:number-columns-repeated="21"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio:///if" xlink:type="simple">/if</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="16"/>
+     <table:table-cell table:number-columns-repeated="21"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
-     <table:table-cell table:number-columns-repeated="17"/>
+     <table:table-cell table:number-columns-repeated="22"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce20" office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://if%20test=%22existing_typifications%22" xlink:type="simple">if test=&quot;existing_typifications&quot;</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="16"/>
+     <table:table-cell table:number-columns-repeated="21"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce5" office:value-type="string" calcext:value-type="string">
       <text:p>Existing Typifications</text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="16"/>
+     <table:table-cell table:number-columns-repeated="21"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell office:value-type="string" calcext:value-type="string">
@@ -420,14 +506,64 @@
      <table:table-cell office:value-type="string" calcext:value-type="string">
       <text:p>Method</text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="13"/>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Detection limit</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Quantification limit</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Lower limit allowed</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Upper limit allowed</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Validate limits directly on the result</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Initial concentration</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Start UoM</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Final concentration</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>End UoM</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Literal Final concentration</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Default repetitions</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Technical scope versions</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Comments</text:p>
+     </table:table-cell>
+     <table:table-cell table:number-columns-repeated="2" office:value-type="string" calcext:value-type="string">
+      <text:p>Additional analysis</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Report</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Referred by default</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>By default</text:p>
+     </table:table-cell>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce6" office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://for%20each=%22line%20in%20existing_typifications%22" xlink:type="simple">for each=&quot;line in existing_typifications&quot;</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="16"/>
+     <table:table-cell table:number-columns-repeated="21"/>
     </table:table-row>
-    <table:table-row table:style-name="ro1">
+    <table:table-row table:style-name="ro5">
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.product_type.rec_name" xlink:type="simple">line.product_type.rec_name</text:a></text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.matrix.rec_name" xlink:type="simple">line.matrix.rec_name</text:a></text:p>
@@ -436,17 +572,52 @@
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.method.rec_name" xlink:type="simple">line.method.rec_name</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="13"/>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.detection_limit" xlink:type="simple">line.detection_limit</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.quantification_limit" xlink:type="simple">line.quantification_limit</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.lower_limit" xlink:type="simple">line.lower_limit</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.upper_limit" xlink:type="simple">line.upper_limit</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.check_result_limits%20and%20&apos;X&apos;%20or%20&apos;&apos;" xlink:type="simple">line.check_result_limits and &apos;X&apos; or &apos;&apos;</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.initial_concentration" xlink:type="simple">line.initial_concentration</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.start_uom%20and%20line.start_uom.name%20or%20&apos;&apos;" xlink:type="simple">line.start_uom and line.start_uom.name or &apos;&apos;</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.final_concentration" xlink:type="simple">line.final_concentration</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.end_uom%20and%20line.end_uom.name%20or%20&apos;&apos;" xlink:type="simple">line.end_uom and line.end_uom.name or &apos;&apos;</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.literal_final_concentration" xlink:type="simple">line.literal_final_concentration</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.default_repetitions" xlink:type="simple">line.default_repetitions</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://for%20each=%22tsv%20in%20line.technical_scope_versions%22" xlink:type="simple">for each=&quot;tsv in line.technical_scope_versions&quot;</text:a></text:p><text:p><text:a xlink:href="relatorio://tsv.number" xlink:type="simple">tsv.number</text:a></text:p><text:p><text:a xlink:href="relatorio:///for" xlink:type="simple">/for</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://for%20each=%22c%20in%20line.comments.split(&apos;%5Cn&apos;)%22" xlink:type="simple">for each=&quot;c in line.comments.split(&apos;\n&apos;)&quot;</text:a></text:p><text:p><text:a xlink:href="relatorio://c" xlink:type="simple">c</text:a></text:p><text:p><text:a xlink:href="relatorio:///for" xlink:type="simple">/for</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.additional%20and%20line.additional.rec_name%20or%20&apos;&apos;" xlink:type="simple">line.additional and line.additional.rec_name or &apos;&apos;</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://for%20each=%22a%20in%20line.additionals%22" xlink:type="simple">for each=&quot;a in line.additionals&quot;</text:a></text:p><text:p><text:a xlink:href="relatorio://a.rec_name" xlink:type="simple">a.rec_name</text:a></text:p><text:p><text:a xlink:href="relatorio:///for" xlink:type="simple">/for</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.report%20and%20&apos;X&apos;%20or%20&apos;&apos;" xlink:type="simple">line.report and &apos;X&apos; or &apos;&apos;</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.referable%20and%20&apos;X&apos;%20or%20&apos;&apos;" xlink:type="simple">line.referable and &apos;X&apos; or &apos;&apos;</text:a></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.by_default%20and%20&apos;X&apos;%20or%20&apos;&apos;" xlink:type="simple">line.by_default and &apos;X&apos; or &apos;&apos;</text:a></text:p>
+     </table:table-cell>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce6" office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio:///for" xlink:type="simple">/for</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="16"/>
+     <table:table-cell table:number-columns-repeated="21"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio:///if" xlink:type="simple">/if</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="16"/>
+     <table:table-cell table:number-columns-repeated="21"/>
     </table:table-row>
    </table:table>
    <table:named-expressions/>
