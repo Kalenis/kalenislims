@@ -834,8 +834,8 @@ class EditSample(Wizard):
                 self.update_laboratory_notebook(sample)
 
         for entry_id, samples_to_edit in samples_to_edit_party.items():
-            self._edit_entry_party(entry_id, samples_to_edit)
-            self._edit_results_report_party(samples_to_edit)
+            new_entry_id = self._edit_entry_party(entry_id, samples_to_edit)
+            self._edit_results_report_party(new_entry_id, samples_to_edit)
 
         return 'end'
 
@@ -861,7 +861,7 @@ class EditSample(Wizard):
             if party_id not in party_domain:
                 raise UserError(gettext('lims_industry.msg_edit_sample_party'))
             Sample.write(samples, {'party': party_id})
-            return
+            return entry_id
 
         # Check if all samples from the same entry were selected
         if Sample.search_count([
@@ -875,23 +875,24 @@ class EditSample(Wizard):
             entry.ack_report_cache_id = None
             entry.save()
             Sample.write(samples, {'party': party_id})
-        else:
-            new_vals = {
-                'party': party_id,
-                'invoice_party': party_id,
-                'samples': [],
-                'invoice_contacts': [],
-                'report_contacts': [],
-                'acknowledgment_contacts': [],
-                }
+            return entry_id
 
-            new_entry, = Entry.copy([entry], new_vals)
-            new_entry.state = entry.state
-            new_entry.result_cron = entry.result_cron
-            new_entry.save()
-            Sample.write(samples, {'entry': new_entry.id, 'party': party_id})
+        new_vals = {
+            'party': party_id,
+            'invoice_party': party_id,
+            'samples': [],
+            'invoice_contacts': [],
+            'report_contacts': [],
+            'acknowledgment_contacts': [],
+            }
+        new_entry, = Entry.copy([entry], new_vals)
+        new_entry.state = entry.state
+        new_entry.result_cron = entry.result_cron
+        new_entry.save()
+        Sample.write(samples, {'entry': new_entry.id, 'party': party_id})
+        return new_entry.id
 
-    def _edit_results_report_party(self, samples):
+    def _edit_results_report_party(self, entry_id, samples):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         Fraction = pool.get('lims.fraction')
@@ -926,7 +927,7 @@ class EditSample(Wizard):
             if not reports_ids:
                 continue
             reports = ResultsReport.browse(reports_ids)
-            ResultsReport.write(reports, {'party': party_id})
+            ResultsReport.write(reports, {'entry': entry_id, 'party': party_id})
 
     def check_typifications(self, sample):
         analysis_domain_ids = self._get_analysis_domain(sample)
