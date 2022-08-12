@@ -22,9 +22,17 @@ msgctxt "field:company.department,headquarters:"
 msgid "Headquarters"
 msgstr "Sede"
 
+msgctxt "field:company.department,laboratory_professional:"
+msgid "Laboratory professional"
+msgstr "Profesional de laboratorio"
+
 msgctxt "field:company.department,name:"
 msgid "Name"
 msgstr "Nombre"
+
+msgctxt "field:company.department,responsible:"
+msgid "Responsible User"
+msgstr "Usuario responsable"
 
 msgctxt "field:company.headquarters,name:"
 msgid "Name"
@@ -2417,6 +2425,10 @@ msgstr "Correcciones de CV"
 msgctxt "field:lims.laboratory,default_laboratory_professional:"
 msgid "Default professional"
 msgstr "Profesional por defecto"
+
+msgctxt "field:lims.laboratory,default_manager:"
+msgid "Default manager"
+msgstr "Gerente por defecto"
 
 msgctxt "field:lims.laboratory,default_signer:"
 msgid "Default signer"
@@ -5302,13 +5314,9 @@ msgctxt "field:lims.results_report.version.detail,samples_list:"
 msgid "Samples"
 msgstr "Muestras"
 
-msgctxt "field:lims.results_report.version.detail,signer:"
-msgid "Signer"
-msgstr "Firmante"
-
-msgctxt "field:lims.results_report.version.detail,signer_domain:"
-msgid "Signer domain"
-msgstr "Dominio para Firmante"
+msgctxt "field:lims.results_report.version.detail,signatories:"
+msgid "Signatories"
+msgstr "Firmantes"
 
 msgctxt "field:lims.results_report.version.detail,state:"
 msgid "State"
@@ -5488,6 +5496,22 @@ msgid "Sample Comments"
 msgstr "Observaciones de la muestra"
 
 msgctxt "field:lims.results_report.version.detail.sample,version_detail:"
+msgid "Report Detail"
+msgstr "Detalle de informe"
+
+msgctxt "field:lims.results_report.version.detail.signer,professional:"
+msgid "Professional"
+msgstr "Profesional"
+
+msgctxt "field:lims.results_report.version.detail.signer,professional_domain:"
+msgid "Professional domain"
+msgstr "Dominio para Profesional"
+
+msgctxt "field:lims.results_report.version.detail.signer,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:lims.results_report.version.detail.signer,version_detail:"
 msgid "Report Detail"
 msgstr "Detalle de informe"
 
@@ -10041,6 +10065,10 @@ msgctxt "model:lims.results_report.version.detail.sample,name:"
 msgid "Results Report Version Detail Sample"
 msgstr "Muestra de detalle de versión de informe de resultados"
 
+msgctxt "model:lims.results_report.version.detail.signer,name:"
+msgid "Results Report Version Detail Signer"
+msgstr "Firmante de detalle de versión de informe de resultados"
+
 msgctxt "model:lims.results_report_annulation.start,name:"
 msgid "Report Annulation"
 msgstr "Anulación de Informe"
@@ -13648,6 +13676,18 @@ msgstr "Rectificativo"
 msgctxt "selection:lims.results_report.version.detail.new_version.start,type:"
 msgid "Preliminary"
 msgstr "Preliminar"
+
+msgctxt "selection:lims.results_report.version.detail.signer,type:"
+msgid "Manager"
+msgstr "Gerente"
+
+msgctxt "selection:lims.results_report.version.detail.signer,type:"
+msgid "Responsible"
+msgstr "Responsable"
+
+msgctxt "selection:lims.results_report.version.detail.signer,type:"
+msgid "Signer"
+msgstr "Firmante"
 
 msgctxt "selection:lims.rule,action:"
 msgid "Add Analysis"

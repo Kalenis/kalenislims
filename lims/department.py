@@ -4,6 +4,8 @@
 # the full copyright notices and license terms.
 
 from trytond.model import ModelView, ModelSQL, fields
+from trytond.pool import Pool
+from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
@@ -24,6 +26,35 @@ class Department(ModelSQL, ModelView):
     headquarters = fields.Many2One('company.headquarters', 'Headquarters')
     default_location = fields.Many2One('stock.location', 'Default Location',
         domain=[('type', '=', 'storage')])
+    responsible = fields.Many2One('res.user', 'Responsible User')
+    laboratory_professional = fields.Function(fields.Many2One(
+        'lims.laboratory.professional', 'Laboratory professional'),
+        'on_change_with_laboratory_professional')
+
+    @fields.depends('responsible')
+    def on_change_with_laboratory_professional(self, name=None):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        LaboratoryProfessional = pool.get('lims.laboratory.professional')
+
+        if not self.responsible:
+            return None
+        cursor.execute('SELECT id '
+            'FROM party_party '
+            'WHERE is_lab_professional = true '
+                'AND lims_user = %s '
+            'LIMIT 1', (self.responsible.id,))
+        party_id = cursor.fetchone()
+        if not party_id:
+            return None
+        cursor.execute('SELECT id '
+            'FROM "' + LaboratoryProfessional._table + '" '
+            'WHERE party = %s '
+            'LIMIT 1', (party_id[0],))
+        lab_professional_id = cursor.fetchone()
+        if not lab_professional_id:
+            return None
+        return lab_professional_id[0]
 
 
 class UserDepartment(ModelSQL, ModelView):

@@ -397,6 +397,19 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
+<!-- Results Report Version Detail Signer -->
+
+        <record model="ir.ui.view" id="lims_results_report_version_detail_signer_view_list">
+            <field name="model">lims.results_report.version.detail.signer</field>
+            <field name="type">tree</field>
+            <field name="name">results_report_version_detail_signer_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_results_report_version_detail_signer_view_form">
+            <field name="model">lims.results_report.version.detail.signer</field>
+            <field name="type">form</field>
+            <field name="name">results_report_version_detail_signer_form</field>
+        </record>
+
 <!-- Results Report Version Detail Sample -->
 
         <record model="ir.ui.view" id="lims_results_report_version_detail_sample_view_list">

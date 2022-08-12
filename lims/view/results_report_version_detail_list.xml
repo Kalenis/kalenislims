@@ -12,7 +12,6 @@
     <field name="entry_summary"/>
     <field name="report_type"/>
     <field name="report_result_type"/>
-    <field name="signer"/>
     <field name="cie_fraction_type"/>
     <field name="resultrange_origin"/>
     <field name="trace_report"/>

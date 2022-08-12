@@ -4,4 +4,5 @@
     <field name="name"/>
     <field name="headquarters"/>
     <field name="default_location"/>
+    <field name="responsible"/>
 </tree>

@@ -27,6 +27,8 @@ class Laboratory(ModelSQL, ModelView):
         'lims.laboratory.professional', 'Default professional')
     default_signer = fields.Many2One('lims.laboratory.professional',
         'Default signer', required=True)
+    default_manager = fields.Many2One('lims.laboratory.professional',
+        'Default manager')
     related_location = fields.Many2One('stock.location', 'Related location',
         required=True, domain=[('type', '=', 'storage')])
     cv_corrections = fields.One2Many('lims.laboratory.cv_correction',

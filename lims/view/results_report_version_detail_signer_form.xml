@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form col="6">
+    <label name="type"/>
+    <field name="type"/>
+    <label name="professional"/>
+    <field name="professional"/>
+</form>

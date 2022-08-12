@@ -8,6 +8,8 @@
     <field name="default_laboratory_professional"/>
     <label name="default_signer"/>
     <field name="default_signer"/>
+    <label name="default_manager"/>
+    <field name="default_manager"/>
     <label name="related_location"/>
     <field name="related_location"/>
     <label name="section"/>

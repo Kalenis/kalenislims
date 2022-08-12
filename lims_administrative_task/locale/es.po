@@ -2,10 +2,6 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "field:company.department,responsible:"
-msgid "Responsible User"
-msgstr "Usuario responsable"
-
 msgctxt "field:lims.administrative.task,closing_date:"
 msgid "Closing Date"
 msgstr "Fecha de cierre"

@@ -8,4 +8,6 @@
     <field name="headquarters"/>
     <label name="default_location"/>
     <field name="default_location"/>
+    <label name="responsible"/>
+    <field name="responsible"/>
 </form>

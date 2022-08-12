@@ -4,7 +4,6 @@
 
 from trytond.pool import Pool
 from . import task
-from . import department
 from . import user
 from . import configuration
 
@@ -16,7 +15,6 @@ def register():
         task.EditAdministrativeTaskStart,
         task.AdministrativeTaskProgram,
         task.Cron,
-        department.Department,
         user.User,
         configuration.Configuration,
         configuration.ConfigurationSequence,

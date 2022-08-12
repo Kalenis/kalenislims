@@ -4,7 +4,7 @@
         <label name="diagnosis_template"/>
         <field name="diagnosis_template"/>
     </xpath>
-    <xpath expr="/form/field[@name='signer']" position="after">
+    <xpath expr="/form/field[@name='party']" position="after">
         <label name="diagnostician"/>
         <field name="diagnostician"/>
     </xpath>

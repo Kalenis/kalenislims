@@ -93,6 +93,7 @@ def register():
         results_report.ResultsReportVersionDetail,
         results_report.ResultsReportCachedReport,
         results_report.ResultsReportComment,
+        results_report.ResultsReportVersionDetailSigner,
         results_report.ResultsReportVersionDetailSample,
         results_report.ResultsReportVersionDetailLine,
         certification.AnalysisFamily,

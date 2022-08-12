@@ -5,10 +5,10 @@
 from io import BytesIO
 from datetime import datetime
 from PyPDF2 import PdfFileMerger
-from sql import Literal
+from sql import Literal, Null
 
-from trytond.model import Workflow, ModelView, ModelSQL, fields, \
-    sequence_ordered, Unique
+from trytond.model import (Workflow, ModelView, ModelSQL, Unique, fields,
+    sequence_ordered)
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     StateReport, Button
 from trytond.pool import Pool
@@ -639,12 +639,8 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
        'get_report_field', searcher='search_report_field')
     invoice_party = fields.Function(fields.Many2One('party.party',
         'Invoice party'), 'get_entry_field', searcher='search_entry_field')
-    signer = fields.Many2One('lims.laboratory.professional', 'Signer',
-        domain=[('id', 'in', Eval('signer_domain'))],
-        states=_states, depends=['state', 'signer_domain'])
-    signer_domain = fields.Function(fields.Many2Many(
-        'lims.laboratory.professional', None, None, 'Signer domain'),
-        'on_change_with_signer_domain')
+    signatories = fields.One2Many('lims.results_report.version.detail.signer',
+        'version_detail', 'Signatories', states=_states, depends=_depends)
     resultrange_origin = fields.Many2One('lims.range.type', 'Origin',
         domain=['OR', ('id', '=', Eval('resultrange_origin')),
             ('id', 'in', Eval('resultrange_origin_domain'))],
@@ -1032,27 +1028,6 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
             if ranges:
                 self.resultrange_origin = ranges[0].id
 
-    @fields.depends('laboratory')
-    def on_change_with_signer_domain(self, name=None):
-        pool = Pool()
-        UserLaboratory = pool.get('lims.user-laboratory')
-        LaboratoryProfessional = pool.get('lims.laboratory.professional')
-
-        if not self.laboratory:
-            return []
-        users = UserLaboratory.search([
-            ('laboratory', '=', self.laboratory.id),
-            ])
-        if not users:
-            return []
-        professionals = LaboratoryProfessional.search([
-            ('party.lims_user', 'in', [u.user.id for u in users]),
-            ('role', '!=', ''),
-            ])
-        if not professionals:
-            return []
-        return [p.id for p in professionals]
-
     @fields.depends('samples')
     def on_change_with_resultrange_origin_domain(self, name=None):
         cursor = Transaction().connection.cursor()
@@ -1259,8 +1234,12 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         detail_default['report_type_forced'] = detail.report_type_forced
         detail_default['report_result_type_forced'] = (
             detail.report_result_type_forced)
-        if detail.signer:
-            detail_default['signer'] = detail.signer.id
+        if detail.signatories:
+            detail_default['signatories'] = [('create', [{
+                'sequence': c.sequence,
+                'type': c.type,
+                'professional': c.professional.id,
+                } for c in detail.signatories])]
         if detail.resultrange_origin:
             detail_default['resultrange_origin'] = detail.resultrange_origin.id
         detail_default['comments'] = str(detail.comments or '')
@@ -1583,7 +1562,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def _get_fields_not_overwrite(cls):
-        fields = ['type', 'signer', 'samples']
+        fields = ['type', 'signatories', 'samples']
         return fields
 
     @classmethod
@@ -1784,6 +1763,92 @@ class ResultsReportComment(ModelSQL):
                     table.report_language,
                     table.comments,
                     ], res))
+
+
+class ResultsReportVersionDetailSigner(sequence_ordered(),
+        ModelSQL, ModelView):
+    'Results Report Version Detail Signer'
+    __name__ = 'lims.results_report.version.detail.signer'
+
+    version_detail = fields.Many2One('lims.results_report.version.detail',
+        'Report Detail', required=True, ondelete='CASCADE', select=True)
+    type = fields.Selection([
+        ('signer', 'Signer'),
+        ('manager', 'Manager'),
+        ('responsible', 'Responsible'),
+        ], 'Type', sort=False, required=True)
+    professional = fields.Many2One('lims.laboratory.professional',
+        'Professional', required=True)
+        #domain=[('id', 'in', Eval('professional_domain'))],
+        #depends=['professional_domain'])
+    professional_domain = fields.Function(fields.Many2Many(
+        'lims.laboratory.professional', None, None, 'Professional domain'),
+        'on_change_with_professional_domain')
+
+    @classmethod
+    def __register__(cls, module_name):
+        TableHandler = backend.TableHandler
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
+
+        signer_table_exist = TableHandler.table_exist(
+            'lims_results_report_version_detail_signer')
+        detail_table_h = ResultsDetail.__table_handler__(module_name)
+        signer_exist = detail_table_h.column_exist('signer')
+
+        super().__register__(module_name)
+
+        if signer_exist and not signer_table_exist:
+            cls._migrate_signer()
+
+
+    @classmethod
+    def _migrate_signer(cls):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+
+        report_table = ResultsDetail.__table__()
+        signer_table = cls.__table__()
+
+        cursor.execute(*report_table.select(
+            report_table.id,
+            Literal('signer').as_('type'),
+            report_table.signer,
+            where=report_table.signer != Null))
+        res = cursor.fetchall()
+        if res:
+            cursor.execute(*signer_table.insert([
+                    signer_table.version_detail,
+                    signer_table.type,
+                    signer_table.professional,
+                    ], res))
+
+    @staticmethod
+    def default_type():
+        return 'signer'
+
+    @fields.depends('_parent_version_detail.laboratory')
+    def on_change_with_professional_domain(self, name=None):
+        pool = Pool()
+        UserLaboratory = pool.get('lims.user-laboratory')
+        LaboratoryProfessional = pool.get('lims.laboratory.professional')
+
+        laboratory = self.version_detail.laboratory
+        res = [laboratory.default_signer.id]
+        if laboratory.default_manager:
+            res.append(laboratory.default_manager.id)
+        users = UserLaboratory.search([
+            ('laboratory', '=', laboratory.id),
+            ])
+        if not users:
+            return res
+        professionals = LaboratoryProfessional.search([
+            ('party.lims_user', 'in', [u.user.id for u in users]),
+            ('role', '!=', ''),
+            ])
+        if not professionals:
+            return res
+        return res + [p.id for p in professionals]
 
 
 class ResultsReportVersionDetailSample(
@@ -2430,7 +2495,13 @@ class GenerateReport(Wizard):
 
         laboratory_id = Transaction().context.get(
             'samples_pending_reporting_laboratory', None)
-        signer = Laboratory(laboratory_id).default_signer.id
+        laboratory = Laboratory(laboratory_id)
+
+        signatories = [{'type': 'signer',
+            'professional': laboratory.default_signer.id}]
+        if laboratory.default_manager:
+            signatories.append({'type': 'manager',
+                'professional': laboratory.default_manager.id})
 
         reports_created = []
 
@@ -2440,6 +2511,7 @@ class GenerateReport(Wizard):
 
         if self.start.report:  # Result report selected
             samples = []
+            extra_signers = set()
             for notebook in self.start.notebooks:
                 lines = notebook._get_lines_for_reporting(laboratory_id,
                     state)
@@ -2451,9 +2523,15 @@ class GenerateReport(Wizard):
                     'notebook': notebook.id,
                     'notebook_lines': [('create', notebook_lines)],
                     })
+                extra_signers.update(self._get_lines_signer(
+                    lines, signatories))
+            extra_signatories = [{'type': 'responsible',
+                'professional': signer_id,
+                } for signer_id in extra_signers]
             details = {
                 'type': self.start.type,
-                'signer': signer,
+                'signatories': [('create',
+                    signatories + extra_signatories)],
                 'samples': [('create', samples)],
                 }
             details.update(ResultsDetail._get_fields_from_samples(samples))
@@ -2555,6 +2633,7 @@ class GenerateReport(Wizard):
                         notebooks[line.notebook.id]['lines'].append(line)
 
                     samples = []
+                    extra_signers = set()
                     for notebook in notebooks.values():
                         notebook_lines = [{
                             'notebook_line': line.id,
@@ -2565,9 +2644,15 @@ class GenerateReport(Wizard):
                             'notebook': notebook['notebook'],
                             'notebook_lines': [('create', notebook_lines)],
                             })
+                        extra_signers.update(self._get_lines_signer(
+                            notebook['lines'], signatories))
+                    extra_signatories = [{'type': 'responsible',
+                        'professional': signer_id,
+                        } for signer_id in extra_signers]
                     details = {
                         'type': self.start.type,
-                        'signer': signer,
+                        'signatories': [('create',
+                            signatories + extra_signatories)],
                         'samples': [('create', samples)],
                         }
                     details.update(ResultsDetail._get_fields_from_samples(
@@ -2688,6 +2773,26 @@ class GenerateReport(Wizard):
 
         reports_details = [draft_detail.id]
         return reports_details
+
+    def _get_lines_signer(self, lines, excluded_signatories):
+        pool = Pool()
+        Department = pool.get('company.department')
+
+        signers = set()
+
+        departments = Department.search([
+            ('id', 'in', list(set(l.department.id
+                for l in lines if l.department))),
+            ('responsible', '!=', None),
+            ])
+        for d in departments:
+            signers.add(d.laboratory_professional.id)
+
+        for s in excluded_signatories:
+            if s['professional'] in signers:
+                signers.remove(s['professional'])
+
+        return signers
 
     def do_open_(self, action):
         action['pyson_domain'] = PYSONEncoder().encode([
@@ -3339,16 +3444,14 @@ class ResultReport(Report):
             report.report_result_type in ('both', 'both_range') else
             'initial_concentration')
 
-        report_context['signer'] = ''
-        report_context['signer_role'] = ''
-        report_context['signature'] = None
         report_context['headquarters'] = report.laboratory.headquarters
-
-        if report.signer:
-            report_context['signer'] = report.signer.rec_name
-            report_context['signer_role'] = report.signer.role
-            if report.signer.signature:
-                report_context['signature'] = report.signer.signature
+        report_context['signatories'] = []
+        for signer in report.signatories:
+            report_context['signatories'].append({
+                'signer': signer.professional.rec_name,
+                'role': signer.professional.role,
+                'signature': signer.professional.signature,
+                })
 
         enac = False
         enac_all_acredited = True
