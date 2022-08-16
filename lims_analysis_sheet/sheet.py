@@ -751,10 +751,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 ('transfer_field', '=', True),
                 ('related_line_field.name', '=', 'result'),
                 ])
-            if not result_column:
-                raise UserError(gettext(
-                    'lims_analysis_sheet.msg_template_not_result_field'))
-            result_field = result_column[0].name
+            result_field = (result_column and
+                result_column[0].name or None)
 
             literal_result_column = Field.search([
                 ('table', '=', table_id),
@@ -772,6 +770,11 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             result_modifier_field = (result_modifier_column and
                 result_modifier_column[0].name or None)
 
+            if (not result_column and not literal_result_column and
+                    not result_modifier_column):
+                raise UserError(gettext(
+                    'lims_analysis_sheet.msg_template_not_result_field'))
+
             with Transaction().set_context(lims_interface_table=table_id):
                 lines = Data.search([('compilation', '=', s.compilation.id)])
                 if not lines:
@@ -782,7 +785,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         continue
                     if line.annulled:
                         continue
-                    if getattr(line, result_field) not in (None, ''):
+                    if (result_field and getattr(line,
+                            result_field) not in (None, '')):
                         continue
                     if (literal_result_field and getattr(line,
                             literal_result_field) not in (None, '')):
