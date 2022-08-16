@@ -1331,6 +1331,11 @@ class NotebookLine(ModelSQL, ModelView):
         return [('analysis',) + tuple(clause[1:])]
 
     @classmethod
+    def _get_custom_views(cls):
+        # All Notebook Lines view
+        return ['notebook_line_all_list']
+
+    @classmethod
     def fields_view_get(cls, view_id=None, view_type='form', level=None):
         pool = Pool()
         User = pool.get('res.user')
@@ -1339,8 +1344,7 @@ class NotebookLine(ModelSQL, ModelView):
 
         result = super().fields_view_get(view_id, view_type, level)
 
-        # All Notebook Lines view
-        if view_id and UiView(view_id).name == 'notebook_line_all_list':
+        if view_id and UiView(view_id).name in cls._get_custom_views():
             return result
 
         notebook_view = User(Transaction().user).notebook_view
