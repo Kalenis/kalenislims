@@ -45,6 +45,17 @@
                 <label name="lpl"/>
                 <field name="lpl"/>
             </group>
+            <group col="8" colspan="4" id="filters">
+                <separator string="Filters" colspan="8" id="filters"/>
+                <label name="date_from"/>
+                <field name="date_from"/>
+                <label name="date_to"/>
+                <field name="date_to"/>
+                <label name="range_min"/>
+                <field name="range_min"/>
+                <label name="range_max"/>
+                <field name="range_max"/>
+            </group>
         </page>
         <page string="Details" id="details">
             <group col="8" colspan="4" id="rules">

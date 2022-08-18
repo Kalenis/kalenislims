@@ -289,6 +289,13 @@
             <field name="name">control_means_deviations_calc_result2_form</field>
         </record>
 
+        <record model="ir.model.button" id="means_deviations_calc_select_all_button">
+            <field name="name">select_all</field>
+            <field name="string">Select All</field>
+            <field name="model"
+                search="[('model', '=', 'lims.control.means_deviations_calc.result')]"/>
+        </record>
+
         <record model="ir.action.wizard" id="wiz_lims_control_means_deviations_calc">
             <field name="name">Calculation of Means and Deviations</field>
             <field name="wiz_name">lims.control.means_deviations_calc</field>

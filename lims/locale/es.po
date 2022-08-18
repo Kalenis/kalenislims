@@ -8752,6 +8752,10 @@ msgctxt "model:ir.model.button,string:entry_pre_assign_sample_button"
 msgid "Pre-assign sample numbers"
 msgstr "Preasignar números de muestras"
 
+msgctxt "model:ir.model.button,string:means_deviations_calc_select_all_button"
+msgid "Select All"
+msgstr "Seleccionar todo"
+
 msgctxt "model:ir.rule.group,name:rule_group_analysis_device"
 msgid "User in laboratory"
 msgstr ""
@@ -14022,6 +14026,10 @@ msgstr "Detalles de Análisis de Tendencias"
 msgctxt "view:lims.control.tendency:"
 msgid "Details"
 msgstr "Detalles"
+
+msgctxt "view:lims.control.tendency:"
+msgid "Filters"
+msgstr "Filtros"
 
 msgctxt "view:lims.control.tendency:"
 msgid "General"

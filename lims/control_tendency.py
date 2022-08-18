@@ -576,6 +576,18 @@ class MeansDeviationsCalcResult(ModelView):
 
     lines = fields.One2Many('lims.control.result_line', None, 'Results')
 
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._buttons.update({
+            'select_all': {},
+            })
+
+    @ModelView.button_change('lines')
+    def select_all(self, name=None):
+        for l in self.lines:
+            l.update = True
+
 
 class ControlResultLine(ModelSQL, ModelView):
     'Control Chart Result Line'
