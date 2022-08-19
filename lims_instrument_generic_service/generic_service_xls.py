@@ -117,8 +117,6 @@ def parse(self, infile):
             values = {}
             result = row[COL['D']].value if (
                 row[COL['D']].ctype == xlrd.XL_CELL_NUMBER) else None
-            rm_correction_formula = row[COL['O']].value if (
-                row[COL['O']].ctype == xlrd.XL_CELL_TEXT) else None
             literal_result = row[COL['P']].value if (
                 row[COL['P']].ctype == xlrd.XL_CELL_TEXT) else None
             device = None
@@ -126,11 +124,13 @@ def parse(self, infile):
                 device = str(int(row[COL['J']].value))
             elif row[COL['J']].ctype == xlrd.XL_CELL_TEXT:
                 device = row[COL['J']].value
+            trace_report = False
+            if (row[COL['O']].ctype == xlrd.XL_CELL_TEXT and
+                    row[COL['O']].value == 'T'):
+                trace_report = True
 
             if result is not None:
                 values['result'] = result
-            if rm_correction_formula is not None:
-                values['rm_correction_formula'] = rm_correction_formula
             if literal_result is not None:
                 values['literal_result'] = literal_result
             if device:
@@ -145,6 +145,8 @@ def parse(self, infile):
                 values['chromatogram'] = chromatogram
             if dilution_factor is not None:
                 values['dilution_factor'] = dilution_factor
+            if trace_report:
+                values['trace_report'] = True
             values['row_number'] = curr_row + 1
 
             if fraction in self.rawresults:
