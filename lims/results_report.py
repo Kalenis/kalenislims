@@ -2222,13 +2222,15 @@ class DivideReports(Wizard):
                 ('service.annulled', '=', False),
                 ('report_grouper', '=', 0),
                 ])
-            default['analysis_detail_domain'] = [e.id for e in analysis_detail]
+            default['analysis_detail_domain'] = [e.id for e in analysis_detail
+                if not e.report_grouper_readonly]
 
         elif model == 'lims.entry.detail.analysis':
             analysis_detail = EntryDetailAnalysis.search([
                 ('id', 'in', context['active_ids']),
                 ])
-            default['analysis_detail_domain'] = [e.id for e in analysis_detail]
+            default['analysis_detail_domain'] = [e.id for e in analysis_detail
+                if not e.report_grouper_readonly]
             default['analysis_detail'] = default['analysis_detail_domain']
 
         return default

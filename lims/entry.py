@@ -1089,7 +1089,11 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     analysis_origin = fields.Char('Analysis origin',
         states={'readonly': True})
     confirmation_date = fields.Date('Confirmation date', readonly=True)
-    report_grouper = fields.Integer('Report Grouper')
+    report_grouper = fields.Integer('Report Grouper',
+        states={'readonly': Bool(Eval('report_grouper_readonly'))},
+        depends=['report_grouper_readonly'])
+    report_grouper_readonly = fields.Function(fields.Boolean(
+        'Report Grouper readonly'), 'get_report_grouper_readonly')
     results_report = fields.Function(fields.Many2One('lims.results_report',
         'Results Report'), 'get_results_report')
     report = fields.Boolean('Report', states={'readonly': True})
@@ -1475,6 +1479,32 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     @classmethod
     def order_create_date2(cls, tables):
         return cls.create_date.convert_order('create_date', tables, cls)
+
+    @classmethod
+    def get_report_grouper_readonly(cls, details, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+
+        result = {}
+        for d in details:
+            cursor.execute('SELECT rd.id '
+                'FROM "' + ResultsDetail._table + '" rd '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON rd.id = rs.version_detail '
+                    'INNER JOIN "' + ResultsLine._table + '" rl '
+                    'ON rl.detail_sample = rs.id '
+                    'INNER JOIN "' + NotebookLine._table + '" nl '
+                    'ON nl.id = rl.notebook_line '
+                'WHERE nl.analysis_detail = %s '
+                    'AND rd.state IN (\'released\', \'annulled\')',
+                (str(d.id),))
+            reports_ids = [x[0] for x in cursor.fetchall()]
+            result[d.id] = True if reports_ids else False
+        return result
 
     @classmethod
     def get_results_report(cls, details, name):

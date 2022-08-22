@@ -1625,6 +1625,10 @@ msgctxt "field:lims.entry.detail.analysis,report_grouper:"
 msgid "Report Grouper"
 msgstr "Agrupador de informe"
 
+msgctxt "field:lims.entry.detail.analysis,report_grouper_readonly:"
+msgid "Report Grouper readonly"
+msgstr "Agrupador de informe sólo lectura"
+
 msgctxt "field:lims.entry.detail.analysis,results_report:"
 msgid "Results Report"
 msgstr "Informe de resultados"
