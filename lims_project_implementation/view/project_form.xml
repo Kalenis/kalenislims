@@ -33,7 +33,7 @@
                         view_ids="lims_project_study_plan.lims_sample_view_list,lims_project_study_plan.lims_sample_view_form"/>
                 </page>
                 <page string="Supplies" id="supplies">
-                    <field name="stp_solvents_and_reagents" colspan="4" mode="tree,form"
+                    <field name="stp_solvents_and_reagents" string="Supplies" colspan="4" mode="tree,form"
                         view_ids="lims_project_implementation.lims_project_solvent_reagent_view_list,lims_project_implementation.lims_project_solvent_reagent_view_form"/>
                 </page>
             </notebook>

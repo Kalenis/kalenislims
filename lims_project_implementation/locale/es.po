@@ -46,6 +46,10 @@ msgctxt "field:lims.project.mpi_professional,project:"
 msgid "Implementation project"
 msgstr "Proyecto implementación"
 
+msgctxt "field:lims.project.solvent_reagent,product:"
+msgid "Supply"
+msgstr "Insumo"
+
 msgctxt "field:lims.project.solvent_reagent,purchase_date:"
 msgid "Purchase date"
 msgstr "Fecha de compra"

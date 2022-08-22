@@ -7,6 +7,7 @@ from trytond.model import ModelSQL, ModelView, fields
 from trytond.report import Report
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval, Equal, Bool, Not
+from trytond.transaction import Transaction
 
 
 class Project(metaclass=PoolMeta):
@@ -35,6 +36,8 @@ class Project(metaclass=PoolMeta):
         cls.external_quality_control.states['invisible'] = Bool(
             Equal(Eval('type'), 'implementation'))
         cls.external_quality_control.depends = ['type']
+        cls.stp_solvents_and_reagents.context = {'project_type': Eval('type')}
+        cls.stp_solvents_and_reagents.depends = ['type', 'stp_state']
 
     @classmethod
     def view_attributes(cls):
@@ -94,6 +97,30 @@ class ProjectSolventAndReagent(metaclass=PoolMeta):
     __name__ = 'lims.project.solvent_reagent'
 
     purchase_date = fields.Date('Purchase date')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls.product.string = 'Supply'
+
+    @staticmethod
+    def default_solvent_reagent_domain():
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        Category = pool.get('product.category')
+        if Transaction().context.get('project_type', '') == 'implementation':
+            return [c.id for c in Category.search([])]
+        config = Config(1)
+        return config.get_solvents() + config.get_reagents()
+
+    def get_solvent_reagent_domain(self, name=None):
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        Category = pool.get('product.category')
+        if self.project.type == 'implementation':
+            return [c.id for c in Category.search([])]
+        config = Config(1)
+        return config.get_solvents() + config.get_reagents()
 
     @fields.depends('lot')
     def on_change_lot(self, name=None):
