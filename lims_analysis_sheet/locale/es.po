@@ -98,6 +98,10 @@ msgctxt "field:lims.analysis_sheet,view:"
 msgid "View"
 msgstr "Vista"
 
+msgctxt "field:lims.analysis_sheet,samples:"
+msgid "Samples"
+msgstr "Muestras"
+
 msgctxt "field:lims.analysis_sheet.add_control.start,analysis_sheet:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"

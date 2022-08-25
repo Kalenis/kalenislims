@@ -10,6 +10,8 @@
             <field name="professional"/>
             <label name="laboratory"/>
             <field name="laboratory"/>
+            <label name="samples"/>
+            <field name="samples"/>
             <label name="date"/>
             <field name="date"/>
             <group id="samples" colspan="2" col="6">
