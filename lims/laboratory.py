@@ -683,6 +683,7 @@ class NotebookRule(ModelSQL, ModelView):
         AnalysisDevice = pool.get('lims.analysis.device')
         Service = pool.get('lims.service')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
 
         cursor.execute('SELECT DISTINCT(laboratory) '
             'FROM "' + AnalysisLaboratory._table + '" '
@@ -727,6 +728,11 @@ class NotebookRule(ModelSQL, ModelView):
                 'state': 'unplanned',
                 })
 
+            notebook_lines = NotebookLine.search([
+                ('analysis_detail', 'in', [d.id for d in analysis_detail])])
+            if notebook_lines:
+                NotebookLine.write(notebook_lines, {'rule': self.id})
+
     def _exec_edit(self, line):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
@@ -756,6 +762,7 @@ class NotebookRule(ModelSQL, ModelView):
                 if notebook_line.laboratory.automatic_accept_result:
                     notebook_line.accepted = True
                     notebook_line.acceptance_date = now
+            notebook_line.rule = self.id
             notebook_line.save()
         except Exception as e:
             return

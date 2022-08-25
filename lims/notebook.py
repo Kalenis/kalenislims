@@ -997,6 +997,8 @@ class NotebookLine(ModelSQL, ModelView):
         readonly=True)
     exceptional_load_uid = fields.Many2One('res.user',
         'Exceptional loading of results User', readonly=True)
+    rule = fields.Many2One('lims.rule', 'Notebook Rule', readonly=True,
+        ondelete='SET NULL')
 
     del _states, _depends
 

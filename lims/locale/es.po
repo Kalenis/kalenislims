@@ -3184,6 +3184,10 @@ msgctxt "field:lims.notebook.line,rm_correction_formula:"
 msgid "RM Correction Formula"
 msgstr "Fórmula Corrección RM"
 
+msgctxt "field:lims.notebook.line,rule:"
+msgid "Notebook Rule"
+msgstr "Regla de cuaderno"
+
 msgctxt "field:lims.notebook.line,sample:"
 msgid "Sample"
 msgstr "Muestra"
