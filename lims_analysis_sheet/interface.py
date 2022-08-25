@@ -5,6 +5,7 @@
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Bool, Or, And
+from trytond.transaction import Transaction
 from trytond.modules.lims_interface.interface import FUNCTIONS
 from .function import custom_functions
 
@@ -151,7 +152,8 @@ class Data(metaclass=PoolMeta):
     @classmethod
     def delete(cls, records):
         NotebookLine = Pool().get('lims.notebook.line')
-        notebook_lines = [x.notebook_line for x in records
-            if x.notebook_line]
-        NotebookLine.write(notebook_lines, {'start_date': None})
+        if Transaction().context.get('clean_start_date', True):
+            notebook_lines = [x.notebook_line for x in records
+                if x.notebook_line]
+            NotebookLine.write(notebook_lines, {'start_date': None})
         super().delete(records)
