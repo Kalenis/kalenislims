@@ -119,8 +119,12 @@ class NotebookRule(metaclass=PoolMeta):
             EntryDetailAnalysis.write(analysis_detail, {
                 'state': 'unplanned',
                 })
+
             notebook_lines = NotebookLine.search([
                 ('analysis_detail', 'in', [d.id for d in analysis_detail])])
+            if notebook_lines:
+                NotebookLine.write(notebook_lines, {'rule': self.id})
+
             sheet = AnalysisSheet(Transaction().context.get(
                 'lims_analysis_sheet'))
             notebook_lines = [nl for nl in notebook_lines if
@@ -212,6 +216,8 @@ class NotebookRule(metaclass=PoolMeta):
                         value = getattr(value, field)
                 except AttributeError:
                     value = None
+            if self.target_field.ttype == 'many2one':
+                value = int(value)
             setattr(notebook_line, self.target_field.name, value)
             if self.target_field.name in ('result', 'literal_result'):
                 if not notebook_line.start_date:
@@ -220,6 +226,7 @@ class NotebookRule(metaclass=PoolMeta):
                 if notebook_line.laboratory.automatic_accept_result:
                     notebook_line.accepted = True
                     notebook_line.acceptance_date = now
+            notebook_line.rule = self.id
             notebook_line.save()
         except Exception as e:
             return
