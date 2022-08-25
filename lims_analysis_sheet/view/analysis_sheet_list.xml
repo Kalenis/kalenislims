@@ -2,6 +2,7 @@
 <tree>
     <field name="laboratory"/>
     <field name="professional"/>
+    <field name="samples"/>
     <field name="template"/>
     <field name="samples_qty"/>
     <field name="completion_percentage" widget="progressbar"/>
