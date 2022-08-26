@@ -837,6 +837,10 @@ msgctxt "field:party.party,fantasy_name:"
 msgid "Fantasy Name"
 msgstr "Nombre de fantasía"
 
+msgctxt "field:party.party,is_invoice_party:"
+msgid "Invoice party"
+msgstr "Entidad de facturación"
+
 msgctxt "field:party.party,plants:"
 msgid "Plants"
 msgstr "Plantas"

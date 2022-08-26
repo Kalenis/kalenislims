@@ -22,8 +22,14 @@ class Party(metaclass=PoolMeta):
         states=_states, depends=_depends)
     complete_file = fields.Boolean('Complete File',
         states=_states, depends=_depends)
+    is_invoice_party = fields.Boolean('Invoice party',
+        states=_states, depends=_depends)
 
     del _states, _depends
+
+    @staticmethod
+    def default_is_invoice_party():
+        return True
 
     @classmethod
     def create(cls, vlist):
@@ -38,7 +44,7 @@ class Party(metaclass=PoolMeta):
         AdministrativeTask = Pool().get('lims.administrative.task')
         res = []
         for party in parties:
-            if party.complete_file:
+            if party.complete_file or not party.is_invoice_party:
                 continue
             if AdministrativeTask.search([
                     ('type', '=', 'party_incomplete_file'),
