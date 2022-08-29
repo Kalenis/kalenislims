@@ -5,6 +5,7 @@
 import datetime
 import formulas
 import numpy as np
+from dateutil.relativedelta import relativedelta
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool
@@ -193,7 +194,7 @@ def to_time(value,uom):
     res = None
     try:
         value = float(value)
-    except (ValueError,TypeError):
+    except (ValueError, TypeError):
         value = False
 
     if type(value) is float and value == 0:
@@ -202,11 +203,62 @@ def to_time(value,uom):
         res = None
     else:
         res = _td_to_time(uoms[uom](value))
-    
+
     return res
 
 
 custom_functions['TOTIME'] = to_time
+
+
+def float_to_delta(value, uom):
+    uoms = {
+        'MO': lambda x: relativedelta(months=x),
+        'W': lambda x: datetime.timedelta(days=x*7),
+        'D': lambda x: datetime.timedelta(days=x),
+        'H': lambda x: datetime.timedelta(hours=x),
+        'M': lambda x: datetime.timedelta(minutes=x),
+        'S': lambda x: datetime.timedelta(seconds=x),
+    }
+    return uoms.get(uom, lambda x: False)(value)
+
+
+def date_add(base_date, value, uom):
+    res = None
+    try:
+        value = float(value)
+    except (ValueError, TypeError):
+        return None
+
+    if not type(base_date) in [datetime.date, datetime.datetime]:
+        return None
+    if type(base_date) is datetime.date and uom in ['H', 'M', 'S']:
+        return base_date
+    # Float is not allowed for month values, because its ambiguos
+    if uom == 'MO':
+        value = int(value)
+    delta = float_to_delta(value, uom)
+    res = base_date + delta if delta else None
+    return res
+
+
+custom_functions['DATEADD'] = date_add
+
+
+def slope(yp, xp):
+    items_to_delete = []
+    i = 0
+    for y1 in yp:
+        for y2 in y1:
+            if y2 is None:
+                items_to_delete.append(i)
+            i += 1
+    if items_to_delete:
+        yp = np.delete(yp, items_to_delete, axis=1)
+        xp = np.delete(xp, items_to_delete, axis=1)
+    return formulas.functions.wrap_func(formulas.functions.stat.xslope)(yp, xp)
+
+
+custom_functions['SLOPE'] = slope
 
 
 class Function(ModelSQL, ModelView):
