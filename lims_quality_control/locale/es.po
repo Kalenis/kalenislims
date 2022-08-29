@@ -62,6 +62,10 @@ msgctxt "field:lims.lab.method,specification:"
 msgid "Specification"
 msgstr "Especificación"
 
+msgctxt "field:lims.lab.method.version,specification:"
+msgid "Specification"
+msgstr "Especificación"
+
 msgctxt "field:lims.lab.workyear,default_entry_quality:"
 msgid "Default entry quality"
 msgstr "Ingreso para calidad por defecto"

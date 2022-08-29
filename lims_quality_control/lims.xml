@@ -92,5 +92,21 @@
             <field name="name">notebook_load_results_manual_result_line_list</field>
         </record>
 
+<!-- Method Version -->
+
+        <record model="ir.ui.view" id="lims_lab_method_version_view_form">
+            <field name="model">lims.lab.method.version</field>
+            <field name="inherit" ref="lims.lims_lab_method_version_view_form"/>
+            <field name="name">method_version_form</field>
+        </record>
+
+<!-- Wizard New Method Version -->
+
+        <record model="ir.ui.view" id="method_new_version_start_form">
+            <field name="model">lims.lab.method</field>
+            <field name="inherit" ref="lims.method_new_version_start_form"/>
+            <field name="name">method_new_version_form</field>
+        </record>
+
     </data>
 </tryton>

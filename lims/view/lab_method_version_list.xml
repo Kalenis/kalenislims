@@ -11,5 +11,4 @@
     <field name="pnt"/>
     <field name="results_estimated_waiting"/>
     <field name="equivalence_code"/>
-    <field name="state"/>
 </tree>

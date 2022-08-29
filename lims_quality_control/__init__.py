@@ -15,6 +15,7 @@ def register():
         product.Template,
         lims.Configuration,
         lims.Method,
+        lims.MethodVersion,
         lims.Typification,
         lims.Analysis,
         lims.NotebookLine,

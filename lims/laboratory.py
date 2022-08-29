@@ -6,7 +6,8 @@ from datetime import datetime
 import operator
 from sql import Cast
 
-from trytond.model import ModelView, ModelSQL, DeactivableMixin, fields, Unique
+from trytond.model import Workflow, ModelView, ModelSQL, DeactivableMixin, \
+    fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool
 from trytond.transaction import Transaction
@@ -137,24 +138,44 @@ class LaboratoryProfessional(ModelSQL, ModelView):
         return None
 
 
-class LabMethod(ModelSQL, ModelView):
+class LabMethod(Workflow, ModelSQL, ModelView):
     'Laboratory Method'
     __name__ = 'lims.lab.method'
 
-    code = fields.Char('Code', required=True)
-    name = fields.Char('Name', required=True, translate=True)
-    reference = fields.Char('Reference')
-    determination = fields.Char('Determination', required=True)
+    _states = {'readonly': Eval('state') != 'draft'}
+    _depends = ['state']
+
+    code = fields.Char('Code', required=True,
+        states=_states, depends=_depends)
+    name = fields.Char('Name', required=True, translate=True,
+        states=_states, depends=_depends)
+    version = fields.Char('Version', states=_states, depends=_depends)
+    reference = fields.Char('Reference', states=_states, depends=_depends)
+    determination = fields.Char('Determination', required=True,
+        states=_states, depends=_depends)
     requalification_months = fields.Integer('Requalification months',
-        required=True)
-    supervised_requalification = fields.Boolean('Supervised requalification')
-    deprecated_since = fields.Date('Deprecated since')
-    pnt = fields.Char('PNT')
+        required=True, states=_states, depends=_depends)
+    supervised_requalification = fields.Boolean('Supervised requalification',
+        states=_states, depends=_depends)
+    deprecated_since = fields.Date('Deprecated since',
+        states=_states, depends=_depends)
+    pnt = fields.Char('PNT', states=_states, depends=_depends)
     results_estimated_waiting = fields.Integer(
-        'Estimated number of days for results')
+        'Estimated number of days for results',
+        states=_states, depends=_depends)
     results_waiting = fields.One2Many('lims.lab.method.results_waiting',
         'method', 'Waiting times per client')
-    equivalence_code = fields.Char('Equivalence Code')
+    equivalence_code = fields.Char('Equivalence Code',
+        states=_states, depends=_depends)
+    versions = fields.One2Many('lims.lab.method.version',
+        'method', 'Versions', readonly=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('active', 'Active'),
+        ('disabled', 'Disabled'),
+        ], 'State', required=True, readonly=True)
+
+    del _states, _depends
 
     @classmethod
     def __setup__(cls):
@@ -164,12 +185,30 @@ class LabMethod(ModelSQL, ModelView):
             ('code_uniq', Unique(t, t.code),
                 'lims.msg_method_code_unique_id'),
             ]
+        cls._transitions |= set((
+            ('draft', 'active'),
+            ('active', 'disabled'),
+            ))
+        cls._buttons.update({
+            'activate': {
+                'invisible': (Eval('state') != 'draft'),
+                },
+            'disable': {
+                'invisible': (Eval('state') != 'active'),
+                },
+            'new_version': {
+                'invisible': (Eval('state') != 'active'),
+                },
+            })
+
+    @staticmethod
+    def default_state():
+        return 'draft'
 
     def get_rec_name(self, name):
         if self.code:
             return self.code + ' - ' + self.name
-        else:
-            return self.name
+        return self.name
 
     @classmethod
     def search_rec_name(cls, name, clause):
@@ -220,6 +259,40 @@ class LabMethod(ModelSQL, ModelView):
                     'results_estimated_waiting': (
                         method.results_estimated_waiting),
                     })
+
+    def _get_new_version_fields(self):
+        return ['code', 'name', 'version', 'reference', 'determination',
+            'requalification_months', 'supervised_requalification',
+            'deprecated_since', 'pnt', 'results_estimated_waiting',
+            'equivalence_code']
+
+    @classmethod
+    @ModelView.button_action('lims.wiz_method_new_version')
+    def new_version(cls, methods):
+        pass
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('active')
+    def activate(cls, methods):
+        for method in methods:
+            method.create_new_version()
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('disabled')
+    def disable(cls, methods):
+        pass
+
+    def create_new_version(self):
+        pool = Pool()
+        LabMethodVersion = pool.get('lims.lab.method.version')
+
+        version = LabMethodVersion()
+        version.method = self.id
+        for field in self._get_new_version_fields():
+            setattr(version, field, getattr(self, field))
+        version.save()
 
 
 class LabMethodWaitingTime(ModelSQL, ModelView):
@@ -279,6 +352,69 @@ class LabMethodWaitingTime(ModelSQL, ModelView):
         waiting = waiting_times[0].method.results_estimated_waiting
         cls.update_laboratory_notebook(waiting_times, waiting)
         super().delete(waiting_times)
+
+
+class LabMethodVersion(ModelSQL, ModelView):
+    'Method Version'
+    __name__ = 'lims.lab.method.version'
+
+    method = fields.Many2One('lims.lab.method', 'Method',
+        ondelete='CASCADE', select=True)
+    code = fields.Char('Code', readonly=True)
+    name = fields.Char('Name', translate=True, readonly=True)
+    version = fields.Char('Version', readonly=True)
+    reference = fields.Char('Reference', readonly=True)
+    determination = fields.Char('Determination', readonly=True)
+    requalification_months = fields.Integer('Requalification months',
+        readonly=True)
+    supervised_requalification = fields.Boolean('Supervised requalification',
+        readonly=True)
+    deprecated_since = fields.Date('Deprecated since', readonly=True)
+    pnt = fields.Char('PNT', readonly=True)
+    results_estimated_waiting = fields.Integer(
+        'Estimated number of days for results', readonly=True)
+    equivalence_code = fields.Char('Equivalence Code', readonly=True)
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._order.insert(0, ('id', 'DESC'))
+
+    def get_rec_name(self, name):
+        return self.version
+
+
+class NewLabMethodVersion(Wizard):
+    'New Method Version'
+    __name__ = 'lims.lab.method.new_version'
+
+    start = StateView('lims.lab.method',
+        'lims.method_new_version_start_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Confirm', 'confirm', 'tryton-ok', default=True),
+            ])
+    confirm = StateTransition()
+
+    def default_start(self, fields):
+        pool = Pool()
+        LabMethod = pool.get('lims.lab.method')
+
+        method = LabMethod(Transaction().context['active_id'])
+        default = {'state': 'draft'}
+        for field in method._get_new_version_fields():
+            default[field] = getattr(method, field)
+        return default
+
+    def transition_confirm(self):
+        pool = Pool()
+        LabMethod = pool.get('lims.lab.method')
+
+        method = LabMethod(Transaction().context['active_id'])
+        for field in method._get_new_version_fields():
+            setattr(method, field, getattr(self.start, field))
+        method.save()
+        method.create_new_version()
+        return 'end'
 
 
 class LabDevice(DeactivableMixin, ModelSQL, ModelView):

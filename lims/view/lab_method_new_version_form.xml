@@ -20,22 +20,6 @@
     <field name="pnt"/>
     <label name="equivalence_code"/>
     <field name="equivalence_code"/>
-    <notebook>
-        <page id="times" string="Times">
-            <label name="results_estimated_waiting"/>
-            <field name="results_estimated_waiting"/>
-            <newline/>
-            <field name="results_waiting" colspan="4"/>
-        </page>
-        <page name="versions">
-            <field name="versions" colspan="4"/>
-        </page>
-    </notebook>
-    <group id="buttons" colspan="4" col="-1">
-        <label name="state"/>
-        <field name="state"/>
-        <button name="activate" string="Activate"/>
-        <button name="disable" string="Disable"/>
-        <button name="new_version" string="New Version"/>
-    </group>
+    <label name="results_estimated_waiting"/>
+    <field name="results_estimated_waiting"/>
 </form>
