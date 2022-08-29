@@ -47,6 +47,13 @@
             <field name="parameters">notebook_line, variable</field>
             <field name="help">Obtains the value of a given variable, setted for the analysis, product type, matrix and method indicated.</field>
         </record>
+
+        <record model="lims.interface.function" id="function_timediff">
+            <field name="name">TIMEDIF</field>
+            <field name="parameters">time_1, time_2,delta=False</field>
+            <field name="help">Gets the diff between time_1 and time_2. If time 1 is lower than time 2, None is returned. If delta is true, a timedelta object is returned.</field>
+        </record>
+
         <record model="lims.interface.function" id="function_scientific_notation">
             <field name="name">SCIENTIFIC_NOTATION</field>
             <field name="parameters">value, decimals=2</field>
