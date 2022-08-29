@@ -185,19 +185,25 @@ custom_functions['TIMEDIF'] = time_diff
 
 def to_time(value,uom):
     uoms = {
-        'H':lambda x: datetime.timedelta(hours=x),
-        'M':lambda x: datetime.timedelta(minutes=x),
-        'S':lambda x: datetime.timedelta(seconds=x),
-        'MS':lambda x: datetime.timedelta(seconds=x/1000),
+        'H': lambda x: datetime.timedelta(hours=x),
+        'M': lambda x: datetime.timedelta(minutes=x),
+        'S': lambda x: datetime.timedelta(seconds=x),
+        'MS': lambda x: datetime.timedelta(seconds=x/1000),
     }
-    if value == 0:
-        return 0
-    if not value or not uom or uom not in uoms:
-        return None
-    
-    td = uoms[uom](value)
+    res = None
+    try:
+        value = float(value)
+    except (ValueError,TypeError):
+        value = False
 
-    return _td_to_time(td)
+    if type(value) is float and value == 0:
+        res = datetime.timedelta(hours=0)
+    elif not value or not type(value) is float or not uom or uom not in uoms:
+        res = None
+    else:
+        res = _td_to_time(uoms[uom](value))
+    
+    return res
 
 
 custom_functions['TOTIME'] = to_time
