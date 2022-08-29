@@ -50,8 +50,14 @@
 
         <record model="lims.interface.function" id="function_timediff">
             <field name="name">TIMEDIF</field>
-            <field name="parameters">time_1, time_2,delta=False</field>
-            <field name="help">Gets the diff between time_1 and time_2. If time 1 is lower than time 2, None is returned. If delta is true, a timedelta object is returned.</field>
+            <field name="parameters">time_1, time_2,uom=False,delta=False</field>
+            <field name="help">Gets the diff between time_1 and time_2. If time 1 is lower than time 2, None is returned. If uom [H,M,S,MS] is specified, a Float representing the the conversion from the delta to the required uom. will be returned. If delta is true and uom is false, a timedelta object is returned.</field>
+        </record>
+
+        <record model="lims.interface.function" id="function_totime">
+            <field name="name">TOTIME</field>
+            <field name="parameters">value[float], uom[H,M,S,MS]</field>
+            <field name="help">Convert float value to time object, using the provided uom.</field>
         </record>
 
         <record model="lims.interface.function" id="function_scientific_notation">
