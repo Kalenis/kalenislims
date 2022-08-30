@@ -20,4 +20,6 @@
     <field name="range_min"/>
     <label name="range_max"/>
     <field name="range_max"/>
+    <label name="concentration_level"/>
+    <field name="concentration_level"/>
 </form>

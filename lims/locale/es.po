@@ -555,6 +555,10 @@ msgctxt "field:lims.control.means_deviations_calc.result2,tendencies:"
 msgid "Tendencies"
 msgstr "Tendencias"
 
+msgctxt "field:lims.control.means_deviations_calc.start,concentration_level:"
+msgid "Concentration level"
+msgstr "Nivel de concentración"
+
 msgctxt "field:lims.control.means_deviations_calc.start,date_from:"
 msgid "Date from"
 msgstr "Fecha desde"
@@ -734,6 +738,10 @@ msgstr "Resultado"
 msgctxt "field:lims.control.tendencies_analysis.result,tendencies:"
 msgid "Tendencies"
 msgstr "Tendencias"
+
+msgctxt "field:lims.control.tendencies_analysis.start,concentration_level:"
+msgid "Concentration level"
+msgstr "Nivel de concentración"
 
 msgctxt "field:lims.control.tendencies_analysis.start,date_from:"
 msgid "Date from"

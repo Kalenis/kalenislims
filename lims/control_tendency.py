@@ -208,17 +208,17 @@ class ControlTendency(ModelSQL, ModelView):
     _states = {'readonly': Bool(Eval('context', {}).get('readonly', False))}
 
     family = fields.Many2One('lims.analysis.family', 'Family',
-        states=_states)
+        states=_states, select=True)
     product_type = fields.Many2One('lims.product.type', 'Product type',
-        states=_states)
+        states=_states, select=True)
     matrix = fields.Many2One('lims.matrix', 'Matrix',
-        states=_states)
+        states=_states, select=True)
     fraction_type = fields.Many2One('lims.fraction.type', 'Fraction type',
-        required=True, states=_states)
+        required=True, states=_states, select=True)
     analysis = fields.Many2One('lims.analysis', 'Analysis',
-        required=True, states=_states)
+        required=True, states=_states, select=True)
     concentration_level = fields.Many2One('lims.concentration.level',
-        'Concentration level', states=_states)
+        'Concentration level', states=_states, select=True)
     mean = fields.Float('Mean', required=True, states=_states,
         digits=(16, Eval('digits', 2)), depends=['digits'])
     deviation = fields.Float('Standard Deviation', required=True,
@@ -508,6 +508,8 @@ class MeansDeviationsCalcStart(ModelView):
         None, None, 'Matrix domain'), 'on_change_with_matrix_domain')
     range_min = fields.Float('Range Minimum', digits=(16, 3))
     range_max = fields.Float('Range Maximum', digits=(16, 3))
+    concentration_level = fields.Many2One('lims.concentration.level',
+        'Concentration level')
 
     @staticmethod
     def default_group_by_family():
@@ -763,7 +765,7 @@ class MeansDeviationsCalc(Wizard):
             if (hasattr(self.start, field) and getattr(self.start, field)):
                 res[field] = getattr(self.start, field)
         for field in ('family', 'laboratory', 'product_type', 'matrix',
-                'fraction_type'):
+                'fraction_type', 'concentration_level'):
             if (hasattr(self.start, field) and getattr(self.start, field)):
                 res[field] = getattr(self.start, field).id
         for field in ('product_type_domain', 'matrix_domain'):
@@ -805,6 +807,9 @@ class MeansDeviationsCalc(Wizard):
                 self.start.product_type.id))
         if self.start.matrix:
             clause.append(('notebook.matrix', '=', self.start.matrix.id))
+        if self.start.concentration_level:
+            clause.append(('concentration_level', '=',
+                self.start.concentration_level.id))
 
         lines = NotebookLine.search(clause,
             order=[('end_date', 'ASC'), ('id', 'ASC')])
@@ -941,6 +946,9 @@ class MeansDeviationsCalc(Wizard):
             ('result', 'not in', [None, '']),
             ('annulled', '=', False),
             ]
+        if self.start.concentration_level:
+            clause.append(('concentration_level', '=',
+                self.start.concentration_level.id))
 
         lines = NotebookLine.search(clause,
             order=[('end_date', 'ASC'), ('id', 'ASC')])
@@ -1186,6 +1194,8 @@ class TendenciesAnalysisStart(ModelView):
         depends=['matrix_domain', 'group_by_family'])
     matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
         None, None, 'Matrix domain'), 'on_change_with_matrix_domain')
+    concentration_level = fields.Many2One('lims.concentration.level',
+        'Concentration level')
 
     @staticmethod
     def default_group_by_family():
@@ -1291,6 +1301,9 @@ class TendenciesAnalysis(Wizard):
                     self.start.product_type.id))
             if self.start.matrix:
                 clause.append(('matrix', '=', self.start.matrix.id))
+        if self.start.concentration_level:
+            clause.append(('concentration_level', '=',
+                self.start.concentration_level.id))
 
         tendencies = ControlTendency.search(clause)
         if not tendencies:

@@ -817,7 +817,7 @@ class NotebookLine(ModelSQL, ModelView):
         select=True)
     end_date = fields.Date('End date', states={
         'readonly': Or(~Bool(Eval('start_date')), Bool(Eval('accepted'))),
-        }, depends=['start_date', 'accepted'])
+        }, depends=['start_date', 'accepted'], select=True)
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         readonly=True, select=True)
     method = fields.Many2One('lims.lab.method', 'Method',
@@ -910,7 +910,7 @@ class NotebookLine(ModelSQL, ModelView):
         states=_states, depends=_depends)
     concentration_level = fields.Many2One('lims.concentration.level',
         'Concentration level',
-        states=_states, depends=_depends)
+        states=_states, depends=_depends, select=True)
     decimals = fields.Integer('Decimals',
         states=_states, depends=_depends)
     significant_digits = fields.Integer('Significant digits',
