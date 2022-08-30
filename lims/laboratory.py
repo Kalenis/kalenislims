@@ -14,6 +14,7 @@ from trytond.transaction import Transaction
 from trytond.pyson import Eval, Bool
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
+from trytond.rpc import RPC
 from .formula_parser import FormulaParser
 
 
@@ -200,6 +201,15 @@ class LabMethod(Workflow, ModelSQL, ModelView):
                 'invisible': (Eval('state') != 'active'),
                 },
             })
+        cls.__rpc__.update({
+            'activate': RPC(readonly=False, instantiate=0),
+            })
+
+    @classmethod
+    def __register__(cls, module_name):
+        super().__register__(module_name)
+        methods = cls.search([('state', '=', 'draft')])
+        cls.activate(methods)
 
     @staticmethod
     def default_state():
