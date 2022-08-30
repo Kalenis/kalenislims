@@ -294,6 +294,11 @@ class LabMethod(Workflow, ModelSQL, ModelView):
             setattr(version, field, getattr(self, field))
         version.save()
 
+    def get_current_version(self):
+        if self.versions:
+            return self.versions[0].id
+        return None
+
 
 class LabMethodWaitingTime(ModelSQL, ModelView):
     'Waiting Time per Client'

@@ -382,6 +382,8 @@ class Service(ModelSQL, ModelView):
         'Method'), 'get_views_field')
     method_domain = fields.Function(fields.Many2Many('lims.lab.method',
         None, None, 'Method domain'), 'on_change_with_method_domain')
+    method_version = fields.Many2One('lims.lab.method.version',
+        'Method version', readonly=True)
     device = fields.Many2One('lims.lab.device', 'Device',
         domain=['OR', ('id', '=', Eval('device')),
             ('id', 'in', Eval('device_domain'))],
@@ -510,6 +512,7 @@ class Service(ModelSQL, ModelView):
         pool = Pool()
         LabWorkYear = pool.get('lims.lab.workyear')
         Sequence = pool.get('ir.sequence')
+        LabMethod = pool.get('lims.lab.method')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Sample = pool.get('lims.sample')
 
@@ -523,6 +526,11 @@ class Service(ModelSQL, ModelView):
         vlist = [x.copy() for x in vlist]
         for values in vlist:
             values['number'] = Sequence.get_id(sequence.id)
+            # set method version
+            if 'method' in values and values['method'] is not None:
+                values['method_version'] = LabMethod(
+                    values['method']).get_current_version()
+
         services = super().create(vlist)
 
         if not Transaction().context.get('copying', False):
@@ -557,8 +565,21 @@ class Service(ModelSQL, ModelView):
 
     @classmethod
     def write(cls, *args):
-        Sample = Pool().get('lims.sample')
+        pool = Pool()
+        LabMethod = pool.get('lims.lab.method')
+        Sample = pool.get('lims.sample')
+
+        actions = iter(args)
+        args = []
+        for services, values in zip(actions, actions):
+            # set method version
+            if 'method' in values and values['method'] is not None:
+                values['method_version'] = LabMethod(
+                    values['method']).get_current_version()
+            args.extend((services, values))
+
         super().write(*args)
+
         actions = iter(args)
         for services, vals in zip(actions, actions):
             change_detail = False

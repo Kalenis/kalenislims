@@ -1535,6 +1535,10 @@ msgctxt "field:lims.entry.detail.analysis,method:"
 msgid "Method"
 msgstr "Método"
 
+msgctxt "field:lims.entry.detail.analysis,method_version:"
+msgid "Method version"
+msgstr "Versión Método"
+
 msgctxt "field:lims.entry.detail.analysis,party:"
 msgid "Party"
 msgstr "Entidad"
@@ -3147,6 +3151,10 @@ msgstr "Método"
 msgctxt "field:lims.notebook.line,method_domain:"
 msgid "Method domain"
 msgstr "Dominio para Método"
+
+msgctxt "field:lims.notebook.line,method_version:"
+msgid "Method version"
+msgstr "Versión Método"
 
 msgctxt "field:lims.notebook.line,method_view:"
 msgid "Method"
@@ -6023,6 +6031,10 @@ msgstr "Método"
 msgctxt "field:lims.service,method_domain:"
 msgid "Method domain"
 msgstr "Dominio para Método"
+
+msgctxt "field:lims.service,method_version:"
+msgid "Method version"
+msgstr "Versión Método"
 
 msgctxt "field:lims.service,method_view:"
 msgid "Method"

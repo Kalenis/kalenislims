@@ -939,6 +939,8 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         states={'readonly': True})
     method = fields.Many2One('lims.lab.method', 'Method',
         states={'readonly': True})
+    method_version = fields.Many2One('lims.lab.method.version',
+        'Method version', readonly=True)
     device = fields.Many2One('lims.lab.device', 'Device',
         states={'readonly': True})
     analysis_origin = fields.Char('Analysis origin',
@@ -1045,10 +1047,19 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
 
     @classmethod
     def create(cls, vlist):
+        pool = Pool()
+        LabMethod = pool.get('lims.lab.method')
+
         vlist = [x.copy() for x in vlist]
         for values in vlist:
             values['plannable'] = cls._get_plannable(values)
+            # set method version
+            if 'method' in values and values['method'] is not None:
+                values['method_version'] = LabMethod(
+                    values['method']).get_current_version()
+
         details = super().create(vlist)
+
         cls._set_referable(details)
         return details
 
@@ -1335,7 +1346,20 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
 
     @classmethod
     def write(cls, *args):
+        pool = Pool()
+        LabMethod = pool.get('lims.lab.method')
+
+        actions = iter(args)
+        args = []
+        for details, values in zip(actions, actions):
+            # set method version
+            if 'method' in values and values['method'] is not None:
+                values['method_version'] = LabMethod(
+                    values['method']).get_current_version()
+            args.extend((details, values))
+
         super().write(*args)
+
         actions = iter(args)
         for details, vals in zip(actions, actions):
             change_cie_data = False
