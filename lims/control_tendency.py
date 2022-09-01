@@ -799,6 +799,7 @@ class MeansDeviationsCalc(Wizard):
             ('end_date', '<=', self.start.date_to),
             ('notebook.fraction.type', '=', self.start.fraction_type.id),
             ('analysis.behavior', '=', 'normal'),
+            ('concentration_level', '!=', None),
             ('result', 'not in', [None, '']),
             ('annulled', '=', False),
             ]
@@ -849,8 +850,7 @@ class MeansDeviationsCalc(Wizard):
             matrix_id = line.notebook.matrix.id
             fraction_type_id = line.notebook.fraction_type.id
             analysis_id = line.analysis.id
-            concentration_level_id = (line.concentration_level.id if
-                line.concentration_level else None)
+            concentration_level_id = line.concentration_level.id
 
             key = (product_type_id, matrix_id, analysis_id,
                 concentration_level_id)
@@ -943,6 +943,7 @@ class MeansDeviationsCalc(Wizard):
             ('end_date', '<=', self.start.date_to),
             ('notebook.fraction.type', '=', self.start.fraction_type.id),
             ('analysis.behavior', '=', 'normal'),
+            ('concentration_level', '!=', None),
             ('result', 'not in', [None, '']),
             ('annulled', '=', False),
             ]
@@ -989,8 +990,7 @@ class MeansDeviationsCalc(Wizard):
                 family_id = family.id
                 fraction_type_id = line.notebook.fraction_type.id
                 analysis_id = line.analysis.id
-                concentration_level_id = (line.concentration_level.id if
-                    line.concentration_level else None)
+                concentration_level_id = line.concentration_level.id
 
                 key = (family_id, analysis_id, concentration_level_id)
                 if key not in records:
@@ -1105,15 +1105,13 @@ class MeansDeviationsCalc(Wizard):
 
         tendencies = []
         for line in res_lines:
-            concentration_level_id = (line.concentration_level.id if
-                line.concentration_level else None)
             tendency = ControlTendency.search([
                 ('family', '=', line.family),
                 ('product_type', '=', line.product_type),
                 ('matrix', '=', line.matrix),
                 ('fraction_type', '=', line.fraction_type),
                 ('analysis', '=', line.analysis),
-                ('concentration_level', '=', concentration_level_id),
+                ('concentration_level', '=', line.concentration_level),
                 ])
             if tendency:
                 ControlTendency.write(tendency, {
@@ -1141,7 +1139,7 @@ class MeansDeviationsCalc(Wizard):
                     'matrix': line.matrix and line.matrix.id,
                     'fraction_type': line.fraction_type.id,
                     'analysis': line.analysis.id,
-                    'concentration_level': concentration_level_id,
+                    'concentration_level': line.concentration_level.id,
                     'mean': line.mean,
                     'deviation': line.deviation,
                     'min_cv': min_cv,
@@ -1341,13 +1339,11 @@ class TendenciesAnalysis(Wizard):
                 res = cursor.fetchall()
                 tendency_families = [(x[0], x[1]) for x in res]
 
-            concentration_level_id = (tendency.concentration_level.id if
-                tendency.concentration_level else None)
             clause = [
                 ('laboratory', '=', self.start.laboratory.id),
                 ('notebook.fraction.type', '=', tendency.fraction_type.id),
                 ('analysis', '=', tendency.analysis.id),
-                ('concentration_level', '=', concentration_level_id),
+                ('concentration_level', '=', tendency.concentration_level.id),
                 ('result', 'not in', [None, '']),
                 ('annulled', '=', False),
                 ]
