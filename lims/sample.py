@@ -3739,25 +3739,7 @@ class ManageServices(Wizard):
         Service = pool.get('lims.service')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
-        service_create = [{
-            'fraction': fraction.id,
-            'sample': service.sample.id,
-            'analysis': service.analysis.id,
-            'laboratory': (service.laboratory.id if service.laboratory
-                else None),
-            'method': service.method.id if service.method else None,
-            'device': service.device.id if service.device else None,
-            'urgent': service.urgent,
-            'priority': service.priority,
-            'estimated_waiting_laboratory': (
-                service.estimated_waiting_laboratory),
-            'estimated_waiting_report': (
-                service.estimated_waiting_report),
-            'laboratory_date': service.laboratory_date,
-            'report_date': service.report_date,
-            'comments': service.comments,
-            'divide': service.divide,
-            }]
+        service_create = [self._get_new_service(service, fraction)]
         with Transaction().set_context(manage_service=True):
             new_service, = Service.create(service_create)
 
@@ -3775,6 +3757,28 @@ class ManageServices(Wizard):
             self._create_blind_samples(analysis_detail, fraction)
 
         return new_service
+
+    def _get_new_service(self, service, fraction):
+        service_create = {
+            'fraction': fraction.id,
+            'sample': service.sample.id,
+            'analysis': service.analysis.id,
+            'laboratory': (service.laboratory.id if service.laboratory
+                else None),
+            'method': service.method.id if service.method else None,
+            'device': service.device.id if service.device else None,
+            'urgent': service.urgent,
+            'priority': service.priority,
+            'estimated_waiting_laboratory': (
+                service.estimated_waiting_laboratory),
+            'estimated_waiting_report': (
+                service.estimated_waiting_report),
+            'laboratory_date': service.laboratory_date,
+            'report_date': service.report_date,
+            'comments': service.comments,
+            'divide': service.divide,
+            }
+        return service_create
 
     def delete_services(self, services):
         Service = Pool().get('lims.service')
@@ -4106,7 +4110,25 @@ class AddSampleService(Wizard):
         Service = pool.get('lims.service')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
-        service_create = [{
+        service_create = [self._get_new_service(service, fraction)]
+        with Transaction().set_context(manage_service=True):
+            new_service, = Service.create(service_create)
+
+        Service.copy_analysis_comments([new_service])
+        Service.set_confirmation_date([new_service])
+        analysis_detail = EntryDetailAnalysis.search([
+            ('service', '=', new_service.id)])
+        if analysis_detail:
+            EntryDetailAnalysis.create_notebook_lines(analysis_detail,
+                fraction)
+            EntryDetailAnalysis.write(analysis_detail, {
+                'state': 'unplanned',
+                })
+
+        return new_service
+
+    def _get_new_service(self, service, fraction):
+        service_create = {
             'fraction': fraction.id,
             'sample': fraction.sample.id,
             'analysis': service.analysis.id,
@@ -4123,22 +4145,8 @@ class AddSampleService(Wizard):
             'laboratory_date': service.laboratory_date,
             'report_date': service.report_date,
             'divide': service.divide,
-            }]
-        with Transaction().set_context(manage_service=True):
-            new_service, = Service.create(service_create)
-
-        Service.copy_analysis_comments([new_service])
-        Service.set_confirmation_date([new_service])
-        analysis_detail = EntryDetailAnalysis.search([
-            ('service', '=', new_service.id)])
-        if analysis_detail:
-            EntryDetailAnalysis.create_notebook_lines(analysis_detail,
-                fraction)
-            EntryDetailAnalysis.write(analysis_detail, {
-                'state': 'unplanned',
-                })
-
-        return new_service
+            }
+        return service_create
 
     def _send_ack_of_receipt(self):
         Cron = Pool().get('ir.cron')
@@ -4292,7 +4300,25 @@ class EditSampleService(Wizard):
         Service = pool.get('lims.service')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
-        service_create = [{
+        service_create = [self._get_new_service(service, fraction)]
+        with Transaction().set_context(manage_service=True):
+            new_service, = Service.create(service_create)
+
+        Service.copy_analysis_comments([new_service])
+        Service.set_confirmation_date([new_service])
+        analysis_detail = EntryDetailAnalysis.search([
+            ('service', '=', new_service.id)])
+        if analysis_detail:
+            EntryDetailAnalysis.create_notebook_lines(analysis_detail,
+                fraction)
+            EntryDetailAnalysis.write(analysis_detail, {
+                'state': 'unplanned',
+                })
+
+        return new_service
+
+    def _get_new_service(self, service, fraction):
+        service_create = {
             'fraction': fraction.id,
             'sample': fraction.sample.id,
             'analysis': service.analysis.id,
@@ -4309,22 +4335,8 @@ class EditSampleService(Wizard):
             'laboratory_date': service.laboratory_date,
             'report_date': service.report_date,
             'divide': service.divide,
-            }]
-        with Transaction().set_context(manage_service=True):
-            new_service, = Service.create(service_create)
-
-        Service.copy_analysis_comments([new_service])
-        Service.set_confirmation_date([new_service])
-        analysis_detail = EntryDetailAnalysis.search([
-            ('service', '=', new_service.id)])
-        if analysis_detail:
-            EntryDetailAnalysis.create_notebook_lines(analysis_detail,
-                fraction)
-            EntryDetailAnalysis.write(analysis_detail, {
-                'state': 'unplanned',
-                })
-
-        return new_service
+            }
+        return service_create
 
     def update_fraction_services(self, fraction):
         pool = Pool()
