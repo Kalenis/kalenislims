@@ -205,12 +205,6 @@ class LabMethod(Workflow, ModelSQL, ModelView):
             'activate': RPC(readonly=False, instantiate=0),
             })
 
-    @classmethod
-    def __register__(cls, module_name):
-        super().__register__(module_name)
-        methods = cls.search([('state', '=', 'draft')])
-        cls.activate(methods)
-
     @staticmethod
     def default_state():
         return 'draft'
@@ -389,6 +383,13 @@ class LabMethodVersion(ModelSQL, ModelView):
     results_estimated_waiting = fields.Integer(
         'Estimated number of days for results', readonly=True)
     equivalence_code = fields.Char('Equivalence Code', readonly=True)
+
+    @classmethod
+    def __register__(cls, module_name):
+        LabMethod = Pool().get('lims.lab.method')
+        super().__register__(module_name)
+        methods = LabMethod.search([('state', '=', 'draft')])
+        LabMethod.activate(methods)
 
     @classmethod
     def __setup__(cls):
