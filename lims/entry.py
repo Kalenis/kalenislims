@@ -1334,8 +1334,9 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
             cursor.execute('SELECT department '
                 'FROM "' + AnalysisLaboratory._table + '" '
                 'WHERE analysis = %s '
-                    'AND laboratory = %s',
-                    (detail.analysis.id, detail.laboratory.id))
+                    'AND laboratory = %s '
+                'ORDER BY by_default DESC',
+                (detail.analysis.id, detail.laboratory.id))
             res = cursor.fetchone()
             if res and res[0]:
                 department = res[0]
