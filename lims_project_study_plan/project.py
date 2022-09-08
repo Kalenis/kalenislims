@@ -1546,6 +1546,7 @@ class ProjectGLPReport09(Report):
         NotebookLine = pool.get('lims.notebook.line')
         ResultsReport = pool.get('lims.results_report')
         Analysis = pool.get('lims.analysis')
+        ResultModifier = pool.get('lims.result_modifier')
 
         report_context = super().get_context(records, header, data)
 
@@ -1561,10 +1562,12 @@ class ProjectGLPReport09(Report):
         for fraction in fractions:
 
             cursor.execute('SELECT DISTINCT(nl.results_report) , '
-                'nl.result_modifier, nl.result, a.description '
+                'rm.code, nl.result, a.description '
                 'FROM "' + NotebookLine._table + '" nl '
                     'INNER JOIN "' + Service._table + '" s '
                     'ON nl.service = s.id '
+                    'LEFT JOIN "' + ResultModifier._table + '" rm '
+                    'ON rm.id = nl.result_modifier '
                 'INNER JOIN "' + Analysis._table + '" a '
                 'ON a.id = nl.analysis '
                 'WHERE s.fraction = %s '
@@ -1597,7 +1600,7 @@ class ProjectGLPReport09(Report):
 
                 re = None
                 analysis = None
-                if report_id[1] == 'eq':
+                if not report_id[1]:
                     re = report_id[2]
                 else:
                     if report_id[1] == 'low':

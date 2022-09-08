@@ -2033,6 +2033,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
     @Workflow.transition('done')
     def confirm(cls, compilations):
         pool = Pool()
+        ModelData = pool.get('ir.model.data')
         Data = pool.get('lims.interface.data')
         Field = pool.get('lims.interface.table.field')
         NotebookLine = pool.get('lims.notebook.line')
@@ -2042,6 +2043,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
 
         now = datetime.now()
         #today = now.date()
+        result_modifier_na = ModelData.get_id('lims', 'result_modifier_na')
+
         for c in compilations:
             fields = {}
             columns = Field.search([
@@ -2070,15 +2073,14 @@ class Compilation(Workflow, ModelSQL, ModelView):
                                 result = round(float(data[nl_field]), decimals)
                                 data[nl_field] = format(result,
                                     '.{}f'.format(decimals))
-                        if (nl_field == 'result_modifier' and
-                                not data[nl_field]):
-                            data[nl_field] = 'eq'
+                        if nl_field == 'result_modifier' and data[nl_field]:
+                            data[nl_field] = data[nl_field].id
                         if nl_field == 'literal_result' and data[nl_field]:
                             data_eng[nl_field] = data[nl_field]
 
                     if line.annulled:
                         data.update({
-                            'result_modifier': 'na',
+                            'result_modifier': result_modifier_na,
                             'annulled': True,
                             'annulment_date': now,
                             'report': False,

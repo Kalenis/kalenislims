@@ -1052,6 +1052,7 @@ class LimitsValidation(Wizard):
 
     def transition_validate_limits(self):
         pool = Pool()
+        ModelData = pool.get('ir.model.data')
         AnalysisSheet = pool.get('lims.analysis_sheet')
         Data = pool.get('lims.interface.data')
         NotebookLine = pool.get('lims.notebook.line')
@@ -1061,6 +1062,9 @@ class LimitsValidation(Wizard):
         sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
         table_id = sheet.compilation.table.id
+
+        result_modifier_low = ModelData.get_id('lims', 'result_modifier_low')
+        result_modifier_nd = ModelData.get_id('lims', 'result_modifier_nd')
 
         result_column = self._get_template_column(
             'result', table_id)
@@ -1090,8 +1094,8 @@ class LimitsValidation(Wizard):
                 result = getattr(line, result_field)
                 if result is None:
                     continue
-                result_modifier = getattr(line, result_modifier_field) or 'eq'
-                if result_modifier != 'eq':
+                result_modifier = getattr(line, result_modifier_field)
+                if result_modifier:
                     continue
                 try:
                     value = float(result)
@@ -1113,19 +1117,19 @@ class LimitsValidation(Wizard):
                         line=nl.rec_name))
                 if dl < value and value < ql:
                     data[result_field] = str(ql)
-                    data[result_modifier_field] = 'low'
+                    data[result_modifier_field] = result_modifier_low
                 elif value < dl:
                     data[result_field] = None
-                    data[result_modifier_field] = 'nd'
+                    data[result_modifier_field] = result_modifier_nd
                 elif value == dl:
                     data[result_field] = str(ql)
-                    data[result_modifier_field] = 'low'
+                    data[result_modifier_field] = result_modifier_low
                 else:
-                    data[result_modifier_field] = 'eq'
+                    data[result_modifier_field] = None
 
                 if data:
                     Data.write([line], data)
-                    if data[result_modifier_field] != 'eq':
+                    if data[result_modifier_field]:
                         NotebookLine.write([nl], {'backup': str(value)})
 
         return 'end'

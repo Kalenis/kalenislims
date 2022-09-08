@@ -593,7 +593,7 @@ class NotebookLoadResultsManualLine(metaclass=PoolMeta):
         if self.end_date:
             return self.end_date
         if (self.result or self.literal_result or self.qualitative_value or
-                self.result_modifier not in ('eq', 'low')):
+                (self.result_modifier and self.result_modifier.code != 'low')):
             return Date.today()
         return None
 
@@ -628,7 +628,8 @@ class NotebookLoadResultsManual(metaclass=PoolMeta):
             notebook_line_write = {
                 'result': data.result,
                 'qualitative_value': data.qualitative_value,
-                'result_modifier': data.result_modifier,
+                'result_modifier': (data.result_modifier.id if
+                    data.result_modifier else None),
                 'end_date': data.end_date,
                 'chromatogram': data.chromatogram,
                 'initial_unit': (data.initial_unit.id if
@@ -636,12 +637,12 @@ class NotebookLoadResultsManual(metaclass=PoolMeta):
                 'comments': data.comments,
                 'literal_result': data.literal_result,
                 'converted_result': None,
-                'converted_result_modifier': 'eq',
+                'converted_result_modifier': None,
                 'backup': None,
                 'verification': None,
                 'uncertainty': None,
                 }
-            if data.result_modifier == 'na':
+            if data.result_modifier and data.result_modifier.code == 'na':
                 notebook_line_write['annulled'] = True
                 notebook_line_write['annulment_date'] = datetime.now()
                 notebook_line_write['report'] = False

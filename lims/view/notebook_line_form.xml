@@ -45,11 +45,11 @@
     <field name="final_unit"/>
     <group id="result_modifier" colspan="2" col="2">
         <label name="result_modifier"/>
-        <field name="result_modifier"/>
+        <field name="result_modifier" widget="selection"/>
     </group>
     <group id="converted_result_modifier" colspan="2" col="2">
         <label name="converted_result_modifier"/>
-        <field name="converted_result_modifier"/>
+        <field name="converted_result_modifier" widget="selection"/>
     </group>
     <label name="result"/>
     <field name="result"/>

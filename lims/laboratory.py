@@ -583,6 +583,18 @@ class LabDeviceRelateAnalysis(Wizard):
         return 'end'
 
 
+class ResultModifier(ModelSQL, ModelView):
+    'Result Modifier'
+    __name__ = 'lims.result_modifier'
+
+    code = fields.Char('Code', required=True)
+    name = fields.Char('Name', required=True, translate=True)
+
+    @classmethod
+    def check_xml_record(cls, records, values):
+        return True
+
+
 class NotebookRule(ModelSQL, ModelView):
     'Notebook Rule'
     __name__ = 'lims.rule'

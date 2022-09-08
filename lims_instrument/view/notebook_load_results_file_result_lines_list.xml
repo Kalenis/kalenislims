@@ -3,7 +3,7 @@
     <field name="fraction"/>
     <field name="analysis"/>
     <field name="repetition"/>
-    <field name="result_modifier"/>
+    <field name="result_modifier" widget="selection"/>
     <field name="imported_result"/>
     <field name="initial_unit"/>
     <field name="imported_end_date"/>

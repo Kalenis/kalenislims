@@ -84,6 +84,7 @@ def register():
         uom.ConcentrationLevel,
         entry.EntryDetailAnalysis,
         notebook.Notebook,
+        laboratory.ResultModifier,
         results_report.ResultsReport,
         notebook.NotebookLine,
         notebook.NotebookLineAllFields,

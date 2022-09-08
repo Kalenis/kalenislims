@@ -9,7 +9,7 @@
     <label name="repetition"/>
     <field name="repetition"/>
     <label name="result_modifier"/>
-    <field name="result_modifier"/>
+    <field name="result_modifier" widget="selection"/>
     <label name="result"/>
     <field name="result"/>
     <label name="initial_unit"/>

@@ -3287,6 +3287,7 @@ class Sample(ModelSQL, ModelView):
         Notebook = pool.get('lims.notebook')
         Fraction = pool.get('lims.fraction')
         FractionType = pool.get('lims.fraction.type')
+        ResultModifier = pool.get('lims.result_modifier')
 
         _ZERO = Decimal(0)
         samples_in_progress = Config(1).samples_in_progress
@@ -3294,7 +3295,7 @@ class Sample(ModelSQL, ModelView):
 
         cursor.execute('SELECT nl.notebook, nl.analysis, nl.method, '
                 'nl.accepted, nl.result, nl.literal_result, '
-                'nl.result_modifier '
+                'rm.code '
             'FROM "' + NotebookLine._table + '" nl '
                 'INNER JOIN "' + EntryDetailAnalysis._table + '" d '
                 'ON d.id = nl.analysis_detail '
@@ -3304,6 +3305,8 @@ class Sample(ModelSQL, ModelView):
                 'ON f.id = n.fraction '
                 'INNER JOIN "' + FractionType._table + '" ft '
                 'ON ft.id = f.type '
+                'LEFT JOIN "' + ResultModifier._table + '" rm '
+                'ON rm.id = nl.result_modifier '
             'WHERE ft.report = TRUE '
                 'AND f.sample = %s '
                 'AND nl.report = TRUE '

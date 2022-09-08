@@ -510,11 +510,20 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     def get_fields(cls, sheets, names):
         cursor = Transaction().connection.cursor()
         pool = Pool()
+        ModelData = pool.get('ir.model.data')
         Field = pool.get('lims.interface.table.field')
         notebook_line = pool.get('lims.notebook.line').__table__()
 
         _ZERO = Decimal(0)
         digits = cls.completion_percentage.digits[1]
+        result_modifiers = [
+            ModelData.get_id('lims', 'result_modifier_d'),
+            ModelData.get_id('lims', 'result_modifier_nd'),
+            ModelData.get_id('lims', 'result_modifier_pos'),
+            ModelData.get_id('lims', 'result_modifier_neg'),
+            ModelData.get_id('lims', 'result_modifier_ni'),
+            ModelData.get_id('lims', 'result_modifier_abs'),
+            ModelData.get_id('lims', 'result_modifier_pre')]
 
         result = {
             'urgent': {},
@@ -575,8 +584,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         literal_result_field), '') != '')
                 if result_modifier_field:
                     result_clause |= (Column(sql_table,
-                        result_modifier_field).in_((
-                            'd', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre')))
+                        result_modifier_field).in_(result_modifiers))
 
                 cursor.execute(*sql_join.select(Count(Literal('*')),
                     where=(sql_table.compilation == s.compilation.id) & (
@@ -792,7 +800,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                             literal_result_field) not in (None, '')):
                         continue
                     if (result_modifier_field and getattr(line,
-                            result_modifier_field) in (
+                            result_modifier_field) and getattr(line,
+                            result_modifier_field).code in (
                             'd', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre')):
                         continue
                     raise UserError(gettext(

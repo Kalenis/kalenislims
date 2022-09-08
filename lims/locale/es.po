@@ -5033,6 +5033,14 @@ msgctxt "field:lims.relate_method.start,method:"
 msgid "Method"
 msgstr "Método"
 
+msgctxt "field:lims.result_modifier,code:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "field:lims.result_modifier,name:"
+msgid "Name"
+msgstr "Nombre"
+
 msgctxt "field:lims.results_report,attachments:"
 msgid "Attachments"
 msgstr "Adjuntos"
@@ -7276,6 +7284,10 @@ msgctxt "model:ir.action,name:act_remove_typifications"
 msgid "Remove Typifications"
 msgstr "Quitar tipificaciones"
 
+msgctxt "model:ir.action,name:act_result_modifier_list"
+msgid "Result Modifiers"
+msgstr "Modificadores de resultado"
+
 msgctxt "model:ir.action,name:act_sample_attribute"
 msgid "Sample Attributes"
 msgstr "Atributos de Muestra"
@@ -9184,6 +9196,10 @@ msgctxt "model:ir.ui.menu,name:menu_referral_list"
 msgid "Referrals"
 msgstr "Derivaciones"
 
+msgctxt "model:ir.ui.menu,name:menu_result_modifier_list"
+msgid "Result Modifiers"
+msgstr "Modificadores de resultado"
+
 msgctxt "model:ir.ui.menu,name:menu_sample_attribute"
 msgid "Sample Attributes"
 msgstr "Atributos de Muestra"
@@ -10053,6 +10069,46 @@ msgctxt "model:lims.relate_method.start,name:"
 msgid "Relate Method"
 msgstr "Relacionar método"
 
+msgctxt "model:lims.result_modifier,name:"
+msgid "Result Modifier"
+msgstr "Modificador de resultado"
+
+msgctxt "model:lims.result_modifier,name:result_modifier_abs"
+msgid "Absence"
+msgstr "Ausencia"
+
+msgctxt "model:lims.result_modifier,name:result_modifier_d"
+msgid "Detected"
+msgstr "Detectado"
+
+msgctxt "model:lims.result_modifier,name:result_modifier_low"
+msgid "<"
+msgstr "<"
+
+msgctxt "model:lims.result_modifier,name:result_modifier_na"
+msgid "na"
+msgstr "na"
+
+msgctxt "model:lims.result_modifier,name:result_modifier_nd"
+msgid "nd"
+msgstr "nd"
+
+msgctxt "model:lims.result_modifier,name:result_modifier_neg"
+msgid "Negative"
+msgstr "Negativo"
+
+msgctxt "model:lims.result_modifier,name:result_modifier_ni"
+msgid "ni"
+msgstr "ni"
+
+msgctxt "model:lims.result_modifier,name:result_modifier_pos"
+msgid "Positive"
+msgstr "Positivo"
+
+msgctxt "model:lims.result_modifier,name:result_modifier_pre"
+msgid "Presence"
+msgstr "Presencia"
+
 msgctxt "model:lims.results_report,name:"
 msgid "Results Report"
 msgstr "Informe de resultados"
@@ -10718,7 +10774,8 @@ msgid "line.converted_result"
 msgstr ""
 
 msgctxt "report:lims.analysis_checked_pending_inform:"
-msgid "line.converted_result_modifier_string"
+msgid ""
+"line.converted_result_modifier and line.converted_result_modifier.name or ''"
 msgstr ""
 
 msgctxt "report:lims.analysis_checked_pending_inform:"
@@ -10774,7 +10831,7 @@ msgid "line.result"
 msgstr ""
 
 msgctxt "report:lims.analysis_checked_pending_inform:"
-msgid "line.result_modifier_string"
+msgid "line.result_modifier and line.result_modifier.name or ''"
 msgstr ""
 
 msgctxt "report:lims.analysis_checked_pending_inform:"
@@ -11102,7 +11159,8 @@ msgid "line.converted_result"
 msgstr ""
 
 msgctxt "report:lims.analysis_pending_inform:"
-msgid "line.converted_result_modifier_string"
+msgid ""
+"line.converted_result_modifier and line.converted_result_modifier.name or ''"
 msgstr ""
 
 msgctxt "report:lims.analysis_pending_inform:"
@@ -11162,7 +11220,7 @@ msgid "line.result"
 msgstr ""
 
 msgctxt "report:lims.analysis_pending_inform:"
-msgid "line.result_modifier_string"
+msgid "line.result_modifier and line.result_modifier.name or ''"
 msgstr ""
 
 msgctxt "report:lims.analysis_pending_inform:"
@@ -13093,219 +13151,6 @@ msgctxt "selection:lims.notebook.generate_results_report.start,type:"
 msgid "Preliminary"
 msgstr "Preliminar"
 
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,converted_result_modifier:"
-msgid "<"
-msgstr "<"
-
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,converted_result_modifier:"
-msgid "="
-msgstr "="
-
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,converted_result_modifier:"
-msgid "Negative"
-msgstr "Negativo"
-
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,converted_result_modifier:"
-msgid "Positive"
-msgstr "Positivo"
-
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,converted_result_modifier:"
-msgid "na"
-msgstr "na"
-
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,converted_result_modifier:"
-msgid "nd"
-msgstr "nd"
-
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,converted_result_modifier:"
-msgid "ni"
-msgstr "ni"
-
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,result_modifier:"
-msgid "<"
-msgstr "<"
-
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,result_modifier:"
-msgid "="
-msgstr "="
-
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,result_modifier:"
-msgid "Absence"
-msgstr "Ausencia"
-
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,result_modifier:"
-msgid "Detected"
-msgstr "Detectado"
-
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,result_modifier:"
-msgid "Negative"
-msgstr "Negativo"
-
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,result_modifier:"
-msgid "Positive"
-msgstr "Positivo"
-
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,result_modifier:"
-msgid "Presence"
-msgstr "Presencia"
-
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,result_modifier:"
-msgid "na"
-msgstr "na"
-
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,result_modifier:"
-msgid "nd"
-msgstr "nd"
-
-msgctxt ""
-"selection:lims.notebook.internal_relations_calc_2.variable,result_modifier:"
-msgid "ni"
-msgstr "ni"
-
-msgctxt "selection:lims.notebook.line,converted_result_modifier:"
-msgid "<"
-msgstr "<"
-
-msgctxt "selection:lims.notebook.line,converted_result_modifier:"
-msgid "="
-msgstr "="
-
-msgctxt "selection:lims.notebook.line,converted_result_modifier:"
-msgid "Negative"
-msgstr "Negativo"
-
-msgctxt "selection:lims.notebook.line,converted_result_modifier:"
-msgid "Positive"
-msgstr "Positivo"
-
-msgctxt "selection:lims.notebook.line,converted_result_modifier:"
-msgid "nd"
-msgstr "nd"
-
-msgctxt "selection:lims.notebook.line,converted_result_modifier:"
-msgid "ni"
-msgstr "ni"
-
-msgctxt "selection:lims.notebook.line,result_modifier:"
-msgid "<"
-msgstr "<"
-
-msgctxt "selection:lims.notebook.line,result_modifier:"
-msgid "="
-msgstr "="
-
-msgctxt "selection:lims.notebook.line,result_modifier:"
-msgid "Absence"
-msgstr "Ausencia"
-
-msgctxt "selection:lims.notebook.line,result_modifier:"
-msgid "Detected"
-msgstr "Detectado"
-
-msgctxt "selection:lims.notebook.line,result_modifier:"
-msgid "Negative"
-msgstr "Negativo"
-
-msgctxt "selection:lims.notebook.line,result_modifier:"
-msgid "Positive"
-msgstr "Positivo"
-
-msgctxt "selection:lims.notebook.line,result_modifier:"
-msgid "Presence"
-msgstr "Presencia"
-
-msgctxt "selection:lims.notebook.line,result_modifier:"
-msgid "na"
-msgstr "na"
-
-msgctxt "selection:lims.notebook.line,result_modifier:"
-msgid "nd"
-msgstr "nd"
-
-msgctxt "selection:lims.notebook.line,result_modifier:"
-msgid "ni"
-msgstr "ni"
-
-msgctxt "selection:lims.notebook.line.all_fields,converted_result_modifier:"
-msgid "<"
-msgstr "<"
-
-msgctxt "selection:lims.notebook.line.all_fields,converted_result_modifier:"
-msgid "="
-msgstr "="
-
-msgctxt "selection:lims.notebook.line.all_fields,converted_result_modifier:"
-msgid "Negative"
-msgstr "Negativo"
-
-msgctxt "selection:lims.notebook.line.all_fields,converted_result_modifier:"
-msgid "Positive"
-msgstr "Positivo"
-
-msgctxt "selection:lims.notebook.line.all_fields,converted_result_modifier:"
-msgid "nd"
-msgstr "nd"
-
-msgctxt "selection:lims.notebook.line.all_fields,converted_result_modifier:"
-msgid "ni"
-msgstr "ni"
-
-msgctxt "selection:lims.notebook.line.all_fields,result_modifier:"
-msgid "<"
-msgstr "<"
-
-msgctxt "selection:lims.notebook.line.all_fields,result_modifier:"
-msgid "="
-msgstr "="
-
-msgctxt "selection:lims.notebook.line.all_fields,result_modifier:"
-msgid "Absence"
-msgstr "Ausencia"
-
-msgctxt "selection:lims.notebook.line.all_fields,result_modifier:"
-msgid "Detected"
-msgstr "Detectado"
-
-msgctxt "selection:lims.notebook.line.all_fields,result_modifier:"
-msgid "Negative"
-msgstr "Negativo"
-
-msgctxt "selection:lims.notebook.line.all_fields,result_modifier:"
-msgid "Positive"
-msgstr "Positivo"
-
-msgctxt "selection:lims.notebook.line.all_fields,result_modifier:"
-msgid "Presence"
-msgstr "Presencia"
-
-msgctxt "selection:lims.notebook.line.all_fields,result_modifier:"
-msgid "na"
-msgstr "na"
-
-msgctxt "selection:lims.notebook.line.all_fields,result_modifier:"
-msgid "nd"
-msgstr "nd"
-
-msgctxt "selection:lims.notebook.line.all_fields,result_modifier:"
-msgid "ni"
-msgstr "ni"
-
 msgctxt "selection:lims.notebook.line.repeat_analysis.start,analysis_type:"
 msgid "Analysis"
 msgstr "Análisis"
@@ -13317,136 +13162,6 @@ msgstr "Grupo"
 msgctxt "selection:lims.notebook.line.repeat_analysis.start,analysis_type:"
 msgid "Set"
 msgstr "Set"
-
-msgctxt "selection:lims.notebook.load_results_formula.action,result_modifier:"
-msgid "<"
-msgstr "<"
-
-msgctxt "selection:lims.notebook.load_results_formula.action,result_modifier:"
-msgid "="
-msgstr "="
-
-msgctxt "selection:lims.notebook.load_results_formula.action,result_modifier:"
-msgid "Absence"
-msgstr "Ausencia"
-
-msgctxt "selection:lims.notebook.load_results_formula.action,result_modifier:"
-msgid "Detected"
-msgstr "Detectado"
-
-msgctxt "selection:lims.notebook.load_results_formula.action,result_modifier:"
-msgid "Negative"
-msgstr "Negativo"
-
-msgctxt "selection:lims.notebook.load_results_formula.action,result_modifier:"
-msgid "Positive"
-msgstr "Positivo"
-
-msgctxt "selection:lims.notebook.load_results_formula.action,result_modifier:"
-msgid "Presence"
-msgstr "Presencia"
-
-msgctxt "selection:lims.notebook.load_results_formula.action,result_modifier:"
-msgid "na"
-msgstr "na"
-
-msgctxt "selection:lims.notebook.load_results_formula.action,result_modifier:"
-msgid "nd"
-msgstr "nd"
-
-msgctxt "selection:lims.notebook.load_results_formula.action,result_modifier:"
-msgid "ni"
-msgstr "ni"
-
-msgctxt ""
-"selection:lims.notebook.load_results_formula.process,result_modifier:"
-msgid "<"
-msgstr "<"
-
-msgctxt ""
-"selection:lims.notebook.load_results_formula.process,result_modifier:"
-msgid "="
-msgstr "="
-
-msgctxt ""
-"selection:lims.notebook.load_results_formula.process,result_modifier:"
-msgid "Absence"
-msgstr "Ausencia"
-
-msgctxt ""
-"selection:lims.notebook.load_results_formula.process,result_modifier:"
-msgid "Detected"
-msgstr "Detectado"
-
-msgctxt ""
-"selection:lims.notebook.load_results_formula.process,result_modifier:"
-msgid "Negative"
-msgstr "Negativo"
-
-msgctxt ""
-"selection:lims.notebook.load_results_formula.process,result_modifier:"
-msgid "Positive"
-msgstr "Positivo"
-
-msgctxt ""
-"selection:lims.notebook.load_results_formula.process,result_modifier:"
-msgid "Presence"
-msgstr "Presencia"
-
-msgctxt ""
-"selection:lims.notebook.load_results_formula.process,result_modifier:"
-msgid "na"
-msgstr "na"
-
-msgctxt ""
-"selection:lims.notebook.load_results_formula.process,result_modifier:"
-msgid "nd"
-msgstr "nd"
-
-msgctxt ""
-"selection:lims.notebook.load_results_formula.process,result_modifier:"
-msgid "ni"
-msgstr "ni"
-
-msgctxt "selection:lims.notebook.load_results_manual.line,result_modifier:"
-msgid "<"
-msgstr "<"
-
-msgctxt "selection:lims.notebook.load_results_manual.line,result_modifier:"
-msgid "="
-msgstr "="
-
-msgctxt "selection:lims.notebook.load_results_manual.line,result_modifier:"
-msgid "Absence"
-msgstr "Ausencia"
-
-msgctxt "selection:lims.notebook.load_results_manual.line,result_modifier:"
-msgid "Detected"
-msgstr "Detectado"
-
-msgctxt "selection:lims.notebook.load_results_manual.line,result_modifier:"
-msgid "Negative"
-msgstr "Negativo"
-
-msgctxt "selection:lims.notebook.load_results_manual.line,result_modifier:"
-msgid "Positive"
-msgstr "Positivo"
-
-msgctxt "selection:lims.notebook.load_results_manual.line,result_modifier:"
-msgid "Presence"
-msgstr "Presencia"
-
-msgctxt "selection:lims.notebook.load_results_manual.line,result_modifier:"
-msgid "na"
-msgstr "na"
-
-msgctxt "selection:lims.notebook.load_results_manual.line,result_modifier:"
-msgid "nd"
-msgstr "nd"
-
-msgctxt "selection:lims.notebook.load_results_manual.line,result_modifier:"
-msgid "ni"
-msgstr "ni"
 
 msgctxt "selection:lims.planification,state:"
 msgid "Confirmed"

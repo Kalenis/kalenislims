@@ -352,10 +352,14 @@ class NotebookLoadResultsFile(Wizard):
                             ('result', 'in', [None, '']),
                             ('converted_result', 'in', [None, '']),
                             ('literal_result', 'in', [None, '']),
-                            ('result_modifier', 'not in', ['d', 'nd', 'pos',
-                                'neg', 'ni', 'abs', 'pre', 'na']),
-                            ('converted_result_modifier', 'not in',
-                                ['d', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre']),
+                            ['OR', ('result_modifier', '=', None),
+                                ('result_modifier.code', 'not in',
+                                ['d', 'nd', 'pos', 'neg', 'ni', 'abs',
+                                    'pre', 'na'])],
+                            ['OR', ('converted_result_modifier', '=', None),
+                                ('converted_result_modifier.code', 'not in',
+                                ['d', 'nd', 'pos', 'neg', 'ni', 'abs',
+                                    'pre'])],
                             ]
                         line = NotebookLine.search(clause, limit=1)
                         if not line:
@@ -465,6 +469,7 @@ class NotebookLoadResultsFile(Wizard):
     def transition_confirm(self):
         cursor = Transaction().connection.cursor()
         pool = Pool()
+        ModelData = pool.get('ir.model.data')
         NotebookLine = pool.get('lims.notebook.line')
         AnalyticProfessional = pool.get('lims.notebook.line.professional')
         sql_table = NotebookLine.__table__()
@@ -473,6 +478,7 @@ class NotebookLoadResultsFile(Wizard):
         warnings = False
         messages = ''
         export_results = self.start.results_importer.exportResults()
+        result_modifier_na = ModelData.get_id('lims', 'result_modifier_na')
 
         previous_professionals = []
         new_professionals = []
@@ -512,7 +518,7 @@ class NotebookLoadResultsFile(Wizard):
                 columns.append(sql_table.result)
                 values.append(Null)
                 columns.append(sql_table.result_modifier)
-                values.append(Literal('na'))
+                values.append(result_modifier_na)
                 columns.append(sql_table.report)
                 values.append(Literal(False))
                 columns.append(sql_table.annulled)

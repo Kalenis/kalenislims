@@ -3,11 +3,11 @@
     <field name="use"/>
     <field name="analysis"/>
     <field name="repetition"/>
-    <field name="result_modifier"/>
+    <field name="result_modifier" widget="selection"/>
     <field name="result"/>
     <field name="initial_unit"/>
     <field name="initial_concentration"/>
-    <field name="converted_result_modifier"/>
+    <field name="converted_result_modifier" widget="selection"/>
     <field name="converted_result"/>
     <field name="final_unit"/>
     <field name="final_concentration"/>

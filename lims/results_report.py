@@ -1800,7 +1800,6 @@ class ResultsReportVersionDetailSigner(sequence_ordered(),
         if signer_exist and not signer_table_exist:
             cls._migrate_signer()
 
-
     @classmethod
     def _migrate_signer(cls):
         cursor = Transaction().connection.cursor()
@@ -4027,7 +4026,8 @@ class ResultReport(Report):
     def get_result(cls, report_section, notebook_line, obs_ql, language):
         res = notebook_line.formated_result
         if (report_section in ('amb', 'for', 'rp', 'sq') and
-                notebook_line.result_modifier == 'low'):
+                notebook_line.result_modifier and
+                notebook_line.result_modifier.code == 'low'):
             obs_ql = True
         return res, obs_ql
 
@@ -4036,8 +4036,9 @@ class ResultReport(Report):
             notebook_line, obs_ql, language):
         res = notebook_line.formated_converted_result
         if (notebook_line.analysis.code != '0001' and
-                not notebook_line.literal_result
-                and notebook_line.converted_result_modifier == 'low'):
+                not notebook_line.literal_result and
+                notebook_line.converted_result_modifier and
+                notebook_line.converted_result_modifier.code == 'low'):
             obs_ql = True
         return res, obs_ql
 
@@ -4049,7 +4050,8 @@ class ResultReport(Report):
 
         initial_unit = notebook_line.initial_unit.rec_name
         literal_result = notebook_line.literal_result
-        result_modifier = notebook_line.result_modifier
+        result_modifier = (notebook_line.result_modifier and
+            notebook_line.result_modifier.code)
         detection_limit = notebook_line.detection_limit
         converted_result = notebook_line.converted_result
         uncertainty = notebook_line.uncertainty
@@ -4058,7 +4060,7 @@ class ResultReport(Report):
         with Transaction().set_context(language=language):
             if report_section == 'rp':
                 res = ''
-                if (not literal_result and result_modifier == 'eq' and
+                if (not literal_result and not result_modifier and
                         uncertainty and float(uncertainty) != 0):
                     res = round(float(uncertainty), decimals)
                     res = format(res, '.{}f'.format(decimals))
@@ -4105,7 +4107,8 @@ class ResultReport(Report):
         final_unit = notebook_line.final_unit.rec_name
         analysis = notebook_line.analysis.code
         literal_result = notebook_line.literal_result
-        converted_result_modifier = notebook_line.converted_result_modifier
+        converted_result_modifier = (notebook_line.converted_result_modifier
+            and notebook_line.converted_result_modifier.code)
         detection_limit = notebook_line.detection_limit
         converted_result = notebook_line.converted_result
         uncertainty = notebook_line.uncertainty
@@ -4143,7 +4146,8 @@ class ResultReport(Report):
             report_type, notebook_line, language):
         detection_limit = notebook_line.detection_limit
         literal_result = notebook_line.literal_result
-        result_modifier = notebook_line.result_modifier
+        result_modifier = (notebook_line.result_modifier and
+            notebook_line.result_modifier.code)
 
         if report_section in ('amb', 'sq'):
             res = ''

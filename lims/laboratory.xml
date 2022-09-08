@@ -311,6 +311,37 @@
             <field name="action" ref="wizard_device_relate_analysis"/>
         </record>
 
+<!-- Result Modifier -->
+
+        <record model="ir.ui.view" id="result_modifier_view_form">
+            <field name="model">lims.result_modifier</field>
+            <field name="type">form</field>
+            <field name="name">result_modifier_form</field>
+        </record>
+        <record model="ir.ui.view" id="result_modifier_view_list">
+            <field name="model">lims.result_modifier</field>
+            <field name="type">tree</field>
+            <field name="name">result_modifier_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_result_modifier_list">
+            <field name="name">Result Modifiers</field>
+            <field name="res_model">lims.result_modifier</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_result_modifier_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="result_modifier_view_list"/>
+            <field name="act_window" ref="act_result_modifier_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_result_modifier_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="result_modifier_view_form"/>
+            <field name="act_window" ref="act_result_modifier_list"/>
+        </record>
+
+        <menuitem action="act_result_modifier_list" id="menu_result_modifier_list"
+            parent="lims_config_laboratory" sequence="55"/>
+
 <!-- Notebook Rule -->
 
         <record model="ir.ui.view" id="notebook_rule_view_form">
@@ -353,6 +384,46 @@
             <field name="model">lims.rule.condition</field>
             <field name="type">tree</field>
             <field name="name">notebook_rule_condition_list</field>
+        </record>
+
+    </data>
+    <data noupdate="1">
+
+        <record model="lims.result_modifier" id="result_modifier_low">
+            <field name="code">low</field>
+            <field name="name">&lt;</field>
+        </record>
+        <record model="lims.result_modifier" id="result_modifier_d">
+            <field name="code">d</field>
+            <field name="name">Detected</field>
+        </record>
+        <record model="lims.result_modifier" id="result_modifier_nd">
+            <field name="code">nd</field>
+            <field name="name">nd</field>
+        </record>
+        <record model="lims.result_modifier" id="result_modifier_na">
+            <field name="code">na</field>
+            <field name="name">na</field>
+        </record>
+        <record model="lims.result_modifier" id="result_modifier_pos">
+            <field name="code">pos</field>
+            <field name="name">Positive</field>
+        </record>
+        <record model="lims.result_modifier" id="result_modifier_neg">
+            <field name="code">neg</field>
+            <field name="name">Negative</field>
+        </record>
+        <record model="lims.result_modifier" id="result_modifier_ni">
+            <field name="code">ni</field>
+            <field name="name">ni</field>
+        </record>
+        <record model="lims.result_modifier" id="result_modifier_abs">
+            <field name="code">abs</field>
+            <field name="name">Absence</field>
+        </record>
+        <record model="lims.result_modifier" id="result_modifier_pre">
+            <field name="code">pre</field>
+            <field name="name">Presence</field>
         </record>
 
     </data>

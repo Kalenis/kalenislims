@@ -538,13 +538,13 @@
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://if%20test=%22line.report_date%22" xlink:type="simple">if test=&quot;line.report_date&quot;</text:a><text:a xlink:href="relatorio://format_date(line.report_date,%20user.language)" xlink:type="simple">format_date(line.report_date, user.language)</text:a><text:a xlink:href="relatorio:///if" xlink:type="simple">/if</text:a></text:p>
      </table:table-cell>
-     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.result_modifier_string" xlink:type="simple">line.result_modifier_string</text:a></text:p>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.result_modifier%20and%20line.result_modifier.name%20or%20&apos;&apos;" xlink:type="simple">line.result_modifier and line.result_modifier.name or &apos;&apos;</text:a></text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.result" xlink:type="simple">line.result</text:a></text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.initial_unit.rec_name%20if%20line.initial_unit%20else%20&apos;&apos;" xlink:type="simple">line.initial_unit.rec_name if line.initial_unit else &apos;&apos;</text:a></text:p>
      </table:table-cell>
-     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.converted_result_modifier_string" xlink:type="simple">line.converted_result_modifier_string</text:a></text:p>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.converted_result_modifier%20and%20line.converted_result_modifier.name%20or%20&apos;&apos;" xlink:type="simple">line.converted_result_modifier and line.converted_result_modifier.name or &apos;&apos;</text:a></text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.converted_result" xlink:type="simple">line.converted_result</text:a></text:p>
      </table:table-cell>

@@ -309,6 +309,7 @@ class Notebook(ModelSQL, ModelView):
         Fraction = pool.get('lims.fraction')
         FractionType = pool.get('lims.fraction.type')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        ResultModifier = pool.get('lims.result_modifier')
 
         draft_lines_ids = ResultsLine.get_draft_lines_ids(
             laboratory_id, notebook_id)
@@ -322,6 +323,8 @@ class Notebook(ModelSQL, ModelView):
                 'ON f.id = n.fraction '
                 'INNER JOIN "' + FractionType._table + '" ft '
                 'ON ft.id = f.type '
+                'LEFT JOIN "' + ResultModifier._table + '" rm '
+                'ON rm.id = nl.result_modifier '
             'WHERE nl.notebook = %s '
                 'AND nl.laboratory = %s '
                 'AND ft.report = TRUE '
@@ -357,6 +360,8 @@ class Notebook(ModelSQL, ModelView):
                 'ON f.id = n.fraction '
                 'INNER JOIN "' + FractionType._table + '" ft '
                 'ON ft.id = f.type '
+                'LEFT JOIN "' + ResultModifier._table + '" rm '
+                'ON rm.id = nl.result_modifier '
             'WHERE nl.notebook = %s '
                 'AND nl.laboratory = %s '
                 'AND ft.report = TRUE '
@@ -505,6 +510,7 @@ class Notebook(ModelSQL, ModelView):
         Notebook = pool.get('lims.notebook')
         Fraction = pool.get('lims.fraction')
         FractionType = pool.get('lims.fraction.type')
+        ResultModifier = pool.get('lims.result_modifier')
 
         laboratory_id = Transaction().context.get(
             'samples_pending_reporting_laboratory', None)
@@ -522,6 +528,8 @@ class Notebook(ModelSQL, ModelView):
                 'ON f.id = n.fraction '
                 'INNER JOIN "' + FractionType._table + '" ft '
                 'ON ft.id = f.type '
+                'LEFT JOIN "' + ResultModifier._table + '" rm '
+                'ON rm.id = nl.result_modifier '
             'WHERE nl.laboratory = %s '
                 'AND ft.report = TRUE '
                 'AND nl.report = TRUE '
@@ -549,7 +557,7 @@ class Notebook(ModelSQL, ModelView):
             clause = [['OR',
                 ('result', 'not in', [None, '']),
                 ('literal_result', 'not in', [None, '']),
-                ('result_modifier', 'in', [
+                ('result_modifier.code', 'in', [
                     'd', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre', 'na']),
                 ]]
         return clause
@@ -566,7 +574,7 @@ class Notebook(ModelSQL, ModelView):
                 'AND nl.result != \'\') '
                 'OR (nl.literal_result IS NOT NULL '
                 'AND nl.literal_result != \'\') '
-                'OR nl.result_modifier IN '
+                'OR rm.code IN '
                 '(\'d\', \'nd\', \'pos\', \'neg\', '
                 '\'ni\', \'abs\', \'pre\', \'na\')) ')
         return sql_clause
@@ -675,6 +683,7 @@ class Notebook(ModelSQL, ModelView):
         NotebookLine = pool.get('lims.notebook.line')
         Fraction = pool.get('lims.fraction')
         FractionType = pool.get('lims.fraction.type')
+        ResultModifier = pool.get('lims.result_modifier')
 
         result = {}
         for n in notebooks:
@@ -687,13 +696,15 @@ class Notebook(ModelSQL, ModelView):
                     'ON f.id = n.fraction '
                     'INNER JOIN "' + FractionType._table + '" ft '
                     'ON ft.id = f.type '
+                    'LEFT JOIN "' + ResultModifier._table + '" rm '
+                    'ON rm.id = nl.result_modifier '
                 'WHERE ft.report = TRUE '
                     'AND nl.report = TRUE '
                     'AND nl.annulled = FALSE '
                     'AND nl.accepted = FALSE '
                     'AND (nl.result IS NOT NULL '
                         'OR nl.literal_result IS NOT NULL '
-                        'OR nl.result_modifier IN '
+                        'OR rm.code IN '
                         '(\'d\', \'nd\', \'pos\', \'neg\', '
                         '\'ni\', \'abs\', \'pre\', \'na\')) '
                     'AND nl.notebook = %s',
@@ -709,6 +720,7 @@ class Notebook(ModelSQL, ModelView):
         NotebookLine = pool.get('lims.notebook.line')
         Fraction = pool.get('lims.fraction')
         FractionType = pool.get('lims.fraction.type')
+        ResultModifier = pool.get('lims.result_modifier')
 
         cursor.execute('SELECT nl.notebook '
             'FROM "' + NotebookLine._table + '" nl '
@@ -718,13 +730,15 @@ class Notebook(ModelSQL, ModelView):
                 'ON f.id = n.fraction '
                 'INNER JOIN "' + FractionType._table + '" ft '
                 'ON ft.id = f.type '
+                'LEFT JOIN "' + ResultModifier._table + '" rm '
+                'ON rm.id = nl.result_modifier '
             'WHERE ft.report = TRUE '
                 'AND nl.report = TRUE '
                 'AND nl.annulled = FALSE '
                 'AND nl.accepted = FALSE '
                 'AND (nl.result IS NOT NULL '
                     'OR nl.literal_result IS NOT NULL '
-                    'OR nl.result_modifier IN '
+                    'OR rm.code IN '
                     '(\'d\', \'nd\', \'pos\', \'neg\', '
                     '\'ni\', \'abs\', \'pre\', \'na\'))')
         notebooks_ids = [x[0] for x in cursor.fetchall()]
@@ -856,31 +870,12 @@ class NotebookLine(ModelSQL, ModelView):
     final_unit = fields.Many2One('product.uom', 'Final unit',
         domain=[('category.lims_only_available', '=', True)],
         states=_states, depends=_depends)
-    result_modifier = fields.Selection([
-        ('eq', '='),
-        ('low', '<'),
-        ('d', 'Detected'),
-        ('nd', 'nd'),
-        ('na', 'na'),
-        ('pos', 'Positive'),
-        ('neg', 'Negative'),
-        ('ni', 'ni'),
-        ('abs', 'Absence'),
-        ('pre', 'Presence'),
-        ], 'Result modifier', sort=False,
+    result_modifier = fields.Many2One('lims.result_modifier',
+        'Result modifier', select=True,
         states=_states, depends=_depends)
-    result_modifier_string = result_modifier.translated('result_modifier')
-    converted_result_modifier = fields.Selection([
-        ('eq', '='),
-        ('low', '<'),
-        ('nd', 'nd'),
-        ('pos', 'Positive'),
-        ('neg', 'Negative'),
-        ('ni', 'ni'),
-        ], 'Converted result modifier', sort=False,
+    converted_result_modifier = fields.Many2One('lims.result_modifier',
+        'Converted result modifier', select=True,
         states=_states, depends=_depends)
-    converted_result_modifier_string = converted_result_modifier.translated(
-        'converted_result_modifier')
     result = fields.Char('Result',
         states=_states, depends=_depends)
     converted_result = fields.Char('Converted result',
@@ -1015,16 +1010,51 @@ class NotebookLine(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
+        cursor = Transaction().connection.cursor()
+        Service = Pool().get('lims.service')
         table_h = cls.__table_handler__(module_name)
+
         urgent_exist = table_h.column_exist('urgent')
+
+        migrate_result_modifier = (
+            table_h.column_exist('result_modifier') and
+            table_h.column_is_type('result_modifier', 'VARCHAR'))
+        if migrate_result_modifier:
+            table_h.column_rename('result_modifier',
+                'temp_result_modifier')
+            table_h.column_rename('converted_result_modifier',
+                'temp_converted_result_modifier')
+
         super().__register__(module_name)
+
         if not urgent_exist:
-            cursor = Transaction().connection.cursor()
-            Service = Pool().get('lims.service')
             cursor.execute('UPDATE "' + cls._table + '" nl '
                 'SET urgent = srv.urgent FROM '
                 '"' + Service._table + '" srv '
                 'WHERE srv.id = nl.service')
+        if migrate_result_modifier:
+            cls._migrate_result_modifier()
+            table_h.drop_column('temp_result_modifier')
+            table_h.drop_column('temp_converted_result_modifier')
+
+    @classmethod
+    def _migrate_result_modifier(cls):
+        cursor = Transaction().connection.cursor()
+        ResultModifier = Pool().get('lims.result_modifier')
+        cursor.execute('UPDATE "' + cls._table + '" '
+            'SET result_modifier = NULL '
+            'WHERE temp_result_modifier = \'eq\'')
+        cursor.execute('UPDATE "' + cls._table + '" nl '
+            'SET result_modifier = rm.id FROM '
+            '"' + ResultModifier._table + '" rm '
+            'WHERE rm.code = nl.temp_result_modifier')
+        cursor.execute('UPDATE "' + cls._table + '" '
+            'SET converted_result_modifier = NULL '
+            'WHERE temp_converted_result_modifier = \'eq\'')
+        cursor.execute('UPDATE "' + cls._table + '" nl '
+            'SET converted_result_modifier = rm.id FROM '
+            '"' + ResultModifier._table + '" rm '
+            'WHERE rm.code = nl.temp_converted_result_modifier')
 
     @classmethod
     def __setup__(cls):
@@ -1035,14 +1065,6 @@ class NotebookLine(ModelSQL, ModelView):
     @staticmethod
     def default_repetition():
         return 0
-
-    @staticmethod
-    def default_result_modifier():
-        return 'eq'
-
-    @staticmethod
-    def default_converted_result_modifier():
-        return 'eq'
 
     @staticmethod
     def default_decimals():
@@ -1175,8 +1197,9 @@ class NotebookLine(ModelSQL, ModelView):
                     ('annulled', '=', False),
                     ('result', 'in', [None, '']),
                     ('literal_result', 'in', [None, '']),
-                    ('result_modifier', 'not in', [
-                        'd', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre', 'na']),
+                    ['OR', ('result_modifier', '=', None),
+                        ('result_modifier.code', 'not in',
+                        ['d', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre', 'na'])],
                     ]) == 0:
                 Referral.write([referral], {'state': 'done'})
 
@@ -1397,7 +1420,7 @@ class NotebookLine(ModelSQL, ModelView):
         'analysis')
     def on_change_result(self):
         self.converted_result = None
-        self.converted_result_modifier = 'eq'
+        self.converted_result_modifier = None
         self.backup = None
         self.verification = None
         self.uncertainty = None
@@ -1422,29 +1445,37 @@ class NotebookLine(ModelSQL, ModelView):
                 self.not_accepted_message = gettext('lims.msg_not_accepted_3')
             elif not (self.result or self.converted_result or
                     self.literal_result or
-                    self.result_modifier in
-                    ('d', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre') or
-                    self.converted_result_modifier in
-                    ('d', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre')):
+                    (self.result_modifier and
+                        self.result_modifier.code in
+                        ('d', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre')) or
+                    (self.converted_result_modifier and
+                        self.converted_result_modifier.code in
+                        ('d', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre'))):
                 self.accepted = False
                 self.not_accepted_message = gettext('lims.msg_not_accepted_4')
             else:
-                if (self.converted_result and self.converted_result_modifier
-                        not in ('ni', 'eq', 'low')):
+                if (self.converted_result and (
+                        self.converted_result_modifier and
+                        self.converted_result_modifier.code not in
+                        ('ni', 'low'))):
                     self.accepted = False
                     self.not_accepted_message = gettext(
                         'lims.msg_not_accepted_5')
-                elif (self.result and self.result_modifier
-                        not in ('ni', 'eq', 'low')):
+                elif (self.result and (
+                        self.result_modifier and
+                        self.result_modifier.code not in
+                        ('ni', 'low'))):
                     self.accepted = False
                     self.not_accepted_message = gettext(
                         'lims.msg_not_accepted_6')
-                elif (self.result_modifier == 'ni' and
+                elif (self.result_modifier and
+                        self.result_modifier.code == 'ni' and
                         not self.literal_result and
                         (not self.converted_result_modifier or
                             not self.converted_result) and
-                        self.converted_result_modifier not in (
-                            'nd', 'pos', 'neg')):
+                        (self.converted_result_modifier and
+                            self.converted_result_modifier.code not in
+                            ('nd', 'pos', 'neg'))):
                     self.accepted = False
                     self.not_accepted_message = gettext(
                         'lims.msg_not_accepted_7')
@@ -1466,11 +1497,13 @@ class NotebookLine(ModelSQL, ModelView):
 
     @fields.depends('result_modifier', 'annulled', 'annulment_date', 'report')
     def on_change_result_modifier(self):
-        if self.result_modifier == 'na' and not self.annulled:
+        if (self.result_modifier and self.result_modifier.code == 'na'
+                and not self.annulled):
             self.annulled = True
             self.annulment_date = datetime.now()
             self.report = False
-        elif self.result_modifier != 'na' and self.annulled:
+        elif ((not self.result_modifier or self.result_modifier.code != 'na')
+                and self.annulled):
             self.annulled = False
             self.annulment_date = None
             self.report = True
@@ -1619,14 +1652,14 @@ class NotebookLine(ModelSQL, ModelView):
 
     def get_formated_result(self, name=None):
         res = ''
-        result_modifier = self.result_modifier
+        result_modifier = self.result_modifier and self.result_modifier.code
         if self.literal_result:
             res = self.literal_result
         else:
             res = self._format_result(self.result,
                 self.decimals, self.significant_digits,
                 self.scientific_notation)
-            if result_modifier == 'eq':
+            if not result_modifier:
                 res = res
             elif result_modifier == 'low':
                 res = gettext('lims.msg_quantification_limit', loq=res)
@@ -1645,17 +1678,18 @@ class NotebookLine(ModelSQL, ModelView):
             elif result_modifier == 'abs':
                 res = gettext('lims.msg_abs')
             else:
-                res = result_modifier
+                res = self.result_modifier.name
         return res
 
     def get_formated_converted_result(self, name=None):
         res = ''
-        result_modifier = self.converted_result_modifier
+        result_modifier = (self.converted_result_modifier and
+            self.converted_result_modifier.code)
         if not self.literal_result:
             res = self._format_result(self.converted_result,
                 self.decimals, self.significant_digits,
                 self.scientific_notation)
-            if result_modifier == 'eq':
+            if not result_modifier:
                 res = res
             elif result_modifier == 'low':
                 res = gettext('lims.msg_quantification_limit', loq=res)
@@ -1674,7 +1708,7 @@ class NotebookLine(ModelSQL, ModelView):
             elif result_modifier == 'abs':
                 res = gettext('lims.msg_abs')
             else:
-                res = result_modifier
+                res = self.converted_result_modifier.name
         return res
 
     def _format_result(self, result, decimals, significant_digits=None,
@@ -1736,29 +1770,10 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     initial_unit = fields.Many2One('product.uom', 'Initial unit',
         readonly=True)
     final_unit = fields.Many2One('product.uom', 'Final unit', readonly=True)
-    result_modifier = fields.Selection([
-        ('eq', '='),
-        ('low', '<'),
-        ('d', 'Detected'),
-        ('nd', 'nd'),
-        ('na', 'na'),
-        ('pos', 'Positive'),
-        ('neg', 'Negative'),
-        ('ni', 'ni'),
-        ('abs', 'Absence'),
-        ('pre', 'Presence'),
-        ], 'Result modifier', readonly=True)
-    converted_result_modifier = fields.Selection([
-        ('eq', '='),
-        ('low', '<'),
-        ('nd', 'nd'),
-        ('pos', 'Positive'),
-        ('neg', 'Negative'),
-        ('ni', 'ni'),
-        ], 'Converted result modifier', readonly=True)
-    result_modifier_string = result_modifier.translated('result_modifier')
-    converted_result_modifier_string = converted_result_modifier.translated(
-        'converted_result_modifier')
+    result_modifier = fields.Many2One('lims.result_modifier',
+        'Result modifier', readonly=True)
+    converted_result_modifier = fields.Many2One('lims.result_modifier',
+        'Converted result modifier', readonly=True)
     result = fields.Char('Result', readonly=True)
     converted_result = fields.Char('Converted result', readonly=True)
     formated_result = fields.Function(fields.Char('Result to report'),
@@ -2215,7 +2230,7 @@ class NotebookResultsConversion(Wizard):
             if notebook_line.accepted:
                 continue
             if (notebook_line.converted_result or not notebook_line.result or
-                    notebook_line.result_modifier != 'eq'):
+                    notebook_line.result_modifier):
                 continue
             iu = notebook_line.initial_unit
             if not iu:
@@ -2239,7 +2254,7 @@ class NotebookResultsConversion(Wizard):
             if (iu == fu and ic == fc):
                 converted_result = result
                 notebook_line.converted_result = str(converted_result)
-                notebook_line.converted_result_modifier = 'eq'
+                notebook_line.converted_result_modifier = None
                 lines_to_save.append(notebook_line)
             elif (iu != fu and ic == fc):
                 formula = UomConversion.get_conversion_formula(iu, fu)
@@ -2251,12 +2266,12 @@ class NotebookResultsConversion(Wizard):
 
                 converted_result = result * formula_result
                 notebook_line.converted_result = str(converted_result)
-                notebook_line.converted_result_modifier = 'eq'
+                notebook_line.converted_result_modifier = None
                 lines_to_save.append(notebook_line)
             elif (iu == fu and ic != fc):
                 converted_result = result * (fc / ic)
                 notebook_line.converted_result = str(converted_result)
-                notebook_line.converted_result_modifier = 'eq'
+                notebook_line.converted_result_modifier = None
                 lines_to_save.append(notebook_line)
             else:
                 formula = None
@@ -2282,12 +2297,12 @@ class NotebookResultsConversion(Wizard):
                     converted_result = (result * (fc / ic) * (d_fc / d_ic) *
                         formula_result)
                     notebook_line.converted_result = str(converted_result)
-                    notebook_line.converted_result_modifier = 'eq'
+                    notebook_line.converted_result_modifier = None
                     lines_to_save.append(notebook_line)
                 else:
                     converted_result = result * (fc / ic) * formula_result
                     notebook_line.converted_result = str(converted_result)
-                    notebook_line.converted_result_modifier = 'eq'
+                    notebook_line.converted_result_modifier = None
                     lines_to_save.append(notebook_line)
         if lines_to_save:
             NotebookLine.save(lines_to_save)
@@ -2370,7 +2385,13 @@ class NotebookLimitsValidation(Wizard):
         return 'end'
 
     def lines_limits_validation(self, notebook_lines):
-        NotebookLine = Pool().get('lims.notebook.line')
+        pool = Pool()
+        ModelData = pool.get('ir.model.data')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        result_modifier_low = ModelData.get_id('lims', 'result_modifier_low')
+        result_modifier_nd = ModelData.get_id('lims', 'result_modifier_nd')
+        result_modifier_ni = ModelData.get_id('lims', 'result_modifier_ni')
 
         lines_to_save = []
         for notebook_line in notebook_lines:
@@ -2390,7 +2411,7 @@ class NotebookLimitsValidation(Wizard):
             if (notebook_line.result and (
                     notebook_line.check_result_limits or
                     not notebook_line.converted_result)):
-                if notebook_line.result_modifier != 'eq':
+                if notebook_line.result_modifier:
                     continue
                 try:
                     value = float(notebook_line.result)
@@ -2401,27 +2422,27 @@ class NotebookLimitsValidation(Wizard):
                         line=notebook_line.rec_name))
                 if dl < value and value < ql:
                     notebook_line.result = str(ql)
-                    notebook_line.result_modifier = 'low'
+                    notebook_line.result_modifier = result_modifier_low
                     notebook_line.converted_result = None
-                    notebook_line.converted_result_modifier = 'eq'
+                    notebook_line.converted_result_modifier = None
                     notebook_line.rm_correction_formula = None
                 elif value < dl:
                     notebook_line.result = None
-                    notebook_line.result_modifier = 'nd'
+                    notebook_line.result_modifier = result_modifier_nd
                     notebook_line.converted_result = None
-                    notebook_line.converted_result_modifier = 'eq'
+                    notebook_line.converted_result_modifier = None
                     notebook_line.rm_correction_formula = None
                 elif value == dl:
                     notebook_line.result = str(ql)
-                    notebook_line.result_modifier = 'low'
+                    notebook_line.result_modifier = result_modifier_low
                     notebook_line.converted_result = None
-                    notebook_line.converted_result_modifier = 'eq'
+                    notebook_line.converted_result_modifier = None
                     notebook_line.rm_correction_formula = None
                 notebook_line.backup = str(value)
                 lines_to_save.append(notebook_line)
 
             elif notebook_line.converted_result:
-                if notebook_line.converted_result_modifier != 'eq':
+                if notebook_line.converted_result_modifier:
                     continue
                 try:
                     value = float(notebook_line.converted_result)
@@ -2432,18 +2453,21 @@ class NotebookLimitsValidation(Wizard):
                         line=notebook_line.rec_name))
                 if dl < value and value < ql:
                     notebook_line.converted_result = str(ql)
-                    notebook_line.converted_result_modifier = 'low'
-                    notebook_line.result_modifier = 'ni'
+                    notebook_line.converted_result_modifier = (
+                        result_modifier_low)
+                    notebook_line.result_modifier = result_modifier_ni
                     notebook_line.rm_correction_formula = None
                 elif value < dl:
                     notebook_line.converted_result = None
-                    notebook_line.converted_result_modifier = 'nd'
-                    notebook_line.result_modifier = 'ni'
+                    notebook_line.converted_result_modifier = (
+                        result_modifier_nd)
+                    notebook_line.result_modifier = result_modifier_ni
                     notebook_line.rm_correction_formula = None
                 elif value == dl:
                     notebook_line.converted_result = str(ql)
-                    notebook_line.converted_result_modifier = 'low'
-                    notebook_line.result_modifier = 'ni'
+                    notebook_line.converted_result_modifier = (
+                        result_modifier_low)
+                    notebook_line.result_modifier = result_modifier_ni
                     notebook_line.rm_correction_formula = None
                 notebook_line.backup = str(value)
                 lines_to_save.append(notebook_line)
@@ -2899,32 +2923,15 @@ class NotebookInternalRelationsCalc2Variable(ModelSQL, ModelView):
     line = fields.Many2One('lims.notebook.line', 'Line')
     analysis = fields.Many2One('lims.analysis', 'Analysis', readonly=True)
     repetition = fields.Integer('Repetition', readonly=True)
-    result_modifier = fields.Function(fields.Selection([
-        ('eq', '='),
-        ('low', '<'),
-        ('d', 'Detected'),
-        ('nd', 'nd'),
-        ('na', 'na'),
-        ('pos', 'Positive'),
-        ('neg', 'Negative'),
-        ('ni', 'ni'),
-        ('abs', 'Absence'),
-        ('pre', 'Presence'),
-        ], 'Result modifier'), 'get_line_field')
+    result_modifier = fields.Function(fields.Many2One('lims.result_modifier',
+        'Result modifier'), 'get_line_field')
     result = fields.Function(fields.Char('Result'), 'get_line_field')
     initial_unit = fields.Function(fields.Many2One('product.uom',
         'Initial unit'), 'get_line_field')
     initial_concentration = fields.Function(fields.Char(
         'Initial concentration'), 'get_line_field')
-    converted_result_modifier = fields.Function(fields.Selection([
-        ('eq', '='),
-        ('low', '<'),
-        ('nd', 'nd'),
-        ('na', 'na'),
-        ('pos', 'Positive'),
-        ('neg', 'Negative'),
-        ('ni', 'ni'),
-        ], 'Converted result modifier'), 'get_line_field')
+    converted_result_modifier = fields.Function(fields.Many2One(
+        'lims.result_modifier', 'Converted result modifier'), 'get_line_field')
     converted_result = fields.Function(fields.Char('Converted result'),
         'get_line_field')
     final_unit = fields.Function(fields.Many2One('product.uom', 'Final unit'),
@@ -2945,7 +2952,7 @@ class NotebookInternalRelationsCalc2Variable(ModelSQL, ModelView):
         result = {}
         for name in names:
             result[name] = {}
-            if name in ('initial_unit', 'final_unit'):
+            if cls._fields[name]._type == 'many2one':
                 for v in variables:
                     field = getattr(v.line, name, None)
                     result[name][v.id] = field.id if field else None
@@ -3401,18 +3408,8 @@ class NotebookLoadResultsFormulaAction(ModelSQL):
 
     line = fields.Many2One('lims.notebook.line', 'Line')
     result = fields.Char('Result')
-    result_modifier = fields.Selection([
-        ('eq', '='),
-        ('low', '<'),
-        ('d', 'Detected'),
-        ('nd', 'nd'),
-        ('na', 'na'),
-        ('pos', 'Positive'),
-        ('neg', 'Negative'),
-        ('ni', 'ni'),
-        ('abs', 'Absence'),
-        ('pre', 'Presence'),
-        ], 'Result modifier', sort=False)
+    result_modifier = fields.Many2One('lims.result_modifier',
+        'Result modifier')
     end_date = fields.Date('End date')
     professional = fields.Many2One('lims.laboratory.professional',
         'Laboratory professional')
@@ -3426,8 +3423,17 @@ class NotebookLoadResultsFormulaAction(ModelSQL):
 
     @classmethod
     def __register__(cls, module_name):
-        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
+        table_h = cls.__table_handler__(module_name)
+        migrate_result_modifier = (
+            table_h.column_exist('result_modifier') and
+            table_h.column_is_type('result_modifier', 'VARCHAR'))
+        if migrate_result_modifier:
+            table_h.column_rename('result_modifier',
+                'temp_result_modifier')
+        super().__register__(module_name)
+        if migrate_result_modifier:
+            table_h.drop_column('temp_result_modifier')
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
 
@@ -3447,18 +3453,8 @@ class NotebookLoadResultsFormulaProcess(ModelView):
     variables = fields.One2Many('lims.notebook.load_results_formula.variable',
         None, 'Variables')
     result = fields.Char('Result', required=True)
-    result_modifier = fields.Selection([
-        ('eq', '='),
-        ('low', '<'),
-        ('d', 'Detected'),
-        ('nd', 'nd'),
-        ('na', 'na'),
-        ('pos', 'Positive'),
-        ('neg', 'Negative'),
-        ('ni', 'ni'),
-        ('abs', 'Absence'),
-        ('pre', 'Presence'),
-        ], 'Result modifier', sort=False, required=True)
+    result_modifier = fields.Many2One('lims.result_modifier',
+        'Result modifier')
     end_date = fields.Date('End date')
     end_date_copy = fields.Boolean('Field copy')
     professional = fields.Many2One('lims.laboratory.professional',
@@ -3687,7 +3683,8 @@ class NotebookLoadResultsFormula(Wizard):
                 'session_id': self._session_id,
                 'line': self.process.line.id,
                 'result': self.process.result,
-                'result_modifier': self.process.result_modifier,
+                'result_modifier': (self.process.result_modifier.id if
+                    self.process.result_modifier else None),
                 'end_date': self.process.end_date,
                 'professional': self.process.professional.id,
                 'chromatogram': self.process.chromatogram,
@@ -3732,7 +3729,8 @@ class NotebookLoadResultsFormula(Wizard):
                 ])
             if action:
                 self.process.result = action[0].result
-                self.process.result_modifier = action[0].result_modifier
+                self.process.result_modifier = (action[0].result_modifier.id if
+                    action[0].result_modifier else None)
                 self.process.end_date = action[0].end_date
                 self.process.professional = action[0].professional.id
                 self.process.chromatogram = action[0].chromatogram
@@ -3743,7 +3741,7 @@ class NotebookLoadResultsFormula(Wizard):
                 self.process.variables = [v.id for v in action[0].variables]
             elif has_prev:
                 self.process.result = None
-                self.process.result_modifier = 'eq'
+                self.process.result_modifier = None
                 if not self.process.end_date_copy:
                     self.process.end_date = None
                 if not self.process.chromatogram_copy:
@@ -3783,7 +3781,8 @@ class NotebookLoadResultsFormula(Wizard):
                 ])
             if action:
                 self.process.result = action[0].result
-                self.process.result_modifier = action[0].result_modifier
+                self.process.result_modifier = (action[0].result_modifier.id if
+                    action[0].result_modifier else None)
                 self.process.end_date = action[0].end_date
                 self.process.professional = action[0].professional.id
                 self.process.chromatogram = action[0].chromatogram
@@ -3794,7 +3793,7 @@ class NotebookLoadResultsFormula(Wizard):
                 self.process.variables = [v.id for v in action[0].variables]
             else:
                 self.process.result = None
-                self.process.result_modifier = 'eq'
+                self.process.result_modifier = None
                 self.process.end_date = None
                 self.process.professional = None
                 self.process.chromatogram = None
@@ -3840,7 +3839,8 @@ class NotebookLoadResultsFormula(Wizard):
             default['formula_formula'] = formula_formula
 
             default['result'] = self.process.result
-            default['result_modifier'] = self.process.result_modifier
+            default['result_modifier'] = (self.process.result_modifier.id if
+                self.process.result_modifier else None)
 
             default['initial_concentration'] = (
                 self.process.initial_concentration)
@@ -3867,7 +3867,7 @@ class NotebookLoadResultsFormula(Wizard):
                 for k, v in variables_desc.items():
                     formula_formula = formula_formula.replace(k, v)
                 default['formula_formula'] = formula_formula
-            default['result_modifier'] = 'eq'
+            default['result_modifier'] = None
 
             for field in ('initial_concentration', 'comments'):
                 if (hasattr(self.process, field + '_copy') and
@@ -3994,18 +3994,19 @@ class NotebookLoadResultsFormula(Wizard):
                 continue
             notebook_line_write = {
                 'result': data.result,
-                'result_modifier': data.result_modifier,
+                'result_modifier': (data.result_modifier.id if
+                    data.result_modifier else None),
                 'end_date': data.end_date,
                 'chromatogram': data.chromatogram,
                 'initial_concentration': data.initial_concentration,
                 'comments': data.comments,
                 'converted_result': None,
-                'converted_result_modifier': 'eq',
+                'converted_result_modifier': None,
                 'backup': None,
                 'verification': None,
                 'uncertainty': None,
                 }
-            if data.result_modifier == 'na':
+            if data.result_modifier and data.result_modifier.code == 'na':
                 notebook_line_write['annulled'] = True
                 notebook_line_write['annulment_date'] = datetime.now()
                 notebook_line_write['report'] = False
@@ -4154,18 +4155,8 @@ class NotebookLoadResultsManualLine(ModelSQL, ModelView):
     repetition = fields.Integer('Repetition', readonly=True)
     fraction = fields.Many2One('lims.fraction', 'Fraction', readonly=True)
     result = fields.Char('Result')
-    result_modifier = fields.Selection([
-        ('eq', '='),
-        ('low', '<'),
-        ('d', 'Detected'),
-        ('nd', 'nd'),
-        ('na', 'na'),
-        ('pos', 'Positive'),
-        ('neg', 'Negative'),
-        ('ni', 'ni'),
-        ('abs', 'Absence'),
-        ('pre', 'Presence'),
-        ], 'Result modifier', sort=False)
+    result_modifier = fields.Many2One('lims.result_modifier',
+        'Result modifier')
     end_date = fields.Date('End date')
     chromatogram = fields.Char('Chromatogram')
     initial_unit = fields.Many2One('product.uom', 'Initial unit',
@@ -4195,7 +4186,7 @@ class NotebookLoadResultsManualLine(ModelSQL, ModelView):
         if self.end_date:
             return self.end_date
         if (self.result or self.literal_result or
-                self.result_modifier not in ('eq', 'low')):
+                (self.result_modifier and self.result_modifier.code != 'low')):
             return Date.today()
         return None
 
@@ -4291,7 +4282,8 @@ class NotebookLoadResultsManual(Wizard):
                     'line': line.id,
                     'repetition': line.repetition,
                     'result': line.result,
-                    'result_modifier': line.result_modifier,
+                    'result_modifier': (line.result_modifier.id if
+                        line.result_modifier else None),
                     'end_date': line.end_date,
                     'chromatogram': line.chromatogram,
                     'initial_unit': (line.initial_unit.id if
@@ -4401,24 +4393,25 @@ class NotebookLoadResultsManual(Wizard):
                 continue
             notebook_line_write = {
                 'result': data.result,
-                'result_modifier': data.result_modifier,
+                'result_modifier': (data.result_modifier.id if
+                    data.result_modifier else None),
                 'chromatogram': data.chromatogram,
                 'initial_unit': (data.initial_unit.id if
                     data.initial_unit else None),
                 'comments': data.comments,
                 'literal_result': data.literal_result,
                 'converted_result': None,
-                'converted_result_modifier': 'eq',
+                'converted_result_modifier': None,
                 'backup': None,
                 'verification': None,
                 'uncertainty': data.uncertainty,
                 'device': (data.device.id if
                     data.device else None),
                 }
-            if (not (data.result_modifier == 'eq' and not data.result) or
+            if (not (not data.result_modifier and not data.result) or
                     data.literal_result):
                 notebook_line_write['end_date'] = data.end_date
-            if data.result_modifier == 'na':
+            if data.result_modifier and data.result_modifier.code == 'na':
                 notebook_line_write['annulled'] = True
                 notebook_line_write['annulment_date'] = datetime.now()
                 notebook_line_write['report'] = False
@@ -5282,17 +5275,22 @@ class NotebookAcceptLines(Wizard):
                 continue
             if not (notebook_line.result or notebook_line.converted_result or
                     notebook_line.literal_result or
-                    notebook_line.result_modifier in
-                    ('d', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre') or
-                    notebook_line.converted_result_modifier in
-                    ('d', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre')):
+                    (notebook_line.result_modifier and
+                    notebook_line.result_modifier.code in
+                    ('d', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre')) or
+                    (notebook_line.converted_result_modifier and
+                    notebook_line.converted_result_modifier.code in
+                    ('d', 'nd', 'pos', 'neg', 'ni', 'abs', 'pre'))):
                 continue
-            if (notebook_line.converted_result and
-                    notebook_line.converted_result_modifier
-                    not in ('ni', 'eq', 'low')):
+            if (notebook_line.converted_result and (
+                    notebook_line.converted_result_modifier and
+                    notebook_line.converted_result_modifier.code not in
+                    ('ni', 'low'))):
                 continue
-            if (notebook_line.result and notebook_line.result_modifier
-                    not in ('ni', 'eq', 'low')):
+            if (notebook_line.result and (
+                    notebook_line.result_modifier and
+                    notebook_line.result_modifier.code not in
+                    ('ni', 'low'))):
                 continue
 
             notebook_id = notebook_line.notebook.id
@@ -5422,10 +5420,14 @@ class NotebookAnnulLines(Wizard):
         return 'end'
 
     def lines_annul(self, notebook_lines):
-        NotebookLine = Pool().get('lims.notebook.line')
+        pool = Pool()
+        ModelData = pool.get('ir.model.data')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        result_modifier_na = ModelData.get_id('lims', 'result_modifier_na')
 
         NotebookLine.write(notebook_lines, {
-            'result_modifier': 'na',
+            'result_modifier': result_modifier_na,
             'annulled': True,
             'annulment_date': datetime.now(),
             'annulment_reason': self.start.annulment_reason,
@@ -5477,7 +5479,7 @@ class NotebookUnannulLines(Wizard):
         NotebookLine = Pool().get('lims.notebook.line')
 
         NotebookLine.write(notebook_lines, {
-            'result_modifier': 'eq',
+            'result_modifier': None,
             'annulled': False,
             'annulment_date': None,
             'annulment_reason': None,
