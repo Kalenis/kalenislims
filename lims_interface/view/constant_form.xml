@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<form>
+    <label name="name"/>
+    <field name="name"/>
+    <label name="parameter1"/>
+    <field name="parameter1"/>
+    <label name="parameter2"/>
+    <field name="parameter2"/>
+    <label name="parameter3"/>
+    <field name="parameter3"/>
+    <label name="value1"/>
+    <field name="value1"/>
+    <label name="value2"/>
+    <field name="value2"/>
+    <label name="value3"/>
+    <field name="value3"/>
+</form>
