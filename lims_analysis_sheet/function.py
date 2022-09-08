@@ -22,6 +22,20 @@ def device_correction(device_id, value):
 custom_functions['DEVICE_CORRECTION'] = device_correction
 
 
+def get_device_constant(device_id, name, value=None):
+    pool = Pool()
+    LabDevice = pool.get('lims.lab.device')
+    if not device_id or not name:
+        return None
+    if not value:
+        value = 'value1'
+    device = LabDevice(device_id)
+    return device.get_constant(name, value)
+
+
+custom_functions['DEVICE_CONSTANT'] = get_device_constant
+
+
 def _get_result_column(table_id=None):
     pool = Pool()
     Field = pool.get('lims.interface.table.field')

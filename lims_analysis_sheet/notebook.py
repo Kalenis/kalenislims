@@ -3,7 +3,6 @@
 # the full copyright notices and license terms.
 import formulas
 import schedula
-from decimal import Decimal
 from datetime import datetime
 from itertools import chain
 from collections import defaultdict
