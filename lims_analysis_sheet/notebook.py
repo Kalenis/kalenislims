@@ -3,8 +3,7 @@
 # the full copyright notices and license terms.
 import formulas
 import schedula
-from decimal import Decimal
-from datetime import datetime, time, timedelta
+from datetime import datetime
 from itertools import chain
 from collections import defaultdict
 #from dateutil.relativedelta import relativedelta

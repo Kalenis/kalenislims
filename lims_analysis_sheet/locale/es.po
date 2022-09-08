@@ -70,6 +70,10 @@ msgctxt "field:lims.analysis_sheet,report_format:"
 msgid "Report Format"
 msgstr "Formato Informe"
 
+msgctxt "field:lims.analysis_sheet,samples:"
+msgid "Samples"
+msgstr "Muestras"
+
 msgctxt "field:lims.analysis_sheet,samples_qty:"
 msgid "Samples Qty."
 msgstr "Cant. Muestras"
@@ -97,10 +101,6 @@ msgstr "Fecha Validación"
 msgctxt "field:lims.analysis_sheet,view:"
 msgid "View"
 msgstr "Vista"
-
-msgctxt "field:lims.analysis_sheet,samples:"
-msgid "Samples"
-msgstr "Muestras"
 
 msgctxt "field:lims.analysis_sheet.add_control.start,analysis_sheet:"
 msgid "Analysis Sheet"
@@ -266,6 +266,26 @@ msgstr "Hoja de análisis"
 msgctxt "field:lims.interface.multi_sample_data,fraction:"
 msgid "Sample"
 msgstr "Muestra"
+
+msgctxt "field:lims.lab.device,constants:"
+msgid "Constants"
+msgstr "Constantes"
+
+msgctxt "field:lims.lab.device.constant,device:"
+msgid "Device"
+msgstr "Equipo"
+
+msgctxt "field:lims.lab.device.constant,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.lab.device.constant,value1:"
+msgid "Value 1"
+msgstr "Valor 1"
+
+msgctxt "field:lims.lab.device.constant,value2:"
+msgid "Value 2"
+msgstr "Valor 2"
 
 msgctxt "field:lims.laboratory.professional,samples_qty:"
 msgid "# Samples"
@@ -769,6 +789,10 @@ msgstr "Verificación de resultados"
 msgctxt "model:lims.interface.multi_sample_data,name:"
 msgid "Multi Sample Data"
 msgstr "Datos multi muestra"
+
+msgctxt "model:lims.lab.device.constant,name:"
+msgid "Device Constant"
+msgstr "Constante de Equipo"
 
 msgctxt "model:lims.planification.analysis_sheet,name:"
 msgid "Planification - Analysis Sheet"

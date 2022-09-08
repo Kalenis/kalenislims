@@ -22,6 +22,12 @@
             <field name="help">Returns the corrected value for a device.</field>
         </record>
 
+        <record model="lims.interface.function" id="function_device_constant">
+            <field name="name">DEVICE_CONSTANT</field>
+            <field name="parameters">device_id, name, value=None</field>
+            <field name="help">Obtains the value of the constant defined for a device.</field>
+        </record>
+
         <record model="lims.interface.function" id="function_a">
             <field name="name">A</field>
             <field name="parameters">analysis_code, alias=None</field>
