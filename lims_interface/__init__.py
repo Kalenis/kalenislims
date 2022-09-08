@@ -32,6 +32,7 @@ def register():
         interface.TestFormulaViewVariable,
         interface.Variable,
         interface.VariableValue,
+        interface.Constant,
         function.Function,
         table.Table,
         table.TableField,

@@ -48,6 +48,12 @@
             <field name="help">Obtains the value of a given variable, setted for the analysis, product type, matrix and method indicated.</field>
         </record>
 
+        <record model="lims.interface.function" id="function_constant">
+            <field name="name">CONSTANT</field>
+            <field name="parameters">name, parameter1=None, parameter2=None, parameter3=None, value=None</field>
+            <field name="help">Obtains the value of the constant defined for the given parameters.</field>
+        </record>
+
         <record model="lims.interface.function" id="function_timediff">
             <field name="name">TIMEDIF</field>
             <field name="parameters">time_1, time_2,uom=False,delta=False</field>

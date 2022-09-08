@@ -246,6 +246,34 @@ msgctxt "field:lims.interface.compilation.origin,origin_file_id:"
 msgid "Origin File ID"
 msgstr "ID de archivo origen"
 
+msgctxt "field:lims.interface.constant,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.interface.constant,parameter1:"
+msgid "Parameter 1"
+msgstr "Parámetro 1"
+
+msgctxt "field:lims.interface.constant,parameter2:"
+msgid "Parameter 2"
+msgstr "Parámetro 2"
+
+msgctxt "field:lims.interface.constant,parameter3:"
+msgid "Parameter 3"
+msgstr "Parámetro 3"
+
+msgctxt "field:lims.interface.constant,value1:"
+msgid "Value 1"
+msgstr "Valor 1"
+
+msgctxt "field:lims.interface.constant,value2:"
+msgid "Value 2"
+msgstr "Valor 2"
+
+msgctxt "field:lims.interface.constant,value3:"
+msgid "Value 3"
+msgstr "Valor 3"
+
 msgctxt "field:lims.interface.copy_column.start,origin_interface:"
 msgid "Origin Interface"
 msgstr "Interfaz origen"
@@ -690,6 +718,10 @@ msgctxt "help:lims.interface.column,transfer_field:"
 msgid "Check if value have to be transferred to notebook line"
 msgstr "Marcar si se debe trasladar el dato a la línea de cuaderno"
 
+msgctxt "model:ir.action,name:act_interface_constant_list"
+msgid "Interface Constants"
+msgstr "Constantes de Interfaz"
+
 msgctxt "model:ir.action,name:act_interface_function_list"
 msgid "Interface Functions"
 msgstr "Funciones de Interfaz"
@@ -855,6 +887,10 @@ msgctxt "model:ir.ui.menu,name:lims_interface_compilation_menu"
 msgid "Interface Compilations"
 msgstr "Compilaciones desde interfaz"
 
+msgctxt "model:ir.ui.menu,name:lims_interface_constant_menu"
+msgid "Interface Constants"
+msgstr "Constantes"
+
 msgctxt "model:ir.ui.menu,name:lims_interface_function_menu"
 msgid "Interface Functions"
 msgstr "Funciones"
@@ -886,6 +922,10 @@ msgstr "Compilación desde interfaz"
 msgctxt "model:lims.interface.compilation.origin,name:"
 msgid "Compilation Origin"
 msgstr "Origen de datos"
+
+msgctxt "model:lims.interface.constant,name:"
+msgid "Interface Constant"
+msgstr "Constante de interfaz"
 
 msgctxt "model:lims.interface.copy_column.start,name:"
 msgid "Copy Interface Column"

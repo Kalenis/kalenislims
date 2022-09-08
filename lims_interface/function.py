@@ -63,6 +63,21 @@ def get_variable(notebook_line, variable):
 custom_functions['VAR'] = get_variable
 
 
+def get_constant(name, parameter1=None, parameter2=None, parameter3=None,
+        value=None):
+    pool = Pool()
+    Constant = pool.get('lims.interface.constant')
+    if not name:
+        return None
+    if not value:
+        value = 'value1'
+    return Constant.get_constant(name, parameter1, parameter2, parameter3,
+        value)
+
+
+custom_functions['CONSTANT'] = get_constant
+
+
 def slope(yp, xp):
     items_to_delete, i = [], 0
     for y1 in yp:

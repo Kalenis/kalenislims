@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="name"/>
+    <field name="parameter1"/>
+    <field name="parameter2"/>
+    <field name="parameter3"/>
+    <field name="value1"/>
+    <field name="value2"/>
+    <field name="value3"/>
+</tree>
