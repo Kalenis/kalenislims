@@ -4,6 +4,7 @@
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import PoolMeta
+from trytond.pyson import Eval
 from trytond.transaction import Transaction
 
 
@@ -48,4 +49,5 @@ class Party(metaclass=PoolMeta):
 
     diagnostician = fields.Many2One('lims.diagnostician', 'Diagnostician')
     diagnosis_template = fields.Many2One('lims.diagnosis.template',
-        'Diagnosis Template')
+        'Diagnosis Template', domain=['OR', ('active', '=', True),
+            ('id', '=', Eval('diagnosis_template'))])

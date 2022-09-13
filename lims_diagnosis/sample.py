@@ -4,6 +4,7 @@
 
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
+from trytond.pyson import Eval
 
 
 class Fraction(metaclass=PoolMeta):
@@ -34,7 +35,8 @@ class Sample(metaclass=PoolMeta):
 
     diagnostician = fields.Many2One('lims.diagnostician', 'Diagnostician')
     diagnosis_template = fields.Many2One('lims.diagnosis.template',
-        'Diagnosis Template')
+        'Diagnosis Template', domain=['OR', ('active', '=', True),
+            ('id', '=', Eval('diagnosis_template'))])
 
     @classmethod
     def create(cls, vlist):

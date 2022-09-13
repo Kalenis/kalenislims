@@ -18,8 +18,10 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     diagnostician = fields.Many2One('lims.diagnostician', 'Diagnostician',
         states={'readonly': Eval('state') != 'draft'}, depends=['state'])
     diagnosis_template = fields.Many2One('lims.diagnosis.template',
-        'Diagnosis Template', depends=['state'],
-        states={'readonly': Eval('state') != 'draft'})
+        'Diagnosis Template', domain=['OR', ('active', '=', True),
+            ('id', '=', Eval('diagnosis_template'))],
+        states={'readonly': Eval('state') != 'draft'},
+        depends=['state'])
 
     @classmethod
     def __setup__(cls):

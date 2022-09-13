@@ -2,12 +2,13 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond.model import ModelSQL, ModelView, fields, DictSchemaMixin
+from trytond.model import ModelSQL, ModelView, DeactivableMixin, fields, \
+    DictSchemaMixin
 from trytond.pool import PoolMeta
 from trytond.pyson import Eval
 
 
-class DiagnosisTemplate(ModelSQL, ModelView):
+class DiagnosisTemplate(DeactivableMixin, ModelSQL, ModelView):
     'Diagnosis Template'
     __name__ = 'lims.diagnosis.template'
 
@@ -56,7 +57,8 @@ class ResultsReportTemplate(metaclass=PoolMeta):
     __name__ = 'lims.report.template'
 
     diagnosis_template = fields.Many2One('lims.diagnosis.template',
-        'Diagnosis Template',
+        'Diagnosis Template', domain=['OR', ('active', '=', True),
+            ('id', '=', Eval('diagnosis_template'))],
         states={'invisible': Eval('type') != 'base'},
         depends=['type'])
     diagnosis_length = fields.Integer('Diagnosis Length',
