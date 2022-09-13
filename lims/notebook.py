@@ -4175,8 +4175,17 @@ class NotebookLoadResultsManualLine(ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        super().__register__(module_name)
         cursor = Transaction().connection.cursor()
+        table_h = cls.__table_handler__(module_name)
+        migrate_result_modifier = (
+            table_h.column_exist('result_modifier') and
+            table_h.column_is_type('result_modifier', 'VARCHAR'))
+        if migrate_result_modifier:
+            table_h.column_rename('result_modifier',
+                'temp_result_modifier')
+        super().__register__(module_name)
+        if migrate_result_modifier:
+            table_h.drop_column('temp_result_modifier')
         cursor.execute('DELETE FROM "' + cls._table + '"')
 
     @fields.depends('result', 'literal_result', 'result_modifier', 'end_date')
