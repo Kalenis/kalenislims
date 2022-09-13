@@ -4121,8 +4121,9 @@ class AddSampleService(Wizard):
         if analysis_detail:
             EntryDetailAnalysis.create_notebook_lines(analysis_detail,
                 fraction)
-            EntryDetailAnalysis.write(analysis_detail, {
-                'state': 'unplanned',
+            if new_service.entry.state == 'ongoing':
+                EntryDetailAnalysis.write(analysis_detail, {
+                    'state': 'unplanned',
                 })
 
         return new_service
