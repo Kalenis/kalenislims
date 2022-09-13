@@ -31,7 +31,9 @@ class AddSampleService(metaclass=PoolMeta):
     def create_service(self, service, fraction):
         Planification = Pool().get('lims.planification')
         new_service = super().create_service(service, fraction)
-        Planification.automatic_plan(entries=[new_service.entry])
+        # Prevent auto planning if the entry is draft or pending
+        if new_service.entry.state == 'ongoing':
+            Planification.automatic_plan(entries=[new_service.entry])
         return new_service
 
 class EditSampleService(metaclass=PoolMeta):
