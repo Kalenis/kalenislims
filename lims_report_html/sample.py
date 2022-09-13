@@ -4,6 +4,7 @@
 
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
+from trytond.pyson import Eval
 
 
 class Fraction(metaclass=PoolMeta):
@@ -36,6 +37,8 @@ class Sample(metaclass=PoolMeta):
         'Report Template', domain=[
             ('report_name', '=', 'lims.result_report'),
             ('type', 'in', [None, 'base']),
+            ['OR', ('active', '=', True),
+                ('id', '=', Eval('result_template'))],
             ])
     resultrange_origin = fields.Many2One('lims.range.type', 'Comparison range',
         domain=[('use', '=', 'result_range')])
@@ -54,6 +57,8 @@ class CreateSampleStart(metaclass=PoolMeta):
         'Report Template', domain=[
             ('report_name', '=', 'lims.result_report'),
             ('type', 'in', [None, 'base']),
+            ['OR', ('active', '=', True),
+                ('id', '=', Eval('result_template'))],
             ])
     resultrange_origin = fields.Many2One('lims.range.type', 'Comparison range',
         domain=[('use', '=', 'result_range')])

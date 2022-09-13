@@ -21,6 +21,8 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         'Report Template', domain=[
             ('report_name', '=', 'lims.result_report'),
             ('type', 'in', [None, 'base']),
+            ['OR', ('active', '=', True),
+                ('id', '=', Eval('template'))],
             ],
         states={'readonly': Eval('state') != 'draft'},
         depends=['state'])
@@ -495,6 +497,8 @@ class GenerateReportStart(metaclass=PoolMeta):
         'Report Template', domain=[
             ('report_name', '=', 'lims.result_report'),
             ('type', 'in', [None, 'base']),
+            ['OR', ('active', '=', True),
+                ('id', '=', Eval('template'))],
             ],
         states={'readonly': Bool(Eval('report'))},
         depends=['report'])

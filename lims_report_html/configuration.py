@@ -4,6 +4,7 @@
 
 from trytond.model import fields
 from trytond.pool import PoolMeta
+from trytond.pyson import Eval
 
 
 class Configuration(metaclass=PoolMeta):
@@ -13,4 +14,6 @@ class Configuration(metaclass=PoolMeta):
         'Default Report Template', domain=[
             ('report_name', '=', 'lims.result_report'),
             ('type', 'in', [None, 'base']),
+            ['OR', ('active', '=', True),
+                ('id', '=', Eval('result_template'))],
             ])

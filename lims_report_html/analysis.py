@@ -14,6 +14,8 @@ class Analysis(metaclass=PoolMeta):
         'Report Template', domain=[
             ('report_name', '=', 'lims.result_report'),
             ('type', 'in', [None, 'base']),
+            ['OR', ('active', '=', True),
+                ('id', '=', Eval('result_template'))],
             ],
         states={'readonly': Eval('type') != 'group'},
         depends=['type'])

@@ -18,7 +18,7 @@ from babel.support import Translations as BabelTranslations
 from mimetypes import guess_type as mime_guess_type
 from sql import Literal
 
-from trytond.model import ModelSQL, ModelView, fields
+from trytond.model import ModelSQL, ModelView, DeactivableMixin, fields
 from trytond.report import Report
 from trytond.pool import Pool
 from trytond.pyson import Eval, Bool, Or
@@ -31,7 +31,7 @@ from trytond import backend
 from .generator import PdfGenerator
 
 
-class ReportTemplate(ModelSQL, ModelView):
+class ReportTemplate(DeactivableMixin, ModelSQL, ModelView):
     'Report Template'
     __name__ = 'lims.report.template'
 
@@ -59,12 +59,16 @@ class ReportTemplate(ModelSQL, ModelView):
         domain=[
             ('report_name', '=', Eval('report_name')),
             ('type', '=', 'header'),
+            ['OR', ('active', '=', True),
+                ('id', '=', Eval('header'))],
             ],
         depends=['report_name'])
     footer = fields.Many2One('lims.report.template', 'Footer',
         domain=[
             ('report_name', '=', Eval('report_name')),
             ('type', '=', 'footer'),
+            ['OR', ('active', '=', True),
+                ('id', '=', Eval('footer'))],
             ],
         depends=['report_name'])
     translations = fields.One2Many('lims.report.template.translation',

@@ -10,6 +10,8 @@
     <field name="page_orientation"/>
     <label name="resultrange_origin"/>
     <field name="resultrange_origin"/>
+    <label name="active"/>
+    <field name="active" xexpand="0" width="25"/>
     <notebook>
         <page name="content">
             <field name="content" colspan="4" widget="html"/>
