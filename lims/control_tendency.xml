@@ -350,6 +350,40 @@
             <field name="group" ref="group_lims_control"/>
         </record>
 
+<!-- Analysis Group for Tendencies Analysis -->
+
+        <record model="ir.ui.view" id="control_tendencies_analysis_group_view_list">
+            <field name="model">lims.control.analysis_group</field>
+            <field name="type">tree</field>
+            <field name="name">control_tendencies_analysis_group_list</field>
+        </record>
+        <record model="ir.ui.view" id="control_tendencies_analysis_group_view_form">
+            <field name="model">lims.control.analysis_group</field>
+            <field name="type">form</field>
+            <field name="name">control_tendencies_analysis_group_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_control_tendencies_analysis_group">
+            <field name="name">Analysis Group for Tendencies Analysis</field>
+            <field name="res_model">lims.control.analysis_group</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_control_tendencies_analysis_group_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="control_tendencies_analysis_group_view_list"/>
+            <field name="act_window" ref="act_control_tendencies_analysis_group"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_control_tendencies_analysis_group_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="control_tendencies_analysis_group_view_form"/>
+            <field name="act_window" ref="act_control_tendencies_analysis_group"/>
+        </record>
+
+        <menuitem action="act_control_tendencies_analysis_group"
+            id="control_tendencies_analysis_group_menu"
+            parent="lims_laboratory_control" sequence="25"/>
+
 <!-- Control Charts -->
 
         <record model="ir.action.report" id="report_control_chart">

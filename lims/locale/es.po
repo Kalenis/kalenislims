@@ -547,6 +547,22 @@ msgctxt "field:lims.configuration.sequence,referral_sequence:"
 msgid "Referral Sequence"
 msgstr "Secuencia de derivaciones"
 
+msgctxt "field:lims.control.analysis_group,analyzes:"
+msgid "Analyzes"
+msgstr "Análisis"
+
+msgctxt "field:lims.control.analysis_group,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.control.analysis_group.analysis,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:lims.control.analysis_group.analysis,group:"
+msgid "Group"
+msgstr "Grupo"
+
 msgctxt "field:lims.control.means_deviations_calc.result,lines:"
 msgid "Results"
 msgstr "Resultados"
@@ -738,6 +754,10 @@ msgstr "Resultado"
 msgctxt "field:lims.control.tendencies_analysis.result,tendencies:"
 msgid "Tendencies"
 msgstr "Tendencias"
+
+msgctxt "field:lims.control.tendencies_analysis.start,analysis_group:"
+msgid "Analysis Group"
+msgstr "Grupo de análisis"
 
 msgctxt "field:lims.control.tendencies_analysis.start,concentration_level:"
 msgid "Concentration level"
@@ -6980,6 +7000,10 @@ msgctxt "model:ir.action,name:act_company_headquarters_list"
 msgid "Headquarters"
 msgstr "Sedes"
 
+msgctxt "model:ir.action,name:act_control_tendencies_analysis_group"
+msgid "Analysis Group for Tendencies Analysis"
+msgstr "Grupo de análisis para Análisis de tendencias"
+
 msgctxt "model:ir.action,name:act_lims_analysis_family_certificant_list"
 msgid "Certificant Party - Product Type - Matrix"
 msgstr "Entidad certificante - Tipo de producto - Matriz"
@@ -8880,6 +8904,10 @@ msgctxt "model:ir.ui.menu,name:company_headquarters_menu"
 msgid "Headquarters"
 msgstr "Sedes"
 
+msgctxt "model:ir.ui.menu,name:control_tendencies_analysis_group_menu"
+msgid "Analysis Group for Tendencies Analysis"
+msgstr "Grupos de análisis"
+
 msgctxt "model:ir.ui.menu,name:lims_analysis_family_menu"
 msgid "Analysis Families"
 msgstr "Familias de análisis"
@@ -9279,6 +9307,14 @@ msgstr "Configuración - Categoría de producto"
 msgctxt "model:lims.configuration.sequence,name:"
 msgid "Configuration Sequence"
 msgstr "Configuración Secuencia"
+
+msgctxt "model:lims.control.analysis_group,name:"
+msgid "Analysis Group for Tendencies Analysis"
+msgstr "Grupo de análisis para Análisis de tendencias"
+
+msgctxt "model:lims.control.analysis_group.analysis,name:"
+msgid "Analysis Group for Tendencies Analysis"
+msgstr "Grupo de análisis para Análisis de tendencias"
 
 msgctxt "model:lims.control.means_deviations_calc.empty,name:"
 msgid "Calculation of Means and Deviations"

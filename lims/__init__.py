@@ -175,6 +175,8 @@ def register():
         notebook.UncertaintyCalcStart,
         notebook.NotebookPrecisionControlStart,
         notebook.NotebookEvaluateRulesStart,
+        control_tendency.TendencyAnalysisGroup,
+        control_tendency.TendencyAnalysisGroupAnalysis,
         control_tendency.MeansDeviationsCalcStart,
         control_tendency.MeansDeviationsCalcEmpty,
         control_tendency.MeansDeviationsCalcResult,

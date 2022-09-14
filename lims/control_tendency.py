@@ -1194,6 +1194,8 @@ class TendenciesAnalysisStart(ModelView):
         None, None, 'Matrix domain'), 'on_change_with_matrix_domain')
     concentration_level = fields.Many2One('lims.concentration.level',
         'Concentration level')
+    analysis_group = fields.Many2One('lims.control.analysis_group',
+        'Analysis Group')
 
     @staticmethod
     def default_group_by_family():
@@ -1302,6 +1304,9 @@ class TendenciesAnalysis(Wizard):
         if self.start.concentration_level:
             clause.append(('concentration_level', '=',
                 self.start.concentration_level.id))
+        if self.start.analysis_group:
+            clause.append(('analysis', 'in',
+                [a.id for a in self.start.analysis_group.analyzes]))
 
         tendencies = ControlTendency.search(clause)
         if not tendencies:
@@ -1549,6 +1554,26 @@ class TendenciesAnalysis(Wizard):
             })
         self.result.tendencies = None
         return action, {}
+
+
+class TendencyAnalysisGroup(ModelSQL, ModelView):
+    'Analysis Group for Tendencies Analysis'
+    __name__ = 'lims.control.analysis_group'
+
+    name = fields.Char('Name', required=True)
+    analyzes = fields.Many2Many('lims.control.analysis_group.analysis',
+        'group', 'analysis', 'Analyzes')
+
+
+class TendencyAnalysisGroupAnalysis(ModelSQL):
+    'Analysis Group for Tendencies Analysis'
+    __name__ = 'lims.control.analysis_group.analysis'
+
+    group = fields.Many2One('lims.control.analysis_group', 'Group',
+        ondelete='CASCADE', select=True, required=True)
+    analysis = fields.Many2One('lims.analysis', 'Analysis',
+        domain=[('type', '=', 'analysis')],
+        ondelete='CASCADE', select=True, required=True)
 
 
 class PrintControlChart(Wizard):

@@ -18,4 +18,6 @@
     <field name="matrix"/>
     <label name="concentration_level"/>
     <field name="concentration_level"/>
+    <label name="analysis_group"/>
+    <field name="analysis_group"/>
 </form>
