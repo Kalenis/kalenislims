@@ -2052,6 +2052,23 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
                         getattr(d.notebook_line, name, None) or None)
         return result
 
+    def _order_nline_field(name):
+        def order_field(tables):
+            NotebookLine = Pool().get('lims.notebook.line')
+            field = NotebookLine._fields[name]
+            table, _ = tables[None]
+            nline_tables = tables.get('notebook_line')
+            if nline_tables is None:
+                notebook_line = NotebookLine.__table__()
+                nline_tables = {
+                    None: (notebook_line,
+                        notebook_line.id == table.notebook_line),
+                    }
+                tables['notebook_line'] = nline_tables
+            return field.convert_order(name, nline_tables, NotebookLine)
+        return staticmethod(order_field)
+    order_trace_report = _order_nline_field('trace_report')
+
     @classmethod
     def get_result(cls, details, name):
         result = {}
