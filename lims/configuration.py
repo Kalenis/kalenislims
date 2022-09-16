@@ -129,6 +129,49 @@ class User(metaclass=PoolMeta):
             status += ' [%s]' % self.laboratory.rec_name
         return status
 
+    @classmethod
+    def write(cls, *args):
+        super().write(*args)
+        actions = iter(args)
+        for users, vals in zip(actions, actions):
+            if 'active' in vals:
+                cls.sync_active_field(users, vals['active'])
+
+    @classmethod
+    def sync_active_field(cls, users, active_value):
+        pool = Pool()
+        Party = pool.get('party.party')
+        Employee = pool.get('company.employee')
+        Professional = pool.get('lims.laboratory.professional')
+
+        if not users:
+            return
+
+        user_ids = [user.id for user in users]
+        parties = Party.search([
+            ('lims_user', 'in', user_ids),
+            ('active', 'in', [True, False]),
+            ])
+        if not parties:
+            return
+
+        Party.write(parties, {'active': active_value})
+        party_ids = [party.id for party in parties]
+
+        employees = Employee.search([
+            ('party', 'in', party_ids),
+            ('active', 'in', [True, False]),
+            ])
+        if employees:
+            Employee.write(employees, {'active': active_value})
+
+        professionals = Professional.search([
+            ('party', 'in', party_ids),
+            ('active', 'in', [True, False]),
+            ])
+        if professionals:
+            Professional.write(professionals, {'active': active_value})
+
 
 class UserLaboratory(ModelSQL):
     'User - Laboratory'

@@ -2,8 +2,12 @@
 <form>
     <label name="party"/>
     <field name="party"/>
-    <label name="code"/>
-    <field name="code"/>
+    <group id="code" colspan="2" col="-1">
+        <label name="code"/>
+        <field name="code"/>
+        <label name="active"/>
+        <field name="active" xexpand="0" width="25"/>
+    </group>
     <label name="role"/>
     <field name="role"/>
     <newline/>

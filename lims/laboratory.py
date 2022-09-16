@@ -86,7 +86,7 @@ class LaboratoryCVCorrection(ModelSQL, ModelView):
         help="Correction factor for CV greater than Max")
 
 
-class LaboratoryProfessional(ModelSQL, ModelView):
+class LaboratoryProfessional(DeactivableMixin, ModelSQL, ModelView):
     'Laboratory Professional'
     __name__ = 'lims.laboratory.professional'
 

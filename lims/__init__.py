@@ -241,6 +241,7 @@ def register():
         party.Party,
         party.Address,
         party.Company,
+        party.Employee,
         notebook.PrintAnalysisCheckedPendingInformStart,
         planification.Planification,
         planification.PlanificationTechnician,

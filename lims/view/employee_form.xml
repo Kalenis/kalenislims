@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/form/field[@name='supervisor']" position="after">
+        <label name="active"/>
+        <field name="active" xexpand="0" width="25"/>
+    </xpath>
+</data>

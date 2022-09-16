@@ -6,7 +6,7 @@ import pytz
 from datetime import datetime
 from sql import Literal
 
-from trytond.model import fields, Unique
+from trytond.model import DeactivableMixin, fields, Unique
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Bool, Eval, Or
 from trytond.transaction import Transaction
@@ -197,3 +197,7 @@ class Company(metaclass=PoolMeta):
         timezone = self.get_timezone()
         return datetime.astimezone(datetime_.replace(tzinfo=pytz.utc),
             timezone)
+
+
+class Employee(DeactivableMixin, metaclass=PoolMeta):
+    __name__ = 'company.employee'
