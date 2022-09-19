@@ -1032,10 +1032,10 @@ class NotebookLine(ModelSQL, ModelView):
                 'SET urgent = srv.urgent FROM '
                 '"' + Service._table + '" srv '
                 'WHERE srv.id = nl.service')
-        if migrate_result_modifier:
-            cls._migrate_result_modifier()
-            table_h.drop_column('temp_result_modifier')
-            table_h.drop_column('temp_converted_result_modifier')
+        #if migrate_result_modifier:
+            #cls._migrate_result_modifier()
+            #table_h.drop_column('temp_result_modifier')
+            #table_h.drop_column('temp_converted_result_modifier')
 
     @classmethod
     def _migrate_result_modifier(cls):
