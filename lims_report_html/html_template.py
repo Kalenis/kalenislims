@@ -454,7 +454,7 @@ class LimsReport(Report):
             env = cls.get_lims_environment()
 
         report_template = env.from_string(template_string)
-        context = cls.get_context(records, data)
+        context = cls.get_context(records, header=[], data)
         context.update({
             'report': action,
             'get_image': cls.get_image,
