@@ -2498,6 +2498,9 @@ class Sample(ModelSQL, ModelView):
         'lims.typification', None, None, 'Typification domain'),
         'on_change_with_typification_domain')
     confirmed = fields.Function(fields.Boolean('Confirmed'), 'get_confirmed')
+    button_confirm_available = fields.Function(fields.Boolean(
+        'Button confirm available'),
+        'on_change_with_button_confirm_available')
     has_results_report = fields.Function(fields.Boolean('Results Report'),
         'get_has_results_report')
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
@@ -2547,6 +2550,11 @@ class Sample(ModelSQL, ModelView):
         cls._order.insert(0, ('number', 'DESC'))
         cls.__rpc__.update({
             'update_samples_state': RPC(readonly=False, instantiate=0),
+            })
+        cls._buttons.update({
+            'confirm': {
+                'invisible': ~Eval('button_confirm_available'),
+                },
             })
 
     @classmethod
@@ -3005,6 +3013,28 @@ class Sample(ModelSQL, ModelView):
             if not fraction.confirmed:
                 return False
         return True
+
+    @fields.depends('entry', 'fractions')
+    def on_change_with_button_confirm_available(self, name=None):
+        if not self.entry or self.entry.state != 'ongoing':
+            return False
+        if not self.fractions:
+            return False
+        for fraction in self.fractions:
+            if not fraction.confirmed:
+                return True
+        return False
+
+    @classmethod
+    @ModelView.button
+    def confirm(cls, samples):
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
+
+        fractions = [f for s in samples for f in s.fractions
+            if s.entry.state == 'ongoing' and not f.confirmed]
+        if fractions:
+            Fraction.confirm(fractions)
 
     @classmethod
     def get_icon(cls, samples, name):
