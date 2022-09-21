@@ -468,6 +468,21 @@
             <field name="group" ref="group_lims_entry"/>
         </record>
 
+        <record model="ir.model.button" id="sample_confirm_button">
+            <field name="name">confirm</field>
+            <field name="model" search="[('model', '=', 'lims.sample')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="sample_confirm_button_group_lims_entry">
+            <field name="button" ref="sample_confirm_button"/>
+            <field name="group" ref="group_lims_entry"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="sample_confirm_button_group_lims_entry_update">
+            <field name="button" ref="sample_confirm_button"/>
+            <field name="group" ref="group_lims_entry_update"/>
+        </record>
+
         <record model="ir.model.access" id="access_sample">
             <field name="model" search="[('model', '=', 'lims.sample')]"/>
             <field name="perm_read" eval="True"/>
