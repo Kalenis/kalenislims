@@ -4302,6 +4302,7 @@ class EditSampleService(Wizard):
         pool = Pool()
         Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
+        send_ack = False
 
         actual_analysis = [(s.analysis.id, s.method and s.method.id or None)
             for s in self.start.services]
@@ -4324,6 +4325,8 @@ class EditSampleService(Wizard):
                         service.method and service.method.id or None)
                     if key not in original_analysis:
                         self.create_service(service, fraction)
+                        if fraction.entry and fraction.entry.state == 'ongoing':
+                            send_ack = True
                         delete_ack_report_cache = True
                 self.update_fraction_services(fraction)
 
@@ -4333,7 +4336,7 @@ class EditSampleService(Wizard):
                 entry.ack_report_cache = None
                 entry.save()
 
-        if self._send_ack_of_receipt():
+        if send_ack and self._send_ack_of_receipt():
             return 'send_ack_of_receipt'
 
         return 'end'
@@ -4356,11 +4359,12 @@ class EditSampleService(Wizard):
         analysis_detail = EntryDetailAnalysis.search([
             ('service', '=', new_service.id)])
         if analysis_detail:
-            EntryDetailAnalysis.create_notebook_lines(analysis_detail,
-                fraction)
-            EntryDetailAnalysis.write(analysis_detail, {
-                'state': 'unplanned',
-                })
+            if new_service.entry and new_service.entry.state == 'ongoing':
+                EntryDetailAnalysis.create_notebook_lines(analysis_detail,
+                    fraction)
+                EntryDetailAnalysis.write(analysis_detail, {
+                    'state': 'unplanned',
+                    })
 
         return new_service
 
