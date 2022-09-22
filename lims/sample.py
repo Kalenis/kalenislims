@@ -3279,7 +3279,8 @@ class Sample(ModelSQL, ModelView):
         self.save()
 
     def _get_origin_default_dates(self):
-        '''Sample dates modifier based on origin. 
+        ''' Used on Manage services context
+            Sample dates modifier based on origin. 
             Extend this method for use cases where the sample
             is not part of an entry.
         '''
@@ -3301,7 +3302,10 @@ class Sample(ModelSQL, ModelView):
         ResultsDetail = pool.get('lims.results_report.version.detail')
         ResultsSample = pool.get('lims.results_report.version.detail.sample')
 
-        res = self._get_origin_default_dates()
+        res = {}
+        if Transaction().context.get(
+                    'manage_service', False):
+            res = self._get_origin_default_dates()
 
         # Confirmation date
         if 'confirmation_date' not in res:
@@ -4158,17 +4162,17 @@ class AddSampleService(Wizard):
         with Transaction().set_context(manage_service=True):
             new_service, = Service.create(service_create)
 
-        Service.copy_analysis_comments([new_service])
-        Service.set_confirmation_date([new_service])
-        analysis_detail = EntryDetailAnalysis.search([
-            ('service', '=', new_service.id)])
-        if analysis_detail:
-            EntryDetailAnalysis.create_notebook_lines(analysis_detail,
-                fraction)
-            if new_service.entry and new_service.entry.state == 'ongoing':
-                EntryDetailAnalysis.write(analysis_detail, {
-                    'state': 'unplanned',
-                })
+            Service.copy_analysis_comments([new_service])
+            Service.set_confirmation_date([new_service])
+            analysis_detail = EntryDetailAnalysis.search([
+                ('service', '=', new_service.id)])
+            if analysis_detail:
+                EntryDetailAnalysis.create_notebook_lines(analysis_detail,
+                    fraction)
+                if new_service.entry and new_service.entry.state == 'ongoing':
+                    EntryDetailAnalysis.write(analysis_detail, {
+                        'state': 'unplanned',
+                    })
 
         return new_service
 
@@ -4354,17 +4358,17 @@ class EditSampleService(Wizard):
         with Transaction().set_context(manage_service=True):
             new_service, = Service.create(service_create)
 
-        Service.copy_analysis_comments([new_service])
-        Service.set_confirmation_date([new_service])
-        analysis_detail = EntryDetailAnalysis.search([
-            ('service', '=', new_service.id)])
-        if analysis_detail:
-            if new_service.entry and new_service.entry.state == 'ongoing':
-                EntryDetailAnalysis.create_notebook_lines(analysis_detail,
-                    fraction)
-                EntryDetailAnalysis.write(analysis_detail, {
-                    'state': 'unplanned',
-                    })
+            Service.copy_analysis_comments([new_service])
+            Service.set_confirmation_date([new_service])
+            analysis_detail = EntryDetailAnalysis.search([
+                ('service', '=', new_service.id)])
+            if analysis_detail:
+                if new_service.entry and new_service.entry.state == 'ongoing':
+                    EntryDetailAnalysis.create_notebook_lines(analysis_detail,
+                        fraction)
+                    EntryDetailAnalysis.write(analysis_detail, {
+                        'state': 'unplanned',
+                        })
 
         return new_service
 
