@@ -10,6 +10,14 @@ msgctxt "field:lims.analysis_sheet,activated_date:"
 msgid "Activated Date"
 msgstr "Fecha Activación"
 
+msgctxt "field:lims.analysis_sheet,annulled_by:"
+msgid "Annulled By"
+msgstr "Anulada por"
+
+msgctxt "field:lims.analysis_sheet,annulled_date:"
+msgid "Annulled Date"
+msgstr "Fecha Anulación"
+
 msgctxt "field:lims.analysis_sheet,compilation:"
 msgid "Compilation"
 msgstr "Compilación"
@@ -1063,6 +1071,10 @@ msgid "Active"
 msgstr "Activa"
 
 msgctxt "selection:lims.analysis_sheet,state:"
+msgid "Annulled"
+msgstr "Anulada"
+
+msgctxt "selection:lims.analysis_sheet,state:"
 msgid "Done"
 msgstr "Realizada"
 
@@ -1229,6 +1241,10 @@ msgstr "SLA"
 msgctxt "view:lims.analysis_sheet:"
 msgid "Activate"
 msgstr "Activar"
+
+msgctxt "view:lims.analysis_sheet:"
+msgid "Annul"
+msgstr "Anular"
 
 msgctxt "view:lims.analysis_sheet:"
 msgid "Confirm"

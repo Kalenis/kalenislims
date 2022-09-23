@@ -1547,6 +1547,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
         ('active', 'Active'),
         ('validated', 'Validated'),
         ('done', 'Done'),
+        ('annulled', 'Annulled'),
         ], 'State', readonly=True, required=True)
 
     @classmethod
@@ -1555,10 +1556,13 @@ class Compilation(Workflow, ModelSQL, ModelView):
         cls._order.insert(0, ('date_time', 'DESC'))
         cls._transitions |= set((
             ('draft', 'active'),
+            ('draft', 'annulled'),
             ('active', 'draft'),
             ('active', 'validated'),
+            ('active', 'annulled'),
             ('validated', 'active'),
             ('validated', 'done'),
+            ('validated', 'annulled'),
             ))
         cls._buttons.update({
             'view_data': {
@@ -2103,7 +2107,30 @@ class Compilation(Workflow, ModelSQL, ModelView):
             return False
         if nb_line.end_date:
             return False
+        if nb_line.annulled:
+            return False
         return True
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('annulled')
+    def annul(cls, compilations):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+
+        for c in compilations:
+            with Transaction().set_context(lims_interface_table=c.table):
+                lines = Data.search([('compilation', '=', c.id)])
+                if not lines:
+                    continue
+                for line in lines:
+                    nb_line = line.notebook_line
+                    if not nb_line:
+                        continue
+                    if not nb_line.annulled:
+                        raise UserError(gettext(
+                            'lims_interface.msg_line_not_annulled',
+                            notebook_line=nb_line.rec_name))
 
     @classmethod
     def delete(cls, compilations):
