@@ -2212,7 +2212,7 @@ class OpenCompilationData(Wizard):
         compilation_id = Transaction().context.get('active_id', None)
         if compilation_id:
             compilation = Compilation(compilation_id)
-            readonly = (compilation.state in ('validated', 'done'))
+            readonly = (compilation.state in ('validated', 'done', 'annulled'))
             context['lims_interface_compilation'] = compilation.id
             context['lims_interface_table'] = compilation.table.id
             context['lims_interface_readonly'] = readonly

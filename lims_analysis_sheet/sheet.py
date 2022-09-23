@@ -1114,7 +1114,7 @@ class OpenAnalysisSheetData(Wizard):
         sheet_id = Transaction().context.get('active_id', None)
         if sheet_id:
             sheet = AnalysisSheet(sheet_id)
-            readonly = (sheet.state in ('validated', 'done'))
+            readonly = (sheet.state in ('validated', 'done', 'annulled'))
             context['lims_analysis_sheet'] = sheet.id
             context['lims_interface_compilation'] = sheet.compilation.id
             context['lims_interface_table'] = sheet.compilation.table.id
