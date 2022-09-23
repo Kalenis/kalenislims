@@ -846,6 +846,10 @@ msgctxt "model:ir.message,text:msg_interface_column_alias_unique"
 msgid "There cannot be two columns with the same alias in an interface."
 msgstr "No puede haber dos columnas con el mismo alias en una interfaz."
 
+msgctxt "model:ir.message,text:msg_line_not_annulled"
+msgid "Notebook line \"%(notebook_line)s\" is not annulled."
+msgstr "La línea de cuaderno \"%(notebook_line)s\" no está anulada."
+
 msgctxt "model:ir.model.button,string:lims_interface_activate_button"
 msgid "Activate"
 msgstr "Activar"
@@ -1158,6 +1162,10 @@ msgstr "Timestamp"
 msgctxt "selection:lims.interface.compilation,state:"
 msgid "Active"
 msgstr "Activa"
+
+msgctxt "selection:lims.interface.compilation,state:"
+msgid "Annulled"
+msgstr "Anulada"
 
 msgctxt "selection:lims.interface.compilation,state:"
 msgid "Done"

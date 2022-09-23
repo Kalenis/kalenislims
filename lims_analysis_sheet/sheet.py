@@ -397,6 +397,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         ('active', 'Active'),
         ('validated', 'Validated'),
         ('done', 'Done'),
+        ('annulled', 'Annulled'),
         ], 'State', required=True, readonly=True)
     planification = fields.Many2One('lims.planification', 'Planification',
         readonly=True)
@@ -423,6 +424,9 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     confirmed_by = fields.Many2One('lims.laboratory.professional',
         'Confirmed By', readonly=True)
     confirmed_date = fields.DateTime('Confirmed Date', readonly=True)
+    annulled_by = fields.Many2One('lims.laboratory.professional',
+        'Annulled By', readonly=True)
+    annulled_date = fields.DateTime('Annulled Date', readonly=True)
     view = fields.Many2One('lims.interface.view', 'View',
         domain=[('interface', '=', Eval('interface'))],
         states={'invisible': Eval('state') == 'draft'},
@@ -442,9 +446,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             ]
         cls._transitions |= set((
             ('draft', 'active'),
+            ('draft', 'annulled'),
             ('active', 'validated'),
+            ('active', 'annulled'),
             ('validated', 'active'),
             ('validated', 'done'),
+            ('validated', 'annulled'),
             ))
         cls._buttons.update({
             'activate': {
@@ -469,6 +476,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             'confirm': {
                 'invisible': Eval('state') != 'validated',
                 'icon': 'tryton-ok',
+                'depends': ['state'],
+                },
+            'annul': {
+                'invisible': ~Eval('state').in_(
+                    ['draft', 'active', 'validated']),
+                'icon': 'tryton-cancel',
                 'depends': ['state'],
                 },
             })
@@ -930,6 +943,14 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         data['accepted'] = True
                         data['acceptance_date'] = now
                     NotebookLine.write([nb_line], data)
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('annulled')
+    @set_state_info('annulled')
+    def annul(cls, sheets):
+        Compilation = Pool().get('lims.interface.compilation')
+        Compilation.annul([s.compilation for s in sheets])
 
     def get_new_compilation(self, defaults={}):
         Compilation = Pool().get('lims.interface.compilation')

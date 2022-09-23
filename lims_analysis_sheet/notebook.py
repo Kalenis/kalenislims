@@ -54,6 +54,39 @@ class NotebookLine(metaclass=PoolMeta):
 
         return template and template[0] or None
 
+    @classmethod
+    def write(cls, *args):
+        super().write(*args)
+        actions = iter(args)
+        for lines, vals in zip(actions, actions):
+            if 'annulled' in vals:
+                cls.update_analysis_sheet_line(lines, vals['annulled'])
+
+    @staticmethod
+    def update_analysis_sheet_line(nb_lines, annulled):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+
+        for nb_line in nb_lines:
+            template_id = nb_line.get_analysis_sheet_template()
+            if not template_id:
+                continue
+
+            sheets = AnalysisSheet.search([
+                ('template', '=', template_id),
+                ('state', 'in', ['draft', 'active', 'validated'])
+                ], order=[('id', 'DESC')])
+            for s in sheets:
+                with Transaction().set_context(
+                        lims_interface_table=s.compilation.table.id):
+                    lines = Data.search([
+                        ('compilation', '=', s.compilation.id),
+                        ('notebook_line', '=', nb_line.id),
+                        ], limit=1)
+                    if lines:
+                        Data.write(lines, {'annulled': annulled})
+
     @fields.depends('end_date', 'analysis', 'method')
     def on_change_end_date(self):
         if not self.end_date:

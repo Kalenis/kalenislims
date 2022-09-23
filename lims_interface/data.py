@@ -350,7 +350,9 @@ class Data(ModelSQL, ModelView):
         if not compilation_id:
             return readonly_ids
         for line in cls.search([('compilation', '=', compilation_id)]):
-            if line.notebook_line and line.notebook_line.end_date:
+            if not line.notebook_line:
+                continue
+            if line.notebook_line.end_date or line.notebook_line.annulled:
                 readonly_ids.append(line.notebook_line.id)
         return readonly_ids
 
