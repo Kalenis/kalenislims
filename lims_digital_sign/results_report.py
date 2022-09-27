@@ -93,9 +93,15 @@ class ResultsReport(metaclass=PoolMeta):
 class ResultsReportAttachment(metaclass=PoolMeta):
     __name__ = 'lims.results_report.attachment'
 
+    sign = fields.Boolean('Sign')
+
+    @staticmethod
+    def default_sign():
+        return False
+
     def get_attachment_data(self):
         data = super().get_attachment_data()
-        if data['format'] == 'pdf':
+        if data['format'] == 'pdf' and self.sign:
             signed_content = self.sign_attachment(data['content'])
             data['content'] = signed_content
         return data

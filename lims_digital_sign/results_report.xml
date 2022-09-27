@@ -10,5 +10,18 @@
             <field name="name">results_report_list</field>
         </record>
 
+<!-- Results Report Attachment -->
+
+        <record model="ir.ui.view" id="lims_results_report_attachment_view_list">
+            <field name="model">lims.results_report.attachment</field>
+            <field name="inherit" ref="lims_email.lims_results_report_attachment_view_list"/>
+            <field name="name">results_report_attachment_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_results_report_attachment_view_form">
+            <field name="model">lims.results_report.attachment</field>
+            <field name="inherit" ref="lims_email.lims_results_report_attachment_view_form"/>
+            <field name="name">results_report_attachment_form</field>
+        </record>
+
     </data>
 </tryton>

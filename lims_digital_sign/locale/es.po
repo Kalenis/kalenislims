@@ -10,6 +10,10 @@ msgctxt "field:lims.results_report,signed_date:"
 msgid "Signed date"
 msgstr "Fecha de firmado"
 
+msgctxt "field:lims.results_report.attachment,sign:"
+msgid "Sign"
+msgstr "Firmar"
+
 msgctxt "model:ir.message,text:msg_sign_attachment_error"
 msgid ""
 "Unable to digitally sign attachment \"%(name)s\" in results report "
