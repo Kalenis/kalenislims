@@ -12,6 +12,7 @@ def register():
     Pool.register(
         task.AdministrativeTaskTemplate,
         task.AdministrativeTask,
+        task.AdministrativeTaskUser,
         task.EditAdministrativeTaskStart,
         task.AdministrativeTaskProgram,
         task.Cron,

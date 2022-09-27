@@ -30,6 +30,10 @@ msgctxt "field:lims.administrative.task,icon:"
 msgid "Icon"
 msgstr "Icono"
 
+msgctxt "field:lims.administrative.task,notified_users:"
+msgid "Notified Users"
+msgstr "Usuarios notificados"
+
 msgctxt "field:lims.administrative.task,number:"
 msgid "Number"
 msgstr "Número"
@@ -66,6 +70,10 @@ msgctxt ""
 "field:lims.administrative.task.configuration,email_responsible_subject:"
 msgid "Subject of the task assignment email"
 msgstr "Asunto del email de asignación de tareas"
+
+msgctxt "field:lims.administrative.task.configuration,email_update_subject:"
+msgid "Subject of the task update email"
+msgstr "Asunto del email de actualización de tareas"
 
 msgctxt "field:lims.administrative.task.configuration,task_sequence:"
 msgid "Task Sequence"
@@ -163,12 +171,24 @@ msgctxt "field:lims.administrative.task.template,type:"
 msgid "Type"
 msgstr "Tipo"
 
+msgctxt "field:lims.administrative.task.user,task:"
+msgid "Task"
+msgstr "Tarea"
+
+msgctxt "field:lims.administrative.task.user,user:"
+msgid "User"
+msgstr "Usuario"
+
 msgctxt "field:res.user,superior:"
 msgid "Responsible Superior"
 msgstr "Superior responsable"
 
 msgctxt ""
 "help:lims.administrative.task.configuration,email_responsible_subject:"
+msgid "In the text will be added suffix with the task number"
+msgstr "En el texto se añadirá sufijo con el número de tarea"
+
+msgctxt "help:lims.administrative.task.configuration,email_update_subject:"
 msgid "In the text will be added suffix with the task number"
 msgstr "En el texto se añadirá sufijo con el número de tarea"
 
@@ -386,6 +406,10 @@ msgctxt "model:lims.administrative.task.template,name:"
 msgid "Administrative Task Configuration"
 msgstr "Configuración de Tarea administrativa"
 
+msgctxt "model:lims.administrative.task.user,name:"
+msgid "Administrative Task User"
+msgstr "Usuario de Tarea administrativa"
+
 msgctxt "model:res.group,name:group_administrative_task"
 msgid "Lims Administrative Task"
 msgstr "Lims Tarea administrativa"
@@ -567,10 +591,6 @@ msgstr "Frecuencia"
 msgctxt "view:lims.administrative.task.program:"
 msgid "Generate Administrative Tasks"
 msgstr "Generar tareas administrativas"
-
-msgctxt "view:lims.administrative.task:"
-msgid "Comments"
-msgstr "Observaciones"
 
 msgctxt "view:lims.administrative.task:"
 msgid "Discard"

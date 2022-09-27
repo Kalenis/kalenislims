@@ -25,6 +25,9 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     email_responsible_subject = fields.Char('Subject of the task'
         ' assignment email',
         help='In the text will be added suffix with the task number')
+    email_update_subject = fields.Char('Subject of the task'
+        ' update email',
+        help='In the text will be added suffix with the task number')
 
     @classmethod
     def multivalue_model(cls, field):

@@ -117,6 +117,8 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
     comments = fields.Text('Comments')
     scheduled = fields.Boolean('Scheduled', readonly=True)
     color = fields.Function(fields.Char('Color'), 'get_color')
+    notified_users = fields.Many2Many('lims.administrative.task.user',
+        'task', 'user', 'Notified Users')
 
     @classmethod
     def __setup__(cls):
@@ -195,6 +197,38 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
     def delete(cls, tasks):
         cls.check_delete(tasks)
         super().delete(tasks)
+
+    @classmethod
+    def write(cls, *args):
+        super().write(*args)
+        states_to_check = cls._get_states_to_check()
+        fields_to_check = cls._get_fields_to_check()
+        actions = iter(args)
+        for tasks, vals in zip(actions, actions):
+            send_email_update = False
+            if 'state' in vals and vals['state'] in states_to_check:
+                send_email_update = True
+            if not send_email_update:
+                for field in fields_to_check:
+                    if field in vals:
+                        send_email_update = True
+                        break
+            if send_email_update:
+                cls.send_email_update(tasks)
+
+    @staticmethod
+    def _get_states_to_check():
+        return ['rejected', 'ongoing', 'standby', 'done', 'discarded']
+
+    @staticmethod
+    def _get_fields_to_check():
+        return [
+            'expiration_date',
+            'priority',
+            'description',
+            'responsible',
+            'comments',
+            ]
 
     def get_date(self, name):
         if self.scheduled:
@@ -338,8 +372,8 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
             return
 
         for task in tasks:
-            to_addr = task.responsible.email
-            if not to_addr:
+            to_addrs = [task.responsible.email]
+            if not to_addrs:
                 logger.error("Missing address for '%s' to send email",
                     task.responsible.rec_name)
                 continue
@@ -347,10 +381,32 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
                 continue
 
             subject, body = task._get_mail_subject_body()
-            msg = cls.create_msg(from_addr, to_addr, subject, body)
-            cls.send_msg(from_addr, to_addr, msg, task.number)
+            msg = cls._create_msg(from_addr, to_addrs, subject, body)
+            cls._send_msg(from_addr, to_addrs, msg, task.number)
 
-    def _get_mail_subject_body(self):
+    @classmethod
+    def send_email_update(cls, tasks):
+        from_addr = tconfig.get('email', 'from')
+        if not from_addr:
+            logger.error("Missing configuration to send emails")
+            return
+
+        for task in tasks:
+            to_addrs = [task.responsible.email, task.create_uid.email]
+            for user in task.notified_users:
+                to_addrs.append(user.email)
+            if not to_addrs:
+                logger.error("Missing address for '%s' to send email",
+                    task.responsible.rec_name)
+                continue
+            if task.scheduled:
+                continue
+
+            subject, body = task._get_mail_subject_body(True)
+            msg = cls._create_msg(from_addr, to_addrs, subject, body)
+            cls._send_msg(from_addr, to_addrs, msg, task.number)
+
+    def _get_mail_subject_body(self, update=False):
         pool = Pool()
         Config = pool.get('lims.administrative.task.configuration')
         Lang = pool.get('ir.lang')
@@ -358,8 +414,12 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         config_ = Config(1)
         lang = Lang.get()
 
-        subject = str('%s (%s)' % (config_.email_responsible_subject,
-            self.number)).strip()
+        if update:
+            subject = str('%s (%s)' % (config_.email_update_subject,
+                self.number)).strip()
+        else:
+            subject = str('%s (%s)' % (config_.email_responsible_subject,
+                self.number)).strip()
 
         body = str(self.description)
         body += '\n%s: %s' % (
@@ -400,13 +460,13 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         return '%(hostname)s#%(database)s/%(type)s/%(name)s/%(id)d' % url_part
 
     @staticmethod
-    def create_msg(from_addr, to_addr, subject, body):
-        if not (from_addr and to_addr):
+    def _create_msg(from_addr, to_addrs, subject, body):
+        if not (from_addr and to_addrs):
             return None
 
         msg = MIMEMultipart()
         msg['From'] = from_addr
-        msg['To'] = to_addr
+        msg['To'] = ', '.join(to_addrs)
         msg['Subject'] = Header(subject, 'utf-8')
 
         msg_body = MIMEBase('text', 'plain')
@@ -415,11 +475,12 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         return msg
 
     @staticmethod
-    def send_msg(from_addr, to_addr, msg, task_number):
+    def _send_msg(from_addr, to_addrs, msg, task_number):
+        to_addrs = list(set(to_addrs))
         success = False
         try:
             server = get_smtp_server()
-            server.sendmail(from_addr, [to_addr], msg.as_string())
+            server.sendmail(from_addr, to_addrs, msg.as_string())
             server.quit()
             success = True
         except Exception:
@@ -465,6 +526,16 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
             body_ += '\n\nTotal: %s' % len(tasks)
             msg = cls.create_msg(from_addr, to_addr, subject, body_)
             cls.send_msg(from_addr, to_addr, msg, task.number)
+
+
+class AdministrativeTaskUser(ModelSQL):
+    'Administrative Task User'
+    __name__ = 'lims.administrative.task.user'
+
+    task = fields.Many2One('lims.administrative.task', 'Task',
+        ondelete='CASCADE', select=True, required=True)
+    user = fields.Many2One('res.user', 'User',
+        ondelete='CASCADE', select=True, required=True)
 
 
 class EditAdministrativeTaskStart(ModelView):
