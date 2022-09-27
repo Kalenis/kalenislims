@@ -10,6 +10,10 @@ msgctxt "field:lims.create_sample.start,sale_lines_domain:"
 msgid "Quotes domain"
 msgstr "Dominio para Presupuestos"
 
+msgctxt "field:lims.report.template,clause_template:"
+msgid "Clauses Template"
+msgstr "Plantilla de Cláusulas"
+
 msgctxt "field:lims.sample,sale_lines:"
 msgid "Quotes"
 msgstr "Presupuestos"
@@ -30,11 +34,11 @@ msgctxt "field:party.party,purchase_order_required:"
 msgid "Purchase order required"
 msgstr "Orden de compra requerida"
 
-msgctxt "field:sale.clause,description:"
-msgid "Description"
-msgstr "Descripción"
+msgctxt "field:sale.clause.template,content:"
+msgid "Content"
+msgstr "Contenido"
 
-msgctxt "field:sale.clause,name:"
+msgctxt "field:sale.clause.template,name:"
 msgid "Name"
 msgstr "Nombre"
 
@@ -126,6 +130,10 @@ msgctxt "field:sale.load_set_group.start,analysis:"
 msgid "Set/Group"
 msgstr "Set/Grupo"
 
+msgctxt "field:sale.sale,clause_template:"
+msgid "Clauses Template"
+msgstr "Plantilla de Cláusulas"
+
 msgctxt "field:sale.sale,clauses:"
 msgid "Clauses"
 msgstr "Cláusulas"
@@ -133,6 +141,10 @@ msgstr "Cláusulas"
 msgctxt "field:sale.sale,expiration_date:"
 msgid "Expiration date"
 msgstr "Fecha de vencimiento"
+
+msgctxt "field:sale.sale,following_sections:"
+msgid "Following Sections"
+msgstr "Secciones siguientes"
 
 msgctxt "field:sale.sale,invoice_party:"
 msgid "Invoice party"
@@ -142,25 +154,65 @@ msgctxt "field:sale.sale,invoice_party_domain:"
 msgid "Invoice party domain"
 msgstr "Dominio para Tercero de facturación"
 
+msgctxt "field:sale.sale,previous_sections:"
+msgid "Previous Sections"
+msgstr "Secciones anteriores"
+
 msgctxt "field:sale.sale,purchase_order:"
 msgid "Purchase order"
 msgstr "Orden de compra"
+
+msgctxt "field:sale.sale,sections:"
+msgid "Sections"
+msgstr "Secciones"
 
 msgctxt "field:sale.sale,send_email:"
 msgid "Send automatically by Email"
 msgstr "Enviar automáticamente por email"
 
-msgctxt "field:sale.sale-sale.clause,clause:"
-msgid "Clause"
-msgstr "Cláusula"
+msgctxt "field:sale.sale,template:"
+msgid "Sale Template"
+msgstr "Plantilla de Presupuesto"
 
-msgctxt "field:sale.sale-sale.clause,sale:"
+msgctxt "field:sale.sale.section,data:"
+msgid "File"
+msgstr "Archivo"
+
+msgctxt "field:sale.sale.section,data_id:"
+msgid "File ID"
+msgstr "ID Archivo"
+
+msgctxt "field:sale.sale.section,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:sale.sale.section,order:"
+msgid "Order"
+msgstr "Orden"
+
+msgctxt "field:sale.sale.section,position:"
+msgid "Position"
+msgstr "Posición"
+
+msgctxt "field:sale.sale.section,sale:"
 msgid "Sale"
 msgstr "Venta"
 
-msgctxt "model:ir.action,name:act_sale_clause"
+msgctxt "model:ir.action,name:"
 msgid "Clauses"
 msgstr "Cláusulas"
+
+msgctxt "model:ir.action,name:act_sale_clause_template"
+msgid "Sale Clauses Templates"
+msgstr "Plantillas de Cláusulas de presupuesto"
+
+msgctxt "model:ir.action,name:act_sale_report_template"
+msgid "Sale Report Templates"
+msgstr "Plantillas de Presupuesto"
+
+msgctxt "model:ir.action,name:report_sale_html"
+msgid "Sale"
+msgstr "Presupuesto"
 
 msgctxt "model:ir.action,name:wiz_notebook_open_sale"
 msgid "Sample Sale"
@@ -186,17 +238,21 @@ msgctxt "model:ir.model.button,string:sale_load_set_group_button"
 msgid "Load Analysis from Set/Group"
 msgstr "Cargar análisis desde Set/Grupo"
 
-msgctxt "model:ir.ui.menu,name:menu_sale_clause"
-msgid "Clauses"
-msgstr "Cláusulas"
+msgctxt "model:ir.ui.menu,name:menu_sale_clause_template"
+msgid "Sale Clauses Templates"
+msgstr "Plantillas de Cláusulas de presupuesto"
+
+msgctxt "model:ir.ui.menu,name:menu_sale_report_template"
+msgid "Sale Report Templates"
+msgstr "Plantillas de Presupuesto"
 
 msgctxt "model:lims.sample-sale.line,name:"
 msgid "Sample - Sale Line"
 msgstr "Muestra - Línea de venta"
 
-msgctxt "model:sale.clause,name:"
-msgid "Clause"
-msgstr "Cláusula"
+msgctxt "model:sale.clause.template,name:"
+msgid "Sale Clause Template"
+msgstr "Plantilla de Cláusulas de presupuesto"
 
 msgctxt "model:sale.load_services.start,name:"
 msgid "Load Services from Entry"
@@ -206,9 +262,21 @@ msgctxt "model:sale.load_set_group.start,name:"
 msgid "Load Analysis from Set/Group"
 msgstr "Cargar análisis desde Set/Grupo"
 
-msgctxt "model:sale.sale-sale.clause,name:"
-msgid "Sale - Clause"
-msgstr "Venta - Cláusula"
+msgctxt "model:sale.sale.section,name:"
+msgid "Sale Section"
+msgstr "Sección de Presupuesto"
+
+msgctxt "selection:sale.sale.section,position:"
+msgid "Following"
+msgstr "Siguiente"
+
+msgctxt "selection:sale.sale.section,position:"
+msgid "Previous"
+msgstr "Anterior"
+
+msgctxt "view:lims.report.template:"
+msgid "Header and Footer"
+msgstr "Encabezado y Pie de página"
 
 msgctxt "view:party.party:"
 msgid "Sale"
@@ -225,6 +293,10 @@ msgstr "Cargar servicios desde ingreso"
 msgctxt "view:sale.sale:"
 msgid "Load Services from Entry"
 msgstr "Cargar servicios desde ingreso"
+
+msgctxt "view:sale.sale:"
+msgid "Printing"
+msgstr "Impresión"
 
 msgctxt "wizard_button:sale.load_services,start,end:"
 msgid "Cancel"

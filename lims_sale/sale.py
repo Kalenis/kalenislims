@@ -2,10 +2,13 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import logging
+from io import BytesIO
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from PyPDF2 import PdfFileMerger
+from PyPDF2.utils import PdfReadError
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.wizard import Wizard, StateView, StateTransition, Button
@@ -14,6 +17,9 @@ from trytond.pyson import Eval, Bool
 from trytond.transaction import Transaction
 from trytond.config import config
 from trytond.tools import get_smtp_server
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
+from trytond.modules.lims_report_html.html_template import LimsReport
 
 logger = logging.getLogger(__name__)
 
@@ -37,12 +43,32 @@ class Sale(metaclass=PoolMeta):
     expiration_date = fields.Date('Expiration date', required=True,
         states={'readonly': ~Eval('state').in_(['draft', 'quotation'])},
         depends=['state'])
-    clauses = fields.Many2Many('sale.sale-sale.clause', 'sale', 'clause',
-        'Clauses',
+    template = fields.Many2One('lims.report.template',
+        'Sale Template', domain=[
+            ('report_name', '=', 'sale.sale'),
+            ('type', 'in', [None, 'base']),
+            ['OR', ('active', '=', True),
+                ('id', '=', Eval('template'))],
+            ],
+        states={'readonly': Eval('state') != 'draft'},
+        depends=['state'])
+    clause_template = fields.Many2One('sale.clause.template',
+        'Clauses Template', depends=['state'],
+        states={'readonly': Eval('state') != 'draft'})
+    sections = fields.One2Many('sale.sale.section', 'sale', 'Sections')
+    previous_sections = fields.Function(fields.One2Many(
+        'sale.sale.section', 'sale', 'Previous Sections',
+        domain=[('position', '=', 'previous')]),
+        'get_previous_sections', setter='set_previous_sections')
+    following_sections = fields.Function(fields.One2Many(
+        'sale.sale.section', 'sale', 'Following Sections',
+        domain=[('position', '=', 'following')]),
+        'get_following_sections', setter='set_following_sections')
+    clauses = fields.Text('Clauses',
         states={'readonly': Eval('state') != 'draft'},
         depends=['state'])
     send_email = fields.Boolean('Send automatically by Email',
-        states={'readonly': Eval('state') != 'draft'},
+        states={'readonly': ~Eval('state').in_(['draft', 'quotation'])},
         depends=['state'])
 
     @classmethod
@@ -88,6 +114,48 @@ class Sale(metaclass=PoolMeta):
         if self.invoice_party:
             self.invoice_address = self.invoice_party.address_get(
                 type='invoice')
+
+    @fields.depends('template', '_parent_template.sections', 'sections',
+        '_parent_template.clause_template',
+        methods=['on_change_clause_template'])
+    def on_change_template(self):
+        if self.template and self.template.sections:
+            sections = {}
+            for s in self.sections + self.template.sections:
+                sections[s.name] = {
+                    'name': s.name,
+                    'data': s.data,
+                    'data_id': s.data_id,
+                    'position': s.position,
+                    'order': s.order,
+                    }
+            self.sections = sections.values()
+        if self.template and self.template.clause_template:
+            self.clause_template = self.template.clause_template
+            self.on_change_clause_template()
+
+    @fields.depends('clause_template', '_parent_clause_template.content')
+    def on_change_clause_template(self):
+        if self.clause_template:
+            self.clauses = self.clause_template.content
+
+    def get_previous_sections(self, name):
+        return [s.id for s in self.sections if s.position == 'previous']
+
+    @classmethod
+    def set_previous_sections(cls, sections, name, value):
+        if not value:
+            return
+        cls.write(sections, {'sections': value})
+
+    def get_following_sections(self, name):
+        return [s.id for s in self.sections if s.position == 'following']
+
+    @classmethod
+    def set_following_sections(cls, sections, name, value):
+        if not value:
+            return
+        cls.write(sections, {'sections': value})
 
     @classmethod
     @ModelView.button_action('lims_sale.wiz_sale_load_services')
@@ -187,15 +255,38 @@ class Sale(metaclass=PoolMeta):
         return success
 
 
-class SaleClause(ModelSQL):
-    'Sale - Clause'
-    __name__ = 'sale.sale-sale.clause'
-    _table = 'sale_sale_sale_clause'
+class SaleSection(ModelSQL, ModelView):
+    'Sale Section'
+    __name__ = 'sale.sale.section'
+    _order_name = 'order'
 
     sale = fields.Many2One('sale.sale', 'Sale',
         ondelete='CASCADE', select=True, required=True)
-    clause = fields.Many2One('sale.clause', 'Clause',
-        ondelete='CASCADE', select=True, required=True)
+    name = fields.Char('Name', required=True)
+    data = fields.Binary('File', filename='name', required=True,
+        file_id='data_id', store_prefix='sale_section')
+    data_id = fields.Char('File ID', readonly=True)
+    position = fields.Selection([
+        ('previous', 'Previous'),
+        ('following', 'Following'),
+        ], 'Position', required=True)
+    order = fields.Integer('Order')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._order.insert(0, ('order', 'ASC'))
+
+    @classmethod
+    def validate(cls, sections):
+        super().validate(sections)
+        merger = PdfFileMerger(strict=False)
+        for section in sections:
+            filedata = BytesIO(section.data)
+            try:
+                merger.append(filedata)
+            except PdfReadError:
+                raise UserError(gettext('lims_report_html.msg_section_pdf'))
 
 
 class SaleLine(metaclass=PoolMeta):
@@ -674,3 +765,31 @@ class SaleLoadAnalysis(Wizard):
             sale_lines.append(sale_line)
         SaleLine.save(sale_lines)
         return 'end'
+
+
+class SaleReport(LimsReport, metaclass=PoolMeta):
+    __name__ = 'sale.sale'
+
+    @classmethod
+    def execute(cls, ids, data):
+        Sale = Pool().get('sale.sale')
+
+        if data is None:
+            data = {}
+        current_data = data.copy()
+
+        if len(ids) > 1:
+            raise UserError(gettext(
+                'lims_report_html.msg_print_multiple_record'))
+
+        sale = Sale(ids[0])
+        template = sale.template
+        if template and template.type == 'base':  # HTML
+            result = cls.execute_html_lims_report(ids, current_data)
+        else:
+            current_data['action_id'] = None
+            if template and template.report:
+                current_data['action_id'] = template.report.id
+            result = cls.execute_custom_lims_report(ids, current_data)
+
+        return result

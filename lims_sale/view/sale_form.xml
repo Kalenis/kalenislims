@@ -21,15 +21,26 @@
             <button name="load_set_group"/>
         </group>
     </xpath>
-    <xpath
-        expr="/form/notebook/page[@id='other']/field[@name='shipment_method']"
-        position="after">
-        <label name="send_email"/>
-        <field name="send_email"/>
-    </xpath>
-    <xpath expr="/form/notebook/page[@id='other']" position="after">
-        <page name="clauses">
-            <field name="clauses" colspan="4" mode="tree"/>
+    <xpath expr="/form/notebook" position="inside">
+        <page id="lims_report" string="Printing">
+            <label name="template"/>
+            <field name="template"
+                view_ids="lims_sale.sale_report_template_view_list,lims_sale.sale_report_template_view_form"/>
+            <label name="clause_template"/>
+            <field name="clause_template"/>
+            <notebook colspan="4">
+                <page name="clauses">
+                    <field name="clauses" colspan="4" widget="html"/>
+                </page>
+                <page name="sections">
+                    <field name="previous_sections" colspan="4"/>
+                    <field name="following_sections" colspan="4"/>
+                </page>
+            </notebook>
+        </page>
+        <page id="lims_email" string="Mailing">
+            <label name="send_email"/>
+            <field name="send_email"/>
         </page>
     </xpath>
 </data>

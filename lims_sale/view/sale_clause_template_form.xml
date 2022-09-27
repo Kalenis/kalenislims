@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<form>
+    <label name="name"/>
+    <field name="name"/>
+    <notebook>
+        <page name="content">
+            <field name="content" colspan="4" widget="html"/>
+        </page>
+    </notebook>
+</form>

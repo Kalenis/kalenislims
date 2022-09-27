@@ -21,6 +21,19 @@
             <field name="model" search="[('model', '=', 'sale.sale')]"/>
         </record>
 
+<!-- Sale Section -->
+
+        <record model="ir.ui.view" id="sale_section_view_form">
+            <field name="model">sale.sale.section</field>
+            <field name="type">form</field>
+            <field name="name">sale_section_form</field>
+        </record>
+        <record model="ir.ui.view" id="sale_section_view_list">
+            <field name="model">sale.sale.section</field>
+            <field name="type">tree</field>
+            <field name="name">sale_section_list</field>
+        </record>
+
 <!-- Sale Line -->
 
         <record model="ir.ui.view" id="sale_line_view_form">
@@ -65,6 +78,17 @@
             <field name="name">Load Analysis from Set/Group</field>
             <field name="wiz_name">sale.load_set_group</field>
             <field name="model">sale.sale</field>
+        </record>
+
+<!-- Sale Report -->
+
+        <record model="ir.action.report" id="report_sale_html">
+            <field name="name">Sale</field>
+            <field name="model">sale.sale</field>
+            <field name="report_name">sale.sale</field>
+            <field name="report">lims_sale/report/sale.html</field>
+            <field name="extension">pdf</field>
+            <field name="template_extension">lims</field>
         </record>
 
     </data>

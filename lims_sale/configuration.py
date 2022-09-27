@@ -2,7 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond.model import ModelSQL, ModelView, fields
+from trytond.model import fields
 from trytond.pool import PoolMeta
 
 
@@ -11,11 +11,3 @@ class Configuration(metaclass=PoolMeta):
 
     email_quotation_subject = fields.Char('Subject of the quotation email')
     email_quotation_body = fields.Text('Body of the quotation email')
-
-
-class Clause(ModelSQL, ModelView):
-    'Clause'
-    __name__ = 'sale.clause'
-
-    name = fields.Char('Name', required=True)
-    description = fields.Text('Description', required=True)
