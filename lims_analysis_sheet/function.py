@@ -224,7 +224,7 @@ custom_functions['T'] = convert_brix_to_soluble_solids
 
 
 def get_reference_value(fraction_type=None, product_type=None, matrix=None,
-        analysis=None, target_field=None):
+        analysis=None, target_field=None, device=None):
     cursor = Transaction().connection.cursor()
     pool = Pool()
     Date = pool.get('ir.date')
@@ -242,6 +242,12 @@ def get_reference_value(fraction_type=None, product_type=None, matrix=None,
     if (not fraction_type or not product_type or not matrix or not analysis
             or not target_field):
         return None
+
+    device_clause = ''
+    if device:
+        if not isinstance(device, int):
+            device = device.id
+        device_clause = 'AND nl.device = ' + str(device) + ' '
 
     today = Date.today()
 
@@ -267,6 +273,7 @@ def get_reference_value(fraction_type=None, product_type=None, matrix=None,
             'AND a.code = %s '
             'AND (f.expiry_date IS NULL OR f.expiry_date::date > %s::date) '
             'AND nl.accepted = TRUE '
+            + device_clause +
         'ORDER BY s.date DESC LIMIT 1',
         (fraction_type, product_type, matrix, analysis, today,))
     reference_line = cursor.fetchall()
