@@ -8,6 +8,7 @@ from . import laboratory
 from . import entry
 from . import sheet
 from . import quality
+from . import sample
 
 
 def register():
@@ -15,6 +16,7 @@ def register():
         planification.Planification,
         laboratory.Laboratory,
         entry.Entry,
+        sample.Sample,
         module='lims_planning_automatic', type_='model')
     Pool.register(
         sheet.AnalysisSheet,

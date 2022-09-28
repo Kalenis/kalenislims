@@ -3278,6 +3278,18 @@ class Sample(ModelSQL, ModelView):
             setattr(self, field, value)
         self.save()
 
+    def _get_origin_default_dates(self):
+        ''' Used on Manage services context
+            Sample dates modifier based on origin. 
+            Extend this method for use cases where the sample
+            is not part of an entry.
+        '''
+        res = {}
+        # Set confirmation date to None for draft and pending entries
+        if self.entry and self.entry.state != 'ongoing':
+            res['confirmation_date'] = None
+        return res
+
     def _get_sample_dates(self):
         cursor = Transaction().connection.cursor()
         pool = Pool()
@@ -3291,15 +3303,19 @@ class Sample(ModelSQL, ModelView):
         ResultsSample = pool.get('lims.results_report.version.detail.sample')
 
         res = {}
+        if Transaction().context.get(
+                    'manage_service', False):
+            res = self._get_origin_default_dates()
 
         # Confirmation date
-        cursor.execute('SELECT MIN(s.confirmation_date) '
-            'FROM "' + Service._table + '" s '
-                'INNER JOIN "' + Fraction._table + '" f '
-                'ON f.id = s.fraction '
-            'WHERE f.sample = %s',
-            (self.id,))
-        res['confirmation_date'] = cursor.fetchone()[0] or None
+        if 'confirmation_date' not in res:
+            cursor.execute('SELECT MIN(s.confirmation_date) '
+                'FROM "' + Service._table + '" s '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = s.fraction '
+                'WHERE f.sample = %s',
+                (self.id,))    
+            res['confirmation_date'] = cursor.fetchone()[0] or None
 
         # Laboratory deadline
         cursor.execute('SELECT MAX(s.laboratory_date) '
@@ -4106,7 +4122,7 @@ class AddSampleService(Wizard):
         pool = Pool()
         Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
-
+        send_ack = False
         for sample in Sample.browse(Transaction().context['active_ids']):
             delete_ack_report_cache = False
             for fraction in sample.fractions:
@@ -4122,6 +4138,8 @@ class AddSampleService(Wizard):
                         service.method and service.method.id or None)
                     if key not in original_analysis:
                         self.create_service(service, fraction)
+                        if fraction.entry and fraction.entry.state == 'ongoing':
+                            send_ack = True
                         delete_ack_report_cache = True
 
             if delete_ack_report_cache:
@@ -4130,7 +4148,7 @@ class AddSampleService(Wizard):
                 entry.ack_report_cache = None
                 entry.save()
 
-        if self._send_ack_of_receipt():
+        if send_ack and self._send_ack_of_receipt():
             return 'send_ack_of_receipt'
 
         return 'end'
@@ -4144,16 +4162,17 @@ class AddSampleService(Wizard):
         with Transaction().set_context(manage_service=True):
             new_service, = Service.create(service_create)
 
-        Service.copy_analysis_comments([new_service])
-        Service.set_confirmation_date([new_service])
-        analysis_detail = EntryDetailAnalysis.search([
-            ('service', '=', new_service.id)])
-        if analysis_detail:
-            EntryDetailAnalysis.create_notebook_lines(analysis_detail,
-                fraction)
-            EntryDetailAnalysis.write(analysis_detail, {
-                'state': 'unplanned',
-                })
+            Service.copy_analysis_comments([new_service])
+            Service.set_confirmation_date([new_service])
+            analysis_detail = EntryDetailAnalysis.search([
+                ('service', '=', new_service.id)])
+            if analysis_detail:
+                EntryDetailAnalysis.create_notebook_lines(analysis_detail,
+                    fraction)
+                if new_service.entry and new_service.entry.state == 'ongoing':
+                    EntryDetailAnalysis.write(analysis_detail, {
+                        'state': 'unplanned',
+                    })
 
         return new_service
 
@@ -4195,7 +4214,9 @@ class AddSampleService(Wizard):
 
         entry_ids = set()
         for sample in Sample.browse(Transaction().context['active_ids']):
-            entry_ids.add(sample.entry.id)
+            # Only send ack for ongoing entries
+            if sample.entry and sample.entry.state == 'ongoing':
+                entry_ids.add(sample.entry.id)
 
         session_id, _, _ = ForwardAcknowledgmentOfReceipt.create()
         acknowledgment_forward = ForwardAcknowledgmentOfReceipt(session_id)
@@ -4285,6 +4306,7 @@ class EditSampleService(Wizard):
         pool = Pool()
         Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
+        send_ack = False
 
         actual_analysis = [(s.analysis.id, s.method and s.method.id or None)
             for s in self.start.services]
@@ -4307,6 +4329,8 @@ class EditSampleService(Wizard):
                         service.method and service.method.id or None)
                     if key not in original_analysis:
                         self.create_service(service, fraction)
+                        if fraction.entry and fraction.entry.state == 'ongoing':
+                            send_ack = True
                         delete_ack_report_cache = True
                 self.update_fraction_services(fraction)
 
@@ -4316,7 +4340,7 @@ class EditSampleService(Wizard):
                 entry.ack_report_cache = None
                 entry.save()
 
-        if self._send_ack_of_receipt():
+        if send_ack and self._send_ack_of_receipt():
             return 'send_ack_of_receipt'
 
         return 'end'
@@ -4334,16 +4358,17 @@ class EditSampleService(Wizard):
         with Transaction().set_context(manage_service=True):
             new_service, = Service.create(service_create)
 
-        Service.copy_analysis_comments([new_service])
-        Service.set_confirmation_date([new_service])
-        analysis_detail = EntryDetailAnalysis.search([
-            ('service', '=', new_service.id)])
-        if analysis_detail:
-            EntryDetailAnalysis.create_notebook_lines(analysis_detail,
-                fraction)
-            EntryDetailAnalysis.write(analysis_detail, {
-                'state': 'unplanned',
-                })
+            Service.copy_analysis_comments([new_service])
+            Service.set_confirmation_date([new_service])
+            analysis_detail = EntryDetailAnalysis.search([
+                ('service', '=', new_service.id)])
+            if analysis_detail:
+                if new_service.entry and new_service.entry.state == 'ongoing':
+                    EntryDetailAnalysis.create_notebook_lines(analysis_detail,
+                        fraction)
+                    EntryDetailAnalysis.write(analysis_detail, {
+                        'state': 'unplanned',
+                        })
 
         return new_service
 
