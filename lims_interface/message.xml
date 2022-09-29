@@ -43,5 +43,8 @@
         <record model="ir.message" id="msg_analysis_specific">
             <field name="text">There cannot be more than one column per analysis in view "%(view)s"</field>
         </record>
+        <record model="ir.message" id="msg_line_not_annulled">
+            <field name="text">Notebook line "%(notebook_line)s" is not annulled.</field>
+        </record>
     </data>
 </tryton>

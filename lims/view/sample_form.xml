@@ -56,4 +56,8 @@
             <field name="comments" colspan="4"/>
         </page>
     </notebook>
+    <group colspan="4" id="button_confirm">
+        <field name="button_confirm_available" invisible="1"/>
+        <button name="confirm" string="Confirm"/>
+    </group>
 </form>

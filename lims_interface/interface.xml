@@ -358,5 +358,37 @@
             id="lims_interface_variable_value_menu"
             parent="lims_interface_variable_menu" sequence="10"/>
 
+<!-- Constant -->
+
+        <record model="ir.ui.view" id="interface_constant_view_form">
+            <field name="model">lims.interface.constant</field>
+            <field name="type">form</field>
+            <field name="name">constant_form</field>
+        </record>
+        <record model="ir.ui.view" id="interface_constant_view_list">
+            <field name="model">lims.interface.constant</field>
+            <field name="type">tree</field>
+            <field name="name">constant_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_interface_constant_list">
+            <field name="name">Interface Constants</field>
+            <field name="res_model">lims.interface.constant</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_interface_constant_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="interface_constant_view_list"/>
+            <field name="act_window" ref="act_interface_constant_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_interface_constant_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="interface_constant_view_form"/>
+            <field name="act_window" ref="act_interface_constant_list"/>
+        </record>
+
+        <menuitem action="act_interface_constant_list"
+            id="lims_interface_constant_menu"
+            parent="lims_interface_menu" sequence="20"/>
+
     </data>
 </tryton>

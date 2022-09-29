@@ -2519,6 +2519,9 @@ class Sample(ModelSQL, ModelView):
         'lims.typification', None, None, 'Typification domain'),
         'on_change_with_typification_domain')
     confirmed = fields.Function(fields.Boolean('Confirmed'), 'get_confirmed')
+    button_confirm_available = fields.Function(fields.Boolean(
+        'Button confirm available'),
+        'on_change_with_button_confirm_available')
     has_results_report = fields.Function(fields.Boolean('Results Report'),
         'get_has_results_report')
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
@@ -2568,6 +2571,11 @@ class Sample(ModelSQL, ModelView):
         cls._order.insert(0, ('number', 'DESC'))
         cls.__rpc__.update({
             'update_samples_state': RPC(readonly=False, instantiate=0),
+            })
+        cls._buttons.update({
+            'confirm': {
+                'invisible': ~Eval('button_confirm_available'),
+                },
             })
 
     @classmethod
@@ -3027,6 +3035,28 @@ class Sample(ModelSQL, ModelView):
                 return False
         return True
 
+    @fields.depends('entry', 'fractions')
+    def on_change_with_button_confirm_available(self, name=None):
+        if not self.entry or self.entry.state != 'ongoing':
+            return False
+        if not self.fractions:
+            return False
+        for fraction in self.fractions:
+            if not fraction.confirmed:
+                return True
+        return False
+
+    @classmethod
+    @ModelView.button
+    def confirm(cls, samples):
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
+
+        fractions = [f for s in samples for f in s.fractions
+            if s.entry.state == 'ongoing' and not f.confirmed]
+        if fractions:
+            Fraction.confirm(fractions)
+
     @classmethod
     def get_icon(cls, samples, name):
         result = {}
@@ -3269,6 +3299,18 @@ class Sample(ModelSQL, ModelView):
             setattr(self, field, value)
         self.save()
 
+    def _get_origin_default_dates(self):
+        ''' Used on Manage services context
+            Sample dates modifier based on origin. 
+            Extend this method for use cases where the sample
+            is not part of an entry.
+        '''
+        res = {}
+        # Set confirmation date to None for draft and pending entries
+        if self.entry and self.entry.state != 'ongoing':
+            res['confirmation_date'] = None
+        return res
+
     def _get_sample_dates(self):
         cursor = Transaction().connection.cursor()
         pool = Pool()
@@ -3282,15 +3324,19 @@ class Sample(ModelSQL, ModelView):
         ResultsSample = pool.get('lims.results_report.version.detail.sample')
 
         res = {}
+        if Transaction().context.get(
+                    'manage_service', False):
+            res = self._get_origin_default_dates()
 
         # Confirmation date
-        cursor.execute('SELECT MIN(s.confirmation_date) '
-            'FROM "' + Service._table + '" s '
-                'INNER JOIN "' + Fraction._table + '" f '
-                'ON f.id = s.fraction '
-            'WHERE f.sample = %s',
-            (self.id,))
-        res['confirmation_date'] = cursor.fetchone()[0] or None
+        if 'confirmation_date' not in res:
+            cursor.execute('SELECT MIN(s.confirmation_date) '
+                'FROM "' + Service._table + '" s '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = s.fraction '
+                'WHERE f.sample = %s',
+                (self.id,))    
+            res['confirmation_date'] = cursor.fetchone()[0] or None
 
         # Laboratory deadline
         cursor.execute('SELECT MAX(s.laboratory_date) '
@@ -3760,25 +3806,7 @@ class ManageServices(Wizard):
         Service = pool.get('lims.service')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
-        service_create = [{
-            'fraction': fraction.id,
-            'sample': service.sample.id,
-            'analysis': service.analysis.id,
-            'laboratory': (service.laboratory.id if service.laboratory
-                else None),
-            'method': service.method.id if service.method else None,
-            'device': service.device.id if service.device else None,
-            'urgent': service.urgent,
-            'priority': service.priority,
-            'estimated_waiting_laboratory': (
-                service.estimated_waiting_laboratory),
-            'estimated_waiting_report': (
-                service.estimated_waiting_report),
-            'laboratory_date': service.laboratory_date,
-            'report_date': service.report_date,
-            'comments': service.comments,
-            'divide': service.divide,
-            }]
+        service_create = [self._get_new_service(service, fraction)]
         with Transaction().set_context(manage_service=True):
             new_service, = Service.create(service_create)
 
@@ -3796,6 +3824,28 @@ class ManageServices(Wizard):
             self._create_blind_samples(analysis_detail, fraction)
 
         return new_service
+
+    def _get_new_service(self, service, fraction):
+        service_create = {
+            'fraction': fraction.id,
+            'sample': service.sample.id,
+            'analysis': service.analysis.id,
+            'laboratory': (service.laboratory.id if service.laboratory
+                else None),
+            'method': service.method.id if service.method else None,
+            'device': service.device.id if service.device else None,
+            'urgent': service.urgent,
+            'priority': service.priority,
+            'estimated_waiting_laboratory': (
+                service.estimated_waiting_laboratory),
+            'estimated_waiting_report': (
+                service.estimated_waiting_report),
+            'laboratory_date': service.laboratory_date,
+            'report_date': service.report_date,
+            'comments': service.comments,
+            'divide': service.divide,
+            }
+        return service_create
 
     def delete_services(self, services):
         Service = Pool().get('lims.service')
@@ -4093,7 +4143,7 @@ class AddSampleService(Wizard):
         pool = Pool()
         Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
-
+        send_ack = False
         for sample in Sample.browse(Transaction().context['active_ids']):
             delete_ack_report_cache = False
             for fraction in sample.fractions:
@@ -4109,6 +4159,8 @@ class AddSampleService(Wizard):
                         service.method and service.method.id or None)
                     if key not in original_analysis:
                         self.create_service(service, fraction)
+                        if fraction.entry and fraction.entry.state == 'ongoing':
+                            send_ack = True
                         delete_ack_report_cache = True
 
             if delete_ack_report_cache:
@@ -4117,7 +4169,7 @@ class AddSampleService(Wizard):
                 entry.ack_report_cache = None
                 entry.save()
 
-        if self._send_ack_of_receipt():
+        if send_ack and self._send_ack_of_receipt():
             return 'send_ack_of_receipt'
 
         return 'end'
@@ -4127,7 +4179,26 @@ class AddSampleService(Wizard):
         Service = pool.get('lims.service')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
-        service_create = [{
+        service_create = [self._get_new_service(service, fraction)]
+        with Transaction().set_context(manage_service=True):
+            new_service, = Service.create(service_create)
+
+            Service.copy_analysis_comments([new_service])
+            Service.set_confirmation_date([new_service])
+            analysis_detail = EntryDetailAnalysis.search([
+                ('service', '=', new_service.id)])
+            if analysis_detail:
+                EntryDetailAnalysis.create_notebook_lines(analysis_detail,
+                    fraction)
+                if new_service.entry and new_service.entry.state == 'ongoing':
+                    EntryDetailAnalysis.write(analysis_detail, {
+                        'state': 'unplanned',
+                    })
+
+        return new_service
+
+    def _get_new_service(self, service, fraction):
+        service_create = {
             'fraction': fraction.id,
             'sample': fraction.sample.id,
             'analysis': service.analysis.id,
@@ -4144,22 +4215,8 @@ class AddSampleService(Wizard):
             'laboratory_date': service.laboratory_date,
             'report_date': service.report_date,
             'divide': service.divide,
-            }]
-        with Transaction().set_context(manage_service=True):
-            new_service, = Service.create(service_create)
-
-        Service.copy_analysis_comments([new_service])
-        Service.set_confirmation_date([new_service])
-        analysis_detail = EntryDetailAnalysis.search([
-            ('service', '=', new_service.id)])
-        if analysis_detail:
-            EntryDetailAnalysis.create_notebook_lines(analysis_detail,
-                fraction)
-            EntryDetailAnalysis.write(analysis_detail, {
-                'state': 'unplanned',
-                })
-
-        return new_service
+            }
+        return service_create
 
     def _send_ack_of_receipt(self):
         Cron = Pool().get('ir.cron')
@@ -4178,7 +4235,9 @@ class AddSampleService(Wizard):
 
         entry_ids = set()
         for sample in Sample.browse(Transaction().context['active_ids']):
-            entry_ids.add(sample.entry.id)
+            # Only send ack for ongoing entries
+            if sample.entry and sample.entry.state == 'ongoing':
+                entry_ids.add(sample.entry.id)
 
         session_id, _, _ = ForwardAcknowledgmentOfReceipt.create()
         acknowledgment_forward = ForwardAcknowledgmentOfReceipt(session_id)
@@ -4268,6 +4327,7 @@ class EditSampleService(Wizard):
         pool = Pool()
         Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
+        send_ack = False
 
         actual_analysis = [(s.analysis.id, s.method and s.method.id or None)
             for s in self.start.services]
@@ -4290,6 +4350,8 @@ class EditSampleService(Wizard):
                         service.method and service.method.id or None)
                     if key not in original_analysis:
                         self.create_service(service, fraction)
+                        if fraction.entry and fraction.entry.state == 'ongoing':
+                            send_ack = True
                         delete_ack_report_cache = True
                 self.update_fraction_services(fraction)
 
@@ -4299,7 +4361,7 @@ class EditSampleService(Wizard):
                 entry.ack_report_cache = None
                 entry.save()
 
-        if self._send_ack_of_receipt():
+        if send_ack and self._send_ack_of_receipt():
             return 'send_ack_of_receipt'
 
         return 'end'
@@ -4313,7 +4375,26 @@ class EditSampleService(Wizard):
         Service = pool.get('lims.service')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
-        service_create = [{
+        service_create = [self._get_new_service(service, fraction)]
+        with Transaction().set_context(manage_service=True):
+            new_service, = Service.create(service_create)
+
+            Service.copy_analysis_comments([new_service])
+            Service.set_confirmation_date([new_service])
+            analysis_detail = EntryDetailAnalysis.search([
+                ('service', '=', new_service.id)])
+            if analysis_detail:
+                if new_service.entry and new_service.entry.state == 'ongoing':
+                    EntryDetailAnalysis.create_notebook_lines(analysis_detail,
+                        fraction)
+                    EntryDetailAnalysis.write(analysis_detail, {
+                        'state': 'unplanned',
+                        })
+
+        return new_service
+
+    def _get_new_service(self, service, fraction):
+        service_create = {
             'fraction': fraction.id,
             'sample': fraction.sample.id,
             'analysis': service.analysis.id,
@@ -4330,22 +4411,8 @@ class EditSampleService(Wizard):
             'laboratory_date': service.laboratory_date,
             'report_date': service.report_date,
             'divide': service.divide,
-            }]
-        with Transaction().set_context(manage_service=True):
-            new_service, = Service.create(service_create)
-
-        Service.copy_analysis_comments([new_service])
-        Service.set_confirmation_date([new_service])
-        analysis_detail = EntryDetailAnalysis.search([
-            ('service', '=', new_service.id)])
-        if analysis_detail:
-            EntryDetailAnalysis.create_notebook_lines(analysis_detail,
-                fraction)
-            EntryDetailAnalysis.write(analysis_detail, {
-                'state': 'unplanned',
-                })
-
-        return new_service
+            }
+        return service_create
 
     def update_fraction_services(self, fraction):
         pool = Pool()

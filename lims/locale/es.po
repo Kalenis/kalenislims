@@ -5647,6 +5647,10 @@ msgctxt "field:lims.sample,attributes:"
 msgid "Attributes"
 msgstr "Atributos"
 
+msgctxt "field:lims.sample,button_confirm_available:"
+msgid "Button confirm available"
+msgstr "Botón confirmar disponible"
+
 msgctxt "field:lims.sample,comments:"
 msgid "Comments"
 msgstr "Observaciones"
@@ -14880,6 +14884,10 @@ msgstr "Atributos"
 msgctxt "view:lims.sample:"
 msgid "Comments"
 msgstr "Observaciones"
+
+msgctxt "view:lims.sample:"
+msgid "Confirm"
+msgstr "Confirmar"
 
 msgctxt "view:lims.sample:"
 msgid "General"

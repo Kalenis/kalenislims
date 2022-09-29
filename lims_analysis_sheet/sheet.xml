@@ -182,6 +182,10 @@
             <field name="name">confirm</field>
             <field name="model" search="[('model', '=', 'lims.analysis_sheet')]"/>
         </record>
+        <record model="ir.model.button" id="button_sheet_annul">
+            <field name="name">annul</field>
+            <field name="model" search="[('model', '=', 'lims.analysis_sheet')]"/>
+        </record>
 
         <record model="ir.rule.group" id="rule_group_sheet">
             <field name="name">User in laboratory</field>

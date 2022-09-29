@@ -22,6 +22,20 @@ def device_correction(device_id, value):
 custom_functions['DEVICE_CORRECTION'] = device_correction
 
 
+def get_device_constant(device_id, name, value=None):
+    pool = Pool()
+    LabDevice = pool.get('lims.lab.device')
+    if not device_id or not name:
+        return None
+    if not value:
+        value = 'value1'
+    device = LabDevice(device_id)
+    return device.get_constant(name, value)
+
+
+custom_functions['DEVICE_CONSTANT'] = get_device_constant
+
+
 def _get_result_column(table_id=None):
     pool = Pool()
     Field = pool.get('lims.interface.table.field')
@@ -210,7 +224,7 @@ custom_functions['T'] = convert_brix_to_soluble_solids
 
 
 def get_reference_value(fraction_type=None, product_type=None, matrix=None,
-        analysis=None, target_field=None):
+        analysis=None, target_field=None, device=None):
     cursor = Transaction().connection.cursor()
     pool = Pool()
     Date = pool.get('ir.date')
@@ -228,6 +242,12 @@ def get_reference_value(fraction_type=None, product_type=None, matrix=None,
     if (not fraction_type or not product_type or not matrix or not analysis
             or not target_field):
         return None
+
+    device_clause = ''
+    if device:
+        if not isinstance(device, int):
+            device = device.id
+        device_clause = 'AND nl.device = ' + str(device) + ' '
 
     today = Date.today()
 
@@ -253,6 +273,7 @@ def get_reference_value(fraction_type=None, product_type=None, matrix=None,
             'AND a.code = %s '
             'AND (f.expiry_date IS NULL OR f.expiry_date::date > %s::date) '
             'AND nl.accepted = TRUE '
+            + device_clause +
         'ORDER BY s.date DESC LIMIT 1',
         (fraction_type, product_type, matrix, analysis, today,))
     reference_line = cursor.fetchall()

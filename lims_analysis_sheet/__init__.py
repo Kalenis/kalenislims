@@ -48,6 +48,8 @@ def register():
         notebook.EditMultiSampleDataStart,
         notebook.MultiSampleData,
         notebook.MoveDataStart,
+        laboratory.LabDevice,
+        laboratory.LabDeviceConstant,
         laboratory.NotebookRule,
         laboratory.NotebookRuleCondition,
         module='lims_analysis_sheet', type_='model')

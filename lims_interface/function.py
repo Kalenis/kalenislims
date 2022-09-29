@@ -4,6 +4,7 @@
 # the full copyright notices and license terms.
 import formulas
 import numpy as np
+from decimal import Decimal
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool
@@ -68,6 +69,21 @@ def get_variable(notebook_line, variable):
 
 
 custom_functions['VAR'] = get_variable
+
+
+def get_constant(name, parameter1=None, parameter2=None, parameter3=None,
+        value=None):
+    pool = Pool()
+    Constant = pool.get('lims.interface.constant')
+    if not name:
+        return None
+    if not value:
+        value = 'value1'
+    return Constant.get_constant(name, parameter1, parameter2, parameter3,
+        value)
+
+
+custom_functions['CONSTANT'] = get_constant
 
 
 def _get_column_name(alias, iteration=None):
@@ -265,7 +281,7 @@ def slope(yp, xp):
     items_to_delete, i = [], 0
     for y1 in yp:
         for val in y1:
-            if val is None:
+            if not isinstance(val, (int, float, Decimal)):
                 items_to_delete.append(i)
             i += 1
     if items_to_delete:
@@ -284,7 +300,7 @@ def intercept(y, x):
     items_to_delete, i = [], 0
     for y1 in y:
         for val in y1:
-            if val is None:
+            if not isinstance(val, (int, float, Decimal)):
                 items_to_delete.append(i)
             i += 1
     if items_to_delete:
@@ -316,7 +332,7 @@ def rsq(y, x):
     items_to_delete, i = [], 0
     for y1 in y:
         for val in y1:
-            if val is None:
+            if not isinstance(val, (int, float, Decimal)):
                 items_to_delete.append(i)
             i += 1
     if items_to_delete:

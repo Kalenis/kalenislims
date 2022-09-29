@@ -1564,6 +1564,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
         ('active', 'Active'),
         ('validated', 'Validated'),
         ('done', 'Done'),
+        ('annulled', 'Annulled'),
         ], 'State', readonly=True, required=True)
 
     @classmethod
@@ -1572,10 +1573,13 @@ class Compilation(Workflow, ModelSQL, ModelView):
         cls._order.insert(0, ('date_time', 'DESC'))
         cls._transitions |= set((
             ('draft', 'active'),
+            ('draft', 'annulled'),
             ('active', 'draft'),
             ('active', 'validated'),
+            ('active', 'annulled'),
             ('validated', 'active'),
             ('validated', 'done'),
+            ('validated', 'annulled'),
             ))
         cls._buttons.update({
             'view_data': {
@@ -2118,7 +2122,30 @@ class Compilation(Workflow, ModelSQL, ModelView):
             return False
         if nb_line.end_date:
             return False
+        if nb_line.annulled:
+            return False
         return True
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('annulled')
+    def annul(cls, compilations):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+
+        for c in compilations:
+            with Transaction().set_context(lims_interface_table=c.table):
+                lines = Data.search([('compilation', '=', c.id)])
+                if not lines:
+                    continue
+                for line in lines:
+                    nb_line = line.notebook_line
+                    if not nb_line:
+                        continue
+                    if not nb_line.annulled:
+                        raise UserError(gettext(
+                            'lims_interface.msg_line_not_annulled',
+                            notebook_line=nb_line.rec_name))
 
     @classmethod
     def delete(cls, compilations):
@@ -2200,7 +2227,7 @@ class OpenCompilationData(Wizard):
         compilation_id = Transaction().context.get('active_id', None)
         if compilation_id:
             compilation = Compilation(compilation_id)
-            readonly = (compilation.state in ('validated', 'done'))
+            readonly = (compilation.state in ('validated', 'done', 'annulled'))
             context['lims_interface_compilation'] = compilation.id
             context['lims_interface_table'] = compilation.table.id
             context['lims_interface_readonly'] = readonly
@@ -2423,3 +2450,49 @@ class VariableValue(ModelSQL, ModelView):
         except (TypeError, ValueError):
             val = res[0].value
         return val
+
+
+class Constant(ModelSQL, ModelView):
+    'Interface Constant'
+    __name__ = 'lims.interface.constant'
+
+    name = fields.Char('Name', required=True)
+    parameter1 = fields.Float('Parameter 1')
+    parameter2 = fields.Float('Parameter 2')
+    parameter3 = fields.Float('Parameter 3')
+    value1 = fields.Float('Value 1')
+    value2 = fields.Float('Value 2')
+    value3 = fields.Float('Value 3')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._order.insert(0, ('name', 'ASC'))
+        cls._order.insert(1, ('parameter1', 'ASC'))
+        cls._order.insert(2, ('parameter2', 'ASC'))
+        cls._order.insert(3, ('parameter3', 'ASC'))
+
+    @classmethod
+    def get_constant(cls, name, parameter1=None, parameter2=None,
+            parameter3=None, value=None):
+        if not name:
+            return None
+        if not value:
+            value = 'value1'
+
+        clause = [('name', '=', name)]
+        if parameter1 is not None:
+            clause.append(('parameter1', '=', parameter1))
+        if parameter2 is not None:
+            clause.append(('parameter2', '=', parameter2))
+        if parameter3 is not None:
+            clause.append(('parameter3', '=', parameter3))
+        constant = cls.search(clause)
+        if not constant:
+            return None
+
+        constant = constant[0]
+        if hasattr(constant, value):
+            return getattr(constant, value)
+
+        return None

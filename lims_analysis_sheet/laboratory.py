@@ -4,10 +4,55 @@
 from datetime import datetime, date
 import operator
 
-from trytond.model import fields
+from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.pyson import Eval, Bool, And
+
+
+class LabDevice(metaclass=PoolMeta):
+    __name__ = 'lims.lab.device'
+
+    constants = fields.One2Many('lims.lab.device.constant', 'device',
+        'Constants')
+
+    def get_constant(self, name, value=None):
+        pool = Pool()
+        DeviceConstant = pool.get('lims.lab.device.constant')
+
+        if not name:
+            return None
+        if not value:
+            value = 'value1'
+
+        constant = DeviceConstant.search([
+            ('device', '=', self.id),
+            ('name', '=', name),
+            ])
+        if not constant:
+            return None
+
+        constant = constant[0]
+        if hasattr(constant, value):
+            return getattr(constant, value)
+
+        return None
+
+
+class LabDeviceConstant(ModelSQL, ModelView):
+    'Device Constant'
+    __name__ = 'lims.lab.device.constant'
+
+    device = fields.Many2One('lims.lab.device', 'Device', required=True,
+        ondelete='CASCADE', select=True)
+    name = fields.Float('Name', required=True)
+    value1 = fields.Float('Value 1')
+    value2 = fields.Float('Value 2')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._order.insert(0, ('name', 'ASC'))
 
 
 class NotebookRule(metaclass=PoolMeta):

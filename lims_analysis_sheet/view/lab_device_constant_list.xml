@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="name"/>
+    <field name="value1"/>
+    <field name="value2"/>
+</tree>
