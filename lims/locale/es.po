@@ -4339,6 +4339,10 @@ msgctxt "field:lims.planification.detail,label:"
 msgid "Label"
 msgstr "Rótulo"
 
+msgctxt "field:lims.planification.detail,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
 msgctxt "field:lims.planification.detail,laboratory_date:"
 msgid "Laboratory deadline"
 msgstr "Fecha límite Laboratorio"
@@ -7175,6 +7179,10 @@ msgstr "Estados de envase"
 msgctxt "model:ir.action,name:act_lims_packaging_type_list"
 msgid "Packaging Types"
 msgstr "Tipos de envase"
+
+msgctxt "model:ir.action,name:act_lims_planification_detail_related"
+msgid "Planifications"
+msgstr "Planificaciones"
 
 msgctxt "model:ir.action,name:act_lims_planification_form"
 msgid "New Planification"

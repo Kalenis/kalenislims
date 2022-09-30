@@ -707,6 +707,9 @@ class PlanificationDetail(ModelSQL, ModelView):
         'get_service_field')
     comments = fields.Function(fields.Text('Comments'), 'get_fraction_field')
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
+    laboratory = fields.Function(fields.Many2One('lims.laboratory',
+        'Laboratory'), 'get_planification_field',
+        searcher='search_planification_field')
 
     @classmethod
     def __setup__(cls):
@@ -804,6 +807,24 @@ class PlanificationDetail(ModelSQL, ModelView):
         if self.comments:
             return 'lims-blue'
         return 'lims-white'
+
+    @classmethod
+    def get_planification_field(cls, details, names):
+        result = {}
+        for name in names:
+            result[name] = {}
+            if cls._fields[name]._type == 'many2one':
+                for d in details:
+                    field = getattr(d.planification, name, None)
+                    result[name][d.id] = field.id if field else None
+            else:
+                for d in details:
+                    result[name][d.id] = getattr(d.planification, name, None)
+        return result
+
+    @classmethod
+    def search_planification_field(cls, name, clause):
+        return [('planification.' + name,) + tuple(clause[1:])]
 
 
 class PlanificationServiceDetail(ModelSQL, ModelView):

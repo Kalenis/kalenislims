@@ -998,5 +998,30 @@
             <field name="name">planification_qualification_situation_4_form</field>
         </record>
 
+<!-- Fraction actions related -->
+
+        <record model="ir.ui.view" id="lims_planification_detail2_view_list">
+            <field name="model">lims.planification.detail</field>
+            <field name="type">tree</field>
+            <field name="name">planification_detail2_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_planification_detail_related">
+            <field name="name">Planifications</field>
+            <field name="res_model">lims.planification.detail</field>
+            <field name="domain" eval="[('fraction', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_planification_detail_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_planification_detail2_view_list"/>
+            <field name="act_window" ref="act_lims_planification_detail_related"/>
+        </record>
+
+        <record model="ir.action.keyword" id="act_open_planification_detail_keyword">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.fraction,-1</field>
+            <field name="action" ref="act_lims_planification_detail_related"/>
+        </record>
+
     </data>
 </tryton>

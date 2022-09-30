@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="fraction"/>
+    <field name="planification"/>
+    <field name="laboratory"/>
+    <field name="service_analysis"/>
+    <field name="create_uid"/>
+</tree>
