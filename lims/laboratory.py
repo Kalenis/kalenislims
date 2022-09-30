@@ -92,7 +92,7 @@ class LaboratoryProfessional(DeactivableMixin, ModelSQL, ModelView):
 
     party = fields.Many2One('party.party', 'Party', required=True,
         domain=[('is_lab_professional', '=', True)])
-    code = fields.Char('Code')
+    code = fields.Char('Code', required=True)
     role = fields.Char('Signature role', translate=True)
     signature = fields.Binary('Signature')
     methods = fields.One2Many('lims.lab.professional.method', 'professional',
