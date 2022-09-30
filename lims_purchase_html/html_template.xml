@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Purchase Clause Template -->
+
+        <record model="ir.ui.view" id="purchase_clause_template_view_form">
+            <field name="model">purchase.clause.template</field>
+            <field name="type">form</field>
+            <field name="name">purchase_clause_template_form</field>
+        </record>
+        <record model="ir.ui.view" id="purchase_clause_template_view_list">
+            <field name="model">purchase.clause.template</field>
+            <field name="type">tree</field>
+            <field name="name">purchase_clause_template_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_purchase_clause_template">
+            <field name="name">Purchase Clauses Templates</field>
+            <field name="res_model">purchase.clause.template</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_purchase_clause_template_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="purchase_clause_template_view_list"/>
+            <field name="act_window" ref="act_purchase_clause_template"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_purchase_clause_template_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="purchase_clause_template_view_form"/>
+            <field name="act_window" ref="act_purchase_clause_template"/>
+        </record>
+
+        <menuitem action="act_purchase_clause_template"
+            id="menu_purchase_clause_template"
+            parent="purchase.menu_configuration" sequence="30"/>
+
+<!-- Purchase Report Template -->
+
+        <record model="ir.ui.view" id="purchase_report_template_view_form">
+            <field name="model">lims.report.template</field>
+            <field name="type">form</field>
+            <field name="name">purchase_report_template_form</field>
+        </record>
+        <record model="ir.ui.view" id="purchase_report_template_view_list">
+            <field name="model">lims.report.template</field>
+            <field name="type">tree</field>
+            <field name="name">purchase_report_template_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_purchase_report_template">
+            <field name="name">Purchase Report Templates</field>
+            <field name="res_model">lims.report.template</field>
+            <field name="domain" pyson="1"
+                eval="[('report_name', '=', 'purchase.purchase')]"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_purchase_report_template_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="purchase_report_template_view_list"/>
+            <field name="act_window" ref="act_purchase_report_template"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_purchase_report_template_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="purchase_report_template_view_form"/>
+            <field name="act_window" ref="act_purchase_report_template"/>
+        </record>
+
+        <menuitem action="act_purchase_report_template"
+            id="menu_purchase_report_template"
+            parent="purchase.menu_configuration" sequence="20"
+            icon="tryton-list"/>
+
+    </data>
+</tryton>

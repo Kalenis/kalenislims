@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<tree editable="bottom">
+    <field name="data"/>
+    <field name="name" expand="2"/>
+    <field name="order"/>
+    <field name="position" tree_invisible="1"/>
+</tree>

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Purchase -->
+
+        <record model="ir.ui.view" id="purchase_view_form">
+            <field name="model">purchase.purchase</field>
+            <field name="inherit" ref="purchase.purchase_view_form"/>
+            <field name="name">purchase_form</field>
+        </record>
+
+<!-- Purchase Section -->
+
+        <record model="ir.ui.view" id="purchase_section_view_form">
+            <field name="model">purchase.purchase.section</field>
+            <field name="type">form</field>
+            <field name="name">purchase_section_form</field>
+        </record>
+        <record model="ir.ui.view" id="purchase_section_view_list">
+            <field name="model">purchase.purchase.section</field>
+            <field name="type">tree</field>
+            <field name="name">purchase_section_list</field>
+        </record>
+
+<!-- Purchase Report -->
+
+        <record model="ir.action.report" id="report_purchase_html">
+            <field name="name">Purchase</field>
+            <field name="model">purchase.purchase</field>
+            <field name="report_name">purchase.purchase</field>
+            <field name="report">lims_purchase_html/report/purchase.html</field>
+            <field name="extension">pdf</field>
+            <field name="template_extension">lims</field>
+        </record>
+
+    </data>
+</tryton>

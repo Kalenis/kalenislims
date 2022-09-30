@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/form/notebook" position="inside">
+        <page id="lims_report" string="Printing">
+            <label name="template"/>
+            <field name="template"
+                view_ids="lims_purchase_html.purchase_report_template_view_list,lims_purchase_html.purchase_report_template_view_form"/>
+            <label name="clause_template"/>
+            <field name="clause_template"/>
+            <notebook colspan="4">
+                <page name="clauses">
+                    <field name="clauses" colspan="4" widget="html"/>
+                </page>
+                <page name="sections">
+                    <field name="previous_sections" colspan="4"/>
+                    <field name="following_sections" colspan="4"/>
+                </page>
+            </notebook>
+        </page>
+    </xpath>
+</data>

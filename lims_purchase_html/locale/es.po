@@ -1,0 +1,107 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:lims.report.template,clause_template:"
+msgid "Clauses Template"
+msgstr "Plantilla de Cláusulas"
+
+msgctxt "field:purchase.clause.template,content:"
+msgid "Content"
+msgstr "Contenido"
+
+msgctxt "field:purchase.clause.template,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:purchase.purchase,clause_template:"
+msgid "Clauses Template"
+msgstr "Plantilla de Cláusulas"
+
+msgctxt "field:purchase.purchase,clauses:"
+msgid "Clauses"
+msgstr "Cláusulas"
+
+msgctxt "field:purchase.purchase,following_sections:"
+msgid "Following Sections"
+msgstr "Secciones siguientes"
+
+msgctxt "field:purchase.purchase,previous_sections:"
+msgid "Previous Sections"
+msgstr "Secciones anteriores"
+
+msgctxt "field:purchase.purchase,sections:"
+msgid "Sections"
+msgstr "Secciones"
+
+msgctxt "field:purchase.purchase,template:"
+msgid "Purchase Template"
+msgstr "Plantilla de Compra"
+
+msgctxt "field:purchase.purchase.section,data:"
+msgid "File"
+msgstr "Archivo"
+
+msgctxt "field:purchase.purchase.section,data_id:"
+msgid "File ID"
+msgstr "ID Archivo"
+
+msgctxt "field:purchase.purchase.section,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:purchase.purchase.section,order:"
+msgid "Order"
+msgstr "Orden"
+
+msgctxt "field:purchase.purchase.section,position:"
+msgid "Position"
+msgstr "Posición"
+
+msgctxt "field:purchase.purchase.section,purchase:"
+msgid "Purchase"
+msgstr "Compras"
+
+msgctxt "model:ir.action,name:act_purchase_clause_template"
+msgid "Purchase Clauses Templates"
+msgstr "Plantillas de Cláusulas de compra"
+
+msgctxt "model:ir.action,name:act_purchase_report_template"
+msgid "Purchase Report Templates"
+msgstr "Plantillas de Compra"
+
+msgctxt "model:ir.action,name:report_purchase_html"
+msgid "Purchase"
+msgstr "Compra"
+
+msgctxt "model:ir.ui.menu,name:menu_purchase_clause_template"
+msgid "Purchase Clauses Templates"
+msgstr "Plantillas de Cláusulas de compra"
+
+msgctxt "model:ir.ui.menu,name:menu_purchase_report_template"
+msgid "Purchase Report Templates"
+msgstr "Plantillas de Compra"
+
+msgctxt "model:purchase.clause.template,name:"
+msgid "Purchase Clause Template"
+msgstr "Plantilla de Cláusulas de compra"
+
+msgctxt "model:purchase.purchase.section,name:"
+msgid "Purchase Section"
+msgstr "Sección de Compra"
+
+msgctxt "selection:purchase.purchase.section,position:"
+msgid "Following"
+msgstr "Siguiente"
+
+msgctxt "selection:purchase.purchase.section,position:"
+msgid "Previous"
+msgstr "Anterior"
+
+msgctxt "view:lims.report.template:"
+msgid "Header and Footer"
+msgstr "Encabezado y Pie de página"
+
+msgctxt "view:purchase.purchase:"
+msgid "Printing"
+msgstr "Impresión"
