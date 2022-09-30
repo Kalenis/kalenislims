@@ -399,8 +399,6 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
                 logger.error("Missing address for '%s' to send email",
                     task.responsible.rec_name)
                 continue
-            if task.scheduled:
-                continue
 
             subject, body = task._get_mail_subject_body(True)
             msg = cls._create_msg(from_addr, to_addrs, subject, body)
@@ -463,6 +461,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
     def _create_msg(from_addr, to_addrs, subject, body):
         if not (from_addr and to_addrs):
             return None
+        to_addrs = list(set(to_addrs))
 
         msg = MIMEMultipart()
         msg['From'] = from_addr
