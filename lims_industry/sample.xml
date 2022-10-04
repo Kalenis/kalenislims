@@ -48,19 +48,9 @@
 
         <record model="ir.ui.view" id="edit_sample_start_view_form">
             <field name="model">lims.sample.edit.start</field>
-            <field name="type">form</field>
+            <field name="type" eval="None"/>
+            <field name="inherit" ref="lims.edit_sample_start_view_form"/>
             <field name="name">sample_edit_form</field>
-        </record>
-
-        <record model="ir.action.wizard" id="wiz_edit_sample">
-            <field name="name">Edit Samples</field>
-            <field name="wiz_name">lims.sample.edit</field>
-        </record>
-
-        <record model="ir.action.keyword" id="wiz_edit_sample_keyword">
-            <field name="keyword">form_action</field>
-            <field name="model">lims.sample,-1</field>
-            <field name="action" ref="wiz_edit_sample"/>
         </record>
 
 <!-- Samples Pending Reporting -->
