@@ -5815,6 +5815,10 @@ msgctxt "field:lims.sample.duplicate.start,sample:"
 msgid "Sample"
 msgstr "Muestra"
 
+msgctxt "field:lims.sample.edit.start,party:"
+msgid "Party"
+msgstr "Entidad"
+
 msgctxt "field:lims.sample.edit_service.start,analysis_domain:"
 msgid "Analysis domain"
 msgstr "Dominio para Análisis"
@@ -7282,6 +7286,10 @@ msgctxt "model:ir.action,name:wiz_control_chart_print"
 msgid "Control Chart"
 msgstr "Carta de Control"
 
+msgctxt "model:ir.action,name:wiz_edit_sample"
+msgid "Edit Samples"
+msgstr "Modificar muestras"
+
 msgctxt "model:ir.action,name:wiz_edit_sample_service"
 msgid "Edit Sample Services"
 msgstr "Modificar servicios de muestras"
@@ -8025,6 +8033,15 @@ msgstr ""
 msgctxt "model:ir.message,text:msg_duplicated_label"
 msgid "The label \"%(label)s\" is already present in another sample"
 msgstr "La etiqueta «%(label)s» ya está presente en otra muestra"
+
+msgctxt "model:ir.message,text:msg_edit_results_report_party"
+msgid "Sample \"%(sample)s\" has a Results report already released"
+msgstr "La muestra «%(sample)s» tiene un Informe de resultados ya publicado"
+
+msgctxt "model:ir.message,text:msg_edit_sample_party"
+msgid "You must select a Party related to the invoice Party"
+msgstr ""
+"Debe seleccionar una entidad relacionada con la entidad de facturación"
 
 msgctxt "model:ir.message,text:msg_empty_report"
 msgid "The report has not details to print"
@@ -9996,6 +10013,10 @@ msgstr "Atributo de Muestra"
 msgctxt "model:lims.sample.duplicate.start,name:"
 msgid "Copy Sample"
 msgstr "Copiar muestra"
+
+msgctxt "model:lims.sample.edit.start,name:"
+msgid "Edit Samples"
+msgstr "Modificar muestras"
 
 msgctxt "model:lims.sample.edit_service.ack_of_receipt,name:"
 msgid "Edit Sample Services"
@@ -15841,6 +15862,14 @@ msgid "Copy"
 msgstr "Copiar"
 
 msgctxt "wizard_button:lims.sample.duplicate,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.sample.edit,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.sample.edit,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 

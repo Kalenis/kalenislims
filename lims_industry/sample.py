@@ -5,7 +5,7 @@ from sql import Literal
 from sql.conditionals import Case
 
 from trytond.model import ModelSQL, ModelView, fields
-from trytond.wizard import Wizard, StateTransition, StateView, Button
+from trytond.wizard import StateTransition, StateView, Button
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Bool
 from trytond.transaction import Transaction
@@ -682,11 +682,9 @@ class CreateSample(metaclass=PoolMeta):
         return 'start'
 
 
-class EditSampleStart(ModelView):
-    'Edit Samples'
+class EditSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.sample.edit.start'
 
-    party = fields.Many2One('party.party', 'Party')
     plant = fields.Many2One('lims.plant', 'Plant',
         domain=[('party', '=', Eval('party'))],
         depends=['party'])
@@ -705,35 +703,8 @@ class EditSampleStart(ModelView):
             self.comercial_product = self.component.comercial_product.id
 
 
-class EditSample(Wizard):
-    'Edit Samples'
+class EditSample(metaclass=PoolMeta):
     __name__ = 'lims.sample.edit'
-
-    start = StateView('lims.sample.edit.start',
-        'lims_industry.edit_sample_start_view_form', [
-            Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Confirm', 'confirm', 'tryton-ok', default=True),
-            ])
-    confirm = StateTransition()
-
-    def _get_filtered_samples(self):
-        Sample = Pool().get('lims.sample')
-        samples = Sample.browse(Transaction().context['active_ids'])
-        #return [s for s in samples if s.entry.state == 'draft']
-        return samples
-
-    def default_start(self, fields):
-        samples = self._get_filtered_samples()
-        party_id = None
-        for sample in samples:
-            if not party_id:
-                party_id = sample.party.id
-            elif party_id != sample.party.id:
-                party_id = None
-                break
-        return {
-            'party': party_id,
-            }
 
     def transition_confirm(self):
         SampleEditionLog = Pool().get('lims.sample.edition.log')
@@ -838,96 +809,6 @@ class EditSample(Wizard):
             self._edit_results_report_party(new_entry_id, samples_to_edit)
 
         return 'end'
-
-    def _edit_entry_party(self, entry_id, samples):
-        pool = Pool()
-        Config = pool.get('lims.configuration')
-        PartyRelation = pool.get('party.relation')
-        Sample = pool.get('lims.sample')
-        Entry = pool.get('lims.entry')
-
-        entry = Entry(entry_id)
-        party_id = self.start.party.id
-
-        if entry.multi_party:
-            config_ = Config(1)
-            party_domain = [entry.invoice_party.id]
-            relations = PartyRelation.search([
-                ('to', '=', entry.invoice_party),
-                ('type', '=', config_.invoice_party_relation_type)
-                ])
-            party_domain.extend([r.from_.id for r in relations])
-            party_domain = list(set(party_domain))
-            if party_id not in party_domain:
-                raise UserError(gettext('lims_industry.msg_edit_sample_party'))
-            Sample.write(samples, {'party': party_id})
-            return entry_id
-
-        # Check if all samples from the same entry were selected
-        if Sample.search_count([
-                ('entry', '=', entry.id),
-                ('id', 'not in', [s.id for s in samples]),
-                ]) == 0:
-            entry.party = party_id
-            entry.invoice_party = party_id
-            entry.ack_report_format = None
-            entry.ack_report_cache = None
-            entry.ack_report_cache_id = None
-            entry.save()
-            Sample.write(samples, {'party': party_id})
-            return entry_id
-
-        new_vals = {
-            'party': party_id,
-            'invoice_party': party_id,
-            'samples': [],
-            'invoice_contacts': [],
-            'report_contacts': [],
-            'acknowledgment_contacts': [],
-            }
-        new_entry, = Entry.copy([entry], new_vals)
-        new_entry.state = entry.state
-        new_entry.result_cron = entry.result_cron
-        new_entry.save()
-        Sample.write(samples, {'entry': new_entry.id, 'party': party_id})
-        return new_entry.id
-
-    def _edit_results_report_party(self, entry_id, samples):
-        cursor = Transaction().connection.cursor()
-        pool = Pool()
-        Fraction = pool.get('lims.fraction')
-        Notebook = pool.get('lims.notebook')
-        ResultsSample = pool.get('lims.results_report.version.detail.sample')
-        ResultsDetail = pool.get('lims.results_report.version.detail')
-        ResultsVersion = pool.get('lims.results_report.version')
-        ResultsReport = pool.get('lims.results_report')
-
-        party_id = self.start.party.id
-
-        for sample in samples:
-            #if sample.has_results_report:
-                #raise UserError(gettext(
-                    #'lims_industry.msg_edit_results_report_party',
-                    #sample=sample.rec_name))
-
-            cursor.execute('SELECT rv.results_report '
-                'FROM "' + ResultsVersion._table + '" rv '
-                    'INNER JOIN "' + ResultsDetail._table + '" rd '
-                    'ON rv.id =  rd.report_version '
-                    'INNER JOIN "' + ResultsSample._table + '" rs '
-                    'ON rd.id = rs.version_detail '
-                    'INNER JOIN "' + Notebook._table + '" n '
-                    'ON n.id = rs.notebook '
-                    'INNER JOIN "' + Fraction._table + '" f '
-                    'ON f.id = n.fraction '
-                'WHERE f.sample = %s '
-                    'AND rd.state NOT IN (\'released\', \'annulled\')',
-                (str(sample.id),))
-            reports_ids = [x[0] for x in cursor.fetchall()]
-            if not reports_ids:
-                continue
-            reports = ResultsReport.browse(reports_ids)
-            ResultsReport.write(reports, {'entry': entry_id, 'party': party_id})
 
     def check_typifications(self, sample):
         analysis_domain_ids = self._get_analysis_domain(sample)

@@ -556,5 +556,11 @@
         <record model="ir.message" id="msg_invalid_report_state">
             <field name="text">The target Results Report does not have a valid state</field>
         </record>
+        <record model="ir.message" id="msg_edit_sample_party">
+            <field name="text">You must select a Party related to the invoice Party</field>
+        </record>
+        <record model="ir.message" id="msg_edit_results_report_party">
+            <field name="text">Sample "%(sample)s" has a Results report already released</field>
+        </record>
     </data>
 </tryton>

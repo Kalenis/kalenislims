@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
-<form>
-    <label name="party"/>
-    <field name="party"/>
-    <label name="plant"/>
-    <field name="plant"/>
-    <label name="equipment"/>
-    <field name="equipment"/>
-    <label name="component"/>
-    <field name="component"/>
-    <label name="comercial_product"/>
-    <field name="comercial_product"/>
-</form>
+<data>
+    <xpath expr="/form/field[@name='party']" position="after">
+        <label name="plant"/>
+        <field name="plant"/>
+        <label name="equipment"/>
+        <field name="equipment"/>
+        <label name="component"/>
+        <field name="component"/>
+        <label name="comercial_product"/>
+        <field name="comercial_product"/>
+    </xpath>
+</data>
