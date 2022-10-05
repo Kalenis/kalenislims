@@ -1,9 +1,13 @@
 <?xml version="1.0"?>
 <form>
-    <label name="name"/>
-    <field name="name"/>
-    <label name="template"/>
-    <field name="template"/>
+    <group id="name" colspan="4" col="6">
+        <label name="name"/>
+        <field name="name"/>
+        <label name="template"/>
+        <field name="template"/>
+        <label name="active"/>
+        <field name="active" xexpand="0" width="100"/>
+    </group>
     <notebook>
         <page id="general" string="General">
             <label name="plant"/>
