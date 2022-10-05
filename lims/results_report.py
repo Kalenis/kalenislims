@@ -1826,6 +1826,23 @@ class ResultsReportVersionDetailSigner(sequence_ordered(),
     def default_type():
         return 'signer'
 
+    @classmethod
+    def create(cls, vlist):
+        new_list = []
+        counter = set()
+        for x in vlist:
+            key = (x['version_detail'], x['professional'])
+            if key in counter:
+                continue
+            if cls.search_count([
+                    ('version_detail', '=', key[0]),
+                    ('professional', '=', key[1]),
+                    ]) > 0:
+                continue
+            counter.add(key)
+            new_list.append(x.copy())
+        return super().create(new_list)
+
     @fields.depends('_parent_version_detail.laboratory')
     def on_change_with_professional_domain(self, name=None):
         pool = Pool()
