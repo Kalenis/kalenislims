@@ -96,15 +96,15 @@ class EventCreator(Model):
                 FREQUENCE_OPTIONS_VALUE_MAP[self.frequence_selection])
 
     @classmethod
-    def create_events(cls, records, create_method):
+    def create_events(cls, records, create_method, start_date=None, include_start_date=True):
         events = []
         for record in records:
             if record.finish_selection == 'quantity':
                 events.extend(
-                    cls.create_fixed_events(record, create_method))
+                    cls.create_fixed_events(record, create_method, start_date, include_start_date))
             elif record.finish_selection == 'date':
                 events.extend(
-                    cls.create_events_until_date(record, create_method))
+                    cls.create_events_until_date(record, create_method, start_date, include_start_date))
             else:
                 raise UserError(gettext(
                     'lims_tools.missing_end_condition'))
@@ -112,13 +112,16 @@ class EventCreator(Model):
         return events
 
     @classmethod
-    def create_fixed_events(cls, record, create_method):
+    def create_fixed_events(cls, record, create_method, start_date=None, include_start_date=True):
         events = []
-        start_date = record.start_date
+        if not start_date:
+            start_date = record.start_date
         frequence = record.detail_frequence
         frequence_selection = record.detail_frequence_selection
 
         date = start_date
+        if not include_start_date:
+            date = date + cls.get_delta(frequence, frequence_selection)
         while len(events) < record.end_repetition:
             event = {}
             event['scheduled_date'] = date
@@ -130,13 +133,16 @@ class EventCreator(Model):
         return events
 
     @classmethod
-    def create_events_until_date(cls, record, create_method):
+    def create_events_until_date(cls, record, create_method, start_date=None, include_start_date=True):
         events = []
-        start_date = record.start_date
+        if not start_date:
+            start_date = record.start_date
         frequence = record.detail_frequence
         frequence_selection = record.detail_frequence_selection
 
         date = start_date
+        if not include_start_date:
+            date = date + cls.get_delta(frequence, frequence_selection)
         while date < record.end_date:
             event = {}
             event['scheduled_date'] = date
