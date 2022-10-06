@@ -571,6 +571,9 @@ Rule 2: 4 of 5 consecutive values above or below the mean +/- 1 deviation.
 Rule 3: 2 of 3 consecutive values above or below the mean +/- 2 deviations.
 Rule 4: 1 value above or below the mean +/- 3 deviations.</field>
         </record>
+        <record model="ir.message" id="msg_delete_signatories">
+            <field name="text">You can not delete all signers from the report. There must be at least one Manager or Responsible.</field>
+        </record>
         <record model="ir.message" id="msg_edit_sample_party">
             <field name="text">You must select a Party related to the invoice Party</field>
         </record>

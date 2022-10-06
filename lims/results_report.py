@@ -1843,6 +1843,27 @@ class ResultsReportVersionDetailSigner(sequence_ordered(),
             new_list.append(x.copy())
         return super().create(new_list)
 
+    @classmethod
+    def delete(cls, signatories):
+        cls.check_delete(signatories)
+        super().delete(signatories)
+
+    @classmethod
+    def check_delete(cls, signatories):
+        to_check = {}
+        for signer in signatories:
+            key = signer.version_detail.id
+            if key not in to_check:
+                to_check[key] = []
+            to_check[key].append(signer.id)
+        for k, v in to_check.items():
+            if cls.search_count([
+                    ('version_detail', '=', k),
+                    ('type', 'in', ['manager', 'responsible']),
+                    ('id', 'not in', v),
+                    ]) == 0:
+                raise UserError(gettext('lims.msg_delete_signatories'))
+
     @fields.depends('_parent_version_detail.laboratory')
     def on_change_with_professional_domain(self, name=None):
         pool = Pool()
