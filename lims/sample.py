@@ -7180,6 +7180,7 @@ class Referral(ModelSQL, ModelView):
                     raise UserWarning(key, gettext(
                         'lims.msg_referral_email_laboratory',
                         laboratory=referral.laboratory.rec_name))
+                continue
 
             subject, body = referral._get_mail_subject_body()
             attachment_data = referral._get_mail_attachment()
