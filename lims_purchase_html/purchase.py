@@ -42,6 +42,14 @@ class Purchase(metaclass=PoolMeta):
     clauses = fields.Text('Clauses',
         states={'readonly': Eval('state') != 'draft'},
         depends=['state'])
+    
+    @staticmethod
+    def default_template():
+        Configuration = Pool().get('purchase.configuration')
+        config = Configuration(1)
+        if config.default_template:
+            return config.default_template.id
+        return None
 
     @fields.depends('template', '_parent_template.sections', 'sections',
         '_parent_template.clause_template',

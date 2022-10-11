@@ -5,6 +5,7 @@
 from trytond.pool import Pool
 from . import html_template
 from . import purchase
+from. import configuration
 
 
 def register():
@@ -13,6 +14,7 @@ def register():
         html_template.PurchaseReportTemplate,
         purchase.Purchase,
         purchase.PurchaseSection,
+        configuration.Configuration,
         module='lims_purchase_html', type_='model')
     Pool.register(
         purchase.PurchaseReport,
