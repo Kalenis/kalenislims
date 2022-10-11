@@ -1516,7 +1516,8 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     @classmethod
     def delete(cls, details):
         cls.check_delete(details)
-        super().delete(details)
+        with Transaction().set_context(check_signer=False):
+            super().delete(details)
 
     @classmethod
     def check_delete(cls, details):
@@ -1845,7 +1846,8 @@ class ResultsReportVersionDetailSigner(sequence_ordered(),
 
     @classmethod
     def delete(cls, signatories):
-        cls.check_delete(signatories)
+        if Transaction().context.get('check_signer', True):
+            cls.check_delete(signatories)
         super().delete(signatories)
 
     @classmethod
