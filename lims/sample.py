@@ -20,7 +20,7 @@ from trytond.pool import Pool
 from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or, If
 from trytond.transaction import Transaction
 from trytond.report import Report
-from trytond.exceptions import UserError
+from trytond.exceptions import UserError, UserWarning
 from trytond.i18n import gettext
 from trytond.rpc import RPC
 from trytond.config import config as tconfig
@@ -7165,6 +7165,8 @@ class Referral(ModelSQL, ModelView):
 
     @classmethod
     def send_email_laboratory(cls, referrals):
+        Warning = Pool().get('res.user.warning')
+
         from_addr = tconfig.get('email', 'from')
         if not from_addr:
             logger.error("Missing configuration to send emails")
@@ -7173,9 +7175,11 @@ class Referral(ModelSQL, ModelView):
         for referral in referrals:
             to_addrs = referral._get_mail_recipients()
             if not to_addrs:
-                logger.error("Missing address for '%s' to send email",
-                    referral.laboratory.rec_name)
-                continue
+                key = 'lims_referral_email@%s' % referral.number
+                if Warning.check(key):
+                    raise UserWarning(key, gettext(
+                        'lims.msg_referral_email_laboratory',
+                        laboratory=referral.laboratory.rec_name))
 
             subject, body = referral._get_mail_subject_body()
             attachment_data = referral._get_mail_attachment()
@@ -7184,9 +7188,15 @@ class Referral(ModelSQL, ModelView):
             cls.send_msg(from_addr, to_addrs, msg, referral.number)
 
     def _get_mail_recipients(self):
-        address = self.laboratory.address_get('delivery')
-        if address:
-            return [address.email]
+        pool = Pool()
+        Address = pool.get('party.address')
+
+        addresses = Address.search([
+            ('party', '=', self.laboratory),
+            ('delivery', '=', True),
+            ])
+        if addresses:
+            return [addresses[0].email]
         return []
 
     def _get_mail_subject_body(self):
