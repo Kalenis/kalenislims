@@ -562,5 +562,8 @@
         <record model="ir.message" id="msg_edit_results_report_party">
             <field name="text">Sample "%(sample)s" has a Results report already released</field>
         </record>
+        <record model="ir.message" id="msg_referral_email_laboratory">
+            <field name="text">The email is missing in the delivery address for "%(laboratory)s"</field>
+        </record>
     </data>
 </tryton>

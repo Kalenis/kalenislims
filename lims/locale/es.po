@@ -8481,6 +8481,10 @@ msgctxt "model:ir.message,text:msg_reference_reversion"
 msgid "Countersamples Storage Reversion"
 msgstr "Reversión Almacenamiento de contramuestras"
 
+msgctxt "model:ir.message,text:msg_referral_email_laboratory"
+msgid "The email is missing in the delivery address for \"%(laboratory)s\""
+msgstr "Falta el email en la dirección de envío para \"%(laboratory)s\""
+
 msgctxt "model:ir.message,text:msg_replace_number"
 msgid "Supplants the Results Report N° %(report)s"
 msgstr "Sustituye al informe de resultados N° %(report)s"
