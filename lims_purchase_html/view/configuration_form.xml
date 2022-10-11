@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/form/field[@name='purchase_process_after']" position="after">
+        <label name="default_template"/>
+        <field name="default_template"/>
+    </xpath>
+</data>
+
