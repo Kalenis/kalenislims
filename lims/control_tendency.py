@@ -1964,6 +1964,8 @@ class TrendChart(ModelSQL, ModelView):
                             ax.set_ylabel(self.uom_y2.symbol)
                     except TypeError:
                         pass
+                ax.xaxis.label.set_fontsize(14)
+                ax.yaxis.label.set_fontsize(14)
 
                 loc, i = ['upper left', 'upper right'], 0
                 for axis in ax.figure.axes:
@@ -1973,7 +1975,7 @@ class TrendChart(ModelSQL, ModelView):
                             continue
                         handles.append(h)
                         labels.append(l)
-                    axis.legend(handles, labels, loc=loc[i])
+                    axis.legend(handles, labels, loc=loc[i], fontsize=14)
                     i += 1
 
                 ax.get_figure().savefig(output, bbox_inches='tight', dpi=300)
@@ -1995,6 +1997,8 @@ class TrendChart(ModelSQL, ModelView):
                     ax.set_xlabel(self.x_axis_string)
                     if self.uom_y2:
                         ax.set_ylabel(self.uom_y2.symbol)
+                    ax.xaxis.label.set_fontsize(14)
+                    ax.yaxis.label.set_fontsize(14)
 
                     loc, i = ['upper left', 'upper right'], 0
                     for axis in ax.figure.axes:
@@ -2004,7 +2008,7 @@ class TrendChart(ModelSQL, ModelView):
                                 continue
                             handles.append(h)
                             labels.append(l)
-                        axis.legend(handles, labels, loc=loc[i])
+                        axis.legend(handles, labels, loc=loc[i], fontsize=14)
                         i += 1
 
                     ax.get_figure().savefig(output, bbox_inches='tight',
