@@ -2,4 +2,6 @@
 <tree>
     <field name="analysis"/>
     <field name="method"/>
+    <field name="product_type"/>
+    <field name="matrix"/>
 </tree>

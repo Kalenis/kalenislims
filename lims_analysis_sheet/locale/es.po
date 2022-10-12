@@ -524,6 +524,10 @@ msgctxt "field:lims.template.analysis_sheet.analysis,interface:"
 msgid "Device Interface"
 msgstr "Interfaz"
 
+msgctxt "field:lims.template.analysis_sheet.analysis,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
 msgctxt "field:lims.template.analysis_sheet.analysis,method:"
 msgid "Method"
 msgstr "Método"
@@ -531,6 +535,10 @@ msgstr "Método"
 msgctxt "field:lims.template.analysis_sheet.analysis,method_domain:"
 msgid "Method domain"
 msgstr "Dominio para Método"
+
+msgctxt "field:lims.template.analysis_sheet.analysis,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
 
 msgctxt "field:lims.template.analysis_sheet.analysis,template:"
 msgid "Template"
