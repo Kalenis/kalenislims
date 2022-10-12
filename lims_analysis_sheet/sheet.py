@@ -93,6 +93,7 @@ class TemplateAnalysisSheet(DeactivableMixin, ModelSQL, ModelView):
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
         Fraction = pool.get('lims.fraction')
+        Sample = pool.get('lims.sample')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Analysis = pool.get('lims.analysis')
         Template = pool.get('lims.template.analysis_sheet')
@@ -100,7 +101,7 @@ class TemplateAnalysisSheet(DeactivableMixin, ModelSQL, ModelView):
 
         result = {
             'urgent': dict((r.id, False) for r in records),
-            'pending_fractions': dict((r.id, None) for r in records),
+            'pending_fractions': dict((r.id, 0) for r in records),
             }
 
         date_from = context.get('date_from') or str(date.min)
@@ -127,15 +128,19 @@ class TemplateAnalysisSheet(DeactivableMixin, ModelSQL, ModelView):
         dates_where += ('AND ad.confirmation_date::date <= \'%s\'::date ' %
             date_to)
 
-        sql_select = 'SELECT nl.analysis, nl.method, nl.urgent, frc.id '
+        sql_select = (
+            'SELECT nl.analysis, nl.method, s.product_type, s.matrix, '
+            'nl.urgent, f.id ')
         sql_from = (
             'FROM "' + NotebookLine._table + '" nl '
             'INNER JOIN "' + Analysis._table + '" nla '
             'ON nla.id = nl.analysis '
-            'INNER JOIN "' + Notebook._table + '" nb '
-            'ON nb.id = nl.notebook '
-            'INNER JOIN "' + Fraction._table + '" frc '
-            'ON frc.id = nb.fraction '
+            'INNER JOIN "' + Notebook._table + '" n '
+            'ON n.id = nl.notebook '
+            'INNER JOIN "' + Fraction._table + '" f '
+            'ON f.id = n.fraction '
+            'INNER JOIN "' + Sample._table + '" s '
+            'ON s.id = f.sample '
             'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
             'ON ad.id = nl.analysis_detail ')
         sql_where = (
@@ -167,15 +172,17 @@ class TemplateAnalysisSheet(DeactivableMixin, ModelSQL, ModelView):
                     'ON t.id = ta.template '
                 'WHERE t.active IS TRUE '
                     'AND ta.analysis = %s '
-                    'AND (ta.method = %s OR ta.method IS NULL)',
-                (nl[0], nl[1]))
+                    'AND (ta.method = %s OR ta.method IS NULL) '
+                    'AND (ta.product_type = %s OR ta.product_type IS NULL) '
+                    'AND (ta.matrix = %s OR ta.matrix IS NULL)',
+                (nl[0], nl[1], nl[2], nl[3]))
             template = cursor.fetchone()
             if not template:
                 continue
             if template[0] not in templates:
                 templates[template[0]] = set()
-            templates[template[0]].add(nl[3])
-            if nl[2]:
+            templates[template[0]].add(nl[5])
+            if nl[4]:
                 result['urgent'][template[0]] = True
         for t_id, fractions in templates.items():
             result['pending_fractions'][t_id] = len(fractions)
@@ -193,6 +200,7 @@ class TemplateAnalysisSheet(DeactivableMixin, ModelSQL, ModelView):
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
         Fraction = pool.get('lims.fraction')
+        Sample = pool.get('lims.sample')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Analysis = pool.get('lims.analysis')
         Template = pool.get('lims.template.analysis_sheet')
@@ -222,19 +230,21 @@ class TemplateAnalysisSheet(DeactivableMixin, ModelSQL, ModelView):
         dates_where += ('AND ad.confirmation_date::date <= \'%s\'::date ' %
             date_to)
 
-        sql_select = 'SELECT nl.analysis, nl.method, nl.urgent, frc.id '
+        sql_select = 'SELECT nl.analysis, nl.method, s.product_type, s.matrix '
         sql_from = (
             'FROM "' + NotebookLine._table + '" nl '
             'INNER JOIN "' + Analysis._table + '" nla '
             'ON nla.id = nl.analysis '
-            'INNER JOIN "' + Notebook._table + '" nb '
-            'ON nb.id = nl.notebook '
-            'INNER JOIN "' + Fraction._table + '" frc '
-            'ON frc.id = nb.fraction '
+            'INNER JOIN "' + Notebook._table + '" n '
+            'ON n.id = nl.notebook '
+            'INNER JOIN "' + Fraction._table + '" f '
+            'ON f.id = n.fraction '
+            'INNER JOIN "' + Sample._table + '" s '
+            'ON s.id = f.sample '
             'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
             'ON ad.id = nl.analysis_detail ')
         sql_where = (
-            'WHERE nl.urgent '
+            'WHERE nl.urgent = TRUE '
             'AND ad.plannable = TRUE '
             'AND nl.start_date IS NULL '
             'AND nl.annulled = FALSE '
@@ -266,8 +276,10 @@ class TemplateAnalysisSheet(DeactivableMixin, ModelSQL, ModelView):
                     'ON t.id = ta.template '
                 'WHERE t.active IS TRUE '
                     'AND ta.analysis = %s '
-                    'AND (ta.method = %s OR ta.method IS NULL)',
-                (nl[0], nl[1]))
+                    'AND (ta.method = %s OR ta.method IS NULL) '
+                    'AND (ta.product_type = %s OR ta.product_type IS NULL) '
+                    'AND (ta.matrix = %s OR ta.matrix IS NULL)',
+                (nl[0], nl[1], nl[2], nl[3]))
             template = cursor.fetchone()
             if not template:
                 continue
@@ -292,6 +304,8 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
     method_domain = fields.Function(fields.Many2Many('lims.lab.method',
         None, None, 'Method domain'),
         'on_change_with_method_domain')
+    product_type = fields.Many2One('lims.product.type', 'Product type')
+    matrix = fields.Many2One('lims.matrix', 'Matrix')
     expressions = fields.One2Many(
         'lims.template.analysis_sheet.analysis.expression',
         'analysis', 'Special formulas')
@@ -329,6 +343,14 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
             clause.append(('method', '=', self.method.id))
         else:
             clause.append(('method', '=', None))
+        if self.product_type:
+            clause.append(('product_type', '=', self.product_type.id))
+        else:
+            clause.append(('product_type', '=', None))
+        if self.matrix:
+            clause.append(('matrix', '=', self.matrix.id))
+        else:
+            clause.append(('matrix', '=', None))
         duplicated = self.search(clause)
         if duplicated:
             raise UserError(gettext(

@@ -32,27 +32,113 @@ class NotebookLine(metaclass=PoolMeta):
         Template = pool.get('lims.template.analysis_sheet')
         TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
 
+        # Analysis + Method + Product type + Matrix
         cursor.execute('SELECT t.id '
             'FROM "' + Template._table + '" t '
                 'INNER JOIN "' + TemplateAnalysis._table + '" ta '
                 'ON t.id = ta.template '
             'WHERE t.active IS TRUE '
                 'AND ta.analysis = %s '
-                'AND ta.method = %s',
+                'AND ta.method = %s '
+                'AND ta.product_type = %s '
+                'AND ta.matrix = %s',
+            (self.analysis.id, self.method.id, self.product_type.id,
+                self.matrix.id))
+        template = cursor.fetchone()
+        if template:
+            return template[0]
+
+        # Analysis + Method + Product type
+        cursor.execute('SELECT t.id '
+            'FROM "' + Template._table + '" t '
+                'INNER JOIN "' + TemplateAnalysis._table + '" ta '
+                'ON t.id = ta.template '
+            'WHERE t.active IS TRUE '
+                'AND ta.analysis = %s '
+                'AND ta.method = %s '
+                'AND ta.product_type = %s '
+                'AND ta.matrix IS NULL',
+            (self.analysis.id, self.method.id, self.product_type.id))
+        template = cursor.fetchone()
+        if template:
+            return template[0]
+
+        # Analysis + Method + Matrix
+        cursor.execute('SELECT t.id '
+            'FROM "' + Template._table + '" t '
+                'INNER JOIN "' + TemplateAnalysis._table + '" ta '
+                'ON t.id = ta.template '
+            'WHERE t.active IS TRUE '
+                'AND ta.analysis = %s '
+                'AND ta.method = %s '
+                'AND ta.product_type IS NULL '
+                'AND ta.matrix = %s',
+            (self.analysis.id, self.method.id, self.matrix.id))
+        template = cursor.fetchone()
+        if template:
+            return template[0]
+
+        # Analysis + Product type
+        cursor.execute('SELECT t.id '
+            'FROM "' + Template._table + '" t '
+                'INNER JOIN "' + TemplateAnalysis._table + '" ta '
+                'ON t.id = ta.template '
+            'WHERE t.active IS TRUE '
+                'AND ta.analysis = %s '
+                'AND ta.method IS NULL '
+                'AND ta.product_type = %s '
+                'AND ta.matrix IS NULL',
+            (self.analysis.id, self.product_type.id))
+        template = cursor.fetchone()
+        if template:
+            return template[0]
+
+        # Analysis + Matrix
+        cursor.execute('SELECT t.id '
+            'FROM "' + Template._table + '" t '
+                'INNER JOIN "' + TemplateAnalysis._table + '" ta '
+                'ON t.id = ta.template '
+            'WHERE t.active IS TRUE '
+                'AND ta.analysis = %s '
+                'AND ta.method IS NULL '
+                'AND ta.product_type IS NULL '
+                'AND ta.matrix = %s',
+            (self.analysis.id, self.matrix.id))
+        template = cursor.fetchone()
+        if template:
+            return template[0]
+
+        # Analysis + Method
+        cursor.execute('SELECT t.id '
+            'FROM "' + Template._table + '" t '
+                'INNER JOIN "' + TemplateAnalysis._table + '" ta '
+                'ON t.id = ta.template '
+            'WHERE t.active IS TRUE '
+                'AND ta.analysis = %s '
+                'AND ta.method = %s '
+                'AND ta.product_type IS NULL '
+                'AND ta.matrix IS NULL',
             (self.analysis.id, self.method.id))
         template = cursor.fetchone()
-        if not template:
-            cursor.execute('SELECT t.id '
-                'FROM "' + Template._table + '" t '
-                    'INNER JOIN "' + TemplateAnalysis._table + '" ta '
-                    'ON t.id = ta.template '
-                'WHERE t.active IS TRUE '
-                    'AND ta.analysis = %s '
-                    'AND ta.method IS NULL',
-                (self.analysis.id,))
-            template = cursor.fetchone()
+        if template:
+            return template[0]
 
-        return template and template[0] or None
+        # Analysis
+        cursor.execute('SELECT t.id '
+            'FROM "' + Template._table + '" t '
+                'INNER JOIN "' + TemplateAnalysis._table + '" ta '
+                'ON t.id = ta.template '
+            'WHERE t.active IS TRUE '
+                'AND ta.analysis = %s '
+                'AND ta.method IS NULL '
+                'AND ta.product_type IS NULL '
+                'AND ta.matrix IS NULL',
+            (self.analysis.id,))
+        template = cursor.fetchone()
+        if template:
+            return template[0]
+
+        return None
 
     @classmethod
     def write(cls, *args):
@@ -84,8 +170,10 @@ class NotebookLine(metaclass=PoolMeta):
                         ('compilation', '=', s.compilation.id),
                         ('notebook_line', '=', nb_line.id),
                         ], limit=1)
-                    if lines:
-                        Data.write(lines, {'annulled': annulled})
+                    if not lines:
+                        continue
+                    Data.write(lines, {'annulled': annulled})
+                    break
 
     @fields.depends('end_date', 'analysis', 'method')
     def on_change_end_date(self):

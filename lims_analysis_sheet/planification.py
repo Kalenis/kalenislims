@@ -239,6 +239,7 @@ class SearchAnalysisSheet(Wizard):
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
         Fraction = pool.get('lims.fraction')
+        Sample = pool.get('lims.sample')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Analysis = pool.get('lims.analysis')
         Template = pool.get('lims.template.analysis_sheet')
@@ -267,15 +268,17 @@ class SearchAnalysisSheet(Wizard):
             dates_where += ('AND ad.confirmation_date::date <= \'%s\'::date ' %
                 planification.date_to)
 
-        sql_select = 'SELECT nl.analysis, nl.method '
+        sql_select = 'SELECT nl.analysis, nl.method, s.product_type, s.matrix '
         sql_from = (
             'FROM "' + NotebookLine._table + '" nl '
             'INNER JOIN "' + Analysis._table + '" nla '
             'ON nla.id = nl.analysis '
-            'INNER JOIN "' + Notebook._table + '" nb '
-            'ON nb.id = nl.notebook '
-            'INNER JOIN "' + Fraction._table + '" frc '
-            'ON frc.id = nb.fraction '
+            'INNER JOIN "' + Notebook._table + '" n '
+            'ON n.id = nl.notebook '
+            'INNER JOIN "' + Fraction._table + '" f '
+            'ON f.id = n.fraction '
+            'INNER JOIN "' + Sample._table + '" s '
+            'ON s.id = f.sample '
             'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
             'ON ad.id = nl.analysis_detail ')
         sql_where = (
@@ -301,8 +304,10 @@ class SearchAnalysisSheet(Wizard):
                     'ON t.id = ta.template '
                 'WHERE t.active IS TRUE '
                     'AND ta.analysis = %s '
-                    'AND (ta.method = %s OR ta.method IS NULL)',
-                (nl[0], nl[1]))
+                    'AND (ta.method = %s OR ta.method IS NULL) '
+                    'AND (ta.product_type = %s OR ta.product_type IS NULL) '
+                    'AND (ta.matrix = %s OR ta.matrix IS NULL)',
+                (nl[0], nl[1], nl[2], nl[3]))
             template = cursor.fetchone()
             if template:
                 result.append(template[0])
@@ -998,6 +1003,7 @@ class SamplesPendingPlanning(ModelSQL, ModelView):
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
         Fraction = pool.get('lims.fraction')
+        Sample = pool.get('lims.sample')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Analysis = pool.get('lims.analysis')
         TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
@@ -1020,15 +1026,17 @@ class SamplesPendingPlanning(ModelSQL, ModelView):
             for x in [0] + planned_lines)
         preplanned_where = 'AND nl.id NOT IN (%s) ' % planned_lines_ids
 
-        sql_select = 'SELECT nl.analysis, nl.method '
+        sql_select = 'SELECT nl.analysis, nl.method, s.product_type, s.matrix '
         sql_from = (
             'FROM "' + NotebookLine._table + '" nl '
             'INNER JOIN "' + Analysis._table + '" nla '
             'ON nla.id = nl.analysis '
-            'INNER JOIN "' + Notebook._table + '" nb '
-            'ON nb.id = nl.notebook '
-            'INNER JOIN "' + Fraction._table + '" frc '
-            'ON frc.id = nb.fraction '
+            'INNER JOIN "' + Notebook._table + '" n '
+            'ON n.id = nl.notebook '
+            'INNER JOIN "' + Fraction._table + '" f '
+            'ON f.id = n.fraction '
+            'INNER JOIN "' + Sample._table + '" s '
+            'ON s.id = f.sample '
             'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
             'ON ad.id = nl.analysis_detail ')
         sql_where = (
@@ -1064,8 +1072,10 @@ class SamplesPendingPlanning(ModelSQL, ModelView):
                     'ON t.id = ta.template '
                 'WHERE t.active IS TRUE '
                     'AND ta.analysis = %s '
-                    'AND (ta.method = %s OR ta.method IS NULL)',
-                (nl[0], nl[1]))
+                    'AND (ta.method = %s OR ta.method IS NULL) '
+                    'AND (ta.product_type = %s OR ta.product_type IS NULL) '
+                    'AND (ta.matrix = %s OR ta.matrix IS NULL)',
+                (nl[0], nl[1], nl[2], nl[3]))
             template_id = cursor.fetchone()
             if template_id:
                 result.append(template_id[0])
