@@ -62,6 +62,9 @@ def get_variable(notebook_line, variable):
     res = VariableValue.get_value(variable, analysis, product_type)
     if res:
         return res
+    res = VariableValue.get_value(variable, analysis, method)
+    if res:
+        return res
     res = VariableValue.get_value(variable, analysis)
     if res:
         return res
