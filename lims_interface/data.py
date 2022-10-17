@@ -244,7 +244,7 @@ class Data(ModelSQL, ModelView):
     def __getattr__(self, name):
         try:
             return super().__getattr__(name)
-        except AttributeError:
+        except (AttributeError, KeyError):
             pass
 
     def on_change_with(self, fieldnames):
@@ -680,13 +680,15 @@ class Data(ModelSQL, ModelView):
 
         compilation_id = Transaction().context.get(
             'lims_interface_compilation')
-        if not compilation_id:
-            return
-
-        compilation = Compilation(compilation_id)
-        table = compilation.table
-        interface = compilation.interface
-        sql_table = SqlTable(table.name)
+        if compilation_id:
+            compilation = Compilation(compilation_id)
+            table = compilation.table
+            interface = compilation.interface
+            sql_table = SqlTable(table.name)
+        else:
+            table = cls.get_table()
+            sql_table = cls.get_sql_table()
+            interface = cls.get_interface()
 
         formula_fields = []
         fields = TableField.search([
@@ -926,8 +928,9 @@ class GroupedData(ModelView):
 
     @classmethod
     def fields_get(cls, fields_names=None, group=0, level=0):
-        Model = Pool().get('ir.model')
-        Data = Pool().get('lims.interface.data')
+        pool = Pool()
+        Model = pool.get('ir.model')
+        Data = pool.get('lims.interface.data')
         res = super().fields_get(fields_names)
 
         table = cls.get_table()
