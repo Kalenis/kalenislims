@@ -2665,25 +2665,32 @@ class Sample(ModelSQL, ModelView):
         return [('id', 'in', [x[0] for x in cursor.fetchall()])]
 
     @classmethod
-    def create(cls, vlist):
+    def get_workyear_sequence(cls, values={}):
         pool = Pool()
         LabWorkYear = pool.get('lims.lab.workyear')
         Sequence = pool.get('ir.sequence')
-        EntryPreAssignedSample = pool.get('lims.entry.pre_assigned_sample')
-
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
         sequence = workyear.get_sequence('sample')
         if not sequence:
             raise UserError(gettext('lims.msg_no_sample_sequence',
                 work_year=workyear.rec_name))
+        return Sequence.get_id(sequence.id)
 
+    @classmethod
+    def get_sequence(cls, values={}):
+        pool = Pool()
+        EntryPreAssignedSample = pool.get('lims.entry.pre_assigned_sample')
+        number = EntryPreAssignedSample.get_next_number(values['entry'])
+        if not number:
+            number = cls.get_workyear_sequence(values)
+        return number
+
+    @classmethod
+    def create(cls, vlist):
         vlist = [x.copy() for x in vlist]
         for values in vlist:
-            number = EntryPreAssignedSample.get_next_number(values['entry'])
-            if not number:
-                number = Sequence.get_id(sequence.id)
-            values['number'] = number
+            values['number'] = cls.get_sequence(values)
         samples = super().create(vlist)
         for sample in samples:
             sample.warn_duplicated_label()
