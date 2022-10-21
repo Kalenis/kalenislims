@@ -798,6 +798,35 @@ class Sample(metaclass=PoolMeta):
                     }),
             ]
 
+    def _get_dict_for_fast_copy(self):
+        def _many2one(value):
+            if value:
+                return str(value.id)
+            return "NULL"
+
+        def _string(value):
+            if value:
+                return "'%s'" % str(value)
+            return "NULL"
+
+        def _integer(value):
+            if value is not None:
+                return str(value)
+            return "NULL"
+
+        res = super()._get_dict_for_fast_copy()
+        res['application_date'] = _string(self.application_date)
+        res['sampling_date'] = _string(self.sampling_date)
+        res['reception_date'] = _string(self.reception_date)
+        res['treatment'] = _string(self.treatment)
+        res['dosis'] = _string(self.dosis)
+        res['after_application_days'] = _string(self.after_application_days)
+        res['glp_repetitions'] = _string(self.glp_repetitions)
+        res['sample_weight'] = _integer(self.sample_weight)
+        res['balance'] = _many2one(self.balance)
+        res['cultivation_zone'] = _string(self.cultivation_zone)
+        return res
+
 
 class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
