@@ -1631,6 +1631,43 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                 'plannable': False,
                 })
 
+    def _get_dict_for_fast_copy(self):
+        def _many2one(value):
+            if value:
+                return str(value.id)
+            return "NULL"
+
+        def _string(value):
+            if value:
+                return "'%s'" % str(value)
+            return "NULL"
+
+        def _integer(value):
+            if value is not None:
+                return str(value)
+            return "NULL"
+
+        def _boolean(value):
+            if value:
+                return "TRUE"
+            return "FALSE"
+
+        res = {
+            'create_uid': _many2one(self.create_uid),
+            'create_date': _string(self.create_date),
+            'analysis': _many2one(self.analysis),
+            'laboratory': _many2one(self.laboratory),
+            'method': _many2one(self.method),
+            'device': _many2one(self.device),
+            'analysis_origin': _string(self.analysis_origin),
+            'report_grouper': _integer(self.report_grouper),
+            'report': _boolean(self.report),
+            'state': _string(self.state),
+            'plannable': _boolean(self.plannable),
+            'referable': _boolean(self.referable),
+            }
+        return res
+
 
 class ForwardAcknowledgmentOfReceipt(Wizard):
     'Forward Acknowledgment of Samples Receipt'

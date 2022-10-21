@@ -20,6 +20,8 @@
             <field name="analysis_product_category"/>
             <label name="entry_confirm_background"/>
             <field name="entry_confirm_background"/>
+            <label name="sample_fast_copy"/>
+            <field name="sample_fast_copy"/>
             <label name="entry_default_contacts"/>
             <field name="entry_default_contacts"/>
             <label name="samples_in_progress"/>

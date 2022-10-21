@@ -966,6 +966,47 @@ class Service(ModelSQL, ModelView):
             new_services.append(new_service)
         return new_services
 
+    def _get_dict_for_fast_copy(self):
+        def _many2one(value):
+            if value:
+                return str(value.id)
+            return "NULL"
+
+        def _string(value):
+            if value:
+                return "'%s'" % str(value)
+            return "NULL"
+
+        def _integer(value):
+            if value is not None:
+                return str(value)
+            return "NULL"
+
+        def _boolean(value):
+            if value:
+                return "TRUE"
+            return "FALSE"
+
+        res = {
+            'create_uid': _many2one(self.create_uid),
+            'create_date': _string(self.create_date),
+            'analysis': _many2one(self.analysis),
+            'urgent': _boolean(self.urgent),
+            'priority': _integer(self.priority),
+            'estimated_waiting_laboratory': _integer(
+                self.estimated_waiting_laboratory),
+            'estimated_waiting_report': _integer(
+                self.estimated_waiting_report),
+            'laboratory_date': _string(self.laboratory_date),
+            'report_date': _string(self.report_date),
+            'laboratory': _many2one(self.laboratory),
+            'method': _many2one(self.method),
+            'device': _many2one(self.device),
+            'comments': _string(self.comments),
+            'divide': _boolean(self.divide),
+            }
+        return res
+
     @staticmethod
     def copy_analysis_comments(services):
         pool = Pool()
@@ -1794,6 +1835,41 @@ class Fraction(ModelSQL, ModelView):
                     default=current_default)
                 new_fractions.append(new_fraction)
         return new_fractions
+
+    def _get_dict_for_fast_copy(self):
+        def _many2one(value):
+            if value:
+                return str(value.id)
+            return "NULL"
+
+        def _string(value):
+            if value:
+                return "'%s'" % str(value)
+            return "NULL"
+
+        def _integer(value):
+            if value is not None:
+                return str(value)
+            return "NULL"
+
+        def _boolean(value):
+            if value:
+                return "TRUE"
+            return "FALSE"
+
+        res = {
+            'create_uid': _many2one(self.create_uid),
+            'create_date': _string(self.create_date),
+            'type': _many2one(self.type),
+            'storage_location': _many2one(self.storage_location),
+            'storage_time': _integer(self.storage_time),
+            'packages_quantity': _integer(self.packages_quantity),
+            'package_type': _many2one(self.package_type),
+            'fraction_state': _many2one(self.fraction_state),
+            'shared': _boolean(self.shared),
+            'comments': _string(self.comments),
+            }
+        return res
 
     @classmethod
     def check_delete(cls, fractions):
@@ -2824,6 +2900,168 @@ class Sample(ModelSQL, ModelView):
             new_samples.append(new_sample)
         return new_samples
 
+    @classmethod
+    def fast_copy(cls, sample, default, labels):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        LabWorkYear = pool.get('lims.lab.workyear')
+
+        workyear_id = LabWorkYear.find()
+        workyear = LabWorkYear(workyear_id)
+        sample_sequence = workyear.get_sequence('sample')
+        if not sample_sequence:
+            raise UserError(gettext('lims.msg_no_sample_sequence',
+                work_year=workyear.rec_name))
+        service_sequence = workyear.get_sequence('service')
+        if not service_sequence:
+            raise UserError(gettext('lims.msg_no_service_sequence',
+                work_year=workyear.rec_name))
+
+        sample_dict = sample._get_dict_for_fast_copy()
+        for label in labels:
+            if not label:
+                continue
+
+            # sample
+            sample_number = sample_sequence.get()
+            f_count = 0
+            sample_dict['number'] = "'%s'" % str(sample_number)
+            sample_dict['label'] = "'%s'" % str(label)
+
+            query = "INSERT INTO lims_sample ("
+            query += ", ".join([str(x) for x in sample_dict.keys()])
+            query += ") VALUES ("
+            query += ", ".join([str(x) for x in sample_dict.values()])
+            query += ") RETURNING id"
+            cursor.execute(query)
+            row = cursor.fetchone()
+            if not row:
+                raise
+            sample_id = row[0]
+
+            # sample eng fields
+            if default.get('sample_client_description_lang'):
+                cursor.execute("INSERT INTO ir_translation "
+                    "(lang, src, name, res_id, value, type) VALUES "
+                    "(%s, %s, 'lims.sample,sample_client_description', %s, "
+                    "%s, 'model')",
+                    (default['foreign_language_code'],
+                    sample_dict['sample_client_description'], sample_id,
+                    default['sample_client_description_lang']))
+            if default.get('obj_description_manual_lang'):
+                cursor.execute("INSERT INTO ir_translation "
+                    "(lang, src, name, res_id, value, type) VALUES "
+                    "(%s, %s, 'lims.sample,obj_description_manual', %s, "
+                    "%s, 'model')",
+                    (default['foreign_language_code'],
+                    sample_dict['obj_description_manual'], sample_id,
+                    default['obj_description_manual_lang']))
+
+            # fractions
+            for fraction in sample.fractions:
+                fraction_dict = fraction._get_dict_for_fast_copy()
+                fraction_dict['sample'] = str(sample_id)
+                f_count += 1
+                fraction_dict['number'] = "'%s-%s'" % (sample_number, f_count)
+
+                query = "INSERT INTO lims_fraction ("
+                query += ", ".join([str(x) for x in fraction_dict.keys()])
+                query += ") VALUES ("
+                query += ", ".join([str(x) for x in fraction_dict.values()])
+                query += ") RETURNING id"
+                cursor.execute(query)
+                row = cursor.fetchone()
+                if not row:
+                    raise
+                fraction_id = row[0]
+
+                # services
+                for service in fraction.services:
+                    service_dict = service._get_dict_for_fast_copy()
+                    service_dict['fraction'] = str(fraction_id)
+                    service_number = service_sequence.get()
+                    service_dict['number'] = "'%s'" % str(service_number)
+
+                    query = "INSERT INTO lims_service ("
+                    query += ", ".join([str(x) for x in service_dict.keys()])
+                    query += ") VALUES ("
+                    query += ", ".join([str(x) for x in service_dict.values()])
+                    query += ") RETURNING id"
+                    cursor.execute(query)
+                    row = cursor.fetchone()
+                    if not row:
+                        raise
+                    service_id = row[0]
+
+                    # analysis_detail
+                    for detail in service.analysis_detail:
+                        detail_dict = detail._get_dict_for_fast_copy()
+                        detail_dict['service'] = str(service_id)
+
+                        query = "INSERT INTO lims_entry_detail_analysis ("
+                        query += ", ".join([str(x)
+                            for x in detail_dict.keys()])
+                        query += ") VALUES ("
+                        query += ", ".join([str(x)
+                            for x in detail_dict.values()])
+                        query += ") RETURNING id"
+                        cursor.execute(query)
+                        row = cursor.fetchone()
+                        if not row:
+                            raise
+
+    def _get_dict_for_fast_copy(self):
+        def _many2one(value):
+            if value:
+                return str(value.id)
+            return "NULL"
+
+        def _string(value):
+            if value:
+                return "'%s'" % str(value)
+            return "NULL"
+
+        def _integer(value):
+            if value is not None:
+                return str(value)
+            return "NULL"
+
+        def _boolean(value):
+            if value:
+                return "TRUE"
+            return "FALSE"
+
+        res = {
+            'create_uid': _many2one(self.create_uid),
+            'create_date': _string(self.create_date),
+            'date': _string(self.date),
+            'entry': _many2one(self.entry),
+            'party': _many2one(self.party),
+            'producer': _many2one(self.producer),
+            'sample_client_description': _string(
+                self.sample_client_description),
+            'product_type': _many2one(self.product_type),
+            'matrix': _many2one(self.matrix),
+            'obj_description': _many2one(self.obj_description),
+            'obj_description_manual': _string(
+                self.obj_description_manual),
+            'package_state': _many2one(self.package_state),
+            'package_type': _many2one(self.package_type),
+            'packages_quantity': _integer(self.packages_quantity),
+            'restricted_entry': _boolean(self.restricted_entry),
+            'zone': _many2one(self.zone),
+            'trace_report': _boolean(self.trace_report),
+            'report_comments': _string(self.report_comments),
+            'comments': _string(self.comments),
+            'variety': _many2one(self.variety),
+            'attributes': _string(self.attributes),
+            'state': _string(self.state),
+            'qty_lines_pending': _integer(self.qty_lines_pending),
+            'qty_lines_pending_acceptance': _integer(
+                self.qty_lines_pending_acceptance),
+            }
+        return res
+
     def get_date(self, name):
         pool = Pool()
         Company = pool.get('company.company')
@@ -3488,7 +3726,7 @@ class Sample(ModelSQL, ModelView):
 
     def _get_origin_default_dates(self):
         ''' Used on Manage services context
-            Sample dates modifier based on origin. 
+            Sample dates modifier based on origin.
             Extend this method for use cases where the sample
             is not part of an entry.
         '''
@@ -3522,7 +3760,7 @@ class Sample(ModelSQL, ModelView):
                     'INNER JOIN "' + Fraction._table + '" f '
                     'ON f.id = s.fraction '
                 'WHERE f.sample = %s',
-                (self.id,))    
+                (self.id,))
             res['confirmation_date'] = cursor.fetchone()[0] or None
 
         # Laboratory deadline
@@ -4350,7 +4588,8 @@ class AddSampleService(Wizard):
                         service.method and service.method.id or None)
                     if key not in original_analysis:
                         self.create_service(service, fraction)
-                        if fraction.entry and fraction.entry.state == 'ongoing':
+                        if (fraction.entry and
+                                fraction.entry.state == 'ongoing'):
                             send_ack = True
                         delete_ack_report_cache = True
 
@@ -4541,7 +4780,8 @@ class EditSampleService(Wizard):
                         service.method and service.method.id or None)
                     if key not in original_analysis:
                         self.create_service(service, fraction)
-                        if fraction.entry and fraction.entry.state == 'ongoing':
+                        if (fraction.entry and
+                                fraction.entry.state == 'ongoing'):
                             send_ack = True
                         delete_ack_report_cache = True
                 self.update_fraction_services(fraction)
@@ -6403,12 +6643,18 @@ class CreateSample(Wizard):
         pool = Pool()
         Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
+        Config = pool.get('lims.configuration')
 
         entry_id = Transaction().context['active_id']
         entry = Entry(entry_id)
         samples_defaults = self._get_samples_defaults(entry_id)
         logger.info('.. Sample.create(..)')
         sample, = Sample.create(samples_defaults)
+        fast_default = {
+            'foreign_language_code': entry.report_language.code,
+            'sample_client_description_lang': None,
+            'obj_description_manual_lang': None,
+            }
 
         foreign_language = entry.report_language.code
         if (hasattr(self.start, 'sample_client_description_lang') and
@@ -6418,6 +6664,8 @@ class CreateSample(Wizard):
                 sample_lang.sample_client_description = (
                     self.start.sample_client_description_lang)
                 sample_lang.save()
+                fast_default['sample_client_description_lang'] = (
+                    self.start.sample_client_description_lang)
         if (hasattr(self.start, 'obj_description_manual_lang') and
                 getattr(self.start, 'obj_description_manual_lang')):
             with Transaction().set_context(language=foreign_language):
@@ -6425,17 +6673,26 @@ class CreateSample(Wizard):
                 sample_lang.obj_description_manual = (
                     self.start.obj_description_manual_lang)
                 sample_lang.save()
+                fast_default['obj_description_manual_lang'] = (
+                    self.start.obj_description_manual_lang)
 
         labels_list = self._get_labels_list(self.start.labels)
         if len(labels_list) > 1:
-            logger.info('.. Sample.copy(..): %s' % (len(labels_list) - 1))
-            for label in labels_list[1:]:
-                if not label:
-                    continue
-                with Transaction().set_context(create_sample=True):
-                    Sample.copy([sample], default={
-                        'label': label,
-                        })
+            config_ = Config(1)
+            if config_.sample_fast_copy:
+                logger.info('.. Sample.fast_copy(..): %s' %
+                    (len(labels_list) - 1))
+                Sample.fast_copy(sample, fast_default, labels_list[1:])
+            else:
+                logger.info('.. Sample.copy(..): %s' %
+                    (len(labels_list) - 1))
+                for label in labels_list[1:]:
+                    if not label:
+                        continue
+                    with Transaction().set_context(create_sample=True):
+                        Sample.copy([sample], default={
+                            'label': label,
+                            })
 
         logger.info('-- CreateSample().transition_create_():END --')
         return 'end'

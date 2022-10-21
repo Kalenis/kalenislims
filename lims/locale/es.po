@@ -503,6 +503,10 @@ msgctxt "field:lims.configuration,rm_start_uom:"
 msgid "RM Start UoM"
 msgstr "UdM inicial RM"
 
+msgctxt "field:lims.configuration,sample_fast_copy:"
+msgid "Fast Sample Creation (Experimental)"
+msgstr "Creación rápida de muestras (Experimental)"
+
 msgctxt "field:lims.configuration,samples_in_progress:"
 msgid "Samples in progress"
 msgstr "Muestras en curso"

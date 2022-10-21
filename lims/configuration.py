@@ -275,6 +275,7 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     mail_referral_subject = fields.Char('Email subject of Referral of Samples',
         help="A suffix with the referral number will be added to the text")
     mail_referral_body = fields.Text('Email body of Referral of Samples')
+    sample_fast_copy = fields.Boolean('Fast Sample Creation (Experimental)')
 
     @staticmethod
     def default_brix_digits():
@@ -341,6 +342,9 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
             ('code', '=', 'es'),
             ])
         return langs and langs[0].id or None
+
+    def default_sample_fast_copy():
+        return False
 
     def get_reagents(self):
         res = []
