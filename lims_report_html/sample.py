@@ -49,6 +49,17 @@ class Sample(metaclass=PoolMeta):
             self.resultrange_origin = (
                 self.result_template.resultrange_origin.id)
 
+    def _get_dict_for_fast_copy(self):
+        def _many2one(value):
+            if value:
+                return str(value.id)
+            return "NULL"
+
+        res = super()._get_dict_for_fast_copy()
+        res['result_template'] = _many2one(self.result_template)
+        res['resultrange_origin'] = _many2one(self.resultrange_origin)
+        return res
+
 
 class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
