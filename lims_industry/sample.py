@@ -326,6 +326,50 @@ class Sample(metaclass=PoolMeta):
                 AdministrativeTask.delete(tasks)
         super().delete(samples)
 
+    def _get_dict_for_fast_copy(self):
+        def _many2one(value):
+            if value:
+                return str(value.id)
+            return "NULL"
+
+        def _string(value):
+            if value:
+                return "'%s'" % str(value)
+            return "NULL"
+
+        def _integer(value):
+            if value is not None:
+                return str(value)
+            return "NULL"
+
+        def _boolean(value):
+            if value:
+                return "TRUE"
+            return "FALSE"
+
+        res = super()._get_dict_for_fast_copy()
+        res['equipment'] = _many2one(self.equipment)
+        res['component'] = _many2one(self.component)
+        res['comercial_product'] = _many2one(self.comercial_product)
+        res['ind_sampling_date'] = _string(self.ind_sampling_date)
+        res['ind_volume'] = _integer(self.ind_volume)
+        res['sampling_type'] = _many2one(self.sampling_type)
+        res['ind_operational_detail'] = _string(self.ind_operational_detail)
+        res['ind_work_environment'] = _string(self.ind_work_environment)
+        res['ind_analysis_reason'] = _string(self.ind_analysis_reason)
+        res['missing_data'] = _boolean(self.missing_data)
+        res['oil_added'] = _integer(self.oil_added)
+        res['ind_equipment'] = _integer(self.ind_equipment)
+        res['ind_equipment_uom'] = _string(self.ind_equipment_uom)
+        res['ind_component'] = _integer(self.ind_component)
+        res['ind_component_uom'] = _string(self.ind_component_uom)
+        res['ind_oil'] = _integer(self.ind_oil)
+        res['ind_oil_uom'] = _string(self.ind_oil_uom)
+        res['oil_changed'] = _string(self.oil_changed)
+        res['oil_filter_changed'] = _string(self.oil_filter_changed)
+        res['air_filter_changed'] = _string(self.air_filter_changed)
+        return res
+
 
 class SampleEditionLog(ModelSQL, ModelView):
     'Sample Edition Log'
