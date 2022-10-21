@@ -47,19 +47,20 @@ class Entry(metaclass=PoolMeta):
 class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
 
-    sampling_point = fields.Char('Sampling point', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'water'))),
-            }, depends=['project_type'])
-    gps_coordinates = fields.Char('GPS coordinates', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'water'))),
-            }, depends=['project_type'])
-    sampling_datetime = fields.DateTime('Sampling date and time', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'water'))),
-            }, depends=['project_type'])
+    _states = {'invisible': Eval('project_type') != 'water'}
+    _depends = ['project_type']
+
+    sampling_point = fields.Char('Sampling point',
+        states=_states, depends=_depends)
+    gps_coordinates = fields.Char('GPS coordinates',
+        states=_states, depends=_depends)
+    sampling_datetime = fields.DateTime('Sampling date and time',
+        states=_states, depends=_depends)
     sampling_responsible = fields.Many2One('party.party',
-        'Sampling responsible', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'water'))),
-            }, depends=['project_type'])
+        'Sampling responsible',
+        states=_states, depends=_depends)
+
+    del _states, _depends
 
     @classmethod
     def view_attributes(cls):
@@ -70,23 +71,42 @@ class Sample(metaclass=PoolMeta):
                     }),
             ]
 
+    def _get_dict_for_fast_copy(self):
+        def _many2one(value):
+            if value:
+                return str(value.id)
+            return "NULL"
+
+        def _string(value):
+            if value:
+                return "'%s'" % str(value)
+            return "NULL"
+
+        res = super()._get_dict_for_fast_copy()
+        res['sampling_point'] = _string(self.sampling_point)
+        res['gps_coordinates'] = _string(self.gps_coordinates)
+        res['sampling_datetime'] = _string(self.sampling_datetime)
+        res['sampling_responsible'] = _many2one(self.sampling_responsible)
+        return res
+
 
 class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
 
-    sampling_point = fields.Char('Sampling point', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'water'))),
-            }, depends=['project_type'])
-    gps_coordinates = fields.Char('GPS coordinates', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'water'))),
-            }, depends=['project_type'])
-    sampling_datetime = fields.DateTime('Sampling date and time', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'water'))),
-            }, depends=['project_type'])
+    _states = {'invisible': Eval('project_type') != 'water'}
+    _depends = ['project_type']
+
+    sampling_point = fields.Char('Sampling point',
+        states=_states, depends=_depends)
+    gps_coordinates = fields.Char('GPS coordinates',
+        states=_states, depends=_depends)
+    sampling_datetime = fields.DateTime('Sampling date and time',
+        states=_states, depends=_depends)
     sampling_responsible = fields.Many2One('party.party',
-        'Sampling responsible', states={
-            'invisible': Not(Bool(Equal(Eval('project_type'), 'water'))),
-            }, depends=['project_type'])
+        'Sampling responsible',
+        states=_states, depends=_depends)
+
+    del _states, _depends
 
     @classmethod
     def view_attributes(cls):
