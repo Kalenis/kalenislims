@@ -66,6 +66,17 @@ class Sample(metaclass=PoolMeta):
             return sample.product_type.diagnostician.id
         return None
 
+    def _get_dict_for_fast_copy(self):
+        def _many2one(value):
+            if value:
+                return str(value.id)
+            return "NULL"
+
+        res = super()._get_dict_for_fast_copy()
+        res['diagnostician'] = _many2one(self.diagnostician)
+        res['diagnosis_template'] = _many2one(self.diagnosis_template)
+        return res
+
 
 class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
