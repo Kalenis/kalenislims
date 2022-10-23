@@ -548,8 +548,8 @@ class ResultReport(metaclass=PoolMeta):
     __name__ = 'lims.result_report'
 
     @classmethod
-    def get_context(cls, records, data):
-        report_context = super().get_context(records, data)
+    def get_context(cls, records, header, data):
+        report_context = super().get_context(records, header, data)
         report_context['state_image'] = cls.get_state_image
         return report_context
 
