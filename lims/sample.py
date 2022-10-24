@@ -2804,6 +2804,8 @@ class Sample(ModelSQL, ModelView):
                             raise
 
     def _get_dict_for_fast_copy(self):
+        cursor = Transaction().connection.cursor()
+
         def _many2one(value):
             if value:
                 return str(value.id)
@@ -2823,6 +2825,14 @@ class Sample(ModelSQL, ModelView):
             if value:
                 return "TRUE"
             return "FALSE"
+
+        def _dict(sample_id, field_name):
+            cursor.execute('SELECT ' + field_name +
+                ' FROM lims_sample WHERE id = ' + str(sample_id))
+            value = cursor.fetchone()
+            if value:
+                return "'%s'" % str(value[0])
+            return "NULL"
 
         res = {
             'create_uid': _many2one(self.create_uid),
@@ -2847,7 +2857,7 @@ class Sample(ModelSQL, ModelView):
             'report_comments': _string(self.report_comments),
             'comments': _string(self.comments),
             'variety': _many2one(self.variety),
-            'attributes': _string(self.attributes),
+            'attributes': _dict(self.id, 'attributes'),
             'state': _string(self.state),
             'qty_lines_pending': _integer(self.qty_lines_pending),
             'qty_lines_pending_acceptance': _integer(
