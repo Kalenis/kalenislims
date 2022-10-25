@@ -1368,7 +1368,7 @@ class EditGroupedData(Wizard):
                 lims_interface_table=sheet.compilation.table.id):
             line = Data.search([('id', '=', line_id)])[0]
             record = {
-                'notebook_line': line.notebook_line.id,
+                'notebook_line': line.notebook_line and line.notebook_line.id,
                 }
             for field in fields:
                 if field.group:
@@ -1394,7 +1394,8 @@ class EditGroupedData(Wizard):
                 group_fields = []
                 for rep in range(1, reps):
                     grouped_record = {
-                        'notebook_line': line.notebook_line.id,
+                        'notebook_line': (line.notebook_line and
+                            line.notebook_line.id),
                         'data': line.id,
                         'iteration': rep,
                         }
