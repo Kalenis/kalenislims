@@ -2830,7 +2830,7 @@ class Sample(ModelSQL, ModelView):
             cursor.execute('SELECT ' + field_name +
                 ' FROM lims_sample WHERE id = ' + str(sample_id))
             value = cursor.fetchone()
-            if value:
+            if value and value[0] is not None:
                 return "'%s'" % str(value[0])
             return "NULL"
 
