@@ -1370,15 +1370,17 @@ class EditGroupedData(Wizard):
         data = []
         with Transaction().set_context(
                 lims_interface_table=sheet.compilation.table.id):
-            line = Data.search([('id', '=', line_id)])[0]
+            line = Data.search([
+                ('compilation', '=', sheet.compilation.id),
+                ('id', '=', line_id)])[0]
             record = {
                 'notebook_line': line.notebook_line and line.notebook_line.id,
                 }
             for field in fields:
                 if field.group:
                     continue
-                val = getattr(line, '%s' % (field.name, ))
-                if val != 0.0 and not val:
+                val = getattr(line, field.name, None)
+                if val is None:
                     continue
                 if field.type == 'many2one':
                     record[field.name] = val and val.id or None
@@ -1410,7 +1412,7 @@ class EditGroupedData(Wizard):
                         else:
                             grouped_record[field.name] = val
                     group_fields.append(grouped_record)
-                record['group_%s' % (group, )] = group_fields
+                record['group_%s' % group] = group_fields
 
             data.append(record)
 
@@ -1436,7 +1438,9 @@ class EditGroupedData(Wizard):
 
         with Transaction().set_context(
                 lims_interface_table=sheet.compilation.table.id):
-            line = Data.search([('id', '=', line_id)])[0]
+            line = Data.search([
+                ('compilation', '=', sheet.compilation.id),
+                ('id', '=', line_id)])[0]
             res = {}
             for data in self.start.data:
                 groups = 0
@@ -1458,7 +1462,7 @@ class EditGroupedData(Wizard):
 
                 for group in range(1, groups + 1):
                     for group_data in getattr(
-                            data, 'group_%s' % (group, )):
+                            data, 'group_%s' % group):
                         for field in grouped_fields:
                             if field.group != group:
                                 continue

@@ -489,13 +489,13 @@ class Data(ModelSQL, ModelView):
                 }
             res[field_name]['views'] = {
                 'tree': GroupedData.fields_view_get(
-                    view_type='tree', group=i + 1)}
+                    view_type='tree', level=i + 1)}
             func_name = '%s_%s' % ('on_change_with', field_name)
             cls.__rpc__.setdefault(func_name, RPC(instantiate=0))
         return res
 
     @classmethod
-    def fields_view_get(cls, view_id=None, view_type='form'):
+    def fields_view_get(cls, view_id=None, view_type='form', level=None):
         if Pool().test:
             return
         table = cls.get_table()
@@ -1024,12 +1024,12 @@ class GroupedData(ModelView):
         return res
 
     @classmethod
-    def fields_view_get(cls, view_id=None, view_type='form', group=0):
+    def fields_view_get(cls, view_id=None, view_type='form', level=0):
         if Pool().test:
             return
         table = cls.get_table()
         for view in table.grouped_views:
-            if view.type == view_type and view.group == group:
+            if view.type == view_type and view.group == level:
                 break
         assert(view.id)
 
@@ -1039,7 +1039,7 @@ class GroupedData(ModelView):
             'iteration',
             ]
         for field in table.grouped_fields_:
-            if field.group != group:
+            if field.group != level:
                 continue
             fields_names.append(field.name)
         res = {
@@ -1047,7 +1047,7 @@ class GroupedData(ModelView):
             'view_id': view_id,
             'field_childs': None,
             'arch': view.arch,
-            'fields': cls.fields_get(fields_names, group),
+            'fields': cls.fields_get(fields_names, level),
             'model': cls.__name__,
             }
         return res
