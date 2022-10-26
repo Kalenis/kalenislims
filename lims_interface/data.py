@@ -2,6 +2,7 @@
 # This file is part of lims_interface module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import collections.abc
 from sql import (Table as SqlTable, Column as SqlColumn, Literal,
     Desc, Asc, NullsFirst, NullsLast)
 from sql.aggregate import Count
@@ -19,12 +20,41 @@ from trytond.tools import cursor_dict
 from trytond.pyson import PYSONEncoder, Eval
 from trytond.rpc import RPC
 from trytond.exceptions import UserError
+from trytond.cache import LRUDictTransaction
+from trytond.model.model import record as model_record
+from trytond.model.modelstorage import cache_size as model_cache_size
 from trytond.model.modelsql import convert_from
 from .interface import FIELD_TYPE_TRYTON, FIELD_TYPE_CAST
 
 
 ALLOWED_RESULT_TYPES = (str, int, float, Decimal, datetime.time,
                         datetime.date, datetime.timedelta, type(None))
+
+
+def data_record(name, field_names):
+    res = model_record(name, field_names)
+
+    def _setitem(self, field, value):
+        try:
+            return setattr(self, field, value)
+        except AttributeError:
+            pass
+    res._setitem = _setitem
+
+    def _update(self, _other=None, **kwargs):
+        if isinstance(_other, collections.abc.Mapping):
+            _other = _other.items()
+        elif _other is None:
+            _other = []
+        chained = chain(_other, kwargs.items())
+        for key, value in chained:
+            try:
+                setattr(self, key, value)
+            except AttributeError:
+                pass
+    res._update = _update
+
+    return res
 
 
 class Adapter:
@@ -225,6 +255,8 @@ class Data(ModelSQL, ModelView):
         super().__post_setup__()
         cls._previous_fields = cls._fields
         cls._fields = Adapter()
+        cls._record = data_record('lims.interface.data._record',
+            cls._fields.keys())
 
     @classmethod
     def __table__(cls):
@@ -236,6 +268,8 @@ class Data(ModelSQL, ModelView):
         kwargs_copy = kwargs.copy()
         for kw in kwargs_copy:
             kwargs.pop(kw, None)
+        kwargs['_local_cache'] = LRUDictTransaction(model_cache_size(),
+            data_record('lims.interface.data._record', self._fields.keys()))
         super().__init__(id, **kwargs)
         self._values = {}
         for kw in kwargs_copy:
@@ -244,7 +278,7 @@ class Data(ModelSQL, ModelView):
     def __getattr__(self, name):
         try:
             return super().__getattr__(name)
-        except (AttributeError, KeyError):
+        except AttributeError:
             pass
 
     def on_change_with(self, fieldnames):
