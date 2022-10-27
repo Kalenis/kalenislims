@@ -25,7 +25,19 @@ class Configuration(metaclass=PoolMeta):
 class Method(metaclass=PoolMeta):
     __name__ = 'lims.lab.method'
 
-    specification = fields.Text('Specification')
+    specification = fields.Text('Specification',
+        states={'readonly': Eval('state') != 'draft'},
+        depends=['state'])
+
+    def _get_new_version_fields(self):
+        fields = super()._get_new_version_fields()
+        return fields + ['specification']
+
+
+class MethodVersion(metaclass=PoolMeta):
+    __name__ = 'lims.lab.method.version'
+
+    specification = fields.Text('Specification', readonly=True)
 
 
 class Analysis(metaclass=PoolMeta):

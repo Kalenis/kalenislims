@@ -844,6 +844,8 @@ class NotebookLine(ModelSQL, ModelView):
     method_domain = fields.Function(fields.Many2Many('lims.lab.method',
         None, None, 'Method domain'),
         'on_change_with_method_domain')
+    method_version = fields.Many2One('lims.lab.method.version',
+        'Method version', readonly=True)
     device = fields.Many2One('lims.lab.device', 'Device',
         states=_states,
         domain=['OR', ('id', '=', Eval('device')),
@@ -1088,8 +1090,19 @@ class NotebookLine(ModelSQL, ModelView):
 
     @classmethod
     def create(cls, vlist):
-        Sample = Pool().get('lims.sample')
+        pool = Pool()
+        LabMethod = pool.get('lims.lab.method')
+        Sample = pool.get('lims.sample')
+
+        vlist = [x.copy() for x in vlist]
+        for values in vlist:
+            # set method version
+            if 'method' in values and values['method'] is not None:
+                values['method_version'] = LabMethod(
+                    values['method']).get_current_version()
+
         lines = super().create(vlist)
+
         cls.update_detail_report(lines)
         sample_ids = list(set(nl.sample.id for nl in lines))
         Sample.update_samples_state(sample_ids)
@@ -1097,8 +1110,21 @@ class NotebookLine(ModelSQL, ModelView):
 
     @classmethod
     def write(cls, *args):
-        Sample = Pool().get('lims.sample')
+        pool = Pool()
+        LabMethod = pool.get('lims.lab.method')
+        Sample = pool.get('lims.sample')
+
+        actions = iter(args)
+        args = []
+        for lines, values in zip(actions, actions):
+            # set method version
+            if 'method' in values and values['method'] is not None:
+                values['method_version'] = LabMethod(
+                    values['method']).get_current_version()
+            args.extend((lines, values))
+
         super().write(*args)
+
         actions = iter(args)
         for lines, vals in zip(actions, actions):
             if vals.get('not_accepted_message'):

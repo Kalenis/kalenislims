@@ -1629,6 +1629,10 @@ msgctxt "field:lims.entry.detail.analysis,method:"
 msgid "Method"
 msgstr "Método"
 
+msgctxt "field:lims.entry.detail.analysis,method_version:"
+msgid "Method version"
+msgstr "Versión Método"
+
 msgctxt "field:lims.entry.detail.analysis,party:"
 msgid "Party"
 msgstr "Entidad"
@@ -2285,9 +2289,21 @@ msgctxt "field:lims.lab.method,results_waiting:"
 msgid "Waiting times per client"
 msgstr "Tiempos de respuesta por cliente"
 
+msgctxt "field:lims.lab.method,state:"
+msgid "State"
+msgstr "Estado"
+
 msgctxt "field:lims.lab.method,supervised_requalification:"
 msgid "Supervised requalification"
 msgstr "Recualificación supervisada"
+
+msgctxt "field:lims.lab.method,version:"
+msgid "Version"
+msgstr "Versión"
+
+msgctxt "field:lims.lab.method,versions:"
+msgid "Versions"
+msgstr "Versiones"
 
 msgctxt "field:lims.lab.method.results_waiting,method:"
 msgid "Method"
@@ -2300,6 +2316,54 @@ msgstr "Entidad"
 msgctxt "field:lims.lab.method.results_waiting,results_estimated_waiting:"
 msgid "Estimated number of days for results"
 msgstr "Cantidad estimada de días para resultados"
+
+msgctxt "field:lims.lab.method.version,code:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "field:lims.lab.method.version,deprecated_since:"
+msgid "Deprecated since"
+msgstr "Obsoleto desde"
+
+msgctxt "field:lims.lab.method.version,determination:"
+msgid "Determination"
+msgstr "Determinación"
+
+msgctxt "field:lims.lab.method.version,equivalence_code:"
+msgid "Equivalence Code"
+msgstr "Código de equivalencia"
+
+msgctxt "field:lims.lab.method.version,method:"
+msgid "Method"
+msgstr "Método"
+
+msgctxt "field:lims.lab.method.version,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.lab.method.version,pnt:"
+msgid "PNT"
+msgstr "PNT"
+
+msgctxt "field:lims.lab.method.version,reference:"
+msgid "Reference"
+msgstr "Referencia"
+
+msgctxt "field:lims.lab.method.version,requalification_months:"
+msgid "Requalification months"
+msgstr "Meses para recualificación"
+
+msgctxt "field:lims.lab.method.version,results_estimated_waiting:"
+msgid "Estimated number of days for results"
+msgstr "Cantidad estimada de días para resultados"
+
+msgctxt "field:lims.lab.method.version,supervised_requalification:"
+msgid "Supervised requalification"
+msgstr "Recualificación supervisada"
+
+msgctxt "field:lims.lab.method.version,version:"
+msgid "Version"
+msgstr "Versión"
 
 msgctxt "field:lims.lab.professional.method,determination:"
 msgid "Determination"
@@ -3046,6 +3110,10 @@ msgstr "Método"
 msgctxt "field:lims.notebook.line,method_domain:"
 msgid "Method domain"
 msgstr "Dominio para Método"
+
+msgctxt "field:lims.notebook.line,method_version:"
+msgid "Method version"
+msgstr "Versión Método"
 
 msgctxt "field:lims.notebook.line,method_view:"
 msgid "Method"
@@ -6036,6 +6104,10 @@ msgctxt "field:lims.service,method_domain:"
 msgid "Method domain"
 msgstr "Dominio para Método"
 
+msgctxt "field:lims.service,method_version:"
+msgid "Method version"
+msgstr "Versión Método"
+
 msgctxt "field:lims.service,method_view:"
 msgid "Method"
 msgstr "Método"
@@ -7775,6 +7847,10 @@ msgctxt "model:ir.action,name:wiz_lims_unlink_technicians"
 msgid "Unlink Technicians"
 msgstr "Desvincular técnicos"
 
+msgctxt "model:ir.action,name:wiz_method_new_version"
+msgid "New Method Version"
+msgstr "Nueva versión de Método"
+
 msgctxt "model:ir.action,name:wiz_notebook_evaluate_rules"
 msgid "Evaluate Rules"
 msgstr "11) Evaluar Reglas de cuaderno"
@@ -8845,6 +8921,10 @@ msgctxt "model:ir.model.button,confirm:entry_confirm_button"
 msgid "Are you sure you want to confirm the entry?"
 msgstr "¿Está seguro que desea confirmar el ingreso?"
 
+msgctxt "model:ir.model.button,confirm:method_disable_button"
+msgid "Are you sure you want to disable the method?"
+msgstr "¿Está seguro que desea deshabilitar el método?"
+
 msgctxt "model:ir.model.button,string:entry_pre_assign_sample_button"
 msgid "Pre-assign sample numbers"
 msgstr "Preasignar números de muestras"
@@ -9680,6 +9760,10 @@ msgstr "Método de laboratorio"
 msgctxt "model:lims.lab.method.results_waiting,name:"
 msgid "Waiting Time per Client"
 msgstr "Tiempo de respuesta por cliente"
+
+msgctxt "model:lims.lab.method.version,name:"
+msgid "Method Version"
+msgstr "Versión de Método"
 
 msgctxt "model:lims.lab.professional.method,name:"
 msgid "Laboratory Professional Method"
@@ -13140,6 +13224,18 @@ msgctxt "selection:lims.fraction,rm_type:"
 msgid "SLA"
 msgstr "SLA"
 
+msgctxt "selection:lims.lab.method,state:"
+msgid "Active"
+msgstr "Activo"
+
+msgctxt "selection:lims.lab.method,state:"
+msgid "Disabled"
+msgstr "Deshabilitado"
+
+msgctxt "selection:lims.lab.method,state:"
+msgid "Draft"
+msgstr "Borrador"
+
 msgctxt "selection:lims.lab.professional.method,state:"
 msgid "Qualified"
 msgstr "Cualificado"
@@ -14170,6 +14266,18 @@ msgstr "Correcciones"
 msgctxt "view:lims.lab.device:"
 msgid "Laboratories"
 msgstr "Laboratorios"
+
+msgctxt "view:lims.lab.method:"
+msgid "Activate"
+msgstr "Activar"
+
+msgctxt "view:lims.lab.method:"
+msgid "Disable"
+msgstr "Dar de baja"
+
+msgctxt "view:lims.lab.method:"
+msgid "New Version"
+msgstr "Nueva versión"
 
 msgctxt "view:lims.lab.method:"
 msgid "Times"
@@ -15267,6 +15375,14 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.lab.device.relate_analysis,start,relate:"
 msgid "Relate"
 msgstr "Relacionar"
+
+msgctxt "wizard_button:lims.lab.method.new_version,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.lab.method.new_version,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:lims.manage_services,send_ack_of_receipt,end:"
 msgid "Cancel"

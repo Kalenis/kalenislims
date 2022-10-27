@@ -142,6 +142,20 @@
             id="lims_lab_method_menu"
             parent="lims_config_base_tables" sequence="30"/>
 
+        <record model="ir.model.button" id="method_activate_button">
+            <field name="name">activate</field>
+            <field name="model" search="[('model', '=', 'lims.lab.method')]"/>
+        </record>
+        <record model="ir.model.button" id="method_disable_button">
+            <field name="name">disable</field>
+            <field name="confirm">Are you sure you want to disable the method?</field>
+            <field name="model" search="[('model', '=', 'lims.lab.method')]"/>
+        </record>
+        <record model="ir.model.button" id="method_new_version_button">
+            <field name="name">new_version</field>
+            <field name="model" search="[('model', '=', 'lims.lab.method')]"/>
+        </record>
+
         <record model="ir.model.access" id="access_lab_method">
             <field name="model" search="[('model', '=', 'lims.lab.method')]"/>
             <field name="perm_read" eval="True"/>
@@ -169,6 +183,32 @@
             <field name="model">lims.lab.method.results_waiting</field>
             <field name="type">tree</field>
             <field name="name">lab_method_results_waiting_list</field>
+        </record>
+
+<!-- Method Version -->
+
+        <record model="ir.ui.view" id="lims_lab_method_version_view_form">
+            <field name="model">lims.lab.method.version</field>
+            <field name="type">form</field>
+            <field name="name">lab_method_version_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_lab_method_version_view_list">
+            <field name="model">lims.lab.method.version</field>
+            <field name="type">tree</field>
+            <field name="name">lab_method_version_list</field>
+        </record>
+
+<!-- Wizard New Method Version -->
+
+        <record model="ir.ui.view" id="method_new_version_start_form">
+            <field name="model">lims.lab.method</field>
+            <field name="type">form</field>
+            <field name="name">lab_method_new_version_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_method_new_version">
+            <field name="name">New Method Version</field>
+            <field name="wiz_name">lims.lab.method.new_version</field>
         </record>
 
 <!-- Laboratory Device -->
