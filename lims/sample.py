@@ -615,6 +615,8 @@ class Service(ModelSQL, ModelView):
                 cls.update_analysis_detail(services)
                 fractions_ids = list(set(s.fraction.id for s in services))
                 cls.set_shared_fraction(fractions_ids)
+            if not change_detail and 'urgent' in vals:
+                cls.update_urgent_lines(services, vals.get('urgent'))
             update_samples_state = False
             for field in ('laboratory_date', 'report_date',
                     'confirmation_date'):
@@ -1073,6 +1075,19 @@ class Service(ModelSQL, ModelView):
         if analysis_details:
             EntryDetailAnalysis.write(analysis_details, {
                 'confirmation_date': confirmation_date,
+                })
+
+    @staticmethod
+    def update_urgent_lines(services, urgent):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+
+        notebook_lines = NotebookLine.search([
+            ('service', 'in', [s.id for s in services]),
+            ])
+        if notebook_lines:
+            NotebookLine.write(notebook_lines, {
+                'urgent': urgent,
                 })
 
     @fields.depends('analysis', 'fraction', 'typification_domain',
