@@ -64,4 +64,20 @@
     <field name="referable"/>
     <label name="update_referable"/>
     <field name="update_referable"/>
+    <label name="literal_final_concentration"/>
+    <field name="literal_final_concentration"/>
+    <label name="update_literal_final_concentration"/>
+    <field name="update_literal_final_concentration"/>
+    <label name="report_type"/>
+    <field name="report_type"/>
+    <label name="update_report_type"/>
+    <field name="update_report_type"/>
+    <label name="report_result_type"/>
+    <field name="report_result_type"/>
+    <label name="update_report_result_type"/>
+    <field name="update_report_result_type"/>
+    <label name="laboratory"/>
+    <field name="laboratory"/>
+    <label name="update_laboratory"/>
+    <field name="update_laboratory"/>
 </form>

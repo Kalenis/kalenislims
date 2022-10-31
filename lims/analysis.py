@@ -2874,6 +2874,16 @@ class UpdateTypificationStart(ModelView):
     scientific_notation = fields.Boolean('Scientific notation')
     report = fields.Boolean('Report')
     referable = fields.Boolean('Referred by default')
+    literal_final_concentration = fields.Char('Literal Final concentration')
+    report_type = fields.Selection([
+        ('normal', 'Normal'),
+        ('polisample', 'Polisample'),
+        ], 'Report type', sort=False)
+    report_result_type = fields.Selection([
+        ('result', 'Result'),
+        ('both', 'Both'),
+        ], 'Result type', sort=False)
+    laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
     update_detection_limit = fields.Boolean('Update Detection limit')
     update_quantification_limit = fields.Boolean('Update Quantification limit')
     update_lower_limit = fields.Boolean('Update Lower limit allowed')
@@ -2892,10 +2902,23 @@ class UpdateTypificationStart(ModelView):
     update_scientific_notation = fields.Boolean('Update Scientific notation')
     update_report = fields.Boolean('Update Report')
     update_referable = fields.Boolean('Update Referred by default')
+    update_literal_final_concentration = fields.Boolean(
+        'Update Literal Final concentration')
+    update_report_type = fields.Boolean('Update Report type')
+    update_report_result_type = fields.Boolean('Update Result type')
+    update_laboratory = fields.Boolean('Update Laboratory')
 
     @staticmethod
     def default_limit_digits():
         return 2
+
+    @staticmethod
+    def default_report_type():
+        return 'normal'
+
+    @staticmethod
+    def default_report_result_type():
+        return 'result'
 
 
 class UpdateTypification(Wizard):

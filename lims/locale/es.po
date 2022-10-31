@@ -6659,9 +6659,17 @@ msgctxt "field:lims.typification.update.start,initial_concentration:"
 msgid "Initial concentration"
 msgstr "Concentración inicial"
 
+msgctxt "field:lims.typification.update.start,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
 msgctxt "field:lims.typification.update.start,limit_digits:"
 msgid "Limit digits"
 msgstr "Dígitos de límite"
+
+msgctxt "field:lims.typification.update.start,literal_final_concentration:"
+msgid "Literal Final concentration"
+msgstr "Concentración final textual"
 
 msgctxt "field:lims.typification.update.start,lower_limit:"
 msgid "Lower limit allowed"
@@ -6678,6 +6686,14 @@ msgstr "Derivado por defecto"
 msgctxt "field:lims.typification.update.start,report:"
 msgid "Report"
 msgstr "Informe"
+
+msgctxt "field:lims.typification.update.start,report_result_type:"
+msgid "Result type"
+msgstr "Tipo de resultado"
+
+msgctxt "field:lims.typification.update.start,report_type:"
+msgid "Report type"
+msgstr "Tipo de informe"
 
 msgctxt "field:lims.typification.update.start,scientific_notation:"
 msgid "Scientific notation"
@@ -6719,9 +6735,18 @@ msgctxt "field:lims.typification.update.start,update_initial_concentration:"
 msgid "Update Initial concentration"
 msgstr "Actualizar Concentración inicial"
 
+msgctxt "field:lims.typification.update.start,update_laboratory:"
+msgid "Update Laboratory"
+msgstr "Actualizar Laboratorio"
+
 msgctxt "field:lims.typification.update.start,update_limit_digits:"
 msgid "Update Limit digits"
 msgstr "Actualizar Dígitos de límite"
+
+msgctxt ""
+"field:lims.typification.update.start,update_literal_final_concentration:"
+msgid "Update Literal Final concentration"
+msgstr "Actualizar Concentración final textual"
 
 msgctxt "field:lims.typification.update.start,update_lower_limit:"
 msgid "Update Lower limit allowed"
@@ -6738,6 +6763,14 @@ msgstr "Actualizar Derivado por defecto"
 msgctxt "field:lims.typification.update.start,update_report:"
 msgid "Update Report"
 msgstr "Actualizar Informe"
+
+msgctxt "field:lims.typification.update.start,update_report_result_type:"
+msgid "Update Result type"
+msgstr "Actualizar Tipo de resultado"
+
+msgctxt "field:lims.typification.update.start,update_report_type:"
+msgid "Update Report type"
+msgstr "Actualizar Tipo de informe"
 
 msgctxt "field:lims.typification.update.start,update_scientific_notation:"
 msgid "Update Scientific notation"
@@ -13754,6 +13787,22 @@ msgstr "No incluir alcance de acreditación"
 msgctxt "selection:lims.typification.copy.start,include_accreditation_scope:"
 msgid "Include accreditation scope"
 msgstr "Incluir alcance de acreditación"
+
+msgctxt "selection:lims.typification.update.start,report_result_type:"
+msgid "Both"
+msgstr "Ambos"
+
+msgctxt "selection:lims.typification.update.start,report_result_type:"
+msgid "Result"
+msgstr "Resultado"
+
+msgctxt "selection:lims.typification.update.start,report_type:"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "selection:lims.typification.update.start,report_type:"
+msgid "Polisample"
+msgstr "Polimuestra"
 
 msgctxt "view:ir.attachment:"
 msgid "Last Modification Time"
