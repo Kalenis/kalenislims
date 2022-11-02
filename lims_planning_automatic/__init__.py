@@ -1,4 +1,4 @@
-# This file is part of lims_automatic_planning module for Tryton.
+# This file is part of lims_planning_automatic module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
