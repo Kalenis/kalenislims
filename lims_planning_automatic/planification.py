@@ -76,6 +76,7 @@ class Planification(metaclass=PoolMeta):
             session_id, _, _ = TechniciansQualification.create()
             technicians_qualification = TechniciansQualification(session_id)
             with Transaction().set_context(active_id=planification.id):
-                technicians_qualification.transition_start()
-                technicians_qualification.transition_next_()
+                res = technicians_qualification.transition_start()
+                while res == 'next_':
+                    res = technicians_qualification.transition_next_()
                 technicians_qualification.transition_confirm()
