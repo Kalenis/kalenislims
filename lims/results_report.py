@@ -1201,7 +1201,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                 ('id', '!=', detail.id),
                 ('report_version', '=', detail.report_version.id),
                 ('valid', '=', True),
-                ('type', '!=', 'preliminary'),
+                #('type', '!=', 'preliminary'),
                 ], limit=1)
             if not valid_details:
                 continue
@@ -1953,6 +1953,9 @@ class ResultsReportVersionDetailSample(
     @classmethod
     def _get_fields_from_sample(cls, sample, only_accepted=True):
         sample_default = {}
+        # avoid copying lines from preliminary reports
+        if sample.version_detail.type == 'preliminary':
+            return sample_default
         notebook_lines = []
         for nline in sample.notebook_lines:
             if not nline.notebook_line:
