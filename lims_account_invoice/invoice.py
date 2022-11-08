@@ -284,8 +284,9 @@ class InvoiceLine(metaclass=PoolMeta):
     @classmethod
     def check_service_invoice(cls, lines):
         for line in lines:
-            if (line.origin and line.origin.__name__ == 'lims.service' and not
-                    line.economic_offer):
+            if (line.origin and line.origin.__name__ == 'lims.service' and
+                    (not hasattr(line, 'economic_offer') or
+                    not line.economic_offer)):
                 raise UserError(
                     gettext('lims_account_invoice.msg_delete_service_invoice',
                         service=line.origin.rec_name))

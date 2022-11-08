@@ -4326,7 +4326,7 @@ class AddSampleServiceStart(ModelView):
     analysis_domain = fields.Many2Many('lims.analysis', None, None,
         'Analysis domain')
     services = fields.One2Many('lims.create_sample.service', None, 'Services',
-        required=True, depends=['analysis_domain', 'product_type', 'matrix'],
+        depends=['analysis_domain', 'product_type', 'matrix'],
         context={
             'analysis_domain': Eval('analysis_domain'),
             'product_type': Eval('product_type'), 'matrix': Eval('matrix'),
@@ -4489,7 +4489,7 @@ class EditSampleServiceStart(ModelView):
     analysis_domain = fields.Many2Many('lims.analysis', None, None,
         'Analysis domain')
     services = fields.One2Many('lims.create_sample.service', None, 'Services',
-        required=True, depends=['analysis_domain', 'product_type', 'matrix'],
+        depends=['analysis_domain', 'product_type', 'matrix'],
         context={
             'analysis_domain': Eval('analysis_domain'),
             'product_type': Eval('product_type'), 'matrix': Eval('matrix'),
