@@ -1285,7 +1285,10 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         Config = pool.get('lims.configuration')
 
         with Transaction().set_user(0):
-            notebook, = Notebook.search([('fraction', '=', fraction.id)])
+            notebooks = Notebook.search([('fraction', '=', fraction.id)])
+            if not notebooks:
+                return
+            notebook = notebooks[0]
 
         lines_to_create = []
         for detail in details:
