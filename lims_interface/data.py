@@ -292,7 +292,7 @@ class Data(ModelSQL, ModelView):
         except AttributeError:
             pass
 
-    def on_change_with(self, fieldnames):
+    def on_change_with(self, fieldnames=[], single=False):
         table = self.get_table()
         res = {}
 
@@ -336,54 +336,20 @@ class Data(ModelSQL, ModelView):
                     if isinstance(x, formulas.tokens.operand.XlError):
                         value = None
             res[field.name] = value
+
+        if single and len(fieldnames) == 1:
+            return res[fieldnames[0]]
         return res
 
     @classmethod
-    def add_on_change_with_method(cls, field):
+    def add_on_change_with_method(cls, field_name):
         """
-        Dynamically add 'on_change_with_<field>' methods.
+        Dynamically add 'on_change_with_<field_name>' methods.
         """
-        fn_name = 'on_change_with_' + field.name
+        fn_name = 'on_change_with_' + field_name
 
-        def fn(self):
-            table = self.get_table()
-            grouped_fields = defaultdict(list)
-            for table_field in table.fields_:
-                if table_field.group:
-                    grouped_fields[table_field.group].append(table_field.name)
-
-            ast = field.get_ast()
-            inputs = []
-            for input_ in field.inputs.split():
-                found = False
-                for group, repetition_fields in grouped_fields.items():
-                    if input_ in repetition_fields:
-                        group_values = getattr(self, 'group_%s' % group)
-                        if not group_values:
-                            continue
-                        for line in group_values:
-                            if line['iteration'] == int(
-                                    input_.split('_')[-1:][0]):
-                                inputs.append(line[
-                                    '_'.join(input_.split('_')[:-1])])
-                        found = True
-                if not found:
-                    inputs.append(getattr(self, input_))
-            try:
-                value = ast(*inputs)
-            except schedula.utils.exc.DispatcherError as e:
-                raise UserError(e.args[0] % e.args[1:])
-            if isinstance(value, list):
-                value = str(value)
-            elif not isinstance(value, ALLOWED_RESULT_TYPES):
-                value = value.tolist()
-            if isinstance(value, formulas.tokens.operand.XlError):
-                value = None
-            elif isinstance(value, list):
-                for x in chain(*value):
-                    if isinstance(x, formulas.tokens.operand.XlError):
-                        value = None
-            return value
+        def fn(self, name=None):
+            return self.on_change_with([field_name], True)
 
         setattr(cls, fn_name, fn)
 
@@ -441,6 +407,7 @@ class Data(ModelSQL, ModelView):
                     or Eval('notebook_line').in_(readonly_ids)),
                 }
             res[field.name] = {
+                'context': encoder.encode(Transaction().context),
                 'name': field.name,
                 'string': field.string,
                 'type': FIELD_TYPE_TRYTON[field.type],
@@ -479,7 +446,7 @@ class Data(ModelSQL, ModelView):
                     if not found:
                         inputs.append(input_)
                 res[field.name]['on_change_with'] = list(set(inputs))
-                cls.add_on_change_with_method(field)
+                cls.add_on_change_with_method(field.name)
                 func_name = '%s_%s' % ('on_change_with', field.name)
                 cls.__rpc__.setdefault(func_name, RPC(instantiate=0))
 
@@ -501,8 +468,8 @@ class Data(ModelSQL, ModelView):
             res[field_name]['views'] = {
                 'tree': GroupedData.fields_view_get(
                     view_type='tree', level=i + 1)}
-            func_name = '%s_%s' % ('on_change_with', field_name)
-            cls.__rpc__.setdefault(func_name, RPC(instantiate=0))
+            #func_name = '%s_%s' % ('on_change_with', field_name)
+            #cls.__rpc__.setdefault(func_name, RPC(instantiate=0))
         return res
 
     @classmethod
@@ -912,7 +879,7 @@ class GroupedData(ModelView):
         except AttributeError:
             pass
 
-    def on_change_with(self, fieldnames):
+    def on_change_with(self, fieldnames=[], single=False):
         table = self.get_table()
         res = {}
         for field in table.grouped_fields_:
@@ -938,36 +905,20 @@ class GroupedData(ModelView):
                     if isinstance(x, formulas.tokens.operand.XlError):
                         value = None
             res[field.name] = value
+
+        if single and len(fieldnames) == 1:
+            return res[fieldnames[0]]
         return res
 
     @classmethod
-    def add_on_change_with_method(cls, field):
+    def add_on_change_with_method(cls, field_name):
         """
-        Dynamically add 'on_change_with_<field>' methods.
+        Dynamically add 'on_change_with_<field_name>' methods.
         """
-        fn_name = 'on_change_with_' + field.name
+        fn_name = 'on_change_with_' + field_name
 
-        def fn(self):
-            ast = field.get_ast()
-            inputs = field.get_inputs().split()
-            inputs = [self.data.get(x) if x in self.data.keys()
-                else getattr(self, x) for x in inputs]
-            try:
-                value = ast(*inputs)
-            except schedula.utils.exc.DispatcherError as e:
-                raise UserError(e.args[0] % e.args[1:])
-
-            if isinstance(value, list):
-                value = str(value)
-            elif not isinstance(value, ALLOWED_RESULT_TYPES):
-                value = value.tolist()
-            if isinstance(value, formulas.tokens.operand.XlError):
-                value = None
-            elif isinstance(value, list):
-                for x in chain(*value):
-                    if isinstance(x, formulas.tokens.operand.XlError):
-                        value = None
-            return value
+        def fn(self, name=None):
+            return self.on_change_with([field_name], True)
 
         setattr(cls, fn_name, fn)
 
@@ -986,6 +937,7 @@ class GroupedData(ModelView):
             if field.group != group:
                 continue
             res[field.name] = {
+                'context': encoder.encode(Transaction().context),
                 'name': field.name,
                 'string': field.string,
                 'type': FIELD_TYPE_TRYTON[field.type],
@@ -1016,7 +968,7 @@ class GroupedData(ModelView):
             if field.inputs:
                 res[field.name]['on_change_with'] = field.inputs.split() + [
                     'data']
-                cls.add_on_change_with_method(field)
+                cls.add_on_change_with_method(field.name)
                 func_name = '%s_%s' % ('on_change_with', field.name)
                 cls.__rpc__.setdefault(func_name, RPC(instantiate=0))
 
