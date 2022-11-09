@@ -265,12 +265,23 @@ class Data(ModelSQL, ModelView):
         return cls.get_sql_table()
 
     def __init__(self, id=None, **kwargs):
+        _ids = kwargs.pop('_ids', None)
+        _local_cache = kwargs.pop('_local_cache', None)
+        _transaction_cache = kwargs.pop('_transaction_cache', None)
+        transaction = kwargs.pop('_transaction', None)
+
         kwargs_copy = kwargs.copy()
         for kw in kwargs_copy:
             kwargs.pop(kw, None)
+
+        kwargs['_ids'] = _ids
         kwargs['_local_cache'] = LRUDictTransaction(model_cache_size(),
             data_record('lims.interface.data._record', self._fields.keys()))
+        kwargs['_transaction_cache'] = _transaction_cache
+        kwargs['_transaction'] = transaction
+
         super().__init__(id, **kwargs)
+
         self._values = {}
         for kw in kwargs_copy:
             self._values[kw] = kwargs_copy[kw]
