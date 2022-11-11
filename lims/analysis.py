@@ -107,6 +107,11 @@ class Typification(ModelSQL, ModelView):
         depends=['laboratory_domain'])
     laboratory_domain = fields.Function(fields.Many2Many('lims.laboratory',
         None, None, 'Laboratory domain'), 'on_change_with_laboratory_domain')
+    department = fields.Many2One('company.department', 'Department',
+        domain=[('id', 'in', Eval('department_domain'))],
+        depends=['department_domain'])
+    department_domain = fields.Function(fields.Many2Many('company.department',
+        None, None, 'Department domain'), 'on_change_with_department_domain')
 
     @classmethod
     def __setup__(cls):
@@ -214,6 +219,24 @@ class Typification(ModelSQL, ModelView):
         if self.analysis and self.analysis.laboratories:
             return [l.laboratory.id for l in self.analysis.laboratories]
         return []
+
+    @fields.depends('analysis', 'laboratory')
+    def on_change_with_department_domain(self, name=None):
+        cursor = Transaction().connection.cursor()
+        AnalysisLaboratory = Pool().get('lims.analysis-laboratory')
+
+        if not self.analysis or not self.laboratory:
+            return []
+
+        cursor.execute('SELECT DISTINCT(department) '
+            'FROM "' + AnalysisLaboratory._table + '" '
+            'WHERE analysis = %s  '
+                'AND laboratory = %s',
+            (self.analysis.id, self.laboratory.id))
+        res = cursor.fetchall()
+        if not res:
+            return []
+        return [x[0] for x in res]
 
     @fields.depends('analysis')
     def on_change_analysis(self):

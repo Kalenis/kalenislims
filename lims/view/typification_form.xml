@@ -71,4 +71,6 @@
     <field name="report_result_type"/>
     <label name="laboratory"/>
     <field name="laboratory"/>
+    <label name="department"/>
+    <field name="department"/>
 </form>

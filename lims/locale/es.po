@@ -6356,6 +6356,14 @@ msgctxt "field:lims.typification,default_repetitions:"
 msgid "Default repetitions"
 msgstr "Repeticiones por defecto"
 
+msgctxt "field:lims.typification,department:"
+msgid "Department"
+msgstr "Departamento"
+
+msgctxt "field:lims.typification,department_domain:"
+msgid "Department domain"
+msgstr "Dominio para Departamento"
+
 msgctxt "field:lims.typification,detection_limit:"
 msgid "Detection limit"
 msgstr "Límite de detección"
