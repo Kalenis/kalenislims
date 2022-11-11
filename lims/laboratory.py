@@ -770,6 +770,12 @@ class NotebookRule(ModelSQL, ModelView):
             ('type', '=', 'analysis'),
             ('behavior', '!=', 'additional'),
             ])
+    target_method = fields.Many2One('lims.lab.method', 'Target Method',
+        domain=[('id', 'in', Eval('target_method_domain'))],
+        depends=['target_method_domain'])
+    target_method_domain = fields.Function(fields.Many2Many('lims.lab.method',
+        None, None, 'Target Method domain'),
+        'on_change_with_target_method_domain')
     target_field = fields.Many2One('ir.model.field', 'Target Field',
         domain=[('id', 'in', Eval('target_field_domain'))],
         depends=['target_field_domain', 'action'], states={
@@ -808,6 +814,13 @@ class NotebookRule(ModelSQL, ModelView):
     def get_target_field_domain(self, name=None):
         return self.default_target_field_domain()
 
+    @fields.depends('target_analysis', '_parent_target_analysis.methods')
+    def on_change_with_target_method_domain(self, name=None):
+        methods = []
+        if self.target_analysis and self.target_analysis.methods:
+            methods = [m.id for m in self.target_analysis.methods]
+        return methods
+
     def eval_condition(self, line):
         for condition in self.conditions:
             if not condition.eval_condition(line):
@@ -835,10 +848,13 @@ class NotebookRule(ModelSQL, ModelView):
         if not typification:
             return
 
-        existing_line = NotebookLine.search([
+        clause = [
             ('notebook', '=', line.notebook),
             ('analysis', '=', self.target_analysis),
-            ], order=[('repetition', 'DESC')], limit=1)
+            ]
+        if self.target_method:
+            clause.append(('method', '=', self.target_method))
+        existing_line = NotebookLine.search(clause)
         if not existing_line:
             self._exec_add_service(line, typification[0])
 
@@ -860,7 +876,9 @@ class NotebookRule(ModelSQL, ModelView):
             return
         laboratory_id = laboratories[0]
 
-        method_id = typification.method and typification.method.id or None
+        method_id = self.target_method and self.target_method.id or None
+        if not method_id:
+            method_id = typification.method and typification.method.id or None
 
         cursor.execute('SELECT DISTINCT(device) '
             'FROM "' + AnalysisDevice._table + '" '
@@ -909,10 +927,16 @@ class NotebookRule(ModelSQL, ModelView):
         if line.analysis == self.target_analysis:
             notebook_line = NotebookLine(line.id)
         else:
-            target_line = NotebookLine.search([
+            clause = [
                 ('notebook', '=', line.notebook),
                 ('analysis', '=', self.target_analysis),
-                ], order=[('repetition', 'DESC')], limit=1)
+                ('accepted', '=', False),
+                ('annulled', '=', False),
+                ]
+            if self.target_method:
+                clause.append(('method', '=', self.target_method))
+            target_line = NotebookLine.search(clause,
+                order=[('repetition', 'DESC')], limit=1)
             if not target_line:
                 return
             notebook_line = target_line[0]

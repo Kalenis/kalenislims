@@ -8,6 +8,8 @@
     <field name="action"/>
     <label name="target_analysis"/>
     <field name="target_analysis"/>
+    <label name="target_method"/>
+    <field name="target_method"/>
     <label name="target_field"/>
     <field name="target_field"/>
     <label name="value"/>
