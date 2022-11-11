@@ -5555,6 +5555,14 @@ msgctxt "field:lims.rule,target_field_domain:"
 msgid "Target Field domain"
 msgstr "Dominio para Campo destino"
 
+msgctxt "field:lims.rule,target_method:"
+msgid "Target Method"
+msgstr "Método destino"
+
+msgctxt "field:lims.rule,target_method_domain:"
+msgid "Target Method domain"
+msgstr "Dominio para Método destino"
+
 msgctxt "field:lims.rule,value:"
 msgid "Value"
 msgstr "Valor"

@@ -78,6 +78,8 @@ class NotebookRule(metaclass=PoolMeta):
         return super().eval_condition(line)
 
     def eval_sheet_condition(self, line):
+        if not self.analysis_sheet:
+            return False
         for condition in self.conditions:
             if not condition.eval_sheet_condition(line):
                 return False
@@ -106,7 +108,8 @@ class NotebookRule(metaclass=PoolMeta):
             return
 
         existing_line = self._get_existing_line(
-            line.notebook_line.notebook.id, self.target_analysis.id)
+            line.notebook_line.notebook.id, self.target_analysis.id,
+            self.target_method and self.target_method.id or None)
         if not existing_line:
             self._exec_sheet_add_service(line, typification[0])
 
@@ -131,7 +134,9 @@ class NotebookRule(metaclass=PoolMeta):
             return
         laboratory_id = laboratories[0]
 
-        method_id = typification.method and typification.method.id or None
+        method_id = self.target_method and self.target_method.id or None
+        if not method_id:
+            method_id = typification.method and typification.method.id or None
 
         cursor.execute('SELECT DISTINCT(device) '
             'FROM "' + AnalysisDevice._table + '" '
@@ -201,6 +206,7 @@ class NotebookRule(metaclass=PoolMeta):
         else:
             sheet_line = self._get_existing_line(
                 line.notebook_line.notebook.id, self.target_analysis.id,
+                self.target_method and self.target_method.id or None,
                 Transaction().context.get('lims_interface_compilation'))
             if not sheet_line:
                 return
@@ -238,10 +244,16 @@ class NotebookRule(metaclass=PoolMeta):
         if line.notebook_line.analysis == self.target_analysis:
             notebook_line = NotebookLine(line.notebook_line.id)
         else:
-            target_line = NotebookLine.search([
+            clause = [
                 ('notebook', '=', line.notebook_line.notebook),
                 ('analysis', '=', self.target_analysis),
-                ], order=[('repetition', 'DESC')], limit=1)
+                ('accepted', '=', False),
+                ('annulled', '=', False),
+                ]
+            if self.target_method:
+                clause.append(('method', '=', self.target_method))
+            target_line = NotebookLine.search(clause,
+                order=[('repetition', 'DESC')], limit=1)
             if not target_line:
                 return
             notebook_line = target_line[0]
@@ -309,16 +321,21 @@ class NotebookRule(metaclass=PoolMeta):
                 except Exception as e:
                     return
 
-    def _get_existing_line(self, notebook_id, analysis_id,
+    def _get_existing_line(self, notebook_id, analysis_id, method_id,
             compilation_id=None):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
         Data = pool.get('lims.interface.data')
 
-        notebook_lines = NotebookLine.search([
+        clause = [
             ('notebook', '=', notebook_id),
             ('analysis', '=', analysis_id),
-            ])
+            ('accepted', '=', False),
+            ('annulled', '=', False),
+            ]
+        if method_id:
+            clause.append(('method', '=', method_id))
+        notebook_lines = NotebookLine.search(clause)
         nl_ids = [nl.id for nl in notebook_lines]
         if not compilation_id:
             return bool(len(nl_ids))
