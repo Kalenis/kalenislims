@@ -1459,6 +1459,13 @@ class ShowInterfaceViewStart(ModelView):
 
     data = fields.One2Many('lims.interface.data', None, 'Data')
 
+    @classmethod
+    def fields_view_get(cls, view_id=None, view_type='form', level=None):
+        result = super().fields_view_get(view_id, view_type, level)
+        key = (cls.__name__, view_id, view_type, level)
+        cls._fields_view_get_cache.set(key, None)
+        return result
+
 
 class ShowInterfaceView(Wizard):
     'Show Interface View'
