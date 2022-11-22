@@ -274,6 +274,30 @@ msgctxt "field:lims.interface.constant,value3:"
 msgid "Value 3"
 msgstr "Valor 3"
 
+msgctxt "field:lims.interface.constant,value4:"
+msgid "Value 4"
+msgstr "Valor 4"
+
+msgctxt "field:lims.interface.constant,value5:"
+msgid "Value 5"
+msgstr "Valor 5"
+
+msgctxt "field:lims.interface.constant,value6:"
+msgid "Value 6"
+msgstr "Valor 6"
+
+msgctxt "field:lims.interface.constant,value7:"
+msgid "Value 7"
+msgstr "Valor 7"
+
+msgctxt "field:lims.interface.constant,value8:"
+msgid "Value 8"
+msgstr "Valor 8"
+
+msgctxt "field:lims.interface.constant,value9:"
+msgid "Value 9"
+msgstr "Valor 9"
+
 msgctxt "field:lims.interface.copy_column.start,origin_interface:"
 msgid "Origin Interface"
 msgstr "Interfaz origen"

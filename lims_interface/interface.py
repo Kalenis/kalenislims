@@ -2463,6 +2463,12 @@ class Constant(ModelSQL, ModelView):
     value1 = fields.Float('Value 1')
     value2 = fields.Float('Value 2')
     value3 = fields.Float('Value 3')
+    value4 = fields.Float('Value 4')
+    value5 = fields.Float('Value 5')
+    value6 = fields.Float('Value 6')
+    value7 = fields.Float('Value 7')
+    value8 = fields.Float('Value 8')
+    value9 = fields.Float('Value 9')
 
     @classmethod
     def __setup__(cls):
