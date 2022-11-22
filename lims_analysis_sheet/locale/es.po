@@ -295,6 +295,34 @@ msgctxt "field:lims.lab.device.constant,value2:"
 msgid "Value 2"
 msgstr "Valor 2"
 
+msgctxt "field:lims.lab.device.constant,value3:"
+msgid "Value 3"
+msgstr "Valor 3"
+
+msgctxt "field:lims.lab.device.constant,value4:"
+msgid "Value 4"
+msgstr "Valor 4"
+
+msgctxt "field:lims.lab.device.constant,value5:"
+msgid "Value 5"
+msgstr "Valor 5"
+
+msgctxt "field:lims.lab.device.constant,value6:"
+msgid "Value 6"
+msgstr "Valor 6"
+
+msgctxt "field:lims.lab.device.constant,value7:"
+msgid "Value 7"
+msgstr "Valor 7"
+
+msgctxt "field:lims.lab.device.constant,value8:"
+msgid "Value 8"
+msgstr "Valor 8"
+
+msgctxt "field:lims.lab.device.constant,value9:"
+msgid "Value 9"
+msgstr "Valor 9"
+
 msgctxt "field:lims.laboratory.professional,samples_qty:"
 msgid "# Samples"
 msgstr "Cant. Muestras"
