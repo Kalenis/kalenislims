@@ -1,9 +1,24 @@
 <?xml version="1.0"?>
-<form>
+<form col="6">
     <label name="name"/>
     <field name="name"/>
+    <newline/>
     <label name="value1"/>
     <field name="value1"/>
     <label name="value2"/>
     <field name="value2"/>
+    <label name="value3"/>
+    <field name="value3"/>
+    <label name="value4"/>
+    <field name="value4"/>
+    <label name="value5"/>
+    <field name="value5"/>
+    <label name="value6"/>
+    <field name="value6"/>
+    <label name="value7"/>
+    <field name="value7"/>
+    <label name="value8"/>
+    <field name="value8"/>
+    <label name="value9"/>
+    <field name="value9"/>
 </form>
