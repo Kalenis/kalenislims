@@ -3,7 +3,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond.model import fields, ModelSQL
+from trytond.model import ModelSQL, fields, dualmethod
 from trytond.pyson import In, Eval, Bool, If
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
@@ -131,12 +131,12 @@ class ShipmentInternal(metaclass=PoolMeta):
         with Transaction().set_context(check_current_location=False):
             super().cancel(shipments)
 
-    @classmethod
+    @dualmethod
     def assign_try(cls, shipments):
         with Transaction().set_context(check_current_location=False):
             return super().assign_try(shipments)
 
-    @classmethod
+    @dualmethod
     def assign_force(cls, shipments):
         with Transaction().set_context(check_current_location=False):
             super().assign_force(shipments)
