@@ -7142,6 +7142,7 @@ class CountersampleStorageReport(Report):
         f_list = []
         fractions = Fraction.search([
             ('countersample_date', '=', None),
+            ('discharge_date', '=', None),
             ('sample.date2', '>=', data['date_from']),
             ('sample.date2', '<=', data['date_to']),
             ('has_results_report', '=', True),
