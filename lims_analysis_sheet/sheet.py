@@ -995,7 +995,6 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         with Transaction().set_context(
                 lims_interface_table=self.compilation.table.id):
             data = []
-            samples = []
             for nl in lines:
                 line = {
                     'compilation': self.compilation.id,
@@ -1040,11 +1039,18 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 if interface.repetition_field:
                     line[interface.repetition_field.alias] = nl.repetition
                 data.append(line)
-                samples.append(nl.fraction.sample.number)
 
             if data:
                 Data.create(data)
-            self.samples = ' - '.join(list(set(samples)))
+
+            samples = set()
+            data_lines = Data.search([
+                ('compilation', '=', self.compilation.id),
+                ('notebook_line', '!=', None),
+                ])
+            for data_line in data_lines:
+                samples.add(data_line.notebook_line.fraction.sample.number)
+            self.samples = ' - '.join(list(samples))
             self.save()
 
     def get_data_defaults(self):
