@@ -890,12 +890,17 @@ class Service(ModelSQL, ModelView):
             services_default = []
             for fraction_id, analysis in aditional_services.items():
                 for analysis_id, service_data in analysis.items():
-                    if EntryDetailAnalysis.search([
-                            ('fraction', '=', fraction_id),
-                            ('analysis', '=', analysis_id),
-                            ]):
+                    existing_aditional = Service.search([
+                        ('fraction', '=', fraction_id),
+                        ('analysis', '=', analysis_id),
+                        ])
+                    if existing_aditional:
+                        Service.write(existing_aditional, {
+                            'additional_origins': [('add', list(
+                                service_data['additional_origins']))],
+                            })
                         continue
-                    if Service.search([
+                    if EntryDetailAnalysis.search([
                             ('fraction', '=', fraction_id),
                             ('analysis', '=', analysis_id),
                             ]):
