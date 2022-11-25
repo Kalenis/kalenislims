@@ -1368,14 +1368,18 @@ class NotebookLine(ModelSQL, ModelView):
             for nl in notebook_lines:
                 result[name][nl.id] = None
                 fraction = getattr(nl.service, 'fraction', None)
-                if fraction:
-                    sample = getattr(fraction, 'sample', None)
-                    if sample:
-                        field = getattr(fraction, name, None)
-                        if name in ('label', 'date', 'date2'):
-                            result[name][nl.id] = field
-                        else:
-                            result[name][nl.id] = field.id if field else None
+                if not fraction:
+                    continue
+                sample = getattr(fraction, 'sample', None)
+                if not sample:
+                    continue
+                field = getattr(sample, name, None)
+                if isinstance(field, ModelSQL):
+                    result[name][nl.id] = field.id if field else None
+                elif isinstance(field, tuple):
+                    result[name][nl.id] = [f.id for f in field]
+                else:
+                    result[name][nl.id] = field
         return result
 
     @classmethod
@@ -1861,6 +1865,9 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     exceptional_load_uid = fields.Many2One('res.user',
         'Exceptional loading of results User', readonly=True)
     trace_report = fields.Boolean('Trace report', readonly=True)
+    sample_client_description = fields.Function(fields.Char(
+        'Product described by the client', translate=True),
+        'get_sample_field')
 
     @classmethod
     def __setup__(cls):
@@ -1967,6 +1974,9 @@ class NotebookLineAllFields(ModelSQL, ModelView):
         where = Literal(True)
         return join6.select(*columns, where=where)
 
+    def get_rec_name(self, name):
+        return self.line.get_rec_name(name)
+
     @classmethod
     def get_line_field(cls, notebook_lines, names):
         result = dict((name, {}) for name in names)
@@ -1985,8 +1995,26 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     def search_line_field(cls, name, clause):
         return [('line.' + name,) + tuple(clause[1:])]
 
-    def get_rec_name(self, name):
-        return self.line.get_rec_name(name)
+    @classmethod
+    def get_sample_field(cls, notebook_lines, names):
+        result = dict((name, {}) for name in names)
+        for nl in notebook_lines:
+            for name in names:
+                result[name][nl.id] = None
+                fraction = getattr(nl.line.service, 'fraction', None)
+                if not fraction:
+                    continue
+                sample = getattr(fraction, 'sample', None)
+                if not sample:
+                    continue
+                field = getattr(sample, name, None)
+                if isinstance(field, ModelSQL):
+                    result[name][nl.id] = field.id if field else None
+                elif isinstance(field, tuple):
+                    result[name][nl.id] = [f.id for f in field]
+                else:
+                    result[name][nl.id] = field
+        return result
 
 
 class NotebookLineLaboratoryProfessional(ModelSQL):
