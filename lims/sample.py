@@ -1087,13 +1087,14 @@ class Service(ModelSQL, ModelView):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
 
-        notebook_lines = NotebookLine.search([
-            ('service', 'in', [s.id for s in services]),
-            ])
-        if notebook_lines:
-            NotebookLine.write(notebook_lines, {
-                'urgent': urgent,
-                })
+        with Transaction().set_context(_check_access=False):
+            notebook_lines = NotebookLine.search([
+                ('service', 'in', [s.id for s in services]),
+                ])
+            if notebook_lines:
+                NotebookLine.write(notebook_lines, {
+                    'urgent': urgent,
+                    })
 
     @fields.depends('analysis', 'fraction', 'typification_domain',
         'laboratory', '_parent_fraction.id',
