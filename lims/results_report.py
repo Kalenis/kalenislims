@@ -31,7 +31,8 @@ class ResultsReport(ModelSQL, ModelView):
     number = fields.Char('Number', select=True, readonly=True)
     versions = fields.One2Many('lims.results_report.version',
         'results_report', 'Laboratories', readonly=True)
-    party = fields.Many2One('party.party', 'Party', readonly=True)
+    party = fields.Many2One('party.party', 'Party', required=True,
+        readonly=True)
     invoice_party = fields.Function(fields.Many2One('party.party',
         'Invoice party'), 'get_entry_field',
         searcher='search_entry_field')
