@@ -431,7 +431,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
             lang.strftime(self.date))
         body += '\n%s: %s' % (
             gettext('lims_administrative_task.field_task_expiration_date'),
-            lang.strftime(self.expiration_date))
+            self.expiration_date and lang.strftime(self.expiration_date) or '')
         body += '\n%s: %s' % (
             gettext('lims_administrative_task.field_task_priority'),
             str(self.priority_string))
