@@ -138,9 +138,6 @@ class ReportTemplate(DeactivableMixin, ModelSQL, ModelView):
             ('//page[@name="translations"]', 'states', {
                     'invisible': ~Bool(Eval('type')),
                     }),
-            ('//page[@name="sections"]', 'states', {
-                    'invisible': Eval('type') != 'base',
-                    }),
             ]
 
     @classmethod
@@ -340,6 +337,26 @@ class LimsReport(Report):
         oext, content = cls._execute(records, data, action)
         if not isinstance(content, str):
             content = bytearray(content) if bytes == str else bytes(content)
+
+        record = records[0]
+        if oext == 'pdf' and (record.previous_sections or
+                record.following_sections):
+            merger = PdfFileMerger(strict=False)
+            # Previous Sections
+            for section in record.previous_sections:
+                filedata = BytesIO(section.data)
+                merger.append(filedata)
+            # Main Report
+            filedata = BytesIO(content)
+            merger.append(filedata)
+            # Following Sections
+            for section in record.following_sections:
+                filedata = BytesIO(section.data)
+                merger.append(filedata)
+            output = BytesIO()
+            merger.write(output)
+            content = output.getvalue()
+
         return (oext, content, action.direct_print, action.name)
 
     @classmethod
