@@ -1007,6 +1007,9 @@ class NotebookLine(ModelSQL, ModelView):
     rule = fields.Many2One('lims.rule', 'Notebook Rule', readonly=True,
         ondelete='SET NULL')
     trace_report = fields.Boolean('Trace report')
+    sample_client_description = fields.Function(fields.Char(
+        'Product described by the client', translate=True),
+        'get_sample_field')
 
     del _states, _depends
 

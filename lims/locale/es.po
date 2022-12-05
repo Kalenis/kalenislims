@@ -3219,6 +3219,10 @@ msgctxt "field:lims.notebook.line,sample:"
 msgid "Sample"
 msgstr "Muestra"
 
+msgctxt "field:lims.notebook.line,sample_client_description:"
+msgid "Product described by the client"
+msgstr "Producto descripto por el cliente"
+
 msgctxt "field:lims.notebook.line,scientific_notation:"
 msgid "Scientific notation"
 msgstr "Notación científica"
