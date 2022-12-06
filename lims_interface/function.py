@@ -36,6 +36,16 @@ def concat(*args):
 custom_functions['CONCAT'] = concat
 
 
+def trunc_float(value, digits=2):
+    if not isinstance(value, (float, int)) or not isinstance(digits, int):
+        return value
+    pow_10 = 10 ** digits
+    return (float(int(value * pow_10))) / pow_10
+
+
+custom_functions['TRUNC_FLOAT'] = trunc_float
+
+
 def get_variable(notebook_line, variable):
     pool = Pool()
     NotebookLine = pool.get('lims.notebook.line')
