@@ -1,6 +1,7 @@
 # This file is part of lims_planning_automatic module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+from datetime import datetime
 
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
@@ -24,7 +25,6 @@ class Planification(metaclass=PoolMeta):
         TechniciansQualification = pool.get(
             'lims.planification.technicians_qualification', type='wizard')
         Laboratory = pool.get('lims.laboratory')
-        Date = pool.get('ir.date')
 
         laboratories = Laboratory.search([('automatic_planning', '=', True)])
         for laboratory in laboratories:
@@ -51,7 +51,7 @@ class Planification(metaclass=PoolMeta):
             planification = cls()
             planification.automatic = True
             planification.laboratory = laboratory
-            planification.start_date = Date.today()
+            planification.start_date = datetime.now().date()
             planification.analysis = analyses_to_plan
 
             technician = PlanificationTechnician()
