@@ -45,6 +45,8 @@
             <field name="sampling_type"/>
             <label name="missing_data"/>
             <field name="missing_data"/>
+            <label name="dangerous"/>
+            <field name="dangerous"/>
             <newline/>
             <group id="ind_operational_detail" colspan="2" col="1">
                 <separator id="ind_operational_detail"

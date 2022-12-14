@@ -3,4 +3,5 @@
     <field name="name" expand="1"/>
     <field name="brand" expand="1"/>
     <field name="matrix" expand="1"/>
+    <field name="dangerous"/>
 </tree>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<form>
+    <image name="tryton-warning" xexpand="0" xfill="0"/>
+    <label
+        string="DANGEROUS PRODUCTS"
+        id="danger" yalign="0.5" xalign="0.0" colspan="3"/>
+    <field name="comercial_products" colspan="4"/>
+    <field name="attachments" colspan="4"/>
+    <label
+        string="I have informed myself of the dangers involved in the treatment of the sample/s and I promise to take the necessary precautions."
+        id="ack" yalign="0.5" xalign="1.0" colspan="4"/>
+</form>

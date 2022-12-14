@@ -89,4 +89,10 @@
             <field name="attributes_domain" colspan="4" invisible="1"/>
         </page>
     </xpath>
+    <xpath
+        expr="/form/notebook/page[@id='additional_information']/field[@name='restricted_entry']"
+        position="after">
+        <label name="dangerous"/>
+        <field name="dangerous"/>
+    </xpath>
 </data>

@@ -12,6 +12,8 @@ from . import results_report
 from . import party
 from . import task
 from . import control_tendency
+from . import planification
+from . import sheet
 
 
 def register():
@@ -41,6 +43,7 @@ def register():
         sample.FractionType,
         sample.CreateSampleStart,
         sample.EditSampleStart,
+        sample.WarnDangerousProductStart,
         notebook.Notebook,
         results_report.ResultsReport,
         results_report.ResultsReportVersionDetail,
@@ -59,11 +62,17 @@ def register():
         module='lims_industry', type_='model',
         depends=['lims_email'])
     Pool.register(
+        sheet.AnalysisSheet,
+        module='lims_industry', type_='model',
+        depends=['lims_analysis_sheet'])
+    Pool.register(
         sample.CreateSample,
         sample.EditSample,
+        sample.WarnDangerousProduct,
         results_report.OpenResultsDetailPrecedent,
         results_report.OpenResultsDetailAttachment,
         control_tendency.OpenTrendChart,
+        planification.TechniciansQualification,
         module='lims_industry', type_='wizard')
     Pool.register(
         results_report.SendResultsReport,
