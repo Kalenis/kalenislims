@@ -2246,6 +2246,449 @@ class NotebookLineInitialConcentrationCalc(NotebookInitialConcentrationCalc):
         return 'end'
 
 
+class NotebookInitialConcentrationCalc2Start(ModelView):
+    'Initial Concentration Calculation'
+    __name__ = 'lims.notebook.initial_concentration_calc_2.start'
+
+
+class NotebookInitialConcentrationCalc2Result(ModelView):
+    'Initial Concentration Calculation'
+    __name__ = 'lims.notebook.initial_concentration_calc_2.result'
+
+    concentrations = fields.Many2Many(
+        'lims.notebook.initial_concentration_calc_2.concentration', None, None,
+        'Concentration')
+    total = fields.Integer('Total')
+    index = fields.Integer('Index')
+
+
+class NotebookInitialConcentrationCalc2Concentration(ModelSQL, ModelView):
+    'Initial Concentration Calculation'
+    __name__ = 'lims.notebook.initial_concentration_calc_2.concentration'
+    _table = 'lims_notebook_initial_concentration_c_2_conc'
+
+    notebook = fields.Many2One('lims.notebook', 'Laboratory notebook')
+    analysis = fields.Many2One('lims.analysis', 'Analysis')
+    variables = fields.One2Many(
+        'lims.notebook.initial_concentration_calc_2.variable', 'concentration',
+        'Variables')
+    session_id = fields.Integer('Session ID')
+
+    @classmethod
+    def __register__(cls, module_name):
+        super().__register__(module_name)
+        cursor = Transaction().connection.cursor()
+        cursor.execute('DELETE FROM "' + cls._table + '"')
+
+
+class NotebookInitialConcentrationCalc2Variable(ModelSQL, ModelView):
+    'Formula Variable'
+    __name__ = 'lims.notebook.initial_concentration_calc_2.variable'
+
+    concentration = fields.Many2One(
+        'lims.notebook.initial_concentration_calc_2.concentration',
+        'Concentration', ondelete='CASCADE', readonly=True)
+    line = fields.Many2One('lims.notebook.line', 'Line')
+    analysis = fields.Many2One('lims.analysis', 'Analysis', readonly=True)
+    repetition = fields.Integer('Repetition', readonly=True)
+    result_modifier = fields.Function(fields.Many2One('lims.result_modifier',
+        'Result modifier'), 'get_line_field')
+    result = fields.Function(fields.Char('Result'), 'get_line_field')
+    initial_unit = fields.Function(fields.Many2One('product.uom',
+        'Initial unit'), 'get_line_field')
+    use = fields.Boolean('Use')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._order.insert(0, ('concentration', 'ASC'))
+        cls._order.insert(1, ('analysis', 'ASC'))
+        cls._order.insert(2, ('repetition', 'ASC'))
+
+    @classmethod
+    def get_line_field(cls, variables, names):
+        result = {}
+        for name in names:
+            result[name] = {}
+            if cls._fields[name]._type == 'many2one':
+                for v in variables:
+                    field = getattr(v.line, name, None)
+                    result[name][v.id] = field.id if field else None
+            else:
+                for v in variables:
+                    result[name][v.id] = getattr(v.line, name, None)
+        return result
+
+
+class NotebookInitialConcentrationCalc2Process(ModelView):
+    'Initial Concentration Calculation'
+    __name__ = 'lims.notebook.initial_concentration_calc_2.process'
+
+    notebook = fields.Many2One('lims.notebook', 'Laboratory notebook',
+        readonly=True)
+    analysis = fields.Many2One('lims.analysis', 'Analysis',
+        readonly=True)
+    variables = fields.One2Many(
+        'lims.notebook.initial_concentration_calc_2.variable', None,
+        'Variables')
+
+
+class NotebookInitialConcentrationCalc2(Wizard):
+    'Initial Concentration Calculation'
+    __name__ = 'lims.notebook.initial_concentration_calc_2'
+
+    start_state = 'search'
+    start = StateView('lims.notebook.initial_concentration_calc_2.start',
+        'lims.lims_notebook_initial_concentration_calc_2_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Search', 'search', 'tryton-forward', default=True),
+            ])
+    search = StateTransition()
+    result = StateView('lims.notebook.initial_concentration_calc_2.result',
+        'lims.lims_notebook_initial_concentration_calc_2_result_view_form', [])
+    next_ = StateTransition()
+    process = StateView('lims.notebook.initial_concentration_calc_2.process',
+        'lims.lims_notebook_initial_concentration_calc_2_process_view_form', [
+            Button('Next', 'check_variables', 'tryton-forward', default=True),
+            ])
+    check_variables = StateTransition()
+    confirm = StateTransition()
+
+    def transition_search(self):
+        NotebookLine = Pool().get('lims.notebook.line')
+
+        for notebook_id in Transaction().context['active_ids']:
+            with Transaction().set_context(_check_access=True):
+                notebook_lines = NotebookLine.search([
+                    ('notebook', '=', notebook_id),
+                    ])
+            if not notebook_lines:
+                continue
+            if self.get_concentrations(notebook_lines):
+                return 'next_'
+        return 'end'
+
+    def get_concentrations(self, notebook_lines):
+        InitialConcentrationCalc2Concentration = Pool().get(
+            'lims.notebook.initial_concentration_calc_2.concentration')
+
+        concentrations = {}
+        for notebook_line in notebook_lines:
+            if notebook_line.accepted:
+                continue
+            analysis_code = notebook_line.analysis.code
+            if not analysis_code or not notebook_line.initial_concentration:
+                continue
+
+            formulas = notebook_line.initial_concentration
+            for i in (' ', '\t', '\n', '\r'):
+                formulas = formulas.replace(i, '')
+            variables = self._get_variables_list(formulas,
+                notebook_line.notebook, {})
+            if not variables:
+                continue
+            has_repetitions = False
+            for var in variables:
+                if var['repetition'] > 0:
+                    has_repetitions = True
+            if not has_repetitions:
+                continue
+
+            concentrations[notebook_line.analysis.id] = {
+                'notebook': notebook_line.notebook.id,
+                'analysis': notebook_line.analysis.id,
+                'variables': [('create', variables)],
+                'session_id': self._session_id,
+                }
+
+        if concentrations:
+            res_lines = InitialConcentrationCalc2Concentration.create(
+                [ir for ir in concentrations.values()])
+            self.result.concentrations = res_lines
+            self.result.total = len(self.result.concentrations)
+            self.result.index = 0
+            return True
+        return False
+
+    def transition_next_(self):
+        if self.result.index < self.result.total:
+            conc = self.result.concentrations[self.result.index]
+            self.process.notebook = conc.notebook.id
+            self.process.analysis = conc.analysis.id
+            self.process.variables = None
+            self.result.index += 1
+            return 'process'
+        return 'confirm'
+
+    def default_process(self, fields):
+        InitialConcentrationCalc2Variable = Pool().get(
+            'lims.notebook.initial_concentration_calc_2.variable')
+
+        if not self.process.analysis:
+            return {}
+
+        default = {}
+        default['notebook'] = self.process.notebook.id
+        default['analysis'] = self.process.analysis.id
+        if self.process.variables:
+            default['variables'] = [v.id for v in self.process.variables]
+        else:
+            variables = InitialConcentrationCalc2Variable.search([
+                ('concentration.session_id', '=', self._session_id),
+                ('concentration.notebook', '=', self.process.notebook.id),
+                ('concentration.analysis', '=', self.process.analysis.id),
+                ])
+            if variables:
+                default['variables'] = [v.id for v in variables]
+        return default
+
+    def _get_variables_list(self, formula, notebook, analysis={}):
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        code_length = Analysis._code_length() + 1
+        variables = {}
+        for prefix in ('A', 'D', 'T', 'Y', 'R'):
+            while True:
+                idx = formula.find(prefix)
+                if idx >= 0:
+                    var = formula[idx:idx + code_length]
+                    variables[var] = None
+                    formula = formula.replace(var, '_')
+                else:
+                    break
+        for var in variables.keys():
+            if var[0] in ('A', 'D', 'T'):
+                analysis_code = var[1:]
+                with Transaction().set_user(0):
+                    notebook_lines = NotebookLine.search([
+                        ('notebook', '=', notebook.id),
+                        ('analysis.code', '=', analysis_code),
+                        ('annulment_date', '=', None),
+                        ])
+                if not notebook_lines:
+                    continue
+                for nl in notebook_lines:
+                    analysis[nl.id] = {
+                        'line': nl.id,
+                        'analysis': nl.analysis.id,
+                        'repetition': nl.repetition,
+                        'use': True if nl.repetition == 0 else False,
+                        }
+            elif var[0] in ('R', 'Y'):
+                analysis_code = var[1:]
+                internal_relations = Analysis.search([
+                    ('code', '=', analysis_code),
+                    ])
+                if not internal_relations:
+                    continue
+                more_formulas = internal_relations[0].result_formula
+                for i in (' ', '\t', '\n', '\r'):
+                    more_formulas = more_formulas.replace(i, '')
+                self._get_variables_list(more_formulas, notebook, analysis)
+
+        return [v for v in analysis.values()]
+
+    def transition_check_variables(self):
+        variables = {}
+        for var in self.process.variables:
+            analysis_code = var.analysis.code
+            if analysis_code not in variables:
+                variables[analysis_code] = False
+            if var.use:
+                if variables[analysis_code]:
+                    variables[analysis_code] = False
+                else:
+                    variables[analysis_code] = True
+            var.save()
+
+        for var in variables.values():
+            if not var:
+                return 'process'
+        return 'next_'
+
+    def transition_confirm(self):
+        pool = Pool()
+        InitialConcentrationCalc2Concentration = pool.get(
+            'lims.notebook.initial_concentration_calc_2.concentration')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        concentrations = InitialConcentrationCalc2Concentration.search([
+            ('session_id', '=', self._session_id),
+            ])
+        notebook_lines_to_save = []
+        for conc in concentrations:
+            notebook_lines = NotebookLine.search([
+                ('notebook', '=', conc.notebook.id),
+                ('analysis', '=', conc.analysis.id)
+                ])
+            if len(notebook_lines) != 1:
+                continue
+
+            analysis_code = conc.analysis.code
+            result = self._get_relation_result(analysis_code,
+                conc.notebook, analysis_code, round_=True)
+
+            notebook_line = notebook_lines[0]
+            if result is not None:
+                notebook_line.initial_concentration = str(result)
+                notebook_lines_to_save.append(notebook_line)
+        NotebookLine.save(notebook_lines_to_save)
+        return 'end'
+
+    def _get_analysis_result(self, analysis_code, notebook, relation_code):
+        InitialConcentrationCalc2Variable = Pool().get(
+            'lims.notebook.initial_concentration_calc_2.variable')
+
+        variables = InitialConcentrationCalc2Variable.search([
+            ('concentration.session_id', '=', self._session_id),
+            ('concentration.notebook', '=', notebook.id),
+            ('concentration.analysis.code', '=', relation_code),
+            ('analysis.code', '=', analysis_code),
+            ('use', '=', True),
+            ])
+        if not variables:
+            return None
+
+        notebook_line = variables[0].line
+        if not notebook_line:
+            return None
+
+        try:
+            res = float(notebook_line.result)
+        except (TypeError, ValueError):
+            return None
+        return round(res, notebook_line.decimals)
+
+    def _get_relation_result(self, analysis_code, notebook, relation_code,
+            round_=False):
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        internal_relations = Analysis.search([
+            ('code', '=', analysis_code),
+            ])
+        if not internal_relations:
+            return None
+        formula = internal_relations[0].result_formula
+        if not formula:
+            return None
+        for i in (' ', '\t', '\n', '\r'):
+            formula = formula.replace(i, '')
+        variables = self._get_variables(formula, notebook, relation_code)
+        if not variables:
+            return None
+
+        parser = FormulaParser(formula, variables)
+        value = parser.getValue()
+
+        if int(value) == value:
+            res = int(value)
+        else:
+            epsilon = 0.0000000001
+            if int(value + epsilon) != int(value):
+                res = int(value + epsilon)
+            elif int(value - epsilon) != int(value):
+                res = int(value)
+            else:
+                res = float(value)
+        if not round_:
+            return res
+
+        with Transaction().set_user(0):
+            notebook_lines = NotebookLine.search([
+                ('notebook', '=', notebook.id),
+                ('analysis.code', '=', analysis_code),
+                ('repetition', '=', 0),
+                ('annulment_date', '=', None),
+                ])
+        if not notebook_lines:
+            return None
+        return round(res, notebook_lines[0].decimals)
+
+    def _get_variables(self, formula, notebook, relation_code):
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        VolumeConversion = pool.get('lims.volume.conversion')
+
+        code_length = Analysis._code_length() + 1
+        variables = {}
+        for prefix in ('A', 'D', 'T', 'Y', 'R'):
+            while True:
+                idx = formula.find(prefix)
+                if idx >= 0:
+                    var = formula[idx:idx + code_length]
+                    variables[var] = None
+                    formula = formula.replace(var, '_')
+                else:
+                    break
+        for var in variables.keys():
+            if var[0] == 'A':
+                analysis_code = var[1:]
+                result = self._get_analysis_result(analysis_code, notebook,
+                    relation_code)
+                if result is not None:
+                    variables[var] = result
+            elif var[0] == 'D':
+                analysis_code = var[1:]
+                result = self._get_analysis_result(analysis_code, notebook,
+                    relation_code)
+                if result is not None:
+                    result = VolumeConversion.brixToDensity(result)
+                    if result is not None:
+                        variables[var] = result
+            elif var[0] == 'T':
+                analysis_code = var[1:]
+                result = self._get_analysis_result(analysis_code, notebook,
+                    relation_code)
+                if result is not None:
+                    result = VolumeConversion.brixToSolubleSolids(result)
+                    if result is not None:
+                        variables[var] = result
+            elif var[0] == 'R':
+                analysis_code = var[1:]
+                result = self._get_relation_result(analysis_code, notebook,
+                    relation_code, round_=True)
+                if result is not None:
+                    result = VolumeConversion.brixToSolubleSolids(result)
+                    if result is not None:
+                        variables[var] = result
+            elif var[0] == 'Y':
+                analysis_code = var[1:]
+                result = self._get_relation_result(analysis_code, notebook,
+                    relation_code, round_=True)
+                if result is not None:
+                    result = VolumeConversion.brixToDensity(result)
+                    if result is not None:
+                        variables[var] = result
+        for var in variables.values():
+            if var is None:
+                return None
+        return variables
+
+    def end(self):
+        return 'reload'
+
+
+class NotebookLineInitialConcentrationCalc2(NotebookInitialConcentrationCalc2):
+    'Initial Concentration Calculation'
+    __name__ = 'lims.notebook_line.initial_concentration_calc_2'
+
+    def transition_search(self):
+        NotebookLine = Pool().get('lims.notebook.line')
+
+        notebook_lines = NotebookLine.browse(
+            Transaction().context['active_ids'])
+        if not notebook_lines:
+            return 'end'
+
+        if self.get_concentrations(notebook_lines):
+            return 'next_'
+        return 'end'
+
+
 class NotebookResultsConversionStart(ModelView):
     'Results Conversion'
     __name__ = 'lims.notebook.results_conversion.start'

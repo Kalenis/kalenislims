@@ -2780,6 +2780,87 @@ msgid "Type"
 msgstr "Tipo"
 
 msgctxt ""
+"field:lims.notebook.initial_concentration_calc_2.concentration,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt ""
+"field:lims.notebook.initial_concentration_calc_2.concentration,notebook:"
+msgid "Laboratory notebook"
+msgstr "Cuaderno de laboratorio"
+
+msgctxt ""
+"field:lims.notebook.initial_concentration_calc_2.concentration,session_id:"
+msgid "Session ID"
+msgstr "ID Sesión"
+
+msgctxt ""
+"field:lims.notebook.initial_concentration_calc_2.concentration,variables:"
+msgid "Variables"
+msgstr "Variables"
+
+msgctxt "field:lims.notebook.initial_concentration_calc_2.process,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:lims.notebook.initial_concentration_calc_2.process,notebook:"
+msgid "Laboratory notebook"
+msgstr "Cuaderno de laboratorio"
+
+msgctxt "field:lims.notebook.initial_concentration_calc_2.process,variables:"
+msgid "Variables"
+msgstr "Variables"
+
+msgctxt ""
+"field:lims.notebook.initial_concentration_calc_2.result,concentrations:"
+msgid "Concentration"
+msgstr "Concentración"
+
+msgctxt "field:lims.notebook.initial_concentration_calc_2.result,index:"
+msgid "Index"
+msgstr "Índice"
+
+msgctxt "field:lims.notebook.initial_concentration_calc_2.result,total:"
+msgid "Total"
+msgstr "Total"
+
+msgctxt "field:lims.notebook.initial_concentration_calc_2.variable,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt ""
+"field:lims.notebook.initial_concentration_calc_2.variable,concentration:"
+msgid "Concentration"
+msgstr "Concentración"
+
+msgctxt ""
+"field:lims.notebook.initial_concentration_calc_2.variable,initial_unit:"
+msgid "Initial unit"
+msgstr "Unidad inicial"
+
+msgctxt "field:lims.notebook.initial_concentration_calc_2.variable,line:"
+msgid "Line"
+msgstr "Línea"
+
+msgctxt ""
+"field:lims.notebook.initial_concentration_calc_2.variable,repetition:"
+msgid "Repetition"
+msgstr "Repetición"
+
+msgctxt "field:lims.notebook.initial_concentration_calc_2.variable,result:"
+msgid "Result"
+msgstr "Resultado"
+
+msgctxt ""
+"field:lims.notebook.initial_concentration_calc_2.variable,result_modifier:"
+msgid "Result modifier"
+msgstr "Modificador de resultado"
+
+msgctxt "field:lims.notebook.initial_concentration_calc_2.variable,use:"
+msgid "Use"
+msgstr "Usar"
+
+msgctxt ""
 "field:lims.notebook.internal_relations_calc_1.relation,internal_relation:"
 msgid "Internal relation"
 msgstr "Relación interna"
@@ -7719,7 +7800,7 @@ msgstr "Gestionar servicios"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_accept_lines"
 msgid "Accept Lines"
-msgstr "12) Aceptar resultados a todas las líneas"
+msgstr "13) Aceptar resultados a todas las líneas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_add_internal_relations"
 msgid "Add Internal Relations"
@@ -7727,31 +7808,35 @@ msgstr "03) Agregar relaciones internas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_annul_lines"
 msgid "Annul Lines"
-msgstr "13) Anular resultados a todas las líneas"
+msgstr "14) Anular resultados a todas las líneas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_initial_concentration_calc"
 msgid "Initial Concentration Calculation"
 msgstr "04) Cálculo de concentración inicial"
 
+msgctxt "model:ir.action,name:wiz_lims_notebook_initial_concentration_calc_2"
+msgid "Initial Concentration Calculation"
+msgstr "05) Cálculo de concentración inicial con repeticiones"
+
 msgctxt "model:ir.action,name:wiz_lims_notebook_internal_relations_calc_1"
 msgid "Internal Relations Calculation"
-msgstr "06) Cálculo de relaciones internas"
+msgstr "07) Cálculo de relaciones internas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_internal_relations_calc_2"
 msgid "Internal Relations Calculation"
-msgstr "07) Cálculo de relaciones internas con repeticiones"
+msgstr "08) Cálculo de relaciones internas con repeticiones"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_limits_validation"
 msgid "Limits Validation"
-msgstr "10) Validación de límites"
+msgstr "11) Validación de límites"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_line_accept_lines"
 msgid "Accept Lines"
-msgstr "11) Aceptar resultados a las líneas"
+msgstr "12) Aceptar resultados a las líneas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_line_annul_lines"
 msgid "Annul Lines"
-msgstr "13) Anular resultados a las líneas"
+msgstr "14) Anular resultados a las líneas"
 
 msgctxt ""
 "model:ir.action,name:wiz_lims_notebook_line_initial_concentration_calc"
@@ -7759,18 +7844,23 @@ msgid "Initial Concentration Calculation"
 msgstr "03) Cálculo de concentración inicial"
 
 msgctxt ""
+"model:ir.action,name:wiz_lims_notebook_line_initial_concentration_calc_2"
+msgid "Initial Concentration Calculation"
+msgstr "04) Cálculo de concentración inicial con repeticiones"
+
+msgctxt ""
 "model:ir.action,name:wiz_lims_notebook_line_internal_relations_calc_1"
 msgid "Internal Relations Calculation"
-msgstr "05) Cálculo de relaciones internas"
+msgstr "06) Cálculo de relaciones internas"
 
 msgctxt ""
 "model:ir.action,name:wiz_lims_notebook_line_internal_relations_calc_2"
 msgid "Internal Relations Calculation"
-msgstr "06) Cálculo de relaciones internas con repeticiones"
+msgstr "07) Cálculo de relaciones internas con repeticiones"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_line_limits_validation"
 msgid "Limits Validation"
-msgstr "09) Validación de límites"
+msgstr "10) Validación de límites"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_line_precision_control"
 msgid "Precision Control"
@@ -7782,23 +7872,23 @@ msgstr "02) Repetir análisis"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_line_results_conversion"
 msgid "Results Conversion"
-msgstr "04) Conversión de resultados"
+msgstr "05) Conversión de resultados"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_line_results_verification"
 msgid "Results Verification"
-msgstr "08) Verificación de resultados"
+msgstr "09) Verificación de resultados"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_line_unaccept_lines"
 msgid "Revert Lines Acceptance"
-msgstr "12) Revertir Aceptación de resultados a las líneas"
+msgstr "13) Revertir Aceptación de resultados a las líneas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_line_unannul_lines"
 msgid "Revert Lines Annulment"
-msgstr "14) Revertir Anulación de resultados a las líneas"
+msgstr "15) Revertir Anulación de resultados a las líneas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_line_uncertainty_calc"
 msgid "Uncertainty Calculation"
-msgstr "07) Cálculo de incertidumbre"
+msgstr "08) Cálculo de incertidumbre"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_load_results_exceptional"
 msgid "Exceptional Loading of Results"
@@ -7822,19 +7912,19 @@ msgstr "02) Repetir análisis"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_results_conversion"
 msgid "Results Conversion"
-msgstr "05) Conversión de resultados"
+msgstr "06) Conversión de resultados"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_results_verification"
 msgid "Results Verification"
-msgstr "09) Verificación de resultados"
+msgstr "10) Verificación de resultados"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_unannul_lines"
 msgid "Revert Lines Annulment"
-msgstr "14) Revertir Anulación de resultados a todas las líneas"
+msgstr "15) Revertir Anulación de resultados a todas las líneas"
 
 msgctxt "model:ir.action,name:wiz_lims_notebook_uncertainty_calc"
 msgid "Uncertainty Calculation"
-msgstr "08) Cálculo de incertidumbre"
+msgstr "09) Cálculo de incertidumbre"
 
 msgctxt "model:ir.action,name:wiz_lims_pre_assign_sample"
 msgid "Pre-Assign Samples"
@@ -7910,7 +8000,7 @@ msgstr "Nueva versión de Método"
 
 msgctxt "model:ir.action,name:wiz_notebook_evaluate_rules"
 msgid "Evaluate Rules"
-msgstr "11) Evaluar Reglas de cuaderno"
+msgstr "12) Evaluar Reglas de cuaderno"
 
 msgctxt "model:ir.action,name:wiz_notebook_generate_results_report"
 msgid "Generate Results Report"
@@ -7918,7 +8008,7 @@ msgstr "Generar informe de resultados"
 
 msgctxt "model:ir.action,name:wiz_notebook_line_evaluate_rules"
 msgid "Evaluate Rules"
-msgstr "10) Evaluar Reglas de cuaderno"
+msgstr "11) Evaluar Reglas de cuaderno"
 
 msgctxt "model:ir.action,name:wiz_notebook_open_entry"
 msgid "Sample Entry"
@@ -9901,6 +9991,26 @@ msgstr "Generar informe de resultados"
 msgctxt "model:lims.notebook.initial_concentration_calc.start,name:"
 msgid "Initial Concentration Calculation"
 msgstr "Cálculo de concentración inicial"
+
+msgctxt "model:lims.notebook.initial_concentration_calc_2.concentration,name:"
+msgid "Initial Concentration Calculation"
+msgstr "Cálculo de concentración inicial"
+
+msgctxt "model:lims.notebook.initial_concentration_calc_2.process,name:"
+msgid "Initial Concentration Calculation"
+msgstr "Cálculo de concentración inicial"
+
+msgctxt "model:lims.notebook.initial_concentration_calc_2.result,name:"
+msgid "Initial Concentration Calculation"
+msgstr "Cálculo de concentración inicial"
+
+msgctxt "model:lims.notebook.initial_concentration_calc_2.start,name:"
+msgid "Initial Concentration Calculation"
+msgstr "Cálculo de concentración inicial"
+
+msgctxt "model:lims.notebook.initial_concentration_calc_2.variable,name:"
+msgid "Formula Variable"
+msgstr "Variable de fórmula"
 
 msgctxt "model:lims.notebook.internal_relations_calc_1.relation,name:"
 msgid "Internal Relations Calculation"
@@ -14448,6 +14558,10 @@ msgctxt "view:lims.notebook.initial_concentration_calc.start:"
 msgid "Calculate initial concentration?"
 msgstr "¿Calcular concentración inicial?"
 
+msgctxt "view:lims.notebook.initial_concentration_calc_2.start:"
+msgid "Calculate initial concentration?"
+msgstr "¿Calcular concentración inicial?"
+
 msgctxt "view:lims.notebook.internal_relations_calc_1.start:"
 msgid "Calculate internal relations?"
 msgstr "¿Calcular relaciones internas?"
@@ -15521,6 +15635,20 @@ msgctxt "wizard_button:lims.notebook.initial_concentration_calc,start,ok:"
 msgid "Ok"
 msgstr "Aceptar"
 
+msgctxt ""
+"wizard_button:lims.notebook.initial_concentration_calc_2,process,check_variables:"
+msgid "Next"
+msgstr "Siguiente"
+
+msgctxt "wizard_button:lims.notebook.initial_concentration_calc_2,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt ""
+"wizard_button:lims.notebook.initial_concentration_calc_2,start,search:"
+msgid "Search"
+msgstr "Buscar"
+
 msgctxt "wizard_button:lims.notebook.internal_relations_calc_1,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
@@ -15745,6 +15873,21 @@ msgctxt ""
 "wizard_button:lims.notebook_line.initial_concentration_calc,start,ok:"
 msgid "Ok"
 msgstr "Aceptar"
+
+msgctxt ""
+"wizard_button:lims.notebook_line.initial_concentration_calc_2,process,check_variables:"
+msgid "Next"
+msgstr "Siguiente"
+
+msgctxt ""
+"wizard_button:lims.notebook_line.initial_concentration_calc_2,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt ""
+"wizard_button:lims.notebook_line.initial_concentration_calc_2,start,search:"
+msgid "Search"
+msgstr "Buscar"
 
 msgctxt ""
 "wizard_button:lims.notebook_line.internal_relations_calc_1,start,end:"

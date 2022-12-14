@@ -233,7 +233,7 @@
             <field name="rule_group" ref="rule_group_notebook_line_all_fields"/>
         </record>
 
-<!-- Wizard Initial Concentration Calculation -->
+<!-- Wizard Initial Concentration Calculation (repetition zero) -->
 
         <record model="ir.ui.view" id="lims_notebook_initial_concentration_calc_view_form">
             <field name="model">lims.notebook.initial_concentration_calc.start</field>
@@ -260,6 +260,64 @@
             <field name="model">lims.notebook.line,-1</field>
             <field name="action" ref="wiz_lims_notebook_line_initial_concentration_calc"/>
         </record>
+
+<!-- Wizard Initial Concentration Calculation (with repetitions) -->
+
+        <record model="ir.ui.view" id="lims_notebook_initial_concentration_calc_2_start_view_form">
+            <field name="model">lims.notebook.initial_concentration_calc_2.start</field>
+            <field name="type">form</field>
+            <field name="name">notebook_initial_concentration_calc_2_start_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_notebook_initial_concentration_calc_2_result_view_form">
+            <field name="model">lims.notebook.initial_concentration_calc_2.result</field>
+            <field name="type">form</field>
+            <field name="name">notebook_initial_concentration_calc_2_result_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_notebook_initial_concentration_calc_2_process_view_form">
+            <field name="model">lims.notebook.initial_concentration_calc_2.process</field>
+            <field name="type">form</field>
+            <field name="name">notebook_initial_concentration_calc_2_process_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_notebook_initial_concentration_calc_2_variable_view_list">
+            <field name="model">lims.notebook.initial_concentration_calc_2.variable</field>
+            <field name="type">tree</field>
+            <field name="name">notebook_initial_concentration_calc_2_variable_list</field>
+        </record>
+        <record model="ir.ui.view" id="lims_notebook_initial_concentration_calc_2_variable_view_form">
+            <field name="model">lims.notebook.initial_concentration_calc_2.variable</field>
+            <field name="type">form</field>
+            <field name="name">notebook_initial_concentration_calc_2_variable_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_notebook_initial_concentration_calc_2">
+            <field name="name">Initial Concentration Calculation</field>
+            <field name="wiz_name">lims.notebook.initial_concentration_calc_2</field>
+        </record>
+        <record model="ir.action.keyword" id="lims_notebook_initial_concentration_calc_2_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.notebook,-1</field>
+            <field name="action" ref="wiz_lims_notebook_initial_concentration_calc_2"/>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_notebook_line_initial_concentration_calc_2">
+            <field name="name">Initial Concentration Calculation</field>
+            <field name="wiz_name">lims.notebook_line.initial_concentration_calc_2</field>
+        </record>
+        <record model="ir.action.keyword" id="lims_notebook_line_initial_concentration_calc_2_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.notebook.line,-1</field>
+            <field name="action" ref="wiz_lims_notebook_line_initial_concentration_calc_2"/>
+        </record>
+
+        <record model="ir.model.field.access" id="access_initial_concentration_calc_2_process_variables">
+            <field name="field"
+                search="[('name', '=', 'variables'), ('model.model', '=', 'lims.notebook.initial_concentration_calc_2.process')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
 
 <!-- Wizard Results Conversion -->
 
