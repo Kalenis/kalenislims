@@ -5,7 +5,7 @@ from sql import Literal
 from sql.conditionals import Case
 
 from trytond.model import ModelSQL, ModelView, fields
-from trytond.wizard import StateTransition, StateView, Button
+from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Bool
 from trytond.transaction import Transaction
@@ -17,6 +17,8 @@ class Entry(metaclass=PoolMeta):
     __name__ = 'lims.entry'
 
     @classmethod
+    @ModelView.button_action(
+        'lims_industry.wiz_comercial_product_warn_dangerous')
     def confirm(cls, entries):
         Sample = Pool().get('lims.sample')
         super().confirm(entries)
@@ -103,6 +105,7 @@ class Sample(metaclass=PoolMeta):
         'air_filter_changed')
     edition_log = fields.One2Many('lims.sample.edition.log', 'sample',
         'Edition log', readonly=True)
+    dangerous = fields.Boolean('Dangerous Product')
 
     @classmethod
     def __register__(cls, module_name):
@@ -183,6 +186,7 @@ class Sample(metaclass=PoolMeta):
     def on_change_comercial_product(self):
         if self.comercial_product and self.comercial_product.matrix:
             self.matrix = self.comercial_product.matrix.id
+            self.dangerous = self.comercial_product.dangerous
 
     @fields.depends('product_type', '_parent_product_type.attribute_set')
     def on_change_with_attributes_domain(self, name=None):
@@ -517,6 +521,7 @@ class CreateSampleStart(metaclass=PoolMeta):
         ('yes', 'Yes'),
         ('no', 'No'),
         ], 'Did change Air Filter?', sort=False)
+    dangerous = fields.Boolean('Dangerous Product')
 
     @classmethod
     def __setup__(cls):
@@ -572,6 +577,7 @@ class CreateSampleStart(metaclass=PoolMeta):
     def on_change_comercial_product(self):
         if self.comercial_product and self.comercial_product.matrix:
             self.matrix = self.comercial_product.matrix.id
+            self.dangerous = self.comercial_product.dangerous
 
     @fields.depends('product_type', 'component',
         '_parent_product_type.attribute_set')
@@ -692,6 +698,8 @@ class CreateSample(metaclass=PoolMeta):
         sample_client_description = (hasattr(self.start,
             'sample_client_description') and getattr(self.start,
             'sample_client_description') or ' ')
+        dangerous = (hasattr(self.start, 'dangerous') and
+            getattr(self.start, 'dangerous') or False)
 
         for sample_defaults in samples_defaults:
             sample_defaults['equipment'] = equipment_id
@@ -718,6 +726,7 @@ class CreateSample(metaclass=PoolMeta):
             sample_defaults['air_filter_changed'] = air_filter_changed
             sample_defaults['sample_client_description'] = \
                 sample_client_description
+            sample_defaults['dangerous'] = dangerous
 
         return samples_defaults
 
@@ -933,3 +942,96 @@ class EditSample(metaclass=PoolMeta):
 
         if lines_to_update:
             NotebookLine.save(lines_to_update)
+
+
+class WarnDangerousProductStart(ModelView):
+    'Warn Dangerous Product'
+    __name__ = 'lims.comercial.product.warn_dangerous.start'
+
+    comercial_products = fields.Many2Many('lims.comercial.product',
+        None, None, 'Dangerous Products', readonly=True)
+    attachments = fields.One2Many('ir.attachment', 'resource', 'Attachments',
+        readonly=True)
+
+
+class WarnDangerousProduct(Wizard):
+    'Warn Dangerous Product'
+    __name__ = 'lims.comercial.product.warn_dangerous'
+
+    start_state = 'check_dangerous_products'
+    check_dangerous_products = StateTransition()
+    warn_dangerous_products = StateView(
+        'lims.comercial.product.warn_dangerous.start',
+        'lims_industry.comercial_product_warn_dangerous_start_view_form', [
+            Button('Ok', 'end', 'tryton-ok', default=True),
+            ])
+
+    def _get_dangerous_products(self):
+        pool = Pool()
+
+        active_model = Transaction().context['active_model']
+        active_id = Transaction().context['active_id']
+        dangerous_products = set()
+
+        if active_model == 'lims.entry':
+            Entry = pool.get(active_model)
+            entry = Entry(active_id)
+            for sample in entry.samples:
+                if (sample.comercial_product and
+                        sample.comercial_product.dangerous):
+                    dangerous_products.add(sample.comercial_product.id)
+
+        elif active_model == 'lims.planification':
+            Planification = pool.get(active_model)
+            planification = Planification(active_id)
+
+            for detail in planification.details:
+                sample = detail.fraction.sample
+                if (sample.comercial_product and
+                        sample.comercial_product.dangerous):
+                    dangerous_products.add(sample.comercial_product.id)
+
+        elif active_model == 'lims.analysis_sheet':
+            Data = pool.get('lims.interface.data')
+            AnalysisSheet = pool.get(active_model)
+            sheet = AnalysisSheet(active_id)
+
+            with Transaction().set_context(
+                    lims_interface_table=sheet.compilation.table.id):
+                data_lines = Data.search([
+                    ('compilation', '=', sheet.compilation.id),
+                    ('notebook_line', '!=', None),
+                    ])
+                for data_line in data_lines:
+                    sample = data_line.notebook_line.sample
+                    if (sample.comercial_product and
+                            sample.comercial_product.dangerous):
+                        dangerous_products.add(sample.comercial_product.id)
+
+        return list(dangerous_products)
+
+    def transition_check_dangerous_products(self):
+        dangerous_products = self._get_dangerous_products()
+        if not dangerous_products:
+            return 'end'
+        return 'warn_dangerous_products'
+
+    def default_warn_dangerous_products(self, fields):
+        pool = Pool()
+        Attachment = pool.get('ir.attachment')
+
+        dangerous_products = self._get_dangerous_products()
+        if not dangerous_products:
+            return {}
+
+        resources = []
+        for cp_id in dangerous_products:
+            resources.append('lims.comercial.product,%s' % cp_id)
+        attachments = Attachment.search([
+            ('resource', 'in', resources),
+            ])
+
+        return {
+            'comercial_products': dangerous_products,
+            'attachments': [a.id for a in attachments],
+            }

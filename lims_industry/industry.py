@@ -641,6 +641,11 @@ class ComercialProduct(ModelSQL, ModelView):
     brand = fields.Many2One('lims.comercial.product.brand', 'Brand',
         required=True)
     matrix = fields.Many2One('lims.matrix', 'Base/Matrix', required=True)
+    dangerous = fields.Boolean('Dangerous')
+
+    @staticmethod
+    def default_dangerous():
+        return False
 
     def get_rec_name(self, name):
         res = '%s %s' % (self.brand.name, self.name)

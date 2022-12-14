@@ -66,5 +66,18 @@
             <field name="name">samples_pending_reporting_form</field>
         </record>
 
+<!-- Wizard Warn Dangerous Product -->
+
+        <record model="ir.ui.view" id="comercial_product_warn_dangerous_start_view_form">
+            <field name="model">lims.comercial.product.warn_dangerous.start</field>
+            <field name="type">form</field>
+            <field name="name">comercial_product_warn_dangerous_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_comercial_product_warn_dangerous">
+            <field name="name">Warn Dangerous Product</field>
+            <field name="wiz_name">lims.comercial.product.warn_dangerous</field>
+        </record>
+
     </data>
 </tryton>

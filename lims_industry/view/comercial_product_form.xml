@@ -6,4 +6,6 @@
     <field name="brand"/>
     <label name="matrix"/>
     <field name="matrix"/>
+    <label name="dangerous"/>
+    <field name="dangerous"/>
 </form>
