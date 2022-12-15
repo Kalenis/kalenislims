@@ -10,5 +10,8 @@
         <page id="lines" string="Lines">
             <field name="notebook_lines"/>
         </page>
+        <page id="comments" string="Comments">
+            <field name="comments" colspan="4"/>
+        </page>
     </notebook>
 </form>
