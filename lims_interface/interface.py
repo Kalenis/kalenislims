@@ -421,7 +421,9 @@ class Interface(Workflow, ModelSQL, ModelView):
                                 position = pos * 1000 + column.group * 100000
                                 pos_group = position
                                 expression = (column.expression and
-                                    column.expression.replace('_XX', ''))
+                                    column.expression.replace(
+                                        '_XX', '').replace(
+                                        'XX', '%s' % rep))
                                 grouped_fields.append(GroupedField(
                                     name=column.alias,
                                     string=column.name,
@@ -448,7 +450,9 @@ class Interface(Workflow, ModelSQL, ModelView):
                                 position = pos_group
 
                             expression = (column.expression and
-                                column.expression.replace('_XX', '_%s' % rep))
+                                column.expression.replace(
+                                    '_XX', '_%s' % rep).replace(
+                                    'XX', '%s' % rep))
                             fields[position] = Field(
                                 name='%s_%s' % (column.alias, str(rep)),
                                 string='%s (%s)' % (column.name, str(rep)),
