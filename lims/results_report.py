@@ -1904,6 +1904,7 @@ class ResultsReportVersionDetailSample(
         'detail_sample', 'Analysis')
     party = fields.Function(fields.Many2One('party.party', 'Party'),
         'get_notebook_field')
+    comments = fields.Text('Comments')
     invoice_party = fields.Function(fields.Many2One('party.party',
         'Invoice Party'), 'get_notebook_field')
     label = fields.Function(fields.Char('Label'), 'get_notebook_field')
@@ -1970,6 +1971,7 @@ class ResultsReportVersionDetailSample(
                 })
         if notebook_lines:
             sample_default['notebook_lines'] = [('create', notebook_lines)]
+        sample_default['comments'] = sample.comments
         return sample_default
 
     @classmethod
@@ -2665,6 +2667,7 @@ class GenerateReport(Wizard):
                     parties[key] = {
                         'party': notebook.party.id,
                         'entry': notebook.fraction.entry.id,
+                        'comments': notebook.fraction.entry.report_comments,
                         'cie_fraction_type': (
                             notebook.fraction.cie_fraction_type),
                         'report_language': (
@@ -2716,6 +2719,7 @@ class GenerateReport(Wizard):
                         'signatories': [('create',
                             signatories + extra_signatories)],
                         'samples': [('create', samples)],
+                        'comments': party['comments'],
                         }
                     details.update(ResultsDetail._get_fields_from_samples(
                         samples, self.start))

@@ -5668,6 +5668,10 @@ msgctxt "field:lims.results_report.version.detail.new_version.start,type:"
 msgid "Type"
 msgstr "Tipo"
 
+msgctxt "field:lims.results_report.version.detail.sample,comments:"
+msgid "Comments"
+msgstr "Observaciones"
+
 msgctxt "field:lims.results_report.version.detail.sample,invoice_party:"
 msgid "Invoice Party"
 msgstr "Tercero de la factura"
@@ -15073,6 +15077,10 @@ msgstr "Línea"
 msgctxt "view:lims.results_report.version.detail.line:"
 msgid "Lines"
 msgstr "Líneas"
+
+msgctxt "view:lims.results_report.version.detail.sample:"
+msgid "Comments"
+msgstr "Observaciones"
 
 msgctxt "view:lims.results_report.version.detail.sample:"
 msgid "Lines"
