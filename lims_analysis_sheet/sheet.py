@@ -985,7 +985,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             setattr(compilation, field, value)
         return compilation
 
-    def create_lines(self, lines):
+    def create_lines(self, lines, update_samples_list=True):
         Data = Pool().get('lims.interface.data')
 
         interface = self.template.interface
@@ -1043,15 +1043,21 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             if data:
                 Data.create(data)
 
-            samples = set()
-            data_lines = Data.search([
-                ('compilation', '=', self.compilation.id),
-                ('notebook_line', '!=', None),
-                ])
-            for data_line in data_lines:
-                samples.add(data_line.notebook_line.fraction.sample.number)
-            self.samples = ' - '.join(list(samples))
-            self.save()
+            if update_samples_list:
+                self._update_samples_list()
+
+    def _update_samples_list(self):
+        Data = Pool().get('lims.interface.data')
+
+        samples = set()
+        data_lines = Data.search([
+            ('compilation', '=', self.compilation.id),
+            ('notebook_line', '!=', None),
+            ])
+        for data_line in data_lines:
+            samples.add(data_line.notebook_line.fraction.sample.number)
+        self.samples = ' - '.join(list(samples))
+        self.save()
 
     def get_data_defaults(self):
         defaults = {}
