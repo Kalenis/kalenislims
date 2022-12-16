@@ -7692,3 +7692,40 @@ class ReferService(Wizard):
 
     def transition_open_(self):
         return 'end'
+
+
+class ChangeStorageTimeStart(ModelView):
+    'Change Storage Time'
+    __name__ = 'lims.change_storage_time.start'
+
+    storage_time = fields.Integer('Storage time (in months)', required=True)
+
+
+class ChangeStorageTime(Wizard):
+    'Change Storage Time'
+    __name__ = 'lims.change_storage_time'
+
+    start = StateView('lims.change_storage_time.start',
+        'lims.change_storage_time_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Change', 'change', 'tryton-ok', default=True),
+            ])
+    change = StateTransition()
+
+    def transition_change(self):
+        Fraction = Pool().get('lims.fraction')
+
+        fractions_to_save = []
+        for fraction in Fraction.browse(Transaction().context['active_ids']):
+            #if fraction.has_results_report:
+                #continue
+            fraction.storage_time = self.start.storage_time
+            if fraction.countersample_date:
+                fraction.expiry_date = (fraction.countersample_date +
+                    relativedelta(months=fraction.storage_time))
+            fractions_to_save.append(fraction)
+        Fraction.save(fractions_to_save)
+        return 'end'
+
+    def end(self):
+        return 'reload'

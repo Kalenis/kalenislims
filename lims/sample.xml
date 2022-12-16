@@ -1351,5 +1351,24 @@
             <field name="action" ref="wiz_referral_service"/>
         </record>
 
+<!-- Wizard Change Storage Time -->
+
+        <record model="ir.ui.view" id="change_storage_time_start_view_form">
+            <field name="model">lims.change_storage_time.start</field>
+            <field name="type">form</field>
+            <field name="name">change_storage_time_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_change_storage_time">
+            <field name="name">Change Storage Time</field>
+            <field name="wiz_name">lims.change_storage_time</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_change_storage_time_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.fraction,-1</field>
+            <field name="action" ref="wiz_change_storage_time"/>
+        </record>
+
     </data>
 </tryton>

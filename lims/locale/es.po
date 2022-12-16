@@ -367,6 +367,10 @@ msgctxt ""
 msgid "Days to add"
 msgstr "Días a agregar"
 
+msgctxt "field:lims.change_storage_time.start,storage_time:"
+msgid "Storage time (in months)"
+msgstr "Tiempo de almacenamiento (en meses)"
+
 msgctxt "field:lims.concentration.level,code:"
 msgid "Code"
 msgstr "Código"
@@ -7670,6 +7674,10 @@ msgctxt "model:ir.action,name:wiz_change_results_estimated_waiting"
 msgid "Change Estimated Days For Results"
 msgstr "Cambiar Días estimados para resultados"
 
+msgctxt "model:ir.action,name:wiz_change_storage_time"
+msgid "Change Storage Time"
+msgstr "Cambiar Tiempo de almacenamiento"
+
 msgctxt "model:ir.action,name:wiz_control_chart_print"
 msgid "Control Chart"
 msgstr "Carta de Control"
@@ -9563,6 +9571,10 @@ msgstr "Tipo de certificación"
 msgctxt "model:lims.change_results_estimated_waiting.start,name:"
 msgid "Change Estimated Days For Results"
 msgstr "Cambiar Días estimados para resultados"
+
+msgctxt "model:lims.change_storage_time.start,name:"
+msgid "Change Storage Time"
+msgstr "Cambiar Tiempo de almacenamiento"
 
 msgctxt "model:lims.concentration.level,name:"
 msgid "Concentration Level"
@@ -15336,6 +15348,14 @@ msgid "Change"
 msgstr "Cambiar"
 
 msgctxt "wizard_button:lims.change_results_estimated_waiting,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.change_storage_time,start,change:"
+msgid "Change"
+msgstr "Cambiar"
+
+msgctxt "wizard_button:lims.change_storage_time,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 

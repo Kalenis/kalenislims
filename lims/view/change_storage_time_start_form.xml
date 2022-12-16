@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<form>
+    <label name="storage_time"/>
+    <field name="storage_time"/>
+</form>
