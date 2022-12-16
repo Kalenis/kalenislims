@@ -1067,12 +1067,14 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         Data = Pool().get('lims.interface.data')
 
         samples = set()
-        data_lines = Data.search([
-            ('compilation', '=', self.compilation.id),
-            ('notebook_line', '!=', None),
-            ])
-        for data_line in data_lines:
-            samples.add(data_line.notebook_line.fraction.sample.number)
+        with Transaction().set_context(
+                lims_interface_table=self.compilation.table.id):
+            data_lines = Data.search([
+                ('compilation', '=', self.compilation.id),
+                ('notebook_line', '!=', None),
+                ])
+            for data_line in data_lines:
+                samples.add(data_line.notebook_line.fraction.sample.number)
         self.samples = ' - '.join(list(samples))
         self.save()
 
