@@ -2381,6 +2381,9 @@ class NotebookInitialConcentrationCalc2(Wizard):
                 continue
 
             formulas = notebook_line.initial_concentration
+            if formulas[0] != 'A' and formulas[0] != 'R':
+                continue
+
             for i in (' ', '\t', '\n', '\r'):
                 formulas = formulas.replace(i, '')
             variables = self._get_variables_list(formulas,
@@ -2521,19 +2524,26 @@ class NotebookInitialConcentrationCalc2(Wizard):
         for conc in concentrations:
             notebook_lines = NotebookLine.search([
                 ('notebook', '=', conc.notebook.id),
-                ('analysis', '=', conc.analysis.id)
+                ('analysis', '=', conc.analysis.id),
                 ])
-            if len(notebook_lines) != 1:
-                continue
-
-            analysis_code = conc.analysis.code
-            result = self._get_relation_result(analysis_code,
-                conc.notebook, analysis_code, round_=True)
-
-            notebook_line = notebook_lines[0]
-            if result is not None:
-                notebook_line.initial_concentration = str(result)
-                notebook_lines_to_save.append(notebook_line)
+            relation_code = conc.analysis.code
+            for notebook_line in notebook_lines:
+                ic = notebook_line.initial_concentration
+                analysis_code = ic[1:]
+                if ic[0] == 'A':
+                    result = self._get_analysis_result(analysis_code,
+                        conc.notebook, relation_code)
+                    if result is not None:
+                        notebook_line.initial_concentration = str(result)
+                        notebook_lines_to_save.append(notebook_line)
+                elif ic[0] == 'R':
+                    result = self._get_relation_result(analysis_code,
+                        conc.notebook, relation_code, round_=True)
+                    if result is not None:
+                        notebook_line.initial_concentration = str(result)
+                        notebook_lines_to_save.append(notebook_line)
+                else:
+                    continue
         NotebookLine.save(notebook_lines_to_save)
         return 'end'
 
