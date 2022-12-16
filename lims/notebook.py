@@ -3200,10 +3200,8 @@ class NotebookInternalRelationsCalc1(Wizard):
             notebook_line = notebook_lines[0]
             if result is not None:
                 notebook_line.result = str(result)
-                notebook_line.result_modifier = 'eq'
             if converted_result is not None:
                 notebook_line.converted_result = str(converted_result)
-                notebook_line.converted_result_modifier = 'eq'
             if result is not None or converted_result is not None:
                 notebook_line.start_date = date
                 notebook_line.end_date = date
@@ -3697,10 +3695,8 @@ class NotebookInternalRelationsCalc2(Wizard):
             notebook_line = notebook_lines[0]
             if result is not None:
                 notebook_line.result = str(result)
-                notebook_line.result_modifier = 'eq'
             if converted_result is not None:
                 notebook_line.converted_result = str(converted_result)
-                notebook_line.converted_result_modifier = 'eq'
             if result is not None or converted_result is not None:
                 notebook_line.start_date = date
                 notebook_line.end_date = date
