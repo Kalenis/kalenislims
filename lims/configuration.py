@@ -672,3 +672,17 @@ class Cron(metaclass=PoolMeta):
                 ('lims.trend.chart|clean',
                     "Lims Clean Inactive Trend Charts"),
                 ])
+
+
+class Sequence(metaclass=PoolMeta):
+    __name__ = 'ir.sequence'
+
+    @classmethod
+    def _get_substitutions(cls, date):
+        pool = Pool()
+        Date = pool.get('ir.date')
+        res = super(Sequence, cls)._get_substitutions(date)
+        if not date:
+            date = Date.today()
+        res['year2'] = date.strftime('%y')
+        return res

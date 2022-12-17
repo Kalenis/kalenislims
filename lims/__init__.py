@@ -39,6 +39,7 @@ def register():
         configuration.LabWorkYearSequence,
         configuration.LabWorkYearHoliday,
         configuration.Cron,
+        configuration.Sequence,
         laboratory.LaboratoryProfessional,
         laboratory.Laboratory,
         laboratory.LabMethod,
