@@ -6,12 +6,20 @@ import datetime
 import formulas
 import numpy as np
 from dateutil.relativedelta import relativedelta
+from decimal import Decimal
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool
 from trytond.transaction import Transaction
 
 custom_functions = {}
+
+
+def dummy_iter(alias, iteration=None):
+    return alias
+
+
+custom_functions['ITER'] = dummy_iter
 
 
 def to_str(value):
@@ -91,109 +99,59 @@ def get_constant(name, parameter1=None, parameter2=None, parameter3=None,
 custom_functions['CONSTANT'] = get_constant
 
 
-def slope(yp, xp):
-    items_to_delete, i = [], 0
-    for y1 in yp:
-        for val in y1:
-            if val is None:
-                items_to_delete.append(i)
-            i += 1
-    if items_to_delete:
-        yp = np.delete(yp, items_to_delete, axis=1)
-        xp = np.delete(xp, items_to_delete, axis=1)
-    if any(val is None for x1 in xp for val in x1):
+def _get_column_name(alias, iteration=None):
+    if not iteration:
+        return alias
+    parser = formulas.Parser()
+    ast = parser.ast('=%s' % str(iteration))[1].compile()
+    iteration = str(ast())
+    return '%s_%s' % (alias, iteration)
+
+
+def get_column_value(notebook_line, alias, iteration=None):
+    pool = Pool()
+    Data = pool.get('lims.interface.data')
+
+    if not notebook_line or not alias:
         return None
 
-    return formulas.functions.wrap_func(formulas.functions.stat.xslope)(yp, xp)
+    if not isinstance(notebook_line, int):
+        notebook_line = notebook_line.id
 
-
-custom_functions['SLOPE'] = slope
-
-
-def intercept(y, x):
-    items_to_delete, i = [], 0
-    for y1 in y:
-        for val in y1:
-            if val is None:
-                items_to_delete.append(i)
-            i += 1
-    if items_to_delete:
-        y = np.delete(y, items_to_delete, axis=1)
-        x = np.delete(x, items_to_delete, axis=1)
-    if any(val is None for x1 in x for val in x1):
+    compilation_id = Transaction().context.get('lims_interface_compilation')
+    if not compilation_id:
         return None
 
-    y, x = y[0].astype(float), x[0].astype(float)
-    if len(y) < 2 or len(x) < 2:
+    lines = Data.search([
+        ('compilation', '=', compilation_id),
+        ('notebook_line', '=', notebook_line),
+        ], limit=1)
+    target_line = lines and lines[0] or None
+    if not target_line:
         return None
 
-    def _mean(l):
-        return sum(l) / len(l)
-
-    def _multiply(l1, l2):
-        return [a * b for a, b in zip(l1, l2)]
-
-    m = ((_mean(x) * _mean(y) - _mean(_multiply(x, y))) /
-        (_mean(x) ** 2 - _mean(_multiply(x, x))))
-    b = _mean(y) - m * _mean(x)
-    return b
-
-
-custom_functions['INTERCEPT'] = intercept
-
-
-def rsq(y, x):
-    items_to_delete, i = [], 0
-    for y1 in y:
-        for val in y1:
-            if val is None:
-                items_to_delete.append(i)
-            i += 1
-    if items_to_delete:
-        y = np.delete(y, items_to_delete, axis=1)
-        x = np.delete(x, items_to_delete, axis=1)
-    if any(val is None for x1 in x for val in x1):
+    target_field = _get_column_name(alias, iteration)
+    if not hasattr(target_line, target_field):
         return None
 
-    y, x = y[0].astype(float), x[0].astype(float)
-    if len(y) < 2 or len(x) < 2:
-        return None
-
-    zx = (x - np.mean(x)) / np.std(x, ddof=1)
-    zy = (y - np.mean(y)) / np.std(y, ddof=1)
-    r = np.sum(zx * zy) / (len(x) - 1)
-    return r ** 2
+    return getattr(target_line, target_field)
 
 
-custom_functions['RSQ'] = rsq
-
-
-def scientific_notation(value, decimals=2):
-    res = ''
-    if not value:
-        return res
-    try:
-        res = ("{0:.%ie}" % (decimals)).format(float(value))
-    except (TypeError, ValueError):
-        pass
-    return res
-
-
-custom_functions['SCIENTIFIC_NOTATION'] = scientific_notation
+custom_functions['V'] = get_column_value
 
 
 def _td_to_time(td_value):
     hours, remainder = divmod(td_value.seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
-    return datetime.time(hours, minutes,seconds)
+    return datetime.time(hours, minutes, seconds)
 
 
-def time_diff(time_1,time_2,uom=False,return_delta=False):
+def time_diff(time_1, time_2, uom=False, return_delta=False):
     uoms = {
-        'H':lambda x: x.seconds/3600,
-        'M':lambda x: x.seconds/60,
-        'S':lambda x: x.seconds,
-        'MS':lambda x: x.seconds*1000,
+        'H': lambda x: x.seconds / 3600,
+        'M': lambda x: x.seconds / 60,
+        'S': lambda x: x.seconds,
+        'MS': lambda x: x.seconds * 1000,
     }
     if not time_1 or not time_2 or time_1 < time_2:
         return None
@@ -212,7 +170,7 @@ def time_diff(time_1,time_2,uom=False,return_delta=False):
 custom_functions['TIMEDIF'] = time_diff
 
 
-def to_time(value,uom):
+def to_time(value, uom):
     uoms = {
         'H': lambda x: datetime.timedelta(hours=x),
         'M': lambda x: datetime.timedelta(minutes=x),
@@ -333,20 +291,94 @@ custom_functions['MINDATE'] = min_date
 
 
 def slope(yp, xp):
-    items_to_delete = []
-    i = 0
+    items_to_delete, i = [], 0
     for y1 in yp:
-        for y2 in y1:
-            if y2 is None:
+        for val in y1:
+            if not isinstance(val, (int, float, Decimal)):
                 items_to_delete.append(i)
             i += 1
     if items_to_delete:
         yp = np.delete(yp, items_to_delete, axis=1)
         xp = np.delete(xp, items_to_delete, axis=1)
+    if any(val is None for x1 in xp for val in x1):
+        return None
+
     return formulas.functions.wrap_func(formulas.functions.stat.xslope)(yp, xp)
 
 
 custom_functions['SLOPE'] = slope
+
+
+def intercept(y, x):
+    items_to_delete, i = [], 0
+    for y1 in y:
+        for val in y1:
+            if not isinstance(val, (int, float, Decimal)):
+                items_to_delete.append(i)
+            i += 1
+    if items_to_delete:
+        y = np.delete(y, items_to_delete, axis=1)
+        x = np.delete(x, items_to_delete, axis=1)
+    if any(val is None for x1 in x for val in x1):
+        return None
+
+    y, x = y[0].astype(float), x[0].astype(float)
+    if len(y) < 2 or len(x) < 2:
+        return None
+
+    def _mean(l):
+        return sum(l) / len(l)
+
+    def _multiply(l1, l2):
+        return [a * b for a, b in zip(l1, l2)]
+
+    m = ((_mean(x) * _mean(y) - _mean(_multiply(x, y))) /
+        (_mean(x) ** 2 - _mean(_multiply(x, x))))
+    b = _mean(y) - m * _mean(x)
+    return b
+
+
+custom_functions['INTERCEPT'] = intercept
+
+
+def rsq(y, x):
+    items_to_delete, i = [], 0
+    for y1 in y:
+        for val in y1:
+            if not isinstance(val, (int, float, Decimal)):
+                items_to_delete.append(i)
+            i += 1
+    if items_to_delete:
+        y = np.delete(y, items_to_delete, axis=1)
+        x = np.delete(x, items_to_delete, axis=1)
+    if any(val is None for x1 in x for val in x1):
+        return None
+
+    y, x = y[0].astype(float), x[0].astype(float)
+    if len(y) < 2 or len(x) < 2:
+        return None
+
+    zx = (x - np.mean(x)) / np.std(x, ddof=1)
+    zy = (y - np.mean(y)) / np.std(y, ddof=1)
+    r = np.sum(zx * zy) / (len(x) - 1)
+    return r ** 2
+
+
+custom_functions['RSQ'] = rsq
+
+
+def scientific_notation(value, decimals=2):
+    res = ''
+    if not value:
+        return res
+    try:
+        res = ("{0:.%ie}" % (decimals)).format(float(value))
+    except (TypeError, ValueError):
+        pass
+    return res
+
+
+custom_functions['SCIENTIFIC_NOTATION'] = scientific_notation
 
 
 class Function(ModelSQL, ModelView):
