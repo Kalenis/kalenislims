@@ -2783,59 +2783,13 @@ msgctxt "field:lims.notebook.generate_results_report.start,type:"
 msgid "Type"
 msgstr "Tipo"
 
-msgctxt ""
-"field:lims.notebook.initial_concentration_calc_2.concentration,analysis:"
-msgid "Analysis"
-msgstr "Análisis"
-
-msgctxt ""
-"field:lims.notebook.initial_concentration_calc_2.concentration,notebook:"
-msgid "Laboratory notebook"
-msgstr "Cuaderno de laboratorio"
-
-msgctxt ""
-"field:lims.notebook.initial_concentration_calc_2.concentration,session_id:"
-msgid "Session ID"
-msgstr "ID Sesión"
-
-msgctxt ""
-"field:lims.notebook.initial_concentration_calc_2.concentration,variables:"
+msgctxt "field:lims.notebook.initial_concentration_calc_2.start,variables:"
 msgid "Variables"
 msgstr "Variables"
-
-msgctxt "field:lims.notebook.initial_concentration_calc_2.process,analysis:"
-msgid "Analysis"
-msgstr "Análisis"
-
-msgctxt "field:lims.notebook.initial_concentration_calc_2.process,notebook:"
-msgid "Laboratory notebook"
-msgstr "Cuaderno de laboratorio"
-
-msgctxt "field:lims.notebook.initial_concentration_calc_2.process,variables:"
-msgid "Variables"
-msgstr "Variables"
-
-msgctxt ""
-"field:lims.notebook.initial_concentration_calc_2.result,concentrations:"
-msgid "Concentration"
-msgstr "Concentración"
-
-msgctxt "field:lims.notebook.initial_concentration_calc_2.result,index:"
-msgid "Index"
-msgstr "Índice"
-
-msgctxt "field:lims.notebook.initial_concentration_calc_2.result,total:"
-msgid "Total"
-msgstr "Total"
 
 msgctxt "field:lims.notebook.initial_concentration_calc_2.variable,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
-
-msgctxt ""
-"field:lims.notebook.initial_concentration_calc_2.variable,concentration:"
-msgid "Concentration"
-msgstr "Concentración"
 
 msgctxt ""
 "field:lims.notebook.initial_concentration_calc_2.variable,initial_unit:"
@@ -10008,18 +9962,6 @@ msgctxt "model:lims.notebook.initial_concentration_calc.start,name:"
 msgid "Initial Concentration Calculation"
 msgstr "Cálculo de concentración inicial"
 
-msgctxt "model:lims.notebook.initial_concentration_calc_2.concentration,name:"
-msgid "Initial Concentration Calculation"
-msgstr "Cálculo de concentración inicial"
-
-msgctxt "model:lims.notebook.initial_concentration_calc_2.process,name:"
-msgid "Initial Concentration Calculation"
-msgstr "Cálculo de concentración inicial"
-
-msgctxt "model:lims.notebook.initial_concentration_calc_2.result,name:"
-msgid "Initial Concentration Calculation"
-msgstr "Cálculo de concentración inicial"
-
 msgctxt "model:lims.notebook.initial_concentration_calc_2.start,name:"
 msgid "Initial Concentration Calculation"
 msgstr "Cálculo de concentración inicial"
@@ -15672,18 +15614,13 @@ msgid "Ok"
 msgstr "Aceptar"
 
 msgctxt ""
-"wizard_button:lims.notebook.initial_concentration_calc_2,process,check_variables:"
-msgid "Next"
-msgstr "Siguiente"
+"wizard_button:lims.notebook.initial_concentration_calc_2,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
 
 msgctxt "wizard_button:lims.notebook.initial_concentration_calc_2,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
-
-msgctxt ""
-"wizard_button:lims.notebook.initial_concentration_calc_2,start,search:"
-msgid "Search"
-msgstr "Buscar"
 
 msgctxt "wizard_button:lims.notebook.internal_relations_calc_1,start,end:"
 msgid "Cancel"
@@ -15911,19 +15848,14 @@ msgid "Ok"
 msgstr "Aceptar"
 
 msgctxt ""
-"wizard_button:lims.notebook_line.initial_concentration_calc_2,process,check_variables:"
-msgid "Next"
-msgstr "Siguiente"
+"wizard_button:lims.notebook_line.initial_concentration_calc_2,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
 
 msgctxt ""
 "wizard_button:lims.notebook_line.initial_concentration_calc_2,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
-
-msgctxt ""
-"wizard_button:lims.notebook_line.initial_concentration_calc_2,start,search:"
-msgid "Search"
-msgstr "Buscar"
 
 msgctxt ""
 "wizard_button:lims.notebook_line.internal_relations_calc_1,start,end:"
