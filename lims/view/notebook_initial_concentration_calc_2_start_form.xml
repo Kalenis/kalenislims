@@ -1,6 +1,4 @@
 <?xml version="1.0"?>
 <form col="2">
-    <image name="tryton-info" xexpand="0" xfill="0"/>
-    <label string="Calculate initial concentration?" id="ask"
-        yalign="0.0" xalign="0.0" xexpand="1"/>
+    <field name="variables" colspan="4"/>
 </form>

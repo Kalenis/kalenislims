@@ -2250,200 +2250,75 @@ class NotebookInitialConcentrationCalc2Start(ModelView):
     'Initial Concentration Calculation'
     __name__ = 'lims.notebook.initial_concentration_calc_2.start'
 
-
-class NotebookInitialConcentrationCalc2Result(ModelView):
-    'Initial Concentration Calculation'
-    __name__ = 'lims.notebook.initial_concentration_calc_2.result'
-
-    concentrations = fields.Many2Many(
-        'lims.notebook.initial_concentration_calc_2.concentration', None, None,
-        'Concentration')
-    total = fields.Integer('Total')
-    index = fields.Integer('Index')
-
-
-class NotebookInitialConcentrationCalc2Concentration(ModelSQL, ModelView):
-    'Initial Concentration Calculation'
-    __name__ = 'lims.notebook.initial_concentration_calc_2.concentration'
-    _table = 'lims_notebook_initial_concentration_c_2_conc'
-
-    notebook = fields.Many2One('lims.notebook', 'Laboratory notebook')
-    analysis = fields.Many2One('lims.analysis', 'Analysis')
-    variables = fields.One2Many(
-        'lims.notebook.initial_concentration_calc_2.variable', 'concentration',
-        'Variables')
-    session_id = fields.Integer('Session ID')
-
-    @classmethod
-    def __register__(cls, module_name):
-        super().__register__(module_name)
-        cursor = Transaction().connection.cursor()
-        cursor.execute('DELETE FROM "' + cls._table + '"')
-
-
-class NotebookInitialConcentrationCalc2Variable(ModelSQL, ModelView):
-    'Formula Variable'
-    __name__ = 'lims.notebook.initial_concentration_calc_2.variable'
-
-    concentration = fields.Many2One(
-        'lims.notebook.initial_concentration_calc_2.concentration',
-        'Concentration', ondelete='CASCADE', readonly=True)
-    line = fields.Many2One('lims.notebook.line', 'Line')
-    analysis = fields.Many2One('lims.analysis', 'Analysis', readonly=True)
-    repetition = fields.Integer('Repetition', readonly=True)
-    result_modifier = fields.Function(fields.Many2One('lims.result_modifier',
-        'Result modifier'), 'get_line_field')
-    result = fields.Function(fields.Char('Result'), 'get_line_field')
-    initial_unit = fields.Function(fields.Many2One('product.uom',
-        'Initial unit'), 'get_line_field')
-    use = fields.Boolean('Use')
-
-    @classmethod
-    def __setup__(cls):
-        super().__setup__()
-        cls._order.insert(0, ('concentration', 'ASC'))
-        cls._order.insert(1, ('analysis', 'ASC'))
-        cls._order.insert(2, ('repetition', 'ASC'))
-
-    @classmethod
-    def get_line_field(cls, variables, names):
-        result = {}
-        for name in names:
-            result[name] = {}
-            if cls._fields[name]._type == 'many2one':
-                for v in variables:
-                    field = getattr(v.line, name, None)
-                    result[name][v.id] = field.id if field else None
-            else:
-                for v in variables:
-                    result[name][v.id] = getattr(v.line, name, None)
-        return result
-
-
-class NotebookInitialConcentrationCalc2Process(ModelView):
-    'Initial Concentration Calculation'
-    __name__ = 'lims.notebook.initial_concentration_calc_2.process'
-
-    notebook = fields.Many2One('lims.notebook', 'Laboratory notebook',
-        readonly=True)
-    analysis = fields.Many2One('lims.analysis', 'Analysis',
-        readonly=True)
     variables = fields.One2Many(
         'lims.notebook.initial_concentration_calc_2.variable', None,
         'Variables')
+
+
+class NotebookInitialConcentrationCalc2Variable(ModelView):
+    'Formula Variable'
+    __name__ = 'lims.notebook.initial_concentration_calc_2.variable'
+
+    line = fields.Many2One('lims.notebook.line', 'Line')
+    analysis = fields.Many2One('lims.analysis', 'Analysis', readonly=True)
+    repetition = fields.Integer('Repetition', readonly=True)
+    result_modifier = fields.Many2One('lims.result_modifier',
+        'Result modifier', readonly=True)
+    result = fields.Char('Result', readonly=True)
+    initial_unit = fields.Many2One('product.uom', 'Initial unit',
+        readonly=True)
+    use = fields.Boolean('Use')
 
 
 class NotebookInitialConcentrationCalc2(Wizard):
     'Initial Concentration Calculation'
     __name__ = 'lims.notebook.initial_concentration_calc_2'
 
-    start_state = 'search'
     start = StateView('lims.notebook.initial_concentration_calc_2.start',
         'lims.lims_notebook_initial_concentration_calc_2_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Search', 'search', 'tryton-forward', default=True),
+            Button('Confirm', 'confirm', 'tryton-ok', default=True),
             ])
-    search = StateTransition()
-    result = StateView('lims.notebook.initial_concentration_calc_2.result',
-        'lims.lims_notebook_initial_concentration_calc_2_result_view_form', [])
-    next_ = StateTransition()
-    process = StateView('lims.notebook.initial_concentration_calc_2.process',
-        'lims.lims_notebook_initial_concentration_calc_2_process_view_form', [
-            Button('Next', 'check_variables', 'tryton-forward', default=True),
-            ])
-    check_variables = StateTransition()
     confirm = StateTransition()
 
-    def transition_search(self):
+    def _get_notebook_lines(self):
         NotebookLine = Pool().get('lims.notebook.line')
+        notebook_id = Transaction().context['active_id']
+        with Transaction().set_context(_check_access=True):
+            notebook_lines = NotebookLine.search([
+                ('notebook', '=', notebook_id),
+                ])
+            return notebook_lines
 
-        for notebook_id in Transaction().context['active_ids']:
-            with Transaction().set_context(_check_access=True):
-                notebook_lines = NotebookLine.search([
-                    ('notebook', '=', notebook_id),
-                    ])
-            if not notebook_lines:
-                continue
-            if self.get_concentrations(notebook_lines):
-                return 'next_'
-        return 'end'
+    def default_start(self, fields):
+        notebook_lines = self._get_notebook_lines()
+        if not notebook_lines:
+            return {}
 
-    def get_concentrations(self, notebook_lines):
-        InitialConcentrationCalc2Concentration = Pool().get(
-            'lims.notebook.initial_concentration_calc_2.concentration')
-
-        concentrations = {}
+        notebook, all_formulas = None, ''
         for notebook_line in notebook_lines:
             if notebook_line.accepted:
                 continue
             analysis_code = notebook_line.analysis.code
             if not analysis_code or not notebook_line.initial_concentration:
                 continue
-
             formulas = notebook_line.initial_concentration
             if formulas[0] != 'A' and formulas[0] != 'R':
                 continue
 
             for i in (' ', '\t', '\n', '\r'):
                 formulas = formulas.replace(i, '')
-            variables = self._get_variables_list(formulas,
-                notebook_line.notebook, {})
-            if not variables:
-                continue
-            has_repetitions = False
-            for var in variables:
-                if var['repetition'] > 0:
-                    has_repetitions = True
-            if not has_repetitions:
-                continue
+            all_formulas += "+" + formulas
+            if not notebook:
+                notebook = notebook_line.notebook
 
-            concentrations[notebook_line.analysis.id] = {
-                'notebook': notebook_line.notebook.id,
-                'analysis': notebook_line.analysis.id,
-                'variables': [('create', variables)],
-                'session_id': self._session_id,
-                }
-
-        if concentrations:
-            res_lines = InitialConcentrationCalc2Concentration.create(
-                [ir for ir in concentrations.values()])
-            self.result.concentrations = res_lines
-            self.result.total = len(self.result.concentrations)
-            self.result.index = 0
-            return True
-        return False
-
-    def transition_next_(self):
-        if self.result.index < self.result.total:
-            conc = self.result.concentrations[self.result.index]
-            self.process.notebook = conc.notebook.id
-            self.process.analysis = conc.analysis.id
-            self.process.variables = None
-            self.result.index += 1
-            return 'process'
-        return 'confirm'
-
-    def default_process(self, fields):
-        InitialConcentrationCalc2Variable = Pool().get(
-            'lims.notebook.initial_concentration_calc_2.variable')
-
-        if not self.process.analysis:
+        if not all_formulas:
             return {}
 
-        default = {}
-        default['notebook'] = self.process.notebook.id
-        default['analysis'] = self.process.analysis.id
-        if self.process.variables:
-            default['variables'] = [v.id for v in self.process.variables]
-        else:
-            variables = InitialConcentrationCalc2Variable.search([
-                ('concentration.session_id', '=', self._session_id),
-                ('concentration.notebook', '=', self.process.notebook.id),
-                ('concentration.analysis', '=', self.process.analysis.id),
-                ])
-            if variables:
-                default['variables'] = [v.id for v in variables]
-        return default
+        variables = self._get_variables_list(all_formulas, notebook, {})
+        if not variables:
+            return {}
+        return {'variables': variables}
 
     def _get_variables_list(self, formula, notebook, analysis={}):
         pool = Pool()
@@ -2478,7 +2353,13 @@ class NotebookInitialConcentrationCalc2(Wizard):
                         'analysis': nl.analysis.id,
                         'repetition': nl.repetition,
                         'use': True if nl.repetition == 0 else False,
+                        'result_modifier': (nl.result_modifier and
+                            nl.result_modifier.id),
+                        'result': nl.result,
+                        'initial_unit': (nl.initial_unit and
+                            nl.initial_unit.id),
                         }
+
             elif var[0] in ('R', 'Y'):
                 analysis_code = var[1:]
                 internal_relations = Analysis.search([
@@ -2493,9 +2374,12 @@ class NotebookInitialConcentrationCalc2(Wizard):
 
         return [v for v in analysis.values()]
 
-    def transition_check_variables(self):
+    def transition_confirm(self):
+        NotebookLine = Pool().get('lims.notebook.line')
+
+        # check_variables
         variables = {}
-        for var in self.process.variables:
+        for var in self.start.variables:
             analysis_code = var.analysis.code
             if analysis_code not in variables:
                 variables[analysis_code] = False
@@ -2504,78 +2388,51 @@ class NotebookInitialConcentrationCalc2(Wizard):
                     variables[analysis_code] = False
                 else:
                     variables[analysis_code] = True
-            var.save()
-
         for var in variables.values():
-            if not var:
-                return 'process'
-        return 'next_'
+            if var is False:
+                return 'start'
 
-    def transition_confirm(self):
-        pool = Pool()
-        InitialConcentrationCalc2Concentration = pool.get(
-            'lims.notebook.initial_concentration_calc_2.concentration')
-        NotebookLine = pool.get('lims.notebook.line')
+        var_values = {}
+        for var in self.start.variables:
+            if not var.use:
+                continue
+            try:
+                res = float(var.line.result)
+            except (TypeError, ValueError):
+                var_values[var.analysis.code] = None
+            else:
+                var_values[var.analysis.code] = res
 
-        concentrations = InitialConcentrationCalc2Concentration.search([
-            ('session_id', '=', self._session_id),
-            ])
         notebook_lines_to_save = []
-        for conc in concentrations:
-            notebook_lines = NotebookLine.search([
-                ('notebook', '=', conc.notebook.id),
-                ('analysis', '=', conc.analysis.id),
-                ])
-            relation_code = conc.analysis.code
-            for notebook_line in notebook_lines:
-                ic = notebook_line.initial_concentration
-                analysis_code = ic[1:]
-                if ic[0] == 'A':
-                    result = self._get_analysis_result(analysis_code,
-                        conc.notebook, relation_code)
-                    if result is not None:
-                        notebook_line.initial_concentration = str(result)
-                        notebook_lines_to_save.append(notebook_line)
-                elif ic[0] == 'R':
-                    result = self._get_relation_result(analysis_code,
-                        conc.notebook, relation_code, round_=True)
-                    if result is not None:
-                        notebook_line.initial_concentration = str(result)
-                        notebook_lines_to_save.append(notebook_line)
-                else:
-                    continue
-        NotebookLine.save(notebook_lines_to_save)
+        notebook_lines = self._get_notebook_lines()
+        for notebook_line in notebook_lines:
+            ic = notebook_line.initial_concentration
+            if not ic:
+                continue
+            analysis_code = ic[1:]
+            if ic[0] == 'A':
+                result = self._get_analysis_result(analysis_code, var_values)
+                if result is not None:
+                    notebook_line.initial_concentration = str(result)
+                    notebook_lines_to_save.append(notebook_line)
+            elif ic[0] == 'R':
+                result = self._get_relation_result(analysis_code, var_values)
+                if result is not None:
+                    notebook_line.initial_concentration = str(result)
+                    notebook_lines_to_save.append(notebook_line)
+            else:
+                continue
+        if notebook_lines_to_save:
+            NotebookLine.save(notebook_lines_to_save)
         return 'end'
 
-    def _get_analysis_result(self, analysis_code, notebook, relation_code):
-        InitialConcentrationCalc2Variable = Pool().get(
-            'lims.notebook.initial_concentration_calc_2.variable')
+    def _get_analysis_result(self, analysis_code, var_values):
+        res = var_values[analysis_code]
+        return res
 
-        variables = InitialConcentrationCalc2Variable.search([
-            ('concentration.session_id', '=', self._session_id),
-            ('concentration.notebook', '=', notebook.id),
-            ('concentration.analysis.code', '=', relation_code),
-            ('analysis.code', '=', analysis_code),
-            ('use', '=', True),
-            ])
-        if not variables:
-            return None
-
-        notebook_line = variables[0].line
-        if not notebook_line:
-            return None
-
-        try:
-            res = float(notebook_line.result)
-        except (TypeError, ValueError):
-            return None
-        return round(res, notebook_line.decimals)
-
-    def _get_relation_result(self, analysis_code, notebook, relation_code,
-            round_=False):
+    def _get_relation_result(self, analysis_code, var_values):
         pool = Pool()
         Analysis = pool.get('lims.analysis')
-        NotebookLine = pool.get('lims.notebook.line')
 
         internal_relations = Analysis.search([
             ('code', '=', analysis_code),
@@ -2587,7 +2444,7 @@ class NotebookInitialConcentrationCalc2(Wizard):
             return None
         for i in (' ', '\t', '\n', '\r'):
             formula = formula.replace(i, '')
-        variables = self._get_variables(formula, notebook, relation_code)
+        variables = self._get_variables(formula, var_values)
         if not variables:
             return None
 
@@ -2604,21 +2461,10 @@ class NotebookInitialConcentrationCalc2(Wizard):
                 res = int(value)
             else:
                 res = float(value)
-        if not round_:
-            return res
 
-        with Transaction().set_user(0):
-            notebook_lines = NotebookLine.search([
-                ('notebook', '=', notebook.id),
-                ('analysis.code', '=', analysis_code),
-                ('repetition', '=', 0),
-                ('annulment_date', '=', None),
-                ])
-        if not notebook_lines:
-            return None
-        return round(res, notebook_lines[0].decimals)
+        return res
 
-    def _get_variables(self, formula, notebook, relation_code):
+    def _get_variables(self, formula, var_values):
         pool = Pool()
         Analysis = pool.get('lims.analysis')
         VolumeConversion = pool.get('lims.volume.conversion')
@@ -2637,38 +2483,33 @@ class NotebookInitialConcentrationCalc2(Wizard):
         for var in variables.keys():
             if var[0] == 'A':
                 analysis_code = var[1:]
-                result = self._get_analysis_result(analysis_code, notebook,
-                    relation_code)
+                result = self._get_analysis_result(analysis_code, var_values)
                 if result is not None:
                     variables[var] = result
             elif var[0] == 'D':
                 analysis_code = var[1:]
-                result = self._get_analysis_result(analysis_code, notebook,
-                    relation_code)
+                result = self._get_analysis_result(analysis_code, var_values)
                 if result is not None:
                     result = VolumeConversion.brixToDensity(result)
                     if result is not None:
                         variables[var] = result
             elif var[0] == 'T':
                 analysis_code = var[1:]
-                result = self._get_analysis_result(analysis_code, notebook,
-                    relation_code)
+                result = self._get_analysis_result(analysis_code, var_values)
                 if result is not None:
                     result = VolumeConversion.brixToSolubleSolids(result)
                     if result is not None:
                         variables[var] = result
             elif var[0] == 'R':
                 analysis_code = var[1:]
-                result = self._get_relation_result(analysis_code, notebook,
-                    relation_code, round_=True)
+                result = self._get_relation_result(analysis_code, var_values)
                 if result is not None:
                     result = VolumeConversion.brixToSolubleSolids(result)
                     if result is not None:
                         variables[var] = result
             elif var[0] == 'Y':
                 analysis_code = var[1:]
-                result = self._get_relation_result(analysis_code, notebook,
-                    relation_code, round_=True)
+                result = self._get_relation_result(analysis_code, var_values)
                 if result is not None:
                     result = VolumeConversion.brixToDensity(result)
                     if result is not None:
@@ -2686,17 +2527,11 @@ class NotebookLineInitialConcentrationCalc2(NotebookInitialConcentrationCalc2):
     'Initial Concentration Calculation'
     __name__ = 'lims.notebook_line.initial_concentration_calc_2'
 
-    def transition_search(self):
+    def _get_notebook_lines(self):
         NotebookLine = Pool().get('lims.notebook.line')
-
         notebook_lines = NotebookLine.browse(
             Transaction().context['active_ids'])
-        if not notebook_lines:
-            return 'end'
-
-        if self.get_concentrations(notebook_lines):
-            return 'next_'
-        return 'end'
+        return notebook_lines
 
 
 class NotebookResultsConversionStart(ModelView):
