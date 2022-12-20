@@ -3165,14 +3165,14 @@ class Sample(ModelSQL, ModelView):
     def get_workyear_sequence(cls, values={}):
         pool = Pool()
         LabWorkYear = pool.get('lims.lab.workyear')
-        Sequence = pool.get('ir.sequence')
+        # Sequence = pool.get('ir.sequence')
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
         sequence = workyear.get_sequence('sample')
         if not sequence:
             raise UserError(gettext('lims.msg_no_sample_sequence',
                 work_year=workyear.rec_name))
-        return Sequence.get_id(sequence.id)
+        return sequence.get()
 
     @classmethod
     def get_sequence(cls, values={}):
