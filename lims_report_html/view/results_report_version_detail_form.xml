@@ -25,6 +25,7 @@
             <field name="template_type" colspan="4" invisible="1"/>
         </page>
         <page name="sections">
+            <button name="relate_attachment" colspan="4" string="Relate Attachment"/>
             <field name="previous_sections" colspan="4"/>
             <field name="following_sections" colspan="4"/>
         </page>

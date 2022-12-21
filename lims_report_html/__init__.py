@@ -34,12 +34,14 @@ def register():
         results_report.ResultsReportVersionDetailTrendChart,
         results_report.ResultsReportVersionDetailSample,
         results_report.GenerateReportStart,
+        results_report.RelateAttachmentResultsReportStart,
         notebook.Notebook,
         module='lims_report_html', type_='model')
     Pool.register(
         action.ReportTranslationSet,
         sample.CreateSample,
         results_report.GenerateReport,
+        results_report.RelateAttachmentResultsReport,
         module='lims_report_html', type_='wizard')
     Pool.register(
         results_report.ResultReport,
