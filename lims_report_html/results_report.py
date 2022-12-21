@@ -6,6 +6,7 @@ from PyPDF2 import PdfFileMerger
 from PyPDF2.utils import PdfReadError
 
 from trytond.model import ModelView, ModelSQL, fields
+from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Not, Bool
 from trytond.transaction import Transaction
@@ -59,6 +60,12 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             del cls.resultrange_origin.states['invisible']
         if 'required' in cls.resultrange_origin.states:
             del cls.resultrange_origin.states['required']
+        cls._buttons.update({
+            'relate_attachment': {
+                'invisible': Eval('state').in_(['released', 'annulled']),
+                'depends': ['state'],
+                },
+            })
 
     @classmethod
     def view_attributes(cls):
@@ -243,6 +250,12 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     def set_comments_plain(cls, records, name, value):
         cls.write(records, {'comments': value})
 
+    @classmethod
+    @ModelView.button_action(
+        'lims_report_html.wiz_results_report_version_detail_relate_attachment')
+    def relate_attachment(cls, details):
+        pass
+
 
 class ResultsReportVersionDetailSection(ModelSQL, ModelView):
     'Results Report Version Detail Section'
@@ -288,6 +301,92 @@ class ResultsReportVersionDetailTrendChart(ModelSQL, ModelView):
     chart = fields.Many2One('lims.trend.chart', 'Trend Chart',
         required=True, domain=[('active', '=', True)])
     order = fields.Integer('Order')
+
+
+class RelateAttachmentResultsReportStart(ModelView):
+    'Relate Attachment to Results Report'
+    __name__ = 'lims.results_report.version.detail.relate_attachment.start'
+
+    position = fields.Selection([
+        ('previous', 'Previous'),
+        ('following', 'Following'),
+        ], 'Position', required=True)
+    attachment = fields.Many2One('ir.attachment', 'Attachment', required=True,
+        domain=[('id', 'in', Eval('attachment_domain'))],
+        depends=['attachment_domain'])
+    attachment_domain = fields.Many2Many('ir.attachment', None, None,
+        'Attachment domain')
+
+
+class RelateAttachmentResultsReport(Wizard):
+    'Relate Attachment to Results Report'
+    __name__ = 'lims.results_report.version.detail.relate_attachment'
+
+    start = StateView(
+        'lims.results_report.version.detail.relate_attachment.start',
+        'lims_report_html.'
+        'results_report_version_detail_relate_attachment_start_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Relate', 'relate', 'tryton-ok', default=True),
+            ])
+    relate = StateTransition()
+
+    def default_start(self, fields):
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+
+        detail = ResultsDetail(Transaction().context['active_id'])
+
+        attachments = self.get_attachments(detail)
+        return {'attachment_domain': [a.id for a in attachments]}
+
+    def _get_resource(self, obj):
+        return '%s,%s' % (obj.__name__, obj.id)
+
+    def get_attachments(self, detail):
+        pool = Pool()
+        Attachment = pool.get('ir.attachment')
+
+        resources = []
+        resources.append(self._get_resource(detail))
+        for sample in detail.samples:
+            resources.append(self._get_resource(sample))
+            resources.append(self._get_resource(sample.notebook))
+            resources.append(self._get_resource(sample.notebook.fraction))
+            resources.append(self._get_resource(
+                sample.notebook.fraction.sample))
+            resources.append(self._get_resource(
+                sample.notebook.fraction.sample.entry))
+            for line in sample.notebook_lines:
+                if not line.notebook_line:
+                    continue
+                resources.append(self._get_resource(line))
+                resources.append(self._get_resource(line.notebook_line))
+
+        attachments = Attachment.search([
+            ('resource', 'in', resources),
+            ])
+        return attachments
+
+    def transition_relate(self):
+        pool = Pool()
+        ResultsDetailSection = pool.get(
+            'lims.results_report.version.detail.section')
+
+        detail_id = Transaction().context['active_id']
+        defaults = {
+            'version_detail': detail_id,
+            'position': self.start.position,
+            'name': self.start.attachment.name,
+            'data': self.start.attachment.data,
+            'data_id': self.start.attachment.file_id,
+            'order': None,
+            }
+        ResultsDetailSection.create([defaults])
+        return 'end'
+
+    def end(self):
+        return 'reload'
 
 
 class ResultsReportVersionDetailSample(metaclass=PoolMeta):
