@@ -349,6 +349,9 @@ class RelateAttachmentResultsReport(Wizard):
 
         resources = []
         resources.append(self._get_resource(detail))
+        entry = detail.report_version.results_report.entry
+        if entry:
+            resources.append(self._get_resource(entry))
         for sample in detail.samples:
             resources.append(self._get_resource(sample))
             resources.append(self._get_resource(sample.notebook))
