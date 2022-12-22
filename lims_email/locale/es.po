@@ -82,6 +82,16 @@ msgctxt "field:lims.results_report.version.detail,sent_date:"
 msgid "Sent date"
 msgstr "Fecha de enviado"
 
+msgctxt ""
+"field:lims.results_report.version.detail.relate_mail_attachment.start,attachment:"
+msgid "Attachment"
+msgstr "Adjunto"
+
+msgctxt ""
+"field:lims.results_report.version.detail.relate_mail_attachment.start,attachment_domain:"
+msgid "Attachment domain"
+msgstr "Dominio para Adjunto"
+
 msgctxt "field:lims_email.send_results_report.failed,reports_not_ready:"
 msgid "Reports not ready"
 msgstr "Informes no listos"
@@ -122,6 +132,11 @@ msgctxt "model:ir.action,name:act_results_report_format"
 msgid "Results Report Name Formats"
 msgstr "Formatos de nombre para Informe de resultados"
 
+msgctxt ""
+"model:ir.action,name:wiz_results_report_version_detail_relate_mail_attachment"
+msgid "Relate Mail Attachment to Results Report"
+msgstr "Relacionar adjunto de correo a Informe de resultados"
+
 msgctxt "model:ir.action,name:wizard_send_results_report"
 msgid "Send Results Reports"
 msgstr "Enviar Informes de resultados"
@@ -153,6 +168,11 @@ msgstr "Adjunto de Informe de resultados"
 msgctxt "model:lims.results_report.mailing,name:"
 msgid "Results Report Mailing"
 msgstr "Envío de Informe de resultados"
+
+msgctxt ""
+"model:lims.results_report.version.detail.relate_mail_attachment.start,name:"
+msgid "Relate Mail Attachment to Results Report"
+msgstr "Relacionar adjunto de correo a Informe de resultados"
 
 msgctxt "model:lims_email.send_results_report.failed,name:"
 msgid "Send Results Report"
@@ -199,6 +219,10 @@ msgid "Time"
 msgstr "Hora"
 
 msgctxt "view:lims.results_report.version.detail:"
+msgid "Relate Attachment"
+msgstr "Relacionar archivo adjunto"
+
+msgctxt "view:lims.results_report.version.detail:"
 msgid "Time"
 msgstr "Hora"
 
@@ -219,6 +243,16 @@ msgstr "¿Desea enviar los siguientes Informes de resultados?"
 msgctxt "view:lims_email.send_results_report.succeed:"
 msgid "Results Reports sent successfully!"
 msgstr "¡Envío de Informes de resultados exitoso!"
+
+msgctxt ""
+"wizard_button:lims.results_report.version.detail.relate_mail_attachment,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt ""
+"wizard_button:lims.results_report.version.detail.relate_mail_attachment,start,relate:"
+msgid "Relate"
+msgstr "Relacionar"
 
 msgctxt "wizard_button:lims_email.send_results_report,failed,end:"
 msgid "Ok"

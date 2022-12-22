@@ -60,6 +60,29 @@
             <field name="name">results_report_version_detail_form</field>
         </record>
 
+        <record model="ir.model.button" id="results_report_version_detail_relate_mail_attachment_button">
+            <field name="name">relate_mail_attachment</field>
+            <field name="model" search="[('model', '=', 'lims.results_report.version.detail')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="results_report_version_detail_relate_mail_attachment_button_group_lims_laboratory_reports">
+            <field name="button" ref="results_report_version_detail_relate_mail_attachment_button"/>
+            <field name="group" ref="lims.group_lims_laboratory_reports"/>
+        </record>
+
+<!-- Wizard Relate Mail Attachment to Results Report -->
+
+        <record model="ir.ui.view" id="results_report_version_detail_relate_mail_attachment_start_form">
+            <field name="model">lims.results_report.version.detail.relate_mail_attachment.start</field>
+            <field name="type">form</field>
+            <field name="name">results_report_version_detail_relate_mail_attachment_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_results_report_version_detail_relate_mail_attachment">
+            <field name="name">Relate Mail Attachment to Results Report</field>
+            <field name="wiz_name">lims.results_report.version.detail.relate_mail_attachment</field>
+        </record>
+
 <!-- Wizard Send Results Report -->
 
         <record model="ir.ui.view" id="send_results_report_start_view">

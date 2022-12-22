@@ -13,6 +13,7 @@ def register():
         configuration.Configuration,
         configuration.Cron,
         results_report.ResultsReportVersionDetail,
+        results_report.RelateMailAttachmentResultsReportStart,
         results_report.ResultsReport,
         results_report.ResultsReportAttachment,
         results_report.ResultsReportMailing,
@@ -23,6 +24,7 @@ def register():
         party.Party,
         module='lims_email', type_='model')
     Pool.register(
+        results_report.RelateMailAttachmentResultsReport,
         results_report.ResultsReportAnnulation,
         results_report.SendResultsReport,
         module='lims_email', type_='wizard')

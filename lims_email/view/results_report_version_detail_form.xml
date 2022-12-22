@@ -4,6 +4,7 @@
         expr="/form/notebook/page[@name='fractions_comments']"
         position="before">
         <page name="mail_attachments">
+            <button name="relate_mail_attachment" colspan="4" string="Relate Attachment"/>
             <field name="mail_attachments" colspan="4"/>
         </page>
     </xpath>

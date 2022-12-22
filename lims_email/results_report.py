@@ -33,6 +33,16 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     sent_date = fields.Function(fields.DateTime('Sent date'),
        'get_sent_date')
 
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._buttons.update({
+            'relate_mail_attachment': {
+                'invisible': Eval('state').in_(['released', 'annulled']),
+                'depends': ['state'],
+                },
+            })
+
     def get_mail_attachments(self, name=None):
         attachments = [a.id
             for a in self.report_version.results_report.mail_attachments]
@@ -76,6 +86,95 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         super().release_all_lang(details)
         for detail in details:
             detail.unsend()
+
+    @classmethod
+    @ModelView.button_action(
+        'lims_email.wiz_results_report_version_detail_relate_mail_attachment')
+    def relate_mail_attachment(cls, details):
+        pass
+
+
+class RelateMailAttachmentResultsReportStart(ModelView):
+    'Relate Mail Attachment to Results Report'
+    __name__ = 'lims.results_report.version.detail.relate_mail_attachment.start'
+
+    attachment = fields.Many2One('ir.attachment', 'Attachment', required=True,
+        domain=[('id', 'in', Eval('attachment_domain'))],
+        depends=['attachment_domain'])
+    attachment_domain = fields.Many2Many('ir.attachment', None, None,
+        'Attachment domain')
+
+
+class RelateMailAttachmentResultsReport(Wizard):
+    'Relate Mail Attachment to Results Report'
+    __name__ = 'lims.results_report.version.detail.relate_mail_attachment'
+
+    start = StateView(
+        'lims.results_report.version.detail.relate_mail_attachment.start',
+        'lims_email.'
+        'results_report_version_detail_relate_mail_attachment_start_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Relate', 'relate', 'tryton-ok', default=True),
+            ])
+    relate = StateTransition()
+
+    def default_start(self, fields):
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+
+        detail = ResultsDetail(Transaction().context['active_id'])
+
+        attachments = self.get_attachments(detail)
+        return {'attachment_domain': [a.id for a in attachments]}
+
+    def _get_resource(self, obj):
+        return '%s,%s' % (obj.__name__, obj.id)
+
+    def get_attachments(self, detail):
+        pool = Pool()
+        Attachment = pool.get('ir.attachment')
+
+        resources = []
+        resources.append(self._get_resource(detail))
+        entry = detail.report_version.results_report.entry
+        if entry:
+            resources.append(self._get_resource(entry))
+        for sample in detail.samples:
+            resources.append(self._get_resource(sample))
+            resources.append(self._get_resource(sample.notebook))
+            resources.append(self._get_resource(sample.notebook.fraction))
+            resources.append(self._get_resource(
+                sample.notebook.fraction.sample))
+            resources.append(self._get_resource(
+                sample.notebook.fraction.sample.entry))
+            for line in sample.notebook_lines:
+                if not line.notebook_line:
+                    continue
+                resources.append(self._get_resource(line))
+                resources.append(self._get_resource(line.notebook_line))
+
+        attachments = Attachment.search([
+            ('resource', 'in', resources),
+            ])
+        return attachments
+
+    def transition_relate(self):
+        pool = Pool()
+        ResultsDetail = Pool().get('lims.results_report.version.detail')
+        ResultsReportAttachment = pool.get('lims.results_report.attachment')
+
+        detail = ResultsDetail(Transaction().context['active_id'])
+        defaults = {
+            'results_report': detail.report_version.results_report.id,
+            'name': self.start.attachment.name,
+            'data': self.start.attachment.data,
+            'file_id': self.start.attachment.file_id,
+            }
+        ResultsReportAttachment.create([defaults])
+        return 'end'
+
+    def end(self):
+        return 'reload'
 
 
 class ResultsReport(metaclass=PoolMeta):
