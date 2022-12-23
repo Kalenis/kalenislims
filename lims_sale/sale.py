@@ -70,6 +70,8 @@ class Sale(metaclass=PoolMeta):
     send_email = fields.Boolean('Send automatically by Email',
         states={'readonly': ~Eval('state').in_(['draft', 'quotation'])},
         depends=['state'])
+    services_completed = fields.Function(fields.Boolean('Services completed'),
+        'get_services_completed')
 
     @classmethod
     def __setup__(cls):
@@ -156,6 +158,25 @@ class Sale(metaclass=PoolMeta):
         if not value:
             return
         cls.write(sections, {'sections': value})
+
+    def get_services_completed(self, name=None):
+        pool = Pool()
+        SaleLine = pool.get('sale.line')
+
+        sale_lines = SaleLine.search([
+            ('sale', '=', self.id),
+            ('type', '=', 'line'),
+            ])
+        if not sale_lines:
+            return False
+        for line in sale_lines:
+            if line.unlimited_quantity:
+                return False
+            if not line.quantity:
+                return False
+            if line.quantity > len(line.services):
+                return False
+        return True
 
     @classmethod
     @ModelView.button_action('lims_sale.wiz_sale_load_services')
