@@ -38,8 +38,9 @@ class CreateSampleStart(metaclass=PoolMeta):
             clause.append(('product_type', '=', self.product_type.id))
         if self.matrix:
             clause.append(('matrix', '=', self.matrix.id))
-        res = SaleLine.search(clause)
-        return [x.id for x in res]
+        sale_lines = SaleLine.search(clause)
+        res = [sl.id for sl in sale_lines if not sl.services_completed]
+        return res
 
     @fields.depends('product_type', 'matrix', 'sale_lines')
     def on_change_with_analysis_domain(self, name=None):
@@ -66,37 +67,84 @@ class CreateSample(metaclass=PoolMeta):
                 not hasattr(self.start, 'services')):
             return samples_defaults
 
-        analysis = [s.analysis.id for s in self.start.services]
-        sale_lines = []
+        sale_lines = {}
         for line in self.start.sale_lines:
-            if line.analysis and line.analysis.id in analysis:
-                sale_lines.append(line.id)
+            analysis_id = line.analysis and line.analysis.id
+            if not analysis_id:
+                continue
+            sale_lines[analysis_id] = line.id
+        if not sale_lines:
+            return samples_defaults
 
-        if sale_lines:
-            for sample in samples_defaults:
-                sample['sale_lines'] = [('add', sale_lines)]
+        for sample in samples_defaults:
+            if 'fractions' not in sample:
+                continue
+            for fraction_defaults in sample['fractions']:
+                if 'create' not in fraction_defaults[0]:
+                    continue
+                for fraction in fraction_defaults[1]:
+                    if 'services' not in fraction:
+                        continue
+                    for services_defaults in fraction['services']:
+                        if 'create' not in services_defaults[0]:
+                            continue
+                        for service in services_defaults[1]:
+                            analysis_id = service['analysis']
+                            if analysis_id in sale_lines:
+                                service['sale_lines'] = [('add',
+                                    [sale_lines[analysis_id]])]
         return samples_defaults
 
 
 class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
 
-    sale_lines = fields.Many2Many('lims.sample-sale.line',
-        'sample', 'sale_line', 'Quotes', readonly=True)
+    sale_lines = fields.Function(fields.Many2Many('sale.line',
+        None, None, 'Quotes'), 'get_sale_lines')
 
-
-class SampleSaleLine(ModelSQL):
-    'Sample - Sale Line'
-    __name__ = 'lims.sample-sale.line'
-    _table = 'lims_sample_sale_line'
-
-    sample = fields.Many2One('lims.sample', 'Sample',
-        ondelete='CASCADE', select=True, required=True)
-    sale_line = fields.Many2One('sale.line', 'Sale Line',
-        ondelete='CASCADE', select=True, required=True)
+    def get_sale_lines(self, name):
+        pool = Pool()
+        ServiceSaleLine = pool.get('lims.service-sale.line')
+        sale_lines = ServiceSaleLine.search([
+            ('service.fraction.sample', '=', self.id),
+            ])
+        return [sl.sale_line.id for sl in sale_lines]
 
 
 class Service(metaclass=PoolMeta):
+    __name__ = 'lims.service'
+
+    sale_lines = fields.Many2Many('lims.service-sale.line',
+        'service', 'sale_line', 'Quotes', readonly=True)
+
+    @classmethod
+    def copy(cls, services, default=None):
+        if default is None:
+            default = {}
+        current_default = default.copy()
+        current_default['sale_lines'] = None
+        return super().copy(services, default=current_default)
+
+    @classmethod
+    def write(cls, *args):
+        super().write(*args)
+        actions = iter(args)
+        for services, vals in zip(actions, actions):
+            if vals.get('annulled'):
+                cls.unlink_sale_lines(services)
+
+    @classmethod
+    def unlink_sale_lines(cls, services):
+        pool = Pool()
+        ServiceSaleLine = pool.get('lims.service-sale.line')
+        sale_lines = ServiceSaleLine.search([
+            ('service', 'in', [s.id for s in services]),
+            ])
+        if sale_lines:
+            ServiceSaleLine.delete(sale_lines)
+
+
+class Service2(metaclass=PoolMeta):
     __name__ = 'lims.service'
 
     def get_invoice_line(self):
@@ -108,3 +156,14 @@ class Service(metaclass=PoolMeta):
                 if sale_line.product.id == self.analysis.product.id:
                     invoice_line['unit_price'] = sale_line.unit_price
         return invoice_line
+
+
+class ServiceSaleLine(ModelSQL):
+    'Service - Sale Line'
+    __name__ = 'lims.service-sale.line'
+    _table = 'lims_service_sale_line'
+
+    service = fields.Many2One('lims.service', 'Service',
+        ondelete='CASCADE', select=True, required=True)
+    sale_line = fields.Many2One('sale.line', 'Sale Line',
+        ondelete='CASCADE', select=True, required=True)

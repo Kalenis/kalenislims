@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <data>
-    <xpath expr="/tree/field[@name='taxes']" position="after">
+    <xpath expr="/tree/field[@name='amount']" position="after">
         <field name="print_service_detail"/>
+        <field name="services_completed"/>
     </xpath>
 </data>

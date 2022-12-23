@@ -31,8 +31,8 @@
         </group>
     </xpath>
     <xpath expr="/form/notebook" position="inside">
-        <page string="Samples" id="samples">
-            <field name="samples" colspan="4" mode="tree"/>
+        <page name="services">
+            <field name="services" colspan="4" mode="tree"/>
         </page>
     </xpath>
 </data>

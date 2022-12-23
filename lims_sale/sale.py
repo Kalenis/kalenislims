@@ -354,8 +354,10 @@ class SaleLine(metaclass=PoolMeta):
     unlimited_quantity = fields.Boolean('Unlimited quantity',
         states={'readonly': Eval('sale_state') != 'draft'},
         depends=['sale_state'])
-    samples = fields.Many2Many('lims.sample-sale.line',
-        'sale_line', 'sample', 'Samples', readonly=True)
+    services = fields.Many2Many('lims.service-sale.line',
+        'sale_line', 'service', 'Services', readonly=True)
+    services_completed = fields.Function(fields.Boolean('Services completed'),
+        'on_change_with_services_completed')
     additional_origin = fields.Many2One('sale.line', 'Origin of additional')
 
     @staticmethod
@@ -632,6 +634,25 @@ class SaleLine(metaclass=PoolMeta):
             if l.id not in lines_to_delete]
         if additionals_to_delete:
             cls.delete(additionals_to_delete)
+
+    @classmethod
+    def copy(cls, sale_lines, default=None):
+        if default is None:
+            default = {}
+        current_default = default.copy()
+        current_default['services'] = None
+        current_default['additional_origin'] = None
+        return super().copy(sale_lines, default=current_default)
+
+    @fields.depends('unlimited_quantity', 'quantity', 'services')
+    def on_change_with_services_completed(self, name=None):
+        if self.unlimited_quantity:
+            return False
+        if not self.quantity:
+            return False
+        if self.quantity > len(self.services):
+            return False
+        return True
 
 
 class SaleLoadServicesStart(ModelView):

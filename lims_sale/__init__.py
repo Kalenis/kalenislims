@@ -24,10 +24,11 @@ def register():
         sale.SaleLoadAnalysisStart,
         sample.CreateSampleStart,
         sample.Sample,
-        sample.SampleSaleLine,
+        sample.Service,
+        sample.ServiceSaleLine,
         module='lims_sale', type_='model')
     Pool.register(
-        sample.Service,
+        sample.Service2,
         module='lims_sale', type_='model',
         depends=['lims_account_invoice'])
     Pool.register(

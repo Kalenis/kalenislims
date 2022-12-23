@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/form/notebook" position="inside">
+        <page name="sale_lines">
+            <field name="sale_lines" colspan="4" mode="tree"/>
+        </page>
+    </xpath>
+</data>
