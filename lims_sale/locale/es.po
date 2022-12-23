@@ -10,6 +10,11 @@ msgctxt "field:lims.create_sample.start,sale_lines_domain:"
 msgid "Quotes domain"
 msgstr "Dominio para Presupuestos"
 
+msgctxt ""
+"field:lims.create_sample.start,sale_lines_filter_product_type_matrix:"
+msgid "Filter Quotes by Product type and Matrix"
+msgstr "Filtrar Presupuestos por Tipo de producto y Matriz"
+
 msgctxt "field:lims.report.template,clause_template:"
 msgid "Clauses Template"
 msgstr "Plantilla de Cláusulas"
@@ -174,13 +179,13 @@ msgctxt "field:sale.sale,sections:"
 msgid "Sections"
 msgstr "Secciones"
 
-msgctxt "field:sale.sale,services_completed:"
-msgid "Services completed"
-msgstr "Servicios completados"
-
 msgctxt "field:sale.sale,send_email:"
 msgid "Send automatically by Email"
 msgstr "Enviar automáticamente por email"
+
+msgctxt "field:sale.sale,services_completed:"
+msgid "Services completed"
+msgstr "Servicios completados"
 
 msgctxt "field:sale.sale,template:"
 msgid "Sale Template"

@@ -4,27 +4,51 @@
 
 from trytond.model import ModelSQL, fields
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Or
+from trytond.transaction import Transaction
 
 
 class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
 
-    sale_lines = fields.Many2Many('sale.line',
-        None, None, 'Quotes', depends=['sale_lines_domain'],
-        domain=[('id', 'in', Eval('sale_lines_domain'))])
+    sale_lines_filter_product_type_matrix = fields.Boolean(
+        'Filter Quotes by Product type and Matrix')
+    sale_lines = fields.Many2Many('sale.line', None, None, 'Quotes',
+        domain=[('id', 'in', Eval('sale_lines_domain'))],
+        states={'readonly': Or(~Eval('product_type'), ~Eval('matrix'))},
+        depends=['sale_lines_domain', 'product_type', 'matrix'])
     sale_lines_domain = fields.Function(fields.Many2Many('sale.line',
         None, None, 'Quotes domain'),
         'on_change_with_sale_lines_domain')
 
-    @fields.depends('party', 'product_type', 'matrix')
+    @staticmethod
+    def default_sale_lines_filter_product_type_matrix():
+        return False
+
+    @fields.depends('party', 'product_type', 'matrix',
+        'sale_lines_filter_product_type_matrix')
     def on_change_with_sale_lines_domain(self, name=None):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
         Date = pool.get('ir.date')
         SaleLine = pool.get('sale.line')
+        Analysis = pool.get('lims.analysis')
 
-        if not self.party:
+        if not self.party or not self.product_type or not self.matrix:
             return []
+
+        analysis_domain = super().on_change_with_analysis_domain()
+        if not analysis_domain:
+            return []
+        analysis_ids = ', '.join(str(a) for a in analysis_domain)
+
+        cursor.execute('SELECT DISTINCT(product) '
+            'FROM "' + Analysis._table + '" '
+            'WHERE id IN (' + analysis_ids + ')')
+        res = cursor.fetchall()
+        if not res:
+            return []
+        product_ids = [x[0] for x in res]
 
         today = Date.today()
         clause = [
@@ -33,11 +57,12 @@ class CreateSampleStart(metaclass=PoolMeta):
             ('sale.state', 'in', [
                 'quotation', 'confirmed', 'processing', 'done',
                 ]),
+            ('product.id', 'in', product_ids),
             ]
-        if self.product_type:
+        if self.sale_lines_filter_product_type_matrix:
             clause.append(('product_type', '=', self.product_type.id))
-        if self.matrix:
             clause.append(('matrix', '=', self.matrix.id))
+
         sale_lines = SaleLine.search(clause)
         res = [sl.id for sl in sale_lines if not sl.services_completed]
         return res
