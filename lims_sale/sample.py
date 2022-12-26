@@ -81,6 +81,47 @@ class CreateSampleStart(metaclass=PoolMeta):
 
         return [a for a in analysis_domain if a in quoted_analysis]
 
+    @fields.depends('sale_lines', 'product_type', 'matrix', 'services')
+    def on_change_sale_lines(self, name=None):
+        if not self.sale_lines:
+            return
+        self.load_sale_lines_analyzes()
+
+    def load_sale_lines_analyzes(self):
+        pool = Pool()
+        CreateSampleService = pool.get('lims.create_sample.service')
+
+        analysis_domain = super().on_change_with_analysis_domain()
+        if not analysis_domain:
+            return
+
+        quoted_analysis = []
+        for sale_line in self.sale_lines:
+            if sale_line.analysis:
+                quoted_analysis.append(sale_line.analysis)
+        quoted_analysis = [a for a in quoted_analysis
+            if a.id in analysis_domain]
+        if not quoted_analysis:
+            return
+
+        quoted_services = []
+        for a in quoted_analysis:
+            with Transaction().set_context(
+                    product_type=self.product_type.id,
+                    matrix=self.matrix.id):
+                s = CreateSampleService()
+                s.analysis_locked = False
+                s.urgent = s.default_urgent()
+                s.priority = s.default_priority()
+                s.analysis = a
+                s.on_change_analysis()
+                s.laboratory_date = s.on_change_with_laboratory_date()
+                s.report_date = s.on_change_with_report_date()
+
+            quoted_services.append(s)
+
+        self.services = quoted_services
+
 
 class CreateSample(metaclass=PoolMeta):
     __name__ = 'lims.create_sample'
