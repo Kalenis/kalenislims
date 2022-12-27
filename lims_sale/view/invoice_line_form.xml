@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='general']/group[@id='origin_group']/field[@name='origin']"
+        position="after">
+        <label name="lims_sale_line_origin"/>
+        <field name="lims_sale_line_origin"/>
+    </xpath>
+</data>

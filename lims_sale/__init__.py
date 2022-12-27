@@ -9,6 +9,7 @@ from . import party
 from . import sale
 from . import sample
 from . import results_report
+from . import invoice
 
 
 def register():
@@ -28,7 +29,10 @@ def register():
         sample.ServiceSaleLine,
         module='lims_sale', type_='model')
     Pool.register(
+        sale.Sale2,
+        sale.SaleLine2,
         sample.Service2,
+        invoice.InvoiceLine,
         module='lims_sale', type_='model',
         depends=['lims_account_invoice'])
     Pool.register(

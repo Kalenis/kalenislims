@@ -2,6 +2,10 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "field:account.invoice.line,lims_sale_line_origin:"
+msgid "Quote line"
+msgstr "Línea de Presupuesto"
+
 msgctxt "field:lims.create_sample.start,sale_lines:"
 msgid "Quotes"
 msgstr "Presupuestos"
@@ -74,6 +78,10 @@ msgstr "Dominio para Análisis"
 msgctxt "field:sale.line,expiration_date:"
 msgid "Expiration date"
 msgstr "Fecha de vencimiento"
+
+msgctxt "field:sale.line,lims_invoice_lines:"
+msgid "Invoice Lines"
+msgstr "Líneas de factura"
 
 msgctxt "field:sale.line,matrix:"
 msgid "Matrix"

@@ -217,9 +217,10 @@ class Service2(metaclass=PoolMeta):
         invoice_line = super().get_invoice_line()
         if not invoice_line:
             return
-        if self.sample.sale_lines:
-            for sale_line in self.sample.sale_lines:
+        if self.sale_lines:
+            for sale_line in self.sale_lines:
                 if sale_line.product.id == self.analysis.product.id:
+                    invoice_line['lims_sale_line_origin'] = sale_line.id
                     invoice_line['unit_price'] = sale_line.unit_price
         return invoice_line
 

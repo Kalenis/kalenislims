@@ -97,4 +97,15 @@
         </record>
 
     </data>
+    <data depends="lims_account_invoice">
+
+<!-- Sale Line -->
+
+        <record model="ir.ui.view" id="sale_line_view_form2">
+            <field name="model">sale.line</field>
+            <field name="inherit" ref="sale.sale_line_view_form"/>
+            <field name="name">sale_line_form2</field>
+        </record>
+
+    </data>
 </tryton>

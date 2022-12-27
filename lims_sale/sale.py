@@ -276,6 +276,28 @@ class Sale(metaclass=PoolMeta):
         return success
 
 
+class Sale2(metaclass=PoolMeta):
+    __name__ = 'sale.sale'
+
+    def get_invoices(self, name):
+        invoices = super().get_invoices(name)
+        lims_invoices = set()
+        for line in self.lines:
+            for invoice_line in line.lims_invoice_lines:
+                if invoice_line.invoice:
+                    lims_invoices.add(invoice_line.invoice.id)
+        return invoices + list(lims_invoices)
+
+    @classmethod
+    def search_invoices(cls, name, clause):
+        return ['OR',
+            ('lines.invoice_lines.invoice' + clause[0].lstrip(name),) +
+            tuple(clause[1:]),
+            ('lines.lims_invoice_lines.invoice' + clause[0].lstrip(name),) +
+            tuple(clause[1:]),
+            ]
+
+
 class SaleSection(ModelSQL, ModelView):
     'Sale Section'
     __name__ = 'sale.sale.section'
@@ -674,6 +696,13 @@ class SaleLine(metaclass=PoolMeta):
         if self.quantity > len(self.services):
             return False
         return True
+
+
+class SaleLine2(metaclass=PoolMeta):
+    __name__ = 'sale.line'
+
+    lims_invoice_lines = fields.One2Many('account.invoice.line',
+        'lims_sale_line_origin', 'Invoice Lines', readonly=True)
 
 
 class SaleLoadServicesStart(ModelView):
