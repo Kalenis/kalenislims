@@ -4919,6 +4919,7 @@ class EditSampleService(Wizard):
         for annulled_service in annulled_services:
             original_details = EntryDetailAnalysis.search([
                 ('service', '=', annulled_service),
+                ('state', '!=', 'annulled'),
                 ])
             for original_detail in original_details:
                 duplicated_details = self._get_duplicated_details(
@@ -4936,7 +4937,8 @@ class EditSampleService(Wizard):
                     self._annul_detail(original_detail)
 
     def _get_duplicated_details(self, original):
-        EntryDetailAnalysis = Pool().get('lims.entry.detail.analysis')
+        pool = Pool()
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         duplicated_details = EntryDetailAnalysis.search([
             ('fraction', '=', original.fraction),
             ('analysis', '=', original.analysis),
