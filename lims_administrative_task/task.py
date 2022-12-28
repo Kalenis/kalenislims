@@ -372,7 +372,9 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
             return
 
         for task in tasks:
-            to_addrs = [task.responsible.email]
+            to_addrs = []
+            if task.responsible.email:
+                to_addrs.append(task.responsible.email)
             if not to_addrs:
                 logger.error("Missing address for '%s' to send email",
                     task.responsible.rec_name)
@@ -392,7 +394,11 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
             return
 
         for task in tasks:
-            to_addrs = [task.responsible.email, task.create_uid.email]
+            to_addrs = []
+            if task.responsible.email:
+                to_addrs.append(task.responsible.email)
+            if task.create_uid.email:
+                to_addrs.append(task.create_uid.email)
             for user in task.notified_users:
                 to_addrs.append(user.email)
             if not to_addrs:
