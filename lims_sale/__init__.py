@@ -8,6 +8,7 @@ from . import html_template
 from . import party
 from . import sale
 from . import sample
+from . import entry
 from . import results_report
 from . import invoice
 
@@ -27,6 +28,7 @@ def register():
         sample.Sample,
         sample.Service,
         sample.ServiceSaleLine,
+        entry.Entry,
         module='lims_sale', type_='model')
     Pool.register(
         sale.Sale2,

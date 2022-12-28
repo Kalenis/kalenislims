@@ -5,5 +5,7 @@
         <field name="internal_code"/>
         <label name="purchase_order_required"/>
         <field name="purchase_order_required"/>
+        <label name="allow_services_without_quotation"/>
+        <field name="allow_services_without_quotation"/>
     </xpath>
 </data>

@@ -67,21 +67,27 @@ class CreateSampleStart(metaclass=PoolMeta):
         res = [sl.id for sl in sale_lines if not sl.services_completed]
         return res
 
-    @fields.depends('product_type', 'matrix', 'sale_lines')
+    @fields.depends('party', 'product_type', 'matrix', 'sale_lines')
     def on_change_with_analysis_domain(self, name=None):
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+
         analysis_domain = super().on_change_with_analysis_domain(name)
 
         if not self.sale_lines:
             return analysis_domain
 
-        quoted_analysis = []
-        for sale_line in self.sale_lines:
-            if sale_line.analysis:
-                quoted_analysis.append(sale_line.analysis.id)
+        if self.party and self.party.allow_services_without_quotation:
+            return analysis_domain
 
-        return [a for a in analysis_domain if a in quoted_analysis]
+        quoted_products = [sl.product.id
+            for sl in self.sale_lines if sl.product]
+        quoted_analysis = Analysis.search([('product', 'in', quoted_products)])
+        quoted_analysis_ids = [a.id for a in quoted_analysis]
+        return [a for a in analysis_domain if a in quoted_analysis_ids]
 
-    @fields.depends('sale_lines', 'product_type', 'matrix', 'services')
+    @fields.depends('sale_lines', 'product_type', 'matrix', 'services',
+        methods=['on_change_with_analysis_domain'])
     def on_change_sale_lines(self, name=None):
         if not self.sale_lines:
             return
@@ -89,16 +95,16 @@ class CreateSampleStart(metaclass=PoolMeta):
 
     def load_sale_lines_analyzes(self):
         pool = Pool()
+        Analysis = pool.get('lims.analysis')
         CreateSampleService = pool.get('lims.create_sample.service')
 
-        analysis_domain = super().on_change_with_analysis_domain()
+        analysis_domain = self.on_change_with_analysis_domain()
         if not analysis_domain:
             return
 
-        quoted_analysis = []
-        for sale_line in self.sale_lines:
-            if sale_line.analysis:
-                quoted_analysis.append(sale_line.analysis)
+        quoted_products = [sl.product.id
+            for sl in self.sale_lines if sl.product]
+        quoted_analysis = Analysis.search([('product', 'in', quoted_products)])
         quoted_analysis = [a for a in quoted_analysis
             if a.id in analysis_domain]
         if not quoted_analysis:

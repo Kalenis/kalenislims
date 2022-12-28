@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- Entry -->
+
+        <record model="ir.ui.view" id="entry_view_form">
+            <field name="model">lims.entry</field>
+            <field name="inherit" ref="lims.lims_entry_view_form"/>
+            <field name="name">entry_form</field>
+        </record>
+
+    </data>
+</tryton>

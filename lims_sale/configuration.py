@@ -11,3 +11,9 @@ class Configuration(metaclass=PoolMeta):
 
     email_quotation_subject = fields.Char('Subject of the quotation email')
     email_quotation_body = fields.Text('Body of the quotation email')
+    allow_services_without_quotation = fields.Boolean(
+        'Allow services without quotation')
+
+    @staticmethod
+    def default_allow_services_without_quotation():
+        return True
