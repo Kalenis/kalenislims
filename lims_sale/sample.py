@@ -133,6 +133,9 @@ class CreateSample(metaclass=PoolMeta):
     __name__ = 'lims.create_sample'
 
     def _get_samples_defaults(self, entry_id):
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+
         samples_defaults = super()._get_samples_defaults(entry_id)
 
         if (not hasattr(self.start, 'sale_lines') or
@@ -143,7 +146,13 @@ class CreateSample(metaclass=PoolMeta):
         for line in self.start.sale_lines:
             analysis_id = line.analysis and line.analysis.id
             if not analysis_id:
-                continue
+                product_id = line.product and line.product.id
+                if not product_id:
+                    continue
+                analysis = Analysis.search([('product', '=', product_id)])
+                if not analysis:
+                    continue
+                analysis_id = analysis[0].id
             sale_lines[analysis_id] = line.id
         if not sale_lines:
             return samples_defaults
