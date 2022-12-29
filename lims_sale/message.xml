@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tryton>
+    <data grouped="1">
+        <record model="ir.message" id="msg_services_without_quotation">
+            <field name="text">This entry exceeds the amount of quoted services.</field>
+        </record>
+    </data>
+</tryton>

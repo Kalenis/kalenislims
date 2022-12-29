@@ -275,6 +275,10 @@ msgctxt "model:ir.action,name:wiz_sale_load_set_group"
 msgid "Load Analysis from Set/Group"
 msgstr "Cargar análisis desde Set/Grupo"
 
+msgctxt "model:ir.message,text:msg_services_without_quotation"
+msgid "This entry exceeds the amount of quoted services."
+msgstr "Este ingreso excede la cantidad de servicios presupuestados."
+
 msgctxt "model:ir.model.button,string:sale_load_services_button"
 msgid "Load Services from Entry"
 msgstr "Cargar servicios desde partida"

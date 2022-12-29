@@ -6,6 +6,8 @@ from trytond.model import ModelSQL, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Or
 from trytond.transaction import Transaction
+from trytond.exceptions import UserError, UserWarning
+from trytond.i18n import gettext
 
 
 class CreateSampleStart(metaclass=PoolMeta):
@@ -71,13 +73,15 @@ class CreateSampleStart(metaclass=PoolMeta):
     def on_change_with_analysis_domain(self, name=None):
         pool = Pool()
         Analysis = pool.get('lims.analysis')
+        Entry = pool.get('lims.entry')
 
         analysis_domain = super().on_change_with_analysis_domain(name)
 
         if not self.sale_lines:
             return analysis_domain
 
-        if self.party and self.party.allow_services_without_quotation:
+        entry = Entry(Transaction().context['active_id'])
+        if entry.allow_services_without_quotation:
             return analysis_domain
 
         quoted_products = [sl.product.id
@@ -135,6 +139,8 @@ class CreateSample(metaclass=PoolMeta):
     def _get_samples_defaults(self, entry_id):
         pool = Pool()
         Analysis = pool.get('lims.analysis')
+        Entry = pool.get('lims.entry')
+        Warning = pool.get('res.user.warning')
 
         samples_defaults = super()._get_samples_defaults(entry_id)
 
@@ -153,9 +159,19 @@ class CreateSample(metaclass=PoolMeta):
                 if not analysis:
                     continue
                 analysis_id = analysis[0].id
-            sale_lines[analysis_id] = line.id
+            sale_lines[analysis_id] = {
+                'line': line.id,
+                'available': line.services_available,
+                }
         if not sale_lines:
             return samples_defaults
+
+        entry = Entry(Transaction().context['active_id'])
+        allow_services_without_quotation = (
+            entry.allow_services_without_quotation)
+        labels_qty = len(self._get_labels_list(self.start.labels))
+        error_key = 'lims_services_without_quotation@%s' % entry.number
+        error_msg = 'lims_sale.msg_services_without_quotation'
 
         for sample in samples_defaults:
             if 'fractions' not in sample:
@@ -171,9 +187,21 @@ class CreateSample(metaclass=PoolMeta):
                             continue
                         for service in services_defaults[1]:
                             analysis_id = service['analysis']
-                            if analysis_id in sale_lines:
-                                service['sale_lines'] = [('add',
-                                    [sale_lines[analysis_id]])]
+                            if analysis_id not in sale_lines:
+                                continue
+                            service['sale_lines'] = [('add',
+                                [sale_lines[analysis_id]['line']])]
+                            if (sale_lines[analysis_id]['available'] is None or
+                                    sale_lines[analysis_id]['available'] >=
+                                    labels_qty):
+                                continue
+                            if allow_services_without_quotation:
+                                if Warning.check(error_key):
+                                    raise UserWarning(error_key,
+                                        gettext(error_msg))
+                            else:
+                                raise UserError(gettext(error_msg))
+
         return samples_defaults
 
 
@@ -203,7 +231,7 @@ class Service(metaclass=PoolMeta):
         if default is None:
             default = {}
         current_default = default.copy()
-        current_default['sale_lines'] = None
+        #current_default['sale_lines'] = None
         return super().copy(services, default=current_default)
 
     @classmethod
