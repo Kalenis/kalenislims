@@ -143,9 +143,17 @@ msgctxt "field:sale.line,services:"
 msgid "Services"
 msgstr "Servicios"
 
+msgctxt "field:sale.line,services_available:"
+msgid "Services available"
+msgstr "Servicios disponibles"
+
 msgctxt "field:sale.line,services_completed:"
 msgid "Services completed"
 msgstr "Servicios completados"
+
+msgctxt "field:sale.line,services_completed_icon:"
+msgid "Services completed Icon"
+msgstr "Icono Servicios completados"
 
 msgctxt "field:sale.line,unlimited_quantity:"
 msgid "Unlimited quantity"

@@ -399,8 +399,13 @@ class SaleLine(metaclass=PoolMeta):
         depends=['sale_state'])
     services = fields.Many2Many('lims.service-sale.line',
         'sale_line', 'service', 'Services', readonly=True)
+    services_available = fields.Function(fields.Float('Services available',
+        digits=(16, Eval('unit_digits', 2)), depends=['unit_digits']),
+        'on_change_with_services_available')
     services_completed = fields.Function(fields.Boolean('Services completed'),
         'on_change_with_services_completed')
+    services_completed_icon = fields.Function(fields.Char(
+        'Services completed Icon'), 'get_services_completed_icon')
     additional_origin = fields.Many2One('sale.line', 'Origin of additional')
 
     @staticmethod
@@ -688,6 +693,17 @@ class SaleLine(metaclass=PoolMeta):
         return super().copy(sale_lines, default=current_default)
 
     @fields.depends('unlimited_quantity', 'quantity', 'services')
+    def on_change_with_services_available(self, name=None):
+        if self.quantity is None:
+            return None
+        if self.unlimited_quantity:
+            return None
+        res = self.quantity - len(self.services)
+        if res < 0:
+            return 0
+        return res
+
+    @fields.depends('unlimited_quantity', 'quantity', 'services')
     def on_change_with_services_completed(self, name=None):
         if self.unlimited_quantity:
             return False
@@ -696,6 +712,11 @@ class SaleLine(metaclass=PoolMeta):
         if self.quantity > len(self.services):
             return False
         return True
+
+    def get_services_completed_icon(self, name):
+        if self.services_completed:
+            return 'lims-red'
+        return 'lims-green'
 
 
 class SaleLine2(metaclass=PoolMeta):
