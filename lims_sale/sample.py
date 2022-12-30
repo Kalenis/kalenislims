@@ -149,10 +149,10 @@ class CreateSample(metaclass=PoolMeta):
             return samples_defaults
 
         sale_lines = {}
-        for line in self.start.sale_lines:
-            analysis_id = line.analysis and line.analysis.id
+        for sl in self.start.sale_lines:
+            analysis_id = sl.analysis and sl.analysis.id
             if not analysis_id:
-                product_id = line.product and line.product.id
+                product_id = sl.product and sl.product.id
                 if not product_id:
                     continue
                 analysis = Analysis.search([('product', '=', product_id)])
@@ -160,8 +160,8 @@ class CreateSample(metaclass=PoolMeta):
                     continue
                 analysis_id = analysis[0].id
             sale_lines[analysis_id] = {
-                'line': line.id,
-                'available': line.services_available,
+                'line': sl.id,
+                'available': sl.services_available,
                 }
         if not sale_lines:
             return samples_defaults
@@ -169,9 +169,9 @@ class CreateSample(metaclass=PoolMeta):
         entry = Entry(Transaction().context['active_id'])
         allow_services_without_quotation = (
             entry.allow_services_without_quotation)
-        labels_qty = len(self._get_labels_list(self.start.labels))
         error_key = 'lims_services_without_quotation@%s' % entry.number
         error_msg = 'lims_sale.msg_services_without_quotation'
+        labels_qty = len(self._get_labels_list(self.start.labels))
 
         for sample in samples_defaults:
             if 'fractions' not in sample:
@@ -195,12 +195,11 @@ class CreateSample(metaclass=PoolMeta):
                                     sale_lines[analysis_id]['available'] >=
                                     labels_qty):
                                 continue
-                            if allow_services_without_quotation:
-                                if Warning.check(error_key):
-                                    raise UserWarning(error_key,
-                                        gettext(error_msg))
-                            else:
+                            if not allow_services_without_quotation:
                                 raise UserError(gettext(error_msg))
+                            if Warning.check(error_key):
+                                raise UserWarning(error_key,
+                                    gettext(error_msg))
 
         return samples_defaults
 
@@ -225,14 +224,52 @@ class Service(metaclass=PoolMeta):
 
     sale_lines = fields.Many2Many('lims.service-sale.line',
         'service', 'sale_line', 'Quotes', readonly=True)
+    matching_quote_removed = fields.Many2One('sale.line',
+        'Matching quote removed', readonly=True)
+
+    @classmethod
+    def create(cls, vlist):
+        services = super().create(vlist)
+        silent = Transaction().context.get('create_sample', False)
+        cls.check_services_without_quotation(services, silent)
+        return services
 
     @classmethod
     def copy(cls, services, default=None):
-        if default is None:
-            default = {}
-        current_default = default.copy()
-        #current_default['sale_lines'] = None
-        return super().copy(services, default=current_default)
+        new_service = super().copy(services, default)
+        silent = Transaction().context.get('create_sample', False)
+        cls.check_services_without_quotation(new_service, silent)
+        return new_service
+
+    @classmethod
+    def check_services_without_quotation(cls, services, silent=False):
+        pool = Pool()
+        Warning = pool.get('res.user.warning')
+
+        to_unlink = []
+        for service in services:
+            if not service.sale_lines:
+                continue
+
+            entry = service.entry
+            allow_services_without_quotation = (
+                entry.allow_services_without_quotation)
+            error_key = 'lims_services_without_quotation@%s' % entry.number
+            error_msg = 'lims_sale.msg_services_without_quotation'
+
+            for sl in service.sale_lines:
+                if (sl.quantity is None or sl.unlimited_quantity or
+                        sl.quantity >= len(sl.services)):
+                    continue
+                if not allow_services_without_quotation:
+                    raise UserError(gettext(error_msg))
+                if not silent and Warning.check(error_key):
+                    raise UserWarning(error_key, gettext(error_msg))
+                service.matching_quote_removed = sl.id
+                service.save()
+                to_unlink.append(service)
+        if to_unlink:
+            cls.unlink_sale_lines(to_unlink)
 
     @classmethod
     def write(cls, *args):

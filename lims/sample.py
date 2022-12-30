@@ -6712,7 +6712,8 @@ class CreateSample(Wizard):
         entry = Entry(entry_id)
         samples_defaults = self._get_samples_defaults(entry_id)
         logger.info('.. Sample.create(..)')
-        sample, = Sample.create(samples_defaults)
+        with Transaction().set_context(create_sample=True):
+            sample, = Sample.create(samples_defaults)
         fast_default = {
             'foreign_language_code': entry.report_language.code,
             'sample_client_description_lang': None,
