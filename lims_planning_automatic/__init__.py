@@ -9,6 +9,7 @@ from . import entry
 from . import sheet
 from . import quality
 from . import sample
+from . import notebook
 
 
 def register():
@@ -30,4 +31,6 @@ def register():
         entry.ManageServices,
         entry.AddSampleService,
         entry.EditSampleService,
+        notebook.NotebookRepeatAnalysis,
+        notebook.NotebookLineRepeatAnalysis,
         module='lims_planning_automatic', type_='wizard')
