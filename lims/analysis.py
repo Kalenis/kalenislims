@@ -1477,8 +1477,8 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 products.append(a.product)
                 templates.append(a.product.template)
         if products:
-            Product.write(products, {'active': True})
             Template.write(templates, {'active': True})
+            Product.write(products, {'active': True})
 
     @fields.depends('laboratories')
     def on_change_with_microbiology(self, name=None):
