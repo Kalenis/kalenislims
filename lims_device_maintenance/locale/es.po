@@ -34,6 +34,10 @@ msgctxt "field:lims.lab.device.maintenance,device:"
 msgid "Device"
 msgstr "Equipo"
 
+msgctxt "field:lims.lab.device.maintenance,device_active:"
+msgid "Device active"
+msgstr "Equipo activo"
+
 msgctxt "field:lims.lab.device.maintenance,lot:"
 msgid "Lot"
 msgstr "Lote"

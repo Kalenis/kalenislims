@@ -220,6 +220,9 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
         ], 'State', select=True, readonly=True, required=True)
     comments = fields.Text('Comments')
     color = fields.Function(fields.Char('Color'), 'get_color')
+    device_active = fields.Function(fields.Boolean('Device active',
+        states={'invisible': Eval('asset') != 'device'},
+        depends=['asset']), 'get_device_active')
 
     del _states, _depends
 
@@ -266,6 +269,11 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
         if self.state in ('done', 'discarded'):
             return 'lightgray'
         return 'lightblue'
+
+    def get_device_active(self, name=None):
+        if self.device:
+            return self.device.active
+        return True
 
     @classmethod
     def delete(cls, maintenances):

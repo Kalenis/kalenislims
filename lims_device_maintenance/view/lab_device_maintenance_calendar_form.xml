@@ -16,6 +16,8 @@
     <field name="responsible"/>
     <separator string="Comments" colspan="4" id="comments"/>
     <field name="comments" colspan="4"/>
+    <label name="device_active"/>
+    <field name="device_active"/>
     <group colspan="4" id="state">
         <label name="state"/>
         <field name="state"/>

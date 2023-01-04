@@ -9,4 +9,5 @@
     <field name="responsible"/>
     <field name="state"/>
     <field name="comments"/>
+    <field name="device_active"/>
 </tree>
