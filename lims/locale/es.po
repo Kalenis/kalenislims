@@ -5513,6 +5513,10 @@ msgctxt "field:lims.results_report.version.detail.line,analysis:"
 msgid "Analysis"
 msgstr "Análisis"
 
+msgctxt "field:lims.results_report.version.detail.line,analysis_order:"
+msgid "Order"
+msgstr "Orden"
+
 msgctxt "field:lims.results_report.version.detail.line,analysis_origin:"
 msgid "Analysis origin"
 msgstr "Análisis origen"

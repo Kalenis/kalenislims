@@ -2032,6 +2032,8 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         'get_nline_field')
     trace_report = fields.Function(fields.Boolean('Trace report'),
         'get_nline_field')
+    analysis_order = fields.Function(fields.Integer('Order'),
+        'get_nline_field')
 
     @classmethod
     def __register__(cls, module_name):
@@ -2067,6 +2069,11 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
                     'AND nl.notebook = %s',
                 (detail_sample.id, detail_sample.version_detail.id,
                  detail_sample.notebook.id))
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._order.insert(0, ('analysis_order', 'ASC'))
 
     @staticmethod
     def default_hide():
@@ -2114,6 +2121,30 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
             return field.convert_order(name, nline_tables, NotebookLine)
         return staticmethod(order_field)
     order_trace_report = _order_nline_field('trace_report')
+
+    @staticmethod
+    def order_analysis_order(tables):
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        field = Analysis._fields['order']
+        table, _ = tables[None]
+        nline_tables = tables.get('notebook_line')
+        if nline_tables is None:
+            notebook_line = NotebookLine.__table__()
+            analysis = Analysis.__table__()
+            nline_tables = {
+                None: (notebook_line,
+                    notebook_line.id == table.notebook_line),
+                'analysis': {
+                    None: (analysis,
+                        analysis.id == notebook_line.analysis),
+                    },
+                }
+            tables['notebook_line'] = nline_tables
+        return field.convert_order('order',
+            nline_tables['analysis'], Analysis)
 
     @classmethod
     def get_result(cls, details, name):
