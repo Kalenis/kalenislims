@@ -26,6 +26,12 @@
             <field name="model" search="[('model', '=', 'sale.sale')]"/>
         </record>
 
+        <record model="ir.action.act_window" id="sale.act_invoice_form">
+            <field name="domain"
+                eval="[If(Eval('active_ids', []) == [Eval('active_id')], ['OR', ('lines.origin.sale.id', '=', Eval('active_id'), 'sale.line'), ('lines.lims_sale_line_origin.sale.id', '=', Eval('active_id'))], ['OR', ('lines.origin.sale.id', 'in', Eval('active_ids'), 'sale.line'), ('lines.lims_sale_line_origin.sale.id', 'in', Eval('active_ids'))])]"
+                pyson="1"/>
+        </record>
+
 <!-- Sale Section -->
 
         <record model="ir.ui.view" id="sale_section_view_form">

@@ -9,6 +9,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from PyPDF2 import PdfFileMerger
 from PyPDF2.utils import PdfReadError
+from decimal import Decimal
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.wizard import Wizard, StateView, StateTransition, Button
@@ -20,6 +21,7 @@ from trytond.tools import get_smtp_server
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.modules.lims_report_html.html_template import LimsReport
+from trytond.modules.sale.exceptions import SaleValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -72,12 +74,29 @@ class Sale(metaclass=PoolMeta):
         depends=['state'])
     services_completed = fields.Function(fields.Boolean('Services completed'),
         'get_services_completed')
+    services_completed_manual = fields.Boolean('Services completed',
+        states={
+            'invisible': Eval('invoice_method') != 'service',
+            'readonly': Eval('state') != 'processing',
+            },
+        depends=['invoice_method', 'state'])
+    completion_percentage = fields.Function(fields.Numeric('Complete',
+        digits=(1, 4)), 'get_completion_percentage')
 
     @classmethod
     def __setup__(cls):
         super().__setup__()
         cls.invoice_address.domain = [('party', '=', Eval('invoice_party'))]
         cls.invoice_address.depends.append('invoice_party')
+        invoice_method = ('service', 'On Entry Confirmed')
+        if invoice_method not in cls.invoice_method.selection:
+            cls.invoice_method.selection.append(invoice_method)
+        cls.invoice_state.states['invisible'] = (
+            Eval('invoice_method') == 'service')
+        cls.invoice_state.depends.append('invoice_method')
+        cls.shipment_state.states['invisible'] = (
+            Eval('invoice_method') == 'service')
+        cls.shipment_state.depends.append('invoice_method')
         cls._buttons.update({
             'load_services': {
                 'invisible': (Eval('state') != 'draft'),
@@ -86,6 +105,23 @@ class Sale(metaclass=PoolMeta):
                 'invisible': (Eval('state') != 'draft'),
                 },
             })
+
+    @staticmethod
+    def default_services_completed_manual():
+        return False
+
+    @classmethod
+    def view_attributes(cls):
+        return super().view_attributes() + [
+            ('//group[@id="links"]/link[@name="sale.act_shipment_form"]',
+                'states', {
+                    'invisible': Eval('invoice_method') == 'service',
+                    }),
+            ('//group[@id="links"]/link[@name="sale.act_return_form"]',
+                'states', {
+                    'invisible': Eval('invoice_method') == 'service',
+                    }),
+            ]
 
     @fields.depends('party', 'invoice_party')
     def on_change_party(self):
@@ -163,6 +199,9 @@ class Sale(metaclass=PoolMeta):
         pool = Pool()
         SaleLine = pool.get('sale.line')
 
+        if self.services_completed_manual:
+            return True
+
         sale_lines = SaleLine.search([
             ('sale', '=', self.id),
             ('type', '=', 'line'),
@@ -177,6 +216,44 @@ class Sale(metaclass=PoolMeta):
             if line.quantity > len(line.services):
                 return False
         return True
+
+    def get_completion_percentage(self, name=None):
+        pool = Pool()
+        SaleLine = pool.get('sale.line')
+        Sale = pool.get('sale.sale')
+
+        sale_lines = SaleLine.search([
+            ('sale', '=', self.id),
+            ('type', '=', 'line'),
+            ])
+        if not sale_lines:
+            return Decimal(0)
+
+        completed = Decimal(0)
+        total = Decimal(0)
+        for line in sale_lines:
+            if line.unlimited_quantity:
+                continue
+            if not line.quantity:
+                continue
+            completed += (line.amount / Decimal(line.quantity) *
+                len(line.services))
+            total += line.amount
+
+        digits = Sale.completion_percentage.digits[1]
+        return Decimal(
+            Decimal(completed) / Decimal(total)
+            ).quantize(Decimal(str(10 ** -digits)))
+
+    def check_method(self):
+        super().check_method()
+        if (self.shipment_method == 'invoice'
+                and self.invoice_method == 'service'):
+            raise SaleValidationError(
+                gettext('sale.msg_sale_invalid_method',
+                    invoice_method=self.invoice_method_string,
+                    shipment_method=self.shipment_method_string,
+                    sale=self.rec_name))
 
     @classmethod
     @ModelView.button_action('lims_sale.wiz_sale_load_services')
@@ -274,6 +351,16 @@ class Sale(metaclass=PoolMeta):
             logger.error(
                 "Unable to deliver email for task '%s'" % (task_number))
         return success
+
+    def create_invoice(self):
+        if self.invoice_method == 'service':
+            return
+        return super().create_invoice()
+
+    def is_done(self):
+        if self.invoice_method != 'service':
+            return super().is_done()
+        return self.services_completed
 
 
 class Sale2(metaclass=PoolMeta):

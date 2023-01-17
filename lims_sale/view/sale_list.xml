@@ -3,4 +3,7 @@
     <xpath expr="/tree/field[@name='description']" position="after">
         <field name="services_completed"/>
     </xpath>
+    <xpath expr="/tree/field[@name='state']" position="after">
+        <field name="completion_percentage" widget="progressbar"/>
+    </xpath>
 </data>

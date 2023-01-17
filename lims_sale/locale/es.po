@@ -183,6 +183,10 @@ msgctxt "field:sale.sale,clauses:"
 msgid "Clauses"
 msgstr "Cláusulas"
 
+msgctxt "field:sale.sale,completion_percentage:"
+msgid "Complete"
+msgstr "Completo"
+
 msgctxt "field:sale.sale,expiration_date:"
 msgid "Expiration date"
 msgstr "Fecha de vencimiento"
@@ -216,6 +220,10 @@ msgid "Send automatically by Email"
 msgstr "Enviar automáticamente por email"
 
 msgctxt "field:sale.sale,services_completed:"
+msgid "Services completed"
+msgstr "Servicios completados"
+
+msgctxt "field:sale.sale,services_completed_manual:"
 msgid "Services completed"
 msgstr "Servicios completados"
 
@@ -318,6 +326,10 @@ msgstr "Cargar análisis desde Set/Grupo"
 msgctxt "model:sale.sale.section,name:"
 msgid "Sale Section"
 msgstr "Sección de Presupuesto"
+
+msgctxt "selection:sale.sale,invoice_method:"
+msgid "On Entry Confirmed"
+msgstr "Al confirmar servicio"
 
 msgctxt "selection:sale.sale.section,position:"
 msgid "Following"

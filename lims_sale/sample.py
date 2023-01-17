@@ -314,3 +314,27 @@ class ServiceSaleLine(ModelSQL):
         ondelete='CASCADE', select=True, required=True)
     sale_line = fields.Many2One('sale.line', 'Sale Line',
         ondelete='CASCADE', select=True, required=True)
+
+    @classmethod
+    def create(cls, vlist):
+        sale_lines = super().create(vlist)
+        with Transaction().set_context(_check_access=False):
+            sales = set(sl.sale_line.sale for sl in sale_lines)
+        if sales:
+            cls.process_sale(sales)
+        return sale_lines
+
+    @classmethod
+    def delete(cls, sale_lines):
+        with Transaction().set_context(_check_access=False):
+            sales = set(sl.sale_line.sale for sl in sale_lines)
+        super().delete(sale_lines)
+        if sales:
+            cls.process_sale(sales)
+
+    @classmethod
+    def process_sale(cls, sales):
+        pool = Pool()
+        Sale = pool.get('sale.sale')
+        with Transaction().set_context(_check_access=False):
+            Sale.__queue__.process(sales)
