@@ -224,8 +224,8 @@ msgid "Services completed"
 msgstr "Servicios completados"
 
 msgctxt "field:sale.sale,services_completed_manual:"
-msgid "Services completed"
-msgstr "Servicios completados"
+msgid "Manually completed services"
+msgstr "Servicios completados manualmente"
 
 msgctxt "field:sale.sale,template:"
 msgid "Sale Template"
@@ -287,6 +287,10 @@ msgctxt "model:ir.action,name:wiz_sale_load_set_group"
 msgid "Load Analysis from Set/Group"
 msgstr "Cargar análisis desde Set/Grupo"
 
+msgctxt "model:ir.message,text:msg_sale_completed_manual"
+msgid "The quote will change to 'done' with all services completed."
+msgstr "El presupuesto pasará a 'realizado' con todos los servicios completados."
+
 msgctxt "model:ir.message,text:msg_services_without_quotation"
 msgid "This entry exceeds the amount of quoted services."
 msgstr "Este ingreso excede la cantidad de servicios presupuestados."
@@ -310,6 +314,10 @@ msgstr "Plantillas de Presupuesto"
 msgctxt "model:lims.service-sale.line,name:"
 msgid "Service - Sale Line"
 msgstr "Servicio - Línea de venta"
+
+msgctxt "model:res.group,name:group_sale_services_completed_manual"
+msgid "Manually complete services in sales"
+msgstr "Completar manualmente servicios en ventas"
 
 msgctxt "model:sale.clause.template,name:"
 msgid "Sale Clause Template"

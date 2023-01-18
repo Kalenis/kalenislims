@@ -2,6 +2,17 @@
 <tryton>
     <data>
 
+<!-- Groups -->
+
+        <record model="res.group" id="group_sale_services_completed_manual">
+            <field name="name">Manually complete services in sales</field>
+        </record>
+        <record model="res.user-res.group"
+            id="user_admin_group_sale_services_completed_manual">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_sale_services_completed_manual"/>
+        </record>
+
 <!-- Sale -->
 
         <record model="ir.ui.view" id="sale_view_form">
@@ -30,6 +41,26 @@
             <field name="domain"
                 eval="[If(Eval('active_ids', []) == [Eval('active_id')], ['OR', ('lines.origin.sale.id', '=', Eval('active_id'), 'sale.line'), ('lines.lims_sale_line_origin.sale.id', '=', Eval('active_id'))], ['OR', ('lines.origin.sale.id', 'in', Eval('active_ids'), 'sale.line'), ('lines.lims_sale_line_origin.sale.id', 'in', Eval('active_ids'))])]"
                 pyson="1"/>
+        </record>
+
+        <record model="ir.model.field.access"
+            id="access_sale_services_completed_manual">
+            <field name="field"
+                search="[('name', '=', 'services_completed_manual'), ('model.model', '=', 'sale.sale')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_sale_services_completed_manual_group_sale_services_completed_manual">
+            <field name="field"
+                search="[('name', '=', 'services_completed_manual'), ('model.model', '=', 'sale.sale')]"/>
+            <field name="group" ref="group_sale_services_completed_manual"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
 <!-- Sale Section -->

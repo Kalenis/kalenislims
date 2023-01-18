@@ -4,5 +4,8 @@
         <record model="ir.message" id="msg_services_without_quotation">
             <field name="text">This entry exceeds the amount of quoted services.</field>
         </record>
+        <record model="ir.message" id="msg_sale_completed_manual">
+            <field name="text">The quote will change to 'done' with all services completed.</field>
+        </record>
     </data>
 </tryton>

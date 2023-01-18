@@ -18,7 +18,7 @@ from trytond.pyson import Eval, Bool
 from trytond.transaction import Transaction
 from trytond.config import config
 from trytond.tools import get_smtp_server
-from trytond.exceptions import UserError
+from trytond.exceptions import UserError, UserWarning
 from trytond.i18n import gettext
 from trytond.modules.lims_report_html.html_template import LimsReport
 from trytond.modules.sale.exceptions import SaleValidationError
@@ -74,7 +74,7 @@ class Sale(metaclass=PoolMeta):
         depends=['state'])
     services_completed = fields.Function(fields.Boolean('Services completed'),
         'get_services_completed')
-    services_completed_manual = fields.Boolean('Services completed',
+    services_completed_manual = fields.Boolean('Manually completed services',
         states={
             'invisible': Eval('invoice_method') != 'service',
             'readonly': Eval('state') != 'processing',
@@ -239,6 +239,8 @@ class Sale(metaclass=PoolMeta):
             completed += (line.amount / Decimal(line.quantity) *
                 len(line.services))
             total += line.amount
+        if not total:
+            return Decimal(0)
 
         digits = Sale.completion_percentage.digits[1]
         return Decimal(
@@ -361,6 +363,21 @@ class Sale(metaclass=PoolMeta):
         if self.invoice_method != 'service':
             return super().is_done()
         return self.services_completed
+
+    @classmethod
+    def process(cls, sales):
+        pool = Pool()
+        Warning = pool.get('res.user.warning')
+
+        for sale in sales:
+            if (sale.state == 'processing' and
+                    sale.invoice_method == 'service' and
+                    sale.services_completed_manual):
+                error_key = 'lims_sale_completed_manual@%s' % sale.id
+                if Warning.check(error_key):
+                    raise UserWarning(error_key, gettext(
+                        'lims_sale.msg_sale_completed_manual'))
+        return super().process(sales)
 
 
 class Sale2(metaclass=PoolMeta):

@@ -57,7 +57,7 @@ class CreateSampleStart(metaclass=PoolMeta):
             ('sale.party', '=', self.party.id),
             ('sale.expiration_date', '>=', today),
             ('sale.state', 'in', [
-                'quotation', 'confirmed', 'processing', 'done',
+                'quotation', 'confirmed', 'processing',
                 ]),
             ('product.id', 'in', product_ids),
             ]

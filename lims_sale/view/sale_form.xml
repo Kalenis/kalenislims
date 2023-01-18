@@ -44,8 +44,8 @@
         </page>
     </xpath>
     <xpath
-        expr="/form/notebook/page[@id='sale']/group[@id='states']/field[@name='state']"
-        position="after">
+        expr="/form/notebook/page[@id='sale']/group[@id='states']/label[@name='state']"
+        position="before">
         <group id="services_completed_manual" colspan="2" col="2">
             <label name="services_completed_manual"/>
             <field name="services_completed_manual"/>
