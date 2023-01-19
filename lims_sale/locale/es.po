@@ -231,6 +231,10 @@ msgctxt "field:sale.sale,template:"
 msgid "Sale Template"
 msgstr "Plantilla de Presupuesto"
 
+msgctxt "field:sale.sale,unlimited_quantity:"
+msgid "Lines with unlimited quantity"
+msgstr "Líneas con cantidad ilimitada"
+
 msgctxt "field:sale.sale.section,data:"
 msgid "File"
 msgstr "Archivo"

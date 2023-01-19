@@ -82,6 +82,8 @@ class Sale(metaclass=PoolMeta):
         depends=['invoice_method', 'state'])
     completion_percentage = fields.Function(fields.Numeric('Complete',
         digits=(1, 4)), 'get_completion_percentage')
+    unlimited_quantity = fields.Function(fields.Boolean(
+        'Lines with unlimited quantity'), 'get_unlimited_quantity')
 
     @classmethod
     def __setup__(cls):
@@ -222,6 +224,9 @@ class Sale(metaclass=PoolMeta):
         SaleLine = pool.get('sale.line')
         Sale = pool.get('sale.sale')
 
+        if self.services_completed_manual:
+            return Decimal(1)
+
         sale_lines = SaleLine.search([
             ('sale', '=', self.id),
             ('type', '=', 'line'),
@@ -246,6 +251,19 @@ class Sale(metaclass=PoolMeta):
         return Decimal(
             Decimal(completed) / Decimal(total)
             ).quantize(Decimal(str(10 ** -digits)))
+
+    def get_unlimited_quantity(self, name=None):
+        pool = Pool()
+        SaleLine = pool.get('sale.line')
+
+        sale_lines = SaleLine.search([
+            ('sale', '=', self.id),
+            ('type', '=', 'line'),
+            ('unlimited_quantity', '=', True),
+            ])
+        if sale_lines:
+            return True
+        return False
 
     def check_method(self):
         super().check_method()
