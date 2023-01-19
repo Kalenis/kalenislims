@@ -445,7 +445,10 @@ class LabDevice(DeactivableMixin, ModelSQL, ModelView):
     device_type = fields.Many2One('lims.lab.device.type', 'Device type',
         required=True)
     laboratories = fields.One2Many('lims.lab.device.laboratory', 'device',
-        'Laboratories', required=True)
+        'Laboratories', depends=['non_analytical'],
+        states={'required': ~Eval('non_analytical', False)})
+    non_analytical = fields.Function(fields.Boolean('Non-analytical'),
+        'on_change_with_non_analytical')
     corrections = fields.One2Many('lims.lab.device.correction', 'device',
         'Corrections')
     serial_number = fields.Char('Serial number')
@@ -475,6 +478,10 @@ class LabDevice(DeactivableMixin, ModelSQL, ModelView):
         if records:
             return [(field,) + tuple(clause[1:])]
         return [(cls._rec_name,) + tuple(clause[1:])]
+
+    @fields.depends('device_type')
+    def on_change_with_non_analytical(self, name=None):
+        return self.device_type and self.device_type.non_analytical
 
     @classmethod
     def write(cls, *args):
