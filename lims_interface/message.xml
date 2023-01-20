@@ -46,5 +46,8 @@
         <record model="ir.message" id="msg_line_not_annulled">
             <field name="text">Notebook line "%(notebook_line)s" is not annulled.</field>
         </record>
+        <record model="ir.message" id="missing_required_field">
+            <field name="text">The "%(field)s" field is required.</field>
+        </record>
     </data>
 </tryton>

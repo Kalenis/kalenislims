@@ -404,6 +404,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                                         column.expression and
                                         column.expression.startswith('=') else
                                         None),
+                                    required=column.required,
                                     readonly=column.readonly,
                                     invisible=column.invisible,
                                     digits=column.digits,
@@ -439,6 +440,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                                     inputs=(get_inputs(expression) if
                                         expression and
                                         expression.startswith('=') else None),
+                                    required=column.required,
                                     readonly=column.readonly,
                                     invisible=column.invisible,
                                     digits=column.digits,
@@ -468,6 +470,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                                 inputs=(get_inputs(expression)
                                     if expression and
                                     expression.startswith('=') else None),
+                                required=column.required,
                                 readonly=column.readonly,
                                 invisible=column.invisible,
                                 digits=column.digits,
@@ -505,6 +508,7 @@ class Interface(Workflow, ModelSQL, ModelView):
                                 column.expression and
                                 column.expression.startswith('=') else
                                 None),
+                            required=column.required,
                             readonly=column.readonly,
                             invisible=column.invisible,
                             digits=column.digits,
@@ -873,6 +877,7 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
         depends=['expression', 'interface_state'])
     readonly = fields.Boolean('Read only', states=_states, depends=_depends)
     invisible = fields.Boolean('Invisible', states=_states, depends=_depends)
+    required = fields.Boolean('Required', states=_states, depends=_depends)
     digits = fields.Integer('Digits',
         states={
             'required': Eval('type_').in_(['float', 'numeric']),
@@ -2015,33 +2020,29 @@ class Compilation(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('validated')
     def validate_(cls, compilations):
-        pool = Pool()
-        Data = pool.get('lims.interface.data')
-        Field = pool.get('lims.interface.table.field')
+        cls.check_required_fields(compilations)
 
-        return  # TODO: check values and correct type
+    @classmethod
+    def check_required_fields(cls, compilations):
+        pool = Pool()
+        Field = pool.get('lims.interface.table.field')
+        Data = pool.get('lims.interface.data')
 
         for c in compilations:
-            fields = {}
-            columns = Field.search([
+            required_columns = Field.search([
                 ('table', '=', c.table),
-                ('transfer_field', '=', True),
+                ('required', '=', True),
                 ])
-            for column in columns:
-                fields[column.name] = {
-                    'type': column.type,
-                    'field_name': column.related_line_field.name,
-                    }
-            if not fields:
+            if not required_columns:
                 continue
             with Transaction().set_context(lims_interface_table=c.table):
                 lines = Data.search([('compilation', '=', c.id)])
                 for line in lines:
-                    if not cls._allow_confirm_line(line):
-                        continue
-                    # TODO: check values and correct type
-                    #for alias, field in fields.items():
-                        #value = getattr(line, alias)
+                    for column in required_columns:
+                        if getattr(line, column.name) is None:
+                            raise UserError(gettext(
+                                'lims_interface.missing_required_field',
+                                field=column.name))
 
     @classmethod
     @ModelView.button
@@ -2052,6 +2053,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
         Data = pool.get('lims.interface.data')
         Field = pool.get('lims.interface.table.field')
         NotebookLine = pool.get('lims.notebook.line')
+
+        cls.check_required_fields(compilations)
 
         avoid_accept_result = Transaction().context.get('avoid_accept_result',
             False)

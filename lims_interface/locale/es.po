@@ -166,6 +166,10 @@ msgctxt "field:lims.interface.column,related_model:"
 msgid "Related Model"
 msgstr "Modelo relacionado"
 
+msgctxt "field:lims.interface.column,required:"
+msgid "Required"
+msgstr "Obligatorio"
+
 msgctxt "field:lims.interface.column,selection:"
 msgid "Selection"
 msgstr "Selección"
@@ -522,6 +526,10 @@ msgctxt "field:lims.interface.table.field,related_model:"
 msgid "Related Model"
 msgstr "Modelo relacionado"
 
+msgctxt "field:lims.interface.table.field,required:"
+msgid "Required"
+msgstr "Obligatorio"
+
 msgctxt "field:lims.interface.table.field,selection:"
 msgid "Selection"
 msgstr "Selección"
@@ -585,6 +593,10 @@ msgstr "Sólo lectura"
 msgctxt "field:lims.interface.table.grouped_field,related_model:"
 msgid "Related Model"
 msgstr "Modelo relacionado"
+
+msgctxt "field:lims.interface.table.grouped_field,required:"
+msgid "Required"
+msgstr "Obligatorio"
 
 msgctxt "field:lims.interface.table.grouped_field,selection:"
 msgid "Selection"
@@ -861,6 +873,10 @@ msgstr ""
 msgctxt "model:ir.message,text:invalid_selection"
 msgid "Invalid selection in column \"%(name)s\"."
 msgstr "Las opciones de selección en la columna \"%(name)s\" son inválidas."
+
+msgctxt "model:ir.message,text:missing_required_field"
+msgid "The \"%(field)s\" field is required."
+msgstr "El campo \"%(field)s\" es obligatorio."
 
 msgctxt "model:ir.message,text:msg_analysis_specific"
 msgid "There cannot be more than one column per analysis in view \"%(view)s\""
