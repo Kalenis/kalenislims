@@ -31,6 +31,23 @@ msgctxt "field:lims.sample,sale_lines:"
 msgid "Quotes"
 msgstr "Presupuestos"
 
+msgctxt "field:lims.sample.add_service.start,party:"
+msgid "Party"
+msgstr "Entidad"
+
+msgctxt "field:lims.sample.add_service.start,sale_lines:"
+msgid "Quotes"
+msgstr "Presupuestos"
+
+msgctxt "field:lims.sample.add_service.start,sale_lines_domain:"
+msgid "Quotes domain"
+msgstr "Dominio para Presupuestos"
+
+msgctxt ""
+"field:lims.sample.add_service.start,sale_lines_filter_product_type_matrix:"
+msgid "Filter Quotes by Product type and Matrix"
+msgstr "Filtrar Presupuestos por Tipo de producto y Matriz"
+
 msgctxt "field:lims.service,matching_quote_removed:"
 msgid "Matching quote removed"
 msgstr "Presupuesto coincidente no aplicado"
@@ -293,7 +310,8 @@ msgstr "Cargar análisis desde Set/Grupo"
 
 msgctxt "model:ir.message,text:msg_sale_completed_manual"
 msgid "The quote will change to 'done' with all services completed."
-msgstr "El presupuesto pasará a 'realizado' con todos los servicios completados."
+msgstr ""
+"El presupuesto pasará a 'realizado' con todos los servicios completados."
 
 msgctxt "model:ir.message,text:msg_services_without_quotation"
 msgid "This entry exceeds the amount of quoted services."

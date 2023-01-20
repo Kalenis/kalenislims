@@ -18,5 +18,13 @@
             <field name="name">create_sample_start_form</field>
         </record>
 
+<!-- Wizard Add Sample Services -->
+
+        <record model="ir.ui.view" id="add_sample_service_start_view_form">
+            <field name="model">lims.sample.add_service.start</field>
+            <field name="inherit" ref="lims.add_sample_service_start_view_form"/>
+            <field name="name">sample_add_services_start_form</field>
+        </record>
+
     </data>
 </tryton>
