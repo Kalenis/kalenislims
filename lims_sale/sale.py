@@ -88,6 +88,11 @@ class Sale(metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super().__setup__()
+        state = ('expired', 'Expired')
+        if state not in cls.state.selection:
+            cls.state.selection.append(state)
+        cls.shipping_date.states['readonly'] = Eval('state').in_(
+            ['processing', 'expired', 'done', 'cancelled'])
         cls.invoice_address.domain = [('party', '=', Eval('invoice_party'))]
         cls.invoice_address.depends.append('invoice_party')
         invoice_method = ('service', 'On Entry Confirmed')
@@ -396,6 +401,21 @@ class Sale(metaclass=PoolMeta):
                     raise UserWarning(error_key, gettext(
                         'lims_sale.msg_sale_completed_manual'))
         return super().process(sales)
+
+    @classmethod
+    def update_expired_sales_status(cls):
+        '''
+        Cron - Update Expired Sales Status
+        '''
+        Date = Pool().get('ir.date')
+        expired_sales = cls.search([
+            ('expiration_date', '<', Date.today()),
+            ('state', 'in', ['quotation', 'processing', 'confirmed']),
+            ])
+        logger.info('Cron - Updating Expired Sales Status: %s found' %
+            str(len(expired_sales)))
+        if expired_sales:
+            cls.write(expired_sales, {'state': 'expired'})
 
 
 class Sale2(metaclass=PoolMeta):

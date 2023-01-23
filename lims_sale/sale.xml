@@ -26,6 +26,16 @@
             <field name="name">sale_list</field>
         </record>
 
+        <record model="ir.action.act_window.domain" id="act_sale_form_domain_expired">
+            <field name="name">Expired</field>
+            <field name="sequence" eval="60"/>
+            <field name="domain"
+                eval="[('state', '=', 'expired')]"
+                pyson="1"/>
+            <field name="count" eval="True"/>
+            <field name="act_window" ref="sale.act_sale_form"/>
+        </record>
+
         <record model="ir.model.button" id="sale_load_services_button">
             <field name="name">load_services</field>
             <field name="string">Load Services from Entry</field>
@@ -131,6 +141,14 @@
             <field name="report">lims_sale/report/sale.html</field>
             <field name="extension">pdf</field>
             <field name="template_extension">lims</field>
+        </record>
+
+<!-- Cron Update Expired Sales Status -->
+
+        <record model="ir.cron" id="cron_update_expired_sales_status">
+            <field name="interval_number" eval="1"/>
+            <field name="interval_type">days</field>
+            <field name="method">sale.sale|update_expired_sales_status</field>
         </record>
 
     </data>

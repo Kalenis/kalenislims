@@ -16,6 +16,7 @@ from . import invoice
 def register():
     Pool.register(
         configuration.Configuration,
+        configuration.Cron,
         html_template.SaleClauseTemplate,
         html_template.SaleReportTemplate,
         party.Party,

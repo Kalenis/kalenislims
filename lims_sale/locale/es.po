@@ -308,6 +308,10 @@ msgctxt "model:ir.action,name:wiz_sale_load_set_group"
 msgid "Load Analysis from Set/Group"
 msgstr "Cargar análisis desde Set/Grupo"
 
+msgctxt "model:ir.action.act_window.domain,name:act_sale_form_domain_expired"
+msgid "Expired"
+msgstr "Vencida"
+
 msgctxt "model:ir.message,text:msg_sale_completed_manual"
 msgid "The quote will change to 'done' with all services completed."
 msgstr ""
@@ -357,9 +361,17 @@ msgctxt "model:sale.sale.section,name:"
 msgid "Sale Section"
 msgstr "Sección de Presupuesto"
 
+msgctxt "selection:ir.cron,method:"
+msgid "Update Expired Sales Status"
+msgstr "Actualizar estado de ventas vencidas"
+
 msgctxt "selection:sale.sale,invoice_method:"
 msgid "On Entry Confirmed"
 msgstr "Al confirmar servicio"
+
+msgctxt "selection:sale.sale,state:"
+msgid "Expired"
+msgstr "Vencida"
 
 msgctxt "selection:sale.sale.section,position:"
 msgid "Following"
