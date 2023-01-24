@@ -1183,6 +1183,10 @@ msgctxt "field:lims.create_sample.service,analysis_locked:"
 msgid "Analysis/Set/Group Locked"
 msgstr "Análisis/Set/Grupo bloqueado"
 
+msgctxt "field:lims.create_sample.service,contract_number:"
+msgid "Contract Number"
+msgstr "Número de contrato"
+
 msgctxt "field:lims.create_sample.service,device:"
 msgid "Device"
 msgstr "Equipo"
@@ -1430,6 +1434,10 @@ msgstr "Observaciones"
 msgctxt "field:lims.entry,confirmed:"
 msgid "Confirmed"
 msgstr "Confirmado"
+
+msgctxt "field:lims.entry,contract_number:"
+msgid "Contract Number"
+msgstr "Número de contrato"
 
 msgctxt "field:lims.entry,create_date2:"
 msgid "Create Date"
@@ -5377,6 +5385,10 @@ msgctxt "field:lims.results_report.version.detail,comments_readonly:"
 msgid "Comments readonly"
 msgstr "Observaciones sólo lectura"
 
+msgctxt "field:lims.results_report.version.detail,contract_numbers:"
+msgid "Contract Numbers"
+msgstr "Números de contrato"
+
 msgctxt "field:lims.results_report.version.detail,create_date2:"
 msgid "Create Date"
 msgstr "Fecha de creación"
@@ -6090,6 +6102,10 @@ msgstr "Fecha de confirmación"
 msgctxt "field:lims.service,confirmed:"
 msgid "Confirmed"
 msgstr "Confirmado"
+
+msgctxt "field:lims.service,contract_number:"
+msgid "Contract Number"
+msgstr "Número de contrato"
 
 msgctxt "field:lims.service,create_date2:"
 msgid "Create Date"

@@ -31,6 +31,7 @@ def register():
         sample.Service,
         sample.ServiceSaleLine,
         entry.Entry,
+        results_report.ResultsReportVersionDetail,
         module='lims_sale', type_='model')
     Pool.register(
         sale.Sale2,

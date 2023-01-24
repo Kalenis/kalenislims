@@ -677,6 +677,8 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     entry_summary = fields.Function(fields.Char('Entry / Qty. Samples'),
         'get_entry_summary', searcher='search_entry_summary')
     trace_report = fields.Boolean('Trace report')
+    contract_numbers = fields.Function(fields.Char('Contract Numbers'),
+        'get_contract_numbers')
 
     # State changes
     revision_uid = fields.Many2One('res.user', 'Revision user', readonly=True)
@@ -1686,6 +1688,37 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         if not details_ids:
             return [('id', '=', -1)]
         return [('id', 'in', details_ids)]
+
+    @classmethod
+    def get_contract_numbers(cls, details, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        result = {}
+        for d in details:
+            result[d.id] = ''
+            cursor.execute('SELECT DISTINCT(srv.contract_number) '
+                'FROM "' + Service._table + '" srv '
+                    'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
+                    'ON srv.id = ad.service '
+                    'INNER JOIN "' + NotebookLine._table + '" nl '
+                    'ON ad.id = nl.analysis_detail '
+                    'INNER JOIN "' + ResultsLine._table + '" rl '
+                    'ON nl.id = rl.notebook_line '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON rl.detail_sample = rs.id '
+                'WHERE rs.version_detail = %s '
+                    'AND srv.contract_number IS NOT NULL '
+                'ORDER BY srv.contract_number', (d.id,))
+            contract_numbers = [str(x[0]) for x in cursor.fetchall()]
+            if contract_numbers:
+                result[d.id] = ' / '.join(contract_numbers)
+        return result
 
 
 class ResultsReportCachedReport(ModelSQL):

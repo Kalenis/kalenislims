@@ -2,8 +2,12 @@
 <form cursor="party">
     <label name="number"/>
     <field name="number"/>
-    <label name="date"/>
-    <field name="date"/>
+    <group id="date" colspan="2">
+        <label name="date"/>
+        <field name="date"/>
+        <label name="contract_number"/>
+        <field name="contract_number"/>
+    </group>
     <label name="party"/>
     <field name="party"/>
     <label name="invoice_party"/>

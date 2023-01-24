@@ -419,6 +419,7 @@ class Service(ModelSQL, ModelView):
     is_additional = fields.Boolean('Is Additional', readonly=True)
     additional_origins = fields.Many2Many('lims.service.additional_origin',
         'service', 'origin', 'Origins of additional')
+    contract_number = fields.Char('Contract Number')
 
     @classmethod
     def __setup__(cls):
@@ -6392,6 +6393,7 @@ class CreateSampleService(ModelView):
         depends=['explode_analysis_invisible'])
     explode_analysis_invisible = fields.Boolean(
         'Load included analyzes individually Invisible')
+    contract_number = fields.Char('Contract Number')
 
     @staticmethod
     def default_explode_analysis():
@@ -6430,6 +6432,14 @@ class CreateSampleService(ModelView):
     @staticmethod
     def default_report_date_readonly():
         return True
+
+    @staticmethod
+    def default_contract_number():
+        Entry = Pool().get('lims.entry')
+        entry_id = Transaction().context.get('active_id', None)
+        if entry_id:
+            entry = Entry(entry_id)
+            return entry.contract_number
 
     @fields.depends('analysis', 'analysis_locked')
     def on_change_analysis(self):
@@ -6803,6 +6813,8 @@ class CreateSample(Wizard):
                     getattr(service, 'estimated_waiting_report') or None)
                 explode_analysis = (hasattr(service, 'explode_analysis') and
                     getattr(service, 'explode_analysis') or False)
+                contract_number = (hasattr(service, 'contract_number') and
+                    getattr(service, 'contract_number') or None)
                 if (explode_analysis and
                         service.analysis.type in ('set', 'group')):
                     for included_analysis in self._get_included_analysis(
@@ -6821,6 +6833,7 @@ class CreateSample(Wizard):
                             'laboratory_date': service.laboratory_date,
                             'report_date': service.report_date,
                             'divide': service.divide,
+                            'contract_number': contract_number,
                             })
                 else:
                     services_defaults.append({
@@ -6840,6 +6853,7 @@ class CreateSample(Wizard):
                         'laboratory_date': service.laboratory_date,
                         'report_date': service.report_date,
                         'divide': service.divide,
+                        'contract_number': contract_number,
                         })
 
         # samples data
