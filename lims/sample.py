@@ -6435,11 +6435,21 @@ class CreateSampleService(ModelView):
 
     @staticmethod
     def default_contract_number():
-        Entry = Pool().get('lims.entry')
-        entry_id = Transaction().context.get('active_id', None)
-        if entry_id:
-            entry = Entry(entry_id)
-            return entry.contract_number
+        pool = Pool()
+        Entry = pool.get('lims.entry')
+        Sample = pool.get('lims.sample')
+
+        if Transaction().context.get('active_model') == 'lims.entry':
+            entry_id = Transaction().context.get('active_id', None)
+            if entry_id:
+                entry = Entry(entry_id)
+                return entry.contract_number
+        elif Transaction().context.get('active_model') == 'lims.sample':
+            sample_id = Transaction().context.get('active_id', None)
+            if sample_id:
+                sample = Sample(sample_id)
+                return sample.entry.contract_number
+        return None
 
     @fields.depends('analysis', 'analysis_locked')
     def on_change_analysis(self):
