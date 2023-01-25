@@ -377,13 +377,16 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
         Lang = pool.get('ir.lang')
 
         with Transaction().set_user(0):
-            notebook, = Notebook.search([('fraction', '=', fraction.id)])
-
-        lines_to_create = []
+            notebooks = Notebook.search([('fraction', '=', fraction.id)])
+            if not notebooks:
+                return
+            notebook = notebooks[0]
 
         template_id = None
         if Transaction().context.get('template'):
             template_id = Transaction().context.get('template')
+
+        lines_to_create = []
         for detail in details:
             clause = ('product_type = %s '
                 'AND matrix = %s '
@@ -417,6 +420,7 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
                 significant_digits = t.significant_digits
                 scientific_notation = t.scientific_notation
                 report = t.report
+                department = t.department and t.department.id or None
             else:
                 repetitions = 0
                 initial_concentration = None
@@ -431,6 +435,7 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
                 significant_digits = None
                 scientific_notation = False
                 report = False
+                department = None
 
             results_estimated_waiting = None
             cursor.execute('SELECT results_estimated_waiting '
@@ -449,22 +454,23 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
                 if res:
                     results_estimated_waiting = res[0]
 
-            department = None
-            cursor.execute('SELECT department '
-                'FROM "' + AnalysisLaboratory._table + '" '
-                'WHERE analysis = %s '
-                    'AND laboratory = %s',
-                    (detail.analysis.id, detail.laboratory.id))
-            res = cursor.fetchone()
-            if res and res[0]:
-                department = res[0]
-            else:
+            if not department:
                 cursor.execute('SELECT department '
-                    'FROM "' + ProductType._table + '" '
-                    'WHERE id = %s', (fraction.product_type.id,))
+                    'FROM "' + AnalysisLaboratory._table + '" '
+                    'WHERE analysis = %s '
+                        'AND laboratory = %s '
+                    'ORDER BY by_default DESC',
+                    (detail.analysis.id, detail.laboratory.id))
                 res = cursor.fetchone()
                 if res and res[0]:
                     department = res[0]
+                else:
+                    cursor.execute('SELECT department '
+                        'FROM "' + ProductType._table + '" '
+                        'WHERE id = %s', (fraction.product_type.id,))
+                    res = cursor.fetchone()
+                    if res and res[0]:
+                        department = res[0]
 
             for i in range(0, repetitions + 1):
                 notebook_line = {
