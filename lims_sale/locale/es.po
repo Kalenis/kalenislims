@@ -312,6 +312,10 @@ msgctxt "model:ir.action.act_window.domain,name:act_sale_form_domain_expired"
 msgid "Expired"
 msgstr "Vencida"
 
+msgctxt "model:ir.message,text:msg_party_services_without_quotation"
+msgid "This party does not allow services without quotation."
+msgstr "Esta entidad no permite servicios sin presupuesto."
+
 msgctxt "model:ir.message,text:msg_sale_completed_manual"
 msgid "The quote will change to 'done' with all services completed."
 msgstr ""

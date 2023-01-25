@@ -45,6 +45,8 @@ def register():
         sale.SaleLoadAnalysis,
         sample.CreateSample,
         sample.AddSampleService,
+        sample.EditSampleService,
+        sample.EditSample,
         results_report.OpenSampleSale,
         results_report.OpenResultsDetailSale,
         results_report.OpenResultsDetailAttachment,
