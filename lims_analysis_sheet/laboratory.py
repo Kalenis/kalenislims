@@ -128,9 +128,6 @@ class NotebookRule(metaclass=PoolMeta):
         Service = pool.get('lims.service')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         NotebookLine = pool.get('lims.notebook.line')
-        AnalysisSheet = pool.get('lims.analysis_sheet')
-
-        today = date.today()
 
         cursor.execute('SELECT DISTINCT(laboratory) '
             'FROM "' + AnalysisLaboratory._table + '" '
@@ -181,18 +178,28 @@ class NotebookRule(metaclass=PoolMeta):
                 ('analysis_detail', 'in', [d.id for d in analysis_detail])])
             if notebook_lines:
                 NotebookLine.write(notebook_lines, {'rule': self.id})
+                self._add_service_to_sheet(notebook_lines)
+            return notebook_lines
 
-            sheet = AnalysisSheet(Transaction().context.get(
-                'lims_analysis_sheet'))
-            notebook_lines = [nl for nl in notebook_lines if
-                nl.get_analysis_sheet_template() == sheet.template.id]
-            if notebook_lines:
-                NotebookLine.write(notebook_lines, {'start_date': today})
-                analysis_details = [nl.analysis_detail
-                    for nl in notebook_lines]
-                EntryDetailAnalysis.write(analysis_details,
-                    {'state': 'planned'})
-                sheet.create_lines(notebook_lines)
+    def _add_service_to_sheet(self, notebook_lines):
+        pool = Pool()
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+
+        today = date.today()
+
+        sheet = AnalysisSheet(Transaction().context.get(
+            'lims_analysis_sheet'))
+        notebook_lines = [nl for nl in notebook_lines if
+            nl.get_analysis_sheet_template() == sheet.template.id]
+        if notebook_lines:
+            NotebookLine.write(notebook_lines, {'start_date': today})
+            analysis_details = [nl.analysis_detail
+                for nl in notebook_lines]
+            EntryDetailAnalysis.write(analysis_details,
+                {'state': 'planned'})
+            sheet.create_lines(notebook_lines)
 
     def _exec_sheet_edit(self, line):
         pool = Pool()

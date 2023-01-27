@@ -923,6 +923,7 @@ class NotebookRule(ModelSQL, ModelView):
                 ('analysis_detail', 'in', [d.id for d in analysis_detail])])
             if notebook_lines:
                 NotebookLine.write(notebook_lines, {'rule': self.id})
+            return notebook_lines
 
     def _exec_edit(self, line):
         pool = Pool()

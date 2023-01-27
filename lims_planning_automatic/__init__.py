@@ -16,6 +16,7 @@ def register():
     Pool.register(
         planification.Planification,
         laboratory.Laboratory,
+        laboratory.NotebookRule,
         entry.Entry,
         sample.Sample,
         module='lims_planning_automatic', type_='model')
