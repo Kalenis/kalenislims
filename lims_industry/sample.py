@@ -627,7 +627,7 @@ class CreateSample(metaclass=PoolMeta):
 
     def default_start(self, fields):
         defaults = super().default_start(fields)
-        for field in ('storage_location', 'equipment'):
+        for field in ('party', 'storage_location', 'equipment'):
             if (hasattr(self.start, field) and getattr(self.start, field)):
                 defaults[field] = getattr(self.start, field).id
         for field in ('ind_equipment', 'ind_equipment_uom'):
