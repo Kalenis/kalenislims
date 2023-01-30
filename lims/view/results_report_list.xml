@@ -6,6 +6,7 @@
     <field name="party"/>
     <field name="invoice_party"/>
     <field name="samples_list"/>
+    <field name="entry_summary"/>
     <field name="cie_fraction_type"/>
     <field name="ready_to_send"/>
     <field name="create_date2" widget="date"/>

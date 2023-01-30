@@ -5062,6 +5062,10 @@ msgctxt "field:lims.results_report,entry:"
 msgid "Entry"
 msgstr "Ingreso"
 
+msgctxt "field:lims.results_report,entry_summary:"
+msgid "Entry / Qty. Samples"
+msgstr "Ingreso / Cant. Muestras"
+
 msgctxt "field:lims.results_report,generation_type:"
 msgid "Generation type"
 msgstr "Tipo de generación"
