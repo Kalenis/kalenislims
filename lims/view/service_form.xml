@@ -53,6 +53,8 @@
                 <label name="report_date"/>
                 <field name="report_date"/>
             </group>
+            <label name="contract_number"/>
+            <field name="contract_number"/>
         </page>
         <page string="Comments" id="comments">
             <separator string="Comments" colspan="4" id="comments"/>

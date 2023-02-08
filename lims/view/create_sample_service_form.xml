@@ -36,4 +36,6 @@
         <label name="report_date"/>
         <field name="report_date"/>
     </group>
+    <label name="contract_number"/>
+    <field name="contract_number"/>
 </form>

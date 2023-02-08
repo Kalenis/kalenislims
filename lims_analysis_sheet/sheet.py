@@ -954,12 +954,14 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         Data = pool.get('lims.interface.data')
         NotebookLine = pool.get('lims.notebook.line')
         Compilation = pool.get('lims.interface.compilation')
+        Date = pool.get('ir.date')
 
         avoid_accept_result = Transaction().context.get('avoid_accept_result',
             False)
 
         now = datetime.now()
-        today = now.date()
+        today = Date.today()
+
         for s in sheets:
             with Transaction().set_context(
                     lims_interface_table=s.compilation.table.id):

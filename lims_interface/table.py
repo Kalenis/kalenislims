@@ -93,6 +93,7 @@ class TableField(ModelSQL, ModelView):
     formula = fields.Char('On Change With Formula')
     inputs = fields.Char('On Change With Inputs')
     readonly = fields.Boolean('Read only')
+    required = fields.Boolean('Required')
     invisible = fields.Boolean('Invisible')
     digits = fields.Integer('Digits')
     group = fields.Integer('Group')
@@ -126,6 +127,7 @@ class TableGroupedField(ModelSQL, ModelView):
     formula = fields.Char('On Change With Formula')
     inputs = fields.Function(fields.Char('On Change With Inputs'),
         'get_inputs')
+    required = fields.Boolean('Required')
     readonly = fields.Boolean('Read only')
     invisible = fields.Boolean('Invisible')
     digits = fields.Integer('Digits')

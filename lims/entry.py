@@ -139,6 +139,7 @@ class Entry(Workflow, ModelSQL, ModelView):
     multi_party = fields.Boolean('Multi Party', readonly=True, select=True)
     pre_assigned_samples = fields.Function(fields.Integer(
         'Pre-Assigned Samples'), 'get_pre_assigned_samples')
+    contract_number = fields.Char('Contract Number')
 
     @classmethod
     def __setup__(cls):

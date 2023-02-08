@@ -74,3 +74,44 @@ class OpenResultsDetailAttachment(metaclass=PoolMeta):
                     for sale_line in s.notebook.fraction.sample.sale_lines:
                         res.append(self._get_resource(sale_line.sale))
         return res
+
+
+class ResultsReportVersionDetail(metaclass=PoolMeta):
+    __name__ = 'lims.results_report.version.detail'
+
+    @classmethod
+    def get_contract_numbers(cls, details, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        result = {}
+        for d in details:
+            result[d.id] = ''
+            cursor.execute('SELECT ad.service '
+                'FROM "' + EntryDetailAnalysis._table + '" ad '
+                    'INNER JOIN "' + NotebookLine._table + '" nl '
+                    'ON ad.id = nl.analysis_detail '
+                    'INNER JOIN "' + ResultsLine._table + '" rl '
+                    'ON nl.id = rl.notebook_line '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON rl.detail_sample = rs.id '
+                'WHERE rs.version_detail = %s', (d.id,))
+            service_ids = [int(x[0]) for x in cursor.fetchall()]
+            if not service_ids:
+                continue
+            contract_numbers = set()
+            services = Service.browse(service_ids)
+            for service in services:
+                if service.contract_number:
+                    contract_numbers.add(service.contract_number)
+                elif service.sale_lines:
+                    for sl in service.sale_lines:
+                        contract_numbers.add(sl.sale.number)
+            if contract_numbers:
+                result[d.id] = ' / '.join(contract_numbers)
+        return result

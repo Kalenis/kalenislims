@@ -57,7 +57,7 @@ class CreateSampleStart(metaclass=PoolMeta):
             ('sale.party', '=', self.party.id),
             ('sale.expiration_date', '>=', today),
             ('sale.state', 'in', [
-                'quotation', 'confirmed', 'processing', 'done',
+                'quotation', 'confirmed', 'processing',
                 ]),
             ('product.id', 'in', product_ids),
             ]
@@ -75,13 +75,14 @@ class CreateSampleStart(metaclass=PoolMeta):
         Analysis = pool.get('lims.analysis')
         Entry = pool.get('lims.entry')
 
+        entry = Entry(Transaction().context['active_id'])
+        if (not self.sale_lines and
+                not entry.allow_services_without_quotation):
+            return []
+
         analysis_domain = super().on_change_with_analysis_domain(name)
 
         if not self.sale_lines:
-            return analysis_domain
-
-        entry = Entry(Transaction().context['active_id'])
-        if entry.allow_services_without_quotation:
             return analysis_domain
 
         quoted_products = [sl.product.id
@@ -204,6 +205,243 @@ class CreateSample(metaclass=PoolMeta):
         return samples_defaults
 
 
+class AddSampleServiceStart(metaclass=PoolMeta):
+    __name__ = 'lims.sample.add_service.start'
+
+    party = fields.Many2One('party.party', 'Party')
+    sale_lines_filter_product_type_matrix = fields.Boolean(
+        'Filter Quotes by Product type and Matrix')
+    sale_lines = fields.Many2Many('sale.line', None, None, 'Quotes',
+        domain=[('id', 'in', Eval('sale_lines_domain'))],
+        states={'readonly': Or(~Eval('product_type'), ~Eval('matrix'))},
+        depends=['sale_lines_domain', 'product_type', 'matrix'])
+    sale_lines_domain = fields.Function(fields.Many2Many('sale.line',
+        None, None, 'Quotes domain'),
+        'on_change_with_sale_lines_domain')
+
+    @staticmethod
+    def default_sale_lines_filter_product_type_matrix():
+        return False
+
+    @fields.depends('party', 'product_type', 'matrix',
+        'sale_lines_filter_product_type_matrix', 'analysis_domain')
+    def on_change_with_sale_lines_domain(self, name=None):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Date = pool.get('ir.date')
+        SaleLine = pool.get('sale.line')
+        Analysis = pool.get('lims.analysis')
+        Sample = pool.get('lims.sample')
+
+        if not self.party or not self.product_type or not self.matrix:
+            return []
+
+        sample = Sample(Transaction().context['active_id'])
+        analysis_domain = sample.on_change_with_analysis_domain()
+        if not analysis_domain:
+            return []
+        analysis_ids = ', '.join(str(a) for a in analysis_domain)
+
+        cursor.execute('SELECT DISTINCT(product) '
+            'FROM "' + Analysis._table + '" '
+            'WHERE id IN (' + analysis_ids + ')')
+        res = cursor.fetchall()
+        if not res:
+            return []
+        product_ids = [x[0] for x in res]
+
+        today = Date.today()
+        clause = [
+            ('sale.party', '=', self.party.id),
+            ('sale.expiration_date', '>=', today),
+            ('sale.state', 'in', [
+                'quotation', 'confirmed', 'processing',
+                ]),
+            ('product.id', 'in', product_ids),
+            ]
+        if self.sale_lines_filter_product_type_matrix:
+            clause.append(('product_type', '=', self.product_type.id))
+            clause.append(('matrix', '=', self.matrix.id))
+
+        sale_lines = SaleLine.search(clause)
+        res = [sl.id for sl in sale_lines if not sl.services_completed]
+        return res
+
+    @fields.depends('party', 'product_type', 'matrix', 'sale_lines')
+    def on_change_with_analysis_domain(self, name=None):
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        Sample = pool.get('lims.sample')
+
+        sample = Sample(Transaction().context['active_id'])
+        if (not self.sale_lines and
+                not sample.entry.allow_services_without_quotation):
+            return []
+
+        analysis_domain = sample.on_change_with_analysis_domain()
+
+        if not self.sale_lines:
+            return analysis_domain
+
+        quoted_products = [sl.product.id
+            for sl in self.sale_lines if sl.product]
+        quoted_analysis = Analysis.search([('product', 'in', quoted_products)])
+        quoted_analysis_ids = [a.id for a in quoted_analysis]
+        return [a for a in analysis_domain if a in quoted_analysis_ids]
+
+    @fields.depends('sale_lines', 'product_type', 'matrix', 'services',
+        methods=['on_change_with_analysis_domain'])
+    def on_change_sale_lines(self, name=None):
+        if not self.sale_lines:
+            return
+        self.load_sale_lines_analyzes()
+
+    def load_sale_lines_analyzes(self):
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        CreateSampleService = pool.get('lims.create_sample.service')
+
+        analysis_domain = self.on_change_with_analysis_domain()
+        if not analysis_domain:
+            return
+
+        quoted_products = [sl.product.id
+            for sl in self.sale_lines if sl.product]
+        quoted_analysis = Analysis.search([('product', 'in', quoted_products)])
+        quoted_analysis = [a for a in quoted_analysis
+            if a.id in analysis_domain]
+        if not quoted_analysis:
+            return
+
+        quoted_services = []
+        for a in quoted_analysis:
+            with Transaction().set_context(
+                    product_type=self.product_type.id,
+                    matrix=self.matrix.id):
+                s = CreateSampleService()
+                s.analysis_locked = False
+                s.urgent = s.default_urgent()
+                s.priority = s.default_priority()
+                s.analysis = a
+                s.on_change_analysis()
+                s.laboratory_date = s.on_change_with_laboratory_date()
+                s.report_date = s.on_change_with_report_date()
+
+            quoted_services.append(s)
+
+        self.services = quoted_services
+
+
+class AddSampleService(metaclass=PoolMeta):
+    __name__ = 'lims.sample.add_service'
+
+    def default_start(self, fields):
+        Sample = Pool().get('lims.sample')
+
+        defaults = super().default_start(fields)
+
+        sample = Sample(Transaction().context['active_id'])
+        if not sample:
+            return defaults
+
+        defaults['party'] = sample.party.id
+        return defaults
+
+    def _get_new_service(self, service, fraction):
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        Sample = pool.get('lims.sample')
+        Warning = pool.get('res.user.warning')
+
+        service_create = super()._get_new_service(service, fraction)
+
+        if (not hasattr(self.start, 'sale_lines') or
+                not hasattr(self.start, 'services')):
+            return service_create
+
+        sale_lines = {}
+        for sl in self.start.sale_lines:
+            analysis_id = sl.analysis and sl.analysis.id
+            if not analysis_id:
+                product_id = sl.product and sl.product.id
+                if not product_id:
+                    continue
+                analysis = Analysis.search([('product', '=', product_id)])
+                if not analysis:
+                    continue
+                analysis_id = analysis[0].id
+            sale_lines[analysis_id] = {
+                'line': sl.id,
+                'available': sl.services_available,
+                }
+        if not sale_lines:
+            return service_create
+
+        analysis_id = service_create['analysis']
+        if analysis_id not in sale_lines:
+            return service_create
+        service_create['sale_lines'] = [('add',
+            [sale_lines[analysis_id]['line']])]
+        if (sale_lines[analysis_id]['available'] is None or
+                sale_lines[analysis_id]['available'] >= 1):
+            return service_create
+
+        sample = Sample(Transaction().context['active_id'])
+        error_key = 'lims_services_without_quotation@%s' % sample.entry.number
+        error_msg = 'lims_sale.msg_party_services_without_quotation'
+        if not sample.entry.allow_services_without_quotation:
+            raise UserError(gettext(error_msg))
+        if Warning.check(error_key):
+            raise UserWarning(error_key, gettext(error_msg))
+
+        return service_create
+
+
+class EditSampleService(metaclass=PoolMeta):
+    __name__ = 'lims.sample.edit_service'
+
+    def _get_new_service(self, service, fraction):
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Warning = pool.get('res.user.warning')
+
+        service_create = super()._get_new_service(service, fraction)
+
+        sample = Sample(Transaction().context['active_id'])
+        error_key = 'lims_services_without_quotation@%s' % sample.entry.number
+        error_msg = 'lims_sale.msg_party_services_without_quotation'
+        if not sample.entry.allow_services_without_quotation:
+            raise UserError(gettext(error_msg))
+        if Warning.check(error_key):
+            raise UserWarning(error_key, gettext(error_msg))
+
+        return service_create
+
+
+class EditSample(metaclass=PoolMeta):
+    __name__ = 'lims.sample.edit'
+
+    def transition_confirm(self):
+        pool = Pool()
+        ServiceSaleLine = pool.get('lims.service-sale.line')
+
+        error_msg = 'lims_sale.msg_party_services_without_quotation'
+
+        samples = self._get_filtered_samples()
+        for sample in samples:
+            if self.start.party and self.start.party != sample.party:
+                sale_lines = ServiceSaleLine.search([
+                    ('service.fraction.sample', '=', sample.id),
+                    ])
+                if not sale_lines:
+                    continue
+                if self.start.party.allow_services_without_quotation:
+                    ServiceSaleLine.delete(sale_lines)
+                else:
+                    raise UserError(gettext(error_msg))
+        return super().transition_confirm()
+
+
 class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
 
@@ -314,3 +552,27 @@ class ServiceSaleLine(ModelSQL):
         ondelete='CASCADE', select=True, required=True)
     sale_line = fields.Many2One('sale.line', 'Sale Line',
         ondelete='CASCADE', select=True, required=True)
+
+    @classmethod
+    def create(cls, vlist):
+        sale_lines = super().create(vlist)
+        with Transaction().set_context(_check_access=False):
+            sales = set(sl.sale_line.sale for sl in sale_lines)
+        if sales:
+            cls.process_sale(sales)
+        return sale_lines
+
+    @classmethod
+    def delete(cls, sale_lines):
+        with Transaction().set_context(_check_access=False):
+            sales = set(sl.sale_line.sale for sl in sale_lines)
+        super().delete(sale_lines)
+        if sales:
+            cls.process_sale(sales)
+
+    @classmethod
+    def process_sale(cls, sales):
+        pool = Pool()
+        Sale = pool.get('sale.sale')
+        with Transaction().set_context(_check_access=False):
+            Sale.__queue__.process(sales)

@@ -64,6 +64,10 @@ class ResultsReport(ModelSQL, ModelView):
     attachments = fields.One2Many('ir.attachment', 'resource', 'Attachments')
     samples_list = fields.Function(fields.Char('Samples'),
         'get_samples_list', searcher='search_samples_list')
+    entry_summary = fields.Function(fields.Char('Entry / Qty. Samples'),
+        'get_entry_summary', searcher='search_entry_summary')
+
+    # PDF Report Cache
     report_cache = fields.Binary('Report cache', readonly=True,
         file_id='report_cache_id', store_prefix='results_report')
     report_cache_id = fields.Char('Report cache id', readonly=True)
@@ -501,10 +505,91 @@ class ResultsReport(ModelSQL, ModelView):
             'WHERE s.number ILIKE %s '
                 'AND rd.state != \'annulled\'',
             (value,))
-        details_ids = [x[0] for x in cursor.fetchall()]
-        if not details_ids:
+        reports_ids = [x[0] for x in cursor.fetchall()]
+        if not reports_ids:
             return [('id', '=', -1)]
-        return [('id', 'in', details_ids)]
+        return [('id', 'in', reports_ids)]
+
+    @classmethod
+    def get_entry_summary(cls, reports, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Entry = pool.get('lims.entry')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
+
+        result = {}
+        for r in reports:
+            result[r.id] = ''
+
+            cursor.execute('SELECT DISTINCT(s.entry) '
+                'FROM "' + Sample._table + '" s '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON s.id = f.sample '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON f.id = n.fraction '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON n.id = rs.notebook '
+                    'INNER JOIN "' + ResultsDetail._table + '" rd '
+                    'ON rs.version_detail = rd.id '
+                    'INNER JOIN "' + ResultsVersion._table + '" rv '
+                    'ON rd.report_version = rv.id '
+                'WHERE rv.results_report = %s', (r.id,))
+            entry_ids = [x[0] for x in cursor.fetchall()]
+            if not entry_ids:
+                continue
+            entry_ids = ', '.join(str(e) for e in entry_ids)
+
+            cursor.execute('SELECT e.number, count(s.id) '
+                'FROM "' + Entry._table + '" e '
+                    'INNER JOIN "' + Sample._table + '" s '
+                    'ON e.id = s.entry '
+                'WHERE e.id IN (' + entry_ids + ') '
+                'GROUP BY e.number '
+                'ORDER BY e.number ASC')
+            res = cursor.fetchone()
+            if not res:
+                continue
+            result[r.id] = '%s/%s' % (res[0], res[1])
+        return result
+
+    @classmethod
+    def search_entry_summary(cls, name, clause):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Entry = pool.get('lims.entry')
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Notebook = pool.get('lims.notebook')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
+
+        value = clause[2]
+        cursor.execute('SELECT rv.results_report '
+            'FROM "' + Entry._table + '" e '
+                'INNER JOIN "' + Sample._table + '" s '
+                'ON e.id = s.entry '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON s.id = f.sample '
+                'INNER JOIN "' + Notebook._table + '" n '
+                'ON f.id = n.fraction '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON n.id = rs.notebook '
+                'INNER JOIN "' + ResultsDetail._table + '" rd '
+                'ON rs.version_detail = rd.id '
+                'INNER JOIN "' + ResultsVersion._table + '" rv '
+                'ON rd.report_version = rv.id '
+            'WHERE e.number ILIKE %s',
+            (value,))
+        reports_ids = [x[0] for x in cursor.fetchall()]
+        if not reports_ids:
+            return [('id', '=', -1)]
+        return [('id', 'in', reports_ids)]
 
 
 class ResultsReportVersion(ModelSQL, ModelView):
@@ -677,6 +762,8 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     entry_summary = fields.Function(fields.Char('Entry / Qty. Samples'),
         'get_entry_summary', searcher='search_entry_summary')
     trace_report = fields.Boolean('Trace report')
+    contract_numbers = fields.Function(fields.Char('Contract Numbers'),
+        'get_contract_numbers')
 
     # State changes
     revision_uid = fields.Many2One('res.user', 'Revision user', readonly=True)
@@ -1652,7 +1739,8 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                     'INNER JOIN "' + Sample._table + '" s '
                     'ON e.id = s.entry '
                 'WHERE e.id IN (' + entry_ids + ') '
-                'GROUP BY e.number')
+                'GROUP BY e.number '
+                'ORDER BY e.number ASC')
             res = cursor.fetchone()
             if not res:
                 continue
@@ -1686,6 +1774,37 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         if not details_ids:
             return [('id', '=', -1)]
         return [('id', 'in', details_ids)]
+
+    @classmethod
+    def get_contract_numbers(cls, details, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        result = {}
+        for d in details:
+            result[d.id] = ''
+            cursor.execute('SELECT DISTINCT(srv.contract_number) '
+                'FROM "' + Service._table + '" srv '
+                    'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
+                    'ON srv.id = ad.service '
+                    'INNER JOIN "' + NotebookLine._table + '" nl '
+                    'ON ad.id = nl.analysis_detail '
+                    'INNER JOIN "' + ResultsLine._table + '" rl '
+                    'ON nl.id = rl.notebook_line '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON rl.detail_sample = rs.id '
+                'WHERE rs.version_detail = %s '
+                    'AND srv.contract_number IS NOT NULL '
+                'ORDER BY srv.contract_number', (d.id,))
+            contract_numbers = [str(x[0]) for x in cursor.fetchall()]
+            if contract_numbers:
+                result[d.id] = ' / '.join(contract_numbers)
+        return result
 
 
 class ResultsReportCachedReport(ModelSQL):
@@ -3528,6 +3647,8 @@ class ResultReport(Report):
                 report_context['replace_number'] = (
                     gettext('lims.msg_replace_number', report=prev_number))
         report_context['print_date'] = get_print_date().date()
+        report_context['convert_timezone_datetime'] = \
+            company.convert_timezone_datetime
         report_context['party'] = report.party.rec_name
         party_address = report.party.get_results_report_address()
 

@@ -31,6 +31,23 @@ msgctxt "field:lims.sample,sale_lines:"
 msgid "Quotes"
 msgstr "Presupuestos"
 
+msgctxt "field:lims.sample.add_service.start,party:"
+msgid "Party"
+msgstr "Entidad"
+
+msgctxt "field:lims.sample.add_service.start,sale_lines:"
+msgid "Quotes"
+msgstr "Presupuestos"
+
+msgctxt "field:lims.sample.add_service.start,sale_lines_domain:"
+msgid "Quotes domain"
+msgstr "Dominio para Presupuestos"
+
+msgctxt ""
+"field:lims.sample.add_service.start,sale_lines_filter_product_type_matrix:"
+msgid "Filter Quotes by Product type and Matrix"
+msgstr "Filtrar Presupuestos por Tipo de producto y Matriz"
+
 msgctxt "field:lims.service,matching_quote_removed:"
 msgid "Matching quote removed"
 msgstr "Presupuesto coincidente no aplicado"
@@ -183,6 +200,10 @@ msgctxt "field:sale.sale,clauses:"
 msgid "Clauses"
 msgstr "Cláusulas"
 
+msgctxt "field:sale.sale,completion_percentage:"
+msgid "Complete"
+msgstr "Completo"
+
 msgctxt "field:sale.sale,expiration_date:"
 msgid "Expiration date"
 msgstr "Fecha de vencimiento"
@@ -219,9 +240,17 @@ msgctxt "field:sale.sale,services_completed:"
 msgid "Services completed"
 msgstr "Servicios completados"
 
+msgctxt "field:sale.sale,services_completed_manual:"
+msgid "Manually completed services"
+msgstr "Servicios completados manualmente"
+
 msgctxt "field:sale.sale,template:"
 msgid "Sale Template"
 msgstr "Plantilla de Presupuesto"
+
+msgctxt "field:sale.sale,unlimited_quantity:"
+msgid "Lines with unlimited quantity"
+msgstr "Líneas con cantidad ilimitada"
 
 msgctxt "field:sale.sale.section,data:"
 msgid "File"
@@ -279,6 +308,19 @@ msgctxt "model:ir.action,name:wiz_sale_load_set_group"
 msgid "Load Analysis from Set/Group"
 msgstr "Cargar análisis desde Set/Grupo"
 
+msgctxt "model:ir.action.act_window.domain,name:act_sale_form_domain_expired"
+msgid "Expired"
+msgstr "Vencida"
+
+msgctxt "model:ir.message,text:msg_party_services_without_quotation"
+msgid "This party does not allow services without quotation."
+msgstr "Esta entidad no permite servicios sin presupuesto."
+
+msgctxt "model:ir.message,text:msg_sale_completed_manual"
+msgid "The quote will change to 'done' with all services completed."
+msgstr ""
+"El presupuesto pasará a 'realizado' con todos los servicios completados."
+
 msgctxt "model:ir.message,text:msg_services_without_quotation"
 msgid "This entry exceeds the amount of quoted services."
 msgstr "Este ingreso excede la cantidad de servicios presupuestados."
@@ -303,6 +345,10 @@ msgctxt "model:lims.service-sale.line,name:"
 msgid "Service - Sale Line"
 msgstr "Servicio - Línea de venta"
 
+msgctxt "model:res.group,name:group_sale_services_completed_manual"
+msgid "Manually complete services in sales"
+msgstr "Completar manualmente servicios en ventas"
+
 msgctxt "model:sale.clause.template,name:"
 msgid "Sale Clause Template"
 msgstr "Plantilla de Cláusulas de presupuesto"
@@ -318,6 +364,18 @@ msgstr "Cargar análisis desde Set/Grupo"
 msgctxt "model:sale.sale.section,name:"
 msgid "Sale Section"
 msgstr "Sección de Presupuesto"
+
+msgctxt "selection:ir.cron,method:"
+msgid "Update Expired Sales Status"
+msgstr "Actualizar estado de ventas vencidas"
+
+msgctxt "selection:sale.sale,invoice_method:"
+msgid "On Entry Confirmed"
+msgstr "Al confirmar servicio"
+
+msgctxt "selection:sale.sale,state:"
+msgid "Expired"
+msgstr "Vencida"
 
 msgctxt "selection:sale.sale.section,position:"
 msgid "Following"

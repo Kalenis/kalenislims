@@ -17,3 +17,15 @@ class Configuration(metaclass=PoolMeta):
     @staticmethod
     def default_allow_services_without_quotation():
         return True
+
+
+class Cron(metaclass=PoolMeta):
+    __name__ = 'ir.cron'
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls.method.selection.extend([
+                ('sale.sale|update_expired_sales_status',
+                    'Update Expired Sales Status'),
+                ])

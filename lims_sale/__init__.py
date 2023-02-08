@@ -16,6 +16,7 @@ from . import invoice
 def register():
     Pool.register(
         configuration.Configuration,
+        configuration.Cron,
         html_template.SaleClauseTemplate,
         html_template.SaleReportTemplate,
         party.Party,
@@ -25,10 +26,12 @@ def register():
         sale.SaleLoadServicesStart,
         sale.SaleLoadAnalysisStart,
         sample.CreateSampleStart,
+        sample.AddSampleServiceStart,
         sample.Sample,
         sample.Service,
         sample.ServiceSaleLine,
         entry.Entry,
+        results_report.ResultsReportVersionDetail,
         module='lims_sale', type_='model')
     Pool.register(
         sale.Sale2,
@@ -41,6 +44,9 @@ def register():
         sale.SaleLoadServices,
         sale.SaleLoadAnalysis,
         sample.CreateSample,
+        sample.AddSampleService,
+        sample.EditSampleService,
+        sample.EditSample,
         results_report.OpenSampleSale,
         results_report.OpenResultsDetailSale,
         results_report.OpenResultsDetailAttachment,

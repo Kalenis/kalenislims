@@ -28,6 +28,8 @@
     <field name="resultrange_origin" widget="selection"/>
     <label name="trace_report"/>
     <field name="trace_report"/>
+    <label name="contract_numbers"/>
+    <field name="contract_numbers"/>
     <notebook>
         <page name="samples">
             <field name="samples" colspan="4" mode="form,tree"
