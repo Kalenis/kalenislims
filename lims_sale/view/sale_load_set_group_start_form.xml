@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <form>
+    <label name="quantity"/>
+    <field name="quantity"/>
     <label name="analysis"/>
     <field name="analysis"/>
 </form>

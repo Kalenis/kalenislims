@@ -43,7 +43,7 @@ minor_version = int(minor_version)
 
 # TODO: check new openpyxl versions, v.3 seems to be buggy in PyPI
 requires = ['appdirs', 'Babel', 'Click', 'formulas', 'Jinja2 < 3.1',
-    get_require_version('kalenis_user_view'), 'openpyxl==2.6.4', 'matplotlib',
+    get_require_version('kalenis_user_view'), 'openpyxl==3.1.0', 'matplotlib',
     'pandas', 'psycopg2', 'PyPDF2 < 2', 'pytz', 'unidecode', 'WeasyPrint',
     'werkzeug < 2', 'xlrd', 'xlutils']
 

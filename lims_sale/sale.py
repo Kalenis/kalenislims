@@ -946,6 +946,11 @@ class SaleLoadAnalysisStart(ModelView):
 
     analysis = fields.Many2One('lims.analysis', 'Set/Group', required=True,
         domain=[('type', 'in', ['set', 'group'])])
+    quantity = fields.Integer('Quantity', required=True)
+
+    @staticmethod
+    def default_quantity():
+        return 1
 
 
 class SaleLoadAnalysis(Wizard):
@@ -965,7 +970,7 @@ class SaleLoadAnalysis(Wizard):
 
         sale_id = Transaction().context['active_id']
 
-        def get_sale_services(analysis, sale_services={}):
+        def get_sale_services(analysis, quantity=1, sale_services={}):
             if not analysis.included_analysis:
                 return sale_services
             for ia in analysis.included_analysis:
@@ -975,16 +980,16 @@ class SaleLoadAnalysis(Wizard):
                 if included.id not in sale_services.keys():
                     if included.type != 'set':
                         sale_services[included.id] = {
-                            'quantity': 1,
+                            'quantity': quantity,
                             'unit': included.product.default_uom.id,
                             'product': included.product.id,
                             'method': ia.method.id if ia.method else None,
                             'description': included.rec_name,
                             }
-                    sale_services = get_sale_services(included, sale_services)
+                    sale_services = get_sale_services(included, quantity, sale_services)
             return sale_services
 
-        sale_services = get_sale_services(self.start.analysis)
+        sale_services = get_sale_services(self.start.analysis, self.start.quantity)
 
         sale_lines = []
         for service in sale_services.values():
