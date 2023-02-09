@@ -13763,6 +13763,10 @@ msgid "Add Analysis"
 msgstr "Añadir análisis"
 
 msgctxt "selection:lims.rule,action:"
+msgid "Annul Analysis"
+msgstr "Anular análisis"
+
+msgctxt "selection:lims.rule,action:"
 msgid "Edit Analysis"
 msgstr "Editar análisis"
 
