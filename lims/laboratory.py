@@ -931,9 +931,10 @@ class NotebookRule(ModelSQL, ModelView):
     def _exec_edit(self, line):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
+        Date = pool.get('ir.date')
 
         now = datetime.now()
-        today = now.date()
+        today = Date.today()
 
         if line.analysis == self.target_analysis:
             notebook_line = NotebookLine(line.id)

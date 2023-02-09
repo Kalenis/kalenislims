@@ -255,9 +255,10 @@ class NotebookRule(metaclass=PoolMeta):
         Data = pool.get('lims.interface.data')
         AnalysisSheet = pool.get('lims.analysis_sheet')
         Field = pool.get('lims.interface.table.field')
+        Date = pool.get('ir.date')
 
         now = datetime.now()
-        today = now.date()
+        today = Date.today()
 
         # update notebook line
         if line.notebook_line.analysis == self.target_analysis:
