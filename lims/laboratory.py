@@ -597,6 +597,7 @@ class NotebookRule(ModelSQL, ModelView):
     action = fields.Selection([
         ('add', 'Add Analysis'),
         ('edit', 'Edit Analysis'),
+        ('annul', 'Annul Analysis'),
         ], 'Action', required=True, sort=False)
     target_analysis = fields.Many2One('lims.analysis', 'Target Analysis',
         required=True, domain=[
@@ -666,6 +667,8 @@ class NotebookRule(ModelSQL, ModelView):
             self._exec_add(line)
         elif self.action == 'edit':
             self._exec_edit(line)
+        elif self.action == 'annul':
+            self._exec_annul(line)
 
     def _exec_add(self, line):
         pool = Pool()
@@ -786,6 +789,43 @@ class NotebookRule(ModelSQL, ModelView):
                 if notebook_line.laboratory.automatic_accept_result:
                     notebook_line.accepted = True
                     notebook_line.acceptance_date = now
+            notebook_line.rule = self.id
+            notebook_line.save()
+        except Exception as e:
+            return
+
+    def _exec_annul(self, line):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+
+        now = datetime.now()
+
+        if line.analysis == self.target_analysis:
+            notebook_line = NotebookLine(line.id)
+        else:
+            clause = [
+                ('notebook', '=', line.notebook),
+                ('analysis', '=', self.target_analysis),
+                ('accepted', '=', False),
+                ('annulled', '=', False),
+                ]
+            if self.target_method:
+                clause.append(('method', '=', self.target_method))
+            target_line = NotebookLine.search(clause,
+                order=[('repetition', 'DESC')], limit=1)
+            if not target_line:
+                return
+            notebook_line = target_line[0]
+
+        if notebook_line.accepted or notebook_line.annulled:
+            return
+
+        try:
+            notebook_line.result_modifier = 'na'
+            notebook_line.annulled = True
+            notebook_line.annulment_date = now
+            notebook_line.annulment_reason = self.name
+            notebook_line.report = False
             notebook_line.rule = self.id
             notebook_line.save()
         except Exception as e:
