@@ -16,6 +16,8 @@ class Party(metaclass=PoolMeta):
     _states = {'readonly': ~Eval('active', True)}
     _depends = ['active']
 
+    fantasy_name = fields.Char('Fantasy Name',
+        states=_states, depends=_depends)
     plants = fields.One2Many('lims.plant', 'party', 'Plants',
         states=_states, depends=_depends)
     complete_file = fields.Boolean('Complete File',
@@ -51,6 +53,12 @@ class Party(metaclass=PoolMeta):
                     ]):
                 continue
             res.append(party)
+        return res
+
+    @classmethod
+    def search_rec_name(cls, name, clause):
+        res = super().search_rec_name(name, clause)
+        res.append(('fantasy_name',) + tuple(clause[1:]))
         return res
 
     @classmethod
