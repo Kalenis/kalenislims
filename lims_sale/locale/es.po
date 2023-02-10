@@ -212,10 +212,6 @@ msgctxt "field:sale.sale,following_sections:"
 msgid "Following Sections"
 msgstr "Secciones siguientes"
 
-msgctxt "field:sale.sale,invoice_party:"
-msgid "Invoice party"
-msgstr "Tercero de facturación"
-
 msgctxt "field:sale.sale,invoice_party_domain:"
 msgid "Invoice party domain"
 msgstr "Dominio para Tercero de facturación"

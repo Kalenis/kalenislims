@@ -100,6 +100,11 @@ class NotebookRule(metaclass=PoolMeta):
                 self._exec_notebook_edit(line)
             else:
                 self._exec_sheet_edit(line)
+        elif self.action == 'annul':
+            if self.apply_on_notebook:
+                self._exec_notebook_annul(line)
+            else:
+                self._exec_sheet_annul(line)
 
     def _exec_sheet_add(self, line):
         Typification = Pool().get('lims.typification')
@@ -250,9 +255,10 @@ class NotebookRule(metaclass=PoolMeta):
         Data = pool.get('lims.interface.data')
         AnalysisSheet = pool.get('lims.analysis_sheet')
         Field = pool.get('lims.interface.table.field')
+        Date = pool.get('ir.date')
 
         now = datetime.now()
-        today = now.date()
+        today = Date.today()
 
         # update notebook line
         if line.notebook_line.analysis == self.target_analysis:
@@ -332,6 +338,93 @@ class NotebookRule(metaclass=PoolMeta):
                 target_field = target_column[0].name
                 try:
                     Data.write(lines, {target_field: str(value)})
+                except Exception as e:
+                    return
+
+    def _exec_sheet_annul(self, line):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+
+        if line.notebook_line.analysis == self.target_analysis:
+            sheet_line = Data(line.id)
+        else:
+            sheet_line = self._get_existing_line(
+                line.notebook_line.notebook.id, self.target_analysis.id,
+                self.target_method and self.target_method.id or None,
+                Transaction().context.get('lims_interface_compilation'))
+            if not sheet_line:
+                return
+
+        if sheet_line.annulled:
+            return
+
+        try:
+            Data.write([sheet_line], {'annulled': True})
+        except Exception as e:
+            return
+
+    def _exec_notebook_annul(self, line):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        Data = pool.get('lims.interface.data')
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+
+        now = datetime.now()
+
+        # update notebook line
+        if line.notebook_line.analysis == self.target_analysis:
+            notebook_line = NotebookLine(line.notebook_line.id)
+        else:
+            clause = [
+                ('notebook', '=', line.notebook_line.notebook),
+                ('analysis', '=', self.target_analysis),
+                ('accepted', '=', False),
+                ('annulled', '=', False),
+                ]
+            if self.target_method:
+                clause.append(('method', '=', self.target_method))
+            target_line = NotebookLine.search(clause,
+                order=[('repetition', 'DESC')], limit=1)
+            if not target_line:
+                return
+            notebook_line = target_line[0]
+
+        if notebook_line.accepted or notebook_line.annulled:
+            return
+
+        try:
+            notebook_line.result_modifier = 'na'
+            notebook_line.annulled = True
+            notebook_line.annulment_date = now
+            notebook_line.annulment_reason = self.name
+            notebook_line.report = False
+            notebook_line.rule = self.id
+            notebook_line.save()
+        except Exception as e:
+            return
+
+        # find analysis sheet line and update it
+        if notebook_line.analysis_sheet:
+            sheets = [notebook_line.analysis_sheet]
+        else:
+            template_id = notebook_line.get_analysis_sheet_template()
+            if not template_id:
+                return
+            sheets = AnalysisSheet.search([
+                ('template', '=', template_id),
+                ('state', 'in', ['draft', 'active', 'validated'])
+                ], order=[('id', 'DESC')])
+        for s in sheets:
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                lines = Data.search([
+                    ('compilation', '=', s.compilation.id),
+                    ('notebook_line', '=', notebook_line.id),
+                    ], limit=1)
+                if not lines:
+                    continue
+                try:
+                    Data.write(lines, {'annulled': True})
                 except Exception as e:
                     return
 

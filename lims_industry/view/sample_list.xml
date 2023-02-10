@@ -8,5 +8,6 @@
         <field name="ind_sampling_date"/>
         <field name="ind_volume"/>
         <field name="sampling_type"/>
+        <field name="dangerous"/>
     </xpath>
 </data>
