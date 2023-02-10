@@ -29,15 +29,6 @@ logger = logging.getLogger(__name__)
 class Sale(metaclass=PoolMeta):
     __name__ = 'sale.sale'
 
-    invoice_party = fields.Many2One('party.party', 'Invoice party',
-        required=True, select=True,
-        domain=['OR', ('id', '=', Eval('invoice_party')),
-            ('id', 'in', Eval('invoice_party_domain'))],
-        states={
-            'readonly': ((Eval('state') != 'draft') |
-                (Eval('lines', [0]) & Eval('party'))),
-            },
-        depends=['invoice_party_domain', 'state'])
     invoice_party_domain = fields.Function(fields.Many2Many('party.party',
         None, None, 'Invoice party domain'),
         'on_change_with_invoice_party_domain')
@@ -93,8 +84,15 @@ class Sale(metaclass=PoolMeta):
             cls.state.selection.append(state)
         cls.shipping_date.states['readonly'] = Eval('state').in_(
             ['processing', 'expired', 'done', 'cancelled'])
+        cls.invoice_party.required = True
+        cls.invoice_party.select = True
+        cls.invoice_party.domain = ['OR',
+            ('id', '=', Eval('invoice_party')),
+            ('id', 'in', Eval('invoice_party_domain'))]
+        cls.invoice_party.depends.append('invoice_party_domain')
         cls.invoice_address.domain = [('party', '=', Eval('invoice_party'))]
         cls.invoice_address.depends.append('invoice_party')
+        cls.contact.domain = [('party', '=', Eval('party'))]
         invoice_method = ('service', 'On Entry Confirmed')
         if invoice_method not in cls.invoice_method.selection:
             cls.invoice_method.selection.append(invoice_method)
