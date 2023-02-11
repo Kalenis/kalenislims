@@ -6883,7 +6883,8 @@ class BlindSampleReport(Report):
         return report_context
 
     def _get_variables(self, formula, notebook_line):
-        VolumeConversion = Pool().get('lims.volume.conversion')
+        pool = Pool()
+        VolumeConversion = pool.get('lims.volume.conversion')
 
         variables = {}
         for var in ('DI',):

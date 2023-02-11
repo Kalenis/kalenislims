@@ -13,7 +13,7 @@ class FormulaParser(Model):
     __slots__ = ('_string', '_index', '_vars')
 
     def __init__(self, string, vars={}, id=None, **kwargs):
-        self._string = string
+        self._string = string.replace('{', '').replace('}', '')
         self._index = 0
         self._vars = {
             'pi': 3.141592653589793,

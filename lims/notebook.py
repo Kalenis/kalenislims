@@ -3,6 +3,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import operator
+import re
 from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -2168,20 +2169,15 @@ class NotebookInitialConcentrationCalc(Wizard):
 
     def _get_variables(self, formula, notebook):
         pool = Pool()
-        Analysis = pool.get('lims.analysis')
         VolumeConversion = pool.get('lims.volume.conversion')
 
-        code_length = Analysis._code_length() + 1
         variables = {}
-        for prefix in ('A', 'D', 'T', 'Y', 'R'):
-            while True:
-                idx = formula.find(prefix)
-                if idx >= 0:
-                    var = formula[idx:idx + code_length]
+        for variable in re.findall(r'\{.*?\}', formula):
+            var = variable.replace('{', '').replace('}', '')
+            for prefix in ('A', 'D', 'T', 'Y', 'R'):
+                if var.startswith(prefix):
                     variables[var] = None
-                    formula = formula.replace(var, '_')
-                else:
-                    break
+
         for var in variables.keys():
             if var[0] == 'A':
                 analysis_code = var[1:]
@@ -2295,27 +2291,24 @@ class NotebookInitialConcentrationCalc2(Wizard):
         if not notebook_lines:
             return {}
 
-        notebook, all_formulas = None, ''
+        notebook, formula = None, ''
         for notebook_line in notebook_lines:
             if notebook_line.accepted:
                 continue
             analysis_code = notebook_line.analysis.code
             if not analysis_code or not notebook_line.initial_concentration:
                 continue
-            formulas = notebook_line.initial_concentration
-            if formulas[0] != 'A' and formulas[0] != 'R':
+            ic = notebook_line.initial_concentration
+            if ic[0] != 'A' and ic[0] != 'R':
                 continue
-
-            for i in (' ', '\t', '\n', '\r'):
-                formulas = formulas.replace(i, '')
-            all_formulas += "+" + formulas
+            formula += '{%s}' % ic
             if not notebook:
                 notebook = notebook_line.notebook
 
-        if not all_formulas:
+        if not formula:
             return {}
 
-        variables = self._get_variables_list(all_formulas, notebook, {})
+        variables = self._get_variables_list(formula, notebook, {})
         if not variables:
             return {}
         return {'variables': variables}
@@ -2325,17 +2318,13 @@ class NotebookInitialConcentrationCalc2(Wizard):
         Analysis = pool.get('lims.analysis')
         NotebookLine = pool.get('lims.notebook.line')
 
-        code_length = Analysis._code_length() + 1
         variables = {}
-        for prefix in ('A', 'D', 'T', 'Y', 'R'):
-            while True:
-                idx = formula.find(prefix)
-                if idx >= 0:
-                    var = formula[idx:idx + code_length]
+        for variable in re.findall(r'\{.*?\}', formula):
+            var = variable.replace('{', '').replace('}', '')
+            for prefix in ('A', 'D', 'T', 'Y', 'R'):
+                if var.startswith(prefix):
                     variables[var] = None
-                    formula = formula.replace(var, '_')
-                else:
-                    break
+
         for var in variables.keys():
             if var[0] in ('A', 'D', 'T'):
                 analysis_code = var[1:]
@@ -2466,20 +2455,15 @@ class NotebookInitialConcentrationCalc2(Wizard):
 
     def _get_variables(self, formula, var_values):
         pool = Pool()
-        Analysis = pool.get('lims.analysis')
         VolumeConversion = pool.get('lims.volume.conversion')
 
-        code_length = Analysis._code_length() + 1
         variables = {}
-        for prefix in ('A', 'D', 'T', 'Y', 'R'):
-            while True:
-                idx = formula.find(prefix)
-                if idx >= 0:
-                    var = formula[idx:idx + code_length]
+        for variable in re.findall(r'\{.*?\}', formula):
+            var = variable.replace('{', '').replace('}', '')
+            for prefix in ('A', 'D', 'T', 'Y', 'R'):
+                if var.startswith(prefix):
                     variables[var] = None
-                    formula = formula.replace(var, '_')
-                else:
-                    break
+
         for var in variables.keys():
             if var[0] == 'A':
                 analysis_code = var[1:]
@@ -2654,7 +2638,8 @@ class NotebookResultsConversion(Wizard):
 
     def _get_variables(self, formula, notebook_line,
             initial_uom_volume=False, final_uom_volume=False):
-        VolumeConversion = Pool().get('lims.volume.conversion')
+        pool = Pool()
+        VolumeConversion = pool.get('lims.volume.conversion')
 
         variables = {}
         for var in ('DI',):
@@ -2960,17 +2945,13 @@ class NotebookInternalRelationsCalc1(Wizard):
         Analysis = pool.get('lims.analysis')
         NotebookLine = pool.get('lims.notebook.line')
 
-        code_length = Analysis._code_length() + 1
         variables = {}
-        for prefix in ('A', 'D', 'T', 'Y', 'R'):
-            while True:
-                idx = formula.find(prefix)
-                if idx >= 0:
-                    var = formula[idx:idx + code_length]
+        for variable in re.findall(r'\{.*?\}', formula):
+            var = variable.replace('{', '').replace('}', '')
+            for prefix in ('A', 'D', 'T', 'Y', 'R'):
+                if var.startswith(prefix):
                     variables[var] = None
-                    formula = formula.replace(var, '_')
-                else:
-                    break
+
         for var in variables.keys():
             if var[0] in ('A', 'D', 'T'):
                 analysis_code = var[1:]
@@ -3142,20 +3123,15 @@ class NotebookInternalRelationsCalc1(Wizard):
     def _get_variables(self, formula, notebook, relation_code,
             converted=False):
         pool = Pool()
-        Analysis = pool.get('lims.analysis')
         VolumeConversion = pool.get('lims.volume.conversion')
 
-        code_length = Analysis._code_length() + 1
         variables = {}
-        for prefix in ('A', 'D', 'T', 'Y', 'R'):
-            while True:
-                idx = formula.find(prefix)
-                if idx >= 0:
-                    var = formula[idx:idx + code_length]
+        for variable in re.findall(r'\{.*?\}', formula):
+            var = variable.replace('{', '').replace('}', '')
+            for prefix in ('A', 'D', 'T', 'Y', 'R'):
+                if var.startswith(prefix):
                     variables[var] = None
-                    formula = formula.replace(var, '_')
-                else:
-                    break
+
         for var in variables.keys():
             if var[0] == 'A':
                 analysis_code = var[1:]
@@ -3438,17 +3414,13 @@ class NotebookInternalRelationsCalc2(Wizard):
         Analysis = pool.get('lims.analysis')
         NotebookLine = pool.get('lims.notebook.line')
 
-        code_length = Analysis._code_length() + 1
         variables = {}
-        for prefix in ('A', 'D', 'T', 'Y', 'R'):
-            while True:
-                idx = formula.find(prefix)
-                if idx >= 0:
-                    var = formula[idx:idx + code_length]
+        for variable in re.findall(r'\{.*?\}', formula):
+            var = variable.replace('{', '').replace('}', '')
+            for prefix in ('A', 'D', 'T', 'Y', 'R'):
+                if var.startswith(prefix):
                     variables[var] = None
-                    formula = formula.replace(var, '_')
-                else:
-                    break
+
         for var in variables.keys():
             if var[0] in ('A', 'D', 'T'):
                 analysis_code = var[1:]
@@ -3624,20 +3596,15 @@ class NotebookInternalRelationsCalc2(Wizard):
     def _get_variables(self, formula, notebook, relation_code,
             converted=False):
         pool = Pool()
-        Analysis = pool.get('lims.analysis')
         VolumeConversion = pool.get('lims.volume.conversion')
 
-        code_length = Analysis._code_length() + 1
         variables = {}
-        for prefix in ('A', 'D', 'T', 'Y', 'R'):
-            while True:
-                idx = formula.find(prefix)
-                if idx >= 0:
-                    var = formula[idx:idx + code_length]
+        for variable in re.findall(r'\{.*?\}', formula):
+            var = variable.replace('{', '').replace('}', '')
+            for prefix in ('A', 'D', 'T', 'Y', 'R'):
+                if var.startswith(prefix):
                     variables[var] = None
-                    formula = formula.replace(var, '_')
-                else:
-                    break
+
         for var in variables.keys():
             if var[0] == 'A':
                 analysis_code = var[1:]
@@ -5051,19 +5018,12 @@ class NotebookAddInternalRelations(Wizard):
         return default
 
     def _get_variables(self, formula):
-        Analysis = Pool().get('lims.analysis')
-
-        code_length = Analysis._code_length() + 1
         variables = []
-        for prefix in ('A', 'D', 'T', 'Y', 'R'):
-            while True:
-                idx = formula.find(prefix)
-                if idx >= 0:
-                    var = formula[idx:idx + code_length]
-                    formula = formula.replace(var, '_')
+        for variable in re.findall(r'\{.*?\}', formula):
+            var = variable.replace('{', '').replace('}', '')
+            for prefix in ('A', 'D', 'T', 'Y', 'R'):
+                if var.startswith(prefix):
                     variables.append(var[1:])
-                else:
-                    break
         return variables
 
     def transition_add(self):
@@ -6000,7 +5960,8 @@ class NotebookResultsVerification(Wizard):
             NotebookLine.save(lines_to_save)
 
     def _get_variables(self, formula, notebook_line):
-        VolumeConversion = Pool().get('lims.volume.conversion')
+        pool = Pool()
+        VolumeConversion = pool.get('lims.volume.conversion')
 
         variables = {}
         for var in ('DI',):
