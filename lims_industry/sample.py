@@ -559,6 +559,12 @@ class CreateSampleStart(metaclass=PoolMeta):
                 return True
         return False
 
+    @fields.depends('party')
+    def on_change_party(self):
+        if not self.party:
+            self.equipment = None
+            self.component = None
+
     @fields.depends('equipment', 'component')
     def on_change_equipment(self):
         if not self.equipment and self.component:
