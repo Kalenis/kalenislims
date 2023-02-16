@@ -1,5 +1,16 @@
 <?xml version="1.0"?>
 <data>
+    <xpath expr="/form/label[@name='code']" position="replace">
+        <label name="fantasy_name"/>
+    </xpath>
+    <xpath expr="/form/field[@name='code']" position="replace">
+        <field name="fantasy_name"/>
+    </xpath>
+    <xpath expr="/form/group[@id='checkboxes']/label[@name='active']"
+        position="before">
+        <label name="code"/>
+        <field name="code" xexpand="0"/>
+    </xpath>
     <xpath expr="/form/notebook/page[@id='stock']" position="after">
         <page string="Lims" id="lims">
             <group id="lims_checkboxes" colspan="4" col="8">

@@ -27,6 +27,9 @@ class Party(metaclass=PoolMeta):
     entry_zone = fields.Many2One('lims.zone', 'Entry Zone')
     block_entry_confirmation = fields.Boolean('Block Entry Confirmation')
     carrier = fields.Many2One('carrier', 'Carrier')
+    fantasy_name = fields.Char('Fantasy Name',
+        states= {'readonly': ~Eval('active', True)}, depends=['active'])
+
 
     @classmethod
     def __setup__(cls):
@@ -51,6 +54,13 @@ class Party(metaclass=PoolMeta):
     @staticmethod
     def default_no_acknowledgment_of_receipt():
         return False
+    
+    @classmethod
+    def search_rec_name(cls, name, clause):
+        res = super().search_rec_name(name, clause)
+        res.append(('fantasy_name',) + tuple(clause[1:]))
+        return res
+
 
 
 class Address(metaclass=PoolMeta):
