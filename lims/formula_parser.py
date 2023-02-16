@@ -2,6 +2,7 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import re
 
 from trytond.model import Model
 from trytond.exceptions import UserError
@@ -13,17 +14,26 @@ class FormulaParser(Model):
     __slots__ = ('_string', '_index', '_vars')
 
     def __init__(self, string, vars={}, id=None, **kwargs):
-        self._string = string.replace('{', '').replace('}', '')
+        def _clean_variable(variable):
+            return variable.replace(
+                '{', '').replace(
+                '}', '').replace(
+                '.', '')
+        self._string = string
+        for var in re.findall(r'\{.*?\}', string):
+            clean_var = _clean_variable(var)
+            self._string = self._string.replace(var, clean_var)
         self._index = 0
         self._vars = {
             'pi': 3.141592653589793,
             'e': 2.718281828459045,
             }
         for var in list(vars.keys()):
-            if self._vars.get(var) is not None:
+            clean_var = _clean_variable(var)
+            if self._vars.get(clean_var) is not None:
                 raise UserError(gettext(
                     'lims.msg_variable_redefine', variable=var))
-            self._vars[var] = vars[var]
+            self._vars[clean_var] = vars[var]
         super().__init__(id, **kwargs)
 
     def getValue(self):
