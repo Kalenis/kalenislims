@@ -507,6 +507,19 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
+<!-- Sample Package -->
+
+        <record model="ir.ui.view" id="sample_package_view_form">
+            <field name="model">lims.sample.package</field>
+            <field name="type">form</field>
+            <field name="name">sample_package_form</field>
+        </record>
+        <record model="ir.ui.view" id="sample_package_view_list">
+            <field name="model">lims.sample.package</field>
+            <field name="type">tree</field>
+            <field name="name">sample_package_list</field>
+        </record>
+
 <!-- Zone -->
 
         <record model="ir.ui.view" id="lims_zone_view_form">

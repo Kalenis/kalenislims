@@ -2160,8 +2160,9 @@ class EntryLabels(Report):
         labels = []
         for entry in records:
             for sample in entry.samples:
-                for fraction in sample.fractions:
-                    for i in range(fraction.packages_quantity):
-                        labels.append(fraction)
+                for package in sample.packages:
+                    for i in range(package.quantity):
+                        for fraction in sample.fractions:
+                            labels.append(fraction)
         report_context['labels'] = labels
         return report_context

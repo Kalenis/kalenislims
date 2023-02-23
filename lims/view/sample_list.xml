@@ -14,9 +14,7 @@
     <field name="sample_client_description"/>
     <field name="product_type_view"/>
     <field name="matrix_view"/>
-    <field name="package_type"/>
-    <field name="package_state"/>
-    <field name="packages_quantity"/>
+    <field name="packages_string"/>
     <field name="restricted_entry"/>
     <field name="zone"/>
     <field name="trace_report"/>

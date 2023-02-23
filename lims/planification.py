@@ -2634,7 +2634,11 @@ class AddFractionRMBMZ(Wizard):
             'zone': zone_id,
             'label': self.start.label,
             'obj_description': obj_description,
-            'packages_quantity': 1,
+            'packages': [('create', [{
+                'quantity': 1,
+                'type': fraction_type.default_package_type.id,
+                'state': fraction_type.default_fraction_state.id,
+                }])],
             'fractions': [],
             }])
 
@@ -2643,9 +2647,6 @@ class AddFractionRMBMZ(Wizard):
             'sample': new_sample.id,
             'type': fraction_type.id,
             'storage_location': laboratory.related_location.id,
-            'packages_quantity': 1,
-            'package_type': fraction_type.default_package_type.id,
-            'fraction_state': fraction_type.default_fraction_state.id,
             'services': [],
             }
         if fraction_type.max_storage_time:
@@ -3079,7 +3080,11 @@ class AddFractionBRE(Wizard):
             'zone': zone_id,
             'label': self.start.label,
             'obj_description': obj_description,
-            'packages_quantity': 1,
+            'packages': [('create', [{
+                'quantity': 1,
+                'type': fraction_type.default_package_type.id,
+                'state': fraction_type.default_fraction_state.id,
+                }])],
             'fractions': [],
             }])
 
@@ -3092,9 +3097,6 @@ class AddFractionBRE(Wizard):
             'sample': new_sample.id,
             'type': fraction_type.id,
             'storage_location': laboratory.related_location.id,
-            'packages_quantity': 1,
-            'package_type': fraction_type.default_package_type.id,
-            'fraction_state': fraction_type.default_fraction_state.id,
             'services': [],
             'bre_product_type': new_sample.product_type.id,
             'bre_matrix': new_sample.matrix.id,
@@ -3444,7 +3446,11 @@ class AddFractionMRT(Wizard):
             'zone': zone_id,
             'label': self.start.label,
             'obj_description': obj_description,
-            'packages_quantity': 1,
+            'packages': [('create', [{
+                'quantity': 1,
+                'type': fraction_type.default_package_type.id,
+                'state': fraction_type.default_fraction_state.id,
+                }])],
             'fractions': [],
             }])
 
@@ -3453,9 +3459,6 @@ class AddFractionMRT(Wizard):
             'sample': new_sample.id,
             'type': fraction_type.id,
             'storage_location': laboratory.related_location.id,
-            'packages_quantity': 1,
-            'package_type': fraction_type.default_package_type.id,
-            'fraction_state': fraction_type.default_fraction_state.id,
             'services': [],
             'mrt_product_type': new_sample.product_type.id,
             'mrt_matrix': new_sample.matrix.id,
@@ -4810,7 +4813,11 @@ class CreateFractionControl(Wizard):
             'zone': zone_id,
             'label': self.start.label,
             'obj_description': obj_description,
-            'packages_quantity': 1,
+            'packages': [('create', [{
+                'quantity': 1,
+                'type': fraction_type.default_package_type.id,
+                'state': fraction_type.default_fraction_state.id,
+                }])],
             'fractions': [],
             }])
 
@@ -4819,9 +4826,6 @@ class CreateFractionControl(Wizard):
             'sample': new_sample.id,
             'type': fraction_type.id,
             'storage_location': laboratory.related_location.id,
-            'packages_quantity': 1,
-            'package_type': fraction_type.default_package_type.id,
-            'fraction_state': fraction_type.default_fraction_state.id,
             'services': [],
             'con_type': self.start.type,
             }
@@ -6062,10 +6066,6 @@ class PlanificationWorksheetMethodReport(Report):
                                 '', notebook_line.service.comments or '',
                                 notebook_line.service.fraction.comments or '')
 
-                        if fraction.packages_quantity != 0.0:
-                            pack_quant = str(fraction.packages_quantity)
-                        else:
-                            pack_quant = ''
                         record = {
                             'order': order,
                             'number': number,
@@ -6081,9 +6081,7 @@ class PlanificationWorksheetMethodReport(Report):
                             'urgent': 'SI' if notebook_line.urgent else '',
                             'comments': comments,
                             'planification_code': planification.code,
-                            'package_type':
-                                pack_quant + ' ' +
-                                fraction.package_type.description,
+                            'package_type': fraction.packages_string,
                             'methods': {},
                             'sample_obj_description': (
                                 fraction.sample.obj_description.description
@@ -6243,10 +6241,6 @@ class PlanificationWorksheetReport(Report):
                                 '', notebook_line.service.comments or '',
                                 notebook_line.service.fraction.comments or '')
 
-                        if fraction.packages_quantity != 0.0:
-                            pack_quant = str(fraction.packages_quantity)
-                        else:
-                            pack_quant = ''
                         record = {
                             'order': order,
                             'number': number,
@@ -6264,9 +6258,7 @@ class PlanificationWorksheetReport(Report):
                             'urgent': 'SI' if notebook_line.urgent else '',
                             'comments': comments,
                             'planification_code': planification.code,
-                            'package_type':
-                                pack_quant + ' ' +
-                                fraction.package_type.description,
+                            'package_type': fraction.packages_string,
                             'methods': {},
                             'sample_obj_description': (
                                 fraction.sample.obj_description.description

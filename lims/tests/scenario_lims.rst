@@ -83,13 +83,15 @@ Create Samples::
     >>> create_sample.form.sample_client_description = 'Wine'
     >>> create_sample.form.product_type = product_type
     >>> create_sample.form.matrix = matrix
-    >>> create_sample.form.fraction_state = fraction_state
-    >>> create_sample.form.package_type = package_type
-    >>> create_sample.form.packages_quantity = 1
     >>> create_sample.form.zone = zone
     >>> create_sample.form.fraction_type = fraction_type
     >>> create_sample.form.storage_location = storage_location
     >>> create_sample.form.labels = 'LBL-001\nLBL-002\nLBL-003'
+
+    >>> package = create_sample.form.packages.new()
+    >>> package.quantity = 1
+    >>> package.type = package_type
+    >>> package.state = fraction_state
 
     >>> service = create_sample.form.services.new()
     >>> service.analysis = analysis

@@ -20,16 +20,12 @@
             <field name="type"/>
             <label name="storage_location"/>
             <field name="storage_location"/>
-            <label name="fraction_state"/>
-            <field name="fraction_state"/>
+            <label name="packages_string"/>
+            <field name="packages_string"/>
             <group col="2" colspan="2" id="storage_time">
                 <label name="storage_time"/>
                 <field name="storage_time"/>
             </group>
-            <label name="package_type"/>
-            <field name="package_type"/>
-            <label name="packages_quantity"/>
-            <field name="packages_quantity"/>
             <label name="expiry_date"/>
             <field name="expiry_date"/>
             <label name="discharge_date"/>

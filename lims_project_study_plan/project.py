@@ -1072,9 +1072,7 @@ class ProjectGLPReport02(Report):
 
             objects[fraction.storage_location.id]['samples'].append({
                 'number': fraction.get_formated_number('pt-m-sy-sn-fn'),
-                'packages': '%s %s' % (fraction.packages_quantity or '',
-                    fraction.package_type.description if fraction.package_type
-                    else ''),
+                'packages': fraction.packages_string,
                 'entry_date': fraction.sample.date2,
                 'label': fraction.sample.label,
                 'sample_weight': fraction.sample.sample_weight,
@@ -1166,9 +1164,7 @@ class ProjectGLPReport03(Report):
             objects.append({
                 'number': fraction.get_formated_number('pt-m-sy-sn-fn'),
                 'type': fraction.type.code,
-                'packages': '%s %s' % (fraction.packages_quantity or '',
-                    fraction.package_type.description if fraction.package_type
-                    else ''),
+                'packages': fraction.packages_string,
                 'storage_location': fraction.storage_location.code,
                 'entry_date': fraction.sample.date2,
                 'countersample_location': (fraction.countersample_location.code
@@ -1329,9 +1325,7 @@ class ProjectGLPReport05(Report):
             objects.append({
                 'number': fraction.get_formated_number('pt-m-sy-sn-fn'),
                 'type': fraction.type.code,
-                'packages': '%s %s' % (fraction.packages_quantity or '',
-                    fraction.package_type.description if fraction.package_type
-                    else ''),
+                'packages': fraction.packages_string,
                 'storage_location': fraction.storage_location.code,
                 'entry_date': fraction.sample.date2,
                 'countersample_location': (fraction.countersample_location.code
@@ -1466,9 +1460,7 @@ class ProjectGLPReport07(Report):
         for fraction in fractions:
             objects.append({
                 'number': fraction.get_formated_number('sy-sn-fn'),
-                'packages': '%s %s' % (fraction.packages_quantity or '',
-                    fraction.package_type.description if fraction.package_type
-                    else ''),
+                'packages': fraction.packages_string,
                 'reception_date': fraction.sample.reception_date,
                 'application_date': fraction.sample.application_date,
                 'sampling_date': fraction.sample.sampling_date,

@@ -199,9 +199,7 @@ class ProjectWaterSampling(Report):
             objects.append({
                 'number': fraction.get_formated_number('pt-m-sy-sn-fn'),
                 'type': fraction.type.code,
-                'packages': '%s %s' % (fraction.packages_quantity or '',
-                    fraction.package_type.description if fraction.package_type
-                    else ''),
+                'packages': fraction.packages_string,
                 'sampling_point': (fraction.sample.sampling_point
                     if fraction.sample.sampling_point else ''),
                 'gps_coordinates': (fraction.sample.gps_coordinates

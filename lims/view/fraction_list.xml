@@ -17,9 +17,7 @@
     <field name="discharge_date"/>
     <field name="countersample_date"/>
     <field name="countersample_location"/>
-    <field name="fraction_state"/>
-    <field name="package_type"/>
-    <field name="packages_quantity"/>
+    <field name="packages_string"/>
     <field name="shared"/>
     <field name="current_location"/>
     <field name="has_results_report"/>

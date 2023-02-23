@@ -171,7 +171,11 @@ class TakeSample(Wizard):
             'zone': zone_id,
             'label': self.start.label,
             'obj_description': obj_description,
-            'packages_quantity': 1,
+            'packages': [('create', [{
+                'quantity': 1,
+                'type': fraction_type.default_package_type.id,
+                'state': fraction_type.default_fraction_state.id,
+                }])],
             'fractions': [],
             }])
 
@@ -180,9 +184,6 @@ class TakeSample(Wizard):
             'sample': new_sample.id,
             'type': fraction_type.id,
             'storage_location': quality_config.sample_location.id,
-            'packages_quantity': 1,
-            'package_type': fraction_type.default_package_type.id,
-            'fraction_state': fraction_type.default_fraction_state.id,
             'services': [],
             }
         if fraction_type.max_storage_time:
@@ -311,7 +312,11 @@ class CountersampleCreate(Wizard):
                 'zone': sample.zone and sample.zone.id or None,
                 'label': sample.label,
                 'obj_description': sample.obj_description,
-                'packages_quantity': sample.packages_quantity,
+                'packages': [('create', [{
+                    'quantity': p.quantity,
+                    'type': p.type.id,
+                    'state': p.state.id,
+                    } for p in sample.packages])],
                 'countersample_original_sample': sample.id,
                 'test_state': 'countersample',
                 'comments': self.ask.comments,
@@ -323,9 +328,6 @@ class CountersampleCreate(Wizard):
                 'sample': new_countersample.id,
                 'type': sample.fractions[0].type.id,
                 'storage_location': self.ask.location.id,
-                'packages_quantity': sample.packages_quantity,
-                'package_type': sample.fractions[0].package_type.id,
-                'fraction_state': sample.fractions[0].fraction_state.id,
                 'storage_time': sample.fractions[0].storage_time,
                 'countersample_location': self.ask.location.id,
                 'countersample_date': Date.today(),

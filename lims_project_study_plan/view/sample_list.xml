@@ -5,8 +5,7 @@
     <field name="product_type_view"/>
     <field name="matrix_view"/>
     <field name="label"/>
-    <field name="package_type"/>
-    <field name="packages_quantity"/>
+    <field name="packages_string"/>
     <field name="application_date"/>
     <field name="sampling_date"/>
     <field name="treatment"/>

@@ -8,6 +8,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal
 from sql.conditionals import Case
+from sql import Literal
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
@@ -1631,17 +1632,13 @@ class Fraction(ModelSQL, ModelView):
         states=_states, depends=_depends)
     storage_time = fields.Integer('Storage time (in months)', required=True,
         states=_states, depends=_depends)
-    packages_quantity = fields.Integer('Packages quantity', required=True,
-        states=_states, depends=_depends)
-    package_type = fields.Many2One('lims.packaging.type', 'Package type',
-        required=True, states=_states, depends=_depends)
+    packages_string = fields.Function(fields.Char('Packages'),
+        'get_packages_string')
     expiry_date = fields.Date('Expiry date', states={'readonly': True})
     discharge_date = fields.Date('Discharge date', readonly=True)
     countersample_location = fields.Many2One('stock.location',
         'Countersample location', readonly=True)
     countersample_date = fields.Date('Countersample date', readonly=True)
-    fraction_state = fields.Many2One('lims.packaging.integrity',
-        'Fraction state', required=True, states=_states, depends=_depends)
     services = fields.One2Many('lims.service', 'fraction', 'Services',
         states={'readonly': Bool(Eval('button_manage_services_available'))},
         context={
@@ -1766,9 +1763,40 @@ class Fraction(ModelSQL, ModelView):
                 },
             })
 
-    @staticmethod
-    def default_packages_quantity():
-        return 1
+    @classmethod
+    def __register__(cls, module_name):
+        table_h = cls.__table_handler__(module_name)
+        packages_quantity_exist = table_h.column_exist('packages_quantity')
+        super().__register__(module_name)
+        if packages_quantity_exist:
+            cls._migrate_packages()
+            table_h.drop_column('packages_quantity')
+            table_h.drop_column('package_type')
+            table_h.drop_column('fraction_state')
+
+    @classmethod
+    def _migrate_packages(cls):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        SamplePackage = pool.get('lims.sample.package')
+
+        fraction_table = cls.__table__()
+        sample_package_table = SamplePackage.__table__()
+
+        cursor.execute(*fraction_table.select(
+            fraction_table.sample,
+            fraction_table.packages_quantity,
+            fraction_table.package_type,
+            fraction_table.fraction_state,
+            where=Literal(True)))
+        vals = cursor.fetchall()
+        if vals:
+            cursor.execute(*sample_package_table.insert([
+                    sample_package_table.sample,
+                    sample_package_table.quantity,
+                    sample_package_table.type,
+                    sample_package_table.state,
+                    ], vals))
 
     @staticmethod
     def default_storage_time():
@@ -1906,9 +1934,6 @@ class Fraction(ModelSQL, ModelView):
             'type': _many2one(self.type),
             'storage_location': _many2one(self.storage_location),
             'storage_time': _integer(self.storage_time),
-            'packages_quantity': _integer(self.packages_quantity),
-            'package_type': _many2one(self.package_type),
-            'fraction_state': _many2one(self.fraction_state),
             'shared': _boolean(self.shared),
             'comments': _string(self.comments),
             }
@@ -2156,42 +2181,12 @@ class Fraction(ModelSQL, ModelView):
                 return result['label'][self.id]
             return ''
 
-    @staticmethod
-    def default_package_type():
-        if Transaction().context.get('package_type'):
-            return Transaction().context.get('package_type')
-        return None
-
-    @fields.depends('sample', '_parent_sample.package_type')
-    def on_change_with_package_type(self, name=None):
-        if self.sample:
-            result = self.get_sample_field((self,), ('package_type',))
-            return result['package_type'][self.id]
-        return None
-
-    @staticmethod
-    def default_fraction_state():
-        if Transaction().context.get('fraction_state'):
-            return Transaction().context.get('fraction_state')
-        return None
-
-    @fields.depends('sample', '_parent_sample.package_state')
-    def on_change_with_fraction_state(self, name=None):
-        if self.sample:
-            result = self.get_sample_field((self,), ('fraction_state',))
-            return result['fraction_state'][self.id]
-        return None
-
     @classmethod
     def get_sample_field(cls, fractions, names):
         result = {}
         for name in names:
             result[name] = {}
-            if name == 'fraction_state':
-                for f in fractions:
-                    field = getattr(f.sample, 'package_state', None)
-                    result[name][f.id] = field.id if field else None
-            elif cls._fields[name]._type == 'many2one':
+            if cls._fields[name]._type == 'many2one':
                 for f in fractions:
                     field = getattr(f.sample, name, None)
                     result[name][f.id] = field.id if field else None
@@ -2236,6 +2231,14 @@ class Fraction(ModelSQL, ModelView):
     @classmethod
     def search_entry_state(cls, name, clause):
         return [('sample.entry.state',) + tuple(clause[1:])]
+
+    def get_packages_string(self, name=None):
+        res = ''
+        for package in self.sample.packages:
+            if res:
+                res += ' / '
+            res += '%s %s' % (package.quantity, package.type.description)
+        return res
 
     @fields.depends('confirmed')
     def on_change_with_button_manage_services_available(self, name=None):
@@ -2384,7 +2387,7 @@ class Fraction(ModelSQL, ModelView):
             move = Move()
         move.product = product.id
         move.fraction = self.id
-        move.quantity = self.packages_quantity
+        move.quantity = 1
         move.uom = product.default_uom
         move.from_location = from_location
         move.to_location = self.storage_location
@@ -2784,10 +2787,9 @@ class Sample(ModelSQL, ModelView):
     obj_description_manual = fields.Char('Manual Objective description',
         translate=True, states={'readonly': Bool(Eval('obj_description'))},
         depends=['obj_description'])
-    package_state = fields.Many2One('lims.packaging.integrity',
-        'Package state')
-    package_type = fields.Many2One('lims.packaging.type', 'Package type')
-    packages_quantity = fields.Integer('Packages quantity', required=True)
+    packages = fields.One2Many('lims.sample.package', 'sample', 'Packages')
+    packages_string = fields.Function(fields.Char('Packages'),
+        'get_packages_string')
     restricted_entry = fields.Boolean('Restricted entry',
         states={'readonly': True})
     zone = fields.Many2One('lims.zone', 'Zone',
@@ -2803,8 +2805,6 @@ class Sample(ModelSQL, ModelView):
             'product_type': Eval('product_type'), 'matrix': Eval('matrix'),
             'sample': Eval('id'), 'entry': Eval('entry'),
             'party': Eval('party'), 'label': Eval('label'),
-            'package_type': Eval('package_type'),
-            'fraction_state': Eval('package_state'),
             },
         depends=['analysis_domain', 'typification_domain', 'entry',
             'party', 'label'])
@@ -2887,6 +2887,7 @@ class Sample(ModelSQL, ModelView):
         qty_lines_pending_acceptance_exist = table_h.column_exist(
             'qty_lines_pending_acceptance')
         party_exist = table_h.column_exist('party')
+        packages_quantity_exist = table_h.column_exist('packages_quantity')
         super().__register__(module_name)
         if (not qty_lines_pending_exist or
                 not qty_lines_pending_acceptance_exist):
@@ -2899,6 +2900,10 @@ class Sample(ModelSQL, ModelView):
                 'SET party = e.party FROM '
                 '"' + Entry._table + '" e '
                 'WHERE e.id = s.entry')
+        if packages_quantity_exist:
+            table_h.drop_column('packages_quantity')
+            table_h.drop_column('package_type')
+            table_h.drop_column('package_state')
 
     @staticmethod
     def default_date():
@@ -3000,6 +3005,21 @@ class Sample(ModelSQL, ModelView):
                     sample_dict['obj_description_manual'], sample_id,
                     default['obj_description_manual_lang']))
 
+            # packages
+            for package in sample.packages:
+                package_dict = package._get_dict_for_fast_copy()
+                package_dict['sample'] = str(sample_id)
+
+                query = "INSERT INTO lims_sample_package ("
+                query += ", ".join([str(x) for x in package_dict.keys()])
+                query += ") VALUES ("
+                query += ", ".join([str(x) for x in package_dict.values()])
+                query += ") RETURNING id"
+                cursor.execute(query)
+                row = cursor.fetchone()
+                if not row:
+                    raise
+
             # fractions
             for fraction in sample.fractions:
                 fraction_dict = fraction._get_dict_for_fast_copy()
@@ -3098,9 +3118,6 @@ class Sample(ModelSQL, ModelView):
             'obj_description': _many2one(self.obj_description),
             'obj_description_manual': _string(
                 self.obj_description_manual),
-            'package_state': _many2one(self.package_state),
-            'package_type': _many2one(self.package_type),
-            'packages_quantity': _integer(self.packages_quantity),
             'restricted_entry': _boolean(self.restricted_entry),
             'zone': _many2one(self.zone),
             'trace_report': _boolean(self.trace_report),
@@ -3348,6 +3365,14 @@ class Sample(ModelSQL, ModelView):
         if Service.search_count([('sample', '=', self.id)]) != 0:
             return True
         return False
+
+    def get_packages_string(self, name=None):
+        res = ''
+        for package in self.packages:
+            if res:
+                res += ' / '
+            res += '%s %s' % (package.quantity, package.type.description)
+        return res
 
     @fields.depends('product_type', 'matrix')
     def on_change_with_obj_description(self):
@@ -4052,6 +4077,47 @@ class Sample(ModelSQL, ModelView):
                 'AND nl.acceptance_date IS NULL',
             (self.id,))
         return cursor.fetchone()[0]
+
+
+class SamplePackage(ModelSQL, ModelView):
+    'Sample Package'
+    __name__ = 'lims.sample.package'
+
+    sample = fields.Many2One('lims.sample', 'Sample', required=True,
+        ondelete='CASCADE', select=True)
+    quantity = fields.Integer('Quantity', required=True)
+    type = fields.Many2One('lims.packaging.type', 'Type', required=True)
+    state = fields.Many2One('lims.packaging.integrity', 'State', required=True)
+
+    def _get_dict_for_fast_copy(self):
+        def _many2one(value):
+            if value:
+                return str(value.id)
+            return "NULL"
+
+        def _string(value):
+            if value:
+                return "'%s'" % str(value)
+            return "NULL"
+
+        def _integer(value):
+            if value is not None:
+                return str(value)
+            return "NULL"
+
+        def _boolean(value):
+            if value:
+                return "TRUE"
+            return "FALSE"
+
+        res = {
+            'create_uid': _many2one(self.create_uid),
+            'create_date': _string(self.create_date),
+            'quantity': _integer(self.quantity),
+            'type': _many2one(self.type),
+            'state': _many2one(self.state),
+            }
+        return res
 
 
 class DuplicateSampleStart(ModelView):
@@ -5330,7 +5396,7 @@ class CountersampleStorage(Wizard):
                 move = Move()
             move.product = product.id
             move.fraction = fraction.id
-            move.quantity = fraction.packages_quantity
+            move.quantity = 1
             move.uom = product.default_uom
             move.from_location = from_location
             move.to_location = to_location
@@ -5533,7 +5599,7 @@ class CountersampleStorageRevert(Wizard):
                 move = Move()
             move.product = product.id
             move.fraction = fraction.id
-            move.quantity = fraction.packages_quantity
+            move.quantity = 1
             move.uom = product.default_uom
             move.from_location = from_location
             move.to_location = to_location
@@ -5723,7 +5789,7 @@ class CountersampleDischarge(Wizard):
                 move = Move()
             move.product = product.id
             move.fraction = fraction.id
-            move.quantity = fraction.packages_quantity
+            move.quantity = 1
             move.uom = product.default_uom
             move.from_location = from_location
             move.to_location = to_location
@@ -5918,7 +5984,7 @@ class FractionDischarge(Wizard):
                 move = Move()
             move.product = product.id
             move.fraction = fraction.id
-            move.quantity = fraction.packages_quantity
+            move.quantity = 1
             move.uom = product.default_uom
             move.from_location = from_location
             move.to_location = to_location
@@ -6102,7 +6168,7 @@ class FractionDischargeRevert(Wizard):
                 move = Move()
             move.product = product.id
             move.fraction = fraction.id
-            move.quantity = fraction.packages_quantity
+            move.quantity = 1
             move.uom = product.default_uom
             move.from_location = from_location
             move.to_location = to_location
@@ -6175,11 +6241,7 @@ class CreateSampleStart(ModelView):
                 ~Eval('foreign_language')),
             },
         depends=['obj_description', 'foreign_language'])
-    fraction_state = fields.Many2One('lims.packaging.integrity',
-        'Package state', required=True)
-    package_type = fields.Many2One('lims.packaging.type', 'Package type',
-        required=True)
-    packages_quantity = fields.Integer('Packages quantity', required=True)
+    packages = fields.One2Many('lims.create_sample.package', None, 'Packages')
     restricted_entry = fields.Boolean('Restricted entry',
         states={'readonly': True})
     zone = fields.Many2One('lims.zone', 'Zone',
@@ -6298,20 +6360,18 @@ class CreateSampleStart(ModelView):
                 self.matrix and self.matrix.restricted_entry and
                 self.zone and self.zone.restricted_entry)
 
-    @fields.depends('fraction_type', 'storage_location', 'package_type',
-        'fraction_state')
+    @fields.depends('fraction_type', 'storage_location')
     def on_change_fraction_type(self):
         if not self.fraction_type:
             return
         if (not self.storage_location and
                 self.fraction_type.default_storage_location):
             self.storage_location = self.fraction_type.default_storage_location
-        if (not self.package_type and
-                self.fraction_type.default_package_type):
-            self.package_type = self.fraction_type.default_package_type
-        if (not self.fraction_state and
-                self.fraction_type.default_fraction_state):
-            self.fraction_state = self.fraction_type.default_fraction_state
+        self.packages = [CreateSamplePackage(
+                quantity=1,
+                type=self.fraction_type.default_package_type,
+                state=self.fraction_type.default_fraction_state,
+                )]
 
     @fields.depends('fraction_type', 'storage_location',
         '_parent_fraction_type.max_storage_time',
@@ -6338,6 +6398,15 @@ class CreateSampleStart(ModelView):
             (self.product_type.id, self.matrix.id))
         res = cursor.fetchone()
         return res and res[0] or None
+
+
+class CreateSamplePackage(ModelView):
+    'Sample Package'
+    __name__ = 'lims.create_sample.package'
+
+    quantity = fields.Integer('Quantity', required=True)
+    type = fields.Many2One('lims.packaging.type', 'Type', required=True)
+    state = fields.Many2One('lims.packaging.integrity', 'State', required=True)
 
 
 class CreateSampleService(ModelView):
@@ -6874,13 +6943,17 @@ class CreateSample(Wizard):
                 'type': self.start.fraction_type.id,
                 'storage_location': self.start.storage_location.id,
                 'storage_time': self.start.storage_time,
-                'packages_quantity': self.start.packages_quantity,
                 'shared': shared,
-                'package_type': self.start.package_type.id,
-                'fraction_state': self.start.fraction_state.id,
                 }
             if services_defaults:
                 fraction_defaults['services'] = [('create', services_defaults)]
+
+            # packages data
+            packages_defaults = [{
+                'quantity': p.quantity,
+                'type': p.type.id,
+                'state': p.state.id,
+                } for p in self.start.packages]
 
             sample_defaults = {
                 'entry': entry_id,
@@ -6893,9 +6966,6 @@ class CreateSample(Wizard):
                 'matrix': self.start.matrix.id,
                 'obj_description': obj_description_id,
                 'obj_description_manual': self.start.obj_description_manual,
-                'package_state': self.start.fraction_state.id,
-                'package_type': self.start.package_type.id,
-                'packages_quantity': self.start.packages_quantity,
                 'restricted_entry': restricted_entry,
                 'zone': zone_id,
                 'trace_report': trace_report,
@@ -6903,6 +6973,7 @@ class CreateSample(Wizard):
                 'comments': comments,
                 'variety': variety_id,
                 'label': label,
+                'packages': [('create', packages_defaults)],
                 'fractions': [('create', [fraction_defaults])],
                 'attributes': attributes,
                 }
@@ -7235,9 +7306,7 @@ class CountersampleStorageReport(Report):
             objects[fraction.current_location.id]['fractions'].append({
                 'number': fraction.get_formated_number('pt-m-sy-sn-fn'),
                 'type': fraction.type.code,
-                'packages': '%s %s' % (fraction.packages_quantity or '',
-                    fraction.package_type.description if fraction.package_type
-                    else ''),
+                'packages': fraction.packages_string,
                 'entry_date': fraction.sample.date2,
                 'results_reports': cls.get_fraction_results_reports(
                     fraction.id),
@@ -7392,9 +7461,7 @@ class CountersampleDischargeReport(Report):
             objects[fraction.current_location.id]['fractions'].append({
                 'number': fraction.get_formated_number('pt-m-sy-sn-fn'),
                 'type': fraction.type.code,
-                'packages': '%s %s' % (fraction.packages_quantity or '',
-                    fraction.package_type.description if fraction.package_type
-                    else ''),
+                'packages': fraction.packages_string,
                 'entry_date': fraction.sample.date2,
                 'results_reports': cls.get_fraction_results_reports(
                     fraction.id),

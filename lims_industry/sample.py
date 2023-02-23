@@ -603,11 +603,13 @@ class CreateSampleStart(metaclass=PoolMeta):
     def on_change_label(self):
         self.labels = self.label
 
-    @fields.depends('packages_quantity', 'package_type')
+    @fields.depends('packages')
     def on_change_with_ind_volume(self, name=None):
-        if (self.packages_quantity and
-                self.package_type and self.package_type.capacity):
-            return (self.packages_quantity * self.package_type.capacity)
+        if self.packages:
+            ind_volume = 0
+            for p in self.packages:
+                ind_volume += (p.quantity * p.type.capacity)
+            return ind_volume
         return None
 
     @fields.depends('fraction_type', 'sampling_type')
