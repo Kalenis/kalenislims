@@ -13,10 +13,9 @@ class Location(metaclass=PoolMeta):
     __name__ = 'stock.location'
 
     storage_time = fields.Integer('Storage time (in months)')
-    internal_shipment_to_location_restrictions =\
-        fields.Many2Many('stock.location-stock.location',
-                         'from_location','to_location',
-                         'Internal Shipment To Location Restrictions')
+    internal_shipment_to_location_restrictions = fields.Many2Many(
+        'stock.location-stock.location', 'from_location', 'to_location',
+        'Internal Shipment To Location Restrictions')
 
     @classmethod
     def search_rec_name(cls, name, clause):
@@ -82,13 +81,16 @@ class ShipmentInternal(metaclass=PoolMeta):
     __name__ = 'stock.shipment.internal'
 
     to_location_domain = fields.Function(fields.Many2Many(
-        'stock.location',None, None,
-        'Internal Shipment To Location Restrictions Domain'), 'on_change_with_to_location_domain')
+        'stock.location', None, None,
+        'Internal Shipment To Location Restrictions Domain'),
+        'on_change_with_to_location_domain')
 
     @fields.depends('from_location')
     def on_change_with_to_location_domain(self, name=None):
-        if self.from_location and self.from_location.internal_shipment_to_location_restrictions:
-            return [x.id for x in self.from_location.internal_shipment_to_location_restrictions]
+        if (self.from_location and
+                self.from_location.internal_shipment_to_location_restrictions):
+            return [x.id for x in
+                self.from_location.internal_shipment_to_location_restrictions]
         return []
 
     @classmethod
@@ -147,8 +149,8 @@ class ShipmentInternal(metaclass=PoolMeta):
         cls.to_location.domain = [
             [('type', 'in', ['view', 'storage', 'lost_found'])],
             [If(Eval('to_location_domain'),
-                ('id','in',Eval('to_location_domain')),
-                ('id','>',0))]]
+                ('id', 'in', Eval('to_location_domain')),
+                ('id', '>', 0))]]
 
 
 class LocationShipmentInternalRestrictionLocation(ModelSQL):

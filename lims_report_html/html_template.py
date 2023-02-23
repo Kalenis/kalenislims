@@ -334,7 +334,7 @@ class LimsReport(Report):
         model = action.model or data.get('model')
         if model:
             records = cls._get_records(ids, model, data)
-        oext, content = cls._execute(records, data, action)
+        oext, content = cls._execute(records, [], data, action)
         if not isinstance(content, str):
             content = bytearray(content) if bytes == str else bytes(content)
 
@@ -471,7 +471,7 @@ class LimsReport(Report):
             env = cls.get_lims_environment()
 
         report_template = env.from_string(template_string)
-        context = cls.get_context(records, header={}, data=data)
+        context = cls.get_context(records, header=[], data=data)
         context.update({
             'report': action,
             'get_image': cls.get_image,

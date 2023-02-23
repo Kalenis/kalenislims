@@ -522,7 +522,6 @@ class Service(ModelSQL, ModelView):
     def create(cls, vlist):
         pool = Pool()
         LabWorkYear = pool.get('lims.lab.workyear')
-        Sequence = pool.get('ir.sequence')
         LabMethod = pool.get('lims.lab.method')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Sample = pool.get('lims.sample')

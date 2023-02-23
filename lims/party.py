@@ -126,7 +126,7 @@ class Party(metaclass=PoolMeta):
                 ])
             if address:
                 return address[0]
-        except AttributeError:
+        except KeyError:
             pass
 
         address = Address.search([
