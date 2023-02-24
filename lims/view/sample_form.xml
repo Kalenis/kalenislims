@@ -28,6 +28,8 @@
             <field name="obj_description"/>
             <label name="obj_description_manual"/>
             <field name="obj_description_manual"/>
+            <label name="packages_string"/>
+            <field name="packages_string"/>
             <label name="restricted_entry"/>
             <field name="restricted_entry"/>
             <label name="zone"/>
@@ -36,9 +38,10 @@
             <field name="trace_report"/>
             <label name="variety"/>
             <field name="variety"/>
-            <field name="packages" colspan="4" mode="form,tree"
-                view_ids="lims.sample_package_view_form,lims.sample_package_view_list"/>
             <field name="fractions" colspan="4"/>
+        </page>
+        <page string="Packages" id="packages">
+            <field name="packages" colspan="4"/>
         </page>
         <page string="Attributes" id="attributes">
             <field name="attributes" colspan="4"/>

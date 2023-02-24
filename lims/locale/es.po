@@ -1320,8 +1320,8 @@ msgid "Manual Objective description (foreign language)"
 msgstr "Descripción objetiva manual (idioma extranjero)"
 
 msgctxt "field:lims.create_sample.start,packages:"
-msgid "Packages"
-msgstr "Envases"
+msgid "Packages per sample"
+msgstr "Envases por muestra"
 
 msgctxt "field:lims.create_sample.start,party:"
 msgid "Party"
@@ -15180,6 +15180,10 @@ msgstr "Confirmar"
 msgctxt "view:lims.sample:"
 msgid "General"
 msgstr "General"
+
+msgctxt "view:lims.sample:"
+msgid "Packages"
+msgstr "Envases"
 
 msgctxt "view:lims.sample:"
 msgid "Report"

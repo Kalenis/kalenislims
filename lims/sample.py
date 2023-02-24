@@ -6241,7 +6241,8 @@ class CreateSampleStart(ModelView):
                 ~Eval('foreign_language')),
             },
         depends=['obj_description', 'foreign_language'])
-    packages = fields.One2Many('lims.create_sample.package', None, 'Packages')
+    packages = fields.One2Many('lims.create_sample.package', None,
+        'Packages per sample')
     restricted_entry = fields.Boolean('Restricted entry',
         states={'readonly': True})
     zone = fields.Many2One('lims.zone', 'Zone',
