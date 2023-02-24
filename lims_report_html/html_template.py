@@ -331,10 +331,11 @@ class LimsReport(Report):
             action = ActionReport(action_id)
 
         records = []
+        header = {}
         model = action.model or data.get('model')
         if model:
             records = cls._get_records(ids, model, data)
-        oext, content = cls._execute(records, [], data, action)
+        oext, content = cls._execute(records, header, data, action)
         if not isinstance(content, str):
             content = bytearray(content) if bytes == str else bytes(content)
 
