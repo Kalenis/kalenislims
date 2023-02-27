@@ -37,5 +37,6 @@
         <button name="activate" string="Activate"/>
         <button name="disable" string="Disable"/>
         <button name="new_version" string="New Version"/>
+        <button name="reactivate" string="Reactivate"/>
     </group>
 </form>

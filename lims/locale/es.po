@@ -14469,6 +14469,10 @@ msgid "New Version"
 msgstr "Nueva versión"
 
 msgctxt "view:lims.lab.method:"
+msgid "Reactivate"
+msgstr "Reactivar"
+
+msgctxt "view:lims.lab.method:"
 msgid "Times"
 msgstr "Tiempos"
 

@@ -191,6 +191,7 @@ class LabMethod(Workflow, ModelSQL, ModelView):
         cls._transitions |= set((
             ('draft', 'active'),
             ('active', 'disabled'),
+            ('disabled', 'active'),
             ))
         cls._buttons.update({
             'activate': {
@@ -201,6 +202,9 @@ class LabMethod(Workflow, ModelSQL, ModelView):
                 },
             'new_version': {
                 'invisible': (Eval('state') != 'active'),
+                },
+            'reactivate': {
+                'invisible': (Eval('state') != 'disabled'),
                 },
             })
         cls.__rpc__.update({
@@ -288,6 +292,12 @@ class LabMethod(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('disabled')
     def disable(cls, methods):
+        pass
+
+    @classmethod
+    @ModelView.button_action('lims.wiz_method_new_version')
+    @Workflow.transition('active')
+    def reactivate(cls, methods):
         pass
 
     def create_new_version(self):
