@@ -2,7 +2,7 @@
 <data>
     <xpath expr="/form/notebook/page[@id='info']/field[@name='cancel_move']"
         position="after">
-        <label name="lims_project"/>
-        <field name="lims_project"/>
+        <label name="lims_project_tas"/>
+        <field name="lims_project_tas"/>
     </xpath>
 </data>

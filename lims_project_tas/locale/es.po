@@ -10,6 +10,10 @@ msgctxt "model:ir.message,text:msg_tas_type_code_unique_id"
 msgid "TAS type code must be unique"
 msgstr "El código del tipo de SAT debe ser único"
 
+msgctxt "field:account.invoice,lims_project_tas:"
+msgid "TAS Project"
+msgstr "Proyecto SAT"
+
 msgctxt "field:lims.lab.workyear,project_tas_sequence:"
 msgid "TAS Projects Sequence"
 msgstr "Secuencia de Proyectos SAT"
