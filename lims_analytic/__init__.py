@@ -10,5 +10,8 @@ from . import stock
 def register():
     Pool.register(
         lims.Location,
-        stock.Move,
         module='lims_analytic', type_='model')
+    Pool.register(
+        stock.Move,
+        module='lims_analytic', type_='model',
+        depends=['account_stock_continental'])
