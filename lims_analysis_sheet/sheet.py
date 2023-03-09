@@ -456,6 +456,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     interface = fields.Function(fields.Many2One('lims.interface', 'Interface'),
         'get_interface')
     samples = fields.Char('Samples', readonly=True)
+    out_of_ranges = fields.Function(fields.Boolean('Out of Ranges'), 'get_out_of_ranges')
 
     @classmethod
     def __setup__(cls):
@@ -663,6 +664,45 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
     def get_interface(self, name):
         return self.compilation.interface.id
+
+    def get_out_of_ranges(self, name):
+        # TODO: improve perf
+        res = False
+        Column = Pool().get('lims.interface.column')
+        Data = Pool().get('lims.interface.data')
+        validation_column = Column.search([
+                                        ('interface','=',self.interface),
+                                        ('validation_column','=',True)
+                                        ])
+        if not len(validation_column):
+            return False
+        validation_column = validation_column[0].alias
+        with Transaction().set_context(
+                    lims_interface_table=self.compilation.table.id):
+                clause = [('compilation', '=', self.compilation.id)]
+                lines = Data.search(clause)
+                for line in lines:
+                    try:
+                        if getattr(line, validation_column):
+                            res = True
+                            break
+                    except AttributeError:
+                        pass
+                    
+        return res
+
+    @classmethod
+    def get_notebook_lines(cls, records):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+        notebook_lines = []
+        for record in records:
+            with Transaction().set_context(
+                        lims_interface_table=record.compilation.table.id):
+                    lines = Data.search([('compilation', '=', record.compilation.id)])
+                    notebook_lines += filter(None, [line.notebook_line for line in lines])
+
+        return notebook_lines
 
     @classmethod
     def create(cls, vlist):

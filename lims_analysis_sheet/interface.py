@@ -99,6 +99,7 @@ class Column(metaclass=PoolMeta):
             'readonly': Eval('interface_state') != 'draft',
             },
         depends=['interface_state'])
+    validation_column = fields.Boolean('Validation Column', help="Column used to set if the result is in ranges (should return 1 or 0)")
 
 
 class Interface(metaclass=PoolMeta):

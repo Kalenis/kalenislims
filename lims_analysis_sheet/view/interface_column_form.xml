@@ -10,5 +10,8 @@
         <field name="destination_start"/>
         <label name="destination_end"/>
         <field name="destination_end"/>
+        <label name="validation_column"/>
+        <field name="validation_column"/>
+        
     </xpath>
 </data>

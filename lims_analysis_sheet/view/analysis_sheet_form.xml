@@ -14,9 +14,11 @@
             <field name="samples"/>
             <label name="date"/>
             <field name="date"/>
-            <group id="samples" colspan="2" col="6">
+            <group id="samples" colspan="2" col="8">
                 <label name="urgent"/>
                 <field name="urgent"/>
+                <label name="out_of_ranges"/>
+                <field name="out_of_ranges"/>
                 <label name="samples_qty"/>
                 <field name="samples_qty"/>
                 <label name="completion_percentage"/>
