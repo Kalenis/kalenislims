@@ -471,8 +471,9 @@ class LimsReport(Report):
         with Transaction().set_context(locale=locale):
             env = cls.get_lims_environment()
 
+        header = {}
         report_template = env.from_string(template_string)
-        context = cls.get_context(records, header=[], data=data)
+        context = cls.get_context(records, header, data=data)
         context.update({
             'report': action,
             'get_image': cls.get_image,
