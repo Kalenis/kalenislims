@@ -417,6 +417,7 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
             open_chart.transition_compute()
             plot = tc.chart.get_plot(session_id)
             charts.append(plot)
+            OpenTrendChart.delete(session_id)
 
         div_row = '<div style="clear:both;">'
         charts_x_row = int(self.version_detail.charts_x_row) or 1
@@ -464,6 +465,7 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
             open_chart.transition_compute()
             plot = tc.chart.get_plot(session_id)
             charts.append(plot)
+            OpenTrendChart.delete(session_id)
         return charts
 
     def _get_resource(self, obj):

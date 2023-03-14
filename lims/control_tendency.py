@@ -6,6 +6,7 @@ import pandas as pd
 from io import BytesIO
 from math import sqrt
 import matplotlib.pyplot as plt
+import gc
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import (Wizard, StateTransition, StateView, StateAction,
@@ -1979,8 +1980,14 @@ class TrendChart(ModelSQL, ModelView):
                     i += 1
 
                 ax.get_figure().savefig(output, bbox_inches='tight', dpi=300)
+                plt.close('all')
                 image = output.getvalue()
                 output.close()
+            # release memory
+            del ax, df, df_interpolated
+            if ds2:
+                del df2, df2_interpolated
+            gc.collect()
             return image
 
         except (TypeError, ModuleNotFoundError):
@@ -2013,12 +2020,23 @@ class TrendChart(ModelSQL, ModelView):
 
                     ax.get_figure().savefig(output, bbox_inches='tight',
                         dpi=300)
+                    plt.close('all')
                     image = output.getvalue()
                     output.close()
+                    # release memory
+                    del ax, df, df_interpolated
+                    if ds2:
+                        del df2, df2_interpolated
+                    gc.collect()
                     return image
 
                 except (TypeError, ModuleNotFoundError):
                     pass
+            # release memory
+            del df, df_interpolated
+            if ds2:
+                del df2, df2_interpolated
+            gc.collect()
             return output.getvalue()
 
     @classmethod
