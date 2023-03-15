@@ -6884,38 +6884,22 @@ class CreateSample(Wizard):
         services_defaults = []
         if hasattr(self.start, 'services'):
             for service in self.start.services:
-                estimated_waiting_laboratory = (
-                    hasattr(service, 'estimated_waiting_laboratory') and
-                    getattr(service, 'estimated_waiting_laboratory') or None)
-                estimated_waiting_report = (
-                    hasattr(service, 'estimated_waiting_report') and
-                    getattr(service, 'estimated_waiting_report') or None)
                 explode_analysis = (hasattr(service, 'explode_analysis') and
                     getattr(service, 'explode_analysis') or False)
-                contract_number = (hasattr(service, 'contract_number') and
-                    getattr(service, 'contract_number') or None)
                 if (explode_analysis and
                         service.analysis.type in ('set', 'group')):
                     for included_analysis in self._get_included_analysis(
                             service.analysis):
-                        services_defaults.append({
+                        record = {
                             'analysis': included_analysis['analysis'],
                             'laboratory': included_analysis['laboratory'],
                             'method': included_analysis['method'],
                             'device': included_analysis['device'],
-                            'urgent': service.urgent,
-                            'priority': service.priority,
-                            'estimated_waiting_laboratory': (
-                                estimated_waiting_laboratory),
-                            'estimated_waiting_report': (
-                                estimated_waiting_report),
-                            'laboratory_date': service.laboratory_date,
-                            'report_date': service.report_date,
-                            'divide': service.divide,
-                            'contract_number': contract_number,
-                            })
+                            }
+                        record = self._get_service_data(record, service)
+                        services_defaults.append(record)
                 else:
-                    services_defaults.append({
+                    record = {
                         'analysis': service.analysis.id,
                         'laboratory': (service.laboratory.id
                             if service.laboratory else None),
@@ -6923,17 +6907,9 @@ class CreateSample(Wizard):
                             else None),
                         'device': (service.device.id if service.device
                             else None),
-                        'urgent': service.urgent,
-                        'priority': service.priority,
-                        'estimated_waiting_laboratory': (
-                            estimated_waiting_laboratory),
-                        'estimated_waiting_report': (
-                            estimated_waiting_report),
-                        'laboratory_date': service.laboratory_date,
-                        'report_date': service.report_date,
-                        'divide': service.divide,
-                        'contract_number': contract_number,
-                        })
+                        }
+                    record = self._get_service_data(record, service)
+                    services_defaults.append(record)
 
         # samples data
         samples_defaults = []
@@ -6982,6 +6958,28 @@ class CreateSample(Wizard):
             samples_defaults.append(sample_defaults)
 
         return samples_defaults
+
+    def _get_service_data(self, record, service):
+        current_record = record.copy()
+        current_record['urgent'] = service.urgent
+        current_record['priority'] = service.priority
+        current_record['laboratory_date'] = service.laboratory_date
+        current_record['report_date'] = service.report_date
+        current_record['divide'] = service.divide
+        contract_number = (hasattr(service, 'contract_number') and
+            getattr(service, 'contract_number') or None)
+        current_record['contract_number'] = contract_number
+        estimated_waiting_laboratory = (
+            hasattr(service, 'estimated_waiting_laboratory') and
+            getattr(service, 'estimated_waiting_laboratory') or None)
+        current_record['estimated_waiting_laboratory'] = (
+            estimated_waiting_laboratory)
+        estimated_waiting_report = (
+            hasattr(service, 'estimated_waiting_report') and
+            getattr(service, 'estimated_waiting_report') or None)
+        current_record['estimated_waiting_report'] = (
+            estimated_waiting_report)
+        return current_record
 
     def _get_included_analysis(self, analysis):
         cursor = Transaction().connection.cursor()

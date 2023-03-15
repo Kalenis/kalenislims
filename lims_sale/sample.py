@@ -355,8 +355,7 @@ class AddSampleService(metaclass=PoolMeta):
 
         service_create = super()._get_new_service(service, fraction)
 
-        if (not hasattr(self.start, 'sale_lines') or
-                not hasattr(self.start, 'services')):
+        if not hasattr(self.start, 'sale_lines'):
             return service_create
 
         sale_lines = {}
