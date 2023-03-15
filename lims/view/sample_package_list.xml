@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<tree editable="1">
+<tree>
     <field name="quantity"/>
     <field name="type" expand="1"/>
     <field name="state" expand="1"/>
