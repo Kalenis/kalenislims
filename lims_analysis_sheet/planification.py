@@ -108,8 +108,8 @@ class Planification(metaclass=PoolMeta):
         AnalysisSheet = pool.get('lims.analysis_sheet')
         PlanificationAnalysisSheet = pool.get(
             'lims.planification.analysis_sheet')
-
         analysis_sheets = {}
+        sheets = []
         service_details = PlanificationServiceDetail.search([
             ('detail.planification', '=', self.id),
             ('notebook_line', '!=', None),
@@ -144,7 +144,9 @@ class Planification(metaclass=PoolMeta):
                 sheet.laboratory = self.laboratory.id
                 sheet.planification = self.id
                 sheet.save()
+            sheets.append(sheet)
             sheet.create_lines(values)
+        return sheets
 
 
 class PlanificationAnalysisSheet(ModelSQL, ModelView):
