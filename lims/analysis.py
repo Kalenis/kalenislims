@@ -2723,55 +2723,64 @@ class CopyCalculatedTypification(Wizard):
 
             # check if additionals are typified
             for a in origin.additionals:
-                cursor.execute('SELECT COUNT(*) '
-                    'FROM "' + Typification._table + '" '
-                    'WHERE product_type = %s '
-                        'AND matrix = %s '
-                        'AND analysis = %s '
-                        'AND valid IS TRUE',
-                    (product_type_id, matrix_id, a.id))
-                if cursor.fetchone()[0] == 0:
+                additional_origin = Typification.search([
+                    ('product_type', '=', self.start.origin_product_type.id),
+                    ('matrix', '=', self.start.origin_matrix.id),
+                    ('analysis', '=', a.id),
+                    ('valid', '=', True),
+                    ('by_default', '=', True),
+                    ])
+                if additional_origin:  # additional origin typified
+                    additional_origin = additional_origin[0]
+                    cursor.execute('SELECT id '
+                        'FROM "' + Typification._table + '" '
+                        'WHERE product_type = %s '
+                            'AND matrix = %s '
+                            'AND analysis = %s '
+                            'AND method = %s',
+                        (product_type_id, matrix_id,
+                            additional_origin.analysis.id,
+                            additional_origin.method.id))
+                    if cursor.fetchone():  # additional destination typified
+                        continue
+
                     # Typify missing additionals
                     if typify_additionals:
-                        additional_origin = Typification.search([
-                            ('product_type', '=',
-                                self.start.origin_product_type.id),
-                            ('matrix', '=',
-                                self.start.origin_matrix.id),
-                            ('analysis', '=', a.id),
-                            ('valid', '=', True),
-                            ('by_default', '=', True),
-                            ])
-                        if additional_origin:
-                            additional_origin = additional_origin[0]
-
-                            if additional_origin not in to_copy:
-                                to_copy[additional_origin] = {
-                                    'typification': [],
-                                    'scope_version': [],
-                                    }
-                            default = {
-                                'valid': True,
-                                'product_type': product_type_id,
-                                'matrix': matrix_id,
-                                'analysis': a.id,
-                                'by_default': True,
+                        if additional_origin not in to_copy:
+                            to_copy[additional_origin] = {
+                                'typification': [],
+                                'scope_version': [],
                                 }
+                        default = {
+                            'valid': True,
+                            'product_type': product_type_id,
+                            'matrix': matrix_id,
+                            'analysis': a.id,
+                            'method': additional_origin.method.id,
+                            'by_default': True,
+                            }
+                        to_copy[additional_origin][
+                            'typification'].append(default)
+
+                        if include_accreditation_scope:
                             to_copy[additional_origin][
-                                'typification'].append(default)
+                                'scope_version'].extend(
+                                    self._get_typification_scope(
+                                        additional_origin))
 
-                            if include_accreditation_scope:
-                                to_copy[additional_origin][
-                                    'scope_version'].extend(
-                                        self._get_typification_scope(
-                                            additional_origin))
-                            continue
+                    else:  # additional destination not typified
+                        error_additionals += '* %s\n' % gettext(
+                            'lims.msg_not_typified',
+                            analysis=a.rec_name,
+                            product_type=product_type.rec_name,
+                            matrix=matrix.rec_name)
 
+                else:  # additional origin not typified
                     error_additionals += '* %s\n' % gettext(
                         'lims.msg_not_typified',
                         analysis=a.rec_name,
-                        product_type=product_type.rec_name,
-                        matrix=matrix.rec_name)
+                        product_type=self.start.origin_product_type.rec_name,
+                        matrix=self.start.origin_matrix.rec_name)
 
             if already_exists or error_additionals:
                 continue
@@ -2830,6 +2839,9 @@ class CopyCalculatedTypification(Wizard):
                         'version': v_id,
                         } for v_id in defaults['scope_version']])
 
+        if existing_typifications:
+            typifications = Typification.browse(existing_typifications)
+            Typification.write(typifications, {'valid': True})
         self.result.message = '%s' % gettext(
             'lims.msg_typification_copy_new_typifications',
             qty=len(new_typifications))
