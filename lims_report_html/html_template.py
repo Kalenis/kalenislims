@@ -426,7 +426,6 @@ class LimsReport(Report):
             for section in record.following_sections:
                 filedata = BytesIO(section.data)
                 merger.append(filedata)
-            filedata.close()
             output = BytesIO()
             merger.write(output)
             merger.close()
