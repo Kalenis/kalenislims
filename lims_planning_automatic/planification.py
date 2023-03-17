@@ -35,7 +35,8 @@ class Planification(metaclass=PoolMeta):
 
             cls.preplan([planification])
 
-            staff = [t.id for t in planification.technicians]
+            staff = [t.laboratory_professional.id
+                for t in planification.technicians]
             for f in planification.details:
                 for s in f.details:
                     s.staff_responsible = staff
