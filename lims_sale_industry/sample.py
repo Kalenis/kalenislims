@@ -86,3 +86,8 @@ class CreateSampleStart(metaclass=PoolMeta):
         sale_lines = SaleLine.search(clause)
         res = [sl.id for sl in sale_lines if not sl.services_completed]
         return res
+
+    @fields.depends('party', 'product_type', 'matrix',
+        'sale_lines', 'component', 'comercial_product')
+    def on_change_with_analysis_domain(self, name=None):
+        return super().on_change_with_analysis_domain(name)
