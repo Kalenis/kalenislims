@@ -2038,6 +2038,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
             with Transaction().set_context(lims_interface_table=c.table):
                 lines = Data.search([('compilation', '=', c.id)])
                 for line in lines:
+                    if line.annulled:
+                        continue
                     for column in required_columns:
                         if getattr(line, column.name) is None:
                             raise UserError(gettext(
