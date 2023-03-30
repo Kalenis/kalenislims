@@ -43,7 +43,7 @@ DETAIL_FREQUENCE_OPTIONS = [
 class EventCreator(Model):
     'Event Creator'
 
-    start_date = fields.DateTime('Start Date', required=True)
+    start_date = fields.DateTime('Start Date')
     frequence_selection = fields.Selection(
         FREQUENCE_OPTIONS,
         'Select Frequence', sort=False)
@@ -65,7 +65,7 @@ class EventCreator(Model):
             'invisible': Eval('frequence_selection') != 'weekly',
             },
         depends=['frequence_selection'])
-    specific_time = fields.Time('Specific Time',
+    specific_event_time = fields.DateTime('Specific Time',
         states={
             'invisible': Eval('frequence_selection') != 'daily',
             },
@@ -122,8 +122,15 @@ class EventCreator(Model):
         date = start_date
         if not include_start_date:
             date = date + cls.get_delta(frequence, frequence_selection)
+            
         while len(events) < record.end_repetition:
             event = {}
+            if record.specific_event_time:
+                date = date.replace(
+                    hour=record.specific_event_time.hour, 
+                    minute=record.specific_event_time.minute, 
+                    second=record.specific_event_time.second
+                    )
             event['scheduled_date'] = date
             event['week_day'] = date.weekday()
             date = date + cls.get_delta(frequence, frequence_selection)
