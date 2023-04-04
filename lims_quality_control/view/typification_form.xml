@@ -5,4 +5,14 @@
         <field name="quality"/>
         <newline/>
     </xpath>
+    <xpath expr="/form/notebook/page[@id='additionals']" position="after">
+        <page id="quality" string="Quality">
+            <label name="quality_min"/>
+            <field name="quality_min"/>
+            <label name="quality_max"/>
+            <field name="quality_max"/>
+            <label name="valid_value"/>
+            <field name="valid_value"/>
+        </page>
+    </xpath>
 </data>

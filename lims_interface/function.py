@@ -264,7 +264,8 @@ def get_date_list(dates):
     date_list = []
 
     def isValid(date):
-        return isinstance(date, datetime.date) or isinstance(date, datetime.datetime)
+        return (isinstance(date, datetime.date) or
+            isinstance(date, datetime.datetime))
     try:
         date_list = [date for date in dates[0] if isValid(date)]
     except IndexError:

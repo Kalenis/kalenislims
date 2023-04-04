@@ -400,10 +400,14 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
                 final_concentration = t.final_concentration
                 initial_unit = t.start_uom and t.start_uom.id or None
                 final_unit = t.end_uom and t.end_uom.id or None
-                detection_limit = t.detection_limit
-                quantification_limit = t.quantification_limit
-                lower_limit = t.lower_limit
-                upper_limit = t.upper_limit
+                detection_limit = (str(t.detection_limit) if
+                    t.detection_limit is not None else None)
+                quantification_limit = (str(t.quantification_limit) if
+                    t.quantification_limit is not None else None)
+                lower_limit = (str(t.lower_limit) if
+                    t.lower_limit is not None else None)
+                upper_limit = (str(t.upper_limit) if
+                    t.upper_limit is not None else None)
                 decimals = t.calc_decimals
                 significant_digits = t.significant_digits
                 scientific_notation = t.scientific_notation

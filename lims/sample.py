@@ -494,7 +494,8 @@ class Service(ModelSQL, ModelView):
             for d in details:
                 existing_analysis.append([d.analysis.id, d.method.id])
 
-            new_analysis = [(new_service['analysis'], new_service['method'])]
+            new_analysis = [(new_service['analysis'],
+                new_service['method'] if 'method' in new_service else None)]
             new_analysis.extend(Analysis.get_included_analysis_method(
                 new_service['analysis']))
             new_analysis = [list(a) for a in new_analysis]
@@ -4648,6 +4649,7 @@ class AddSampleServiceStart(ModelView):
     'Add Sample Services'
     __name__ = 'lims.sample.add_service.start'
 
+    sample = fields.Many2One('lims.sample', 'Sample')
     product_type = fields.Many2One('lims.product.type', 'Product type')
     matrix = fields.Many2One('lims.matrix', 'Matrix')
     analysis_domain = fields.Many2Many('lims.analysis', None, None,
@@ -4683,15 +4685,14 @@ class AddSampleService(Wizard):
     send_ack = StateTransition()
 
     def default_start(self, fields):
-        Sample = Pool().get('lims.sample')
-
-        sample = Sample(Transaction().context['active_id'])
+        sample = self.record
         if not sample:
             return {}
 
         analysis_domain_ids = sample.on_change_with_analysis_domain()
 
         default = {
+            'sample': sample.id,
             'product_type': sample.product_type.id,
             'matrix': sample.matrix.id,
             'analysis_domain': analysis_domain_ids,
@@ -4701,10 +4702,10 @@ class AddSampleService(Wizard):
 
     def transition_confirm(self):
         pool = Pool()
-        Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
+
         send_ack = False
-        for sample in Sample.browse(Transaction().context['active_ids']):
+        for sample in self.records:
             delete_ack_report_cache = False
             for fraction in sample.fractions:
                 original_analysis = []
@@ -4790,12 +4791,11 @@ class AddSampleService(Wizard):
 
     def transition_send_ack(self):
         pool = Pool()
-        Sample = pool.get('lims.sample')
         ForwardAcknowledgmentOfReceipt = pool.get(
             'lims.entry.acknowledgment.forward', type='wizard')
 
         entry_ids = set()
-        for sample in Sample.browse(Transaction().context['active_ids']):
+        for sample in self.records:
             # Only send ack for ongoing entries
             if sample.entry and sample.entry.state == 'ongoing':
                 entry_ids.add(sample.entry.id)
@@ -4811,6 +4811,7 @@ class EditSampleServiceStart(ModelView):
     'Edit Sample Services'
     __name__ = 'lims.sample.edit_service.start'
 
+    sample = fields.Many2One('lims.sample', 'Sample')
     product_type = fields.Many2One('lims.product.type', 'Product type')
     matrix = fields.Many2One('lims.matrix', 'Matrix')
     analysis_domain = fields.Many2Many('lims.analysis', None, None,
@@ -4846,9 +4847,7 @@ class EditSampleService(Wizard):
     send_ack = StateTransition()
 
     def default_start(self, fields):
-        Sample = Pool().get('lims.sample')
-
-        sample = Sample(Transaction().context['active_id'])
+        sample = self.record
         if not sample:
             return {}
 
@@ -4877,6 +4876,7 @@ class EditSampleService(Wizard):
                     })
 
         default = {
+            'sample': sample.id,
             'product_type': sample.product_type.id,
             'matrix': sample.matrix.id,
             'analysis_domain': analysis_domain_ids,
@@ -4886,14 +4886,13 @@ class EditSampleService(Wizard):
 
     def transition_confirm(self):
         pool = Pool()
-        Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
         send_ack = False
 
         actual_analysis = [(s.analysis.id, s.method and s.method.id or None)
             for s in self.start.services]
 
-        for sample in Sample.browse(Transaction().context['active_ids']):
+        for sample in self.records:
             delete_ack_report_cache = False
             for fraction in sample.fractions:
                 original_analysis = []
@@ -5071,12 +5070,11 @@ class EditSampleService(Wizard):
 
     def transition_send_ack(self):
         pool = Pool()
-        Sample = pool.get('lims.sample')
         ForwardAcknowledgmentOfReceipt = pool.get(
             'lims.entry.acknowledgment.forward', type='wizard')
 
         entry_ids = set()
-        for sample in Sample.browse(Transaction().context['active_ids']):
+        for sample in self.records:
             entry_ids.add(sample.entry.id)
 
         session_id, _, _ = ForwardAcknowledgmentOfReceipt.create()
@@ -6725,7 +6723,6 @@ class CreateSample(Wizard):
     def default_start(self, fields):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        Entry = pool.get('lims.entry')
         Config = pool.get('lims.configuration')
         PartyRelation = pool.get('party.relation')
         Typification = pool.get('lims.typification')
@@ -6740,7 +6737,7 @@ class CreateSample(Wizard):
             'without_services': False,
             }
 
-        entry = Entry(Transaction().context['active_id'])
+        entry = self.record
         if entry.multi_party:
             party_domain = [entry.invoice_party.id]
             relations = PartyRelation.search([
@@ -6777,11 +6774,10 @@ class CreateSample(Wizard):
         logger.info('-- CreateSample().transition_create_():INIT --')
         pool = Pool()
         Sample = pool.get('lims.sample')
-        Entry = pool.get('lims.entry')
         Config = pool.get('lims.configuration')
 
-        entry_id = Transaction().context['active_id']
-        entry = Entry(entry_id)
+        entry = self.record
+        entry_id = entry.id
         samples_defaults = self._get_samples_defaults(entry_id)
         logger.info('.. Sample.create(..)')
         with Transaction().set_context(create_sample=True):
@@ -6909,11 +6905,15 @@ class CreateSample(Wizard):
                 fraction_defaults['services'] = [('create', services_defaults)]
 
             # packages data
-            packages_defaults = [{
-                'quantity': p.quantity,
-                'type': p.type.id,
-                'state': p.state.id,
-                } for p in self.start.packages]
+            packages_defaults = []
+            for p in self.start.packages:
+                if not p.type or not p.state:
+                    continue
+                packages_defaults.append({
+                    'quantity': p.quantity,
+                    'type': p.type.id,
+                    'state': p.state.id,
+                    })
 
             sample_defaults = {
                 'entry': entry_id,

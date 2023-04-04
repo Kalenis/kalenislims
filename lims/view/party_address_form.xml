@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <data>
-    <xpath expr="/form/field[@name='subdivision']" position="after">
+    <xpath
+        expr="/form/notebook/page[@id='general']/field[@name='subdivision']"
+        position="after">
         <newline/>
         <label name="email"/>
         <field name="email"/>
@@ -25,7 +27,9 @@
             </group>
         </group>
     </xpath>
-    <xpath expr="/form/group[@id='checkboxes']/field[@name='active']" position="after">
+    <xpath
+        expr="/form/group[@id='checkboxes']/field[@name='active']"
+        position="after">
         <label name="report"/>
         <field name="report" xexpand="0" width="25"/>
     </xpath>

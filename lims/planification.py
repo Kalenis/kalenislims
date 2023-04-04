@@ -3936,7 +3936,6 @@ class SearchFractionsDetail(ModelSQL, ModelView):
                 tables['fraction'] = fraction_tables
             return field.convert_order(name, fraction_tables, Fraction)
         return staticmethod(order_field)
-    order_equipment = _order_sample_field('equipment')
 
     @classmethod
     def get_fraction_field(cls, details, names):

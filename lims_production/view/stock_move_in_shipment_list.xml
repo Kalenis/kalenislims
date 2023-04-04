@@ -14,5 +14,4 @@
     <field name="origin"/>
     <button name="cancel" string="Cancel"/>
     <button name="draft" string="Reset to Draft"/>
-    <field name="unit_digits" tree_invisible="1"/>
 </tree>

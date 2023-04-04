@@ -34,6 +34,7 @@ class NotebookLine(metaclass=PoolMeta):
 
 
 class BaseImport(object):
+    __slots__ = ()
 
     controller = None
     infile = None

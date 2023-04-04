@@ -72,11 +72,9 @@ class CreateSampleStart(metaclass=PoolMeta):
     def on_change_with_analysis_domain(self, name=None):
         pool = Pool()
         Analysis = pool.get('lims.analysis')
-        Entry = pool.get('lims.entry')
 
-        entry = Entry(Transaction().context['active_id'])
-        if (not self.sale_lines and
-                not entry.allow_services_without_quotation):
+        if (not self.sale_lines and (not self.party or
+                not self.party.allow_services_without_quotation)):
             return []
 
         analysis_domain = super().on_change_with_analysis_domain(name)
@@ -135,6 +133,12 @@ class CreateSampleStart(metaclass=PoolMeta):
 
 class CreateSample(metaclass=PoolMeta):
     __name__ = 'lims.create_sample'
+
+    def default_start(self, fields):
+        defaults = super().default_start(fields)
+        entry = self.record
+        defaults['trace_report'] = entry.party.trace_report
+        return defaults
 
     def _get_samples_defaults(self, entry_id):
         pool = Pool()
@@ -229,12 +233,11 @@ class AddSampleServiceStart(metaclass=PoolMeta):
         Date = pool.get('ir.date')
         SaleLine = pool.get('sale.line')
         Analysis = pool.get('lims.analysis')
-        Sample = pool.get('lims.sample')
 
         if not self.party or not self.product_type or not self.matrix:
             return []
 
-        sample = Sample(Transaction().context['active_id'])
+        sample = self.sample
         analysis_domain = sample.on_change_with_analysis_domain()
         if not analysis_domain:
             return []
@@ -269,13 +272,12 @@ class AddSampleServiceStart(metaclass=PoolMeta):
     def on_change_with_analysis_domain(self, name=None):
         pool = Pool()
         Analysis = pool.get('lims.analysis')
-        Sample = pool.get('lims.sample')
 
-        sample = Sample(Transaction().context['active_id'])
-        if (not self.sale_lines and
-                not sample.entry.allow_services_without_quotation):
+        if (not self.sale_lines and (not self.party or
+                not self.party.allow_services_without_quotation)):
             return []
 
+        sample = self.sample
         analysis_domain = sample.on_change_with_analysis_domain()
 
         if not self.sale_lines:
@@ -334,11 +336,9 @@ class AddSampleService(metaclass=PoolMeta):
     __name__ = 'lims.sample.add_service'
 
     def default_start(self, fields):
-        Sample = Pool().get('lims.sample')
-
         defaults = super().default_start(fields)
 
-        sample = Sample(Transaction().context['active_id'])
+        sample = self.record
         if not sample:
             return defaults
 
@@ -348,7 +348,6 @@ class AddSampleService(metaclass=PoolMeta):
     def _get_new_service(self, service, fraction):
         pool = Pool()
         Analysis = pool.get('lims.analysis')
-        Sample = pool.get('lims.sample')
         Warning = pool.get('res.user.warning')
 
         service_create = super()._get_new_service(service, fraction)
@@ -383,7 +382,7 @@ class AddSampleService(metaclass=PoolMeta):
                 sale_lines[analysis_id]['available'] >= 1):
             return service_create
 
-        sample = Sample(Transaction().context['active_id'])
+        sample = self.record
         error_key = 'lims_services_without_quotation@%s' % sample.entry.number
         error_msg = 'lims_sale.msg_party_services_without_quotation'
         if not sample.entry.allow_services_without_quotation:
@@ -399,12 +398,11 @@ class EditSampleService(metaclass=PoolMeta):
 
     def _get_new_service(self, service, fraction):
         pool = Pool()
-        Sample = pool.get('lims.sample')
         Warning = pool.get('res.user.warning')
 
         service_create = super()._get_new_service(service, fraction)
 
-        sample = Sample(Transaction().context['active_id'])
+        sample = self.record
         error_key = 'lims_services_without_quotation@%s' % sample.entry.number
         error_msg = 'lims_sale.msg_party_services_without_quotation'
         if not sample.entry.allow_services_without_quotation:

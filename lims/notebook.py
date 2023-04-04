@@ -4490,6 +4490,8 @@ class NotebookLoadResultsManualLine(ModelSQL, ModelView):
         cursor = Transaction().connection.cursor()
         AnalysisDevice = Pool().get('lims.analysis.device')
 
+        if not self.line:
+            return []
         cursor.execute('SELECT DISTINCT(device) '
             'FROM "' + AnalysisDevice._table + '" '
             'WHERE active IS TRUE '

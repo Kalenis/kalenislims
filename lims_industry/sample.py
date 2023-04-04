@@ -423,6 +423,8 @@ class Fraction(metaclass=PoolMeta):
     comercial_product = fields.Function(fields.Many2One(
         'lims.comercial.product', 'Comercial Product'),
         'get_sample_field', searcher='search_sample_field')
+    ind_equipment = fields.Function(fields.Integer('Hs/Km Equipment'),
+        'get_sample_field', searcher='search_sample_field')
     ind_component = fields.Function(fields.Integer('Hs/Km Component'),
         'get_sample_field', searcher='search_sample_field')
 
@@ -443,6 +445,7 @@ class Fraction(metaclass=PoolMeta):
     order_equipment = _order_sample_field('equipment')
     order_component = _order_sample_field('component')
     order_comercial_product = _order_sample_field('comercial_product')
+    order_ind_equipment = _order_sample_field('ind_equipment')
     order_ind_component = _order_sample_field('ind_component')
 
 
@@ -597,6 +600,8 @@ class CreateSampleStart(metaclass=PoolMeta):
         if self.packages:
             ind_volume = 0
             for p in self.packages:
+                if not p.quantity or not p.type:
+                    continue
                 ind_volume += (p.quantity * p.type.capacity)
             return ind_volume
         return None

@@ -8,7 +8,7 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from PyPDF2 import PdfFileMerger
-from PyPDF2.utils import PdfReadError
+from PyPDF2.errors import PdfReadError
 from decimal import Decimal
 
 from trytond.model import ModelSQL, ModelView, fields
@@ -259,15 +259,20 @@ class Sale(metaclass=PoolMeta):
             return True
         return False
 
-    def check_method(self):
-        super().check_method()
-        if (self.shipment_method == 'invoice'
-                and self.invoice_method == 'service'):
-            raise SaleValidationError(
-                gettext('sale.msg_sale_invalid_method',
-                    invoice_method=self.invoice_method_string,
-                    shipment_method=self.shipment_method_string,
-                    sale=self.rec_name))
+    @classmethod
+    def check_method(cls, sales, field_names=None):
+        super().check_method(sales, field_names)
+        if field_names and not (field_names &
+                {'invoice_method', 'shipment_method'}):
+            return
+        for sale in sales:
+            if (sale.shipment_method == 'invoice'
+                    and sale.invoice_method == 'service'):
+                raise SaleValidationError(
+                    gettext('sale.msg_sale_invalid_method',
+                        invoice_method=sale.invoice_method_string,
+                        shipment_method=sale.shipment_method_string,
+                        sale=sale.rec_name))
 
     @classmethod
     @ModelView.button_action('lims_sale.wiz_sale_load_services')
@@ -966,10 +971,12 @@ class SaleLoadAnalysis(Wizard):
                             'method': ia.method.id if ia.method else None,
                             'description': included.rec_name,
                             }
-                    sale_services = get_sale_services(included, quantity, sale_services)
+                    sale_services = get_sale_services(included, quantity,
+                        sale_services)
             return sale_services
 
-        sale_services = get_sale_services(self.start.analysis, self.start.quantity)
+        sale_services = get_sale_services(self.start.analysis,
+            self.start.quantity)
 
         sale_lines = []
         for service in sale_services.values():

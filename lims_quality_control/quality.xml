@@ -241,6 +241,19 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
+        <record model="ir.rule.group" id="rule_group_quality_template_companies">
+            <field name="name">User in companies</field>
+            <field name="model"
+                search="[('model', '=', 'lims.quality.template')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_quality_template_companies">
+            <field name="domain"
+                eval="[('company', 'in', Eval('companies', []))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_quality_template_companies"/>
+        </record>
+
 <!-- Quality Test -->
 
         <record model="ir.ui.view" id="quality_test_form_view">
@@ -402,6 +415,19 @@
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.rule.group" id="rule_group_quality_test_companies">
+            <field name="name">User in companies</field>
+            <field name="model"
+                search="[('model', '=', 'lims.quality.test')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_quality_test_companies">
+            <field name="domain"
+                eval="[('company', 'in', Eval('companies', []))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_quality_test_companies"/>
         </record>
 
 <!-- Create Quality Test -->

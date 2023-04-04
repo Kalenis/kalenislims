@@ -23,7 +23,7 @@ class Brand(ModelSQL, ModelView):
     'Brand'
     __name__ = 'lims.brand'
 
-    code = fields.Char('Code', required=True)
+    code = fields.Char('Code')
     name = fields.Char('Name', required=True)
 
 

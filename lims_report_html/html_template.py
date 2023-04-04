@@ -9,7 +9,7 @@ from datetime import date, datetime
 from binascii import b2a_base64
 from functools import partial
 from PyPDF2 import PdfFileMerger
-from PyPDF2.utils import PdfReadError
+from PyPDF2.errors import PdfReadError
 from jinja2 import contextfilter, Markup
 from jinja2 import Environment, FunctionLoader
 from lxml import html as lxml_html
@@ -17,6 +17,7 @@ from base64 import b64encode
 from babel.support import Translations as BabelTranslations
 from mimetypes import guess_type as mime_guess_type
 from sql import Literal
+from itertools import groupby
 
 from trytond.model import ModelSQL, ModelView, DeactivableMixin, fields
 from trytond.report import Report
@@ -327,11 +328,24 @@ class LimsReport(Report):
             action = ActionReport(action_id)
 
         records = []
-        header = {}
         model = action.model or data.get('model')
         if model:
             records = cls._get_records(ids, model, data)
-        oext, content = cls._execute(records, header, data, action)
+
+        if not records:
+            groups = [[]]
+            headers = [{}]
+        elif action.single:
+            groups = [[r] for r in records]
+            headers = [dict(cls.header_key(r)) for r in records]
+        else:
+            groups = []
+            headers = []
+            for key, group in groupby(records, key=cls.header_key):
+                groups.append(list(group))
+                headers.append(dict(key))
+
+        oext, content = cls._execute(groups[0], headers[0], data, action)
         if not isinstance(content, str):
             content = bytearray(content) if bytes == str else bytes(content)
 

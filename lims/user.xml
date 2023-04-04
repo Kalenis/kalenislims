@@ -286,6 +286,11 @@
             <field name="path">icons/results_report_version_detail.svg</field>
         </record>
 
+        <record model="ir.ui.icon" id="execute_icon">
+            <field name="name">lims-execute</field>
+            <field name="path">icons/execute_icon.svg</field>
+        </record>
+
         <record model="ir.ui.icon" id="yellow_icon">
             <field name="name">lims-yellow</field>
             <field name="path">icons/yellow.svg</field>

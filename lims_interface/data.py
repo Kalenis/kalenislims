@@ -15,14 +15,13 @@ from collections import defaultdict
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import Pool, PoolMeta
-from trytond.transaction import Transaction
+from trytond.transaction import Transaction, record_cache_size
 from trytond.tools import cursor_dict
 from trytond.pyson import PYSONEncoder, Eval
 from trytond.rpc import RPC
 from trytond.exceptions import UserError
 from trytond.cache import LRUDictTransaction
 from trytond.model.model import record as model_record
-from trytond.model.modelstorage import cache_size as model_cache_size
 from trytond.model.modelsql import convert_from
 from .interface import FIELD_TYPE_TRYTON, FIELD_TYPE_CAST
 
@@ -269,13 +268,16 @@ class Data(ModelSQL, ModelView):
         _local_cache = kwargs.pop('_local_cache', None)
         _transaction_cache = kwargs.pop('_transaction_cache', None)
         transaction = kwargs.pop('_transaction', None)
+        if transaction is None:
+            transaction = Transaction()
 
         kwargs_copy = kwargs.copy()
         for kw in kwargs_copy:
             kwargs.pop(kw, None)
 
         kwargs['_ids'] = _ids
-        kwargs['_local_cache'] = LRUDictTransaction(model_cache_size(),
+        kwargs['_local_cache'] = LRUDictTransaction(
+            record_cache_size(transaction),
             data_record('lims.interface.data._record', self._fields.keys()))
         kwargs['_transaction_cache'] = _transaction_cache
         kwargs['_transaction'] = transaction

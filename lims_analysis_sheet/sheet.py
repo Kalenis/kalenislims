@@ -673,28 +673,31 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
     def get_out_of_ranges(self, name):
         # TODO: improve perf
+        pool = Pool()
+        Column = pool.get('lims.interface.column')
+        Data = pool.get('lims.interface.data')
+
         res = False
-        Column = Pool().get('lims.interface.column')
-        Data = Pool().get('lims.interface.data')
+
         validation_column = Column.search([
-                                        ('interface','=',self.interface),
-                                        ('validation_column','=',True)
-                                        ])
+            ('interface', '=', self.interface),
+            ('validation_column', '=', True)
+            ])
         if not len(validation_column):
-            return False
+            return res
         validation_column = validation_column[0].alias
         with Transaction().set_context(
-                    lims_interface_table=self.compilation.table.id):
-                clause = [('compilation', '=', self.compilation.id)]
-                lines = Data.search(clause)
-                for line in lines:
-                    try:
-                        if getattr(line, validation_column):
-                            res = True
-                            break
-                    except AttributeError:
-                        pass
-                    
+                lims_interface_table=self.compilation.table.id):
+            clause = [('compilation', '=', self.compilation.id)]
+            lines = Data.search(clause)
+            for line in lines:
+                try:
+                    if getattr(line, validation_column):
+                        res = True
+                        break
+                except AttributeError:
+                    pass
+
         return res
 
     @classmethod
@@ -704,9 +707,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         notebook_lines = []
         for record in records:
             with Transaction().set_context(
-                        lims_interface_table=record.compilation.table.id):
-                    lines = Data.search([('compilation', '=', record.compilation.id)])
-                    notebook_lines += filter(None, [line.notebook_line for line in lines])
+                    lims_interface_table=record.compilation.table.id):
+                lines = Data.search([
+                    ('compilation', '=', record.compilation.id),
+                    ])
+                notebook_lines += filter(None,
+                    [line.notebook_line for line in lines])
 
         return notebook_lines
 

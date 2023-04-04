@@ -42,9 +42,12 @@ class LabDevice(metaclass=PoolMeta):
 class LabDeviceConstant(ModelSQL, ModelView):
     'Device Constant'
     __name__ = 'lims.lab.device.constant'
+    _rec_name = 'constant_name'
 
     device = fields.Many2One('lims.lab.device', 'Device', required=True,
         ondelete='CASCADE')
+    constant_name = fields.Function(fields.Char('Name'),
+        'get_constant_name', searcher='search_constant_name')
     name = fields.Float('Name', required=True)
     value1 = fields.Float('Value 1')
     value2 = fields.Float('Value 2')
@@ -60,6 +63,14 @@ class LabDeviceConstant(ModelSQL, ModelView):
     def __setup__(cls):
         super().__setup__()
         cls._order.insert(0, ('name', 'ASC'))
+
+    @classmethod
+    def get_constant_name(self, name):
+        return str(self.name)
+
+    @classmethod
+    def search_constant_name(cls, name, clause):
+        return [('name',) + tuple(clause[1:])]
 
 
 class NotebookRule(metaclass=PoolMeta):

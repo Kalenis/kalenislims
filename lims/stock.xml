@@ -44,7 +44,7 @@
 
 <!-- Fraction Product -->
 
-        <record model="product.template" id="template_fraction">
+<!--        <record model="product.template" id="template_fraction">
             <field name="name">Fraction</field>
             <field name="type">goods</field>
             <field name="default_uom" ref="product.uom_unit"/>
@@ -53,7 +53,7 @@
         <record model="product.product" id="product_fraction">
             <field name="template" ref="template_fraction"/>
             <field name="cost_price" eval="1.0"/>
-        </record>
+        </record>-->
 
     </data>
 </tryton>

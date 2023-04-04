@@ -4,7 +4,7 @@
 import logging
 from io import BytesIO
 from PyPDF2 import PdfFileMerger
-from PyPDF2.utils import PdfReadError
+from PyPDF2.errors import PdfReadError
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import PoolMeta, Pool

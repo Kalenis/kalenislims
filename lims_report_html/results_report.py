@@ -3,7 +3,7 @@
 # the full copyright notices and license terms.
 from io import BytesIO
 from PyPDF2 import PdfFileMerger
-from PyPDF2.utils import PdfReadError
+from PyPDF2.errors import PdfReadError
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, Button

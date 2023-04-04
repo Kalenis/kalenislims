@@ -2003,6 +2003,8 @@ class ResultsReportVersionDetailSigner(sequence_ordered(),
         UserLaboratory = pool.get('lims.user-laboratory')
         LaboratoryProfessional = pool.get('lims.laboratory.professional')
 
+        if not self.version_detail:
+            return []
         laboratory = self.version_detail.laboratory
         res = [laboratory.default_signer.id]
         if laboratory.default_manager:
@@ -2882,7 +2884,7 @@ class GenerateReport(Wizard):
                         'signatories': [('create',
                             signatories + extra_signatories)],
                         'samples': [('create', samples)],
-                        'comments': party['comments'],
+                        'comments': party['comments'] or None,
                         }
                     details.update(ResultsDetail._get_fields_from_samples(
                         samples, self.start))

@@ -92,15 +92,18 @@ class EventCreator(Model):
                 FREQUENCE_OPTIONS_VALUE_MAP[self.frequence_selection])
 
     @classmethod
-    def create_events(cls, records, create_method, start_date=None, include_start_date=True):
+    def create_events(cls, records, create_method, start_date=None,
+            include_start_date=True):
         events = []
         for record in records:
             if record.finish_selection == 'quantity':
                 events.extend(
-                    cls.create_fixed_events(record, create_method, start_date, include_start_date))
+                    cls.create_fixed_events(record, create_method, start_date,
+                        include_start_date))
             elif record.finish_selection == 'date':
                 events.extend(
-                    cls.create_events_until_date(record, create_method, start_date, include_start_date))
+                    cls.create_events_until_date(record, create_method,
+                        start_date, include_start_date))
             else:
                 raise UserError(gettext(
                     'lims_tools.missing_end_condition'))
@@ -108,7 +111,8 @@ class EventCreator(Model):
         return events
 
     @classmethod
-    def create_fixed_events(cls, record, create_method, start_date=None, include_start_date=True):
+    def create_fixed_events(cls, record, create_method, start_date=None,
+            include_start_date=True):
         events = []
         if not start_date:
             start_date = record.start_date
@@ -136,7 +140,8 @@ class EventCreator(Model):
         return events
 
     @classmethod
-    def create_events_until_date(cls, record, create_method, start_date=None, include_start_date=True):
+    def create_events_until_date(cls, record, create_method, start_date=None,
+            include_start_date=True):
         events = []
         if not start_date:
             start_date = record.start_date
