@@ -262,7 +262,7 @@ class ResultsReportVersionDetailSection(ModelSQL, ModelView):
     _order_name = 'order'
 
     version_detail = fields.Many2One('lims.results_report.version.detail',
-        'Report Detail', ondelete='CASCADE', select=True, required=True)
+        'Report Detail', ondelete='CASCADE', required=True)
     name = fields.Char('Name', required=True)
     data = fields.Binary('File', filename='name', required=True,
         file_id='data_id', store_prefix='results_report_section')
@@ -296,7 +296,7 @@ class ResultsReportVersionDetailTrendChart(ModelSQL, ModelView):
     _order_name = 'order'
 
     version_detail = fields.Many2One('lims.results_report.version.detail',
-        'Report Detail', ondelete='CASCADE', select=True, required=True)
+        'Report Detail', ondelete='CASCADE', required=True)
     chart = fields.Many2One('lims.trend.chart', 'Trend Chart',
         required=True, domain=[('active', '=', True)])
     order = fields.Integer('Order')

@@ -3,7 +3,7 @@
 # the full copyright notices and license terms.
 from dateutil import relativedelta
 
-from trytond.model import Workflow, ModelView, ModelSQL, fields
+from trytond.model import Workflow, ModelView, ModelSQL, fields, Index
 from trytond.wizard import Wizard, StateAction
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
@@ -43,7 +43,7 @@ class LabDeviceMaintenanceProgram(EventCreator, ModelSQL, ModelView):
     asset = fields.Selection([
         ('device', 'Device'),
         ('product', 'Product'),
-        ], 'Asset', select=True, required=True)
+        ], 'Asset', required=True)
     device = fields.Many2One('lims.lab.device', 'Device',
         states={
             'required': Eval('asset') == 'device',
@@ -97,6 +97,20 @@ class LabDeviceMaintenanceProgram(EventCreator, ModelSQL, ModelView):
                 'WHERE frequency = \'yearly\'')
             table_h.drop_column('frequency')
 
+    @classmethod
+    def __setup__(cls):
+        cls.asset.search_unaccented = False
+        super().__setup__()
+        cls._buttons.update({
+            'create_maintenances': {
+                },
+            })
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.asset, Index.Similarity())),
+            Index(t, (t.device, Index.Equality())),
+            })
+
     @staticmethod
     def default_asset():
         return 'device'
@@ -132,14 +146,6 @@ class LabDeviceMaintenanceProgram(EventCreator, ModelSQL, ModelView):
             result[p.id] = (latest_maintenance and
                 latest_maintenance[0].date or None)
         return result
-
-    @classmethod
-    def __setup__(cls):
-        super().__setup__()
-        cls._buttons.update({
-            'create_maintenances': {
-                },
-            })
 
     @classmethod
     @ModelView.button_action(
@@ -209,7 +215,7 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
         ('pending', 'Pending'),
         ('done', 'Done'),
         ('discarded', 'Discarded'),
-        ], 'State', select=True, readonly=True, required=True)
+        ], 'State', readonly=True, required=True)
     comments = fields.Text('Comments')
     color = fields.Function(fields.Char('Color'), 'get_color')
     device_active = fields.Function(fields.Boolean('Device active',
@@ -219,6 +225,8 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
+        cls.asset.search_unaccented = False
+        cls.state.search_unaccented = False
         super().__setup__()
         cls._order.insert(0, ('date', 'DESC'))
         cls._transitions |= set((
@@ -236,6 +244,12 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
             'discard': {
                 'invisible': Eval('state') != 'pending',
                 },
+            })
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.asset, Index.Similarity())),
+            Index(t, (t.state, Index.Similarity())),
+            Index(t, (t.device, Index.Equality())),
             })
 
     @staticmethod

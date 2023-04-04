@@ -7,7 +7,7 @@ import operator
 from sql import Cast
 
 from trytond.model import Workflow, ModelView, ModelSQL, DeactivableMixin, \
-    fields, Unique
+    fields, Unique, Index
 from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool
 from trytond.transaction import Transaction
@@ -77,7 +77,7 @@ class LaboratoryCVCorrection(ModelSQL, ModelView):
     __name__ = 'lims.laboratory.cv_correction'
 
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     fraction_type = fields.Many2One('lims.fraction.type', 'Fraction type',
         required=True)
     min_cv = fields.Float('Minimum CV (%)')
@@ -320,9 +320,9 @@ class LabMethodWaitingTime(ModelSQL, ModelView):
     __name__ = 'lims.lab.method.results_waiting'
 
     method = fields.Many2One('lims.lab.method', 'Method',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     party = fields.Many2One('party.party', 'Party',
-        ondelete='CASCADE', select=True, required=True,
+        ondelete='CASCADE', required=True,
         states={'readonly': Bool(Eval('id', 0) > 0)})
     results_estimated_waiting = fields.Integer(
         'Estimated number of days for results', required=True)
@@ -379,7 +379,7 @@ class LabMethodVersion(ModelSQL, ModelView):
     __name__ = 'lims.lab.method.version'
 
     method = fields.Many2One('lims.lab.method', 'Method',
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE')
     code = fields.Char('Code', readonly=True)
     name = fields.Char('Name', translate=True, readonly=True)
     version = fields.Char('Version', readonly=True)
@@ -586,9 +586,9 @@ class LabDeviceTypeLabMethod(ModelSQL):
     __name__ = 'lims.lab.device.type-lab.method'
 
     device_type = fields.Many2One('lims.lab.device.type', 'Device type',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     method = fields.Many2One('lims.lab.method', 'Method',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class LabDeviceLaboratory(ModelSQL, ModelView):
@@ -596,7 +596,7 @@ class LabDeviceLaboratory(ModelSQL, ModelView):
     __name__ = 'lims.lab.device.laboratory'
 
     device = fields.Many2One('lims.lab.device', 'Device', required=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE')
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         required=True)
     physically_here = fields.Boolean('Physically here')
@@ -627,7 +627,7 @@ class LabDeviceCorrection(ModelSQL, ModelView):
     __name__ = 'lims.lab.device.correction'
 
     device = fields.Many2One('lims.lab.device', 'Device', required=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE')
     result_from = fields.Char('From', required=True)
     result_to = fields.Char('To', required=True)
     formula = fields.Char('Correction Formula', required=True,
@@ -768,7 +768,7 @@ class NotebookRule(ModelSQL, ModelView):
 
     name = fields.Char('Name', required=True)
     analysis = fields.Many2One('lims.analysis', 'Trigger Analysis',
-        required=True, select=True, domain=[
+        required=True, domain=[
             ('state', '=', 'active'),
             ('type', '=', 'analysis'),
             ('behavior', '!=', 'additional'),
@@ -801,6 +801,14 @@ class NotebookRule(ModelSQL, ModelView):
         None, None, 'Target Field domain'), 'get_target_field_domain')
     value = fields.Char('Value',
         states={'invisible': Eval('action') != 'edit'})
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.analysis, Index.Equality())),
+            })
 
     @classmethod
     def _target_fields(cls):
@@ -1027,7 +1035,7 @@ class NotebookRuleCondition(ModelSQL, ModelView):
     __name__ = 'lims.rule.condition'
 
     rule = fields.Many2One('lims.rule', 'Rule', required=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE')
     field = fields.Char('Field', required=True, help=("Internal name of the " +
         "field. Relationships are allowed, such as " +
         "\"notebook.product_type.code\""))

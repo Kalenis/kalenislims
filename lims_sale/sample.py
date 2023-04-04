@@ -546,9 +546,9 @@ class ServiceSaleLine(ModelSQL):
     _table = 'lims_service_sale_line'
 
     service = fields.Many2One('lims.service', 'Service',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     sale_line = fields.Many2One('sale.line', 'Sale Line',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
     @classmethod
     def create(cls, vlist):

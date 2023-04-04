@@ -311,7 +311,7 @@ class ResultsReportAttachment(ModelSQL, ModelView):
     __name__ = 'lims.results_report.attachment'
 
     results_report = fields.Many2One('lims.results_report', 'Results Report',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     name = fields.Char('Name', required=True)
     data = fields.Binary('File', filename='name', required=True,
         file_id='file_id', store_prefix='report_attachment')
@@ -338,7 +338,7 @@ class ResultsReportMailing(ModelSQL, ModelView):
     __name__ = 'lims.results_report.mailing'
 
     results_report = fields.Many2One('lims.results_report', 'Results Report',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     date = fields.Function(fields.DateTime('Date'),
        'get_date', searcher='search_date')
     addresses = fields.Char('Addresses', readonly=True)

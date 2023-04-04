@@ -6,7 +6,7 @@ from datetime import datetime
 from dateutil import rrule
 from sql import Null
 
-from trytond.model import ModelSingleton, ModelView, ModelSQL, fields
+from trytond.model import ModelSingleton, ModelView, ModelSQL, fields, Index
 from trytond.pyson import Eval, Id
 from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
@@ -44,15 +44,19 @@ class NotebookViewColumn(ModelSQL, ModelView):
     __name__ = 'lims.notebook.view.column'
 
     view = fields.Many2One('lims.notebook.view', 'View', required=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE')
     field = fields.Many2One('ir.model.field', 'Field', required=True,
         domain=[('model.model', '=', 'lims.notebook.line')])
-    sequence = fields.Integer('Sequence', required=True, select=True)
+    sequence = fields.Integer('Sequence', required=True)
 
     @classmethod
     def __setup__(cls):
         super().__setup__()
         cls._order.insert(0, ('sequence', 'ASC'))
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.sequence, Index.Equality())),
+            })
 
 
 class Printer(ModelSQL, ModelView):
@@ -178,9 +182,9 @@ class UserLaboratory(ModelSQL):
     __name__ = 'lims.user-laboratory'
 
     user = fields.Many2One('res.user', 'User',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class Configuration(ModelSingleton, ModelSQL, ModelView,
@@ -373,9 +377,9 @@ class ConfigurationLaboratory(ModelSQL):
     __name__ = 'lims.configuration-laboratory'
 
     configuration = fields.Many2One('lims.configuration', 'Configuration',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class ConfigurationSequence(ModelSQL, CompanyValueMixin):
@@ -419,9 +423,9 @@ class ConfigurationProductCategory(ModelSQL):
     __name__ = 'lims.configuration-product.category'
 
     configuration = fields.Many2One('lims.configuration', 'Configuration',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     category = fields.Many2One('product.category', 'Category',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class LabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
@@ -587,7 +591,7 @@ class LabWorkYearSequence(ModelSQL, CompanyValueMixin):
     __name__ = 'lims.lab.workyear.sequence'
 
     workyear = fields.Many2One('lims.lab.workyear', 'Work Year',
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE',
         context={'company': Eval('company', -1)}, depends={'company'})
     entry_sequence = fields.Many2One('ir.sequence',
         'Entry Sequence', domain=[
@@ -647,7 +651,7 @@ class LabWorkYearHoliday(ModelSQL, ModelView):
     __name__ = 'lims.lab.workyear.holiday'
 
     workyear = fields.Many2One('lims.lab.workyear', 'Work Year',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     name = fields.Char('Name', required=True)
     date = fields.Date('Date', required=True)
 

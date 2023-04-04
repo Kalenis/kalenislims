@@ -2,7 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond.model import fields
+from trytond.model import fields, Index
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 from trytond.exceptions import UserError
@@ -97,17 +97,23 @@ class Party(metaclass=PoolMeta):
 class Address(metaclass=PoolMeta):
     __name__ = 'party.address'
 
-    plant = fields.Many2One('lims.plant', 'Plant',
-        ondelete='CASCADE', select=True,
+    plant = fields.Many2One('lims.plant', 'Plant', ondelete='CASCADE',
         domain=[('party', '=', Eval('party'))])
     equipment = fields.Many2One('lims.equipment', 'Equipment',
-        select=True,
         domain=[('party', '=', Eval('party'))])
     phone = fields.Char('Phone')
     purchase_contact = fields.Boolean('Purchase contact')
     technical_contact = fields.Boolean('Technical contact')
     administrative_contact = fields.Boolean('Administrative contact')
     contract_contact = fields.Boolean('Contract contact')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.equipment, Index.Equality())),
+            })
 
     @staticmethod
     def default_country():

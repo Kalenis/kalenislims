@@ -2,7 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond.model import Workflow, ModelView, ModelSQL, fields
+from trytond.model import Workflow, ModelView, ModelSQL, fields, Index
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
 from trytond.pool import Pool, PoolMeta
@@ -446,9 +446,9 @@ class SamplesComparatorLine(ModelSQL, ModelView):
     __name__ = 'lims.samples_comparator.line'
 
     sample = fields.Many2One('lims.samples_comparator', 'Sample',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
-        required=True, readonly=True, select=True)
+        required=True, readonly=True)
     analysis = fields.Function(fields.Many2One('lims.analysis', 'Analysis'),
         'get_nline_field')
     repetition = fields.Function(fields.Integer('Repetition'),
@@ -466,6 +466,14 @@ class SamplesComparatorLine(ModelSQL, ModelView):
         'get_comparison_result')
     notebook3_result = fields.Function(fields.Char('Sample 3'),
         'get_comparison_result')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.notebook_line, Index.Equality())),
+            })
 
     @classmethod
     def get_nline_field(cls, lines, names):

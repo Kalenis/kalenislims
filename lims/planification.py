@@ -6,7 +6,7 @@ import logging
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
-from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
+from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique, Index
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
 from trytond.report import Report
@@ -25,7 +25,7 @@ class Planification(Workflow, ModelSQL, ModelView):
 
     _states = {'readonly': Not(Bool(Equal(Eval('state'), 'draft')))}
 
-    code = fields.Char('Code', select=True, readonly=True)
+    code = fields.Char('Code', readonly=True)
     date = fields.Date('Date', readonly=True)
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         required=True, states={
@@ -73,6 +73,7 @@ class Planification(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
+        cls.code.search_unaccented = False
         super().__setup__()
         cls._order.insert(0, ('code', 'DESC'))
         cls._transitions |= set((
@@ -123,6 +124,10 @@ class Planification(Workflow, ModelSQL, ModelView):
             'remove_control': {
                 'readonly': (Eval('state') != 'preplanned'),
                 },
+            })
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.code, Index.Similarity())),
             })
 
     @classmethod
@@ -599,7 +604,7 @@ class PlanificationTechnician(ModelSQL, ModelView):
     __name__ = 'lims.planification.technician'
 
     planification = fields.Many2One('lims.planification', 'Planification',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     laboratory_professional = fields.Many2One('lims.laboratory.professional',
         'Laboratory professional', required=True, domain=[
             ('id', 'in', Eval('_parent_planification',
@@ -678,11 +683,10 @@ class PlanificationDetail(ModelSQL, ModelView):
     __name__ = 'lims.planification.detail'
 
     planification = fields.Many2One('lims.planification', 'Planification',
-        ondelete='CASCADE', select=True, required=True)
-    fraction = fields.Many2One('lims.fraction', 'Fraction', required=True,
-        select=True)
+        ondelete='CASCADE', required=True)
+    fraction = fields.Many2One('lims.fraction', 'Fraction', required=True)
     service_analysis = fields.Many2One('lims.analysis', 'Service',
-        required=True, select=True)
+        required=True)
     fraction_type = fields.Function(fields.Many2One('lims.fraction.type',
         'Fraction type'), 'get_fraction_field',
         searcher='search_fraction_field')
@@ -713,6 +717,11 @@ class PlanificationDetail(ModelSQL, ModelView):
         super().__setup__()
         cls._order.insert(0, ('fraction', 'ASC'))
         cls._order.insert(1, ('service_analysis', 'ASC'))
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.fraction, Index.Equality())),
+            Index(t, (t.service_analysis, Index.Equality())),
+            })
 
     @classmethod
     def get_fraction_field(cls, details, names):
@@ -829,19 +838,29 @@ class PlanificationServiceDetail(ModelSQL, ModelView):
     __name__ = 'lims.planification.service_detail'
 
     detail = fields.Many2One('lims.planification.detail', 'Planification',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     planification = fields.Function(fields.Many2One('lims.planification',
         'Planification'), 'get_planification', searcher='search_planification')
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook line',
-        required=True, select=True)
+        required=True)
     staff_responsible = fields.Many2Many(
         'lims.planification.service_detail-laboratory.professional', 'detail',
         'professional', 'Laboratory professionals')
-    is_control = fields.Boolean('Is Control', select=True)
-    is_replanned = fields.Boolean('Is Replanned', select=True)
+    is_control = fields.Boolean('Is Control')
+    is_replanned = fields.Boolean('Is Replanned')
     planned_service = fields.Many2One('lims.analysis', 'Planned service')
     repetition = fields.Function(fields.Integer('Repetition'),
         'get_notebook_line_field')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.notebook_line, Index.Equality())),
+            Index(t, (t.is_control, Index.Equality())),
+            Index(t, (t.is_replanned, Index.Equality())),
+            })
 
     @staticmethod
     def default_is_control():
@@ -896,11 +915,9 @@ class PlanificationServiceDetailLaboratoryProfessional(ModelSQL):
     _table = 'lims_plan_service_d-laboratory_professional'
 
     detail = fields.Many2One('lims.planification.service_detail',
-        'Planification detail', ondelete='CASCADE', select=True,
-        required=True)
+        'Planification detail', ondelete='CASCADE', required=True)
     professional = fields.Many2One('lims.laboratory.professional',
-        'Laboratory professional', ondelete='CASCADE', select=True,
-        required=True)
+        'Laboratory professional', ondelete='CASCADE', required=True)
 
 
 class PlanificationAnalysis(ModelSQL):
@@ -908,9 +925,9 @@ class PlanificationAnalysis(ModelSQL):
     __name__ = 'lims.planification-analysis'
 
     planification = fields.Many2One('lims.planification', 'Planification',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     analysis = fields.Many2One('lims.analysis', 'Analysis',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class PlanificationFraction(ModelSQL):
@@ -918,9 +935,9 @@ class PlanificationFraction(ModelSQL):
     __name__ = 'lims.planification-fraction'
 
     planification = fields.Many2One('lims.planification', 'Planification',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     fraction = fields.Many2One('lims.fraction', 'Fraction',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class NotebookLineFraction(ModelSQL):
@@ -928,9 +945,9 @@ class NotebookLineFraction(ModelSQL):
     __name__ = 'lims.notebook.line-fraction'
 
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     fraction = fields.Many2One('lims.fraction', 'Fraction',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class FractionReagent(ModelSQL, ModelView):
@@ -938,7 +955,7 @@ class FractionReagent(ModelSQL, ModelView):
     __name__ = 'lims.fraction.reagent'
 
     fraction = fields.Many2One('lims.fraction', 'Fraction', required=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE')
     product = fields.Many2One('product.product', 'Reagent', required=True,
         domain=[('account_category', 'in', Eval('reagent_domain'))])
     reagent_domain = fields.Function(fields.Many2Many('product.category',
@@ -986,9 +1003,8 @@ class LabProfessionalMethod(ModelSQL, ModelView):
     __name__ = 'lims.lab.professional.method'
 
     professional = fields.Many2One('lims.laboratory.professional',
-        'Professional', required=True, select=True)
-    method = fields.Many2One('lims.lab.method', 'Method', required=True,
-        select=True)
+        'Professional', required=True)
+    method = fields.Many2One('lims.lab.method', 'Method', required=True)
     state = fields.Selection([
         ('training', 'Training'),
         ('qualified', 'Qualified'),
@@ -997,7 +1013,7 @@ class LabProfessionalMethod(ModelSQL, ModelView):
     type = fields.Selection([
         ('preparation', 'Preparation'),
         ('analytical', 'Analytical'),
-        ], 'Type', sort=False, select=True)
+        ], 'Type', sort=False)
     requalification_history = fields.One2Many(
         'lims.lab.professional.method.requalification', 'professional_method',
         'Trainings/Qualifications/Requalifications')
@@ -1015,6 +1031,11 @@ class LabProfessionalMethod(ModelSQL, ModelView):
                 Unique(t, t.professional, t.method, t.type),
                 'lims.msg_professional_method_unique_id'),
             ]
+        cls._sql_indexes.update({
+            Index(t, (t.professional, Index.Equality())),
+            Index(t, (t.method, Index.Equality())),
+            Index(t, (t.type, Index.Equality())),
+            })
 
     def get_determination(self, name=None):
         if self.method:
@@ -1032,7 +1053,7 @@ class LabProfessionalMethodRequalification(ModelSQL, ModelView):
     _table = 'lims_lab_pro_method_req'
 
     professional_method = fields.Many2One('lims.lab.professional.method',
-        'Professional Method', ondelete='CASCADE', select=True, required=True)
+        'Professional Method', ondelete='CASCADE', required=True)
     type = fields.Selection([
         ('training', 'Training'),
         ('qualification', 'Qualification'),
@@ -1056,7 +1077,7 @@ class LabProfessionalMethodRequalificationSupervisor(ModelSQL, ModelView):
     method_requalification = fields.Many2One(
         'lims.lab.professional.method.requalification',
         'Professional method requalification', ondelete='CASCADE',
-        select=True, required=True)
+        required=True)
     supervisor = fields.Many2One('lims.laboratory.professional', 'Supervisor',
         required=True)
 
@@ -1069,7 +1090,7 @@ class LabProfessionalMethodRequalificationControl(ModelSQL, ModelView):
     method_requalification = fields.Many2One(
         'lims.lab.professional.method.requalification',
         'Professional method requalification', ondelete='CASCADE',
-        select=True, required=True)
+        required=True)
     control = fields.Many2One('lims.fraction', 'Control',
         required=True)
 
@@ -1079,7 +1100,7 @@ class BlindSample(ModelSQL, ModelView):
     __name__ = 'lims.blind_sample'
 
     line = fields.Many2One('lims.notebook.line', 'Line', required=True,
-        readonly=True, ondelete='CASCADE', select=True)
+        readonly=True, ondelete='CASCADE')
     entry = fields.Many2One('lims.entry', 'Entry', readonly=True)
     sample = fields.Many2One('lims.sample', 'Sample', readonly=True)
     fraction = fields.Many2One('lims.fraction', 'Fraction', readonly=True)

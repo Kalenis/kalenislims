@@ -100,7 +100,7 @@ class PurchaseSection(ModelSQL, ModelView):
     _order_name = 'order'
 
     purchase = fields.Many2One('purchase.purchase', 'Purchase',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     name = fields.Char('Name', required=True)
     data = fields.Binary('File', filename='name', required=True,
         file_id='data_id', store_prefix='purchase_section')

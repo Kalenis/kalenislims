@@ -2,7 +2,8 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond.model import ModelSQL, ModelView, DeactivableMixin, fields, Unique
+from trytond.model import ModelSQL, ModelView, DeactivableMixin, fields, \
+    Unique, Index
 from trytond.pool import Pool
 from trytond.pyson import Eval, If
 from trytond.transaction import Transaction
@@ -16,7 +17,7 @@ class Plant(ModelSQL, ModelView):
     __name__ = 'lims.plant'
 
     party = fields.Many2One('party.party', 'Party', required=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE')
     name = fields.Char('Name', required=True)
     street = fields.Char('Street', required=True)
     postal_code = fields.Char('Postal Code', required=True)
@@ -268,9 +269,9 @@ class EquipmentTemplateComponentKind(ModelSQL, ModelView):
     _table = 'lims_equipment_template_component_kind'
 
     template = fields.Many2One('lims.equipment.template', 'Template',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     kind = fields.Many2One('lims.component.kind', 'Kind',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     location = fields.Many2One('lims.component.location', 'Location')
 
     @classmethod
@@ -315,8 +316,7 @@ class Equipment(DeactivableMixin, ModelSQL, ModelView):
     internal_id = fields.Char('Internal ID Code')
     latitude = fields.Numeric('Latitude', digits=(3, 14))
     longitude = fields.Numeric('Longitude', digits=(4, 14))
-    plant = fields.Many2One('lims.plant', 'Plant',
-        required=True, select=True,
+    plant = fields.Many2One('lims.plant', 'Plant', required=True,
         domain=[If(Eval('context', {}).contains('party'),
             ('party', '=', Eval('context', {}).get('party', -1)),
             ())])
@@ -342,6 +342,9 @@ class Equipment(DeactivableMixin, ModelSQL, ModelView):
             ('name_unique', Unique(t, t.plant, t.name),
                 'lims_industry.msg_equipment_name_unique'),
             ]
+        cls._sql_indexes.update({
+            Index(t, (t.plant, Index.Equality())),
+            })
 
     @classmethod
     def create(cls, vlist):
@@ -470,7 +473,7 @@ class Component(ModelSQL, ModelView):
     __name__ = 'lims.component'
 
     equipment = fields.Many2One('lims.equipment', 'Equipment',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     kind = fields.Many2One('lims.component.kind', 'Kind', required=True)
     location = fields.Many2One('lims.component.location', 'Location')
     product_type = fields.Function(fields.Many2One('lims.product.type',

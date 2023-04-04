@@ -8,7 +8,7 @@ from PyPDF2 import PdfFileMerger
 from sql import Literal, Null
 
 from trytond.model import (Workflow, ModelView, ModelSQL, Unique, fields,
-    sequence_ordered)
+    sequence_ordered, Index)
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     StateReport, Button
 from trytond.pool import Pool
@@ -28,7 +28,7 @@ class ResultsReport(ModelSQL, ModelView):
     __name__ = 'lims.results_report'
     _rec_name = 'number'
 
-    number = fields.Char('Number', select=True, readonly=True)
+    number = fields.Char('Number', readonly=True)
     versions = fields.One2Many('lims.results_report.version',
         'results_report', 'Laboratories', readonly=True)
     party = fields.Many2One('party.party', 'Party', required=True,
@@ -36,7 +36,7 @@ class ResultsReport(ModelSQL, ModelView):
     invoice_party = fields.Function(fields.Many2One('party.party',
         'Invoice party'), 'get_entry_field',
         searcher='search_entry_field')
-    entry = fields.Many2One('lims.entry', 'Entry', select=True, readonly=True)
+    entry = fields.Many2One('lims.entry', 'Entry', readonly=True)
     notebook = fields.Many2One('lims.notebook', 'Laboratory notebook')
     report_grouper = fields.Integer('Report Grouper')
     generation_type = fields.Char('Generation type')
@@ -130,8 +130,14 @@ class ResultsReport(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
+        cls.number.search_unaccented = False
         super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.number, Index.Similarity())),
+            Index(t, (t.entry, Index.Equality())),
+            })
 
     @staticmethod
     def default_report_grouper():
@@ -598,8 +604,8 @@ class ResultsReportVersion(ModelSQL, ModelView):
     _rec_name = 'number'
 
     results_report = fields.Many2One('lims.results_report', 'Results Report',
-        required=True, ondelete='CASCADE', select=True)
-    number = fields.Char('Number', select=True, readonly=True)
+        required=True, ondelete='CASCADE')
+    number = fields.Char('Number', readonly=True)
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         required=True, readonly=True)
     details = fields.One2Many('lims.results_report.version.detail',
@@ -611,8 +617,13 @@ class ResultsReportVersion(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
+        cls.number.search_unaccented = False
         super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.number, Index.Similarity())),
+            })
 
     def get_report_type(self, name):
         ResultsDetail = Pool().get('lims.results_report.version.detail')
@@ -699,10 +710,10 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
 
     report_version = fields.Many2One('lims.results_report.version',
         'Report', required=True, readonly=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE')
     laboratory = fields.Function(fields.Many2One('lims.laboratory',
         'Laboratory'), 'get_version_field', searcher='search_version_field')
-    number = fields.Char('Version', select=True, readonly=True)
+    number = fields.Char('Version', readonly=True)
     valid = fields.Boolean('Active', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -824,6 +835,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
+        cls.number.search_unaccented = False
         super().__setup__()
         cls._order.insert(0, ('report_version', 'DESC'))
         cls._order.insert(1, ('number', 'DESC'))
@@ -863,6 +875,10 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                 'invisible': Or(Eval('state') != 'released', ~Eval('valid')),
                 'depends': ['state', 'valid'],
                 },
+            })
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.number, Index.Similarity())),
             })
 
     @classmethod
@@ -1808,7 +1824,7 @@ class ResultsReportCachedReport(ModelSQL):
     __name__ = 'lims.results_report.cached_report'
 
     version_detail = fields.Many2One('lims.results_report.version.detail',
-        'Report Detail', required=True, ondelete='CASCADE', select=True)
+        'Report Detail', required=True, ondelete='CASCADE')
     report_language = fields.Many2One('ir.lang', 'Language', required=True)
     report_cache = fields.Binary('Report cache', readonly=True,
         file_id='report_cache_id', store_prefix='results_report')
@@ -1839,7 +1855,7 @@ class ResultsReportComment(ModelSQL):
     __name__ = 'lims.results_report.comment'
 
     version_detail = fields.Many2One('lims.results_report.version.detail',
-        'Report Detail', ondelete='CASCADE', select=True, required=True)
+        'Report Detail', ondelete='CASCADE', required=True)
     report_language = fields.Many2One('ir.lang', 'Language', required=True)
     comments = fields.Text('Comments')
 
@@ -1888,7 +1904,7 @@ class ResultsReportVersionDetailSigner(sequence_ordered(),
     __name__ = 'lims.results_report.version.detail.signer'
 
     version_detail = fields.Many2One('lims.results_report.version.detail',
-        'Report Detail', required=True, ondelete='CASCADE', select=True)
+        'Report Detail', required=True, ondelete='CASCADE')
     type = fields.Selection([
         ('signer', 'Signer'),
         ('manager', 'Manager'),
@@ -2011,9 +2027,9 @@ class ResultsReportVersionDetailSample(
     __name__ = 'lims.results_report.version.detail.sample'
 
     version_detail = fields.Many2One('lims.results_report.version.detail',
-        'Report Detail', required=True, ondelete='CASCADE', select=True)
+        'Report Detail', required=True, ondelete='CASCADE')
     notebook = fields.Many2One('lims.notebook', 'Notebook', required=True,
-        readonly=True, select=True)
+        readonly=True)
     notebook_lines = fields.One2Many('lims.results_report.version.detail.line',
         'detail_sample', 'Analysis')
     party = fields.Function(fields.Many2One('party.party', 'Party'),
@@ -2036,6 +2052,10 @@ class ResultsReportVersionDetailSample(
     def __setup__(cls):
         super().__setup__()
         cls._order.insert(1, ('notebook.fraction', 'ASC'))
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.notebook, Index.Equality())),
+            })
 
     def get_rec_name(self, name):
         return self.notebook.rec_name
@@ -2111,10 +2131,10 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
 
     detail_sample = fields.Many2One(
         'lims.results_report.version.detail.sample', 'Sample Detail',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
-        readonly=True, select=True)
-    hide = fields.Boolean('Hide in Report', select=True)
+        readonly=True)
+    hide = fields.Boolean('Hide in Report')
     corrected = fields.Boolean('Corrected')
     analysis_origin = fields.Function(fields.Char('Analysis origin'),
         'get_nline_field')
@@ -2188,6 +2208,11 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
     def __setup__(cls):
         super().__setup__()
         cls._order.insert(0, ('analysis_order', 'ASC'))
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.notebook_line, Index.Equality())),
+            Index(t, (t.hide, Index.Equality())),
+            })
 
     @staticmethod
     def default_hide():

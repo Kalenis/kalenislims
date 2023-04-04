@@ -2,7 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from trytond.model import fields
+from trytond.model import fields, Index
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 
@@ -83,9 +83,17 @@ class Notebook(metaclass=PoolMeta):
 class NotebookLine(metaclass=PoolMeta):
     __name__ = 'lims.notebook.line'
 
-    diagnosis_warning = fields.Boolean('Diagnosis Warning', select=True)
+    diagnosis_warning = fields.Boolean('Diagnosis Warning')
     notify_acceptance = fields.Boolean('Notify acceptace')
     notify_acceptance_user = fields.Many2One('res.user', 'Notification User')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.diagnosis_warning, Index.Equality())),
+            })
 
     @staticmethod
     def default_notify_acceptance():

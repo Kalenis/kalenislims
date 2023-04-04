@@ -7,7 +7,7 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
-from trytond.model import Workflow, ModelSQL, ModelView, fields
+from trytond.model import Workflow, ModelSQL, ModelView, fields, Index
 from trytond.pyson import PYSONEncoder, Eval
 from trytond.pool import Pool, PoolMeta
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
@@ -79,7 +79,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
     __name__ = 'lims.administrative.task'
     _rec_name = 'number'
 
-    number = fields.Char('Number', select=True, readonly=True)
+    number = fields.Char('Number', readonly=True)
     type = fields.Char('Type', readonly=True)
     date = fields.Function(fields.Date('Create Date'), 'get_date',
         searcher='search_date')
@@ -97,7 +97,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         readonly=True)
     description = fields.Char('Description', required=True)
     responsible = fields.Many2One('res.user', 'Responsible User',
-        select=True, required=True)
+        required=True)
     rejection_reason = fields.Char('Rejection/Stand By Reason',
         states={
             'invisible': ~Eval('state').in_(['rejected', 'standby']),
@@ -111,7 +111,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         ('standby', 'Stand By'),
         ('done', 'Done'),
         ('discarded', 'Discarded'),
-        ], 'State', select=True, readonly=True, required=True)
+        ], 'State', readonly=True, required=True)
     icon = fields.Function(fields.Char('Icon'), 'get_icon')
     comments = fields.Text('Comments')
     scheduled = fields.Boolean('Scheduled', readonly=True)
@@ -121,6 +121,8 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
+        cls.number.search_unaccented = False
+        cls.state.search_unaccented = False
         super().__setup__()
         cls._order.insert(0, ('id', 'DESC'))
         cls._transitions |= set((
@@ -154,6 +156,12 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
             'do': {
                 'invisible': ~Eval('state').in_(['standby', 'ongoing']),
                 },
+            })
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.number, Index.Similarity())),
+            Index(t, (t.state, Index.Similarity())),
+            Index(t, (t.responsible, Index.Equality())),
             })
 
     @staticmethod
@@ -537,9 +545,9 @@ class AdministrativeTaskUser(ModelSQL):
     __name__ = 'lims.administrative.task.user'
 
     task = fields.Many2One('lims.administrative.task', 'Task',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     user = fields.Many2One('res.user', 'User',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class EditAdministrativeTaskStart(ModelView):

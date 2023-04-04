@@ -94,6 +94,6 @@ class ConfigurationSolvents(ModelSQL):
     __name__ = 'lims.configuration.solvents'
 
     configuration = fields.Many2One('lims.configuration', 'Configuration',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     category = fields.Many2One('product.category', 'Category',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)

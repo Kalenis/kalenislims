@@ -187,7 +187,7 @@ class ReportTemplateTranslation(ModelSQL, ModelView):
     _order_name = 'src'
 
     template = fields.Many2One('lims.report.template', 'Template',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     src = fields.Text('Source', required=True)
     value = fields.Text('Translation Value', required=True)
     lang = fields.Selection('get_language', string='Language', required=True)
@@ -256,7 +256,7 @@ class ReportTemplateSection(ModelSQL, ModelView):
     _order_name = 'order'
 
     template = fields.Many2One('lims.report.template', 'Template',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     name = fields.Char('Name', required=True)
     data = fields.Binary('File', filename='name', required=True,
         file_id='data_id', store_prefix='results_report_template_section')
@@ -698,7 +698,7 @@ class ResultsReportTemplateTrendChart(ModelSQL, ModelView):
     _order_name = 'order'
 
     template = fields.Many2One('lims.report.template', 'Template',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     chart = fields.Many2One('lims.trend.chart', 'Trend Chart',
         required=True, domain=[('active', '=', True)])
     order = fields.Integer('Order')

@@ -32,7 +32,7 @@ class Location(metaclass=PoolMeta):
 class Move(metaclass=PoolMeta):
     __name__ = 'stock.move'
 
-    fraction = fields.Many2One('lims.fraction', 'Fraction', select=True,
+    fraction = fields.Many2One('lims.fraction', 'Fraction',
         ondelete='CASCADE', states={
             'readonly': (In(Eval('state'), ['cancel', 'assigned', 'done']) |
                 Bool(Eval('fraction_readonly')))},

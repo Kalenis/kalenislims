@@ -126,10 +126,9 @@ class TechnicalScopeVersionLine(ModelSQL):
     __name__ = 'lims.technical.scope.version.line'
 
     version = fields.Many2One('lims.technical.scope.version',
-        'Technical scope version', ondelete='CASCADE', select=True,
-        required=True)
+        'Technical scope version', ondelete='CASCADE', required=True)
     typification = fields.Many2One('lims.typification', 'Typification',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class AnalysisFamily(ModelSQL, ModelView):

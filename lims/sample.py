@@ -14,7 +14,8 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from trytond.model import ModelView, ModelSQL, fields, Unique, DictSchemaMixin
+from trytond.model import ModelView, ModelSQL, fields, Unique, \
+    DictSchemaMixin, Index
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
 from trytond.pool import Pool
@@ -199,7 +200,7 @@ class FractionType(ModelSQL, ModelView):
     requalify = fields.Boolean('Requalify')
     control_charts = fields.Boolean('Available for Control Charts')
     report = fields.Boolean('Available for Results Report')
-    plannable = fields.Boolean('Plannable', select=True)
+    plannable = fields.Boolean('Plannable')
     cie_fraction_type = fields.Boolean('Available for Blind Samples')
     without_services = fields.Boolean('Allows entries without services')
     default_package_type = fields.Many2One('lims.packaging.type',
@@ -218,6 +219,9 @@ class FractionType(ModelSQL, ModelView):
             ('code_uniq', Unique(t, t.code),
                 'lims.msg_fraction_type_code_unique_id'),
             ]
+        cls._sql_indexes.update({
+            Index(t, (t.plannable, Index.Equality())),
+            })
 
     @staticmethod
     def default_requalify():
@@ -292,7 +296,7 @@ class Service(ModelSQL, ModelView):
     __name__ = 'lims.service'
     _rec_name = 'number'
 
-    number = fields.Char('Number', select=True, readonly=True)
+    number = fields.Char('Number', readonly=True)
     create_date2 = fields.Function(fields.DateTime('Create Date'),
        'get_create_date2', searcher='search_create_date2')
     fraction = fields.Many2One('lims.fraction', 'Fraction', required=True,
@@ -417,8 +421,14 @@ class Service(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
+        cls.number.search_unaccented = False
         super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.number, Index.Similarity())),
+            Index(t, (t.analysis, Index.Equality())),
+            })
 
     @classmethod
     def __register__(cls, module_name):
@@ -1586,9 +1596,9 @@ class ServiceOrigin(ModelSQL):
     __name__ = 'lims.service.additional_origin'
 
     service = fields.Many2One('lims.service', 'Service',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     origin = fields.Many2One('lims.service', 'Origin',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class Fraction(ModelSQL, ModelView):
@@ -1598,7 +1608,7 @@ class Fraction(ModelSQL, ModelView):
 
     _states = {'readonly': Bool(Eval('has_results_report'))}
 
-    number = fields.Char('Number', select=True, readonly=True)
+    number = fields.Char('Number', readonly=True)
     create_date2 = fields.Function(fields.DateTime('Create Date'),
        'get_create_date2', searcher='search_create_date2')
     sample = fields.Many2One('lims.sample', 'Sample', required=True,
@@ -1660,7 +1670,7 @@ class Fraction(ModelSQL, ModelView):
     button_manage_services_available = fields.Function(fields.Boolean(
         'Button manage services available'),
         'on_change_with_button_manage_services_available')
-    confirmed = fields.Boolean('Confirmed', select=True)
+    confirmed = fields.Boolean('Confirmed')
     button_confirm_available = fields.Function(fields.Boolean(
         'Button confirm available'),
         'on_change_with_button_confirm_available')
@@ -1731,6 +1741,7 @@ class Fraction(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
+        cls.number.search_unaccented = False
         super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
         cls._buttons.update({
@@ -1750,6 +1761,12 @@ class Fraction(ModelSQL, ModelView):
                     Bool(Eval('services'))),
                 'readonly': Bool(Eval('context', {}).get('from_entry', False)),
                 },
+            })
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.number, Index.Similarity())),
+            Index(t, (t.type, Index.Equality())),
+            Index(t, (t.confirmed, Index.Equality())),
             })
 
     @classmethod
@@ -2718,7 +2735,7 @@ class Sample(ModelSQL, ModelView):
     __name__ = 'lims.sample'
     _rec_name = 'number'
 
-    number = fields.Char('Number', select=True, readonly=True)
+    number = fields.Char('Number', readonly=True)
     create_date2 = fields.Function(fields.DateTime('Create Date'),
        'get_create_date2', searcher='search_create_date2')
     date = fields.DateTime('Date', required=True)
@@ -2849,6 +2866,7 @@ class Sample(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
+        cls.number.search_unaccented = False
         super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
         cls.__rpc__.update({
@@ -2858,6 +2876,10 @@ class Sample(ModelSQL, ModelView):
             'confirm': {
                 'invisible': ~Eval('button_confirm_available'),
                 },
+            })
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.number, Index.Similarity())),
             })
 
     @classmethod
@@ -4066,7 +4088,7 @@ class SamplePackage(ModelSQL, ModelView):
     __name__ = 'lims.sample.package'
 
     sample = fields.Many2One('lims.sample', 'Sample', required=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE')
     quantity = fields.Integer('Quantity', required=True)
     type = fields.Many2One('lims.packaging.type', 'Type', required=True)
     state = fields.Many2One('lims.packaging.integrity', 'State', required=True)
@@ -7472,7 +7494,7 @@ class Referral(ModelSQL, ModelView):
 
     _states = {'readonly': Eval('state') != 'draft'}
 
-    number = fields.Char('Number', select=True, readonly=True)
+    number = fields.Char('Number', readonly=True)
     date = fields.Date('Date', required=True, states=_states)
     sent_date = fields.Date('Sent date', readonly=True)
     laboratory = fields.Many2One('party.party', 'Destination Laboratory',
@@ -7495,6 +7517,7 @@ class Referral(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
+        cls.number.search_unaccented = False
         super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
         cls._buttons.update({
@@ -7502,6 +7525,10 @@ class Referral(ModelSQL, ModelView):
                 'invisible': Eval('state') != 'draft',
                 'depends': ['state'],
                 },
+            })
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.number, Index.Similarity())),
             })
 
     @staticmethod

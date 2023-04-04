@@ -26,7 +26,7 @@ class TemplateAnalysisSheetMaterial(ModelSQL, ModelView):
     __name__ = 'lims.template.analysis_sheet.material'
 
     template = fields.Many2One('lims.template.analysis_sheet', 'Template',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     product = fields.Many2One('product.product', 'Product',
         required=True, domain=[
             ('type', '!=', 'service'),

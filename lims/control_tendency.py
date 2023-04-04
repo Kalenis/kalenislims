@@ -8,7 +8,7 @@ from math import sqrt
 import matplotlib.pyplot as plt
 import gc
 
-from trytond.model import ModelView, ModelSQL, fields
+from trytond.model import ModelView, ModelSQL, fields, Index
 from trytond.wizard import (Wizard, StateTransition, StateView, StateAction,
     StateReport, Button)
 from trytond.pyson import PYSONEncoder, Eval, Bool
@@ -204,17 +204,17 @@ class ControlTendency(ModelSQL, ModelView):
     _states = {'readonly': Bool(Eval('context', {}).get('readonly', False))}
 
     family = fields.Many2One('lims.analysis.family', 'Family',
-        states=_states, select=True)
+        states=_states)
     product_type = fields.Many2One('lims.product.type', 'Product type',
-        states=_states, select=True)
+        states=_states)
     matrix = fields.Many2One('lims.matrix', 'Matrix',
-        states=_states, select=True)
+        states=_states)
     fraction_type = fields.Many2One('lims.fraction.type', 'Fraction type',
-        required=True, states=_states, select=True)
+        required=True, states=_states)
     analysis = fields.Many2One('lims.analysis', 'Analysis',
-        required=True, states=_states, select=True)
+        required=True, states=_states)
     concentration_level = fields.Many2One('lims.concentration.level',
-        'Concentration level', states=_states, select=True)
+        'Concentration level', states=_states)
     mean = fields.Float('Mean', required=True, states=_states,
         digits=(16, Eval('digits', 2)))
     deviation = fields.Float('Standard Deviation', required=True,
@@ -289,6 +289,15 @@ class ControlTendency(ModelSQL, ModelView):
         cls._order.insert(6, ('matrix', 'ASC'))
         cls._order.insert(7, ('analysis', 'ASC'))
         cls._order.insert(8, ('concentration_level', 'ASC'))
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.family, Index.Equality())),
+            Index(t, (t.product_type, Index.Equality())),
+            Index(t, (t.matrix, Index.Equality())),
+            Index(t, (t.fraction_type, Index.Equality())),
+            Index(t, (t.analysis, Index.Equality())),
+            Index(t, (t.concentration_level, Index.Equality())),
+            })
 
     @staticmethod
     def default_rule_1_count():
@@ -420,7 +429,7 @@ class ControlTendencyDetail(ModelSQL, ModelView):
     __name__ = 'lims.control.tendency.detail'
 
     tendency = fields.Many2One('lims.control.tendency', 'Tendency',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line')
     date = fields.Date('Date')
     fraction = fields.Many2One('lims.fraction', 'Fraction')
@@ -462,7 +471,7 @@ class ControlTendencyDetailRule(ModelSQL):
     __name__ = 'lims.control.tendency.detail.rule'
 
     detail = fields.Many2One('lims.control.tendency.detail', 'Detail',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     rule = fields.Char('Rule')
 
 
@@ -681,7 +690,7 @@ class ControlResultLineDetail(ModelSQL, ModelView):
     __name__ = 'lims.control.result_line.detail'
 
     line = fields.Many2One('lims.control.result_line', 'Line',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     date = fields.Date('Date')
     fraction = fields.Many2One('lims.fraction', 'Fraction')
     device = fields.Many2One('lims.lab.device', 'Device')
@@ -1540,10 +1549,10 @@ class TendencyAnalysisGroupAnalysis(ModelSQL):
     __name__ = 'lims.control.analysis_group.analysis'
 
     group = fields.Many2One('lims.control.analysis_group', 'Group',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     analysis = fields.Many2One('lims.analysis', 'Analysis',
         domain=[('type', '=', 'analysis')],
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class PrintControlChart(Wizard):
@@ -2022,7 +2031,7 @@ class TrendChartAnalysis(ModelSQL, ModelView):
     __name__ = 'lims.trend.chart.analysis'
 
     chart = fields.Many2One('lims.trend.chart', 'Trend Chart',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True)
     order = fields.Integer('Order')
 
@@ -2037,7 +2046,7 @@ class TrendChartAnalysis2(ModelSQL, ModelView):
     __name__ = 'lims.trend.chart.analysis2'
 
     chart = fields.Many2One('lims.trend.chart', 'Trend Chart',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True)
     order = fields.Integer('Order')
 

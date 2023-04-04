@@ -22,7 +22,7 @@ class LotAttribute(DictSchemaMixin, ModelSQL, ModelView):
     _rec_name = 'name'
 
     type = fields.Many2One('stock.lot.attribute.type', 'Type',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
 
     @staticmethod
     def default_type_():
@@ -43,9 +43,9 @@ class ProductCategoryLotAttributeType(ModelSQL):
     _table = 'product_category_stock_lot_attribute_type'
 
     category = fields.Many2One('product.category',
-        'Product Category', required=True, ondelete='CASCADE', select=True)
+        'Product Category', required=True, ondelete='CASCADE')
     attribute_type = fields.Many2One('stock.lot.attribute.type',
-        'Lot Attribute Type', required=True, ondelete='CASCADE', select=True)
+        'Lot Attribute Type', required=True, ondelete='CASCADE')
 
 
 class Lot(metaclass=PoolMeta):

@@ -222,7 +222,7 @@ class InvoiceContact(ModelSQL, ModelView):
     __name__ = 'account.invoice.invoice_contacts'
 
     invoice = fields.Many2One('account.invoice', 'Invoice',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     contact = fields.Many2One('party.address', 'Contact', required=True,
         domain=[('invoice_contact', '=', True)])
 

@@ -435,7 +435,7 @@ class SaleSection(ModelSQL, ModelView):
     _order_name = 'order'
 
     sale = fields.Many2One('sale.sale', 'Sale',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     name = fields.Char('Name', required=True)
     data = fields.Binary('File', filename='name', required=True,
         file_id='data_id', store_prefix='sale_section')

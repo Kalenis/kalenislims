@@ -4,7 +4,7 @@
 from sql import Literal
 from sql.conditionals import Case
 
-from trytond.model import ModelSQL, ModelView, fields
+from trytond.model import ModelSQL, ModelView, fields, Index
 from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Bool
@@ -147,6 +147,10 @@ class Sample(metaclass=PoolMeta):
         cls.product_type.states['readonly'] = Bool(Eval('component'))
         cls.matrix.states['readonly'] = Bool(Eval('comercial_product'))
         cls.attributes.domain = [('id', 'in', Eval('attributes_domain'))]
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.equipment, Index.Equality())),
+            })
 
     @staticmethod
     def default_ind_equipment_uom():
@@ -374,7 +378,7 @@ class SampleEditionLog(ModelSQL, ModelView):
     create_date2 = fields.Function(fields.DateTime('Created at'),
        'get_create_date2', searcher='search_create_date2')
     sample = fields.Many2One('lims.sample', 'Sample', required=True,
-        ondelete='CASCADE', select=True, readonly=True)
+        ondelete='CASCADE', readonly=True)
     field = fields.Selection([
         ('party', 'Party'),
         ('equipment', 'Equipment'),

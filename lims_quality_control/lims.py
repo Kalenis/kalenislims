@@ -3,7 +3,7 @@
 # the full copyright notices and license terms.
 from datetime import datetime
 
-from trytond.model import fields
+from trytond.model import fields, Index
 from trytond.pyson import Eval, Equal, Bool
 from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
@@ -221,9 +221,9 @@ class Typification(metaclass=PoolMeta):
 
 class NotebookLine(metaclass=PoolMeta):
     __name__ = 'lims.notebook.line'
+
     typification = fields.Many2One('lims.typification', 'Typification')
-    quality_test = fields.Many2One('lims.quality.test', 'Quality Test',
-        select=True)
+    quality_test = fields.Many2One('lims.quality.test', 'Quality Test')
     test_value = fields.Many2One('lims.quality.qualitative.value',
         'Test Value', states={'readonly': True})
     qualitative_value = fields.Many2One('lims.quality.qualitative.value',
@@ -249,6 +249,10 @@ class NotebookLine(metaclass=PoolMeta):
             'invisible': Bool(Eval('qualitative_value')),
             'readonly': Bool(Eval('accepted')),
             }
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.quality_test, Index.Equality())),
+            })
 
     @staticmethod
     def default_quality_test_report():

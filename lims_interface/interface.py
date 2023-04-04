@@ -21,7 +21,7 @@ from collections import defaultdict
 
 from trytond.config import config
 from trytond.model import (Workflow, ModelView, ModelSQL, fields,
-    sequence_ordered, Unique)
+    sequence_ordered, Unique, Index)
 from trytond.wizard import (Wizard, StateTransition, StateView, StateAction,
     Button)
 from trytond.pool import Pool
@@ -1510,7 +1510,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
     'Interface Compilation'
     __name__ = 'lims.interface.compilation'
 
-    date_time = fields.DateTime('Date', required=True, select=True)
+    date_time = fields.DateTime('Date', required=True)
     interface = fields.Many2One('lims.interface', 'Device Interface',
         domain=[('state', '=', 'active')],
         states={'readonly': Eval('state') != 'draft'})
@@ -1568,6 +1568,10 @@ class Compilation(Workflow, ModelSQL, ModelView):
                 'invisible': Eval('state') != 'validated',
                 'depends': ['state'],
                 },
+            })
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.date_time, Index.Range())),
             })
 
     def get_rec_name(self, name):
@@ -2373,7 +2377,7 @@ class VariableValue(ModelSQL, ModelView):
     __name__ = 'lims.interface.variable.value'
 
     variable = fields.Many2One('lims.interface.variable', 'Variable',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     name = fields.Function(fields.Char('Name'), 'get_name',
         searcher='search_name')
     value = fields.Char('Value', required=True)

@@ -9,7 +9,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from sql import Literal, Join
 
-from trytond.model import ModelView, ModelSQL, fields
+from trytond.model import ModelView, ModelSQL, fields, Index
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     StateReport, Button
 from trytond.pool import Pool
@@ -27,7 +27,7 @@ class Notebook(ModelSQL, ModelView):
     __name__ = 'lims.notebook'
 
     fraction = fields.Many2One('lims.fraction', 'Fraction', required=True,
-        readonly=True, ondelete='CASCADE', select=True)
+        readonly=True, ondelete='CASCADE')
     lines = fields.One2Many('lims.notebook.line', 'notebook', 'Lines')
     product_type = fields.Function(fields.Many2One('lims.product.type',
         'Product type'), 'get_sample_field', searcher='search_sample_field')
@@ -819,21 +819,20 @@ class NotebookLine(ModelSQL, ModelView):
     _states = {'readonly': Bool(Eval('accepted'))}
 
     notebook = fields.Many2One('lims.notebook', 'Laboratory notebook',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     analysis_detail = fields.Many2One('lims.entry.detail.analysis',
-        'Analysis detail', ondelete='CASCADE', select=True)
+        'Analysis detail', ondelete='CASCADE')
     service = fields.Many2One('lims.service', 'Service', readonly=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE')
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
-        readonly=True, select=True)
+        readonly=True)
     repetition = fields.Integer('Repetition', readonly=True)
-    start_date = fields.Date('Start date', states={'readonly': True},
-        select=True)
+    start_date = fields.Date('Start date', states={'readonly': True})
     end_date = fields.Date('End date', states={
         'readonly': Or(~Bool(Eval('start_date')), Bool(Eval('accepted'))),
         })
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        readonly=True, select=True)
+        readonly=True)
     method = fields.Many2One('lims.lab.method', 'Method',
         required=True, states=_states,
         domain=['OR', ('id', '=', Eval('method', -1)),
@@ -908,19 +907,18 @@ class NotebookLine(ModelSQL, ModelView):
     analysis_order = fields.Function(fields.Integer('Order'),
         'get_analysis_order')
     dilution_factor = fields.Float('Dilution factor', states=_states)
-    accepted = fields.Boolean('Accepted', select=True)
+    accepted = fields.Boolean('Accepted')
     acceptance_date = fields.DateTime('Acceptance date',
         states={'readonly': True})
     not_accepted_message = fields.Text('Message', readonly=True,
         states={'invisible': Not(Bool(Eval('not_accepted_message')))})
-    annulled = fields.Boolean('Annulled', states={'readonly': True},
-        select=True)
+    annulled = fields.Boolean('Annulled', states={'readonly': True})
     annulment_date = fields.DateTime('Annulment date',
         states={'readonly': True})
     annulment_reason = fields.Text('Annulment reason',
         states={'readonly': True, 'invisible': ~Eval('annulled')})
     results_report = fields.Many2One('lims.results_report', 'Results Report',
-        readonly=True, select=True)
+        readonly=True)
     planification = fields.Many2One('lims.planification', 'Planification',
         readonly=True)
     urgent = fields.Boolean('Urgent', states=_states)
@@ -1038,6 +1036,20 @@ class NotebookLine(ModelSQL, ModelView):
         super().__setup__()
         cls._order.insert(0, ('analysis_order', 'ASC'))
         cls._order.insert(1, ('repetition', 'ASC'))
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.analysis, Index.Equality())),
+            Index(t, (t.start_date, Index.Range())),
+            Index(t, (t.end_date, Index.Range())),
+            Index(t, (t.laboratory, Index.Equality())),
+            Index(t, (t.result_modifier, Index.Equality())),
+            Index(t, (t.converted_result_modifier, Index.Equality())),
+            Index(t, (t.concentration_level, Index.Equality())),
+            Index(t, (t.report, Index.Equality())),
+            Index(t, (t.accepted, Index.Equality())),
+            Index(t, (t.annulled, Index.Equality())),
+            Index(t, (t.results_report, Index.Equality())),
+            })
 
     @staticmethod
     def default_repetition():
@@ -1995,10 +2007,9 @@ class NotebookLineLaboratoryProfessional(ModelSQL):
     __name__ = 'lims.notebook.line-laboratory.professional'
 
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     professional = fields.Many2One('lims.laboratory.professional',
-        'Laboratory professional', ondelete='CASCADE', select=True,
-        required=True)
+        'Laboratory professional', ondelete='CASCADE', required=True)
 
 
 class NotebookLineProfessional(ModelSQL, ModelView):
@@ -2006,7 +2017,7 @@ class NotebookLineProfessional(ModelSQL, ModelView):
     __name__ = 'lims.notebook.line.professional'
 
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     professional = fields.Many2One('lims.laboratory.professional',
         'Laboratory professional', required=True)
 
@@ -3854,9 +3865,9 @@ class NotebookLoadResultsFormulaSit2DetailLine(ModelSQL):
 
     load_results = fields.Many2One(
         'lims.notebook.load_results_formula.sit2.detail', 'Load Results',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class NotebookLoadResultsFormula(Wizard):

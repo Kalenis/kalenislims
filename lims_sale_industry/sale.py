@@ -100,9 +100,9 @@ class SalePlant(ModelSQL):
     _table = 'sale_sale_lims_plant'
 
     sale = fields.Many2One('sale.sale', 'Sale',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     plant = fields.Many2One('lims.plant', 'Plant',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class SaleEquipment(ModelSQL):
@@ -111,9 +111,9 @@ class SaleEquipment(ModelSQL):
     _table = 'sale_sale_lims_equipment'
 
     sale = fields.Many2One('sale.sale', 'Sale',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     equipment = fields.Many2One('lims.equipment', 'Equipment',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class SaleComponent(ModelSQL):
@@ -122,9 +122,9 @@ class SaleComponent(ModelSQL):
     _table = 'sale_sale_lims_component'
 
     sale = fields.Many2One('sale.sale', 'Sale',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     component = fields.Many2One('lims.component', 'Component',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class SaleContact(ModelSQL):
@@ -133,9 +133,9 @@ class SaleContact(ModelSQL):
     _table = 'sale_sale_party_address'
 
     sale = fields.Many2One('sale.sale', 'Sale',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     address = fields.Many2One('party.address', 'Contact',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class SaleLine(metaclass=PoolMeta):
@@ -228,9 +228,9 @@ class SaleLinePlant(ModelSQL):
     _table = 'sale_line_lims_plant'
 
     line = fields.Many2One('sale.line', 'Sale Line',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     plant = fields.Many2One('lims.plant', 'Plant',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class SaleLineEquipment(ModelSQL):
@@ -239,9 +239,9 @@ class SaleLineEquipment(ModelSQL):
     _table = 'sale_line_lims_equipment'
 
     line = fields.Many2One('sale.line', 'Sale Line',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     equipment = fields.Many2One('lims.equipment', 'Equipment',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class SaleLineComponent(ModelSQL):
@@ -250,9 +250,9 @@ class SaleLineComponent(ModelSQL):
     _table = 'sale_line-lims_component'
 
     line = fields.Many2One('sale.line', 'Sale Line',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     component = fields.Many2One('lims.component', 'Component',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class SaleAddProductKitStart(ModelView):

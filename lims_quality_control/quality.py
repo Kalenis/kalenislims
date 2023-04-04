@@ -6,7 +6,7 @@ from io import BytesIO
 from PyPDF2 import PdfFileMerger
 
 from trytond.model import Workflow, ModelView, ModelSQL, DeactivableMixin, \
-    fields
+    fields, Index
 from trytond.wizard import Wizard, StateView, StateTransition, StateAction, \
     StateReport, Button
 from trytond.pyson import PYSONEncoder, Bool, Equal, Eval, Not
@@ -23,10 +23,18 @@ class QualitativeValue(DeactivableMixin, ModelSQL, ModelView):
     'Quality Value'
     __name__ = 'lims.quality.qualitative.value'
 
-    name = fields.Char('Name', required=True, translate=True,
-        select=True)
+    name = fields.Char('Name', required=True, translate=True)
     analysis = fields.Many2One('lims.analysis', 'Analysis')
     typification = fields.Many2One('lims.typification', 'Typification')
+
+    @classmethod
+    def __setup__(cls):
+        cls.name.search_unaccented = False
+        super().__setup__()
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.name, Index.Similarity())),
+            })
 
 
 class Template(Workflow, ModelSQL, ModelView):
@@ -74,6 +82,7 @@ class Template(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
+        cls.name.search_unaccented = False
         super().__setup__()
         cls._transitions |= set((
             ('draft', 'active'),
@@ -97,6 +106,12 @@ class Template(Workflow, ModelSQL, ModelView):
             'copy_lines': {
                 'invisible': Eval('state') != 'draft',
                 },
+            })
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.name, Index.Similarity())),
+            Index(t, (t.product, Index.Equality())),
+            Index(t, (t.company, Index.Equality())),
             })
 
     @classmethod
@@ -181,7 +196,7 @@ class QualityTest(Workflow, ModelSQL, ModelView):
 
     _states = {'readonly': Eval('state') != 'draft'}
 
-    number = fields.Char('Number', readonly=True, select=True,
+    number = fields.Char('Number', readonly=True,
         states={'required': Not(Equal(Eval('state'), 'draft'))})
     company = fields.Many2One('company.company', 'Company', required=True,
         states=_states)
@@ -223,6 +238,7 @@ class QualityTest(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
+        cls.number.search_unaccented = False
         super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
         cls._transitions |= set((
@@ -239,6 +255,11 @@ class QualityTest(Workflow, ModelSQL, ModelView):
                 'invisible': (Eval('state') != 'confirmed'),
                 'icon': 'tryton-ok',
                 },
+            })
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.number, Index.Similarity())),
+            Index(t, (t.company, Index.Equality())),
             })
 
     def get_success(self, name):

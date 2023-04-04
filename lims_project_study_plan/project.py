@@ -364,7 +364,7 @@ class ProjectLaboratoryProfessional(ModelSQL, ModelView):
     __name__ = 'lims.project.stp_professional'
 
     project = fields.Many2One('lims.project', 'Study plan project',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     professional = fields.Many2One('lims.laboratory.professional',
         'Laboratory professional', required=True)
     position = fields.Many2One('lims.project.stp_professional.position',
@@ -467,7 +467,7 @@ class ProjectReferenceElement(ModelSQL, ModelView):
     __name__ = 'lims.project.reference_element'
 
     project = fields.Many2One('lims.project', 'Project',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     type = fields.Selection([
         ('test', 'Test element'),
         ('reference', 'Reference element'),
@@ -553,7 +553,7 @@ class ProjectSolventAndReagent(ModelSQL, ModelView):
     __name__ = 'lims.project.solvent_reagent'
 
     project = fields.Many2One('lims.project', 'Project',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     product = fields.Many2One('product.product', 'Solvent/Reagent',
         domain=[('account_category', 'in', Eval('solvent_reagent_domain'))])
     solvent_reagent_domain = fields.Function(fields.Many2Many(
@@ -577,7 +577,7 @@ class ProjectSampleInCustody(ModelSQL, ModelView):
     __name__ = 'lims.project.sample_in_custody'
 
     project = fields.Many2One('lims.project', 'Project',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     sample = fields.Char('Sample', readonly=True)
     entry_date = fields.Date('Entry date')
     packages_quantity = fields.Integer('Packages quantity')
@@ -627,7 +627,7 @@ class ProjectDeviationAndAmendment(ModelSQL, ModelView):
     __name__ = 'lims.project.deviation_amendment'
 
     project = fields.Many2One('lims.project', 'Project',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     type = fields.Selection([
         ('deviation', 'Deviation'),
         ('amendment', 'Amendment'),
@@ -684,7 +684,7 @@ class ProjectDeviationAndAmendmentProfessional(ModelSQL, ModelView):
     _table = 'lims_project_deviation_amendment_pro'
 
     deviation_amendment = fields.Many2One('lims.project.deviation_amendment',
-        'Deviation/Amendment', ondelete='CASCADE', select=True, required=True)
+        'Deviation/Amendment', ondelete='CASCADE', required=True)
     professional = fields.Many2One('lims.laboratory.professional',
         'Laboratory professional', required=True, domain=['OR',
             ('id', '=', Eval('professional', -1)),
@@ -698,7 +698,7 @@ class ProjectChangeLog(ModelSQL):
     __name__ = 'lims.project.stp_changelog'
 
     project = fields.Many2One('lims.project', 'Study plan project',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     reason = fields.Text('Reason')
     date = fields.DateTime('Date')
     date2 = fields.Function(fields.Date('Date'), 'get_date',

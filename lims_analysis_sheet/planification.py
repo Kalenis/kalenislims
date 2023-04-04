@@ -154,7 +154,7 @@ class PlanificationAnalysisSheet(ModelSQL, ModelView):
     __name__ = 'lims.planification.analysis_sheet'
 
     planification = fields.Many2One('lims.planification', 'Planification',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     professional = fields.Many2One('lims.laboratory.professional',
         'Laboratory professional', required=True)
     analysis_sheet = fields.Many2One('lims.analysis_sheet',

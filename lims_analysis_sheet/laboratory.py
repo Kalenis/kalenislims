@@ -44,7 +44,7 @@ class LabDeviceConstant(ModelSQL, ModelView):
     __name__ = 'lims.lab.device.constant'
 
     device = fields.Many2One('lims.lab.device', 'Device', required=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE')
     name = fields.Float('Name', required=True)
     value1 = fields.Float('Value 1')
     value2 = fields.Float('Value 2')

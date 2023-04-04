@@ -86,7 +86,7 @@ class ProjectProfessional(ModelSQL, ModelView):
     __name__ = 'lims.project.mpi_professional'
 
     project = fields.Many2One('lims.project', 'Implementation project',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     employee = fields.Many2One('company.employee', 'Employee', required=True)
     position = fields.Many2One('lims.project.stp_professional.position',
         'Position')

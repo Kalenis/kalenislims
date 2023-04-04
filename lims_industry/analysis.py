@@ -28,9 +28,9 @@ class SampleAttributeAttributeSet(ModelSQL):
     _table = 'lims_sample_attribute_attribute_set'
 
     attribute = fields.Many2One('lims.sample.attribute', 'Attribute',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     attribute_set = fields.Many2One('lims.sample.attribute.set', 'Set',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
 
 
 class SamplingType(ModelSQL, ModelView):

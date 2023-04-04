@@ -5,7 +5,7 @@
 import formulas
 
 from trytond import backend
-from trytond.model import ModelSQL, ModelView, fields
+from trytond.model import ModelSQL, ModelView, fields, Index
 from trytond.transaction import Transaction
 from .interface import FIELD_TYPE_SQL, FIELD_TYPE_SELECTION
 
@@ -77,16 +77,15 @@ class TableField(ModelSQL, ModelView):
     __name__ = 'lims.interface.table.field'
 
     table = fields.Many2One('lims.interface.table', 'Table',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     name = fields.Char('Name', required=True)
     string = fields.Char('String', required=True)
     type = fields.Selection(
         [(None, ''), ('one2many', 'One2Many')] + FIELD_TYPE_SELECTION,
         'Field Type', required=False)
     help = fields.Text('Help')
-    transfer_field = fields.Boolean('Is a transfer field', select=True)
-    related_line_field = fields.Many2One('ir.model.field', 'Related Field',
-        select=True)
+    transfer_field = fields.Boolean('Is a transfer field')
+    related_line_field = fields.Many2One('ir.model.field', 'Related Field')
     related_model = fields.Many2One('ir.model', 'Related Model')
     selection = fields.Text('Selection')
     domain = fields.Char('Domain Value')
@@ -103,6 +102,15 @@ class TableField(ModelSQL, ModelView):
     group_name = fields.Char('Group Name')
     group_colspan = fields.Integer('Group Colspan')
     group_col = fields.Integer('Group Col')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.transfer_field, Index.Equality())),
+            Index(t, (t.related_line_field, Index.Equality())),
+            })
 
     def get_ast(self):
         parser = formulas.Parser()

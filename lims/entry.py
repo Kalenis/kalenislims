@@ -10,7 +10,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from sql import Literal
 
-from trytond.model import Workflow, Model, ModelView, ModelSQL, fields, Unique
+from trytond.model import Workflow, Model, ModelView, ModelSQL, fields, \
+    Unique, Index
 from trytond.wizard import Wizard, StateTransition, StateView, StateReport, \
     Button
 from trytond.pool import Pool
@@ -47,7 +48,7 @@ class Entry(Workflow, ModelSQL, ModelView):
     __name__ = 'lims.entry'
     _rec_name = 'number'
 
-    number = fields.Char('Number', select=True, readonly=True)
+    number = fields.Char('Number', readonly=True)
     create_date2 = fields.Function(fields.DateTime('Create Date'),
        'get_create_date2', searcher='search_create_date2')
     date = fields.DateTime('Date')
@@ -88,9 +89,9 @@ class Entry(Workflow, ModelSQL, ModelView):
     packages_quantity = fields.Integer('Packages quantity')
     email_report = fields.Boolean('Email report')
     single_sending_report = fields.Boolean(
-        'Single sending of report per Sample', select=True)
+        'Single sending of report per Sample')
     entry_single_sending_report = fields.Boolean(
-        'Single sending of report per Entry', select=True)
+        'Single sending of report per Entry')
     report_language = fields.Many2One('ir.lang',
         'Results Report Language', required=True,
         domain=[('translatable', '=', True)])
@@ -114,7 +115,7 @@ class Entry(Workflow, ModelSQL, ModelView):
         ('ongoing', 'Ongoing'),
         ('pending', 'Administration pending'),
         ('closed', 'Closed'),
-        ], 'State', required=True, readonly=True, select=True)
+        ], 'State', required=True, readonly=True)
     state_string = state.translated('state')
     ack_report_cache = fields.Binary('Acknowledgment report cache',
         readonly=True,
@@ -134,13 +135,15 @@ class Entry(Workflow, ModelSQL, ModelView):
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
     block_entry_confirmation = fields.Function(fields.Boolean(
         'Block Entry Confirmation'), 'get_block_entry_confirmation')
-    multi_party = fields.Boolean('Multi Party', readonly=True, select=True)
+    multi_party = fields.Boolean('Multi Party', readonly=True)
     pre_assigned_samples = fields.Function(fields.Integer(
         'Pre-Assigned Samples'), 'get_pre_assigned_samples')
     contract_number = fields.Char('Contract Number')
 
     @classmethod
     def __setup__(cls):
+        cls.number.search_unaccented = False
+        cls.state.search_unaccented = False
         super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
         cls._transitions |= set((
@@ -167,6 +170,14 @@ class Entry(Workflow, ModelSQL, ModelView):
                 'invisible': ~Eval('state').in_(['draft']),
                 'depends': ['state'],
                 },
+            })
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.number, Index.Similarity())),
+            Index(t, (t.state, Index.Similarity())),
+            Index(t, (t.single_sending_report, Index.Equality())),
+            Index(t, (t.entry_single_sending_report, Index.Equality())),
+            Index(t, (t.multi_party, Index.Equality())),
             })
 
     @classmethod
@@ -834,7 +845,7 @@ class EntryInvoiceContact(EntryContactMixin, ModelSQL, ModelView):
     __name__ = 'lims.entry.invoice_contacts'
 
     entry = fields.Many2One('lims.entry', 'Entry',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     contact = fields.Many2One('party.address', 'Contact', required=True,
         domain=[
             ('party', 'in', [Eval('_parent_entry', {}).get('party', -1),
@@ -863,7 +874,7 @@ class EntryReportContact(EntryContactMixin, ModelSQL, ModelView):
     __name__ = 'lims.entry.report_contacts'
 
     entry = fields.Many2One('lims.entry', 'Entry',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     contact = fields.Many2One('party.address', 'Contact', required=True,
         domain=[
             ('party', 'in', [Eval('_parent_entry', {}).get('party', -1),
@@ -892,7 +903,7 @@ class EntryAcknowledgmentContact(EntryContactMixin, ModelSQL, ModelView):
     __name__ = 'lims.entry.acknowledgment_contacts'
 
     entry = fields.Many2One('lims.entry', 'Entry',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     contact = fields.Many2One('party.address', 'Contact', required=True,
         domain=[
             ('party', 'in', [Eval('_parent_entry', {}).get('party', -1),
@@ -921,7 +932,7 @@ class EntryPreAssignedSample(ModelSQL):
     __name__ = 'lims.entry.pre_assigned_sample'
 
     entry = fields.Many2One('lims.entry', 'Entry',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     number = fields.Char('Number')
     used = fields.Boolean('Used')
 
@@ -1056,7 +1067,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     __name__ = 'lims.entry.detail.analysis'
 
     service = fields.Many2One('lims.service', 'Service', required=True,
-        ondelete='CASCADE', select=True, readonly=True)
+        ondelete='CASCADE', readonly=True)
     service_view = fields.Function(fields.Many2One('lims.service',
         'Service', states={'invisible': Not(Bool(Eval('_parent_service')))}),
         'on_change_with_service_view')
@@ -1071,7 +1082,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     party = fields.Function(fields.Many2One('party.party', 'Party'),
         'get_service_field', searcher='search_service_field')
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
-        select=True, states={'readonly': True})
+        states={'readonly': True})
     analysis_type = fields.Function(fields.Selection([
         (None, ''),
         ('analysis', 'Analysis'),
@@ -1105,13 +1116,13 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         ('done', 'Done'),
         ('reported', 'Reported'),
         ('annulled', 'Annulled'),
-        ], 'State', readonly=True, select=True)
+        ], 'State', readonly=True)
     cie_min_value = fields.Char('Minimum value')
     cie_max_value = fields.Char('Maximum value')
     cie_fraction_type = fields.Function(fields.Boolean('Blind Sample'),
         'get_cie_fraction_type')
-    plannable = fields.Boolean('Plannable', select=True)
-    referable = fields.Boolean('Referred by default', select=True)
+    plannable = fields.Boolean('Plannable')
+    referable = fields.Boolean('Referred by default')
     referral = fields.Many2One('lims.referral', 'Referral',
         states={'readonly': True})
     referral_date = fields.Function(fields.Date('Referral date'),
@@ -1141,8 +1152,16 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
+        cls.state.search_unaccented = False
         super().__setup__()
         cls._order.insert(0, ('service', 'DESC'))
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.state, Index.Similarity())),
+            Index(t, (t.analysis, Index.Equality())),
+            Index(t, (t.plannable, Index.Equality())),
+            Index(t, (t.referable, Index.Equality())),
+            })
 
     @staticmethod
     def default_fraction():

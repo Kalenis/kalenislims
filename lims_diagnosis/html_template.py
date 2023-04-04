@@ -37,7 +37,7 @@ class DiagnosisStateImage(ModelSQL, ModelView):
     __name__ = 'lims.diagnosis.state.image'
 
     state = fields.Many2One('lims.diagnosis.state', 'State',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     name = fields.Char('Name', required=True)
     image = fields.Binary('Image', required=True)
 
@@ -48,9 +48,9 @@ class DiagnosisTemplateState(ModelSQL):
     _table = 'lims_diagnosis_template_diagnosis_state'
 
     template = fields.Many2One('lims.diagnosis.template', 'Template',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     state = fields.Many2One('lims.diagnosis.state', 'State',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
 
 
 class ResultsReportTemplate(metaclass=PoolMeta):

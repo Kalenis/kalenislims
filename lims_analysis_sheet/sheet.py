@@ -13,7 +13,7 @@ from sql.aggregate import Count
 from sql.conditionals import Coalesce
 
 from trytond.model import Workflow, ModelView, ModelSQL, DeactivableMixin, \
-    fields, Unique
+    fields, Unique, Index
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
 from trytond.pool import Pool
@@ -294,9 +294,9 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
     __name__ = 'lims.template.analysis_sheet.analysis'
 
     template = fields.Many2One('lims.template.analysis_sheet', 'Template',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     analysis = fields.Many2One('lims.analysis', 'Analysis',
-        required=True, select=True, domain=[('type', '=', 'analysis')])
+        required=True, domain=[('type', '=', 'analysis')])
     method = fields.Many2One('lims.lab.method', 'Method',
         domain=[('id', 'in', Eval('method_domain'))])
     method_domain = fields.Function(fields.Many2Many('lims.lab.method',
@@ -310,6 +310,14 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
     interface = fields.Function(fields.Many2One(
         'lims.interface', 'Device Interface'), 'get_interface',
         searcher='search_interface')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.analysis, Index.Equality())),
+            })
 
     @fields.depends('analysis', '_parent_analysis.methods')
     def on_change_with_method_domain(self, name=None):
@@ -361,7 +369,7 @@ class TemplateAnalysisSheetAnalysisExpression(ModelSQL, ModelView):
     __name__ = 'lims.template.analysis_sheet.analysis.expression'
 
     analysis = fields.Many2One('lims.template.analysis_sheet.analysis',
-        'Analysis', required=True, ondelete='CASCADE', select=True)
+        'Analysis', required=True, ondelete='CASCADE')
     column = fields.Many2One('lims.interface.column', 'Column',
         domain=['OR', ('id', '=', Eval('column', -1)),
             ('interface', '=', Eval('context', {}).get('interface_id'))],

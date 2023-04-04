@@ -10,7 +10,7 @@ from decimal import Decimal
 from sql import Literal
 
 from trytond.model import Workflow, ModelView, ModelSQL, DeactivableMixin, \
-    fields, Unique
+    fields, Unique, Index
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
 from trytond.report import Report
@@ -27,16 +27,15 @@ class Typification(ModelSQL, ModelView):
     _rec_name = 'initial_concentration'
 
     product_type = fields.Many2One('lims.product.type', 'Product type',
-        required=True, select=True,
-        states={'readonly': Bool(Eval('id', 0) > 0)})
+        required=True, states={'readonly': Bool(Eval('id', 0) > 0)})
     matrix = fields.Many2One('lims.matrix', 'Matrix', required=True,
-        select=True, states={'readonly': Bool(Eval('id', 0) > 0)})
+        states={'readonly': Bool(Eval('id', 0) > 0)})
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
         domain=[
             ('state', '=', 'active'),
             ('type', '=', 'analysis'),
             ('behavior', '!=', 'additional'),
-        ], select=True, states={'readonly': Bool(Eval('id', 0) > 0)})
+        ], states={'readonly': Bool(Eval('id', 0) > 0)})
     method = fields.Many2One('lims.lab.method', 'Method', required=True,
         domain=[('id', 'in', Eval('method_domain'))])
     method_view = fields.Function(fields.Many2One('lims.lab.method', 'Method'),
@@ -78,7 +77,7 @@ class Typification(ModelSQL, ModelView):
     additionals_domain = fields.Function(fields.Many2Many('lims.analysis',
         None, None, 'Additional analysis domain'),
         'on_change_with_additionals_domain')
-    by_default = fields.Boolean('By default', select=True)
+    by_default = fields.Boolean('By default')
     calc_decimals = fields.Integer('Calculation decimals', required=True)
     significant_digits = fields.Integer('Significant digits')
     scientific_notation = fields.Boolean('Scientific notation')
@@ -92,7 +91,7 @@ class Typification(ModelSQL, ModelView):
         ('both', 'Both'),
         ], 'Result type', sort=False)
     referable = fields.Boolean('Referred by default')
-    valid = fields.Boolean('Active', select=True,
+    valid = fields.Boolean('Active',
         states={'readonly': Bool(Eval('valid_readonly'))})
     valid_view = fields.Function(fields.Boolean('Active'),
         'get_views_field', searcher='search_views_field')
@@ -116,7 +115,6 @@ class Typification(ModelSQL, ModelView):
         cls._order.insert(2, ('analysis', 'ASC'))
         cls._order.insert(3, ('method', 'ASC'))
         t = cls.__table__()
-
         # Add unique index if quality control module is not installed
         Module = Pool().get('ir.module')
         cursor = Transaction().connection.cursor()
@@ -131,6 +129,14 @@ class Typification(ModelSQL, ModelView):
                     Unique(t, t.product_type, t.matrix, t.analysis, t.method),
                     'lims.msg_typification_unique_id'),
                 ]
+        cls._sql_indexes.update({
+            Index(t, (t.product_type, Index.Equality())),
+            Index(t, (t.matrix, Index.Equality())),
+            Index(t, (t.analysis, Index.Equality())),
+            Index(t, (t.method, Index.Equality())),
+            Index(t, (t.by_default, Index.Equality())),
+            Index(t, (t.valid, Index.Equality())),
+            })
 
     @staticmethod
     def default_limit_digits():
@@ -550,9 +556,9 @@ class TypificationAditional(ModelSQL):
     __name__ = 'lims.typification-analysis'
 
     typification = fields.Many2One('lims.typification', 'Typification',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     analysis = fields.Many2One('lims.analysis', 'Analysis',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
 
 class TypificationReadOnly(ModelSQL, ModelView):
@@ -598,11 +604,19 @@ class CalculatedTypification(ModelSQL):
     __name__ = 'lims.typification.calculated'
 
     product_type = fields.Many2One('lims.product.type', 'Product type',
-        required=True, select=True)
-    matrix = fields.Many2One('lims.matrix', 'Matrix', required=True,
-        select=True)
+        required=True)
+    matrix = fields.Many2One('lims.matrix', 'Matrix', required=True)
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.product_type, Index.Equality())),
+            Index(t, (t.matrix, Index.Equality())),
+            })
 
     @classmethod
     def __register__(cls, module_name):
@@ -823,11 +837,9 @@ class ObjectiveDescription(ModelSQL, ModelView):
     _rec_name = 'description'
 
     product_type = fields.Many2One('lims.product.type', 'Product type',
-        required=True, select=True,
-        states={'readonly': Bool(Eval('id', 0) > 0)})
+        required=True, states={'readonly': Bool(Eval('id', 0) > 0)})
     matrix = fields.Many2One('lims.matrix', 'Matrix',
-        required=True, select=True,
-        states={'readonly': Bool(Eval('id', 0) > 0)})
+        required=True, states={'readonly': Bool(Eval('id', 0) > 0)})
     description = fields.Char('Description', required=True, translate=True)
 
     @classmethod
@@ -841,6 +853,10 @@ class ObjectiveDescription(ModelSQL, ModelView):
             ('product_matrix_uniq', Unique(t, t.product_type, t.matrix),
                 'lims.msg_objective_description_unique_id'),
             ]
+        cls._sql_indexes.update({
+            Index(t, (t.product_type, Index.Equality())),
+            Index(t, (t.matrix, Index.Equality())),
+            })
 
 
 class Formula(ModelSQL, ModelView):
@@ -858,7 +874,7 @@ class FormulaVariable(ModelSQL, ModelView):
     __name__ = 'lims.formula.variable'
 
     formula = fields.Many2One('lims.formula', 'Formula', required=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE')
     number = fields.Char('Number', required=True)
     description = fields.Char('Description', required=True)
     fraction_type = fields.Many2One('lims.fraction.type', 'Fraction type')
@@ -870,7 +886,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
     __name__ = 'lims.analysis'
     _rec_name = 'description'
 
-    code = fields.Char('Code', required=True, select=True,
+    code = fields.Char('Code', required=True,
         states={'readonly': Eval('state') != 'draft'})
     description = fields.Char('Description', required=True, translate=True,
         states={'readonly': Bool(Equal(Eval('state'), 'disabled'))})
@@ -1011,6 +1027,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def __setup__(cls):
+        cls.code.search_unaccented = False
         super().__setup__()
         t = cls.__table__()
         cls._sql_constraints += [
@@ -1036,6 +1053,10 @@ class Analysis(Workflow, ModelSQL, ModelView):
             'reactivate': {
                 'invisible': (Eval('state') != 'disabled'),
                 },
+            })
+        cls._sql_indexes.update({
+            Index(t, (t.code, Index.Similarity())),
+            Index(t, (t.automatic_acquisition, Index.Equality())),
             })
 
     @staticmethod
@@ -1672,7 +1693,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
     __name__ = 'lims.analysis.included'
 
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE')
     included_analysis = fields.Many2One('lims.analysis', 'Included analysis',
         required=True, domain=['OR',
             ('id', '=', Eval('included_analysis', -1)),
@@ -1695,6 +1716,14 @@ class AnalysisIncluded(ModelSQL, ModelView):
     method_domain = fields.Function(fields.Many2Many('lims.lab.method',
         None, None, 'Method domain'),
         'on_change_with_method_domain')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        t = cls.__table__()
+        cls._sql_indexes.update({
+            Index(t, (t.included_analysis, Index.Equality())),
+            })
 
     @classmethod
     def validate(cls, included_analysis):
@@ -1987,9 +2016,9 @@ class AnalysisLaboratory(ModelSQL, ModelView):
     __name__ = 'lims.analysis-laboratory'
 
     analysis = fields.Many2One('lims.analysis', 'Analysis',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     department = fields.Many2One('company.department', 'Department',
         states={'readonly': ~Equal(Eval('context', {}).get('type', ''),
             'analysis')})
@@ -2022,9 +2051,9 @@ class AnalysisLabMethod(ModelSQL):
     __name__ = 'lims.analysis-lab.method'
 
     analysis = fields.Many2One('lims.analysis', 'Analysis',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
     method = fields.Many2One('lims.lab.method', 'Method',
-        ondelete='CASCADE', select=True, required=True)
+        ondelete='CASCADE', required=True)
 
     @classmethod
     def delete(cls, methods):
@@ -2050,7 +2079,7 @@ class AnalysisDevice(DeactivableMixin, ModelSQL, ModelView):
     __name__ = 'lims.analysis.device'
 
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE')
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         required=True, domain=[('id', 'in', Eval('_parent_analysis',
             {}).get('laboratory_domain', [Eval('laboratory', -1)]))])
