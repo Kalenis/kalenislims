@@ -19,9 +19,12 @@ def kalenis_test_suite():
 
 
 def read(fname):
-    return io.open(
+    content = io.open(
         os.path.join(os.path.dirname(__file__), fname),
         'r', encoding='utf-8').read()
+    content = re.sub(
+        r'(?m)^\.\. toctree::\r?\n((^$|^\s.*$)\r?\n)*', '', content)
+    return content
 
 
 def get_require_version(name):
@@ -36,7 +39,7 @@ def get_require_version(name):
     return require
 
 
-version = '6.0.0'
+version = '6.6.0'
 major_version, minor_version, _ = version.split('.', 2)
 major_version = int(major_version)
 minor_version = int(minor_version)
@@ -45,7 +48,7 @@ minor_version = int(minor_version)
 requires = ['appdirs', 'Babel', 'Click', 'formulas', 'Jinja2 < 3.1',
     get_require_version('kalenis_user_view'), 'openpyxl==2.6.4', 'matplotlib',
     'pandas', 'psycopg2', 'PyPDF2 < 2', 'pytz', 'unidecode', 'WeasyPrint',
-    'werkzeug < 2', 'xlrd', 'xlutils']
+    'werkzeug', 'xlrd', 'xlutils']
 
 
 packages = []
@@ -58,7 +61,7 @@ for name in os.listdir('.'):
     if not os.path.isfile(cfg):
         continue
     config = ConfigParser()
-    config.readfp(open(cfg))
+    config.read_file(open(cfg))
     info = dict(config.items('tryton'))
     for key in ('depends', 'extras_depend', 'xml'):
         if key in info:
@@ -124,17 +127,16 @@ if __name__ == '__main__':
             'Natural Language :: Spanish',
             'Operating System :: OS Independent',
             'Programming Language :: Python :: 3',
-            'Programming Language :: Python :: 3.6',
             'Programming Language :: Python :: 3.7',
             'Programming Language :: Python :: 3.8',
             'Programming Language :: Python :: 3.9',
+            'Programming Language :: Python :: 3.10',
             'Programming Language :: Python :: Implementation :: CPython',
-            'Programming Language :: Python :: Implementation :: PyPy',
             'Topic :: Office/Business',
             'Topic :: Scientific/Engineering',
             ],
         license='GPL-3',
-        python_requires='>=3.6',
+        python_requires='>=3.7',
         install_requires=requires,
         dependency_links=dependency_links,
         zip_safe=False,
