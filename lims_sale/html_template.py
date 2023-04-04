@@ -20,5 +20,4 @@ class SaleReportTemplate(metaclass=PoolMeta):
 
     clause_template = fields.Many2One('sale.clause.template',
         'Clauses Template',
-        states={'invisible': Eval('type') != 'base'},
-        depends=['type'])
+        states={'invisible': Eval('type') != 'base'})

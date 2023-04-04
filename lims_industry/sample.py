@@ -32,9 +32,8 @@ class Sample(metaclass=PoolMeta):
     plant = fields.Function(fields.Many2One('lims.plant', 'Plant'),
         'get_plant', searcher='search_plant')
     equipment = fields.Many2One('lims.equipment', 'Equipment',
-        domain=['OR', ('id', '=', Eval('equipment')),
-            ('party', '=', Eval('party'))],
-        depends=['party'], select=True)
+        domain=['OR', ('id', '=', Eval('equipment', -1)),
+            ('party', '=', Eval('party'))])
     equipment_template = fields.Function(fields.Many2One(
         'lims.equipment.template', 'Equipment Template'),
         'get_equipment_field')
@@ -45,9 +44,8 @@ class Sample(metaclass=PoolMeta):
     equipment_name = fields.Function(fields.Char(
         'Equipment Name'), 'get_equipment_field')
     component = fields.Many2One('lims.component', 'Component',
-        domain=['OR', ('id', '=', Eval('component')),
-            ('equipment', '=', Eval('equipment'))],
-        depends=['equipment'])
+        domain=['OR', ('id', '=', Eval('component', -1)),
+            ('equipment', '=', Eval('equipment'))])
     comercial_product = fields.Many2One('lims.comercial.product',
         'Comercial Product')
     ind_sampling_date = fields.Date('Sampling date')
@@ -147,14 +145,8 @@ class Sample(metaclass=PoolMeta):
     def __setup__(cls):
         super().__setup__()
         cls.product_type.states['readonly'] = Bool(Eval('component'))
-        if 'component' not in cls.product_type.depends:
-            cls.product_type.depends.append('component')
         cls.matrix.states['readonly'] = Bool(Eval('comercial_product'))
-        if 'comercial_product' not in cls.matrix.depends:
-            cls.matrix.depends.append('comercial_product')
         cls.attributes.domain = [('id', 'in', Eval('attributes_domain'))]
-        if 'attributes_domain' not in cls.attributes.depends:
-            cls.attributes.depends.append('attributes_domain')
 
     @staticmethod
     def default_ind_equipment_uom():
@@ -466,20 +458,19 @@ class CreateSampleStart(metaclass=PoolMeta):
         domain=[('party', '=', Eval('party'))],
         states={'required': Bool(Eval('ind_required'))},
         context={'party': Eval('party')},
-        depends=['party', 'ind_required'])
+        depends={'party'})
     component = fields.Many2One('lims.component', 'Component',
         domain=[('equipment', '=', Eval('equipment'))],
-        states={'required': Bool(Eval('ind_required'))},
-        depends=['equipment', 'ind_required'])
+        states={'required': Bool(Eval('ind_required'))})
     comercial_product = fields.Many2One('lims.comercial.product',
-        'Comercial Product', depends=['ind_required'],
+        'Comercial Product',
         states={'required': Bool(Eval('ind_required'))})
     label = fields.Char('Label')
     ind_sampling_date = fields.Date('Sampling date')
-    ind_volume = fields.Float('Received volume', depends=['ind_required'],
+    ind_volume = fields.Float('Received volume',
         states={'required': Bool(Eval('ind_required'))})
     sampling_type = fields.Many2One('lims.sampling.type',
-        'Sampling Type', depends=['ind_required'],
+        'Sampling Type',
         states={'required': Bool(Eval('ind_required'))})
     ind_operational_detail = fields.Text('Operational detail')
     ind_work_environment = fields.Text('Work environment')
@@ -529,14 +520,8 @@ class CreateSampleStart(metaclass=PoolMeta):
         for field in ('component', 'comercial_product'):
             cls.analysis_domain.on_change_with.add(field)
         cls.product_type.states['readonly'] = Bool(Eval('component'))
-        if 'component' not in cls.product_type.depends:
-            cls.product_type.depends.append('component')
         cls.matrix.states['readonly'] = Bool(Eval('comercial_product'))
-        if 'comercial_product' not in cls.matrix.depends:
-            cls.matrix.depends.append('comercial_product')
         cls.attributes.domain = [('id', 'in', Eval('attributes_domain'))]
-        if 'attributes_domain' not in cls.attributes.depends:
-            cls.attributes.depends.append('attributes_domain')
         cls.sample_client_description.required = False
 
     @staticmethod
@@ -747,14 +732,11 @@ class EditSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.sample.edit.start'
 
     plant = fields.Many2One('lims.plant', 'Plant',
-        domain=[('party', '=', Eval('party'))],
-        depends=['party'])
+        domain=[('party', '=', Eval('party'))])
     equipment = fields.Many2One('lims.equipment', 'Equipment',
-        domain=[('plant', '=', Eval('plant'))],
-        depends=['plant'])
+        domain=[('plant', '=', Eval('plant'))])
     component = fields.Many2One('lims.component', 'Component',
-        domain=[('equipment', '=', Eval('equipment'))],
-        depends=['equipment'])
+        domain=[('equipment', '=', Eval('equipment'))])
     comercial_product = fields.Many2One('lims.comercial.product',
         'Comercial Product')
 

@@ -38,21 +38,20 @@ class Typification(ModelSQL, ModelView):
             ('behavior', '!=', 'additional'),
         ], select=True, states={'readonly': Bool(Eval('id', 0) > 0)})
     method = fields.Many2One('lims.lab.method', 'Method', required=True,
-        domain=[('id', 'in', Eval('method_domain'))],
-        depends=['method_domain'], select=True)
+        domain=[('id', 'in', Eval('method_domain'))])
     method_view = fields.Function(fields.Many2One('lims.lab.method', 'Method'),
         'get_views_field', searcher='search_views_field')
     method_domain = fields.Function(fields.Many2Many('lims.lab.method',
         None, None, 'Method domain'),
         'on_change_with_method_domain')
     detection_limit = fields.Float('Detection limit',
-        digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
+        digits=(16, Eval('limit_digits', 2)))
     quantification_limit = fields.Float('Quantification limit',
-        digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
+        digits=(16, Eval('limit_digits', 2)))
     lower_limit = fields.Float('Lower limit allowed',
-        digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
+        digits=(16, Eval('limit_digits', 2)))
     upper_limit = fields.Float('Upper limit allowed',
-        digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
+        digits=(16, Eval('limit_digits', 2)))
     limit_digits = fields.Integer('Limit digits')
     check_result_limits = fields.Boolean(
         'Validate limits directly on the result')
@@ -75,8 +74,7 @@ class Typification(ModelSQL, ModelView):
         domain=[('state', '=', 'active'), ('behavior', '=', 'additional')])
     additionals = fields.Many2Many('lims.typification-analysis',
         'typification', 'analysis', 'Additional analysis',
-        domain=[('id', 'in', Eval('additionals_domain'))],
-        depends=['additionals_domain'])
+        domain=[('id', 'in', Eval('additionals_domain'))])
     additionals_domain = fields.Function(fields.Many2Many('lims.analysis',
         None, None, 'Additional analysis domain'),
         'on_change_with_additionals_domain')
@@ -95,21 +93,18 @@ class Typification(ModelSQL, ModelView):
         ], 'Result type', sort=False)
     referable = fields.Boolean('Referred by default')
     valid = fields.Boolean('Active', select=True,
-        states={'readonly': Bool(Eval('valid_readonly'))},
-        depends=['valid_readonly'])
+        states={'readonly': Bool(Eval('valid_readonly'))})
     valid_view = fields.Function(fields.Boolean('Active'),
         'get_views_field', searcher='search_views_field')
     valid_readonly = fields.Function(fields.Boolean(
         'Field active readonly'),
         'on_change_with_valid_readonly')
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        domain=[('id', 'in', Eval('laboratory_domain'))],
-        depends=['laboratory_domain'])
+        domain=[('id', 'in', Eval('laboratory_domain'))])
     laboratory_domain = fields.Function(fields.Many2Many('lims.laboratory',
         None, None, 'Laboratory domain'), 'on_change_with_laboratory_domain')
     department = fields.Many2One('company.department', 'Department',
-        domain=[('id', 'in', Eval('department_domain'))],
-        depends=['department_domain'])
+        domain=[('id', 'in', Eval('department_domain'))])
     department_domain = fields.Function(fields.Many2Many('company.department',
         None, None, 'Department domain'), 'on_change_with_department_domain')
 
@@ -876,16 +871,15 @@ class Analysis(Workflow, ModelSQL, ModelView):
     _rec_name = 'description'
 
     code = fields.Char('Code', required=True, select=True,
-        states={'readonly': Eval('state') != 'draft'}, depends=['state'])
+        states={'readonly': Eval('state') != 'draft'})
     description = fields.Char('Description', required=True, translate=True,
-        states={'readonly': Bool(Equal(Eval('state'), 'disabled'))},
-        depends=['state'])
+        states={'readonly': Bool(Equal(Eval('state'), 'disabled'))})
     type = fields.Selection([
         ('analysis', 'Analysis'),
         ('set', 'Set'),
         ('group', 'Group'),
         ], 'Type', sort=False, required=True,
-        states={'readonly': Eval('state') != 'draft'}, depends=['state'])
+        states={'readonly': Eval('state') != 'draft'})
     laboratories = fields.One2Many('lims.analysis-laboratory', 'analysis',
         'Laboratories', context={'type': Eval('type')},
         states={
@@ -896,7 +890,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 Eval('type') != 'analysis',
                 Bool(Equal(Eval('behavior'), 'additional')))),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
-            }, depends=['type', 'behavior', 'state'])
+            }, depends={'type'})
     laboratory_domain = fields.Function(fields.Many2Many('lims.laboratory',
         None, None, 'Laboratories'), 'on_change_with_laboratory_domain')
     methods = fields.Many2Many('lims.analysis-lab.method', 'analysis',
@@ -908,19 +902,18 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 Eval('type').in_(['set', 'group']),
                 Bool(Equal(Eval('behavior'), 'additional')))),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
-            }, depends=['type', 'behavior', 'state'])
+            })
     devices = fields.One2Many('lims.analysis.device', 'analysis', 'Devices',
         states={
             'invisible': Or(
                 Eval('type').in_(['set', 'group']),
                 Bool(Equal(Eval('behavior'), 'additional'))),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
-            },
-        depends=['type', 'behavior', 'state'])
+            })
     start_date = fields.Date('Entry date', readonly=True)
     end_date = fields.Date('Leaving date', readonly=True)
     included_analysis = fields.One2Many('lims.analysis.included', 'analysis',
-        'Included analysis', depends=['type', 'state'],
+        'Included analysis', depends={'type'},
         context={'analysis': Eval('id'), 'type': Eval('type')},
         states={
             'invisible': Bool(Equal(Eval('type'), 'analysis')),
@@ -941,28 +934,28 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 Eval('type').in_(['set', 'group']),
                 Eval('state') != 'draft',
                 ),
-            }, depends=['type', 'state'])
+            })
     result_formula = fields.Char('Result formula',
         states={
             'invisible': Not(
                 Bool(Equal(Eval('behavior'), 'internal_relation'))),
             'required': Bool(Equal(Eval('behavior'), 'internal_relation')),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
-            }, depends=['behavior', 'state'])
+            })
     converted_result_formula = fields.Char('Converted result formula',
         states={
             'invisible': Not(
                 Bool(Equal(Eval('behavior'), 'internal_relation'))),
             'required': Bool(Equal(Eval('behavior'), 'internal_relation')),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
-            }, depends=['behavior', 'state'])
+            })
     gender_species = fields.Text('Gender Species', translate=True,
         states={
             'invisible': Not(And(
                 Bool(Equal(Eval('type'), 'analysis')),
                 Bool(Equal(Eval('behavior'), 'normal')))),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
-            }, depends=['type', 'behavior', 'state'])
+            })
     microbiology = fields.Function(fields.Boolean('Microbiology'),
         'on_change_with_microbiology')
     formula = fields.Many2One('lims.formula', 'Formula',
@@ -971,32 +964,29 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 Bool(Equal(Eval('type'), 'analysis')),
                 Bool(Equal(Eval('behavior'), 'normal')))),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
-            }, depends=['type', 'behavior', 'state'])
+            })
     product = fields.Many2One('product.product', 'Product')
     automatic_acquisition = fields.Boolean('Automatic acquisition',
-        states={'readonly': Bool(Equal(Eval('state'), 'disabled'))},
-        depends=['state'], select=True)
+        states={'readonly': Bool(Equal(Eval('state'), 'disabled'))})
     order = fields.Integer('Order', states={
         'invisible': Not(And(
             Bool(Equal(Eval('type'), 'analysis')),
             Eval('behavior').in_(['normal', 'internal_relation']))),
         'readonly': Bool(Equal(Eval('state'), 'disabled')),
-        }, depends=['type', 'behavior', 'state'])
+        })
     disable_as_individual = fields.Boolean(
         'Not allowed as individual service', states={
             'invisible': Not(And(
                 Bool(Equal(Eval('type'), 'analysis')),
                 Eval('behavior').in_(['normal', 'internal_relation']))),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
-            },
-        depends=['type', 'behavior', 'state'])
+            })
     validate_limits_after_calculation = fields.Boolean(
         'Validate limits after calculation ', states={
             'invisible': Not(
                 Bool(Equal(Eval('behavior'), 'internal_relation'))),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
-            },
-        depends=['behavior', 'state'])
+            })
     state = fields.Selection([
         ('draft', 'Draft'),
         ('active', 'Active'),
@@ -1008,7 +998,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 Bool(Equal(Eval('type'), 'analysis')),
                 Bool(Equal(Eval('behavior'), 'normal')))),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
-            }, depends=['type', 'behavior', 'state'])
+            })
     comments = fields.Text('Warnings/Comments')
     pending_fractions = fields.Function(fields.Integer('Pending fractions'),
         'get_pending_fractions', searcher='search_pending_fractions')
@@ -1684,8 +1674,8 @@ class AnalysisIncluded(ModelSQL, ModelView):
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
         ondelete='CASCADE', select=True)
     included_analysis = fields.Many2One('lims.analysis', 'Included analysis',
-        required=True, select=True, depends=['analysis_domain'],
-        domain=['OR', ('id', '=', Eval('included_analysis')),
+        required=True, domain=['OR',
+            ('id', '=', Eval('included_analysis', -1)),
             ('id', 'in', Eval('analysis_domain'))])
     analysis_domain = fields.Function(fields.Many2Many('lims.analysis',
         None, None, 'Analysis domain'),
@@ -1701,8 +1691,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
         domain=[('id', 'in', Eval('method_domain'))],
         states={
             'invisible': Eval('analysis_type').in_(['set', 'group']),
-            },
-        depends=['method_domain', 'analysis_type'])
+            })
     method_domain = fields.Function(fields.Many2Many('lims.lab.method',
         None, None, 'Method domain'),
         'on_change_with_method_domain')
@@ -1749,7 +1738,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
         analysis_id = context.get('analysis', None)
         return AnalysisIncluded.get_analysis_domain(analysis_id)
 
-    @fields.depends('analysis')
+    @fields.depends('analysis', '_parent_analysis.id')
     def on_change_with_analysis_domain(self, name=None):
         analysis_id = self.analysis.id if self.analysis else None
         return self.get_analysis_domain(analysis_id)
@@ -2063,13 +2052,11 @@ class AnalysisDevice(DeactivableMixin, ModelSQL, ModelView):
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
         ondelete='CASCADE', select=True)
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        required=True, depends=['analysis'],
-        domain=[('id', 'in', Eval('_parent_analysis',
-            {}).get('laboratory_domain', [Eval('laboratory')]))])
+        required=True, domain=[('id', 'in', Eval('_parent_analysis',
+            {}).get('laboratory_domain', [Eval('laboratory', -1)]))])
     device = fields.Many2One('lims.lab.device', 'Device', required=True,
         domain=[('laboratories.laboratory', '=', Eval('laboratory')),
-            ('device_type.non_analytical', '=', False)],
-        depends=['laboratory'])
+            ('device_type.non_analytical', '=', False)])
     by_default = fields.Boolean('By default')
 
     @staticmethod
@@ -2125,8 +2112,7 @@ class CopyTypificationStart(ModelView):
             ('behavior', '!=', 'additional'),
             ])
     origin_method = fields.Many2One('lims.lab.method', 'Method',
-        states={'required': Bool(Eval('destination_method'))},
-        depends=['destination_method'])
+        states={'required': Bool(Eval('destination_method'))})
     destination_product_type = fields.Many2One('lims.product.type',
         'Product type',
         states={
@@ -2887,13 +2873,13 @@ class UpdateTypificationStart(ModelView):
     __name__ = 'lims.typification.update.start'
 
     detection_limit = fields.Float('Detection limit',
-        digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
+        digits=(16, Eval('limit_digits', 2)))
     quantification_limit = fields.Float('Quantification limit',
-        digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
+        digits=(16, Eval('limit_digits', 2)))
     lower_limit = fields.Float('Lower limit allowed',
-        digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
+        digits=(16, Eval('limit_digits', 2)))
     upper_limit = fields.Float('Upper limit allowed',
-        digits=(16, Eval('limit_digits', 2)), depends=['limit_digits'])
+        digits=(16, Eval('limit_digits', 2)))
     limit_digits = fields.Integer('Limit digits')
     check_result_limits = fields.Boolean(
         'Validate limits on the result')
@@ -2990,8 +2976,7 @@ class RelateAnalysisStart(ModelView):
 
     analysis = fields.Many2Many('lims.analysis', None, None,
         'Analysis', required=True,
-        domain=[('id', 'in', Eval('analysis_domain'))],
-        depends=['analysis_domain'])
+        domain=[('id', 'in', Eval('analysis_domain'))])
     analysis_domain = fields.One2Many('lims.analysis', None,
         'Analysis domain')
 
@@ -3306,8 +3291,7 @@ class RemoveTypificationsStart(ModelView):
 
     typifications = fields.Many2Many('lims.typification.readonly',
         None, None, 'Typifications', required=True,
-        domain=[('id', 'in', Eval('typifications_domain'))],
-        depends=['typifications_domain'])
+        domain=[('id', 'in', Eval('typifications_domain'))])
     typifications_domain = fields.One2Many('lims.typification.readonly',
         None, 'Typifications domain')
 

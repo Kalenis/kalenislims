@@ -12,13 +12,11 @@ class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'
 
     int_itl_party = fields.Many2One('party.party', 'ITL Party',
-        depends=['type'], states={
-            'required': Bool(Equal(Eval('type'), 'itl')),
-            })
+        states={'required': Bool(Equal(Eval('type'), 'itl'))})
     int_result_date = fields.Date('Result date')
     int_report_reception = fields.Date('Report reception')
     int_evaluation = fields.Text('Evaluation',
-        depends=['type', 'end_date'], states={
+        states={
             'required': And(Equal(Eval('type'), 'itl'),
                 Bool(Eval('end_date'))),
             })

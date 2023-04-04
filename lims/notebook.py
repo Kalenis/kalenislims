@@ -817,7 +817,6 @@ class NotebookLine(ModelSQL, ModelView):
     __name__ = 'lims.notebook.line'
 
     _states = {'readonly': Bool(Eval('accepted'))}
-    _depends = ['accepted']
 
     notebook = fields.Many2One('lims.notebook', 'Laboratory notebook',
         ondelete='CASCADE', select=True, required=True)
@@ -832,14 +831,13 @@ class NotebookLine(ModelSQL, ModelView):
         select=True)
     end_date = fields.Date('End date', states={
         'readonly': Or(~Bool(Eval('start_date')), Bool(Eval('accepted'))),
-        }, depends=['start_date', 'accepted'], select=True)
+        })
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         readonly=True, select=True)
     method = fields.Many2One('lims.lab.method', 'Method',
         required=True, states=_states,
-        domain=['OR', ('id', '=', Eval('method')),
-            ('id', 'in', Eval('method_domain'))],
-        depends=['accepted', 'method_domain'])
+        domain=['OR', ('id', '=', Eval('method', -1)),
+            ('id', 'in', Eval('method_domain'))])
     method_view = fields.Function(fields.Many2One('lims.lab.method',
         'Method'), 'get_views_field')
     method_domain = fields.Function(fields.Many2Many('lims.lab.method',
@@ -849,90 +847,67 @@ class NotebookLine(ModelSQL, ModelView):
         'Method version', readonly=True)
     device = fields.Many2One('lims.lab.device', 'Device',
         states=_states,
-        domain=['OR', ('id', '=', Eval('device')),
-            ('id', 'in', Eval('device_domain'))],
-        depends=['accepted', 'device_domain'])
+        domain=['OR', ('id', '=', Eval('device', -1)),
+            ('id', 'in', Eval('device_domain'))])
     device_view = fields.Function(fields.Many2One('lims.lab.device',
         'Device'), 'get_views_field')
     device_domain = fields.Function(fields.Many2Many('lims.lab.device',
         None, None, 'Device domain'), 'on_change_with_device_domain')
     analysis_origin = fields.Char('Analysis origin', readonly=True)
     initial_concentration = fields.Char('Initial concentration',
-        translate=True, states=_states, depends=_depends)
+        translate=True, states=_states)
     final_concentration = fields.Char('Final concentration',
-        translate=True, states=_states, depends=_depends)
+        translate=True, states=_states)
     literal_final_concentration = fields.Char('Literal Final concentration',
-        translate=True, states=_states, depends=_depends)
+        translate=True, states=_states)
     laboratory_professionals = fields.Many2Many(
         'lims.notebook.line-laboratory.professional', 'notebook_line',
-        'professional', 'Preparation professionals',
-        states=_states, depends=_depends)
+        'professional', 'Preparation professionals', states=_states)
     initial_unit = fields.Many2One('product.uom', 'Initial unit',
         domain=[('category.lims_only_available', '=', True)],
-        states=_states, depends=_depends)
+        states=_states)
     final_unit = fields.Many2One('product.uom', 'Final unit',
         domain=[('category.lims_only_available', '=', True)],
-        states=_states, depends=_depends)
+        states=_states)
     result_modifier = fields.Many2One('lims.result_modifier',
-        'Result modifier', select=True,
-        states=_states, depends=_depends)
+        'Result modifier', states=_states)
     converted_result_modifier = fields.Many2One('lims.result_modifier',
-        'Converted result modifier', select=True,
-        states=_states, depends=_depends)
-    result = fields.Char('Result',
-        states=_states, depends=_depends)
-    converted_result = fields.Char('Converted result',
-        states=_states, depends=_depends)
+        'Converted result modifier', states=_states)
+    result = fields.Char('Result', states=_states)
+    converted_result = fields.Char('Converted result', states=_states)
     formated_result = fields.Function(fields.Char('Result to report'),
         'get_formated_result')
     formated_converted_result = fields.Function(fields.Char(
         'Converted result to report'), 'get_formated_converted_result')
-    detection_limit = fields.Char('Detection limit',
-        states=_states, depends=_depends)
-    quantification_limit = fields.Char('Quantification limit',
-        states=_states, depends=_depends)
-    lower_limit = fields.Char('Lower limit allowed',
-        states=_states, depends=_depends)
-    upper_limit = fields.Char('Upper limit allowed',
-        states=_states, depends=_depends)
+    detection_limit = fields.Char('Detection limit', states=_states)
+    quantification_limit = fields.Char('Quantification limit', states=_states)
+    lower_limit = fields.Char('Lower limit allowed', states=_states)
+    upper_limit = fields.Char('Upper limit allowed', states=_states)
     check_result_limits = fields.Function(fields.Boolean(
         'Validate limits directly on the result'), 'get_typification_field')
-    chromatogram = fields.Char('Chromatogram',
-        states=_states, depends=_depends)
+    chromatogram = fields.Char('Chromatogram', states=_states)
     professionals = fields.One2Many('lims.notebook.line.professional',
-        'notebook_line', 'Analytic professionals',
-        states=_states, depends=_depends)
-    comments = fields.Text('Entry comments',
-        states=_states, depends=_depends)
+        'notebook_line', 'Analytic professionals', states=_states)
+    comments = fields.Text('Entry comments', states=_states)
     theoretical_concentration = fields.Char('Theoretical concentration',
-        states=_states, depends=_depends)
+        states=_states)
     concentration_level = fields.Many2One('lims.concentration.level',
-        'Concentration level',
-        states=_states, depends=_depends, select=True)
-    decimals = fields.Integer('Decimals',
-        states=_states, depends=_depends)
-    significant_digits = fields.Integer('Significant digits',
-        states=_states, depends=_depends)
-    scientific_notation = fields.Boolean('Scientific notation',
-        states=_states, depends=_depends)
-    backup = fields.Char('Backup',
-        states=_states, depends=_depends)
-    reference = fields.Char('Reference',
-        states=_states, depends=_depends)
+        'Concentration level', states=_states)
+    decimals = fields.Integer('Decimals', states=_states)
+    significant_digits = fields.Integer('Significant digits', states=_states)
+    scientific_notation = fields.Boolean('Scientific notation', states=_states)
+    backup = fields.Char('Backup', states=_states)
+    reference = fields.Char('Reference', states=_states)
     literal_result = fields.Char('Literal result', translate=True,
-        states=_states, depends=_depends)
+        states=_states)
     rm_correction_formula = fields.Char('RM Correction Formula',
-        states=_states, depends=_depends)
-    report = fields.Boolean('Report',
-        states=_states, depends=_depends, select=True)
-    uncertainty = fields.Char('Uncertainty',
-        states=_states, depends=_depends)
-    verification = fields.Char('Verification',
-        states=_states, depends=_depends)
+        states=_states)
+    report = fields.Boolean('Report', states=_states)
+    uncertainty = fields.Char('Uncertainty', states=_states)
+    verification = fields.Char('Verification', states=_states)
     analysis_order = fields.Function(fields.Integer('Order'),
         'get_analysis_order')
-    dilution_factor = fields.Float('Dilution factor',
-        states=_states, depends=_depends)
+    dilution_factor = fields.Float('Dilution factor', states=_states)
     accepted = fields.Boolean('Accepted', select=True)
     acceptance_date = fields.DateTime('Acceptance date',
         states={'readonly': True})
@@ -943,14 +918,12 @@ class NotebookLine(ModelSQL, ModelView):
     annulment_date = fields.DateTime('Annulment date',
         states={'readonly': True})
     annulment_reason = fields.Text('Annulment reason',
-        states={'readonly': True, 'invisible': ~Eval('annulled')},
-        depends=['annulled'])
+        states={'readonly': True, 'invisible': ~Eval('annulled')})
     results_report = fields.Many2One('lims.results_report', 'Results Report',
         readonly=True, select=True)
     planification = fields.Many2One('lims.planification', 'Planification',
         readonly=True)
-    urgent = fields.Boolean('Urgent',
-        states=_states, depends=_depends)
+    urgent = fields.Boolean('Urgent', states=_states)
     priority = fields.Function(fields.Integer('Priority'),
         'get_service_field', searcher='search_service_field')
     fraction = fields.Function(fields.Many2One('lims.fraction', 'Fraction'),
@@ -985,22 +958,20 @@ class NotebookLine(ModelSQL, ModelView):
     report_date = fields.Function(fields.Date('Date agreed for result'),
         'get_service_field', searcher='search_service_field')
     department = fields.Many2One('company.department', 'Department',
-        domain=['OR', ('id', '=', Eval('department')),
+        domain=['OR', ('id', '=', Eval('department', -1)),
             ('id', 'in', Eval('department_domain'))],
-        states=_states, depends=_depends + ['department_domain'])
+        states=_states)
     department_domain = fields.Function(fields.Many2Many('company.department',
         None, None, 'Department domain'), 'on_change_with_department_domain')
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
     planning_comments = fields.Function(fields.Text('Planification comments'),
         'get_planning_comments')
     controls = fields.Many2Many('lims.notebook.line-fraction',
-        'notebook_line', 'fraction', 'Controls',
-        states=_states, depends=_depends)
+        'notebook_line', 'fraction', 'Controls', states=_states)
     referral = fields.Function(fields.Many2One('lims.referral', 'Referral'),
         'get_detail_field', searcher='search_detail_field')
     repetition_reason = fields.Char('Repetition reason',
-        states={'readonly': True, 'invisible': Eval('repetition', 0) == 0},
-        depends=['repetition'])
+        states={'readonly': True, 'invisible': Eval('repetition', 0) == 0})
     exceptional_load = fields.Boolean('Exceptionally loaded result',
         readonly=True)
     exceptional_load_uid = fields.Many2One('res.user',
@@ -1012,7 +983,7 @@ class NotebookLine(ModelSQL, ModelView):
         'Product described by the client', translate=True),
         'get_sample_field')
 
-    del _states, _depends
+    del _states
 
     @classmethod
     def __register__(cls, module_name):
@@ -1844,8 +1815,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     annulled = fields.Boolean('Annulled', readonly=True)
     annulment_date = fields.DateTime('Annulment date', readonly=True)
     annulment_reason = fields.Text('Annulment reason', readonly=True,
-        states={'invisible': ~Eval('annulled')},
-        depends=['annulled'])
+        states={'invisible': ~Eval('annulled')})
     results_report = fields.Many2One('lims.results_report', 'Results Report',
         readonly=True)
     planification = fields.Many2One('lims.planification', 'Planification',
@@ -1862,8 +1832,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     referral = fields.Function(fields.Many2One('lims.referral', 'Referral'),
         'get_line_field', searcher='search_line_field')
     repetition_reason = fields.Char('Repetition reason', readonly=True,
-        states={'invisible': Eval('repetition', 0) == 0},
-        depends=['repetition'])
+        states={'invisible': Eval('repetition', 0) == 0})
     exceptional_load = fields.Boolean('Exceptionally loaded result',
         readonly=True)
     exceptional_load_uid = fields.Many2One('res.user',
@@ -3849,8 +3818,7 @@ class NotebookLoadResultsFormulaSit2Detail(ModelSQL, ModelView):
         'Professional', readonly=True)
     method = fields.Many2One('lims.lab.method', 'Method', readonly=True)
     supervisor = fields.Many2One('lims.laboratory.professional',
-        'Supervisor', depends=['supervisor_domain'],
-        domain=[('id', 'in', Eval('supervisor_domain'))])
+        'Supervisor', domain=[('id', 'in', Eval('supervisor_domain'))])
     supervisor_domain = fields.Function(fields.Many2Many(
         'lims.laboratory.professional', None, None, 'Supervisor domain'),
         'get_supervisor_domain')
@@ -4474,8 +4442,7 @@ class NotebookLoadResultsManualLine(ModelSQL, ModelView):
     fraction_type = fields.Many2One('lims.fraction.type', 'Fraction type',
         readonly=True)
     device = fields.Many2One('lims.lab.device', 'Device',
-        domain=[('id', 'in', Eval('device_domain'))],
-        depends=['device_domain'])
+        domain=[('id', 'in', Eval('device_domain'))])
     device_domain = fields.Function(fields.Many2Many('lims.lab.device',
         None, None, 'Device domain'), 'on_change_with_device_domain')
     uncertainty = fields.Char('Uncertainty')
@@ -4507,7 +4474,7 @@ class NotebookLoadResultsManualLine(ModelSQL, ModelView):
             return Date.today()
         return None
 
-    @fields.depends('line')
+    @fields.depends('line', '_parent_line.analysis', '_parent_line.laboratory')
     def on_change_with_device_domain(self, name=None):
         cursor = Transaction().connection.cursor()
         AnalysisDevice = Pool().get('lims.analysis.device')
@@ -4536,8 +4503,8 @@ class NotebookLoadResultsManualSit2(ModelView):
     __name__ = 'lims.notebook.load_results_manual.sit2'
 
     supervisor = fields.Many2One('lims.laboratory.professional',
-        'Supervisor', depends=['supervisor_domain'],
-        domain=[('id', 'in', Eval('supervisor_domain'))], required=True)
+        'Supervisor', required=True,
+        domain=[('id', 'in', Eval('supervisor_domain'))])
     supervisor_domain = fields.Many2Many('lims.laboratory.professional',
         None, None, 'Supervisor domain')
     lines = fields.Many2Many('lims.notebook.line', None, None, 'Lines')
@@ -4939,8 +4906,7 @@ class NotebookAddInternalRelationsStart(ModelView):
 
     analysis = fields.Many2Many('lims.analysis', None, None,
         'Internal relations', required=True,
-        domain=[('id', 'in', Eval('analysis_domain'))],
-        depends=['analysis_domain'])
+        domain=[('id', 'in', Eval('analysis_domain'))])
     analysis_domain = fields.One2Many('lims.analysis', None,
         'Internal relations domain')
 
@@ -5136,8 +5102,7 @@ class NotebookRepeatAnalysisStart(ModelView):
 
     analysis = fields.Many2Many('lims.analysis', None, None,
         'Analysis', required=True,
-        domain=[('id', 'in', Eval('analysis_domain'))],
-        depends=['analysis_domain'])
+        domain=[('id', 'in', Eval('analysis_domain'))])
     analysis_domain = fields.One2Many('lims.analysis', None,
         'Analysis domain')
     repetition_reason = fields.Char('Reason')
@@ -5310,8 +5275,7 @@ class NotebookLineRepeatAnalysisStart(ModelView):
     __name__ = 'lims.notebook.line.repeat_analysis.start'
 
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
-        domain=[('id', 'in', Eval('analysis_domain'))],
-        depends=['analysis_domain'])
+        domain=[('id', 'in', Eval('analysis_domain'))])
     analysis_domain = fields.One2Many('lims.analysis', None,
         'Analysis domain')
     repetition_reason = fields.Char('Reason')
@@ -5324,8 +5288,7 @@ class NotebookLineRepeatAnalysisStart(ModelView):
         'on_change_with_analysis_type')
     method = fields.Many2One('lims.lab.method', 'Method',
         domain=[('id', 'in', Eval('method_domain'))],
-        states={'invisible': Eval('analysis_type') != 'analysis'},
-        depends=['method_domain', 'analysis_type'])
+        states={'invisible': Eval('analysis_type') != 'analysis'})
     method_domain = fields.Function(fields.Many2Many('lims.lab.method',
         None, None, 'Method domain'),
         'on_change_with_method_domain')
@@ -6203,9 +6166,7 @@ class NotebookPrecisionControlStart(ModelView):
     product_type = fields.Many2One('lims.product.type', 'Product type',
         required=True)
     matrix = fields.Many2One('lims.matrix', 'Matrix', required=True,
-        domain=[
-            ('id', 'in', Eval('matrix_domain')),
-            ], depends=['matrix_domain'])
+        domain=[('id', 'in', Eval('matrix_domain'))])
     matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
         None, None, 'Matrix domain'),
         'on_change_with_matrix_domain')

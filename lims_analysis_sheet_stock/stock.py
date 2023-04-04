@@ -52,8 +52,7 @@ class Lot(metaclass=PoolMeta):
     __name__ = 'stock.lot'
 
     attributes = fields.Dict('stock.lot.attribute', 'Attributes',
-        domain=[('type', 'in', Eval('attribute_types_domain'))],
-        depends=['attribute_types_domain'])
+        domain=[('type', 'in', Eval('attribute_types_domain'))])
     attributes_string = attributes.translated('attributes')
     attribute_types_domain = fields.Function(fields.Many2Many(
         'stock.lot.attribute.type', None, None, 'Attribute Types domain'),

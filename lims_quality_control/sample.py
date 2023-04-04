@@ -234,7 +234,7 @@ class CountersampleCreateStart(ModelView):
     unit = fields.Many2One('product.uom', 'UoM', required=True,
         domain=[
             ('category', '=', Eval('product_uom_category')),
-            ('factor', '<=', Eval('product_factor')),
+            ('factor', '<=', Eval('product_factor', 0)),
             ])
     product_uom_category = fields.Many2One('product.uom.category',
         'Product Uom Category')

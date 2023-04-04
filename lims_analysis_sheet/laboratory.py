@@ -68,8 +68,7 @@ class NotebookRule(metaclass=PoolMeta):
     analysis_sheet = fields.Boolean('For use in Analysis Sheets')
     apply_on_notebook = fields.Boolean('Apply directly on the Notebook',
         states={'readonly': ~And(
-            Bool(Eval('analysis_sheet')), Eval('action') == 'edit')},
-        depends=['analysis_sheet', 'action'])
+            Bool(Eval('analysis_sheet')), Eval('action') == 'edit')})
 
     @staticmethod
     def default_analysis_sheet():

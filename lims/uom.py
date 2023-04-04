@@ -78,12 +78,11 @@ class VolumeConversion(ModelSQL, ModelView):
     __name__ = 'lims.volume.conversion'
 
     brix = fields.Float('Brix', required=True, digits=(16,
-        Eval('brix_digits', 2)), depends=['brix_digits'])
+        Eval('brix_digits', 2)))
     density = fields.Float('Density', required=True, digits=(16,
-        Eval('density_digits', 2)), depends=['density_digits'])
+        Eval('density_digits', 2)))
     soluble_solids = fields.Float('Soluble solids', required=True,
-        digits=(16, Eval('soluble_solids_digits', 2)),
-        depends=['soluble_solids_digits'])
+        digits=(16, Eval('soluble_solids_digits', 2)))
     brix_digits = fields.Function(fields.Integer('Brix digits'),
         'get_configuration_field')
     density_digits = fields.Function(fields.Integer('Density digits'),

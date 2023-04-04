@@ -102,8 +102,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         states={
             'invisible': ~Eval('state').in_(['rejected', 'standby']),
             'required': Eval('state').in_(['rejected', 'standby']),
-            },
-        depends=['state'])
+            })
     state = fields.Selection([
         ('draft', 'Draft'),
         ('pending', 'Pending'),

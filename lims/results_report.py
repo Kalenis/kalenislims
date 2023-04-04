@@ -696,7 +696,6 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     __name__ = 'lims.results_report.version.detail'
 
     _states = {'readonly': Eval('state') != 'draft'}
-    _depends = ['state']
 
     report_version = fields.Many2One('lims.results_report.version',
         'Report', required=True, readonly=True,
@@ -720,17 +719,16 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         ], 'Type', readonly=True)
     type_string = type.translated('type')
     samples = fields.One2Many('lims.results_report.version.detail.sample',
-        'version_detail', 'Samples', states=_states, depends=_depends)
+        'version_detail', 'Samples', states=_states)
     party = fields.Function(fields.Many2One('party.party', 'Party'),
        'get_report_field', searcher='search_report_field')
     invoice_party = fields.Function(fields.Many2One('party.party',
         'Invoice party'), 'get_entry_field', searcher='search_entry_field')
     signatories = fields.One2Many('lims.results_report.version.detail.signer',
-        'version_detail', 'Signatories', states=_states, depends=_depends)
+        'version_detail', 'Signatories', states=_states)
     resultrange_origin = fields.Many2One('lims.range.type', 'Origin',
-        domain=['OR', ('id', '=', Eval('resultrange_origin')),
+        domain=['OR', ('id', '=', Eval('resultrange_origin', -1)),
             ('id', 'in', Eval('resultrange_origin_domain'))],
-        depends=['resultrange_origin_domain', 'report_result_type', 'state'],
         states={
             'invisible': Not(Eval('report_result_type').in_([
                 'result_range', 'both_range'])),
@@ -742,8 +740,8 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         'lims.range.type', None, None, 'Origin domain'),
         'on_change_with_resultrange_origin_domain')
     comments = fields.Function(fields.Text('Comments',
-        states={'readonly': Bool(Eval('comments_readonly'))},
-        depends=['comments_readonly']), 'get_comments', setter='set_comments')
+        states={'readonly': Bool(Eval('comments_readonly'))}),
+        'get_comments', setter='set_comments')
     comments_readonly = fields.Function(fields.Boolean(
         'Comments readonly'), 'get_comments_readonly')
     fractions_comments = fields.Function(fields.Text('Fractions comments'),
@@ -773,21 +771,19 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     review_reason = fields.Text('Review reason', translate=True,
         states={
             'readonly': Or(Bool(Eval('valid')), Eval('state') != 'released'),
-            },
-        depends=['state', 'valid'])
+            })
     review_reason_print = fields.Boolean(
         'Print review reason in next version',
         states={
             'readonly': Or(Bool(Eval('valid')), Eval('state') != 'released'),
-            },
-        depends=['state', 'valid'])
+            })
     annulment_uid = fields.Many2One('res.user', 'Annulment user',
         readonly=True)
     annulment_date = fields.DateTime('Annulment date', readonly=True)
     annulment_reason = fields.Text('Annulment reason', translate=True,
-        states={'readonly': Eval('state') != 'annulled'}, depends=_depends)
+        states={'readonly': Eval('state') != 'annulled'})
     annulment_reason_print = fields.Boolean('Print annulment reason',
-        states={'readonly': Eval('state') != 'annulled'}, depends=_depends)
+        states={'readonly': Eval('state') != 'annulled'})
     waiting_reason = fields.Text('Waiting reason', readonly=True)
 
     # Report format
@@ -798,7 +794,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         ('normal', 'Normal'),
         ('polisample', 'Polisample'),
         ], 'Forced Report type', sort=False,
-        states=_states, depends=_depends)
+        states=_states)
     report_type = fields.Function(fields.Selection([
         ('normal', 'Normal'),
         ('polisample', 'Polisample'),
@@ -810,7 +806,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         ('result_range', 'Result and Ranges'),
         ('both_range', 'Both and Ranges'),
         ], 'Forced Result type', sort=False,
-        states=_states, depends=_depends)
+        states=_states)
     report_result_type = fields.Function(fields.Selection([
         ('result', 'Result'),
         ('both', 'Both'),
@@ -824,7 +820,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     report_language_cached = fields.Function(fields.Boolean(
         'Report cached'), 'get_report_language_cached')
 
-    del _states, _depends
+    del _states
 
     @classmethod
     def __setup__(cls):
@@ -1900,8 +1896,7 @@ class ResultsReportVersionDetailSigner(sequence_ordered(),
         ], 'Type', sort=False, required=True)
     professional = fields.Many2One('lims.laboratory.professional',
         'Professional', required=True)
-        #domain=[('id', 'in', Eval('professional_domain'))],
-        #depends=['professional_domain'])
+        #domain=[('id', 'in', Eval('professional_domain'))])
     professional_domain = fields.Function(fields.Many2Many(
         'lims.laboratory.professional', None, None, 'Professional domain'),
         'on_change_with_professional_domain')
@@ -1986,7 +1981,7 @@ class ResultsReportVersionDetailSigner(sequence_ordered(),
                     ]) == 0:
                 raise UserError(gettext('lims.msg_delete_signatories'))
 
-    @fields.depends('_parent_version_detail.laboratory')
+    @fields.depends('version_detail', '_parent_version_detail.laboratory')
     def on_change_with_professional_domain(self, name=None):
         pool = Pool()
         UserLaboratory = pool.get('lims.user-laboratory')
@@ -2396,8 +2391,7 @@ class DivideReportsStart(ModelView):
     report_grouper = fields.Integer('Report Grouper')
     analysis_detail = fields.Many2Many('lims.entry.detail.analysis',
         None, None, 'Analysis detail',
-        domain=[('id', 'in', Eval('analysis_detail_domain'))],
-        depends=['analysis_detail_domain'])
+        domain=[('id', 'in', Eval('analysis_detail_domain'))])
     analysis_detail_domain = fields.One2Many('lims.entry.detail.analysis',
         None, 'Analysis detail domain')
 
@@ -2505,8 +2499,7 @@ class GenerateReportStart(ModelView):
         readonly=True)
     report = fields.Many2One('lims.results_report', 'Target Report',
         states={'readonly': Bool(Eval('report_readonly'))},
-        domain=[('id', 'in', Eval('report_domain'))],
-        depends=['report_readonly', 'report_domain'])
+        domain=[('id', 'in', Eval('report_domain'))])
     report_readonly = fields.Boolean('Target Report readonly')
     report_domain = fields.One2Many('lims.results_report', None,
         'Target Report domain')
@@ -2519,25 +2512,20 @@ class GenerateReportStart(ModelView):
     preliminary = fields.Boolean('Preliminary')
     corrective = fields.Boolean('Corrective',
         states={'invisible': ~Eval('type').in_([
-            'complementary', 'corrective'])},
-        depends=['type'])
+            'complementary', 'corrective'])})
     review_reason = fields.Text('Review reason',
         states={'invisible': ~Eval('type').in_([
-            'complementary', 'corrective'])},
-        depends=['type'])
+            'complementary', 'corrective'])})
     review_reason_print = fields.Boolean(
         'Print review reason in next version',
         states={'invisible': ~Eval('type').in_([
-            'complementary', 'corrective'])},
-        depends=['type'])
+            'complementary', 'corrective'])})
     reports_created = fields.One2Many('lims.results_report.version.detail',
         None, 'Reports created')
     group_samples = fields.Boolean('Group samples in the same report',
-        states={'readonly': Bool(Eval('report'))},
-        depends=['report'])
+        states={'readonly': Bool(Eval('report'))})
     append_samples = fields.Boolean('Append samples to existing reports',
-        states={'readonly': Bool(Eval('report'))},
-        depends=['report'])
+        states={'readonly': Bool(Eval('report'))})
 
     @fields.depends('report', 'preliminary', 'corrective')
     def on_change_with_type(self, name=None):
@@ -3366,8 +3354,7 @@ class NewResultsReportVersionStart(ModelView):
     preliminary = fields.Boolean('Preliminary')
     corrective = fields.Boolean('Corrective',
         states={'invisible': ~Eval('type').in_([
-            'complementary', 'corrective'])},
-        depends=['type'])
+            'complementary', 'corrective'])})
     review_reason = fields.Text('Review reason', required=True,
         translate=True)
     review_reason_print = fields.Boolean(

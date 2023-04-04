@@ -83,8 +83,7 @@ class ResultsImport(BaseImport, ModelSQL, ModelView):
     __name__ = 'lims.resultsimport'
     _rec_name = 'description'
 
-    name = fields.Selection([], 'Name', required=True, sort=False,
-        depends=['description'])
+    name = fields.Selection([], 'Name', required=True, sort=False)
     description = fields.Char('Description', required=True)
 
     @classmethod

@@ -25,15 +25,13 @@ class Plant(ModelSQL, ModelView):
         'Subdivision', required=True, domain=[
             ('country', '=', Eval('country', -1)),
             ('parent', '=', None),
-            ],
-        depends=['country'])
+            ])
     country = fields.Many2One('country.country', 'Country',
         required=True)
     equipments = fields.One2Many('lims.equipment', 'plant',
         'Equipments')
     contacts = fields.One2Many('party.address', 'plant',
-        'Contacts', domain=[('party', '=', Eval('party'))],
-        depends=['party'])
+        'Contacts', domain=[('party', '=', Eval('party'))])
     invoice_party = fields.Many2One('party.party', 'Invoice Party')
     latitude = fields.Numeric('Latitude', digits=(3, 14))
     longitude = fields.Numeric('Longitude', digits=(4, 14))
@@ -329,8 +327,7 @@ class Equipment(DeactivableMixin, ModelSQL, ModelView):
     internal_location = fields.Char('Internal location')
     contacts = fields.One2Many('party.address', 'equipment',
         'Contacts', domain=[('party', '=', Eval('party'))],
-        context={'plant': Eval('plant')},
-        depends=['party', 'plant'])
+        context={'plant': Eval('plant')}, depends={'plant'})
     party = fields.Function(fields.Many2One('party.party', 'Party'),
         'get_party', searcher='search_party')
     missing_data = fields.Boolean('Missing data')

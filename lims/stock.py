@@ -39,9 +39,8 @@ class Move(metaclass=PoolMeta):
         domain=[
             If(~Eval('fraction'),
                 ('current_location', '=', Eval('from_location')),
-                ('id', '=', Eval('fraction'))),
-            ],
-        depends=['state', 'fraction_readonly', 'from_location'])
+                ('id', '=', Eval('fraction', -1))),
+            ])
     fraction_readonly = fields.Function(fields.Boolean('Fraction Read Only'),
         'on_change_with_fraction_readonly')
 

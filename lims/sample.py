@@ -296,7 +296,7 @@ class Service(ModelSQL, ModelView):
     create_date2 = fields.Function(fields.DateTime('Create Date'),
        'get_create_date2', searcher='search_create_date2')
     fraction = fields.Many2One('lims.fraction', 'Fraction', required=True,
-        ondelete='CASCADE', select=True, depends=['number'],
+        ondelete='CASCADE',
         states={'readonly': Or(Bool(Eval('number')),
             Bool(Eval('context', {}).get('readonly', True))),
             })
@@ -314,8 +314,8 @@ class Service(ModelSQL, ModelView):
         'get_fraction_field',
         searcher='search_fraction_field')
     analysis = fields.Many2One('lims.analysis', 'Analysis/Set/Group',
-        required=True, select=True, depends=['analysis_domain'],
-        domain=['OR', ('id', '=', Eval('analysis')),
+        required=True,
+        domain=['OR', ('id', '=', Eval('analysis', -1)),
             ('id', 'in', Eval('analysis_domain'))],
         states={'readonly': Bool(Eval('context', {}).get('readonly', True))})
     analysis_view = fields.Function(fields.Many2One('lims.analysis',
@@ -340,47 +340,41 @@ class Service(ModelSQL, ModelView):
         'Number of days for Laboratory',
         states={'readonly': Or(
             Bool(Eval('context', {}).get('readonly', True)),
-            ~Eval('report_date_readonly'))},
-        depends=['report_date_readonly'])
+            ~Eval('report_date_readonly'))})
     estimated_waiting_report = fields.Integer(
         'Number of days for Reporting',
         states={'readonly': Or(
             Bool(Eval('context', {}).get('readonly', True)),
-            ~Eval('report_date_readonly'))},
-        depends=['report_date_readonly'])
+            ~Eval('report_date_readonly'))})
     laboratory_date = fields.Date('Laboratory deadline',
         states={'readonly': Or(
             Bool(Eval('context', {}).get('readonly', True)),
-            Bool(Eval('report_date_readonly')))},
-        depends=['report_date_readonly'])
+            Bool(Eval('report_date_readonly')))})
     report_date = fields.Date('Date agreed for result',
         states={'readonly': Or(
             Bool(Eval('context', {}).get('readonly', True)),
-            Bool(Eval('report_date_readonly')))},
-        depends=['report_date_readonly'])
+            Bool(Eval('report_date_readonly')))})
     report_date_readonly = fields.Function(fields.Boolean(
         'Report deadline Readonly'), 'get_report_date_readonly')
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        domain=['OR', ('id', '=', Eval('laboratory')),
+        domain=['OR', ('id', '=', Eval('laboratory', -1)),
             ('id', 'in', Eval('laboratory_domain'))],
         states={
             'required': Bool(Eval('laboratory_domain')),
             'readonly': Bool(Eval('context', {}).get('readonly', True)),
-            },
-        depends=['laboratory_domain'])
+            })
     laboratory_view = fields.Function(fields.Many2One('lims.laboratory',
         'Laboratory'), 'get_views_field')
     laboratory_domain = fields.Function(fields.Many2Many('lims.laboratory',
         None, None, 'Laboratory domain'),
         'on_change_with_laboratory_domain')
     method = fields.Many2One('lims.lab.method', 'Method',
-        domain=['OR', ('id', '=', Eval('method')),
+        domain=['OR', ('id', '=', Eval('method', -1)),
             ('id', 'in', Eval('method_domain'))],
         states={
             'required': Bool(Eval('method_domain')),
             'readonly': Bool(Eval('context', {}).get('readonly', True)),
-            },
-        depends=['method_domain'])
+            })
     method_view = fields.Function(fields.Many2One('lims.lab.method',
         'Method'), 'get_views_field')
     method_domain = fields.Function(fields.Many2Many('lims.lab.method',
@@ -388,13 +382,12 @@ class Service(ModelSQL, ModelView):
     method_version = fields.Many2One('lims.lab.method.version',
         'Method version', readonly=True)
     device = fields.Many2One('lims.lab.device', 'Device',
-        domain=['OR', ('id', '=', Eval('device')),
+        domain=['OR', ('id', '=', Eval('device', -1)),
             ('id', 'in', Eval('device_domain'))],
         states={
             'required': Bool(Eval('device_domain')),
             'readonly': Bool(Eval('context', {}).get('readonly', True)),
-            },
-        depends=['device_domain'])
+            })
     device_view = fields.Function(fields.Many2One('lims.lab.device',
         'Device'), 'get_views_field')
     device_domain = fields.Function(fields.Many2Many('lims.lab.device',
@@ -1295,7 +1288,7 @@ class Service(ModelSQL, ModelView):
 
         return None
 
-    @fields.depends('analysis', '_parent_fraction.product_type',
+    @fields.depends('analysis', 'fraction', '_parent_fraction.product_type',
         '_parent_fraction.matrix')
     def on_change_with_laboratory_domain(self, name=None):
         cursor = Transaction().connection.cursor()
@@ -1604,14 +1597,12 @@ class Fraction(ModelSQL, ModelView):
     _rec_name = 'number'
 
     _states = {'readonly': Bool(Eval('has_results_report'))}
-    _depends = ['has_results_report']
 
     number = fields.Char('Number', select=True, readonly=True)
     create_date2 = fields.Function(fields.DateTime('Create Date'),
        'get_create_date2', searcher='search_create_date2')
     sample = fields.Many2One('lims.sample', 'Sample', required=True,
-        ondelete='CASCADE', select=True, depends=['number'],
-        states={'readonly': Bool(Eval('number'))})
+        ondelete='CASCADE', states={'readonly': Bool(Eval('number'))})
     sample_view = fields.Function(fields.Many2One('lims.sample', 'Sample',
         states={'invisible': Not(Bool(Eval('_parent_sample')))}),
         'on_change_with_sample_view')
@@ -1626,12 +1617,12 @@ class Fraction(ModelSQL, ModelView):
     date = fields.Function(fields.DateTime('Date'), 'get_sample_field',
         searcher='search_sample_field')
     type = fields.Many2One('lims.fraction.type', 'Fraction type',
-        required=True, select=True, states=_states, depends=_depends)
+        required=True, states=_states)
     storage_location = fields.Many2One('stock.location', 'Storage location',
         required=True, domain=[('type', '=', 'storage')],
-        states=_states, depends=_depends)
+        states=_states)
     storage_time = fields.Integer('Storage time (in months)', required=True,
-        states=_states, depends=_depends)
+        states=_states)
     packages_string = fields.Function(fields.Char('Packages'),
         'get_packages_string')
     expiry_date = fields.Date('Expiry date', states={'readonly': True})
@@ -1649,10 +1640,10 @@ class Fraction(ModelSQL, ModelView):
             'entry': Eval('entry'), 'party': Eval('party'),
             'readonly': Bool(Eval('button_manage_services_available')),
             },
-        depends=['button_manage_services_available', 'analysis_domain',
+        depends={'button_manage_services_available', 'analysis_domain',
             'typification_domain', 'product_type', 'matrix', 'sample',
             'entry', 'party',
-            ])
+            })
     shared = fields.Boolean('Shared')
     comments = fields.Text('Comments')
     analysis_domain = fields.Function(fields.Many2Many('lims.analysis',
@@ -1732,13 +1723,11 @@ class Fraction(ModelSQL, ModelView):
         'Available for Blind Sample'),
         'on_change_with_cie_fraction_type_available')
     cie_fraction_type = fields.Boolean('Blind Sample',
-        states={'readonly': Not(Bool(Eval('cie_fraction_type_available')))},
-        depends=['cie_fraction_type_available'])
+        states={'readonly': Not(Bool(Eval('cie_fraction_type_available')))})
     cie_original_fraction = fields.Many2One('lims.fraction',
-        'Original fraction', states={'readonly': Bool(Eval('confirmed'))},
-        depends=['confirmed'])
+        'Original fraction', states={'readonly': Bool(Eval('confirmed'))})
 
-    del _states, _depends
+    del _states
 
     @classmethod
     def __setup__(cls):
@@ -2736,8 +2725,7 @@ class Sample(ModelSQL, ModelView):
     date2 = fields.Function(fields.Date('Date'), 'get_date',
         searcher='search_date')
     entry = fields.Many2One('lims.entry', 'Entry', required=True,
-        ondelete='CASCADE', select=True, depends=['number'],
-        states={'readonly': Bool(Eval('number'))})
+        ondelete='CASCADE', states={'readonly': Bool(Eval('number'))})
     entry_view = fields.Function(fields.Many2One('lims.entry', 'Entry',
         states={'invisible': Not(Bool(Eval('_parent_entry')))}),
         'on_change_with_entry_view')
@@ -2748,28 +2736,25 @@ class Sample(ModelSQL, ModelView):
     invoice_party = fields.Function(fields.Many2One('party.party',
         'Invoice Party'), 'get_entry_field', searcher='search_entry_field')
     producer = fields.Many2One('lims.sample.producer', 'Producer company',
-        domain=['OR', ('id', '=', Eval('producer')),
-            ('party', '=', Eval('party'))],
-        depends=['party'])
+        domain=['OR', ('id', '=', Eval('producer', -1)),
+            ('party', '=', Eval('party'))])
     label = fields.Char('Label')
     sample_client_description = fields.Char('Product described by the client',
         translate=True)
     product_type = fields.Many2One('lims.product.type', 'Product type',
         required=True,
-        domain=['OR', ('id', '=', Eval('product_type')),
+        domain=['OR', ('id', '=', Eval('product_type', -1)),
             ('id', 'in', Eval('product_type_domain'))],
-        states={'readonly': Bool(Eval('product_type_matrix_readonly'))},
-        depends=['product_type_domain', 'product_type_matrix_readonly'])
+        states={'readonly': Bool(Eval('product_type_matrix_readonly'))})
     product_type_view = fields.Function(fields.Many2One('lims.product.type',
         'Product type'), 'get_views_field', searcher='search_views_field')
     product_type_domain = fields.Function(fields.Many2Many(
         'lims.product.type', None, None, 'Product type domain'),
         'on_change_with_product_type_domain')
     matrix = fields.Many2One('lims.matrix', 'Matrix', required=True,
-        domain=['OR', ('id', '=', Eval('matrix')),
+        domain=['OR', ('id', '=', Eval('matrix', -1)),
             ('id', 'in', Eval('matrix_domain'))],
-        states={'readonly': Bool(Eval('product_type_matrix_readonly'))},
-        depends=['matrix_domain', 'product_type_matrix_readonly'])
+        states={'readonly': Bool(Eval('product_type_matrix_readonly'))})
     matrix_view = fields.Function(fields.Many2One('lims.matrix',
         'Matrix'), 'get_views_field', searcher='search_views_field')
     matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
@@ -2779,22 +2764,20 @@ class Sample(ModelSQL, ModelView):
         'Product type and Matrix readonly'),
         'get_product_type_matrix_readonly')
     obj_description = fields.Many2One('lims.objective_description',
-        'Objective description', depends=['product_type', 'matrix'],
+        'Objective description',
         domain=[
             ('product_type', '=', Eval('product_type')),
             ('matrix', '=', Eval('matrix')),
             ])
     obj_description_manual = fields.Char('Manual Objective description',
-        translate=True, states={'readonly': Bool(Eval('obj_description'))},
-        depends=['obj_description'])
+        translate=True, states={'readonly': Bool(Eval('obj_description'))})
     packages = fields.One2Many('lims.sample.package', 'sample', 'Packages')
     packages_string = fields.Function(fields.Char('Packages'),
         'get_packages_string')
     restricted_entry = fields.Boolean('Restricted entry',
         states={'readonly': True})
     zone = fields.Many2One('lims.zone', 'Zone',
-        states={'required': Bool(Eval('zone_required'))},
-        depends=['zone_required'])
+        states={'required': Bool(Eval('zone_required'))})
     zone_required = fields.Function(fields.Boolean('Zone required'),
         'get_zone_required')
     trace_report = fields.Boolean('Trace report')
@@ -2806,13 +2789,12 @@ class Sample(ModelSQL, ModelView):
             'sample': Eval('id'), 'entry': Eval('entry'),
             'party': Eval('party'), 'label': Eval('label'),
             },
-        depends=['analysis_domain', 'typification_domain', 'entry',
-            'party', 'label'])
+        depends={'analysis_domain', 'typification_domain', 'entry',
+            'party', 'label'})
     report_comments = fields.Text('Report comments', translate=True)
     comments = fields.Text('Comments')
     variety = fields.Many2One('lims.variety', 'Variety',
-        domain=[('varieties.matrix', '=', Eval('matrix'))],
-        depends=['matrix'])
+        domain=[('varieties.matrix', '=', Eval('matrix'))])
     analysis_domain = fields.Function(fields.Many2Many('lims.analysis',
         None, None, 'Analysis domain'), 'on_change_with_analysis_domain')
     typification_domain = fields.Function(fields.Many2Many(
@@ -3543,7 +3525,7 @@ class Sample(ModelSQL, ModelView):
                 return False
         return True
 
-    @fields.depends('entry', 'fractions')
+    @fields.depends('entry', '_parent_entry.state', 'fractions')
     def on_change_with_button_confirm_available(self, name=None):
         if not self.entry or self.entry.state != 'ongoing':
             return False
@@ -4176,7 +4158,7 @@ class DuplicateSampleFromEntryStart(ModelView):
 
     entry = fields.Many2One('lims.entry', 'Entry')
     sample = fields.Many2One('lims.sample', 'Sample', required=True,
-        domain=[('entry', '=', Eval('entry'))], depends=['entry'])
+        domain=[('entry', '=', Eval('entry'))])
     date = fields.DateTime('Date', required=True)
     labels = fields.Text('Labels')
 
@@ -4649,7 +4631,7 @@ class AddSampleServiceStart(ModelView):
     analysis_domain = fields.Many2Many('lims.analysis', None, None,
         'Analysis domain')
     services = fields.One2Many('lims.create_sample.service', None, 'Services',
-        depends=['analysis_domain', 'product_type', 'matrix'],
+        depends={'analysis_domain', 'product_type', 'matrix'},
         context={
             'analysis_domain': Eval('analysis_domain'),
             'product_type': Eval('product_type'), 'matrix': Eval('matrix'),
@@ -4812,7 +4794,7 @@ class EditSampleServiceStart(ModelView):
     analysis_domain = fields.Many2Many('lims.analysis', None, None,
         'Analysis domain')
     services = fields.One2Many('lims.create_sample.service', None, 'Services',
-        depends=['analysis_domain', 'product_type', 'matrix'],
+        depends={'analysis_domain', 'product_type', 'matrix'},
         context={
             'analysis_domain': Eval('analysis_domain'),
             'product_type': Eval('product_type'), 'matrix': Eval('matrix'),
@@ -5150,8 +5132,7 @@ class CountersampleStorageResult(ModelView):
     countersample_date = fields.Date('Storage date', required=True)
     fractions = fields.Many2Many('lims.fraction', None, None,
         'Fractions', required=True,
-        domain=[('id', 'in', Eval('fraction_domain'))],
-        depends=['fraction_domain'])
+        domain=[('id', 'in', Eval('fraction_domain'))])
     fraction_domain = fields.One2Many('lims.fraction', None,
         'Fractions domain')
     shipment = fields.Many2One('stock.shipment.internal', 'Internal Shipment')
@@ -5461,8 +5442,7 @@ class CountersampleStorageRevertResult(ModelView):
         domain=[('type', '=', 'storage')])
     fractions = fields.Many2Many('lims.fraction', None, None,
         'Fractions', required=True,
-        domain=[('id', 'in', Eval('fraction_domain'))],
-        depends=['fraction_domain'])
+        domain=[('id', 'in', Eval('fraction_domain'))])
     fraction_domain = fields.One2Many('lims.fraction', None,
         'Fractions domain')
     shipment = fields.Many2One('stock.shipment.internal', 'Internal Shipment')
@@ -5650,8 +5630,7 @@ class CountersampleDischargeResult(ModelView):
     discharge_date = fields.Date('Discharge date', required=True)
     fractions = fields.Many2Many('lims.fraction', None, None,
         'Fractions', required=True,
-        domain=[('id', 'in', Eval('fraction_domain'))],
-        depends=['fraction_domain'])
+        domain=[('id', 'in', Eval('fraction_domain'))])
     fraction_domain = fields.One2Many('lims.fraction', None,
         'Fractions domain')
     shipment = fields.Many2One('stock.shipment.internal', 'Internal Shipment')
@@ -5839,8 +5818,7 @@ class FractionDischargeResult(ModelView):
     discharge_date = fields.Date('Discharge date', required=True)
     fractions = fields.Many2Many('lims.fraction', None, None,
         'Fractions', required=True,
-        domain=[('id', 'in', Eval('fraction_domain'))],
-        depends=['fraction_domain'])
+        domain=[('id', 'in', Eval('fraction_domain'))])
     fraction_domain = fields.One2Many('lims.fraction', None,
         'Fractions domain')
     shipment = fields.Many2One('stock.shipment.internal', 'Internal Shipment')
@@ -6032,8 +6010,7 @@ class FractionDischargeRevertResult(ModelView):
         domain=[('type', '=', 'storage')])
     fractions = fields.Many2Many('lims.fraction', None, None,
         'Fractions', required=True,
-        domain=[('id', 'in', Eval('fraction_domain'))],
-        depends=['fraction_domain'])
+        domain=[('id', 'in', Eval('fraction_domain'))])
     fraction_domain = fields.One2Many('lims.fraction', None,
         'Fractions domain')
     shipment = fields.Many2One('stock.shipment.internal', 'Internal Shipment')
@@ -6198,40 +6175,36 @@ class CreateSampleStart(ModelView):
 
     party = fields.Many2One('party.party', 'Party', required=True,
         states={'invisible': ~Eval('multi_party')},
-        domain=[('id', 'in', Eval('party_domain'))],
-        depends=['party_domain', 'multi_party'])
+        domain=[('id', 'in', Eval('party_domain'))])
     party_domain = fields.Many2Many('party.party',
         None, None, 'Party domain')
     multi_party = fields.Boolean('Multi Party')
     date = fields.DateTime('Date', required=True)
     producer = fields.Many2One('lims.sample.producer', 'Producer company',
-        domain=[('party', '=', Eval('party'))], depends=['party'])
+        domain=[('party', '=', Eval('party'))])
     sample_client_description = fields.Char(
         'Product described by the client', required=True)
     sample_client_description_lang = fields.Char(
         'Product described by the client (foreign language)',
-        states={'readonly': ~Eval('foreign_language')},
-        depends=['foreign_language'])
+        states={'readonly': ~Eval('foreign_language')})
     product_type = fields.Many2One('lims.product.type', 'Product type',
         required=True, states={'readonly': Bool(Eval('services'))},
-        domain=[('id', 'in', Eval('product_type_domain'))],
-        depends=['product_type_domain', 'services'])
+        domain=[('id', 'in', Eval('product_type_domain'))])
     product_type_domain = fields.Many2Many('lims.product.type', None, None,
         'Product type domain')
     matrix = fields.Many2One('lims.matrix', 'Matrix', required=True,
         states={'readonly': Bool(Eval('services'))},
-        domain=[('id', 'in', Eval('matrix_domain'))],
-        depends=['matrix_domain', 'services'])
+        domain=[('id', 'in', Eval('matrix_domain'))])
     matrix_domain = fields.Many2Many('lims.matrix', None, None,
         'Matrix domain')
     obj_description = fields.Many2One('lims.objective_description',
-        'Objective description', depends=['product_type', 'matrix'],
+        'Objective description',
         domain=[
             ('product_type', '=', Eval('product_type')),
             ('matrix', '=', Eval('matrix')),
             ])
     obj_description_manual = fields.Char(
-        'Manual Objective description', depends=['obj_description'],
+        'Manual Objective description',
         states={'readonly': Bool(Eval('obj_description'))})
     obj_description_manual_lang = fields.Char(
         'Manual Objective description (foreign language)',
@@ -6239,23 +6212,20 @@ class CreateSampleStart(ModelView):
             'readonly': Or(
                 Bool(Eval('obj_description')),
                 ~Eval('foreign_language')),
-            },
-        depends=['obj_description', 'foreign_language'])
+            })
     packages = fields.One2Many('lims.create_sample.package', None,
         'Packages per sample')
     restricted_entry = fields.Boolean('Restricted entry',
         states={'readonly': True})
     zone = fields.Many2One('lims.zone', 'Zone',
-        states={'required': Bool(Eval('zone_required'))},
-        depends=['zone_required'])
+        states={'required': Bool(Eval('zone_required'))})
     zone_required = fields.Boolean('Zone required',
         states={'readonly': True})
     trace_report = fields.Boolean('Trace report')
     report_comments = fields.Text('Report comments', translate=True)
     comments = fields.Text('Comments')
     variety = fields.Many2One('lims.variety', 'Variety',
-        domain=[('varieties.matrix', '=', Eval('matrix'))],
-        depends=['matrix'])
+        domain=[('varieties.matrix', '=', Eval('matrix'))])
     labels = fields.Text('Labels')
     fraction_type = fields.Many2One('lims.fraction.type', 'Fraction type',
         required=True)
@@ -6271,8 +6241,7 @@ class CreateSampleStart(ModelView):
             'analysis_domain': Eval('analysis_domain'),
             'product_type': Eval('product_type'), 'matrix': Eval('matrix'),
             },
-        depends=['analysis_domain', 'product_type', 'matrix',
-            'without_services'])
+        depends={'analysis_domain', 'product_type', 'matrix'})
     without_services = fields.Boolean('Without services')
     attributes = fields.Dict('lims.sample.attribute', 'Attributes')
     foreign_language = fields.Boolean('Foreign Language')
@@ -6420,46 +6389,38 @@ class CreateSampleService(ModelView):
             ])
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         domain=[('id', 'in', Eval('laboratory_domain'))],
-        states={'required': Bool(Eval('laboratory_domain'))},
-        depends=['laboratory_domain'])
+        states={'required': Bool(Eval('laboratory_domain'))})
     laboratory_domain = fields.Many2Many('lims.laboratory',
         None, None, 'Laboratory domain')
     method = fields.Many2One('lims.lab.method', 'Method',
         domain=[('id', 'in', Eval('method_domain'))],
-        states={'required': Bool(Eval('method_domain'))},
-        depends=['method_domain'])
+        states={'required': Bool(Eval('method_domain'))})
     method_domain = fields.Many2Many('lims.lab.method',
         None, None, 'Method domain')
     device = fields.Many2One('lims.lab.device', 'Device',
         domain=[('id', 'in', Eval('device_domain'))],
-        states={'required': Bool(Eval('device_domain'))},
-        depends=['device_domain'])
+        states={'required': Bool(Eval('device_domain'))})
     device_domain = fields.Many2Many('lims.lab.device',
         None, None, 'Device domain')
     urgent = fields.Boolean('Urgent')
     priority = fields.Integer('Priority')
     estimated_waiting_laboratory = fields.Integer(
         'Number of days for Laboratory',
-        states={'readonly': ~Eval('report_date_readonly')},
-        depends=['report_date_readonly'])
+        states={'readonly': ~Eval('report_date_readonly')})
     estimated_waiting_report = fields.Integer(
         'Number of days for Reporting',
-        states={'readonly': ~Eval('report_date_readonly')},
-        depends=['report_date_readonly'])
+        states={'readonly': ~Eval('report_date_readonly')})
     laboratory_date = fields.Date('Laboratory deadline',
-        states={'readonly': Bool(Eval('report_date_readonly'))},
-        depends=['report_date_readonly'])
+        states={'readonly': Bool(Eval('report_date_readonly'))})
     report_date = fields.Date('Date agreed for result',
-        states={'readonly': Bool(Eval('report_date_readonly'))},
-        depends=['report_date_readonly'])
+        states={'readonly': Bool(Eval('report_date_readonly'))})
     report_date_readonly = fields.Boolean('Report deadline Readonly')
     divide = fields.Boolean('Divide Report')
     analysis_locked = fields.Boolean('Analysis/Set/Group Locked')
     laboratory_locked = fields.Boolean('Laboratory Locked')
     explode_analysis = fields.Boolean(
         'Load included analyzes individually',
-        states={'invisible': Bool(Eval('explode_analysis_invisible'))},
-        depends=['explode_analysis_invisible'])
+        states={'invisible': Bool(Eval('explode_analysis_invisible'))})
     explode_analysis_invisible = fields.Boolean(
         'Load included analyzes individually Invisible')
     contract_number = fields.Char('Contract Number')
@@ -7510,31 +7471,27 @@ class Referral(ModelSQL, ModelView):
     _rec_name = 'number'
 
     _states = {'readonly': Eval('state') != 'draft'}
-    _depends = ['state']
 
     number = fields.Char('Number', select=True, readonly=True)
-    date = fields.Date('Date', required=True,
-        states=_states, depends=_depends)
+    date = fields.Date('Date', required=True, states=_states)
     sent_date = fields.Date('Sent date', readonly=True)
     laboratory = fields.Many2One('party.party', 'Destination Laboratory',
-        required=True, states=_states, depends=_depends)
-    carrier = fields.Many2One('carrier', 'Carrier',
-        states=_states, depends=_depends)
-    comments = fields.Text('Comments', states=_states, depends=_depends)
+        required=True, states=_states)
+    carrier = fields.Many2One('carrier', 'Carrier', states=_states)
+    comments = fields.Text('Comments', states=_states)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('sent', 'Sent'),
         ('done', 'Done'),
         ], 'State', required=True, readonly=True)
     services = fields.One2Many('lims.entry.detail.analysis',
-        'referral', 'Services',
-        states=_states, depends=_depends,
+        'referral', 'Services', states=_states,
         add_remove=[
             ('state', '=', 'unplanned'),
             ('referral', '=', None),
             ])
 
-    del _states, _depends
+    del _states
 
     @classmethod
     def __setup__(cls):

@@ -15,7 +15,6 @@ class Analysis(metaclass=PoolMeta):
             ('report_name', '=', 'lims.result_report'),
             ('type', 'in', [None, 'base']),
             ['OR', ('active', '=', True),
-                ('id', '=', Eval('result_template'))],
+                ('id', '=', Eval('result_template', -1))],
             ],
-        states={'readonly': Eval('type') != 'group'},
-        depends=['type'])
+        states={'readonly': Eval('type') != 'group'})

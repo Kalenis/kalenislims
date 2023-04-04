@@ -24,12 +24,11 @@ class Purchase(metaclass=PoolMeta):
             ('report_name', '=', 'purchase.purchase'),
             ('type', 'in', [None, 'base']),
             ['OR', ('active', '=', True),
-                ('id', '=', Eval('template'))],
+                ('id', '=', Eval('template', -1))],
             ],
-        states={'readonly': Eval('state') != 'draft'},
-        depends=['state'])
+        states={'readonly': Eval('state') != 'draft'})
     clause_template = fields.Many2One('purchase.clause.template',
-        'Clauses Template', depends=['state'],
+        'Clauses Template',
         states={'readonly': Eval('state') != 'draft'})
     sections = fields.One2Many('purchase.purchase.section', 'purchase',
         'Sections')
@@ -42,9 +41,8 @@ class Purchase(metaclass=PoolMeta):
         domain=[('position', '=', 'following')]),
         'get_following_sections', setter='set_following_sections')
     clauses = fields.Text('Clauses',
-        states={'readonly': Eval('state') != 'draft'},
-        depends=['state'])
-    
+        states={'readonly': Eval('state') != 'draft'})
+
     @staticmethod
     def default_template():
         Configuration = Pool().get('purchase.configuration')

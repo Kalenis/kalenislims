@@ -24,7 +24,6 @@ class Planification(Workflow, ModelSQL, ModelView):
     _rec_name = 'code'
 
     _states = {'readonly': Not(Bool(Equal(Eval('state'), 'draft')))}
-    _depends = ['state']
 
     code = fields.Char('Code', select=True, readonly=True)
     date = fields.Date('Date', readonly=True)
@@ -32,7 +31,7 @@ class Planification(Workflow, ModelSQL, ModelView):
         required=True, states={
             'readonly': ((Eval('state') != 'draft')
                 | (Eval('analysis', [0]) & Eval('laboratory'))),
-            }, depends=['state'])
+            })
     analysis = fields.Many2Many('lims.planification-analysis',
         'planification', 'analysis', 'Analysis/Sets/Groups',
         context={'date_from': Eval('date_from'), 'date_to': Eval('date_to'),
@@ -40,20 +39,18 @@ class Planification(Workflow, ModelSQL, ModelView):
         domain=['OR', ('id', 'in', Eval('analysis')), [
             ('id', 'in', Eval('analysis_domain'))]],
         states=_states,
-        depends=['state', 'date_from', 'date_to', 'analysis_domain'])
+        depends={'state', 'date_from', 'date_to'})
     analysis_domain = fields.Function(fields.Many2Many('lims.analysis',
         None, None, 'Analysis domain'),
         'on_change_with_analysis_domain')
     technicians = fields.One2Many('lims.planification.technician',
-        'planification', 'Technicians', depends=['method_domain',
-        'technicians_domain'])
-    date_from = fields.Date('Date from', states=_states, depends=_depends)
-    date_to = fields.Date('Date to', states=_states, depends=_depends)
-    start_date = fields.Date('Start date', depends=_depends,
+        'planification', 'Technicians')
+    date_from = fields.Date('Date from', states=_states)
+    date_to = fields.Date('Date to', states=_states)
+    start_date = fields.Date('Start date',
         states={'readonly': Bool(Equal(Eval('state'), 'confirmed'))})
     details = fields.One2Many('lims.planification.detail',
-        'planification', 'Fractions to plan',
-        states=_states, depends=_depends)
+        'planification', 'Fractions to plan', states=_states)
     controls = fields.Many2Many('lims.planification-fraction',
         'planification', 'fraction', 'Controls', readonly=True)
     state = fields.Selection([
@@ -72,7 +69,7 @@ class Planification(Workflow, ModelSQL, ModelView):
         'on_change_with_technicians_domain', setter='set_technicians_domain')
     comments = fields.Text('Comments')
 
-    del _states, _depends
+    del _states
 
     @classmethod
     def __setup__(cls):
@@ -943,13 +940,11 @@ class FractionReagent(ModelSQL, ModelView):
     fraction = fields.Many2One('lims.fraction', 'Fraction', required=True,
         ondelete='CASCADE', select=True)
     product = fields.Many2One('product.product', 'Reagent', required=True,
-        domain=[('account_category', 'in', Eval('reagent_domain'))],
-        depends=['reagent_domain'])
+        domain=[('account_category', 'in', Eval('reagent_domain'))])
     reagent_domain = fields.Function(fields.Many2Many('product.category',
         None, None, 'Reagent domain'), 'get_reagent_domain')
     lot = fields.Many2One('stock.lot', 'Lot',
-        domain=[('product', '=', Eval('product'))],
-        depends=['product'])
+        domain=[('product', '=', Eval('product'))])
     quantity = fields.Function(fields.Float('Current quantity'),
         'on_change_with_quantity')
     default_uom = fields.Function(fields.Many2One('product.uom',
@@ -1120,8 +1115,7 @@ class RelateTechniciansResult(ModelView):
 
     technicians = fields.Many2Many('lims.laboratory.professional',
         None, None, 'Technicians', required=True,
-        domain=[('id', 'in', Eval('technicians_domain'))],
-        depends=['technicians_domain'])
+        domain=[('id', 'in', Eval('technicians_domain'))])
     technicians_domain = fields.One2Many('lims.laboratory.professional',
         None, 'Technicians domain')
     grouping = fields.Selection([
@@ -1132,8 +1126,7 @@ class RelateTechniciansResult(ModelView):
     details1 = fields.Many2Many(
         'lims.planification.relate_technicians.detail1', None, None,
         'Fractions to plan', domain=[('id', 'in', Eval('details1_domain'))],
-        states={'invisible': Not(Bool(Equal(Eval('grouping'), 'none')))},
-        depends=['details1_domain', 'grouping'])
+        states={'invisible': Not(Bool(Equal(Eval('grouping'), 'none')))})
     details1_domain = fields.One2Many(
         'lims.planification.relate_technicians.detail1', None,
         'Fractions domain')
@@ -1142,15 +1135,14 @@ class RelateTechniciansResult(ModelView):
         'Fractions to plan', domain=[('id', 'in', Eval('details2_domain'))],
         states={
             'invisible': Not(Bool(Equal(Eval('grouping'), 'origin_method'))),
-        }, depends=['details2_domain', 'grouping'])
+        })
     details2_domain = fields.One2Many(
         'lims.planification.relate_technicians.detail2', None,
         'Fractions domain')
     details3 = fields.Many2Many(
         'lims.planification.relate_technicians.detail3', None, None,
         'Fractions to plan', domain=[('id', 'in', Eval('details3_domain'))],
-        states={'invisible': Not(Bool(Equal(Eval('grouping'), 'origin')))},
-        depends=['details3_domain', 'grouping'])
+        states={'invisible': Not(Bool(Equal(Eval('grouping'), 'origin')))})
     details3_domain = fields.One2Many(
         'lims.planification.relate_technicians.detail3', None,
         'Fractions domain')
@@ -1640,14 +1632,12 @@ class UnlinkTechniciansStart(ModelView):
 
     technicians = fields.Many2Many('lims.laboratory.professional',
         None, None, 'Technicians', required=True,
-        domain=[('id', 'in', Eval('technicians_domain'))],
-        depends=['technicians_domain'])
+        domain=[('id', 'in', Eval('technicians_domain'))])
     technicians_domain = fields.One2Many('lims.laboratory.professional',
         None, 'Technicians domain')
     details1 = fields.Many2Many(
         'lims.planification.unlink_technicians.detail1', None, None,
-        'Assigned fractions', domain=[('id', 'in', Eval('details1_domain'))],
-        depends=['details1_domain'])
+        'Assigned fractions', domain=[('id', 'in', Eval('details1_domain'))])
     details1_domain = fields.Many2Many(
         'lims.planification.unlink_technicians.detail1', None, None,
         'Fractions domain')
@@ -1809,20 +1799,18 @@ class AddFractionControlStart(ModelView):
         ('itl', 'ITL'),
         ], 'Control type', sort=False, required=True)
     original_fraction = fields.Many2One('lims.fraction', 'Original fraction',
-        required=True, domain=[('id', 'in', Eval('fraction_domain'))],
-        depends=['fraction_domain'])
+        required=True, domain=[('id', 'in', Eval('fraction_domain'))])
     fraction_domain = fields.Function(fields.One2Many('lims.fraction',
         None, 'Fraction domain'), 'on_change_with_fraction_domain')
-    label = fields.Char('Label', depends=['type'],
-        states={'readonly': Eval('type') == 'exist'})
+    label = fields.Char('Label', states={'readonly': Eval('type') == 'exist'})
     concentration_level = fields.Many2One('lims.concentration.level',
         'Concentration level', states={
             'invisible': Bool(Eval('concentration_level_invisible')),
-            }, depends=['concentration_level_invisible'])
+            })
     concentration_level_invisible = fields.Boolean(
         'Concentration level invisible')
     generate_repetition = fields.Boolean('Generate repetition',
-        states={'readonly': Eval('type') == 'exist'}, depends=['type'])
+        states={'readonly': Eval('type') == 'exist'})
 
     @fields.depends('planification', 'type', '_parent_planification.analysis')
     def on_change_with_fraction_domain(self, name=None):
@@ -2204,42 +2192,38 @@ class AddFractionRMBMZStart(ModelView):
         ('noref', 'No Reference'),
         ('exist', 'Existing RM/BMZ'),
         ], 'RM/BMZ type', sort=False, required=True)
-    reference_fraction = fields.Many2One('lims.fraction',
-        'Reference fraction', depends=['fraction_domain', 'rm_bmz_type'],
-        states={
+    reference_fraction = fields.Many2One('lims.fraction', 'Reference fraction',
+        domain=[('id', 'in', Eval('fraction_domain'))], states={
             'readonly': Bool(Equal(Eval('rm_bmz_type'), 'noref')),
             'required': Not(Bool(Equal(Eval('rm_bmz_type'), 'noref'))),
-        }, domain=[('id', 'in', Eval('fraction_domain'))])
+            })
     fraction_domain = fields.Function(fields.One2Many('lims.fraction',
         None, 'Fraction domain'), 'on_change_with_fraction_domain')
     product_type = fields.Many2One('lims.product.type', 'Product type',
-        states={
+        domain=[('id', 'in', Eval('product_type_domain'))], states={
             'readonly': Not(Bool(Equal(Eval('rm_bmz_type'), 'noref'))),
-            'required': Bool(Equal(Eval('rm_bmz_type'), 'noref'))},
-        domain=[('id', 'in', Eval('product_type_domain'))],
-        depends=['rm_bmz_type', 'product_type_domain'])
+            'required': Bool(Equal(Eval('rm_bmz_type'), 'noref')),
+            })
     product_type_domain = fields.Function(fields.Many2Many(
         'lims.product.type', None, None, 'Product type domain'),
         'on_change_with_product_type_domain')
     matrix = fields.Many2One('lims.matrix', 'Matrix', required=True,
-        states={
+        domain=[('id', 'in', Eval('matrix_domain'))], states={
             'readonly': Not(Bool(Equal(Eval('rm_bmz_type'), 'noref'))),
-            'required': Bool(Equal(Eval('rm_bmz_type'), 'noref'))},
-        domain=[('id', 'in', Eval('matrix_domain'))],
-        depends=['rm_bmz_type', 'matrix_domain'])
+            'required': Bool(Equal(Eval('rm_bmz_type'), 'noref')),
+            })
     matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
         None, None, 'Matrix domain'),
         'on_change_with_matrix_domain')
-    repetitions = fields.Integer('Repetitions',
-        states={'readonly': Or(Eval('type') == 'bmz',
-            Eval('rm_bmz_type') == 'exist')},
-        depends=['type', 'rm_bmz_type'])
-    label = fields.Char('Label', depends=['rm_bmz_type'], states={
+    repetitions = fields.Integer('Repetitions', states={
+        'readonly': Or(Eval('type') == 'bmz',
+            Eval('rm_bmz_type') == 'exist')})
+    label = fields.Char('Label', states={
         'readonly': Eval('rm_bmz_type') == 'exist'})
     concentration_level = fields.Many2One('lims.concentration.level',
         'Concentration level', states={
             'invisible': Bool(Eval('concentration_level_invisible')),
-            }, depends=['concentration_level_invisible'])
+            })
     concentration_level_invisible = fields.Boolean(
         'Concentration level invisible')
 
@@ -2886,8 +2870,7 @@ class AddFractionBREStart(ModelView):
         ('exist', 'Existing BRE'),
         ], 'BRE Type', sort=False, required=True)
     bre_fraction = fields.Many2One('lims.fraction',
-        'BRE fraction', depends=['fraction_domain', 'type'],
-        states={
+        'BRE fraction', states={
             'readonly': Bool(Equal(Eval('type'), 'new')),
             'required': Bool(Equal(Eval('type'), 'exist')),
         }, domain=[('id', 'in', Eval('fraction_domain'))])
@@ -2895,28 +2878,26 @@ class AddFractionBREStart(ModelView):
         None, 'Fraction domain'), 'on_change_with_fraction_domain')
     product_type = fields.Many2One('lims.product.type', 'Product type',
         states={'required': Bool(Equal(Eval('type'), 'new'))},
-        domain=[('id', 'in', Eval('product_type_domain'))],
-        depends=['type', 'product_type_domain'])
+        domain=[('id', 'in', Eval('product_type_domain'))])
     product_type_domain = fields.Function(fields.Many2Many(
         'lims.product.type', None, None, 'Product type domain'),
         'on_change_with_product_type_domain')
     matrix = fields.Many2One('lims.matrix', 'Matrix', required=True,
         states={'required': Bool(Equal(Eval('type'), 'new'))},
-        domain=[('id', 'in', Eval('matrix_domain'))],
-        depends=['type', 'matrix_domain'])
+        domain=[('id', 'in', Eval('matrix_domain'))])
     matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
         None, None, 'Matrix domain'),
         'on_change_with_matrix_domain')
     reagents = fields.One2Many('lims.fraction.reagent', None,
-        'Reagents', states={
+        'Reagents', required=True, states={
             'readonly': Bool(Equal(Eval('type'), 'exist')),
-        }, depends=['type'], required=True)
-    label = fields.Char('Label', depends=['type'], states={
+            })
+    label = fields.Char('Label', states={
         'readonly': Eval('type') == 'exist'})
     concentration_level = fields.Many2One('lims.concentration.level',
         'Concentration level', states={
             'invisible': Bool(Eval('concentration_level_invisible')),
-            }, depends=['concentration_level_invisible'])
+            })
     concentration_level_invisible = fields.Boolean(
         'Concentration level invisible')
 
@@ -3255,8 +3236,7 @@ class AddFractionMRTStart(ModelView):
         ('exist', 'Existing MRT'),
         ], 'MRT Type', sort=False, required=True)
     mrt_fraction = fields.Many2One('lims.fraction',
-        'MRT fraction', depends=['fraction_domain', 'type'],
-        states={
+        'MRT fraction', states={
             'readonly': Bool(Equal(Eval('type'), 'new')),
             'required': Bool(Equal(Eval('type'), 'exist')),
         }, domain=[('id', 'in', Eval('fraction_domain'))])
@@ -3264,25 +3244,23 @@ class AddFractionMRTStart(ModelView):
         None, 'Fraction domain'), 'on_change_with_fraction_domain')
     product_type = fields.Many2One('lims.product.type', 'Product type',
         states={'required': Bool(Equal(Eval('type'), 'new'))},
-        domain=[('id', 'in', Eval('product_type_domain'))],
-        depends=['type', 'product_type_domain'])
+        domain=[('id', 'in', Eval('product_type_domain'))])
     product_type_domain = fields.Function(fields.Many2Many(
         'lims.product.type', None, None, 'Product type domain'),
         'on_change_with_product_type_domain')
     matrix = fields.Many2One('lims.matrix', 'Matrix', required=True,
         states={'required': Bool(Equal(Eval('type'), 'new'))},
-        domain=[('id', 'in', Eval('matrix_domain'))],
-        depends=['type', 'matrix_domain'])
+        domain=[('id', 'in', Eval('matrix_domain'))])
     matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
         None, None, 'Matrix domain'),
         'on_change_with_matrix_domain')
     repetitions = fields.Integer('Repetitions')
-    label = fields.Char('Label', depends=['type'], states={
+    label = fields.Char('Label', states={
         'readonly': Eval('type') == 'exist'})
     concentration_level = fields.Many2One('lims.concentration.level',
         'Concentration level', states={
             'invisible': Bool(Eval('concentration_level_invisible')),
-            }, depends=['concentration_level_invisible'])
+            })
     concentration_level_invisible = fields.Boolean(
         'Concentration level invisible')
 
@@ -3685,8 +3663,7 @@ class RemoveControlStart(ModelView):
     __name__ = 'lims.planification.remove_control.start'
 
     controls = fields.Many2Many('lims.fraction', None, None, 'Controls',
-        required=True, domain=[('id', 'in', Eval('controls_domain'))],
-        depends=['controls_domain'])
+        required=True, domain=[('id', 'in', Eval('controls_domain'))])
     controls_domain = fields.Many2Many('lims.fraction', None, None,
         'Controls domain')
 
@@ -3749,7 +3726,7 @@ class AddAnalysisStart(ModelView):
         'Analysis/Sets/Groups', required=True,
         domain=[('id', 'in', Eval('analysis_domain'))],
         context={'date_from': Eval('date_from'), 'date_to': Eval('date_to')},
-        depends=['analysis_domain', 'date_from', 'date_to'])
+        depends={'date_from', 'date_to'})
     analysis_domain = fields.Many2Many('lims.analysis', None, None,
         'Analysis domain')
 
@@ -3815,8 +3792,8 @@ class SearchFractionsNext(ModelView):
 
     details = fields.Many2Many(
         'lims.planification.search_fractions.detail',
-        None, None, 'Fractions to plan', depends=['details_domain'],
-        domain=[('id', 'in', Eval('details_domain'))], required=True)
+        None, None, 'Fractions to plan', required=True,
+        domain=[('id', 'in', Eval('details_domain'))])
     details_domain = fields.One2Many(
         'lims.planification.search_fractions.detail',
         None, 'Fractions domain')
@@ -4282,8 +4259,7 @@ class SearchPlannedFractionsStart(ModelView):
     date_to = fields.Date('Date to')
     analysis = fields.Many2Many('lims.planification-analysis',
         'planification', 'analysis', 'Analysis/Sets/Groups',
-        domain=[('id', 'in', Eval('analysis_domain'))],
-        depends=['analysis_domain'], required=True)
+        required=True, domain=[('id', 'in', Eval('analysis_domain'))])
     analysis_domain = fields.One2Many('lims.analysis', None,
         'Analysis domain')
 
@@ -4294,8 +4270,8 @@ class SearchPlannedFractionsNext(ModelView):
 
     details = fields.Many2Many(
         'lims.planification.search_fractions.detail',
-        None, None, 'Fractions to replan', depends=['details_domain'],
-        domain=[('id', 'in', Eval('details_domain'))], required=True)
+        None, None, 'Fractions to replan', required=True,
+        domain=[('id', 'in', Eval('details_domain'))])
     details_domain = fields.One2Many(
         'lims.planification.search_fractions.detail',
         None, 'Fractions domain')
@@ -4562,29 +4538,25 @@ class CreateFractionControlStart(ModelView):
         ('sla', 'SLA'),
         ], 'Control type', sort=False, required=True)
     product_type = fields.Many2One('lims.product.type', 'Product type',
-        required=True,
-        domain=[('id', 'in', Eval('product_type_domain'))],
-        depends=['product_type_domain'])
+        required=True, domain=[('id', 'in', Eval('product_type_domain'))])
     product_type_domain = fields.Function(fields.Many2Many(
         'lims.product.type', None, None, 'Product type domain'),
         'on_change_with_product_type_domain')
     matrix = fields.Many2One('lims.matrix', 'Matrix', required=True,
-        domain=[('id', 'in', Eval('matrix_domain'))],
-        depends=['matrix_domain'])
+        domain=[('id', 'in', Eval('matrix_domain'))])
     matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
         None, None, 'Matrix domain'),
         'on_change_with_matrix_domain')
     analysis = fields.Many2Many('lims.planification-analysis',
         'planification', 'analysis', 'Analysis/Sets/Groups',
-        domain=[('id', 'in', Eval('analysis_domain'))],
-        depends=['analysis_domain'])
+        domain=[('id', 'in', Eval('analysis_domain'))])
     analysis_domain = fields.Function(fields.One2Many('lims.analysis',
         None, 'Analysis domain'), 'on_change_with_analysis_domain')
     label = fields.Char('Label')
     concentration_level = fields.Many2One('lims.concentration.level',
         'Concentration level', states={
             'invisible': Bool(Eval('concentration_level_invisible')),
-            }, depends=['concentration_level_invisible'])
+            })
     concentration_level_invisible = fields.Boolean(
         'Concentration level invisible')
     sample_created = fields.Many2One('lims.sample', 'Sample created')
@@ -4926,8 +4898,7 @@ class ReleaseFractionResult(ModelView):
 
     fractions = fields.Many2Many('lims.planification.detail', None, None,
         'Fractions', required=True,
-        domain=[('id', 'in', Eval('fractions_domain'))],
-        depends=['fractions_domain'])
+        domain=[('id', 'in', Eval('fractions_domain'))])
     fractions_domain = fields.One2Many('lims.planification.detail', None,
         'Fractions domain')
 
@@ -5632,14 +5603,12 @@ class ReplaceTechnicianStart(ModelView):
     planification = fields.Many2One('lims.planification', 'Planification')
     technician_replaced = fields.Many2One('lims.laboratory.professional',
         'Technician replaced', required=True,
-        domain=[('id', 'in', Eval('replaced_domain'))],
-        depends=['replaced_domain'])
+        domain=[('id', 'in', Eval('replaced_domain'))])
     replaced_domain = fields.One2Many('lims.laboratory.professional',
         None, 'Replaced domain')
     technician_substitute = fields.Many2One('lims.laboratory.professional',
         'Technician substitute', required=True,
-        domain=[('id', 'in', Eval('substitute_domain'))],
-        depends=['substitute_domain'])
+        domain=[('id', 'in', Eval('substitute_domain'))])
     substitute_domain = fields.Function(fields.One2Many(
         'lims.laboratory.professional', None, 'Substitute domain'),
         'on_change_with_substitute_domain')

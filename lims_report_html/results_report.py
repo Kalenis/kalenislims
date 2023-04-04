@@ -23,10 +23,9 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             ('report_name', '=', 'lims.result_report'),
             ('type', 'in', [None, 'base']),
             ['OR', ('active', '=', True),
-                ('id', '=', Eval('template'))],
+                ('id', '=', Eval('template', -1))],
             ],
-        states={'readonly': Eval('state') != 'draft'},
-        depends=['state'])
+        states={'readonly': Eval('state') != 'draft'})
     template_type = fields.Function(fields.Selection([
         (None, ''),
         ('base', 'HTML'),
@@ -312,8 +311,7 @@ class RelateAttachmentResultsReportStart(ModelView):
         ('following', 'Following'),
         ], 'Position', required=True)
     attachment = fields.Many2One('ir.attachment', 'Attachment', required=True,
-        domain=[('id', 'in', Eval('attachment_domain'))],
-        depends=['attachment_domain'])
+        domain=[('id', 'in', Eval('attachment_domain'))])
     attachment_domain = fields.Many2Many('ir.attachment', None, None,
         'Attachment domain')
 
@@ -602,10 +600,9 @@ class GenerateReportStart(metaclass=PoolMeta):
             ('report_name', '=', 'lims.result_report'),
             ('type', 'in', [None, 'base']),
             ['OR', ('active', '=', True),
-                ('id', '=', Eval('template'))],
+                ('id', '=', Eval('template', -1))],
             ],
-        states={'readonly': Bool(Eval('report'))},
-        depends=['report'])
+        states={'readonly': Bool(Eval('report'))})
 
 
 class GenerateReport(metaclass=PoolMeta):

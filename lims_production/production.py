@@ -22,30 +22,30 @@ class Production(metaclass=PoolMeta):
     __name__ = 'production'
 
     concentration = fields.Char('Concentration',
-        depends=['salable_product', 'state'], states={
+        states={
             'invisible': Bool(Eval('salable_product')),
             'readonly': ~Eval('state').in_(['request', 'draft']),
             })
     preparation_date = fields.Date('Preparation date',
-        depends=['salable_product', 'state'], states={
+        states={
             'invisible': Bool(Eval('salable_product')),
             'readonly': ~Eval('state').in_(['request', 'draft']),
             })
     expiration_date = fields.Date('Expiration date',
-        depends=['state'], states={
+        states={
             'readonly': ~Eval('state').in_(['request', 'draft']),
             })
     technician = fields.Many2One('lims.laboratory.professional',
-        'Technician', depends=['state'], states={
+        'Technician', states={
             'readonly': ~Eval('state').in_(['request', 'draft']),
             })
     solvent = fields.Function(fields.Many2One('product.product',
-        'Solvent', depends=['salable_product', 'state'], states={
+        'Solvent', context={'company': Eval('company', -1)},
+        depends={'company'}, states={
             'invisible': Bool(Eval('salable_product')),
             'readonly': ~Eval('state').in_(['request', 'draft']),
             }), 'on_change_with_solvent')
-    salable_product = fields.Function(fields.Boolean('Salable',
-        depends=['product']),
+    salable_product = fields.Function(fields.Boolean('Salable'),
         'on_change_with_salable_product')
     comments = fields.Text('Comments')
 

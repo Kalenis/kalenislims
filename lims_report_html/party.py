@@ -15,5 +15,5 @@ class Party(metaclass=PoolMeta):
             ('report_name', '=', 'lims.result_report'),
             ('type', 'in', [None, 'base']),
             ['OR', ('active', '=', True),
-                ('id', '=', Eval('result_template'))],
+                ('id', '=', Eval('result_template', -1))],
             ])

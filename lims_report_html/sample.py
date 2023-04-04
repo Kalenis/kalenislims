@@ -38,7 +38,7 @@ class Sample(metaclass=PoolMeta):
             ('report_name', '=', 'lims.result_report'),
             ('type', 'in', [None, 'base']),
             ['OR', ('active', '=', True),
-                ('id', '=', Eval('result_template'))],
+                ('id', '=', Eval('result_template', -1))],
             ])
     resultrange_origin = fields.Many2One('lims.range.type', 'Comparison range',
         domain=[('use', '=', 'result_range')])
@@ -69,7 +69,7 @@ class CreateSampleStart(metaclass=PoolMeta):
             ('report_name', '=', 'lims.result_report'),
             ('type', 'in', [None, 'base']),
             ['OR', ('active', '=', True),
-                ('id', '=', Eval('result_template'))],
+                ('id', '=', Eval('result_template', -1))],
             ])
     resultrange_origin = fields.Many2One('lims.range.type', 'Comparison range',
         domain=[('use', '=', 'result_range')])

@@ -21,16 +21,10 @@ class Compilation(metaclass=PoolMeta):
     def __setup__(cls):
         super().__setup__()
         cls.date_time.states['readonly'] = Bool(Eval('analysis_sheet'))
-        if 'analysis_sheet' not in cls.date_time.depends:
-            cls.date_time.depends.append('analysis_sheet')
         cls.interface.states['readonly'] = Or(Bool(Eval('analysis_sheet')),
             Eval('state') != 'draft')
-        if 'analysis_sheet' not in cls.interface.depends:
-            cls.interface.depends.append('analysis_sheet')
         cls.revision.states['readonly'] = Or(Bool(Eval('analysis_sheet')),
             Eval('state') != 'draft')
-        if 'analysis_sheet' not in cls.revision.depends:
-            cls.revision.depends.append('analysis_sheet')
 
         cls._buttons['view_data']['invisible'] = Or(
             Eval('state') == 'draft',
@@ -79,7 +73,6 @@ class Column(metaclass=PoolMeta):
                 'export_file_type') == 'txt',
             'readonly': Eval('interface_state') != 'draft',
             },
-        depends=['interface_state'],
         help='Mapped column in batch file')
     destination_start = fields.Integer('Field start',
         states={
@@ -88,8 +81,7 @@ class Column(metaclass=PoolMeta):
             'invisible': Eval('_parent_interface', {}).get(
                 'export_file_type') != 'txt',
             'readonly': Eval('interface_state') != 'draft',
-            },
-        depends=['interface_state'])
+            })
     destination_end = fields.Integer('Field end',
         states={
             'required': Eval('_parent_interface', {}).get(
@@ -97,9 +89,10 @@ class Column(metaclass=PoolMeta):
             'invisible': Eval('_parent_interface', {}).get(
                 'export_file_type') != 'txt',
             'readonly': Eval('interface_state') != 'draft',
-            },
-        depends=['interface_state'])
-    validation_column = fields.Boolean('Validation Column', help="Column used to set if the result is in ranges (should return 1 or 0)")
+            })
+    validation_column = fields.Boolean('Validation Column',
+        help=('Column used to set if the result is in ranges '
+        '(should return 1 or 0)'))
 
 
 class Interface(metaclass=PoolMeta):
@@ -122,8 +115,7 @@ class Interface(metaclass=PoolMeta):
         states={
             'required': Eval('export_file_type') == 'csv',
             'invisible': Eval('export_file_type') != 'csv',
-            },
-        depends=['export_file_type'])
+            })
     export_field_separator_other = fields.Char('Other',
         states={
             'required': And(
@@ -132,10 +124,9 @@ class Interface(metaclass=PoolMeta):
             'invisible': Or(
                 Eval('export_file_type') != 'csv',
                 Eval('export_field_separator') != 'other'),
-            },
-        depends=['export_file_type', 'export_field_separator'])
+            })
     export_order_field = fields.Many2One('lims.interface.column',
-        'Order field', depends=['id'],
+        'Order field',
         domain=[('interface', '=', Eval('id')), ('group', '=', None)])
 
     @staticmethod

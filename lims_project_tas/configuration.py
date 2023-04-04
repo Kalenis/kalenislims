@@ -32,7 +32,7 @@ class LabWorkYearSequence(metaclass=PoolMeta):
     __name__ = 'lims.lab.workyear.sequence'
 
     project_tas_sequence = fields.Many2One('ir.sequence.strict',
-        'TAS Projects Sequence', depends=['company'], domain=[
+        'TAS Projects Sequence', domain=[
             ('sequence_type', '=',
                 Id('lims_project_study_plan', 'seq_type_stp_project')),
             ('company', 'in', [Eval('company', -1), None]),

@@ -16,12 +16,11 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail'
 
     diagnostician = fields.Many2One('lims.diagnostician', 'Diagnostician',
-        states={'readonly': Eval('state') != 'draft'}, depends=['state'])
+        states={'readonly': Eval('state') != 'draft'})
     diagnosis_template = fields.Many2One('lims.diagnosis.template',
         'Diagnosis Template', domain=['OR', ('active', '=', True),
-            ('id', '=', Eval('diagnosis_template'))],
-        states={'readonly': Eval('state') != 'draft'},
-        depends=['state'])
+            ('id', '=', Eval('diagnosis_template', -1))],
+        states={'readonly': Eval('state') != 'draft'})
 
     @classmethod
     def __setup__(cls):
@@ -201,8 +200,7 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
     diagnosis_plain = fields.Function(fields.Text('Diagnosis'),
         'get_diagnosis_plain', setter='set_diagnosis_plain')
     diagnosis_states = fields.Dict('lims.diagnosis.state', 'States',
-        domain=[('id', 'in', Eval('diagnosis_states_domain'))],
-        depends=['diagnosis_states_domain'])
+        domain=[('id', 'in', Eval('diagnosis_states_domain'))])
     diagnosis_states_string = diagnosis_states.translated('diagnosis_states')
     diagnosis_states_domain = fields.Function(fields.Many2Many(
         'lims.diagnosis.state', None, None, 'States domain'),

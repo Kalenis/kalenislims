@@ -20,7 +20,7 @@ class Planification(metaclass=PoolMeta):
     planification_update_draft_sheet = fields.Boolean(
         'Update draft sheets')
     analysis_sheets = fields.One2Many('lims.planification.analysis_sheet',
-        'planification', 'Analysis sheets to update', depends=['state'],
+        'planification', 'Analysis sheets to update',
         states={'readonly': Eval('state') != 'preplanned'})
 
     @staticmethod
@@ -159,10 +159,9 @@ class PlanificationAnalysisSheet(ModelSQL, ModelView):
         'Laboratory professional', required=True)
     analysis_sheet = fields.Many2One('lims.analysis_sheet',
         'Analysis Sheet', required=True,
-        domain=['OR', ('id', '=', Eval('analysis_sheet')),
+        domain=['OR', ('id', '=', Eval('analysis_sheet', -1)),
             [('state', 'in', ['draft', 'active']),
-                ('professional', '=', Eval('professional'))]],
-        depends=['professional'])
+                ('professional', '=', Eval('professional'))]])
     template = fields.Function(fields.Many2One('lims.template.analysis_sheet',
         'Template'), 'on_change_with_template')
 
@@ -183,7 +182,7 @@ class SearchAnalysisSheetStart(ModelView):
         None, None, 'Templates', required=True,
         domain=[('id', 'in', Eval('templates_domain'))],
         context={'date_from': Eval('date_from'), 'date_to': Eval('date_to')},
-        depends=['templates_domain', 'date_from', 'date_to'])
+        depends={'date_from', 'date_to'})
     templates_domain = fields.One2Many('lims.template.analysis_sheet',
         None, 'Templates domain')
 
@@ -194,7 +193,7 @@ class SearchAnalysisSheetNext(ModelView):
 
     details = fields.Many2Many(
         'lims.planification.search_fractions.detail',
-        None, None, 'Fractions to plan', depends=['details_domain'],
+        None, None, 'Fractions to plan',
         domain=[('id', 'in', Eval('details_domain'))], required=True)
     details_domain = fields.One2Many(
         'lims.planification.search_fractions.detail',
@@ -527,8 +526,7 @@ class RelateTechniciansResult(metaclass=PoolMeta):
     details4 = fields.Many2Many(
         'lims.planification.relate_technicians.detail4', None, None,
         'Fractions to plan', domain=[('id', 'in', Eval('details4_domain'))],
-        states={'invisible': ~Bool(Equal(Eval('grouping'), 'analysis_sheet'))},
-        depends=['details4_domain', 'grouping'])
+        states={'invisible': ~Bool(Equal(Eval('grouping'), 'analysis_sheet'))})
     details4_domain = fields.One2Many(
         'lims.planification.relate_technicians.detail4', None,
         'Fractions domain')
@@ -853,15 +851,13 @@ class PlanificationProfessionalContext(ModelView):
             If(Eval('to_date') & Eval('from_date'),
                 ('from_date', '<=', Eval('to_date')),
                 ()),
-            ],
-        depends=['to_date'])
+            ])
     to_date = fields.Date("To Date",
         domain=[
             If(Eval('from_date') & Eval('to_date'),
                 ('to_date', '>=', Eval('from_date')),
                 ()),
-            ],
-        depends=['from_date'])
+            ])
 
     @classmethod
     def default_laboratory(cls):
@@ -1122,15 +1118,13 @@ class SamplesPendingPlanningContext(ModelView):
             If(Eval('date_to') & Eval('date_from'),
                 ('date_from', '<=', Eval('date_to')),
                 ()),
-            ],
-        depends=['date_to'])
+            ])
     date_to = fields.Date("To Date",
         domain=[
             If(Eval('date_from') & Eval('date_to'),
                 ('date_to', '>=', Eval('date_from')),
                 ()),
-            ],
-        depends=['date_from'])
+            ])
 
     @classmethod
     def default_laboratory(cls):

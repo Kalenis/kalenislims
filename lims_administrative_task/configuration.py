@@ -47,7 +47,7 @@ class ConfigurationSequence(ModelSQL, CompanyValueMixin):
     __name__ = 'lims.administrative.task.configuration.sequence'
 
     task_sequence = fields.Many2One('ir.sequence',
-        'Task Sequence', depends=['company'], domain=[
+        'Task Sequence', domain=[
             ('sequence_type', '=',
                 Id('lims_administrative_task', 'seq_type_task')),
             ('company', 'in', [Eval('company', -1), None]),

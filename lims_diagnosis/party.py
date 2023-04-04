@@ -50,4 +50,4 @@ class Party(metaclass=PoolMeta):
     diagnostician = fields.Many2One('lims.diagnostician', 'Diagnostician')
     diagnosis_template = fields.Many2One('lims.diagnosis.template',
         'Diagnosis Template', domain=['OR', ('active', '=', True),
-            ('id', '=', Eval('diagnosis_template'))])
+            ('id', '=', Eval('diagnosis_template', -1))])

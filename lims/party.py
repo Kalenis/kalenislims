@@ -29,8 +29,7 @@ class Party(metaclass=PoolMeta):
         'Sample Producers')
     is_lab_professional = fields.Boolean('Laboratory Professional')
     lims_user = fields.Many2One('res.user', 'Lims User',
-        states={'required': Bool(Eval('is_lab_professional'))},
-        depends=['is_lab_professional'])
+        states={'required': Bool(Eval('is_lab_professional'))})
     entry_zone = fields.Many2One('lims.zone', 'Entry Zone')
     block_entry_confirmation = fields.Boolean('Block Entry Confirmation')
     carrier = fields.Many2One('carrier', 'Carrier')
@@ -148,22 +147,17 @@ class Address(metaclass=PoolMeta):
                 Bool(Eval('invoice_contact')),
                 Bool(Eval('report_contact')),
                 Bool(Eval('acknowledgment_contact'))),
-            },
-        depends=['report_contact', 'acknowledgment_contact',
-            'invoice_contact'])
+            })
     report_contact = fields.Boolean('Report contact')
     report_contact_default = fields.Boolean('Report contact by default',
-        states={'readonly': ~Bool(Eval('report_contact'))},
-        depends=['report_contact'])
+        states={'readonly': ~Bool(Eval('report_contact'))})
     acknowledgment_contact = fields.Boolean('Acknowledgment contact')
     acknowledgment_contact_default = fields.Boolean(
         'Acknowledgment contact by default',
-        states={'readonly': ~Bool(Eval('acknowledgment_contact'))},
-        depends=['acknowledgment_contact'])
+        states={'readonly': ~Bool(Eval('acknowledgment_contact'))})
     invoice_contact = fields.Boolean('Invoice contact')
     invoice_contact_default = fields.Boolean('Invoice contact by default',
-        states={'readonly': ~Bool(Eval('invoice_contact'))},
-        depends=['invoice_contact'])
+        states={'readonly': ~Bool(Eval('invoice_contact'))})
 
     @fields.depends('report_contact')
     def on_change_report_contact(self):

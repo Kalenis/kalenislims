@@ -30,20 +30,16 @@ class Invoice(metaclass=PoolMeta):
 
     no_send_invoice = fields.Boolean('No send invoice',
         states={'invisible': Eval('type') == 'in'},
-        depends=['type'],
         help='If checked, then the invoice will not be mailed to contacts.')
     invoice_contacts = fields.One2Many('account.invoice.invoice_contacts',
         'invoice', 'Invoice contacts',
-        states={'invisible': Eval('type') == 'in'},
-        depends=['type'])
+        states={'invisible': Eval('type') == 'in'})
     sent = fields.Boolean('Sent', readonly=True,
         help='If checked, then the invoice was mailed to contacts.')
     sent_date = fields.DateTime('Sent date', readonly=True,
-        states={'invisible': Bool(Eval('no_send_invoice'))},
-        depends=['no_send_invoice'])
+        states={'invisible': Bool(Eval('no_send_invoice'))})
     entries_comments = fields.Text('Entries comments',
-        states={'invisible': Eval('type') == 'in'},
-        depends=['type'], readonly=True)
+        states={'invisible': Eval('type') == 'in'}, readonly=True)
 
     @classmethod
     def __setup__(cls):
@@ -241,45 +237,40 @@ class InvoiceLine(metaclass=PoolMeta):
     __name__ = 'account.invoice.line'
 
     lims_service_party = fields.Function(fields.Many2One('party.party',
-        'Party', depends=['invoice_type'],
-        states={
+        'Party', context={'company': Eval('company', -1)},
+        depends={'company'}, states={
             'invisible': Or(Eval('_parent_invoice', {}).get('type') == 'in',
                 Eval('invoice_type') == 'in'),
             }), 'get_fraction_field', searcher='search_fraction_field')
     lims_service_entry = fields.Function(fields.Many2One('lims.entry',
-        'Entry', depends=['invoice_type'],
-        states={
+        'Entry', states={
             'invisible': Or(Eval('_parent_invoice', {}).get('type') == 'in',
                 Eval('invoice_type') == 'in'),
             }), 'get_fraction_field', searcher='search_fraction_field')
     lims_service_sample = fields.Function(fields.Many2One('lims.sample',
-        'Sample', depends=['invoice_type'],
-        states={
+        'Sample', states={
             'invisible': Or(Eval('_parent_invoice', {}).get('type') == 'in',
                 Eval('invoice_type') == 'in'),
             }), 'get_fraction_field', searcher='search_fraction_field')
     lims_service_results_reports = fields.Function(fields.Char(
-        'Results Reports', depends=['invoice_type'],
-        states={
+        'Results Reports', states={
             'invisible': Or(Eval('_parent_invoice', {}).get('type') == 'in',
                 Eval('invoice_type') == 'in'),
             }), 'get_results_reports', searcher='search_results_reports')
     party_domain = fields.Function(fields.Many2Many('party.party',
-        None, None, 'Party domain'), 'get_party_domain')
+        None, None, 'Party domain', context={'company': Eval('company', -1)},
+        depends={'company'}), 'get_party_domain')
 
     @classmethod
     def __setup__(cls):
         super().__setup__()
         cls.origin.states['readonly'] = True
-        cls.party.domain = ['OR', ('id', '=', Eval('party')),
+        cls.party.domain = ['OR', ('id', '=', Eval('party', -1)),
             If(Bool(Eval('party_domain')),
             ('id', 'in', Eval('party_domain')), ('id', '!=', -1))]
-        if 'party_domain' not in cls.party.depends:
-            cls.party.depends.append('party_domain')
         cls.product.states['readonly'] = Or(
             Eval('invoice_state') != 'draft',
             Bool(Eval('lims_service_sample')))
-        cls.product.depends.append('lims_service_sample')
 
     @classmethod
     def delete(cls, lines):

@@ -63,7 +63,7 @@ class Entry(metaclass=PoolMeta):
     __name__ = 'lims.entry'
 
     project = fields.Many2One('lims.project', 'Project',
-        domain=[('client', '=', Eval('party'))], depends=['party'])
+        domain=[('client', '=', Eval('party'))])
     project_type = fields.Function(fields.Selection([],
         'Type', sort=False),
         'on_change_with_project_type')
@@ -74,8 +74,7 @@ class Entry(metaclass=PoolMeta):
         cls.samples.context.update({
             'project': Eval('project', None),
             })
-        if 'project' not in cls.samples.depends:
-            cls.samples.depends.append('project')
+        cls.samples.depends.add('project')
 
     @fields.depends('project', '_parent_project.type')
     def on_change_with_project_type(self, name=None):

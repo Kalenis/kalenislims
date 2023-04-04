@@ -58,10 +58,8 @@ class ResultsReportTemplate(metaclass=PoolMeta):
 
     diagnosis_template = fields.Many2One('lims.diagnosis.template',
         'Diagnosis Template', domain=['OR', ('active', '=', True),
-            ('id', '=', Eval('diagnosis_template'))],
-        states={'invisible': Eval('type') != 'base'},
-        depends=['type'])
+            ('id', '=', Eval('diagnosis_template', -1))],
+        states={'invisible': Eval('type') != 'base'})
     diagnosis_length = fields.Integer('Diagnosis Length',
         states={'invisible': Eval('type') != 'base'},
-        depends=['type'],
         help='Maximum number of characters in diagnosis')

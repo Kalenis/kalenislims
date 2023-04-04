@@ -26,8 +26,7 @@ class Method(metaclass=PoolMeta):
     __name__ = 'lims.lab.method'
 
     specification = fields.Text('Specification',
-        states={'readonly': Eval('state') != 'draft'},
-        depends=['state'])
+        states={'readonly': Eval('state') != 'draft'})
 
     def _get_new_version_fields(self):
         fields = super()._get_new_version_fields()
@@ -52,7 +51,7 @@ class Analysis(metaclass=PoolMeta):
         states={
             'invisible': ~Equal(Eval('quality_type'), 'qualitative'),
             'required': Equal(Eval('quality_type'), 'qualitative'),
-            }, depends=['quality_type'])
+            })
 
     @staticmethod
     def default_quality_type():
@@ -78,26 +77,23 @@ class Typification(metaclass=PoolMeta):
             'invisible': ~Equal(Eval('quality_type'), 'qualitative'),
             'required': Equal(Eval('quality_type'), 'qualitative'),
             },
-        domain=[('id', 'in', Eval('valid_value_domain'))],
-        depends=['valid_value_domain', 'quality_type'])
+        domain=[('id', 'in', Eval('valid_value_domain'))])
     valid_value_domain = fields.Function(fields.Many2Many(
         'lims.quality.qualitative.value',
         None, None, 'Valid Value domain',
         states={'invisible': True}), 'on_change_with_valid_value_domain')
     quality_test_report = fields.Boolean('Quality Test Report')
     quality_order = fields.Integer('Quality Order')
-    quality_min = fields.Float('Min',
-        digits=(16, Eval('limit_digits', 2)),
+    quality_min = fields.Float('Min', digits=(16, Eval('limit_digits', 2)),
         states={
             'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
             'required': Equal(Eval('quality_type'), 'quantitative'),
-            }, depends=['quality_type', 'limit_digits'])
-    quality_max = fields.Float('Max',
-        digits=(16, Eval('limit_digits', 2)),
+            })
+    quality_max = fields.Float('Max', digits=(16, Eval('limit_digits', 2)),
         states={
             'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
             'required': Equal(Eval('quality_type'), 'quantitative'),
-            }, depends=['quality_type', 'limit_digits'])
+            })
     interface = fields.Function(fields.Many2One('lims.interface',
         'Interface'), 'get_interface')
 
@@ -109,27 +105,21 @@ class Typification(metaclass=PoolMeta):
             'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
             'required': Equal(Eval('quality_type'), 'quantitative'),
             }
-        cls.start_uom.depends = ['quality_type']
         cls.end_uom.states = {
             'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
             }
-        cls.end_uom.depends = ['quality_type']
         cls.initial_concentration.states = {
             'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
             }
-        cls.initial_concentration.depends = ['quality_type']
         cls.final_concentration.states = {
             'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
             }
-        cls.final_concentration.depends = ['quality_type']
         cls.limit_digits.states = {
             'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
             }
-        cls.limit_digits.depends = ['quality_type']
         cls.calc_decimals.states = {
             'invisible': ~Equal(Eval('quality_type'), 'quantitative'),
             }
-        cls.calc_decimals.depends = ['quality_type']
 
     @classmethod
     def __register__(cls, module_name):
@@ -235,23 +225,18 @@ class NotebookLine(metaclass=PoolMeta):
     quality_test = fields.Many2One('lims.quality.test', 'Quality Test',
         select=True)
     test_value = fields.Many2One('lims.quality.qualitative.value',
-        'Test Value',
-        states={
-            'readonly': True,
-            })
+        'Test Value', states={'readonly': True})
     qualitative_value = fields.Many2One('lims.quality.qualitative.value',
         'Qualitative Value',
-        domain=[
-            ('analysis', '=', Eval('analysis')),
-            ], depends=['analysis'])
-    success = fields.Function(fields.Boolean('Success',
-        depends=['success_icon']), 'get_success')
-    success_icon = fields.Function(fields.Char('Success Icon',
-        depends=['success']), 'get_success_icon')
+        domain=[('analysis', '=', Eval('analysis'))])
+    success = fields.Function(fields.Boolean('Success'),
+        'get_success')
+    success_icon = fields.Function(fields.Char('Success Icon'),
+        'get_success_icon')
     quality_min = fields.Float('Min',
-        digits=(16, Eval('decimals', 2)), depends=['decimals'])
+        digits=(16, Eval('decimals', 2)))
     quality_max = fields.Float('Max',
-        digits=(16, Eval('decimals', 2)), depends=['decimals'])
+        digits=(16, Eval('decimals', 2)))
     quality_test_report = fields.Boolean('Quality Test Report')
     specification = fields.Text('Specification', readonly=True)
     test_result = fields.Function(fields.Char('Test Result'),
@@ -264,7 +249,6 @@ class NotebookLine(metaclass=PoolMeta):
             'invisible': Bool(Eval('qualitative_value')),
             'readonly': Bool(Eval('accepted')),
             }
-        cls.result.depends = ['accepted', 'qualitative_value']
 
     @staticmethod
     def default_quality_test_report():
@@ -594,9 +578,7 @@ class NotebookLoadResultsManualLine(metaclass=PoolMeta):
 
     qualitative_value = fields.Many2One('lims.quality.qualitative.value',
         'Qualitative Value',
-        domain=[
-            ('analysis', '=', Eval('analysis')),
-            ], depends=['analysis'])
+        domain=[('analysis', '=', Eval('analysis'))])
     analysis = fields.Function(fields.Many2One('lims.analysis', 'Analysis'),
         'get_analysis')
 

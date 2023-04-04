@@ -34,9 +34,7 @@ class TemplateAnalysisSheetMaterial(ModelSQL, ModelView):
     uom_category = fields.Function(fields.Many2One(
         'product.uom.category', 'Uom Category'), 'on_change_with_uom_category')
     uom = fields.Many2One('product.uom', 'Uom', required=True,
-        domain=[
-            ('category', '=', Eval('uom_category')),
-        ], depends=['uom_category'])
+        domain=[('category', '=', Eval('uom_category'))])
     unit_digits = fields.Function(fields.Integer('Unit Digits'),
         'on_change_with_unit_digits')
     quantity = fields.Float('Quantity', required=True,
@@ -44,8 +42,7 @@ class TemplateAnalysisSheetMaterial(ModelSQL, ModelView):
             ('quantity', '>=', 0),
             ('quantity', '=', None),
             ],
-        digits=(16, Eval('unit_digits', 2)),
-        depends=['unit_digits'])
+        digits=(16, Eval('unit_digits', 2)))
     quantity_by_sample = fields.Boolean('Quantity by Sample')
     interface = fields.Function(fields.Many2One(
         'lims.interface', 'Device Interface'), 'get_interface')
@@ -133,18 +130,13 @@ class AddMaterialDetailStart(ModelView):
             ('type', '!=', 'service'),
         ])
     lot = fields.Many2One('stock.lot', 'Lot',
-        domain=[
-            ('product', '=', Eval('product')),
-            ],
-        depends=['product'])
+        domain=[('product', '=', Eval('product'))])
     from_location = fields.Many2One('stock.location', 'From Location',
         domain=[('type', '=', 'storage')])
     uom_category = fields.Function(fields.Many2One(
         'product.uom.category', 'Uom Category'), 'on_change_with_uom_category')
     uom = fields.Many2One('product.uom', 'Uom', required=True,
-        domain=[
-            ('category', '=', Eval('uom_category')),
-        ], depends=['uom_category'])
+        domain=[('category', '=', Eval('uom_category'))])
     unit_digits = fields.Function(fields.Integer('Unit Digits'),
         'on_change_with_unit_digits')
     quantity = fields.Float('Quantity', required=True,
@@ -152,8 +144,7 @@ class AddMaterialDetailStart(ModelView):
             ('quantity', '>=', 0),
             ('quantity', '=', None),
             ],
-        digits=(16, Eval('unit_digits', 2)),
-        depends=['unit_digits'])
+        digits=(16, Eval('unit_digits', 2)))
 
     @fields.depends('product', 'uom')
     def on_change_product(self):

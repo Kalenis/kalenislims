@@ -17,8 +17,7 @@ class CreateSampleStart(metaclass=PoolMeta):
         'Filter Quotes by Product type and Matrix')
     sale_lines = fields.Many2Many('sale.line', None, None, 'Quotes',
         domain=[('id', 'in', Eval('sale_lines_domain'))],
-        states={'readonly': Or(~Eval('product_type'), ~Eval('matrix'))},
-        depends=['sale_lines_domain', 'product_type', 'matrix'])
+        states={'readonly': Or(~Eval('product_type'), ~Eval('matrix'))})
     sale_lines_domain = fields.Function(fields.Many2Many('sale.line',
         None, None, 'Quotes domain'),
         'on_change_with_sale_lines_domain')
@@ -213,8 +212,7 @@ class AddSampleServiceStart(metaclass=PoolMeta):
         'Filter Quotes by Product type and Matrix')
     sale_lines = fields.Many2Many('sale.line', None, None, 'Quotes',
         domain=[('id', 'in', Eval('sale_lines_domain'))],
-        states={'readonly': Or(~Eval('product_type'), ~Eval('matrix'))},
-        depends=['sale_lines_domain', 'product_type', 'matrix'])
+        states={'readonly': Or(~Eval('product_type'), ~Eval('matrix'))})
     sale_lines_domain = fields.Function(fields.Many2Many('sale.line',
         None, None, 'Quotes domain'),
         'on_change_with_sale_lines_domain')
@@ -223,7 +221,7 @@ class AddSampleServiceStart(metaclass=PoolMeta):
     def default_sale_lines_filter_product_type_matrix():
         return False
 
-    @fields.depends('party', 'product_type', 'matrix',
+    @fields.depends('sample', 'party', 'product_type', 'matrix',
         'sale_lines_filter_product_type_matrix', 'analysis_domain')
     def on_change_with_sale_lines_domain(self, name=None):
         cursor = Transaction().connection.cursor()
@@ -267,7 +265,7 @@ class AddSampleServiceStart(metaclass=PoolMeta):
         res = [sl.id for sl in sale_lines if not sl.services_completed]
         return res
 
-    @fields.depends('party', 'product_type', 'matrix', 'sale_lines')
+    @fields.depends('sample', 'party', 'product_type', 'matrix', 'sale_lines')
     def on_change_with_analysis_domain(self, name=None):
         pool = Pool()
         Analysis = pool.get('lims.analysis')

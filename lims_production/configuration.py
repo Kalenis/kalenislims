@@ -39,7 +39,7 @@ class ProductionConfigurationLotSequence(ModelSQL, CompanyValueMixin):
     __name__ = 'production.configuration.lot_sequence'
 
     lot_sequence = fields.Many2One('ir.sequence',
-        'Lot Sequence', depends=['company'], domain=[
+        'Lot Sequence', domain=[
             ('sequence_type', '=',
                 Id('lims_production', 'seq_type_lot')),
             ('company', 'in', [Eval('company', -1), None]),

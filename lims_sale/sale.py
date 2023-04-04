@@ -30,24 +30,22 @@ class Sale(metaclass=PoolMeta):
     __name__ = 'sale.sale'
 
     invoice_party_domain = fields.Function(fields.Many2Many('party.party',
-        None, None, 'Invoice party domain'),
+        None, None, 'Invoice party domain',
+        context={'company': Eval('company', -1)}, depends={'company'}),
         'on_change_with_invoice_party_domain')
     purchase_order = fields.Char('Purchase order')
     expiration_date = fields.Date('Expiration date', required=True,
-        states={'readonly': ~Eval('state').in_(['draft', 'quotation'])},
-        depends=['state'])
+        states={'readonly': ~Eval('state').in_(['draft', 'quotation'])})
     template = fields.Many2One('lims.report.template',
         'Sale Template', domain=[
             ('report_name', '=', 'sale.sale'),
             ('type', 'in', [None, 'base']),
             ['OR', ('active', '=', True),
-                ('id', '=', Eval('template'))],
+                ('id', '=', Eval('template', -1))],
             ],
-        states={'readonly': Eval('state') != 'draft'},
-        depends=['state'])
-    clause_template = fields.Many2One('sale.clause.template',
-        'Clauses Template', depends=['state'],
         states={'readonly': Eval('state') != 'draft'})
+    clause_template = fields.Many2One('sale.clause.template',
+        'Clauses Template', states={'readonly': Eval('state') != 'draft'})
     sections = fields.One2Many('sale.sale.section', 'sale', 'Sections')
     previous_sections = fields.Function(fields.One2Many(
         'sale.sale.section', 'sale', 'Previous Sections',
@@ -58,19 +56,16 @@ class Sale(metaclass=PoolMeta):
         domain=[('position', '=', 'following')]),
         'get_following_sections', setter='set_following_sections')
     clauses = fields.Text('Clauses',
-        states={'readonly': Eval('state') != 'draft'},
-        depends=['state'])
+        states={'readonly': Eval('state') != 'draft'})
     send_email = fields.Boolean('Send automatically by Email',
-        states={'readonly': ~Eval('state').in_(['draft', 'quotation'])},
-        depends=['state'])
+        states={'readonly': ~Eval('state').in_(['draft', 'quotation'])})
     services_completed = fields.Function(fields.Boolean('Services completed'),
         'get_services_completed')
     services_completed_manual = fields.Boolean('Manually completed services',
         states={
             'invisible': Eval('invoice_method') != 'service',
             'readonly': Eval('state') != 'processing',
-            },
-        depends=['invoice_method', 'state'])
+            })
     completion_percentage = fields.Function(fields.Numeric('Complete',
         digits=(1, 4)), 'get_completion_percentage')
     unlimited_quantity = fields.Function(fields.Boolean(
@@ -87,21 +82,17 @@ class Sale(metaclass=PoolMeta):
         cls.invoice_party.required = True
         cls.invoice_party.select = True
         cls.invoice_party.domain = ['OR',
-            ('id', '=', Eval('invoice_party')),
+            ('id', '=', Eval('invoice_party', -1)),
             ('id', 'in', Eval('invoice_party_domain'))]
-        cls.invoice_party.depends.append('invoice_party_domain')
         cls.invoice_address.domain = [('party', '=', Eval('invoice_party'))]
-        cls.invoice_address.depends.append('invoice_party')
         cls.contact.domain = [('party', '=', Eval('party'))]
         invoice_method = ('service', 'On Entry Confirmed')
         if invoice_method not in cls.invoice_method.selection:
             cls.invoice_method.selection.append(invoice_method)
         cls.invoice_state.states['invisible'] = (
             Eval('invoice_method') == 'service')
-        cls.invoice_state.depends.append('invoice_method')
         cls.shipment_state.states['invisible'] = (
             Eval('invoice_method') == 'service')
-        cls.shipment_state.depends.append('invoice_method')
         cls._buttons.update({
             'load_services': {
                 'invisible': (Eval('state') != 'draft'),
@@ -477,71 +468,62 @@ class SaleLine(metaclass=PoolMeta):
 
     purchase_order = fields.Char('PO Nº')
     product_type = fields.Many2One('lims.product.type', 'Product type',
-        domain=['OR', ('id', '=', Eval('product_type')),
+        domain=['OR', ('id', '=', Eval('product_type', -1)),
             ('id', 'in', Eval('product_type_domain'))],
         states={
             'readonly': Eval('sale_state') != 'draft',
             'invisible': Eval('type') != 'line',
-            },
-        depends=['product_type_domain', 'sale_state', 'type'])
+            })
     product_type_domain = fields.Function(fields.Many2Many('lims.product.type',
         None, None, 'Product type domain'),
         'on_change_with_product_type_domain')
     matrix = fields.Many2One('lims.matrix', 'Matrix',
-        domain=['OR', ('id', '=', Eval('matrix')),
+        domain=['OR', ('id', '=', Eval('matrix', -1)),
             ('id', 'in', Eval('matrix_domain'))],
         states={
             'readonly': Eval('sale_state') != 'draft',
             'invisible': Eval('type') != 'line',
-            },
-        depends=['matrix_domain', 'sale_state', 'type'])
+            })
     matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
         None, None, 'Matrix domain'), 'on_change_with_matrix_domain')
     analysis = fields.Many2One('lims.analysis', 'Service',
-        domain=['OR', ('id', '=', Eval('analysis')),
+        domain=['OR', ('id', '=', Eval('analysis', -1)),
             ('id', 'in', Eval('analysis_domain'))],
         states={
             'readonly': Eval('sale_state') != 'draft',
             'invisible': Eval('type') != 'line',
-            },
-        depends=['analysis_domain', 'sale_state', 'type'])
+            })
     analysis_domain = fields.Function(fields.Many2Many('lims.analysis',
         None, None, 'Analysis domain'), 'on_change_with_analysis_domain')
     method = fields.Many2One('lims.lab.method', 'Method',
-        domain=['OR', ('id', '=', Eval('method')),
+        domain=['OR', ('id', '=', Eval('method', -1)),
             ('id', 'in', Eval('method_domain'))],
         states={
             'invisible': Bool(Eval('method_invisible')),
             'readonly': Eval('sale_state') != 'draft',
-            },
-        depends=['method_domain', 'method_invisible', 'sale_state'])
+            })
     method_invisible = fields.Function(fields.Boolean('Method invisible'),
         'on_change_with_method_invisible')
     method_domain = fields.Function(fields.Many2Many('lims.lab.method',
         None, None, 'Method domain'), 'on_change_with_method_domain')
     expiration_date = fields.Date('Expiration date',
-        states={'readonly': Eval('sale_state') != 'draft'},
-        depends=['sale_state'])
+        states={'readonly': Eval('sale_state') != 'draft'})
     print_price = fields.Boolean('Print price on quotation',
-        states={'readonly': Eval('sale_state') != 'draft'},
-        depends=['sale_state'])
+        states={'readonly': Eval('sale_state') != 'draft'})
     print_service_detail = fields.Boolean('Print service detail',
         states={
             'invisible': Bool(Eval('print_service_detail_invisible')),
             'readonly': Eval('sale_state') != 'draft',
-            },
-        depends=['print_service_detail_invisible', 'sale_state'])
+            })
     print_service_detail_invisible = fields.Function(fields.Boolean(
         'Print service detail invisible'),
         'on_change_with_print_service_detail_invisible')
     unlimited_quantity = fields.Boolean('Unlimited quantity',
-        states={'readonly': Eval('sale_state') != 'draft'},
-        depends=['sale_state'])
+        states={'readonly': Eval('sale_state') != 'draft'})
     services = fields.Many2Many('lims.service-sale.line',
         'sale_line', 'service', 'Services', readonly=True)
     services_available = fields.Function(fields.Float('Services available',
-        digits=(16, Eval('unit_digits', 2)), depends=['unit_digits']),
-        'on_change_with_services_available')
+        digits='unit'), 'on_change_with_services_available')
     services_completed = fields.Function(fields.Boolean('Services completed'),
         'on_change_with_services_completed')
     services_completed_icon = fields.Function(fields.Char(
@@ -688,7 +670,7 @@ class SaleLine(metaclass=PoolMeta):
                 return False
         return True
 
-    @fields.depends('analysis')
+    @fields.depends('analysis', methods=['on_change_product'])
     def on_change_analysis(self):
         product = None
         if self.analysis and self.analysis.product:
@@ -871,7 +853,7 @@ class SaleLoadServicesStart(ModelView):
     __name__ = 'sale.load_services.start'
 
     entry = fields.Many2One('lims.entry', 'Entry', required=True,
-        domain=[('invoice_party', '=', Eval('party'))], depends=['party'])
+        domain=[('invoice_party', '=', Eval('party'))])
     party = fields.Many2One('party.party', 'Party')
 
 

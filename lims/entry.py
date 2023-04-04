@@ -59,17 +59,15 @@ class Entry(Workflow, ModelSQL, ModelView):
             'invisible': Bool(Eval('multi_party')),
             'readonly': ((Eval('state') != 'draft')
                 | (Eval('samples', [0]))),
-            },
-        depends=['multi_party', 'state', 'samples'])
+            })
     invoice_party = fields.Many2One('party.party', 'Invoice party',
         states={
             'required': True,
             'readonly': Eval('state') != 'draft',
             },
         domain=[If(~Eval('multi_party'), ['OR',
-            ('id', '=', Eval('invoice_party')),
-            ('id', 'in', Eval('invoice_party_domain'))], [])],
-        depends=['multi_party', 'state', 'invoice_party_domain'])
+            ('id', '=', Eval('invoice_party', -1)),
+            ('id', 'in', Eval('invoice_party_domain'))], [])])
     invoice_party_view = fields.Function(fields.Many2One('party.party',
         'Invoice party'), 'get_views_field',
         searcher='search_views_field')
@@ -101,7 +99,7 @@ class Entry(Workflow, ModelSQL, ModelView):
     samples = fields.One2Many('lims.sample', 'entry', 'Samples',
         readonly=True, context={'from_entry': True,
             'entry': Eval('id'), 'party': Eval('party')},
-        depends=['party'])
+        depends={'party'})
     invoice_comments = fields.Text('Invoice comments')
     report_comments = fields.Text('Report comments', translate=True)
     transfer_comments = fields.Text('Transfer comments')
@@ -110,7 +108,7 @@ class Entry(Workflow, ModelSQL, ModelView):
         'Pending reason', states={
             'invisible': Not(Bool(Equal(Eval('state'), 'pending'))),
             'required': Bool(Equal(Eval('state'), 'pending')),
-            }, depends=['state'])
+            })
     state = fields.Selection([
         ('draft', 'Draft'),
         ('ongoing', 'Ongoing'),
@@ -839,8 +837,8 @@ class EntryInvoiceContact(EntryContactMixin, ModelSQL, ModelView):
         ondelete='CASCADE', select=True, required=True)
     contact = fields.Many2One('party.address', 'Contact', required=True,
         domain=[
-            ('party', 'in', [Eval('_parent_entry', {}).get('party'),
-                Eval('_parent_entry', {}).get('invoice_party')]),
+            ('party', 'in', [Eval('_parent_entry', {}).get('party', -1),
+                Eval('_parent_entry', {}).get('invoice_party', -1)]),
             ('invoice_contact', '=', True),
         ])
     contact_email = fields.Function(fields.Char('Email'),
@@ -868,8 +866,8 @@ class EntryReportContact(EntryContactMixin, ModelSQL, ModelView):
         ondelete='CASCADE', select=True, required=True)
     contact = fields.Many2One('party.address', 'Contact', required=True,
         domain=[
-            ('party', 'in', [Eval('_parent_entry', {}).get('party'),
-                Eval('_parent_entry', {}).get('invoice_party')]),
+            ('party', 'in', [Eval('_parent_entry', {}).get('party', -1),
+                Eval('_parent_entry', {}).get('invoice_party', -1)]),
             ('report_contact', '=', True),
         ])
     contact_email = fields.Function(fields.Char('Email'),
@@ -897,8 +895,8 @@ class EntryAcknowledgmentContact(EntryContactMixin, ModelSQL, ModelView):
         ondelete='CASCADE', select=True, required=True)
     contact = fields.Many2One('party.address', 'Contact', required=True,
         domain=[
-            ('party', 'in', [Eval('_parent_entry', {}).get('party'),
-                Eval('_parent_entry', {}).get('invoice_party')]),
+            ('party', 'in', [Eval('_parent_entry', {}).get('party', -1),
+                Eval('_parent_entry', {}).get('invoice_party', -1)]),
             ('acknowledgment_contact', '=', True),
         ])
     contact_email = fields.Function(fields.Char('Email'),
@@ -1093,8 +1091,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         states={'readonly': True})
     confirmation_date = fields.Date('Confirmation date', readonly=True)
     report_grouper = fields.Integer('Report Grouper',
-        states={'readonly': Bool(Eval('report_grouper_readonly'))},
-        depends=['report_grouper_readonly'])
+        states={'readonly': Bool(Eval('report_grouper_readonly'))})
     report_grouper_readonly = fields.Function(fields.Boolean(
         'Report Grouper readonly'), 'get_report_grouper_readonly')
     results_report = fields.Function(fields.Many2One('lims.results_report',
@@ -1755,8 +1752,7 @@ class ChangeInvoicePartyStart(ModelView):
     invoice_party_domain = fields.Many2Many('party.party', None, None,
         'Invoice party domain')
     invoice_party = fields.Many2One('party.party', 'Invoice party',
-        domain=[('id', 'in', Eval('invoice_party_domain'))],
-        depends=['invoice_party_domain'], required=True)
+        domain=[('id', 'in', Eval('invoice_party_domain'))], required=True)
 
 
 class ChangeInvoicePartyError(ModelView):

@@ -23,7 +23,6 @@ class Template(metaclass=PoolMeta):
     family_equivalent = fields.Many2One('lims.family.equivalent',
         'Family/Equivalent',
         domain=[('uom.category', '=', Eval('default_uom_category'))],
-        depends=['default_uom_category'],
         help='The UoM\'s Category of Family/Equivalent which you can '
         'select here will match the UoM\'s Category of this Product.')
     controlled = fields.Boolean('Controlled')
@@ -46,9 +45,9 @@ class Template(metaclass=PoolMeta):
 class Product(metaclass=PoolMeta):
     __name__ = 'product.product'
 
-    catalog = fields.Char('Catalog', depends=['active'],
+    catalog = fields.Char('Catalog',
         states={'readonly': ~Eval('active', True)})
-    barcode = fields.Char('Bar Code', depends=['active'],
+    barcode = fields.Char('Bar Code',
         states={'readonly': ~Eval('active', True)})
     common_name = fields.Function(fields.Char('Common name'),
         'get_template_field', searcher='search_template_field')
@@ -121,83 +120,83 @@ class Lot(metaclass=PoolMeta):
     category = fields.Many2One('stock.lot.category', 'Category')
     special_category = fields.Function(fields.Char('Category'),
         'on_change_with_special_category')
-    stability = fields.Char('Stability', depends=['special_category'],
+    stability = fields.Char('Stability',
         states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod'))),
             })
-    homogeneity = fields.Char('Homogeneity', depends=['special_category'],
+    homogeneity = fields.Char('Homogeneity',
         states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod'))),
             })
     concentration = fields.Char('Concentration',
-        depends=['special_category'], states={
+        states={
             'invisible': ~Eval('special_category').in_(
                 ['input_prod', 'domestic_use']),
             })
     reception_date = fields.Date('Reception date',
-        depends=['special_category'], states={
+        states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod'))),
             })
     preparation_date = fields.Date('Preparation date',
-        depends=['special_category'], states={
+        states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'domestic_use'))),
             })
     common_name = fields.Function(fields.Char('Common name',
-        depends=['special_category'], states={
+        states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod'))),
             }), 'get_common_name')
     chemical_name = fields.Function(fields.Char('Chemical name',
-        depends=['special_category'], states={
+        states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod'))),
             }), 'get_chemical_name')
     commercial_name = fields.Function(fields.Char('Commercial name',
-        depends=['special_category'], states={
+        states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod'))),
             }), 'get_commercial_name')
     cas_number = fields.Function(fields.Char('CAS number',
-        depends=['special_category'], states={
+        states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod'))),
             }), 'get_cas_number', searcher='search_cas_number')
     commercial_brand = fields.Function(fields.Many2One('lims.brand',
-        'Commercial Brand', depends=['special_category'], states={
+        'Commercial Brand', states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod'))),
             }), 'get_commercial_brand')
     catalog = fields.Function(fields.Char('Catalog',
-        depends=['special_category'], states={
+        states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod'))),
             }), 'get_catalog')
     purity_degree = fields.Function(fields.Many2One('lims.purity.degree',
-        'Purity Degree', depends=['special_category'], states={
+        'Purity Degree', states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod'))),
             }), 'get_purity_degree')
     solvent = fields.Many2One('product.product', 'Solvent',
-        depends=['special_category'], states={
+        states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'domestic_use'))),
             })
     technician = fields.Many2One('lims.laboratory.professional', 'Technician',
-        depends=['special_category'], states={
+        states={
             'invisible': ~Eval('special_category').in_(
                 ['domestic_use', 'prod_sale']),
             })
     account_category = fields.Function(fields.Many2One('product.category',
-        'Account Category', depends=['special_category'], states={
+        'Account Category', states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod'))),
             }), 'get_account_category', searcher='search_account_category')
     exclusive_glp = fields.Boolean('Exclusive use GLP',
-        depends=['special_category'], states={
+        states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod')))})
     production = fields.Many2One('production', 'Production origin',
@@ -314,7 +313,7 @@ class Move(metaclass=PoolMeta):
     __name__ = 'stock.move'
 
     label_quantity = fields.Float("Label Quantity",
-        digits=(16, Eval('unit_digits', 2)), depends=['unit_digits'])
+        digits='uom')
     origin_purchase_unit_price = fields.Numeric('Unit Price',
         digits=price_digits)
     origin_purchase_currency = fields.Many2One('currency.currency',

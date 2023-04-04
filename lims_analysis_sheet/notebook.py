@@ -222,7 +222,7 @@ class AddControlStart(ModelView):
         ('itc', 'ITC'),
         ('itl', 'ITL'),
         ], 'Type', sort=False,
-        depends=['type'], states={
+        states={
             'required': Eval('type') == 'con',
             'invisible': Eval('type') != 'con',
             })
@@ -230,17 +230,16 @@ class AddControlStart(ModelView):
         ('exist', 'Existing'),
         ('sla', 'SLA'),
         ], 'Type', sort=False,
-        depends=['type'], states={
+        states={
             'required': Eval('type').in_(['rm', 'bmz']),
             'invisible': ~Eval('type').in_(['rm', 'bmz']),
             })
     original_fraction = fields.Many2One('lims.fraction',
         'Original/Reference Fraction',
-        required=True, domain=[('id', 'in', Eval('fraction_domain'))],
-        depends=['fraction_domain'])
+        required=True, domain=[('id', 'in', Eval('fraction_domain'))])
     fraction_domain = fields.Function(fields.One2Many('lims.fraction',
         None, 'Fraction domain'), 'on_change_with_fraction_domain')
-    label = fields.Char('Label', depends=['type', 'con_type', 'rm_bmz_type'],
+    label = fields.Char('Label',
         states={'readonly': Or(
             And(Eval('type') == 'con',
                 Eval('con_type') == 'exist'),
@@ -249,12 +248,10 @@ class AddControlStart(ModelView):
             })
     concentration_level = fields.Many2One('lims.concentration.level',
         'Concentration level',
-        states={'invisible': Bool(Eval('concentration_level_invisible'))},
-        depends=['concentration_level_invisible'])
+        states={'invisible': Bool(Eval('concentration_level_invisible'))})
     concentration_level_invisible = fields.Boolean(
         'Concentration level invisible')
     quantity = fields.Integer('Quantity', required=True,
-        depends=['type', 'con_type', 'rm_bmz_type'],
         states={'readonly': Or(
             And(Eval('type') == 'con',
                 Eval('con_type') == 'exist'),
@@ -651,8 +648,7 @@ class RepeatAnalysisStart(ModelView):
 
     lines = fields.Many2Many(
         'lims.analysis_sheet.repeat_analysis.start.line', None, None,
-        'Lines', required=True, domain=[('id', 'in', Eval('lines_domain'))],
-        depends=['lines_domain'])
+        'Lines', required=True, domain=[('id', 'in', Eval('lines_domain'))])
     lines_domain = fields.One2Many(
         'lims.analysis_sheet.repeat_analysis.start.line', None,
         'Lines domain')
@@ -1847,8 +1843,7 @@ class MoveDataStart(ModelView):
         states={
             'invisible': Eval('move_to') != 'exist',
             'required': Eval('move_to') == 'exist',
-            },
-        depends=['move_to', 'table'])
+            })
     table = fields.Many2One('lims.interface.table', 'Table')
 
 

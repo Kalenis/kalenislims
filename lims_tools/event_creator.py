@@ -63,13 +63,11 @@ class EventCreator(Model):
         ], 'Specific Day',
         states={
             'invisible': Eval('frequence_selection') != 'weekly',
-            },
-        depends=['frequence_selection'])
+            })
     specific_event_time = fields.DateTime('Specific Time',
         states={
             'invisible': Eval('frequence_selection') != 'daily',
-            },
-        depends=['frequence_selection'])
+            })
     only_workdays = fields.Boolean('Allow working days only')
     finish_selection = fields.Selection([
         (None, ''),
@@ -80,14 +78,12 @@ class EventCreator(Model):
         states={
             'invisible': Eval('finish_selection') != 'quantity',
             'required': Eval('finish_selection') == 'quantity',
-            },
-        depends=['finish_selection'])
+            })
     end_date = fields.DateTime('End Date',
         states={
             'invisible': Eval('finish_selection') != 'date',
             'required': Eval('finish_selection') == 'date',
-            },
-        depends=['finish_selection'])
+            })
 
     @fields.depends('frequence_selection')
     def on_change_frequence_selection(self):

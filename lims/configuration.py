@@ -69,7 +69,7 @@ class User(metaclass=PoolMeta):
     laboratories = fields.Many2Many('lims.user-laboratory',
         'user', 'laboratory', 'Laboratories')
     laboratory = fields.Many2One('lims.laboratory', 'Main Laboratory',
-        domain=[('id', 'in', Eval('laboratories'))], depends=['laboratories'])
+        domain=[('id', 'in', Eval('laboratories'))])
     printer = fields.Many2One('lims.printer', 'Printer')
     departments = fields.One2Many('user.department', 'user', 'Departments')
 
@@ -383,13 +383,13 @@ class ConfigurationSequence(ModelSQL, CompanyValueMixin):
     __name__ = 'lims.configuration.sequence'
 
     planification_sequence = fields.Many2One('ir.sequence',
-        'Planification Sequence', depends=['company'], domain=[
+        'Planification Sequence', domain=[
             ('sequence_type', '=',
                 Id('lims', 'seq_type_planification')),
             ('company', 'in', [Eval('company', -1), None]),
             ])
     referral_sequence = fields.Many2One('ir.sequence',
-        'Referral Sequence', depends=['company'], domain=[
+        'Referral Sequence', domain=[
             ('sequence_type', '=',
                 Id('lims', 'seq_type_referral')),
             ('company', 'in', [Eval('company', -1), None]),
@@ -588,26 +588,27 @@ class LabWorkYearSequence(ModelSQL, CompanyValueMixin):
 
     workyear = fields.Many2One('lims.lab.workyear', 'Work Year',
         ondelete='CASCADE', select=True)
+        context={'company': Eval('company', -1)}, depends={'company'})
     entry_sequence = fields.Many2One('ir.sequence',
-        'Entry Sequence', depends=['company'], domain=[
+        'Entry Sequence', domain=[
             ('sequence_type', '=',
                 Id('lims', 'seq_type_entry')),
             ('company', 'in', [Eval('company', -1), None]),
             ])
     sample_sequence = fields.Many2One('ir.sequence',
-        'Sample Sequence', depends=['company'], domain=[
+        'Sample Sequence', domain=[
             ('sequence_type', '=',
                 Id('lims', 'seq_type_sample')),
             ('company', 'in', [Eval('company', -1), None]),
             ])
     service_sequence = fields.Many2One('ir.sequence',
-        'Service Sequence', depends=['company'], domain=[
+        'Service Sequence', domain=[
             ('sequence_type', '=',
                 Id('lims', 'seq_type_service')),
             ('company', 'in', [Eval('company', -1), None]),
             ])
     results_report_sequence = fields.Many2One('ir.sequence',
-        'Results Report Sequence', depends=['company'], domain=[
+        'Results Report Sequence', domain=[
             ('sequence_type', '=',
                 Id('lims', 'seq_type_results_report')),
             ('company', 'in', [Eval('company', -1), None]),

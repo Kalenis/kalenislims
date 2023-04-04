@@ -146,30 +146,29 @@ class LabMethod(Workflow, ModelSQL, ModelView):
     __name__ = 'lims.lab.method'
 
     _states = {'readonly': Eval('state') != 'draft'}
-    _depends = ['state']
 
     code = fields.Char('Code', required=True,
-        states=_states, depends=_depends)
+        states=_states)
     name = fields.Char('Name', required=True, translate=True,
-        states=_states, depends=_depends)
-    version = fields.Char('Version', states=_states, depends=_depends)
-    reference = fields.Char('Reference', states=_states, depends=_depends)
+        states=_states)
+    version = fields.Char('Version', states=_states)
+    reference = fields.Char('Reference', states=_states)
     determination = fields.Char('Determination', required=True,
-        states=_states, depends=_depends)
+        states=_states)
     requalification_months = fields.Integer('Requalification months',
-        required=True, states=_states, depends=_depends)
+        required=True, states=_states)
     supervised_requalification = fields.Boolean('Supervised requalification',
-        states=_states, depends=_depends)
+        states=_states)
     deprecated_since = fields.Date('Deprecated since',
-        states=_states, depends=_depends)
-    pnt = fields.Char('PNT', states=_states, depends=_depends)
+        states=_states)
+    pnt = fields.Char('PNT', states=_states)
     results_estimated_waiting = fields.Integer(
         'Estimated number of days for results',
-        states=_states, depends=_depends)
+        states=_states)
     results_waiting = fields.One2Many('lims.lab.method.results_waiting',
         'method', 'Waiting times per client')
     equivalence_code = fields.Char('Equivalence Code',
-        states=_states, depends=_depends)
+        states=_states)
     versions = fields.One2Many('lims.lab.method.version',
         'method', 'Versions', readonly=True)
     state = fields.Selection([
@@ -178,7 +177,7 @@ class LabMethod(Workflow, ModelSQL, ModelView):
         ('disabled', 'Disabled'),
         ], 'State', required=True, readonly=True)
 
-    del _states, _depends
+    del _states
 
     @classmethod
     def __setup__(cls):
@@ -455,7 +454,7 @@ class LabDevice(DeactivableMixin, ModelSQL, ModelView):
     device_type = fields.Many2One('lims.lab.device.type', 'Device type',
         required=True)
     laboratories = fields.One2Many('lims.lab.device.laboratory', 'device',
-        'Laboratories', depends=['non_analytical'],
+        'Laboratories',
         states={'required': ~Eval('non_analytical', False)})
     non_analytical = fields.Function(fields.Boolean('Non-analytical'),
         'on_change_with_non_analytical')
@@ -665,12 +664,11 @@ class LabDeviceRelateAnalysisStart(ModelView):
     __name__ = 'lims.lab.device.relate_analysis.start'
 
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        required=True, depends=['laboratory_domain'],
-        domain=[('id', 'in', Eval('laboratory_domain'))])
+        required=True, domain=[('id', 'in', Eval('laboratory_domain'))])
     laboratory_domain = fields.One2Many('lims.laboratory',
         None, 'Laboratory domain')
     analysis = fields.Many2Many('lims.analysis', None, None,
-        'Analysis', required=True, depends=['analysis_domain'],
+        'Analysis', required=True,
         domain=[('id', 'in', Eval('analysis_domain'))])
     analysis_domain = fields.Function(fields.One2Many('lims.analysis',
         None, 'Analysis domain'), 'on_change_with_analysis_domain')
@@ -789,20 +787,19 @@ class NotebookRule(ModelSQL, ModelView):
             ('behavior', '!=', 'additional'),
             ])
     target_method = fields.Many2One('lims.lab.method', 'Target Method',
-        domain=[('id', 'in', Eval('target_method_domain'))],
-        depends=['target_method_domain'])
+        domain=[('id', 'in', Eval('target_method_domain'))])
     target_method_domain = fields.Function(fields.Many2Many('lims.lab.method',
         None, None, 'Target Method domain'),
         'on_change_with_target_method_domain')
     target_field = fields.Many2One('ir.model.field', 'Target Field',
         domain=[('id', 'in', Eval('target_field_domain'))],
-        depends=['target_field_domain', 'action'], states={
+        states={
             'required': Eval('action') == 'edit',
             'invisible': Eval('action') != 'edit',
             })
     target_field_domain = fields.Function(fields.Many2Many('ir.model.field',
         None, None, 'Target Field domain'), 'get_target_field_domain')
-    value = fields.Char('Value', depends=['action'],
+    value = fields.Char('Value',
         states={'invisible': Eval('action') != 'edit'})
 
     @classmethod

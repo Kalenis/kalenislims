@@ -34,11 +34,9 @@ class RangeType(ModelSQL, ModelView):
     use_string = use.translated('use')
     by_default = fields.Boolean('By default')
     resultrange_title = fields.Char('Column Title in Results report',
-        translate=True, states={'invisible': Eval('use') != 'result_range'},
-        depends=['use'])
+        translate=True, states={'invisible': Eval('use') != 'result_range'})
     resultrange_comments = fields.Char('Comments in Results report',
-        translate=True, states={'invisible': Eval('use') != 'result_range'},
-        depends=['use'])
+        translate=True, states={'invisible': Eval('use') != 'result_range'})
 
     @staticmethod
     def default_by_default():
@@ -87,14 +85,11 @@ class Range(ModelSQL, ModelView):
     min95 = fields.Float('Minimum 95', digits=(16, 3))
     max95 = fields.Float('Maximum 95', digits=(16, 3))
     low_level = fields.Float('Low level', digits=(16, 3),
-        states={'required': Bool(Eval('low_level_value'))},
-        depends=['low_level_value'])
+        states={'required': Bool(Eval('low_level_value'))})
     middle_level = fields.Float('Middle level', digits=(16, 3),
-        states={'required': Bool(Eval('middle_level_value'))},
-        depends=['middle_level_value'])
+        states={'required': Bool(Eval('middle_level_value'))})
     high_level = fields.Float('High level', digits=(16, 3),
-        states={'required': Bool(Eval('high_level_value'))},
-        depends=['high_level_value'])
+        states={'required': Bool(Eval('high_level_value'))})
     low_level_value = fields.Float('Low level value', digits=(16, 3))
     middle_level_value = fields.Float('Middle level value', digits=(16, 3))
     high_level_value = fields.Float('High level value', digits=(16, 3))
@@ -221,51 +216,43 @@ class ControlTendency(ModelSQL, ModelView):
     concentration_level = fields.Many2One('lims.concentration.level',
         'Concentration level', states=_states, select=True)
     mean = fields.Float('Mean', required=True, states=_states,
-        digits=(16, Eval('digits', 2)), depends=['digits'])
+        digits=(16, Eval('digits', 2)))
     deviation = fields.Float('Standard Deviation', required=True,
-        digits=(16, Eval('digits', 2)), depends=['digits'])
+        digits=(16, Eval('digits', 2)))
     one_sd = fields.Function(fields.Float('1 SD', digits=(16,
-        Eval('digits', 2)), depends=['deviation', 'digits']), 'get_one_sd')
+        Eval('digits', 2))), 'get_one_sd')
     two_sd = fields.Function(fields.Float('2 SD', digits=(16,
-        Eval('digits', 2)), depends=['deviation', 'digits']), 'get_two_sd')
+        Eval('digits', 2))), 'get_two_sd')
     three_sd = fields.Function(fields.Float('3 SD', digits=(16,
-        Eval('digits', 2)), depends=['deviation', 'digits']), 'get_three_sd')
-    cv = fields.Function(fields.Float('CV (%)', digits=(16, Eval('digits', 2)),
-        depends=['deviation', 'mean', 'digits']), 'get_cv')
-    min_cv = fields.Float('Minimum CV (%)', digits=(16, Eval('digits', 2)),
-        depends=['digits'])
-    max_cv = fields.Float('Maximum CV (%)', digits=(16, Eval('digits', 2)),
-        depends=['digits'])
+        Eval('digits', 2))), 'get_three_sd')
+    cv = fields.Function(fields.Float('CV (%)', digits=(16,
+        Eval('digits', 2))), 'get_cv')
+    min_cv = fields.Float('Minimum CV (%)', digits=(16, Eval('digits', 2)))
+    max_cv = fields.Float('Maximum CV (%)', digits=(16, Eval('digits', 2)))
     min_cv_corr_fact = fields.Float('Correction factor for Minimum CV',
-        digits=(16, Eval('digits', 2)), depends=['digits'])
+        digits=(16, Eval('digits', 2)))
     max_cv_corr_fact = fields.Float('Correction factor for Maximum CV',
-        digits=(16, Eval('digits', 2)), depends=['digits'])
+        digits=(16, Eval('digits', 2)))
     one_sd_adj = fields.Function(fields.Float('1 SD Adjusted',
-        digits=(16, Eval('digits', 2)), depends=['cv', 'one_sd', 'min_cv',
-        'max_cv', 'min_cv_corr_fact', 'max_cv_corr_fact', 'digits']),
-        'get_one_sd_adj')
+        digits=(16, Eval('digits', 2))), 'get_one_sd_adj')
     two_sd_adj = fields.Function(fields.Float('2 SD Adjusted',
-        digits=(16, Eval('digits', 2)), depends=['cv', 'two_sd', 'min_cv',
-        'max_cv', 'min_cv_corr_fact', 'max_cv_corr_fact', 'digits']),
-        'get_two_sd_adj')
+        digits=(16, Eval('digits', 2))), 'get_two_sd_adj')
     three_sd_adj = fields.Function(fields.Float('3 SD Adjusted',
-        digits=(16, Eval('digits', 2)), depends=['cv', 'three_sd', 'min_cv',
-        'max_cv', 'min_cv_corr_fact', 'max_cv_corr_fact', 'digits']),
-        'get_three_sd_adj')
-    ucl = fields.Function(fields.Float('UCL', digits=(16, Eval('digits', 2)),
-        depends=['mean', 'three_sd_adj', 'digits']), 'get_ucl')
-    uwl = fields.Function(fields.Float('UWL', digits=(16, Eval('digits', 2)),
-        depends=['mean', 'two_sd_adj', 'digits']), 'get_uwl')
-    upl = fields.Function(fields.Float('UPL', digits=(16, Eval('digits', 2)),
-        depends=['mean', 'one_sd_adj', 'digits']), 'get_upl')
-    lcl = fields.Function(fields.Float('LCL', digits=(16, Eval('digits', 2)),
-        depends=['mean', 'three_sd_adj', 'digits']), 'get_lcl')
-    lwl = fields.Function(fields.Float('LWL', digits=(16, Eval('digits', 2)),
-        depends=['mean', 'two_sd_adj', 'digits']), 'get_lwl')
-    lpl = fields.Function(fields.Float('LPL', digits=(16, Eval('digits', 2)),
-        depends=['mean', 'one_sd_adj', 'digits']), 'get_lpl')
-    cl = fields.Function(fields.Float('CL', digits=(16, Eval('digits', 2)),
-        depends=['mean', 'digits']), 'get_cl')
+        digits=(16, Eval('digits', 2))), 'get_three_sd_adj')
+    ucl = fields.Function(fields.Float('UCL', digits=(16,
+        Eval('digits', 2))), 'get_ucl')
+    uwl = fields.Function(fields.Float('UWL', digits=(16,
+        Eval('digits', 2))), 'get_uwl')
+    upl = fields.Function(fields.Float('UPL', digits=(16,
+        Eval('digits', 2))), 'get_upl')
+    lcl = fields.Function(fields.Float('LCL', digits=(16,
+        Eval('digits', 2))), 'get_lcl')
+    lwl = fields.Function(fields.Float('LWL', digits=(16,
+        Eval('digits', 2))), 'get_lwl')
+    lpl = fields.Function(fields.Float('LPL', digits=(16,
+        Eval('digits', 2))), 'get_lpl')
+    cl = fields.Function(fields.Float('CL', digits=(16,
+        Eval('digits', 2))), 'get_cl')
     details = fields.One2Many('lims.control.tendency.detail', 'tendency',
         'Details', readonly=True)
     rule_1_count = fields.Integer('Rule 1', readonly=True)
@@ -278,10 +265,8 @@ class ControlTendency(ModelSQL, ModelView):
         states=_states)
     mr_d3 = fields.Float('D3 Constant')
     mr_d4 = fields.Float('D4 Constant')
-    mr_ll = fields.Function(fields.Float('MR LL',
-        depends=['mr_avg_abs_diff', 'mr_d3']), 'get_mr_ll')
-    mr_ul = fields.Function(fields.Float('MR UL',
-        depends=['mr_avg_abs_diff', 'mr_d4']), 'get_mr_ul')
+    mr_ll = fields.Function(fields.Float('MR LL'), 'get_mr_ll')
+    mr_ul = fields.Function(fields.Float('MR UL'), 'get_mr_ul')
     # Info
     date_from = fields.Date('Date from', readonly=True)
     date_to = fields.Date('Date to', readonly=True)
@@ -444,9 +429,8 @@ class ControlTendencyDetail(ModelSQL, ModelView):
     rule = fields.Char('Rule')
     rules = fields.One2Many('lims.control.tendency.detail.rule',
         'detail', 'Rules')
-    rules2 = fields.Function(fields.Char('Rules', depends=['rules']),
-        'get_rules2')
-    icon = fields.Function(fields.Char('Icon', depends=['rule']), 'get_icon')
+    rules2 = fields.Function(fields.Char('Rules'), 'get_rules2')
+    icon = fields.Function(fields.Char('Icon'), 'get_icon')
     # Mobile Range
     mr = fields.Float('Mobile Range')
 
@@ -496,15 +480,13 @@ class MeansDeviationsCalcStart(ModelView):
     group_by_family = fields.Boolean('Group by Family')
     product_type = fields.Many2One('lims.product.type', 'Product type',
         domain=[('id', 'in', Eval('product_type_domain'))],
-        states={'invisible': Bool(Eval('group_by_family'))},
-        depends=['product_type_domain', 'group_by_family'])
+        states={'invisible': Bool(Eval('group_by_family'))})
     product_type_domain = fields.Function(fields.Many2Many(
         'lims.product.type', None, None, 'Product type domain'),
         'on_change_with_product_type_domain')
     matrix = fields.Many2One('lims.matrix', 'Matrix',
         domain=[('id', 'in', Eval('matrix_domain'))],
-        states={'invisible': Bool(Eval('group_by_family'))},
-        depends=['matrix_domain', 'group_by_family'])
+        states={'invisible': Bool(Eval('group_by_family'))})
     matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
         None, None, 'Matrix domain'), 'on_change_with_matrix_domain')
     range_min = fields.Float('Range Minimum', digits=(16, 3))
@@ -608,29 +590,20 @@ class ControlResultLine(ModelSQL, ModelView):
         'Concentration level', readonly=True)
     mean = fields.Float('Mean', readonly=True)
     deviation = fields.Float('Standard Deviation', readonly=True)
-    one_sd = fields.Function(fields.Float('1 SD', depends=['deviation']),
-        'get_one_sd')
-    two_sd = fields.Function(fields.Float('2 SD', depends=['deviation']),
-        'get_two_sd')
-    three_sd = fields.Function(fields.Float('3 SD', depends=['deviation']),
-        'get_three_sd')
-    cv = fields.Function(fields.Float('CV (%)', depends=['deviation',
-        'mean']), 'get_cv')
-    prev_mean = fields.Function(fields.Float('Previous Mean', depends=[
-        'product_type', 'matrix', 'fraction_type', 'analysis',
-        'concentration_level', ]), 'get_prev_field')
-    prev_one_sd = fields.Function(fields.Float('Previous 1 SD', depends=[
-        'product_type', 'matrix', 'fraction_type', 'analysis',
-        'concentration_level', ]), 'get_prev_field')
-    prev_two_sd = fields.Function(fields.Float('Previous 2 SD', depends=[
-        'product_type', 'matrix', 'fraction_type', 'analysis',
-        'concentration_level', ]), 'get_prev_field')
-    prev_three_sd = fields.Function(fields.Float('Previous 3 SD', depends=[
-        'product_type', 'matrix', 'fraction_type', 'analysis',
-        'concentration_level', ]), 'get_prev_field')
-    prev_cv = fields.Function(fields.Float('Previous CV (%)', depends=[
-        'product_type', 'matrix', 'fraction_type', 'analysis',
-        'concentration_level', ]), 'get_prev_field')
+    one_sd = fields.Function(fields.Float('1 SD'), 'get_one_sd')
+    two_sd = fields.Function(fields.Float('2 SD'), 'get_two_sd')
+    three_sd = fields.Function(fields.Float('3 SD'), 'get_three_sd')
+    cv = fields.Function(fields.Float('CV (%)'), 'get_cv')
+    prev_mean = fields.Function(fields.Float('Previous Mean'),
+        'get_prev_field')
+    prev_one_sd = fields.Function(fields.Float('Previous 1 SD'),
+        'get_prev_field')
+    prev_two_sd = fields.Function(fields.Float('Previous 2 SD'),
+        'get_prev_field')
+    prev_three_sd = fields.Function(fields.Float('Previous 3 SD'),
+        'get_prev_field')
+    prev_cv = fields.Function(fields.Float('Previous CV (%)'),
+        'get_prev_field')
     details = fields.One2Many('lims.control.result_line.detail', 'line',
         'Details', readonly=True)
     update = fields.Boolean('Update')
@@ -639,9 +612,7 @@ class ControlResultLine(ModelSQL, ModelView):
     mr_avg_abs_diff = fields.Float('Average of Absolute Differences',
         readonly=True)
     prev_mr_avg_abs_diff = fields.Function(fields.Float(
-        'Previous Average of Absolute Differences', depends=[
-            'product_type', 'matrix', 'fraction_type', 'analysis',
-            'concentration_level', ]), 'get_prev_field')
+        'Previous Average of Absolute Differences'), 'get_prev_field')
     # Info
     date_from = fields.Date('Date from', readonly=True)
     date_to = fields.Date('Date to', readonly=True)
@@ -1182,15 +1153,13 @@ class TendenciesAnalysisStart(ModelView):
     group_by_family = fields.Boolean('Group by Family')
     product_type = fields.Many2One('lims.product.type', 'Product type',
         domain=[('id', 'in', Eval('product_type_domain'))],
-        states={'invisible': Bool(Eval('group_by_family'))},
-        depends=['product_type_domain', 'group_by_family'])
+        states={'invisible': Bool(Eval('group_by_family'))})
     product_type_domain = fields.Function(fields.Many2Many(
         'lims.product.type', None, None, 'Product type domain'),
         'on_change_with_product_type_domain')
     matrix = fields.Many2One('lims.matrix', 'Matrix',
         domain=[('id', 'in', Eval('matrix_domain'))],
-        states={'invisible': Bool(Eval('group_by_family'))},
-        depends=['matrix_domain', 'group_by_family'])
+        states={'invisible': Bool(Eval('group_by_family'))})
     matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
         None, None, 'Matrix domain'), 'on_change_with_matrix_domain')
     concentration_level = fields.Many2One('lims.concentration.level',

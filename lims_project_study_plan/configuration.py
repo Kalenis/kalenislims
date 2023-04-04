@@ -37,7 +37,7 @@ class ConfigurationSequence(metaclass=PoolMeta):
     __name__ = 'lims.configuration.sequence'
 
     sample_in_custody_sequence = fields.Many2One('ir.sequence',
-        'Sample in Custody Sequence', depends=['company'], domain=[
+        'Sample in Custody Sequence', domain=[
             ('sequence_type', '=',
                 Id('lims_project_study_plan', 'seq_type_sample_in_custody')),
             ('company', 'in', [Eval('company', -1), None]),
@@ -78,7 +78,7 @@ class LabWorkYearSequence(metaclass=PoolMeta):
     __name__ = 'lims.lab.workyear.sequence'
 
     project_study_plan_sequence = fields.Many2One('ir.sequence.strict',
-        'Study plan Projects Sequence', depends=['company'], domain=[
+        'Study plan Projects Sequence', domain=[
             ('sequence_type', '=',
                 Id('lims_project_study_plan', 'seq_type_stp_project')),
             ('company', 'in', [Eval('company', -1), None]),

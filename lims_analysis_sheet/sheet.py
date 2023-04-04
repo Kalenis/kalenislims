@@ -40,7 +40,7 @@ class TemplateAnalysisSheet(DeactivableMixin, ModelSQL, ModelView):
     analysis = fields.One2Many('lims.template.analysis_sheet.analysis',
         'template', 'Analysis', states={'required': Bool(Eval('active'))},
         context={'interface_id': Eval('interface')},
-        depends=['interface', 'active'])
+        depends={'interface'})
     comments = fields.Text('Comments')
     pending_fractions = fields.Function(fields.Integer('Pending fractions'),
         'get_fields')
@@ -64,8 +64,7 @@ class TemplateAnalysisSheet(DeactivableMixin, ModelSQL, ModelView):
         ('itc', 'ITC'),
         ('itl', 'ITL'),
         ], 'Controls allowed', sort=False,
-        states={'required': Bool(Eval('controls_required'))},
-        depends=['controls_required'])
+        states={'required': Bool(Eval('controls_required'))})
 
     @staticmethod
     def default_report():
@@ -299,8 +298,7 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
     analysis = fields.Many2One('lims.analysis', 'Analysis',
         required=True, select=True, domain=[('type', '=', 'analysis')])
     method = fields.Many2One('lims.lab.method', 'Method',
-        domain=[('id', 'in', Eval('method_domain'))],
-        depends=['method_domain'])
+        domain=[('id', 'in', Eval('method_domain'))])
     method_domain = fields.Function(fields.Many2Many('lims.lab.method',
         None, None, 'Method domain'),
         'on_change_with_method_domain')
@@ -365,7 +363,7 @@ class TemplateAnalysisSheetAnalysisExpression(ModelSQL, ModelView):
     analysis = fields.Many2One('lims.template.analysis_sheet.analysis',
         'Analysis', required=True, ondelete='CASCADE', select=True)
     column = fields.Many2One('lims.interface.column', 'Column',
-        domain=['OR', ('id', '=', Eval('column')),
+        domain=['OR', ('id', '=', Eval('column', -1)),
             ('interface', '=', Eval('context', {}).get('interface_id'))],
         required=True)
     expression = fields.Char('Formula')
@@ -451,12 +449,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     annulled_date = fields.DateTime('Annulled Date', readonly=True)
     view = fields.Many2One('lims.interface.view', 'View',
         domain=[('interface', '=', Eval('interface'))],
-        states={'invisible': Eval('state') == 'draft'},
-        depends=['state', 'interface'])
+        states={'invisible': Eval('state') == 'draft'})
     interface = fields.Function(fields.Many2One('lims.interface', 'Interface'),
         'get_interface')
     samples = fields.Char('Samples', readonly=True)
-    out_of_ranges = fields.Function(fields.Boolean('Out of Ranges'), 'get_out_of_ranges')
+    out_of_ranges = fields.Function(fields.Boolean('Out of Ranges'),
+        'get_out_of_ranges')
 
     @classmethod
     def __setup__(cls):

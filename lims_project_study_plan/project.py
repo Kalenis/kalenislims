@@ -19,7 +19,6 @@ class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'
 
     _states = {'readonly': Eval('stp_state') == 'finalized'}
-    _depends = ['stp_state']
 
     stp_number = fields.Char('SP Id', readonly=True)
     stp_title = fields.Function(fields.Char('Title'),
@@ -28,35 +27,32 @@ class Project(metaclass=PoolMeta):
         states={
             'required': Bool(Equal(Eval('type'), 'study_plan')),
             'readonly': Bool(Equal(Eval('stp_state'), 'finalized')),
-            },
-        depends=['type', 'stp_state'])
+            })
     stp_phase = fields.Selection([
         ('', ''),
         ('study_plan', 'Study plan'),
         ('analytical_phase', 'Analytical phase plan'),
-        ], 'Study plan phase', sort=False, states=_states, depends=_depends)
-    stp_target = fields.Text('Target', states=_states, depends=_depends)
+        ], 'Study plan phase', sort=False, states=_states, )
+    stp_target = fields.Text('Target', states=_states)
     stp_sponsor = fields.Function(fields.Many2One('party.party', 'Sponsor'),
         'on_change_with_stp_sponsor')
     stp_matrix_client_description = fields.Char('Matrix client description',
-        states=_states, depends=_depends)
-    stp_product_brand = fields.Char('Product brand',
-        states=_states, depends=_depends)
+        states=_states)
+    stp_product_brand = fields.Char('Product brand', states=_states)
     stp_date = fields.Date('Ingress date',
         states={
             'required': Bool(Equal(Eval('type'), 'study_plan')),
             'readonly': Bool(Equal(Eval('stp_state'), 'finalized')),
-            },
-        depends=['type', 'stp_state'])
+            })
     stp_proposal_start_date = fields.Char('Proposal start date',
-        states=_states, depends=_depends)
+        states=_states)
     stp_proposal_end_date = fields.Char('Proposal end date',
-        states=_states, depends=_depends)
+        states=_states)
     stp_effective_start_date = fields.Date('Effective start date',
-        states=_states, depends=_depends)
+        states=_states)
     stp_laboratory_professionals = fields.One2Many(
         'lims.project.stp_professional', 'project', 'Laboratory professionals',
-        states=_states, depends=_depends)
+        states=_states)
     stp_study_director = fields.Function(fields.Many2One(
         'lims.laboratory.professional', 'Study director'),
         'on_change_with_stp_study_director')
@@ -67,38 +63,36 @@ class Project(metaclass=PoolMeta):
         'lims.laboratory.professional', 'Quality unit'),
         'on_change_with_stp_quality_unit')
     stp_suspension_date = fields.Date('Discard date',
-        states=_states, depends=_depends)
+        states=_states)
     stp_suspension_reason = fields.Char('Discard reason',
         states={
             'invisible': Not(Bool(Eval('stp_suspension_date'))),
             'readonly': Bool(Equal(Eval('stp_state'), 'finalized')),
-            },
-        depends=['stp_suspension_date', 'stp_state'])
+            })
     stp_pattern_availability = fields.Boolean('Pattern availability',
-        states=_states, depends=_depends)
+        states=_states)
     stp_implementation_validation = fields.Selection([
         ('', ''),
         ('implementation_validation', 'Implementation and validation'),
         ('validation_only', 'Validation only'),
         ('not_apply', 'Does not apply'),
-        ], 'Implementation - Validation', sort=False,
-        states=_states, depends=_depends)
+        ], 'Implementation - Validation', sort=False, states=_states)
     stp_rector_scheme_comments = fields.Text('Rector scheme comments',
-        states=_states, depends=_depends)
+        states=_states)
     stp_glp = fields.Boolean('Good laboratory practices',
-        states=_states, depends=_depends)
+        states=_states)
     stp_reference_elements = fields.One2Many('lims.project.reference_element',
         'project', 'Reference/Test elements in GLP',
-        states=_states, depends=_depends)
+        states=_states)
     stp_solvents_and_reagents = fields.One2Many('lims.project.solvent_reagent',
-        'project', 'Solvents and Reagents', states=_states, depends=_depends)
+        'project', 'Solvents and Reagents', states=_states)
     stp_samples_in_custody = fields.One2Many('lims.project.sample_in_custody',
-        'project', 'Samples in custody', states=_states, depends=_depends)
+        'project', 'Samples in custody', states=_states)
     stp_deviation_and_amendment = fields.One2Many(
         'lims.project.deviation_amendment', 'project',
         'Deviations and Amendments',
         context={'stp_dev_amnd_prof_domain': Eval('stp_dev_amnd_prof_domain')},
-        states=_states, depends=['stp_dev_amnd_prof_domain', 'stp_state'])
+        states=_states, depends={'stp_dev_amnd_prof_domain'})
     stp_dev_amnd_prof_domain = fields.Function(fields.Many2Many(
         'lims.laboratory.professional', None, None, 'Professional domain'),
         'on_change_with_stp_dev_amnd_prof_domain')
@@ -109,13 +103,11 @@ class Project(metaclass=PoolMeta):
         ('initiated', 'Initiated'),
         ('pending', 'Pending'),
         ('requested', 'Requested'),
-        ], 'State', sort=False, states=_states, depends=_depends)
+        ], 'State', sort=False, states=_states)
     stp_state_string = stp_state.translated('stp_state')
-    stp_test_system = fields.Text('Test system',
-        states=_states, depends=_depends)
-    stp_test_method = fields.Text('Test method',
-        states=_states, depends=_depends)
-    stp_records = fields.Char('Records', states=_states, depends=_depends)
+    stp_test_system = fields.Text('Test system', states=_states)
+    stp_test_method = fields.Text('Test method', states=_states)
+    stp_records = fields.Char('Records', states=_states)
     stp_start_date = fields.Function(fields.Date('Start date'),
         'on_change_with_stp_start_date')
     stp_end_date = fields.Function(fields.Date('End date'),
@@ -125,26 +117,26 @@ class Project(metaclass=PoolMeta):
     stp_notebook_lines = fields.Function(fields.Many2Many('lims.notebook.line',
         None, None, 'Tests performed'), 'get_stp_notebook_lines')
     min_qty_sample = fields.Integer('Minimum quantity of sample',
-        states=_states, depends=_depends)
+        states=_states)
     unit = fields.Many2One('product.uom', 'Unit',
         domain=[('category.lims_only_available', '=', True)],
-        states=_states, depends=_depends)
+        states=_states)
     min_qty_sample_compliance = fields.Selection([
         ('', ''),
         ('conforming', 'Conforming'),
         ('non_conforming', 'Non Conforming'),
         ('not_apply', 'Not apply'),
         ], 'Compliance with Minimum quantity of sample', sort=False,
-        states=_states, depends=_depends)
+        states=_states)
     min_qty_sample_compliance_string = min_qty_sample_compliance.translated(
         'min_qty_sample_compliance')
     stp_changelog = fields.One2Many('lims.project.stp_changelog', 'project',
-        'Changelog', states=_states, depends=_depends)
+        'Changelog', states=_states)
     stp_date_entry_document_file = fields.Date(
         'Date of entry into the BPL document file',
-        states=_states, depends=_depends)
+        states=_states)
 
-    del _states, _depends
+    del _states
 
     @staticmethod
     def default_stp_pattern_availability():
@@ -167,41 +159,22 @@ class Project(metaclass=PoolMeta):
             cls.type.selection.append(project_type)
         cls.code.states['readonly'] = Or(And(Eval('type') == 'study_plan',
             Eval('stp_phase') == 'study_plan'), Eval('type') == 'tas')
-        for field in ('type', 'stp_phase'):
-            if field not in cls.code.depends:
-                cls.code.depends.append(field)
         cls.external_quality_control.states['readonly'] = Bool(Equal(
             Eval('type'), 'study_plan'))
-        if 'type' not in cls.external_quality_control.depends:
-            cls.external_quality_control.depends.append('type')
         cls.description.states['readonly'] = Bool(Equal(Eval('stp_state'),
             'finalized'))
-        if 'stp_state' not in cls.description.depends:
-            cls.description.depends.append('stp_state')
         cls.type.states['readonly'] = Bool(Equal(Eval('stp_state'),
             'finalized'))
-        if 'stp_state' not in cls.type.depends:
-            cls.type.depends.append('stp_state')
         cls.start_date.states['readonly'] = Bool(Equal(Eval('stp_state'),
             'finalized'))
-        if 'stp_state' not in cls.start_date.depends:
-            cls.start_date.depends.append('stp_state')
         cls.end_date.states['readonly'] = Bool(Equal(Eval('stp_state'),
             'finalized'))
-        if 'stp_state' not in cls.end_date.depends:
-            cls.end_date.depends.append('stp_state')
         cls.client.states['readonly'] = Bool(Equal(Eval('stp_state'),
             'finalized'))
-        if 'stp_state' not in cls.client.depends:
-            cls.client.depends.append('stp_state')
         cls.storage_time.states['readonly'] = Bool(Equal(Eval('stp_state'),
             'finalized'))
-        if 'stp_state' not in cls.storage_time.depends:
-            cls.storage_time.depends.append('stp_state')
         cls.comments.states['readonly'] = Bool(Equal(Eval('stp_state'),
             'finalized'))
-        if 'stp_state' not in cls.comments.depends:
-            cls.comments.depends.append('stp_state')
         cls._buttons.update({
             'get_stp_test_system': {
                 'invisible': (Eval('stp_state') == 'finalized'),
@@ -507,8 +480,7 @@ class ProjectReferenceElement(ModelSQL, ModelView):
     cas_number = fields.Function(fields.Char('CAS number'),
         'on_change_with_cas_number')
     lot = fields.Many2One('stock.lot', 'Lot',
-        domain=[('product', '=', Eval('input_product'))],
-        depends=['input_product'])
+        domain=[('product', '=', Eval('input_product'))])
     purity_degree = fields.Function(fields.Many2One('lims.purity.degree',
         'Purity Degree'), 'on_change_with_purity_degree')
     stability = fields.Function(fields.Char('Stability'),
@@ -583,14 +555,12 @@ class ProjectSolventAndReagent(ModelSQL, ModelView):
     project = fields.Many2One('lims.project', 'Project',
         ondelete='CASCADE', select=True, required=True)
     product = fields.Many2One('product.product', 'Solvent/Reagent',
-        domain=[('account_category', 'in', Eval('solvent_reagent_domain'))],
-        depends=['solvent_reagent_domain'])
+        domain=[('account_category', 'in', Eval('solvent_reagent_domain'))])
     solvent_reagent_domain = fields.Function(fields.Many2Many(
         'product.category', None, None, 'Solvent/Reagent domain'),
         'get_solvent_reagent_domain')
     lot = fields.Many2One('stock.lot', 'Lot',
-        domain=[('product', '=', Eval('product'))],
-        depends=['product'])
+        domain=[('product', '=', Eval('product'))])
 
     @staticmethod
     def default_solvent_reagent_domain():
@@ -627,8 +597,7 @@ class ProjectSampleInCustody(ModelSQL, ModelView):
         ('others', 'Others (specify)'),
         ], 'Temperature condition of the samples', sort=False)
     temperature_other = fields.Char('Temperature', states={
-            'invisible': Not(Bool(Equal(Eval('temperature'), 'others'))),
-            }, depends=['temperature'])
+        'invisible': Not(Bool(Equal(Eval('temperature'), 'others')))})
     temperature_string = temperature.translated('temperature')
     processing_state = fields.Selection([
         (None, ''),
@@ -638,8 +607,7 @@ class ProjectSampleInCustody(ModelSQL, ModelView):
         ('others', 'Others (specify)'),
         ], 'State of samples processing', sort=False)
     processing_state_other = fields.Char('State', states={
-            'invisible': Not(Bool(Equal(Eval('processing_state'), 'others'))),
-            }, depends=['processing_state'])
+        'invisible': Not(Bool(Equal(Eval('processing_state'), 'others')))})
     processing_state_string = processing_state.translated('processing_state')
 
     @classmethod
@@ -719,7 +687,7 @@ class ProjectDeviationAndAmendmentProfessional(ModelSQL, ModelView):
         'Deviation/Amendment', ondelete='CASCADE', select=True, required=True)
     professional = fields.Many2One('lims.laboratory.professional',
         'Laboratory professional', required=True, domain=['OR',
-            ('id', '=', Eval('professional')),
+            ('id', '=', Eval('professional', -1)),
             ('id', 'in', Eval('context', {}).get('stp_dev_amnd_prof_domain')),
             ])
     date = fields.Date('Date')
@@ -773,27 +741,22 @@ class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
 
     _states = {'invisible': Eval('project_type') != 'study_plan'}
-    _depends = ['project_type']
 
-    application_date = fields.Date('Application date',
-        states=_states, depends=_depends)
-    sampling_date = fields.Date('Sampling date',
-        states=_states, depends=_depends)
-    reception_date = fields.Date('Reception date',
-        states=_states, depends=_depends)
-    treatment = fields.Char('Treatment', states=_states, depends=_depends)
-    dosis = fields.Char('Dosis', states=_states, depends=_depends)
+    application_date = fields.Date('Application date', states=_states)
+    sampling_date = fields.Date('Sampling date', states=_states)
+    reception_date = fields.Date('Reception date', states=_states)
+    treatment = fields.Char('Treatment', states=_states)
+    dosis = fields.Char('Dosis', states=_states)
     after_application_days = fields.Char('After application days',
-        states=_states, depends=_depends)
-    glp_repetitions = fields.Char('GLP repetitions',
-        states=_states, depends=_depends)
+        states=_states)
+    glp_repetitions = fields.Char('GLP repetitions', states=_states)
     sample_weight = fields.Integer('Sample weight')
     balance = fields.Many2One('lims.lab.device', 'Balance',
         domain=[('device_type.non_analytical', '=', False)])
     cultivation_zone = fields.Char('Cultivation zone',
-        states=_states, depends=_depends)
+        states=_states)
 
-    del _states, _depends
+    del _states
 
     @classmethod
     def view_attributes(cls):
@@ -838,27 +801,21 @@ class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
 
     _states = {'invisible': Eval('project_type') != 'study_plan'}
-    _depends = ['project_type']
 
-    application_date = fields.Date('Application date',
-        states=_states, depends=_depends)
-    sampling_date = fields.Date('Sampling date',
-        states=_states, depends=_depends)
-    reception_date = fields.Date('Reception date',
-        states=_states, depends=_depends)
-    treatment = fields.Char('Treatment', states=_states, depends=_depends)
-    dosis = fields.Char('Dosis', states=_states, depends=_depends)
+    application_date = fields.Date('Application date', states=_states)
+    sampling_date = fields.Date('Sampling date', states=_states)
+    reception_date = fields.Date('Reception date', states=_states)
+    treatment = fields.Char('Treatment', states=_states)
+    dosis = fields.Char('Dosis', states=_states)
     after_application_days = fields.Char('After application days',
-        states=_states, depends=_depends)
-    glp_repetitions = fields.Char('GLP repetitions',
-        states=_states, depends=_depends)
+        states=_states)
+    glp_repetitions = fields.Char('GLP repetitions', states=_states)
     sample_weight = fields.Integer('Sample weight')
     balance = fields.Many2One('lims.lab.device', 'Balance',
         domain=[('device_type.non_analytical', '=', False)])
-    cultivation_zone = fields.Char('Cultivation zone',
-        states=_states, depends=_depends)
+    cultivation_zone = fields.Char('Cultivation zone', states=_states)
 
-    del _states, _depends
+    del _states
 
     @classmethod
     def view_attributes(cls):
@@ -918,13 +875,13 @@ class CreateSample(metaclass=PoolMeta):
 class Lot(metaclass=PoolMeta):
     __name__ = 'stock.lot'
 
-    formula = fields.Char('Formula', depends=['special_category'],
+    formula = fields.Char('Formula',
         states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod'))),
             })
     molecular_weight = fields.Char('Molecular weight',
-        depends=['special_category'], states={
+        states={
             'invisible': Not(Bool(Equal(Eval('special_category'),
                 'input_prod'))),
             })

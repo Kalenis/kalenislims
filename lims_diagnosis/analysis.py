@@ -14,8 +14,7 @@ class Analysis(metaclass=PoolMeta):
     not_block_diagnosis = fields.Boolean('Does not block diagnosis',
         help="This analysis is not necessary to begin diagnosing the sample")
     diagnosis_template = fields.Many2One('lims.diagnosis.template',
-        'Diagnosis Template', states={'readonly': Eval('type') != 'group'},
-        depends=['type'])
+        'Diagnosis Template', states={'readonly': Eval('type') != 'group'})
 
 
 class ProductType(metaclass=PoolMeta):

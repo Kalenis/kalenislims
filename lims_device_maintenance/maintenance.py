@@ -45,21 +45,18 @@ class LabDeviceMaintenanceProgram(EventCreator, ModelSQL, ModelView):
         ('product', 'Product'),
         ], 'Asset', select=True, required=True)
     device = fields.Many2One('lims.lab.device', 'Device',
-        select=True, depends=['asset'],
         states={
             'required': Eval('asset') == 'device',
             'invisible': Eval('asset') != 'device',
             })
     product = fields.Many2One('product.product', 'Product',
         domain=[('type', 'in', ['goods', 'assets'])],
-        depends=['asset'],
         states={
             'required': Eval('asset') == 'product',
             'invisible': Eval('asset') != 'product',
             })
     lot = fields.Many2One('stock.lot', 'Lot',
         domain=[('product', '=', Eval('product'))],
-        depends=['asset', 'product'],
         states={
             'required': Eval('asset') == 'product',
             'invisible': Eval('asset') != 'product',
@@ -175,15 +172,12 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
     __name__ = 'lims.lab.device.maintenance'
 
     _states = {'readonly': Eval('state') != 'draft'}
-    _depends = ['state']
 
     asset = fields.Selection([
         ('device', 'Device'),
         ('product', 'Product'),
-        ], 'Asset', select=True, required=True,
-        states=_states, depends=_depends)
+        ], 'Asset', required=True, states=_states)
     device = fields.Many2One('lims.lab.device', 'Device',
-        select=True, depends=['asset', 'state'],
         states={
             'required': Eval('asset') == 'device',
             'invisible': Eval('asset') != 'device',
@@ -191,7 +185,6 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
             })
     product = fields.Many2One('product.product', 'Product',
         domain=[('type', 'in', ['goods', 'assets'])],
-        depends=['asset', 'state'],
         states={
             'required': Eval('asset') == 'product',
             'invisible': Eval('asset') != 'product',
@@ -199,7 +192,6 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
             })
     lot = fields.Many2One('stock.lot', 'Lot',
         domain=[('product', '=', Eval('product'))],
-        depends=['asset', 'product', 'state'],
         states={
             'required': Eval('asset') == 'product',
             'invisible': Eval('asset') != 'product',
@@ -207,11 +199,11 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
             })
     asset_name = fields.Function(fields.Char('Asset'), 'get_asset_name')
     activity = fields.Many2One('lims.lab.device.maintenance.activity',
-        'Activity', required=True, states=_states, depends=_depends)
-    date = fields.Date('Date', required=True, states=_states, depends=_depends)
+        'Activity', required=True, states=_states)
+    date = fields.Date('Date', required=True, states=_states)
     responsible = fields.Many2One('res.user', 'Responsible User',
-        states=_states, depends=_depends)
-    notice_date = fields.Date('Notice Date', states=_states, depends=_depends)
+        states=_states)
+    notice_date = fields.Date('Notice Date', states=_states)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('pending', 'Pending'),
@@ -221,10 +213,9 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
     comments = fields.Text('Comments')
     color = fields.Function(fields.Char('Color'), 'get_color')
     device_active = fields.Function(fields.Boolean('Device active',
-        states={'invisible': Eval('asset') != 'device'},
-        depends=['asset']), 'get_device_active')
+        states={'invisible': Eval('asset') != 'device'}), 'get_device_active')
 
-    del _states, _depends
+    del _states
 
     @classmethod
     def __setup__(cls):

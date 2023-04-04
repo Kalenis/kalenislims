@@ -14,8 +14,7 @@ class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'
 
     mpi_date = fields.Date('Request date',
-        states={'required': Bool(Equal(Eval('type'), 'implementation'))},
-        depends=['type'])
+        states={'required': Bool(Equal(Eval('type'), 'implementation'))})
     mpi_services = fields.Function(fields.Text('Requested analysis'),
         'get_mpi_services')
     mpi_product_types = fields.Function(fields.Text('Product types'),
@@ -35,9 +34,9 @@ class Project(metaclass=PoolMeta):
             cls.type.selection.append(project_type)
         cls.external_quality_control.states['invisible'] = Bool(
             Equal(Eval('type'), 'implementation'))
-        cls.external_quality_control.depends = ['type']
+        cls.external_quality_control.depends = {'type'}
         cls.stp_solvents_and_reagents.context = {'project_type': Eval('type')}
-        cls.stp_solvents_and_reagents.depends = ['type', 'stp_state']
+        cls.stp_solvents_and_reagents.depends = {'type', 'stp_state'}
 
     @classmethod
     def view_attributes(cls):

@@ -27,9 +27,8 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
 
     mail_attachments = fields.Function(fields.One2Many(
         'lims.results_report.attachment', None, 'Attachments',
-        states={'readonly': Eval('state').in_(['released', 'annulled'])},
-        depends=['state']), 'get_mail_attachments',
-        setter='set_mail_attachments')
+        states={'readonly': Eval('state').in_(['released', 'annulled'])}),
+        'get_mail_attachments', setter='set_mail_attachments')
     sent_date = fields.Function(fields.DateTime('Sent date'),
        'get_sent_date')
 
@@ -99,8 +98,7 @@ class RelateMailAttachmentResultsReportStart(ModelView):
     __name__ = 'lims.results_report.version.detail.relate_mail_attachment.start'
 
     attachment = fields.Many2One('ir.attachment', 'Attachment', required=True,
-        domain=[('id', 'in', Eval('attachment_domain'))],
-        depends=['attachment_domain'])
+        domain=[('id', 'in', Eval('attachment_domain'))])
     attachment_domain = fields.Many2Many('ir.attachment', None, None,
         'Attachment domain')
 

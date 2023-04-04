@@ -14,27 +14,25 @@ class Project(metaclass=PoolMeta):
     __name__ = 'lims.project'
 
     _states = {'required': Bool(Equal(Eval('type'), 'tas'))}
-    _depends = ['type']
 
     tas_invoice_party = fields.Many2One('party.party', 'Invoice party',
-        domain=['OR', ('id', '=', Eval('tas_invoice_party')),
+        domain=['OR', ('id', '=', Eval('tas_invoice_party', -1)),
             ('id', 'in', Eval('tas_invoice_party_domain'))],
-        states=_states, depends=['type', 'tas_invoice_party_domain'])
+        states=_states)
     tas_invoice_party_domain = fields.Function(fields.Many2Many('party.party',
         None, None, 'TAS Invoice party domain'),
         'on_change_with_tas_invoice_party_domain')
     tas_laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        states=_states, depends=_depends)
+        states=_states)
     tas_type = fields.Many2One('lims.tas.type', 'TAS type')
     tas_responsible = fields.Many2One('lims.laboratory.professional',
-        'Responsible', domain=[('id', 'in', Eval('tas_responsible_domain'))],
-        depends=['tas_responsible_domain'])
+        'Responsible', domain=[('id', 'in', Eval('tas_responsible_domain'))])
     tas_responsible_domain = fields.Function(fields.Many2Many(
         'lims.laboratory.professional', None, None, 'TAS responsible domain'),
         'on_change_with_tas_responsible_domain')
     tas_comments = fields.Text('Comments')
 
-    del _states, _depends
+    del _states
 
     @classmethod
     def __setup__(cls):
@@ -43,7 +41,6 @@ class Project(metaclass=PoolMeta):
         if project_type not in cls.type.selection:
             cls.type.selection.append(project_type)
         cls.client.states = {'required': Bool(Equal(Eval('type'), 'tas'))}
-        cls.client.depends = ['type']
 
     @classmethod
     def view_attributes(cls):

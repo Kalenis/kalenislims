@@ -42,7 +42,7 @@ class ConfigurationSequence(metaclass=PoolMeta):
     __name__ = 'lims.configuration.sequence'
 
     analysis_sheet_sequence = fields.Many2One('ir.sequence',
-        'Analysis Sheet Sequence', depends=['company'], domain=[
+        'Analysis Sheet Sequence', domain=[
             ('sequence_type', '=',
                 Id('lims_analysis_sheet', 'seq_type_analysis_sheet')),
             ('company', 'in', [Eval('company', -1), None]),

@@ -36,7 +36,7 @@ class ConfigurationSequence(metaclass=PoolMeta):
     __name__ = 'sale.configuration.sequence'
 
     sample_label_sequence = fields.Many2One('ir.sequence',
-        'Label Sequence', depends=['company'], domain=[
+        'Label Sequence', domain=[
             ('sequence_type', '=',
                 Id('lims_sale_industry', 'seq_type_sample_label')),
             ('company', 'in', [Eval('company', -1), None]),

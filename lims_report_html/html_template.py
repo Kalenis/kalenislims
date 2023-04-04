@@ -51,26 +51,23 @@ class ReportTemplate(DeactivableMixin, ModelSQL, ModelView):
         states={
             'required': ~Eval('type'),
             'invisible': Bool(Eval('type')),
-            },
-        depends=['report_name', 'type'])
+            })
     content = fields.Text('Content',
-        states={'required': Bool(Eval('type'))}, depends=['type'])
+        states={'required': Bool(Eval('type'))})
     header = fields.Many2One('lims.report.template', 'Header',
         domain=[
             ('report_name', '=', Eval('report_name')),
             ('type', '=', 'header'),
             ['OR', ('active', '=', True),
-                ('id', '=', Eval('header'))],
-            ],
-        depends=['report_name'])
+                ('id', '=', Eval('header', -1))],
+            ])
     footer = fields.Many2One('lims.report.template', 'Footer',
         domain=[
             ('report_name', '=', Eval('report_name')),
             ('type', '=', 'footer'),
             ['OR', ('active', '=', True),
-                ('id', '=', Eval('footer'))],
-            ],
-        depends=['report_name'])
+                ('id', '=', Eval('footer', -1))],
+            ])
     translations = fields.One2Many('lims.report.template.translation',
         'template', 'Translations')
     _translation_cache = Cache('lims.report.template.translation',
@@ -89,8 +86,7 @@ class ReportTemplate(DeactivableMixin, ModelSQL, ModelView):
         ('portrait', 'Portrait'),
         ('landscape', 'Landscape'),
         ], 'Page orientation', sort=False,
-        states={'invisible': Eval('type') != 'base'},
-        depends=['type'])
+        states={'invisible': Eval('type') != 'base'})
 
     @classmethod
     def __register__(cls, module_name):
@@ -678,8 +674,7 @@ class ResultsReportTemplate(ReportTemplate):
                 Eval('type') != 'base',
                 Eval('report_name') != 'lims.result_report',
                 ),
-            },
-        depends=['type'])
+            })
 
     @staticmethod
     def default_charts_x_row():

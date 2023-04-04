@@ -14,18 +14,13 @@ class Party(metaclass=PoolMeta):
     __name__ = 'party.party'
 
     _states = {'readonly': ~Eval('active', True)}
-    _depends = ['active']
 
-    fantasy_name = fields.Char('Fantasy Name',
-        states=_states, depends=_depends)
-    plants = fields.One2Many('lims.plant', 'party', 'Plants',
-        states=_states, depends=_depends)
-    complete_file = fields.Boolean('Complete File',
-        states=_states, depends=_depends)
-    is_invoice_party = fields.Boolean('Invoice party',
-        states=_states, depends=_depends)
+    fantasy_name = fields.Char('Fantasy Name', states=_states)
+    plants = fields.One2Many('lims.plant', 'party', 'Plants', states=_states)
+    complete_file = fields.Boolean('Complete File', states=_states)
+    is_invoice_party = fields.Boolean('Invoice party', states=_states)
 
-    del _states, _depends
+    del _states
 
     @staticmethod
     def default_is_invoice_party():
@@ -104,10 +99,10 @@ class Address(metaclass=PoolMeta):
 
     plant = fields.Many2One('lims.plant', 'Plant',
         ondelete='CASCADE', select=True,
-        domain=[('party', '=', Eval('party'))], depends=['party'])
+        domain=[('party', '=', Eval('party'))])
     equipment = fields.Many2One('lims.equipment', 'Equipment',
         select=True,
-        domain=[('party', '=', Eval('party'))], depends=['party'])
+        domain=[('party', '=', Eval('party'))])
     phone = fields.Char('Phone')
     purchase_contact = fields.Boolean('Purchase contact')
     technical_contact = fields.Boolean('Technical contact')
