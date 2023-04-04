@@ -2,33 +2,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "model:ir.message,text:msg_position_code_unique_id"
-msgid "Position code must be unique"
-msgstr "El código de la posición debe ser único"
-
-msgctxt "model:ir.message,text:msg_existing_role_facility_director"
-msgid "There is already a Facility director for this project"
-msgstr "Ya existe un Director de Instalación para este proyecto"
-
-msgctxt "model:ir.message,text:msg_existing_role_quality_unit"
-msgid "There is already a Quality unit for this project"
-msgstr "Ya existe una Unidad de Calidad para este proyecto"
-
-msgctxt "model:ir.message,text:msg_existing_role_study_director"
-msgid "There is already a Study director for this project"
-msgstr "Ya existe un Directorio de estudio para este proyecto"
-
-msgctxt "model:ir.message,text:msg_not_glp"
-msgid "Please, select a \"Study plan\" Project to print this report"
-msgstr ""
-"Por favor, seleccione un Proyecto Plan de estudio para imprimir este informe"
-
-msgctxt "model:ir.message,text:msg_no_project_study_plan_sequence"
-msgid "There is no sequence for Study plan Projects for the work year \"%(work_year)s\"."
-msgstr ""
-"No hay una secuencia para Proyectos Plan de estudio para el año laboral «%(work_year)s»"
-
 msgctxt "field:lims.configuration,sample_in_custody_sequence:"
+msgid "Sample in Custody Sequence"
+msgstr "Secuencia de muestras en custodia"
+
+msgctxt "field:lims.configuration.sequence,sample_in_custody_sequence:"
 msgid "Sample in Custody Sequence"
 msgstr "Secuencia de muestras en custodia"
 
@@ -76,6 +54,10 @@ msgctxt "field:lims.lab.workyear,project_study_plan_sequence:"
 msgid "Study plan Projects Sequence"
 msgstr "Secuencia de Proyectos Plan de estudio"
 
+msgctxt "field:lims.lab.workyear.sequence,project_study_plan_sequence:"
+msgid "Study plan Projects Sequence"
+msgstr "Secuencia de Proyectos Plan de estudio"
+
 msgctxt "field:lims.project,min_qty_sample:"
 msgid "Minimum quantity of sample"
 msgstr "Cantidad mínima de muestra"
@@ -91,6 +73,10 @@ msgstr "Registro de cambios"
 msgctxt "field:lims.project,stp_date:"
 msgid "Ingress date"
 msgstr "Fecha de creación"
+
+msgctxt "field:lims.project,stp_date_entry_document_file:"
+msgid "Date of entry into the BPL document file"
+msgstr "Fecha de ingreso al archivo de documentos PBL"
 
 msgctxt "field:lims.project,stp_description:"
 msgid "Description"
@@ -316,6 +302,14 @@ msgstr "Ingreso desde"
 msgctxt "field:lims.project.glp_report.10.print.start,date_to:"
 msgid "to"
 msgstr "hasta"
+
+msgctxt "field:lims.project.glp_report.10.print.start,professional:"
+msgid "Laboratory professional"
+msgstr "Profesional de laboratorio"
+
+msgctxt "field:lims.project.glp_report.10.print.start,stp_state:"
+msgid "State"
+msgstr "Estado"
 
 msgctxt "field:lims.project.glp_report.12.print.start,date_from:"
 msgid "Date from"
@@ -660,6 +654,47 @@ msgstr "BPL 10. Esquema rector"
 msgctxt "model:ir.action,name:wiz_report_glp_12_print"
 msgid "GLP 12. Changelog"
 msgstr "BPL 12. Registro de cambios"
+
+msgctxt "model:ir.message,text:msg_existing_role_facility_director"
+msgid "There is already a Facility director for this project"
+msgstr "Ya existe un Director de Instalación para este proyecto"
+
+msgctxt "model:ir.message,text:msg_existing_role_quality_unit"
+msgid "There is already a Quality unit for this project"
+msgstr "Ya existe una Unidad de Calidad para este proyecto"
+
+msgctxt "model:ir.message,text:msg_existing_role_study_director"
+msgid "There is already a Study director for this project"
+msgstr "Ya existe un Directorio de estudio para este proyecto"
+
+msgctxt "model:ir.message,text:msg_no_project_study_plan_sequence"
+msgid ""
+"There is no sequence for Study plan Projects for the work year "
+"\"%(work_year)s\"."
+msgstr ""
+"No hay una secuencia para Proyectos Plan de estudio para el año laboral "
+"«%(work_year)s»"
+
+msgctxt "model:ir.message,text:msg_not_analytical_phase"
+msgid "Please, select a \"Analytical Phase Project\" to print this report"
+msgstr ""
+"Por favor, seleccione un proyecto de 'Plan de Fase Analítica' para imprimir "
+"este informe"
+
+msgctxt "model:ir.message,text:msg_not_glp"
+msgid "Please, select a \"Study plan\" Project to print this report"
+msgstr ""
+"Por favor, seleccione un Proyecto Plan de estudio para imprimir este informe"
+
+msgctxt "model:ir.message,text:msg_not_study_plan"
+msgid "Please, select a \"Study Plan Phase Project\" to print this report"
+msgstr ""
+"Por favor, seleccione un proyecto de fase 'Plan de Estudio' para imprimir "
+"este informe"
+
+msgctxt "model:ir.message,text:msg_position_code_unique_id"
+msgid "Position code must be unique"
+msgstr "El código de la posición debe ser único"
 
 msgctxt "model:ir.sequence,name:seq_sample_in_custody"
 msgid "Sample in Custody"

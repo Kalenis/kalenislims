@@ -10,10 +10,6 @@ msgctxt "field:product.template,create_task_quotation:"
 msgid "Generate administrative task with quotation"
 msgstr "Genera tarea administrativa con presupuesto"
 
-msgctxt "field:sale.add_product_kit.start,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:sale.configuration,sample_label_sequence:"
 msgid "Label Sequence"
 msgstr "Secuencia Etiqueta"
@@ -46,77 +42,17 @@ msgctxt "field:sale.line-lims.component,component:"
 msgid "Component"
 msgstr "Componente"
 
-msgctxt "field:sale.line-lims.component,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:sale.line-lims.component,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:sale.line-lims.component,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:sale.line-lims.component,line:"
 msgid "Sale Line"
 msgstr "Línea de venta"
-
-msgctxt "field:sale.line-lims.component,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:sale.line-lims.component,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:sale.line-lims.component,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:sale.line-lims.equipment,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:sale.line-lims.equipment,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:sale.line-lims.equipment,equipment:"
 msgid "Equipment"
 msgstr "Equipo"
 
-msgctxt "field:sale.line-lims.equipment,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:sale.line-lims.equipment,line:"
 msgid "Sale Line"
 msgstr "Línea de venta"
-
-msgctxt "field:sale.line-lims.equipment,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:sale.line-lims.equipment,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:sale.line-lims.equipment,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:sale.line-lims.plant,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:sale.line-lims.plant,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:sale.line-lims.plant,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:sale.line-lims.plant,line:"
 msgid "Sale Line"
@@ -125,22 +61,6 @@ msgstr "Línea de venta"
 msgctxt "field:sale.line-lims.plant,plant:"
 msgid "Plant"
 msgstr "Planta"
-
-msgctxt "field:sale.line-lims.plant,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
-msgctxt "field:sale.line-lims.plant,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:sale.line-lims.plant,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:sale.print_label.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:sale.print_label.start,quantity:"
 msgid "Quantity of labels"
@@ -182,133 +102,33 @@ msgctxt "field:sale.sale-lims.component,component:"
 msgid "Component"
 msgstr "Componente"
 
-msgctxt "field:sale.sale-lims.component,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:sale.sale-lims.component,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:sale.sale-lims.component,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:sale.sale-lims.component,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:sale.sale-lims.component,sale:"
 msgid "Sale"
 msgstr "Venta"
-
-msgctxt "field:sale.sale-lims.component,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:sale.sale-lims.component,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:sale.sale-lims.equipment,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:sale.sale-lims.equipment,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
 
 msgctxt "field:sale.sale-lims.equipment,equipment:"
 msgid "Equipment"
 msgstr "Equipo"
 
-msgctxt "field:sale.sale-lims.equipment,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:sale.sale-lims.equipment,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:sale.sale-lims.equipment,sale:"
 msgid "Sale"
 msgstr "Venta"
-
-msgctxt "field:sale.sale-lims.equipment,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:sale.sale-lims.equipment,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:sale.sale-lims.plant,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:sale.sale-lims.plant,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:sale.sale-lims.plant,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:sale.sale-lims.plant,plant:"
 msgid "Plant"
 msgstr "Planta"
 
-msgctxt "field:sale.sale-lims.plant,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:sale.sale-lims.plant,sale:"
 msgid "Sale"
 msgstr "Venta"
-
-msgctxt "field:sale.sale-lims.plant,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:sale.sale-lims.plant,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:sale.sale-party.address,address:"
 msgid "Contact"
 msgstr "Contacto"
 
-msgctxt "field:sale.sale-party.address,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:sale.sale-party.address,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:sale.sale-party.address,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:sale.sale-party.address,rec_name:"
-msgid "Record Name"
-msgstr "Nombre"
-
 msgctxt "field:sale.sale-party.address,sale:"
 msgid "Sale"
 msgstr "Venta"
-
-msgctxt "field:sale.sale-party.address,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:sale.sale-party.address,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
-msgctxt "field:sale.search_label.start,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:sale.search_label.start,label:"
 msgid "Label"

@@ -5998,6 +5998,10 @@ msgctxt "field:lims.sample.add_service.start,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
+msgctxt "field:lims.sample.add_service.start,sample:"
+msgid "Sample"
+msgstr "Muestra"
+
 msgctxt "field:lims.sample.add_service.start,services:"
 msgid "Services"
 msgstr "Servicios"
@@ -6029,6 +6033,10 @@ msgstr "Matriz"
 msgctxt "field:lims.sample.edit_service.start,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
+
+msgctxt "field:lims.sample.edit_service.start,sample:"
+msgid "Sample"
+msgstr "Muestra"
 
 msgctxt "field:lims.sample.edit_service.start,services:"
 msgid "Services"
@@ -11036,15 +11044,7 @@ msgid "format_date(today.date(), user.language)"
 msgstr ""
 
 msgctxt "report:lims.analysis_checked_pending_inform:"
-msgid ""
-"if test=\"(line.report_date - today.date()).days < 3 and (line.report_date -"
-" today.date()).days >=0 \""
-msgstr ""
-
-msgctxt "report:lims.analysis_checked_pending_inform:"
-msgid ""
-"if test=\"(line.results_estimated_date-today.date()).days < 3 and "
-"(line.results_estimated_date-today.date()).days >= 0\""
+msgid "get_notice(line)"
 msgstr ""
 
 msgctxt "report:lims.analysis_checked_pending_inform:"
@@ -11064,19 +11064,7 @@ msgid "if test=\"line.report_date\""
 msgstr ""
 
 msgctxt "report:lims.analysis_checked_pending_inform:"
-msgid "if test=\"line.report_date< today.date()\""
-msgstr ""
-
-msgctxt "report:lims.analysis_checked_pending_inform:"
-msgid "if test=\"line.results_estimated_date and not line.report_date\""
-msgstr ""
-
-msgctxt "report:lims.analysis_checked_pending_inform:"
 msgid "if test=\"line.results_estimated_date\""
-msgstr ""
-
-msgctxt "report:lims.analysis_checked_pending_inform:"
-msgid "if test=\"line.results_estimated_date<today.date()\""
 msgstr ""
 
 msgctxt "report:lims.analysis_checked_pending_inform:"
@@ -11361,14 +11349,6 @@ msgid "Start date"
 msgstr "Fecha de inicio"
 
 msgctxt "report:lims.analysis_pending_inform:"
-msgid "Timed out"
-msgstr "Vencido"
-
-msgctxt "report:lims.analysis_pending_inform:"
-msgid "To expire"
-msgstr "A vencer"
-
-msgctxt "report:lims.analysis_pending_inform:"
 msgid "Urgent"
 msgstr "Urgente"
 
@@ -11417,15 +11397,7 @@ msgid "format_date(today.date(), user.language)"
 msgstr ""
 
 msgctxt "report:lims.analysis_pending_inform:"
-msgid ""
-"if test=\"(line.report_date - today.date()).days < 3 and (line.report_date -"
-" today.date()).days >=0 \""
-msgstr ""
-
-msgctxt "report:lims.analysis_pending_inform:"
-msgid ""
-"if test=\"(line.results_estimated_date-today.date()).days < 3 and "
-"(line.results_estimated_date-today.date()).days >= 0\""
+msgid "get_notice(line)"
 msgstr ""
 
 msgctxt "report:lims.analysis_pending_inform:"
@@ -11445,19 +11417,7 @@ msgid "if test=\"line.report_date\""
 msgstr ""
 
 msgctxt "report:lims.analysis_pending_inform:"
-msgid "if test=\"line.report_date< today.date()\""
-msgstr ""
-
-msgctxt "report:lims.analysis_pending_inform:"
-msgid "if test=\"line.results_estimated_date and not line.report_date\""
-msgstr ""
-
-msgctxt "report:lims.analysis_pending_inform:"
 msgid "if test=\"line.results_estimated_date\""
-msgstr ""
-
-msgctxt "report:lims.analysis_pending_inform:"
-msgid "if test=\"line.results_estimated_date<today.date()\""
 msgstr ""
 
 msgctxt "report:lims.analysis_pending_inform:"
@@ -12495,7 +12455,7 @@ msgstr "Método"
 
 msgctxt "report:lims.referral.report:"
 msgid "Página"
-msgstr ""
+msgstr "Página"
 
 msgctxt "report:lims.referral.report:"
 msgid "Referral of Services"
@@ -13948,6 +13908,14 @@ msgctxt "view:ir.attachment:"
 msgid "Last Modification Time"
 msgstr "Hora última modificación"
 
+msgctxt "view:ir.sequence:"
+msgid "${year2}"
+msgstr "${year2}"
+
+msgctxt "view:ir.sequence:"
+msgid "Year (two digits):"
+msgstr "Año (dos dígitos):"
+
 msgctxt "view:lims.analysis-laboratory:"
 msgid "Analysis Laboratories"
 msgstr "Laboratorios de análisis"
@@ -15324,14 +15292,6 @@ msgstr "Lims"
 msgctxt "view:res.user:"
 msgid "LIMS"
 msgstr ""
-
-msgctxt "view:ir.sequence:"
-msgid "${year2}"
-msgstr "${year2}"
-
-msgctxt "view:ir.sequence:"
-msgid "Year (two digits):"
-msgstr "Año (dos dígitos):"
 
 msgctxt "wizard_button:lims.analysis.family.duplicate,start,duplicate:"
 msgid "Duplicate"

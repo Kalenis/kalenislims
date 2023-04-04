@@ -2,49 +2,13 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "model:ir.message,text:msg_invalid_product_uom_category"
-msgid ""
-"The UoM's Category of each Product should be the same as the UoM's Category "
-"of Family/Equivalent."
-msgstr ""
-"La Categoría de UdM de cada Producto debe ser la misma que la Categoría de "
-"UdM de la Familia/Equivalente."
-
-msgctxt "model:ir.message,text:msg_quantity_multiple_required"
-msgid "Quantity multiple of output bom required."
-msgstr "La cantidad no es múltiplo de la cantidad de salida de la LdM"
-
 msgctxt "field:lims.brand,code:"
 msgid "Code"
 msgstr "Código"
 
-msgctxt "field:lims.brand,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.brand,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.brand,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.brand,name:"
 msgid "Name"
 msgstr "Nombre"
-
-msgctxt "field:lims.brand,rec_name:"
-msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.brand,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.brand,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.configuration,lot_category_input_prod:"
 msgid "Input for production"
@@ -70,45 +34,9 @@ msgctxt "field:lims.configuration.solvents,configuration:"
 msgid "Configuration"
 msgstr "Configuración"
 
-msgctxt "field:lims.configuration.solvents,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.configuration.solvents,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.configuration.solvents,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.configuration.solvents,rec_name:"
-msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.configuration.solvents,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.configuration.solvents,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.family.equivalent,code:"
 msgid "Code"
 msgstr "Código"
-
-msgctxt "field:lims.family.equivalent,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.family.equivalent,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.family.equivalent,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:lims.family.equivalent,name:"
 msgid "Name"
@@ -118,53 +46,17 @@ msgctxt "field:lims.family.equivalent,products:"
 msgid "Products"
 msgstr "Productos"
 
-msgctxt "field:lims.family.equivalent,rec_name:"
-msgid "Name"
-msgstr "Nombre"
-
 msgctxt "field:lims.family.equivalent,uom:"
 msgid "UoM"
 msgstr "UdM"
-
-msgctxt "field:lims.family.equivalent,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.family.equivalent,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:lims.purity.degree,code:"
 msgid "Code"
 msgstr "Código"
 
-msgctxt "field:lims.purity.degree,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.purity.degree,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:lims.purity.degree,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:lims.purity.degree,name:"
 msgid "Name"
 msgstr "Nombre"
-
-msgctxt "field:lims.purity.degree,rec_name:"
-msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.purity.degree,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.purity.degree,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
 
 msgctxt "field:product.product,barcode:"
 msgid "Bar Code"
@@ -290,6 +182,18 @@ msgctxt "field:production.configuration,lot_sequence:"
 msgid "Lot Sequence"
 msgstr "Secuencia de lotes"
 
+msgctxt "field:production.configuration.lot_sequence,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:production.configuration.lot_sequence,lot_sequence:"
+msgid "Lot Sequence"
+msgstr "Secuencia de lotes"
+
+msgctxt "field:stock.lot,account_category:"
+msgid "Account Category"
+msgstr "Categoría contable"
+
 msgctxt "field:stock.lot,cas_number:"
 msgid "CAS number"
 msgstr "Número CAS"
@@ -366,37 +270,21 @@ msgctxt "field:stock.lot,technician:"
 msgid "Technician"
 msgstr "Técnico"
 
-msgctxt "field:stock.lot.category,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:stock.lot.category,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
-msgctxt "field:stock.lot.category,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:stock.lot.category,name:"
 msgid "Name"
 msgstr "Nombre"
 
-msgctxt "field:stock.lot.category,rec_name:"
-msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:stock.lot.category,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:stock.lot.category,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:stock.move,label_quantity:"
 msgid "Label Quantity"
 msgstr "Etiquetas"
+
+msgctxt "field:stock.move,origin_purchase_currency:"
+msgid "Currency"
+msgstr "Moneda"
+
+msgctxt "field:stock.move,origin_purchase_unit_price:"
+msgid "Unit Price"
+msgstr "Precio unitario"
 
 msgctxt "help:lims.family.equivalent,uom:"
 msgid ""
@@ -438,13 +326,21 @@ msgctxt "model:ir.action,name:report_family_equivalent"
 msgid "Family/Equivalents"
 msgstr "Familias/Equivalentes"
 
-msgctxt "model:ir.action,name:wiz_report_shipment_in_labels"
-msgid "Shipment In Labels"
-msgstr "Etiquetas"
-
 msgctxt "model:ir.action,name:wizard_move_production_related"
 msgid "Related Productions"
 msgstr "Producciones relacionadas"
+
+msgctxt "model:ir.message,text:msg_invalid_product_uom_category"
+msgid ""
+"The UoM\\'s Category of each Product should be the same as the UoM\\'s "
+"Category of Family/Equivalent."
+msgstr ""
+"La Categoría de UdM de cada Producto debe ser la misma que la Categoría de "
+"UdM de la Familia/Equivalente."
+
+msgctxt "model:ir.message,text:msg_quantity_multiple_required"
+msgid "Quantity multiple of output bom required."
+msgstr "La cantidad no es múltiplo de la cantidad de salida de la LdM"
 
 msgctxt "model:ir.sequence,name:seq_lot"
 msgid "Lot"
@@ -489,6 +385,10 @@ msgstr "Familia/Equivalente"
 msgctxt "model:lims.purity.degree,name:"
 msgid "Purity Degree"
 msgstr "Grado de pureza"
+
+msgctxt "model:production.configuration.lot_sequence,name:"
+msgid "Production Configuration Lot Sequence"
+msgstr ""
 
 msgctxt "model:res.group,name:group_lims_conf_material_admin"
 msgid "Lims Configuration Material Admin"
@@ -563,8 +463,8 @@ msgid "Purity Degrees"
 msgstr "Grados de pureza"
 
 msgctxt "view:product.template:"
-msgid "Lims"
-msgstr "Lims"
+msgid "LIMS"
+msgstr ""
 
 msgctxt "view:production:"
 msgid "Comments"
@@ -587,13 +487,5 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 msgctxt "view:stock.move:"
-msgid "Moves"
-msgstr "Movimientos"
-
-msgctxt "view:stock.move:"
 msgid "Reset to Draft"
 msgstr "Restablecer a borrador"
-
-msgctxt "field:stock.lot,account_category:"
-msgid "Account Category"
-msgstr "Categoría contable"

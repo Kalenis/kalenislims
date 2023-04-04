@@ -2,19 +2,15 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "model:ir.message,text:msg_no_project_tas_sequence"
-msgid "There is no sequence for TAS Projects for the work year \"%(work_year)s\"."
-msgstr "No existe una secuencia para Proyectos SAT para este año laboral \"%(work_year)s\"."
-
-msgctxt "model:ir.message,text:msg_tas_type_code_unique_id"
-msgid "TAS type code must be unique"
-msgstr "El código del tipo de SAT debe ser único"
-
 msgctxt "field:account.invoice,lims_project_tas:"
 msgid "TAS Project"
 msgstr "Proyecto SAT"
 
 msgctxt "field:lims.lab.workyear,project_tas_sequence:"
+msgid "TAS Projects Sequence"
+msgstr "Secuencia de Proyectos SAT"
+
+msgctxt "field:lims.lab.workyear.sequence,project_tas_sequence:"
 msgid "TAS Projects Sequence"
 msgstr "Secuencia de Proyectos SAT"
 
@@ -26,6 +22,10 @@ msgctxt "field:lims.project,tas_invoice_party:"
 msgid "Invoice party"
 msgstr "Entidad facturación"
 
+msgctxt "field:lims.project,tas_invoice_party_domain:"
+msgid "TAS Invoice party domain"
+msgstr ""
+
 msgctxt "field:lims.project,tas_laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
@@ -33,6 +33,10 @@ msgstr "Laboratorio"
 msgctxt "field:lims.project,tas_responsible:"
 msgid "Responsible"
 msgstr "Responsable"
+
+msgctxt "field:lims.project,tas_responsible_domain:"
+msgid "TAS responsible domain"
+msgstr ""
 
 msgctxt "field:lims.project,tas_type:"
 msgid "TAS type"
@@ -42,37 +46,23 @@ msgctxt "field:lims.tas.type,code:"
 msgid "Code"
 msgstr "Código"
 
-msgctxt "field:lims.tas.type,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.tas.type,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.tas.type,description:"
 msgid "Description"
 msgstr "Descripción"
 
-msgctxt "field:lims.tas.type,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.tas.type,rec_name:"
-msgid "Name"
-msgstr "Nombre"
-
-msgctxt "field:lims.tas.type,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.tas.type,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "model:ir.action,name:act_lims_tas_type_list"
 msgid "TAS Types"
 msgstr "Tipos de SAT"
+
+msgctxt "model:ir.message,text:msg_no_project_tas_sequence"
+msgid "There is no sequence for TAS Projects for the work year \"%(work_year)s\"."
+msgstr ""
+"No existe una secuencia para Proyectos SAT para este año laboral "
+"\"%(work_year)s\"."
+
+msgctxt "model:ir.message,text:msg_tas_type_code_unique_id"
+msgid "TAS type code must be unique"
+msgstr "El código del tipo de SAT debe ser único"
 
 msgctxt "model:ir.ui.menu,name:lims_tas_type_menu"
 msgid "TAS Types"

@@ -2,10 +2,6 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "model:ir.message,text:msg_code_unique_id"
-msgid "Project code must be unique"
-msgstr "El código del proyecto debe ser único"
-
 msgctxt "field:lims.create_sample.start,project_type:"
 msgid "Type"
 msgstr "Tipo de Proyecto"
@@ -30,14 +26,6 @@ msgctxt "field:lims.project,comments:"
 msgid "Comments"
 msgstr "Observaciones"
 
-msgctxt "field:lims.project,create_date:"
-msgid "Create Date"
-msgstr "Fecha creación"
-
-msgctxt "field:lims.project,create_uid:"
-msgid "Create User"
-msgstr "Usuario creación"
-
 msgctxt "field:lims.project,description:"
 msgid "Description"
 msgstr "Descripción"
@@ -49,14 +37,6 @@ msgstr "Fecha de finalización"
 msgctxt "field:lims.project,external_quality_control:"
 msgid "External quality control"
 msgstr "Control externo de calidad"
-
-msgctxt "field:lims.project,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:lims.project,rec_name:"
-msgid "Name"
-msgstr "Nombre"
 
 msgctxt "field:lims.project,start_date:"
 msgid "Start date"
@@ -70,14 +50,6 @@ msgctxt "field:lims.project,type:"
 msgid "Type"
 msgstr "Tipo"
 
-msgctxt "field:lims.project,write_date:"
-msgid "Write Date"
-msgstr "Fecha modificación"
-
-msgctxt "field:lims.project,write_uid:"
-msgid "Write User"
-msgstr "Usuario modificación"
-
 msgctxt "field:lims.sample,project_type:"
 msgid "Type"
 msgstr "Tipo de Proyecto"
@@ -85,6 +57,10 @@ msgstr "Tipo de Proyecto"
 msgctxt "model:ir.action,name:act_lims_project_list"
 msgid "Projects"
 msgstr "Proyectos"
+
+msgctxt "model:ir.message,text:msg_code_unique_id"
+msgid "Project code must be unique"
+msgstr "El código del proyecto debe ser único"
 
 msgctxt "model:ir.ui.menu,name:lims_config_projects"
 msgid "Projects"
@@ -137,11 +113,3 @@ msgstr "Observaciones"
 msgctxt "view:lims.project:"
 msgid "General"
 msgstr "General"
-
-msgctxt "view:lims.project:"
-msgid "Project"
-msgstr "Proyecto"
-
-msgctxt "view:lims.project:"
-msgid "Projects"
-msgstr "Proyectos"

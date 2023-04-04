@@ -235,16 +235,16 @@ msgstr "Fecha de Impresión:"
 
 msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
 msgid "Página"
+msgstr "Página"
+
+msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
+msgid "entry.invoice_party.rec_name"
 msgstr ""
 
 msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
 msgid ""
 "entry.last_release_date and format_date(entry.last_release_date, "
 "user.language) or ''"
-msgstr ""
-
-msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"
-msgid "entry.party and entry.party.rec_name or entry.invoice_party.rec_name"
 msgstr ""
 
 msgctxt "report:lims.entries_ready_for_invoicing.spreadsheet:"

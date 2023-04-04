@@ -192,6 +192,10 @@ msgctxt "field:sale.load_set_group.start,analysis:"
 msgid "Set/Group"
 msgstr "Set/Grupo"
 
+msgctxt "field:sale.load_set_group.start,quantity:"
+msgid "Quantity"
+msgstr "Cantidad"
+
 msgctxt "field:sale.sale,clause_template:"
 msgid "Clauses Template"
 msgstr "Plantilla de Cláusulas"
@@ -398,8 +402,8 @@ msgid "Load Services from Entry"
 msgstr "Cargar servicios desde ingreso"
 
 msgctxt "view:sale.sale:"
-msgid "Load Services from Entry"
-msgstr "Cargar servicios desde ingreso"
+msgid "Mailing"
+msgstr ""
 
 msgctxt "view:sale.sale:"
 msgid "Printing"

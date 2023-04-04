@@ -50,6 +50,10 @@ msgctxt "field:lims.analysis_sheet,number:"
 msgid "Number"
 msgstr "Número"
 
+msgctxt "field:lims.analysis_sheet,out_of_ranges:"
+msgid "Out of Ranges"
+msgstr ""
+
 msgctxt "field:lims.analysis_sheet,partial_analysys:"
 msgid "Partial analysis"
 msgstr "Análisis parciales"
@@ -267,6 +271,10 @@ msgctxt "field:lims.interface.column,destination_start:"
 msgid "Field start"
 msgstr "Campo inicio"
 
+msgctxt "field:lims.interface.column,validation_column:"
+msgid "Validation Column"
+msgstr ""
+
 msgctxt "field:lims.interface.compilation,analysis_sheet:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
@@ -278,6 +286,10 @@ msgstr "Muestra"
 msgctxt "field:lims.lab.device,constants:"
 msgid "Constants"
 msgstr "Constantes"
+
+msgctxt "field:lims.lab.device.constant,constant_name:"
+msgid "Name"
+msgstr "Nombre"
 
 msgctxt "field:lims.lab.device.constant,device:"
 msgid "Device"
@@ -588,6 +600,10 @@ msgctxt "help:lims.interface.column,destination_column:"
 msgid "Mapped column in batch file"
 msgstr "Columna correspondiente en el archivo destino"
 
+msgctxt "help:lims.interface.column,validation_column:"
+msgid "Column used to set if the result is in ranges (should return 1 or 0)"
+msgstr ""
+
 msgctxt "model:ir.action,name:"
 msgid "Open Analysis Sheet Data"
 msgstr "Abrir datos de Hoja de análisis"
@@ -753,6 +769,10 @@ msgstr ""
 msgctxt "model:ir.message,text:msg_template_not_verification_field"
 msgid "The template does not have a column for the Verification field"
 msgstr "La plantilla no tiene una columna para el campo Verificación"
+
+msgctxt "model:ir.rule.group,name:rule_group_sheet"
+msgid "User in laboratory"
+msgstr ""
 
 msgctxt "model:ir.sequence,name:seq_analysis_sheet"
 msgid "Analysis Sheet"
@@ -924,7 +944,7 @@ msgstr "Hoja de análisis"
 
 msgctxt "report:lims.analysis_sheet.report:"
 msgid "Página"
-msgstr ""
+msgstr "Página"
 
 msgctxt "report:lims.analysis_sheet.report:"
 msgid "columns[0]"

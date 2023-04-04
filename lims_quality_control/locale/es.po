@@ -10,10 +10,6 @@ msgctxt "field:lims.analysis,quality_type:"
 msgid "Quality Type"
 msgstr "Tipo"
 
-msgctxt "field:lims.analysis,quality_uom:"
-msgid "Quality UoM"
-msgstr "UdM"
-
 msgctxt "field:lims.configuration,qc_fraction_type:"
 msgid "QC fraction type"
 msgstr "Tipo de fracción de QC"
@@ -29,6 +25,10 @@ msgstr "Contramuestras"
 msgctxt "field:lims.countersample.create.start,location:"
 msgid "Location"
 msgstr "Ubicación Destino"
+
+msgctxt "field:lims.countersample.create.start,product_factor:"
+msgid "Factor"
+msgstr "Factor"
 
 msgctxt "field:lims.countersample.create.start,product_uom_category:"
 msgid "Product Uom Category"
@@ -102,6 +102,10 @@ msgctxt "field:lims.notebook.line,success_icon:"
 msgid "Success Icon"
 msgstr ""
 
+msgctxt "field:lims.notebook.line,test_result:"
+msgid "Test Result"
+msgstr ""
+
 msgctxt "field:lims.notebook.line,test_value:"
 msgid "Test Value"
 msgstr "Valor de Prueba"
@@ -109,10 +113,6 @@ msgstr "Valor de Prueba"
 msgctxt "field:lims.notebook.line,typification:"
 msgid "Typification"
 msgstr "Tipificación"
-
-msgctxt "field:lims.notebook.line,value:"
-msgid "Value"
-msgstr "Valor"
 
 msgctxt "field:lims.notebook.load_results_manual.line,analysis:"
 msgid "Analysis"
@@ -129,26 +129,6 @@ msgstr "Secuencia de Calidad"
 msgctxt "field:lims.quality.configuration,sample_location:"
 msgid "Sample Location"
 msgstr "Ubicación para muestras"
-
-msgctxt "field:lims.quality.configuration.line,company:"
-msgid "Company"
-msgstr "Empresa"
-
-msgctxt "field:lims.quality.configuration.line,configuration:"
-msgid "Configuration"
-msgstr "Configuración"
-
-msgctxt "field:lims.quality.configuration.line,document:"
-msgid "Document"
-msgstr "Documento"
-
-msgctxt "field:lims.quality.configuration.line,quality_sequence:"
-msgid "Quality Sequence"
-msgstr "Secuencia para Pruebas de Calidad"
-
-msgctxt "field:lims.quality.qualitative.value,active:"
-msgid "Active"
-msgstr "Activo"
 
 msgctxt "field:lims.quality.qualitative.value,analysis:"
 msgid "Analysis"
@@ -173,10 +153,6 @@ msgstr "Empresa"
 msgctxt "field:lims.quality.template,countersample_required:"
 msgid "Countersample Required"
 msgstr "Contramuestra requerida"
-
-msgctxt "field:lims.quality.template,document:"
-msgid "Document"
-msgstr "Documento"
 
 msgctxt "field:lims.quality.template,end_date:"
 msgid "End Date"
@@ -218,6 +194,10 @@ msgctxt "field:lims.quality.template,state:"
 msgid "State"
 msgstr "Estado"
 
+msgctxt "field:lims.quality.template.copy_line.start,origin_quality_template:"
+msgid "Origin Template"
+msgstr "Plantilla origen"
+
 msgctxt "field:lims.quality.test,comments:"
 msgid "Comments"
 msgstr "Observaciones"
@@ -233,10 +213,6 @@ msgstr "Fecha Confirmación"
 msgctxt "field:lims.quality.test,countersample:"
 msgid "Countersample"
 msgstr "Contramuestra"
-
-msgctxt "field:lims.quality.test,document:"
-msgid "Document"
-msgstr "Documento"
 
 msgctxt "field:lims.quality.test,lines:"
 msgid "Lines"
@@ -354,10 +330,6 @@ msgctxt "field:lims.typification,quality_order:"
 msgid "Quality Order"
 msgstr "Orden"
 
-msgctxt "field:lims.typification,quality_possible_values:"
-msgid "Possible Values"
-msgstr "Valores Posibles"
-
 msgctxt "field:lims.typification,quality_template:"
 msgid "Quality Template"
 msgstr "Plantilla"
@@ -449,6 +421,10 @@ msgstr "Informes de Resultados"
 msgctxt "model:ir.action,name:wiz_print_test"
 msgid "Test Report"
 msgstr "Informe"
+
+msgctxt "model:ir.action,name:wiz_quality_template_copy_line"
+msgid "Copy Quality Template Line"
+msgstr "Copiar Linea de Plantilla de Calidad"
 
 msgctxt "model:ir.action,name:wiz_test_open_attachment"
 msgid "Test Attachments"
@@ -645,9 +621,17 @@ msgctxt "model:ir.rule.group,name:rule_group_quality_template"
 msgid "User in company"
 msgstr "Usuario en empresa"
 
+msgctxt "model:ir.rule.group,name:rule_group_quality_template_companies"
+msgid "User in companies"
+msgstr "Usuario en las empresas"
+
 msgctxt "model:ir.rule.group,name:rule_group_quality_test"
 msgid "User in company"
 msgstr "Usuario en empresa"
+
+msgctxt "model:ir.rule.group,name:rule_group_quality_test_companies"
+msgid "User in companies"
+msgstr "Usuario en las empresas"
 
 msgctxt "model:ir.sequence,name:sequence_quality"
 msgid "Quality Control"
@@ -693,10 +677,6 @@ msgctxt "model:lims.quality.configuration,name:"
 msgid "Quality configuration"
 msgstr "Configuración"
 
-msgctxt "model:lims.quality.configuration.line,name:"
-msgid "Quality Configuration Model"
-msgstr ""
-
 msgctxt "model:lims.quality.qualitative.value,name:"
 msgid "Quality Value"
 msgstr "Valor"
@@ -705,9 +685,17 @@ msgctxt "model:lims.quality.template,name:"
 msgid "Quality Template"
 msgstr "Plantilla"
 
+msgctxt "model:lims.quality.template.copy_line.start,name:"
+msgid "Copy Quality Template Line"
+msgstr "Copiar Linea de Plantilla de Calidad"
+
 msgctxt "model:lims.quality.test,name:"
 msgid "Quality Test"
 msgstr "Prueba"
+
+msgctxt "model:lims.take.sample.result,name:"
+msgid "Take Sample Result"
+msgstr ""
 
 msgctxt "model:lims.take.sample.start,name:"
 msgid "Take Sample Start"
@@ -873,9 +861,9 @@ msgctxt "view:lims.analysis:"
 msgid "Quality"
 msgstr "Calidad"
 
-msgctxt "view:lims.lab.method:"
-msgid "Results Waiting"
-msgstr ""
+msgctxt "view:lims.countersample.create.start:"
+msgid "Comments"
+msgstr "Observaciones"
 
 msgctxt "view:lims.lab.method:"
 msgid "Specification"
@@ -892,6 +880,10 @@ msgstr "Observaciones"
 msgctxt "view:lims.quality.test:"
 msgid "Test Time"
 msgstr ""
+
+msgctxt "view:lims.sample:"
+msgid "Attributes"
+msgstr "Atributos"
 
 msgctxt "view:lims.sample:"
 msgid "Comments"
@@ -922,6 +914,10 @@ msgid "Comments"
 msgstr "Observaciones"
 
 msgctxt "view:lims.typification:"
+msgid "Quality"
+msgstr "Calidad"
+
+msgctxt "view:lims.typification:"
 msgid "Specification"
 msgstr "Especificación"
 
@@ -937,22 +933,6 @@ msgctxt "wizard_button:lims.countersample.create,ask,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
-msgctxt "wizard_button:lims.countersample.create,location,create_:"
-msgid "Create"
-msgstr "Crear"
-
-msgctxt "wizard_button:lims.countersample.create,location,end:"
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgctxt "wizard_button:lims.countersample.create,start,create:"
-msgid "Create"
-msgstr "Crear"
-
-msgctxt "wizard_button:lims.countersample.create,start,end:"
-msgid "Cancel"
-msgstr "Cancelar"
-
 msgctxt "wizard_button:lims.create.quality.test,ask,confirm:"
 msgid "Confirm"
 msgstr "Confirmar"
@@ -961,11 +941,11 @@ msgctxt "wizard_button:lims.create.quality.test,ask,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
-msgctxt "wizard_button:lims.create.quality.test,start,confirm:"
-msgid "Confirm"
-msgstr "Confirmar"
+msgctxt "wizard_button:lims.quality.template.copy_line,ask,copy:"
+msgid "Copy"
+msgstr "Copiar"
 
-msgctxt "wizard_button:lims.create.quality.test,start,end:"
+msgctxt "wizard_button:lims.quality.template.copy_line,ask,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -990,29 +970,5 @@ msgid "Add"
 msgstr "Añadir"
 
 msgctxt "wizard_button:lims.template.add.service,ask,end:"
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgctxt "field:lims.quality.template.copy_line.start,origin_quality_template:"
-msgid "Origin Template"
-msgstr "Plantilla origen"
-
-msgctxt "model:ir.action,name:wiz_quality_template_copy_line"
-msgid "Copy Quality Template Line"
-msgstr "Copiar Linea de Plantilla de Cálidad"
-
-msgctxt "model:lims.quality.template.copy_line.start,name:"
-msgid "Copy Quality Template Line"
-msgstr "Copiar Linea de Plantilla de Cálidad"
-
-msgctxt "view:lims.quality.template:"
-msgid "Copy Lines"
-msgstr "Copiar Líneas"
-
-msgctxt "wizard_button:lims.quality.template.copy_line,ask,copy:"
-msgid "Copy"
-msgstr "Copiar"
-
-msgctxt "wizard_button:lims.quality.template.copy_line,ask,end:"
 msgid "Cancel"
 msgstr "Cancelar"
