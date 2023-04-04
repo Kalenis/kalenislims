@@ -88,10 +88,10 @@ Create Samples::
     >>> create_sample.form.storage_location = storage_location
     >>> create_sample.form.labels = 'LBL-001\nLBL-002\nLBL-003'
 
-    >>> package = create_sample.form.packages.new()
-    >>> package.quantity = 1
-    >>> package.type = package_type
-    >>> package.state = fraction_state
+    >>> package = create_sample.form.packages.new(
+    ...     quantity=1,
+    ...     type=package_type,
+    ...     state=fraction_state)
 
     >>> service = create_sample.form.services.new()
     >>> service.analysis = analysis
