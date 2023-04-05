@@ -44,7 +44,7 @@ class Planification(Workflow, ModelSQL, ModelView):
         None, None, 'Analysis domain'),
         'on_change_with_analysis_domain')
     technicians = fields.One2Many('lims.planification.technician',
-        'planification', 'Technicians')
+        'planification', 'Technicians', depends={'technicians_domain'})
     date_from = fields.Date('Date from', states=_states)
     date_to = fields.Date('Date to', states=_states)
     start_date = fields.Date('Start date',
