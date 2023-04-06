@@ -2758,7 +2758,7 @@ class Sample(ModelSQL, ModelView):
             ('party', '=', Eval('party'))])
     label = fields.Char('Label')
     sample_client_description = fields.Char('Product described by the client',
-        translate=True)
+        translate=True, required=True)
     product_type = fields.Many2One('lims.product.type', 'Product type',
         required=True,
         domain=['OR', ('id', '=', Eval('product_type', -1)),

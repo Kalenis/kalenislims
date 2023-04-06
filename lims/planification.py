@@ -1959,6 +1959,7 @@ class AddFractionControl(Wizard):
         original_fraction = self.start.original_fraction
         original_sample = Sample(original_fraction.sample.id)
         obj_description = self._get_obj_description(original_sample)
+        laboratory = self.start.planification.laboratory
 
         # new sample
         new_sample, = Sample.copy([original_sample], default={
@@ -1966,6 +1967,12 @@ class AddFractionControl(Wizard):
             'date': datetime.now(),
             'label': self.start.label,
             'obj_description': obj_description,
+            'packages': [('create', [{
+                'quantity': 1,
+                'type': fraction_type.default_package_type.id,
+                'state': fraction_type.default_fraction_state.id,
+                }])],
+            'sample_client_description': '-',
             'fractions': [],
             })
 
@@ -1973,9 +1980,10 @@ class AddFractionControl(Wizard):
         new_fraction, = Fraction.copy([original_fraction], default={
             'sample': new_sample.id,
             'type': fraction_type.id,
-            'services': [],
             'con_type': self.start.type,
             'con_original_fraction': original_fraction.id,
+            'storage_location': laboratory.related_location.id,
+            'services': [],
             })
 
         # new services
@@ -2443,6 +2451,7 @@ class AddFractionRMBMZ(Wizard):
         original_fraction = self.start.reference_fraction
         original_sample = Sample(original_fraction.sample.id)
         obj_description = self._get_obj_description(original_sample)
+        laboratory = self.start.planification.laboratory
 
         # new sample
         new_sample, = Sample.copy([original_sample], default={
@@ -2450,6 +2459,12 @@ class AddFractionRMBMZ(Wizard):
             'date': datetime.now(),
             'label': self.start.label,
             'obj_description': obj_description,
+            'packages': [('create', [{
+                'quantity': 1,
+                'type': fraction_type.default_package_type.id,
+                'state': fraction_type.default_fraction_state.id,
+                }])],
+            'sample_client_description': '-',
             'fractions': [],
             })
 
@@ -2458,6 +2473,7 @@ class AddFractionRMBMZ(Wizard):
             'sample': new_sample.id,
             'type': fraction_type.id,
             'con_type': '',
+            'storage_location': laboratory.related_location.id,
             'services': [],
             }
         if self.start.type == 'rm':
@@ -2644,6 +2660,7 @@ class AddFractionRMBMZ(Wizard):
                 'type': fraction_type.default_package_type.id,
                 'state': fraction_type.default_fraction_state.id,
                 }])],
+            'sample_client_description': '-',
             'fractions': [],
             }])
 
@@ -3087,6 +3104,7 @@ class AddFractionBRE(Wizard):
                 'type': fraction_type.default_package_type.id,
                 'state': fraction_type.default_fraction_state.id,
                 }])],
+            'sample_client_description': '-',
             'fractions': [],
             }])
 
@@ -3450,6 +3468,7 @@ class AddFractionMRT(Wizard):
                 'type': fraction_type.default_package_type.id,
                 'state': fraction_type.default_fraction_state.id,
                 }])],
+            'sample_client_description': '-',
             'fractions': [],
             }])
 
@@ -4810,6 +4829,7 @@ class CreateFractionControl(Wizard):
                 'type': fraction_type.default_package_type.id,
                 'state': fraction_type.default_fraction_state.id,
                 }])],
+            'sample_client_description': '-',
             'fractions': [],
             }])
 
