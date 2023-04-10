@@ -1863,6 +1863,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     'type': column.type_,
                     'singleton': False,
                     'default_value': None,
+                    'grouped_repetitions': None,
                     }
                 if column.singleton:
                     schema[column.alias].update({
@@ -1878,6 +1879,12 @@ class Compilation(Workflow, ModelSQL, ModelView):
                             'field_name': column.name,
                             'model_name': column.related_model.model,
                             })
+                if column.group is not None:
+                    for g_rep in self.interface.grouped_repetitions:
+                        if g_rep.group == column.group:
+                            schema[column.alias].update({
+                                'grouped_repetitions': g_rep.repetitions,
+                                })
             if column.expression:
                 formula_fields[column.alias] = {
                     'type': column.type_,

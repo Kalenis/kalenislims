@@ -1087,7 +1087,12 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                                 value = getattr(value, field)
                         except AttributeError:
                             value = None
-                        line[k] = value
+                        if schema[k]['grouped_repetitions'] is None:
+                            line[k] = value
+                        else:
+                            reps = (schema[k]['grouped_repetitions'] or 1) + 1
+                            for rep in range(1, reps):
+                                line['%s_%s' % (k, rep)] = value
 
                 if interface.fraction_field:
                     if interface.fraction_field.type_ == 'many2one':
@@ -1156,29 +1161,41 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     for x in chain(*value):
                         if isinstance(x, formulas.tokens.operand.XlError):
                             value = None
-                defaults[k] = value
+                if schema[k]['grouped_repetitions'] is None:
+                    defaults[k] = value
+                else:
+                    reps = (schema[k]['grouped_repetitions'] or 1) + 1
+                    for rep in range(1, reps):
+                        defaults['%s_%s' % (k, rep)] = value
                 continue
             if value.startswith('='):
                 continue
 
             if schema[k]['type'] == 'integer':
-                defaults[k] = int(value)
+                default_value = int(value)
             elif schema[k]['type'] == 'float':
-                defaults[k] = float(value)
+                default_value = float(value)
             elif schema[k]['type'] == 'numeric':
-                defaults[k] = Decimal(str(value))
+                default_value = Decimal(str(value))
             elif schema[k]['type'] == 'boolean':
-                defaults[k] = bool(value)
+                default_value = bool(value)
             elif schema[k]['type'] == 'date':
-                defaults[k] = str2date(value,
+                default_value = str2date(value,
                     self.compilation.interface.language)
             elif schema[k]['type'] == 'many2one':
                 resource = get_model_resource(
                     schema[k]['model_name'], value,
                     schema[k]['field_name'])
-                defaults[k] = resource and resource[0].id
+                default_value = resource and resource[0].id
             else:
-                defaults[k] = str(value)
+                default_value = str(value)
+
+            if schema[k]['grouped_repetitions'] is None:
+                defaults[k] = default_value
+            else:
+                reps = (schema[k]['grouped_repetitions'] or 1) + 1
+                for rep in range(1, reps):
+                    defaults['%s_%s' % (k, rep)] = default_value
 
         return defaults
 
