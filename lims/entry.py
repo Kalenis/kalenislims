@@ -571,6 +571,7 @@ class Entry(Workflow, ModelSQL, ModelView):
         Entry = pool.get('lims.entry')
         entries = Entry.search([
             ('result_cron', '!=', 'sent'),
+            ('no_acknowledgment_of_receipt', '=', False),
             ('state', '=', 'ongoing'),
             ])
         session_id, _, _ = ForwardAcknowledgmentOfReceipt.create()
