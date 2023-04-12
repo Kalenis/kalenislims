@@ -26,8 +26,8 @@
         <group id="specific" colspan="2" col="2">
             <label name="specific_day"/>
             <field name="specific_day"/>
-            <label name="specific_time"/>
-            <field name="specific_time"/>
+            <label name="specific_event_time"/>
+            <field name="specific_event_time"/>
         </group>
         <label name="notice_days"/>
         <field name="notice_days"/>
