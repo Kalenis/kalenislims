@@ -508,7 +508,6 @@ class Entry(Workflow, ModelSQL, ModelView):
         Entry = pool.get('lims.entry')
         entries = Entry.search([
             ('result_cron', '!=', 'sent'),
-            ('no_acknowledgment_of_receipt', '=', False),
             ('state', '=', 'ongoing'),
             ])
         session_id, _, _ = ForwardAcknowledgmentOfReceipt.create()
@@ -1455,38 +1454,40 @@ class ForwardAcknowledgmentOfReceipt(Wizard):
                 entry = Entry(active_id)
             if entry.state != 'ongoing':
                 continue
-            if not entry.no_acknowledgment_of_receipt:
-                printable = False
-                cie_entry = False
-                for sample in entry.samples:
-                    if not sample.fractions:
+            if entry.no_acknowledgment_of_receipt:
+                continue
+
+            printable = False
+            cie_entry = False
+            for sample in entry.samples:
+                if not sample.fractions:
+                    break
+                for fraction in sample.fractions:
+                    if fraction.cie_fraction_type:
+                        cie_entry = True
                         break
-                    for fraction in sample.fractions:
-                        if fraction.cie_fraction_type:
-                            cie_entry = True
-                            break
-                        if (fraction.confirmed and fraction.services):
-                            printable = True
-                            break
-                if printable:
-                    entry.ack_report_cache = None
-                    entry.ack_report_format = None
+                    if (fraction.confirmed and fraction.services):
+                        printable = True
+                        break
+            if printable:
+                entry.ack_report_cache = None
+                entry.ack_report_format = None
+                entry.save()
+                if not entry.print_report():
+                    entry.result_cron = 'failed_print'
                     entry.save()
-                    if not entry.print_report():
-                        entry.result_cron = 'failed_print'
-                        entry.save()
-                        continue
-                    if not entry.mail_acknowledgment_of_receipt():
-                        entry.result_cron = 'failed_send'
-                        entry.save()
-                        continue
-                    entry.result_cron = 'sent'
-                    entry.sent_date = datetime.now()
+                    continue
+                if not entry.mail_acknowledgment_of_receipt():
+                    entry.result_cron = 'failed_send'
                     entry.save()
-                if cie_entry:
-                    entry.result_cron = 'sent'
-                    entry.sent_date = datetime.now()
-                    entry.save()
+                    continue
+                entry.result_cron = 'sent'
+                entry.sent_date = datetime.now()
+                entry.save()
+            if cie_entry:
+                entry.result_cron = 'sent'
+                entry.sent_date = datetime.now()
+                entry.save()
         return 'end'
 
 
