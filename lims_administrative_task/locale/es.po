@@ -143,7 +143,7 @@ msgctxt "field:lims.administrative.task.program,specific_day:"
 msgid "Specific Day"
 msgstr "Día específico"
 
-msgctxt "field:lims.administrative.task.program,specific_time:"
+msgctxt "field:lims.administrative.task.program,specific_event_time:"
 msgid "Specific Time"
 msgstr "Horario específico"
 

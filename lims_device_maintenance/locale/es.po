@@ -131,7 +131,7 @@ msgctxt "field:lims.lab.device.maintenance.program,specific_day:"
 msgid "Specific Day"
 msgstr "Día específico"
 
-msgctxt "field:lims.lab.device.maintenance.program,specific_time:"
+msgctxt "field:lims.lab.device.maintenance.program,specific_event_time:"
 msgid "Specific Time"
 msgstr "Horario específico"
 
