@@ -1227,38 +1227,39 @@ class Analysis(Workflow, ModelSQL, ModelView):
         return [(cls._rec_name,) + tuple(clause[1:])]
 
     @classmethod
-    def validate(cls, analysis):
-        super().validate(analysis)
-        for a in analysis:
-            cls.check_duplicate_description(a.type, a.description, a.id)
-            a.check_end_date()
+    def validate_fields(cls, analyses, field_names):
+        super().validate_fields(analyses, field_names)
+        cls.check_duplicate_description(analyses, field_names)
+        cls.check_end_date(analyses, field_names)
 
     @classmethod
-    def check_duplicate_description(cls, type, description, a_id):
-        if cls.search_count([
-                ('id', '!=', a_id),
-                ('description', '=', description),
-                ('type', '=', type),
-                ('end_date', '=', None),
-                ]) > 0:
-            raise UserError(gettext('lims.msg_description_uniq'))
+    def check_duplicate_description(cls, analyses, field_names=None):
+        if field_names and not (field_names & {'description'}):
+            return
+        for a in analyses:
+            if a.end_date:
+                continue
+            if cls.search_count([
+                    ('id', '!=', a.id),
+                    ('description', '=', a.description),
+                    ('type', '=', a.type),
+                    ('behavior', '=', a.behavior),
+                    ('end_date', '=', None),
+                    ]) > 0:
+                raise UserError(gettext('lims.msg_description_uniq'))
 
-    def check_end_date(self):
-        if self.end_date:
-            if not self.start_date or self.end_date < self.start_date:
+    @classmethod
+    def check_end_date(cls, analyses, field_names=None):
+        if field_names and not (field_names & {'end_date'}):
+            return
+        for a in analyses:
+            if not a.end_date:
+                continue
+            if not a.start_date or a.end_date < a.start_date:
                 raise UserError(gettext('lims.msg_end_date'))
-            if not self.start_date or self.end_date > datetime.now().date():
+            if not a.start_date or a.end_date > datetime.now().date():
                 raise UserError(gettext('lims.msg_end_date_wrong'))
 
-    @classmethod
-    def write(cls, *args):
-        actions = iter(args)
-        for analysis, vals in zip(actions, actions):
-            if vals.get('description'):
-                for a in analysis:
-                    cls.check_duplicate_description(vals.get('type', a.type),
-                        vals['description'], a.id)
-        super().write(*args)
 
     @classmethod
     @ModelView.button_action('lims.wiz_lims_relate_analysis')
