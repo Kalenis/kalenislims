@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+<!-- menu -->
+        <menuitem
+            parent="lims.lims_config"
+            sequence="90"
+            name="Tools"
+            id="tools_config_menu"/>
+
+<!-- formula.template -->
+        <record model="ir.ui.view" id="lims_formula_template_tree_view">
+            <field name="model">formula.template</field>
+            <field name="type">tree</field>
+            <field name="name">lims_formula_template_tree</field>
+        </record>
+        <record model="ir.ui.view" id="lims_formula_template_form_view">
+            <field name="model">formula.template</field>
+            <field name="type">form</field>
+            <field name="name">lims_formula_template_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_formula_template">
+            <field name="name">Formula Template</field>
+            <field name="res_model">formula.template</field>
+            <field name="domain" eval="" pyson="1"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_formula_template_tree_view">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_formula_template_tree_view"/>
+            <field name="act_window" ref="act_lims_formula_template"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_formula_template_form_view">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_formula_template_form_view"/>
+            <field name="act_window" ref="act_lims_formula_template"/>
+        </record>
+
+        <menuitem
+            parent="tools_config_menu"
+            sequence="10"
+            action="act_lims_formula_template"
+            id="formula_template_menu"/>
+
+<!-- formula.template.category -->
+        <record model="ir.ui.view" id="lims_formula_template_category_tree_view">
+            <field name="model">formula.template.category</field>
+            <field name="type">tree</field>
+            <field name="name">lims_formula_template_category_tree</field>
+        </record>
+        <record model="ir.ui.view" id="lims_formula_template_category_form_view">
+            <field name="model">formula.template.category</field>
+            <field name="type">form</field>
+            <field name="name">lims_formula_template_category_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_formula_template_category">
+            <field name="name">Formula Template Category</field>
+            <field name="res_model">formula.template.category</field>
+            <field name="domain" eval="" pyson="1"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_formula_template_category_tree_view">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_formula_template_category_tree_view"/>
+            <field name="act_window" ref="act_lims_formula_template_category"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_formula_template_category_form_view">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_formula_template_category_form_view"/>
+            <field name="act_window" ref="act_lims_formula_template_category"/>
+        </record>
+
+        <menuitem
+            parent="tools_config_menu"
+            sequence="10"
+            action="act_lims_formula_template_category"
+            id="formula_template_category_menu"/>
+
+    </data>
+</tryton>
