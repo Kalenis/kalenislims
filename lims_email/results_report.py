@@ -771,6 +771,7 @@ class SendResultsReport(Wizard):
     def _send_msg(self, from_addr, to_addrs, msg):
         to_addrs = list(set(to_addrs))
         success = False
+        server = None
         try:
             server = get_smtp_server()
             server.sendmail(from_addr, to_addrs, msg.as_string())
@@ -779,6 +780,8 @@ class SendResultsReport(Wizard):
         except Exception as e:
             logger.error('Send Results Report: Unable to deliver mail')
             logger.error(str(e))
+            if server is not None:
+                server.quit()
         return success
 
     def default_failed(self, fields):
