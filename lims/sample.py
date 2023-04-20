@@ -492,12 +492,15 @@ class Service(ModelSQL, ModelView):
                 ('state', '!=', 'annulled'),
                 ])
             for d in details:
-                existing_analysis.append([d.analysis.id, d.method.id])
+                existing_analysis.append([
+                    fraction.id, d.analysis.id, d.method.id])
 
-            new_analysis = [(new_service['analysis'],
+            new_analysis = [(
+                fraction.id, new_service['analysis'],
                 new_service['method'] if 'method' in new_service else None)]
-            new_analysis.extend(Analysis.get_included_analysis_method(
-                new_service['analysis']))
+            for included in Analysis.get_included_analysis_method(
+                    new_service['analysis']):
+                new_analysis.append((fraction.id,) + included)
             new_analysis = [list(a) for a in new_analysis]
             for a in new_analysis:
                 if a[1]:
