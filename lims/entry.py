@@ -23,6 +23,8 @@ from trytond.rpc import RPC
 from trytond.exceptions import UserError, UserWarning
 from trytond.i18n import gettext, lazy_gettext
 
+logger = logging.getLogger(__name__)
+
 
 # Genshi fix: https://genshi.edgewall.org/ticket/582
 from genshi.template.astutil import ASTCodeGenerator, ASTTransformer
@@ -554,26 +556,27 @@ class Entry(Workflow, ModelSQL, ModelView):
         '''
         Cron - Acknowledgment Of Receipt (Samples)
         '''
-        logging.getLogger('lims').info(
-                'Cron - Acknowledgment Of Receipt (Samples):INIT')
+        logger.info('Cron - Acknowledgment Of Receipt (Samples): INIT')
         pool = Pool()
+        Entry = pool.get('lims.entry')
         ForwardAcknowledgmentOfReceipt = pool.get(
             'lims.entry.acknowledgment.forward', type='wizard')
-        Entry = pool.get('lims.entry')
+
         entries = Entry.search([
             ('result_cron', '!=', 'sent'),
             ('no_acknowledgment_of_receipt', '=', False),
             ('state', '=', 'ongoing'),
             ])
+
         session_id, _, _ = ForwardAcknowledgmentOfReceipt.create()
         acknowledgment_forward = ForwardAcknowledgmentOfReceipt(session_id)
-        with Transaction().set_context(active_ids=[entry.id for entry
-                in entries]):
+        with Transaction().set_context(active_ids=[entry.id
+                for entry in entries]):
             data = acknowledgment_forward.transition_start()
-        if data:
-            logging.getLogger('lims').info('data:%s' % data)  # debug
-        logging.getLogger('lims').info(
-                'Cron - Acknowledgment Of Receipt (Samples):END')
+            if data:
+                logger.info('data: %s' % data)  # debug
+
+        logger.info('Cron - Acknowledgment Of Receipt (Samples): END')
 
     @classmethod
     @ModelView.button
@@ -638,7 +641,7 @@ class Entry(Workflow, ModelSQL, ModelView):
             AcknowledgmentOfReceipt.execute([self.id], {})
             success = True
         except Exception:
-            logging.getLogger('lims').error(
+            logger.error(
                 'Unable to print report Acknowledgment of receipt for '
                 'Entry:%s' % (self.number))
         return success
@@ -725,14 +728,17 @@ class Entry(Workflow, ModelSQL, ModelView):
     def send_msg(self, from_addr, to_addrs, msg):
         to_addrs = list(set(to_addrs))
         success = False
+        server = None
         try:
             server = get_smtp_server()
             server.sendmail(from_addr, to_addrs, msg.as_string())
             server.quit()
             success = True
-        except Exception:
-            logging.getLogger('lims').error(
-                'Unable to deliver mail for entry %s' % (self.number))
+        except Exception as e:
+            logger.error('Unable to deliver mail for entry %s' % (self.number))
+            logger.error(str(e))
+            if server is not None:
+                server.quit()
         return success
 
     def _confirm(self):
