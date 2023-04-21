@@ -8119,6 +8119,10 @@ msgctxt "model:ir.message,text:msg_fraction_type_code_unique_id"
 msgid "Fraction type code must be unique"
 msgstr "El código del tipo de fracción debe ser único"
 
+msgctxt "model:ir.message,text:msg_invalid_email"
+msgid "Invalid email address"
+msgstr "Dirección de correo electrónico inválida"
+
 msgctxt "model:ir.message,text:msg_invalid_limits"
 msgid "Quantification limit must be greater than Detection limit"
 msgstr "El Límite de cuantificación debe ser mayor que el Límite de detección"
