@@ -2,6 +2,7 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import re
 import pytz
 from datetime import datetime
 from sql import Literal
@@ -10,6 +11,8 @@ from trytond.model import DeactivableMixin, fields, Unique
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Bool, Eval, Or
 from trytond.transaction import Transaction
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 
 class Party(metaclass=PoolMeta):
@@ -173,6 +176,18 @@ class Address(metaclass=PoolMeta):
     def on_change_invoice_contact(self):
         if not self.invoice_contact:
             self.invoice_contact_default = False
+
+    @classmethod
+    def validate(cls, addresses):
+        super().validate(addresses)
+        for address in addresses:
+            address.check_email()
+
+    def check_email(self):
+        if self.email and not re.match(
+                r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+                self.email):
+            raise UserError(gettext('lims.msg_invalid_email'))
 
 
 class Company(metaclass=PoolMeta):
