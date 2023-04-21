@@ -583,5 +583,8 @@ Rule 4: 1 value above or below the mean +/- 3 deviations.</field>
         <record model="ir.message" id="msg_referral_email_laboratory">
             <field name="text">The email is missing in the delivery address for "%(laboratory)s"</field>
         </record>
+        <record model="ir.message" id="msg_invalid_email">
+            <field name="text">Invalid email address</field>
+        </record>
     </data>
 </tryton>
