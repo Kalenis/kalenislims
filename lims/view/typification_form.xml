@@ -34,13 +34,17 @@
     <field name="end_uom"/>
     <label name="literal_final_concentration"/>
     <field name="literal_final_concentration"/>
-    <group id="decimals" colspan="4" col="6">
+    <group id="decimals" colspan="4" col="10">
         <label name="calc_decimals"/>
         <field name="calc_decimals"/>
         <label name="significant_digits"/>
         <field name="significant_digits"/>
         <label name="scientific_notation"/>
         <field name="scientific_notation"/>
+        <label name="result_decimals"/>
+        <field name="result_decimals"/>
+        <label name="converted_result_decimals"/>
+        <field name="converted_result_decimals"/>
     </group>
     <notebook>
         <page string="Additional analysis" id="additionals" >

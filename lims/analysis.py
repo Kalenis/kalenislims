@@ -81,6 +81,9 @@ class Typification(ModelSQL, ModelView):
     calc_decimals = fields.Integer('Calculation decimals', required=True)
     significant_digits = fields.Integer('Significant digits')
     scientific_notation = fields.Boolean('Scientific notation')
+    result_decimals = fields.Integer('Decimals to report result')
+    converted_result_decimals = fields.Integer(
+        'Decimals to report converted result')
     report = fields.Boolean('Report')
     report_type = fields.Selection([
         ('normal', 'Normal'),
@@ -470,7 +473,8 @@ class Typification(ModelSQL, ModelView):
                 'lower_limit', 'upper_limit', 'initial_concentration',
                 'final_concentration', 'literal_final_concentration',
                 'start_uom', 'end_uom', 'calc_decimals', 'significant_digits',
-                'scientific_notation')
+                'scientific_notation', 'result_decimals',
+                'converted_result_decimals')
             for field in fields_check:
                 if field in vals:
                     cls.update_laboratory_notebook(typifications)
@@ -518,6 +522,9 @@ class Typification(ModelSQL, ModelView):
                     'decimals': typification.calc_decimals,
                     'significant_digits': typification.significant_digits,
                     'scientific_notation': typification.scientific_notation,
+                    'result_decimals': typification.result_decimals,
+                    'converted_result_decimals': (
+                        typification.converted_result_decimals),
                     })
 
             # Update RM
@@ -1259,7 +1266,6 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 raise UserError(gettext('lims.msg_end_date'))
             if not a.start_date or a.end_date > datetime.now().date():
                 raise UserError(gettext('lims.msg_end_date_wrong'))
-
 
     @classmethod
     @ModelView.button_action('lims.wiz_lims_relate_analysis')
@@ -2923,6 +2929,9 @@ class UpdateTypificationStart(ModelView):
     calc_decimals = fields.Integer('Calculation decimals')
     significant_digits = fields.Integer('Significant digits')
     scientific_notation = fields.Boolean('Scientific notation')
+    result_decimals = fields.Integer('Decimals to report result')
+    converted_result_decimals = fields.Integer(
+        'Decimals to report converted result')
     report = fields.Boolean('Report')
     referable = fields.Boolean('Referred by default')
     literal_final_concentration = fields.Char('Literal Final concentration')
@@ -2951,6 +2960,9 @@ class UpdateTypificationStart(ModelView):
     update_calc_decimals = fields.Boolean('Update Calculation decimals')
     update_significant_digits = fields.Boolean('Update Significant digits')
     update_scientific_notation = fields.Boolean('Update Scientific notation')
+    update_result_decimals = fields.Boolean('Update Decimals to report result')
+    update_converted_result_decimals = fields.Boolean(
+        'Update Decimals to report converted result')
     update_report = fields.Boolean('Update Report')
     update_referable = fields.Boolean('Update Referred by default')
     update_literal_final_concentration = fields.Boolean(

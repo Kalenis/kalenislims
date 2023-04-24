@@ -1337,6 +1337,8 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                 decimals = t.calc_decimals
                 significant_digits = t.significant_digits
                 scientific_notation = t.scientific_notation
+                result_decimals = t.result_decimals
+                converted_result_decimals = t.converted_result_decimals
                 report = t.report
                 department = t.department and t.department.id or None
             else:
@@ -1353,6 +1355,8 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                 decimals = 2
                 significant_digits = None
                 scientific_notation = False
+                result_decimals = None
+                converted_result_decimals = None
                 report = False
                 department = None
 
@@ -1415,6 +1419,8 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                     'decimals': decimals,
                     'significant_digits': significant_digits,
                     'scientific_notation': scientific_notation,
+                    'result_decimals': result_decimals,
+                    'converted_result_decimals': converted_result_decimals,
                     'report': report,
                     'results_estimated_waiting': results_estimated_waiting,
                     'department': department,

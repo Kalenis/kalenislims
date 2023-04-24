@@ -895,6 +895,10 @@ class NotebookLine(ModelSQL, ModelView):
     decimals = fields.Integer('Decimals', states=_states)
     significant_digits = fields.Integer('Significant digits', states=_states)
     scientific_notation = fields.Boolean('Scientific notation', states=_states)
+    result_decimals = fields.Integer('Decimals to report result',
+        states=_states)
+    converted_result_decimals = fields.Integer(
+        'Decimals to report converted result', states=_states)
     backup = fields.Char('Backup', states=_states)
     reference = fields.Char('Reference', states=_states)
     literal_result = fields.Char('Literal result', translate=True,
@@ -1673,9 +1677,11 @@ class NotebookLine(ModelSQL, ModelView):
         if self.literal_result:
             res = self.literal_result
         else:
-            res = self._format_result(self.result,
-                self.decimals, self.significant_digits,
-                self.scientific_notation)
+            decimals = (self.result_decimals
+                if self.result_decimals is not None
+                else self.decimals)
+            res = self._format_result(self.result, decimals,
+                self.significant_digits, self.scientific_notation)
             if not result_modifier:
                 res = res
             elif result_modifier == 'low':
@@ -1703,9 +1709,11 @@ class NotebookLine(ModelSQL, ModelView):
         result_modifier = (self.converted_result_modifier and
             self.converted_result_modifier.code)
         if not self.literal_result:
-            res = self._format_result(self.converted_result,
-                self.decimals, self.significant_digits,
-                self.scientific_notation)
+            decimals = (self.converted_result_decimals
+                if self.converted_result_decimals is not None
+                else self.decimals)
+            res = self._format_result(self.converted_result, decimals,
+                self.significant_digits, self.scientific_notation)
             if not result_modifier:
                 res = res
             elif result_modifier == 'low':
@@ -1814,6 +1822,10 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     decimals = fields.Integer('Decimals', readonly=True)
     significant_digits = fields.Integer('Significant digits', readonly=True)
     scientific_notation = fields.Boolean('Scientific notation', readonly=True)
+    result_decimals = fields.Integer('Decimals to report result',
+        readonly=True)
+    converted_result_decimals = fields.Integer(
+        'Decimals to report converted result', readonly=True)
     backup = fields.Char('Backup', readonly=True)
     reference = fields.Char('Reference', readonly=True)
     literal_result = fields.Char('Literal result', readonly=True)
@@ -1932,6 +1944,8 @@ class NotebookLineAllFields(ModelSQL, ModelView):
             line.decimals,
             line.significant_digits,
             line.scientific_notation,
+            line.result_decimals,
+            line.converted_result_decimals,
             line.backup,
             line.reference,
             line.literal_result,
@@ -5260,6 +5274,8 @@ class NotebookRepeatAnalysis(Wizard):
             'decimals': line.decimals,
             'significant_digits': line.significant_digits,
             'scientific_notation': line.scientific_notation,
+            'result_decimals': line.result_decimals,
+            'converted_result_decimals': line.converted_result_decimals,
             'report': line.report,
             'results_estimated_waiting': (
                 line.results_estimated_waiting),
@@ -5462,6 +5478,8 @@ class NotebookLineRepeatAnalysis(Wizard):
             'decimals': line.decimals,
             'significant_digits': line.significant_digits,
             'scientific_notation': line.scientific_notation,
+            'result_decimals': line.result_decimals,
+            'converted_result_decimals': line.converted_result_decimals,
             'report': line.report,
             'results_estimated_waiting': (
                 line.results_estimated_waiting),
