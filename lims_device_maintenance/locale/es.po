@@ -163,6 +163,10 @@ msgctxt "model:ir.action,name:act_lab_device_maintenance_type_list"
 msgid "Device Maintenance Types"
 msgstr "Tipos de mantenimiento de Equipo"
 
+msgctxt "model:ir.action,name:wizard_device_discard_maintenance"
+msgid "Discard Pending Maintenance"
+msgstr "Descartar mantenimientos pendientes"
+
 msgctxt "model:ir.action,name:wizard_device_generate_maintenance_calendar"
 msgid "Generate Maintenance Calendar"
 msgstr "Generar Calendario de mantenimiento"
@@ -181,14 +185,29 @@ msgid "Are you sure you want to generate new maintenance programs?"
 msgstr "¿Está seguro que quiere generar nuevos programas de mantenimiento?"
 
 msgctxt ""
+"model:ir.model.button,confirm:maintenance_program_discard_maintenances_button"
+msgid "Are you sure you want to discard all pending scheduled maintenance?"
+msgstr "¿Está seguro que quiere descartar todos los mantenimientos programados pendientes?"
+
+msgctxt ""
 "model:ir.model.button,help:maintenance_program_create_maintenances_button"
 msgid "Generate maintenance programs"
 msgstr "Generar programas de mantenimiento"
 
 msgctxt ""
+"model:ir.model.button,help:maintenance_program_discard_maintenances_button"
+msgid "Discard pending scheduled maintenance"
+msgstr "Descartar mantenimientos programados pendientes"
+
+msgctxt ""
 "model:ir.model.button,string:maintenance_program_create_maintenances_button"
 msgid "Generate"
 msgstr "Generar"
+
+msgctxt ""
+"model:ir.model.button,string:maintenance_program_discard_maintenances_button"
+msgid "Discard pending maintenance"
+msgstr "Descartar mantenimientos pendientes"
 
 msgctxt "model:ir.ui.menu,name:menu_device_maintenance"
 msgid "Devices Maintenance"

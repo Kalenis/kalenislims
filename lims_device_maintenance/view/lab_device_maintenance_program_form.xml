@@ -45,4 +45,5 @@
         </group>
         <button name="create_maintenances" colspan="2"/>
     </group>
+    <button name="discard_maintenances" colspan="4"/>
 </form>

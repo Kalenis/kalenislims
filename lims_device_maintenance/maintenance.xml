@@ -176,11 +176,28 @@
                 search="[('model', '=', 'lims.lab.device.maintenance.program')]"/>
         </record>
 
+        <record model="ir.model.button"
+            id="maintenance_program_discard_maintenances_button">
+            <field name="name">discard_maintenances</field>
+            <field name="string">Discard pending maintenance</field>
+            <field name="confirm">Are you sure you want to discard all pending scheduled maintenance?</field>
+            <field name="help">Discard pending scheduled maintenance</field>
+            <field name="model"
+                search="[('model', '=', 'lims.lab.device.maintenance.program')]"/>
+        </record>
+
 <!-- Wizard Generate Device Maintenance Calendar -->
 
         <record model="ir.action.wizard" id="wizard_device_generate_maintenance_calendar">
             <field name="name">Generate Maintenance Calendar</field>
             <field name="wiz_name">lims.lab.device.maintenance.generate</field>
+        </record>
+
+<!-- Wizard Discard Pending Device Maintenance -->
+
+        <record model="ir.action.wizard" id="wizard_device_discard_maintenance">
+            <field name="name">Discard Pending Maintenance</field>
+            <field name="wiz_name">lims.lab.device.maintenance.discard</field>
         </record>
 
 <!-- Device Maintenance Calendar -->

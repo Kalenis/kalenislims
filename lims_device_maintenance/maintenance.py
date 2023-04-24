@@ -4,7 +4,7 @@
 from dateutil import relativedelta
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Index
-from trytond.wizard import Wizard, StateAction
+from trytond.wizard import Wizard, StateAction, StateTransition
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.pyson import PYSONEncoder, Eval
@@ -104,6 +104,8 @@ class LabDeviceMaintenanceProgram(EventCreator, ModelSQL, ModelView):
         cls._buttons.update({
             'create_maintenances': {
                 },
+            'discard_maintenances': {
+                },
             })
         t = cls.__table__()
         cls._sql_indexes.update({
@@ -171,6 +173,12 @@ class LabDeviceMaintenanceProgram(EventCreator, ModelSQL, ModelView):
                 relativedelta.relativedelta(days=-program.notice_days))
         maintenance.state = 'draft'
         return maintenance
+
+    @classmethod
+    @ModelView.button_action(
+        'lims_device_maintenance.wizard_device_discard_maintenance')
+    def discard_maintenances(cls, programs):
+        pass
 
 
 class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
@@ -368,6 +376,36 @@ class LabDeviceGenerateMaintenance(Wizard):
         return action, {}
 
     def transition_open(self):
+        return 'end'
+
+
+class LabDeviceDiscardMaintenance(Wizard):
+    'Discard Pending Device Maintenance'
+    __name__ = 'lims.lab.device.maintenance.discard'
+
+    start = StateTransition()
+
+    def transition_start(self):
+        pool = Pool()
+        MaintenanceProgram = pool.get('lims.lab.device.maintenance.program')
+        Maintenance = pool.get('lims.lab.device.maintenance')
+        Date = pool.get('ir.date')
+
+        today = Date.today()
+        program = MaintenanceProgram(Transaction().context['active_id'])
+
+        maintenances = Maintenance.search([
+            ('asset', '=', program.asset),
+            ('device', '=', program.device),
+            ('product', '=', program.product),
+            ('lot', '=', program.lot),
+            ('activity', '=', program.activity),
+            ('responsible', '=', program.responsible),
+            ('date', '>=', today),
+            ('state', '=', 'pending'),
+            ])
+        if maintenances:
+            Maintenance.discard(maintenances)
         return 'end'
 
 
