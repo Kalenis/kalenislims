@@ -296,7 +296,7 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
     @classmethod
     def check_delete(cls, maintenances):
         for m in maintenances:
-            if m.state != 'draft':
+            if m.state not in ('draft', 'discarded'):
                 raise UserError(gettext(
                     'lims_device_maintenance.msg_delete_maintenance',
                     maintenance=m.rec_name))
@@ -406,6 +406,7 @@ class LabDeviceDiscardMaintenance(Wizard):
             ])
         if maintenances:
             Maintenance.discard(maintenances)
+            Maintenance.delete(maintenances)
         return 'end'
 
 
