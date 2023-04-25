@@ -20,6 +20,32 @@ class LabDevice(metaclass=PoolMeta):
         'lims.lab.device.maintenance.program',
         'device', 'Maintenance Program')
 
+    @classmethod
+    def write(cls, *args):
+        super().write(*args)
+        actions = iter(args)
+        for devices, vals in zip(actions, actions):
+            if ('active' in vals and
+                    vals['active'] is False):
+                cls._discard_maintenances(devices)
+
+    @classmethod
+    def _discard_maintenances(cls, devices):
+        pool = Pool()
+        Maintenance = pool.get('lims.lab.device.maintenance')
+        Date = pool.get('ir.date')
+
+        today = Date.today()
+        maintenances = Maintenance.search([
+            ('asset', '=', 'device'),
+            ('device', 'in', devices),
+            ('date', '>=', today),
+            ('state', '=', 'pending'),
+            ])
+        if maintenances:
+            Maintenance.discard(maintenances)
+            Maintenance.delete(maintenances)
+
 
 class LabDeviceMaintenanceType(ModelSQL, ModelView):
     'Device Maintenance Type'
@@ -408,6 +434,36 @@ class LabDeviceDiscardMaintenance(Wizard):
             Maintenance.discard(maintenances)
             Maintenance.delete(maintenances)
         return 'end'
+
+
+class Lot(metaclass=PoolMeta):
+    __name__ = 'stock.lot'
+
+    @classmethod
+    def write(cls, *args):
+        super().write(*args)
+        actions = iter(args)
+        for lots, vals in zip(actions, actions):
+            if ('expiration_date' in vals and
+                    vals['expiration_date'] is not None):
+                cls._discard_maintenances(lots)
+
+    @classmethod
+    def _discard_maintenances(cls, lots):
+        pool = Pool()
+        Maintenance = pool.get('lims.lab.device.maintenance')
+
+        for lot in lots:
+            maintenances = Maintenance.search([
+                ('asset', '=', 'product'),
+                ('product', '=', lot.product),
+                ('lot', '=', lot),
+                ('date', '>=', lot.expiration_date),
+                ('state', '=', 'pending'),
+                ])
+            if maintenances:
+                Maintenance.discard(maintenances)
+                Maintenance.delete(maintenances)
 
 
 class Cron(metaclass=PoolMeta):
