@@ -250,7 +250,8 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
         ('done', 'Done'),
         ('discarded', 'Discarded'),
         ], 'State', readonly=True, required=True)
-    comments = fields.Text('Comments')
+    comments = fields.Text('Comments',
+        states={'readonly': Eval('state').in_(['done', 'discarded'])})
     color = fields.Function(fields.Char('Color'), 'get_color')
     device_active = fields.Function(fields.Boolean('Device active',
         states={'invisible': Eval('asset') != 'device'}), 'get_device_active')
