@@ -12599,6 +12599,14 @@ msgid "Date:"
 msgstr "Fecha:"
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Decimals to report converted result"
+msgstr "Decimales para informar resultado convertido"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "Decimals to report result"
+msgstr "Decimales para informar resultado"
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
 msgid "Default repetitions"
 msgstr "Repeticiones por defecto"
 
@@ -12743,6 +12751,10 @@ msgid "line.check_result_limits and 'X' or ''"
 msgstr ""
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.converted_result_decimals"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
 msgid "line.default_repetitions"
 msgstr ""
 
@@ -12792,6 +12804,10 @@ msgstr ""
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"
 msgid "line.report and 'X' or ''"
+msgstr ""
+
+msgctxt "report:lims.report_typification_copy.spreadsheet:"
+msgid "line.result_decimals"
 msgstr ""
 
 msgctxt "report:lims.report_typification_copy.spreadsheet:"

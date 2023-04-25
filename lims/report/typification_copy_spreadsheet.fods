@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:presentation="urn:oasis:names:tc:opendocument:xmlns:presentation:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2" office:mimetype="application/vnd.oasis.opendocument.spreadsheet">
- <office:meta><meta:creation-date>2009-04-16T11:32:48.390000000</meta:creation-date><meta:editing-duration>P9DT18H57M2S</meta:editing-duration><meta:editing-cycles>21</meta:editing-cycles><meta:generator>LibreOffice/6.0.7.3$Linux_X86_64 LibreOffice_project/00m0$Build-3</meta:generator><dc:date>2019-05-29T16:39:23.195575724</dc:date><meta:document-statistic meta:table-count="1" meta:cell-count="101" meta:object-count="0"/><meta:user-defined meta:name="Info 1"/><meta:user-defined meta:name="Info 2"/><meta:user-defined meta:name="Info 3"/><meta:user-defined meta:name="Info 4"/></office:meta>
+ <office:meta><meta:creation-date>2009-04-16T11:32:48.390000000</meta:creation-date><meta:editing-duration>P9DT18H57M2S</meta:editing-duration><meta:editing-cycles>21</meta:editing-cycles><meta:generator>LibreOffice/6.0.7.3$Linux_X86_64 LibreOffice_project/00m0$Build-3</meta:generator><dc:date>2019-05-29T16:39:23.195575724</dc:date><meta:document-statistic meta:table-count="1" meta:cell-count="109" meta:object-count="0"/><meta:user-defined meta:name="Info 1"/><meta:user-defined meta:name="Info 2"/><meta:user-defined meta:name="Info 3"/><meta:user-defined meta:name="Info 4"/></office:meta>
  <office:settings>
   <config:config-item-set config:name="ooo:view-settings">
    <config:config-item config:name="VisibleAreaTop" config:type="int">451</config:config-item>
    <config:config-item config:name="VisibleAreaLeft" config:type="int">0</config:config-item>
-   <config:config-item config:name="VisibleAreaWidth" config:type="int">88011</config:config-item>
+   <config:config-item config:name="VisibleAreaWidth" config:type="int">96012</config:config-item>
    <config:config-item config:name="VisibleAreaHeight" config:type="int">8950</config:config-item>
    <config:config-item-map-indexed config:name="Views">
     <config:config-item-map-entry>
@@ -64,7 +64,7 @@
    <config:config-item config:name="IsKernAsianPunctuation" config:type="boolean">false</config:config-item>
    <config:config-item config:name="CharacterCompressionType" config:type="short">0</config:config-item>
    <config:config-item config:name="ApplyUserData" config:type="boolean">false</config:config-item>
-   <config:config-item config:name="PrinterSetup" config:type="base64Binary">pwH+/0hQLUxhc2VySmV0LTEwMTgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ1VQUzpIUC1MYXNlckpldC0xMDE4AAAAAAAAAAAAAAAWAAMAxAAAAAAAAwAEAAhSAAAEdAAASm9iRGF0YSAxCnByaW50ZXI9SFAtTGFzZXJKZXQtMTAxOApvcmllbnRhdGlvbj1Qb3J0cmFpdApjb3BpZXM9MQpjb2xsYXRlPWZhbHNlCm1hcmdpbmRhanVzdG1lbnQ9MCwwLDAsMApjb2xvcmRlcHRoPTI0CnBzbGV2ZWw9MApwZGZkZXZpY2U9MQpjb2xvcmRldmljZT0wClBQRENvbnRleERhdGEKUGFnZVNpemU6QTQASW5wdXRTbG90OkF1dG8AABIAQ09NUEFUX0RVUExFWF9NT0RFEwBEdXBsZXhNb2RlOjpVbmtub3du</config:config-item>
+   <config:config-item config:name="PrinterSetup" config:type="base64Binary">pwH+/0hQLUxhc2VySmV0LTEwMTgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ1VQUzpIUC1MYXNlckpldC0xMDE4AAAAAAAAAAAAAAAWAAMAxAAAAAAAAwAEAAhSAAAEdAAASm9iRGF0YSAxCnByaW50ZXI9SFAtTGFzZXJKZXQtMTAxOApvcmllbnRhdGlvbj1Qb3J0cmFpdApjb3BpZXM9MQpjb2xsYXRlPWZhbHNlCm1hcmdpbmRhanVzdG1lbnQ9MCwwLDAsMApjb2xvcmRlcHRoPTI0CnBzbGV2ZWw9MApwZGZkZXZpY2U9MQpjb2xvcmRldmljZT0wClBQRENvbnRleERhdGEKSW5wdXRTbG90OkF1dG8AUGFnZVNpemU6QTQAABIAQ09NUEFUX0RVUExFWF9NT0RFEwBEdXBsZXhNb2RlOjpVbmtub3du</config:config-item>
    <config:config-item config:name="PrinterName" config:type="string">HP-LaserJet-1018</config:config-item>
    <config:config-item config:name="AutoCalculate" config:type="boolean">true</config:config-item>
    <config:config-item config:name="LinkUpdateMode" config:type="short">3</config:config-item>
@@ -285,6 +285,15 @@
   <style:style style:name="T2" style:family="text">
    <style:text-properties style:font-name-asian="Andale Sans UI" style:font-size-asian="11pt" style:font-size-complex="11pt"/>
   </style:style>
+  <style:style style:name="T3" style:family="text">
+   <style:text-properties style:font-name-asian="Andale Sans UI" fo:font-size="10pt" fo:font-weight="normal" style:text-underline-style="none" style:text-underline-color="font-color" style:text-line-through-type="none" fo:font-style="normal" style:text-outline="false" fo:text-shadow="none" style:text-line-through-mode="continuous" fo:language="zxx" fo:country="none" style:language-asian="zxx" style:country-asian="none" style:font-name="Arial" style:language-complex="zxx" style:country-complex="none" style:font-name-complex="Tahoma" style:font-size-asian="10pt" style:font-size-complex="10pt" style:font-weight-asian="normal" style:font-weight-complex="normal" style:font-style-asian="normal" style:font-style-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
+  </style:style>
+  <style:style style:name="T4" style:family="text">
+   <style:text-properties style:language-complex="zxx" style:country-complex="none" fo:font-size="10pt" fo:font-weight="normal" style:text-underline-style="none" style:text-underline-color="font-color" style:text-line-through-type="none" fo:font-style="normal" style:text-outline="false" fo:text-shadow="none" style:text-line-through-mode="continuous" fo:language="zxx" fo:country="none" style:language-asian="zxx" style:country-asian="none" style:font-name-asian="Andale Sans UI" style:font-name="Arial" style:font-name-complex="Tahoma" style:font-size-asian="10pt" style:font-size-complex="10pt" style:font-weight-asian="normal" style:font-weight-complex="normal" style:font-style-asian="normal" style:font-style-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
+  </style:style>
+  <style:style style:name="T5" style:family="text">
+   <style:text-properties style:font-name="Arial" fo:font-size="10pt" fo:font-weight="normal" style:text-underline-style="none" style:text-underline-color="font-color" style:text-line-through-type="none" fo:font-style="normal" style:text-outline="false" fo:text-shadow="none" style:text-line-through-mode="continuous" fo:language="zxx" fo:country="none" style:language-asian="zxx" style:country-asian="none" style:language-complex="zxx" style:country-complex="none" style:font-name-asian="Andale Sans UI" style:font-name-complex="Tahoma" style:font-size-asian="10pt" style:font-size-complex="10pt" style:font-weight-asian="normal" style:font-weight-complex="normal" style:font-style-asian="normal" style:font-style-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
+  </style:style>
  </office:automatic-styles>
  <office:master-styles>
   <style:master-page style:name="Default" style:page-layout-name="pm1">
@@ -303,7 +312,7 @@
      <text:p><text:sheet-name>???</text:sheet-name><text:s/>(<text:title>???</text:title>)</text:p>
     </style:region-left>
     <style:region-right>
-     <text:p><text:date style:data-style-name="N2" text:date-value="2022-08-10">00/00/0000</text:date>, <text:time style:data-style-name="N2" text:time-value="19:24:48.737014744">00:00:00</text:time></text:p>
+     <text:p><text:date style:data-style-name="N2" text:date-value="2023-04-25">00/00/0000</text:date>, <text:time style:data-style-name="N2" text:time-value="10:37:32.493409456">00:00:00</text:time></text:p>
     </style:region-right>
    </style:header>
    <style:header-left style:display="false"/>
@@ -316,9 +325,9 @@
  <office:body>
   <office:spreadsheet>
    <table:table table:name="Sheet1" table:style-name="ta1" table:print="false">
-    <table:table-column table:style-name="co1" table:number-columns-repeated="22" table:default-cell-style-name="Default"/>
+    <table:table-column table:style-name="co1" table:number-columns-repeated="24" table:default-cell-style-name="Default"/>
     <table:table-row table:style-name="ro1">
-     <table:table-cell table:number-columns-repeated="22"/>
+     <table:table-cell table:number-columns-repeated="24"/>
     </table:table-row>
     <table:table-row table:style-name="ro2">
      <table:table-cell table:style-name="ce1" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="4" table:number-rows-spanned="1">
@@ -326,32 +335,32 @@
      </table:table-cell>
      <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce7"/>
      <table:covered-table-cell/>
-     <table:table-cell table:number-columns-repeated="18"/>
+     <table:table-cell table:number-columns-repeated="20"/>
     </table:table-row>
     <table:table-row table:style-name="ro3">
      <table:table-cell table:style-name="ce2" office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T1">Date: </text:span><text:span text:style-name="T1"><text:a xlink:href="relatorio://format_date(datetime.date.today(),%20user.language)" xlink:type="simple">format_date(datetime.date.today(), user.language)</text:a></text:span></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="21"/>
+     <table:table-cell table:number-columns-repeated="23"/>
     </table:table-row>
     <table:table-row table:style-name="ro3">
      <table:table-cell table:style-name="ce2" office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T2">User: </text:span><text:span text:style-name="T2"><text:a xlink:href="relatorio://user.rec_name" xlink:type="simple">user.rec_name</text:a></text:span></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="21"/>
+     <table:table-cell table:number-columns-repeated="23"/>
     </table:table-row>
     <table:table-row table:style-name="ro4">
      <table:table-cell table:style-name="ce19"/>
-     <table:table-cell table:number-columns-repeated="21"/>
+     <table:table-cell table:number-columns-repeated="23"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce20" office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://if%20test=%22new_typifications%22" xlink:type="simple">if test=&quot;new_typifications&quot;</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="21"/>
+     <table:table-cell table:number-columns-repeated="23"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce5" office:value-type="string" calcext:value-type="string">
       <text:p>New Typifications</text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="21"/>
+     <table:table-cell table:number-columns-repeated="23"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell office:value-type="string" calcext:value-type="string">
@@ -410,6 +419,12 @@
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string">
       <text:p>Report</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Decimals to report result</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Decimals to report converted result</text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string">
       <text:p>Referred by default</text:p>
@@ -421,7 +436,7 @@
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce6" office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://for%20each=%22line%20in%20new_typifications%22" xlink:type="simple">for each=&quot;line in new_typifications&quot;</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="21"/>
+     <table:table-cell table:number-columns-repeated="23"/>
     </table:table-row>
     <table:table-row table:style-name="ro5">
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.product_type.rec_name" xlink:type="simple">line.product_type.rec_name</text:a></text:p>
@@ -464,6 +479,10 @@
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.report%20and%20&apos;X&apos;%20or%20&apos;&apos;" xlink:type="simple">line.report and &apos;X&apos; or &apos;&apos;</text:a></text:p>
      </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T3"><text:a xlink:href="relatorio://line.result_decimals" xlink:type="simple">line.result_decimals</text:a></text:span></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T5"><text:a xlink:href="relatorio://line.converted_result_decimals" xlink:type="simple">line.converted_result_decimals</text:a></text:span></text:p>
+     </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.referable%20and%20&apos;X&apos;%20or%20&apos;&apos;" xlink:type="simple">line.referable and &apos;X&apos; or &apos;&apos;</text:a></text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.by_default%20and%20&apos;X&apos;%20or%20&apos;&apos;" xlink:type="simple">line.by_default and &apos;X&apos; or &apos;&apos;</text:a></text:p>
@@ -472,26 +491,26 @@
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce6" office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio:///for" xlink:type="simple">/for</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="21"/>
+     <table:table-cell table:number-columns-repeated="23"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio:///if" xlink:type="simple">/if</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="21"/>
+     <table:table-cell table:number-columns-repeated="23"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
-     <table:table-cell table:number-columns-repeated="22"/>
+     <table:table-cell table:number-columns-repeated="24"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce20" office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://if%20test=%22existing_typifications%22" xlink:type="simple">if test=&quot;existing_typifications&quot;</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="21"/>
+     <table:table-cell table:number-columns-repeated="23"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce5" office:value-type="string" calcext:value-type="string">
       <text:p>Existing Typifications</text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="21"/>
+     <table:table-cell table:number-columns-repeated="23"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell office:value-type="string" calcext:value-type="string">
@@ -552,6 +571,12 @@
       <text:p>Report</text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Decimals to report result</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Decimals to report converted result</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
       <text:p>Referred by default</text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string">
@@ -561,7 +586,7 @@
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce6" office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://for%20each=%22line%20in%20existing_typifications%22" xlink:type="simple">for each=&quot;line in existing_typifications&quot;</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="21"/>
+     <table:table-cell table:number-columns-repeated="23"/>
     </table:table-row>
     <table:table-row table:style-name="ro5">
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.product_type.rec_name" xlink:type="simple">line.product_type.rec_name</text:a></text:p>
@@ -604,6 +629,10 @@
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.report%20and%20&apos;X&apos;%20or%20&apos;&apos;" xlink:type="simple">line.report and &apos;X&apos; or &apos;&apos;</text:a></text:p>
      </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T4"><text:a xlink:href="relatorio://line.result_decimals" xlink:type="simple">line.result_decimals</text:a></text:span></text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T5"><text:a xlink:href="relatorio://line.converted_result_decimals" xlink:type="simple">line.converted_result_decimals</text:a></text:span></text:p>
+     </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.referable%20and%20&apos;X&apos;%20or%20&apos;&apos;" xlink:type="simple">line.referable and &apos;X&apos; or &apos;&apos;</text:a></text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio://line.by_default%20and%20&apos;X&apos;%20or%20&apos;&apos;" xlink:type="simple">line.by_default and &apos;X&apos; or &apos;&apos;</text:a></text:p>
@@ -612,12 +641,12 @@
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce6" office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio:///for" xlink:type="simple">/for</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="21"/>
+     <table:table-cell table:number-columns-repeated="23"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:a xlink:href="relatorio:///if" xlink:type="simple">/if</text:a></text:p>
      </table:table-cell>
-     <table:table-cell table:number-columns-repeated="21"/>
+     <table:table-cell table:number-columns-repeated="23"/>
     </table:table-row>
    </table:table>
    <table:named-expressions/>
