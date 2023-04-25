@@ -185,7 +185,7 @@ class Address(metaclass=PoolMeta):
 
     def check_email(self):
         if self.email and not re.match(
-                r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+                r"^[a-zA-Z0-9._'%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
                 self.email):
             raise UserError(gettext('lims.msg_invalid_email'))
 
