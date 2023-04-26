@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<form>
+    <label name="name"/>
+    <field name="name"/>
+    <label name="category"/>
+    <field name="category"/>
+    <label name="key"/>
+    <field name="key"/>
+    <group id="expression" col="3" colspan="4">
+        <label name="expression"/>
+        <field name="expression"/>
+        <image name="expression_icon" xexpand="0" size="30"/>
+    </group>
+</form>

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="name"/>
+    <field name="category"/>
+    <field name="key"/>
+    <field name="expression"/>
+</tree>

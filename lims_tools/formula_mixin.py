@@ -110,6 +110,15 @@ def get_method(object, method_name, *args):
 
 FUNCTIONS['RUN_LATER'] = get_method
 
+
+class FormulaCategory(ModelSQL, ModelView):
+    'Category Formula'
+    __name__ = 'formula.template.category'
+
+    name = fields.Char('Name')
+    code = fields.Char('Code')
+
+
 class FormulaTemplate(ModelSQL, ModelView):
     'Formula Template'
     __name__ = 'formula.template'
@@ -117,6 +126,72 @@ class FormulaTemplate(ModelSQL, ModelView):
     name = fields.Char('Name')
     key = fields.Char('Key')
     expression = fields.Char('Expression')
+    category = fields.Many2One('formula.template.category', 'Category')
+    expression_icon = fields.Function(fields.Char('Expression Icon'),
+        'on_change_with_expression_icon')
+
+    def formula_error(self):
+        if not self.expression:
+            return
+        if not self.expression.startswith('='):
+            return
+        parser = formulas.Parser()
+        try:
+            builder = parser.ast(self.expression)[1]
+            # Find missing methods:
+            # https://github.com/vinci1it2000/formulas/issues/19#issuecomment-429793111
+            missing_methods = [k for k, v in builder.dsp.function_nodes.items()
+                if v['function'] is formulas.functions.not_implemented]
+            if missing_methods:
+                # When there are two occurrences of the same missing method,
+                # the function name returned looks like this:
+                #
+                # Sample formula: A(x) + A(y)
+                # missing_methods: ['A', 'A<0>']
+                #
+                # So in the line below we remove the '<0>' suffix
+                missing_methods = {x.split('<')[0] for x in missing_methods}
+                if len(missing_methods) == 1:
+                    msg = 'Unknown method: '
+                else:
+                    msg = 'Unknown methods: '
+                msg += (', '.join(missing_methods))
+                return ('error', msg)
+
+            ast = builder.compile()
+            missing = (set([x.lower() for x in ast.inputs]) -
+                self.previous_formulas())
+            if not missing:
+                return
+            return ('warning', 'Referenced alias "%s" not found. Ensure it is '
+                'declared before this formula.' % ', '.join(missing))
+        except formulas.errors.FormulaError as error:
+            msg = error.msg.replace('\n', ' ')
+            if error.args[1:]:
+                msg = msg % error.args[1:]
+            return ('error', msg)
+
+    def previous_formulas(self):
+        res = []
+        # for formula in self.interface.columns:
+        #     if formula == self:
+        #         break
+        #     res.append(formula.alias)
+        return set(res)
+
+
+    @fields.depends('expression')
+    def on_change_with_expression_icon(self, name=None):
+        if not self.expression:
+            return ''
+        if not self.expression.startswith('='):
+            return ''
+        error = self.formula_error()
+        if not error:
+            return 'lims-green'
+        if error[0] == 'warning':
+            return 'lims-yellow'
+        return 'lims-red'
 
 
 class FormulaMixin():

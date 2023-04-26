@@ -9,4 +9,5 @@ from . import formula_mixin
 def register():
     Pool.register(
         formula_mixin.FormulaTemplate,
+        formula_mixin.FormulaCategory,
         module='lims_tools', type_='model')
