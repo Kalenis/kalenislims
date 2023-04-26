@@ -972,7 +972,9 @@ class Service(ModelSQL, ModelView):
 
     @classmethod
     def copy(cls, services, default=None):
-        EntryDetailAnalysis = Pool().get('lims.entry.detail.analysis')
+        pool = Pool()
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
         if default is None:
             default = {}
@@ -984,22 +986,60 @@ class Service(ModelSQL, ModelView):
         current_default['is_additional'] = False
         current_default['additional_origins'] = None
 
-        detail_default = {}
-        if current_default.get('method', None):
-            detail_default['method'] = current_default['method']
-        if current_default.get('device', None):
-            detail_default['device'] = current_default['device']
-
         new_services = []
         for service in sorted(services, key=lambda x: x.number):
+            if service.annulled:
+                continue
             with Transaction().set_context(copying=True):
                 new_service, = super().copy([service],
                     default=current_default)
-            detail_default['service'] = new_service.id
-            detail_default['state'] = ('annulled' if service.annulled
-                else 'draft')
-            EntryDetailAnalysis.copy(service.analysis_detail,
-                default=detail_default)
+
+            if new_service.analysis.behavior == 'additional':
+                continue
+
+            analysis_data = []
+            if new_service.analysis.type == 'analysis':
+                analysis_data.append({
+                    'id': new_service.analysis.id,
+                    'origin': new_service.analysis.code,
+                    'laboratory': new_service.laboratory.id,
+                    'method': (new_service.method.id
+                        if new_service.method else None),
+                    'device': (new_service.device.id
+                        if new_service.device else None),
+                    })
+            else:
+                service_context = {
+                    'product_type': new_service.fraction.product_type.id,
+                    'matrix': new_service.fraction.matrix.id,
+                    }
+                analysis_data.extend(Service._get_included_analysis(
+                    new_service.analysis, new_service.analysis.code,
+                    service_context))
+
+            detail_state = 'annulled' if service.annulled else 'draft'
+            to_create = []
+            for analysis in analysis_data:
+                if EntryDetailAnalysis.search_count([
+                        ('fraction', '=', new_service.fraction.id),
+                        ('analysis', '=', analysis['id']),
+                        ('method', '=', analysis['method']),
+                        ]) != 0:
+                    continue
+                values = {}
+                values['service'] = new_service.id
+                values['analysis'] = analysis['id']
+                values['analysis_origin'] = analysis['origin']
+                values['laboratory'] = analysis['laboratory']
+                values['method'] = analysis['method']
+                values['device'] = analysis['device']
+                values['state'] = detail_state
+                to_create.append(values)
+
+            if to_create:
+                with Transaction().set_user(0, set_context=True):
+                    EntryDetailAnalysis.create(to_create)
+
             new_services.append(new_service)
         return new_services
 
