@@ -19,7 +19,6 @@ def _encode_args(args):
         elif type(value) in (list, tuple):
             val = [encodeArg(value, v) for v in value]
             value = val
-            print(value)
         elif issubclass(type(value), ModelSQL):
             # HIGHLIGHT THE MODEL TO DECODE EASILY
             v = tuple(str(value).split(','))
@@ -85,6 +84,8 @@ def is_number(value):
 FUNCTIONS['IS_NUMBER'] = is_number
 
 def run_method(object, method_name, *args):
+    if not object:
+        return None
     try:
         return getattr(object, method_name)(*args)
     except AttributeError:
@@ -105,7 +106,6 @@ def get_method(object, method_name, *args):
         return str(['RUN_LATER', res])
         
     except AttributeError:
-        print("get_method:Go to attribute error")
         raise UserError('Formula Failed')
 
 FUNCTIONS['RUN_LATER'] = get_method
@@ -221,20 +221,17 @@ class FormulaMixin():
         if not obj:
             return None
         value = obj
-        print("GETTING OBJECT VALUE")
-        print(value)
-        print(v)
 
         def _call_value(method, args):
             if not args:
                 args = []
             method(*args)
+
         splitted = v.split('.')
+        args = []
         if len(splitted) > 1:
             value = obj
             for dot in splitted[1:]:
-                print("Dot on run")
-                print(dot)
                 if value:
                     if '(' in dot:
                         dot, args = self._extract_function_args(dot)
@@ -243,8 +240,6 @@ class FormulaMixin():
                     else:
                         value = getattr(value, dot or '')
                         if callable(value):
-                            print("CALLING VALUE ?")
-                            print(value)
                             value = _call_value(value, args)
         # if callable(value):
         #     function_name, args = self._extract_function_args(splitted[len(splitted)-1])
@@ -275,7 +270,10 @@ class FormulaMixin():
         return value
     
     def _check_callable(self, result):
-        result = result.tolist()
+        try:
+            result = result.tolist()
+        except AttributeError:
+            return None
         if type(result) is str and 'RUN_LATER' in result:
             result = ast.literal_eval(result)
             if type(result) is list and result[0] == 'RUN_LATER':
@@ -286,24 +284,23 @@ class FormulaMixin():
                 getattr(object, method_name)(*args)
                 return True
         return None
-            
+    
+    def compile(self, formula):
+        try:
+            func = formulas.Parser().ast(formula.expression)[1].compile()
+        except formulas.errors.FormulaError:
+            return "Invalid Formula"
+
+        return func
 
     def solve_formula(self, formula_key, values):
         formula = self.get_formula(formula_key)
         if not formula:
             return ""
-        try:
-            func = formulas.Parser().ast(formula.expression)[1].compile()
-        except formulas.errors.FormulaError:
-            return "Invalid Formula"
-    
+        func = self.compile(formula)
         inputs = (' '.join([x for x in func.inputs])).lower().split()
         formula_values = [self.get_input_value(input, values) for input in inputs]
-        # print("Formula vars")
-        # print(formula_values)
         res = func(*formula_values)
-        # print("THE FUNCTION RES")
-        # print(res)
         method_run = self._check_callable(res)
         if method_run is not None:
             return method_run
