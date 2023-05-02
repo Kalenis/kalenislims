@@ -290,14 +290,14 @@ class ControlTendency(ModelSQL, ModelView):
         cls._order.insert(7, ('analysis', 'ASC'))
         cls._order.insert(8, ('concentration_level', 'ASC'))
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.family, Index.Equality())),
-            Index(t, (t.product_type, Index.Equality())),
-            Index(t, (t.matrix, Index.Equality())),
-            Index(t, (t.fraction_type, Index.Equality())),
-            Index(t, (t.analysis, Index.Equality())),
-            Index(t, (t.concentration_level, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.family, Index.Equality())),
+            #Index(t, (t.product_type, Index.Equality())),
+            #Index(t, (t.matrix, Index.Equality())),
+            #Index(t, (t.fraction_type, Index.Equality())),
+            #Index(t, (t.analysis, Index.Equality())),
+            #Index(t, (t.concentration_level, Index.Equality())),
+            #})
 
     @staticmethod
     def default_rule_1_count():

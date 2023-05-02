@@ -342,9 +342,9 @@ class Equipment(DeactivableMixin, ModelSQL, ModelView):
             ('name_unique', Unique(t, t.plant, t.name),
                 'lims_industry.msg_equipment_name_unique'),
             ]
-        cls._sql_indexes.update({
-            Index(t, (t.plant, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.plant, Index.Equality())),
+            #})
 
     @classmethod
     def create(cls, vlist):

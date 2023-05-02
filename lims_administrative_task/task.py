@@ -158,11 +158,11 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
                 },
             })
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.number, Index.Similarity())),
-            Index(t, (t.state, Index.Similarity())),
-            Index(t, (t.responsible, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.number, Index.Similarity())),
+            #Index(t, (t.state, Index.Similarity())),
+            #Index(t, (t.responsible, Index.Equality())),
+            #})
 
     @staticmethod
     def default_state():

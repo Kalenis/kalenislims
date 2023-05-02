@@ -806,9 +806,9 @@ class NotebookRule(ModelSQL, ModelView):
     def __setup__(cls):
         super().__setup__()
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.analysis, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.analysis, Index.Equality())),
+            #})
 
     @classmethod
     def _target_fields(cls):

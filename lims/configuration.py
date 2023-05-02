@@ -54,9 +54,9 @@ class NotebookViewColumn(ModelSQL, ModelView):
         super().__setup__()
         cls._order.insert(0, ('sequence', 'ASC'))
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.sequence, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.sequence, Index.Equality())),
+            #})
 
 
 class Printer(ModelSQL, ModelView):

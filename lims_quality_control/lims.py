@@ -250,9 +250,9 @@ class NotebookLine(metaclass=PoolMeta):
             'readonly': Bool(Eval('accepted')),
             }
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.quality_test, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.quality_test, Index.Equality())),
+            #})
 
     @staticmethod
     def default_quality_test_report():

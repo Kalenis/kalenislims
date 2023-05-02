@@ -91,9 +91,9 @@ class NotebookLine(metaclass=PoolMeta):
     def __setup__(cls):
         super().__setup__()
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.diagnosis_warning, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.diagnosis_warning, Index.Equality())),
+            #})
 
     @staticmethod
     def default_notify_acceptance():

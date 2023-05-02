@@ -134,10 +134,10 @@ class LabDeviceMaintenanceProgram(EventCreator, ModelSQL, ModelView):
                 },
             })
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.asset, Index.Similarity())),
-            Index(t, (t.device, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.asset, Index.Similarity())),
+            #Index(t, (t.device, Index.Equality())),
+            #})
 
     @staticmethod
     def default_asset():
@@ -281,11 +281,11 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
                 },
             })
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.asset, Index.Similarity())),
-            Index(t, (t.state, Index.Similarity())),
-            Index(t, (t.device, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.asset, Index.Similarity())),
+            #Index(t, (t.state, Index.Similarity())),
+            #Index(t, (t.device, Index.Equality())),
+            #})
 
     @staticmethod
     def default_asset():

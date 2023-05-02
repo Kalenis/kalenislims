@@ -126,9 +126,9 @@ class Planification(Workflow, ModelSQL, ModelView):
                 },
             })
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.code, Index.Similarity())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.code, Index.Similarity())),
+            #})
 
     @classmethod
     def __register__(cls, module_name):
@@ -718,10 +718,10 @@ class PlanificationDetail(ModelSQL, ModelView):
         cls._order.insert(0, ('fraction', 'ASC'))
         cls._order.insert(1, ('service_analysis', 'ASC'))
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.fraction, Index.Equality())),
-            Index(t, (t.service_analysis, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.fraction, Index.Equality())),
+            #Index(t, (t.service_analysis, Index.Equality())),
+            #})
 
     @classmethod
     def get_fraction_field(cls, details, names):
@@ -856,11 +856,11 @@ class PlanificationServiceDetail(ModelSQL, ModelView):
     def __setup__(cls):
         super().__setup__()
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.notebook_line, Index.Equality())),
-            Index(t, (t.is_control, Index.Equality())),
-            Index(t, (t.is_replanned, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.notebook_line, Index.Equality())),
+            #Index(t, (t.is_control, Index.Equality())),
+            #Index(t, (t.is_replanned, Index.Equality())),
+            #})
 
     @staticmethod
     def default_is_control():
@@ -1031,11 +1031,11 @@ class LabProfessionalMethod(ModelSQL, ModelView):
                 Unique(t, t.professional, t.method, t.type),
                 'lims.msg_professional_method_unique_id'),
             ]
-        cls._sql_indexes.update({
-            Index(t, (t.professional, Index.Equality())),
-            Index(t, (t.method, Index.Equality())),
-            Index(t, (t.type, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.professional, Index.Equality())),
+            #Index(t, (t.method, Index.Equality())),
+            #Index(t, (t.type, Index.Equality())),
+            #})
 
     def get_determination(self, name=None):
         if self.method:

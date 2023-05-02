@@ -219,9 +219,9 @@ class FractionType(ModelSQL, ModelView):
             ('code_uniq', Unique(t, t.code),
                 'lims.msg_fraction_type_code_unique_id'),
             ]
-        cls._sql_indexes.update({
-            Index(t, (t.plannable, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.plannable, Index.Equality())),
+            #})
 
     @staticmethod
     def default_requalify():
@@ -425,10 +425,10 @@ class Service(ModelSQL, ModelView):
         super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.number, Index.Similarity())),
-            Index(t, (t.analysis, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.number, Index.Similarity())),
+            #Index(t, (t.analysis, Index.Equality())),
+            #})
 
     @classmethod
     def __register__(cls, module_name):
@@ -1807,11 +1807,11 @@ class Fraction(ModelSQL, ModelView):
                 },
             })
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.number, Index.Similarity())),
-            Index(t, (t.type, Index.Equality())),
-            Index(t, (t.confirmed, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.number, Index.Similarity())),
+            #Index(t, (t.type, Index.Equality())),
+            #Index(t, (t.confirmed, Index.Equality())),
+            #})
 
     @classmethod
     def __register__(cls, module_name):
@@ -2922,9 +2922,9 @@ class Sample(ModelSQL, ModelView):
                 },
             })
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.number, Index.Similarity())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.number, Index.Similarity())),
+            #})
 
     @classmethod
     def __register__(cls, module_name):
@@ -7570,9 +7570,9 @@ class Referral(ModelSQL, ModelView):
                 },
             })
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.number, Index.Similarity())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.number, Index.Similarity())),
+            #})
 
     @staticmethod
     def default_date():

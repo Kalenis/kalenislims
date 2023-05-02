@@ -107,10 +107,10 @@ class TableField(ModelSQL, ModelView):
     def __setup__(cls):
         super().__setup__()
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.transfer_field, Index.Equality())),
-            Index(t, (t.related_line_field, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.transfer_field, Index.Equality())),
+            #Index(t, (t.related_line_field, Index.Equality())),
+            #})
 
     def get_ast(self):
         parser = formulas.Parser()

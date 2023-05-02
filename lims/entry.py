@@ -174,13 +174,13 @@ class Entry(Workflow, ModelSQL, ModelView):
                 },
             })
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.number, Index.Similarity())),
-            Index(t, (t.state, Index.Similarity())),
-            Index(t, (t.single_sending_report, Index.Equality())),
-            Index(t, (t.entry_single_sending_report, Index.Equality())),
-            Index(t, (t.multi_party, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.number, Index.Similarity())),
+            #Index(t, (t.state, Index.Similarity())),
+            #Index(t, (t.single_sending_report, Index.Equality())),
+            #Index(t, (t.entry_single_sending_report, Index.Equality())),
+            #Index(t, (t.multi_party, Index.Equality())),
+            #})
 
     @classmethod
     def __register__(cls, module_name):
@@ -1162,12 +1162,12 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         super().__setup__()
         cls._order.insert(0, ('service', 'DESC'))
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.state, Index.Similarity())),
-            Index(t, (t.analysis, Index.Equality())),
-            Index(t, (t.plannable, Index.Equality())),
-            Index(t, (t.referable, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.state, Index.Similarity())),
+            #Index(t, (t.analysis, Index.Equality())),
+            #Index(t, (t.plannable, Index.Equality())),
+            #Index(t, (t.referable, Index.Equality())),
+            #})
 
     @staticmethod
     def default_fraction():

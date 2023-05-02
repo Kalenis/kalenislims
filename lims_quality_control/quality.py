@@ -32,9 +32,9 @@ class QualitativeValue(DeactivableMixin, ModelSQL, ModelView):
         cls.name.search_unaccented = False
         super().__setup__()
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.name, Index.Similarity())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.name, Index.Similarity())),
+            #})
 
 
 class Template(Workflow, ModelSQL, ModelView):
@@ -108,11 +108,11 @@ class Template(Workflow, ModelSQL, ModelView):
                 },
             })
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.name, Index.Similarity())),
-            Index(t, (t.product, Index.Equality())),
-            Index(t, (t.company, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.name, Index.Similarity())),
+            #Index(t, (t.product, Index.Equality())),
+            #Index(t, (t.company, Index.Equality())),
+            #})
 
     @classmethod
     def default_revision(cls):
@@ -257,10 +257,10 @@ class QualityTest(Workflow, ModelSQL, ModelView):
                 },
             })
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.number, Index.Similarity())),
-            Index(t, (t.company, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.number, Index.Similarity())),
+            #Index(t, (t.company, Index.Equality())),
+            #})
 
     def get_success(self, name):
         if not self.lines:

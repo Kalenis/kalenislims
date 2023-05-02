@@ -111,9 +111,9 @@ class Address(metaclass=PoolMeta):
     def __setup__(cls):
         super().__setup__()
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.equipment, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.equipment, Index.Equality())),
+            #})
 
     @staticmethod
     def default_country():

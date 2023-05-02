@@ -134,10 +134,10 @@ class ResultsReport(ModelSQL, ModelView):
         super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.number, Index.Similarity())),
-            Index(t, (t.entry, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.number, Index.Similarity())),
+            #Index(t, (t.entry, Index.Equality())),
+            #})
 
     @staticmethod
     def default_report_grouper():
@@ -621,9 +621,9 @@ class ResultsReportVersion(ModelSQL, ModelView):
         super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.number, Index.Similarity())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.number, Index.Similarity())),
+            #})
 
     def get_report_type(self, name):
         ResultsDetail = Pool().get('lims.results_report.version.detail')
@@ -877,9 +877,9 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                 },
             })
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.number, Index.Similarity())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.number, Index.Similarity())),
+            #})
 
     @classmethod
     def __register__(cls, module_name):
@@ -2055,9 +2055,9 @@ class ResultsReportVersionDetailSample(
         super().__setup__()
         cls._order.insert(1, ('notebook.fraction', 'ASC'))
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.notebook, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.notebook, Index.Equality())),
+            #})
 
     def get_rec_name(self, name):
         return self.notebook.rec_name
@@ -2211,10 +2211,10 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         super().__setup__()
         cls._order.insert(0, ('analysis_order', 'ASC'))
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.notebook_line, Index.Equality())),
-            Index(t, (t.hide, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.notebook_line, Index.Equality())),
+            #Index(t, (t.hide, Index.Equality())),
+            #})
 
     @staticmethod
     def default_hide():

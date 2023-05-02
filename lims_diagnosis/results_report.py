@@ -471,9 +471,9 @@ class SamplesComparatorLine(ModelSQL, ModelView):
     def __setup__(cls):
         super().__setup__()
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.notebook_line, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.notebook_line, Index.Equality())),
+            #})
 
     @classmethod
     def get_nline_field(cls, lines, names):

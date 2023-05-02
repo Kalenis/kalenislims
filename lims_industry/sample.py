@@ -148,9 +148,9 @@ class Sample(metaclass=PoolMeta):
         cls.matrix.states['readonly'] = Bool(Eval('comercial_product'))
         cls.attributes.domain = [('id', 'in', Eval('attributes_domain'))]
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.equipment, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.equipment, Index.Equality())),
+            #})
 
     @staticmethod
     def default_ind_equipment_uom():

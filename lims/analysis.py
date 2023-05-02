@@ -132,14 +132,14 @@ class Typification(ModelSQL, ModelView):
                     Unique(t, t.product_type, t.matrix, t.analysis, t.method),
                     'lims.msg_typification_unique_id'),
                 ]
-        cls._sql_indexes.update({
-            Index(t, (t.product_type, Index.Equality())),
-            Index(t, (t.matrix, Index.Equality())),
-            Index(t, (t.analysis, Index.Equality())),
-            Index(t, (t.method, Index.Equality())),
-            Index(t, (t.by_default, Index.Equality())),
-            Index(t, (t.valid, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.product_type, Index.Equality())),
+            #Index(t, (t.matrix, Index.Equality())),
+            #Index(t, (t.analysis, Index.Equality())),
+            #Index(t, (t.method, Index.Equality())),
+            #Index(t, (t.by_default, Index.Equality())),
+            #Index(t, (t.valid, Index.Equality())),
+            #})
 
     @staticmethod
     def default_limit_digits():
@@ -620,10 +620,10 @@ class CalculatedTypification(ModelSQL):
     def __setup__(cls):
         super().__setup__()
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.product_type, Index.Equality())),
-            Index(t, (t.matrix, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.product_type, Index.Equality())),
+            #Index(t, (t.matrix, Index.Equality())),
+            #})
 
     @classmethod
     def __register__(cls, module_name):
@@ -860,10 +860,10 @@ class ObjectiveDescription(ModelSQL, ModelView):
             ('product_matrix_uniq', Unique(t, t.product_type, t.matrix),
                 'lims.msg_objective_description_unique_id'),
             ]
-        cls._sql_indexes.update({
-            Index(t, (t.product_type, Index.Equality())),
-            Index(t, (t.matrix, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.product_type, Index.Equality())),
+            #Index(t, (t.matrix, Index.Equality())),
+            #})
 
 
 class Formula(ModelSQL, ModelView):
@@ -1061,10 +1061,10 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 'invisible': (Eval('state') != 'disabled'),
                 },
             })
-        cls._sql_indexes.update({
-            Index(t, (t.code, Index.Similarity())),
-            Index(t, (t.automatic_acquisition, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.code, Index.Similarity())),
+            #Index(t, (t.automatic_acquisition, Index.Equality())),
+            #})
 
     @staticmethod
     def default_behavior():
@@ -1728,9 +1728,9 @@ class AnalysisIncluded(ModelSQL, ModelView):
     def __setup__(cls):
         super().__setup__()
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.included_analysis, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.included_analysis, Index.Equality())),
+            #})
 
     @classmethod
     def validate(cls, included_analysis):

@@ -315,9 +315,9 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
     def __setup__(cls):
         super().__setup__()
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.analysis, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.analysis, Index.Equality())),
+            #})
 
     @fields.depends('analysis', '_parent_analysis.methods')
     def on_change_with_method_domain(self, name=None):

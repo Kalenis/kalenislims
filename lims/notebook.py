@@ -1041,19 +1041,19 @@ class NotebookLine(ModelSQL, ModelView):
         cls._order.insert(0, ('analysis_order', 'ASC'))
         cls._order.insert(1, ('repetition', 'ASC'))
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.analysis, Index.Equality())),
-            Index(t, (t.start_date, Index.Range())),
-            Index(t, (t.end_date, Index.Range())),
-            Index(t, (t.laboratory, Index.Equality())),
-            Index(t, (t.result_modifier, Index.Equality())),
-            Index(t, (t.converted_result_modifier, Index.Equality())),
-            Index(t, (t.concentration_level, Index.Equality())),
-            Index(t, (t.report, Index.Equality())),
-            Index(t, (t.accepted, Index.Equality())),
-            Index(t, (t.annulled, Index.Equality())),
-            Index(t, (t.results_report, Index.Equality())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.analysis, Index.Equality())),
+            #Index(t, (t.start_date, Index.Range())),
+            #Index(t, (t.end_date, Index.Range())),
+            #Index(t, (t.laboratory, Index.Equality())),
+            #Index(t, (t.result_modifier, Index.Equality())),
+            #Index(t, (t.converted_result_modifier, Index.Equality())),
+            #Index(t, (t.concentration_level, Index.Equality())),
+            #Index(t, (t.report, Index.Equality())),
+            #Index(t, (t.accepted, Index.Equality())),
+            #Index(t, (t.annulled, Index.Equality())),
+            #Index(t, (t.results_report, Index.Equality())),
+            #})
 
     @staticmethod
     def default_repetition():

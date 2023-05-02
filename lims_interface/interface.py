@@ -1570,9 +1570,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
                 },
             })
         t = cls.__table__()
-        cls._sql_indexes.update({
-            Index(t, (t.date_time, Index.Range())),
-            })
+        #cls._sql_indexes.update({
+            #Index(t, (t.date_time, Index.Range())),
+            #})
 
     def get_rec_name(self, name):
         return self.interface.rec_name + ' / ' + str(self.revision)
