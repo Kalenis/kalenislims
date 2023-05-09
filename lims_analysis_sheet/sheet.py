@@ -709,11 +709,14 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         Data = pool.get('lims.interface.data')
         NotebookLine = pool.get('lims.notebook.line')
         Compilation = pool.get('lims.interface.compilation')
+        Date = pool.get('ir.date')
+
+        today = Date.today()
 
         for s in sheets:
             t_analysis_ids = [ta.analysis.id for ta in s.template.analysis]
 
-            notebooks_ids = []
+            notebooks_ids, notebook_lines_ids = [], []
             with Transaction().set_context(
                     lims_interface_table=s.compilation.table.id):
                 lines = Data.search([('compilation', '=', s.compilation.id)])
@@ -721,6 +724,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     nb_line = line.notebook_line
                     if nb_line:
                         notebooks_ids.append(nb_line.notebook.id)
+                        notebook_lines_ids.append(nb_line.id)
             if notebooks_ids:
                 clause = [
                     ('notebook', 'in', notebooks_ids),
@@ -733,6 +737,11 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 notebook_lines = NotebookLine.search(clause)
                 if notebook_lines:
                     s.create_lines(notebook_lines)
+                    notebook_lines_ids.extend(nl.id for nl in notebook_lines)
+
+                notebook_lines = NotebookLine.browse(notebook_lines_ids)
+                NotebookLine.write(notebook_lines,
+                    {'analysis_sheet_activated_date': today})
 
         Compilation.activate([s.compilation for s in sheets])
 

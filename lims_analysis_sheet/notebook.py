@@ -25,6 +25,8 @@ class NotebookLine(metaclass=PoolMeta):
 
     analysis_sheet = fields.Many2One('lims.analysis_sheet', 'Analysis Sheet',
         readonly=True)
+    analysis_sheet_activated_date = fields.Date(
+        'Analysis sheet activation date', readonly=True)
 
     def get_analysis_sheet_template(self):
         cursor = Transaction().connection.cursor()
@@ -141,12 +143,24 @@ class NotebookLine(metaclass=PoolMeta):
         return None
 
     @classmethod
+    def copy(cls, notebook_lines, default=None):
+        if default is None:
+            default = {}
+        current_default = default.copy()
+        current_default['analysis_sheet_activated_date'] = None
+        return super().copy(notebook_lines, default=current_default)
+
+    @classmethod
     def write(cls, *args):
+        Sample = Pool().get('lims.sample')
         super().write(*args)
         actions = iter(args)
         for lines, vals in zip(actions, actions):
             if 'annulled' in vals:
                 cls.update_analysis_sheet_line(lines, vals['annulled'])
+            if 'analysis_sheet_activated_date' in vals:
+                sample_ids = list(set(nl.sample.id for nl in lines))
+                Sample.update_samples_state(sample_ids)
 
     @staticmethod
     def update_analysis_sheet_line(nb_lines, annulled):

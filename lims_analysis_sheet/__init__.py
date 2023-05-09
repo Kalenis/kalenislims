@@ -8,6 +8,7 @@ from . import sheet
 from . import interface
 from . import planification
 from . import notebook
+from . import sample
 from . import laboratory
 
 
@@ -48,6 +49,7 @@ def register():
         notebook.EditMultiSampleDataStart,
         notebook.MultiSampleData,
         notebook.MoveDataStart,
+        sample.Sample,
         laboratory.LabDevice,
         laboratory.LabDeviceConstant,
         laboratory.NotebookRule,
