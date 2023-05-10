@@ -12,4 +12,7 @@
             <field name="printer"/>
         </page>
     </xpath>
+    <xpath expr="/form/notebook/page[@id='user']/separator[@name='signature']" position="after">
+        <field colspan="4" xfill="0" xexpand="1" name="signature_image" height="200" width="200" widget="image"/>
+    </xpath>
 </data>

@@ -7136,6 +7136,10 @@ msgctxt "field:res.user,printer:"
 msgid "Printer"
 msgstr "Impresora"
 
+msgctxt "field:res.user,signature_image:"
+msgid "Signature"
+msgstr "Firma"
+
 msgctxt "field:stock.location,internal_shipment_to_location_restrictions:"
 msgid "Internal Shipment To Location Restrictions"
 msgstr "Restricciones de Destinos de Envíos Internos"
