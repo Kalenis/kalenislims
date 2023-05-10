@@ -72,6 +72,7 @@ class User(metaclass=PoolMeta):
         domain=[('id', 'in', Eval('laboratories'))], depends=['laboratories'])
     printer = fields.Many2One('lims.printer', 'Printer')
     departments = fields.One2Many('user.department', 'user', 'Departments')
+    signature_image = fields.Binary('Signature')
 
     @classmethod
     def __setup__(cls):
