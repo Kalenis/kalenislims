@@ -419,6 +419,14 @@ class PopulateInvoiceContacts(Wizard):
 
         invoice = Invoice(Transaction().context['active_id'])
 
+        # clean entry fields
+        invoice.entries_comments = None
+        invoice.save()
+        invoice_contacts = InvoiceContacts.search([
+            ('invoice', '=', invoice)])
+        if invoice_contacts:
+            InvoiceContacts.delete(invoice_contacts)
+
         lines = InvoiceLine.search([
             ('invoice', '=', invoice.id),
             ])
@@ -448,6 +456,7 @@ class PopulateInvoiceContacts(Wizard):
         invoice.entries_comments = entries_comments
         invoice.save()
 
+        # Set entries contacts
         entry_invoice_contacts = EntryInvoiceContacts.search([
             ('entry', 'in', entry_ids),
             ])
