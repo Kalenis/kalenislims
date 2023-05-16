@@ -34,16 +34,18 @@ class NotebookLine(metaclass=PoolMeta):
 
 
 class BaseImport(object):
-    __slots__ = ()
+    __slots__ = ('__dict__',)
 
-    controller = None
-    infile = None
-    rawresults = {}
-    mimetype = None
-    numline = 0
-    analysis_code = None
-    formula = None
-    header = []
+    def __init__(self, id=None, **kwargs):
+        self.controller = None
+        self.infile = None
+        self.rawresults = {}
+        self.mimetype = None
+        self.numline = 0
+        self.analysis_code = None
+        self.formula = None
+        self.header = []
+        super().__init__(id, **kwargs)
 
     def getInputFile(self):
         return self.infile
