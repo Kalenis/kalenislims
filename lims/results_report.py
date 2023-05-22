@@ -151,7 +151,8 @@ class ResultsReport(ModelSQL, ModelView):
 
         vlist = [x.copy() for x in vlist]
         for values in vlist:
-            values['number'] = sequence.get()
+            if 'number' not in values:
+                values['number'] = sequence.get()
         return super().create(vlist)
 
     @classmethod
