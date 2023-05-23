@@ -315,11 +315,15 @@ class Data(ModelSQL, ModelView):
                         group_values = getattr(self, 'group_%s' % group)
                         if not group_values:
                             continue
+                        iter_found = False
                         for line in group_values:
                             if line['iteration'] == int(
                                     input_.split('_')[-1:][0]):
                                 inputs.append(line[
                                     '_'.join(input_.split('_')[:-1])])
+                                iter_found = True
+                        if not iter_found:
+                            inputs.append(None)
                         found = True
                 if not found:
                     inputs.append(getattr(self, input_))
