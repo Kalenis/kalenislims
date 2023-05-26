@@ -397,7 +397,7 @@ class LimsReport(Report):
         record = records[0]
         template_id, tcontent, theader, tfooter = (
             cls.get_lims_template(action, record))
-        context = Transaction().context
+        context = Transaction().context.copy()
         context['template'] = template_id
         if not template_id:
             context['default_translations'] = os.path.join(
