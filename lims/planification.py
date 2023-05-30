@@ -1957,7 +1957,15 @@ class AddFractionControl(Wizard):
             'date': datetime.now(),
             'label': self.start.label,
             'obj_description': obj_description,
+            'packages': [],
             'fractions': [],
+            })
+        Sample.write([new_sample], {
+            'packages': [('create', [{
+                'quantity': 1,
+                'type': fraction_type.default_package_type.id,
+                'state': fraction_type.default_fraction_state.id,
+                }])],
             })
 
         # new fraction
@@ -2445,7 +2453,15 @@ class AddFractionRMBMZ(Wizard):
             'date': datetime.now(),
             'label': self.start.label,
             'obj_description': obj_description,
+            'packages': [],
             'fractions': [],
+            })
+        Sample.write([new_sample], {
+            'packages': [('create', [{
+                'quantity': 1,
+                'type': fraction_type.default_package_type.id,
+                'state': fraction_type.default_fraction_state.id,
+                }])],
             })
 
         # new fraction
