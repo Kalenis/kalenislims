@@ -4781,9 +4781,6 @@ class NotebookRepeatAnalysis(Wizard):
             }
         return default
 
-    def _unaccept_original(self):
-        return True
-
     def transition_repeat(self):
         pool = Pool()
         Analysis = pool.get('lims.analysis')
@@ -4812,11 +4809,7 @@ class NotebookRepeatAnalysis(Wizard):
             to_update = []
             details_to_update = []
             for analysis_id in analysis_to_repeat:
-                clause = [
-                    ('notebook', '=', notebook.id),
-                    ('analysis', '=', analysis_id),
-                    ('analysis.behavior', '=', 'normal'),
-                    ]
+                clause = self._get_original_clause(notebook.id, analysis_id)
                 nlines = NotebookLine.search(clause,
                     order=[('repetition', 'DESC')], limit=1)
                 if not nlines:
@@ -4856,6 +4849,14 @@ class NotebookRepeatAnalysis(Wizard):
 
         return 'end'
 
+    def _get_original_clause(self, notebook_id, analysis_id):
+        clause = [
+            ('notebook', '=', notebook_id),
+            ('analysis', '=', analysis_id),
+            ('analysis.behavior', '=', 'normal'),
+            ]
+        return clause
+
     def _get_repetition_defaults(self, line):
         defaults = {
             'analysis_detail': line.analysis_detail.id,
@@ -4890,6 +4891,9 @@ class NotebookRepeatAnalysis(Wizard):
         if line.accepted and not self._unaccept_original():
             defaults['report'] = False
         return defaults
+
+    def _unaccept_original(self):
+        return True
 
 
 class NotebookLineRepeatAnalysisStart(ModelView):
@@ -4976,9 +4980,6 @@ class NotebookLineRepeatAnalysis(Wizard):
             default['method'] = notebook_line.method.id
         return default
 
-    def _unaccept_original(self):
-        return True
-
     def transition_repeat(self):
         pool = Pool()
         Analysis = pool.get('lims.analysis')
@@ -5009,13 +5010,7 @@ class NotebookLineRepeatAnalysis(Wizard):
         to_update = []
         details_to_update = []
         for analysis_id in analysis_to_repeat:
-            clause = [
-                ('notebook', '=', notebook.id),
-                ('analysis', '=', analysis_id),
-                ('analysis.behavior', '=', 'normal'),
-                ]
-            if self.start.method:
-                clause.append(('method', '=', self.start.method.id))
+            clause = self._get_original_clause(notebook.id, analysis_id)
             nlines = NotebookLine.search(clause,
                 order=[('repetition', 'DESC')], limit=1)
             if not nlines:
@@ -5057,6 +5052,16 @@ class NotebookLineRepeatAnalysis(Wizard):
 
         return 'end'
 
+    def _get_original_clause(self, notebook_id, analysis_id):
+        clause = [
+            ('notebook', '=', notebook_id),
+            ('analysis', '=', analysis_id),
+            ('analysis.behavior', '=', 'normal'),
+            ]
+        if self.start.method:
+            clause.append(('method', '=', self.start.method.id))
+        return clause
+
     def _get_repetition_defaults(self, line):
         defaults = {
             'analysis_detail': line.analysis_detail.id,
@@ -5091,6 +5096,9 @@ class NotebookLineRepeatAnalysis(Wizard):
         if line.accepted and not self._unaccept_original():
             defaults['report'] = False
         return defaults
+
+    def _unaccept_original(self):
+        return True
 
     def end(self):
         return 'reload'
