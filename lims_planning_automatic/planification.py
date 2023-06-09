@@ -43,6 +43,8 @@ class Planification(metaclass=PoolMeta):
                     s.save()
             planification.save()
 
+            planification.load_analysis_sheets()
+
             session_id, _, _ = TechniciansQualification.create()
             technicians_qualification = TechniciansQualification(session_id)
             with Transaction().set_context(active_id=planification.id):
