@@ -132,6 +132,7 @@ class Planification(metaclass=PoolMeta):
                 ('professional', '=', key[1]),
                 ('analysis_sheet.template', '=', key[0]),
                 ('analysis_sheet.state', 'in', ['draft', 'active']),
+                ('analysis_sheet.date2', '=', self.start_date),
                 ])
             if planification_sheet:
                 sheet = AnalysisSheet(planification_sheet[0].analysis_sheet.id)

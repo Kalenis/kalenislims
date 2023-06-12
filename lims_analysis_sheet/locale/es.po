@@ -38,6 +38,10 @@ msgctxt "field:lims.analysis_sheet,date:"
 msgid "Date"
 msgstr "Fecha"
 
+msgctxt "field:lims.analysis_sheet,date2:"
+msgid "Date"
+msgstr "Fecha"
+
 msgctxt "field:lims.analysis_sheet,interface:"
 msgid "Interface"
 msgstr "Interfaz"
