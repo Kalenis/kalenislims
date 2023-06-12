@@ -420,6 +420,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     number = fields.Char('Number', readonly=True)
     date = fields.Function(fields.DateTime('Date'), 'get_date',
         searcher='search_date')
+    date2 = fields.Function(fields.Date('Date'), 'get_date2',
+        searcher='search_date2')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('active', 'Active'),
@@ -547,6 +549,44 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     @classmethod
     def search_planning_date(cls, name, clause):
         return [('planification.date',) + tuple(clause[1:])]
+
+    def get_date2(self, name):
+        pool = Pool()
+        Company = pool.get('company.company')
+
+        date = self.compilation.date_time
+        if not date:
+            return None
+        company_id = Transaction().context.get('company')
+        if company_id:
+            date = Company(company_id).convert_timezone_datetime(date)
+        return date.date()
+
+    @classmethod
+    def search_date2(cls, name, clause):
+        pool = Pool()
+        Company = pool.get('company.company')
+        Compilation = pool.get('lims.interface.compilation')
+        cursor = Transaction().connection.cursor()
+
+        timezone = None
+        company_id = Transaction().context.get('company')
+        if company_id:
+            timezone = Company(company_id).timezone
+        timezone_datetime = 'c.date_time::timestamp AT TIME ZONE \'UTC\''
+        if timezone:
+            timezone_datetime += ' AT TIME ZONE \'' + timezone + '\''
+
+        operator_ = clause[1:2][0]
+        cursor.execute('SELECT s.id '
+                'FROM "' + cls._table + '" s '
+                    'INNER JOIN "' + Compilation._table + '" c '
+                    'ON s.compilation = c.id '
+                'WHERE (' + timezone_datetime + ')::date ' +
+                operator_ + ' %s::date', clause[2:3])
+        return [('id', 'in', [x[0] for x in cursor.fetchall()])]
+
+    order_date2 = order_date
 
     @classmethod
     def get_fields(cls, sheets, names):
