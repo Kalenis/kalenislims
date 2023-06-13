@@ -353,9 +353,51 @@ class Interface(Workflow, ModelSQL, ModelView):
         Field = pool.get('lims.interface.table.field')
         GroupedField = pool.get('lims.interface.table.grouped_field')
 
+        def _clean_v_function(formula):
+            formula = formula.replace(' ', '')
+            parser = formulas.Parser()
+            column_pattern = 'V\(notebook_line,"[a-zA-Z\_0-9]+'
+            iter_pattern = '","[0-9\+\-\*0-9]+"\)'
+            for v_func in re.findall(column_pattern + iter_pattern, formula):
+                part1 = re.findall(column_pattern, v_func)[0]
+                column = part1.replace('V(notebook_line,"', '')
+                part2 = re.findall(iter_pattern, v_func)[0]
+                iteration = part2.replace('","', '').replace('")', '')
+                ast = parser.ast('=%s' % str(iteration))[1].compile()
+                iteration = str(int(ast()))
+                v_var = '%s_%s' % (column, iteration)
+                formula = formula.replace(v_func, v_var)
+            return formula
+
+        def _clean_iter_function(formula):
+            formula = formula.replace(' ', '')
+            parser = formulas.Parser()
+            column_pattern = 'ITER\("[a-zA-Z\_0-9]+'
+            iter_pattern = '","[0-9\+\-\*0-9]+"\)'
+            for iter_func in re.findall(column_pattern + iter_pattern,
+                    formula):
+                part1 = re.findall(column_pattern, iter_func)[0]
+                column = part1.replace('ITER("', '')
+                part2 = re.findall(iter_pattern, iter_func)[0]
+                iteration = part2.replace('","', '').replace('")', '')
+                ast = parser.ast('=%s' % str(iteration))[1].compile()
+                iteration = str(int(ast()))
+                iter_var = '"%s_%s"' % (column, iteration)
+                formula = formula.replace(iter_func, iter_var)
+            return formula
+
+        def get_formula(formula):
+            if not formula or not formula.startswith('='):
+                return None
+            formula = _clean_v_function(formula)
+            formula = _clean_iter_function(formula)
+            return formula
+
         def get_inputs(formula):
-            if not formula:
-                return
+            if not formula or not formula.startswith('='):
+                return None
+            formula = _clean_v_function(formula)
+            formula = _clean_iter_function(formula)
             parser = formulas.Parser()
             ast = parser.ast(formula)[1].compile()
             return (' '.join([x for x in ast.inputs])).lower()
@@ -396,14 +438,8 @@ class Interface(Workflow, ModelSQL, ModelView):
                                         column.related_line_field),
                                     related_model=column.related_model,
                                     selection=column.selection,
-                                    formula=(column.expression if
-                                        column.expression and
-                                        column.expression.startswith('=') else
-                                        None),
-                                    inputs=(get_inputs(column.expression) if
-                                        column.expression and
-                                        column.expression.startswith('=') else
-                                        None),
+                                    formula=get_formula(column.expression),
+                                    inputs=get_inputs(column.expression),
                                     required=column.required,
                                     readonly=column.readonly,
                                     invisible=column.invisible,
@@ -433,13 +469,8 @@ class Interface(Workflow, ModelSQL, ModelView):
                                     domain=column.domain,
                                     related_model=column.related_model,
                                     selection=column.selection,
-                                    formula=(expression if
-                                        expression and
-                                        expression.startswith('=') else
-                                        None),
-                                    inputs=(get_inputs(expression) if
-                                        expression and
-                                        expression.startswith('=') else None),
+                                    formula=get_formula(expression),
+                                    inputs=get_inputs(expression),
                                     required=column.required,
                                     readonly=column.readonly,
                                     invisible=column.invisible,
@@ -465,11 +496,8 @@ class Interface(Workflow, ModelSQL, ModelView):
                                 related_line_field=column.related_line_field,
                                 related_model=column.related_model,
                                 selection=column.selection,
-                                formula=(expression if expression and
-                                    expression.startswith('=') else None),
-                                inputs=(get_inputs(expression)
-                                    if expression and
-                                    expression.startswith('=') else None),
+                                formula=get_formula(expression),
+                                inputs=get_inputs(expression),
                                 required=column.required,
                                 readonly=column.readonly,
                                 invisible=column.invisible,
@@ -500,14 +528,8 @@ class Interface(Workflow, ModelSQL, ModelView):
                             related_line_field=column.related_line_field,
                             related_model=column.related_model,
                             selection=column.selection,
-                            formula=(column.expression if
-                                column.expression and
-                                column.expression.startswith('=') else
-                                None),
-                            inputs=(get_inputs(column.expression) if
-                                column.expression and
-                                column.expression.startswith('=') else
-                                None),
+                            formula=get_formula(column.expression),
+                            inputs=get_inputs(column.expression),
                             required=column.required,
                             readonly=column.readonly,
                             invisible=column.invisible,
