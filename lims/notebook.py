@@ -5184,14 +5184,17 @@ class NotebookRepeatAnalysis(Wizard):
         return default
 
     def transition_repeat(self):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
         Analysis = pool.get('lims.analysis')
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Config = pool.get('lims.configuration')
+        Typification = pool.get('lims.typification')
 
         config = Config(1)
+        default_language = config.results_report_language
 
         analysis_to_repeat = []
         for analysis in self.start.analysis:
@@ -5207,8 +5210,8 @@ class NotebookRepeatAnalysis(Wizard):
                 rm_start_uom = (config.rm_start_uom.id if config.rm_start_uom
                     else None)
 
-            to_create = []
-            to_update = []
+            lines_to_create = []
+            lines_to_update = []
             details_to_update = []
             for analysis_id in analysis_to_repeat:
                 clause = self._get_original_clause(notebook.id, analysis_id)
@@ -5228,16 +5231,40 @@ class NotebookRepeatAnalysis(Wizard):
                     defaults['quantification_limit'] = None
                     defaults['lower_limit'] = None
                     defaults['upper_limit'] = None
-                to_create.append(defaults)
+                lines_to_create.append(defaults)
                 if not nline_to_repeat.results_report:
-                    to_update.append(nline_to_repeat)
+                    lines_to_update.append(nline_to_repeat)
                 details_to_update.append(nline_to_repeat.analysis_detail.id)
 
-            Notebook.write([notebook], {
-                'lines': [('create', to_create)],
-                })
+            with Transaction().set_context(_check_access=False):
+                lines = NotebookLine.create(lines_to_create)
+
+            # copy translated fields from typification
+            for line in lines:
+                t = Typification.get_valid_typification(
+                    line.product_type.id, line.matrix.id,
+                    line.analysis.id, line.method.id)
+                if not t:
+                    continue
+                for field in ['initial_concentration', 'final_concentration',
+                        'literal_final_concentration']:
+                    cursor.execute("SELECT lang, src, value "
+                        "FROM ir_translation "
+                        "WHERE name = %s "
+                            "AND res_id = %s "
+                            "AND type = 'model' "
+                            "AND lang != %s",
+                        ('lims.typification,' + field, str(t.id),
+                            default_language.code))
+                    for x in cursor.fetchall():
+                        cursor.execute("INSERT INTO ir_translation "
+                            "(name, res_id, type, lang, src, value) "
+                            "VALUES (%s, %s, 'model', %s, %s, %s)",
+                            ('lims.notebook.line,' + field, str(line.id),
+                                x[0], x[1], x[2]))
+
             if self._unaccept_original():
-                NotebookLine.write(to_update, {
+                NotebookLine.write(lines_to_update, {
                     'accepted': False,
                     'acceptance_date': None,
                     'report': False,
@@ -5263,6 +5290,7 @@ class NotebookRepeatAnalysis(Wizard):
 
     def _get_repetition_defaults(self, line):
         defaults = {
+            'notebook': line.notebook.id,
             'analysis_detail': line.analysis_detail.id,
             'service': line.service.id,
             'analysis': line.analysis.id,
@@ -5386,12 +5414,17 @@ class NotebookLineRepeatAnalysis(Wizard):
         return default
 
     def transition_repeat(self):
+        cursor = Transaction().connection.cursor()
         pool = Pool()
         Analysis = pool.get('lims.analysis')
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Config = pool.get('lims.configuration')
+        Typification = pool.get('lims.typification')
+
+        config = Config(1)
+        default_language = config.results_report_language
 
         analysis = self.start.analysis
         analysis_type = analysis.type
@@ -5407,12 +5440,11 @@ class NotebookLineRepeatAnalysis(Wizard):
 
         rm_type = (notebook.fraction.special_type == 'rm')
         if rm_type:
-            config = Config(1)
             rm_start_uom = (config.rm_start_uom.id if config.rm_start_uom
                 else None)
 
-        to_create = []
-        to_update = []
+        lines_to_create = []
+        lines_to_update = []
         details_to_update = []
         for analysis_id in analysis_to_repeat:
             clause = self._get_original_clause(notebook.id, analysis_id)
@@ -5434,16 +5466,40 @@ class NotebookLineRepeatAnalysis(Wizard):
                 defaults['quantification_limit'] = None
                 defaults['lower_limit'] = None
                 defaults['upper_limit'] = None
-            to_create.append(defaults)
+            lines_to_create.append(defaults)
             if not nline_to_repeat.results_report:
-                to_update.append(nline_to_repeat)
+                lines_to_update.append(nline_to_repeat)
             details_to_update.append(nline_to_repeat.analysis_detail.id)
 
-        Notebook.write([notebook], {
-            'lines': [('create', to_create)],
-            })
+        with Transaction().set_context(_check_access=False):
+            lines = NotebookLine.create(lines_to_create)
+
+        # copy translated fields from typification
+        for line in lines:
+            t = Typification.get_valid_typification(
+                line.product_type.id, line.matrix.id,
+                line.analysis.id, line.method.id)
+            if not t:
+                continue
+            for field in ['initial_concentration', 'final_concentration',
+                    'literal_final_concentration']:
+                cursor.execute("SELECT lang, src, value "
+                    "FROM ir_translation "
+                    "WHERE name = %s "
+                        "AND res_id = %s "
+                        "AND type = 'model' "
+                        "AND lang != %s",
+                    ('lims.typification,' + field, str(t.id),
+                        default_language.code))
+                for x in cursor.fetchall():
+                    cursor.execute("INSERT INTO ir_translation "
+                        "(name, res_id, type, lang, src, value) "
+                        "VALUES (%s, %s, 'model', %s, %s, %s)",
+                        ('lims.notebook.line,' + field, str(line.id),
+                            x[0], x[1], x[2]))
+
         if self._unaccept_original():
-            NotebookLine.write(to_update, {
+            NotebookLine.write(lines_to_update, {
                 'accepted': False,
                 'acceptance_date': None,
                 'report': False,
@@ -5471,6 +5527,7 @@ class NotebookLineRepeatAnalysis(Wizard):
 
     def _get_repetition_defaults(self, line):
         defaults = {
+            'notebook': line.notebook.id,
             'analysis_detail': line.analysis_detail.id,
             'service': line.service.id,
             'analysis': line.analysis.id,
