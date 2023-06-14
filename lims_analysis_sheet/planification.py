@@ -80,11 +80,13 @@ class Planification(metaclass=PoolMeta):
                     ('planification', '=', self.id),
                     ('professional', '=', key[1]),
                     ('analysis_sheet.template', '=', key[0]),
+                    ('analysis_sheet.date2', '=', self.start_date),
                     ]):
                 continue
             draft_sheet = AnalysisSheet.search([
                 ('template', '=', key[0]),
                 ('professional', '=', key[1]),
+                ('date2', '=', self.start_date),
                 ('state', '=', 'draft'),
                 ])
             if not draft_sheet:
