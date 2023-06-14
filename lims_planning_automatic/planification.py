@@ -23,7 +23,8 @@ class Planification(metaclass=PoolMeta):
         TechniciansQualification = pool.get(
             'lims.planification.technicians_qualification', type='wizard')
 
-        for planification in cls._get_automatic_planifications():
+        for planification in cls._get_automatic_planifications(
+                entries=entries, tests=tests):
 
             session_id, _, _ = SearchFractions.create()
             search_fractions = SearchFractions(session_id)
