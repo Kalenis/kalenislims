@@ -4212,13 +4212,7 @@ class SearchFractions(Wizard):
         planned_lines_ids = ', '.join(str(x) for x in [0] + planned_lines)
         preplanned_where = 'AND nl.id NOT IN (%s) ' % planned_lines_ids
 
-        dates_where = ''
-        if planification.date_from:
-            dates_where += ('AND ad.confirmation_date::date >= \'%s\'::date ' %
-                planification.date_from)
-        if planification.date_to:
-            dates_where += ('AND ad.confirmation_date::date <= \'%s\'::date ' %
-                planification.date_to)
+        dates_where = self._get_dates_clause(planification)
 
         result = {}
         nlines_added = []
@@ -4287,6 +4281,16 @@ class SearchFractions(Wizard):
                         }
 
         return result
+
+    def _get_dates_clause(self, planification):
+        dates_clause = ''
+        if planification.date_from:
+            dates_clause += ('AND ad.confirmation_date::date >= \'%s\'::date ' %
+                planification.date_from)
+        if planification.date_to:
+            dates_clause += ('AND ad.confirmation_date::date <= \'%s\'::date ' %
+                planification.date_to)
+        return dates_clause
 
 
 class SearchPlannedFractionsStart(ModelView):
