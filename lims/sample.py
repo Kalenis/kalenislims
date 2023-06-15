@@ -503,7 +503,7 @@ class Service(ModelSQL, ModelView):
                 new_analysis.append((fraction.id,) + included)
             new_analysis = [list(a) for a in new_analysis]
             for a in new_analysis:
-                if a[1]:
+                if a[2]:
                     continue
                 cursor.execute('SELECT method '
                     'FROM "' + Typification._table + '" '
@@ -512,16 +512,16 @@ class Service(ModelSQL, ModelView):
                         'AND analysis = %s '
                         'AND valid IS TRUE '
                         'AND by_default IS TRUE',
-                    (fraction.product_type.id, fraction.matrix.id, a[0]))
+                    (fraction.product_type.id, fraction.matrix.id, a[1]))
                 res = cursor.fetchone()
                 if res:
-                    a[1] = res[0]
+                    a[2] = res[0]
 
             for a in new_analysis:
                 if a in existing_analysis:
                     raise UserError(gettext(
                         'lims.msg_duplicated_analysis_service',
-                        analysis=Analysis(a[0]).rec_name,
+                        analysis=Analysis(a[1]).rec_name,
                         fraction=fraction.rec_name,
                         ))
             existing_analysis.extend(new_analysis)
