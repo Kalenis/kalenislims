@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form col="6">
+    <label name="quantity"/>
+    <field name="quantity"/>
+    <label name="type"/>
+    <field name="type"/>
+    <label name="state"/>
+    <field name="state"/>
+</form>

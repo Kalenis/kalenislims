@@ -82,6 +82,7 @@ def register():
         sample.Sample,
         sample.SamplePackage,
         sample.Fraction,
+        sample.FractionPackage,
         sample.Service,
         sample.ServiceOrigin,
         uom.ConcentrationLevel,

@@ -424,6 +424,19 @@
             <field name="perm_delete" eval="False"/>
         </record>
 
+<!-- Fraction Package -->
+
+        <record model="ir.ui.view" id="fraction_package_view_form">
+            <field name="model">lims.fraction.package</field>
+            <field name="type">form</field>
+            <field name="name">fraction_package_form</field>
+        </record>
+        <record model="ir.ui.view" id="fraction_package_view_list">
+            <field name="model">lims.fraction.package</field>
+            <field name="type">tree</field>
+            <field name="name">fraction_package_list</field>
+        </record>
+
 <!-- Sample -->
 
         <record model="ir.ui.view" id="lims_sample_view_form">
@@ -1035,6 +1048,16 @@
             <field name="model">lims.create_sample.service</field>
             <field name="type">form</field>
             <field name="name">create_sample_service_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_create_sample_package_view_form">
+            <field name="model">lims.create_sample.package</field>
+            <field name="type">form</field>
+            <field name="name">create_sample_package_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_create_sample_package_view_list">
+            <field name="model">lims.create_sample.package</field>
+            <field name="type">tree</field>
+            <field name="name">create_sample_package_list</field>
         </record>
 
         <record model="ir.action.wizard" id="wiz_lims_create_sample">

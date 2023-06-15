@@ -133,6 +133,7 @@ class Entry(metaclass=PoolMeta):
             'action': actions,
             'relate': relates,
             'exports': [],
+            'emails': [],
             }
         return result
 

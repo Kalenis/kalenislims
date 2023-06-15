@@ -157,6 +157,11 @@ class TakeSample(Wizard):
         zone_id = entry.party.entry_zone and entry.party.entry_zone.id or None
 
         obj_description = self._get_obj_description(lot.product)
+        packages = [{
+            'quantity': 1,
+            'type': fraction_type.default_package_type.id,
+            'state': fraction_type.default_fraction_state.id,
+            }]
 
         # new sample
         new_sample, = Sample.create([{
@@ -171,11 +176,7 @@ class TakeSample(Wizard):
             'zone': zone_id,
             'label': self.start.label,
             'obj_description': obj_description,
-            'packages': [('create', [{
-                'quantity': 1,
-                'type': fraction_type.default_package_type.id,
-                'state': fraction_type.default_fraction_state.id,
-                }])],
+            'packages': [('create', packages)],
             'fractions': [],
             }])
 
@@ -184,6 +185,7 @@ class TakeSample(Wizard):
             'sample': new_sample.id,
             'type': fraction_type.id,
             'storage_location': quality_config.sample_location.id,
+            'packages': [('create', packages)],
             'services': [],
             }
         if fraction_type.max_storage_time:
@@ -298,6 +300,11 @@ class CountersampleCreate(Wizard):
 
         countersamples = []
         for sample in samples:
+            packages = [{
+                'quantity': p.quantity,
+                'type': p.type.id,
+                'state': p.state.id,
+                } for p in sample.packages]
 
             # new countersample
             new_countersample, = Sample.create([{
@@ -312,11 +319,7 @@ class CountersampleCreate(Wizard):
                 'zone': sample.zone and sample.zone.id or None,
                 'label': sample.label,
                 'obj_description': sample.obj_description,
-                'packages': [('create', [{
-                    'quantity': p.quantity,
-                    'type': p.type.id,
-                    'state': p.state.id,
-                    } for p in sample.packages])],
+                'packages': [('create', packages)],
                 'countersample_original_sample': sample.id,
                 'test_state': 'countersample',
                 'comments': self.ask.comments,
@@ -333,6 +336,7 @@ class CountersampleCreate(Wizard):
                 'countersample_date': Date.today(),
                 'expiry_date': Date.today() + relativedelta(
                     months=sample.fractions[0].storage_time),
+                'packages': [('create', packages)],
                 'services': [],
                 }
             new_fraction, = Fraction.create([fraction_default])

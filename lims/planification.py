@@ -1958,8 +1958,13 @@ class AddFractionControl(Wizard):
         entry = Entry(workyear.default_entry_control.id)
         original_fraction = self.start.original_fraction
         original_sample = Sample(original_fraction.sample.id)
-        obj_description = self._get_obj_description(original_sample)
         laboratory = self.start.planification.laboratory
+        obj_description = self._get_obj_description(original_sample)
+        packages = [{
+            'quantity': 1,
+            'type': fraction_type.default_package_type.id,
+            'state': fraction_type.default_fraction_state.id,
+            }]
 
         # new sample
         new_sample, = Sample.copy([original_sample], default={
@@ -1972,11 +1977,7 @@ class AddFractionControl(Wizard):
             'fractions': [],
             })
         Sample.write([new_sample], {
-            'packages': [('create', [{
-                'quantity': 1,
-                'type': fraction_type.default_package_type.id,
-                'state': fraction_type.default_fraction_state.id,
-                }])],
+            'packages': [('create', packages)],
             })
 
         # new fraction
@@ -1986,7 +1987,11 @@ class AddFractionControl(Wizard):
             'con_type': self.start.type,
             'con_original_fraction': original_fraction.id,
             'storage_location': laboratory.related_location.id,
+            'packages': [],
             'services': [],
+            })
+        Fraction.write([new_fraction], {
+            'packages': [('create', packages)],
             })
 
         # new services
@@ -2455,8 +2460,13 @@ class AddFractionRMBMZ(Wizard):
         entry = Entry(workyear.default_entry_control.id)
         original_fraction = self.start.reference_fraction
         original_sample = Sample(original_fraction.sample.id)
-        obj_description = self._get_obj_description(original_sample)
         laboratory = self.start.planification.laboratory
+        obj_description = self._get_obj_description(original_sample)
+        packages = [{
+            'quantity': 1,
+            'type': fraction_type.default_package_type.id,
+            'state': fraction_type.default_fraction_state.id,
+            }]
 
         # new sample
         new_sample, = Sample.copy([original_sample], default={
@@ -2469,11 +2479,7 @@ class AddFractionRMBMZ(Wizard):
             'fractions': [],
             })
         Sample.write([new_sample], {
-            'packages': [('create', [{
-                'quantity': 1,
-                'type': fraction_type.default_package_type.id,
-                'state': fraction_type.default_fraction_state.id,
-                }])],
+            'packages': [('create', packages)],
             })
 
         # new fraction
@@ -2482,6 +2488,7 @@ class AddFractionRMBMZ(Wizard):
             'type': fraction_type.id,
             'con_type': '',
             'storage_location': laboratory.related_location.id,
+            'packages': [],
             'services': [],
             }
         if self.start.type == 'rm':
@@ -2496,6 +2503,9 @@ class AddFractionRMBMZ(Wizard):
             fraction_default['bmz_original_fraction'] = original_fraction.id
         new_fraction, = Fraction.copy([original_fraction],
             default=fraction_default)
+        Fraction.write([new_fraction], {
+            'packages': [('create', packages)],
+            })
 
         # new services
         p_analysis_ids = []
@@ -2652,6 +2662,11 @@ class AddFractionRMBMZ(Wizard):
 
         laboratory = self.start.planification.laboratory
         obj_description = self._get_obj_description(self.start)
+        packages = [{
+            'quantity': 1,
+            'type': fraction_type.default_package_type.id,
+            'state': fraction_type.default_fraction_state.id,
+            }]
 
         # new sample
         new_sample, = Sample.create([{
@@ -2663,11 +2678,7 @@ class AddFractionRMBMZ(Wizard):
             'zone': zone_id,
             'label': self.start.label,
             'obj_description': obj_description,
-            'packages': [('create', [{
-                'quantity': 1,
-                'type': fraction_type.default_package_type.id,
-                'state': fraction_type.default_fraction_state.id,
-                }])],
+            'packages': [('create', packages)],
             'sample_client_description': '-',
             'fractions': [],
             }])
@@ -2677,6 +2688,7 @@ class AddFractionRMBMZ(Wizard):
             'sample': new_sample.id,
             'type': fraction_type.id,
             'storage_location': laboratory.related_location.id,
+            'packages': [('create', packages)],
             'services': [],
             }
         if fraction_type.max_storage_time:
@@ -3099,6 +3111,11 @@ class AddFractionBRE(Wizard):
 
         laboratory = self.start.planification.laboratory
         obj_description = self._get_obj_description(self.start)
+        packages = [{
+            'quantity': 1,
+            'type': fraction_type.default_package_type.id,
+            'state': fraction_type.default_fraction_state.id,
+            }]
 
         # new sample
         new_sample, = Sample.create([{
@@ -3110,11 +3127,7 @@ class AddFractionBRE(Wizard):
             'zone': zone_id,
             'label': self.start.label,
             'obj_description': obj_description,
-            'packages': [('create', [{
-                'quantity': 1,
-                'type': fraction_type.default_package_type.id,
-                'state': fraction_type.default_fraction_state.id,
-                }])],
+            'packages': [('create', packages)],
             'sample_client_description': '-',
             'fractions': [],
             }])
@@ -3128,6 +3141,7 @@ class AddFractionBRE(Wizard):
             'sample': new_sample.id,
             'type': fraction_type.id,
             'storage_location': laboratory.related_location.id,
+            'packages': [('create', packages)],
             'services': [],
             'bre_product_type': new_sample.product_type.id,
             'bre_matrix': new_sample.matrix.id,
@@ -3463,6 +3477,11 @@ class AddFractionMRT(Wizard):
 
         laboratory = self.start.planification.laboratory
         obj_description = self._get_obj_description(self.start)
+        packages = [{
+            'quantity': 1,
+            'type': fraction_type.default_package_type.id,
+            'state': fraction_type.default_fraction_state.id,
+            }]
 
         # new sample
         new_sample, = Sample.create([{
@@ -3474,11 +3493,7 @@ class AddFractionMRT(Wizard):
             'zone': zone_id,
             'label': self.start.label,
             'obj_description': obj_description,
-            'packages': [('create', [{
-                'quantity': 1,
-                'type': fraction_type.default_package_type.id,
-                'state': fraction_type.default_fraction_state.id,
-                }])],
+            'packages': [('create', packages)],
             'sample_client_description': '-',
             'fractions': [],
             }])
@@ -3488,6 +3503,7 @@ class AddFractionMRT(Wizard):
             'sample': new_sample.id,
             'type': fraction_type.id,
             'storage_location': laboratory.related_location.id,
+            'packages': [('create', packages)],
             'services': [],
             'mrt_product_type': new_sample.product_type.id,
             'mrt_matrix': new_sample.matrix.id,
@@ -4831,6 +4847,11 @@ class CreateFractionControl(Wizard):
 
         laboratory = self.start.laboratory
         obj_description = self._get_obj_description(self.start)
+        packages = [{
+            'quantity': 1,
+            'type': fraction_type.default_package_type.id,
+            'state': fraction_type.default_fraction_state.id,
+            }]
 
         # new sample
         new_sample, = Sample.create([{
@@ -4842,11 +4863,7 @@ class CreateFractionControl(Wizard):
             'zone': zone_id,
             'label': self.start.label,
             'obj_description': obj_description,
-            'packages': [('create', [{
-                'quantity': 1,
-                'type': fraction_type.default_package_type.id,
-                'state': fraction_type.default_fraction_state.id,
-                }])],
+            'packages': [('create', packages)],
             'sample_client_description': '-',
             'fractions': [],
             }])
@@ -4856,6 +4873,7 @@ class CreateFractionControl(Wizard):
             'sample': new_sample.id,
             'type': fraction_type.id,
             'storage_location': laboratory.related_location.id,
+            'packages': [('create', packages)],
             'services': [],
             'con_type': self.start.type,
             }

@@ -594,6 +594,7 @@ class Notebook(ModelSQL, ModelView):
             'action': actions,
             'relate': relates,
             'exports': [],
+            'emails': [],
             }
         return result
 

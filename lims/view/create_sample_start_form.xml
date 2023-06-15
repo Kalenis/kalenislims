@@ -34,8 +34,7 @@
                 <label name="without_services"/>
                 <field name="without_services"/>
             </group>
-            <field name="packages" colspan="2" mode="tree,form"
-                view_ids="lims.sample_package_view_list,lims.sample_package_view_form"/>
+            <field name="packages" colspan="2"/>
             <group id="labels" string="Labels" col="1" colspan="2" yexpand="1" yfill="1">
                 <field name="labels" colspan="2"/>
             </group>

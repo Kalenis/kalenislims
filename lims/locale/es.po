@@ -1957,6 +1957,10 @@ msgctxt "field:lims.fraction,number:"
 msgid "Number"
 msgstr "Número"
 
+msgctxt "field:lims.fraction,packages:"
+msgid "Packages"
+msgstr "Envases"
+
 msgctxt "field:lims.fraction,packages_string:"
 msgid "Packages"
 msgstr "Envases"
@@ -2088,6 +2092,22 @@ msgstr "Fecha hasta"
 msgctxt "field:lims.fraction.discharge_revert.start,location_origin:"
 msgid "Origin Location"
 msgstr "Ubicación origen"
+
+msgctxt "field:lims.fraction.package,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "field:lims.fraction.package,quantity:"
+msgid "Quantity"
+msgstr "Cantidad"
+
+msgctxt "field:lims.fraction.package,state:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:lims.fraction.package,type:"
+msgid "Type"
+msgstr "Tipo"
 
 msgctxt "field:lims.fraction.reagent,default_uom:"
 msgid "Default UOM"
@@ -9835,6 +9855,10 @@ msgctxt "model:lims.fraction.discharge_revert.start,name:"
 msgid "Revert Fractions Discharge"
 msgstr "Revertir descarte de fracciones"
 
+msgctxt "model:lims.fraction.package,name:"
+msgid "Fraction Package"
+msgstr "Envase de fracción"
+
 msgctxt "model:lims.fraction.reagent,name:"
 msgid "Fraction Reagent"
 msgstr "Reactivo de fracción"
@@ -14448,6 +14472,10 @@ msgstr "MRT"
 msgctxt "view:lims.fraction:"
 msgid "Manage services"
 msgstr "Gestionar servicios"
+
+msgctxt "view:lims.fraction:"
+msgid "Packages"
+msgstr "Envases"
 
 msgctxt "view:lims.fraction:"
 msgid "RM"
