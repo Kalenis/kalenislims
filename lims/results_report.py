@@ -3960,6 +3960,8 @@ class ResultReport(Report):
             reference_sample.packages[0].quantity)
         report_context['sample_package_type'] = (
             reference_sample.packages[0].type.description)
+        report_context['sample_packages_string'] = (
+            reference_sample.packages_string)
         report_context['sample_package_state'] = (
             reference_sample.packages[0].state.description)
         if report.report_type == 'normal':
