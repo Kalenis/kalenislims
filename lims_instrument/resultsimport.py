@@ -353,7 +353,6 @@ class NotebookLoadResultsFile(Wizard):
                             ('start_date', '!=', None),
                             ('result', 'in', [None, '']),
                             ('converted_result', 'in', [None, '']),
-                            ('literal_result', 'in', [None, '']),
                             ['OR', ('result_modifier', '=', None),
                                 ('result_modifier.code', 'not in',
                                 ['d', 'nd', 'pos', 'neg', 'ni', 'abs',
