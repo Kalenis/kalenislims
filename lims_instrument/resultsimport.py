@@ -385,7 +385,7 @@ class NotebookLoadResultsFile(Wizard):
             if 'result' in data:
                 res['imported_result'] = str(float(data['result']))
             if 'literal_result' in data:
-                res['imported_literal_result'] = data['literal_result']
+                res['imported_literal_result'] = str(data['literal_result'])
             res['imported_end_date'] = (data['end_date'] if 'end_date' in data
                 else line.end_date)
             res['imported_inj_date'] = (data['injection_date']
@@ -393,7 +393,7 @@ class NotebookLoadResultsFile(Wizard):
             if 'professionals' in data:
                 res['imported_professionals'] = data['professionals']
             if 'chromatogram' in data:
-                res['imported_chromatogram'] = data['chromatogram']
+                res['imported_chromatogram'] = str(data['chromatogram'])
             device = data['device'] if 'device' in data else None
             if device:
                 dev = Device.search([('code', '=', device)])
@@ -402,7 +402,7 @@ class NotebookLoadResultsFile(Wizard):
             if 'dilution_factor' in data:
                 res['imported_dilution_factor'] = data['dilution_factor']
             if 'rm_correction_formula' in data:
-                res['imported_rm_correction_formula'] = (
+                res['imported_rm_correction_formula'] = str(
                     data['rm_correction_formula'])
             if 'trace_report' in data:
                 res['imported_trace_report'] = data['trace_report']
