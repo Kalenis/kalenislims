@@ -3,6 +3,7 @@
 # the full copyright notices and license terms.
 import os
 import operator
+import unicodedata
 from io import BytesIO
 from decimal import Decimal
 from datetime import date, datetime
@@ -18,6 +19,7 @@ from babel.support import Translations as BabelTranslations
 from mimetypes import guess_type as mime_guess_type
 from sql import Literal
 from itertools import groupby
+from genshi.template.text import TextTemplate
 
 from trytond.model import ModelSQL, ModelView, DeactivableMixin, fields
 from trytond.report import Report
@@ -30,6 +32,8 @@ from trytond.i18n import gettext
 from trytond.tools import file_open
 from trytond import backend
 from .generator import PdfGenerator
+
+REPORT_NAME_MAX_LENGTH = 100
 
 
 class ReportTemplate(DeactivableMixin, ModelSQL, ModelView):
@@ -315,6 +319,8 @@ class LimsReport(Report):
         pool = Pool()
         ActionReport = pool.get('ir.action.report')
         cls.check_access()
+        context = Transaction().context
+        ids = list(map(int, ids))
 
         action_id = data.get('action_id')
         if action_id is None:
@@ -326,6 +332,33 @@ class LimsReport(Report):
             action = action_reports[0]
         else:
             action = ActionReport(action_id)
+
+        def report_name(records, reserved_length=0):
+            names = []
+            name_length = 0
+            record_count = len(records)
+            max_length = (REPORT_NAME_MAX_LENGTH
+                - reserved_length
+                - len(str(record_count)) - 2)
+            if action.record_name:
+                template = TextTemplate(action.record_name)
+            else:
+                template = None
+            for record in records[:5]:
+                if template:
+                    record_name = template.generate(record=record).render()
+                else:
+                    record_name = record.rec_name
+                name_length += len(
+                    unicodedata.normalize('NFKD', record_name)) + 1
+                if name_length > max_length:
+                    break
+                names.append(record_name)
+
+            name = '-'.join(names)
+            if len(records) > len(names):
+                name += '__' + str(record_count - len(names))
+            return name
 
         records = []
         model = action.model or data.get('model')
@@ -348,6 +381,16 @@ class LimsReport(Report):
         oext, content = cls._execute(groups[0], headers[0], data, action)
         if not isinstance(content, str):
             content = bytearray(content) if bytes == str else bytes(content)
+        action_report_name = action.name[:REPORT_NAME_MAX_LENGTH]
+        if context.get('with_rec_name', True):
+            join_string = '-'
+            filename = join_string.join(
+                filter(None, [
+                    action_report_name,
+                    report_name(
+                        records, len(action_report_name) + len(join_string))]))
+        else:
+            filename = action_report_name
 
         record = records[0]
         if oext == 'pdf' and (record.previous_sections or
@@ -368,7 +411,7 @@ class LimsReport(Report):
             merger.write(output)
             content = output.getvalue()
 
-        return (oext, content, action.direct_print, action.name)
+        return (oext, content, action.direct_print, filename)
 
     @classmethod
     def execute_html_lims_report(cls, ids, data):
