@@ -2329,6 +2329,10 @@ msgctxt "field:lims.lab.method,supervised_requalification:"
 msgid "Supervised requalification"
 msgstr "Recualificación supervisada"
 
+msgctxt "field:lims.lab.method,translations:"
+msgid "Translations"
+msgstr "Traducciones"
+
 msgctxt "field:lims.lab.method,version:"
 msgid "Version"
 msgstr "Versión"
@@ -2348,6 +2352,14 @@ msgstr "Entidad"
 msgctxt "field:lims.lab.method.results_waiting,results_estimated_waiting:"
 msgid "Estimated number of days for results"
 msgstr "Cantidad estimada de días para resultados"
+
+msgctxt "field:lims.lab.method.translation,lang:"
+msgid "Language"
+msgstr "Idioma"
+
+msgctxt "field:lims.lab.method.translation,name:"
+msgid "Name"
+msgstr "Nombre"
 
 msgctxt "field:lims.lab.method.version,code:"
 msgid "Code"
@@ -9998,6 +10010,10 @@ msgstr "Método de laboratorio"
 msgctxt "model:lims.lab.method.results_waiting,name:"
 msgid "Waiting Time per Client"
 msgstr "Tiempo de respuesta por cliente"
+
+msgctxt "model:lims.lab.method.translation,name:"
+msgid "Method Translation"
+msgstr "Traducción de Método"
 
 msgctxt "model:lims.lab.method.version,name:"
 msgid "Method Version"

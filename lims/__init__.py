@@ -45,6 +45,7 @@ def register():
         laboratory.LabMethod,
         laboratory.LabMethodVersion,
         laboratory.LabMethodWaitingTime,
+        laboratory.LabMethodTranslation,
         laboratory.LabDeviceType,
         laboratory.LabDevice,
         laboratory.LabDeviceLaboratory,

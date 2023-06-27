@@ -176,6 +176,8 @@ class LabMethod(Workflow, ModelSQL, ModelView):
         ('active', 'Active'),
         ('disabled', 'Disabled'),
         ], 'State', required=True, readonly=True)
+    translations = fields.One2Many('lims.lab.method.translation',
+        None, 'Translations')
 
     del _states
 
@@ -274,6 +276,51 @@ class LabMethod(Workflow, ModelSQL, ModelView):
             'requalification_months', 'supervised_requalification',
             'deprecated_since', 'pnt', 'results_estimated_waiting',
             'equivalence_code']
+
+    def _get_new_version_translatable_fields(self):
+        return ['name']
+
+    def _get_new_version_translations(self):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Lang = pool.get('ir.lang')
+
+        default_lang = 'es'
+        langs = Lang.search([
+            ('translatable', '=', True),
+            ('code', '!=', default_lang),
+            ])
+
+        res = []
+        for l in langs:
+            record = {'lang': l.code}
+            for field in self._get_new_version_translatable_fields():
+                cursor.execute("SELECT value "
+                    "FROM ir_translation "
+                    "WHERE lang = %s AND name = %s AND res_id = %s "
+                    "AND type = 'model'",
+                    (l.code, 'lims.lab.method,' + field, self.id))
+                t = cursor.fetchone()
+                record[field] = t and t[0] or None
+            res.append(record)
+        return res
+
+    def _set_new_version_translations(self, translations):
+        cursor = Transaction().connection.cursor()
+        for t in translations:
+            for field in self._get_new_version_translatable_fields():
+                if getattr(t, field):
+                    cursor.execute("INSERT INTO ir_translation "
+                        "(lang, src, name, res_id, value, type) VALUES "
+                        "(%s, %s, %s, %s, %s, 'model')",
+                        (t.lang, getattr(self, field),
+                        'lims.lab.method,' + field, self.id,
+                        getattr(t, field)))
+                else:
+                    cursor.execute("DELETE FROM ir_translation "
+                        "WHERE lang = %s AND name = %s AND res_id = %s "
+                        "AND type = 'model'",
+                        (t.lang, 'lims.lab.method,' + field, self.id))
 
     @classmethod
     @ModelView.button_action('lims.wiz_method_new_version')
@@ -411,6 +458,21 @@ class LabMethodVersion(ModelSQL, ModelView):
         return self.version
 
 
+class LabMethodTranslation(ModelView):
+    'Method Translation'
+    __name__ = 'lims.lab.method.translation'
+
+    lang = fields.Selection('get_language', 'Language', required=True)
+    name = fields.Char('Name')
+
+    @classmethod
+    def get_language(cls):
+        pool = Pool()
+        Lang = pool.get('ir.lang')
+        langs = Lang.search([('translatable', '=', True)])
+        return [(lang.code, lang.name) for lang in langs]
+
+
 class NewLabMethodVersion(Wizard):
     'New Method Version'
     __name__ = 'lims.lab.method.new_version'
@@ -430,6 +492,7 @@ class NewLabMethodVersion(Wizard):
         default = {'state': 'draft'}
         for field in method._get_new_version_fields():
             default[field] = getattr(method, field)
+        default['translations'] = method._get_new_version_translations()
         return default
 
     def transition_confirm(self):
@@ -440,6 +503,7 @@ class NewLabMethodVersion(Wizard):
         for field in method._get_new_version_fields():
             setattr(method, field, getattr(self.start, field))
         method.save()
+        method._set_new_version_translations(self.start.translations)
         method.create_new_version()
         return 'end'
 

@@ -22,4 +22,5 @@
     <field name="equivalence_code"/>
     <label name="results_estimated_waiting"/>
     <field name="results_estimated_waiting"/>
+    <field name="translations" colspan="4"/>
 </form>
