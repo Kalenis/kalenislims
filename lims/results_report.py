@@ -3630,6 +3630,7 @@ class ResultReport(Report):
         NotebookLine = pool.get('lims.notebook.line')
         Sample = pool.get('lims.sample')
         RangeType = pool.get('lims.range.type')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
 
         report_context = super().get_context(records, header, data)
 
@@ -3753,11 +3754,12 @@ class ResultReport(Report):
             with Transaction().set_context(language=lang_code):
                 t_line = NotebookLine(line.notebook_line.id)
                 sample = Sample(line.notebook_line.fraction.sample.id)
+                detail_sample = ResultsSample(line.detail_sample.id)
 
             key = t_line.fraction.id
             if key not in fractions:
                 fractions[key] = {
-                    'obj': line.detail_sample,
+                    'obj': detail_sample,
                     'fraction': sample.number,
                     'date': sample.date2,
                     'client_description': (
