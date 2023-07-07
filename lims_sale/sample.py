@@ -82,7 +82,7 @@ class CreateSampleStart(metaclass=PoolMeta):
 
         analysis_domain = super().on_change_with_analysis_domain(name)
 
-        if not self.sale_lines:
+        if not self.sale_lines or entry.allow_services_without_quotation:
             return analysis_domain
 
         quoted_products = [sl.product.id
