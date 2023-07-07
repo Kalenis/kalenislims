@@ -1282,11 +1282,6 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     def create_notebook_lines(cls, details, fraction):
         cursor = Transaction().connection.cursor()
         pool = Pool()
-        Typification = pool.get('lims.typification')
-        Method = pool.get('lims.lab.method')
-        WaitingTime = pool.get('lims.lab.method.results_waiting')
-        AnalysisLaboratory = pool.get('lims.analysis-laboratory')
-        ProductType = pool.get('lims.product.type')
         Notebook = pool.get('lims.notebook')
         NotebookLine = pool.get('lims.notebook.line')
         Config = pool.get('lims.configuration')
@@ -1294,140 +1289,161 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         with Transaction().set_user(0):
             notebooks = Notebook.search([('fraction', '=', fraction.id)])
             if not notebooks:
-                return
+                return []
             notebook = notebooks[0]
 
         lines_to_create = []
         for detail in details:
-            t = Typification.get_valid_typification(
-                fraction.product_type.id, fraction.matrix.id,
-                detail.analysis.id, detail.method.id)
-
-            if t:
-                repetitions = t.default_repetitions
-                initial_concentration = t.initial_concentration
-                final_concentration = t.final_concentration
-                literal_final_concentration = t.literal_final_concentration
-                initial_unit = t.start_uom and t.start_uom.id or None
-                final_unit = t.end_uom and t.end_uom.id or None
-                detection_limit = t.detection_limit
-                quantification_limit = t.quantification_limit
-                lower_limit = t.lower_limit
-                upper_limit = t.upper_limit
-                decimals = t.calc_decimals
-                significant_digits = t.significant_digits
-                scientific_notation = t.scientific_notation
-                report = t.report
-                department = t.department and t.department.id or None
-            else:
-                repetitions = 0
-                initial_concentration = None
-                final_concentration = None
-                literal_final_concentration = None
-                initial_unit = None
-                final_unit = None
-                detection_limit = None
-                quantification_limit = None
-                lower_limit = None
-                upper_limit = None
-                decimals = 2
-                significant_digits = None
-                scientific_notation = False
-                report = False
-                department = None
-
-            results_estimated_waiting = None
-            cursor.execute('SELECT results_estimated_waiting '
-                'FROM "' + WaitingTime._table + '" '
-                'WHERE method = %s '
-                    'AND party = %s',
-                (detail.method.id, detail.party.id))
-            res = cursor.fetchone()
-            if res:
-                results_estimated_waiting = res[0]
-            else:
-                cursor.execute('SELECT results_estimated_waiting '
-                    'FROM "' + Method._table + '" '
-                    'WHERE id = %s', (detail.method.id,))
-                res = cursor.fetchone()
-                if res:
-                    results_estimated_waiting = res[0]
-
-            if not department:
-                cursor.execute('SELECT department '
-                    'FROM "' + AnalysisLaboratory._table + '" '
-                    'WHERE analysis = %s '
-                        'AND laboratory = %s '
-                    'ORDER BY by_default DESC',
-                    (detail.analysis.id, detail.laboratory.id))
-                res = cursor.fetchone()
-                if res and res[0]:
-                    department = res[0]
-                else:
-                    cursor.execute('SELECT department '
-                        'FROM "' + ProductType._table + '" '
-                        'WHERE id = %s', (fraction.product_type.id,))
-                    res = cursor.fetchone()
-                    if res and res[0]:
-                        department = res[0]
-
-            for i in range(0, repetitions + 1):
-                notebook_line = {
-                    'notebook': notebook.id,
-                    'analysis_detail': detail.id,
-                    'service': detail.service.id,
-                    'analysis': detail.analysis.id,
-                    'analysis_origin': detail.analysis_origin,
-                    'urgent': detail.service.urgent,
-                    'repetition': i,
-                    'laboratory': detail.laboratory.id,
-                    'method': detail.method.id,
-                    'device': detail.device and detail.device.id or None,
-                    'initial_concentration': initial_concentration,
-                    'final_concentration': final_concentration,
-                    'literal_final_concentration': literal_final_concentration,
-                    'initial_unit': initial_unit,
-                    'final_unit': final_unit,
-                    'detection_limit': detection_limit,
-                    'quantification_limit': quantification_limit,
-                    'lower_limit': lower_limit,
-                    'upper_limit': upper_limit,
-                    'decimals': decimals,
-                    'significant_digits': significant_digits,
-                    'scientific_notation': scientific_notation,
-                    'report': report,
-                    'results_estimated_waiting': results_estimated_waiting,
-                    'department': department,
-                    }
-                lines_to_create.append(notebook_line)
+            to_create, _ = cls._get_notebook_line(detail, fraction, notebook)
+            lines_to_create.extend(to_create)
+        if not lines_to_create:
+            return []
 
         with Transaction().set_user(0):
             lines = NotebookLine.create(lines_to_create)
 
-            # copy translated fields from typification
-            default_language = Config(1).results_report_language
-            for line in lines:
-                t = Typification.get_valid_typification(
-                    line.product_type.id, line.matrix.id,
-                    line.analysis.id, line.method.id)
-                if not t:
-                    continue
-                for field in ['initial_concentration', 'final_concentration',
-                        'literal_final_concentration']:
-                    cursor.execute("SELECT lang, src, value "
-                        "FROM ir_translation "
-                        "WHERE name = %s "
-                            "AND res_id = %s "
-                            "AND type = 'model' "
-                            "AND lang != %s",
-                        ('lims.typification,' + field, str(t.id),
-                            default_language.code))
-                    for x in cursor.fetchall():
-                        cursor.execute("INSERT INTO ir_translation "
-                            "(name, res_id, type, lang, src, value) "
-                            "VALUES (%s, %s, 'model', %s, %s, %s)",
-                            ('lims.notebook.line,' + field, str(line.id),
-                                x[0], x[1], x[2]))
+        # copy translated fields from typification
+        default_language = Config(1).results_report_language
+        for line in lines:
+            t = cls._get_notebook_line_valid_typification(
+                line.analysis_detail, line.fraction)
+            if not t:
+                continue
+            for field in ['initial_concentration', 'final_concentration',
+                    'literal_final_concentration']:
+                cursor.execute("SELECT lang, src, value "
+                    "FROM ir_translation "
+                    "WHERE name = %s "
+                        "AND res_id = %s "
+                        "AND type = 'model' "
+                        "AND lang != %s",
+                    ('lims.typification,' + field, str(t.id),
+                        default_language.code))
+                for x in cursor.fetchall():
+                    cursor.execute("INSERT INTO ir_translation "
+                        "(name, res_id, type, lang, src, value) "
+                        "VALUES (%s, %s, 'model', %s, %s, %s)",
+                        ('lims.notebook.line,' + field, str(line.id),
+                            x[0], x[1], x[2]))
+        return lines
+
+    @classmethod
+    def _get_notebook_line(cls, detail, fraction, notebook):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Method = pool.get('lims.lab.method')
+        WaitingTime = pool.get('lims.lab.method.results_waiting')
+        AnalysisLaboratory = pool.get('lims.analysis-laboratory')
+        ProductType = pool.get('lims.product.type')
+
+        t = cls._get_notebook_line_valid_typification(detail, fraction)
+        if t:
+            repetitions = t.default_repetitions
+            initial_concentration = t.initial_concentration
+            final_concentration = t.final_concentration
+            literal_final_concentration = t.literal_final_concentration
+            initial_unit = t.start_uom and t.start_uom.id or None
+            final_unit = t.end_uom and t.end_uom.id or None
+            detection_limit = t.detection_limit
+            quantification_limit = t.quantification_limit
+            lower_limit = t.lower_limit
+            upper_limit = t.upper_limit
+            decimals = t.calc_decimals
+            significant_digits = t.significant_digits
+            scientific_notation = t.scientific_notation
+            report = t.report
+            department = t.department and t.department.id or None
+        else:
+            repetitions = 0
+            initial_concentration = None
+            final_concentration = None
+            literal_final_concentration = None
+            initial_unit = None
+            final_unit = None
+            detection_limit = None
+            quantification_limit = None
+            lower_limit = None
+            upper_limit = None
+            decimals = 2
+            significant_digits = None
+            scientific_notation = False
+            report = False
+            department = None
+
+        results_estimated_waiting = None
+        cursor.execute('SELECT results_estimated_waiting '
+            'FROM "' + WaitingTime._table + '" '
+            'WHERE method = %s '
+                'AND party = %s',
+            (detail.method.id, detail.party.id))
+        res = cursor.fetchone()
+        if res:
+            results_estimated_waiting = res[0]
+        else:
+            cursor.execute('SELECT results_estimated_waiting '
+                'FROM "' + Method._table + '" '
+                'WHERE id = %s', (detail.method.id,))
+            res = cursor.fetchone()
+            if res:
+                results_estimated_waiting = res[0]
+
+        if not department:
+            cursor.execute('SELECT department '
+                'FROM "' + AnalysisLaboratory._table + '" '
+                'WHERE analysis = %s '
+                    'AND laboratory = %s '
+                'ORDER BY by_default DESC',
+                (detail.analysis.id, detail.laboratory.id))
+            res = cursor.fetchone()
+            if res and res[0]:
+                department = res[0]
+            else:
+                cursor.execute('SELECT department '
+                    'FROM "' + ProductType._table + '" '
+                    'WHERE id = %s', (fraction.product_type.id,))
+                res = cursor.fetchone()
+                if res and res[0]:
+                    department = res[0]
+
+        to_create = []
+        for i in range(0, repetitions + 1):
+            notebook_line = {
+                'notebook': notebook.id,
+                'analysis_detail': detail.id,
+                'service': detail.service.id,
+                'analysis': detail.analysis.id,
+                'analysis_origin': detail.analysis_origin,
+                'urgent': detail.service.urgent,
+                'repetition': i,
+                'laboratory': detail.laboratory.id,
+                'method': detail.method.id,
+                'device': detail.device and detail.device.id or None,
+                'initial_concentration': initial_concentration,
+                'final_concentration': final_concentration,
+                'literal_final_concentration': literal_final_concentration,
+                'initial_unit': initial_unit,
+                'final_unit': final_unit,
+                'detection_limit': detection_limit,
+                'quantification_limit': quantification_limit,
+                'lower_limit': lower_limit,
+                'upper_limit': upper_limit,
+                'decimals': decimals,
+                'significant_digits': significant_digits,
+                'scientific_notation': scientific_notation,
+                'report': report,
+                'results_estimated_waiting': results_estimated_waiting,
+                'department': department,
+                }
+            to_create.append(notebook_line)
+        return to_create, t
+
+    @classmethod
+    def _get_notebook_line_valid_typification(cls, detail, fraction):
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+        return Typification.get_valid_typification(
+            fraction.product_type.id, fraction.matrix.id,
+            detail.analysis.id, detail.method.id)
 
     @staticmethod
     def default_service_view():

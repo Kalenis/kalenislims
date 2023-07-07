@@ -363,185 +363,58 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
 
     @classmethod
     def create_notebook_lines(cls, details, fraction):
-        cursor = Transaction().connection.cursor()
         pool = Pool()
-        Typification = pool.get('lims.typification')
-        Method = pool.get('lims.lab.method')
-        WaitingTime = pool.get('lims.lab.method.results_waiting')
-        AnalysisLaboratory = pool.get('lims.analysis-laboratory')
-        ProductType = pool.get('lims.product.type')
-        Notebook = pool.get('lims.notebook')
-        NotebookLine = pool.get('lims.notebook.line')
         Company = pool.get('company.company')
-        Config = pool.get('lims.configuration')
-        Lang = pool.get('ir.lang')
 
-        with Transaction().set_user(0):
-            notebooks = Notebook.search([('fraction', '=', fraction.id)])
-            if not notebooks:
-                return
-            notebook = notebooks[0]
-
-        template_id = None
-        if Transaction().context.get('template'):
-            template_id = Transaction().context.get('template')
-
-        lines_to_create = []
-        for detail in details:
-            clause = ('product_type = %s '
-                'AND matrix = %s '
-                'AND analysis = %s '
-                'AND method = %s '
-                'AND valid')
-            params = [fraction.product_type.id, fraction.matrix.id,
-                detail.analysis.id, detail.method.id]
-            if template_id:
-                clause += ' AND quality_template = %s'
-                params.append(template_id)
-
-            cursor.execute('SELECT id '
-                'FROM "' + Typification._table + '" '
-                'WHERE ' + clause,
-                tuple(params))
-            res = cursor.fetchone()
-            t = res and Typification(res[0]) or None
-
-            if t:
-                repetitions = t.default_repetitions
-                initial_concentration = t.initial_concentration
-                final_concentration = t.final_concentration
-                initial_unit = t.start_uom and t.start_uom.id or None
-                final_unit = t.end_uom and t.end_uom.id or None
-                detection_limit = t.detection_limit
-                quantification_limit = t.quantification_limit
-                lower_limit = t.lower_limit
-                upper_limit = t.upper_limit
-                decimals = t.calc_decimals
-                significant_digits = t.significant_digits
-                scientific_notation = t.scientific_notation
-                report = t.report
-                department = t.department and t.department.id or None
-            else:
-                repetitions = 0
-                initial_concentration = None
-                final_concentration = None
-                initial_unit = None
-                final_unit = None
-                detection_limit = None
-                quantification_limit = None
-                lower_limit = None
-                upper_limit = None
-                decimals = 2
-                significant_digits = None
-                scientific_notation = False
-                report = False
-                department = None
-
-            results_estimated_waiting = None
-            cursor.execute('SELECT results_estimated_waiting '
-                'FROM "' + WaitingTime._table + '" '
-                'WHERE method = %s '
-                    'AND party = %s',
-                (detail.method.id, detail.party.id))
-            res = cursor.fetchone()
-            if res:
-                results_estimated_waiting = res[0]
-            else:
-                cursor.execute('SELECT results_estimated_waiting '
-                    'FROM "' + Method._table + '" '
-                    'WHERE id = %s', (detail.method.id,))
-                res = cursor.fetchone()
-                if res:
-                    results_estimated_waiting = res[0]
-
-            if not department:
-                cursor.execute('SELECT department '
-                    'FROM "' + AnalysisLaboratory._table + '" '
-                    'WHERE analysis = %s '
-                        'AND laboratory = %s '
-                    'ORDER BY by_default DESC',
-                    (detail.analysis.id, detail.laboratory.id))
-                res = cursor.fetchone()
-                if res and res[0]:
-                    department = res[0]
-                else:
-                    cursor.execute('SELECT department '
-                        'FROM "' + ProductType._table + '" '
-                        'WHERE id = %s', (fraction.product_type.id,))
-                    res = cursor.fetchone()
-                    if res and res[0]:
-                        department = res[0]
-
-            for i in range(0, repetitions + 1):
-                notebook_line = {
-                    'notebook': notebook.id,
-                    'analysis_detail': detail.id,
-                    'service': detail.service.id,
-                    'analysis': detail.analysis.id,
-                    'analysis_origin': detail.analysis_origin,
-                    'urgent': detail.service.urgent,
-                    'repetition': i,
-                    'laboratory': detail.laboratory.id,
-                    'method': detail.method.id,
-                    'device': detail.device and detail.device.id or None,
-                    'initial_concentration': initial_concentration,
-                    'final_concentration': final_concentration,
-                    'initial_unit': initial_unit,
-                    'final_unit': final_unit,
-                    'detection_limit': detection_limit,
-                    'quantification_limit': quantification_limit,
-                    'lower_limit': lower_limit,
-                    'upper_limit': upper_limit,
-                    'decimals': decimals,
-                    'significant_digits': significant_digits,
-                    'scientific_notation': scientific_notation,
-                    'report': report,
-                    'results_estimated_waiting': results_estimated_waiting,
-                    'department': department,
-                    }
-                if template_id and t:
-                    notebook_line['typification'] = t.id
-                    notebook_line['test_value'] = (t.valid_value and
-                        t.valid_value.id or None)
-                    notebook_line['quality_test'] = Transaction().context.get(
-                        'test')
-                    notebook_line['quality_min'] = t.quality_min
-                    notebook_line['quality_max'] = t.quality_max
-                    notebook_line['quality_test_report'] = (
-                        t.quality_test_report)
-                    notebook_line['specification'] = t.specification
-                lines_to_create.append(notebook_line)
-
-        if not lines_to_create:
+        lines = super().create_notebook_lines(details, fraction)
+        if not lines:
             companies = Company.search([])
             if fraction.party.id not in [c.party.id for c in companies]:
                 raise UserError(gettext(
                     'lims.msg_not_services', fraction=fraction.rec_name))
+        return lines
 
-        with Transaction().set_user(0):
-            lines = NotebookLine.create(lines_to_create)
+    @classmethod
+    def _get_notebook_line(cls, detail, fraction, notebook):
+        to_create, t = super()._get_notebook_line(detail, fraction, notebook)
+        template_id = Transaction().context.get('template', None)
+        if template_id and t:
+            test_value = t.valid_value and t.valid_value.id or None
+            quality_test = Transaction().context.get('test')
+            for notebook_line in to_create:
+                notebook_line['typification'] = t.id
+                notebook_line['test_value'] = test_value
+                notebook_line['quality_test'] = quality_test
+                notebook_line['quality_min'] = t.quality_min
+                notebook_line['quality_max'] = t.quality_max
+                notebook_line['quality_test_report'] = t.quality_test_report
+                notebook_line['specification'] = t.specification
+        return to_create, t
 
-            # copy translated fields from typification
-            default_language = Config(1).results_report_language
-            for lang in Lang.search([
-                    ('translatable', '=', True),
-                    ('code', '!=', default_language.code),
-                    ]):
-                with Transaction().set_context(language=lang.code):
-                    lines_to_save = []
-                    for line in lines:
-                        t = Typification.get_valid_typification(
-                            line.product_type.id, line.matrix.id,
-                            line.analysis.id, line.method.id)
-                        if not t:
-                            continue
-                        line_lang = NotebookLine(line.id)
-                        line_lang.initial_concentration = (
-                            t.initial_concentration)
-                        line_lang.final_concentration = (
-                            t.final_concentration)
-                        lines_to_save.append(line_lang)
-                    NotebookLine.save(lines_to_save)
+    @classmethod
+    def _get_notebook_line_valid_typification(cls, detail, fraction):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+
+        template_id = Transaction().context.get('template', None)
+        if not template_id:
+            return Typification.get_valid_typification(
+                fraction.product_type.id, fraction.matrix.id,
+                detail.analysis.id, detail.method.id)
+
+        cursor.execute('SELECT id '
+            'FROM "' + Typification._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s '
+                'AND analysis = %s '
+                'AND method = %s '
+                'AND quality_template = %s '
+                'AND valid',
+            (fraction.product_type.id, fraction.matrix.id,
+                detail.analysis.id, detail.method.id, template_id))
+        res = cursor.fetchone()
+        return res and Typification(res[0]) or None
 
 
 class AnalysisSheet(metaclass=PoolMeta):

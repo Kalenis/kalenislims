@@ -663,63 +663,67 @@ class Service(ModelSQL, ModelView):
         if additionals_to_delete:
             cls.delete(additionals_to_delete)
 
-    @staticmethod
-    def update_analysis_detail(services):
+    @classmethod
+    def update_analysis_detail(cls, services):
         pool = Pool()
-        Service = pool.get('lims.service')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
+        res = []
         for service in services:
             if service.annulled:
                 continue
             to_delete = EntryDetailAnalysis.search([
-                ('service', '=', service.id),
-                ])
+                ('service', '=', service.id)])
             if to_delete:
                 with Transaction().set_user(0, set_context=True):
                     EntryDetailAnalysis.delete(to_delete)
             if service.analysis.behavior == 'additional':
                 continue
 
-            to_create = []
-            service_context = {
-                'product_type': service.fraction.product_type.id,
-                'matrix': service.fraction.matrix.id,
-                }
-            analysis_data = []
-            if service.analysis.type == 'analysis':
-                laboratory_id = service.laboratory.id
-                method_id = service.method.id if service.method else None
-                device_id = service.device.id if service.device else None
-
-                analysis_data.append({
-                    'id': service.analysis.id,
-                    'origin': service.analysis.code,
-                    'laboratory': laboratory_id,
-                    'method': method_id,
-                    'device': device_id,
-                    })
-            else:
-                analysis_data.extend(Service._get_included_analysis(
-                    service.analysis, service.analysis.code,
-                    service_context))
-
-            for analysis in analysis_data:
-                values = {}
-                values['service'] = service.id
-                values['analysis'] = analysis['id']
-                values['analysis_origin'] = analysis['origin']
-                values['laboratory'] = analysis['laboratory']
-                values['method'] = analysis['method']
-                values['device'] = analysis['device']
-                to_create.append(values)
-
+            to_create = cls._get_analysis_detail(service)
             if to_create:
                 with Transaction().set_user(0, set_context=True):
-                    EntryDetailAnalysis.create(to_create)
+                    res.extend(EntryDetailAnalysis.create(to_create))
+        return res
 
-    @staticmethod
-    def _get_included_analysis(analysis, analysis_origin='',
+    @classmethod
+    def _get_analysis_detail(cls, service):
+        service_context = {
+            'product_type': service.fraction.product_type.id,
+            'matrix': service.fraction.matrix.id,
+            }
+        analysis_data = []
+        if service.analysis.type == 'analysis':
+            laboratory_id = service.laboratory.id
+            method_id = service.method.id if service.method else None
+            device_id = service.device.id if service.device else None
+
+            analysis_data.append({
+                'id': service.analysis.id,
+                'origin': service.analysis.code,
+                'laboratory': laboratory_id,
+                'method': method_id,
+                'device': device_id,
+                })
+        else:
+            analysis_data.extend(cls._get_included_analysis(
+                service.analysis, service.analysis.code,
+                service_context))
+
+        to_create = []
+        for analysis in analysis_data:
+            values = {}
+            values['service'] = service.id
+            values['analysis'] = analysis['id']
+            values['analysis_origin'] = analysis['origin']
+            values['laboratory'] = analysis['laboratory']
+            values['method'] = analysis['method']
+            values['device'] = analysis['device']
+            to_create.append(values)
+        return to_create
+
+    @classmethod
+    def _get_included_analysis(cls, analysis, analysis_origin='',
             service_context=None):
         cursor = Transaction().connection.cursor()
         pool = Pool()
@@ -788,7 +792,7 @@ class Service(ModelSQL, ModelView):
                         'method': method_id,
                         'device': device_id,
                         })
-                childs.extend(Service._get_included_analysis(
+                childs.extend(cls._get_included_analysis(
                     included.included_analysis, origin, service_context))
         return childs
 
@@ -4537,7 +4541,6 @@ class CompleteServices(Wizard):
     def complete_analysis_detail(self, service):
         'Similar to Service.update_analysis_detail(services)'
         pool = Pool()
-        Service = pool.get('lims.service')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
         if service.annulled:
@@ -4552,54 +4555,31 @@ class CompleteServices(Wizard):
         if service.analysis.behavior == 'additional':
             return
 
-        analysis_data = []
-        if service.analysis.type == 'analysis':
-            laboratory_id = service.laboratory.id
-            method_id = service.method.id if service.method else None
-            device_id = service.device.id if service.device else None
-
-            analysis_data.append({
-                'id': service.analysis.id,
-                'origin': service.analysis.code,
-                'laboratory': laboratory_id,
-                'method': method_id,
-                'device': device_id,
-                })
-        else:
-            service_context = {
-                'product_type': service.fraction.product_type.id,
-                'matrix': service.fraction.matrix.id,
-                }
-
-            analysis_data.extend(Service._get_included_analysis(
-                service.analysis, service.analysis.code,
-                service_context))
-
-        to_create = []
-        for analysis in analysis_data:
-            if EntryDetailAnalysis.search_count([
-                    ('fraction', '=', service.fraction.id),
-                    ('analysis', '=', analysis['id']),
-                    ('method', '=', analysis['method']),
-                    ]) != 0:
-                continue
-            values = {}
-            values['service'] = service.id
-            values['analysis'] = analysis['id']
-            values['analysis_origin'] = analysis['origin']
-            values['laboratory'] = analysis['laboratory']
-            values['method'] = analysis['method']
-            values['device'] = analysis['device']
-            values['confirmation_date'] = service.confirmation_date
-            values['state'] = 'unplanned'
-            to_create.append(values)
-
+        to_create = self._get_analysis_detail(service)
         if to_create:
             with Transaction().set_user(0, set_context=True):
                 analysis_detail = EntryDetailAnalysis.create(to_create)
             if analysis_detail:
                 EntryDetailAnalysis.create_notebook_lines(analysis_detail,
                     service.fraction)
+
+    def _get_analysis_detail(self, service):
+        pool = Pool()
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        to_create = []
+        for values in Service._get_analysis_detail(service):
+            if EntryDetailAnalysis.search_count([
+                    ('fraction', '=', service.fraction.id),
+                    ('analysis', '=', values['analysis']),
+                    ('method', '=', values['method']),
+                    ]) != 0:
+                continue
+            values['confirmation_date'] = service.confirmation_date
+            values['state'] = 'unplanned'
+            to_create.append(values)
+        return to_create
 
 
 class LoadServices(Wizard):
