@@ -948,47 +948,16 @@ class NotebookRule(ModelSQL, ModelView):
             self._exec_add_service(line, typification[0])
 
     def _exec_add_service(self, line, typification):
-        cursor = Transaction().connection.cursor()
         pool = Pool()
-        AnalysisLaboratory = pool.get('lims.analysis-laboratory')
-        AnalysisDevice = pool.get('lims.analysis.device')
         Service = pool.get('lims.service')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         NotebookLine = pool.get('lims.notebook.line')
 
-        cursor.execute('SELECT DISTINCT(laboratory) '
-            'FROM "' + AnalysisLaboratory._table + '" '
-            'WHERE analysis = %s',
-            (self.target_analysis.id,))
-        laboratories = [x[0] for x in cursor.fetchall()]
-        if not laboratories:
+        service_data = self._get_service(line, typification)
+        if not service_data:
             return
-        laboratory_id = laboratories[0]
-
-        method_id = self.target_method and self.target_method.id or None
-        if not method_id:
-            method_id = typification.method and typification.method.id or None
-
-        cursor.execute('SELECT DISTINCT(device) '
-            'FROM "' + AnalysisDevice._table + '" '
-            'WHERE active IS TRUE '
-                'AND analysis = %s  '
-                'AND laboratory = %s '
-                'AND by_default IS TRUE',
-            (self.target_analysis.id, laboratory_id))
-        devices = [x[0] for x in cursor.fetchall()]
-        device_id = devices and devices[0] or None
-
-        service_create = [{
-            'fraction': line.fraction.id,
-            'analysis': self.target_analysis.id,
-            'urgent': True,
-            'laboratory': laboratory_id,
-            'method': method_id,
-            'device': device_id,
-            }]
         with Transaction().set_context(manage_service=True):
-            new_service, = Service.create(service_create)
+            new_service, = Service.create([service_data])
 
         Service.copy_analysis_comments([new_service])
         Service.set_confirmation_date([new_service])
@@ -1006,6 +975,45 @@ class NotebookRule(ModelSQL, ModelView):
             if notebook_lines:
                 NotebookLine.write(notebook_lines, {'rule': self.id})
             return notebook_lines
+
+    def _get_service(self, line, typification):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        AnalysisLaboratory = pool.get('lims.analysis-laboratory')
+        AnalysisDevice = pool.get('lims.analysis.device')
+
+        cursor.execute('SELECT DISTINCT(laboratory) '
+            'FROM "' + AnalysisLaboratory._table + '" '
+            'WHERE analysis = %s',
+            (self.target_analysis.id,))
+        laboratories = [x[0] for x in cursor.fetchall()]
+        if not laboratories:
+            return None
+        laboratory_id = laboratories[0]
+
+        method_id = self.target_method and self.target_method.id or None
+        if not method_id:
+            method_id = typification.method and typification.method.id or None
+
+        cursor.execute('SELECT DISTINCT(device) '
+            'FROM "' + AnalysisDevice._table + '" '
+            'WHERE active IS TRUE '
+                'AND analysis = %s  '
+                'AND laboratory = %s '
+                'AND by_default IS TRUE',
+            (self.target_analysis.id, laboratory_id))
+        devices = [x[0] for x in cursor.fetchall()]
+        device_id = devices and devices[0] or None
+
+        service_data = {
+            'fraction': line.fraction.id,
+            'analysis': self.target_analysis.id,
+            'urgent': True,
+            'laboratory': laboratory_id,
+            'method': method_id,
+            'device': device_id,
+            }
+        return service_data
 
     def _exec_edit(self, line):
         pool = Pool()
