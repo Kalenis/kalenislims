@@ -2478,6 +2478,22 @@ msgctxt ""
 msgid "Supervisor"
 msgstr "Supervisor"
 
+msgctxt "field:lims.lab.workshift,duration:"
+msgid "Duration"
+msgstr "Duración"
+
+msgctxt "field:lims.lab.workshift,end_time:"
+msgid "End Time"
+msgstr "Hora de Finalización"
+
+msgctxt "field:lims.lab.workshift,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.lab.workshift,start_time:"
+msgid "Start Time"
+msgstr "Hora de Inicio"
+
 msgctxt "field:lims.lab.workyear,code:"
 msgid "Code"
 msgstr "Código"
@@ -2513,6 +2529,10 @@ msgstr "Secuencias"
 msgctxt "field:lims.lab.workyear,service_sequence:"
 msgid "Service Sequence"
 msgstr "Secuencia de servicios"
+
+msgctxt "field:lims.lab.workyear,shifts:"
+msgid "Work shifts"
+msgstr "Turnos de trabajo"
 
 msgctxt "field:lims.lab.workyear,start_date:"
 msgid "Start date"
@@ -2555,6 +2575,14 @@ msgid "Service Sequence"
 msgstr "Secuencia de servicios"
 
 msgctxt "field:lims.lab.workyear.sequence,workyear:"
+msgid "Work Year"
+msgstr "Año laboral"
+
+msgctxt "field:lims.lab.workyear.shift,shift:"
+msgid "Work Shift"
+msgstr "Turno de trabajo"
+
+msgctxt "field:lims.lab.workyear.shift,workyear:"
 msgid "Work Year"
 msgstr "Año laboral"
 
@@ -10035,6 +10063,10 @@ msgctxt "model:lims.lab.professional.method.requalification.supervisor,name:"
 msgid "Laboratory Professional Method Requalification Supervisor"
 msgstr "Supervisor de Recualificación de Método de Profesional"
 
+msgctxt "model:lims.lab.workshift,name:"
+msgid "Work Shift"
+msgstr "Turno de trabajo"
+
 msgctxt "model:lims.lab.workyear,name:"
 msgid "Work Year"
 msgstr "Año laboral"
@@ -10046,6 +10078,10 @@ msgstr "Feriado de Año laboral"
 msgctxt "model:lims.lab.workyear.sequence,name:"
 msgid "Work Year Sequence"
 msgstr "Secuencia de años laborales"
+
+msgctxt "model:lims.lab.workyear.shift,name:"
+msgid "Work Year Shift"
+msgstr "Turno de Año laboral"
 
 msgctxt "model:lims.laboratory,name:"
 msgid "Laboratory"

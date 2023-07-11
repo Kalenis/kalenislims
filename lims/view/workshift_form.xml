@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<form>
+    <label name="name"/>
+    <field name="name"/>
+    <label name="duration"/>
+    <field name="duration"/>
+    <label name="start_time"/>
+    <field name="start_time"/>
+    <label name="end_time"/>
+    <field name="end_time"/>
+</form>

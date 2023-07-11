@@ -20,5 +20,6 @@
     <newline/>
     <separator name="workdays" colspan="4"/>
     <field name="workdays" colspan="4"/>
+    <field name="shifts" colspan="4"/>
     <field name="holidays" colspan="4"/>
 </form>
