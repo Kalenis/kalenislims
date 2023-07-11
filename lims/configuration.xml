@@ -99,6 +99,19 @@
             <field name="name">workyear_holiday_list</field>
         </record>
 
+<!-- Work Year Shift -->
+
+        <record model="ir.ui.view" id="lims_workshift_view_form">
+            <field name="model">lims.lab.workshift</field>
+            <field name="type">form</field>
+            <field name="name">workshift_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_workshift_view_list">
+            <field name="model">lims.lab.workshift</field>
+            <field name="type">tree</field>
+            <field name="name">workshift_list</field>
+        </record>
+
 <!-- Laboratory Notebook View -->
 
         <record model="ir.ui.view" id="lims_notebook_views_view_form">

@@ -2,7 +2,7 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil import rrule
 from sql import Null
 
@@ -480,6 +480,8 @@ class LabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
         ], 'Working days', sort=False)
     holidays = fields.One2Many('lims.lab.workyear.holiday', 'workyear',
         'Holidays')
+    shifts = fields.Many2Many('lims.lab.workyear.shift', 'workyear', 'shift',
+        'Work shifts')
 
     @classmethod
     def __setup__(cls):
@@ -655,6 +657,48 @@ class LabWorkYearHoliday(ModelSQL, ModelView):
     def __setup__(cls):
         super().__setup__()
         cls._order.insert(0, ('date', 'ASC'))
+
+
+class LabWorkYearShift(ModelSQL):
+    'Work Year Shift'
+    __name__ = 'lims.lab.workyear.shift'
+
+    workyear = fields.Many2One('lims.lab.workyear', 'Work Year',
+        required=True, ondelete='CASCADE', select=True)
+    shift = fields.Many2One('lims.lab.workshift', 'Work Shift',
+        required=True, ondelete='CASCADE', select=True)
+
+
+class LabWorkShift(ModelSQL, ModelView):
+    'Work Shift'
+    __name__ = 'lims.lab.workshift'
+
+    name = fields.Char('Name', required=True)
+    start_time = fields.Time('Start Time')
+    end_time = fields.Time('End Time')
+    duration = fields.TimeDelta('Duration', 'company_work_time',
+        states={'readonly': True})
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._order.insert(0, ('start_time', 'ASC'))
+
+    @fields.depends('start_time', 'end_time')
+    def on_change_with_duration(self, name=None):
+        start_time = self.start_time
+        end_time = self.end_time
+        if not start_time or not end_time:
+            return None
+        duration_seconds = (end_time.hour * 60 * 60)
+        duration_seconds += (end_time.minute * 60)
+        duration_seconds += end_time.second
+        if start_time > end_time:
+            duration_seconds += (24 * 60 * 60)  # Add 24Hs
+        duration_seconds -= (start_time.hour * 60 * 60)
+        duration_seconds -= (start_time.minute * 60)
+        duration_seconds -= start_time.second
+        return timedelta(seconds=duration_seconds)
 
 
 class Cron(metaclass=PoolMeta):
