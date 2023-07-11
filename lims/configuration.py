@@ -676,8 +676,7 @@ class LabWorkShift(ModelSQL, ModelView):
     name = fields.Char('Name', required=True)
     start_time = fields.Time('Start Time')
     end_time = fields.Time('End Time')
-    duration = fields.TimeDelta('Duration', 'company_work_time',
-        states={'readonly': True})
+    duration = fields.TimeDelta('Duration', states={'readonly': True})
 
     @classmethod
     def __setup__(cls):
