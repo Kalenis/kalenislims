@@ -139,6 +139,14 @@ msgctxt "field:lims.administrative.task.program,responsible:"
 msgid "Responsible User"
 msgstr "Usuario responsable"
 
+msgctxt "field:lims.administrative.task.program,shift_time:"
+msgid "Time of the shift"
+msgstr "Momento del turno"
+
+msgctxt "field:lims.administrative.task.program,shifts:"
+msgid "Work shifts"
+msgstr "Turnos de trabajo"
+
 msgctxt "field:lims.administrative.task.program,specific_day:"
 msgid "Specific Day"
 msgstr "Día específico"
@@ -529,6 +537,10 @@ msgid "Quantity"
 msgstr "Cantidad"
 
 msgctxt "selection:lims.administrative.task.program,frequence_selection:"
+msgid "By work shift"
+msgstr "Por turno de trabajo"
+
+msgctxt "selection:lims.administrative.task.program,frequence_selection:"
 msgid "Customize"
 msgstr "Personalizada"
 
@@ -555,6 +567,18 @@ msgstr "Semanal"
 msgctxt "selection:lims.administrative.task.program,frequence_selection:"
 msgid "Yearly"
 msgstr "Anual"
+
+msgctxt "selection:lims.administrative.task.program,shift_time:"
+msgid "At end"
+msgstr "Al final"
+
+msgctxt "selection:lims.administrative.task.program,shift_time:"
+msgid "At start"
+msgstr "Al inicio"
+
+msgctxt "selection:lims.administrative.task.program,shift_time:"
+msgid "At start and end"
+msgstr "Al inicio y al final"
 
 msgctxt "selection:lims.administrative.task.program,specific_day:"
 msgid "Friday"

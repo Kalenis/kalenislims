@@ -23,6 +23,10 @@
             <label name="specific_event_time"/>
             <field name="specific_event_time"/>
         </group>
+        <label name="shift_time"/>
+        <field name="shift_time"/>
+        <label name="shifts"/>
+        <field name="shifts"/>
     </group>
     <group id="create_tasks" colspan="4" string="Generate Administrative Tasks">
         <label name="start_date"/>

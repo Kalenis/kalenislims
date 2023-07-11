@@ -29,6 +29,10 @@
             <label name="specific_event_time"/>
             <field name="specific_event_time"/>
         </group>
+        <label name="shift_time"/>
+        <field name="shift_time"/>
+        <label name="shifts"/>
+        <field name="shifts"/>
         <label name="notice_days"/>
         <field name="notice_days"/>
     </group>
