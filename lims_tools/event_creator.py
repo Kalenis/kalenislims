@@ -283,12 +283,11 @@ class EventCreator(Model):
         while date < end_date:
             for specific_time in specific_times:
                 event = {}
-                event_date = date.replace(
+                event_date = company_timezone.localize(date.replace(
                     hour=specific_time.hour,
                     minute=specific_time.minute,
-                    second=specific_time.second,
-                    tzinfo=company_timezone
-                    )
+                    second=specific_time.second
+                    ))
                 event['scheduled_date'] = event_date
                 event['week_day'] = date.weekday()
                 new_event = create_method(record, event)
