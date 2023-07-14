@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from trytond.model import Model, fields
 from trytond.pool import Pool
 from trytond.pyson import Eval
+from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
@@ -244,6 +245,7 @@ class EventCreator(Model):
     def create_workshift_events_until_date(cls, record, create_method,
             start_date=None, include_start_date=True):
         pool = Pool()
+        Company = pool.get('company.company')
         LabWorkYear = pool.get('lims.lab.workyear')
         WorkShift = pool.get('lims.lab.workyear.shift')
 
@@ -254,6 +256,9 @@ class EventCreator(Model):
             ])
         if not workyear_shifts:
             return []
+
+        company = Company(Transaction().context.get('company'))
+        company_timezone = company.get_timezone()
 
         specific_times = []
         for ws in workyear_shifts:
@@ -281,7 +286,8 @@ class EventCreator(Model):
                 event_date = date.replace(
                     hour=specific_time.hour,
                     minute=specific_time.minute,
-                    second=specific_time.second
+                    second=specific_time.second,
+                    tzinfo=company_timezone
                     )
                 event['scheduled_date'] = event_date
                 event['week_day'] = date.weekday()
