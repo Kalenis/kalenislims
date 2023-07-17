@@ -43,6 +43,16 @@ DETAIL_FREQUENCE_OPTIONS = [
     ('years', 'Years'),
     ]
 
+WEEK_DAYS = [
+    (None, ''),
+    ('0', 'Monday'),
+    ('1', 'Tuesday'),
+    ('2', 'Wednesday'),
+    ('3', 'Thursday'),
+    ('4', 'Friday'),
+    ('5', 'Saturday'),
+    ('6', 'Sunday'),
+    ]
 
 class EventCreator(Model):
     'Event Creator'
@@ -112,8 +122,13 @@ class EventCreator(Model):
 
     @classmethod
     def get_workyear_shifts(cls):
-        shifts = Pool().get('lims.lab.workshift').search([])
-        result = [(shift.id, shift.name) for shift in shifts]
+        pool = Pool()
+        LabWorkYear = pool.get('lims.lab.workyear')
+        WorkShift = pool.get('lims.lab.workyear.shift')
+        workyear_shifts = WorkShift.search([
+            ('workyear', '=', LabWorkYear.find()),
+            ])
+        result = [(ws.shift.id, ws.shift.name) for ws in workyear_shifts]
         return result
 
     @classmethod
@@ -175,6 +190,7 @@ class EventCreator(Model):
             start_date=None, include_start_date=True):
         pool = Pool()
         LabWorkYear = pool.get('lims.lab.workyear')
+        Company = pool.get('company.company')
         WorkShift = pool.get('lims.lab.workyear.shift')
 
         workyear_id = LabWorkYear.find()
@@ -184,6 +200,9 @@ class EventCreator(Model):
             ])
         if not workyear_shifts:
             return []
+
+        company = Company(Transaction().context.get('company'))
+        company_timezone = company.get_timezone()
 
         specific_times = []
         for ws in workyear_shifts:
@@ -204,11 +223,11 @@ class EventCreator(Model):
         while len(events) < record.end_repetition:
             for specific_time in specific_times:
                 event = {}
-                event_date = date.replace(
+                event_date = company_timezone.localize(date.replace(
                     hour=specific_time.hour,
                     minute=specific_time.minute,
                     second=specific_time.second
-                    )
+                    ))
                 event['scheduled_date'] = event_date
                 event['week_day'] = date.weekday()
                 new_event = create_method(record, event)
@@ -311,3 +330,14 @@ class EventCreator(Model):
         elif unit == 'years':
             return timedelta(days=frequence * 365)
         return timedelta()
+
+class Event():
+    name = fields.Char('Name')
+    description = fields.Text('Description')
+    scheduled_date = fields.DateTime('Scheduled Date')
+    week_day = fields.Selection(WEEK_DAYS, 'Week Day', readonly=True)
+    responsible_user = fields.Many2One('res.user', 'User')
+    notification = fields.Boolean('Notificate user')
+    notification_timing = fields.Float('Notification Timing')
+    notification_timing_unit = fields.Selection(DETAIL_FREQUENCE_OPTIONS,
+        'Notification Timing unit')
