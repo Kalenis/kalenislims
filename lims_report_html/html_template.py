@@ -562,7 +562,7 @@ class LimsReport(Report):
             with file_open(os.path.join(module, path)) as f:
                 return 'file://%s' % f.name
 
-        def render(value, digits=2, lang=None, filename=None):
+        def render(value, digits=2, lang=None, filename=None, date_format=None):
             if value is None or value == '':
                 return ''
 
@@ -581,10 +581,10 @@ class LimsReport(Report):
                 return value.rec_name
 
             if isinstance(value, date):
-                return lang.strftime(value)
+                return lang.strftime(value, format=date_format)
 
             if isinstance(value, datetime):
-                return '%s %s' % (lang.strftime(value),
+                return '%s %s' % (lang.strftime(value, format=date_format),
                     value.strftime('%H:%M:%S'))
 
             if isinstance(value, str):
