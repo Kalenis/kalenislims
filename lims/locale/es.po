@@ -6134,9 +6134,25 @@ msgctxt "field:lims.sample.package,type:"
 msgid "Type"
 msgstr "Tipo"
 
+msgctxt "field:lims.sample.producer.type,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.sample.producer.type,code:"
+msgid "Code"
+msgstr "Código"
+
 msgctxt "field:lims.sample.producer,name:"
 msgid "Name"
 msgstr "Nombre"
+
+msgctxt "field:lims.sample.producer,code:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "field:lims.sample.producer,type:"
+msgid "Type"
+msgstr "Tipo"
 
 msgctxt "field:lims.sample.producer,party:"
 msgid "Party"

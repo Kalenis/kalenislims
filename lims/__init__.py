@@ -80,6 +80,7 @@ def register():
         entry.PreAssignSampleStart,
         sample.Zone,
         sample.Variety,
+        sample.SampleProducerType,
         sample.SampleProducer,
         sample.SampleAttribute,
         sample.Sample,

@@ -277,13 +277,21 @@ class FractionType(ModelSQL, ModelView):
             new_records.append(new_record)
         return new_records
 
+class SampleProducerType(ModelSQL, ModelView):
+    'Sample Producer Type'
+    __name__ = 'lims.sample.producer.type'
+
+    code = fields.Char('Code')
+    name = fields.Char('Name', required=True)
 
 class SampleProducer(ModelSQL, ModelView):
     'Sample Producer'
     __name__ = 'lims.sample.producer'
 
     party = fields.Many2One('party.party', 'Party', required=True)
+    code = fields.Char('Code')
     name = fields.Char('Name', required=True)
+    type = fields.Many2One('lims.sample.producer.type', 'Type')
 
 
 class SampleAttribute(DictSchemaMixin, ModelSQL, ModelView):
