@@ -299,6 +299,8 @@ class ResultsReport(metaclass=PoolMeta):
             'number': getattr(self, 'number', None) or '',
             'sample_number': (sample and
                 sample.notebook.fraction.sample.number or ''),
+            'sample_label': (sample and
+                sample.notebook.fraction.sample.label or ''),
             'party_name': sample and sample.party.rec_name or '',
             }
         for key, value in list(substitutions.items()):
@@ -801,6 +803,7 @@ class ReportNameFormat(ModelSQL, ModelView):
         help=("Available variables (also in upper case):"
             "\n- ${number}"
             "\n- ${sample_number}"
+            "\n- ${sample_label}"
             "\n- ${party_name}"))
 
     @classmethod
