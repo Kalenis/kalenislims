@@ -331,6 +331,19 @@ class LabDevice(DeactivableMixin, ModelSQL, ModelView):
                 cls.update_active_field(devices, vals['active'])
 
     @classmethod
+    def copy(cls, records, default=None):
+        if default is None:
+            default = {}
+        current_default = default.copy()
+
+        new_records = []
+        for record in records:
+            current_default['code'] = '%s (copy)' % record.code
+            new_record, = super().copy([record], default=current_default)
+            new_records.append(new_record)
+        return new_records
+
+    @classmethod
     def update_active_field(cls, devices, active):
         AnalysisDevice = Pool().get('lims.analysis.device')
         analysis_devices = AnalysisDevice.search([
