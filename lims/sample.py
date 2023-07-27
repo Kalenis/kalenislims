@@ -579,7 +579,7 @@ class Service(ModelSQL, ModelView):
         fractions_ids = list(set(s.fraction.id for s in services))
         cls.set_shared_fraction(fractions_ids)
         sample_ids = list(set(s.sample.id for s in services))
-        Sample.update_samples_state(sample_ids)
+        Sample.__queue__.update_samples_state(sample_ids)
         return services
 
     @classmethod
@@ -633,7 +633,7 @@ class Service(ModelSQL, ModelView):
                     break
             if update_samples_state:
                 sample_ids = list(set(s.sample.id for s in services))
-                Sample.update_samples_state(sample_ids)
+                Sample.__queue__.update_samples_state(sample_ids)
 
     @classmethod
     def _get_update_details(cls):
@@ -649,7 +649,7 @@ class Service(ModelSQL, ModelView):
         super().delete(services)
         cls.delete_additional_services()
         cls.set_shared_fraction(fractions_ids)
-        Sample.update_samples_state(sample_ids)
+        Sample.__queue__.update_samples_state(sample_ids)
 
     @classmethod
     def check_delete(cls, services):
