@@ -1249,7 +1249,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
             detail.generate_report()
             sample_ids = list(set(s.notebook.fraction.sample.id for
                 s in detail.samples))
-            Sample.update_samples_state(sample_ids)
+            Sample.__queue__.update_samples_state(sample_ids)
 
     @classmethod
     def link_notebook_lines(cls, details):
@@ -2116,7 +2116,7 @@ class ResultsReportVersionDetailSample(
         Sample = Pool().get('lims.sample')
         samples = super().create(vlist)
         sample_ids = list(set(s.notebook.fraction.sample.id for s in samples))
-        Sample.update_samples_state(sample_ids)
+        Sample.__queue__.update_samples_state(sample_ids)
         return samples
 
     @classmethod
@@ -2124,7 +2124,7 @@ class ResultsReportVersionDetailSample(
         Sample = Pool().get('lims.sample')
         sample_ids = list(set(s.notebook.fraction.sample.id for s in samples))
         super().delete(samples)
-        Sample.update_samples_state(sample_ids)
+        Sample.__queue__.update_samples_state(sample_ids)
 
 
 class ResultsReportVersionDetailLine(ModelSQL, ModelView):

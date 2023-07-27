@@ -160,7 +160,7 @@ class NotebookLine(metaclass=PoolMeta):
                 cls.update_analysis_sheet_line(lines, vals['annulled'])
             if 'analysis_sheet_activated_date' in vals:
                 sample_ids = list(set(nl.sample.id for nl in lines))
-                Sample.update_samples_state(sample_ids)
+                Sample.__queue__.update_samples_state(sample_ids)
 
     @staticmethod
     def update_analysis_sheet_line(nb_lines, annulled):
