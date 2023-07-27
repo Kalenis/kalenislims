@@ -1097,7 +1097,7 @@ class NotebookLine(ModelSQL, ModelView):
 
         cls.update_detail_report(lines)
         sample_ids = list(set(nl.sample.id for nl in lines))
-        Sample.update_samples_state(sample_ids)
+        Sample.__queue__.update_samples_state(sample_ids)
         return lines
 
     @classmethod
@@ -1133,7 +1133,7 @@ class NotebookLine(ModelSQL, ModelView):
                     break
             if update_samples_state:
                 sample_ids = list(set(nl.sample.id for nl in lines))
-                Sample.update_samples_state(sample_ids)
+                Sample.__queue__.update_samples_state(sample_ids)
             update_referrals_state = False
             for field in ('accepted', 'annulled', 'result', 'literal_result',
                     'result_modifier'):
