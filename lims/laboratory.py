@@ -525,6 +525,9 @@ class LabDevice(DeactivableMixin, ModelSQL, ModelView):
     corrections = fields.One2Many('lims.lab.device.correction', 'device',
         'Corrections')
     serial_number = fields.Char('Serial number')
+    responsible = fields.Many2One('lims.laboratory.professional',
+        'Responsible')
+
 
     @classmethod
     def __setup__(cls):

@@ -5,4 +5,5 @@
     <field name="device_type"/>
     <field name="laboratories"/>
     <field name="serial_number"/>
+    <field name="responsible"/>
 </tree>
