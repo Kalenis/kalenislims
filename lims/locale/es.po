@@ -2209,6 +2209,10 @@ msgctxt "field:lims.lab.device,non_analytical:"
 msgid "Non-analytical"
 msgstr "No analítico"
 
+msgctxt "field:lims.lab.device,responsible:"
+msgid "Responsible"
+msgstr "Responsable"
+
 msgctxt "field:lims.lab.device,serial_number:"
 msgid "Serial number"
 msgstr "Número de serie"
