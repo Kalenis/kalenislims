@@ -12,6 +12,8 @@
     <field name="device_type"/>
     <label name="serial_number"/>
     <field name="serial_number"/>
+    <label name="responsible"/>
+    <field name="responsible"/>
     <notebook>
         <page string="Laboratories" id="laboratories">
             <field name="laboratories" colspan="4"/>
