@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='general']/field[@name='extension']"
+        position="after">
+        <label name="lims_template"/>
+        <field name="lims_template"/>
+    </xpath>
+</data>

@@ -19,7 +19,6 @@ from mimetypes import guess_type as mime_guess_type
 from sql import Literal
 
 from trytond.model import ModelSQL, ModelView, DeactivableMixin, fields
-from trytond.report import Report
 from trytond.pool import Pool
 from trytond.pyson import Eval, Bool, Or
 from trytond.transaction import Transaction
@@ -311,13 +310,51 @@ class ReportTemplateSection(ModelSQL, ModelView):
                 raise UserError(gettext('lims_report_html.msg_section_pdf'))
 
 
-class LimsReport(Report):
+class LimsReport:
+    __slots__ = ()
+
+    @classmethod
+    def get_action(cls, data):
+        pool = Pool()
+        ActionReport = pool.get('ir.action.report')
+
+        action_id = data.get('action_id')
+        if action_id is None:
+            action_reports = ActionReport.search([
+                    ('report_name', '=', cls.__name__),
+                    ])
+            assert action_reports, '%s not found' % cls
+            action = action_reports[0]
+        else:
+            action = ActionReport(action_id)
+
+        return action, action.model or data.get('model')
+
+    @classmethod
+    def execute(cls, ids, data):
+        cls.check_access()
+        action, model = cls.get_action(data)
+        if action.template_extension != 'lims' or action.lims_template is None:
+            return super().execute(ids, data)
+
+        if data is None:
+            data = {}
+        current_data = data.copy()
+
+        template = action.lims_template
+        if template.type == 'base':  # HTML
+            result = cls.execute_html_lims_report(ids, current_data)
+        else:
+            current_data['action_id'] = None
+            if template.report:
+                current_data['action_id'] = template.report.id
+            result = cls.execute_custom_lims_report(ids, current_data)
+        return result
 
     @classmethod
     def execute_custom_lims_report(cls, ids, data):
         pool = Pool()
         ActionReport = pool.get('ir.action.report')
-        cls.check_access()
 
         action_id = data.get('action_id')
         if action_id is None:
@@ -364,7 +401,6 @@ class LimsReport(Report):
     def execute_html_lims_report(cls, ids, data):
         pool = Pool()
         ActionReport = pool.get('ir.action.report')
-        cls.check_access()
 
         action_reports = ActionReport.search([
             ('report_name', '=', cls.__name__),
@@ -385,11 +421,11 @@ class LimsReport(Report):
     @classmethod
     def _execute_html_lims_report(cls, records, data, action):
         record = records[0]
-        template_id, tcontent, theader, tfooter = (
+        template, tcontent, theader, tfooter = (
             cls.get_lims_template(action, record))
         context = Transaction().context
-        context['template'] = template_id
-        if not template_id:
+        context['template'] = template.id
+        if not template:
             context['default_translations'] = os.path.join(
                 os.path.dirname(__file__), 'report', 'translations')
         with Transaction().set_context(**context):
@@ -409,8 +445,8 @@ class LimsReport(Report):
         if tfooter:
             stylesheets += cls.parse_stylesheets(tfooter)
 
-        page_orientation = (record.template and
-            record.template.page_orientation or 'portrait')
+        page_orientation = (template and
+            template.page_orientation or 'portrait')
 
         document = PdfGenerator(content,
             header_html=header, footer_html=footer,
@@ -418,17 +454,21 @@ class LimsReport(Report):
             stylesheets=stylesheets,
             page_orientation=page_orientation).render_html().write_pdf()
 
-        if record.previous_sections or record.following_sections:
+        previous_sections = (hasattr(record, 'previous_sections') and
+            record.previous_sections or [])
+        following_sections = (hasattr(record, 'following_sections') and
+            record.following_sections or [])
+        if previous_sections or following_sections:
             merger = PdfFileMerger(strict=False)
             # Previous Sections
-            for section in record.previous_sections:
+            for section in previous_sections:
                 filedata = BytesIO(section.data)
                 merger.append(filedata)
             # Main Report
             filedata = BytesIO(document)
             merger.append(filedata)
             # Following Sections
-            for section in record.following_sections:
+            for section in following_sections:
                 filedata = BytesIO(section.data)
                 merger.append(filedata)
             output = BytesIO()
@@ -441,22 +481,22 @@ class LimsReport(Report):
 
     @classmethod
     def get_lims_template(cls, action, record):
-        template_id, content, header, footer = None, None, None, None
-        if record.template:
-            template_id = record.template
-            content = '<body>%s</body>' % record.template.content
-            header = (record.template.header and
+        template, content, header, footer = None, None, None, None
+        template = action.lims_template or record.template
+        if template:
+            content = '<body>%s</body>' % template.content
+            header = (template.header and
                 '<header id="header">%s</header>' %
-                    record.template.header.content)
-            footer = (record.template.footer and
+                    template.header.content)
+            footer = (template.footer and
                 '<footer id="footer">%s</footer>' %
-                    record.template.footer.content)
+                    template.footer.content)
         if not content:
             content = (action.report_content and
                 action.report_content.decode('utf-8'))
             if not content:
                 raise UserError(gettext('lims_report_html.msg_no_template'))
-        return template_id, content, header, footer
+        return template, content, header, footer
 
     @classmethod
     def render_lims_template(cls, action, template_string,
