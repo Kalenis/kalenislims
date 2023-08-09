@@ -2,6 +2,10 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "field:ir.action.report,lims_template:"
+msgid "Report Template"
+msgstr "Plantilla de Informe"
+
 msgctxt "field:lims.analysis,result_template:"
 msgid "Report Template"
 msgstr "Plantilla de Informe"
@@ -257,6 +261,10 @@ msgctxt "model:ir.action,name:act_result_template_list"
 msgid "Results Report Templates"
 msgstr "Plantillas de Informe de resultados"
 
+msgctxt "model:ir.action,name:act_template_list"
+msgid "Report Templates"
+msgstr "Plantillas de Informe"
+
 msgctxt "model:ir.action,name:report_result_report_html"
 msgid "Results Report"
 msgstr "Informe de resultados"
@@ -288,6 +296,10 @@ msgstr "Sí"
 
 msgctxt "model:ir.ui.menu,name:menu_result_template_list"
 msgid "Results Report Templates"
+msgstr "Plantillas de Informe"
+
+msgctxt "model:ir.ui.menu,name:menu_template_list"
+msgid "Report Templates"
 msgstr "Plantillas de Informe"
 
 msgctxt "model:lims.report.template,name:"

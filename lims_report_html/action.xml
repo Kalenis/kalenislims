@@ -1,0 +1,11 @@
+<tryton>
+    <data>
+
+        <record model="ir.ui.view" id="action_report_view_form">
+            <field name="model">ir.action.report</field>
+            <field name="inherit" ref="ir.action_report_view_form"/>
+            <field name="name">action_report_form</field>
+        </record>
+
+    </data>
+</tryton>

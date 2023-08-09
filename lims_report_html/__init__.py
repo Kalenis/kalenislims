@@ -3,6 +3,7 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import Pool
+from trytond.report import Report
 from . import action
 from . import html_template
 from . import configuration
@@ -15,6 +16,7 @@ from . import notebook
 
 
 def register():
+    module = 'lims_report_html'
     Pool.register(
         action.ActionReport,
         html_template.ReportTemplate,
@@ -36,13 +38,15 @@ def register():
         results_report.GenerateReportStart,
         results_report.RelateAttachmentResultsReportStart,
         notebook.Notebook,
-        module='lims_report_html', type_='model')
+        module=module, type_='model')
     Pool.register(
         action.ReportTranslationSet,
         sample.CreateSample,
         results_report.GenerateReport,
         results_report.RelateAttachmentResultsReport,
-        module='lims_report_html', type_='wizard')
+        module=module, type_='wizard')
     Pool.register(
         results_report.ResultReport,
-        module='lims_report_html', type_='report')
+        module=module, type_='report')
+    Pool.register_mixin(html_template.LimsReport, Report,
+        module=module)

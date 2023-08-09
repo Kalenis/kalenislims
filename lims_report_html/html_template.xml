@@ -28,6 +28,39 @@
             <field name="name">template_section_list</field>
         </record>
 
+<!-- Report Template -->
+
+        <record model="ir.ui.view" id="template_view_form">
+            <field name="model">lims.report.template</field>
+            <field name="type">form</field>
+            <field name="name">template_form</field>
+        </record>
+        <record model="ir.ui.view" id="template_view_list">
+            <field name="model">lims.report.template</field>
+            <field name="type">tree</field>
+            <field name="name">template_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_template_list">
+            <field name="name">Report Templates</field>
+            <field name="res_model">lims.report.template</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_template_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="template_view_list"/>
+            <field name="act_window" ref="act_template_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_template_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="template_view_form"/>
+            <field name="act_window" ref="act_template_list"/>
+        </record>
+
+        <menuitem action="act_template_list"
+            id="menu_template_list"
+            parent="ir.menu_action" sequence="21"
+            icon="tryton-list"/>
+
 <!-- Results Report Template -->
 
         <record model="ir.ui.view" id="result_template_view_form">
