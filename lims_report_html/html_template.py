@@ -377,23 +377,27 @@ class LimsReport:
             content = bytearray(content) if bytes == str else bytes(content)
 
         record = records[0]
-        if oext == 'pdf' and (record.previous_sections or
-                record.following_sections):
-            merger = PdfFileMerger(strict=False)
-            # Previous Sections
-            for section in record.previous_sections:
-                filedata = BytesIO(section.data)
+        if oext == 'pdf':
+            previous_sections = (hasattr(record, 'previous_sections') and
+                record.previous_sections or [])
+            following_sections = (hasattr(record, 'following_sections') and
+                record.following_sections or [])
+            if previous_sections or following_sections:
+                merger = PdfFileMerger(strict=False)
+                # Previous Sections
+                for section in previous_sections:
+                    filedata = BytesIO(section.data)
+                    merger.append(filedata)
+                # Main Report
+                filedata = BytesIO(content)
                 merger.append(filedata)
-            # Main Report
-            filedata = BytesIO(content)
-            merger.append(filedata)
-            # Following Sections
-            for section in record.following_sections:
-                filedata = BytesIO(section.data)
-                merger.append(filedata)
-            output = BytesIO()
-            merger.write(output)
-            content = output.getvalue()
+                # Following Sections
+                for section in following_sections:
+                    filedata = BytesIO(section.data)
+                    merger.append(filedata)
+                output = BytesIO()
+                merger.write(output)
+                content = output.getvalue()
 
         return (oext, content, action.direct_print, action.name)
 
@@ -454,10 +458,16 @@ class LimsReport:
             stylesheets=stylesheets,
             page_orientation=page_orientation).render_html().write_pdf()
 
-        previous_sections = (hasattr(record, 'previous_sections') and
-            record.previous_sections or [])
-        following_sections = (hasattr(record, 'following_sections') and
-            record.following_sections or [])
+        previous_sections = []
+        if hasattr(record, 'previous_sections'):
+            previous_sections = record.previous_sections
+        elif template:
+            previous_sections = template.previous_sections
+        following_sections = []
+        if hasattr(record, 'following_sections'):
+            following_sections = record.following_sections
+        elif template:
+            following_sections = template.following_sections
         if previous_sections or following_sections:
             merger = PdfFileMerger(strict=False)
             # Previous Sections
