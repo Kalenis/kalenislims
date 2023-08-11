@@ -7,6 +7,7 @@
     </xpath>
     <xpath expr="/form/notebook/page[@id='general']/group[@id='trace_report']"
         position="after">
-        <field name="sale_lines" colspan="4"/>
+        <field name="sale_lines" colspan="4" mode="tree,form"
+                view_ids="lims_sale.lims_sale_line_view_tree,lims_sale.lims_sale_line_view_form"/>
     </xpath>
 </data>
