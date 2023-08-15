@@ -4,10 +4,11 @@
 
 from trytond.pool import Pool
 from . import formula_mixin
-
+from . import record_log
 
 def register():
     Pool.register(
         formula_mixin.FormulaTemplate,
         formula_mixin.FormulaCategory,
+        record_log.RecordLog,
         module='lims_tools', type_='model')
