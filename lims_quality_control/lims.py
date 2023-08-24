@@ -136,6 +136,14 @@ class Typification(metaclass=PoolMeta):
         super().__register__(module_name)
         table = cls.__table_handler__(module_name)
         table.drop_constraint('product_matrix_analysis_method_uniq')
+    
+    @classmethod
+    def copy(cls, typifications, default=None):
+        if default is None:
+            default = {}
+        if 'quality_template' not in default:
+            default['quality_template'] = None
+        return super().copy(typifications, default)
 
     @fields.depends('analysis')
     def on_change_with_valid_value_domain(self, name=None):
