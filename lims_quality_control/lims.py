@@ -385,11 +385,10 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
     @classmethod
     def _get_notebook_line(cls, detail, fraction, notebook):
         to_create, t = super()._get_notebook_line(detail, fraction, notebook)
-        template_id = Transaction().context.get('template', None)
-        if template_id and t:
-            test_value = t.valid_value and t.valid_value.id or None
-            quality_test = Transaction().context.get('test')
-            for notebook_line in to_create:
+        if t:
+             test_value = t.valid_value and t.valid_value.id or None
+             quality_test = Transaction().context.get('test')
+             for notebook_line in to_create:
                 notebook_line['typification'] = t.id
                 notebook_line['test_value'] = test_value
                 notebook_line['quality_test'] = quality_test
