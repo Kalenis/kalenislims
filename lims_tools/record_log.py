@@ -67,7 +67,7 @@ class RecordLogMixin(ValueFormatter):
                         'field':cls.get_field(fname),
                         'name':"%s > %s" % (values[fname].get('old_value'), values[fname].get('new_value'))
                         }
-                if fname == cls._transition_state:
+                if hasattr(cls,'_transition_state') and fname == cls._transition_state:
                     vals['is_transition'] = True
                 record.register_log(vals)
 
