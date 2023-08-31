@@ -16,6 +16,8 @@
     <field name="responsible"/>
     <label name="closing_date"/>
     <field name="closing_date"/>
+    <label name="kind"/>
+    <field name="kind"/>
     <label name="department"/>
     <field name="department"/>
     <label name="rejection_reason"/>

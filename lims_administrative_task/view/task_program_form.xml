@@ -8,6 +8,8 @@
     <field name="responsible"/>
     <label name="latest_date"/>
     <field name="latest_date"/>
+    <label name="kind"/>
+    <field name="kind"/>
     <group id="frequence" colspan="4" string="Frequence">
         <label name="frequence_selection"/>
         <field name="frequence_selection"/>
