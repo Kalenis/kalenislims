@@ -8,7 +8,7 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
 from trytond.model import Workflow, ModelSQL, ModelView, fields, Index
-from trytond.pyson import PYSONEncoder, Eval
+from trytond.pyson import PYSONEncoder, Eval, Or, And
 from trytond.pool import Pool, PoolMeta
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
@@ -130,6 +130,8 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         'task', 'user', 'Notified Users')
     kind = fields.Many2One('lims.administrative.task.kind', 'Kind')
     department = fields.Many2One('company.department', 'Department')
+    allow_revert = fields.Function(fields.Boolean('Allow Revert Status'),
+        'get_allow_revert')
 
     @classmethod
     def __setup__(cls):
@@ -142,22 +144,30 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
             ('pending', 'rejected'),
             ('rejected', 'pending'),
             ('pending', 'ongoing'),
+            ('ongoing', 'pending'),
             ('ongoing', 'standby'),
             ('standby', 'ongoing'),
             ('standby', 'discarded'),
             ('standby', 'done'),
             ('ongoing', 'discarded'),
             ('ongoing', 'done'),
+            ('done', 'ongoing'),
             ))
         cls._buttons.update({
             'pending': {
-                'invisible': ~Eval('state').in_(['draft', 'rejected']),
+                'invisible': Or(
+                    ~Eval('state').in_(['draft', 'rejected', 'ongoing']),
+                    And(Eval('state') == 'ongoing', ~Eval('allow_revert'))),
+                'depends': ['allow_revert'],
                 },
             'reject': {
                 'invisible': Eval('state') != 'pending',
                 },
             'ongoing': {
-                'invisible': ~Eval('state').in_(['pending', 'standby']),
+                'invisible': Or(
+                    ~Eval('state').in_(['pending', 'standby', 'done']),
+                    And(Eval('state') == 'done', ~Eval('allow_revert'))),
+                'depends': ['allow_revert'],
                 },
             'standby': {
                 'invisible': Eval('state') != 'ongoing',
@@ -306,6 +316,23 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
             if t.state in ('pending', 'ongoing', 'standby'):
                 result[t.id] = 'lightblue'
         return result
+
+    def get_allow_revert(self, name):
+        pool = Pool()
+        ModelData = pool.get('ir.model.data')
+
+        if self.state not in {'ongoing', 'done'}:
+            return False
+        allowed_groups = [
+            ModelData.get_id('lims_administrative_task',
+                'group_administrative_task_revert'),
+            ModelData.get_id('lims_administrative_task',
+                'group_administrative_task_admin')
+            ]
+        user_groups = Transaction().context['groups']
+        if any(x in allowed_groups for x in user_groups):
+            return True
+        return False
 
     @classmethod
     def check_transition(cls, records, state):
