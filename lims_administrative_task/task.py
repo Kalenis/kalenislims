@@ -118,6 +118,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
     color = fields.Function(fields.Char('Color'), 'get_color')
     notified_users = fields.Many2Many('lims.administrative.task.user',
         'task', 'user', 'Notified Users')
+    department = fields.Many2One('company.department', 'Department')
 
     @classmethod
     def __setup__(cls):
