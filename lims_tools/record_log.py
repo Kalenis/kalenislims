@@ -10,6 +10,7 @@ class RecordLog(ModelSQL, ModelView):
     __name__ = 'record.log'
 
     name = fields.Char('Name')
+    comment = fields.Char('Comment')
     origin = fields.Reference('Operation Origin', selection='get_origin',
         readonly=True)
     user = fields.Many2One('res.user', 'User')
