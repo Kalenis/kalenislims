@@ -22,6 +22,13 @@ from trytond.modules.lims_tools.event_creator import EventCreator
 logger = logging.getLogger(__name__)
 
 
+class AdministrativeTaskKind(ModelSQL, ModelView):
+    'Administrative Task Kind'
+    __name__ = 'lims.administrative.task.kind'
+
+    name = fields.Char('Name', required=True)
+
+
 class AdministrativeTaskTemplate(ModelSQL, ModelView):
     'Administrative Task Configuration'
     __name__ = 'lims.administrative.task.template'
@@ -31,6 +38,7 @@ class AdministrativeTaskTemplate(ModelSQL, ModelView):
     expiration_days = fields.Integer('Days to Expiration', required=True)
     responsible = fields.Many2One('res.user', 'Responsible User',
         required=True)
+    kind = fields.Many2One('lims.administrative.task.kind', 'Kind')
 
     @classmethod
     def get_types(cls):
@@ -56,6 +64,7 @@ class AdministrativeTaskTemplate(ModelSQL, ModelView):
             responsible = template.responsible
         expiration_date = (Date.today() + relativedelta(
             days=template.expiration_days))
+        kind = template.kind
         default_fields = list(AdministrativeTask._fields.keys())
 
         new_tasks = []
@@ -67,6 +76,7 @@ class AdministrativeTaskTemplate(ModelSQL, ModelView):
                 'description': desc,
                 'responsible': responsible,
                 'expiration_date': expiration_date,
+                'kind': kind,
                 'origin': '%s,%s' % (record.__name__, record.id),
                 })
             new_tasks.append(AdministrativeTask(**value))
@@ -118,6 +128,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
     color = fields.Function(fields.Char('Color'), 'get_color')
     notified_users = fields.Many2Many('lims.administrative.task.user',
         'task', 'user', 'Notified Users')
+    kind = fields.Many2One('lims.administrative.task.kind', 'Kind')
     department = fields.Many2One('company.department', 'Department')
 
     @classmethod
@@ -616,6 +627,7 @@ class AdministrativeTaskProgram(EventCreator, ModelSQL, ModelView):
     description = fields.Char('Description', required=True)
     responsible = fields.Many2One('res.user', 'Responsible User',
         required=True)
+    kind = fields.Many2One('lims.administrative.task.kind', 'Kind')
     latest_date = fields.Function(fields.Date('Latest scheduled date'),
         'get_latest_date')
 
@@ -669,6 +681,7 @@ class AdministrativeTaskProgram(EventCreator, ModelSQL, ModelView):
         task.type = program.type
         task.description = program.description
         task.responsible = program.responsible
+        task.kind = program.kind
         task.expiration_date = schedule_info['scheduled_date'].date()
         task.priority = '3'
         task.state = 'draft'

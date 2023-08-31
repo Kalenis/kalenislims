@@ -10,6 +10,7 @@ from . import configuration
 
 def register():
     Pool.register(
+        task.AdministrativeTaskKind,
         task.AdministrativeTaskTemplate,
         task.AdministrativeTask,
         task.AdministrativeTaskUser,

@@ -8,4 +8,6 @@
     <field name="responsible"/>
     <label name="expiration_days"/>
     <field name="expiration_days"/>
+    <label name="kind"/>
+    <field name="kind"/>
 </form>
