@@ -18,6 +18,10 @@ msgctxt "field:lims.administrative.task,date:"
 msgid "Create Date"
 msgstr "Fecha de creación"
 
+msgctxt "field:lims.administrative.task,department:"
+msgid "Department"
+msgstr "Departamento"
+
 msgctxt "field:lims.administrative.task,description:"
 msgid "Description"
 msgstr "Descripción"

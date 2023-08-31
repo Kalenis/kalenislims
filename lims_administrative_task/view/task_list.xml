@@ -9,5 +9,6 @@
     <field name="responsible" expand="1"/>
     <field name="closing_date" widget="date"/>
     <field name="state"/>
+    <field name="department"/>
     <field name="rejection_reason"/>
 </tree>
