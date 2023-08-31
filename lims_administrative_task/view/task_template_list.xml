@@ -4,4 +4,5 @@
     <field name="description" expand="1"/>
     <field name="responsible" expand="1"/>
     <field name="expiration_days"/>
+    <field name="kind"/>
 </tree>

@@ -29,7 +29,40 @@
             <field name="group" ref="group_administrative_task_admin"/>
         </record>
 
-<!-- Administrative Task Configuration -->
+<!-- Administrative Task Kind -->
+
+        <record model="ir.ui.view" id="task_kind_view_list">
+            <field name="model">lims.administrative.task.kind</field>
+            <field name="type">tree</field>
+            <field name="name">task_kind_list</field>
+        </record>
+        <record model="ir.ui.view" id="task_kind_view_form">
+            <field name="model">lims.administrative.task.kind</field>
+            <field name="type">form</field>
+            <field name="name">task_kind_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_task_kind">
+            <field name="name">Administrative Task Kinds</field>
+            <field name="res_model">lims.administrative.task.kind</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_task_kind_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="task_kind_view_list"/>
+            <field name="act_window" ref="act_task_kind"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_task_kind_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="task_kind_view_form"/>
+            <field name="act_window" ref="act_task_kind"/>
+        </record>
+
+        <menuitem action="act_task_kind" id="menu_task_kind"
+            parent="menu_config" sequence="40"/>
+
+s<!-- Administrative Task Configuration -->
 
         <record model="ir.ui.view" id="task_template_view_list">
             <field name="model">lims.administrative.task.template</field>
