@@ -7,6 +7,9 @@
         <record model="res.group" id="group_administrative_task">
             <field name="name">Lims Administrative Task</field>
         </record>
+        <record model="res.group" id="group_administrative_task_revert">
+            <field name="name">Lims Administrative Task Revert Status</field>
+        </record>
         <record model="res.group" id="group_administrative_task_admin">
             <field name="name">Lims Administrative Task Admin</field>
         </record>

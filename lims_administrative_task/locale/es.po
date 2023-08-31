@@ -2,6 +2,10 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "field:lims.administrative.task,allow_revert:"
+msgid "Allow Revert Status"
+msgstr "Permitir revertir estado"
+
 msgctxt "field:lims.administrative.task,closing_date:"
 msgid "Closing Date"
 msgstr "Fecha de cierre"
@@ -449,6 +453,10 @@ msgstr "Lims Tarea administrativa"
 msgctxt "model:res.group,name:group_administrative_task_admin"
 msgid "Lims Administrative Task Admin"
 msgstr "Lims Tarea administrativa Admin"
+
+msgctxt "model:res.group,name:group_administrative_task_revert"
+msgid "Lims Administrative Task Revert Status"
+msgstr "Lims Tarea administrativa Revertir estado"
 
 msgctxt "selection:ir.cron,method:"
 msgid "Control Overdue Administrative Tasks"
