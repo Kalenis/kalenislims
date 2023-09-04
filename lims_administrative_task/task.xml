@@ -62,7 +62,7 @@
         <menuitem action="act_task_kind" id="menu_task_kind"
             parent="menu_config" sequence="40"/>
 
-s<!-- Administrative Task Configuration -->
+<!-- Administrative Task Configuration -->
 
         <record model="ir.ui.view" id="task_template_view_list">
             <field name="model">lims.administrative.task.template</field>
