@@ -4,6 +4,7 @@
 # the full copyright notices and license terms.
 import logging
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
@@ -571,10 +572,12 @@ class Entry(Workflow, ModelSQL, ModelView):
         ForwardAcknowledgmentOfReceipt = pool.get(
             'lims.entry.acknowledgment.forward', type='wizard')
 
+        deadline = datetime.now() - relativedelta(days=7)
         entries = Entry.search([
             ('result_cron', '!=', 'sent'),
             ('no_acknowledgment_of_receipt', '=', False),
             ('state', '=', 'ongoing'),
+            ('date2', '>=', deadline),
             ])
 
         session_id, _, _ = ForwardAcknowledgmentOfReceipt.create()
