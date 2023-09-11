@@ -427,7 +427,6 @@ class LabDeviceDiscardMaintenance(Wizard):
             ('product', '=', program.product),
             ('lot', '=', program.lot),
             ('activity', '=', program.activity),
-            ('responsible', '=', program.responsible),
             ('date', '>=', today),
             ('state', '=', 'pending'),
             ])
