@@ -1313,6 +1313,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                 return
             notebook = notebooks[0]
 
+        warn_invalid_typification = cls._warn_invalid_typification()
         lines_to_create = []
         for detail in details:
             t = Typification.get_valid_typification(
@@ -1341,6 +1342,12 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                 converted_result_decimals = t.converted_result_decimals
                 report = t.report
                 department = t.department and t.department.id or None
+            elif warn_invalid_typification:
+                raise UserError(gettext('lims.msg_not_typification',
+                    analysis=detail.analysis.rec_name,
+                    method=detail.method.rec_name,
+                    product_type=fraction.product_type.rec_name,
+                    matrix=fraction.matrix.rec_name))
             else:
                 repetitions = 0
                 initial_concentration = None
@@ -1454,6 +1461,10 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                             "VALUES (%s, %s, 'model', %s, %s, %s)",
                             ('lims.notebook.line,' + field, str(line.id),
                                 x[0], x[1], x[2]))
+
+    @classmethod
+    def _warn_invalid_typification(cls):
+        return False
 
     @staticmethod
     def default_service_view():

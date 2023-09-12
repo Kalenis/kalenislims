@@ -229,6 +229,9 @@
         <record model="ir.message" id="msg_not_typified">
             <field name="text">The analysis "%(analysis)s" is not typified for product type "%(product_type)s" and matrix "%(matrix)s"</field>
         </record>
+        <record model="ir.message" id="msg_not_typification">
+            <field name="text">There is no typification for the analysis "%(analysis)s" and method "%(method)s", for the product type "%(product_type)s" and matrix "%(matrix)s"</field>
+        </record>
         <record model="ir.message" id="msg_no_bre_fraction_type">
             <field name="text">There is no BRE fraction type configured</field>
         </record>
