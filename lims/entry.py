@@ -1355,6 +1355,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         AnalysisLaboratory = pool.get('lims.analysis-laboratory')
         ProductType = pool.get('lims.product.type')
 
+        warn_invalid_typification = cls._warn_invalid_typification()
         t = cls._get_notebook_line_valid_typification(detail, fraction)
         if t:
             repetitions = t.default_repetitions
@@ -1378,6 +1379,12 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
             converted_result_decimals = t.converted_result_decimals
             report = t.report
             department = t.department and t.department.id or None
+        elif warn_invalid_typification:
+            raise UserError(gettext('lims.msg_not_typification',
+                analysis=detail.analysis.rec_name,
+                method=detail.method.rec_name,
+                product_type=fraction.product_type.rec_name,
+                matrix=fraction.matrix.rec_name))
         else:
             repetitions = 0
             initial_concentration = None
@@ -1465,6 +1472,10 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                 }
             to_create.append(notebook_line)
         return to_create, t
+
+    @classmethod
+    def _warn_invalid_typification(cls):
+        return False
 
     @classmethod
     def _get_notebook_line_valid_typification(cls, detail, fraction):
