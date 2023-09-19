@@ -11,7 +11,7 @@ from trytond.transaction import Transaction
 
 
 COL = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7, 'I': 8,
-    'J': 9, 'K': 10, 'L': 11, 'M': 12}
+    'J': 9, 'K': 10, 'L': 11, 'M': 12, 'N': 13, 'O': 14, 'P': 15}
 STATUS_COLUMN = 10
 
 
@@ -77,6 +77,8 @@ def parse(self, infile):
             values = {}
             result = row[COL['I']].value if (
                 row[COL['I']].ctype == xlrd.XL_CELL_NUMBER) else None
+            literal_result = row[COL['P']].value if (
+                row[COL['P']].ctype == xlrd.XL_CELL_TEXT) else None
             end_date_raw = row[COL['B']].value
             if row[COL['B']].ctype == xlrd.XL_CELL_TEXT:
                 try:
@@ -116,6 +118,8 @@ def parse(self, infile):
                 # Where to save final status: [sheet number, row, column]
                 values['status_cell'] = [
                     worksheet.number, curr_row, STATUS_COLUMN]
+            if literal_result is not None:
+                values['literal_result'] = literal_result
             if end_date:
                 values['end_date'] = end_date
             if inj_date:
