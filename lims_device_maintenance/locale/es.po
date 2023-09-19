@@ -147,6 +147,10 @@ msgctxt "field:lims.lab.device.maintenance.program,start_date:"
 msgid "Start Date"
 msgstr "Fecha de inicio"
 
+msgctxt "field:lims.lab.device.maintenance.program,comments:"
+msgid "Comments"
+msgstr "Observaciones"
+
 msgctxt "field:lims.lab.device.maintenance.type,name:"
 msgid "Name"
 msgstr "Nombre"
@@ -403,6 +407,10 @@ msgstr "Frecuencia"
 msgctxt "view:lims.lab.device.maintenance.program:"
 msgid "Generate Maintenance Programs"
 msgstr "Generar programas de mantenimiento"
+
+msgctxt "view:lims.lab.device.maintenance.program:"
+msgid "Comments"
+msgstr "Observaciones"
 
 msgctxt "view:lims.lab.device.maintenance:"
 msgid "Comments"

@@ -70,6 +70,7 @@ class LabDeviceMaintenanceProgram(EventCreator, ModelSQL, ModelView):
     notice_days = fields.Integer('Days to notify')
     latest_date = fields.Function(fields.Date('Latest scheduled date'),
         'get_latest_date')
+    comments = fields.Text('Comments')
 
     @classmethod
     def __register__(cls, module_name):
