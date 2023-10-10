@@ -1096,8 +1096,9 @@ class NotebookLine(ModelSQL, ModelView):
         lines = super().create(vlist)
 
         cls.update_detail_report(lines)
-        sample_ids = list(set(nl.sample.id for nl in lines))
-        Sample.__queue__.update_samples_state(sample_ids)
+        to_update = Sample.browse(list(set(nl.sample.id
+            for nl in lines)))
+        Sample.__queue__.update_samples_state(to_update)
         return lines
 
     @classmethod
@@ -1132,8 +1133,9 @@ class NotebookLine(ModelSQL, ModelView):
                     update_samples_state = True
                     break
             if update_samples_state:
-                sample_ids = list(set(nl.sample.id for nl in lines))
-                Sample.__queue__.update_samples_state(sample_ids)
+                to_update = Sample.browse(list(set(nl.sample.id
+                    for nl in lines)))
+                Sample.__queue__.update_samples_state(to_update)
             update_referrals_state = False
             for field in ('accepted', 'annulled', 'result', 'literal_result',
                     'result_modifier'):

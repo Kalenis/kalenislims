@@ -3901,8 +3901,7 @@ class Sample(ModelSQL, ModelView):
         return [('id', 'in', samples_ids)]
 
     @classmethod
-    def update_samples_state(cls, sample_ids):
-        samples = cls.browse(sample_ids)
+    def update_samples_state(cls, samples):
         for sample in samples:
             sample.update_sample_dates()
             sample.update_sample_state()

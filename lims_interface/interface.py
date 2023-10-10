@@ -1659,7 +1659,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
         first_row = self.interface.first_row - 1
         encoding = self.interface.charset
         with Transaction().set_context(
-                lims_interface_table=self.table):
+                lims_interface_table=self.table.id):
             imported_files = []
             for origin in self.origins:
                 if origin.imported:
@@ -1772,7 +1772,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
         schema_keys = list(schema.keys())
         first_row = self.interface.first_row
         with Transaction().set_context(
-                lims_interface_table=self.table):
+                lims_interface_table=self.table.id):
             imported_files = []
             for origin in self.origins:
                 if origin.imported:
@@ -2031,7 +2031,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
                 ])
             if not required_columns:
                 continue
-            with Transaction().set_context(lims_interface_table=c.table):
+            with Transaction().set_context(lims_interface_table=c.table.id):
                 lines = Data.search([('compilation', '=', c.id)])
                 for line in lines:
                     if line.annulled:
@@ -2071,7 +2071,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
                 fields[column.name] = column.related_line_field.name
             if not fields:
                 continue
-            with Transaction().set_context(lims_interface_table=c.table):
+            with Transaction().set_context(lims_interface_table=c.table.id):
                 lines = Data.search([('compilation', '=', c.id)])
                 for line in lines:
                     if not cls._allow_confirm_line(line):
@@ -2131,7 +2131,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
         Data = pool.get('lims.interface.data')
 
         for c in compilations:
-            with Transaction().set_context(lims_interface_table=c.table):
+            with Transaction().set_context(lims_interface_table=c.table.id):
                 lines = Data.search([('compilation', '=', c.id)])
                 if not lines:
                     continue
@@ -2151,7 +2151,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
             if c.state == 'done':
                 raise UserError(gettext(
                     'lims_interface.delete_done_compilation'))
-            with Transaction().set_context(lims_interface_table=c.table):
+            with Transaction().set_context(lims_interface_table=c.table.id):
                 lines = Data.search([('compilation', '=', c.id)])
                 Data.delete(lines)
         super().delete(compilations)
