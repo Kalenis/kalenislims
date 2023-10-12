@@ -2042,7 +2042,7 @@ class AcknowledgmentOfReceipt(Report):
                 'label': sample.label,
                 'producer': (sample.producer.rec_name if sample.producer
                     else ''),
-                'date': sample.date,
+                'date': company.convert_timezone_datetime(sample.date),
                 'product_type': sample.product_type.rec_name,
                 'client_description': sample.sample_client_description,
                 'number': sample.number,
