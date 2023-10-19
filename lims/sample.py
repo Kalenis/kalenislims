@@ -4044,6 +4044,7 @@ class Sample(ModelSQL, ModelView):
         res['laboratory_acceptance_date'] = laboratory_acceptance_date
 
         # Report start date
+        res['results_report_create_date'] = None
         cursor.execute('SELECT MIN(r.create_date::date) '
             'FROM "' + ResultsReport._table + '" r '
                 'INNER JOIN "' + ResultsVersion._table + '" rv '
@@ -4059,7 +4060,26 @@ class Sample(ModelSQL, ModelView):
             'WHERE f.sample = %s '
                 'AND rd.type != \'preliminary\'',
             (self.id,))
-        res['results_report_create_date'] = cursor.fetchone()[0] or None
+        results_report_create_date = cursor.fetchone()[0]
+        if results_report_create_date:
+            cursor.execute('SELECT COUNT(*) '
+                'FROM "' + ResultsReport._table + '" r '
+                    'INNER JOIN "' + ResultsVersion._table + '" rv '
+                    'ON rv.results_report = r.id '
+                    'INNER JOIN "' + ResultsDetail._table + '" rd '
+                    'ON rd.report_version = rv.id '
+                    'INNER JOIN "' + ResultsSample._table + '" rs '
+                    'ON rs.version_detail = rd.id '
+                    'INNER JOIN "' + Notebook._table + '" n '
+                    'ON n.id = rs.notebook '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = n.fraction '
+                'WHERE f.sample = %s '
+                    'AND rd.valid '
+                    'AND rd.type != \'preliminary\'',
+                (self.id,))
+            if cursor.fetchone()[0] != 0:
+                res['results_report_create_date'] = results_report_create_date
 
         # Report release date
         cursor.execute('SELECT MAX(rd.release_date::date) '
