@@ -5,12 +5,13 @@
 import formulas
 import numpy as np
 from decimal import Decimal
+import datetime
+from dateutil.relativedelta import relativedelta
+import pytz
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool
 from trytond.transaction import Transaction
-import datetime
-from dateutil.relativedelta import relativedelta
 
 custom_functions = {}
 
@@ -288,6 +289,24 @@ def min_date(dates):
 
 
 custom_functions['MINDATE'] = min_date
+
+
+def now_str():
+    pool = Pool()
+    Company = pool.get('company.company')
+
+    timezone = pytz.utc
+
+    company_id = Transaction().context.get('company')
+    if company_id:
+        company = Company(company_id)
+        if company.timezone:
+            timezone = pytz.timezone(company.timezone)
+    now = datetime.datetime.now(timezone)
+    return now.strftime("%d/%m/%Y %H:%M:%S")
+
+
+custom_functions['NOW_STR'] = now_str
 
 
 def slope(yp, xp):
