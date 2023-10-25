@@ -2835,16 +2835,24 @@ class GenerateReport(Wizard):
                     parties[key] = {
                         'party': notebook.party.id,
                         'entry': notebook.fraction.entry.id,
-                        'comments': notebook.fraction.entry.report_comments,
+                        'comments': '',
                         'cie_fraction_type': (
                             notebook.fraction.cie_fraction_type),
                         'report_language': (
                             notebook.fraction.entry.report_language.id),
                         'lines': [],
                         }
+                    if notebook.fraction.entry.report_comments:
+                        parties[key]['comments'] = (
+                            notebook.fraction.entry.report_comments)
                 lines = notebook._get_lines_for_reporting(laboratory_id,
                     state)
                 parties[key]['lines'].extend(lines)
+                if notebook.fraction.sample.report_comments:
+                    if parties[key]['comments']:
+                        parties[key]['comments'] += '\n'
+                    parties[key]['comments'] += (
+                        notebook.fraction.sample.report_comments)
 
             reports_details = []
             for party in parties.values():
