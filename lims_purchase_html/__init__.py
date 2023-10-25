@@ -12,9 +12,9 @@ def register():
     Pool.register(
         html_template.PurchaseClauseTemplate,
         html_template.PurchaseReportTemplate,
+        configuration.Configuration,
         purchase.Purchase,
         purchase.PurchaseSection,
-        configuration.Configuration,
         module='lims_purchase_html', type_='model')
     Pool.register(
         purchase.PurchaseReport,
