@@ -1106,18 +1106,17 @@ class Service(ModelSQL, ModelView):
             if service.analysis.comments:
                 fraction_id = service.fraction.id
                 if fraction_id not in comments:
-                    comments[fraction_id] = ''
-                if comments[fraction_id]:
-                    comments[fraction_id] += '\n'
-                comments[fraction_id] += service.analysis.comments
+                    comments[fraction_id] = set()
+                comments[fraction_id].add(service.analysis.comments)
         if comments:
             fractions_to_save = []
             for fraction_id, comment in comments.items():
+                analysis_comments = '\n'.join(list(comment))
                 fraction = Fraction(fraction_id)
                 if fraction.comments:
-                    fraction.comments += '\n' + comment
+                    fraction.comments += '\n' + analysis_comments
                 else:
-                    fraction.comments = comment
+                    fraction.comments = analysis_comments
                 fractions_to_save.append(fraction)
             if fractions_to_save:
                 Fraction.save(fractions_to_save)
