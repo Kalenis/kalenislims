@@ -2848,11 +2848,11 @@ class GenerateReport(Wizard):
                 lines = notebook._get_lines_for_reporting(laboratory_id,
                     state)
                 parties[key]['lines'].extend(lines)
-                if notebook.fraction.sample.report_comments:
-                    if parties[key]['comments']:
-                        parties[key]['comments'] += '\n'
-                    parties[key]['comments'] += (
-                        notebook.fraction.sample.report_comments)
+                #if notebook.fraction.sample.report_comments:
+                    #if parties[key]['comments']:
+                        #parties[key]['comments'] += '\n'
+                    #parties[key]['comments'] += (
+                        #notebook.fraction.sample.report_comments)
 
             reports_details = []
             for party in parties.values():
