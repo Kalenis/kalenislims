@@ -2848,11 +2848,11 @@ class GenerateReport(Wizard):
                 lines = notebook._get_lines_for_reporting(laboratory_id,
                     state)
                 parties[key]['lines'].extend(lines)
-                #if notebook.fraction.sample.report_comments:
-                    #if parties[key]['comments']:
-                        #parties[key]['comments'] += '\n'
-                    #parties[key]['comments'] += (
-                        #notebook.fraction.sample.report_comments)
+                if notebook.fraction.sample.report_comments:
+                    if parties[key]['comments']:
+                        parties[key]['comments'] += '\n'
+                    parties[key]['comments'] += (
+                        notebook.fraction.sample.report_comments)
 
             reports_details = []
             for party in parties.values():
@@ -3725,7 +3725,6 @@ class ResultReport(Report):
         alcohol = False
         dry_matter = False
 
-        comments = {}
         fractions = {}
         methods = {}
         methods_by_hq = {}
@@ -3887,17 +3886,6 @@ class ResultReport(Report):
 
             if not initial_unit and t_line.initial_unit:
                 initial_unit = t_line.initial_unit.rec_name
-
-            entry_id = t_line.fraction.sample.entry.id
-            if entry_id not in comments:
-                comments[entry_id] = {
-                    'report_comments': (
-                        t_line.fraction.sample.entry.report_comments),
-                    'samples': {},
-                    }
-            if sample.id not in comments[entry_id]['samples']:
-                comments[entry_id]['samples'][sample.id] = (
-                    sample.report_comments)
 
             method_id = t_line.method.id
             if method_id not in methods:
@@ -4158,22 +4146,7 @@ class ResultReport(Report):
 
         report_context['initial_unit'] = initial_unit
 
-        report_context['comments'] = ''
-        for entry_comment in comments.values():
-            if entry_comment['report_comments']:
-                if report_context['comments']:
-                    report_context['comments'] += '\n'
-                report_context['comments'] += entry_comment['report_comments']
-            for sample_comment in entry_comment['samples'].values():
-                if sample_comment:
-                    if report_context['comments']:
-                        report_context['comments'] += '\n'
-                    report_context['comments'] += sample_comment
-
-        if report.comments:
-            if report_context['comments']:
-                report_context['comments'] += '\n'
-            report_context['comments'] += report.comments
+        report_context['comments'] = report.comments or ''
 
         if obs_ql and report_context['report_section']:
             with Transaction().set_context(language=lang_code):
