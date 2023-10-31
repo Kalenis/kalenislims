@@ -859,15 +859,11 @@ class Service(ModelSQL, ModelView):
                         if (additional.id not in
                                 aditional_services[service.fraction.id]):
 
-                            cursor.execute('SELECT laboratory '
-                                'FROM "' + AnalysisLaboratory._table + '" '
-                                'WHERE analysis = %s '
-                                    'AND by_default = TRUE '
-                                'ORDER BY id', (additional.id,))
-                            res = cursor.fetchone()
-                            laboratory_id = res and res[0] or None
+                            laboratory_id = None
+                            method_id = None
+                            device_id = None
 
-                            cursor.execute('SELECT method '
+                            cursor.execute('SELECT laboratory, method '
                                 'FROM "' + Typification._table + '" '
                                 'WHERE product_type = %s '
                                     'AND matrix = %s '
@@ -877,13 +873,25 @@ class Service(ModelSQL, ModelView):
                                 (service.fraction.product_type.id,
                                     service.fraction.matrix.id, additional.id))
                             res = cursor.fetchone()
-                            method_id = res and res[0] or None
+                            if res:
+                                laboratory_id = res[0]
+                                method_id = res[1]
 
                             if not method_id:
                                 raise UserError(gettext(
                                     'lims.msg_additional_no_method',
                                     additional=additional.rec_name,
                                     analysis=typification.analysis.rec_name))
+
+                            if not laboratory_id:
+                                cursor.execute('SELECT laboratory '
+                                    'FROM "' + AnalysisLaboratory._table + '" '
+                                    'WHERE analysis = %s '
+                                        'AND by_default = TRUE '
+                                    'ORDER BY id', (additional.id,))
+                                res = cursor.fetchone()
+                                if res:
+                                    laboratory_id = res[0]
 
                             cursor.execute('SELECT device '
                                 'FROM "' + AnalysisDevice._table + '" '
@@ -893,7 +901,8 @@ class Service(ModelSQL, ModelView):
                                     'AND by_default IS TRUE',
                                 (additional.id, laboratory_id))
                             res = cursor.fetchone()
-                            device_id = res and res[0] or None
+                            if res:
+                                device_id = res[0]
 
                             aditional_services[service.fraction.id][
                                     additional.id] = {
