@@ -1,7 +1,8 @@
 # This file is part of lims_tools module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-from datetime import datetime, timedelta
+from datetime import datetime
+from dateutil import rrule
 
 from trytond.model import Model, fields
 from trytond.pool import Pool
@@ -53,6 +54,7 @@ WEEK_DAYS = [
     ('5', 'Saturday'),
     ('6', 'Sunday'),
     ]
+
 
 class EventCreator(Model):
     'Event Creator'
@@ -159,16 +161,41 @@ class EventCreator(Model):
     @classmethod
     def create_fixed_events(cls, record, create_method,
             start_date=None, include_start_date=True):
-        events = []
+        pool = Pool()
+        LabWorkYear = pool.get('lims.lab.workyear')
+
+        workyear_id = LabWorkYear.find()
+        workyear = LabWorkYear(workyear_id)
+
+        ruleset = rrule.rruleset()
+        byweekday = None
+        if record.only_workdays:
+            # TODO: handle minutes and hours
+            min_time = datetime.min.time()
+            for h in workyear.holidays:
+                ruleset.exdate(datetime.combine(h.date, min_time))
+            byweekday = workyear.workdays
+
+        freq = {
+            'minutes': rrule.MINUTELY,
+            'hours': rrule.HOURLY,
+            'days': rrule.DAILY,
+            'weeks': rrule.WEEKLY,
+            'months': rrule.MONTHLY,
+            'years': rrule.YEARLY,
+            }[record.detail_frequence_selection]
+        count = record.detail_frequence + 1
+
         if not start_date:
             start_date = record.start_date
-        frequence = record.detail_frequence
-        frequence_selection = record.detail_frequence_selection
-
         date = start_date
-        if not include_start_date:
-            date = date + cls.get_delta(frequence, frequence_selection)
 
+        if not include_start_date:
+            ruleset.rrule(rrule.rrule(freq, count=count,
+                dtstart=date, byweekday=byweekday))
+            date = ruleset[-1]
+
+        events = []
         while len(events) < record.end_repetition:
             event = {}
             if record.specific_event_time:
@@ -179,21 +206,27 @@ class EventCreator(Model):
                     )
             event['scheduled_date'] = date
             event['week_day'] = date.weekday()
-            date = date + cls.get_delta(frequence, frequence_selection)
             new_event = create_method(record, event)
             if new_event:
                 events.append(new_event)
+
+            ruleset.rrule(rrule.rrule(freq, count=count,
+                dtstart=date, byweekday=byweekday))
+            date = ruleset[-1]
+
         return events
 
     @classmethod
     def create_workshift_fixed_events(cls, record, create_method,
             start_date=None, include_start_date=True):
         pool = Pool()
-        LabWorkYear = pool.get('lims.lab.workyear')
         Company = pool.get('company.company')
+        LabWorkYear = pool.get('lims.lab.workyear')
         WorkShift = pool.get('lims.lab.workyear.shift')
 
         workyear_id = LabWorkYear.find()
+        workyear = LabWorkYear(workyear_id)
+
         workyear_shifts = WorkShift.search([
             ('workyear', '=', workyear_id),
             ('shift', 'in', [s for s in record.shifts]),
@@ -204,6 +237,25 @@ class EventCreator(Model):
         company = Company(Transaction().context.get('company'))
         company_timezone = company.get_timezone()
 
+        ruleset = rrule.rruleset()
+        byweekday = None
+        if record.only_workdays:
+            # TODO: handle minutes and hours
+            min_time = datetime.min.time()
+            for h in workyear.holidays:
+                ruleset.exdate(datetime.combine(h.date, min_time))
+            byweekday = workyear.workdays
+
+        freq = {
+            'minutes': rrule.MINUTELY,
+            'hours': rrule.HOURLY,
+            'days': rrule.DAILY,
+            'weeks': rrule.WEEKLY,
+            'months': rrule.MONTHLY,
+            'years': rrule.YEARLY,
+            }[record.detail_frequence_selection]
+        count = record.detail_frequence + 1
+
         specific_times = []
         for ws in workyear_shifts:
             if record.shift_time in ['start', 'start_end']:
@@ -213,12 +265,13 @@ class EventCreator(Model):
 
         if not start_date:
             start_date = record.start_date
-        frequence = record.detail_frequence
-        frequence_selection = record.detail_frequence_selection
-
         date = start_date
+
         if not include_start_date:
-            date = date + cls.get_delta(frequence, frequence_selection)
+            ruleset.rrule(rrule.rrule(freq, count=count,
+                dtstart=date, byweekday=byweekday))
+            date = ruleset[-1]
+
         events = []
         while len(events) < record.end_repetition:
             for specific_time in specific_times:
@@ -235,29 +288,66 @@ class EventCreator(Model):
                     events.append(new_event)
                 if len(events) == record.end_repetition:
                     break
-            date = date + cls.get_delta(frequence, frequence_selection)
+
+            ruleset.rrule(rrule.rrule(freq, count=count,
+                dtstart=date, byweekday=byweekday))
+            date = ruleset[-1]
+
         return events
 
     @classmethod
     def create_events_until_date(cls, record, create_method,
             start_date=None, include_start_date=True):
-        events = []
+        pool = Pool()
+        LabWorkYear = pool.get('lims.lab.workyear')
+
+        workyear_id = LabWorkYear.find()
+        workyear = LabWorkYear(workyear_id)
+
+        ruleset = rrule.rruleset()
+        byweekday = None
+        if record.only_workdays:
+            # TODO: handle minutes and hours
+            min_time = datetime.min.time()
+            for h in workyear.holidays:
+                ruleset.exdate(datetime.combine(h.date, min_time))
+            byweekday = workyear.workdays
+
+        freq = {
+            'minutes': rrule.MINUTELY,
+            'hours': rrule.HOURLY,
+            'days': rrule.DAILY,
+            'weeks': rrule.WEEKLY,
+            'months': rrule.MONTHLY,
+            'years': rrule.YEARLY,
+            }[record.detail_frequence_selection]
+        count = record.detail_frequence + 1
+
+        max_time = datetime.max.time()
+        end_date = datetime.combine(record.end_date, max_time)
+
         if not start_date:
             start_date = record.start_date
-        frequence = record.detail_frequence
-        frequence_selection = record.detail_frequence_selection
-
         date = start_date
+
         if not include_start_date:
-            date = date + cls.get_delta(frequence, frequence_selection)
-        while date < record.end_date:
+            ruleset.rrule(rrule.rrule(freq, count=count,
+                dtstart=date, byweekday=byweekday))
+            date = ruleset[-1]
+
+        events = []
+        while date < end_date:
             event = {}
             event['scheduled_date'] = date
             event['week_day'] = date.weekday()
-            date = date + cls.get_delta(frequence, frequence_selection)
             new_event = create_method(record, event)
             if new_event:
                 events.append(new_event)
+
+            ruleset.rrule(rrule.rrule(freq, count=count,
+                dtstart=date, byweekday=byweekday))
+            date = ruleset[-1]
+
         return events
 
     @classmethod
@@ -269,6 +359,8 @@ class EventCreator(Model):
         WorkShift = pool.get('lims.lab.workyear.shift')
 
         workyear_id = LabWorkYear.find()
+        workyear = LabWorkYear(workyear_id)
+
         workyear_shifts = WorkShift.search([
             ('workyear', '=', workyear_id),
             ('shift', 'in', [s for s in record.shifts]),
@@ -279,6 +371,25 @@ class EventCreator(Model):
         company = Company(Transaction().context.get('company'))
         company_timezone = company.get_timezone()
 
+        ruleset = rrule.rruleset()
+        byweekday = None
+        if record.only_workdays:
+            # TODO: handle minutes and hours
+            min_time = datetime.min.time()
+            for h in workyear.holidays:
+                ruleset.exdate(datetime.combine(h.date, min_time))
+            byweekday = workyear.workdays
+
+        freq = {
+            'minutes': rrule.MINUTELY,
+            'hours': rrule.HOURLY,
+            'days': rrule.DAILY,
+            'weeks': rrule.WEEKLY,
+            'months': rrule.MONTHLY,
+            'years': rrule.YEARLY,
+            }[record.detail_frequence_selection]
+        count = record.detail_frequence + 1
+
         specific_times = []
         for ws in workyear_shifts:
             if record.shift_time in ['start', 'start_end']:
@@ -286,18 +397,18 @@ class EventCreator(Model):
             if record.shift_time in ['end', 'start_end']:
                 specific_times.append(ws.shift.end_time)
 
-        if not start_date:
-            start_date = record.start_date
-        frequence = record.detail_frequence
-        frequence_selection = record.detail_frequence_selection
-
-        min_time = datetime.min.time()
         max_time = datetime.max.time()
         end_date = datetime.combine(record.end_date, max_time)
 
-        date = datetime.combine(start_date, min_time)
+        if not start_date:
+            start_date = record.start_date
+        date = start_date
+
         if not include_start_date:
-            date = date + cls.get_delta(frequence, frequence_selection)
+            ruleset.rrule(rrule.rrule(freq, count=count,
+                dtstart=date, byweekday=byweekday))
+            date = ruleset[-1]
+
         events = []
         while date < end_date:
             for specific_time in specific_times:
@@ -312,24 +423,13 @@ class EventCreator(Model):
                 new_event = create_method(record, event)
                 if new_event:
                     events.append(new_event)
-            date = date + cls.get_delta(frequence, frequence_selection)
+
+            ruleset.rrule(rrule.rrule(freq, count=count,
+                dtstart=date, byweekday=byweekday))
+            date = ruleset[-1]
+
         return events
 
-    @classmethod
-    def get_delta(cls, frequence, unit):
-        if unit == 'minutes':
-            return timedelta(minutes=frequence)
-        elif unit == 'hours':
-            return timedelta(hours=frequence)
-        elif unit == 'days':
-            return timedelta(days=frequence)
-        elif unit == 'weeks':
-            return timedelta(weeks=frequence)
-        elif unit == 'months':
-            return timedelta(days=frequence * 30)
-        elif unit == 'years':
-            return timedelta(days=frequence * 365)
-        return timedelta()
 
 class Event():
     name = fields.Char('Name')
