@@ -16,7 +16,6 @@ from trytond.transaction import Transaction
 from trytond.rpc import RPC
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
-from trytond.modules.lims.formula_parser import FormulaParser
 from trytond.modules.lims_interface.data import ALLOWED_RESULT_TYPES
 
 
@@ -1045,7 +1044,6 @@ class ResultsVerification(Wizard):
         pool = Pool()
         Range = pool.get('lims.range')
         UomConversion = pool.get('lims.uom.conversion')
-        VolumeConversion = pool.get('lims.volume.conversion')
 
         try:
             result = float(result)
@@ -1075,66 +1073,13 @@ class ResultsVerification(Wizard):
             return None
 
         if fu and fu.rec_name != '-':
-            converted_result = None
-            if (iu == fu and ic == fc):
-                converted_result = result
-            elif (iu != fu and ic == fc):
-                formula = UomConversion.get_conversion_formula(iu,
-                    fu)
-                if not formula:
-                    return None
-                variables = self._get_variables(formula, notebook_line)
-                parser = FormulaParser(formula, variables)
-                formula_result = parser.getValue()
-                converted_result = result * formula_result
-            elif (iu == fu and ic != fc):
-                converted_result = result * (fc / ic)
-            else:
-                formula = None
-                conversions = UomConversion.search([
-                    ('initial_uom', '=', iu),
-                    ('final_uom', '=', fu),
-                    ])
-                if conversions:
-                    formula = conversions[0].conversion_formula
-                if not formula:
-                    return None
-                variables = self._get_variables(formula, notebook_line)
-                parser = FormulaParser(formula, variables)
-                formula_result = parser.getValue()
-                if (conversions[0].initial_uom_volume and
-                        conversions[0].final_uom_volume):
-                    d_ic = VolumeConversion.brixToDensity(ic)
-                    d_fc = VolumeConversion.brixToDensity(fc)
-                    converted_result = (result * (fc / ic) *
-                        (d_fc / d_ic) * formula_result)
-                else:
-                    converted_result = (result * (fc / ic) *
-                        formula_result)
+            converted_result = UomConversion.convert(result,
+                iu, ic, fu, fc, notebook_line)
+            if converted_result is None:
+                return None
             result = float(converted_result)
 
         return self._verificate_result(result, ranges[0])
-
-    def _get_variables(self, formula, notebook_line):
-        pool = Pool()
-        VolumeConversion = pool.get('lims.volume.conversion')
-
-        variables = {}
-        for var in ('DI',):
-            while True:
-                idx = formula.find(var)
-                if idx >= 0:
-                    variables[var] = 0
-                    formula = formula.replace(var, '_')
-                else:
-                    break
-        for var in variables.keys():
-            if var == 'DI':
-                ic = float(notebook_line.final_concentration)
-                result = VolumeConversion.brixToDensity(ic)
-                if result:
-                    variables[var] = result
-        return variables
 
     def _verificate_result(self, result, range_):
         if range_.min95 and range_.max95:
