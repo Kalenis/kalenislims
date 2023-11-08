@@ -528,7 +528,6 @@ class LabDevice(DeactivableMixin, ModelSQL, ModelView):
     responsible = fields.Many2One('lims.laboratory.professional',
         'Responsible')
 
-
     @classmethod
     def __setup__(cls):
         super().__setup__()
