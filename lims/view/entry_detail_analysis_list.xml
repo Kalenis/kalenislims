@@ -19,4 +19,5 @@
     <field name="referable"/>
     <field name="referral"/>
     <field name="referral_date"/>
+    <field name="report_date" widget="date"/>
 </tree>
