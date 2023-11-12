@@ -5014,6 +5014,10 @@ msgctxt "field:lims.referral,state:"
 msgid "State"
 msgstr "Estado"
 
+msgctxt "field:lims.referral,urgent:"
+msgid "Urgent"
+msgstr "Urgente"
+
 msgctxt "field:lims.referral.service.start,date:"
 msgid "Date"
 msgstr "Fecha"

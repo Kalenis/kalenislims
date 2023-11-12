@@ -10,6 +10,8 @@
     <field name="carrier"/>
     <label name="sent_date"/>
     <field name="sent_date"/>
+    <label name="urgent"/>
+    <field name="urgent"/>
     <notebook>
         <page string="General" id="general">
             <field name="services" colspan="4"
