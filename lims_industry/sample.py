@@ -608,7 +608,8 @@ class CreateSampleStart(metaclass=PoolMeta):
         if self.packages:
             ind_volume = 0
             for p in self.packages:
-                ind_volume += (p.quantity * p.type.capacity)
+                if p.type and p.type.capacity:
+                    ind_volume += p.quantity * p.type.capacity
             return ind_volume
         return None
 
