@@ -1701,6 +1701,10 @@ msgctxt "field:lims.entry.detail.analysis,state:"
 msgid "State"
 msgstr "Estado"
 
+msgctxt "field:lims.entry.detail.analysis,report_date:"
+msgid "Date agreed for result"
+msgstr "Fecha pactada de resultado"
+
 msgctxt "field:lims.entry.duplicate_sample.start,date:"
 msgid "Date"
 msgstr "Fecha de ingreso"
