@@ -1138,6 +1138,8 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         'get_referral_date', searcher='search_referral_date')
     label = fields.Function(fields.Char('Label'),
         'get_sample_field', searcher='search_sample_field')
+    report_date = fields.Function(fields.DateTime('Date agreed for result'), 'get_service_field',
+                                     searcher='search_service_field') 
 
     @classmethod
     def __register__(cls, module_name):
@@ -1538,6 +1540,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     order_sample = _order_service_field('sample')
     order_entry = _order_service_field('entry')
     order_party = _order_service_field('party')
+    order_report_date = _order_service_field('report_date')
 
     @classmethod
     def get_create_date2(cls, details, name):
