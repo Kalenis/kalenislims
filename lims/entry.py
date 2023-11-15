@@ -1130,7 +1130,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         'get_referral_date', searcher='search_referral_date')
     label = fields.Function(fields.Char('Label'),
         'get_sample_field', searcher='search_sample_field')
-    report_date = fields.Function(fields.DateTime('Date agreed for result'), 'get_service_field',
+    report_date = fields.Function(fields.Date('Date agreed for result'), 'get_service_field',
                                      searcher='search_service_field') 
 
     @classmethod
