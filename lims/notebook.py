@@ -6328,7 +6328,7 @@ class OpenNotebookLines(Wizard):
 
         action['name'] = \
             '%s - %s - %s - %s - %s' % (notebook.fraction.number,
-                notebook.party.name, notebook.product_type.description,
+                notebook.party.code, notebook.product_type.description,
                 notebook.matrix.description, notebook.label)
         return action, {}
 
