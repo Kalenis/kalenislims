@@ -447,6 +447,10 @@ msgctxt "field:lims.configuration,mail_ack_hide_recipients:"
 msgid "Hide recipients"
 msgstr "Ocultar destinatarios"
 
+msgctxt "field:lims.configuration,mail_ack_smtp:"
+msgid "SMTP for Acknowledgment of Samples Receipt"
+msgstr "SMTP para Acuse de recibo de muestras"
+
 msgctxt "field:lims.configuration,mail_ack_subject:"
 msgid "Email subject of Acknowledgment of Samples Receipt"
 msgstr "Asunto del correo de Acuse de recibo de muestras"
@@ -454,6 +458,10 @@ msgstr "Asunto del correo de Acuse de recibo de muestras"
 msgctxt "field:lims.configuration,mail_referral_body:"
 msgid "Email body of Referral of Samples"
 msgstr "Cuerpo del correo de Derivación de muestras"
+
+msgctxt "field:lims.configuration,mail_referral_smtp:"
+msgid "SMTP for Referral of Samples"
+msgstr "SMTP para Derivación de muestras"
 
 msgctxt "field:lims.configuration,mail_referral_subject:"
 msgid "Email subject of Referral of Samples"
@@ -6363,6 +6371,46 @@ msgctxt "field:lims.service.additional_origin,service:"
 msgid "Service"
 msgstr "Servicio"
 
+msgctxt "field:lims.smtp.server,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:lims.smtp.server,smtp_email:"
+msgid "Email"
+msgstr "Correo electrónico"
+
+msgctxt "field:lims.smtp.server,smtp_password:"
+msgid "Password"
+msgstr "Contraseña"
+
+msgctxt "field:lims.smtp.server,smtp_port:"
+msgid "Port"
+msgstr "Puerto"
+
+msgctxt "field:lims.smtp.server,smtp_server:"
+msgid "Server"
+msgstr "Servidor"
+
+msgctxt "field:lims.smtp.server,smtp_ssl:"
+msgid "SSL"
+msgstr "SSL"
+
+msgctxt "field:lims.smtp.server,smtp_timeout:"
+msgid "Timeout"
+msgstr "Timeout"
+
+msgctxt "field:lims.smtp.server,smtp_tls:"
+msgid "TLS"
+msgstr "TLS"
+
+msgctxt "field:lims.smtp.server,smtp_user:"
+msgid "User"
+msgstr "Usuario"
+
+msgctxt "field:lims.smtp.server,state:"
+msgid "State"
+msgstr "Estado"
+
 msgctxt "field:lims.technical.scope,certification_type:"
 msgid "Certification type"
 msgstr "Tipo de certificación"
@@ -7321,6 +7369,14 @@ msgstr ""
 "Para las condiciones \"En\" y \"No en\", utilice una lista de valores "
 "separados por comas (Ej.: AB, CD, 12, 34)"
 
+msgctxt "help:lims.smtp.server,smtp_email:"
+msgid "Default From and Reply Email"
+msgstr "Correo electrónico predeterminado para remitente y respuesta"
+
+msgctxt "help:lims.smtp.server,smtp_timeout:"
+msgid "Time in seconds"
+msgstr "Tiempo en segundos"
+
 msgctxt "help:lims.trend.chart,active:"
 msgid "Check to include in future use"
 msgstr "Marcar para usar en el futuro."
@@ -7688,6 +7744,10 @@ msgstr "Servicios pendientes de derivar"
 msgctxt "model:ir.action,name:act_service_referred_pending_result_list"
 msgid "Referred Services Pending Result"
 msgstr "Servicios derivados pendientes de resultado"
+
+msgctxt "model:ir.action,name:act_smtp_server"
+msgid "SMTP Servers"
+msgstr "Servidores SMTP"
 
 msgctxt "model:ir.action,name:act_trend_chart_data"
 msgid "Trend Chart"
@@ -9217,6 +9277,30 @@ msgctxt "model:ir.message,text:msg_zone_code_unique_id"
 msgid "Zone code must be unique"
 msgstr "El código de la zona debe ser único"
 
+msgctxt "model:ir.message,text:smtp_exception"
+msgid ""
+"SMTP Server exception (Email not sent):\n"
+"%(error)s"
+msgstr ""
+"Excepción de Servidor SMTP (Correo no enviado):\n"
+"%(error)s"
+
+msgctxt "model:ir.message,text:smtp_server_error"
+msgid "Error: could not connect to server. (Email not sent)"
+msgstr "Error: no se pudo conectar al servidor. (Correo no enviado)"
+
+msgctxt "model:ir.message,text:smtp_test_failed"
+msgid ""
+"SMTP test connection failed:\n"
+"%(error)s"
+msgstr ""
+"La conexión SMTP de prueba falló:\n"
+"%(error)s"
+
+msgctxt "model:ir.message,text:smtp_test_successful"
+msgid "SMTP test connection was successful"
+msgstr "La conexión SMTP de prueba fue exitosa"
+
 msgctxt "model:ir.model.button,confirm:entry_confirm_button"
 msgid "Are you sure you want to confirm the entry?"
 msgstr "¿Está seguro que desea confirmar el ingreso?"
@@ -9232,6 +9316,18 @@ msgstr "Preasignar números de muestras"
 msgctxt "model:ir.model.button,string:means_deviations_calc_select_all_button"
 msgid "Select All"
 msgstr "Seleccionar todo"
+
+msgctxt "model:ir.model.button,string:smtp_server_done_button"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "model:ir.model.button,string:smtp_server_draft_button"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "model:ir.model.button,string:smtp_server_test_smtp_server_button"
+msgid "Test Connection"
+msgstr "Probar conexión"
 
 msgctxt "model:ir.rule.group,name:rule_group_analysis_device"
 msgid "User in laboratory"
@@ -9320,6 +9416,10 @@ msgstr "Servicio"
 msgctxt "model:ir.ui.menu,name:"
 msgid "Laboratory Notebook"
 msgstr "Cuaderno de laboratorio"
+
+msgctxt "model:ir.ui.menu,name:act_smtp_server_menu"
+msgid "SMTP Servers"
+msgstr "Servidores SMTP"
 
 msgctxt "model:ir.ui.menu,name:company_department_menu"
 msgid "Departments"
@@ -10718,6 +10818,10 @@ msgctxt "model:lims.service.additional_origin,name:"
 msgid "Service Origin"
 msgstr "Origen de Servicio adicional"
 
+msgctxt "model:lims.smtp.server,name:"
+msgid "SMTP Server"
+msgstr "Servidor SMTP"
+
 msgctxt "model:lims.technical.scope,name:"
 msgid "Technical Scope"
 msgstr "Alcance técnico"
@@ -10953,6 +11057,10 @@ msgstr "Lims Planificación"
 msgctxt "model:res.group,name:group_lims_planification_readonly"
 msgid "Lims Planification Read Only"
 msgstr "Lims Planificación Sólo lectura"
+
+msgctxt "model:res.group,name:group_lims_smtp_server"
+msgid "Lims SMTP Server"
+msgstr "Lims Servidor SMTP"
 
 msgctxt "model:res.group,name:group_lims_trend_chart"
 msgid "Lims Trend Charts"
@@ -14001,6 +14109,14 @@ msgctxt "selection:lims.service,analysis_type:"
 msgid "Set"
 msgstr "Set"
 
+msgctxt "selection:lims.smtp.server,state:"
+msgid "Done"
+msgstr "Confirmado"
+
+msgctxt "selection:lims.smtp.server,state:"
+msgid "Draft"
+msgstr "Borrador"
+
 msgctxt "selection:lims.trend.chart,filter:"
 msgid "Any Sample"
 msgstr "Cualquier muestra"
@@ -15367,6 +15483,10 @@ msgstr "General"
 msgctxt "view:lims.service:"
 msgid "Time"
 msgstr "Hora"
+
+msgctxt "view:lims.smtp.server:"
+msgid "Server"
+msgstr "Servidor"
 
 msgctxt "view:lims.technical.scope.version.line:"
 msgid "Technical Scope Version Line"

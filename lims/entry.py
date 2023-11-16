@@ -665,19 +665,21 @@ class Entry(Workflow, ModelSQL, ModelView):
         if not self.ack_report_cache:
             return
 
-        from_addr = tconfig.get('email', 'from')
+        config_ = Config(1)
+        smtp_server = config_.mail_ack_smtp
+        from_addr = (smtp_server and smtp_server.smtp_email or
+            tconfig.get('email', 'from'))
         to_addrs = [c.contact.email for c in self.acknowledgment_contacts]
         if not (from_addr and to_addrs):
             return
 
-        config = Config(1)
-        hide_recipients = config.mail_ack_hide_recipients
-
+        hide_recipients = config_.mail_ack_hide_recipients
         subject, body = self.subject_body()
         attachment_data = self.attachment()
+
         msg = self.create_msg(from_addr, to_addrs, subject,
             body, hide_recipients, attachment_data)
-        return self.send_msg(from_addr, to_addrs, msg)
+        return self.send_msg(smtp_server, from_addr, to_addrs, msg)
 
     def subject_body(self):
         pool = Pool()
@@ -737,17 +739,20 @@ class Entry(Workflow, ModelSQL, ModelView):
         msg.attach(attachment)
         return msg
 
-    def send_msg(self, from_addr, to_addrs, msg):
+    def send_msg(self, smtp_server, from_addr, to_addrs, msg):
         to_addrs = list(set(to_addrs))
         success = False
         server = None
         try:
-            server = get_smtp_server()
+            if smtp_server:
+                server = smtp_server.get_smtp_server()
+            else:
+                server = get_smtp_server()
             server.sendmail(from_addr, to_addrs, msg.as_string())
             server.quit()
             success = True
         except Exception as e:
-            logger.error('Unable to deliver mail for entry %s' % (self.number))
+            logger.error('Unable to deliver mail for entry %s' % self.number)
             logger.error(str(e))
             if server is not None:
                 server.quit()

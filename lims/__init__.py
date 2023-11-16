@@ -42,6 +42,7 @@ def register():
         configuration.LabWorkYearShift,
         configuration.Cron,
         configuration.Sequence,
+        configuration.SmtpServer,
         laboratory.LaboratoryProfessional,
         laboratory.Laboratory,
         laboratory.LabMethod,

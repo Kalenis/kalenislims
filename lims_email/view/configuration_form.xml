@@ -6,6 +6,8 @@
             <field name="result_report_format"/>
             <label name="mail_ack_report_grouping"/>
             <field name="mail_ack_report_grouping"/>
+            <label name="mail_ack_report_smtp"/>
+            <field name="mail_ack_report_smtp"/>
             <label name="mail_ack_report_hide_recipients"/>
             <field name="mail_ack_report_hide_recipients"/>
             <separator string="Email subject of Acknowledgment of results report"

@@ -54,6 +54,10 @@ msgctxt "field:lims.configuration,mail_send_invoice_body:"
 msgid "Email body of Invoice report"
 msgstr "Cuerpo del correo de Informe de factura"
 
+msgctxt "field:lims.configuration,mail_send_invoice_smtp:"
+msgid "SMTP for Invoice report"
+msgstr "SMTP para Informe de factura"
+
 msgctxt "field:lims.configuration,mail_send_invoice_subject:"
 msgid "Email subject of Invoice report"
 msgstr "Asunto del correo de Informe de factura"

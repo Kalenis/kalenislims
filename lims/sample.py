@@ -7740,9 +7740,12 @@ class Referral(ModelSQL, ModelView):
 
     @classmethod
     def send_email_laboratory(cls, referrals):
-        Warning = Pool().get('res.user.warning')
+        pool = Pool()
+        Warning = pool.get('res.user.warning')
 
-        from_addr = tconfig.get('email', 'from')
+        smtp_server = None
+        from_addr = (smtp_server and smtp_server.smtp_email or
+            tconfig.get('email', 'from'))
         if not from_addr:
             logger.error("Missing configuration to send emails")
             return
@@ -7759,9 +7762,11 @@ class Referral(ModelSQL, ModelView):
 
             subject, body = referral._get_mail_subject_body()
             attachment_data = referral._get_mail_attachment()
+
             msg = cls.create_msg(from_addr, to_addrs, subject,
                 body, attachment_data)
-            cls.send_msg(from_addr, to_addrs, msg, referral.number)
+            cls.send_msg(smtp_server, from_addr, to_addrs, msg,
+                referral.number)
 
     def _get_mail_recipients(self):
         pool = Pool()
@@ -7829,17 +7834,23 @@ class Referral(ModelSQL, ModelView):
         return msg
 
     @staticmethod
-    def send_msg(from_addr, to_addrs, msg, referral_number):
+    def send_msg(smtp_server, from_addr, to_addrs, msg, referral_number):
         to_addrs = list(set(to_addrs))
         success = False
+        server = None
         try:
-            server = get_smtp_server()
+            if smtp_server:
+                server = smtp_server.get_smtp_server()
+            else:
+                server = get_smtp_server()
             server.sendmail(from_addr, to_addrs, msg.as_string())
             server.quit()
             success = True
         except Exception:
             logger.error(
-                "Unable to deliver mail for referral '%s'" % (referral_number))
+                "Unable to deliver mail for referral '%s'" % referral_number)
+            if server is not None:
+                server.quit()
         return success
 
 
