@@ -412,7 +412,9 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def send_email_responsible(cls, tasks):
-        from_addr = tconfig.get('email', 'from')
+        smtp_server = None
+        from_addr = (smtp_server and smtp_server.smtp_email or
+            tconfig.get('email', 'from'))
         if not from_addr:
             logger.error("Missing configuration to send emails")
             return
@@ -429,12 +431,15 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
                 continue
 
             subject, body = task._get_mail_subject_body()
+
             msg = cls._create_msg(from_addr, to_addrs, subject, body)
-            cls._send_msg(from_addr, to_addrs, msg, task.number)
+            cls._send_msg(smtp_server, from_addr, to_addrs, msg, task.number)
 
     @classmethod
     def send_email_update(cls, tasks):
-        from_addr = tconfig.get('email', 'from')
+        smtp_server = None
+        from_addr = (smtp_server and smtp_server.smtp_email or
+            tconfig.get('email', 'from'))
         if not from_addr:
             logger.error("Missing configuration to send emails")
             return
@@ -453,8 +458,9 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
                 continue
 
             subject, body = task._get_mail_subject_body(True)
+
             msg = cls._create_msg(from_addr, to_addrs, subject, body)
-            cls._send_msg(from_addr, to_addrs, msg, task.number)
+            cls._send_msg(smtp_server, from_addr, to_addrs, msg, task.number)
 
     def _get_mail_subject_body(self, update=False):
         pool = Pool()
@@ -526,17 +532,23 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         return msg
 
     @staticmethod
-    def _send_msg(from_addr, to_addrs, msg, task_number):
+    def _send_msg(smtp_server, from_addr, to_addrs, msg, task_number):
         to_addrs = list(set(to_addrs))
         success = False
+        server = None
         try:
-            server = get_smtp_server()
+            if smtp_server:
+                server = smtp_server.get_smtp_server()
+            else:
+                server = get_smtp_server()
             server.sendmail(from_addr, to_addrs, msg.as_string())
             server.quit()
             success = True
         except Exception:
             logger.error(
-                "Unable to deliver email for task '%s'" % (task_number))
+                "Unable to deliver email for task '%s'" % task_number)
+            if server is not None:
+                server.quit()
         return success
 
     @classmethod

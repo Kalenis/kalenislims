@@ -483,16 +483,18 @@ class SendResultsReport(Wizard):
         ResultsReport = pool.get('lims.results_report')
         Lang = pool.get('ir.lang')
 
-        from_addr = tconfig.get('email', 'from')
+        config_ = Config(1)
+        smtp_server = config_.mail_ack_report_smtp
+        from_addr = (smtp_server and smtp_server.smtp_email or
+            tconfig.get('email', 'from'))
         if not from_addr:
             logger.warning('Send Results Report: FAILED')
             self.failed.reports_not_ready = []
             self.failed.reports_not_sent = []
             return 'failed'
 
-        config = Config(1)
-        hide_recipients = config.mail_ack_report_hide_recipients
-        email_qa = config.email_qa
+        hide_recipients = config_.mail_ack_report_hide_recipients
+        email_qa = config_.email_qa
 
         context = Transaction().context
         model = context.get('active_model', None)
@@ -606,7 +608,7 @@ class SendResultsReport(Wizard):
 
             msg = self._create_msg(from_addr, to_addrs, subject,
                 body, hide_recipients, group['attachments_data'])
-            sent = self._send_msg(from_addr, to_addrs, msg)
+            sent = self._send_msg(smtp_server, from_addr, to_addrs, msg)
             if not sent:
                 reports_not_sent.extend(group['reports_ready'])
                 logger.warning('Send Results Report: Not sent')
@@ -635,12 +637,12 @@ class SendResultsReport(Wizard):
         Config = pool.get('lims.configuration')
         ResultsReport = pool.get('lims.results_report')
 
-        config = Config(1)
+        config_ = Config(1)
 
         res = {}
         results_reports = ResultsReport.browse(report_ids)
 
-        if not config.mail_ack_report_grouping:
+        if not config_.mail_ack_report_grouping:
             for report in results_reports:
                 if (report.invoice_party and
                         hasattr(report.invoice_party,
@@ -654,7 +656,7 @@ class SendResultsReport(Wizard):
                     }
             return res
 
-        if config.mail_ack_report_grouping == 'party':
+        if config_.mail_ack_report_grouping == 'party':
             for report in results_reports:
                 if (report.invoice_party and
                         hasattr(report.invoice_party,
@@ -704,7 +706,7 @@ class SendResultsReport(Wizard):
         User = pool.get('res.user')
         Lang = pool.get('ir.lang')
 
-        config = Config(1)
+        config_ = Config(1)
 
         lang = User(Transaction().user).language
         if not lang:
@@ -720,9 +722,9 @@ class SendResultsReport(Wizard):
             else:
                 label = gettext('lims_email.msg_polisample')
             subject = str('%s %s (%s)' % (
-                config.mail_ack_report_subject,
+                config_.mail_ack_report_subject,
                 report_list, label)).strip()
-            body = str(config.mail_ack_report_body)
+            body = str(config_.mail_ack_report_body)
 
         body = body.replace('<SAMPLES>', '\n'.join(sample_list))
         body = body.replace('&lt;SAMPLES&gt;', '\n'.join(sample_list))
@@ -770,12 +772,15 @@ class SendResultsReport(Wizard):
             msg.attach(attachment)
         return msg
 
-    def _send_msg(self, from_addr, to_addrs, msg):
+    def _send_msg(self, smtp_server, from_addr, to_addrs, msg):
         to_addrs = list(set(to_addrs))
         success = False
         server = None
         try:
-            server = get_smtp_server()
+            if smtp_server:
+                server = smtp_server.get_smtp_server()
+            else:
+                server = get_smtp_server()
             server.sendmail(from_addr, to_addrs, msg.as_string())
             server.quit()
             success = True

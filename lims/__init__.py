@@ -40,6 +40,7 @@ def register():
         configuration.LabWorkYearHoliday,
         configuration.Cron,
         configuration.Sequence,
+        configuration.SmtpServer,
         laboratory.LaboratoryProfessional,
         laboratory.Laboratory,
         laboratory.LabMethod,

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<form col="4">
+    <label name="name"/>
+    <field name="name"/>
+    <notebook colspan="4">
+        <page id="server" string="Server">
+            <label name="smtp_server"/>
+            <field name="smtp_server"/>
+            <group id="smtp_header" col="4" colspan="2">
+                <label name="smtp_port"/>
+                <field name="smtp_port"/>
+                <label name="smtp_timeout"/>
+                <field name="smtp_timeout"/>
+            </group>
+            <label name="smtp_ssl"/>
+            <field name="smtp_ssl"/>
+            <label name="smtp_tls"/>
+            <field name="smtp_tls"/>
+            <label name="smtp_user"/>
+            <field name="smtp_user"/>
+            <label name="smtp_password"/>
+            <field name="smtp_password" widget="password"/>
+            <label name="smtp_email"/>
+            <field name="smtp_email"/>
+            <group id="server_buttons" col="6" colspan="6">
+                <label name="state"/>
+                <field name="state"/>
+                <button name="draft" icon="tryton-clear"/>
+                <button name="done" icon="tryton-forward"/>
+                <button name="test_smtp_server" icon="tryton-ok"/>
+            </group>
+        </page>
+    </notebook>
+</form>

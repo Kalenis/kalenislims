@@ -20,6 +20,9 @@ class Configuration(metaclass=PoolMeta):
         ' results report',
         help='<SAMPLES> will be replaced by the list of sample\'s labels')
     mail_ack_report_hide_recipients = fields.Boolean('Hide recipients')
+    mail_ack_report_smtp = fields.Many2One('lims.smtp.server', 'SMTP for '
+        'Acknowledgment of results report',
+        domain=[('state', '=', 'done')])
     result_report_format = fields.Many2One('lims.result_report.format',
         'Default Results Report Name Format')
 

@@ -5,8 +5,11 @@
 from datetime import datetime
 from dateutil import rrule
 from sql import Null
+import logging
+import smtplib
 
-from trytond.model import ModelSingleton, ModelView, ModelSQL, fields, Index
+from trytond.model import ModelSingleton, ModelView, ModelSQL, Workflow, \
+    fields, Index
 from trytond.pyson import Eval, Id
 from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
@@ -14,6 +17,8 @@ from trytond.modules.company.model import (
     CompanyMultiValueMixin, CompanyValueMixin)
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
+
+logger = logging.getLogger(__name__)
 
 sequence_names = [
     'entry_sequence', 'sample_sequence', 'service_sequence',
@@ -201,6 +206,9 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     mail_ack_body = fields.Text('Email body of Acknowledgment of Samples'
         ' Receipt')
     mail_ack_hide_recipients = fields.Boolean('Hide recipients')
+    mail_ack_smtp = fields.Many2One('lims.smtp.server', 'SMTP for '
+        'Acknowledgment of Samples Receipt',
+        domain=[('state', '=', 'done')])
     microbiology_laboratories = fields.Many2Many(
         'lims.configuration-laboratory', 'configuration',
         'laboratory', 'Microbiology Laboratories')
@@ -280,6 +288,9 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     mail_referral_subject = fields.Char('Email subject of Referral of Samples',
         help="A suffix with the referral number will be added to the text")
     mail_referral_body = fields.Text('Email body of Referral of Samples')
+    mail_referral_smtp = fields.Many2One('lims.smtp.server', 'SMTP for '
+        'Referral of Samples',
+        domain=[('state', '=', 'done')])
     sample_fast_copy = fields.Boolean('Fast Sample Creation (Experimental)')
 
     @staticmethod
@@ -692,3 +703,134 @@ class Sequence(metaclass=PoolMeta):
             date = Date.today()
         res['year2'] = date.strftime('%y')
         return res
+
+
+class SmtpServer(Workflow, ModelSQL, ModelView):
+    'SMTP Server'
+    __name__ = 'lims.smtp.server'
+
+    _states = {'readonly': (Eval('state') != 'draft')}
+
+    name = fields.Char('Name', required=True)
+    smtp_server = fields.Char('Server', required=True, states=_states)
+    smtp_port = fields.Integer('Port', required=True, states=_states)
+    smtp_timeout = fields.Integer('Timeout', required=True, states=_states,
+        help='Time in seconds')
+    smtp_ssl = fields.Boolean('SSL', states=_states)
+    smtp_tls = fields.Boolean('TLS', states=_states)
+    smtp_user = fields.Char('User', states=_states)
+    smtp_password = fields.Char('Password', strip=False, states=_states)
+    smtp_email = fields.Char('Email', required=True, states=_states,
+        help='Default From and Reply Email')
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('done', 'Done'),
+        ], 'State', readonly=True, required=True)
+
+    del _states
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._transitions |= set((
+            ('draft', 'done'),
+            ('done', 'draft'),
+            ))
+        cls._buttons.update({
+            'test_smtp_server': {},
+            'draft': {
+                'invisible': Eval('state') == 'draft',
+                'depends': ['state'],
+                },
+            'done': {
+                'invisible': Eval('state') == 'done',
+                'depends': ['state'],
+                },
+            })
+
+    @staticmethod
+    def default_smtp_timeout():
+        return 60
+
+    @staticmethod
+    def default_smtp_ssl():
+        return True
+
+    @staticmethod
+    def default_smtp_port():
+        return 465
+
+    @staticmethod
+    def default_state():
+        return 'draft'
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('draft')
+    def draft(cls, servers):
+        pass
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('done')
+    def done(cls, servers):
+        pass
+
+    @classmethod
+    @ModelView.button
+    def test_smtp_server(cls, servers):
+        for server in servers:
+            try:
+                server.get_smtp_server()
+            except Exception as message:
+                logger.error('Exception getting SMTP Server: %s', message)
+                raise UserError(gettext('lims.smtp_test_failed',
+                    error=message))
+            raise UserError(gettext('lims.smtp_test_successful'))
+
+    def get_smtp_server(self):
+        """
+        Instanciate, configure and return a SMTP or SMTP_SSL instance from
+        smtplib.
+        :return: A SMTP instance. The quit() method must be call when all
+        the calls to sendmail() have been made.
+        """
+        if self.smtp_ssl:
+            smtp_server = smtplib.SMTP_SSL(self.smtp_server, self.smtp_port,
+                timeout=self.smtp_timeout)
+        else:
+            smtp_server = smtplib.SMTP(self.smtp_server, self.smtp_port,
+                timeout=self.smtp_timeout)
+
+        if self.smtp_tls:
+            smtp_server.starttls()
+
+        if self.smtp_user and self.smtp_password:
+            smtp_server.login(self.smtp_user, self.smtp_password)
+
+        return smtp_server
+
+    def send_mail(self, from_addr, to_addrs, msg):
+        success = False
+        server = None
+        try:
+            smtp_server = self.get_smtp_server()
+            smtp_server.sendmail(from_addr, to_addrs, msg)
+            smtp_server.quit()
+            success = True
+        except smtplib.SMTPException as error:
+            logger.error('SMTPException: %s', error)
+            if server is not None:
+                server.quit()
+            raise UserError(gettext('lims.smtp_exception', error=error))
+        except smtplib.socket.error as error:
+            logger.error('socket.error: %s', error)
+            if server is not None:
+                server.quit()
+            raise UserError(gettext('lims.smtp_server_error', error=error))
+        except smtplib.SMTPRecipientsRefused as error:
+            logger.error('socket.error: %s', error)
+            if server is not None:
+                server.quit()
+            raise UserError(gettext('lims.smtp_server_error', error=error))
+        return success

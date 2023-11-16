@@ -69,6 +69,8 @@
         </page>
         <page string="Mail Acknowledgment of Samples Receipt"
                 id="mail_ack_samples">
+            <label name="mail_ack_smtp"/>
+            <field name="mail_ack_smtp"/>
             <label name="mail_ack_hide_recipients"/>
             <field name="mail_ack_hide_recipients"/>
             <separator string="Email body of Acknowledgment of Samples Receipt"
@@ -77,6 +79,8 @@
             <field name="mail_ack_body" colspan="4"/>
         </page>
         <page string="Mail Referral of Samples" id="mail_referral" col="6">
+            <label name="mail_referral_smtp"/>
+            <field name="mail_referral_smtp"/>
             <separator string="Email subject of Referral of Samples"
                 colspan="4" id="mail_referral_subject"/>
             <field name="mail_referral_subject" colspan="4"/>

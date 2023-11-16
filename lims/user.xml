@@ -203,6 +203,14 @@
             <field name="group" ref="group_lims_planification"/>
         </record>
 
+        <record model="res.group" id="group_lims_smtp_server">
+            <field name="name">Lims SMTP Server</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_lims_smtp_server">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_lims_smtp_server"/>
+        </record>
+
 <!-- Icons -->
 
         <record model="ir.ui.icon" id="laboratory_icon">
