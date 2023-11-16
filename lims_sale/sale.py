@@ -16,7 +16,7 @@ from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval, Bool
 from trytond.transaction import Transaction
-from trytond.config import config
+from trytond.config import config as tconfig
 from trytond.tools import get_smtp_server
 from trytond.exceptions import UserError, UserWarning
 from trytond.i18n import gettext
@@ -291,7 +291,9 @@ class Sale(metaclass=PoolMeta):
 
     @classmethod
     def send_email_party(cls, sales):
-        from_addr = config.get('email', 'from')
+        smtp_server = None
+        from_addr = (smtp_server and smtp_server.smtp_email or
+            tconfig.get('email', 'from'))
         if not from_addr:
             logger.error("Missing configuration to send emails")
             return
@@ -302,21 +304,22 @@ class Sale(metaclass=PoolMeta):
                 logger.error("Missing address for '%s' to send email",
                     sale.party.rec_name)
                 continue
-            reply_to = sale.create_uid.email
 
+            reply_to = sale.create_uid.email
             subject, body = sale._get_subject_body()
             attachment_data = sale._get_attachment()
+
             msg = cls.create_msg(from_addr, to_addr, reply_to, subject,
                 body, attachment_data)
-            cls.send_msg(from_addr, to_addr, msg, sale.number)
+            cls.send_msg(smtp_server, from_addr, to_addr, msg, sale.number)
 
     def _get_subject_body(self):
         pool = Pool()
         Config = pool.get('sale.configuration')
 
-        config = Config(1)
-        subject = str(config.email_quotation_subject)
-        body = str(config.email_quotation_body)
+        config_ = Config(1)
+        subject = str(config_.email_quotation_subject)
+        body = str(config_.email_quotation_body)
         return subject, body
 
     def _get_attachment(self):
@@ -359,16 +362,22 @@ class Sale(metaclass=PoolMeta):
         return msg
 
     @staticmethod
-    def send_msg(from_addr, to_addr, msg, task_number):
+    def send_msg(smtp_server, from_addr, to_addr, msg, task_number):
         success = False
+        server = None
         try:
-            server = get_smtp_server()
+            if smtp_server:
+                server = smtp_server.get_smtp_server()
+            else:
+                server = get_smtp_server()
             server.sendmail(from_addr, [to_addr], msg.as_string())
             server.quit()
             success = True
         except Exception:
             logger.error(
-                "Unable to deliver email for task '%s'" % (task_number))
+                "Unable to deliver email for task '%s'" % task_number)
+            if server is not None:
+                server.quit()
         return success
 
     def create_invoice(self):

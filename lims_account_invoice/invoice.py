@@ -18,7 +18,7 @@ from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Bool, Or, If
 from trytond.transaction import Transaction
 from trytond.tools import get_smtp_server
-from trytond.config import config
+from trytond.config import config as tconfig
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
@@ -114,10 +114,16 @@ class Invoice(metaclass=PoolMeta):
                 tt)
 
     def mail_send_invoice(self):
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+
         if not self.invoice_report_cache:
             return
 
-        from_addr = config.get('email', 'from')
+        config_ = Config(1)
+        smtp_server = config_.mail_send_invoice_smtp
+        from_addr = (smtp_server and smtp_server.smtp_email or
+            tconfig.get('email', 'from'))
         to_addrs = [c.contact.email for c in self.invoice_contacts]
         if not (from_addr and to_addrs):
             logger.warn('mail_send_invoice():Factura %s:Envio omitido '
@@ -128,9 +134,10 @@ class Invoice(metaclass=PoolMeta):
 
         subject, body = self.subject_body()
         attachments_data = self.attachment()
+
         msg = self.create_msg(from_addr, to_addrs, subject,
             body, attachments_data)
-        return self.send_msg(from_addr, to_addrs, msg)
+        return self.send_msg(smtp_server, from_addr, to_addrs, msg)
 
     def subject_body(self):
         pool = Pool()
@@ -138,7 +145,7 @@ class Invoice(metaclass=PoolMeta):
         User = pool.get('res.user')
         Lang = pool.get('ir.lang')
 
-        config = Config(1)
+        config_ = Config(1)
 
         lang = User(Transaction().user).language
         if not lang:
@@ -147,9 +154,9 @@ class Invoice(metaclass=PoolMeta):
                     ], limit=1)
 
         with Transaction().set_context(language=lang.code):
-            subject = str('%s %s' % (config.mail_send_invoice_subject,
+            subject = str('%s %s' % (config_.mail_send_invoice_subject,
                     self.number)).strip()
-            body = str(config.mail_send_invoice_body)
+            body = str(config_.mail_send_invoice_body)
 
         return subject, body
 
@@ -204,16 +211,23 @@ class Invoice(metaclass=PoolMeta):
             msg.attach(attachment)
         return msg
 
-    def send_msg(self, from_addr, to_addrs, msg):
+    def send_msg(self, smtp_server, from_addr, to_addrs, msg):
         to_addrs = list(set(to_addrs))
         success = False
+        server = None
         try:
-            server = get_smtp_server()
+            if smtp_server:
+                server = smtp_server.get_smtp_server()
+            else:
+                server = get_smtp_server()
             server.sendmail(from_addr, to_addrs, msg.as_string())
             server.quit()
             success = True
-        except Exception:
+        except Exception as e:
             logger.error('Unable to deliver mail for invoice %s', self.number)
+            logger.error(str(e))
+            if server is not None:
+                server.quit()
         return success
 
 

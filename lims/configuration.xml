@@ -219,5 +219,68 @@
             <field name="name">sequence_form</field>
         </record>
 
+<!-- SMTP Servers -->
+
+        <record model="ir.ui.view" id="smtp_server_view_form">
+            <field name="model">lims.smtp.server</field>
+            <field name="type">form</field>
+            <field name="name">smtp_server_form</field>
+        </record>
+        <record model="ir.ui.view" id="smtp_server_view_list">
+            <field name="model">lims.smtp.server</field>
+            <field name="type">tree</field>
+            <field name="name">smtp_server_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_smtp_server">
+            <field name="name">SMTP Servers</field>
+            <field name="res_model">lims.smtp.server</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_smtp_server_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="smtp_server_view_list"/>
+            <field name="act_window" ref="act_smtp_server"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_smtp_server_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="smtp_server_view_form"/>
+            <field name="act_window" ref="act_smtp_server"/>
+        </record>
+
+        <menuitem action="act_smtp_server" id="act_smtp_server_menu"
+            parent="lims_config_base" sequence="40"/>
+
+        <record model="ir.model.button" id="smtp_server_test_smtp_server_button">
+            <field name="name">test_smtp_server</field>
+            <field name="string">Test Connection</field>
+            <field name="model" search="[('model', '=', 'lims.smtp.server')]"/>
+        </record>
+        <record model="ir.model.button" id="smtp_server_draft_button">
+            <field name="name">draft</field>
+            <field name="string">Draft</field>
+            <field name="model" search="[('model', '=', 'lims.smtp.server')]"/>
+        </record>
+        <record model="ir.model.button" id="smtp_server_done_button">
+            <field name="name">done</field>
+            <field name="string">Confirm</field>
+            <field name="model" search="[('model', '=', 'lims.smtp.server')]"/>
+        </record>
+
+        <record model="ir.model.access" id="access_smtp_server">
+            <field name="model" search="[('model', '=', 'lims.smtp.server')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_smtp_server_group_smtp_server">
+            <field name="model" search="[('model', '=', 'lims.smtp.server')]"/>
+            <field name="group" ref="group_lims_smtp_server"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
     </data>
 </tryton>
