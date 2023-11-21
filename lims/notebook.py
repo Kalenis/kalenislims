@@ -6327,8 +6327,8 @@ class OpenNotebookLines(Wizard):
             [('notebook', 'in', Transaction().context['active_ids'])])
 
         action['name'] = \
-            '%s - %s - %s - %s - %s' % (notebook.fraction.number,
-                notebook.party.code, notebook.product_type.description,
+            '%s - %s - %s - %s' % (notebook.fraction.number,
+                notebook.product_type.description,
                 notebook.matrix.description, notebook.label)
         return action, {}
 
