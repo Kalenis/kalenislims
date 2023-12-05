@@ -40,9 +40,11 @@ class Planification(metaclass=PoolMeta):
                 ('state', '=', 'unplanned'),
                 ]
             if entries:
-                clause.append(('entry', 'in', [e.id for e in entries]),)
+                clause.append(
+                    ('entry', 'in', [e.id for e in entries]))
             if tests:
-                clause.append(('sample', 'in', [t.sample.id for t in tests]),)
+                clause.append(
+                    ('sample', 'in', [t.sample.id for t in tests]))
 
             detail_analyses = EntryDetailAnalysis.search(clause)
             if not detail_analyses:
