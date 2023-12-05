@@ -19,6 +19,7 @@ def register():
         sample.Sample,
         module='lims_planning_automatic', type_='model')
     Pool.register(
+        planification.Planification2,
         sheet.AnalysisSheet,
         module='lims_planning_automatic', type_='model',
         depends=['lims_analysis_sheet'])

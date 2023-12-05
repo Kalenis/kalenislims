@@ -16,5 +16,9 @@
     <field name="headquarters"/>
     <group col="-1" colspan="2" id="checkboxes">
     </group>
-    <field name="cv_corrections" colspan="4"/>
+    <notebook>
+        <page name="cv_corrections">
+            <field name="cv_corrections" colspan="4"/>
+        </page>
+    </notebook>
 </form>

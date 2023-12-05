@@ -6,6 +6,10 @@ msgctxt "field:lims.laboratory,automatic_planning:"
 msgid "Automatic Planning"
 msgstr "Planificación Automática"
 
+msgctxt "field:lims.laboratory,automatic_planning_simplified:"
+msgid "Simplified Automatic Planning"
+msgstr "Planificación Automática Simplificada"
+
 msgctxt "field:lims.planification,automatic:"
 msgid "Automatic"
 msgstr "Automática"
