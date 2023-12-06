@@ -12,6 +12,8 @@ class Laboratory(metaclass=PoolMeta):
     __name__ = 'lims.laboratory'
 
     automatic_planning = fields.Boolean('Automatic Planning')
+    automatic_planning_simplified = fields.Boolean(
+        'Simplified Automatic Planning')
 
 
 class NotebookRule(metaclass=PoolMeta):
