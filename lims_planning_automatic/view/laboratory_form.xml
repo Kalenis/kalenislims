@@ -4,4 +4,10 @@
         <label name="automatic_planning"/>
         <field name="automatic_planning"/>
     </xpath>
+    <xpath expr="/form/notebook" position="inside">
+        <page name="automatic_planning">
+            <label name="automatic_planning_simplified"/>
+            <field name="automatic_planning_simplified"/>
+        </page>
+    </xpath>
 </data>
