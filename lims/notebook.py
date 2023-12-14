@@ -1491,14 +1491,14 @@ class NotebookLine(ModelSQL, ModelView):
                 if (self.converted_result and (
                         self.converted_result_modifier and
                         self.converted_result_modifier.code not in
-                        ('ni', 'low'))):
+                        ('ni', 'low', 'gre'))):
                     self.accepted = False
                     self.not_accepted_message = gettext(
                         'lims.msg_not_accepted_5')
                 elif (self.result and (
                         self.result_modifier and
                         self.result_modifier.code not in
-                        ('ni', 'low'))):
+                        ('ni', 'low', 'gre'))):
                     self.accepted = False
                     self.not_accepted_message = gettext(
                         'lims.msg_not_accepted_6')
@@ -5595,12 +5595,12 @@ class NotebookAcceptLines(Wizard):
             if (notebook_line.converted_result and (
                     notebook_line.converted_result_modifier and
                     notebook_line.converted_result_modifier.code not in
-                    ('ni', 'low'))):
+                    ('ni', 'low', 'gre'))):
                 continue
             if (notebook_line.result and (
                     notebook_line.result_modifier and
                     notebook_line.result_modifier.code not in
-                    ('ni', 'low'))):
+                    ('ni', 'low', 'gre'))):
                 continue
 
             notebook_id = notebook_line.notebook.id

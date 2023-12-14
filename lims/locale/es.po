@@ -10479,6 +10479,10 @@ msgctxt "model:lims.result_modifier,name:result_modifier_d"
 msgid "Detected"
 msgstr "Detectado"
 
+msgctxt "model:lims.result_modifier,name:result_modifier_gre"
+msgid ">"
+msgstr ">"
+
 msgctxt "model:lims.result_modifier,name:result_modifier_low"
 msgid "<"
 msgstr "<"
