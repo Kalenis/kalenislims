@@ -445,6 +445,10 @@
             <field name="code">low</field>
             <field name="name">&lt;</field>
         </record>
+        <record model="lims.result_modifier" id="result_modifier_gre">
+            <field name="code">gre</field>
+            <field name="name">&gt;</field>
+        </record>
         <record model="lims.result_modifier" id="result_modifier_d">
             <field name="code">d</field>
             <field name="name">Detected</field>
