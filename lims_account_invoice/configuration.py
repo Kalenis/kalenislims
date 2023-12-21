@@ -13,9 +13,14 @@ class Configuration(metaclass=PoolMeta):
     mail_send_invoice_subject = fields.Char('Email subject of Invoice report',
         help="In the text will be added suffix with the invoice report number")
     mail_send_invoice_body = fields.Text('Email body of Invoice report')
+    mail_send_invoice_hide_recipients = fields.Boolean('Hide recipients')
     mail_send_invoice_smtp = fields.Many2One('lims.smtp.server', 'SMTP for '
         'Invoice report',
         domain=[('state', '=', 'done')])
+
+    @staticmethod
+    def default_mail_send_invoice_hide_recipients():
+        return True
 
 
 class Cron(metaclass=PoolMeta):

@@ -6339,6 +6339,10 @@ msgctxt "field:lims.smtp.server,smtp_port:"
 msgid "Port"
 msgstr "Puerto"
 
+msgctxt "field:lims.smtp.server,smtp_reply_to:"
+msgid "Reply To"
+msgstr "Responder a"
+
 msgctxt "field:lims.smtp.server,smtp_server:"
 msgid "Server"
 msgstr "Servidor"

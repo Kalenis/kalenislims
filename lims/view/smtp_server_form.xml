@@ -22,6 +22,8 @@
             <field name="smtp_password" widget="password"/>
             <label name="smtp_email"/>
             <field name="smtp_email"/>
+            <label name="smtp_reply_to"/>
+            <field name="smtp_reply_to"/>
             <group id="server_buttons" col="6" colspan="6">
                 <label name="state"/>
                 <field name="state"/>
