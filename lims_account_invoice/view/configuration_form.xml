@@ -4,6 +4,8 @@
         <page string="Mail Invoice Report" id="mail_send_invoice_report">
             <label name="mail_send_invoice_smtp"/>
             <field name="mail_send_invoice_smtp"/>
+            <label name="mail_send_invoice_hide_recipients"/>
+            <field name="mail_send_invoice_hide_recipients"/>
             <separator string="Email subject of Invoice report"
                 colspan="4" id="mail_send_invoice_subject"/>
             <field name="mail_send_invoice_subject" colspan="4"/>
