@@ -1697,6 +1697,8 @@ class NotebookLine(ModelSQL, ModelView):
                 res = res
             elif result_modifier == 'low':
                 res = gettext('lims.msg_quantification_limit', loq=res)
+            elif result_modifier == 'gre':
+                res = '> %s' % res
             elif result_modifier == 'd':
                 res = gettext('lims.msg_d')
             elif result_modifier == 'nd':
@@ -1727,6 +1729,8 @@ class NotebookLine(ModelSQL, ModelView):
                 res = res
             elif result_modifier == 'low':
                 res = gettext('lims.msg_quantification_limit', loq=res)
+            elif result_modifier == 'gre':
+                res = '> %s' % res
             elif result_modifier == 'd':
                 res = gettext('lims.msg_d')
             elif result_modifier == 'nd':
