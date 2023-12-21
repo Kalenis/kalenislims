@@ -673,12 +673,13 @@ class Entry(Workflow, ModelSQL, ModelView):
         if not (from_addr and to_addrs):
             return
 
+        reply_to = smtp_server and smtp_server.smtp_reply_to or from_addr
         hide_recipients = config_.mail_ack_hide_recipients
         subject, body = self.subject_body()
         attachment_data = self.attachment()
 
         msg = self.create_msg(from_addr, to_addrs, subject,
-            body, hide_recipients, attachment_data)
+            body, reply_to, hide_recipients, attachment_data)
         return self.send_msg(smtp_server, from_addr, to_addrs, msg)
 
     def subject_body(self):
@@ -717,7 +718,7 @@ class Entry(Workflow, ModelSQL, ModelView):
         return data
 
     def create_msg(self, from_addr, to_addrs, subject, body,
-            hide_recipients, attachment_data):
+            reply_to, hide_recipients, attachment_data):
         if not to_addrs:
             return None
 
@@ -726,6 +727,9 @@ class Entry(Workflow, ModelSQL, ModelView):
         if not hide_recipients:
             msg['To'] = ', '.join(to_addrs)
         msg['Subject'] = subject
+
+        if reply_to != from_addr:
+            msg.add_header('reply-to', reply_to)
 
         msg_body = MIMEText('text', 'plain')
         msg_body.set_payload(body.encode('UTF-8'), 'UTF-8')

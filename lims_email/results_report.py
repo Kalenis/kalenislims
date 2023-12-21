@@ -493,6 +493,7 @@ class SendResultsReport(Wizard):
             self.failed.reports_not_sent = []
             return 'failed'
 
+        reply_to = smtp_server and smtp_server.smtp_reply_to or from_addr
         hide_recipients = config_.mail_ack_report_hide_recipients
         email_qa = config_.email_qa
 
@@ -607,7 +608,7 @@ class SendResultsReport(Wizard):
             subject, body = self._get_subject_body(group['reports_ready'])
 
             msg = self._create_msg(from_addr, to_addrs, subject,
-                body, hide_recipients, group['attachments_data'])
+                body, reply_to, hide_recipients, group['attachments_data'])
             sent = self._send_msg(smtp_server, from_addr, to_addrs, msg)
             if not sent:
                 reports_not_sent.extend(group['reports_ready'])
@@ -748,7 +749,7 @@ class SendResultsReport(Wizard):
             return sorted(list(set(res)), key=lambda x: x)
 
     def _create_msg(self, from_addr, to_addrs, subject, body,
-            hide_recipients, attachments_data=[]):
+            reply_to, hide_recipients, attachments_data=[]):
         if not to_addrs:
             return None
 
@@ -757,6 +758,9 @@ class SendResultsReport(Wizard):
         if not hide_recipients:
             msg['To'] = ', '.join(to_addrs)
         msg['Subject'] = subject
+
+        if reply_to != from_addr:
+            msg.add_header('reply-to', reply_to)
 
         msg_body = MIMEBase('text', 'plain')
         msg_body.set_payload(body.encode('UTF-8'), 'UTF-8')

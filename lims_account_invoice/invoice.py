@@ -132,11 +132,13 @@ class Invoice(metaclass=PoolMeta):
         logger.info('mail_send_invoice():INFO:Contactos de factura:'
                 'emails:(%s)', ','.join(to_addrs))  # DEBUG
 
+        reply_to = smtp_server and smtp_server.smtp_reply_to or from_addr
+        hide_recipients = config_.mail_send_invoice_hide_recipients
         subject, body = self.subject_body()
         attachments_data = self.attachment()
 
         msg = self.create_msg(from_addr, to_addrs, subject,
-            body, attachments_data)
+            body, reply_to, hide_recipients, attachments_data)
         return self.send_msg(smtp_server, from_addr, to_addrs, msg)
 
     def subject_body(self):
@@ -187,16 +189,19 @@ class Invoice(metaclass=PoolMeta):
                 })
         return data
 
-    def create_msg(self, from_addr, to_addrs, subject, body, attachments_data):
+    def create_msg(self, from_addr, to_addrs, subject, body,
+            reply_to, hide_recipients, attachments_data):
         if not to_addrs:
             return None
 
         msg = MIMEMultipart('mixed')
         msg['From'] = from_addr
-        hidden = True  # TODO: HARDCODE!
-        if not hidden:
+        if not hide_recipients:
             msg['To'] = ', '.join(to_addrs)
         msg['Subject'] = subject
+
+        if reply_to != from_addr:
+            msg.add_header('reply-to', reply_to)
 
         msg_body = MIMEText('text', 'plain')
         msg_body.set_payload(body.encode('UTF-8'), 'UTF-8')

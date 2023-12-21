@@ -765,6 +765,7 @@ class SmtpServer(Workflow, ModelSQL, ModelView):
     smtp_password = fields.Char('Password', strip=False, states=_states)
     smtp_email = fields.Char('Email', required=True, states=_states,
         help='Default From and Reply Email')
+    smtp_reply_to = fields.Char('Reply To', states=_states)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done'),
