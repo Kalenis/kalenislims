@@ -738,6 +738,10 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         'Invoice party'), 'get_entry_field', searcher='search_entry_field')
     signatories = fields.One2Many('lims.results_report.version.detail.signer',
         'version_detail', 'Signatories', states=_states)
+    certifications = fields.Many2Many(
+        'lims.results_report.version.detail.certification',
+        'version_detail', 'certification_type',
+        'Accreditations / Certifications', states=_states)
     resultrange_origin = fields.Many2One('lims.range.type', 'Origin',
         domain=['OR', ('id', '=', Eval('resultrange_origin', -1)),
             ('id', 'in', Eval('resultrange_origin_domain'))],
@@ -1341,6 +1345,9 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                 'type': c.type,
                 'professional': c.professional.id,
                 } for c in detail.signatories])]
+        if detail.certifications:
+            detail_default['certifications'] = [('add',
+                [c.id for c in detail.certifications])]
         if detail.resultrange_origin:
             detail_default['resultrange_origin'] = detail.resultrange_origin.id
         detail_default['comments'] = str(detail.comments or '')
@@ -1664,7 +1671,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def _get_fields_not_overwrite(cls):
-        fields = ['type', 'signatories', 'samples']
+        fields = ['type', 'signatories', 'certifications', 'samples']
         return fields
 
     @classmethod
@@ -2022,6 +2029,16 @@ class ResultsReportVersionDetailSigner(sequence_ordered(),
         if not professionals:
             return res
         return res + [p.id for p in professionals]
+
+
+class ResultsReportVersionDetailCertification(ModelSQL):
+    'Results Report Version Detail Certification'
+    __name__ = 'lims.results_report.version.detail.certification'
+
+    version_detail = fields.Many2One('lims.results_report.version.detail',
+        'Report Detail', required=True, ondelete='CASCADE')
+    certification_type = fields.Many2One('lims.certification.type',
+        'Certification Type', required=True, ondelete='CASCADE')
 
 
 class ResultsReportVersionDetailSample(
@@ -2744,6 +2761,7 @@ class GenerateReport(Wizard):
         if self.start.report:  # Result report selected
             samples = []
             extra_signers = set()
+            certifications = set()
             for notebook in self.start.notebooks:
                 lines = notebook._get_lines_for_reporting(laboratory_id,
                     state)
@@ -2757,6 +2775,8 @@ class GenerateReport(Wizard):
                     })
                 extra_signers.update(self._get_lines_signer(
                     lines, signatories))
+                certifications.update(self._get_lines_certifications(
+                    lines))
             extra_signatories = [{'type': 'responsible',
                 'professional': signer_id,
                 } for signer_id in extra_signers]
@@ -2764,6 +2784,7 @@ class GenerateReport(Wizard):
                 'type': self.start.type,
                 'signatories': [('create',
                     signatories + extra_signatories)],
+                'certifications': [('add', list(certifications))],
                 'samples': [('create', samples)],
                 }
             details.update(ResultsDetail._get_fields_from_samples(samples))
@@ -2875,6 +2896,7 @@ class GenerateReport(Wizard):
 
                     samples = []
                     extra_signers = set()
+                    certifications = set()
                     for notebook in notebooks.values():
                         notebook_lines = [{
                             'notebook_line': line.id,
@@ -2887,6 +2909,8 @@ class GenerateReport(Wizard):
                             })
                         extra_signers.update(self._get_lines_signer(
                             notebook['lines'], signatories))
+                        certifications.update(self._get_lines_certifications(
+                            notebook['lines']))
                     extra_signatories = [{'type': 'responsible',
                         'professional': signer_id,
                         } for signer_id in extra_signers]
@@ -2894,6 +2918,7 @@ class GenerateReport(Wizard):
                         'type': self.start.type,
                         'signatories': [('create',
                             signatories + extra_signatories)],
+                        'certifications': [('add', list(certifications))],
                         'samples': [('create', samples)],
                         'comments': party['comments'] or None,
                         }
@@ -3035,6 +3060,37 @@ class GenerateReport(Wizard):
                 signers.remove(s['professional'])
 
         return signers
+
+    def _get_lines_certifications(self, lines):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+        ScopeVersionLine = pool.get('lims.technical.scope.version.line')
+        ScopeVersion = pool.get('lims.technical.scope.version')
+        Scope = pool.get('lims.technical.scope')
+
+        certifications = set()
+
+        for line in lines:
+            cursor.execute('SELECT s.certification_type '
+                'FROM "' + Typification._table + '" t '
+                    'INNER JOIN "' + ScopeVersionLine._table + '" svl '
+                    'ON t.id = svl.typification '
+                    'INNER JOIN "' + ScopeVersion._table + '" sv '
+                    'ON svl.version = sv.id '
+                    'INNER JOIN "' + Scope._table + '" s '
+                    'ON sv.technical_scope = s.id '
+                'WHERE sv.valid IS TRUE '
+                    'AND t.product_type = %s '
+                    'AND t.matrix = %s '
+                    'AND t.analysis = %s '
+                    'AND t.method = %s '
+                    'AND t.valid IS TRUE',
+                (line.product_type.id, line.matrix.id, line.analysis.id,
+                    line.method.id))
+            for x in cursor.fetchall():
+                certifications.add(x[0])
+        return list(certifications)
 
     def do_open_(self, action):
         action['pyson_domain'] = PYSONEncoder().encode([
@@ -3696,6 +3752,12 @@ class ResultReport(Report):
                 'role': signer.professional.role,
                 'signature': signer.professional.signature,
                 })
+        report_context['certifications'] = []
+        for cert in report.certifications:
+            report_context['certifications'].append({
+                'logo': cert.logo,
+                'report_label': cert.report_label or '',
+                })
 
         enac = False
         enac_all_acredited = True
@@ -4196,19 +4258,18 @@ class ResultReport(Report):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         Typification = pool.get('lims.typification')
-        TechnicalScopeVersionLine = pool.get(
-            'lims.technical.scope.version.line')
-        TechnicalScopeVersion = pool.get('lims.technical.scope.version')
-        TechnicalScope = pool.get('lims.technical.scope')
+        ScopeVersionLine = pool.get('lims.technical.scope.version.line')
+        ScopeVersion = pool.get('lims.technical.scope.version')
+        Scope = pool.get('lims.technical.scope')
         CertificationType = pool.get('lims.certification.type')
 
         cursor.execute('SELECT ct.report '
             'FROM "' + Typification._table + '" t '
-                'INNER JOIN "' + TechnicalScopeVersionLine._table + '" svl '
+                'INNER JOIN "' + ScopeVersionLine._table + '" svl '
                 'ON t.id = svl.typification '
-                'INNER JOIN "' + TechnicalScopeVersion._table + '" sv '
+                'INNER JOIN "' + ScopeVersion._table + '" sv '
                 'ON svl.version = sv.id '
-                'INNER JOIN "' + TechnicalScope._table + '" s '
+                'INNER JOIN "' + Scope._table + '" s '
                 'ON sv.technical_scope = s.id '
                 'INNER JOIN "' + CertificationType._table + '" ct '
                 'ON s.certification_type = ct.id '

@@ -104,6 +104,7 @@ def register():
         results_report.ResultsReportCachedReport,
         results_report.ResultsReportComment,
         results_report.ResultsReportVersionDetailSigner,
+        results_report.ResultsReportVersionDetailCertification,
         results_report.ResultsReportVersionDetailSample,
         results_report.ResultsReportVersionDetailLine,
         certification.AnalysisFamily,

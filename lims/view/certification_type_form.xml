@@ -6,4 +6,10 @@
     <field name="description"/>
     <label name="report"/>
     <field name="report"/>
+    <newline/>
+    <group name="logo" colspan="2" col="2">
+        <field name="logo"  colspan="2" widget="image"/>
+        <label name="report_label"/>
+        <field name="report_label"/>
+    </group>
 </form>
