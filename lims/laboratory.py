@@ -237,7 +237,8 @@ class LabMethod(Workflow, ModelSQL, ModelView):
         actions = iter(args)
         for methods, vals in zip(actions, actions):
             if 'results_estimated_waiting' in vals:
-                cls.update_laboratory_notebook(methods)
+                cls.update_laboratory_notebook(methods,
+                    vals['results_estimated_waiting'])
 
     @classmethod
     def copy(cls, records, default=None):
@@ -253,7 +254,7 @@ class LabMethod(Workflow, ModelSQL, ModelView):
         return new_records
 
     @classmethod
-    def update_laboratory_notebook(cls, methods):
+    def update_laboratory_notebook(cls, methods, results_estimated_waiting):
         NotebookLine = Pool().get('lims.notebook.line')
 
         for method in methods:
@@ -263,6 +264,7 @@ class LabMethod(Workflow, ModelSQL, ModelView):
                 ('method', '=', method.id),
                 ('party', 'not in', waiting_times_parties),
                 ('accepted', '=', False),
+                ('results_estimated_waiting', '!=', results_estimated_waiting),
                 ])
             if notebook_lines:
                 NotebookLine.write(notebook_lines, {
