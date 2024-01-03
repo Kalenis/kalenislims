@@ -5836,16 +5836,44 @@ class CountersampleDischarge(Wizard):
         return res
 
     def transition_search(self):
-        Fraction = Pool().get('lims.fraction')
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Company = pool.get('company.company')
+        Fraction = pool.get('lims.fraction')
+        Sample = pool.get('lims.sample')
+        Move = pool.get('stock.move')
 
-        fractions = Fraction.search([
-            ('discharge_date', '=', None),
-            ('sample.date2', '>=', self.start.date_from),
-            ('sample.date2', '<=', self.start.date_to),
-            ('expiry_date', '>=', self.start.expiry_date_from),
-            ('expiry_date', '<=', self.start.expiry_date_to),
-            ('current_location', '=', self.start.location_origin.id),
-            ])
+        timezone = None
+        company_id = Transaction().context.get('company')
+        if company_id:
+            timezone = Company(company_id).timezone
+        timezone_date = 's.date::timestamp AT TIME ZONE \'UTC\''
+        if timezone:
+            timezone_date += ' AT TIME ZONE \'' + timezone + '\''
+
+        cursor.execute('SELECT f.id '
+            'FROM "' + Fraction._table + '" f '
+                'INNER JOIN "' + Sample._table + '" s '
+                'ON s.id = f.sample '
+                'INNER JOIN ( '
+                    'SELECT DISTINCT ON (fraction) fraction, to_location '
+                    'FROM "' + Move._table + '" '
+                    'WHERE state IN (\'assigned\', \'done\') '
+                    'ORDER BY fraction, effective_date DESC, id DESC '
+                ') last_move '
+                'ON f.id = last_move.fraction '
+            'WHERE f.discharge_date IS NULL '
+                'AND (' + timezone_date + ')::date >=  %s::date '
+                'AND (' + timezone_date + ')::date <=  %s::date '
+                'AND f.expiry_date::date >=  %s::date '
+                'AND f.expiry_date::date <=  %s::date '
+                'AND last_move.to_location = %s',
+            (self.start.date_from, self.start.date_to,
+            self.start.expiry_date_from, self.start.expiry_date_to,
+            str(self.start.location_origin.id)))
+        fractions_ids = [x[0] for x in cursor.fetchall()]
+
+        fractions = Fraction.browse(fractions_ids)
         if fractions:
             self.result.fractions = fractions
             return 'result'
