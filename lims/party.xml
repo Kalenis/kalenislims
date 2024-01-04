@@ -10,6 +10,15 @@
             <field name="name">party_party_form</field>
         </record>
 
+<!-- Replace/Erase Party wizards -->
+
+        <record model="ir.action.wizard" id="party.wizard_replace">
+            <field name="active" eval="False"/>
+        </record>
+        <record model="ir.action.wizard" id="party.wizard_erase">
+            <field name="active" eval="False"/>
+        </record>
+
 <!-- Address -->
 
         <record model="ir.ui.view" id="lims_address_view_form">
