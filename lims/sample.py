@@ -1362,8 +1362,7 @@ class Service(ModelSQL, ModelView):
 
         return None
 
-    @fields.depends('analysis', 'fraction', '_parent_fraction.product_type',
-        '_parent_fraction.matrix')
+    @fields.depends('analysis')
     def on_change_with_laboratory_domain(self, name=None):
         cursor = Transaction().connection.cursor()
         pool = Pool()
@@ -6531,7 +6530,7 @@ class CreateSampleStart(ModelView):
                 self.matrix and self.matrix.restricted_entry and
                 self.zone and self.zone.restricted_entry)
 
-    @fields.depends('fraction_type', 'storage_location')
+    @fields.depends('fraction_type', 'storage_location', 'packages')
     def on_change_fraction_type(self):
         CreateSamplePackage = Pool().get('lims.create_sample.package')
         if not self.fraction_type:
@@ -6539,11 +6538,12 @@ class CreateSampleStart(ModelView):
         if (not self.storage_location and
                 self.fraction_type.default_storage_location):
             self.storage_location = self.fraction_type.default_storage_location
-        self.packages = [CreateSamplePackage(
-                quantity=1,
-                type=self.fraction_type.default_package_type,
-                state=self.fraction_type.default_fraction_state,
-                )]
+        if not self.packages:
+            self.packages = [CreateSamplePackage(
+                    quantity=1,
+                    type=self.fraction_type.default_package_type,
+                    state=self.fraction_type.default_fraction_state,
+                    )]
 
     @fields.depends('fraction_type', 'storage_location',
         '_parent_fraction_type.max_storage_time',
