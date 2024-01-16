@@ -75,7 +75,11 @@ class CreateSampleStart(metaclass=PoolMeta):
         Analysis = pool.get('lims.analysis')
         Entry = pool.get('lims.entry')
 
-        entry = Entry(Transaction().context['active_id'])
+        entry_id = Transaction().context.get('active_id', None)
+        if not entry_id:
+            return []
+
+        entry = Entry(entry_id)
         if (not self.sale_lines and
                 not entry.allow_services_without_quotation):
             return []
