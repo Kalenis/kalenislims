@@ -22,6 +22,10 @@
     </group>
     <label name="current_location"/>
     <field name="current_location"/>
+    <group col="2" colspan="2" id="certifications_annulled">
+        <label name="certifications_annulled"/>
+        <field name="certifications_annulled"/>
+    </group>
     <notebook>
         <page name="lines">
             <field name="lines" colspan="4"/>

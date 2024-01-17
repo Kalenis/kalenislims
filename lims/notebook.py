@@ -78,6 +78,8 @@ class Notebook(ModelSQL, ModelView):
         searcher='search_urgent')
     entry_summary = fields.Function(fields.Char('Entry / Qty. Samples'),
         'get_entry_summary', searcher='search_entry_summary')
+    certifications_annulled = fields.Boolean(
+        'Annul Accreditations / Certifications')
 
     @classmethod
     def __setup__(cls):
@@ -985,6 +987,9 @@ class NotebookLine(ModelSQL, ModelView):
     sample_client_description = fields.Function(fields.Char(
         'Product described by the client', translate=True),
         'get_sample_field')
+    certifications = fields.Function(fields.Many2Many(
+        'lims.certification.type', None, None,
+        'Accreditations / Certifications'), 'get_certifications')
 
     del _states
 
@@ -1389,6 +1394,38 @@ class NotebookLine(ModelSQL, ModelView):
     @classmethod
     def search_rec_name(cls, name, clause):
         return [('analysis',) + tuple(clause[1:])]
+
+    def get_certifications(self, name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+        ScopeVersionLine = pool.get('lims.technical.scope.version.line')
+        ScopeVersion = pool.get('lims.technical.scope.version')
+        Scope = pool.get('lims.technical.scope')
+
+        if self.notebook.certifications_annulled or not self.end_date:
+            return []
+
+        cursor.execute('SELECT s.certification_type '
+            'FROM "' + Typification._table + '" t '
+                'INNER JOIN "' + ScopeVersionLine._table + '" svl '
+                'ON t.id = svl.typification '
+                'INNER JOIN "' + ScopeVersion._table + '" sv '
+                'ON svl.version = sv.id '
+                'INNER JOIN "' + Scope._table + '" s '
+                'ON sv.technical_scope = s.id '
+            'WHERE sv.date::date <= %s::date '
+                'AND (sv.expiration_date IS NULL '
+                'OR sv.expiration_date::date >= %s::date) '
+                'AND t.product_type = %s '
+                'AND t.matrix = %s '
+                'AND t.analysis = %s '
+                'AND t.method = %s '
+                'AND t.valid IS TRUE '
+            'ORDER BY sv.date ASC LIMIT 1',
+            (self.end_date, self.end_date, self.product_type.id,
+                self.matrix.id, self.analysis.id, self.method.id))
+        return list(set(x[0] for x in cursor.fetchall()))
 
     @classmethod
     def _get_custom_views(cls):

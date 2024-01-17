@@ -2718,6 +2718,10 @@ msgctxt "field:lims.notebook,acceptance_pending:"
 msgid "Pending acceptance"
 msgstr "Pendiente de aceptación"
 
+msgctxt "field:lims.notebook,certifications_annulled:"
+msgid "Annul Accreditations / Certifications"
+msgstr "Anular Acreditaciones / Certificaciones"
+
 msgctxt "field:lims.notebook,completion_percentage:"
 msgid "Complete"
 msgstr "Completo"
@@ -3085,6 +3089,10 @@ msgstr "Motivo de anulación"
 msgctxt "field:lims.notebook.line,backup:"
 msgid "Backup"
 msgstr "Resguardo"
+
+msgctxt "field:lims.notebook.line,certifications:"
+msgid "Accreditations / Certifications"
+msgstr "Acreditaciones / Certificaciones"
 
 msgctxt "field:lims.notebook.line,check_result_limits:"
 msgid "Validate limits directly on the result"
