@@ -883,6 +883,7 @@ class NotebookLine(ModelSQL, ModelView):
         states=_states, depends=_depends)
     converted_result = fields.Char('Converted result',
         states=_states, depends=_depends)
+    result_and_uom = fields.Function(fields.Char('Result && Uom'), 'get_result_and_uom')
     formated_result = fields.Function(fields.Char('Result to report'),
         'get_formated_result')
     formated_converted_result = fields.Function(fields.Char(
@@ -1716,6 +1717,14 @@ class NotebookLine(ModelSQL, ModelView):
             else:
                 res = self.result_modifier.name
         return res
+    
+    def get_result_and_uom(self, name=None):
+        if not self.formated_result:
+            return ''
+        if self.result_modifier:
+            return self.formated_result
+        uom = self.initial_unit.symbol if self.initial_unit else ''
+        return '%s %s' % (self.formated_result, uom)
 
     def get_formated_converted_result(self, name=None):
         res = ''
