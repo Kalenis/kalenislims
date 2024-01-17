@@ -20,6 +20,8 @@ class CertificationType(ModelSQL, ModelView):
     code = fields.Char('Code', required=True)
     description = fields.Char('Description', required=True)
     report = fields.Boolean('Report')
+    logo = fields.Binary('Logo')
+    report_label = fields.Char('Report Label')
 
     def get_rec_name(self, name):
         if self.code:

@@ -342,9 +342,17 @@ msgctxt "field:lims.certification.type,description:"
 msgid "Description"
 msgstr "Descripción"
 
+msgctxt "field:lims.certification.type,logo:"
+msgid "Logo"
+msgstr "Logo"
+
 msgctxt "field:lims.certification.type,report:"
 msgid "Report"
 msgstr "Informar"
+
+msgctxt "field:lims.certification.type,report_label:"
+msgid "Report Label"
+msgstr "Etiqueta Informe"
 
 msgctxt "field:lims.change_results_estimated_waiting.start,date_from:"
 msgid "Confirmation date From"
@@ -5409,6 +5417,10 @@ msgctxt "field:lims.results_report.version.detail,cached_reports:"
 msgid "Cached Reports"
 msgstr "Informes cacheados"
 
+msgctxt "field:lims.results_report.version.detail,certifications:"
+msgid "Accreditations / Certifications"
+msgstr "Acreditaciones / Certificaciones"
+
 msgctxt "field:lims.results_report.version.detail,cie_fraction_type:"
 msgid "QA"
 msgstr "QA"
@@ -5560,6 +5572,16 @@ msgstr "Motivo de espera"
 msgctxt "field:lims.results_report.version.detail,write_date2:"
 msgid "Write Date"
 msgstr "Fecha de modificación"
+
+msgctxt ""
+"field:lims.results_report.version.detail.certification,certification_type:"
+msgid "Certification Type"
+msgstr "Tipo de certificación"
+
+msgctxt ""
+"field:lims.results_report.version.detail.certification,version_detail:"
+msgid "Report Detail"
+msgstr "Detalle de informe"
 
 msgctxt "field:lims.results_report.version.detail.line,analysis:"
 msgid "Analysis"
@@ -10530,6 +10552,10 @@ msgstr "Versión de informe de resultados"
 msgctxt "model:lims.results_report.version.detail,name:"
 msgid "Results Report Version Detail"
 msgstr "Detalle de versión de informe de resultados"
+
+msgctxt "model:lims.results_report.version.detail.certification,name:"
+msgid "Results Report Version Detail Certification"
+msgstr "Certificación de detalle de versión de informe de resultados"
 
 msgctxt "model:lims.results_report.version.detail.line,name:"
 msgid "Results Report Version Detail Line"
