@@ -2188,11 +2188,14 @@ class EntryLabels(Report):
     def get_context(cls, records, header, data):
         report_context = super().get_context(records, header, data)
         labels = []
+        package_labels = []
         for entry in records:
             for sample in entry.samples:
                 for package in sample.packages:
                     for i in range(package.quantity):
                         for fraction in sample.fractions:
                             labels.append(fraction)
+                            package_labels.append((fraction, package.type))
         report_context['labels'] = labels
+        report_context['package_labels'] = package_labels
         return report_context
