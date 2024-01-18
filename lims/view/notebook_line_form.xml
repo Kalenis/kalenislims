@@ -141,4 +141,8 @@
     <field name="exceptional_load_uid"/>
     <label name="trace_report"/>
     <field name="trace_report"/>
+    <group id="certifications_annulled" colspan="2" col="2">
+        <label name="certifications_annulled"/>
+        <field name="certifications_annulled"/>
+    </group>
 </form>
