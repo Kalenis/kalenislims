@@ -78,8 +78,6 @@ class Notebook(ModelSQL, ModelView):
         searcher='search_urgent')
     entry_summary = fields.Function(fields.Char('Entry / Qty. Samples'),
         'get_entry_summary', searcher='search_entry_summary')
-    certifications_annulled = fields.Boolean(
-        'Annul Accreditations / Certifications')
 
     @classmethod
     def __setup__(cls):
@@ -1017,6 +1015,8 @@ class NotebookLine(ModelSQL, ModelView):
     certifications = fields.Function(fields.Many2Many(
         'lims.certification.type', None, None,
         'Accreditations / Certifications'), 'get_certifications')
+    certifications_annulled = fields.Boolean(
+        'Annul Accreditations / Certifications')
 
     del _states, _depends
 
@@ -1414,7 +1414,7 @@ class NotebookLine(ModelSQL, ModelView):
         ScopeVersion = pool.get('lims.technical.scope.version')
         Scope = pool.get('lims.technical.scope')
 
-        if self.notebook.certifications_annulled or not self.end_date:
+        if self.certifications_annulled or not self.end_date:
             return []
 
         cursor.execute('SELECT s.certification_type '
