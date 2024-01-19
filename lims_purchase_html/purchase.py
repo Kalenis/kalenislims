@@ -154,3 +154,9 @@ class PurchaseReport(LimsReport, metaclass=PoolMeta):
             result = cls.execute_custom_lims_report(ids, current_data)
 
         return result
+
+    @classmethod
+    def get_context(cls, records, header, data):
+        current_header = header.copy()
+        current_header['company'] = records[0].company
+        return super().get_context(records, current_header, data)
