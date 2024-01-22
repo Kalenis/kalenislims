@@ -1451,6 +1451,14 @@ msgctxt "field:lims.entry,block_entry_confirmation:"
 msgid "Block Entry Confirmation"
 msgstr "Bloquear ingreso de muestras"
 
+msgctxt "field:lims.entry,cancellation_comments:"
+msgid "Cancellation comments"
+msgstr "Observaciones cancelación"
+
+msgctxt "field:lims.entry,cancellation_reason:"
+msgid "Cancellation reason"
+msgstr "Razón de la cancelación"
+
 msgctxt "field:lims.entry,carrier:"
 msgid "Carrier"
 msgstr "Transportista"
@@ -8326,9 +8334,19 @@ msgid "All"
 msgstr "Todo"
 
 msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_entry_list_domain_cancelled"
+msgid "Cancelled"
+msgstr "Cancelado"
+
+msgctxt ""
 "model:ir.action.act_window.domain,name:act_lims_entry_list_domain_draft"
 msgid "Draft"
 msgstr "Borrador"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_entry_list_domain_finished"
+msgid "Finished"
+msgstr "Finalizado"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_lims_entry_list_domain_ongoing"
@@ -8346,9 +8364,19 @@ msgid "All"
 msgstr "Todos"
 
 msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_entry_multi_party_list_domain_cancelled"
+msgid "Cancelled"
+msgstr "Cancelado"
+
+msgctxt ""
 "model:ir.action.act_window.domain,name:act_lims_entry_multi_party_list_domain_draft"
 msgid "Draft"
 msgstr "Borrador"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_lims_entry_multi_party_list_domain_finished"
+msgid "Finished"
+msgstr "Finalizado"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_lims_entry_multi_party_list_domain_ongoing"
@@ -8718,6 +8746,10 @@ msgid "End date should not be greater than the current date in \"%(analysis)s\""
 msgstr ""
 "La fecha de finalización no debe ser mayor que la fecha actual en "
 "\"%(analysis)s\""
+
+msgctxt "model:ir.message,text:msg_entry_cancellation_analysis_accepted"
+msgid "You cannot cancel the entry because it has accepted analyzes"
+msgstr "No puede cancelar el ingreso porque contiene análisis ya aceptados"
 
 msgctxt "model:ir.message,text:msg_error_limits_allowed"
 msgid "The value of line \"%(line)s\" is outside the allowed limits"
@@ -9338,6 +9370,10 @@ msgstr ""
 msgctxt "model:ir.message,text:smtp_test_successful"
 msgid "SMTP test connection was successful"
 msgstr "La conexión SMTP de prueba fue exitosa"
+
+msgctxt "model:ir.model.button,confirm:entry_cancel_button"
+msgid "Are you sure you want to cancel the entry?"
+msgstr "¿Está seguro que desea cancelar el ingreso?"
 
 msgctxt "model:ir.model.button,confirm:entry_confirm_button"
 msgid "Are you sure you want to confirm the entry?"
@@ -13567,12 +13603,16 @@ msgid "Administration pending"
 msgstr "Pendiente por administración"
 
 msgctxt "selection:lims.entry,state:"
-msgid "Closed"
-msgstr "Cerrada"
+msgid "Cancelled"
+msgstr "Cancelado"
 
 msgctxt "selection:lims.entry,state:"
 msgid "Draft"
 msgstr "Borrador"
+
+msgctxt "selection:lims.entry,state:"
+msgid "Finished"
+msgstr "Finalizado"
 
 msgctxt "selection:lims.entry,state:"
 msgid "Ongoing"
@@ -14584,6 +14624,10 @@ msgstr "Pendiente por administración"
 msgctxt "view:lims.entry:"
 msgid "CREATE SAMPLES"
 msgstr "CREAR MUESTRAS"
+
+msgctxt "view:lims.entry:"
+msgid "Cancel"
+msgstr "Cancelar"
 
 msgctxt "view:lims.entry:"
 msgid "Comments"
