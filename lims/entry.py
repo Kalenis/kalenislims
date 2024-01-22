@@ -1080,6 +1080,62 @@ class EntrySuspensionReason(ModelSQL, ModelView):
                 raise UserError(gettext('lims.msg_default_suspension_reason'))
 
 
+class EntryCancellationReason(ModelSQL, ModelView):
+    'Entry Cancellation Reason'
+    __name__ = 'lims.entry.cancellation.reason'
+    _rec_name = 'description'
+
+    code = fields.Char('Code', required=True)
+    description = fields.Char('Description', required=True)
+    by_default = fields.Boolean('By default')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        t = cls.__table__()
+        cls._sql_constraints += [
+            ('code_uniq', Unique(t, t.code),
+                'lims.msg_cancellation_reason_unique_id'),
+            ]
+
+    @staticmethod
+    def default_by_default():
+        return False
+
+    def get_rec_name(self, name):
+        if self.code:
+            return self.code + ' - ' + self.description
+        else:
+            return self.description
+
+    @classmethod
+    def search_rec_name(cls, name, clause):
+        field = None
+        for field in ('code', 'description'):
+            records = cls.search([(field,) + tuple(clause[1:])], limit=1)
+            if records:
+                break
+        if records:
+            return [(field,) + tuple(clause[1:])]
+        return [(cls._rec_name,) + tuple(clause[1:])]
+
+    @classmethod
+    def validate(cls, reasons):
+        super().validate(reasons)
+        for sr in reasons:
+            sr.check_default()
+
+    def check_default(self):
+        if self.by_default:
+            reasons = self.search([
+                ('by_default', '=', True),
+                ('id', '!=', self.id),
+                ])
+            if reasons:
+                raise UserError(gettext(
+                    'lims.msg_default_cancellation_reason'))
+
+
 class EntryDetailAnalysis(ModelSQL, ModelView):
     'Entry Detail Analysis'
     __name__ = 'lims.entry.detail.analysis'

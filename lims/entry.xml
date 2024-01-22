@@ -350,6 +350,54 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
+<!-- Entry Cancellation Reason -->
+
+        <record model="ir.ui.view" id="lims_entry_cancellation_reason_view_form">
+            <field name="model">lims.entry.cancellation.reason</field>
+            <field name="type">form</field>
+            <field name="name">entry_cancellation_reason_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_entry_cancellation_reason_view_list">
+            <field name="model">lims.entry.cancellation.reason</field>
+            <field name="type">tree</field>
+            <field name="name">entry_cancellation_reason_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_entry_cancellation_reason_list">
+            <field name="name">Entry Cancellation Reasons</field>
+            <field name="res_model">lims.entry.cancellation.reason</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_cancellation_reason_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_entry_cancellation_reason_view_list"/>
+            <field name="act_window" ref="act_lims_entry_cancellation_reason_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_entry_cancellation_reason_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_entry_cancellation_reason_view_form"/>
+            <field name="act_window" ref="act_lims_entry_cancellation_reason_list"/>
+        </record>
+
+        <menuitem action="act_lims_entry_cancellation_reason_list"
+            id="lims_entry_cancellation_reason_menu"
+            parent="lims_config_entry" sequence="55"/>
+
+        <record model="ir.model.access" id="access_entry_cancellation_reason">
+            <field name="model" search="[('model', '=', 'lims.entry.cancellation.reason')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_entry_cancellation_reason_group_conf_entry_admin">
+            <field name="model" search="[('model', '=', 'lims.entry.cancellation.reason')]"/>
+            <field name="group" ref="group_lims_conf_entry_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
 <!-- Entry Detail Analysis -->
 
         <record model="ir.ui.view" id="lims_entry_detail_analysis_view_form">
