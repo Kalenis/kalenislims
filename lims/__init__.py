@@ -74,6 +74,7 @@ def register():
         certification.TechnicalScopeVersionLine,
         sample.PackagingIntegrity,
         entry.EntrySuspensionReason,
+        entry.EntryCancellationReason,
         entry.Entry,
         entry.EntryPreAssignedSample,
         entry.PreAssignSampleStart,

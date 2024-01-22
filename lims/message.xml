@@ -100,6 +100,9 @@
         <record model="ir.message" id="msg_default_suspension_reason">
             <field name="text">There is already a default suspension reason</field>
         </record>
+        <record model="ir.message" id="msg_default_cancellation_reason">
+            <field name="text">There is already a default cancellation reason</field>
+        </record>
         <record model="ir.message" id="msg_delete_detail">
             <field name="text">You can not delete the analysis detail because its fraction is confirmed</field>
         </record>
@@ -447,6 +450,9 @@
         </record>
         <record model="ir.message" id="msg_suspension_reason_unique_id">
             <field name="text">Suspension reason code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_cancellation_reason_unique_id">
+            <field name="text">Cancellation reason code must be unique</field>
         </record>
         <record model="ir.message" id="msg_laboratory_code_unique_id">
             <field name="text">Laboratory code must be unique</field>

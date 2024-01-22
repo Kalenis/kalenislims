@@ -1597,6 +1597,18 @@ msgctxt "field:lims.entry.acknowledgment_contacts,entry:"
 msgid "Entry"
 msgstr "Ingreso"
 
+msgctxt "field:lims.entry.cancellation.reason,by_default:"
+msgid "By default"
+msgstr "Por defecto"
+
+msgctxt "field:lims.entry.cancellation.reason,code:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "field:lims.entry.cancellation.reason,description:"
+msgid "Description"
+msgstr "Descripción"
+
 msgctxt "field:lims.entry.change_invoice_party.start,invoice_party:"
 msgid "Invoice party"
 msgstr "Entidad facturación"
@@ -7439,6 +7451,10 @@ msgctxt "model:ir.action,name:act_lims_control_tendency3"
 msgid "Tendencies Analysis"
 msgstr "Análisis de Tendencias"
 
+msgctxt "model:ir.action,name:act_lims_entry_cancellation_reason_list"
+msgid "Entry Cancellation Reasons"
+msgstr "Motivos de cancelación de ingreso"
+
 msgctxt "model:ir.action,name:act_lims_entry_detail_analysis_list"
 msgid "Entry Detail Analysis"
 msgstr "Detalle de análisis"
@@ -8446,6 +8462,10 @@ msgctxt "model:ir.message,text:msg_caa_min"
 msgid "min: %(min)s"
 msgstr "mín: %(min)s"
 
+msgctxt "model:ir.message,text:msg_cancellation_reason_unique_id"
+msgid "Cancellation reason code must be unique"
+msgstr "El código del motivo de cancelación debe ser único"
+
 msgctxt "model:ir.message,text:msg_cl"
 msgid "CL (M)"
 msgstr "LC (M)"
@@ -8498,6 +8518,10 @@ msgstr "NO ESPECIFICADO POR EL CLIENTE"
 msgctxt "model:ir.message,text:msg_default_analysis_laboratory"
 msgid "There is already a default laboratory for this analysis"
 msgstr "Ya existe un laboratorio por defecto para este análisis"
+
+msgctxt "model:ir.message,text:msg_default_cancellation_reason"
+msgid "There is already a default cancellation reason"
+msgstr "Ya existe un motivo de cancelación por defecto"
 
 msgctxt "model:ir.message,text:msg_default_department"
 msgid "There is already a default department for this user"
@@ -9483,6 +9507,10 @@ msgctxt "model:ir.ui.menu,name:lims_entry_board_menu"
 msgid "Entries Board"
 msgstr "Gestión de Muestras"
 
+msgctxt "model:ir.ui.menu,name:lims_entry_cancellation_reason_menu"
+msgid "Entry Cancellation Reasons"
+msgstr "Motivos de cancelación de ingreso"
+
 msgctxt "model:ir.ui.menu,name:lims_entry_detail_analysis_menu"
 msgid "Entry Detail Analysis"
 msgstr "Detalle de análisis"
@@ -9934,6 +9962,10 @@ msgstr "Ingreso"
 msgctxt "model:lims.entry.acknowledgment_contacts,name:"
 msgid "Entry Acknowledgment Contact"
 msgstr "Contacto acuse de recibo de Ingreso"
+
+msgctxt "model:lims.entry.cancellation.reason,name:"
+msgid "Entry Cancellation Reason"
+msgstr "Motivo de cancelación de ingreso"
 
 msgctxt "model:lims.entry.change_invoice_party.error,name:"
 msgid "Change Invoice Party"
