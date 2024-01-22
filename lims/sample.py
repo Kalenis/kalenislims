@@ -4036,6 +4036,23 @@ class Sample(ModelSQL, ModelView):
             return 'planned'
         if self.confirmation_date:
             return 'pending_planning'
+        cursor.execute('SELECT COUNT(*) '
+            'FROM "' + Service._table + '" s '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = s.fraction '
+            'WHERE f.sample = %s '
+                'AND s.annulled = TRUE',
+            (self.id,))
+        annulled_services = cursor.fetchone()[0]
+        if annulled_services > 0:
+            cursor.execute('SELECT COUNT(*) '
+                'FROM "' + Service._table + '" s '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = s.fraction '
+                'WHERE f.sample = %s',
+                (self.id,))
+            if cursor.fetchone()[0] == annulled_services:
+                return 'annulled'
         return 'draft'
 
     def update_qty_lines(self):

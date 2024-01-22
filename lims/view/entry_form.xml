@@ -59,13 +59,21 @@
             <separator string="Comments" colspan="2" id="comments"/>
             <field name="transfer_comments" colspan="2"/>
             <field name="comments" colspan="2"/>
+            <separator name="cancellation_comments" colspan="2"/>
+            <newline/>
+            <field name="cancellation_comments" colspan="2"/>
         </page>
     </notebook>
-    <label name="pending_reason"/>
-    <field name="pending_reason"/>
-    <group colspan="4" id="buttons">
+    <group id="state_reason" colspan="4" col="-1">
+        <label name="cancellation_reason"/>
+        <field name="cancellation_reason"/>
+        <label name="pending_reason"/>
+        <field name="pending_reason"/>
+    </group>
+    <group id="buttons" colspan="4" col="-1">
         <label name="state"/>
         <field name="state"/>
+        <button name="cancel" string="Cancel" icon="tryton-cancel"/>
         <button name="on_hold" string="Administration pending" icon="tryton-log"/>
         <button name="confirm" string="Confirm" icon="tryton-ok"/>
     </group>

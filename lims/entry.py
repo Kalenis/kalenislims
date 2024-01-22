@@ -114,11 +114,20 @@ class Entry(Workflow, ModelSQL, ModelView):
             'invisible': Not(Bool(Equal(Eval('state'), 'pending'))),
             'required': Bool(Equal(Eval('state'), 'pending')),
             }, depends=['state'])
+    cancellation_reason = fields.Many2One('lims.entry.cancellation.reason',
+        'Cancellation reason', states={
+            'invisible': Not(Bool(Equal(Eval('state'), 'cancelled'))),
+            'required': Bool(Equal(Eval('state'), 'cancelled')),
+            }, depends=['state'])
+    cancellation_comments = fields.Text('Cancellation comments',
+        states={'readonly': Eval('state') != 'cancelled'},
+        depends=['state'])
     state = fields.Selection([
         ('draft', 'Draft'),
+        ('cancelled', 'Cancelled'),
         ('ongoing', 'Ongoing'),
         ('pending', 'Administration pending'),
-        ('closed', 'Closed'),
+        ('finished', 'Finished'),
         ], 'State', required=True, readonly=True, select=True)
     state_string = state.translated('state')
     ack_report_cache = fields.Binary('Acknowledgment report cache',
@@ -149,10 +158,13 @@ class Entry(Workflow, ModelSQL, ModelView):
         super().__setup__()
         cls._order.insert(0, ('number', 'DESC'))
         cls._transitions |= set((
-            ('draft', 'ongoing'),
+            ('draft', 'cancelled'),
             ('draft', 'pending'),
+            ('draft', 'ongoing'),
+            ('pending', 'cancelled'),
             ('pending', 'ongoing'),
-            ('ongoing', 'closed'),
+            ('ongoing', 'cancelled'),
+            ('ongoing', 'finished'),
             ))
         cls._buttons.update({
             'pre_assign_sample': {
@@ -170,6 +182,11 @@ class Entry(Workflow, ModelSQL, ModelView):
                 },
             'on_hold': {
                 'invisible': ~Eval('state').in_(['draft']),
+                'depends': ['state'],
+                },
+            'cancel': {
+                'invisible': ~Eval('state').in_(
+                    ['draft', 'pending', 'ongoing']),
                 'depends': ['state'],
                 },
             })
@@ -611,8 +628,30 @@ class Entry(Workflow, ModelSQL, ModelView):
             Bool(Equal(Eval('state'), 'pending')))
 
     @classmethod
-    @Workflow.transition('closed')
-    def close(cls, entries):
+    @ModelView.button
+    def cancel(cls, entries):
+        pool = Pool()
+        EntryCancellationReason = pool.get('lims.entry.cancellation.reason')
+
+        for entry in entries:
+            entry.check_notebook_lines_cancellation()
+            entry.cancel_entry()
+
+        default_cancellation_reason = None
+        reasons = EntryCancellationReason.search([('by_default', '=', True)])
+        if reasons:
+            default_cancellation_reason = reasons[0].id
+        cls.cancellation_reason.states['required'] = False
+        cls.write(entries, {
+            'state': 'cancelled',
+            'cancellation_reason': default_cancellation_reason,
+            })
+        cls.cancellation_reason.states['required'] = (
+            Bool(Equal(Eval('state'), 'pending')))
+
+    @classmethod
+    @Workflow.transition('finished')
+    def finish(cls, entries):
         pass
 
     def check_contacts(self):
@@ -633,6 +672,52 @@ class Entry(Workflow, ModelSQL, ModelView):
             if Warning.check(key):
                 raise UserWarning(key, gettext('lims.msg_foreign_report',
                     lang=self.report_language.name))
+
+    def check_notebook_lines_cancellation(self):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+
+        if NotebookLine.search_count([
+                ('service.fraction.sample.entry', '=', self.id),
+                ('accepted', '=', True),
+                ]) > 0:
+            raise UserError(gettext(
+                'lims.msg_entry_cancellation_analysis_accepted'))
+
+    def cancel_entry(self):
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        with Transaction().set_user(0, set_context=True):
+            services = Service.search([
+                ('fraction.sample.entry', '=', self),
+                ])
+            if services:
+                Service.write(services, {'annulled': True})
+
+            details = EntryDetailAnalysis.search([
+                ('service.fraction.sample.entry', '=', self),
+                ])
+            if details:
+                EntryDetailAnalysis.write(details, {'state': 'annulled'})
+
+            notebook_lines = NotebookLine.search([
+                ('service.fraction.sample.entry', '=', self),
+                ])
+            if notebook_lines:
+                NotebookLine.write(notebook_lines, {
+                    'annulled': True,
+                    'annulment_date': datetime.now(),
+                    'accepted': False,
+                    'acceptance_date': None,
+                    'report': False,
+                    })
+
+            sample_ids = list(sample.id for sample in self.samples)
+            Sample.update_samples_state(sample_ids)
 
     def print_report(self):
         if self.ack_report_cache:
