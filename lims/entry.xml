@@ -47,7 +47,8 @@
             <field name="act_window" ref="act_lims_entry_list"/>
         </record>
 
-        <record model="ir.action.act_window.domain" id="act_lims_entry_list_domain_draft">
+        <record model="ir.action.act_window.domain"
+            id="act_lims_entry_list_domain_draft">
             <field name="name">Draft</field>
             <field name="sequence" eval="10"/>
             <field name="domain"
@@ -55,7 +56,8 @@
                 pyson="1"/>
             <field name="act_window" ref="act_lims_entry_list"/>
         </record>
-        <record model="ir.action.act_window.domain" id="act_lims_entry_list_domain_ongoing">
+        <record model="ir.action.act_window.domain"
+            id="act_lims_entry_list_domain_ongoing">
             <field name="name">Ongoing</field>
             <field name="sequence" eval="20"/>
             <field name="domain"
@@ -63,7 +65,8 @@
                 pyson="1"/>
             <field name="act_window" ref="act_lims_entry_list"/>
         </record>
-        <record model="ir.action.act_window.domain" id="act_lims_entry_list_domain_pending">
+        <record model="ir.action.act_window.domain"
+            id="act_lims_entry_list_domain_pending">
             <field name="name">Administration pending</field>
             <field name="sequence" eval="30"/>
             <field name="domain"
@@ -71,7 +74,26 @@
                 pyson="1"/>
             <field name="act_window" ref="act_lims_entry_list"/>
         </record>
-        <record model="ir.action.act_window.domain" id="act_lims_entry_list_domain_all">
+        <record model="ir.action.act_window.domain"
+            id="act_lims_entry_list_domain_cancelled">
+            <field name="name">Cancelled</field>
+            <field name="sequence" eval="40"/>
+            <field name="domain"
+                eval="[('state', '=', 'cancelled')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_entry_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_lims_entry_list_domain_finished">
+            <field name="name">Finished</field>
+            <field name="sequence" eval="50"/>
+            <field name="domain"
+                eval="[('state', '=', 'finished')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_entry_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_lims_entry_list_domain_all">
             <field name="name">All</field>
             <field name="sequence" eval="9999"/>
             <field name="domain"></field>
@@ -133,6 +155,17 @@
         <record model="ir.model.button-res.group"
             id="entry_on_hold_button_group_lims_entry">
             <field name="button" ref="entry_on_hold_button"/>
+            <field name="group" ref="group_lims_entry"/>
+        </record>
+
+        <record model="ir.model.button" id="entry_cancel_button">
+            <field name="name">cancel</field>
+            <field name="confirm">Are you sure you want to cancel the entry?</field>
+            <field name="model" search="[('model', '=', 'lims.entry')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+            id="entry_cancel_button_group_lims_entry">
+            <field name="button" ref="entry_cancel_button"/>
             <field name="group" ref="group_lims_entry"/>
         </record>
 
@@ -223,6 +256,24 @@
             <field name="sequence" eval="30"/>
             <field name="domain"
                 eval="[('state', '=', 'pending')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_entry_multi_party_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_lims_entry_multi_party_list_domain_cancelled">
+            <field name="name">Cancelled</field>
+            <field name="sequence" eval="40"/>
+            <field name="domain"
+                eval="[('state', '=', 'cancelled')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_lims_entry_multi_party_list"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+            id="act_lims_entry_multi_party_list_domain_finished">
+            <field name="name">Finished</field>
+            <field name="sequence" eval="50"/>
+            <field name="domain"
+                eval="[('state', '=', 'finished')]"
                 pyson="1"/>
             <field name="act_window" ref="act_lims_entry_multi_party_list"/>
         </record>
