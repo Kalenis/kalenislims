@@ -11,6 +11,7 @@ from . import sample
 from . import entry
 from . import results_report
 from . import invoice
+from . import employee
 
 
 def register():
@@ -32,6 +33,7 @@ def register():
         sample.ServiceSaleLine,
         entry.Entry,
         results_report.ResultsReportVersionDetail,
+        employee.Employee,
         module='lims_sale', type_='model')
     Pool.register(
         sale.Sale2,
