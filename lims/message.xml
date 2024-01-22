@@ -609,5 +609,8 @@ Rule 4: 1 value above or below the mean +/- 3 deviations.</field>
       <record model="ir.message" id="smtp_server_error">
           <field name="text">Error: could not connect to server. (Email not sent)</field>
       </record>
+        <record model="ir.message" id="msg_entry_cancellation_analysis_accepted">
+            <field name="text">You cannot cancel the entry because it has accepted analyzes</field>
+        </record>
     </data>
 </tryton>
