@@ -3812,11 +3812,16 @@ class Sample(ModelSQL, ModelView):
 
     @classmethod
     def update_samples_state(cls, sample_ids):
+        Entry = Pool().get('lims.entry')
+        entry_ids = set()
         samples = cls.browse(sample_ids)
         for sample in samples:
             sample.update_sample_dates()
             sample.update_sample_state()
             sample.update_qty_lines()
+            entry_ids.add(sample.entry.id)
+        if entry_ids:
+            Entry.update_entries_state(list(entry_ids))
 
     def update_sample_dates(self):
         dates = self._get_sample_dates()
