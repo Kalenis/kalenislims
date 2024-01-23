@@ -118,6 +118,8 @@ class Planification(metaclass=PoolMeta):
         Date = pool.get('ir.date')
         NotebookLineProfessional = pool.get(
             'lims.notebook.line-laboratory.professional')
+        Company = pool.get('company.company')
+
         try:
             AnalysisSheet = pool.get('lims.analysis_sheet')
         except KeyError:
@@ -187,7 +189,10 @@ class Planification(metaclass=PoolMeta):
 
         if analysis_sheet_activated:
 
-            date_time = datetime.combine(start_date, datetime.now().time())
+            company = Company(Transaction().context.get('company'))
+            company_timezone = company.get_timezone()
+            date_time = company_timezone.localize(datetime.combine(
+                start_date, datetime.min.time()))
 
             analysis_sheets = {}
             for nl in lines:
