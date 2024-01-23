@@ -586,8 +586,9 @@ class Service(ModelSQL, ModelView):
 
         fractions_ids = list(set(s.fraction.id for s in services))
         cls.set_shared_fraction(fractions_ids)
-        sample_ids = list(set(s.sample.id for s in services))
-        Sample.__queue__.update_samples_state(sample_ids)
+        to_update = Sample.browse(list(set(s.sample.id
+            for s in services)))
+        Sample.__queue__.update_samples_state(to_update)
         return services
 
     @classmethod
@@ -640,8 +641,9 @@ class Service(ModelSQL, ModelView):
                     update_samples_state = True
                     break
             if update_samples_state:
-                sample_ids = list(set(s.sample.id for s in services))
-                Sample.__queue__.update_samples_state(sample_ids)
+                to_update = Sample.browse(list(set(s.sample.id
+                    for s in services)))
+                Sample.__queue__.update_samples_state(to_update)
 
     @classmethod
     def _get_update_details(cls):
@@ -653,11 +655,12 @@ class Service(ModelSQL, ModelView):
         if Transaction().user != 0:
             cls.check_delete(services)
         fractions_ids = list(set(s.fraction.id for s in services))
-        sample_ids = list(set(s.sample.id for s in services))
+        to_update = Sample.browse(list(set(s.sample.id
+            for s in services)))
         super().delete(services)
         cls.delete_additional_services()
         cls.set_shared_fraction(fractions_ids)
-        Sample.__queue__.update_samples_state(sample_ids)
+        Sample.__queue__.update_samples_state(to_update)
 
     @classmethod
     def check_delete(cls, services):
@@ -3921,10 +3924,15 @@ class Sample(ModelSQL, ModelView):
 
     @classmethod
     def update_samples_state(cls, samples):
+        Entry = Pool().get('lims.entry')
+        entry_ids = set()
         for sample in samples:
             sample.update_sample_dates()
             sample.update_sample_state()
             sample.update_qty_lines()
+            entry_ids.add(sample.entry.id)
+        if entry_ids:
+            Entry.update_entries_state(list(entry_ids))
 
     def update_sample_dates(self):
         dates = self._get_sample_dates()
