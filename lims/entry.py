@@ -189,6 +189,9 @@ class Entry(Workflow, ModelSQL, ModelView):
                 'depends': ['state'],
                 },
             })
+        cls.__rpc__.update({
+            'update_entries_state': RPC(readonly=False, instantiate=0),
+            })
         t = cls.__table__()
         #cls._sql_indexes.update({
             #Index(t, (t.number, Index.Similarity())),
@@ -721,8 +724,24 @@ class Entry(Workflow, ModelSQL, ModelView):
                     'report': False,
                     })
 
-            sample_ids = list(sample.id for sample in self.samples)
-            Sample.update_samples_state(sample_ids)
+            to_update = self.samples
+            Sample.__queue__.update_samples_state(to_update)
+
+    @classmethod
+    def update_entries_state(cls, entry_ids):
+        entries = cls.browse(entry_ids)
+        states = ['ongoing', 'finished']
+        for entry in entries:
+            if entry.state not in states:
+                continue
+            state = 'finished'
+            for sample in entry.samples:
+                if sample.state != 'report_released':
+                    state = 'ongoing'
+                    break
+            if entry.state != state:
+                entry.state = state
+                entry.save()
 
     def print_report(self):
         if self.ack_report_cache:
