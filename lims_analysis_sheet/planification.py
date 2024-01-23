@@ -110,6 +110,13 @@ class Planification(metaclass=PoolMeta):
         AnalysisSheet = pool.get('lims.analysis_sheet')
         PlanificationAnalysisSheet = pool.get(
             'lims.planification.analysis_sheet')
+        Company = pool.get('company.company')
+
+        company = Company(Transaction().context.get('company'))
+        company_timezone = company.get_timezone()
+        date_time = company_timezone.localize(datetime.combine(
+            self.start_date, datetime.min.time()))
+
         analysis_sheets = {}
         sheets = []
         service_details = PlanificationServiceDetail.search([
@@ -125,8 +132,6 @@ class Planification(metaclass=PoolMeta):
             if key not in analysis_sheets:
                 analysis_sheets[key] = []
             analysis_sheets[key].append(nl)
-
-        date_time = datetime.combine(self.start_date, self.create_date.time())
 
         for key, values in analysis_sheets.items():
             planification_sheet = PlanificationAnalysisSheet.search([
