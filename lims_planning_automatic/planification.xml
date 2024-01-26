@@ -12,5 +12,50 @@
             <field name="act_window" ref="lims.act_lims_planification_list"/>
         </record>
 
+<!-- Wizard Release Fraction -->
+
+        <record model="ir.ui.view" id="lims_planification_release_fraction_automatic_start_view_form">
+            <field name="model">lims.planification.release_fraction_automatic.start</field>
+            <field name="type">form</field>
+            <field name="name">planification_release_fraction_automatic_start_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_planification_release_fraction_automatic_empty_view_form">
+            <field name="model">lims.planification.release_fraction_automatic.empty</field>
+            <field name="type">form</field>
+            <field name="name">planification_release_fraction_automatic_empty_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_planification_release_fraction_automatic_result_view_form">
+            <field name="model">lims.planification.release_fraction_automatic.result</field>
+            <field name="type">form</field>
+            <field name="name">planification_release_fraction_automatic_result_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="lims_planification_release_fraction_automatic_detail_view_form">
+            <field name="model">lims.planification.release_fraction_automatic.detail</field>
+            <field name="type">form</field>
+            <field name="name">planification_release_fraction_automatic_detail_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_planification_release_fraction_automatic_detail_view_list">
+            <field name="model">lims.planification.release_fraction_automatic.detail</field>
+            <field name="type">tree</field>
+            <field name="name">planification_release_fraction_automatic_detail_list</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_release_fraction_automatic">
+            <field name="name">Release Fractions</field>
+            <field name="wiz_name">lims.planification.release_fraction_automatic</field>
+        </record>
+
+        <menuitem action="wiz_lims_release_fraction_automatic"
+            id="lims_release_fraction_automatic_menu"
+            parent="lims.lims_planification_menu" sequence="113"
+            icon="lims-release_fraction"/>
+
+        <record model="ir.ui.menu-res.group"
+            id="menu_release_fraction_automatic_group_planification">
+            <field name="menu" ref="lims_release_fraction_automatic_menu"/>
+            <field name="group" ref="lims.group_lims_planification"/>
+        </record>
+
     </data>
 </tryton>

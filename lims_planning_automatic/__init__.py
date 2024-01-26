@@ -15,6 +15,11 @@ from . import notebook
 def register():
     Pool.register(
         planification.Planification,
+        planification.ReleaseFractionAutomaticStart,
+        planification.ReleaseFractionAutomaticEmpty,
+        planification.ReleaseFractionAutomaticResult,
+        planification.ReleaseFractionDetail,
+        planification.ReleaseFractionDetailLine,
         laboratory.Laboratory,
         laboratory.NotebookRule,
         entry.Entry,
@@ -29,6 +34,7 @@ def register():
         module='lims_planning_automatic', type_='model',
         depends=['lims_quality_control'])
     Pool.register(
+        planification.ReleaseFractionAutomatic,
         entry.ManageServices,
         entry.AddSampleService,
         entry.EditSampleService,

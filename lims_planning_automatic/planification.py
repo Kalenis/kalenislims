@@ -3,8 +3,10 @@
 # the full copyright notices and license terms.
 from datetime import datetime
 
-from trytond.model import fields
+from trytond.model import ModelSQL, ModelView, fields
+from trytond.wizard import Wizard, StateTransition, StateView, Button
 from trytond.pool import Pool, PoolMeta
+from trytond.pyson import Eval
 from trytond.transaction import Transaction
 
 
@@ -215,3 +217,243 @@ class Planification(metaclass=PoolMeta):
                 sheet.create_lines(values)
 
         return res
+
+
+class ReleaseFractionAutomaticStart(ModelView):
+    'Release Fraction'
+    __name__ = 'lims.planification.release_fraction_automatic.start'
+
+    laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
+        required=True)
+    date_from = fields.Date('Date from', required=True)
+    date_to = fields.Date('Date to', required=True)
+
+
+class ReleaseFractionAutomaticEmpty(ModelView):
+    'Release Fraction'
+    __name__ = 'lims.planification.release_fraction_automatic.empty'
+
+
+class ReleaseFractionAutomaticResult(ModelView):
+    'Release Fraction'
+    __name__ = 'lims.planification.release_fraction_automatic.result'
+
+    fractions = fields.Many2Many(
+        'lims.planification.release_fraction_automatic.detail', None, None,
+        'Fractions', required=True,
+        domain=[('id', 'in', Eval('fractions_domain'))])
+    fractions_domain = fields.One2Many(
+        'lims.planification.release_fraction_automatic.detail', None,
+        'Fractions domain')
+
+
+class ReleaseFractionDetail(ModelSQL, ModelView):
+    'Fraction to Release'
+    __name__ = 'lims.planification.release_fraction_automatic.detail'
+    _table = 'lims_planification_release_fraction_detail'
+
+    fraction = fields.Many2One('lims.fraction', 'Fraction', readonly=True)
+    service_analysis = fields.Many2One('lims.analysis', 'Service',
+        readonly=True)
+    fraction_type = fields.Function(fields.Many2One('lims.fraction.type',
+        'Fraction type'), 'get_fraction_field',
+        searcher='search_fraction_field')
+    label = fields.Function(fields.Char('Label'), 'get_fraction_field',
+        searcher='search_fraction_field')
+    product_type = fields.Function(fields.Many2One('lims.product.type',
+        'Product type'), 'get_fraction_field',
+        searcher='search_fraction_field')
+    matrix = fields.Function(fields.Many2One('lims.matrix', 'Matrix'),
+        'get_fraction_field', searcher='search_fraction_field')
+    notebook_lines = fields.Many2Many(
+        'lims.planification.release_fraction_automatic.detail.line',
+        'detail', 'notebook_line', 'Notebook Lines', readonly=True)
+    session_id = fields.Integer('Session ID')
+
+    @classmethod
+    def __register__(cls, module_name):
+        super().__register__(module_name)
+        cursor = Transaction().connection.cursor()
+        cursor.execute('DELETE FROM "' + cls._table + '"')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._order.insert(0, ('fraction', 'ASC'))
+        cls._order.insert(1, ('service_analysis', 'ASC'))
+
+    @classmethod
+    def get_fraction_field(cls, details, names):
+        result = {}
+        for name in names:
+            result[name] = {}
+            if name == 'fraction_type':
+                for d in details:
+                    field = getattr(d.fraction, 'type', None)
+                    result[name][d.id] = field.id if field else None
+            elif cls._fields[name]._type == 'many2one':
+                for d in details:
+                    field = getattr(d.fraction, name, None)
+                    result[name][d.id] = field.id if field else None
+            else:
+                for d in details:
+                    result[name][d.id] = getattr(d.fraction, name, None)
+        return result
+
+    @classmethod
+    def search_fraction_field(cls, name, clause):
+        if name == 'fraction_type':
+            name = 'type'
+        return [('fraction.' + name,) + tuple(clause[1:])]
+
+    def _order_sample_field(name):
+        def order_field(tables):
+            pool = Pool()
+            Sample = pool.get('lims.sample')
+            Fraction = pool.get('lims.fraction')
+            field = Sample._fields[name]
+            table, _ = tables[None]
+            fraction_tables = tables.get('fraction')
+            if fraction_tables is None:
+                fraction = Fraction.__table__()
+                fraction_tables = {
+                    None: (fraction, fraction.id == table.fraction),
+                    }
+                tables['fraction'] = fraction_tables
+            return field.convert_order(name, fraction_tables, Fraction)
+        return staticmethod(order_field)
+    order_product_type = _order_sample_field('product_type')
+    order_matrix = _order_sample_field('matrix')
+
+
+class ReleaseFractionDetailLine(ModelSQL):
+    'Line of Fraction to Release'
+    __name__ = 'lims.planification.release_fraction_automatic.detail.line'
+    _table = 'lims_planification_release_fraction_detail_line'
+
+    detail = fields.Many2One(
+        'lims.planification.release_fraction_automatic.detail', 'Detail',
+        ondelete='CASCADE', required=True)
+    notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
+        ondelete='CASCADE', required=True)
+
+
+class ReleaseFractionAutomatic(Wizard):
+    'Release Fraction'
+    __name__ = 'lims.planification.release_fraction_automatic'
+
+    start = StateView('lims.planification.release_fraction_automatic.start',
+        'lims_planning_automatic.lims_planification_release_fraction_automatic'
+        '_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Search', 'search', 'tryton-forward', default=True),
+            ])
+    search = StateTransition()
+    empty = StateView('lims.planification.release_fraction_automatic.empty',
+        'lims_planning_automatic.lims_planification_release_fraction_automatic'
+        '_empty_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Search again', 'start', 'tryton-forward', default=True),
+            ])
+    result = StateView('lims.planification.release_fraction_automatic.result',
+        'lims_planning_automatic.lims_planification_release_fraction_automatic'
+        '_result_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Release', 'release', 'tryton-ok', default=True),
+            ])
+    release = StateTransition()
+
+    def default_start(self, fields):
+        res = {}
+        for field in ('date_from', 'date_to'):
+            if (hasattr(self.start, field) and getattr(self.start, field)):
+                res[field] = getattr(self.start, field)
+        if (hasattr(self.start, 'laboratory') and
+                getattr(self.start, 'laboratory')):
+            res['laboratory'] = getattr(self.start, 'laboratory').id
+        else:
+            res['laboratory'] = Transaction().context.get('laboratory', None)
+        return res
+
+    def transition_search(self):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        ReleaseFractionDetail = pool.get(
+            'lims.planification.release_fraction_automatic.detail')
+
+        lines = NotebookLine.search([
+            ('laboratory', '=', self.start.laboratory.id),
+            ('start_date', '>=', self.start.date_from),
+            ('start_date', '<=', self.start.date_to),
+            ('end_date', '=', None),
+            ('annulment_date', '=', None),
+            ('result', 'in', [None, '']),
+            ('converted_result', 'in', [None, '']),
+            ('literal_result', 'in', [None, '']),
+            ])
+
+        records = {}
+        for line in lines:
+            key = (line.fraction.id, line.service.id)
+            if key not in records:
+                records[key] = {
+                    'session_id': self._session_id,
+                    'fraction': line.fraction.id,
+                    'service_analysis': line.service.analysis.id,
+                    'notebook_lines': [('add', [])],
+                    }
+            records[key]['notebook_lines'][0][1].append(line.id)
+
+        if records:
+            self.result.fractions = ReleaseFractionDetail.create(
+                records.values())
+            return 'result'
+        return 'empty'
+
+    def default_result(self, fields):
+        fractions = [f.id for f in self.result.fractions]
+        self.result.fractions = None
+        return {
+            'fractions_domain': fractions,
+            }
+
+    def transition_release(self):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        NotebookLineProfessional = pool.get(
+            'lims.notebook.line-laboratory.professional')
+        NotebookLineControl = pool.get('lims.notebook.line-fraction')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        notebook_lines_ids = []
+        analysis_detail_ids = []
+
+        for detail in self.result.fractions:
+            for notebook_line in detail.notebook_lines:
+                notebook_lines_ids.append(notebook_line.id)
+                if notebook_line.analysis_detail:
+                    analysis_detail_ids.append(
+                        notebook_line.analysis_detail.id)
+
+        if notebook_lines_ids:
+            notebook_lines_ids = ', '.join(str(nl)
+                for nl in notebook_lines_ids)
+            cursor.execute('UPDATE "' + NotebookLine._table + '" '
+                'SET start_date = NULL, planification = NULL '
+                'WHERE id IN (' + notebook_lines_ids + ')')
+            cursor.execute('DELETE FROM "' +
+                NotebookLineProfessional._table + '" '
+                'WHERE notebook_line IN (' + notebook_lines_ids + ')')
+            cursor.execute('DELETE FROM "' +
+                NotebookLineControl._table + '" '
+                'WHERE notebook_line IN (' + notebook_lines_ids + ')')
+
+        if analysis_detail_ids:
+            analysis_detail_ids = ', '.join(str(ad)
+                for ad in analysis_detail_ids)
+            cursor.execute('UPDATE "' + EntryDetailAnalysis._table + '" '
+                'SET state = \'unplanned\' '
+                'WHERE id IN (' + analysis_detail_ids + ')')
+
+        return 'end'
