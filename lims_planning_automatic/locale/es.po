@@ -14,6 +14,80 @@ msgctxt "field:lims.planification,automatic:"
 msgid "Automatic"
 msgstr "Automática"
 
+msgctxt "field:lims.planification.release_fraction_automatic.detail,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt ""
+"field:lims.planification.release_fraction_automatic.detail,fraction_type:"
+msgid "Fraction type"
+msgstr "Tipo de fracción"
+
+msgctxt "field:lims.planification.release_fraction_automatic.detail,label:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt "field:lims.planification.release_fraction_automatic.detail,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt ""
+"field:lims.planification.release_fraction_automatic.detail,notebook_lines:"
+msgid "Notebook Lines"
+msgstr "Líneas de Cuaderno"
+
+msgctxt ""
+"field:lims.planification.release_fraction_automatic.detail,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt ""
+"field:lims.planification.release_fraction_automatic.detail,service_analysis:"
+msgid "Service"
+msgstr "Servicio"
+
+msgctxt ""
+"field:lims.planification.release_fraction_automatic.detail,session_id:"
+msgid "Session ID"
+msgstr "ID Sesión"
+
+msgctxt ""
+"field:lims.planification.release_fraction_automatic.detail.line,detail:"
+msgid "Detail"
+msgstr "Detalle"
+
+msgctxt ""
+"field:lims.planification.release_fraction_automatic.detail.line,notebook_line:"
+msgid "Notebook Line"
+msgstr "Línea de cuaderno"
+
+msgctxt ""
+"field:lims.planification.release_fraction_automatic.result,fractions:"
+msgid "Fractions"
+msgstr "Fracciones"
+
+msgctxt ""
+"field:lims.planification.release_fraction_automatic.result,fractions_domain:"
+msgid "Fractions domain"
+msgstr "Dominio para Fracciones"
+
+msgctxt "field:lims.planification.release_fraction_automatic.start,date_from:"
+msgid "Date from"
+msgstr "Fecha desde"
+
+msgctxt "field:lims.planification.release_fraction_automatic.start,date_to:"
+msgid "Date to"
+msgstr "Fecha hasta"
+
+msgctxt ""
+"field:lims.planification.release_fraction_automatic.start,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
+msgctxt "model:ir.action,name:wiz_lims_release_fraction_automatic"
+msgid "Release Fractions"
+msgstr "Liberar fracciones planificadas (*)"
+
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_lims_planification_list_domain_automatic"
 msgid "Automatic"
@@ -22,3 +96,62 @@ msgstr "Automática"
 msgctxt "model:ir.message,text:msg_user_no_professional"
 msgid "This user is not associated with any professional"
 msgstr "Este usuario no está asociado a ningún profesional"
+
+msgctxt "model:ir.ui.menu,name:lims_release_fraction_automatic_menu"
+msgid "Release Fractions"
+msgstr "Liberar fracciones planificadas (*)"
+
+msgctxt "model:lims.planification.release_fraction_automatic.detail,name:"
+msgid "Fraction to Release"
+msgstr "Fracción a Liberar"
+
+msgctxt ""
+"model:lims.planification.release_fraction_automatic.detail.line,name:"
+msgid "Line of Fraction to Release"
+msgstr "Línea de Fracción a Liberar"
+
+msgctxt "model:lims.planification.release_fraction_automatic.empty,name:"
+msgid "Release Fraction"
+msgstr "Liberar fracciones planificadas"
+
+msgctxt "model:lims.planification.release_fraction_automatic.result,name:"
+msgid "Release Fraction"
+msgstr "Liberar fracciones planificadas"
+
+msgctxt "model:lims.planification.release_fraction_automatic.start,name:"
+msgid "Release Fraction"
+msgstr "Liberar fracciones planificadas"
+
+msgctxt "view:lims.planification.release_fraction_automatic.empty:"
+msgid "No fractions found"
+msgstr "Ninguna fracción encontrada"
+
+msgctxt ""
+"wizard_button:lims.planification.release_fraction_automatic,empty,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt ""
+"wizard_button:lims.planification.release_fraction_automatic,empty,start:"
+msgid "Search again"
+msgstr "Buscar nuevamente"
+
+msgctxt ""
+"wizard_button:lims.planification.release_fraction_automatic,result,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt ""
+"wizard_button:lims.planification.release_fraction_automatic,result,release:"
+msgid "Release"
+msgstr "Liberar"
+
+msgctxt ""
+"wizard_button:lims.planification.release_fraction_automatic,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt ""
+"wizard_button:lims.planification.release_fraction_automatic,start,search:"
+msgid "Search"
+msgstr "Buscar"
