@@ -23,8 +23,16 @@ from trytond.report import Report
 from trytond.rpc import RPC
 from trytond.exceptions import UserError, UserWarning
 from trytond.i18n import gettext, lazy_gettext
+from .analysis import ANALYSIS_TYPES
 
 logger = logging.getLogger(__name__)
+
+ENTRY_STATES = [
+    ('draft', 'Draft'),
+    ('ongoing', 'Ongoing'),
+    ('pending', 'Administration pending'),
+    ('closed', 'Closed'),
+    ]
 
 
 # Genshi fix: https://genshi.edgewall.org/ticket/582
@@ -112,12 +120,8 @@ class Entry(Workflow, ModelSQL, ModelView):
             'invisible': Not(Bool(Equal(Eval('state'), 'pending'))),
             'required': Bool(Equal(Eval('state'), 'pending')),
             })
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('ongoing', 'Ongoing'),
-        ('pending', 'Administration pending'),
-        ('closed', 'Closed'),
-        ], 'State', required=True, readonly=True)
+    state = fields.Selection(ENTRY_STATES, 'State',
+        required=True, readonly=True)
     state_string = state.translated('state')
     ack_report_cache = fields.Binary('Acknowledgment report cache',
         readonly=True,
@@ -1098,12 +1102,8 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         'get_service_field', searcher='search_service_field')
     analysis = fields.Many2One('lims.analysis', 'Analysis', required=True,
         states={'readonly': True})
-    analysis_type = fields.Function(fields.Selection([
-        (None, ''),
-        ('analysis', 'Analysis'),
-        ('set', 'Set'),
-        ('group', 'Group'),
-        ], 'Type', sort=False),
+    analysis_type = fields.Function(fields.Selection(
+        [(None, '')] + ANALYSIS_TYPES, 'Type', sort=False),
         'on_change_with_analysis_type')
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
         states={'readonly': True})
