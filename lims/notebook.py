@@ -19,6 +19,7 @@ from trytond.report import Report
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from .configuration import get_print_date
+from .analysis import ANALYSIS_TYPES
 from .formula_parser import FormulaParser
 
 
@@ -5295,12 +5296,8 @@ class NotebookLineRepeatAnalysisStart(ModelView):
     analysis_domain = fields.One2Many('lims.analysis', None,
         'Analysis domain')
     repetition_reason = fields.Char('Reason')
-    analysis_type = fields.Function(fields.Selection([
-        (None, ''),
-        ('analysis', 'Analysis'),
-        ('set', 'Set'),
-        ('group', 'Group'),
-        ], 'Type', sort=False),
+    analysis_type = fields.Function(fields.Selection(
+        [(None, '')] + ANALYSIS_TYPES, 'Type', sort=False),
         'on_change_with_analysis_type')
     method = fields.Many2One('lims.lab.method', 'Method',
         domain=[('id', 'in', Eval('method_domain'))],
