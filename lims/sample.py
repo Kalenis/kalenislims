@@ -28,8 +28,22 @@ from trytond.rpc import RPC
 from trytond.config import config as tconfig
 from trytond.tools import get_smtp_server
 from trytond import backend
+from .analysis import ANALYSIS_TYPES
+from .entry import ENTRY_STATES
 
 logger = logging.getLogger(__name__)
+
+SAMPLE_STATES = [
+    ('draft', 'Draft'),
+    ('annulled', 'Annulled'),
+    ('pending_planning', 'Pending Planification'),
+    ('planned', 'Planned'),
+    ('in_lab', 'In Laboratory'),
+    ('lab_pending_acceptance', 'Pending Laboratory Acceptance'),
+    ('pending_report', 'Pending Reporting'),
+    ('in_report', 'In Report'),
+    ('report_released', 'Report Released'),
+    ]
 
 
 class Zone(ModelSQL, ModelView):
@@ -331,12 +345,8 @@ class Service(ModelSQL, ModelView):
     typification_domain = fields.Function(fields.Many2Many(
         'lims.typification', None, None, 'Typification domain'),
         'on_change_with_typification_domain')
-    analysis_type = fields.Function(fields.Selection([
-        (None, ''),
-        ('analysis', 'Analysis'),
-        ('set', 'Set'),
-        ('group', 'Group'),
-        ], 'Type', sort=False),
+    analysis_type = fields.Function(fields.Selection(
+        [(None, '')] + ANALYSIS_TYPES, 'Type', sort=False),
         'on_change_with_analysis_type', searcher='search_analysis_field')
     urgent = fields.Boolean('Urgent')
     priority = fields.Integer('Priority')
@@ -1740,12 +1750,8 @@ class Fraction(ModelSQL, ModelView):
     has_all_results_reported = fields.Function(fields.Boolean(
         'All results reported'), 'get_has_all_results_reported')
     waiting_confirmation = fields.Boolean('Waiting confirmation')
-    entry_state = fields.Function(fields.Selection([
-        ('draft', 'Draft'),
-        ('ongoing', 'Ongoing'),
-        ('pending', 'Administration pending'),
-        ('closed', 'Closed'),
-        ], 'Entry State'), 'get_entry_state', searcher='search_entry_state')
+    entry_state = fields.Function(fields.Selection(ENTRY_STATES,
+        'Entry State'), 'get_entry_state', searcher='search_entry_state')
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
     special_type = fields.Function(fields.Char('Fraction type'),
         'on_change_with_special_type',
@@ -2951,17 +2957,7 @@ class Sample(ModelSQL, ModelView):
         readonly=True)
     results_reports_list = fields.Function(fields.Char('Results Reports'),
         'get_results_reports_list', searcher='search_results_reports_list')
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('annulled', 'Annulled'),
-        ('pending_planning', 'Pending Planification'),
-        ('planned', 'Planned'),
-        ('in_lab', 'In Laboratory'),
-        ('lab_pending_acceptance', 'Pending Laboratory Acceptance'),
-        ('pending_report', 'Pending Reporting'),
-        ('in_report', 'In Report'),
-        ('report_released', 'Report Released'),
-        ], 'State')
+    state = fields.Selection(SAMPLE_STATES, 'State')
     qty_lines_pending = fields.Integer('Pending lines')
     qty_lines_pending_acceptance = fields.Integer('Lines pending acceptance')
 
