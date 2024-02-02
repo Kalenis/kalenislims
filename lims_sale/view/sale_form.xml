@@ -18,6 +18,12 @@
         </group>
     </xpath>
     <xpath expr="/form/notebook" position="inside">
+        <page id="preload" string="Preload">
+            <label name="preload_product_type"/>
+            <field name="preload_product_type"/>
+            <label name="preload_matrix"/>
+            <field name="preload_matrix"/>
+        </page>
         <page id="lims_report" string="Printing">
             <label name="template"/>
             <field name="template"
