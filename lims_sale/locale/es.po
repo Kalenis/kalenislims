@@ -220,6 +220,22 @@ msgctxt "field:sale.sale,invoice_party_domain:"
 msgid "Invoice party domain"
 msgstr "Dominio para Tercero de facturación"
 
+msgctxt "field:sale.sale,preload_matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:sale.sale,preload_matrix_domain:"
+msgid "Matrix domain"
+msgstr "Dominio para Matriz"
+
+msgctxt "field:sale.sale,preload_product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:sale.sale,preload_product_type_domain:"
+msgid "Product type domain"
+msgstr "Dominio para Tipo de producto"
+
 msgctxt "field:sale.sale,previous_sections:"
 msgid "Previous Sections"
 msgstr "Secciones anteriores"
@@ -404,6 +420,10 @@ msgstr "Cargar servicios desde ingreso"
 msgctxt "view:sale.sale:"
 msgid "Mailing"
 msgstr ""
+
+msgctxt "view:sale.sale:"
+msgid "Preload"
+msgstr "Precarga"
 
 msgctxt "view:sale.sale:"
 msgid "Printing"
