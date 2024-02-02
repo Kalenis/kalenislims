@@ -70,6 +70,17 @@ class Sale(metaclass=PoolMeta):
         digits=(1, 4)), 'get_completion_percentage')
     unlimited_quantity = fields.Function(fields.Boolean(
         'Lines with unlimited quantity'), 'get_unlimited_quantity')
+    preload_product_type = fields.Many2One('lims.product.type', 'Product type',
+        domain=['OR', ('id', '=', Eval('preload_product_type', -1)),
+            ('id', 'in', Eval('preload_product_type_domain'))])
+    preload_product_type_domain = fields.Function(fields.Many2Many(
+        'lims.product.type', None, None, 'Product type domain'),
+        'on_change_with_preload_product_type_domain')
+    preload_matrix = fields.Many2One('lims.matrix', 'Matrix',
+        domain=['OR', ('id', '=', Eval('preload_matrix', -1)),
+            ('id', 'in', Eval('preload_matrix_domain'))])
+    preload_matrix_domain = fields.Function(fields.Many2Many('lims.matrix',
+        None, None, 'Matrix domain'), 'on_change_with_preload_matrix_domain')
 
     @classmethod
     def __setup__(cls):
@@ -93,6 +104,10 @@ class Sale(metaclass=PoolMeta):
             Eval('invoice_method') == 'service')
         cls.shipment_state.states['invisible'] = (
             Eval('invoice_method') == 'service')
+        cls.lines.context.update({
+            'preload_product_type': Eval('preload_product_type', None),
+            'preload_matrix': Eval('preload_matrix', None),
+            })
         cls._buttons.update({
             'load_services': {
                 'invisible': (Eval('state') != 'draft'),
@@ -101,10 +116,6 @@ class Sale(metaclass=PoolMeta):
                 'invisible': (Eval('state') != 'draft'),
                 },
             })
-
-    @staticmethod
-    def default_services_completed_manual():
-        return False
 
     @classmethod
     def view_attributes(cls):
@@ -117,7 +128,28 @@ class Sale(metaclass=PoolMeta):
                 'states', {
                     'invisible': Eval('invoice_method') == 'service',
                     }),
+            ('//page[@id="preload"]',
+                'states', {
+                    'invisible': Eval('state') != 'draft',
+                    }),
             ]
+
+    @staticmethod
+    def default_services_completed_manual():
+        return False
+
+    @staticmethod
+    def default_preload_product_type_domain():
+        cursor = Transaction().connection.cursor()
+        Typification = Pool().get('lims.typification')
+
+        cursor.execute('SELECT DISTINCT(product_type) '
+            'FROM "' + Typification._table + '" '
+            'WHERE valid')
+        res = cursor.fetchall()
+        if not res:
+            return []
+        return [x[0] for x in res]
 
     @fields.depends('party', 'invoice_party')
     def on_change_party(self):
@@ -258,6 +290,39 @@ class Sale(metaclass=PoolMeta):
         if sale_lines:
             return True
         return False
+
+    def on_change_with_preload_product_type_domain(self, name=None):
+        return self.default_preload_product_type_domain()
+
+    @fields.depends('preload_product_type', 'preload_matrix',
+        'preload_matrix_domain')
+    def on_change_preload_product_type(self):
+        matrix_domain = []
+        matrix = None
+        if self.preload_product_type:
+            matrix_domain = self.on_change_with_preload_matrix_domain()
+            if len(matrix_domain) == 1:
+                matrix = matrix_domain[0]
+        self.preload_matrix_domain = matrix_domain
+        self.preload_matrix = matrix
+
+    @fields.depends('preload_product_type')
+    def on_change_with_preload_matrix_domain(self, name=None):
+        cursor = Transaction().connection.cursor()
+        Typification = Pool().get('lims.typification')
+
+        if not self.preload_product_type:
+            return []
+
+        cursor.execute('SELECT DISTINCT(matrix) '
+            'FROM "' + Typification._table + '" '
+            'WHERE product_type = %s '
+            'AND valid',
+            (self.preload_product_type.id,))
+        res = cursor.fetchall()
+        if not res:
+            return []
+        return [x[0] for x in res]
 
     @classmethod
     def check_method(cls, sales, field_names=None):
@@ -545,6 +610,10 @@ class SaleLine(metaclass=PoolMeta):
     additional_origin = fields.Many2One('sale.line', 'Origin of additional')
 
     @staticmethod
+    def default_product_type():
+        return Transaction().context.get('preload_product_type', None)
+
+    @staticmethod
     def default_product_type_domain():
         cursor = Transaction().connection.cursor()
         pool = Pool()
@@ -564,7 +633,7 @@ class SaleLine(metaclass=PoolMeta):
     @fields.depends('product_type', 'matrix', 'matrix_domain')
     def on_change_product_type(self):
         matrix_domain = []
-        matrix = None
+        matrix = Transaction().context.get('preload_matrix', None)
         if self.product_type:
             matrix_domain = self.on_change_with_matrix_domain()
             if len(matrix_domain) == 1:
