@@ -735,8 +735,9 @@ class Entry(Workflow, ModelSQL, ModelView):
     def update_entries_state(cls, entry_ids):
         entries = cls.browse(entry_ids)
         states = ['ongoing', 'finished']
+        entries_exclude = cls._get_update_entries_state_exclude()
         for entry in entries:
-            if entry.state not in states:
+            if entry.state not in states or entry.id in entries_exclude:
                 continue
             state = 'finished'
             for sample in entry.samples:
@@ -746,6 +747,19 @@ class Entry(Workflow, ModelSQL, ModelView):
             if entry.state != state:
                 entry.state = state
                 entry.save()
+
+    @classmethod
+    def _get_update_entries_state_exclude(cls):
+        pool = Pool()
+        LabWorkYear = pool.get('lims.lab.workyear')
+
+        res = []
+
+        workyear_id = LabWorkYear.find()
+        workyear = LabWorkYear(workyear_id)
+        if workyear.default_entry_control:
+            res.append(workyear.default_entry_control.id)
+        return res
 
     def print_report(self):
         if self.ack_report_cache:
