@@ -19,6 +19,7 @@ def register():
         lims.Typification,
         lims.Analysis,
         lims.NotebookLine,
+        lims.Entry,
         lims.EntryDetailAnalysis,
         lims.AnalysisSheet,
         lims.NotebookLoadResultsManualLine,
