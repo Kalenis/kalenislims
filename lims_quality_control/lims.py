@@ -346,6 +346,23 @@ class NotebookLine(metaclass=PoolMeta):
         return result
 
 
+class Entry(metaclass=PoolMeta):
+    __name__ = 'lims.entry'
+
+    @classmethod
+    def _get_update_entries_state_exclude(cls):
+        pool = Pool()
+        LabWorkYear = pool.get('lims.lab.workyear')
+
+        res = super()._get_update_entries_state_exclude()
+
+        workyear_id = LabWorkYear.find()
+        workyear = LabWorkYear(workyear_id)
+        if workyear.default_entry_quality:
+            res.append(workyear.default_entry_quality.id)
+        return res
+
+
 class EntryDetailAnalysis(metaclass=PoolMeta):
     __name__ = 'lims.entry.detail.analysis'
 
