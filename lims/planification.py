@@ -5859,6 +5859,11 @@ class PlanificationSequenceReport(Report):
                     }
             for detail in planification.details:
                 fraction = detail.fraction
+                fraction_number = fraction.get_formated_number('sn-sy-fn')
+                product_type = fraction.product_type.code
+                matrix = fraction.matrix.code
+                fraction_type = fraction.type.code
+                trace_report = fraction.sample.trace_report
                 for service_detail in detail.details:
                     if (service_detail.notebook_line.analysis.behavior ==
                             'internal_relation'):
@@ -5871,25 +5876,14 @@ class PlanificationSequenceReport(Report):
                             'lines': {},
                             }
 
-                    number = fraction.get_formated_number('sn-sy-fn')
-                    number = (number + '-' + str(notebook_line.repetition))
+                    number = '%s-%s' % (
+                        fraction_number, str(notebook_line.repetition))
                     number_parts = number.split('-')
                     order = (number_parts[1] + '-' + number_parts[0] + '-' +
                         number_parts[2] + '-' + number_parts[3])
 
-                    product_type = fraction.product_type.code
-                    matrix = fraction.matrix.code
-                    fraction_type = fraction.type.code
-                    comments = fraction.comments
                     analysis_origin = notebook_line.analysis_origin
                     priority = notebook_line.priority
-                    urgent = notebook_line.urgent
-                    report_date = (notebook_line.report_date or
-                        notebook_line.results_estimated_date)
-                    trace_report = fraction.sample.trace_report
-                    sample_client_description = (
-                        fraction.sample.sample_client_description)
-                    party = notebook_line.party.code
                     key = (number, product_type, matrix, fraction_type,
                         analysis_origin, priority, trace_report)
                     if key not in objects[date]['methods'][method_id]['lines']:
@@ -5900,14 +5894,15 @@ class PlanificationSequenceReport(Report):
                             'matrix': matrix,
                             'fraction_type': fraction_type,
                             'analysis_origin': analysis_origin,
-                            'urgent': urgent,
+                            'urgent': notebook_line.urgent,
                             'priority': priority,
-                            'report_date': report_date,
+                            'report_date': (notebook_line.report_date or
+                                notebook_line.results_estimated_date),
                             'trace_report': trace_report,
-                            'comments': comments,
+                            'comments': fraction.comments,
                             'sample_client_description': (
-                                sample_client_description),
-                            'party': party,
+                                fraction.sample.sample_client_description),
+                            'party': fraction.party.code,
                             }
 
         for k1 in objects.keys():
