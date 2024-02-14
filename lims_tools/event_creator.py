@@ -257,9 +257,9 @@ class EventCreator(Model):
         specific_times = []
         for ws in workyear_shifts:
             if record.shift_time in ['start', 'start_end']:
-                specific_times.append(ws.shift.start_time)
+                specific_times.append((ws.shift.start_time, ws.shift.id))
             if record.shift_time in ['end', 'start_end']:
-                specific_times.append(ws.shift.end_time)
+                specific_times.append((ws.shift.end_time, ws.shift.id))
 
         if not start_date:
             start_date = record.start_date
@@ -272,7 +272,7 @@ class EventCreator(Model):
 
         events = []
         while len(events) < record.end_repetition:
-            for specific_time in specific_times:
+            for specific_time, shift_id in specific_times:
                 event = {}
                 event_date = company_timezone.localize(date.replace(
                     hour=specific_time.hour,
@@ -281,6 +281,7 @@ class EventCreator(Model):
                     ))
                 event['scheduled_date'] = event_date
                 event['week_day'] = date.weekday()
+                event['shift'] = shift_id
                 new_event = create_method(record, event)
                 if new_event:
                     events.append(new_event)
@@ -391,9 +392,9 @@ class EventCreator(Model):
         specific_times = []
         for ws in workyear_shifts:
             if record.shift_time in ['start', 'start_end']:
-                specific_times.append(ws.shift.start_time)
+                specific_times.append((ws.shift.start_time, ws.shift.id))
             if record.shift_time in ['end', 'start_end']:
-                specific_times.append(ws.shift.end_time)
+                specific_times.append((ws.shift.end_time, ws.shift.id))
 
         max_time = datetime.max.time()
         end_date = datetime.combine(record.end_date, max_time)
@@ -409,7 +410,7 @@ class EventCreator(Model):
 
         events = []
         while date < end_date:
-            for specific_time in specific_times:
+            for specific_time, shift_id in specific_times:
                 event = {}
                 event_date = company_timezone.localize(date.replace(
                     hour=specific_time.hour,
@@ -418,6 +419,7 @@ class EventCreator(Model):
                     ))
                 event['scheduled_date'] = event_date
                 event['week_day'] = date.weekday()
+                event['shift'] = shift_id
                 new_event = create_method(record, event)
                 if new_event:
                     events.append(new_event)
@@ -434,6 +436,7 @@ class Event():
     description = fields.Text('Description')
     scheduled_date = fields.DateTime('Scheduled Date')
     week_day = fields.Selection(WEEK_DAYS, 'Week Day', readonly=True)
+    shift = fields.Many2One('lims.lab.workshift', 'Work Shift')
     responsible_user = fields.Many2One('res.user', 'User')
     notification = fields.Boolean('Notificate user')
     notification_timing = fields.Float('Notification Timing')
