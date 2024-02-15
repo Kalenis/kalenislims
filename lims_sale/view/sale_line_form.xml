@@ -34,5 +34,8 @@
         <page name="services">
             <field name="services" colspan="4" mode="tree"/>
         </page>
+        <page name="certifications">
+            <field name="certifications" colspan="4" mode="tree"/>
+        </page>
     </xpath>
 </data>

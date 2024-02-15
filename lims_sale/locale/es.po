@@ -108,6 +108,10 @@ msgctxt "field:sale.line,analysis_domain:"
 msgid "Analysis domain"
 msgstr "Dominio para Análisis"
 
+msgctxt "field:sale.line,certifications:"
+msgid "Accreditations / Certifications"
+msgstr "Acreditaciones / Certificaciones"
+
 msgctxt "field:sale.line,expiration_date:"
 msgid "Expiration date"
 msgstr "Fecha de vencimiento"

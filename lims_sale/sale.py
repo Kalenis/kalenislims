@@ -608,6 +608,9 @@ class SaleLine(metaclass=PoolMeta):
     services_completed_icon = fields.Function(fields.Char(
         'Services completed Icon'), 'get_services_completed_icon')
     additional_origin = fields.Many2One('sale.line', 'Origin of additional')
+    certifications = fields.Function(fields.Many2Many(
+        'lims.certification.type', None, None,
+        'Accreditations / Certifications'), 'on_change_with_certifications')
 
     @staticmethod
     def default_product_type():
@@ -922,6 +925,60 @@ class SaleLine(metaclass=PoolMeta):
         if self.services_completed:
             return 'lims-red'
         return 'lims-green'
+
+    @fields.depends('product_type', 'matrix', 'analysis', 'method')
+    def on_change_with_certifications(self, name=None):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+        ScopeVersionLine = pool.get('lims.technical.scope.version.line')
+        ScopeVersion = pool.get('lims.technical.scope.version')
+        Scope = pool.get('lims.technical.scope')
+
+        if not self.product_type or not self.matrix or not self.analysis:
+            return []
+
+        if self.method:
+            cursor.execute('SELECT s.certification_type '
+                'FROM "' + Typification._table + '" t '
+                    'INNER JOIN "' + ScopeVersionLine._table + '" svl '
+                    'ON t.id = svl.typification '
+                    'INNER JOIN "' + ScopeVersion._table + '" sv '
+                    'ON svl.version = sv.id '
+                    'INNER JOIN "' + Scope._table + '" s '
+                    'ON sv.technical_scope = s.id '
+                'WHERE sv.valid IS TRUE '
+                    'AND t.product_type = %s '
+                    'AND t.matrix = %s '
+                    'AND t.analysis = %s '
+                    'AND t.method = %s '
+                    'AND t.valid IS TRUE',
+                (self.product_type.id, self.matrix.id, self.analysis.id,
+                    self.method.id))
+            return list(set(x[0] for x in cursor.fetchall()))
+
+        # no method: search by unique typification
+        cursor.execute('SELECT t.id '
+            'FROM "' + Typification._table + '" t '
+            'WHERE t.valid IS TRUE '
+                'AND t.product_type = %s '
+                'AND t.matrix = %s '
+                'AND t.analysis = %s',
+            (self.product_type.id, self.matrix.id, self.analysis.id))
+        typifications = list(set(x[0] for x in cursor.fetchall()))
+        if len(typifications) == 1:
+            cursor.execute('SELECT s.certification_type '
+                'FROM "' + ScopeVersionLine._table + '" svl '
+                    'INNER JOIN "' + ScopeVersion._table + '" sv '
+                    'ON svl.version = sv.id '
+                    'INNER JOIN "' + Scope._table + '" s '
+                    'ON sv.technical_scope = s.id '
+                'WHERE sv.valid IS TRUE '
+                    'AND svl.typification = %s',
+                (typifications[0],))
+            return list(set(x[0] for x in cursor.fetchall()))
+
+        return []
 
 
 class SaleLine2(metaclass=PoolMeta):
