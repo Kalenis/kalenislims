@@ -736,12 +736,15 @@ class Entry(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def update_entries_state(cls, entry_ids):
-        entries = cls.browse(entry_ids)
-        states = ['ongoing', 'finished']
+        entries_states = ['ongoing', 'finished']
         entries_exclude = cls._get_update_entries_state_exclude()
+
+        entries_to_save = []
+        entries = cls.search([
+            ('id', 'in', list(set(entry_ids) - set(entries_exclude))),
+            ('state', 'in', entries_states),
+            ])
         for entry in entries:
-            if entry.state not in states or entry.id in entries_exclude:
-                continue
             state = 'finished'
             for sample in entry.samples:
                 if sample.state != 'report_released':
@@ -749,7 +752,9 @@ class Entry(Workflow, ModelSQL, ModelView):
                     break
             if entry.state != state:
                 entry.state = state
-                entry.save()
+                entries_to_save.append(entry)
+        if entries_to_save:
+            cls.save(entries_to_save)
 
     @classmethod
     def _get_update_entries_state_exclude(cls):
