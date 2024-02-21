@@ -52,5 +52,17 @@
             <field name="help">Obtains the value of a given field ('id', 'result' or alias) for the line matching 'fraction type', 'product type', 'matrix' and 'analysis' indicated.</field>
         </record>
 
+        <record model="lims.interface.function" id="function_scientific2decimal">
+            <field name="name">SCIENTIFIC2DECIMAL</field>
+            <field name="parameters">value, decimals=2</field>
+            <field name="help">Converts a value in scientific notation to numeric</field>
+        </record>
+
+        <record model="lims.interface.function" id="function_decimal2scientific">
+            <field name="name">DECIMAL2SCIENTIFIC</field>
+            <field name="parameters">value, decimals=2</field>
+            <field name="help">Converts a numerical value to scientific notation</field>
+        </record>
+
     </data>
 </tryton>
