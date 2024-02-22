@@ -575,6 +575,55 @@ class LabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
             else:
                 return None
         return workyears[0].id
+    
+    @classmethod
+    def get_shift(cls, date_time=None):
+        date_time = date_time if date_time else datetime.now()
+        if not isinstance(date_time, datetime):
+            raise UserError('A datetime is required to get a shift')
+        workyear_id = cls.find(date_time.date())
+        workyear = cls(workyear_id)
+        if not workyear.shifts:
+            return None
+        
+        pool = Pool()
+        
+        Company = pool.get('company.company')
+        company_id = Transaction().context.get('company')
+        if not company_id:
+            raise UserError(gettext('lims.msg_shift_missing_company'))
+        
+        company = Company(company_id)
+        time = company.convert_timezone_datetime(date_time).time()
+        shifts = []
+
+        def inRange(start, end, value):
+            if end >= start:
+                if value >= start and value <= end:
+                    return True
+            else:
+                if value <= end or value >= start:
+                    return True
+                else:
+                    return False
+
+        for shift in workyear.shifts:
+            if(inRange(shift.start_time, shift.end_time, time)):
+                shifts.append(shift)
+            
+        if not shifts:
+            return None
+        
+        # shifts overlap end-start: Select the starting shift
+        if len(shifts) > 1:
+            shifts = list(filter(lambda shift: shift.start_time == time, shifts))
+            # If overlap is not on start-end times, 
+            # raise an error cause the shift configuration is wrong
+            if not shifts:
+                raise UserError(gettext('lims.msg_overlapped_shifts'))
+                
+        
+        return shifts[0]
 
     def get_sequence(self, type):
         sequence = getattr(self, type + '_sequence')

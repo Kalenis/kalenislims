@@ -8998,6 +8998,14 @@ msgctxt "model:ir.message,text:msg_no_workyear_date"
 msgid "No work year defined for \"%(date)s\"."
 msgstr "No hay año laboral definido para «%(date)s»"
 
+msgctxt "model:ir.message,text:msg_overlapped_shifts"
+msgid "Check work year settings, there are overlapping shifts."
+msgstr "Revise la configuración del año laboral, hay turnos superpuestos"
+
+msgctxt "model:ir.message,text:msg_shift_missing_company"
+msgid "A company is required to get a shift (missing company on transaction)."
+msgstr "Se requiere una compañía para buscar un turno laboral (falta la compañía en la transacción)"
+
 msgctxt "model:ir.message,text:msg_not_accepted_1"
 msgid "The analysis is not reported"
 msgstr "El análisis no se informa"

@@ -43,6 +43,12 @@
         <record model="ir.message" id="msg_no_workyear_date">
             <field name="text">No work year defined for "%(date)s".</field>
         </record>
+        <record model="ir.message" id="msg_overlapped_shifts">
+            <field name="text">Check work year settings, there are overlapping shifts.</field>
+        </record>
+        <record model="ir.message" id="msg_shift_missing_company">
+            <field name="text">A company is required to get a shift (missing company on transaction).</field>
+        </record>
         <record model="ir.message" id="msg_default_range_type">
             <field name="text">There is already a default origin for this use</field>
         </record>
