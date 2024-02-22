@@ -60,7 +60,7 @@
 
         <record model="lims.interface.function" id="function_decimal2scientific">
             <field name="name">DECIMAL2SCIENTIFIC</field>
-            <field name="parameters">value, decimals=2</field>
+            <field name="parameters">value, decimals=2, exponent=None</field>
             <field name="help">Converts a numerical value to scientific notation</field>
         </record>
 
