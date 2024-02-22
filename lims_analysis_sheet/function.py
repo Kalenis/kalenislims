@@ -316,7 +316,7 @@ def scientific2decimal(value=None, decimals=2):
         return None
     try:
         res = Decimal(str(value)).quantize(Decimal(str(10 ** -decimals)))
-    except TypeError, ValueError:
+    except (TypeError, ValueError):
         return None
     return res
 
@@ -334,7 +334,7 @@ def decimal2scientific(value=None, decimals=2, exponent=None):
             res = f'{significand:.{decimals}f}e{exponent_sign}{exponent:02d}'
         else:
             res = ("{0:.%ie}" % (decimals)).format(float(value))
-    except TypeError, ValueError:
+    except (TypeError, ValueError):
         return None
     return res
 
