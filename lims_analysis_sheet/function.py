@@ -3,7 +3,6 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from decimal import Decimal
-#from math import fabs
 
 from trytond.pool import Pool
 from trytond.transaction import Transaction
@@ -315,52 +314,28 @@ custom_functions['REFERENCE_VALUE'] = get_reference_value
 def scientific2decimal(value=None, decimals=2):
     if value in [None, '', '#VALUE!']:
         return None
-
-    if False:  # fabs(value) > 0.00009:
-        res = str(value)
-
-    elif '.' in str(value):
-        ent = str.lower(str(value)).split('.')
-        ent2 = ent[1].split('e')
-        part2 = str(ent[0] + ent2[0])
-        ccero = ent[1].split('-')
-        part1 = ''
-
-        if int(ccero[1]) >= 10:
-            part1 = str('0.' + '0' * (int(ccero[1]) - 1))
-        else:
-            x = []
-            for i in ccero[1]:
-                x.append(i)
-            part1 = str('0.' + '0' * (int(x[1]) - 1))
-        res = part1 + part2
-
-    else:
-        ent = str.lower(str(value)).split('e')
-        part2 = ent[0]
-        ccero = ent[1].replace('-', '')
-        part1 = ''
-
-        if int(ccero) >= 10:
-            part1 = str('0.' + '0' * (int(ccero) - 1))
-        else:
-            x = []
-            for i in ccero:
-                x.append(i)
-            part1 = str('0.' + '0' * (int(x[1]) - 1))
-        res = part1 + part2
-
-    return Decimal(res).quantize(Decimal(str(10 ** -decimals)))
+    try:
+        res = Decimal(str(value)).quantize(Decimal(str(10 ** -decimals)))
+    except TypeError:
+        return None
+    return res
 
 
 custom_functions['SCIENTIFIC2DECIMAL'] = scientific2decimal
 
 
-def decimal2scientific(value=None, decimals=2):
+def decimal2scientific(value=None, decimals=2, exponent=None):
     if value in [None, '', '#VALUE!']:
         return None
-
-    res = ("{0:.%ie}" % (decimals)).format(float(value))
+    try:
+        if exponent is not None:
+            significand = value / 10 ** exponent
+            exponent_sign = '+' if exponent >= 0 else '-'
+            res = f'{significand:.{decimals}f}e{exponent_sign}{exponent:02d}'
+        else:
+            res = ("{0:.%ie}" % (decimals)).format(float(value))
+    except TypeError:
+        return None
     return res
 
 
