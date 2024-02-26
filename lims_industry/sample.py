@@ -570,7 +570,7 @@ class CreateSampleStart(metaclass=PoolMeta):
         if not self.equipment and self.component:
             self.component = None
 
-    @fields.depends('component')
+    @fields.depends('component', methods=['on_change_comercial_product'])
     def on_change_component(self):
         if self.component:
             if self.component.product_type:

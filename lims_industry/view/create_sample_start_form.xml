@@ -14,7 +14,7 @@
         <field name="labels" colspan="4" invisible="1"/>
         <group col="6" colspan="4" id="sampling">
             <label name="ind_sampling_date"/>
-            <field name="ind_sampling_date" xexpand="0"/>
+            <field name="ind_sampling_date"/>
             <label name="sampling_type"/>
             <field name="sampling_type"/>
             <label name="missing_data"/>
