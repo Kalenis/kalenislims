@@ -58,7 +58,7 @@
         </record>
 
         <menuitem action="act_lims_about" id="lims_about_menu"
-            parent="lims_config_base" sequence="10"/>
+            parent="lims_config" sequence="10"/>
 
 <!-- Work Year -->
 
