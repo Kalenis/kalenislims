@@ -779,3 +779,11 @@ class Sequence(metaclass=PoolMeta):
             date = Date.today()
         res['year2'] = date.strftime('%y')
         return res
+
+
+class About(ModelSingleton, ModelSQL, ModelView):
+    'About'
+    __name__ = 'lims.about'
+
+    version = fields.Char('Version', states={'readonly': True})
+    release_date = fields.Date('Release Date', states={'readonly': True})

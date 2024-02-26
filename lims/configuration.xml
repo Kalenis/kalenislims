@@ -39,6 +39,27 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
+<!-- About -->
+
+        <record model="ir.ui.view" id="lims_about_view">
+            <field name="model">lims.about</field>
+            <field name="type">form</field>
+            <field name="name">about_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_about">
+            <field name="name">About</field>
+            <field name="res_model">lims.about</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_about_view">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_about_view"/>
+            <field name="act_window" ref="act_lims_about"/>
+        </record>
+
+        <menuitem action="act_lims_about" id="lims_about_menu"
+            parent="lims_config" sequence="10"/>
+
 <!-- Work Year -->
 
         <record model="ir.ui.view" id="lims_workyear_view_form">
@@ -230,6 +251,13 @@
             <field name="model">ir.sequence</field>
             <field name="inherit" ref="ir.sequence_view_form"/>
             <field name="name">sequence_form</field>
+        </record>
+
+<!-- About -->
+
+        <record model="lims.about" id="about">
+            <field name="version">6.0</field>
+            <field name="release_date">2023-3-10</field>
         </record>
 
     </data>
