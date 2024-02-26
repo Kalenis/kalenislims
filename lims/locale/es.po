@@ -563,6 +563,14 @@ msgctxt "field:lims.configuration.sequence,referral_sequence:"
 msgid "Referral Sequence"
 msgstr "Secuencia de derivaciones"
 
+msgctxt "field:lims.about,version:"
+msgid "Version"
+msgstr "Versión"
+
+msgctxt "field:lims.about,release_date:"
+msgid "Release Date"
+msgstr "Fecha de Release"
+
 msgctxt "field:lims.control.analysis_group,analyzes:"
 msgid "Analyzes"
 msgstr "Análisis"

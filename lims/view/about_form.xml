@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form>
+    <label name="version"/>
+    <field name="version"/>
+    <label name="release_date"/>
+    <field name="release_date"/>
+</form>

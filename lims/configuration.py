@@ -786,4 +786,4 @@ class About(ModelSingleton, ModelSQL, ModelView):
     __name__ = 'lims.about'
 
     version = fields.Char('Version', states={'readonly': True})
-    release_date = fields.Date('Fecha de Release', states={'readonly': True})
+    release_date = fields.Date('Release Date', states={'readonly': True})
