@@ -773,6 +773,9 @@ class ResultModifier(ModelSQL, ModelView):
 
     code = fields.Char('Code', required=True)
     name = fields.Char('Name', required=True, translate=True)
+    expression = fields.Char('Expression', translate=True,
+        help='You can use variables like <result>, <detection_limit>, '
+        '<initial_unit>, etc.')
 
     @classmethod
     def check_xml_record(cls, records, values):
