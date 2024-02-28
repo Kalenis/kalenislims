@@ -1713,73 +1713,48 @@ class NotebookLine(ModelSQL, ModelView):
         return ''
 
     def get_formated_result(self, name=None):
-        res = ''
-        result_modifier = self.result_modifier and self.result_modifier.code
         if self.literal_result:
-            res = self.literal_result
-        else:
-            decimals = (self.result_decimals
-                if self.result_decimals is not None
-                else self.decimals)
-            res = self._format_result(self.result, decimals,
-                self.significant_digits, self.scientific_notation)
-            if not result_modifier:
-                res = res
-            elif result_modifier == 'low':
-                res = gettext('lims.msg_quantification_limit', loq=res)
-            elif result_modifier == 'gre':
-                res = '> %s' % res
-            elif result_modifier == 'd':
-                res = gettext('lims.msg_d')
-            elif result_modifier == 'nd':
-                res = gettext('lims.msg_nd')
-            elif result_modifier == 'ni':
-                res = ''
-            elif result_modifier == 'pos':
-                res = gettext('lims.msg_pos')
-            elif result_modifier == 'neg':
-                res = gettext('lims.msg_neg')
-            elif result_modifier == 'pre':
-                res = gettext('lims.msg_pre')
-            elif result_modifier == 'abs':
-                res = gettext('lims.msg_abs')
-            else:
-                res = self.result_modifier.name
-        return res
+            return self.literal_result
+        result = self._format_result(self.result,
+            self.decimals, self.significant_digits,
+            self.scientific_notation)
+        if self.result_modifier:
+            res = self.result_modifier.expression or ''
+            values = {
+                'result': result,
+                'detection_limit': self.detection_limit,
+                'quantification_limit': self.quantification_limit,
+                'initial_unit': (self.initial_unit and
+                    self.initial_unit.symbol or ''),
+                'final_unit': (self.final_unit and
+                    self.final_unit.symbol or ''),
+                }
+            for k, v in values.items():
+                res = res.replace('<%s>' % k, str(v))
+            return res
+        return result
 
     def get_formated_converted_result(self, name=None):
-        res = ''
-        result_modifier = (self.converted_result_modifier and
-            self.converted_result_modifier.code)
-        if not self.literal_result:
-            decimals = (self.converted_result_decimals
-                if self.converted_result_decimals is not None
-                else self.decimals)
-            res = self._format_result(self.converted_result, decimals,
-                self.significant_digits, self.scientific_notation)
-            if not result_modifier:
-                res = res
-            elif result_modifier == 'low':
-                res = gettext('lims.msg_quantification_limit', loq=res)
-            elif result_modifier == 'gre':
-                res = '> %s' % res
-            elif result_modifier == 'd':
-                res = gettext('lims.msg_d')
-            elif result_modifier == 'nd':
-                res = gettext('lims.msg_nd')
-            elif result_modifier == 'ni':
-                res = ''
-            elif result_modifier == 'pos':
-                res = gettext('lims.msg_pos')
-            elif result_modifier == 'neg':
-                res = gettext('lims.msg_neg')
-            elif result_modifier == 'pre':
-                res = gettext('lims.msg_pre')
-            elif result_modifier == 'abs':
-                res = gettext('lims.msg_abs')
-            else:
-                res = self.converted_result_modifier.name
-        return res
+        if self.literal_result:
+            return ''
+        result = self._format_result(self.converted_result,
+            self.decimals, self.significant_digits,
+            self.scientific_notation)
+        if self.converted_result_modifier:
+            res = self.converted_result_modifier.expression or ''
+            values = {
+                'result': result,
+                'detection_limit': self.detection_limit,
+                'quantification_limit': self.quantification_limit,
+                'initial_unit': (self.initial_unit and
+                    self.initial_unit.symbol or ''),
+                'final_unit': (self.final_unit and
+                    self.final_unit.symbol or ''),
+                }
+            for k, v in values.items():
+                res = res.replace('<%s>' % k, str(v))
+            return res
+        return result
 
     def _format_result(self, result, decimals, significant_digits=None,
             scientific_notation=False):

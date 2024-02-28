@@ -4,4 +4,6 @@
     <field name="code"/>
     <label name="name"/>
     <field name="name"/>
+    <label name="expression"/>
+    <field name="expression"/>
 </form>

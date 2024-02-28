@@ -298,9 +298,6 @@
         <record model="ir.message" id="msg_replace_number">
             <field name="text">Supplants the Results Report N° %(report)s</field>
         </record>
-        <record model="ir.message" id="msg_quantification_limit">
-            <field name="text">&lt; LoQ = %(loq)s</field>
-        </record>
         <record model="ir.message" id="msg_detection_limit">
             <field name="text">(LoD = %(detection_limit)s %(initial_unit)s)</field>
         </record>
@@ -312,24 +309,6 @@
         </record>
         <record model="ir.message" id="msg_obs_uncert">
             <field name="text">U = Uncertainty</field>
-        </record>
-        <record model="ir.message" id="msg_neg">
-            <field name="text">Negative</field>
-        </record>
-        <record model="ir.message" id="msg_pos">
-            <field name="text">Positive</field>
-        </record>
-        <record model="ir.message" id="msg_d">
-            <field name="text">Detected</field>
-        </record>
-        <record model="ir.message" id="msg_nd">
-            <field name="text">Not detected</field>
-        </record>
-        <record model="ir.message" id="msg_pre">
-            <field name="text">Presence</field>
-        </record>
-        <record model="ir.message" id="msg_abs">
-            <field name="text">Absence</field>
         </record>
         <record model="ir.message" id="msg_enac_all_acredited">
             <field name="text">Uncertainty for the analysis covered by the Accreditation is available.</field>

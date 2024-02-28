@@ -5316,6 +5316,10 @@ msgctxt "field:lims.result_modifier,code:"
 msgid "Code"
 msgstr "Código"
 
+msgctxt "field:lims.result_modifier,expression:"
+msgid "Expression"
+msgstr "Expresión"
+
 msgctxt "field:lims.result_modifier,name:"
 msgid "Name"
 msgstr "Nombre"
@@ -7407,6 +7411,12 @@ msgctxt "help:lims.laboratory.cv_correction,min_cv_corr_fact:"
 msgid "Correction factor for CV between Min and Max"
 msgstr "Factor de corrección para CV entre Mínimo y Máximo"
 
+msgctxt "help:lims.result_modifier,expression:"
+msgid ""
+"You can use variables like <result>, <detection_limit>, <initial_unit>, etc."
+msgstr ""
+"Puede usar variables como <result>, <detection_limit>, <initial_unit>, etc."
+
 msgctxt "help:lims.rule.condition,field:"
 msgid ""
 "Internal name of the field. Relationships are allowed, such as "
@@ -8490,10 +8500,6 @@ msgctxt "model:ir.action.act_window.domain,name:act_referral_list_domain_sent"
 msgid "Sent"
 msgstr "Enviado"
 
-msgctxt "model:ir.message,text:msg_abs"
-msgid "Absence"
-msgstr "Ausencia"
-
 msgctxt "model:ir.message,text:msg_acceptable"
 msgid "Acceptable / Factor: %(factor)s - CV: %(cv)s"
 msgstr "Aceptable / Factor: %(factor)s - CV: %(cv)s"
@@ -8590,10 +8596,6 @@ msgstr ""
 msgctxt "model:ir.message,text:msg_cv"
 msgid "CV (%)"
 msgstr "CV (%)"
-
-msgctxt "model:ir.message,text:msg_d"
-msgid "Detected"
-msgstr "Detectado"
 
 msgctxt "model:ir.message,text:msg_data_not_specified"
 msgid "NOT SPECIFIED BY THE CLIENT"
@@ -8890,14 +8892,6 @@ msgctxt "model:ir.message,text:msg_multiple_reports"
 msgid "Please, select only one report to print"
 msgstr "Por favor, seleccione un solo informe para imprimir"
 
-msgctxt "model:ir.message,text:msg_nd"
-msgid "Not detected"
-msgstr "No detectado"
-
-msgctxt "model:ir.message,text:msg_neg"
-msgid "Negative"
-msgstr "Negativo"
-
 msgctxt "model:ir.message,text:msg_no_bmz_default_configuration"
 msgid "Missing default configuration for BMZ fraction type"
 msgstr "Falta la configuración por defecto para el tipo de fracción BMZ"
@@ -9151,14 +9145,6 @@ msgctxt "model:ir.message,text:msg_planification_professional_unique_id"
 msgid "Professionals cannot be repeated"
 msgstr "Los profesionales no pueden repetirse"
 
-msgctxt "model:ir.message,text:msg_pos"
-msgid "Positive"
-msgstr "Positivo"
-
-msgctxt "model:ir.message,text:msg_pre"
-msgid "Presence"
-msgstr "Presencia"
-
 msgctxt "model:ir.message,text:msg_product_type_unique_id"
 msgid "Product type code must be unique"
 msgstr "El código del tipo de producto debe ser único"
@@ -9174,10 +9160,6 @@ msgstr "El método ya existe para este profesional"
 msgctxt "model:ir.message,text:msg_professional_party_unique_id"
 msgid "The party is already associated to a professional"
 msgstr "La entidad ya está asociada a un profesional"
-
-msgctxt "model:ir.message,text:msg_quantification_limit"
-msgid "< LoQ = %(loq)s"
-msgstr "< LC = %(loq)s"
 
 msgctxt "model:ir.message,text:msg_range_copy_existing_ranges"
 msgid "%(qty)s Ranges already existed"
@@ -10776,6 +10758,38 @@ msgctxt "model:lims.relate_method.start,name:"
 msgid "Relate Method"
 msgstr "Relacionar método"
 
+msgctxt "model:lims.result_modifier,expression:result_modifier_abs"
+msgid "Absence"
+msgstr "Ausencia"
+
+msgctxt "model:lims.result_modifier,expression:result_modifier_d"
+msgid "Detected"
+msgstr "Detectado"
+
+msgctxt "model:lims.result_modifier,expression:result_modifier_gre"
+msgid "> <result>"
+msgstr "> <result>"
+
+msgctxt "model:lims.result_modifier,expression:result_modifier_low"
+msgid "< LoQ = <result>"
+msgstr "< LC = <result>"
+
+msgctxt "model:lims.result_modifier,expression:result_modifier_nd"
+msgid "Not detected"
+msgstr "No detectado"
+
+msgctxt "model:lims.result_modifier,expression:result_modifier_neg"
+msgid "Negative"
+msgstr "Negativo"
+
+msgctxt "model:lims.result_modifier,expression:result_modifier_pos"
+msgid "Positive"
+msgstr "Positivo"
+
+msgctxt "model:lims.result_modifier,expression:result_modifier_pre"
+msgid "Presence"
+msgstr "Presencia"
+
 msgctxt "model:lims.result_modifier,name:"
 msgid "Result Modifier"
 msgstr "Modificador de resultado"
@@ -10801,8 +10815,8 @@ msgid "na"
 msgstr "na"
 
 msgctxt "model:lims.result_modifier,name:result_modifier_nd"
-msgid "nd"
-msgstr "nd"
+msgid "Not detected"
+msgstr "No detectado"
 
 msgctxt "model:lims.result_modifier,name:result_modifier_neg"
 msgid "Negative"
