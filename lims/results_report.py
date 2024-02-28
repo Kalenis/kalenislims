@@ -2504,11 +2504,9 @@ class OpenSamplesPendingReportingStart(ModelView):
     __name__ = 'lims.samples_pending_reporting.start'
 
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
-        required=True)
-
-    @staticmethod
-    def default_laboratory():
-        return Transaction().context.get('laboratory', None)
+        required=True, domain=[('id', 'in', Eval('laboratory_domain'))])
+    laboratory_domain = fields.One2Many('lims.laboratory',
+        None, 'Laboratory domain')
 
 
 class OpenSamplesPendingReporting(Wizard):
@@ -2521,6 +2519,25 @@ class OpenSamplesPendingReporting(Wizard):
             Button('Open', 'open_', 'tryton-ok', default=True),
             ])
     open_ = StateAction('lims.act_lims_samples_pending_reporting')
+
+    def default_start(self, fields):
+        pool = Pool()
+        User = pool.get('res.user')
+        Laboratory = pool.get('lims.laboratory')
+
+        res = {
+            'laboratory': Transaction().context.get('laboratory', None),
+            'laboratory_domain': [],
+            }
+
+        user = User(Transaction().user)
+        if user.laboratory:
+            res['laboratory_domain'] = [user.laboratory.id]
+        elif user.laboratories:
+            res['laboratory_domain'] = [l.id for l in user.laboratories]
+        else:
+            res['laboratory_domain'] = [l.id for l in Laboratory.search([])]
+        return res
 
     def do_open_(self, action):
         laboratory = self.start.laboratory
