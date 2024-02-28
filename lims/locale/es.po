@@ -6176,6 +6176,10 @@ msgctxt "field:lims.samples_pending_reporting.start,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
 
+msgctxt "field:lims.samples_pending_reporting.start,laboratory_domain:"
+msgid "Laboratory domain"
+msgstr "Dominio para Laboratorio"
+
 msgctxt "field:lims.scope_version.add_typifications.start,typifications:"
 msgid "Typifications"
 msgstr "Tipificaciones"
