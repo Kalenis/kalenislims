@@ -2063,12 +2063,15 @@ class Compilation(Workflow, ModelSQL, ModelView):
 
         for c in compilations:
             fields = {}
+            decimals_column = None
             columns = Field.search([
                 ('table', '=', c.table.id),
                 ('transfer_field', '=', True),
                 ])
             for column in columns:
                 fields[column.name] = column.related_line_field.name
+                if fields[column.name] == 'decimals':
+                    decimals_column = column.name
             if not fields:
                 continue
             with Transaction().set_context(lims_interface_table=c.table.id):
@@ -2085,7 +2088,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         data[nl_field] = getattr(line, alias, None)
                         if nl_field == 'result' and data[nl_field] is not None:
                             if not nb_line.significant_digits:
-                                decimals = nb_line.decimals or 0
+                                decimals = (decimals_column and getattr(line,
+                                    decimals_column) or nb_line.decimals)
                                 result = round(float(data[nl_field]), decimals)
                                 data[nl_field] = format(result,
                                     '.{}f'.format(decimals))
