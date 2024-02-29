@@ -10,4 +10,5 @@
     <field name="state"/>
     <field name="comments"/>
     <field name="device_active"/>
+    <field name="device_laboratory"/>
 </tree>
