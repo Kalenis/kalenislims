@@ -255,6 +255,9 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
     color = fields.Function(fields.Char('Color'), 'get_color')
     device_active = fields.Function(fields.Boolean('Device active',
         states={'invisible': Eval('asset') != 'device'}), 'get_device_active')
+    device_laboratory = fields.Function(fields.Many2One('lims.laboratory',
+        'Laboratory', states={'invisible': Eval('asset') != 'device'}),
+        'get_device_laboratory')
 
     del _states
 
@@ -314,6 +317,13 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
         if self.device:
             return self.device.active
         return True
+
+    def get_device_laboratory(self, name=None):
+        if self.device:
+            for devlab in self.device.laboratories:
+                if devlab.physically_here:
+                    return devlab.laboratory.id
+        return None
 
     @classmethod
     def delete(cls, maintenances):
