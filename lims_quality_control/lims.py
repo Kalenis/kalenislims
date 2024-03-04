@@ -136,7 +136,7 @@ class Typification(metaclass=PoolMeta):
         super().__register__(module_name)
         table = cls.__table_handler__(module_name)
         table.drop_constraint('product_matrix_analysis_method_uniq')
-    
+
     @classmethod
     def copy(cls, typifications, default=None):
         if default is None:
@@ -239,6 +239,7 @@ class Typification(metaclass=PoolMeta):
 
 class NotebookLine(metaclass=PoolMeta):
     __name__ = 'lims.notebook.line'
+
     typification = fields.Many2One('lims.typification', 'Typification')
     quality_test = fields.Many2One('lims.quality.test', 'Quality Test',
         select=True)
@@ -366,6 +367,50 @@ class NotebookLine(metaclass=PoolMeta):
         return result
 
 
+class NotebookRepeatAnalysis(metaclass=PoolMeta):
+    __name__ = 'lims.notebook.repeat_analysis'
+
+    def _get_repetition_defaults(self, line):
+        defaults = super()._get_repetition_defaults(line)
+        defaults.update({
+            'typification': (line.typification and
+                line.typification.id or None),
+            'quality_test': (line.quality_test and
+                line.quality_test.id or None),
+            'test_value': (line.test_value and
+                line.test_value.id or None),
+            'qualitative_value': (line.qualitative_value and
+                line.qualitative_value.id or None),
+            'quality_min': line.quality_min,
+            'quality_max': line.quality_max,
+            'quality_test_report': line.quality_test_report,
+            'specification': line.specification,
+            })
+        return defaults
+
+
+class NotebookLineRepeatAnalysis(metaclass=PoolMeta):
+    __name__ = 'lims.notebook.line.repeat_analysis'
+
+    def _get_repetition_defaults(self, line):
+        defaults = super()._get_repetition_defaults(line)
+        defaults.update({
+            'typification': (line.typification and
+                line.typification.id or None),
+            'quality_test': (line.quality_test and
+                line.quality_test.id or None),
+            'test_value': (line.test_value and
+                line.test_value.id or None),
+            'qualitative_value': (line.qualitative_value and
+                line.qualitative_value.id or None),
+            'quality_min': line.quality_min,
+            'quality_max': line.quality_max,
+            'quality_test_report': line.quality_test_report,
+            'specification': line.specification,
+            })
+        return defaults
+
+
 class Entry(metaclass=PoolMeta):
     __name__ = 'lims.entry'
 
@@ -403,9 +448,9 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
     def _get_notebook_line(cls, detail, fraction, notebook):
         to_create, t = super()._get_notebook_line(detail, fraction, notebook)
         if t:
-             test_value = t.valid_value and t.valid_value.id or None
-             quality_test = Transaction().context.get('test')
-             for notebook_line in to_create:
+            test_value = t.valid_value and t.valid_value.id or None
+            quality_test = Transaction().context.get('test')
+            for notebook_line in to_create:
                 notebook_line['typification'] = t.id
                 notebook_line['test_value'] = test_value
                 notebook_line['quality_test'] = quality_test

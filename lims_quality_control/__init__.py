@@ -38,6 +38,8 @@ def register():
         module='lims_quality_control', type_='model')
     Pool.register(
         lims.NotebookLoadResultsManual,
+        lims.NotebookRepeatAnalysis,
+        lims.NotebookLineRepeatAnalysis,
         sample.TakeSample,
         sample.CountersampleCreate,
         quality.CreateQualityTest,
