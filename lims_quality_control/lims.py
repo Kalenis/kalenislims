@@ -346,6 +346,50 @@ class NotebookLine(metaclass=PoolMeta):
         return result
 
 
+class NotebookRepeatAnalysis(metaclass=PoolMeta):
+    __name__ = 'lims.notebook.repeat_analysis'
+
+    def _get_repetition_defaults(self, line):
+        defaults = super()._get_repetition_defaults(line)
+        defaults.update({
+            'typification': (line.typification and
+                line.typification.id or None),
+            'quality_test': (line.quality_test and
+                line.quality_test.id or None),
+            'test_value': (line.test_value and
+                line.test_value.id or None),
+            'qualitative_value': (line.qualitative_value and
+                line.qualitative_value.id or None),
+            'quality_min': line.quality_min,
+            'quality_max': line.quality_max,
+            'quality_test_report': line.quality_test_report,
+            'specification': line.specification,
+            })
+        return defaults
+
+
+class NotebookLineRepeatAnalysis(metaclass=PoolMeta):
+    __name__ = 'lims.notebook.line.repeat_analysis'
+
+    def _get_repetition_defaults(self, line):
+        defaults = super()._get_repetition_defaults(line)
+        defaults.update({
+            'typification': (line.typification and
+                line.typification.id or None),
+            'quality_test': (line.quality_test and
+                line.quality_test.id or None),
+            'test_value': (line.test_value and
+                line.test_value.id or None),
+            'qualitative_value': (line.qualitative_value and
+                line.qualitative_value.id or None),
+            'quality_min': line.quality_min,
+            'quality_max': line.quality_max,
+            'quality_test_report': line.quality_test_report,
+            'specification': line.specification,
+            })
+        return defaults
+
+
 class Entry(metaclass=PoolMeta):
     __name__ = 'lims.entry'
 
