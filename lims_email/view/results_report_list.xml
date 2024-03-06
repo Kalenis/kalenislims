@@ -4,5 +4,6 @@
         <field name="sent"/>
         <field name="sent_date" widget="date"/>
         <field name="sent_date" widget="time" string="Time"/>
+        <field name="sent_manually"/>
     </xpath>
 </data>

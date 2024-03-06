@@ -20,6 +20,7 @@ def register():
         results_report.SendResultsReportStart,
         results_report.SendResultsReportSucceed,
         results_report.SendResultsReportFailed,
+        results_report.MarkResultsReportSentStart,
         results_report.ReportNameFormat,
         party.Party,
         module='lims_email', type_='model')
@@ -27,4 +28,5 @@ def register():
         results_report.RelateMailAttachmentResultsReport,
         results_report.ResultsReportAnnulation,
         results_report.SendResultsReport,
+        results_report.MarkResultsReportSent,
         module='lims_email', type_='wizard')

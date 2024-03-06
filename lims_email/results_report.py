@@ -12,7 +12,7 @@ from string import Template
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Bool
 from trytond.transaction import Transaction
 from trytond.tools import get_smtp_server
 from trytond.config import config as tconfig
@@ -184,6 +184,7 @@ class ResultsReport(metaclass=PoolMeta):
         'results_report', 'Attachments')
     sent = fields.Boolean('Sent', readonly=True)
     sent_date = fields.DateTime('Sent date', readonly=True)
+    sent_manually = fields.Boolean('Manually sent', readonly=True)
     mailings = fields.One2Many('lims.results_report.mailing',
         'results_report', 'Mailings', readonly=True)
 
@@ -193,6 +194,7 @@ class ResultsReport(metaclass=PoolMeta):
         fields.extend([
             'sent',
             'sent_date',
+            'sent_manually',
             ])
         return fields
 
@@ -792,6 +794,61 @@ class SendResultsReport(Wizard):
             'reports_not_sent': [f.id for f in self.failed.reports_not_sent],
             }
         return default
+
+
+class MarkResultsReportSentStart(ModelView):
+    'Mark Results Report as Sent'
+    __name__ = 'lims_email.mark_results_report_sent.start'
+
+    sent = fields.Boolean('Sent')
+    sent_date = fields.DateTime('Sent date',
+        states={'required': Bool(Eval('sent'))},
+        depends=['sent'])
+
+    @staticmethod
+    def default_sent():
+        return True
+
+    @staticmethod
+    def default_sent_date():
+        return datetime.now()
+
+    @fields.depends('sent')
+    def on_change_sent(self):
+        if not self.sent:
+            self.sent_date = None
+
+
+class MarkResultsReportSent(Wizard):
+    'Mark Results Report as Sent'
+    __name__ = 'lims_email.mark_results_report_sent'
+
+    start = StateView('lims_email.mark_results_report_sent.start',
+        'lims_email.mark_results_report_sent_start_view', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Send', 'send', 'tryton-ok', default=True),
+            ])
+    send = StateTransition()
+
+    def transition_send(self):
+        ResultsReport = Pool().get('lims.results_report')
+
+        to_save = []
+        results_reports = ResultsReport.search([
+            ('id', 'in', Transaction().context['active_ids']),
+            ])
+        for results_report in results_reports:
+            if results_report.mailings:
+                continue
+            results_report.sent_manually = self.start.sent
+            results_report.sent = self.start.sent
+            results_report.sent_date = (self.start.sent and
+                self.start.sent_date or None)
+            to_save.append(results_report)
+        if to_save:
+            ResultsReport.save(to_save)
+
+        return 'end'
 
 
 class ReportNameFormat(ModelSQL, ModelView):

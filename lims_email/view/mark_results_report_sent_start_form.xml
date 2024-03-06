@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form>
+    <label name="sent"/>
+    <field name="sent"/>
+    <label name="sent_date"/>
+    <field name="sent_date"/>
+</form>

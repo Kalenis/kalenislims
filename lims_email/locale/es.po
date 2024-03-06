@@ -46,6 +46,10 @@ msgctxt "field:lims.results_report,sent_date:"
 msgid "Sent date"
 msgstr "Fecha de enviado"
 
+msgctxt "field:lims.results_report,sent_manually:"
+msgid "Manually sent"
+msgstr "Enviado manualmente"
+
 msgctxt "field:lims.results_report.attachment,data:"
 msgid "File"
 msgstr "Archivo"
@@ -92,6 +96,14 @@ msgctxt ""
 msgid "Attachment domain"
 msgstr "Dominio para Adjunto"
 
+msgctxt "field:lims_email.mark_results_report_sent.start,sent:"
+msgid "Sent"
+msgstr "Enviado"
+
+msgctxt "field:lims_email.mark_results_report_sent.start,sent_date:"
+msgid "Sent date"
+msgstr "Fecha de enviado"
+
 msgctxt "field:lims_email.send_results_report.failed,reports_not_ready:"
 msgid "Reports not ready"
 msgstr "Informes no listos"
@@ -137,6 +149,10 @@ msgctxt ""
 msgid "Relate Mail Attachment to Results Report"
 msgstr "Relacionar adjunto de correo a Informe de resultados"
 
+msgctxt "model:ir.action,name:wizard_mark_results_report_sent"
+msgid "Mark Results Report as Sent"
+msgstr "Marcar Informes de resultados como enviados"
+
 msgctxt "model:ir.action,name:wizard_send_results_report"
 msgid "Send Results Reports"
 msgstr "Enviar Informes de resultados"
@@ -173,6 +189,10 @@ msgctxt ""
 "model:lims.results_report.version.detail.relate_mail_attachment.start,name:"
 msgid "Relate Mail Attachment to Results Report"
 msgstr "Relacionar adjunto de correo a Informe de resultados"
+
+msgctxt "model:lims_email.mark_results_report_sent.start,name:"
+msgid "Mark Results Report as Sent"
+msgstr "Marcar Informes de resultados como enviados"
 
 msgctxt "model:lims_email.send_results_report.failed,name:"
 msgid "Send Results Report"
@@ -253,6 +273,14 @@ msgctxt ""
 "wizard_button:lims.results_report.version.detail.relate_mail_attachment,start,relate:"
 msgid "Relate"
 msgstr "Relacionar"
+
+msgctxt "wizard_button:lims_email.mark_results_report_sent,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims_email.mark_results_report_sent,start,send:"
+msgid "Send"
+msgstr "Enviar"
 
 msgctxt "wizard_button:lims_email.send_results_report,failed,end:"
 msgid "Ok"
