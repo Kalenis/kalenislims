@@ -366,10 +366,15 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def send_email_responsible(cls, tasks):
+        pool = Pool()
+        Config = pool.get('lims.administrative.task.configuration')
+
         from_addr = tconfig.get('email', 'from')
         if not from_addr:
             logger.error("Missing configuration to send emails")
             return
+
+        config_ = Config(1)
 
         for task in tasks:
             to_addrs = []
@@ -382,16 +387,23 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
             if task.scheduled:
                 continue
 
-            subject, body = task._get_mail_subject_body()
+            subject = str('%s (%s)' % (config_.email_responsible_subject,
+                task.number)).strip()
+            body = task._get_mail_body()
             msg = cls._create_msg(from_addr, to_addrs, subject, body)
             cls._send_msg(from_addr, to_addrs, msg, task.number)
 
     @classmethod
     def send_email_update(cls, tasks):
+        pool = Pool()
+        Config = pool.get('lims.administrative.task.configuration')
+
         from_addr = tconfig.get('email', 'from')
         if not from_addr:
             logger.error("Missing configuration to send emails")
             return
+
+        config_ = Config(1)
 
         for task in tasks:
             to_addrs = []
@@ -406,24 +418,17 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
                     task.responsible.rec_name)
                 continue
 
-            subject, body = task._get_mail_subject_body(True)
+            subject = str('%s (%s)' % (config_.email_update_subject,
+                task.number)).strip()
+            body = task._get_mail_body()
             msg = cls._create_msg(from_addr, to_addrs, subject, body)
             cls._send_msg(from_addr, to_addrs, msg, task.number)
 
-    def _get_mail_subject_body(self, update=False):
+    def _get_mail_body(self):
         pool = Pool()
-        Config = pool.get('lims.administrative.task.configuration')
         Lang = pool.get('ir.lang')
 
-        config_ = Config(1)
         lang = Lang.get()
-
-        if update:
-            subject = str('%s (%s)' % (config_.email_update_subject,
-                self.number)).strip()
-        else:
-            subject = str('%s (%s)' % (config_.email_responsible_subject,
-                self.number)).strip()
 
         body = str(self.description)
         body += '\n%s: %s' % (
@@ -445,8 +450,7 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
             body += '\n%s: %s' % (
                 gettext('lims_administrative_task.field_task_origin'),
                 str(self.origin.rec_name))
-
-        return subject, body
+        return body
 
     def _get_task_url(self):
         tr = Transaction()
@@ -494,6 +498,43 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         return success
 
     @classmethod
+    def control_expiring_tasks(cls):
+        pool = Pool()
+        Config = pool.get('lims.administrative.task.configuration')
+        Date = pool.get('ir.date')
+
+        from_addr = tconfig.get('email', 'from')
+        if not from_addr:
+            logger.error("Missing configuration to send emails")
+            return
+
+        config_ = Config(1)
+        today = Date.today()
+
+        expiring_tasks = cls.search([
+            ('state', 'in', ['pending', 'rejected', 'ongoing', 'standby']),
+            ('expiration_date', '=', today),
+            ], order=[('expiration_date', 'ASC')])
+        for task in expiring_tasks:
+            to_addrs = []
+            if task.responsible.email:
+                to_addrs.append(task.responsible.email)
+            if task.create_uid.email:
+                to_addrs.append(task.create_uid.email)
+            for user in task.notified_users:
+                to_addrs.append(user.email)
+            if not to_addrs:
+                logger.error("Missing address for '%s' to send email",
+                    task.responsible.rec_name)
+                continue
+
+            subject = str('%s (%s)' % (config_.email_expiration_subject,
+                task.number)).strip()
+            body = task._get_mail_body()
+            msg = cls._create_msg(from_addr, to_addrs, subject, body)
+            cls._send_msg(from_addr, to_addrs, msg, task.number)
+
+    @classmethod
     def control_overdue_tasks(cls):
         pool = Pool()
         Date = pool.get('ir.date')
@@ -529,8 +570,8 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
                     task.expiration_date.strftime('%d/%m/%Y'),
                     task.number, task.description)
             body_ += '\n\nTotal: %s' % len(tasks)
-            msg = cls.create_msg(from_addr, to_addr, subject, body_)
-            cls.send_msg(from_addr, to_addr, msg, task.number)
+            msg = cls._create_msg(from_addr, [to_addr], subject, body_)
+            cls._send_msg(from_addr, [to_addr], msg, task.number)
 
 
 class AdministrativeTaskUser(ModelSQL):
@@ -702,6 +743,8 @@ class Cron(metaclass=PoolMeta):
     def __setup__(cls):
         super().__setup__()
         cls.method.selection.extend([
+            ('lims.administrative.task|control_expiring_tasks',
+                'Control Expiring Administrative Tasks'),
             ('lims.administrative.task|control_overdue_tasks',
                 'Control Overdue Administrative Tasks'),
             ])
