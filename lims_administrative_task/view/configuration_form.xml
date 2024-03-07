@@ -6,4 +6,6 @@
     <field name="email_responsible_subject" xexpand="1"/>
     <label name="email_update_subject"/>
     <field name="email_update_subject" xexpand="1"/>
+    <label name="email_expiration_subject"/>
+    <field name="email_expiration_subject" xexpand="1"/>
 </form>
