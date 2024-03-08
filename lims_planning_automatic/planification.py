@@ -32,7 +32,8 @@ class Planification(metaclass=PoolMeta):
             search_fractions = SearchFractions(session_id)
             with Transaction().set_context(active_id=planification.id):
                 search_fractions.transition_search()
-                details = SearchFractionsDetail.search([])
+                details = SearchFractionsDetail.search([
+                    ('session_id', '=', session_id)])
                 search_fractions.next.details = details
                 search_fractions.transition_add()
 
