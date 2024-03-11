@@ -224,7 +224,7 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
     device_active = fields.Function(fields.Boolean('Device active',
         states={'invisible': Eval('asset') != 'device'},
         depends=['asset']), 'get_device_active')
-    party = fields.Many2One('party.party', 'Estado')
+    party = fields.Many2One('party.party', 'Responsible Party')
 
     del _states, _depends
 
