@@ -58,6 +58,10 @@ msgctxt "field:lims.lab.device.maintenance,state:"
 msgid "State"
 msgstr "Estado"
 
+msgctxt "field:lims.lab.device.maintenance,party:"
+msgid "Responsible Party"
+msgstr "Tercero Responsable"
+
 msgctxt "field:lims.lab.device.maintenance.activity,name:"
 msgid "Name"
 msgstr "Nombre"
