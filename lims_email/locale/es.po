@@ -26,6 +26,10 @@ msgctxt "field:lims.configuration,result_report_format:"
 msgid "Default Results Report Name Format"
 msgstr "Formato de nombre para Informe de resultados"
 
+msgctxt "field:lims.entry,email_report:"
+msgid "Automatic sending of Report by Email"
+msgstr "Envío automático de Informe por Email"
+
 msgctxt "field:lims.result_report.format,format_:"
 msgid "Format"
 msgstr "Formato"
@@ -33,6 +37,10 @@ msgstr "Formato"
 msgctxt "field:lims.result_report.format,name:"
 msgid "Name"
 msgstr "Nombre"
+
+msgctxt "field:lims.results_report,email_report:"
+msgid "Automatic sending by Email"
+msgstr "Envío automático por Email"
 
 msgctxt "field:lims.results_report,mail_attachments:"
 msgid "Attachments"
@@ -119,6 +127,10 @@ msgstr "Informes no enviados"
 msgctxt "field:lims_email.send_results_report.start,summary:"
 msgid "Summary"
 msgstr "Resumen"
+
+msgctxt "field:party.party,email_report:"
+msgid "Automatic sending of Report by Email"
+msgstr "Envío automático de Informe por Email"
 
 msgctxt "field:party.party,result_report_format:"
 msgid "Results Report Name Format"

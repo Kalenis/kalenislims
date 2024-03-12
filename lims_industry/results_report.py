@@ -904,6 +904,8 @@ class SendResultsReport(metaclass=PoolMeta):
             res = {}
             results_reports = ResultsReport.browse(report_ids)
             for report in results_reports:
+                if not report.email_report:
+                    continue
                 plant_id = None
                 samples = ResultsSample.search([
                     ('version_detail.report_version.results_report.id',
@@ -929,6 +931,8 @@ class SendResultsReport(metaclass=PoolMeta):
             res = {}
             results_reports = ResultsReport.browse(report_ids)
             for report in results_reports:
+                if not report.email_report:
+                    continue
                 equipment_id = None
                 samples = ResultsSample.search([
                     ('version_detail.report_version.results_report.id',

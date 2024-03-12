@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <data>
     <xpath expr="/tree/field[@name='ready_to_send']" position="after">
+        <field name="email_report"/>
         <field name="sent"/>
         <field name="sent_date" widget="date"/>
         <field name="sent_date" widget="time" string="Time"/>

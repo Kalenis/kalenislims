@@ -5,8 +5,6 @@
             <group id="lims_checkboxes" colspan="4" col="8">
                 <label name="block_entry_confirmation"/>
                 <field name="block_entry_confirmation"/>
-                <label name="email_report"/>
-                <field name="email_report"/>
                 <label name="single_sending_report"/>
                 <field name="single_sending_report"/>
                 <label name="entry_single_sending_report"/>

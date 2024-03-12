@@ -18,7 +18,6 @@ from trytond.i18n import gettext
 class Party(metaclass=PoolMeta):
     __name__ = 'party.party'
 
-    email_report = fields.Boolean('Email report')
     single_sending_report = fields.Boolean(
         'Single sending of report per Sample')
     entry_single_sending_report = fields.Boolean(
@@ -83,10 +82,6 @@ class Party(metaclass=PoolMeta):
             cursor.execute(*party_table.update(
                 [party_table.report_language], [english_language[0]],
                 where=(party_table.english_report == Literal(True))))
-
-    @staticmethod
-    def default_email_report():
-        return False
 
     @staticmethod
     def default_single_sending_report():

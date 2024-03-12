@@ -6,13 +6,19 @@ from trytond.model import fields
 from trytond.pool import PoolMeta
 
 
-class Party(metaclass=PoolMeta):
-    __name__ = 'party.party'
+class Entry(metaclass=PoolMeta):
+    __name__ = 'lims.entry'
 
     email_report = fields.Boolean('Automatic sending of Report by Email')
-    result_report_format = fields.Many2One('lims.result_report.format',
-        'Results Report Name Format')
 
     @staticmethod
     def default_email_report():
         return False
+
+    @fields.depends('party')
+    def on_change_party(self):
+        super().on_change_party()
+        email = False
+        if self.party:
+            email = self.party.email_report
+        self.email_report = email
