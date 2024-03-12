@@ -292,6 +292,7 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         'Referral of Samples',
         domain=[('state', '=', 'done')])
     sample_fast_copy = fields.Boolean('Fast Sample Creation (Experimental)')
+    server_url = fields.Char('Kalenis Server URL')
 
     @staticmethod
     def default_brix_digits():
