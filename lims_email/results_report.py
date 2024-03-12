@@ -180,6 +180,9 @@ class RelateMailAttachmentResultsReport(Wizard):
 class ResultsReport(metaclass=PoolMeta):
     __name__ = 'lims.results_report'
 
+    email_report = fields.Function(fields.Boolean(
+        'Automatic sending by Email'),
+        'get_entry_field', searcher='search_entry_field')
     mail_attachments = fields.One2Many('lims.results_report.attachment',
         'results_report', 'Attachments')
     sent = fields.Boolean('Sent', readonly=True)
@@ -644,6 +647,8 @@ class SendResultsReport(Wizard):
 
         if not config.mail_ack_report_grouping:
             for report in results_reports:
+                if not report.email_report:
+                    continue
                 if (report.invoice_party and
                         hasattr(report.invoice_party,
                         'block_reports_automatic_sending') and
@@ -658,6 +663,8 @@ class SendResultsReport(Wizard):
 
         if config.mail_ack_report_grouping == 'party':
             for report in results_reports:
+                if not report.email_report:
+                    continue
                 if (report.invoice_party and
                         hasattr(report.invoice_party,
                         'block_reports_automatic_sending') and

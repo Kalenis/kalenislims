@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 <data>
     <xpath
+        expr="/form/notebook/page[@id='lims']/group[@id='lims_checkboxes']/field[@name='block_entry_confirmation']"
+        position="after">
+        <label name="email_report"/>
+        <field name="email_report"/>
+    </xpath>
+    <xpath
         expr="/form/notebook/page[@id='lims']/field[@name='entry_zone']"
         position="after">
         <label name="result_report_format"/>

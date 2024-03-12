@@ -5,6 +5,7 @@
 from trytond.pool import Pool
 from . import configuration
 from . import party
+from . import entry
 from . import results_report
 
 
@@ -23,6 +24,7 @@ def register():
         results_report.MarkResultsReportSentStart,
         results_report.ReportNameFormat,
         party.Party,
+        entry.Entry,
         module='lims_email', type_='model')
     Pool.register(
         results_report.RelateMailAttachmentResultsReport,

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='general']/group[@id='options_holder']/field[@name='report_language']"
+        position="after">
+        <label name="email_report"/>
+        <field name="email_report" xexpand="0" width="25"/>
+    </xpath>
+</data>

@@ -108,7 +108,7 @@
             <field name="wiz_name">lims_email.send_results_report</field>
         </record>
 
-        <record model="ir.action.keyword" id="wizard_send_results_report_keyword">
+<!--        <record model="ir.action.keyword" id="wizard_send_results_report_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.results_report,-1</field>
             <field name="action" ref="wizard_send_results_report"/>
@@ -138,7 +138,7 @@
             id="wizard_send_results_report_group_send_results_report">
             <field name="action" ref="wizard_send_results_report"/>
             <field name="group" ref="group_lims_send_results_report"/>
-        </record>
+        </record>-->
 
 <!-- Wizard Mark Results Report as Sent -->
 

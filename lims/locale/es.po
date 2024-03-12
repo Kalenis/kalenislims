@@ -1479,10 +1479,6 @@ msgctxt "field:lims.entry,date:"
 msgid "Date"
 msgstr "Fecha de ingreso"
 
-msgctxt "field:lims.entry,email_report:"
-msgid "Email report"
-msgstr "Informe por e-mail"
-
 msgctxt "field:lims.entry,entry_single_sending_report:"
 msgid "Single sending of report per Entry"
 msgstr "Envío único de Informe por Partida"
@@ -7132,10 +7128,6 @@ msgstr "Bloquear ingreso de muestras"
 msgctxt "field:party.party,carrier:"
 msgid "Carrier"
 msgstr "Transportista"
-
-msgctxt "field:party.party,email_report:"
-msgid "Email report"
-msgstr "Informe por e-mail"
 
 msgctxt "field:party.party,entry_single_sending_report:"
 msgid "Single sending of report per Entry"
