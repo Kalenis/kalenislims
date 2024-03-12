@@ -108,37 +108,17 @@
             <field name="wiz_name">lims_email.send_results_report</field>
         </record>
 
-<!--        <record model="ir.action.keyword" id="wizard_send_results_report_keyword">
+        <record model="ir.action.keyword" id="wizard_send_results_report_keyword">
             <field name="keyword">form_action</field>
             <field name="model">lims.results_report,-1</field>
             <field name="action" ref="wizard_send_results_report"/>
-        </record>
-
-        <menuitem action="wizard_send_results_report" id="menu_send_results_report"
-            parent="lims.lims_laboratory_reports" sequence="40"
-            icon="lims-email"/>
-
-        <record model="ir.ui.menu-res.group"
-            id="menu_send_results_report_group_send_results_report">
-            <field name="menu" ref="menu_send_results_report"/>
-            <field name="group" ref="group_lims_send_results_report"/>
-        </record>
-        <record model="ir.ui.menu-res.group"
-            id="menu_laboratory_reports_group_send_results_report">
-            <field name="menu" ref="lims.lims_laboratory_reports"/>
-            <field name="group" ref="group_lims_send_results_report"/>
-        </record>
-        <record model="ir.ui.menu-res.group"
-            id="menu_laboratory_group_send_results_report">
-            <field name="menu" ref="lims.lims_laboratory"/>
-            <field name="group" ref="group_lims_send_results_report"/>
         </record>
 
         <record model="ir.action-res.group"
             id="wizard_send_results_report_group_send_results_report">
             <field name="action" ref="wizard_send_results_report"/>
             <field name="group" ref="group_lims_send_results_report"/>
-        </record>-->
+        </record>
 
 <!-- Wizard Mark Results Report as Sent -->
 

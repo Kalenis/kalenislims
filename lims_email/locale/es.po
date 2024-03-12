@@ -187,10 +187,6 @@ msgctxt "model:ir.ui.menu,name:menu_results_report_format"
 msgid "Results Report Name Formats"
 msgstr "Formatos de nombre para Informe de resultados"
 
-msgctxt "model:ir.ui.menu,name:menu_send_results_report"
-msgid "Send Results Reports"
-msgstr "Enviar Informes de resultados"
-
 msgctxt "model:lims.result_report.format,name:"
 msgid "Results Report Name Format"
 msgstr "Formato de nombre para Informe de resultados"
