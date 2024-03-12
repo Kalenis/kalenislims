@@ -505,13 +505,18 @@ class AdministrativeTask(Workflow, ModelSQL, ModelView):
         return body
 
     def _get_task_url(self):
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+
+        config_ = Config(1)
         tr = Transaction()
-        if '_request' not in tr.context:
-            return ''
         url_part = {}
-        hostname = '%s://%s/' % (
-            str(tr.context['_request']['scheme']),
-            str(tr.context['_request']['http_host']))
+        if '_request' in tr.context:
+            hostname = '%s://%s/' % (
+                str(tr.context['_request']['scheme']),
+                str(tr.context['_request']['http_host']))
+        else:
+            hostname = '%s/' % (config_.server_url or '')
         url_part['hostname'] = hostname
         url_part['database'] = tr.database.name
         url_part['type'] = 'model'
