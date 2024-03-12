@@ -2,6 +2,8 @@
 <form>
     <notebook>
         <page string="General" id="general">
+            <label name="server_url"/>
+            <field name="server_url"/>
             <label name="fraction_product"/>
             <field name="fraction_product"/>
             <label name="default_notebook_view"/>

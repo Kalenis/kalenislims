@@ -277,6 +277,7 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         help="A suffix with the referral number will be added to the text")
     mail_referral_body = fields.Text('Email body of Referral of Samples')
     sample_fast_copy = fields.Boolean('Fast Sample Creation (Experimental)')
+    server_url = fields.Char('Kalenis Server URL')
 
     @staticmethod
     def default_brix_digits():
