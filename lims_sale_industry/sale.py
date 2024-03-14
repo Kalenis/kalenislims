@@ -55,6 +55,15 @@ class Sale(metaclass=PoolMeta):
                 },
             })
 
+    @classmethod
+    def view_attributes(cls):
+        attributes = super().view_attributes()
+        if Transaction().context.get('modify_header'):
+            attributes.extend([
+                ('//page[@id="industry"]', 'states', {'invisible': True}),
+                ])
+        return attributes
+
     @fields.depends('equipments', 'plants', 'party')
     def on_change_with_contacts_domain(self, name=None):
         pool = Pool()

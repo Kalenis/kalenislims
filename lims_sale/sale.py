@@ -117,7 +117,7 @@ class Sale(metaclass=PoolMeta):
 
     @classmethod
     def view_attributes(cls):
-        return super().view_attributes() + [
+        attributes = super().view_attributes() + [
             ('//group[@id="links"]/link[@name="sale.act_shipment_form"]',
                 'states', {
                     'invisible': Eval('invoice_method') == 'service',
@@ -127,6 +127,13 @@ class Sale(metaclass=PoolMeta):
                     'invisible': Eval('invoice_method') == 'service',
                     }),
             ]
+        if Transaction().context.get('modify_header'):
+            attributes.extend([
+                ('//group[@id="lims_buttons"]', 'states', {'invisible': True}),
+                ('//page[@id="lims_report"]', 'states', {'invisible': True}),
+                ('//page[@id="lims_email"]', 'states', {'invisible': True}),
+                ])
+        return attributes
 
     @fields.depends('party', 'invoice_party')
     def on_change_party(self):
