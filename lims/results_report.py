@@ -2315,6 +2315,8 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
                 d.notebook_line.formated_result or None)
         return result
 
+    order_result = _order_nline_field('result')
+
     @classmethod
     def get_converted_result(cls, details, name):
         result = {}
