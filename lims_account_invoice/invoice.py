@@ -478,6 +478,7 @@ class PopulateInvoiceContacts(Wizard):
         # Set entries contacts
         entry_invoice_contacts = EntryInvoiceContacts.search([
             ('entry', 'in', entry_ids),
+            ('contact.invoice_contact', '=', True),
             ])
         if not entry_invoice_contacts:
             logger.warn('transition_populate():Las partidas de '
