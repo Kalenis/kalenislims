@@ -2298,7 +2298,27 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
                 d.notebook_line.formated_result or None)
         return result
 
-    order_result = _order_nline_field('result')
+    @staticmethod
+    def order_result(tables):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        field1 = NotebookLine._fields['result_modifier']
+        field2 = NotebookLine._fields['result']
+
+        table, _ = tables[None]
+        nline_tables = tables.get('notebook_line')
+        if nline_tables is None:
+            notebook_line = NotebookLine.__table__()
+            nline_tables = {
+                None: (notebook_line,
+                    notebook_line.id == table.notebook_line),
+                }
+            tables['notebook_line'] = nline_tables
+        order = field1.convert_order('result_modifier',
+            nline_tables, NotebookLine)
+        order.extend(field2.convert_order('result',
+            nline_tables, NotebookLine))
+        return order
 
     @classmethod
     def get_converted_result(cls, details, name):
