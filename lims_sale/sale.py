@@ -88,6 +88,17 @@ class Sale(metaclass=PoolMeta):
                 },
             })
 
+    @classmethod
+    def view_attributes(cls):
+        attributes = super().view_attributes()
+        if Transaction().context.get('modify_header'):
+            attributes.extend([
+                ('//group[@id="lims_buttons"]', 'states', {'invisible': True}),
+                ('//page[@id="lims_report"]', 'states', {'invisible': True}),
+                ('//page[@id="lims_email"]', 'states', {'invisible': True}),
+                ])
+        return attributes
+
     @fields.depends('party', 'invoice_party')
     def on_change_party(self):
         super().on_change_party()
