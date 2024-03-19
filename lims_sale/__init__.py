@@ -43,6 +43,7 @@ def register():
         module='lims_sale', type_='model',
         depends=['lims_account_invoice'])
     Pool.register(
+        sale.ModifyHeader,
         sale.SaleLoadServices,
         sale.SaleLoadAnalysis,
         sample.CreateSample,
