@@ -505,6 +505,16 @@ class SaleLine(metaclass=PoolMeta):
         self.on_change_product()
 
 
+class ModifyHeader(metaclass=PoolMeta):
+    __name__ = 'sale.modify_header'
+
+    def transition_modify(self):
+        for field in ['template', 'clause_template', 'sections',
+                'previous_sections', 'following_sections']:
+            self.start._values.pop(field, None)
+        return super().transition_modify()
+
+
 class SaleLoadServicesStart(ModelView):
     'Load Services from Entry'
     __name__ = 'sale.load_services.start'
