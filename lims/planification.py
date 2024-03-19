@@ -1891,7 +1891,7 @@ class AddFractionControlStart(ModelView):
         label = ''
         date = get_print_date().strftime("%Y-%m-%d %H:%M:%S")
         if self.original_fraction:
-            label += self.original_fraction.label
+            label += self.original_fraction.label or ''
         if self.concentration_level:
             label += (' (' +
                     self.concentration_level.description + ')')
@@ -2388,7 +2388,7 @@ class AddFractionRMBMZStart(ModelView):
         if self.rm_bmz_type == 'sla':
             if self.reference_fraction:
                 label += (' ' +
-                       self.reference_fraction.label)
+                       self.reference_fraction.label or '')
             label += ' ' + date
         elif self.rm_bmz_type == 'noref':
             label += ' ' + date
