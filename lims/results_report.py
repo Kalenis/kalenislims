@@ -5,7 +5,7 @@
 from io import BytesIO
 from datetime import datetime
 from PyPDF2 import PdfFileMerger
-from sql import Literal, Null
+from sql import Literal, Null, Cast
 
 from trytond.model import (Workflow, ModelView, ModelSQL, Unique, fields,
     sequence_ordered, Index)
@@ -2320,12 +2320,12 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
         field1 = NotebookLine._fields['result_modifier']
-        field2 = NotebookLine._fields['result']
+        #field2 = NotebookLine._fields['result']
+        notebook_line = NotebookLine.__table__()
 
         table, _ = tables[None]
         nline_tables = tables.get('notebook_line')
         if nline_tables is None:
-            notebook_line = NotebookLine.__table__()
             nline_tables = {
                 None: (notebook_line,
                     notebook_line.id == table.notebook_line),
@@ -2333,8 +2333,9 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
             tables['notebook_line'] = nline_tables
         order = field1.convert_order('result_modifier',
             nline_tables, NotebookLine)
-        order.extend(field2.convert_order('result',
-            nline_tables, NotebookLine))
+        #order.extend(field2.convert_order('result',
+            #nline_tables, NotebookLine))
+        order.extend([Cast(notebook_line.result, 'FLOAT')])
         return order
 
     @classmethod
