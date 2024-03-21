@@ -64,6 +64,7 @@ class Planification(metaclass=PoolMeta):
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Planification = pool.get('lims.planification')
         PlanificationTechnician = pool.get('lims.planification.technician')
+        Date = pool.get('ir.date')
 
         res = []
 
@@ -90,13 +91,14 @@ class Planification(metaclass=PoolMeta):
             if not analysis_details:
                 continue
 
+            start_date = Date.today()
             analysis = list(set(d.analysis for d in analysis_details))
             professional = laboratory.default_laboratory_professional
 
             planification = Planification()
             planification.automatic = True
             planification.laboratory = laboratory
-            planification.start_date = datetime.now().date()
+            planification.start_date = start_date
             planification.analysis = analysis
 
             technician = PlanificationTechnician()
