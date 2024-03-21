@@ -2,6 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from dateutil import relativedelta
+import operator
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Index
 from trytond.wizard import Wizard, StateAction, StateTransition
@@ -257,7 +258,7 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
         states={'invisible': Eval('asset') != 'device'}), 'get_device_active')
     device_laboratory = fields.Function(fields.Many2One('lims.laboratory',
         'Laboratory', states={'invisible': Eval('asset') != 'device'}),
-        'get_device_laboratory')
+        'get_device_laboratory', searcher='search_device_laboratory')
 
     del _states
 
@@ -318,12 +319,78 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
             return self.device.active
         return True
 
-    def get_device_laboratory(self, name=None):
-        if self.device:
-            for devlab in self.device.laboratories:
-                if devlab.physically_here:
-                    return devlab.laboratory.id
-        return None
+    @classmethod
+    def get_device_laboratory(cls, maintenances, name=None):
+        cursor = Transaction().connection.cursor()
+        DeviceLaboratory = Pool().get('lims.lab.device.laboratory')
+
+        result = {}
+        for m in maintenances:
+            if not m.device:
+                result[m.id] = None
+                continue
+            cursor.execute('SELECT laboratory '
+                'FROM "' + DeviceLaboratory._table + '" '
+                'WHERE device = %s '
+                    'AND physically_here IS TRUE',
+                (m.device.id,))
+            res = cursor.fetchone()
+            result[m.id] = res[0] if res else None
+        return result
+
+    @classmethod
+    def search_device_laboratory(cls, name, domain=None):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Laboratory = pool.get('lims.laboratory')
+        DeviceLaboratory = pool.get('lims.lab.device.laboratory')
+        Device = pool.get('lims.lab.device')
+
+        def _search_device_laboratory_eval_domain(line, domain):
+            operator_funcs = {
+                '=': operator.eq,
+                '>=': operator.ge,
+                '>': operator.gt,
+                '<=': operator.le,
+                '<': operator.lt,
+                '!=': operator.ne,
+                'in': lambda v, l: v in l,
+                'not in': lambda v, l: v not in l,
+                'ilike': lambda v, l: False,
+                'not ilike': lambda v, l: False,
+                }
+            field, op, operand = domain
+            value = line.get(field)
+            return operator_funcs[op](value, operand)
+
+        if domain and domain[1] == 'ilike':
+            laboratories = Laboratory.search([
+                ('code', '=', domain[2].replace('%', '')),
+                ], order=[])
+            if not laboratories:
+                laboratories = Laboratory.search([
+                    ('description',) + tuple(domain[1:]),
+                    ], order=[])
+                if not laboratories:
+                    return []
+            domain = ('device_laboratory', 'in', [l.id for l in laboratories])
+
+        cursor.execute('SELECT m.id, dl.laboratory '
+            'FROM "' + cls._table + '" m '
+                'INNER JOIN "' + Device._table + '" d '
+                'ON d.id = m.device '
+                'INNER JOIN "' + DeviceLaboratory._table + '" dl '
+                'ON d.id = dl.device '
+            'WHERE dl.physically_here IS TRUE')
+
+        processed_lines = [{
+            'maintenance': x[0],
+            'device_laboratory': x[1],
+            } for x in cursor.fetchall()]
+
+        record_ids = [line['maintenance'] for line in processed_lines
+            if _search_device_laboratory_eval_domain(line, domain)]
+        return [('id', 'in', record_ids)]
 
     @classmethod
     def delete(cls, maintenances):
