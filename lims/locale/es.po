@@ -2213,6 +2213,10 @@ msgctxt "field:lims.lab.device,corrections:"
 msgid "Corrections"
 msgstr "Correcciones"
 
+msgctxt "field:lims.lab.device,current_laboratory:"
+msgid "Current Laboratory"
+msgstr "Laboratorio actual"
+
 msgctxt "field:lims.lab.device,description:"
 msgid "Description"
 msgstr "Descripción"
