@@ -527,6 +527,9 @@ class LabDevice(DeactivableMixin, ModelSQL, ModelView):
     serial_number = fields.Char('Serial number')
     responsible = fields.Many2One('lims.laboratory.professional',
         'Responsible')
+    current_laboratory = fields.Function(fields.Many2One('lims.laboratory',
+        'Current Laboratory'), 'get_current_laboratory',
+        searcher='search_current_laboratory')
 
     @classmethod
     def __setup__(cls):
@@ -557,6 +560,76 @@ class LabDevice(DeactivableMixin, ModelSQL, ModelView):
     @fields.depends('device_type')
     def on_change_with_non_analytical(self, name=None):
         return self.device_type and self.device_type.non_analytical
+
+    @classmethod
+    def get_current_laboratory(cls, devices, name=None):
+        cursor = Transaction().connection.cursor()
+        DeviceLaboratory = Pool().get('lims.lab.device.laboratory')
+
+        result = {}
+        for d in devices:
+            cursor.execute('SELECT laboratory '
+                'FROM "' + DeviceLaboratory._table + '" '
+                'WHERE device = %s '
+                    'AND physically_here IS TRUE',
+                (d.id,))
+            res = cursor.fetchone()
+            result[d.id] = res[0] if res else None
+        return result
+
+    @classmethod
+    def search_current_laboratory(cls, name, domain=None):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Laboratory = pool.get('lims.laboratory')
+        DeviceLaboratory = pool.get('lims.lab.device.laboratory')
+
+        def _search_current_laboratory_eval_domain(line, domain):
+            operator_funcs = {
+                '=': operator.eq,
+                '>=': operator.ge,
+                '>': operator.gt,
+                '<=': operator.le,
+                '<': operator.lt,
+                '!=': operator.ne,
+                'in': lambda v, l: v in l,
+                'not in': lambda v, l: v not in l,
+                'ilike': lambda v, l: False,
+                'not ilike': lambda v, l: False,
+                }
+            field, op, operand = domain
+            value = line.get(field)
+            return operator_funcs[op](value, operand)
+
+        if domain and domain[1] in ('ilike', 'not ilike'):
+            laboratories = Laboratory.search([
+                ('code', 'ilike', domain[2]),
+                ], order=[])
+            if not laboratories:
+                laboratories = Laboratory.search([
+                    ('description', 'ilike', domain[2]),
+                    ], order=[])
+            if domain[1] == 'ilike':
+                domain = ('current_laboratory', 'in',
+                    [l.id for l in laboratories])
+            else:  # 'not ilike'
+                domain = ('current_laboratory', 'not in',
+                    [l.id for l in laboratories])
+
+        cursor.execute('SELECT d.id, dl.laboratory '
+            'FROM "' + cls._table + '" d '
+                'INNER JOIN "' + DeviceLaboratory._table + '" dl '
+                'ON d.id = dl.device '
+            'WHERE dl.physically_here IS TRUE')
+
+        processed_lines = [{
+            'device': x[0],
+            'current_laboratory': x[1],
+            } for x in cursor.fetchall()]
+
+        record_ids = [line['device'] for line in processed_lines
+            if _search_current_laboratory_eval_domain(line, domain)]
+        return [('id', 'in', record_ids)]
 
     @classmethod
     def write(cls, *args):

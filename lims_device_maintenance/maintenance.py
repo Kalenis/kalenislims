@@ -363,17 +363,20 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
             value = line.get(field)
             return operator_funcs[op](value, operand)
 
-        if domain and domain[1] == 'ilike':
+        if domain and domain[1] in ('ilike', 'not ilike'):
             laboratories = Laboratory.search([
-                ('code', '=', domain[2].replace('%', '')),
+                ('code', 'ilike', domain[2]),
                 ], order=[])
             if not laboratories:
                 laboratories = Laboratory.search([
-                    ('description',) + tuple(domain[1:]),
+                    ('description', 'ilike', domain[2]),
                     ], order=[])
-                if not laboratories:
-                    return []
-            domain = ('device_laboratory', 'in', [l.id for l in laboratories])
+            if domain[1] == 'ilike':
+                domain = ('device_laboratory', 'in',
+                    [l.id for l in laboratories])
+            else:  # 'not ilike'
+                domain = ('device_laboratory', 'not in',
+                    [l.id for l in laboratories])
 
         cursor.execute('SELECT m.id, dl.laboratory '
             'FROM "' + cls._table + '" m '

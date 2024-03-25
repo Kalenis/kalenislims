@@ -6,4 +6,5 @@
     <field name="laboratories"/>
     <field name="serial_number"/>
     <field name="responsible"/>
+    <field name="current_laboratory"/>
 </tree>
