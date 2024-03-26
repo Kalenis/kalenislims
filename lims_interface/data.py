@@ -16,7 +16,7 @@ from collections import defaultdict
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
-from trytond.tools import cursor_dict
+from trytond.tools import cursor_dict, grouped_slice
 from trytond.pyson import PYSONEncoder, Eval
 from trytond.rpc import RPC
 from trytond.exceptions import UserError
@@ -134,6 +134,9 @@ class Adapter:
                 'lims.interface.grouped_data', 'data', 'Group %s' % (i + 1, ))
             obj.name = 'group_%s' % (i + 1, )
             res[obj.name] = obj
+        # Add function fields
+        for field in Data.get_function_fields(Data._previous_fields):
+            res[field.name] = field
         return res
 
 
@@ -240,6 +243,12 @@ class Data(ModelSQL, ModelView):
     annulled = fields.Boolean('Annulled')
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
         readonly=True)
+    device_domain = fields.Function(fields.Many2Many('lims.lab.device', None, None, 'Device Domain'), 'get_device_domain')
+
+    def get_device_domain(self, name=None):
+        if not self.notebook_line:
+            return []
+        return [device.id for device in self.notebook_line.device_domain]
 
     @classmethod
     def __setup__(cls):
@@ -380,6 +389,13 @@ class Data(ModelSQL, ModelView):
             cursor.execute(*query)
         except Exception:
             pass
+    
+    @classmethod
+    def get_function_fields(cls, fields_origin=None):
+        if not fields_origin:
+            fields_origin = cls._fields
+        return list(filter(lambda field: (isinstance(field, fields.Function)),
+                            fields_origin.values()))
 
     @classmethod
     def fields_get(cls, fields_names=None, level=0):
@@ -490,6 +506,8 @@ class Data(ModelSQL, ModelView):
             'compilation',
             'annulled',
             'notebook_line',
+            *[field.name for field in 
+              cls.get_function_fields()]
             ]
         groups = 0
         for field in table.fields_:
@@ -608,7 +626,6 @@ class Data(ModelSQL, ModelView):
                     row[key] = None
                 if 'rec_name' not in row:
                     row['rec_name'] = str(row['id'])
-
         cursor = Transaction().connection.cursor()
         cursor.execute(*sql_table.select(where=sql_table.id.in_(ids)))
         fetchall = list(cursor_dict(cursor))
@@ -643,6 +660,30 @@ class Data(ModelSQL, ModelView):
             for record in fetchall:
                 for field, cast in to_cast.items():
                     record[field] = cast(record[field])
+        function_fields = [field for field in cls.get_function_fields() 
+                           if field.name in fields_names]
+                           
+        func_fields = {}
+        for field in function_fields:
+           key = (field.getter, getattr(field, 'datetime_field', None))
+           func_fields.setdefault(key, [])
+           func_fields[key].append(field.name)
+        for key in func_fields:
+            field_list = func_fields[key]
+            fname = field_list[0]
+            field = cls._fields[fname]
+            _, datetime_field = key
+            for sub_results in grouped_slice(fetchall, model_cache_size()):
+                sub_results = list(sub_results)
+                sub_ids = [r['id'] for r in sub_results]
+                getter_results = field.get(
+                    sub_ids, cls, field_list, values=sub_results)
+                for fname in field_list:
+                    getter_result = getter_results[fname]
+                    for row in sub_results:
+                        row[fname] = getter_result[row['id']]
+           
+        
         return fetchall
 
     @classmethod
