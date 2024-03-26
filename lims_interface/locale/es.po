@@ -170,6 +170,10 @@ msgctxt "field:lims.interface.column,required:"
 msgid "Required"
 msgstr "Obligatorio"
 
+msgctxt "field:lims.interface.column,required_when_annulled:"
+msgid "Required when annulled"
+msgstr "Obligatorio para anular resultado"
+
 msgctxt "field:lims.interface.column,selection:"
 msgid "Selection"
 msgstr "Selección"
@@ -529,6 +533,10 @@ msgstr "Modelo relacionado"
 msgctxt "field:lims.interface.table.field,required:"
 msgid "Required"
 msgstr "Obligatorio"
+
+msgctxt "field:lims.interface.table.field,required_when_annulled:"
+msgid "Required when annulled"
+msgstr "Obligatorio para anular resultado"
 
 msgctxt "field:lims.interface.table.field,selection:"
 msgid "Selection"

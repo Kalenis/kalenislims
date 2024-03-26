@@ -94,6 +94,7 @@ class TableField(ModelSQL, ModelView):
     inputs = fields.Char('On Change With Inputs')
     readonly = fields.Boolean('Read only')
     required = fields.Boolean('Required')
+    required_when_annulled = fields.Boolean('Required when annulled')
     invisible = fields.Boolean('Invisible')
     digits = fields.Integer('Digits')
     group = fields.Integer('Group')
