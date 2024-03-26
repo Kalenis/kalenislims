@@ -424,6 +424,8 @@ class Interface(Workflow, ModelSQL, ModelView):
                                     formula=get_formula(column.expression),
                                     inputs=get_inputs(column.expression),
                                     required=column.required,
+                                    required_when_annulled=(
+                                        column.required_when_annulled),
                                     readonly=column.readonly,
                                     invisible=column.invisible,
                                     digits=column.digits,
@@ -482,6 +484,8 @@ class Interface(Workflow, ModelSQL, ModelView):
                                 formula=get_formula(expression),
                                 inputs=get_inputs(expression),
                                 required=column.required,
+                                required_when_annulled=(
+                                    column.required_when_annulled),
                                 readonly=column.readonly,
                                 invisible=column.invisible,
                                 digits=column.digits,
@@ -514,6 +518,8 @@ class Interface(Workflow, ModelSQL, ModelView):
                             formula=get_formula(column.expression),
                             inputs=get_inputs(column.expression),
                             required=column.required,
+                            required_when_annulled=(
+                                column.required_when_annulled),
                             readonly=column.readonly,
                             invisible=column.invisible,
                             digits=column.digits,
@@ -875,6 +881,8 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
     readonly = fields.Boolean('Read only', states=_states)
     invisible = fields.Boolean('Invisible', states=_states)
     required = fields.Boolean('Required', states=_states)
+    required_when_annulled = fields.Boolean('Required when annulled',
+        states=_states)
     digits = fields.Integer('Digits',
         states={
             'required': Eval('type_').in_(['float', 'numeric']),
@@ -2029,18 +2037,34 @@ class Compilation(Workflow, ModelSQL, ModelView):
                 ('table', '=', c.table),
                 ('required', '=', True),
                 ])
-            if not required_columns:
-                continue
-            with Transaction().set_context(lims_interface_table=c.table.id):
-                lines = Data.search([('compilation', '=', c.id)])
-                for line in lines:
-                    if line.annulled:
-                        continue
-                    for column in required_columns:
-                        if getattr(line, column.name) is None:
-                            raise UserError(gettext(
-                                'lims_interface.missing_required_field',
-                                field=column.name))
+            if required_columns:
+                with Transaction().set_context(lims_interface_table=c.table.id):
+                    lines = Data.search([
+                        ('compilation', '=', c.id),
+                        ('annulled', '=', False),
+                        ])
+                    for line in lines:
+                        for column in required_columns:
+                            if getattr(line, column.name) is None:
+                                raise UserError(gettext(
+                                    'lims_interface.missing_required_field',
+                                    field=column.name))
+            required_when_annulled_columns = Field.search([
+                ('table', '=', c.table),
+                ('required_when_annulled', '=', True),
+                ])
+            if required_when_annulled_columns:
+                with Transaction().set_context(lims_interface_table=c.table.id):
+                    lines = Data.search([
+                        ('compilation', '=', c.id),
+                        ('annulled', '=', True),
+                        ])
+                    for line in lines:
+                        for column in required_when_annulled_columns:
+                            if getattr(line, column.name) is None:
+                                raise UserError(gettext(
+                                    'lims_interface.missing_required_field',
+                                    field=column.name))
 
     @classmethod
     @ModelView.button
