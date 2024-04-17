@@ -1850,37 +1850,49 @@ class MoveData(Wizard):
     def transition_move(self):
         pool = Pool()
         AnalysisSheet = pool.get('lims.analysis_sheet')
-        Data = pool.get('lims.interface.data')
 
         line_ids = Transaction().context.get('active_ids', None)
         sheet_id = self._get_analysis_sheet_id()
-        sheet = AnalysisSheet(sheet_id)
+        origin = AnalysisSheet(sheet_id)
 
         if self.start.move_to == 'new':
             with Transaction().set_user(0):
-                target = AnalysisSheet()
-                target.template = sheet.template
-                target.compilation = sheet.get_new_compilation({
-                    'table': sheet.compilation.table.id,
-                    'revision': sheet.compilation.revision,
-                    })
-                target.professional = sheet.professional
-                target.laboratory = sheet.laboratory
+                target = self._get_new_sheet(origin)
+                target.compilation.save()
                 target.save()
         else:
             target = self.start.analysis_sheet
 
+        self._move_lines(line_ids, origin, target)
+        return 'end'
+
+    def _get_new_sheet(self, origin):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+
+        target = AnalysisSheet()
+        target.template = origin.template
+        target.compilation = origin.get_new_compilation({
+            'table': origin.compilation.table.id,
+            'revision': origin.compilation.revision,
+            })
+        target.professional = origin.professional
+        target.laboratory = origin.laboratory
+        return target
+
+    def _move_lines(self, line_ids, origin, target):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+
         with Transaction().set_context(
-                lims_interface_table=sheet.compilation.table.id):
+                lims_interface_table=origin.compilation.table.id):
             lines = Data.search([
-                ('compilation', '=', sheet.compilation.id),
+                ('compilation', '=', origin.compilation.id),
                 ('id', 'in', line_ids),
                 ])
             Data.write(lines, {
                 'compilation': target.compilation.id,
                 })
-
-        return 'end'
 
     def end(self):
         return 'reload'
