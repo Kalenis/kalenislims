@@ -8751,6 +8751,13 @@ msgctxt "model:ir.message,text:msg_entry_cancellation_analysis_accepted"
 msgid "You cannot cancel the entry because it has accepted analyzes"
 msgstr "No puede cancelar el ingreso porque contiene análisis ya aceptados"
 
+msgctxt "model:ir.message,text:msg_entry_cancellation_analysis_planned"
+msgid ""
+"You cannot cancel the entry because it has planned analyzes or in laboratory"
+msgstr ""
+"No puede cancelar el ingreso porque contiene análisis planificados o en "
+"laboratorio"
+
 msgctxt "model:ir.message,text:msg_error_limits_allowed"
 msgid "The value of line \"%(line)s\" is outside the allowed limits"
 msgstr "El valor de la línea \"%(line)s\" está fuera de los límites permitidos"
