@@ -119,6 +119,26 @@ class Entry(metaclass=PoolMeta):
         for service in services:
             service.create_invoice_line()
 
+    def check_entry_cancellation(self):
+        pool = Pool()
+        Service = pool.get('lims.service')
+        InvoiceLine = pool.get('account.invoice.line')
+
+        super().check_entry_cancellation()
+
+        with Transaction().set_context(_check_access=False):
+            services = Service.search([
+                ('fraction.sample.entry', '=', self.id),
+                ('annulled', '=', False),
+                ])
+            for service in services:
+                if InvoiceLine.search_count([
+                        ('origin', '=', str(service)),
+                        ('invoice', '!=', None),
+                        ]) > 0:
+                    raise UserError(gettext(
+                        'lims_account_invoice.msg_entry_cancellation_invoiced'))
+
     @classmethod
     def view_toolbar_get(cls):
         if not Transaction().context.get('ready_for_invoicing', False):

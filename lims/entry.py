@@ -646,7 +646,7 @@ class Entry(Workflow, ModelSQL, ModelView):
         EntryCancellationReason = pool.get('lims.entry.cancellation.reason')
 
         for entry in entries:
-            entry.check_notebook_lines_cancellation()
+            entry.check_entry_cancellation()
             entry.cancel_entry()
 
         default_cancellation_reason = None
@@ -685,7 +685,7 @@ class Entry(Workflow, ModelSQL, ModelView):
                 raise UserWarning(key, gettext('lims.msg_foreign_report',
                     lang=self.report_language.name))
 
-    def check_notebook_lines_cancellation(self):
+    def check_entry_cancellation(self):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
 
@@ -695,6 +695,12 @@ class Entry(Workflow, ModelSQL, ModelView):
                 ]) > 0:
             raise UserError(gettext(
                 'lims.msg_entry_cancellation_analysis_accepted'))
+        if NotebookLine.search_count([
+                ('service.fraction.sample.entry', '=', self.id),
+                ('start_date', '!=', None),
+                ]) > 0:
+            raise UserError(gettext(
+                'lims.msg_entry_cancellation_analysis_planned'))
 
     def cancel_entry(self):
         pool = Pool()
