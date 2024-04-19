@@ -5798,7 +5798,7 @@ class CountersampleDischargeStart(ModelView):
     date_from = fields.Date('Date from', required=True)
     date_to = fields.Date('to', required=True)
     location_origin = fields.Many2One('stock.location', 'Origin Location',
-        required=True, domain=[('type', '=', 'storage')])
+        required=True, domain=[('type', 'in', ['storage', 'view'])])
 
 
 class CountersampleDischargeEmpty(ModelView):
@@ -5819,7 +5819,8 @@ class CountersampleDischargeResult(ModelView):
         domain=[('id', 'in', Eval('fraction_domain'))])
     fraction_domain = fields.One2Many('lims.fraction', None,
         'Fractions domain')
-    shipment = fields.Many2One('stock.shipment.internal', 'Internal Shipment')
+    shipments = fields.Many2Many('stock.shipment.internal', None, None,
+        'Internal Shipments')
 
 
 class CountersampleDischarge(Wizard):
@@ -5863,6 +5864,7 @@ class CountersampleDischarge(Wizard):
         Fraction = pool.get('lims.fraction')
         Sample = pool.get('lims.sample')
         Move = pool.get('stock.move')
+        Location = pool.get('stock.location')
 
         timezone = None
         company_id = Transaction().context.get('company')
@@ -5871,6 +5873,12 @@ class CountersampleDischarge(Wizard):
         timezone_date = 's.date::timestamp AT TIME ZONE \'UTC\''
         if timezone:
             timezone_date += ' AT TIME ZONE \'' + timezone + '\''
+
+        locations = Location.search([
+            ('parent', 'child_of', [self.start.location_origin.id]),
+            ])
+        location_ids = ','.join([str(self.start.location_origin.id)] + [
+            str(l.id) for l in locations])
 
         cursor.execute('SELECT f.id '
             'FROM "' + Fraction._table + '" f '
@@ -5888,10 +5896,9 @@ class CountersampleDischarge(Wizard):
                 'AND (' + timezone_date + ')::date <=  %s::date '
                 'AND f.expiry_date::date >=  %s::date '
                 'AND f.expiry_date::date <=  %s::date '
-                'AND last_move.to_location = %s',
+                'AND last_move.to_location IN (' + location_ids + ')',
             (self.start.date_from, self.start.date_to,
-            self.start.expiry_date_from, self.start.expiry_date_to,
-            str(self.start.location_origin.id)))
+            self.start.expiry_date_from, self.start.expiry_date_to))
         fractions_ids = [x[0] for x in cursor.fetchall()]
 
         fractions = Fraction.browse(fractions_ids)
@@ -5919,32 +5926,36 @@ class CountersampleDischarge(Wizard):
         Fraction.save(fractions_to_save)
 
         moves = self._get_stock_moves(self.result.fractions)
-        shipment = self.create_internal_shipment(moves)
-        if shipment:
-            self.result.shipment = shipment
+        shipments = self.create_internal_shipments(moves)
+        if shipments:
+            self.result.shipments = shipments
             return 'open'
         return 'end'
 
-    def create_internal_shipment(self, moves):
-        ShipmentInternal = Pool().get('stock.shipment.internal')
-        shipment = self._get_internal_shipment()
-        if not shipment:
-            return
-        shipment.moves = moves
-        with Transaction().set_context(check_current_location=False):
-            shipment.save()
-        ShipmentInternal.wait([shipment])
-        ShipmentInternal.assign_force([shipment])
-        ShipmentInternal.done([shipment])
-        return shipment
+    def create_internal_shipments(self, moves):
+        pool = Pool()
+        ShipmentInternal = pool.get('stock.shipment.internal')
 
-    def _get_internal_shipment(self):
+        shipments = []
+        for location, lmoves in moves.items():
+            shipment = self._get_internal_shipment(location)
+            if not shipment:
+                return
+            shipment.moves = lmoves
+            with Transaction().set_context(check_current_location=False):
+                shipment.save()
+            ShipmentInternal.wait([shipment])
+            ShipmentInternal.assign_force([shipment])
+            ShipmentInternal.done([shipment])
+            shipments.append(shipment)
+        return shipments
+
+    def _get_internal_shipment(self, from_location):
         pool = Pool()
         User = pool.get('res.user')
         ShipmentInternal = pool.get('stock.shipment.internal')
 
         company = User(Transaction().user).company
-        from_location = self.start.location_origin
         to_location = self.result.location_destination
         planned_date = self.result.discharge_date
 
@@ -5972,12 +5983,14 @@ class CountersampleDischarge(Wizard):
             raise UserError(gettext('lims.msg_missing_fraction_product'))
         company = User(Transaction().user).company
 
-        from_location = self.start.location_origin
         to_location = self.result.location_destination
         planned_date = self.result.discharge_date
 
-        moves = []
+        moves = dict()
         for fraction in fractions:
+            from_location = fraction.current_location
+            if from_location.id not in moves:
+                moves[from_location.id] = []
             with Transaction().set_user(0, set_context=True):
                 move = Move()
             move.product = product.id
@@ -5993,12 +6006,12 @@ class CountersampleDischarge(Wizard):
                 move.unit_price = 0
                 move.currency = company.currency
             move.state = 'draft'
-            moves.append(move)
+            moves[from_location.id].append(move)
         return moves
 
     def do_open(self, action):
         action['pyson_domain'] = PYSONEncoder().encode([
-            ('id', '=', self.result.shipment.id),
+            ('id', 'in', [s.id for s in self.result.shipments]),
             ])
         return action, {}
 
@@ -6013,7 +6026,7 @@ class FractionDischargeStart(ModelView):
     date_from = fields.Date('Date from', required=True)
     date_to = fields.Date('Date to', required=True)
     location_origin = fields.Many2One('stock.location', 'Origin Location',
-        required=True, domain=[('type', '=', 'storage')])
+        required=True, domain=[('type', 'in', ['storage', 'view'])])
     discharge_force = fields.Boolean('Discharge force')
 
 
@@ -6035,7 +6048,8 @@ class FractionDischargeResult(ModelView):
         domain=[('id', 'in', Eval('fraction_domain'))])
     fraction_domain = fields.One2Many('lims.fraction', None,
         'Fractions domain')
-    shipment = fields.Many2One('stock.shipment.internal', 'Internal Shipment')
+    shipments = fields.Many2Many('stock.shipment.internal', None, None,
+        'Internal Shipments')
 
 
 class FractionDischarge(Wizard):
@@ -6072,13 +6086,22 @@ class FractionDischarge(Wizard):
         return res
 
     def transition_search(self):
-        Fraction = Pool().get('lims.fraction')
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
+        Location = pool.get('stock.location')
+
+        locations = Location.search([
+            ('parent', 'child_of', [self.start.location_origin.id]),
+            ])
+        location_ids = [self.start.location_origin.id] + [
+            l.id for l in locations]
+
         if self.start.discharge_force is True:
             fractions = Fraction.search([
                 ('discharge_date', '=', None),
                 ('sample.date2', '>=', self.start.date_from),
                 ('sample.date2', '<=', self.start.date_to),
-                ('current_location', '=', self.start.location_origin.id),
+                ('current_location', 'in', location_ids),
                 ])
         else:
             fractions = Fraction.search([
@@ -6086,7 +6109,7 @@ class FractionDischarge(Wizard):
                 ('sample.date2', '>=', self.start.date_from),
                 ('sample.date2', '<=', self.start.date_to),
                 ('has_results_report', '=', False),
-                ('current_location', '=', self.start.location_origin.id),
+                ('current_location', 'in', location_ids),
                 ])
 
         if fractions:
@@ -6113,32 +6136,36 @@ class FractionDischarge(Wizard):
         Fraction.save(fractions_to_save)
 
         moves = self._get_stock_moves(self.result.fractions)
-        shipment = self.create_internal_shipment(moves)
-        if shipment:
-            self.result.shipment = shipment
+        shipments = self.create_internal_shipments(moves)
+        if shipments:
+            self.result.shipments = shipments
             return 'open'
         return 'end'
 
-    def create_internal_shipment(self, moves):
-        ShipmentInternal = Pool().get('stock.shipment.internal')
-        shipment = self._get_internal_shipment()
-        if not shipment:
-            return
-        shipment.moves = moves
-        with Transaction().set_context(check_current_location=False):
-            shipment.save()
-        ShipmentInternal.wait([shipment])
-        ShipmentInternal.assign_force([shipment])
-        ShipmentInternal.done([shipment])
-        return shipment
+    def create_internal_shipments(self, moves):
+        pool = Pool()
+        ShipmentInternal = pool.get('stock.shipment.internal')
 
-    def _get_internal_shipment(self):
+        shipments = []
+        for location, lmoves in moves.items():
+            shipment = self._get_internal_shipment(location)
+            if not shipment:
+                return
+            shipment.moves = lmoves
+            with Transaction().set_context(check_current_location=False):
+                shipment.save()
+            ShipmentInternal.wait([shipment])
+            ShipmentInternal.assign_force([shipment])
+            ShipmentInternal.done([shipment])
+            shipments.append(shipment)
+        return shipments
+
+    def _get_internal_shipment(self, from_location):
         pool = Pool()
         User = pool.get('res.user')
         ShipmentInternal = pool.get('stock.shipment.internal')
 
         company = User(Transaction().user).company
-        from_location = self.start.location_origin
         to_location = self.result.location_destination
         planned_date = self.result.discharge_date
 
@@ -6166,12 +6193,14 @@ class FractionDischarge(Wizard):
             raise UserError(gettext('lims.msg_missing_fraction_product'))
         company = User(Transaction().user).company
 
-        from_location = self.start.location_origin
         to_location = self.result.location_destination
         planned_date = self.result.discharge_date
 
-        moves = []
+        moves = dict()
         for fraction in fractions:
+            from_location = fraction.current_location
+            if from_location.id not in moves:
+                moves[from_location.id] = []
             with Transaction().set_user(0, set_context=True):
                 move = Move()
             move.product = product.id
@@ -6187,12 +6216,12 @@ class FractionDischarge(Wizard):
                 move.unit_price = 0
                 move.currency = company.currency
             move.state = 'draft'
-            moves.append(move)
+            moves[from_location.id].append(move)
         return moves
 
     def do_open(self, action):
         action['pyson_domain'] = PYSONEncoder().encode([
-            ('id', '=', self.result.shipment.id),
+            ('id', 'in', [s.id for s in self.result.shipments]),
             ])
         return action, {}
 
