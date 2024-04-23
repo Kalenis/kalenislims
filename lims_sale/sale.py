@@ -936,7 +936,8 @@ class ModifyHeader(metaclass=PoolMeta):
     def transition_modify(self):
         for field in ['template', 'clause_template', 'sections',
                 'previous_sections', 'following_sections']:
-            self.start._values.pop(field, None)
+            if field in self.start._save_values:
+                del self.start._save_values[field]
         return super().transition_modify()
 
 
