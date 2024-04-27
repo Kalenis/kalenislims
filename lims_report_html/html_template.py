@@ -349,6 +349,19 @@ class LimsReport:
             if template.report:
                 current_data['action_id'] = template.report.id
             result = cls.execute_custom_lims_report(ids, current_data)
+
+        if action.report_name == 'lims.entry.acknowledgment.report':
+            Entry = Pool().get('lims.entry')
+
+            entry = Entry(ids[0])
+
+            if entry.ack_report_cache:
+                result = (entry.ack_report_format,
+                    entry.ack_report_cache) + result[2:]
+            else:
+                entry.ack_report_format, entry.ack_report_cache = result[:2]
+                entry.save()
+
         return result
 
     @classmethod
