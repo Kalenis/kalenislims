@@ -4894,7 +4894,8 @@ class AddSampleService(Wizard):
                     if key not in original_analysis:
                         self.create_service(service, fraction)
                         if (fraction.entry and
-                                fraction.entry.state == 'ongoing'):
+                                fraction.entry.state in (
+                                'ongoing', 'finished')):
                             send_ack = True
                         delete_ack_report_cache = True
 
@@ -4925,7 +4926,8 @@ class AddSampleService(Wizard):
             if analysis_detail:
                 EntryDetailAnalysis.create_notebook_lines(analysis_detail,
                     fraction)
-                if new_service.entry and new_service.entry.state == 'ongoing':
+                if new_service.entry and new_service.entry.state in (
+                        'ongoing', 'finished'):
                     EntryDetailAnalysis.write(analysis_detail, {
                         'state': 'unplanned',
                     })
@@ -4970,7 +4972,7 @@ class AddSampleService(Wizard):
         entry_ids = set()
         for sample in self.records:
             # Only send ack for ongoing entries
-            if sample.entry and sample.entry.state == 'ongoing':
+            if sample.entry and sample.entry.state in ('ongoing', 'finished'):
                 entry_ids.add(sample.entry.id)
 
         session_id, _, _ = ForwardAcknowledgmentOfReceipt.create()
@@ -5084,7 +5086,8 @@ class EditSampleService(Wizard):
                     if key not in original_analysis:
                         self.create_service(service, fraction)
                         if (fraction.entry and
-                                fraction.entry.state == 'ongoing'):
+                                fraction.entry.state in (
+                                'ongoing', 'finished')):
                             send_ack = True
                         delete_ack_report_cache = True
                 self.update_fraction_services(fraction)
@@ -5118,7 +5121,8 @@ class EditSampleService(Wizard):
             analysis_detail = EntryDetailAnalysis.search([
                 ('service', '=', new_service.id)])
             if analysis_detail:
-                if new_service.entry and new_service.entry.state == 'ongoing':
+                if new_service.entry and new_service.entry.state in (
+                        'ongoing', 'finished'):
                     EntryDetailAnalysis.create_notebook_lines(analysis_detail,
                         fraction)
                     EntryDetailAnalysis.write(analysis_detail, {
