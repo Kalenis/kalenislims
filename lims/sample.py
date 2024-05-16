@@ -3682,7 +3682,7 @@ class Sample(ModelSQL, ModelView):
                     'INNER JOIN "' + Fraction._table + '" f '
                     'ON f.id = n.fraction '
                 'WHERE f.sample = %s '
-                    'AND rd.valid '
+                    'AND rd.state != \'annulled\' '
                     'AND rd.type != \'preliminary\'',
                 (self.id,))
             if cursor.fetchone()[0] != 0:
