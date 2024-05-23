@@ -311,6 +311,10 @@ msgctxt "field:lims.equipment,voltage_secondary:"
 msgid "Secondary Voltage"
 msgstr "Tensión secundaria"
 
+msgctxt "field:lims.equipment,voltage_tertiary:"
+msgid "Tertiary Voltage"
+msgstr "Tensión terciaria"
+
 msgctxt "field:lims.equipment,year_manufacturing:"
 msgid "Year of manufacturing"
 msgstr "Año de fabricación"

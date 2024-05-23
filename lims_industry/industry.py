@@ -312,6 +312,7 @@ class Equipment(DeactivableMixin, ModelSQL, ModelView):
     power = fields.Char('Power')
     voltage = fields.Char('Primary Voltage')
     voltage_secondary = fields.Char('Secondary Voltage')
+    voltage_tertiary = fields.Char('Tertiary Voltage')
     amperage = fields.Char('Secondary Amperage')
     serial_number = fields.Char('Serial number')
     internal_id = fields.Char('Internal ID Code')

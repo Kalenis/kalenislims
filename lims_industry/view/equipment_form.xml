@@ -22,10 +22,14 @@
             <field name="model"/>
             <label name="power"/>
             <field name="power"/>
-            <label name="voltage"/>
-            <field name="voltage"/>
-            <label name="voltage_secondary"/>
-            <field name="voltage_secondary"/>
+            <group colspan="4" col="6" id="voltage">
+                <label name="voltage"/>
+                <field name="voltage"/>
+                <label name="voltage_secondary"/>
+                <field name="voltage_secondary"/>
+                <label name="voltage_tertiary"/>
+                <field name="voltage_tertiary"/>
+            </group>
             <label name="amperage"/>
             <field name="amperage"/>
             <label name="serial_number"/>
