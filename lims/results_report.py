@@ -3831,9 +3831,12 @@ class ResultReport(Report):
                     'number': sample.number,
                     'label': '(%s - %s)' % (sample.number,
                         sample.label),
-                    'packages_quantity': sample.packages[0].quantity,
-                    'package_type': sample.packages[0].type.description,
-                    'package_state': sample.packages[0].state.description,
+                    'packages_quantity':
+                        sample.packages and sample.packages[0].quantity or 1,
+                    'package_type': sample.packages and
+                        sample.packages[0].type.description or '',
+                    'package_state': sample.packages and
+                        sample.packages[0].state.description or '',
                     'producer': (sample.producer.rec_name
                         if sample.producer else
                         gettext('lims.msg_data_not_specified')),
@@ -4022,12 +4025,12 @@ class ResultReport(Report):
         report_context['sample_confirmation_date'] = min_confirmation_date
         report_context['min_start_date'] = min_start_date
         report_context['max_end_date'] = max_end_date
-        report_context['sample_packages_quantity'] = (
-            reference_sample.packages[0].quantity)
-        report_context['sample_package_type'] = (
-            reference_sample.packages[0].type.description)
-        report_context['sample_package_state'] = (
-            reference_sample.packages[0].state.description)
+        report_context['sample_packages_quantity'] = (reference_sample.packages
+            and reference_sample.packages[0].quantity or 1)
+        report_context['sample_package_type'] = (reference_sample.packages
+            and reference_sample.packages[0].type.description or '')
+        report_context['sample_package_state'] = (reference_sample.packages
+            and reference_sample.packages[0].state.description or '')
         if report.report_type == 'normal':
             report_context['sample_label'] = (
                 reference_sample.label)
