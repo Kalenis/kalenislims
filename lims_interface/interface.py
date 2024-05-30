@@ -2108,6 +2108,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
         Data = pool.get('lims.interface.data')
         Field = pool.get('lims.interface.table.field')
         NotebookLine = pool.get('lims.notebook.line')
+        Sample = pool.get('lims.sample')
 
         cls.check_required_fields(compilations)
 
@@ -2131,6 +2132,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     decimals_column = column.name
             if not fields:
                 continue
+
+            sample_ids = set()
+            notebook_lines = []
             with Transaction().set_context(lims_interface_table=c.table):
                 lines = Data.search([('compilation', '=', c.id)])
                 for line in lines:
@@ -2168,10 +2172,20 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         data['accepted'] = True
                         data['acceptance_date'] = now
                     if data:
-                        NotebookLine.write([nb_line], data)
+                        with Transaction().set_context(
+                                update_samples_state=False,
+                                update_referrals_state=False):
+                            NotebookLine.write([nb_line], data)
                     if data_eng:
-                        with Transaction().set_context(language='en'):
+                        with Transaction().set_context(language='en',
+                                update_samples_state=False,
+                                update_referrals_state=False):
                             NotebookLine.write([nb_line], data_eng)
+                    if data or data_eng:
+                        sample_ids.add(nb_line.sample.id)
+                        notebook_lines.append(nb_line)
+            Sample.update_samples_state(list(sample_ids))
+            NotebookLine.update_referrals_state(notebook_lines)
 
     @classmethod
     def _allow_confirm_line(cls, line):
