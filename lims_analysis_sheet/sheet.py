@@ -1056,6 +1056,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         NotebookLine = pool.get('lims.notebook.line')
         Compilation = pool.get('lims.interface.compilation')
         Date = pool.get('ir.date')
+        Sample = pool.get('lims.sample')
 
         avoid_accept_result = Transaction().context.get('avoid_accept_result',
             False)
@@ -1064,6 +1065,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         today = Date.today()
 
         for s in sheets:
+            sample_ids = set()
             with Transaction().set_context(
                     lims_interface_table=s.compilation.table.id):
                 lines = Data.search([('compilation', '=', s.compilation.id)])
@@ -1084,7 +1086,10 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         #data['end_date'] = today
                         data['accepted'] = True
                         data['acceptance_date'] = now
-                    NotebookLine.write([nb_line], data)
+                    with Transaction().set_context(update_samples_state=False):
+                        NotebookLine.write([nb_line], data)
+                    sample_ids.add(nb_line.sample.id)
+            Sample.update_samples_state(list(sample_ids))
 
     @classmethod
     @ModelView.button
