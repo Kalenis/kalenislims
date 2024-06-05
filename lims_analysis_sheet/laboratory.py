@@ -383,11 +383,13 @@ class NotebookRule(metaclass=PoolMeta):
 
     def _exec_notebook_annul(self, line):
         pool = Pool()
+        ModelData = pool.get('ir.model.data')
         NotebookLine = pool.get('lims.notebook.line')
         Data = pool.get('lims.interface.data')
         AnalysisSheet = pool.get('lims.analysis_sheet')
 
         now = datetime.now()
+        result_modifier_na = ModelData.get_id('lims', 'result_modifier_na')
 
         # update notebook line
         if line.notebook_line.analysis == self.target_analysis:
@@ -411,7 +413,7 @@ class NotebookRule(metaclass=PoolMeta):
             return
 
         try:
-            notebook_line.result_modifier = 'na'
+            notebook_line.result_modifier = result_modifier_na
             notebook_line.annulled = True
             notebook_line.annulment_date = now
             notebook_line.annulment_reason = self.name
