@@ -508,6 +508,7 @@ class Service(ModelSQL, ModelView):
             details = EntryDetailAnalysis.search([
                 ('fraction', '=', fraction.id),
                 ('state', '!=', 'annulled'),
+                ('service.annulled', '=', False),
                 ])
             for d in details:
                 existing_analysis.append([
