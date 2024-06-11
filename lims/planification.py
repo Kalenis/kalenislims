@@ -5994,7 +5994,9 @@ class PlanificationWorksheetAnalysisReport(Report):
                         'sample_client_description': (
                             fraction.sample.sample_client_description),
                         'party': fraction.party.code,
-                        'storage_location': fraction.storage_location.code,
+                        'current_location': (fraction.current_location and
+                            fraction.current_location.code or
+                            fraction.storage_location.code),
                         'fraction_type': fraction.type.code,
                         'concentration_level': concentration_level,
                         'device': (notebook_line.device.code if
@@ -6108,7 +6110,9 @@ class PlanificationWorksheetMethodReport(Report):
                             'sample_client_description': (
                                 fraction.sample.sample_client_description),
                             'party': fraction.party.code,
-                            'storage_location': fraction.storage_location.code,
+                            'current_location': (fraction.current_location and
+                                fraction.current_location.code or
+                                fraction.storage_location.code),
                             'fraction_type': fraction.type.code,
                             'concentration_level': concentration_level,
                             'device': (notebook_line.device.code if
@@ -6285,7 +6289,9 @@ class PlanificationWorksheetReport(Report):
                                 fraction.sample.sample_client_description else
                                 ''),
                             'party': fraction.party.code,
-                            'storage_location': fraction.storage_location.code,
+                            'current_location': (fraction.current_location and
+                                fraction.current_location.code or
+                                fraction.storage_location.code),
                             'fraction_type': fraction.type.code,
                             'concentration_level': concentration_level,
                             'device': (notebook_line.device.code if

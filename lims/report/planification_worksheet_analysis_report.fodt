@@ -715,7 +715,7 @@
       <text:p text:style-name="P11"><text:placeholder text:placeholder-type="text">&lt;line[&apos;party&apos;]&gt;</text:placeholder></text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabla2.E7" office:value-type="string">
-      <text:p text:style-name="P11"><text:placeholder text:placeholder-type="text">&lt;line[&apos;storage_location&apos;]&gt;</text:placeholder></text:p>
+      <text:p text:style-name="P11"><text:placeholder text:placeholder-type="text">&lt;line[&apos;current_location&apos;]&gt;</text:placeholder></text:p>
      </table:table-cell>
      <table:table-cell table:style-name="Tabla2.F7" office:value-type="string">
       <text:p text:style-name="P11"><text:placeholder text:placeholder-type="text">&lt;line[&apos;fraction_type&apos;]&gt;</text:placeholder></text:p>
