@@ -1520,9 +1520,11 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
                 literal_final_concentration = t.literal_final_concentration
                 initial_unit = t.start_uom and t.start_uom.id or None
                 final_unit = t.end_uom and t.end_uom.id or None
-                detection_limit = (str(t.detection_limit) if
+                detection_limit = (format(t.detection_limit,
+                    '.{}f'.format(t.limit_digits)) if
                     t.detection_limit is not None else None)
-                quantification_limit = (str(t.quantification_limit) if
+                quantification_limit = (format(t.quantification_limit,
+                    '.{}f'.format(t.limit_digits)) if
                     t.quantification_limit is not None else None)
                 lower_limit = (str(t.lower_limit) if
                     t.lower_limit is not None else None)
