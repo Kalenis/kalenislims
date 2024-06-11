@@ -497,6 +497,17 @@ class Typification(ModelSQL, ModelView):
             if not typification.valid:
                 continue
 
+            detection_limit = (format(typification.detection_limit,
+                '.{}f'.format(typification.limit_digits)) if
+                typification.detection_limit is not None else None)
+            quantification_limit = (format(typification.quantification_limit,
+                '.{}f'.format(typification.limit_digits)) if
+                typification.quantification_limit is not None else None)
+            initial_unit = (typification.start_uom and
+                typification.start_uom.id or None)
+            final_unit = (typification.end_uom and
+                typification.end_uom.id or None)
+
             # Update not RM
             notebook_lines = NotebookLine.search([
                 ('notebook.fraction.special_type', '!=', 'rm'),
@@ -509,10 +520,8 @@ class Typification(ModelSQL, ModelView):
                 ])
             if notebook_lines:
                 NotebookLine.write(notebook_lines, {
-                    'detection_limit': _str_value(
-                        typification.detection_limit),
-                    'quantification_limit': _str_value(
-                        typification.quantification_limit),
+                    'detection_limit': detection_limit,
+                    'quantification_limit': quantification_limit,
                     'lower_limit': _str_value(typification.lower_limit),
                     'upper_limit': _str_value(typification.upper_limit),
                     'initial_concentration': _str_value(
@@ -521,10 +530,8 @@ class Typification(ModelSQL, ModelView):
                         typification.final_concentration),
                     'literal_final_concentration': _str_value(
                         typification.literal_final_concentration),
-                    'initial_unit': (typification.start_uom and
-                        typification.start_uom.id or None),
-                    'final_unit': (typification.end_uom and
-                        typification.end_uom.id or None),
+                    'initial_unit': initial_unit,
+                    'final_unit': final_unit,
                     'decimals': typification.calc_decimals,
                     'significant_digits': typification.significant_digits,
                     'scientific_notation': typification.scientific_notation,
@@ -545,8 +552,8 @@ class Typification(ModelSQL, ModelView):
                 ])
             if notebook_lines:
                 NotebookLine.write(notebook_lines, {
-                    'initial_concentration': str(
-                        typification.initial_concentration or ''),
+                    'initial_concentration': _str_value(
+                        typification.initial_concentration),
                     })
 
     @classmethod
