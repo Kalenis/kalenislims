@@ -929,8 +929,12 @@ class EditSample(metaclass=PoolMeta):
             nl.final_concentration = t.final_concentration
             nl.initial_unit = t.start_uom and t.start_uom.id or None
             nl.final_unit = t.end_uom and t.end_uom.id or None
-            nl.detection_limit = t.detection_limit
-            nl.quantification_limit = t.quantification_limit
+            nl.detection_limit = (format(t.detection_limit,
+                '.{}f'.format(t.limit_digits)) if
+                t.detection_limit is not None else None)
+            nl.quantification_limit = (format(t.quantification_limit,
+                '.{}f'.format(t.limit_digits)) if
+                t.quantification_limit is not None else None)
             nl.lower_limit = t.lower_limit
             nl.upper_limit = t.upper_limit
             nl.decimals = t.calc_decimals
