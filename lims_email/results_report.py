@@ -845,8 +845,8 @@ class MarkResultsReportSent(Wizard):
             ('id', 'in', Transaction().context['active_ids']),
             ])
         for results_report in results_reports:
-            if results_report.mailings:
-                continue
+            #if results_report.mailings:
+                #continue
             results_report.sent_manually = self.start.sent
             results_report.sent = self.start.sent
             results_report.sent_date = (self.start.sent and
