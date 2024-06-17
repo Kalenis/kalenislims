@@ -111,9 +111,12 @@ class CreateSampleStart(metaclass=PoolMeta):
         if not analysis_domain:
             return
 
-        quoted_products = [sl.product.id
-            for sl in self.sale_lines if sl.product]
-        quoted_analysis = Analysis.search([('product', 'in', quoted_products)])
+        quoted_products_methods = {}
+        for sl in self.sale_lines:
+            if sl.product:
+                quoted_products_methods[sl.product.id] = sl.method
+        quoted_analysis = Analysis.search([
+            ('product', 'in', list(quoted_products_methods.keys()))])
         quoted_analysis = [a for a in quoted_analysis
             if a.id in analysis_domain]
         if not quoted_analysis:
@@ -130,6 +133,8 @@ class CreateSampleStart(metaclass=PoolMeta):
                 s.priority = s.default_priority()
                 s.analysis = a
                 s.on_change_analysis()
+                if quoted_products_methods[a.product.id]:
+                    s.method = quoted_products_methods[a.product.id]
                 s.laboratory_date = s.on_change_with_laboratory_date()
                 s.report_date = s.on_change_with_report_date()
 
@@ -309,9 +314,12 @@ class AddSampleServiceStart(metaclass=PoolMeta):
         if not analysis_domain:
             return
 
-        quoted_products = [sl.product.id
-            for sl in self.sale_lines if sl.product]
-        quoted_analysis = Analysis.search([('product', 'in', quoted_products)])
+        quoted_products_methods = {}
+        for sl in self.sale_lines:
+            if sl.product:
+                quoted_products_methods[sl.product.id] = sl.method
+        quoted_analysis = Analysis.search([
+            ('product', 'in', list(quoted_products_methods.keys()))])
         quoted_analysis = [a for a in quoted_analysis
             if a.id in analysis_domain]
         if not quoted_analysis:
@@ -328,6 +336,8 @@ class AddSampleServiceStart(metaclass=PoolMeta):
                 s.priority = s.default_priority()
                 s.analysis = a
                 s.on_change_analysis()
+                if quoted_products_methods[a.product.id]:
+                    s.method = quoted_products_methods[a.product.id]
                 s.laboratory_date = s.on_change_with_laboratory_date()
                 s.report_date = s.on_change_with_report_date()
 
