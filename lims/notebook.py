@@ -2943,7 +2943,8 @@ class NotebookInternalRelationsCalc1(Wizard):
             if (not analysis_code or notebook_line.analysis.behavior !=
                     'internal_relation'):
                 continue
-            if notebook_line.result or notebook_line.converted_result:
+            if (notebook_line.result or notebook_line.converted_result or
+                    notebook_line.annulled):
                 continue
 
             formulas = notebook_line.analysis.result_formula
@@ -3036,7 +3037,8 @@ class NotebookInternalRelationsCalc1(Wizard):
         for relation in relations:
             notebook_lines = NotebookLine.search([
                 ('notebook', '=', relation.notebook.id),
-                ('analysis', '=', relation.internal_relation.id)
+                ('analysis', '=', relation.internal_relation.id),
+                ('annulment_date', '=', None),
                 ])
             if len(notebook_lines) != 1:
                 continue
@@ -3375,7 +3377,8 @@ class NotebookInternalRelationsCalc2(Wizard):
             if (not analysis_code or notebook_line.analysis.behavior !=
                     'internal_relation'):
                 continue
-            if notebook_line.result or notebook_line.converted_result:
+            if (notebook_line.result or notebook_line.converted_result or
+                    notebook_line.annulled):
                 continue
 
             formulas = notebook_line.analysis.result_formula
@@ -3522,7 +3525,8 @@ class NotebookInternalRelationsCalc2(Wizard):
         for relation in relations:
             notebook_lines = NotebookLine.search([
                 ('notebook', '=', relation.notebook.id),
-                ('analysis', '=', relation.internal_relation.id)
+                ('analysis', '=', relation.internal_relation.id),
+                ('annulment_date', '=', None),
                 ])
             if len(notebook_lines) != 1:
                 continue
