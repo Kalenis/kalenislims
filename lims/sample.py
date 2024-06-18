@@ -772,7 +772,22 @@ class Service(ModelSQL, ModelView):
 
                     method_id = (included.method.id
                         if included.method else None)
-                    if not method_id:
+                    if method_id:
+                        cursor.execute('SELECT id '
+                            'FROM "' + Typification._table + '" '
+                            'WHERE product_type = %s '
+                                'AND matrix = %s '
+                                'AND analysis = %s '
+                                'AND method = %s '
+                                'AND valid IS TRUE',
+                            (service_context['product_type'],
+                                service_context['matrix'],
+                                included.included_analysis.id,
+                                method_id))
+                        res = cursor.fetchone()
+                        if not res:
+                            method_id = None
+                    else:
                         cursor.execute('SELECT method '
                             'FROM "' + Typification._table + '" '
                             'WHERE product_type = %s '
@@ -786,6 +801,12 @@ class Service(ModelSQL, ModelView):
                         res = cursor.fetchone()
                         if res:
                             method_id = res[0]
+
+                    if not method_id:
+                        raise UserError(gettext(
+                            'lims.msg_included_no_method',
+                            included=included.included_analysis.rec_name,
+                            analysis=analysis.rec_name))
 
                     device_id = None
                     if included.included_analysis.devices:
@@ -7032,7 +7053,22 @@ class CreateSample(Wizard):
 
                     method_id = (included.method.id
                         if included.method else None)
-                    if not method_id:
+                    if method_id:
+                        cursor.execute('SELECT id '
+                            'FROM "' + Typification._table + '" '
+                            'WHERE product_type = %s '
+                                'AND matrix = %s '
+                                'AND analysis = %s '
+                                'AND method = %s '
+                                'AND valid IS TRUE',
+                            (self.start.product_type.id,
+                                self.start.matrix.id,
+                                included.included_analysis.id,
+                                method_id))
+                        res = cursor.fetchone()
+                        if not res:
+                            method_id = None
+                    else:
                         cursor.execute('SELECT method '
                             'FROM "' + Typification._table + '" '
                             'WHERE product_type = %s '
@@ -7046,6 +7082,12 @@ class CreateSample(Wizard):
                         res = cursor.fetchone()
                         if res:
                             method_id = res[0]
+
+                    if not method_id:
+                        raise UserError(gettext(
+                            'lims.msg_included_no_method',
+                            included=included.included_analysis.rec_name,
+                            analysis=analysis.rec_name))
 
                     device_id = None
                     if included.included_analysis.devices:
