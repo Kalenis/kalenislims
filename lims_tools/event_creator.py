@@ -169,7 +169,8 @@ class EventCreator(Model):
 
         ruleset = rrule.rruleset()
         byweekday = None
-        if record.only_workdays:
+        if (record.only_workdays and
+                record.detail_frequence_selection == 'days'):
             # TODO: handle minutes and hours
             min_time = datetime.min.time()
             for h in workyear.holidays:
@@ -239,7 +240,8 @@ class EventCreator(Model):
 
         ruleset = rrule.rruleset()
         byweekday = None
-        if record.only_workdays:
+        if (record.only_workdays and
+                record.detail_frequence_selection == 'days'):
             # TODO: handle minutes and hours
             min_time = datetime.min.time()
             for h in workyear.holidays:
@@ -307,7 +309,8 @@ class EventCreator(Model):
 
         ruleset = rrule.rruleset()
         byweekday = None
-        if record.only_workdays:
+        if (record.only_workdays and
+                record.detail_frequence_selection == 'days'):
             # TODO: handle minutes and hours
             min_time = datetime.min.time()
             for h in workyear.holidays:
@@ -374,7 +377,8 @@ class EventCreator(Model):
 
         ruleset = rrule.rruleset()
         byweekday = None
-        if record.only_workdays:
+        if (record.only_workdays and
+                record.detail_frequence_selection == 'days'):
             # TODO: handle minutes and hours
             min_time = datetime.min.time()
             for h in workyear.holidays:
