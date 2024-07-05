@@ -118,12 +118,14 @@ class NotebookRule(metaclass=PoolMeta):
             ], limit=1)
         if not typification:
             return
+        typification = typification[0]
+        method = self.target_method or typification.method or None
 
         existing_line = self._get_existing_line(
             line.notebook_line.notebook.id, self.target_analysis.id,
-            self.target_method and self.target_method.id or None)
+            method and method.id or None)
         if not existing_line:
-            self._exec_sheet_add_service(line, typification[0])
+            self._exec_sheet_add_service(line, typification)
 
     def _exec_sheet_add_service(self, line, typification):
         pool = Pool()
@@ -447,11 +449,14 @@ class NotebookRule(metaclass=PoolMeta):
         clause = [
             ('notebook', '=', notebook_id),
             ('analysis', '=', analysis_id),
-            ('accepted', '=', False),
-            ('annulled', '=', False),
             ]
         if method_id:
             clause.append(('method', '=', method_id))
+        if compilation_id:
+            clause.extend([
+                ('accepted', '=', False),
+                ('annulled', '=', False),
+                ])
         notebook_lines = NotebookLine.search(clause)
         nl_ids = [nl.id for nl in notebook_lines]
         if not compilation_id:
