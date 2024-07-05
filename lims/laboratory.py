@@ -1029,16 +1029,19 @@ class NotebookRule(ModelSQL, ModelView):
             ], limit=1)
         if not typification:
             return
+        typification = typification[0]
+        method = self.target_method or typification.method or None
 
         clause = [
             ('notebook', '=', line.notebook),
             ('analysis', '=', self.target_analysis),
             ]
-        if self.target_method:
-            clause.append(('method', '=', self.target_method))
+        if method:
+            clause.append(('method', '=', method))
         existing_line = NotebookLine.search(clause)
         if not existing_line:
-            self._exec_add_service(line, typification[0])
+            self._exec_add_service(line, typification)
+
 
     def _exec_add_service(self, line, typification):
         pool = Pool()
