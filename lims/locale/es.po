@@ -5784,6 +5784,10 @@ msgctxt "field:lims.results_report.version.detail.sample,sample_comments:"
 msgid "Sample Comments"
 msgstr "Observaciones de la muestra"
 
+msgctxt "field:lims.results_report.version.detail.sample,state:"
+msgid "State"
+msgstr "Estado"
+
 msgctxt "field:lims.results_report.version.detail.sample,version_detail:"
 msgid "Report Detail"
 msgstr "Detalle de informe"
