@@ -5,7 +5,7 @@
 from trytond.pool import Pool
 from . import html_template
 from . import purchase
-from. import configuration
+from . import configuration
 
 
 def register():
