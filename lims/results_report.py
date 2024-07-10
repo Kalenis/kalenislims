@@ -2047,12 +2047,15 @@ class ResultsReportVersionDetailSample(
     'Results Report Version Detail Sample'
     __name__ = 'lims.results_report.version.detail.sample'
 
+    _states = {'readonly': Eval('state') != 'draft'}
+    _depends = ['state']
+
     version_detail = fields.Many2One('lims.results_report.version.detail',
         'Report Detail', required=True, ondelete='CASCADE')
     notebook = fields.Many2One('lims.notebook', 'Notebook', required=True,
         readonly=True)
     notebook_lines = fields.One2Many('lims.results_report.version.detail.line',
-        'detail_sample', 'Analysis')
+        'detail_sample', 'Analysis', states=_states, depends=_depends)
     party = fields.Function(fields.Many2One('party.party', 'Party'),
         'get_notebook_field')
     comments = fields.Text('Comments')
@@ -2068,6 +2071,10 @@ class ResultsReportVersionDetailSample(
     lines_not_reported = fields.Function(fields.One2Many(
         'lims.notebook.line', None, 'Not reported Lines'),
         'get_lines_not_reported')
+    state = fields.Function(fields.Selection('get_states', 'State'),
+        'on_change_with_state')
+
+    del _states, _depends
 
     @classmethod
     def __setup__(cls):
@@ -2106,6 +2113,17 @@ class ResultsReportVersionDetailSample(
             'AND (report = FALSE OR annulled = TRUE)',
             (self.notebook.id,))
         return [x[0] for x in cursor.fetchall()]
+
+    @classmethod
+    def get_states(cls):
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        return ResultsDetail.fields_get(['state'])['state']['selection']
+
+    @fields.depends('version_detail', '_parent_version_detail.state')
+    def on_change_with_state(self, name=None):
+        if self.version_detail:
+            return self.version_detail.state
 
     @classmethod
     def _get_fields_from_sample(cls, sample, only_accepted=True):
