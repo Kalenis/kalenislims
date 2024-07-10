@@ -1057,7 +1057,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         'analysis_sheet': s.id,
                         }
                     # if the analysis was scheduled for a future date
-                    if nb_line.start_date > today:
+                    if not nb_line.start_date or nb_line.start_date > today:
                         data['start_date'] = today
                     # if already avoided in compilations then accept here
                     if not line.annulled and (avoid_accept_result and
