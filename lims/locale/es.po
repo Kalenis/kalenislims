@@ -8168,6 +8168,10 @@ msgctxt "model:ir.action,name:wiz_referral_service"
 msgid "Refer Service"
 msgstr "Derivar Servicio"
 
+msgctxt "model:ir.action,name:wiz_render_result_report"
+msgid "Render Preview"
+msgstr "Renderizar Previsualización"
+
 msgctxt "model:ir.action,name:wiz_results_detail_open_attachment"
 msgid "Results Report Attachments"
 msgstr "Adjuntos del Informe de resultados"

@@ -822,5 +822,18 @@
             <field name="extension">pdf</field>
         </record>
 
+<!-- Wizard Render Results Report -->
+
+        <record model="ir.action.wizard" id="wiz_render_result_report">
+            <field name="name">Render Preview</field>
+            <field name="wiz_name">lims.render_result_report</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_render_result_report_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">lims.results_report.version.detail,-1</field>
+            <field name="action" ref="wiz_render_result_report"/>
+        </record>
+
     </data>
 </tryton>
