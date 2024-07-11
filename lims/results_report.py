@@ -1252,6 +1252,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         cls.link_notebook_lines(details)
         for detail in details:
             detail.generate_report()
+            detail.generate_render()
             to_update = Sample.browse(list(set(s.notebook.fraction.sample.id
                 for s in detail.samples)))
             Sample.__queue__.update_samples_state(to_update)
@@ -1382,6 +1383,33 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
 
         ResultReport.execute([self.id], {'save_cache': True})
         ResultReportTranscription.execute([self.id], {'save_cache': True})
+
+    def generate_render(self):
+        pool = Pool()
+        ResultReport = pool.get('lims.result_report', type='report')
+        Attachment = pool.get('ir.attachment')
+
+        result = ResultReport.execute([self.id], {})
+
+        name = 'Preview.pdf'
+        data = result[1]
+        resource = '%s,%s' % (self.__name__, self.id)
+
+        values = {
+            'name': name,
+            'type': 'data',
+            'data': data,
+            'resource': '%s,%s' % (self.__name__, self.id),
+            }
+
+        attachment = Attachment.search([
+            ('resource', '=', resource),
+            ('name', '=', name),
+            ])
+        if attachment:
+            Attachment.write(attachment, values)
+        else:
+            Attachment.create([values])
 
     @classmethod
     @ModelView.button_action('lims.wiz_lims_results_report_annulation')
@@ -4716,3 +4744,18 @@ class GlobalResultReport(Report):
         report_name = '%s %s' % (result[3], results_report.number)
         result = result[:3] + (report_name,)
         return result
+
+
+class RenderResultReport(Wizard):
+    'Render Results Report'
+    __name__ = 'lims.render_result_report'
+
+    start = StateTransition()
+
+    def transition_start(self):
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+
+        detail = ResultsDetail(Transaction().context['active_id'])
+        detail.generate_render()
+        return 'end'

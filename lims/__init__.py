@@ -375,6 +375,7 @@ def register():
         results_report.OpenSampleEntry,
         results_report.PrintResultReport,
         results_report.PrintGlobalResultReport,
+        results_report.RenderResultReport,
         certification.DuplicateAnalysisFamily,
         results_report.ServiceResultsReport,
         results_report.FractionResultsReport,
