@@ -3,6 +3,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import re
+from math import log10 as math_log10
 
 from trytond.model import Model
 from trytond.exceptions import UserError
@@ -13,7 +14,7 @@ class FormulaParser(Model):
     'Formula Parser'
     __slots__ = ('_string', '_index', '_vars')
 
-    def __init__(self, string, vars={}, id=None, **kwargs):
+    def __init__(self, string, vars={}, subcall=False, id=None, **kwargs):
         def _clean_variable(variable):
             return variable.replace(
                 '{', '').replace(
@@ -30,7 +31,7 @@ class FormulaParser(Model):
             }
         for var in list(vars.keys()):
             clean_var = _clean_variable(var)
-            if self._vars.get(clean_var) is not None:
+            if self._vars.get(clean_var) is not None and not subcall:
                 raise UserError(gettext(
                     'lims.msg_variable_redefine', variable=var))
             self._vars[clean_var] = vars[var]
@@ -58,6 +59,18 @@ class FormulaParser(Model):
                 return
 
     def parseExpression(self):
+        return self.parseFunction()
+
+    def parseFunction(self):
+        string = self._string
+        # log10
+        for funct in re.findall(r'LOG10\(.*?\)', string):
+            formula = funct[6:-1]
+            variables = self._vars
+            parser = FormulaParser(formula, vars=variables, subcall=True)
+            value = parser.getValue()
+            value = str(math_log10(float(value)))
+            self._string = self._string.replace(funct, value)
         return self.parseAddition()
 
     def parseAddition(self):
