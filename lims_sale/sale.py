@@ -717,19 +717,40 @@ class SaleLine(metaclass=PoolMeta):
 
         return typified_analysis + typified_sets_groups + additional_analysis
 
-    @fields.depends('product', 'analysis', '_parent_analysis.methods')
+    @fields.depends('product', 'analysis', 'product_type', 'matrix')
     def on_change_with_method_domain(self, name=None):
-        Analysis = Pool().get('lims.analysis')
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        Typification = pool.get('lims.typification')
+
+        if not self.product_type or not self.matrix:
+            return []
+        if not self.analysis and not self.product:
+            return []
         if self.analysis:
-            return [m.id for m in self.analysis.methods]
-        if self.product:
+            analysis_id = self.analysis.id
+        elif self.product:
             res = Analysis.search([
                 ('product', '=', self.product.id),
                 ('type', '=', 'analysis'),
                 ])
-            if res:
-                return [m.id for m in res[0].methods]
-        return []
+            if not res:
+                return []
+            analysis_id = res[0].id
+
+        cursor.execute('SELECT DISTINCT(method) '
+            'FROM "' + Typification._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s '
+                'AND analysis = %s '
+                'AND valid IS TRUE',
+            (self.product_type.id, self.matrix.id,
+                analysis_id))
+        res = cursor.fetchall()
+        if not res:
+            return []
+        return [x[0] for x in res]
 
     @staticmethod
     def default_method_invisible():
@@ -737,7 +758,8 @@ class SaleLine(metaclass=PoolMeta):
 
     @fields.depends('product', 'analysis', '_parent_analysis.type')
     def on_change_with_method_invisible(self, name=None):
-        Analysis = Pool().get('lims.analysis')
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
         if self.analysis and self.analysis.type == 'analysis':
             return False
         if (self.product and Analysis.search_count([
