@@ -616,6 +616,7 @@ class Entry(Workflow, ModelSQL, ModelView):
         pool = Pool()
         Fraction = pool.get('lims.fraction')
         EntrySuspensionReason = pool.get('lims.entry.suspension.reason')
+        Sample = pool.get('lims.sample')
 
         for entry in entries:
             entry.check_contacts()
@@ -639,11 +640,15 @@ class Entry(Workflow, ModelSQL, ModelView):
         cls.pending_reason.states['required'] = (
             Bool(Equal(Eval('state'), 'pending')))
 
+        to_update = [s for e in entries for s in e.samples]
+        Sample.__queue__.update_samples_state(to_update)
+
     @classmethod
     @ModelView.button
     def cancel(cls, entries):
         pool = Pool()
         EntryCancellationReason = pool.get('lims.entry.cancellation.reason')
+        Sample = pool.get('lims.sample')
 
         for entry in entries:
             entry.check_entry_cancellation()
@@ -659,7 +664,10 @@ class Entry(Workflow, ModelSQL, ModelView):
             'cancellation_reason': default_cancellation_reason,
             })
         cls.cancellation_reason.states['required'] = (
-            Bool(Equal(Eval('state'), 'pending')))
+            Bool(Equal(Eval('state'), 'cancelled')))
+
+        to_update = [s for e in entries for s in e.samples]
+        Sample.__queue__.update_samples_state(to_update)
 
     @classmethod
     @Workflow.transition('finished')
@@ -704,7 +712,6 @@ class Entry(Workflow, ModelSQL, ModelView):
 
     def cancel_entry(self):
         pool = Pool()
-        Sample = pool.get('lims.sample')
         Service = pool.get('lims.service')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         NotebookLine = pool.get('lims.notebook.line')
@@ -733,9 +740,6 @@ class Entry(Workflow, ModelSQL, ModelView):
                     'acceptance_date': None,
                     'report': False,
                     })
-
-            to_update = self.samples
-            Sample.__queue__.update_samples_state(to_update)
 
     @classmethod
     def update_entries_state(cls, entry_ids):
@@ -892,7 +896,8 @@ class Entry(Workflow, ModelSQL, ModelView):
         return success
 
     def _confirm(self):
-        Fraction = Pool().get('lims.fraction')
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
         fractions = Fraction.search([
             ('entry', '=', self.id),
             ('confirmed', '=', False),
