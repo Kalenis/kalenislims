@@ -36,6 +36,7 @@ logger = logging.getLogger(__name__)
 SAMPLE_STATES = [
     ('draft', 'Draft'),
     ('annulled', 'Annulled'),
+    ('pending_admin', 'Administration pending'),
     ('pending_planning', 'Pending Planification'),
     ('planned', 'Planned'),
     ('in_lab', 'In Laboratory'),
@@ -3067,6 +3068,7 @@ class Sample(ModelSQL, ModelView):
         if default is None:
             default = {}
         current_default = default.copy()
+        current_default['state'] = 'draft'
         current_default['qty_lines_pending'] = None
         current_default['qty_lines_pending_acceptance'] = None
 
@@ -3669,14 +3671,15 @@ class Sample(ModelSQL, ModelView):
         table, _ = tables[None]
         order = [Case((table.state == 'draft', 1),
             else_=Case((table.state == 'annulled', 2),
-            else_=Case((table.state == 'pending_planning', 3),
-            else_=Case((table.state == 'planned', 4),
-            else_=Case((table.state == 'in_lab', 5),
-            else_=Case((table.state == 'lab_pending_acceptance', 6),
-            else_=Case((table.state == 'pending_report', 7),
-            else_=Case((table.state == 'in_report', 8),
-            else_=Case((table.state == 'report_released', 9),
-            else_=0)))))))))]
+            else_=Case((table.state == 'pending_admin', 3),
+            else_=Case((table.state == 'pending_planning', 4),
+            else_=Case((table.state == 'planned', 5),
+            else_=Case((table.state == 'in_lab', 6),
+            else_=Case((table.state == 'lab_pending_acceptance', 7),
+            else_=Case((table.state == 'pending_report', 8),
+            else_=Case((table.state == 'in_report', 9),
+            else_=Case((table.state == 'report_released', 10),
+            else_=0))))))))))]
         return order
 
     def get_confirmed(self, name=None):
@@ -3942,7 +3945,9 @@ class Sample(ModelSQL, ModelView):
 
     @classmethod
     def update_samples_state(cls, samples):
-        Entry = Pool().get('lims.entry')
+        pool = Pool()
+        Entry = pool.get('lims.entry')
+
         entry_ids = set()
         for sample in samples:
             sample.update_sample_dates()
@@ -4207,6 +4212,10 @@ class Sample(ModelSQL, ModelView):
                 (self.id,))
             if cursor.fetchone()[0] == annulled_services:
                 return 'annulled'
+        if self.entry.state == 'pending':
+            return 'pending_admin'
+        if self.entry.state == 'cancelled':
+            return 'annulled'
         return 'draft'
 
     def update_qty_lines(self):

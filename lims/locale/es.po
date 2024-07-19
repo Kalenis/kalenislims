@@ -14265,6 +14265,10 @@ msgid "Not In"
 msgstr "No en"
 
 msgctxt "selection:lims.sample,state:"
+msgid "Administration pending"
+msgstr "Pendiente por administración"
+
+msgctxt "selection:lims.sample,state:"
 msgid "Annulled"
 msgstr "Anulada"
 
