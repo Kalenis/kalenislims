@@ -7986,3 +7986,54 @@ class ChangeStorageTime(Wizard):
 
     def end(self):
         return 'reload'
+
+
+class ChangeCurrentLocationStart(ModelView):
+    'Change Current Location'
+    __name__ = 'lims.change_current_location.start'
+
+    location = fields.Many2One('stock.location', 'Location',
+        required=True, domain=[('type', '=', 'storage')])
+
+
+class ChangeCurrentLocation(Wizard):
+    'Change Current Location'
+    __name__ = 'lims.change_current_location'
+
+    start = StateView('lims.change_current_location.start',
+        'lims.change_current_location_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Change', 'change', 'tryton-ok', default=True),
+            ])
+    change = StateTransition()
+
+    def transition_change(self):
+        pool = Pool()
+        Fraction = Pool().get('lims.fraction')
+        Move = pool.get('stock.move')
+
+        fractions_to_save = []
+        stock_moves_to_create = []
+        for fraction in Fraction.browse(Transaction().context['active_ids']):
+            if fraction.countersample_location:
+                continue
+            if not fraction.confirmed or not fraction.current_location:
+                fraction.storage_location = self.start.location
+                fractions_to_save.append(fraction)
+            else:
+                stock_move = fraction.create_stock_move()
+                stock_move.from_location = fraction.current_location
+                stock_move.to_location = self.start.location
+                stock_moves_to_create.append(stock_move)
+
+        if fractions_to_save:
+            Fraction.save(fractions_to_save)
+        if stock_moves_to_create:
+            with Transaction().set_context(check_current_location=False):
+                Move.save(stock_moves_to_create)
+                Move.assign(stock_moves_to_create)
+                Move.do(stock_moves_to_create)
+        return 'end'
+
+    def end(self):
+        return 'reload'
