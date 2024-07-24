@@ -354,6 +354,10 @@ msgctxt "field:lims.certification.type,report_label:"
 msgid "Report Label"
 msgstr "Etiqueta Informe"
 
+msgctxt "field:lims.change_current_location.start,location:"
+msgid "Location"
+msgstr "Ubicación"
+
 msgctxt "field:lims.change_results_estimated_waiting.start,date_from:"
 msgid "Confirmation date From"
 msgstr "Fecha de confirmación Desde"
@@ -7933,6 +7937,10 @@ msgctxt "model:ir.action,name:wiz_analysis_open_not_typified"
 msgid "Open Analysis Not Typified"
 msgstr "Abrir análisis sin tipificar"
 
+msgctxt "model:ir.action,name:wiz_change_current_location"
+msgid "Change Current Location"
+msgstr "Cambiar Ubicación"
+
 msgctxt "model:ir.action,name:wiz_change_results_estimated_waiting"
 msgid "Change Estimated Days For Results"
 msgstr "Cambiar Días estimados para resultados"
@@ -9923,6 +9931,10 @@ msgstr "Muestra ciega"
 msgctxt "model:lims.certification.type,name:"
 msgid "Certification Type"
 msgstr "Tipo de certificación"
+
+msgctxt "model:lims.change_current_location.start,name:"
+msgid "Change Current Location"
+msgstr "Cambiar Ubicación"
 
 msgctxt "model:lims.change_results_estimated_waiting.start,name:"
 msgid "Change Estimated Days For Results"
@@ -15818,6 +15830,14 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.analysis.open_not_typified,start,open:"
 msgid "Open"
 msgstr "Abrir"
+
+msgctxt "wizard_button:lims.change_current_location,start,change:"
+msgid "Change"
+msgstr "Cambiar"
+
+msgctxt "wizard_button:lims.change_current_location,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:lims.change_results_estimated_waiting,start,change:"
 msgid "Change"
