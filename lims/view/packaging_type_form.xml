@@ -8,4 +8,6 @@
     <field name="capacity"/>
     <label name="capacity_uom"/>
     <field name="capacity_uom"/>
+    <label name="active"/>
+    <field name="active"/>
 </form>
