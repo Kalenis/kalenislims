@@ -14,8 +14,8 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from trytond.model import ModelView, ModelSQL, fields, Unique, \
-    DictSchemaMixin, Index
+from trytond.model import ModelView, ModelSQL, DeactivableMixin, fields, \
+    Unique, DictSchemaMixin, Index
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
 from trytond.pool import Pool
@@ -165,7 +165,7 @@ class PackagingIntegrity(ModelSQL, ModelView):
         return [(cls._rec_name,) + tuple(clause[1:])]
 
 
-class PackagingType(ModelSQL, ModelView):
+class PackagingType(DeactivableMixin, ModelSQL, ModelView):
     'Packaging Type'
     __name__ = 'lims.packaging.type'
     _rec_name = 'description'
