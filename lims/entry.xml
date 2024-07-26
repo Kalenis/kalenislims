@@ -572,6 +572,14 @@
             <field name="action" ref="wiz_lims_forward_entry_acknowledgment"/>
         </record>
 
+<!-- Wizard Ask Send Acknowledgment of Samples Receipt -->
+
+        <record model="ir.ui.view" id="ask_send_ack_of_receipt_view_form">
+            <field name="model">lims.entry.acknowledgment.ask_send.ask</field>
+            <field name="type">form</field>
+            <field name="name">ask_send_ack_of_receipt_form</field>
+        </record>
+
 <!-- Wizard Change Invoice Party -->
 
         <record model="ir.ui.view" id="lims_change_invoice_party_start_view_form">
