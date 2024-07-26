@@ -345,7 +345,7 @@
         </record>
 
         <record model="ir.model.button" id="fraction_confirm_button">
-            <field name="name">confirm</field>
+            <field name="name">button_confirm</field>
             <field name="model" search="[('model', '=', 'lims.fraction')]"/>
         </record>
         <record model="ir.model.button-res.group"
@@ -482,7 +482,7 @@
         </record>
 
         <record model="ir.model.button" id="sample_confirm_button">
-            <field name="name">confirm</field>
+            <field name="name">button_confirm</field>
             <field name="model" search="[('model', '=', 'lims.sample')]"/>
         </record>
         <record model="ir.model.button-res.group"
@@ -821,11 +821,6 @@
             <field name="type">form</field>
             <field name="name">fraction_manage_services_form</field>
         </record>
-        <record model="ir.ui.view" id="lims_manage_services_ack_of_receipt_view_form">
-            <field name="model">lims.manage_services.ack_of_receipt</field>
-            <field name="type">form</field>
-            <field name="name">fraction_manage_services_ack_of_receipt_form</field>
-        </record>
 
         <record model="ir.action.wizard" id="wiz_lims_manage_services">
             <field name="name">Manage Services</field>
@@ -1096,11 +1091,6 @@
             <field name="type">form</field>
             <field name="name">sample_add_services_start_form</field>
         </record>
-        <record model="ir.ui.view" id="add_sample_service_ack_of_receipt_view_form">
-            <field name="model">lims.sample.add_service.ack_of_receipt</field>
-            <field name="type">form</field>
-            <field name="name">sample_add_services_ack_of_receipt_form</field>
-        </record>
 
         <record model="ir.action.wizard" id="wiz_add_sample_service">
             <field name="name">Add Sample Services</field>
@@ -1119,11 +1109,6 @@
             <field name="model">lims.sample.edit_service.start</field>
             <field name="type">form</field>
             <field name="name">sample_edit_services_start_form</field>
-        </record>
-        <record model="ir.ui.view" id="edit_sample_service_ack_of_receipt_view_form">
-            <field name="model">lims.sample.edit_service.ack_of_receipt</field>
-            <field name="type">form</field>
-            <field name="name">sample_edit_services_ack_of_receipt_form</field>
         </record>
 
         <record model="ir.action.wizard" id="wiz_edit_sample_service">
@@ -1423,6 +1408,22 @@
             <field name="keyword">form_action</field>
             <field name="model">lims.fraction,-1</field>
             <field name="action" ref="wiz_change_current_location"/>
+        </record>
+
+<!-- Wizard Confirm Samples -->
+
+        <record model="ir.action.wizard" id="wiz_confirm_samples">
+            <field name="name">Confirm Samples</field>
+            <field name="wiz_name">lims.confirm_samples</field>
+            <field name="model">lims.sample</field>
+        </record>
+
+<!-- Wizard Confirm Fractions -->
+
+        <record model="ir.action.wizard" id="wiz_confirm_fractions">
+            <field name="name">Confirm Fractions</field>
+            <field name="wiz_name">lims.confirm_fractions</field>
+            <field name="model">lims.fraction</field>
         </record>
 
     </data>

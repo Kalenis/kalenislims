@@ -1949,7 +1949,8 @@ class ForwardAcknowledgmentOfReceipt(Wizard):
     start = StateTransition()
 
     def transition_start(self):
-        Entry = Pool().get('lims.entry')
+        pool = Pool()
+        Entry = pool.get('lims.entry')
 
         for active_id in Transaction().context['active_ids']:
             with Transaction().set_context(_check_access=False):
@@ -1990,6 +1991,53 @@ class ForwardAcknowledgmentOfReceipt(Wizard):
                 entry.result_cron = 'sent'
                 entry.sent_date = datetime.now()
                 entry.save()
+        return 'end'
+
+
+class SendAckOfReceiptWizardAsk(ModelView):
+    'Ask Send Acknowledgment of Samples Receipt'
+    __name__ = 'lims.entry.acknowledgment.ask_send.ask'
+
+
+class SendAckOfReceiptWizardMixin(object):
+    'Ask Send Acknowledgment of Samples Receipt'
+    __slots__ = ()
+
+    send_ack_of_receipt = StateView('lims.entry.acknowledgment.ask_send.ask',
+        'lims.ask_send_ack_of_receipt_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Send', 'send_ack', 'tryton-ok', default=True),
+            ])
+    send_ack = StateTransition()
+
+    def _send_ack_of_receipt(self):
+        pool = Pool()
+        Cron = pool.get('ir.cron')
+
+        if Cron.search([
+                ('method', '=', 'lims.entry|cron_acknowledgment_of_receipt'),
+                ('active', '=', True),
+                ]):
+            return True
+        return False
+
+    def _get_entry_ids(self):
+        entry_ids = set()
+        return list(entry_ids)
+
+    def transition_send_ack(self):
+        pool = Pool()
+        ForwardAcknowledgmentOfReceipt = pool.get(
+            'lims.entry.acknowledgment.forward', type='wizard')
+
+        entry_ids = self._get_entry_ids()
+        if not entry_ids:
+            return 'end'
+
+        session_id, _, _ = ForwardAcknowledgmentOfReceipt.create()
+        acknowledgment_forward = ForwardAcknowledgmentOfReceipt(session_id)
+        with Transaction().set_context(active_ids=entry_ids):
+            acknowledgment_forward.transition_start()
         return 'end'
 
 
