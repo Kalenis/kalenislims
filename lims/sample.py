@@ -29,7 +29,7 @@ from trytond.config import config as tconfig
 from trytond.tools import get_smtp_server
 from trytond import backend
 from .analysis import ANALYSIS_TYPES
-from .entry import ENTRY_STATES
+from .entry import ENTRY_STATES, SendAckOfReceiptWizardMixin
 
 logger = logging.getLogger(__name__)
 
@@ -1849,7 +1849,7 @@ class Fraction(ModelSQL, ModelView):
                 'invisible': ~Eval('button_manage_services_available'),
                 'readonly': Bool(Eval('context', {}).get('from_entry', False)),
                 },
-            'confirm': {
+            'button_confirm': {
                 'invisible': ~Eval('button_confirm_available'),
                 },
             'load_services': {
@@ -2360,7 +2360,11 @@ class Fraction(ModelSQL, ModelView):
                 raise UserError(gettext('lims.msg_not_divided'))
 
     @classmethod
-    @ModelView.button
+    @ModelView.button_action('lims.wiz_confirm_fractions')
+    def button_confirm(cls, fractions):
+        pass
+
+    @classmethod
     def confirm(cls, fractions):
         pool = Pool()
         Config = pool.get('lims.configuration')
@@ -3004,7 +3008,7 @@ class Sample(ModelSQL, ModelView):
             'update_samples_state': RPC(readonly=False, instantiate=0),
             })
         cls._buttons.update({
-            'confirm': {
+            'button_confirm': {
                 'invisible': ~Eval('button_confirm_available'),
                 },
             })
@@ -3702,7 +3706,11 @@ class Sample(ModelSQL, ModelView):
         return False
 
     @classmethod
-    @ModelView.button
+    @ModelView.button_action('lims.wiz_confirm_samples')
+    def button_confirm(cls, samples):
+        pass
+
+    @classmethod
     def confirm(cls, samples):
         pool = Pool()
         Fraction = pool.get('lims.fraction')
@@ -4460,7 +4468,7 @@ class ManageServicesAckOfReceipt(ModelView):
     __name__ = 'lims.manage_services.ack_of_receipt'
 
 
-class ManageServices(Wizard):
+class ManageServices(Wizard, SendAckOfReceiptWizardMixin):
     'Manage Services'
     __name__ = 'lims.manage_services'
 
@@ -4472,15 +4480,15 @@ class ManageServices(Wizard):
             Button('Ok', 'ok', 'tryton-ok', default=True),
             ])
     ok = StateTransition()
-    send_ack_of_receipt = StateView('lims.manage_services.ack_of_receipt',
-        'lims.lims_manage_services_ack_of_receipt_view_form', [
-            Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Send', 'send_ack', 'tryton-ok', default=True),
-            ])
-    send_ack = StateTransition()
 
     def _get_fraction_id(self):
         return Transaction().context.get('active_id', None)
+
+    def _get_entry_ids(self):
+        entry_ids = set()
+        for fraction in self.records:
+            entry_ids.add(fraction.sample.entry.id)
+        return list(entry_ids)
 
     def default_start(self, fields):
         Fraction = Pool().get('lims.fraction')
@@ -4718,31 +4726,6 @@ class ManageServices(Wizard):
             'priority', 'estimated_waiting_laboratory',
             'estimated_waiting_report', 'report_date', 'comments', 'divide')
 
-    def _send_ack_of_receipt(self):
-        Cron = Pool().get('ir.cron')
-        if Cron.search([
-                ('method', '=', 'lims.entry|cron_acknowledgment_of_receipt'),
-                ('active', '=', True),
-                ]):
-            return True
-        return False
-
-    def transition_send_ack(self):
-        pool = Pool()
-        Fraction = pool.get('lims.fraction')
-        ForwardAcknowledgmentOfReceipt = pool.get(
-            'lims.entry.acknowledgment.forward', type='wizard')
-
-        fraction_id = self._get_fraction_id()
-        fraction = Fraction(fraction_id)
-        entry_ids = [fraction.sample.entry.id]
-
-        session_id, _, _ = ForwardAcknowledgmentOfReceipt.create()
-        acknowledgment_forward = ForwardAcknowledgmentOfReceipt(session_id)
-        with Transaction().set_context(active_ids=entry_ids):
-            acknowledgment_forward.transition_start()
-        return 'end'
-
 
 class CompleteServices(Wizard):
     'Complete Services'
@@ -4866,12 +4849,7 @@ class AddSampleServiceStart(ModelView):
             })
 
 
-class AddSampleServiceAckOfReceipt(ModelView):
-    'Add Sample Services'
-    __name__ = 'lims.sample.add_service.ack_of_receipt'
-
-
-class AddSampleService(Wizard):
+class AddSampleService(Wizard, SendAckOfReceiptWizardMixin):
     'Add Sample Services'
     __name__ = 'lims.sample.add_service'
 
@@ -4881,12 +4859,12 @@ class AddSampleService(Wizard):
             Button('Confirm', 'confirm', 'tryton-ok', default=True),
             ])
     confirm = StateTransition()
-    send_ack_of_receipt = StateView('lims.sample.add_service.ack_of_receipt',
-        'lims.add_sample_service_ack_of_receipt_view_form', [
-            Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Send', 'send_ack', 'tryton-ok', default=True),
-            ])
-    send_ack = StateTransition()
+
+    def _get_entry_ids(self):
+        entry_ids = set()
+        for sample in self.records:
+            entry_ids.add(sample.entry.id)
+        return list(entry_ids)
 
     def default_start(self, fields):
         sample = self.record
@@ -4986,32 +4964,6 @@ class AddSampleService(Wizard):
             }
         return service_create
 
-    def _send_ack_of_receipt(self):
-        Cron = Pool().get('ir.cron')
-        if Cron.search([
-                ('method', '=', 'lims.entry|cron_acknowledgment_of_receipt'),
-                ('active', '=', True),
-                ]):
-            return True
-        return False
-
-    def transition_send_ack(self):
-        pool = Pool()
-        ForwardAcknowledgmentOfReceipt = pool.get(
-            'lims.entry.acknowledgment.forward', type='wizard')
-
-        entry_ids = set()
-        for sample in self.records:
-            # Only send ack for ongoing entries
-            if sample.entry and sample.entry.state in ('ongoing', 'finished'):
-                entry_ids.add(sample.entry.id)
-
-        session_id, _, _ = ForwardAcknowledgmentOfReceipt.create()
-        acknowledgment_forward = ForwardAcknowledgmentOfReceipt(session_id)
-        with Transaction().set_context(active_ids=list(entry_ids)):
-            acknowledgment_forward.transition_start()
-        return 'end'
-
 
 class EditSampleServiceStart(ModelView):
     'Edit Sample Services'
@@ -5030,12 +4982,7 @@ class EditSampleServiceStart(ModelView):
             })
 
 
-class EditSampleServiceAckOfReceipt(ModelView):
-    'Edit Sample Services'
-    __name__ = 'lims.sample.edit_service.ack_of_receipt'
-
-
-class EditSampleService(Wizard):
+class EditSampleService(Wizard, SendAckOfReceiptWizardMixin):
     'Edit Sample Services'
     __name__ = 'lims.sample.edit_service'
 
@@ -5045,12 +4992,12 @@ class EditSampleService(Wizard):
             Button('Confirm', 'confirm', 'tryton-ok', default=True),
             ])
     confirm = StateTransition()
-    send_ack_of_receipt = StateView('lims.sample.edit_service.ack_of_receipt',
-        'lims.edit_sample_service_ack_of_receipt_view_form', [
-            Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Send', 'send_ack', 'tryton-ok', default=True),
-            ])
-    send_ack = StateTransition()
+
+    def _get_entry_ids(self):
+        entry_ids = set()
+        for sample in self.records:
+            entry_ids.add(sample.entry.id)
+        return list(entry_ids)
 
     def default_start(self, fields):
         sample = self.record
@@ -5266,30 +5213,6 @@ class EditSampleService(Wizard):
 
         original.state = 'annulled'
         original.save()
-
-    def _send_ack_of_receipt(self):
-        Cron = Pool().get('ir.cron')
-        if Cron.search([
-                ('method', '=', 'lims.entry|cron_acknowledgment_of_receipt'),
-                ('active', '=', True),
-                ]):
-            return True
-        return False
-
-    def transition_send_ack(self):
-        pool = Pool()
-        ForwardAcknowledgmentOfReceipt = pool.get(
-            'lims.entry.acknowledgment.forward', type='wizard')
-
-        entry_ids = set()
-        for sample in self.records:
-            entry_ids.add(sample.entry.id)
-
-        session_id, _, _ = ForwardAcknowledgmentOfReceipt.create()
-        acknowledgment_forward = ForwardAcknowledgmentOfReceipt(session_id)
-        with Transaction().set_context(active_ids=list(entry_ids)):
-            acknowledgment_forward.transition_start()
-        return 'end'
 
 
 class FractionsByLocationsStart(ModelView):
@@ -8164,3 +8087,53 @@ class ChangeCurrentLocation(Wizard):
 
     def end(self):
         return 'reload'
+
+
+class ConfirmSamples(Wizard, SendAckOfReceiptWizardMixin):
+    'Confirm Samples'
+    __name__ = 'lims.confirm_samples'
+
+    start = StateTransition()
+
+    def transition_start(self):
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+
+        samples = self.records
+        Sample.confirm(samples)
+
+        if self._send_ack_of_receipt():
+            return 'send_ack_of_receipt'
+
+        return 'end'
+
+    def _get_entry_ids(self):
+        entry_ids = set()
+        for sample in self.records:
+            entry_ids.add(sample.entry.id)
+        return list(entry_ids)
+
+
+class ConfirmFractions(Wizard, SendAckOfReceiptWizardMixin):
+    'Confirm Fractions'
+    __name__ = 'lims.confirm_fractions'
+
+    start = StateTransition()
+
+    def transition_start(self):
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
+
+        fractions = self.records
+        Fraction.confirm(fractions)
+
+        if self._send_ack_of_receipt():
+            return 'send_ack_of_receipt'
+
+        return 'end'
+
+    def _get_entry_ids(self):
+        entry_ids = set()
+        for fraction in self.records:
+            entry_ids.add(fraction.sample.entry.id)
+        return list(entry_ids)

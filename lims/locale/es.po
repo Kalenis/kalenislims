@@ -7949,6 +7949,14 @@ msgctxt "model:ir.action,name:wiz_change_storage_time"
 msgid "Change Storage Time"
 msgstr "Cambiar Tiempo de almacenamiento"
 
+msgctxt "model:ir.action,name:wiz_confirm_fractions"
+msgid "Confirm Fractions"
+msgstr "Confirmar Fracciones"
+
+msgctxt "model:ir.action,name:wiz_confirm_samples"
+msgid "Confirm Samples"
+msgstr "Confirmar Muestras"
+
 msgctxt "model:ir.action,name:wiz_control_chart_print"
 msgid "Control Chart"
 msgstr "Carta de Control"
@@ -10080,6 +10088,10 @@ msgctxt "model:lims.entry,name:"
 msgid "Entry"
 msgstr "Ingreso"
 
+msgctxt "model:lims.entry.acknowledgment.ask_send.ask,name:"
+msgid "Ask Send Acknowledgment of Samples Receipt"
+msgstr "Preguntar por envío de Acuse de recibo de muestras"
+
 msgctxt "model:lims.entry.acknowledgment_contacts,name:"
 msgid "Entry Acknowledgment Contact"
 msgstr "Contacto acuse de recibo de Ingreso"
@@ -10359,10 +10371,6 @@ msgstr "Corrección de CV"
 msgctxt "model:lims.laboratory.professional,name:"
 msgid "Laboratory Professional"
 msgstr "Profesional de laboratorio"
-
-msgctxt "model:lims.manage_services.ack_of_receipt,name:"
-msgid "Manage Services"
-msgstr "Gestionar servicios"
 
 msgctxt "model:lims.matrix,name:"
 msgid "Matrix"
@@ -10933,10 +10941,6 @@ msgctxt "model:lims.sample,name:"
 msgid "Sample"
 msgstr "Muestra"
 
-msgctxt "model:lims.sample.add_service.ack_of_receipt,name:"
-msgid "Add Sample Services"
-msgstr "Añadir servicios a muestras"
-
 msgctxt "model:lims.sample.add_service.start,name:"
 msgid "Add Sample Services"
 msgstr "Añadir servicios a muestras"
@@ -10952,10 +10956,6 @@ msgstr "Copiar muestra"
 msgctxt "model:lims.sample.edit.start,name:"
 msgid "Edit Samples"
 msgstr "Modificar muestras"
-
-msgctxt "model:lims.sample.edit_service.ack_of_receipt,name:"
-msgid "Edit Sample Services"
-msgstr "Modificar servicios de muestras"
 
 msgctxt "model:lims.sample.edit_service.start,name:"
 msgid "Edit Sample Services"
@@ -14698,6 +14698,10 @@ msgctxt "view:lims.create_sample.start:"
 msgid "Report comments"
 msgstr "Observaciones informe"
 
+msgctxt "view:lims.entry.acknowledgment.ask_send.ask:"
+msgid "Do you want to resend the acknowledgment of receipt?"
+msgstr "¿Quiere reenviar el acuse de recibo de muestras?"
+
 msgctxt "view:lims.entry.acknowledgment_contacts:"
 msgid "Acknowledgment Contact"
 msgstr "Contacto acuse de recibo"
@@ -15021,10 +15025,6 @@ msgstr "Laboratorios"
 msgctxt "view:lims.laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
-
-msgctxt "view:lims.manage_services.ack_of_receipt:"
-msgid "Do you want to resend the acknowledgment of receipt?"
-msgstr "¿Quiere reenviar el acuse de recibo de muestras?"
 
 msgctxt "view:lims.matrix.variety:"
 msgid "Product Type - Matrix - Variety"
@@ -15638,17 +15638,9 @@ msgctxt "view:lims.results_report_annulation.start:"
 msgid "Annulment reason"
 msgstr "Motivo de anulación"
 
-msgctxt "view:lims.sample.add_service.ack_of_receipt:"
-msgid "Do you want to resend the acknowledgment of receipt?"
-msgstr "¿Quiere reenviar el acuse de recibo de muestras?"
-
 msgctxt "view:lims.sample.duplicate.start:"
 msgid "Labels"
 msgstr "Rótulos"
-
-msgctxt "view:lims.sample.edit_service.ack_of_receipt:"
-msgid "Do you want to resend the acknowledgment of receipt?"
-msgstr "¿Quiere reenviar el acuse de recibo de muestras?"
 
 msgctxt "view:lims.sample.edit_service.start:"
 msgid "All selected samples will be left only with the following services:"
@@ -15854,6 +15846,22 @@ msgstr "Cambiar"
 msgctxt "wizard_button:lims.change_storage_time,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.confirm_fractions,send_ack_of_receipt,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.confirm_fractions,send_ack_of_receipt,send_ack:"
+msgid "Send"
+msgstr "Enviar"
+
+msgctxt "wizard_button:lims.confirm_samples,send_ack_of_receipt,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.confirm_samples,send_ack_of_receipt,send_ack:"
+msgid "Send"
+msgstr "Enviar"
 
 msgctxt "wizard_button:lims.control.means_deviations_calc,empty,end:"
 msgid "Cancel"

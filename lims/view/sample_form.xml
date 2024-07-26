@@ -57,6 +57,6 @@
     </notebook>
     <group colspan="4" id="button_confirm">
         <field name="button_confirm_available" invisible="1"/>
-        <button name="confirm" string="Confirm"/>
+        <button name="button_confirm" string="Confirm"/>
     </group>
 </form>
