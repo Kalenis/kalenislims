@@ -536,8 +536,23 @@ class Typification(ModelSQL, ModelView):
                     })
 
     @classmethod
-    def get_valid_typification(cls, product_type, matrix, analysis, method):
+    def get_valid_typification(cls, product_type, matrix, analysis, method,
+            laboratory=None):
         cursor = Transaction().connection.cursor()
+        if laboratory:
+            cursor.execute('SELECT id '
+                'FROM "' + cls._table + '" '
+                'WHERE product_type = %s '
+                    'AND matrix = %s '
+                    'AND analysis = %s '
+                    'AND method = %s '
+                    'AND laboratory = %s '
+                    'AND valid',
+                (product_type, matrix, analysis, method, laboratory))
+            res = cursor.fetchone()
+            if res:
+                return cls(res[0])
+
         cursor.execute('SELECT id '
             'FROM "' + cls._table + '" '
             'WHERE product_type = %s '

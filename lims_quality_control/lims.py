@@ -470,7 +470,7 @@ class EntryDetailAnalysis(metaclass=PoolMeta):
         if not template_id:
             return Typification.get_valid_typification(
                 fraction.product_type.id, fraction.matrix.id,
-                detail.analysis.id, detail.method.id)
+                detail.analysis.id, detail.method.id, detail.laboratory.id)
 
         cursor.execute('SELECT id '
             'FROM "' + Typification._table + '" '
