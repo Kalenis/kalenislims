@@ -1584,7 +1584,7 @@ class NotebookLine(ModelSQL, ModelView):
         for nl in notebook_lines:
             typification = Typification.get_valid_typification(
                 nl.notebook.product_type.id, nl.notebook.matrix.id,
-                nl.analysis.id, nl.method.id)
+                nl.analysis.id, nl.method.id, nl.laboratory.id)
             for name in names:
                 if typification:
                     result[name][nl.id] = getattr(typification, name, None)

@@ -1468,13 +1468,13 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
             default = {}
         current_default = default.copy()
         current_default['confirmation_date'] = None
-        for detail in details:
-            if (detail.laboratory and
-                    detail.laboratory.id !=
-                    detail._get_default_laboratory()):
-                raise UserError(gettext('lims.msg_service_default_laboratory',
-                    analysis=detail.analysis.rec_name,
-                    laboratory=detail.laboratory.rec_name))
+        #for detail in details:
+            #if (detail.laboratory and
+                    #detail.laboratory.id !=
+                    #detail._get_default_laboratory()):
+                #raise UserError(gettext('lims.msg_service_default_laboratory',
+                    #analysis=detail.analysis.rec_name,
+                    #laboratory=detail.laboratory.rec_name))
         return super().copy(details, default=current_default)
 
     @classmethod
@@ -1677,7 +1677,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
         Typification = pool.get('lims.typification')
         return Typification.get_valid_typification(
             fraction.product_type.id, fraction.matrix.id,
-            detail.analysis.id, detail.method.id)
+            detail.analysis.id, detail.method.id, detail.laboratory.id)
 
     @staticmethod
     def default_service_view():
