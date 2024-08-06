@@ -6888,6 +6888,14 @@ msgctxt "field:lims.typification.readonly,product_type:"
 msgid "Product type"
 msgstr "Tipo de producto"
 
+msgctxt "field:lims.typification.update.start,additional:"
+msgid "Additional analysis"
+msgstr "Análisis adicional"
+
+msgctxt "field:lims.typification.update.start,additionals:"
+msgid "Additional analysis"
+msgstr "Análisis adicionales"
+
 msgctxt "field:lims.typification.update.start,calc_decimals:"
 msgid "Calculation decimals"
 msgstr "Decimales para cálculo"
@@ -6972,9 +6980,13 @@ msgctxt "field:lims.typification.update.start,start_uom:"
 msgid "Start UoM"
 msgstr "UdM inicial"
 
+msgctxt "field:lims.typification.update.start,update_additional:"
+msgid "Update Additional analysis"
+msgstr "Actualizar Análisis adicional"
+
 msgctxt "field:lims.typification.update.start,update_calc_decimals:"
 msgid "Update Calculation decimals"
-msgstr "Decimales para cálculo"
+msgstr "Actualizar Decimales para cálculo"
 
 msgctxt "field:lims.typification.update.start,update_check_result_limits:"
 msgid "Update Validate limits on the result"
@@ -15561,6 +15573,14 @@ msgstr "Origen:"
 msgctxt "view:lims.typification.readonly:"
 msgid "Typifications"
 msgstr "Tipificaciones"
+
+msgctxt "view:lims.typification.update.start:"
+msgid "Additional analysis"
+msgstr "Análisis adicionales"
+
+msgctxt "view:lims.typification.update.start:"
+msgid "General"
+msgstr "General"
 
 msgctxt "view:lims.typification:"
 msgid "Additional analysis"

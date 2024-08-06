@@ -2949,6 +2949,12 @@ class UpdateTypificationStart(ModelView):
         ('both', 'Both'),
         ], 'Result type', sort=False)
     laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
+    additional = fields.Many2One('lims.analysis', 'Additional analysis',
+        domain=[('state', '=', 'active'), ('behavior', '=', 'additional')])
+    additionals = fields.Many2Many('lims.typification-analysis',
+        'typification', 'analysis', 'Additional analysis',
+        domain=[('state', '=', 'active'), ('type', '=', 'analysis'),
+            ('behavior', '!=', 'additional')])
     update_detection_limit = fields.Boolean('Update Detection limit')
     update_quantification_limit = fields.Boolean('Update Quantification limit')
     update_lower_limit = fields.Boolean('Update Lower limit allowed')
@@ -2975,6 +2981,7 @@ class UpdateTypificationStart(ModelView):
     update_report_type = fields.Boolean('Update Report type')
     update_report_result_type = fields.Boolean('Update Result type')
     update_laboratory = fields.Boolean('Update Laboratory')
+    update_additional = fields.Boolean('Update Additional analysis')
 
     @staticmethod
     def default_limit_digits():
@@ -3001,15 +3008,22 @@ class UpdateTypification(Wizard):
     confirm = StateTransition()
 
     def transition_confirm(self):
-        Typification = Pool().get('lims.typification')
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+
         active_ids = Transaction().context['active_ids']
         typifications = Typification.browse(active_ids)
+
         values_to_update = {}
         for field_name in self.start._fields.keys():
             if 'update' in field_name and getattr(
                     self.start, 'update_%s' % (field_name[7:])):
                 values_to_update[field_name[7:]] = getattr(
                     self.start, '%s' % (field_name[7:]))
+        if self.start.additionals:
+            values_to_update['additionals'] = [('add',
+                [a.id for a in self.start.additionals])]
+
         Typification.write(typifications, values_to_update)
         return 'end'
 
