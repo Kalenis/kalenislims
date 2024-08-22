@@ -2630,6 +2630,14 @@ msgctxt "field:lims.laboratory,section:"
 msgid "Section"
 msgstr "Sección"
 
+msgctxt "field:lims.laboratory,address:"
+msgid "Address"
+msgstr "Dirección"
+
+msgctxt "field:lims.laboratory,phone:"
+msgid "Phone"
+msgstr "Teléfono"
+
 msgctxt "field:lims.laboratory.cv_correction,fraction_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
