@@ -816,6 +816,7 @@ class SaleLine(metaclass=PoolMeta):
                 sale_line.method and sale_line.method.id or None)]
             analysis.extend(Analysis.get_included_analysis_method(
                 sale_line.analysis.id))
+            included_analysis_id = [a[0] for a in analysis]
 
             for a in analysis:
                 clause = [
@@ -838,17 +839,20 @@ class SaleLine(metaclass=PoolMeta):
                     additional = typification.additional
                     if key not in additional_services:
                         additional_services[key] = {}
-                    if additional.id not in additional_services[key]:
+                    if additional.id in additional_services[key]:
+                        continue
+                    if additional.id in included_analysis_id:
+                        continue
 
-                        additional_services[key][additional.id] = {
-                            'product': additional.product.id,
-                            'quantity': sale_line.quantity,
-                            'unit': additional.product.default_uom.id,
-                            'product_type': sale_line.product_type.id,
-                            'matrix': sale_line.matrix.id,
-                            'method': None,
-                            'additional_origin': sale_line.id,
-                            }
+                    additional_services[key][additional.id] = {
+                        'product': additional.product.id,
+                        'quantity': sale_line.quantity,
+                        'unit': additional.product.default_uom.id,
+                        'product_type': sale_line.product_type.id,
+                        'matrix': sale_line.matrix.id,
+                        'method': None,
+                        'additional_origin': sale_line.id,
+                        }
 
                 if typification.additionals:
                     if key not in additional_services:
@@ -856,29 +860,32 @@ class SaleLine(metaclass=PoolMeta):
                     for additional in typification.additionals:
                         if not additional.product:
                             continue
-                        if additional.id not in additional_services[key]:
+                        if additional.id in additional_services[key]:
+                            continue
+                        if additional.id in included_analysis_id:
+                            continue
 
-                            cursor.execute('SELECT method '
-                                'FROM "' + Typification._table + '" '
-                                'WHERE product_type = %s '
-                                    'AND matrix = %s '
-                                    'AND analysis = %s '
-                                    'AND valid IS TRUE '
-                                    'AND by_default IS TRUE',
-                                (sale_line.product_type.id,
-                                    sale_line.matrix.id, additional.id))
-                            res = cursor.fetchone()
-                            method_id = res and res[0] or None
+                        cursor.execute('SELECT method '
+                            'FROM "' + Typification._table + '" '
+                            'WHERE product_type = %s '
+                                'AND matrix = %s '
+                                'AND analysis = %s '
+                                'AND valid IS TRUE '
+                                'AND by_default IS TRUE',
+                            (sale_line.product_type.id,
+                                sale_line.matrix.id, additional.id))
+                        res = cursor.fetchone()
+                        method_id = res and res[0] or None
 
-                            additional_services[key][additional.id] = {
-                                'product': additional.product.id,
-                                'quantity': sale_line.quantity,
-                                'unit': additional.product.default_uom.id,
-                                'product_type': sale_line.product_type.id,
-                                'matrix': sale_line.matrix.id,
-                                'method': method_id,
-                                'additional_origin': sale_line.id,
-                                }
+                        additional_services[key][additional.id] = {
+                            'product': additional.product.id,
+                            'quantity': sale_line.quantity,
+                            'unit': additional.product.default_uom.id,
+                            'product_type': sale_line.product_type.id,
+                            'matrix': sale_line.matrix.id,
+                            'method': method_id,
+                            'additional_origin': sale_line.id,
+                            }
 
         if additional_services:
             sale_lines = []
