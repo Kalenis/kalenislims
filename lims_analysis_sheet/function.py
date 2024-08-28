@@ -2,10 +2,15 @@
 # This file is part of lims_analysis_sheet module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import formulas
+import schedula
+from itertools import chain
 from decimal import Decimal
 
 from trytond.pool import Pool
 from trytond.transaction import Transaction
+from trytond.exceptions import UserError
+from trytond.modules.lims_interface.data import ALLOWED_RESULT_TYPES
 
 custom_functions = {}
 
@@ -196,6 +201,93 @@ def get_sheet_analysis(analysis_code, alias=None, notebook_line=None):
 
 
 custom_functions['XS_A'] = get_sheet_analysis
+
+
+def get_nline_relation(analysis_code, notebook_line=None, round_=True):
+    pool = Pool()
+    NotebookLine = pool.get('lims.notebook.line')
+
+    notebook_id = Transaction().context.get('lims_analysis_notebook')
+    if not notebook_id:
+        if not notebook_line:
+            return None
+        if isinstance(notebook_line, int):
+            notebook_line = NotebookLine(notebook_line)
+        notebook_id = notebook_line.notebook.id
+
+    target_line = None
+    accepted_line = NotebookLine.search([
+        ('notebook', '=', notebook_id),
+        ('analysis.code', '=', analysis_code),
+        ('accepted', '=', True),
+        ])
+    if accepted_line:
+        target_line = accepted_line[0]
+    else:
+        last_repetition_line = NotebookLine.search([
+            ('notebook', '=', notebook_id),
+            ('analysis.code', '=', analysis_code),
+            ('annulled', '=', False),
+            ], order=[('repetition', 'DESC')], limit=1)
+        if last_repetition_line:
+            target_line = last_repetition_line[0]
+
+    if not target_line:
+        return None
+
+    formula = target_line.analysis.result_formula
+    if not formula:
+        return None
+
+    if not formula.startswith('='):
+        formula = '=' + formula
+
+    parser = formulas.Parser()
+    with Transaction().set_context(
+            lims_analysis_notebook=target_line.notebook.id):
+        try:
+            ast = parser.ast(formula)[1].compile()
+        except Exception as e:
+            return None
+
+        inputs = []
+        try:
+            value = ast(*inputs)
+        except schedula.utils.exc.DispatcherError as e:
+            raise UserError(e.args[0] % e.args[1:])
+
+        if value == '':
+            value = None
+        if isinstance(value, list):
+            value = str(value)
+        elif not isinstance(value, ALLOWED_RESULT_TYPES):
+            value = value.tolist()
+        if isinstance(value, formulas.tokens.operand.XlError):
+            value = None
+        elif isinstance(value, list):
+            for x in chain(*value):
+                if isinstance(x,
+                        formulas.tokens.operand.XlError):
+                    value = None
+
+        if value is not None:
+            if int(value) == value:
+                value = int(value)
+            else:
+                epsilon = 0.0000000001
+                if int(value + epsilon) != int(value):
+                    value = int(value + epsilon)
+                elif int(value - epsilon) != int(value):
+                    value = int(value)
+                else:
+                    value = float(value)
+            if round_:
+                value = round(value, target_line.decimals)
+
+    return value
+
+
+custom_functions['R'] = get_nline_relation
 
 
 def convert_brix_to_density(value=None):

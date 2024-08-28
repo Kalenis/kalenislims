@@ -5,6 +5,7 @@
 import logging
 import operator
 import json
+import formulas
 from datetime import datetime, date
 from decimal import Decimal
 from sql import Literal
@@ -964,6 +965,9 @@ class Analysis(Workflow, ModelSQL, ModelView):
             'required': Bool(Equal(Eval('behavior'), 'internal_relation')),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
             }, depends=['behavior', 'state'])
+    result_formula_icon = fields.Function(fields.Char(
+        'Result formula Icon'),
+        'on_change_with_result_formula_icon')
     converted_result_formula = fields.Char('Converted result formula',
         states={
             'invisible': Not(
@@ -971,6 +975,9 @@ class Analysis(Workflow, ModelSQL, ModelView):
             'required': Bool(Equal(Eval('behavior'), 'internal_relation')),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
             }, depends=['behavior', 'state'])
+    converted_result_formula_icon = fields.Function(fields.Char(
+        'Converted result formula Icon'),
+        'on_change_with_converted_result_formula_icon')
     gender_species = fields.Text('Gender Species', translate=True,
         states={
             'invisible': Not(And(
@@ -1229,6 +1236,59 @@ class Analysis(Workflow, ModelSQL, ModelView):
         if records:
             return [(field,) + tuple(clause[1:])]
         return [(cls._rec_name,) + tuple(clause[1:])]
+
+    @fields.depends('result_formula')
+    def on_change_with_result_formula_icon(self, name=None):
+        if not self.result_formula:
+            return ''
+        error = self.formula_error(self.result_formula)
+        if not error:
+            return 'lims-green'
+        if error[0] == 'warning':
+            return 'lims-yellow'
+        return 'lims-red'
+
+    @fields.depends('converted_result_formula')
+    def on_change_with_converted_result_formula_icon(self, name=None):
+        if not self.converted_result_formula:
+            return ''
+        error = self.formula_error(self.converted_result_formula)
+        if not error:
+            return 'lims-green'
+        if error[0] == 'warning':
+            return 'lims-yellow'
+        return 'lims-red'
+
+    def formula_error(self, formula):
+        if not formula:
+            return
+        if not formula.startswith('='):
+            formula = '=' + formula
+        parser = formulas.Parser()
+        try:
+            builder = parser.ast(formula)[1]
+            missing_methods = [k for k, v in builder.dsp.function_nodes.items()
+                if v['function'] is formulas.functions.not_implemented]
+            if missing_methods:
+                missing_methods = {x.split('<')[0] for x in missing_methods}
+                if len(missing_methods) == 1:
+                    msg = 'Unknown method: '
+                else:
+                    msg = 'Unknown methods: '
+                msg += (', '.join(missing_methods))
+                return ('error', msg)
+
+            #ast = builder.compile()
+            missing_variables = []
+            if missing_variables:
+                return ('warning', 'Referenced alias not found: %s' %
+                    ', '.join(missing_variables))
+        except formulas.errors.FormulaError as error:
+            msg = error.msg.replace('\n', ' ')
+            if error.args[1:]:
+                msg = msg % error.args[1:]
+            return ('error', msg)
+        return
 
     @classmethod
     def validate(cls, analysis):

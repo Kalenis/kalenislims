@@ -62,6 +62,10 @@ msgctxt "field:lims.analysis,converted_result_formula:"
 msgid "Converted result formula"
 msgstr "Fórmula de resultado convertido"
 
+msgctxt "field:lims.analysis,converted_result_formula_icon:"
+msgid "Converted result formula Icon"
+msgstr "Icono Fórmula de resultado convertido"
+
 msgctxt "field:lims.analysis,description:"
 msgid "Description"
 msgstr "Descripción"
@@ -137,6 +141,10 @@ msgstr "Producto"
 msgctxt "field:lims.analysis,result_formula:"
 msgid "Result formula"
 msgstr "Fórmula de resultado"
+
+msgctxt "field:lims.analysis,result_formula_icon:"
+msgid "Result formula Icon"
+msgstr "Icono Fórmula de resultado"
 
 msgctxt "field:lims.analysis,start_date:"
 msgid "Entry date"
@@ -8140,6 +8148,10 @@ msgctxt "model:ir.action,name:wiz_method_new_version"
 msgid "New Method Version"
 msgstr "Nueva versión de Método"
 
+msgctxt "model:ir.action,name:wiz_notebook_calculate_internal_relations"
+msgid "Calculate Internal Relations"
+msgstr "Calcular Relaciones internas"
+
 msgctxt "model:ir.action,name:wiz_notebook_evaluate_rules"
 msgid "Evaluate Rules"
 msgstr "12) Evaluar Reglas de cuaderno"
@@ -8147,6 +8159,10 @@ msgstr "12) Evaluar Reglas de cuaderno"
 msgctxt "model:ir.action,name:wiz_notebook_generate_results_report"
 msgid "Generate Results Report"
 msgstr "Generar informe de resultados"
+
+msgctxt "model:ir.action,name:wiz_notebook_line_calculate_internal_relations"
+msgid "Calculate Internal Relations"
+msgstr "Calcular Relaciones internas"
 
 msgctxt "model:ir.action,name:wiz_notebook_line_evaluate_rules"
 msgid "Evaluate Rules"

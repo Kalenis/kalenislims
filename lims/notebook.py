@@ -4,8 +4,12 @@
 # the full copyright notices and license terms.
 import operator
 import re
+import formulas
+import schedula
+from itertools import chain
+from decimal import Decimal
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, date, time, timedelta
 from dateutil.relativedelta import relativedelta
 from sql import Literal, Join
 
@@ -20,6 +24,9 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from .configuration import get_print_date
 from .formula_parser import FormulaParser
+
+ALLOWED_RESULT_TYPES = (str, int, float, Decimal, time, date, timedelta,
+    type(None))
 
 
 class Notebook(ModelSQL, ModelView):
@@ -883,7 +890,8 @@ class NotebookLine(ModelSQL, ModelView):
         states=_states, depends=_depends)
     converted_result = fields.Char('Converted result',
         states=_states, depends=_depends)
-    result_and_uom = fields.Function(fields.Char('Result && Uom'), 'get_result_and_uom')
+    result_and_uom = fields.Function(fields.Char('Result && Uom'),
+        'get_result_and_uom')
     formated_result = fields.Function(fields.Char('Result to report'),
         'get_formated_result')
     formated_converted_result = fields.Function(fields.Char(
@@ -2859,6 +2867,160 @@ class NotebookLineLimitsValidation(NotebookLimitsValidation):
             return 'end'
 
         self.lines_limits_validation(notebook_lines)
+        return 'end'
+
+
+class CalculateInternalRelations(Wizard):
+    'Calculate Internal Relations'
+    __name__ = 'lims.notebook.calculate_internal_relations'
+
+    start_state = 'check'
+    check = StateTransition()
+    calcuate = StateTransition()
+
+    def transition_check(self):
+        return 'calcuate'
+
+    def transition_calcuate(self):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+
+        for notebook_id in Transaction().context['active_ids']:
+            with Transaction().set_context(_check_access=True):
+                notebook_lines = NotebookLine.search([
+                    ('notebook', '=', notebook_id),
+                    ('analysis.behavior', '=', 'internal_relation'),
+                    ('accepted', '=', False),
+                    ('result', 'in', [None, '']),
+                    ('converted_result', 'in', [None, '']),
+                    ('annulled', '=', False),
+                    ])
+            if not notebook_lines:
+                continue
+            self.calculate_relations(notebook_lines)
+        return 'end'
+
+    def calculate_relations(self, notebook_lines):
+        pool = Pool()
+        Date = pool.get('ir.date')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        date = Date.today()
+        lines_to_save = []
+        lines_to_validate_limits = []
+
+        for nl in notebook_lines:
+            result = None
+            formula = nl.analysis.result_formula
+            if formula:
+                result = self._calcuate(formula, nl, round_=True)
+
+            converted_result = None
+            formula = nl.analysis.converted_result_formula
+            if formula:
+                converted_result = self._calcuate(formula, nl)
+
+            if result is not None:
+                nl.result = str(result)
+            if converted_result is not None:
+                nl.converted_result = str(converted_result)
+            if result is not None or converted_result is not None:
+                nl.start_date = date
+                nl.end_date = date
+                if nl.laboratory.automatic_accept_result:
+                    nl.accepted = True
+                    nl.acceptance_date = datetime.now()
+                lines_to_save.append(nl)
+                if nl.analysis.validate_limits_after_calculation:
+                    lines_to_validate_limits.append(nl)
+
+        if lines_to_save:
+            NotebookLine.save(lines_to_save)
+        if lines_to_validate_limits:
+            self.validate_limits(lines_to_validate_limits)
+        return 'end'
+
+    def _calcuate(self, formula, notebook_line, round_=False):
+        if not formula.startswith('='):
+            formula = '=' + formula
+
+        parser = formulas.Parser()
+        with Transaction().set_context(
+                lims_analysis_notebook=notebook_line.notebook.id):
+            try:
+                ast = parser.ast(formula)[1].compile()
+            except Exception as e:
+                return None
+
+            inputs = []
+            try:
+                value = ast(*inputs)
+            except schedula.utils.exc.DispatcherError as e:
+                raise UserError(e.args[0] % e.args[1:])
+
+            if value == '':
+                value = None
+            if isinstance(value, list):
+                value = str(value)
+            elif not isinstance(value, ALLOWED_RESULT_TYPES):
+                value = value.tolist()
+            if isinstance(value, formulas.tokens.operand.XlError):
+                value = None
+            elif isinstance(value, list):
+                for x in chain(*value):
+                    if isinstance(x,
+                            formulas.tokens.operand.XlError):
+                        value = None
+
+            if value is not None:
+                if int(value) == value:
+                    value = int(value)
+                else:
+                    epsilon = 0.0000000001
+                    if int(value + epsilon) != int(value):
+                        value = int(value + epsilon)
+                    elif int(value - epsilon) != int(value):
+                        value = int(value)
+                    else:
+                        value = float(value)
+                if round_:
+                    value = round(value, notebook_line.decimals)
+
+        return value
+
+    def validate_limits(self, notebook_lines):
+        pool = Pool()
+        LimitsValidation = pool.get('lims.notebook.limits_validation',
+            type='wizard')
+        session_id, _, _ = LimitsValidation.create()
+        limits_validation = LimitsValidation(session_id)
+        limits_validation.lines_limits_validation(notebook_lines)
+
+    def end(self):
+        return 'reload'
+
+
+class NLCalculateInternalRelations(CalculateInternalRelations):
+    'Calculate Internal Relations'
+    __name__ = 'lims.notebook_line.calculate_internal_relations'
+
+    def transition_calcuate(self):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+
+        with Transaction().set_context(_check_access=True):
+            notebook_lines = NotebookLine.search([
+                ('id', 'in', Transaction().context['active_ids']),
+                ('analysis.behavior', '=', 'internal_relation'),
+                ('accepted', '=', False),
+                ('result', 'in', [None, '']),
+                ('converted_result', 'in', [None, '']),
+                ('annulled', '=', False),
+                ])
+        if not notebook_lines:
+            return 'end'
+
+        self.calculate_relations(notebook_lines)
         return 'end'
 
 
