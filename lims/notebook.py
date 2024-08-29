@@ -2972,7 +2972,7 @@ class CalculateInternalRelations(Wizard):
                             formulas.tokens.operand.XlError):
                         value = None
 
-            if value is not None:
+            if value is not None and str(value).isnumeric():
                 if int(value) == value:
                     value = int(value)
                 else:
