@@ -14,7 +14,8 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from trytond.model import ModelView, ModelSQL, fields, Unique, DictSchemaMixin
+from trytond.model import ModelView, ModelSQL, fields, Unique, \
+    DictSchemaMixin, DeactivableMixin
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
 from trytond.pool import Pool
@@ -188,7 +189,7 @@ class PackagingType(ModelSQL, ModelView):
         return [(cls._rec_name,) + tuple(clause[1:])]
 
 
-class FractionType(ModelSQL, ModelView):
+class FractionType(DeactivableMixin, ModelSQL, ModelView):
     'Fraction Type'
     __name__ = 'lims.fraction.type'
     _rec_name = 'description'

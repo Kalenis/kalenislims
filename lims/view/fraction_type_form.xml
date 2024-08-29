@@ -26,4 +26,6 @@
     <field name="report"/>
     <label name="without_services"/>
     <field name="without_services"/>
+    <label name="active"/>
+    <field name="active"/>
 </form>
