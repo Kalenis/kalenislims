@@ -336,6 +336,8 @@ def register():
         notebook.NotebookLineResultsConversion,
         notebook.NotebookLimitsValidation,
         notebook.NotebookLineLimitsValidation,
+        notebook.CalculateInternalRelations,
+        notebook.NLCalculateInternalRelations,
         notebook.NotebookInternalRelationsCalc1,
         notebook.NotebookLineInternalRelationsCalc1,
         notebook.NotebookInternalRelationsCalc2,

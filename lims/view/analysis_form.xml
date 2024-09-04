@@ -10,10 +10,16 @@
     <field name="type"/>
     <label name="behavior"/>
     <field name="behavior"/>
-    <label name="result_formula"/>
-    <field name="result_formula"/>
-    <label name="converted_result_formula"/>
-    <field name="converted_result_formula"/>
+    <group id="result_formula" colspan="2" col="3">
+        <label name="result_formula"/>
+        <field name="result_formula" xexpand="1"/>
+        <image name="result_formula_icon" xexpand="0" size="30"/>
+    </group>
+    <group id="converted_result_formula" colspan="2" col="3">
+        <label name="converted_result_formula"/>
+        <field name="converted_result_formula" xexpand="1"/>
+        <image name="converted_result_formula_icon" xexpand="0" size="30"/>
+    </group>
     <label name="product"/>
     <field name="product"/>
     <label name="order"/>

@@ -365,6 +365,30 @@
             <field name="action" ref="wiz_lims_notebook_line_limits_validation"/>
         </record>
 
+<!-- Wizard Calculate Internal Relations -->
+
+        <record model="ir.action.wizard" id="wiz_notebook_calculate_internal_relations">
+            <field name="name">Calculate Internal Relations</field>
+            <field name="wiz_name">lims.notebook.calculate_internal_relations</field>
+        </record>
+        <record model="ir.action.keyword"
+            id="wiz_notebook_calculate_internal_relations_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.notebook,-1</field>
+            <field name="action" ref="wiz_notebook_calculate_internal_relations"/>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_notebook_line_calculate_internal_relations">
+            <field name="name">Calculate Internal Relations</field>
+            <field name="wiz_name">lims.notebook_line.calculate_internal_relations</field>
+        </record>
+        <record model="ir.action.keyword"
+            id="wiz_notebook_line_calculate_internal_relations_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.notebook.line,-1</field>
+            <field name="action" ref="wiz_notebook_line_calculate_internal_relations"/>
+        </record>
+
 <!-- Wizard Internal Relations Calculation 1 (repetition zero) -->
 
         <record model="ir.ui.view" id="lims_notebook_internal_relations_calc_1_start_view_form">
