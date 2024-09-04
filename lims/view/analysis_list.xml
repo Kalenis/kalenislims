@@ -10,6 +10,7 @@
     <field name="behavior"/>
     <field name="result_formula"/>
     <field name="converted_result_formula"/>
+    <field name="literal_result_formula"/>
     <field name="product"/>
     <field name="formula"/>
     <field name="order"/>

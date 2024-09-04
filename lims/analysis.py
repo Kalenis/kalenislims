@@ -962,9 +962,11 @@ class Analysis(Workflow, ModelSQL, ModelView):
         states={
             'invisible': Not(
                 Bool(Equal(Eval('behavior'), 'internal_relation'))),
-            'required': Bool(Equal(Eval('behavior'), 'internal_relation')),
+            'required': And(
+                Eval('behavior') == 'internal_relation',
+                ~Eval('literal_result_formula')),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
-            }, depends=['behavior', 'state'])
+            }, depends=['behavior', 'literal_result_formula', 'state'])
     result_formula_icon = fields.Function(fields.Char(
         'Result formula Icon'),
         'on_change_with_result_formula_icon')
@@ -972,12 +974,26 @@ class Analysis(Workflow, ModelSQL, ModelView):
         states={
             'invisible': Not(
                 Bool(Equal(Eval('behavior'), 'internal_relation'))),
-            'required': Bool(Equal(Eval('behavior'), 'internal_relation')),
+            'required': And(
+                Eval('behavior') == 'internal_relation',
+                ~Eval('literal_result_formula')),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
-            }, depends=['behavior', 'state'])
+            }, depends=['behavior', 'literal_result_formula', 'state'])
     converted_result_formula_icon = fields.Function(fields.Char(
         'Converted result formula Icon'),
         'on_change_with_converted_result_formula_icon')
+    literal_result_formula = fields.Char('Literal result formula',
+        states={
+            'invisible': Not(
+                Bool(Equal(Eval('behavior'), 'internal_relation'))),
+            'required': And(
+                Eval('behavior') == 'internal_relation',
+                ~Eval('result_formula')),
+            'readonly': Bool(Equal(Eval('state'), 'disabled')),
+            }, depends=['behavior', 'result_formula', 'state'])
+    literal_result_formula_icon = fields.Function(fields.Char(
+        'Literal result formula Icon'),
+        'on_change_with_literal_result_formula_icon')
     gender_species = fields.Text('Gender Species', translate=True,
         states={
             'invisible': Not(And(
@@ -1253,6 +1269,17 @@ class Analysis(Workflow, ModelSQL, ModelView):
         if not self.converted_result_formula:
             return ''
         error = self.formula_error(self.converted_result_formula)
+        if not error:
+            return 'lims-green'
+        if error[0] == 'warning':
+            return 'lims-yellow'
+        return 'lims-red'
+
+    @fields.depends('literal_result_formula')
+    def on_change_with_literal_result_formula_icon(self, name=None):
+        if not self.literal_result_formula:
+            return ''
+        error = self.formula_error(self.literal_result_formula)
         if not error:
             return 'lims-green'
         if error[0] == 'warning':

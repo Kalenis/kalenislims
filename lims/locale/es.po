@@ -122,6 +122,14 @@ msgctxt "field:lims.analysis,laboratory_domain:"
 msgid "Laboratories"
 msgstr "Laboratorios"
 
+msgctxt "field:lims.analysis,literal_result_formula:"
+msgid "Literal result formula"
+msgstr "Fórmula de resultado textual"
+
+msgctxt "field:lims.analysis,literal_result_formula_icon:"
+msgid "Literal result formula Icon"
+msgstr "Icono Fórmula de resultado textual"
+
 msgctxt "field:lims.analysis,methods:"
 msgid "Methods"
 msgstr "Métodos"
