@@ -2788,6 +2788,7 @@ class CalculateInternalRelations(Wizard):
                     ('accepted', '=', False),
                     ('result', 'in', [None, '']),
                     ('converted_result', 'in', [None, '']),
+                    ('literal_result', 'in', [None, '']),
                     ('annulled', '=', False),
                     ])
             if not notebook_lines:
@@ -2815,11 +2816,19 @@ class CalculateInternalRelations(Wizard):
             if formula:
                 converted_result = self._calcuate(formula, nl)
 
+            literal_result = None
+            formula = nl.analysis.literal_result_formula
+            if formula:
+                literal_result = self._calcuate(formula, nl)
+
             if result is not None:
                 nl.result = str(result)
             if converted_result is not None:
                 nl.converted_result = str(converted_result)
-            if result is not None or converted_result is not None:
+            if literal_result is not None:
+                nl.literal_result = str(literal_result)
+            if (result is not None or converted_result is not None or
+                    literal_result is not None):
                 nl.start_date = date
                 nl.end_date = date
                 if nl.laboratory.automatic_accept_result:
@@ -2910,6 +2919,7 @@ class NLCalculateInternalRelations(CalculateInternalRelations):
                 ('accepted', '=', False),
                 ('result', 'in', [None, '']),
                 ('converted_result', 'in', [None, '']),
+                ('literal_result', 'in', [None, '']),
                 ('annulled', '=', False),
                 ])
         if not notebook_lines:
@@ -3044,6 +3054,7 @@ class CalculateInternalRelationsUsingReps(Wizard):
                     ('accepted', '=', False),
                     ('result', 'in', [None, '']),
                     ('converted_result', 'in', [None, '']),
+                    ('literal_result', 'in', [None, '']),
                     ('annulled', '=', False),
                     ])
             if not notebook_lines:
@@ -3063,6 +3074,9 @@ class CalculateInternalRelationsUsingReps(Wizard):
             if formula:
                 variables.extend(self._get_variables_list(formula, nl))
             formula = nl.analysis.converted_result_formula
+            if formula:
+                variables.extend(self._get_variables_list(formula, nl))
+            formula = nl.analysis.literal_result_formula
             if formula:
                 variables.extend(self._get_variables_list(formula, nl))
             if not variables:
@@ -3211,11 +3225,20 @@ class CalculateInternalRelationsUsingReps(Wizard):
                 converted_result = self._calcuate(formula, nl, variables,
                     converted=True)
 
+            literal_result = None
+            formula = relation.internal_relation.literal_result_formula
+            if formula:
+                literal_result = self._calcuate(formula, nl, variables,
+                    converted=True)
+
             if result is not None:
                 nl.result = str(result)
             if converted_result is not None:
                 nl.converted_result = str(converted_result)
-            if result is not None or converted_result is not None:
+            if literal_result is not None:
+                nl.literal_result = str(literal_result)
+            if (result is not None or converted_result is not None
+                    or literal_result is not None):
                 nl.start_date = date
                 nl.end_date = date
                 if nl.laboratory.automatic_accept_result:
@@ -3296,6 +3319,7 @@ class NLCalculateInternalRelationsUsingReps(
             ('accepted', '=', False),
             ('result', 'in', [None, '']),
             ('converted_result', 'in', [None, '']),
+            ('literal_result', 'in', [None, '']),
             ('annulled', '=', False),
             ])
         if not notebook_lines:

@@ -20,6 +20,11 @@
         <field name="converted_result_formula" xexpand="1"/>
         <image name="converted_result_formula_icon" xexpand="0" size="30"/>
     </group>
+    <group id="literal_result_formula" colspan="4" col="3">
+        <label name="literal_result_formula"/>
+        <field name="literal_result_formula" xexpand="1"/>
+        <image name="literal_result_formula_icon" xexpand="0" size="30"/>
+    </group>
     <label name="product"/>
     <field name="product"/>
     <label name="order"/>
