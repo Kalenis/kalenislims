@@ -2862,6 +2862,109 @@ msgctxt "field:lims.notebook.annul_lines.start,annulment_reason:"
 msgid "Annulment reason"
 msgstr "Motivo de anulación"
 
+msgctxt ""
+"field:lims.notebook.calculate_internal_relations.process,internal_relation:"
+msgid "Internal relation"
+msgstr "Relación interna"
+
+msgctxt "field:lims.notebook.calculate_internal_relations.process,notebook:"
+msgid "Laboratory notebook"
+msgstr "Cuaderno de laboratorio"
+
+msgctxt "field:lims.notebook.calculate_internal_relations.process,variables:"
+msgid "Variables"
+msgstr "Variables"
+
+msgctxt ""
+"field:lims.notebook.calculate_internal_relations.relation,internal_relation:"
+msgid "Internal relation"
+msgstr "Relación interna"
+
+msgctxt "field:lims.notebook.calculate_internal_relations.relation,notebook:"
+msgid "Laboratory notebook"
+msgstr "Cuaderno de laboratorio"
+
+msgctxt ""
+"field:lims.notebook.calculate_internal_relations.relation,session_id:"
+msgid "Session ID"
+msgstr "ID Sesión"
+
+msgctxt "field:lims.notebook.calculate_internal_relations.relation,variables:"
+msgid "Variables"
+msgstr "Variables"
+
+msgctxt "field:lims.notebook.calculate_internal_relations.result,index:"
+msgid "Index"
+msgstr "Índice"
+
+msgctxt "field:lims.notebook.calculate_internal_relations.result,relations:"
+msgid "Relation"
+msgstr "Relación"
+
+msgctxt "field:lims.notebook.calculate_internal_relations.result,total:"
+msgid "Total"
+msgstr "Total"
+
+msgctxt "field:lims.notebook.calculate_internal_relations.variable,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt ""
+"field:lims.notebook.calculate_internal_relations.variable,converted_result:"
+msgid "Converted result"
+msgstr "Resultado convertido"
+
+msgctxt ""
+"field:lims.notebook.calculate_internal_relations.variable,converted_result_modifier:"
+msgid "Converted result modifier"
+msgstr "Modificador de resultado convertido"
+
+msgctxt ""
+"field:lims.notebook.calculate_internal_relations.variable,final_concentration:"
+msgid "Final concentration"
+msgstr "Concentración final"
+
+msgctxt ""
+"field:lims.notebook.calculate_internal_relations.variable,final_unit:"
+msgid "Final unit"
+msgstr "Unidad final"
+
+msgctxt ""
+"field:lims.notebook.calculate_internal_relations.variable,initial_concentration:"
+msgid "Initial concentration"
+msgstr "Concentración inicial"
+
+msgctxt ""
+"field:lims.notebook.calculate_internal_relations.variable,initial_unit:"
+msgid "Initial unit"
+msgstr "Unidad inicial"
+
+msgctxt "field:lims.notebook.calculate_internal_relations.variable,line:"
+msgid "Line"
+msgstr "Línea"
+
+msgctxt "field:lims.notebook.calculate_internal_relations.variable,relation:"
+msgid "Relation"
+msgstr "Relación"
+
+msgctxt ""
+"field:lims.notebook.calculate_internal_relations.variable,repetition:"
+msgid "Repetition"
+msgstr "Repetición"
+
+msgctxt "field:lims.notebook.calculate_internal_relations.variable,result:"
+msgid "Result"
+msgstr "Resultado"
+
+msgctxt ""
+"field:lims.notebook.calculate_internal_relations.variable,result_modifier:"
+msgid "Result modifier"
+msgstr "Modificador de resultado"
+
+msgctxt "field:lims.notebook.calculate_internal_relations.variable,use:"
+msgid "Use"
+msgstr "Usar"
+
 msgctxt "field:lims.notebook.generate_results_report.start,append_samples:"
 msgid "Append samples to existing reports"
 msgstr "Anexar muestras a informes existentes"
@@ -8313,6 +8416,11 @@ msgctxt "model:ir.action,name:wiz_notebook_calculate_internal_relations"
 msgid "Calculate Internal Relations"
 msgstr "Calcular Relaciones internas"
 
+msgctxt ""
+"model:ir.action,name:wiz_notebook_calculate_internal_relations_using_reps"
+msgid "Calculate Internal Relations using Repetitions"
+msgstr "Calcular Relaciones internas usando Repeticiones"
+
 msgctxt "model:ir.action,name:wiz_notebook_evaluate_rules"
 msgid "Evaluate Rules"
 msgstr "12) Evaluar Reglas de cuaderno"
@@ -8324,6 +8432,11 @@ msgstr "Generar informe de resultados"
 msgctxt "model:ir.action,name:wiz_notebook_line_calculate_internal_relations"
 msgid "Calculate Internal Relations"
 msgstr "Calcular Relaciones internas"
+
+msgctxt ""
+"model:ir.action,name:wiz_notebook_line_calculate_internal_relations_using_reps"
+msgid "Calculate Internal Relations using Repetitions"
+msgstr "Calcular Relaciones internas usando Repeticiones"
 
 msgctxt "model:ir.action,name:wiz_notebook_line_evaluate_rules"
 msgid "Evaluate Rules"
@@ -10423,6 +10536,22 @@ msgstr "Agregar relaciones internas"
 msgctxt "model:lims.notebook.annul_lines.start,name:"
 msgid "Annul Lines"
 msgstr "Anular líneas"
+
+msgctxt "model:lims.notebook.calculate_internal_relations.process,name:"
+msgid "Calculate Internal Relations using Repetitions"
+msgstr "Calcular Relaciones internas usando Repeticiones"
+
+msgctxt "model:lims.notebook.calculate_internal_relations.relation,name:"
+msgid "Internal Relation"
+msgstr "Relación Interna"
+
+msgctxt "model:lims.notebook.calculate_internal_relations.result,name:"
+msgid "Calculate Internal Relations using Repetitions"
+msgstr "Calcular Relaciones internas usando Repeticiones"
+
+msgctxt "model:lims.notebook.calculate_internal_relations.variable,name:"
+msgid "Internal Relation Variable"
+msgstr "Variable de Relación Interna"
 
 msgctxt "model:lims.notebook.evaluate_rules.start,name:"
 msgid "Evaluate Rules"
@@ -16179,6 +16308,16 @@ msgctxt "wizard_button:lims.notebook.annul_lines,start,ok:"
 msgid "Ok"
 msgstr "Aceptar"
 
+msgctxt ""
+"wizard_button:lims.notebook.calculate_internal_relations_using_reps,process,check_variables:"
+msgid "Next"
+msgstr "Siguiente"
+
+msgctxt ""
+"wizard_button:lims.notebook.calculate_internal_relations_using_reps,process,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
 msgctxt "wizard_button:lims.notebook.evaluate_rules,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
@@ -16418,6 +16557,16 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.notebook_line.annul_lines,start,ok:"
 msgid "Ok"
 msgstr "Aceptar"
+
+msgctxt ""
+"wizard_button:lims.notebook_line.calculate_internal_relations_using_reps,process,check_variables:"
+msgid "Next"
+msgstr "Siguiente"
+
+msgctxt ""
+"wizard_button:lims.notebook_line.calculate_internal_relations_using_reps,process,end:"
+msgid "Cancel"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:lims.notebook_line.evaluate_rules,start,end:"
 msgid "Cancel"

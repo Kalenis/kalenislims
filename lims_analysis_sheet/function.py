@@ -105,22 +105,33 @@ def get_nline_analysis(analysis_code, alias=None, notebook_line=None):
             notebook_line = NotebookLine(notebook_line)
         notebook_id = notebook_line.notebook.id
 
+    variables = Transaction().context.get('lims_analysis_variables', {})
+
     target_line = None
-    accepted_line = NotebookLine.search([
-        ('notebook', '=', notebook_id),
-        ('analysis.code', '=', analysis_code),
-        ('accepted', '=', True),
-        ])
-    if accepted_line:
-        target_line = accepted_line[0]
-    else:
-        last_repetition_line = NotebookLine.search([
+    if analysis_code in variables:
+        selected_line = NotebookLine.search([
             ('notebook', '=', notebook_id),
             ('analysis.code', '=', analysis_code),
-            ('annulled', '=', False),
-            ], order=[('repetition', 'DESC')], limit=1)
-        if last_repetition_line:
-            target_line = last_repetition_line[0]
+            ('repetition', '=', variables[analysis_code]),
+            ])
+        if selected_line:
+            target_line = selected_line[0]
+    else:
+        accepted_line = NotebookLine.search([
+            ('notebook', '=', notebook_id),
+            ('analysis.code', '=', analysis_code),
+            ('accepted', '=', True),
+            ])
+        if accepted_line:
+            target_line = accepted_line[0]
+        else:
+            last_repetition_line = NotebookLine.search([
+                ('notebook', '=', notebook_id),
+                ('analysis.code', '=', analysis_code),
+                ('annulled', '=', False),
+                ], order=[('repetition', 'DESC')], limit=1)
+            if last_repetition_line:
+                target_line = last_repetition_line[0]
 
     if not target_line:
         return None

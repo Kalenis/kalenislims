@@ -389,6 +389,61 @@
             <field name="action" ref="wiz_notebook_line_calculate_internal_relations"/>
         </record>
 
+<!-- Wizard Calculate Internal Relations using Repetitions -->
+
+        <record model="ir.ui.view" id="notebook_calculate_internal_relations_result_view">
+            <field name="model">lims.notebook.calculate_internal_relations.result</field>
+            <field name="type">form</field>
+            <field name="name">notebook_calculate_internal_relations_result_form</field>
+        </record>
+        <record model="ir.ui.view" id="notebook_calculate_internal_relations_process_view">
+            <field name="model">lims.notebook.calculate_internal_relations.process</field>
+            <field name="type">form</field>
+            <field name="name">notebook_calculate_internal_relations_process_form</field>
+        </record>
+        <record model="ir.ui.view" id="notebook_calculate_internal_relations_variable_view_list">
+            <field name="model">lims.notebook.calculate_internal_relations.variable</field>
+            <field name="type">tree</field>
+            <field name="name">notebook_calculate_internal_relations_variable_list</field>
+        </record>
+        <record model="ir.ui.view" id="notebook_calculate_internal_relations_variable_view_form">
+            <field name="model">lims.notebook.calculate_internal_relations.variable</field>
+            <field name="type">form</field>
+            <field name="name">notebook_calculate_internal_relations_variable_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_notebook_calculate_internal_relations_using_reps">
+            <field name="name">Calculate Internal Relations using Repetitions</field>
+            <field name="wiz_name">lims.notebook.calculate_internal_relations_using_reps</field>
+        </record>
+        <record model="ir.action.keyword"
+            id="wiz_notebook_calculate_internal_relations_using_reps_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.notebook,-1</field>
+            <field name="action" ref="wiz_notebook_calculate_internal_relations_using_reps"/>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_notebook_line_calculate_internal_relations_using_reps">
+            <field name="name">Calculate Internal Relations using Repetitions</field>
+            <field name="wiz_name">lims.notebook_line.calculate_internal_relations_using_reps</field>
+        </record>
+        <record model="ir.action.keyword"
+            id="wiz_notebook_line_calculate_internal_relations_using_reps_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.notebook.line,-1</field>
+            <field name="action" ref="wiz_notebook_line_calculate_internal_relations_using_reps"/>
+        </record>
+
+        <record model="ir.model.field.access"
+            id="access_calculate_internal_relations_process_variables">
+            <field name="field"
+                search="[('name', '=', 'variables'), ('model.model', '=', 'lims.notebook.calculate_internal_relations.process')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
 <!-- Wizard Internal Relations Calculation 1 (repetition zero) -->
 
         <record model="ir.ui.view" id="lims_notebook_internal_relations_calc_1_start_view_form">
