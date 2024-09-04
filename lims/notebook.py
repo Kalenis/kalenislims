@@ -3024,6 +3024,393 @@ class NLCalculateInternalRelations(CalculateInternalRelations):
         return 'end'
 
 
+class CalculateInternalRelationsUsingRepsResult(ModelView):
+    'Calculate Internal Relations using Repetitions'
+    __name__ = 'lims.notebook.calculate_internal_relations.result'
+
+    relations = fields.Many2Many(
+        'lims.notebook.calculate_internal_relations.relation', None, None,
+        'Relation')
+    total = fields.Integer('Total')
+    index = fields.Integer('Index')
+
+
+class CalculateInternalRelationsRelation(ModelSQL, ModelView):
+    'Internal Relation'
+    __name__ = 'lims.notebook.calculate_internal_relations.relation'
+    _table = 'lims_nb_calculate_internal_relations_relation'
+
+    notebook = fields.Many2One('lims.notebook', 'Laboratory notebook')
+    internal_relation = fields.Many2One('lims.analysis', 'Internal relation')
+    variables = fields.One2Many(
+        'lims.notebook.calculate_internal_relations.variable', 'relation',
+        'Variables')
+    session_id = fields.Integer('Session ID')
+
+    @classmethod
+    def __register__(cls, module_name):
+        super().__register__(module_name)
+        cursor = Transaction().connection.cursor()
+        cursor.execute('DELETE FROM "' + cls._table + '"')
+
+
+class CalculateInternalRelationsVariable(ModelSQL, ModelView):
+    'Internal Relation Variable'
+    __name__ = 'lims.notebook.calculate_internal_relations.variable'
+    _table = 'lims_nb_calculate_internal_relations_variable'
+
+    relation = fields.Many2One(
+        'lims.notebook.calculate_internal_relations.relation', 'Relation',
+        ondelete='CASCADE', readonly=True)
+    line = fields.Many2One('lims.notebook.line', 'Line')
+    analysis = fields.Many2One('lims.analysis', 'Analysis', readonly=True)
+    repetition = fields.Integer('Repetition', readonly=True)
+    result_modifier = fields.Function(fields.Many2One('lims.result_modifier',
+        'Result modifier'), 'get_line_field')
+    result = fields.Function(fields.Char('Result'), 'get_line_field')
+    initial_unit = fields.Function(fields.Many2One('product.uom',
+        'Initial unit'), 'get_line_field')
+    initial_concentration = fields.Function(fields.Char(
+        'Initial concentration'), 'get_line_field')
+    converted_result_modifier = fields.Function(fields.Many2One(
+        'lims.result_modifier', 'Converted result modifier'), 'get_line_field')
+    converted_result = fields.Function(fields.Char('Converted result'),
+        'get_line_field')
+    final_unit = fields.Function(fields.Many2One('product.uom', 'Final unit'),
+        'get_line_field')
+    final_concentration = fields.Function(fields.Char('Final concentration'),
+        'get_line_field')
+    use = fields.Boolean('Use')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._order.insert(0, ('relation', 'ASC'))
+        cls._order.insert(1, ('analysis', 'ASC'))
+        cls._order.insert(2, ('repetition', 'ASC'))
+
+    @classmethod
+    def get_line_field(cls, variables, names):
+        result = {}
+        for name in names:
+            result[name] = {}
+            if cls._fields[name]._type == 'many2one':
+                for v in variables:
+                    field = getattr(v.line, name, None)
+                    result[name][v.id] = field.id if field else None
+            else:
+                for v in variables:
+                    result[name][v.id] = getattr(v.line, name, None)
+        return result
+
+
+class CalculateInternalRelationsUsingRepsProcess(ModelView):
+    'Calculate Internal Relations using Repetitions'
+    __name__ = 'lims.notebook.calculate_internal_relations.process'
+
+    notebook = fields.Many2One('lims.notebook', 'Laboratory notebook',
+        readonly=True)
+    internal_relation = fields.Many2One('lims.analysis', 'Internal relation',
+        readonly=True)
+    variables = fields.One2Many(
+        'lims.notebook.calculate_internal_relations.variable', None,
+        'Variables')
+
+
+class CalculateInternalRelationsUsingReps(Wizard):
+    'Calculate Internal Relations using Repetitions'
+    __name__ = 'lims.notebook.calculate_internal_relations_using_reps'
+
+    start_state = 'search'
+    search = StateTransition()
+    result = StateView(
+        'lims.notebook.calculate_internal_relations.result',
+        'lims.notebook_calculate_internal_relations_result_view',
+        [])
+    next_ = StateTransition()
+    process = StateView(
+        'lims.notebook.calculate_internal_relations.process',
+        'lims.notebook_calculate_internal_relations_process_view', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Next', 'check_variables', 'tryton-forward', default=True),
+            ])
+    check_variables = StateTransition()
+    confirm = StateTransition()
+
+    def transition_search(self):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+
+        for notebook_id in Transaction().context['active_ids']:
+            with Transaction().set_context(_check_access=True):
+                notebook_lines = NotebookLine.search([
+                    ('notebook', '=', notebook_id),
+                    ('analysis.behavior', '=', 'internal_relation'),
+                    ('accepted', '=', False),
+                    ('result', 'in', [None, '']),
+                    ('converted_result', 'in', [None, '']),
+                    ('annulled', '=', False),
+                    ])
+            if not notebook_lines:
+                continue
+            if self.get_relations(notebook_lines):
+                return 'next_'
+        return 'end'
+
+    def get_relations(self, notebook_lines):
+        CalculateInternalRelationsRelation = Pool().get(
+            'lims.notebook.calculate_internal_relations.relation')
+
+        relations = {}
+        for nl in notebook_lines:
+            variables = list()
+            formula = nl.analysis.result_formula
+            if formula:
+                variables.extend(self._get_variables_list(formula, nl))
+            formula = nl.analysis.converted_result_formula
+            if formula:
+                variables.extend(self._get_variables_list(formula, nl))
+            if not variables:
+                continue
+
+            has_repetitions = False
+            for var in variables:
+                if var['repetition'] > 0:
+                    has_repetitions = True
+            if not has_repetitions:
+                continue
+
+            relations[nl.analysis.id] = {
+                'notebook': nl.notebook.id,
+                'internal_relation': nl.analysis.id,
+                'variables': [('create', variables)],
+                'session_id': self._session_id,
+                }
+
+        if relations:
+            res_lines = CalculateInternalRelationsRelation.create(
+                [ir for ir in relations.values()])
+            self.result.relations = res_lines
+            self.result.total = len(self.result.relations)
+            self.result.index = 0
+            return True
+        return False
+
+    def transition_next_(self):
+        if self.result.index < self.result.total:
+            relation = self.result.relations[self.result.index]
+            self.process.notebook = relation.notebook.id
+            self.process.internal_relation = relation.internal_relation.id
+            self.process.variables = None
+            self.result.index += 1
+            return 'process'
+        return 'confirm'
+
+    def default_process(self, fields):
+        CalculateInternalRelationsVariable = Pool().get(
+            'lims.notebook.calculate_internal_relations.variable')
+
+        if not self.process.internal_relation:
+            return {}
+
+        default = {}
+        default['notebook'] = self.process.notebook.id
+        default['internal_relation'] = self.process.internal_relation.id
+        if self.process.variables:
+            default['variables'] = [v.id for v in self.process.variables]
+        else:
+            variables = CalculateInternalRelationsVariable.search([
+                ('relation.session_id', '=', self._session_id),
+                ('relation.notebook', '=', self.process.notebook.id),
+                ('relation.internal_relation', '=',
+                    self.process.internal_relation.id),
+                ])
+            if variables:
+                default['variables'] = [v.id for v in variables]
+        return default
+
+    def _get_variables_list(self, formula, notebook_line):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+
+        variables = {}
+        for variable in re.findall(r'\(".*?"\)', formula):
+            var = variable.replace('("', '').replace('")', '')
+            variables[var] = None
+
+        analysis = {}
+        for var in variables.keys():
+            analysis_code = var
+            with Transaction().set_user(0):
+                notebook_lines = NotebookLine.search([
+                    ('notebook', '=', notebook_line.notebook.id),
+                    ('analysis.code', '=', analysis_code),
+                    ('annulment_date', '=', None),
+                    ])
+            if not notebook_lines:
+                continue
+            for nl in notebook_lines:
+                analysis[nl.id] = {
+                    'line': nl.id,
+                    'analysis': nl.analysis.id,
+                    'repetition': nl.repetition,
+                    'use': True if nl.repetition == 0 else False,
+                    }
+
+        return [v for v in analysis.values()]
+
+    def transition_check_variables(self):
+        variables = {}
+        for var in self.process.variables:
+            analysis_code = var.analysis.code
+            if analysis_code not in variables:
+                variables[analysis_code] = False
+            if var.use:
+                if variables[analysis_code]:
+                    variables[analysis_code] = False
+                else:
+                    variables[analysis_code] = True
+            var.save()
+
+        for var in variables.values():
+            if not var:
+                return 'process'
+        return 'next_'
+
+    def transition_confirm(self):
+        pool = Pool()
+        Date = pool.get('ir.date')
+        NotebookLine = pool.get('lims.notebook.line')
+        CalculateInternalRelationsRelation = pool.get(
+            'lims.notebook.calculate_internal_relations.relation')
+
+        date = Date.today()
+        lines_to_save = []
+
+        relations = CalculateInternalRelationsRelation.search([
+            ('session_id', '=', self._session_id),
+            ])
+        for relation in relations:
+            notebook_lines = NotebookLine.search([
+                ('notebook', '=', relation.notebook.id),
+                ('analysis', '=', relation.internal_relation.id),
+                ('annulment_date', '=', None),
+                ])
+            if len(notebook_lines) != 1:
+                continue
+            nl = notebook_lines[0]
+
+            variables = {}
+            for var in relation.variables:
+                if var.use:
+                    variables[var.analysis.code] = var.repetition
+
+            result = None
+            formula = relation.internal_relation.result_formula
+            if formula:
+                result = self._calcuate(formula, nl, variables, round_=True)
+
+            converted_result = None
+            formula = relation.internal_relation.converted_result_formula
+            if formula:
+                converted_result = self._calcuate(formula, nl, variables,
+                    converted=True)
+
+            if result is not None:
+                nl.result = str(result)
+            if converted_result is not None:
+                nl.converted_result = str(converted_result)
+            if result is not None or converted_result is not None:
+                nl.start_date = date
+                nl.end_date = date
+                if nl.laboratory.automatic_accept_result:
+                    nl.accepted = True
+                    nl.acceptance_date = datetime.now()
+                lines_to_save.append(nl)
+
+        if lines_to_save:
+            NotebookLine.save(lines_to_save)
+        return 'end'
+
+    def _calcuate(self, formula, notebook_line, variables, round_=False,
+            converted=False):
+        if not formula.startswith('='):
+            formula = '=' + formula
+
+        parser = formulas.Parser()
+        with Transaction().set_context(
+                lims_analysis_notebook=notebook_line.notebook.id,
+                lims_analysis_variables=variables):
+            try:
+                ast = parser.ast(formula)[1].compile()
+            except Exception as e:
+                return None
+
+            inputs = []
+            try:
+                value = ast(*inputs)
+            except schedula.utils.exc.DispatcherError as e:
+                raise UserError(e.args[0] % e.args[1:])
+
+            if value == '':
+                value = None
+            if isinstance(value, list):
+                value = str(value)
+            elif not isinstance(value, ALLOWED_RESULT_TYPES):
+                value = value.tolist()
+            if isinstance(value, formulas.tokens.operand.XlError):
+                value = None
+            elif isinstance(value, list):
+                for x in chain(*value):
+                    if isinstance(x,
+                            formulas.tokens.operand.XlError):
+                        value = None
+
+            if value is not None and str(value).isnumeric():
+                if int(value) == value:
+                    value = int(value)
+                else:
+                    epsilon = 0.0000000001
+                    if int(value + epsilon) != int(value):
+                        value = int(value + epsilon)
+                    elif int(value - epsilon) != int(value):
+                        value = int(value)
+                    else:
+                        value = float(value)
+                if round_:
+                    value = round(value, notebook_line.decimals)
+
+        return value
+
+    def end(self):
+        return 'reload'
+
+
+class NLCalculateInternalRelationsUsingReps(
+        CalculateInternalRelationsUsingReps):
+    'Calculate Internal Relations using Repetitions'
+    __name__ = 'lims.notebook_line.calculate_internal_relations_using_reps'
+
+    def transition_search(self):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+
+        notebook_lines = NotebookLine.search([
+            ('id', 'in', Transaction().context['active_ids']),
+            ('analysis.behavior', '=', 'internal_relation'),
+            ('accepted', '=', False),
+            ('result', 'in', [None, '']),
+            ('converted_result', 'in', [None, '']),
+            ('annulled', '=', False),
+            ])
+        if not notebook_lines:
+            return 'end'
+
+        if self.get_relations(notebook_lines):
+            return 'next_'
+        return 'end'
+
+
 class NotebookInternalRelationsCalc1Start(ModelView):
     'Internal Relations Calculation'
     __name__ = 'lims.notebook.internal_relations_calc_1.start'
@@ -5198,7 +5585,7 @@ class NotebookAddInternalRelations(Wizard):
             return default
 
         for internal_relation in internal_relations:
-            formula = internal_relation[0].split(',')[1][:-1]
+            formula = ','.join(internal_relation[0].split(',')[1:])[:-1]
             if not formula:
                 continue
             for i in (' ', '\t', '\n', '\r'):
@@ -5224,6 +5611,10 @@ class NotebookAddInternalRelations(Wizard):
             for prefix in ('A', 'D', 'T', 'Y', 'R'):
                 if var.startswith(prefix):
                     variables.append(var[1:])
+        if not variables:
+            for variable in re.findall(r'\("".*?""\)', formula):
+                var = variable.replace('(""', '').replace('"")', '')
+                variables.append(var)
         return variables
 
     def transition_add(self):

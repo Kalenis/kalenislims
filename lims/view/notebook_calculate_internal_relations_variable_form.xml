@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<form>
+    <label name="analysis"/>
+    <field name="analysis"/>
+    <label name="repetition"/>
+    <field name="repetition"/>
+    <label name="result_modifier"/>
+    <field name="result_modifier" widget="selection"/>
+    <label name="result"/>
+    <field name="result"/>
+    <label name="initial_unit"/>
+    <field name="initial_unit"/>
+    <label name="initial_concentration"/>
+    <field name="initial_concentration"/>
+    <label name="converted_result_modifier"/>
+    <field name="converted_result_modifier" widget="selection"/>
+    <label name="converted_result"/>
+    <field name="converted_result"/>
+    <label name="final_unit"/>
+    <field name="final_unit"/>
+    <label name="final_concentration"/>
+    <field name="final_concentration"/>
+    <label name="use"/>
+    <field name="use"/>
+</form>
