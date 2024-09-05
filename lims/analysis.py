@@ -999,9 +999,6 @@ class Analysis(Workflow, ModelSQL, ModelView):
         states={
             'invisible': Not(
                 Bool(Equal(Eval('behavior'), 'internal_relation'))),
-            'required': And(
-                Eval('behavior') == 'internal_relation',
-                ~Eval('literal_result_formula')),
             'readonly': Bool(Equal(Eval('state'), 'disabled')),
             })
     converted_result_formula_icon = fields.Function(fields.Char(
