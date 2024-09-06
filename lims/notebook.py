@@ -2981,19 +2981,22 @@ class CalculateInternalRelations(Wizard):
                             formulas.tokens.operand.XlError):
                         value = None
 
-            if value is not None and str(value).isnumeric():
-                if int(value) == value:
-                    value = int(value)
-                else:
-                    epsilon = 0.0000000001
-                    if int(value + epsilon) != int(value):
-                        value = int(value + epsilon)
-                    elif int(value - epsilon) != int(value):
+            if value is not None:
+                try:
+                    if int(value) == value:
                         value = int(value)
                     else:
-                        value = float(value)
-                if round_:
-                    value = round(value, notebook_line.decimals)
+                        epsilon = 0.0000000001
+                        if int(value + epsilon) != int(value):
+                            value = int(value + epsilon)
+                        elif int(value - epsilon) != int(value):
+                            value = int(value)
+                        else:
+                            value = float(value)
+                    if round_:
+                        value = round(value, notebook_line.decimals)
+                except ValueError:
+                    pass
 
         return value
 
