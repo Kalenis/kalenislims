@@ -292,12 +292,14 @@ class FractionType(ModelSQL, ModelView):
             new_records.append(new_record)
         return new_records
 
+
 class SampleProducerType(ModelSQL, ModelView):
     'Sample Producer Type'
     __name__ = 'lims.sample.producer.type'
 
     code = fields.Char('Code')
     name = fields.Char('Name', required=True)
+
 
 class SampleProducer(ModelSQL, ModelView):
     'Sample Producer'
@@ -2998,6 +3000,10 @@ class Sample(ModelSQL, ModelView):
     state = fields.Selection(SAMPLE_STATES, 'State')
     qty_lines_pending = fields.Integer('Pending lines')
     qty_lines_pending_acceptance = fields.Integer('Lines pending acceptance')
+    resampling_origin = fields.Many2One('lims.sample',
+        'Resampling Origin', readonly=True)
+    resampling = fields.One2Many('lims.sample', 'resampling_origin',
+        'Resampling', readonly=True)
 
     @classmethod
     def __setup__(cls):
@@ -4280,6 +4286,40 @@ class Sample(ModelSQL, ModelView):
             (self.id,))
         return cursor.fetchone()[0]
 
+    @classmethod
+    def resample(cls, sample, analyses, date=None, label=None):
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        Service = pool.get('lims.service')
+
+        date = date or sample.date
+        label = label or sample.label
+
+        # new sample
+        new_sample, = Sample.copy([sample], default={
+            'resampling_origin': sample.id,
+            'date': date,
+            'label': label,
+            'fractions': [],
+            })
+
+        # new fraction
+        fraction = sample.fractions[0]
+        new_fraction, = Fraction.copy([fraction], default={
+            'sample': new_sample.id,
+            'services': [],
+            })
+
+        # new services
+        services = []
+        for service in fraction.services:
+            if service.analysis in analyses:
+                services.append(service)
+        Service.copy(services, default={
+            'fraction': new_fraction.id,
+            })
+
 
 class SamplePackage(ModelSQL, ModelView):
     'Sample Package'
@@ -4461,6 +4501,64 @@ class DuplicateSampleFromEntry(Wizard):
         if not labels:
             return [None]
         return labels.split('\n')
+
+
+class ResampleStart(ModelView):
+    'Resample'
+    __name__ = 'lims.sample.resample.start'
+
+    date = fields.DateTime('Date')
+    label = fields.Char('Label')
+    analysis = fields.Many2Many('lims.analysis', None, None,
+        'Services', required=True,
+        domain=[('id', 'in', Eval('analysis_domain'))],
+        depends=['analysis_domain'])
+    analysis_domain = fields.Many2Many('lims.analysis', None, None,
+        'Services domain')
+
+
+class Resample(Wizard):
+    'Resample'
+    __name__ = 'lims.sample.resample'
+
+    start = StateView('lims.sample.resample.start',
+        'lims.lims_resample_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Confirm', 'confirm', 'tryton-ok', default=True),
+            ])
+    confirm = StateTransition()
+
+    def default_start(self, fields):
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Service = pool.get('lims.service')
+
+        sample = Sample(Transaction().context['active_id'])
+
+        analyses = set()
+        services = Service.search([
+            ('sample', '=', sample.id),
+            ])
+        for s in services:
+            analyses.add(s.analysis.id)
+        return {
+            'date': sample.date,
+            'label': sample.label,
+            'analysis_domain': list(analyses),
+            }
+
+    def transition_confirm(self):
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+
+        sample = Sample(Transaction().context['active_id'])
+
+        Sample.resample(sample, list(self.start.analysis),
+            self.start.date, self.start.label)
+        return 'end'
+
+    def end(self):
+        return 'reload'
 
 
 class ManageServicesAckOfReceipt(ModelView):

@@ -54,6 +54,9 @@
             <separator string="Comments" colspan="4" id="comments"/>
             <field name="comments" colspan="4"/>
         </page>
+        <page string="Resampling" id="resampling">
+            <field name="resampling" colspan="4"/>
+        </page>
     </notebook>
     <group colspan="4" id="button_confirm">
         <field name="button_confirm_available" invisible="1"/>

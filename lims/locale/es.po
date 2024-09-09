@@ -6215,6 +6215,14 @@ msgctxt "field:lims.sample,report_date:"
 msgid "Date agreed for result"
 msgstr "Fecha pactada de resultado"
 
+msgctxt "field:lims.sample,resampling_origin:"
+msgid "Resampling Origin"
+msgstr "Origen del Remuestreo"
+
+msgctxt "field:lims.sample,resampling:"
+msgid "Resampling"
+msgstr "Remuestreo"
+
 msgctxt "field:lims.sample,restricted_entry:"
 msgid "Restricted entry"
 msgstr "Ingreso restringido"
@@ -6358,6 +6366,22 @@ msgstr "Tipo"
 msgctxt "field:lims.sample.producer,party:"
 msgid "Party"
 msgstr "Entidad"
+
+msgctxt "field:lims.sample.resample.start,analysis:"
+msgid "Services"
+msgstr "Servicios"
+
+msgctxt "field:lims.sample.resample.start,analysis_domain:"
+msgid "Services domain"
+msgstr "Dominio para Servicios"
+
+msgctxt "field:lims.sample.resample.start,date:"
+msgid "Date"
+msgstr "Fecha de ingreso"
+
+msgctxt "field:lims.sample.resample.start,label:"
+msgid "Label"
+msgstr "Rótulo"
 
 msgctxt "field:lims.samples_pending_reporting.start,laboratory:"
 msgid "Laboratory"
@@ -8375,6 +8399,10 @@ msgstr "Quitar control"
 msgctxt "model:ir.action,name:wiz_lims_replace_technician"
 msgid "Replace Technician"
 msgstr "Reemplazar técnico"
+
+msgctxt "model:ir.action,name:wiz_lims_resample"
+msgid "Resample"
+msgstr "Remuestreo"
 
 msgctxt "model:ir.action,name:wiz_lims_results_report_annulation"
 msgid "Report Annulation"
@@ -11133,6 +11161,14 @@ msgstr "Envase de muestra"
 msgctxt "model:lims.sample.producer,name:"
 msgid "Sample Producer"
 msgstr "Productor de muestra"
+
+msgctxt "model:lims.sample.producer.type,name:"
+msgid "Sample Producer Type"
+msgstr ""
+
+msgctxt "model:lims.sample.resample.start,name:"
+msgid "Resample"
+msgstr "Remuestreo"
 
 msgctxt "model:lims.samples_pending_reporting.start,name:"
 msgid "Samples Pending Reporting"
@@ -15841,6 +15877,10 @@ msgid "Report comments"
 msgstr "Observaciones informe"
 
 msgctxt "view:lims.sample:"
+msgid "Resampling"
+msgstr "Remuestreo"
+
+msgctxt "view:lims.sample:"
 msgid "Time"
 msgstr "Hora"
 
@@ -16987,6 +17027,14 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 msgctxt "wizard_button:lims.sample.edit_service,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.sample.resample,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.sample.resample,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 

@@ -814,6 +814,25 @@
             <field name="action" ref="wiz_lims_duplicate_sample_from_entry"/>
         </record>
 
+<!-- Wizard Resample -->
+
+        <record model="ir.ui.view" id="lims_resample_start_view_form">
+            <field name="model">lims.sample.resample.start</field>
+            <field name="type">form</field>
+            <field name="name">sample_resample_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_resample">
+            <field name="name">Resample</field>
+            <field name="wiz_name">lims.sample.resample</field>
+        </record>
+
+        <record model="ir.action.keyword" id="lims_resample_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.sample,-1</field>
+            <field name="action" ref="wiz_lims_resample"/>
+        </record>
+
 <!-- Wizard Manage Services -->
 
         <record model="ir.ui.view" id="lims_manage_services_view_form">
