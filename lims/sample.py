@@ -3081,6 +3081,9 @@ class Sample(ModelSQL, ModelView):
         current_default['state'] = 'draft'
         current_default['qty_lines_pending'] = None
         current_default['qty_lines_pending_acceptance'] = None
+        current_default['resampling'] = None
+        if 'resampling_origin' not in current_default:
+            current_default['resampling_origin'] = None
 
         new_samples = []
         for sample in sorted(samples, key=lambda x: x.number):
@@ -4319,6 +4322,10 @@ class Sample(ModelSQL, ModelView):
         Service.copy(services, default={
             'fraction': new_fraction.id,
             })
+
+        # Confirm sample for ongoing entries
+        if new_sample.entry.state in ('ongoing', 'finished'):
+            Sample.confirm([new_sample])
 
 
 class SamplePackage(ModelSQL, ModelView):
