@@ -1217,7 +1217,8 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                     detail.report_version.id),
                 ('version_detail.valid', '=', True),
                 ])
-            ResultsSample.delete(old_samples)
+            with Transaction().set_context(new_version=True):
+                ResultsSample.delete(old_samples)
 
             # invalidate previous valid version
             valid_details = cls.search([
@@ -2168,9 +2169,18 @@ class ResultsReportVersionDetailSample(
     @classmethod
     def delete(cls, samples):
         Sample = Pool().get('lims.sample')
+        if not Transaction().context.get('new_version', False):
+            cls.check_delete_released(samples)
         sample_ids = list(set(s.notebook.fraction.sample.id for s in samples))
         super().delete(samples)
         Sample.update_samples_state(sample_ids)
+
+    @classmethod
+    def check_delete_released(cls, samples):
+        for s in samples:
+            for d in s.notebook_lines:
+                if d.notebook_line and d.notebook_line.results_report:
+                    raise UserError(gettext('lims.msg_delete_released'))
 
 
 class ResultsReportVersionDetailLine(ModelSQL, ModelView):
@@ -2435,6 +2445,18 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
                 'AND rd.type != \'preliminary\' ' +
                 laboratory_clause + notebook_clause)
         return [x[0] for x in cursor.fetchall()]
+
+    @classmethod
+    def delete(cls, details):
+        if not Transaction().context.get('new_version', False):
+            cls.check_delete_released(details)
+        super().delete(details)
+
+    @classmethod
+    def check_delete_released(cls, details):
+        for d in details:
+            if d.notebook_line and d.notebook_line.results_report:
+                raise UserError(gettext('lims.msg_delete_released'))
 
 
 class ResultsLineRepeatAnalysis(NotebookLineRepeatAnalysis):

@@ -8693,8 +8693,8 @@ msgstr ""
 "No puede eliminar el detalle de análisis porque su fracción está confirmada"
 
 msgctxt "model:ir.message,text:msg_delete_detail_not_draft"
-msgid "You can not delete a detail that is not in draft state"
-msgstr "No puede eliminar un detalle que no está en estado borrador"
+msgid "You can not delete a report that is not in draft state"
+msgstr "No puede eliminar un informe que no está en estado borrador"
 
 msgctxt "model:ir.message,text:msg_delete_entry"
 msgid "You can not delete entry \"%(entry)s\" because it is not in draft state"
@@ -8712,6 +8712,10 @@ msgid ""
 msgstr ""
 "No puede eliminar la planificación \"%(planification)s\" porque no se "
 "encuentra en estado borrador o pre-planificada."
+
+msgctxt "model:ir.message,text:msg_delete_released"
+msgid "You can not delete content from an already released report"
+msgstr "No puede eliminar contenido de un informe ya publicado"
 
 msgctxt "model:ir.message,text:msg_delete_sample"
 msgid ""

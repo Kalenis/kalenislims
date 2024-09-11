@@ -284,7 +284,10 @@
             <field name="text">Build failed</field>
         </record>
         <record model="ir.message" id="msg_delete_detail_not_draft">
-            <field name="text">You can not delete a detail that is not in draft state</field>
+            <field name="text">You can not delete a report that is not in draft state</field>
+        </record>
+        <record model="ir.message" id="msg_delete_released">
+            <field name="text">You can not delete content from an already released report</field>
         </record>
         <record model="ir.message" id="msg_multiple_reports">
             <field name="text">Please, select only one report to print</field>
