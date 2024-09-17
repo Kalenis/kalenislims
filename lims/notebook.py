@@ -1541,15 +1541,15 @@ class NotebookLine(ModelSQL, ModelView):
             else:
                 if (self.converted_result and (
                         self.converted_result_modifier and
-                        self.converted_result_modifier.code not in
-                        ('ni', 'low', 'gre'))):
+                        '<result>' not in
+                        self.converted_result_modifier.expression)):
                     self.accepted = False
                     self.not_accepted_message = gettext(
                         'lims.msg_not_accepted_5')
                 elif (self.result and (
                         self.result_modifier and
-                        self.result_modifier.code not in
-                        ('ni', 'low', 'gre'))):
+                        '<result>' not in
+                        self.result_modifier.expression)):
                     self.accepted = False
                     self.not_accepted_message = gettext(
                         'lims.msg_not_accepted_6')
