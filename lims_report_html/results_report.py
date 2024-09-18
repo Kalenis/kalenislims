@@ -18,6 +18,8 @@ from .html_template import LimsReport
 class ResultsReportVersionDetail(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail'
 
+    _states = {'readonly': Eval('state') != 'draft'}
+
     template = fields.Many2One('lims.report.template',
         'Report Template', domain=[
             ('report_name', '=', 'lims.result_report'),
@@ -25,7 +27,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             ['OR', ('active', '=', True),
                 ('id', '=', Eval('template', -1))],
             ],
-        states={'readonly': Eval('state') != 'draft'})
+        states=_states)
     template_type = fields.Function(fields.Selection([
         (None, ''),
         ('base', 'HTML'),
@@ -36,21 +38,25 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         'version_detail', 'Sections')
     previous_sections = fields.Function(fields.One2Many(
         'lims.results_report.version.detail.section', 'version_detail',
-        'Previous Sections', domain=[('position', '=', 'previous')]),
+        'Previous Sections', domain=[('position', '=', 'previous')],
+        states=_states),
         'get_previous_sections', setter='set_previous_sections')
     following_sections = fields.Function(fields.One2Many(
         'lims.results_report.version.detail.section', 'version_detail',
-        'Following Sections', domain=[('position', '=', 'following')]),
+        'Following Sections', domain=[('position', '=', 'following')],
+        states=_states),
         'get_following_sections', setter='set_following_sections')
     trend_charts = fields.One2Many(
         'lims.results_report.version.detail.trend.chart',
-        'version_detail', 'Trend Charts')
+        'version_detail', 'Trend Charts', states=_states)
     charts_x_row = fields.Selection([
         ('1', '1'),
         ('2', '2'),
-        ], 'Charts per Row')
+        ], 'Charts per Row', states=_states)
     comments_plain = fields.Function(fields.Text('Comments', translate=True),
         'get_comments_plain', setter='set_comments_plain')
+
+    del _states
 
     @classmethod
     def __setup__(cls):
