@@ -776,7 +776,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
         'get_samples_list', searcher='search_samples_list')
     entry_summary = fields.Function(fields.Char('Entry / Qty. Samples'),
         'get_entry_summary', searcher='search_entry_summary')
-    trace_report = fields.Boolean('Trace report')
+    trace_report = fields.Boolean('Trace report', states=_states)
     contract_numbers = fields.Function(fields.Char('Contract Numbers'),
         'get_contract_numbers')
 
@@ -2077,17 +2077,16 @@ class ResultsReportVersionDetailSample(
     __name__ = 'lims.results_report.version.detail.sample'
 
     _states = {'readonly': Eval('state') != 'draft'}
-    _depends = ['state']
 
     version_detail = fields.Many2One('lims.results_report.version.detail',
         'Report Detail', required=True, ondelete='CASCADE')
     notebook = fields.Many2One('lims.notebook', 'Notebook', required=True,
         readonly=True)
     notebook_lines = fields.One2Many('lims.results_report.version.detail.line',
-        'detail_sample', 'Analysis', states=_states, depends=_depends)
+        'detail_sample', 'Analysis', states=_states)
     party = fields.Function(fields.Many2One('party.party', 'Party'),
         'get_notebook_field')
-    comments = fields.Text('Comments')
+    comments = fields.Text('Comments', states=_states)
     invoice_party = fields.Function(fields.Many2One('party.party',
         'Invoice Party'), 'get_notebook_field')
     label = fields.Function(fields.Char('Label'), 'get_notebook_field')
@@ -2103,7 +2102,7 @@ class ResultsReportVersionDetailSample(
     state = fields.Function(fields.Selection('get_states', 'State'),
         'on_change_with_state')
 
-    del _states, _depends
+    del _states
 
     @classmethod
     def __setup__(cls):
