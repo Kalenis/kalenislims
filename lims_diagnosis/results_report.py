@@ -196,11 +196,13 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
 class ResultsReportVersionDetailSample(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail.sample'
 
-    diagnosis = fields.Text('Diagnosis')
-    diagnosis_plain = fields.Function(fields.Text('Diagnosis'),
+    _states = {'readonly': Eval('state') != 'draft'}
+
+    diagnosis = fields.Text('Diagnosis', states=_states)
+    diagnosis_plain = fields.Function(fields.Text('Diagnosis', states=_states),
         'get_diagnosis_plain', setter='set_diagnosis_plain')
     diagnosis_states = fields.Dict('lims.diagnosis.state', 'States',
-        domain=[('id', 'in', Eval('diagnosis_states_domain'))])
+        domain=[('id', 'in', Eval('diagnosis_states_domain'))], states=_states)
     diagnosis_states_string = diagnosis_states.translated('diagnosis_states')
     diagnosis_states_domain = fields.Function(fields.Many2Many(
         'lims.diagnosis.state', None, None, 'States domain'),
@@ -213,6 +215,8 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
         ('header', 'HTML - Header'),
         ('footer', 'HTML - Footer'),
         ], 'Report Template Type'), 'get_template_type')
+
+    del _states
 
     @classmethod
     def view_attributes(cls):
