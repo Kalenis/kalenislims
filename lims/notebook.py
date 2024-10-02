@@ -2955,7 +2955,8 @@ class CalculateInternalRelations(Wizard):
 
         parser = formulas.Parser()
         with Transaction().set_context(
-                lims_analysis_notebook=notebook_line.notebook.id):
+                lims_analysis_notebook=notebook_line.notebook.id,
+                lims_analysis_notebook_line=notebook_line.id):
             try:
                 ast = parser.ast(formula)[1].compile()
             except Exception as e:
@@ -2966,6 +2967,8 @@ class CalculateInternalRelations(Wizard):
                 value = ast(*inputs)
             except schedula.utils.exc.DispatcherError as e:
                 raise UserError(e.args[0] % e.args[1:])
+            except TypeError:
+                return None
 
             if value == '':
                 value = None
