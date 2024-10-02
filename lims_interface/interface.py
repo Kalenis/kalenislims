@@ -29,9 +29,9 @@ from trytond.pyson import PYSONDecoder, PYSONEncoder, Eval, Bool, Not, And, Or
 from trytond.transaction import Transaction
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
+from trytond.modules.lims.analysis import FUNCTIONS
 from .function import custom_functions
 
-FUNCTIONS = formulas.get_functions()
 FUNCTIONS.update(custom_functions)
 
 FIELD_TYPES = [

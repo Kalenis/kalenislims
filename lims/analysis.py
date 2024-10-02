@@ -21,6 +21,8 @@ from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or, And
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
+FUNCTIONS = formulas.get_functions()
+
 ANALYSIS_TYPES = [
     ('analysis', 'Analysis'),
     ('set', 'Set'),

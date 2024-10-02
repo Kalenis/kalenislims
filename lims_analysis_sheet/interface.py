@@ -6,7 +6,7 @@ from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Bool, Or, And
 from trytond.transaction import Transaction
-from trytond.modules.lims_interface.interface import FUNCTIONS
+from trytond.modules.lims.analysis import FUNCTIONS
 from .function import custom_functions
 
 FUNCTIONS.update(custom_functions)

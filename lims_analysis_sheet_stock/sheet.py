@@ -8,7 +8,7 @@ from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
-from trytond.modules.lims_interface.interface import FUNCTIONS
+from trytond.modules.lims.analysis import FUNCTIONS
 from .function import custom_functions
 
 FUNCTIONS.update(custom_functions)
