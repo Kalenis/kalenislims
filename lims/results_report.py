@@ -1641,7 +1641,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     @classmethod
     def delete(cls, details):
         cls.check_delete(details)
-        with Transaction().set_context(check_signer=False):
+        with Transaction().set_context(check_signer=False, new_version=True):
             super().delete(details)
 
     @classmethod
