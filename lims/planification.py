@@ -16,6 +16,7 @@ from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from .configuration import get_print_date
+from .sample import SAMPLE_STATES
 
 
 class Planification(Workflow, ModelSQL, ModelView):
@@ -3903,8 +3904,8 @@ class SearchFractionsDetail(ModelSQL, ModelView):
         digits=(1, 4)), 'get_completion_percentage')
     department = fields.Function(fields.Many2One('company.department',
         'Department'), 'get_department', searcher='search_department')
-    sample_state = fields.Function(fields.Selection(
-        'get_sample_states', 'State'), 'get_sample_state')
+    sample_state = fields.Function(fields.Selection(SAMPLE_STATES,
+        'State'), 'get_sample_state')
     session_id = fields.Integer('Session ID')
 
     @classmethod
@@ -3918,12 +3919,6 @@ class SearchFractionsDetail(ModelSQL, ModelView):
         super().__setup__()
         cls._order.insert(0, ('fraction', 'ASC'))
         cls._order.insert(1, ('service_analysis', 'ASC'))
-
-    @classmethod
-    def get_sample_states(cls):
-        pool = Pool()
-        Sample = pool.get('lims.sample')
-        return Sample.fields_get(['state'])['state']['selection']
 
     @classmethod
     def get_sample_state(cls, details, name):
