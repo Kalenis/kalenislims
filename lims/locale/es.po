@@ -13874,42 +13874,6 @@ msgctxt "selection:lims.planification.relate_technicians.start,grouping:"
 msgid "None"
 msgstr "Ninguna"
 
-msgctxt "selection:lims.planification.search_fractions.detail,sample_state:"
-msgid "Annulled"
-msgstr "Anulada"
-
-msgctxt "selection:lims.planification.search_fractions.detail,sample_state:"
-msgid "Draft"
-msgstr "Borrador"
-
-msgctxt "selection:lims.planification.search_fractions.detail,sample_state:"
-msgid "In Laboratory"
-msgstr "En Laboratorio"
-
-msgctxt "selection:lims.planification.search_fractions.detail,sample_state:"
-msgid "In Report"
-msgstr "En Informe"
-
-msgctxt "selection:lims.planification.search_fractions.detail,sample_state:"
-msgid "Pending Laboratory Acceptance"
-msgstr "Pte. Aceptación Laboratorio"
-
-msgctxt "selection:lims.planification.search_fractions.detail,sample_state:"
-msgid "Pending Planification"
-msgstr "Pte. Planificación"
-
-msgctxt "selection:lims.planification.search_fractions.detail,sample_state:"
-msgid "Pending Reporting"
-msgstr "Pte. Informar"
-
-msgctxt "selection:lims.planification.search_fractions.detail,sample_state:"
-msgid "Planned"
-msgstr "Planificada"
-
-msgctxt "selection:lims.planification.search_fractions.detail,sample_state:"
-msgid "Report Released"
-msgstr "Publicada"
-
 msgctxt "selection:lims.range.type,use:"
 msgid "Repeatability calculation"
 msgstr "Cálculo de repetibilidad"

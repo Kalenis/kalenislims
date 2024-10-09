@@ -20,12 +20,6 @@ from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or, And
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
-ANALYSIS_TYPES = [
-    ('analysis', 'Analysis'),
-    ('set', 'Set'),
-    ('group', 'Group'),
-    ]
-
 
 class Typification(ModelSQL, ModelView):
     'Typification'
@@ -910,7 +904,11 @@ class Analysis(Workflow, ModelSQL, ModelView):
         states={'readonly': Eval('state') != 'draft'})
     description = fields.Char('Description', required=True, translate=True,
         states={'readonly': Bool(Equal(Eval('state'), 'disabled'))})
-    type = fields.Selection(ANALYSIS_TYPES, 'Type', sort=False, required=True,
+    type = fields.Selection([
+        ('analysis', 'Analysis'),
+        ('set', 'Set'),
+        ('group', 'Group'),
+        ], 'Type', sort=False, required=True,
         states={'readonly': Eval('state') != 'draft'})
     laboratories = fields.One2Many('lims.analysis-laboratory', 'analysis',
         'Laboratories', context={'type': Eval('type')},
@@ -1717,8 +1715,12 @@ class AnalysisIncluded(ModelSQL, ModelView):
     analysis_domain = fields.Function(fields.Many2Many('lims.analysis',
         None, None, 'Analysis domain'),
         'on_change_with_analysis_domain')
-    analysis_type = fields.Function(fields.Selection(
-        [(None, '')] + ANALYSIS_TYPES, 'Type', sort=False),
+    analysis_type = fields.Function(fields.Selection([
+        (None, ''),
+        ('analysis', 'Analysis'),
+        ('set', 'Set'),
+        ('group', 'Group'),
+        ], 'Type', sort=False),
         'on_change_with_analysis_type')
     method = fields.Many2One('lims.lab.method', 'Method',
         domain=[('id', 'in', Eval('method_domain'))],
