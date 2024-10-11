@@ -18,33 +18,38 @@ class Entry(metaclass=PoolMeta):
 class ManageServices(metaclass=PoolMeta):
     __name__ = 'lims.manage_services'
 
-    def create_service(self, service, fraction):
+    def process_new_services(self, services):
         Planification = Pool().get('lims.planification')
-        new_service = super().create_service(service, fraction)
-        Planification.automatic_plan(entries=[new_service.entry])
-        return new_service
+        entries = set()
+        for service in services:
+            entries.add(service.entry)
+        if entries:
+            Planification.automatic_plan(entries=list(entries))
 
 
 class AddSampleService(metaclass=PoolMeta):
     __name__ = 'lims.sample.add_service'
 
-    def create_service(self, service, fraction):
+    def process_new_services(self, services):
         Planification = Pool().get('lims.planification')
-        new_service = super().create_service(service, fraction)
-        # Prevent auto planning if the entry is draft or pending
-        if new_service.entry and new_service.entry.state in (
-                'ongoing', 'finished'):
-            Planification.automatic_plan(entries=[new_service.entry])
-        return new_service
+        entries = set()
+        for service in services:
+            if service.entry and service.entry.state in (
+                    'ongoing', 'finished'):
+                entries.add(service.entry)
+        if entries:
+            Planification.automatic_plan(entries=list(entries))
 
 
 class EditSampleService(metaclass=PoolMeta):
     __name__ = 'lims.sample.edit_service'
 
-    def create_service(self, service, fraction):
+    def process_new_services(self, services):
         Planification = Pool().get('lims.planification')
-        new_service = super().create_service(service, fraction)
-        if new_service.entry and new_service.entry.state in (
-                'ongoing', 'finished'):
-            Planification.automatic_plan(entries=[new_service.entry])
-        return new_service
+        entries = set()
+        for service in services:
+            if service.entry and service.entry.state in (
+                    'ongoing', 'finished'):
+                entries.add(service.entry)
+        if entries:
+            Planification.automatic_plan(entries=list(entries))

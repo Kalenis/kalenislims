@@ -4660,6 +4660,7 @@ class ManageServices(Wizard, SendAckOfReceiptWizardMixin):
         original_services = [s for s in fraction.services if
             s.manage_service_available]
         services_to_delete = []
+        new_services = []
         delete_ack_report_cache = False
 
         for service in original_services:
@@ -4671,7 +4672,8 @@ class ManageServices(Wizard, SendAckOfReceiptWizardMixin):
 
         for service in actual_services:
             if service not in original_services:
-                self.create_service(service, fraction)
+                new_services.append(self.create_service(
+                    service, fraction))
                 delete_ack_report_cache = True
 
         for original_service in original_services:
@@ -4690,6 +4692,9 @@ class ManageServices(Wizard, SendAckOfReceiptWizardMixin):
             entry.ack_report_format = None
             entry.ack_report_cache = None
             entry.save()
+
+        if new_services:
+            self.process_new_services(new_services)
 
         if self._send_ack_of_receipt():
             return 'send_ack_of_receipt'
@@ -4830,6 +4835,9 @@ class ManageServices(Wizard, SendAckOfReceiptWizardMixin):
         return ('analysis', 'laboratory', 'method', 'device', 'urgent',
             'priority', 'estimated_waiting_laboratory',
             'estimated_waiting_report', 'report_date', 'comments', 'divide')
+
+    def process_new_services(self, services):
+        pass
 
 
 class CompleteServices(Wizard):
@@ -4991,6 +4999,7 @@ class AddSampleService(Wizard, SendAckOfReceiptWizardMixin):
         pool = Pool()
         Entry = pool.get('lims.entry')
 
+        new_services = []
         send_ack = False
         for sample in self.records:
             delete_ack_report_cache = False
@@ -5006,7 +5015,8 @@ class AddSampleService(Wizard, SendAckOfReceiptWizardMixin):
                     key = (service.analysis.id,
                         service.method and service.method.id or None)
                     if key not in original_analysis:
-                        self.create_service(service, fraction)
+                        new_services.append(self.create_service(
+                            service, fraction))
                         if (fraction.entry and
                                 fraction.entry.state in (
                                 'ongoing', 'finished')):
@@ -5018,6 +5028,9 @@ class AddSampleService(Wizard, SendAckOfReceiptWizardMixin):
                 entry.ack_report_format = None
                 entry.ack_report_cache = None
                 entry.save()
+
+        if new_services:
+            self.process_new_services(new_services)
 
         if send_ack and self._send_ack_of_receipt():
             return 'send_ack_of_receipt'
@@ -5068,6 +5081,9 @@ class AddSampleService(Wizard, SendAckOfReceiptWizardMixin):
             'divide': service.divide,
             }
         return service_create
+
+    def process_new_services(self, services):
+        pass
 
 
 class EditSampleServiceStart(ModelView):
@@ -5145,6 +5161,8 @@ class EditSampleService(Wizard, SendAckOfReceiptWizardMixin):
     def transition_confirm(self):
         pool = Pool()
         Entry = pool.get('lims.entry')
+
+        new_services = []
         send_ack = False
 
         actual_analysis = [(s.analysis.id, s.method and s.method.id or None)
@@ -5167,7 +5185,8 @@ class EditSampleService(Wizard, SendAckOfReceiptWizardMixin):
                     key = (service.analysis.id,
                         service.method and service.method.id or None)
                     if key not in original_analysis:
-                        self.create_service(service, fraction)
+                        new_services.append(self.create_service(
+                            service, fraction))
                         if (fraction.entry and
                                 fraction.entry.state in (
                                 'ongoing', 'finished')):
@@ -5180,6 +5199,9 @@ class EditSampleService(Wizard, SendAckOfReceiptWizardMixin):
                 entry.ack_report_format = None
                 entry.ack_report_cache = None
                 entry.save()
+
+        if new_services:
+            self.process_new_services(new_services)
 
         if send_ack and self._send_ack_of_receipt():
             return 'send_ack_of_receipt'
@@ -5318,6 +5340,9 @@ class EditSampleService(Wizard, SendAckOfReceiptWizardMixin):
 
         original.state = 'annulled'
         original.save()
+
+    def process_new_services(self, services):
+        pass
 
 
 class FractionsByLocationsStart(ModelView):
