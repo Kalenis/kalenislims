@@ -739,6 +739,12 @@ class Entry(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def update_entries_state(cls, entry_ids):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        Service = pool.get('lims.service')
+        Fraction = pool.get('lims.fraction')
+
         entries_states = ['ongoing', 'finished']
         entries_exclude = cls._get_update_entries_state_exclude()
 
@@ -751,6 +757,21 @@ class Entry(Workflow, ModelSQL, ModelView):
             state = 'finished'
             for sample in entry.samples:
                 if sample.state != 'report_released':
+                    state = 'ongoing'
+                    break
+                # All services reported
+                cursor.execute('SELECT COUNT(*) '
+                    'FROM "' + NotebookLine._table + '" nl '
+                        'INNER JOIN "' + Service._table + '" s '
+                        'ON s.id = nl.service '
+                        'INNER JOIN "' + Fraction._table + '" f '
+                        'ON f.id = s.fraction '
+                    'WHERE f.sample = %s '
+                        'AND nl.report = TRUE '
+                        'AND nl.annulled = FALSE '
+                        'AND nl.results_report IS NULL',
+                    (sample.id,))
+                if cursor.fetchone()[0] != 0:
                     state = 'ongoing'
                     break
             if entry.state != state:
