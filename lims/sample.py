@@ -4479,6 +4479,7 @@ class ManageServices(Wizard):
         original_services = [s for s in fraction.services if
             s.manage_service_available]
         services_to_delete = []
+        new_services = []
         delete_ack_report_cache = False
 
         for service in original_services:
@@ -4490,7 +4491,8 @@ class ManageServices(Wizard):
 
         for service in actual_services:
             if service not in original_services:
-                self.create_service(service, fraction)
+                new_services.append(self.create_service(
+                    service, fraction))
                 delete_ack_report_cache = True
 
         for original_service in original_services:
@@ -4509,6 +4511,9 @@ class ManageServices(Wizard):
             entry.ack_report_format = None
             entry.ack_report_cache = None
             entry.save()
+
+        if new_services:
+            self.process_new_services(new_services)
 
         if self._send_ack_of_receipt():
             return 'send_ack_of_receipt'
@@ -4649,6 +4654,9 @@ class ManageServices(Wizard):
         return ('analysis', 'laboratory', 'method', 'device', 'urgent',
             'priority', 'estimated_waiting_laboratory',
             'estimated_waiting_report', 'report_date', 'comments', 'divide')
+
+    def process_new_services(self, services):
+        pass
 
     def _send_ack_of_receipt(self):
         Cron = Pool().get('ir.cron')
@@ -4840,6 +4848,8 @@ class AddSampleService(Wizard):
         pool = Pool()
         Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
+
+        new_services = []
         send_ack = False
         for sample in Sample.browse(Transaction().context['active_ids']):
             delete_ack_report_cache = False
@@ -4855,7 +4865,8 @@ class AddSampleService(Wizard):
                     key = (service.analysis.id,
                         service.method and service.method.id or None)
                     if key not in original_analysis:
-                        self.create_service(service, fraction)
+                        new_services.append(self.create_service(
+                            service, fraction))
                         if (fraction.entry and
                                 fraction.entry.state in (
                                 'ongoing', 'finished')):
@@ -4867,6 +4878,9 @@ class AddSampleService(Wizard):
                 entry.ack_report_format = None
                 entry.ack_report_cache = None
                 entry.save()
+
+        if new_services:
+            self.process_new_services(new_services)
 
         if send_ack and self._send_ack_of_receipt():
             return 'send_ack_of_receipt'
@@ -4917,6 +4931,9 @@ class AddSampleService(Wizard):
             'divide': service.divide,
             }
         return service_create
+
+    def process_new_services(self, services):
+        pass
 
     def _send_ack_of_receipt(self):
         Cron = Pool().get('ir.cron')
@@ -5027,6 +5044,8 @@ class EditSampleService(Wizard):
         pool = Pool()
         Sample = pool.get('lims.sample')
         Entry = pool.get('lims.entry')
+
+        new_services = []
         send_ack = False
 
         actual_analysis = [(s.analysis.id, s.method and s.method.id or None)
@@ -5049,7 +5068,8 @@ class EditSampleService(Wizard):
                     key = (service.analysis.id,
                         service.method and service.method.id or None)
                     if key not in original_analysis:
-                        self.create_service(service, fraction)
+                        new_services.append(self.create_service(
+                            service, fraction))
                         if (fraction.entry and
                                 fraction.entry.state in (
                                 'ongoing', 'finished')):
@@ -5062,6 +5082,9 @@ class EditSampleService(Wizard):
                 entry.ack_report_format = None
                 entry.ack_report_cache = None
                 entry.save()
+
+        if new_services:
+            self.process_new_services(new_services)
 
         if send_ack and self._send_ack_of_receipt():
             return 'send_ack_of_receipt'
@@ -5200,6 +5223,9 @@ class EditSampleService(Wizard):
 
         original.state = 'annulled'
         original.save()
+
+    def process_new_services(self, services):
+        pass
 
     def _send_ack_of_receipt(self):
         Cron = Pool().get('ir.cron')

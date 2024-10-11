@@ -14,6 +14,10 @@ class Sample(metaclass=PoolMeta):
     def confirm(cls, samples):
         Planification = Pool().get('lims.planification')
         super().confirm(samples)
+        entries = set()
         for sample in samples:
-            if sample.entry and sample.entry.state == 'ongoing':
-                Planification.automatic_plan(entries=[sample.entry])
+            if sample.entry and sample.entry.state in (
+                    'ongoing', 'finished'):
+                entries.add(sample.entry)
+        if entries:
+            Planification.automatic_plan(entries=list(entries))
