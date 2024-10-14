@@ -2310,7 +2310,7 @@ class Fraction(ModelSQL, ModelView):
     @fields.depends('confirmed', 'sample', '_parent_sample.entry')
     def on_change_with_button_confirm_available(self, name=None):
         if (not self.confirmed and self.sample and self.sample.entry and
-                (self.sample.entry.state == 'ongoing')):
+                (self.sample.entry.state in ('ongoing', 'finished'))):
             return True
         return False
 
@@ -3592,7 +3592,7 @@ class Sample(ModelSQL, ModelView):
 
     @fields.depends('entry', '_parent_entry.state', 'fractions')
     def on_change_with_button_confirm_available(self, name=None):
-        if not self.entry or self.entry.state != 'ongoing':
+        if not self.entry or self.entry.state not in ('ongoing', 'finished'):
             return False
         if not self.fractions:
             return False
@@ -3608,7 +3608,7 @@ class Sample(ModelSQL, ModelView):
         Fraction = pool.get('lims.fraction')
 
         fractions = [f for s in samples for f in s.fractions
-            if s.entry.state == 'ongoing' and not f.confirmed]
+            if s.entry.state in ('ongoing', 'finished') and not f.confirmed]
         if fractions:
             Fraction.confirm(fractions)
 
@@ -3870,7 +3870,7 @@ class Sample(ModelSQL, ModelView):
         '''
         res = {}
         # Set confirmation date to None for draft and pending entries
-        if self.entry and self.entry.state != 'ongoing':
+        if self.entry and self.entry.state not in ('ongoing', 'finished'):
             res['confirmation_date'] = None
         return res
 
