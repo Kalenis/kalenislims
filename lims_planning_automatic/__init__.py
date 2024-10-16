@@ -38,6 +38,7 @@ def register():
         entry.ManageServices,
         entry.AddSampleService,
         entry.EditSampleService,
+        sample.CompleteServices,
         notebook.NotebookRepeatAnalysis,
         notebook.NotebookLineRepeatAnalysis,
         module='lims_planning_automatic', type_='wizard')
