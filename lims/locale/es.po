@@ -2646,6 +2646,10 @@ msgctxt "field:lims.laboratory,phone:"
 msgid "Phone"
 msgstr "Teléfono"
 
+msgctxt "field:lims.laboratory,email:"
+msgid "Email"
+msgstr "Correo electrónico"
+
 msgctxt "field:lims.laboratory,related_location:"
 msgid "Related location"
 msgstr "Ubicación relacionada"
