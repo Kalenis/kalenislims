@@ -1116,11 +1116,33 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 line.update(defaults)
 
                 for k in list(schema.keys()):
-                    if (schema[k]['default_value'] is not None and
-                            schema[k]['default_value'].startswith('=') and
-                            not schema[k]['default_value'].startswith(
-                                '=REFERENCE_VALUE')):
-                        path = schema[k]['default_value'][1:].split('.')
+                    default_value = schema[k]['default_value']
+                    if (default_value is None or
+                            not default_value.startswith('=')):
+                        continue
+                    if default_value.startswith('=REFERENCE_VALUE('):
+                        continue
+                    if default_value.startswith('=VAR('):
+                        parser = formulas.Parser()
+                        ast = parser.ast(default_value)[1].compile()
+                        inputs = [nl]
+                        try:
+                            value = ast(*inputs)
+                        except schedula.utils.exc.DispatcherError as e:
+                            value = None
+                        if isinstance(value, list):
+                            value = str(value)
+                        elif not isinstance(value, ALLOWED_RESULT_TYPES):
+                            value = value.tolist()
+                        if isinstance(value, formulas.tokens.operand.XlError):
+                            value = None
+                        elif isinstance(value, list):
+                            for x in chain(*value):
+                                if isinstance(x,
+                                        formulas.tokens.operand.XlError):
+                                    value = None
+                    else:
+                        path = default_value[1:].split('.')
                         field = path.pop(0)
                         try:
                             value = getattr(nl, field)
@@ -1129,12 +1151,13 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                                 value = getattr(value, field)
                         except AttributeError:
                             value = None
-                        if schema[k]['grouped_repetitions'] is None:
-                            line[k] = value
-                        else:
-                            reps = (schema[k]['grouped_repetitions'] or 1) + 1
-                            for rep in range(1, reps):
-                                line['%s_%s' % (k, rep)] = value
+
+                    if schema[k]['grouped_repetitions'] is None:
+                        line[k] = value
+                    else:
+                        reps = (schema[k]['grouped_repetitions'] or 1) + 1
+                        for rep in range(1, reps):
+                            line['%s_%s' % (k, rep)] = value
 
                 if interface.fraction_field:
                     if interface.fraction_field.type_ == 'many2one':
@@ -1186,7 +1209,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             value = schema[k]['default_value']
             if value in (None, ''):
                 continue
-            if value.startswith('=REFERENCE_VALUE'):
+            if value.startswith('=REFERENCE_VALUE('):
                 parser = formulas.Parser()
                 ast = parser.ast(value)[1].compile()
                 try:
