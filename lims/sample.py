@@ -4148,8 +4148,10 @@ class Sample(ModelSQL, ModelView):
         return cursor.fetchone()[0]
 
     @classmethod
-    def resample(cls, sample, analyses, date=None, label=None):
+    def resample(cls, sample, analyses, new_entry=False,
+            date=None, label=None):
         pool = Pool()
+        Entry = pool.get('lims.entry')
         Sample = pool.get('lims.sample')
         Fraction = pool.get('lims.fraction')
         Service = pool.get('lims.service')
@@ -4157,8 +4159,18 @@ class Sample(ModelSQL, ModelView):
         date = date or sample.date
         label = label or sample.label
 
+        # (new) entry
+        if new_entry:
+            entry, = Entry.copy([sample.entry], default={
+                'date': date,
+                'samples': [],
+                })
+        else:
+            entry = sample.entry
+
         # new sample
         new_sample, = Sample.copy([sample], default={
+            'entry': entry.id,
             'resampling_origin': sample.id,
             'date': date,
             'label': label,
@@ -4341,6 +4353,7 @@ class ResampleStart(ModelView):
         depends=['analysis_domain'])
     analysis_domain = fields.Many2Many('lims.analysis', None, None,
         'Services domain')
+    new_entry = fields.Boolean('Create new Entry')
 
 
 class Resample(Wizard):
@@ -4368,9 +4381,10 @@ class Resample(Wizard):
         for s in services:
             analyses.add(s.analysis.id)
         return {
-            'date': sample.date,
+            'date': datetime.now(),
             'label': sample.label,
             'analysis_domain': list(analyses),
+            'new_entry': True,
             }
 
     def transition_confirm(self):
@@ -4380,7 +4394,7 @@ class Resample(Wizard):
         sample = Sample(Transaction().context['active_id'])
 
         Sample.resample(sample, list(self.start.analysis),
-            self.start.date, self.start.label)
+            self.start.new_entry, self.start.date, self.start.label)
         return 'end'
 
     def end(self):

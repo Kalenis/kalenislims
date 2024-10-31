@@ -6335,6 +6335,10 @@ msgctxt "field:lims.sample.resample.start,label:"
 msgid "Label"
 msgstr "Rótulo"
 
+msgctxt "field:lims.sample.resample.start,new_entry:"
+msgid "Create new Entry"
+msgstr "Crear nuevo Ingreso"
+
 msgctxt "field:lims.samples_pending_reporting.start,laboratory:"
 msgid "Laboratory"
 msgstr "Laboratorio"
