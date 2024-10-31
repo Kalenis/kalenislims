@@ -4830,10 +4830,11 @@ class AddSampleService(Wizard):
     def default_start(self, fields):
         Sample = Pool().get('lims.sample')
 
-        sample = Sample(Transaction().context['active_id'])
-        if not sample:
+        active_id = Transaction().context['active_ids'][0]
+        if not active_id:
             return {}
 
+        sample = Sample(active_id)
         analysis_domain_ids = sample.on_change_with_analysis_domain()
 
         default = {
@@ -5004,10 +5005,11 @@ class EditSampleService(Wizard):
     def default_start(self, fields):
         Sample = Pool().get('lims.sample')
 
-        sample = Sample(Transaction().context['active_id'])
-        if not sample:
+        active_id = Transaction().context['active_ids'][0]
+        if not active_id:
             return {}
 
+        sample = Sample(active_id)
         analysis_domain_ids = sample.on_change_with_analysis_domain()
         services = []
         for f in sample.fractions:

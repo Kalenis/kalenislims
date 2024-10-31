@@ -245,7 +245,11 @@ class AddSampleServiceStart(metaclass=PoolMeta):
         if not self.party or not self.product_type or not self.matrix:
             return []
 
-        sample = Sample(Transaction().context['active_id'])
+        active_id = Transaction().context['active_ids'][0]
+        if not active_id:
+            return []
+
+        sample = Sample(active_id)
         analysis_domain = sample.on_change_with_analysis_domain()
         if not analysis_domain:
             return []
@@ -282,7 +286,11 @@ class AddSampleServiceStart(metaclass=PoolMeta):
         Analysis = pool.get('lims.analysis')
         Sample = pool.get('lims.sample')
 
-        sample = Sample(Transaction().context['active_id'])
+        active_id = Transaction().context['active_ids'][0]
+        if not active_id:
+            return []
+
+        sample = Sample(active_id)
         if (not self.sale_lines and
                 not sample.entry.allow_services_without_quotation):
             return []
@@ -354,10 +362,11 @@ class AddSampleService(metaclass=PoolMeta):
 
         defaults = super().default_start(fields)
 
-        sample = Sample(Transaction().context['active_id'])
-        if not sample:
+        active_id = Transaction().context['active_ids'][0]
+        if not active_id:
             return defaults
 
+        sample = Sample(active_id)
         defaults['party'] = sample.party.id
         return defaults
 
@@ -399,7 +408,11 @@ class AddSampleService(metaclass=PoolMeta):
                 sale_lines[analysis_id]['available'] >= 1):
             return service_create
 
-        sample = Sample(Transaction().context['active_id'])
+        active_id = Transaction().context['active_ids'][0]
+        if not active_id:
+            return service_create
+
+        sample = Sample(active_id)
         error_key = 'lims_services_without_quotation@%s' % sample.entry.number
         error_msg = 'lims_sale.msg_party_services_without_quotation'
         warning_msg = 'lims_sale.msg_adding_services_without_quotation'
@@ -421,13 +434,17 @@ class EditSampleService(metaclass=PoolMeta):
 
         service_create = super()._get_new_service(service, fraction)
 
-        sample = Sample(Transaction().context['active_id'])
+        active_id = Transaction().context['active_ids'][0]
+        if not active_id:
+            return service_create
+
+        sample = Sample(active_id)
         error_key = 'lims_services_without_quotation@%s' % sample.entry.number
         error_msg = 'lims_sale.msg_party_services_without_quotation'
         warning_msg = 'lims_sale.msg_adding_services_without_quotation'
         if not sample.entry.allow_services_without_quotation:
             raise UserError(gettext(error_msg))
-        
+
         if Warning.check(error_key):
             raise UserWarning(error_key, gettext(warning_msg))
 
