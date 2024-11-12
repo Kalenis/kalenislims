@@ -23,6 +23,35 @@ msgctxt "field:lims.entry,allow_services_without_quotation:"
 msgid "Allow services without quotation"
 msgstr "Permitir servicios sin presupuesto"
 
+msgctxt "field:lims.entry.relate_sale.start,analyses:"
+msgid "Analyses"
+msgstr "Análisis"
+
+msgctxt "field:lims.entry.relate_sale.start,matrices:"
+msgid "Matrices"
+msgstr "Matrices"
+
+msgctxt "field:lims.entry.relate_sale.start,party:"
+msgid "Party"
+msgstr "Entidad"
+
+msgctxt "field:lims.entry.relate_sale.start,product_types:"
+msgid "Product types"
+msgstr "Tipos de producto"
+
+msgctxt "field:lims.entry.relate_sale.start,sale_lines:"
+msgid "Quotes"
+msgstr "Presupuestos"
+
+msgctxt "field:lims.entry.relate_sale.start,sale_lines_domain:"
+msgid "Quotes domain"
+msgstr "Dominio para Presupuestos"
+
+msgctxt ""
+"field:lims.entry.relate_sale.start,sale_lines_filter_product_type_matrix:"
+msgid "Filter Quotes by Product type and Matrix"
+msgstr "Filtrar Presupuestos por Tipo de producto y Matriz"
+
 msgctxt "field:lims.report.template,clause_template:"
 msgid "Clauses Template"
 msgstr "Plantilla de Cláusulas"
@@ -312,6 +341,10 @@ msgctxt "model:ir.action,name:report_sale_html"
 msgid "Sale"
 msgstr "Presupuesto"
 
+msgctxt "model:ir.action,name:wiz_entry_relate_sale"
+msgid "Relate Sale to Entry"
+msgstr "Relacionar Presupuesto con Ingreso"
+
 msgctxt "model:ir.action,name:wiz_notebook_open_sale"
 msgid "Sample Sale"
 msgstr "Presupuesto de la Muestra"
@@ -360,6 +393,10 @@ msgstr "Plantillas de Cláusulas de presupuesto"
 msgctxt "model:ir.ui.menu,name:menu_sale_report_template"
 msgid "Sale Report Templates"
 msgstr "Plantillas de Presupuesto"
+
+msgctxt "model:lims.entry.relate_sale.start,name:"
+msgid "Relate Sale to Entry"
+msgstr "Relacionar Presupuesto con Ingreso"
 
 msgctxt "model:lims.service-sale.line,name:"
 msgid "Service - Sale Line"
@@ -432,6 +469,14 @@ msgstr "Precarga"
 msgctxt "view:sale.sale:"
 msgid "Printing"
 msgstr "Impresión"
+
+msgctxt "wizard_button:lims.entry.relate_sale,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.entry.relate_sale,start,relate:"
+msgid "Relate"
+msgstr "Relacionar"
 
 msgctxt "wizard_button:sale.load_services,start,end:"
 msgid "Cancel"

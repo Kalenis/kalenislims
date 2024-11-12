@@ -32,6 +32,7 @@ def register():
         sample.Service,
         sample.ServiceSaleLine,
         entry.Entry,
+        entry.RelateSaleStart,
         results_report.ResultsReportVersionDetail,
         employee.Employee,
         module='lims_sale', type_='model')
@@ -50,6 +51,7 @@ def register():
         sample.AddSampleService,
         sample.EditSampleService,
         sample.EditSample,
+        entry.RelateSale,
         results_report.OpenSampleSale,
         results_report.OpenResultsDetailSale,
         results_report.OpenResultsDetailAttachment,

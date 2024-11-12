@@ -10,5 +10,24 @@
             <field name="name">entry_form</field>
         </record>
 
+<!-- Wizard Relate Sale to Entry -->
+
+        <record model="ir.ui.view" id="entry_relate_sale_start_view_form">
+            <field name="model">lims.entry.relate_sale.start</field>
+            <field name="type">form</field>
+            <field name="name">entry_relate_sale_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_entry_relate_sale">
+            <field name="name">Relate Sale to Entry</field>
+            <field name="wiz_name">lims.entry.relate_sale</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_entry_relate_sale_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.entry,-1</field>
+            <field name="action" ref="wiz_entry_relate_sale"/>
+        </record>
+
     </data>
 </tryton>
