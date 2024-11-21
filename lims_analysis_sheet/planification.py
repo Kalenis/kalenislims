@@ -408,27 +408,33 @@ class SearchAnalysisSheet(Wizard):
         NotebookLine = pool.get('lims.notebook.line')
         Notebook = pool.get('lims.notebook')
         Fraction = pool.get('lims.fraction')
+        Sample = pool.get('lims.sample')
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Service = pool.get('lims.service')
         Analysis = pool.get('lims.analysis')
         TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
 
-        template_analysis = {}
+        service_where = 'AND ('
         for template in self.start.templates:
-            cursor.execute('SELECT analysis, method '
+            cursor.execute('SELECT analysis, method, product_type, matrix '
                 'FROM "' + TemplateAnalysis._table + '" '
                 'WHERE template = %s',
                 (template.id,))
             for res in cursor.fetchall():
-                if res[0] not in template_analysis:
-                    template_analysis[res[0]] = []
+                where = '(nl.analysis = %s' % str(res[0])
                 if res[1]:
-                    template_analysis[res[0]].append(res[1])
-        if not template_analysis:
+                    where += ' AND nl.method = %s ' % str(res[1])
+                if res[2]:
+                    where += ' AND s.product_type = %s ' % str(res[2])
+                if res[3]:
+                    where += ' AND s.matrix = %s ' % str(res[3])
+                where += ')'
+                if service_where != 'AND (':
+                    service_where += ' OR '
+                service_where += where
+        service_where += ') '
+        if service_where == 'AND () ':
             return {}
-        all_included_analysis_ids = ', '.join(str(x)
-            for x in list(template_analysis.keys()))
-        service_where = 'AND ad.analysis IN (%s) ' % all_included_analysis_ids
 
         planification_details = PlanificationServiceDetail.search([['OR',
             ('planification.state', '=', 'preplanned'),
@@ -458,6 +464,8 @@ class SearchAnalysisSheet(Wizard):
             'ON nb.id = nl.notebook '
             'INNER JOIN "' + Fraction._table + '" frc '
             'ON frc.id = nb.fraction '
+            'INNER JOIN "' + Sample._table + '" s '
+            'ON s.id = frc.sample '
             'INNER JOIN "' + EntryDetailAnalysis._table + '" ad '
             'ON ad.id = nl.analysis_detail '
             'INNER JOIN "' + Service._table + '" srv '
@@ -485,9 +493,6 @@ class SearchAnalysisSheet(Wizard):
         nlines_added = []
         if extra_where:
             for nl in notebook_lines:
-                if (template_analysis[nl[3]] and
-                        nl[4] not in template_analysis[nl[3]]):
-                    continue
                 f_ = nl[1]
                 s_ = nl[2]
                 if (f_, s_) not in result:
@@ -500,9 +505,6 @@ class SearchAnalysisSheet(Wizard):
                         })
         else:
             for nl in notebook_lines:
-                if (template_analysis[nl[3]] and
-                        nl[4] not in template_analysis[nl[3]]):
-                    continue
                 f_ = nl[1]
                 s_ = nl[2]
                 result[(f_, s_)] = {
