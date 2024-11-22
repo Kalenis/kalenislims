@@ -2051,6 +2051,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
         Data = pool.get('lims.interface.data')
         Field = pool.get('lims.interface.table.field')
         NotebookLine = pool.get('lims.notebook.line')
+        LaboratoryProfessional = pool.get('lims.laboratory.professional')
 
         cls.check_required_fields(compilations)
 
@@ -2094,6 +2095,19 @@ class Compilation(Workflow, ModelSQL, ModelView):
                             data[nl_field] = data[nl_field].id
                         if nl_field == 'literal_result' and data[nl_field]:
                             data_eng[nl_field] = data[nl_field]
+                        if (nl_field == 'professionals' and
+                                data[nl_field] is not None):
+                            professionals = []
+                            for p_code in data[nl_field].split('/'):
+                                professional = LaboratoryProfessional.search([
+                                    ('code', '=', p_code.strip())])
+                                if professional:
+                                    professionals.append(
+                                        {'professional': professional[0].id})
+                            if professionals:
+                                data[nl_field] = [('create', professionals)]
+                            else:
+                                del data[nl_field]
 
                     if line.annulled:
                         data.update({
