@@ -2115,6 +2115,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     for alias, nl_field in fields.items():
                         data[nl_field] = getattr(line, alias, None)
                         if nl_field == 'result' and data[nl_field] is not None:
+                            data[nl_field] = str(data[nl_field])
                             if not nb_line.significant_digits:
                                 decimals = (decimals_column and getattr(line,
                                     decimals_column) or nb_line.decimals)
