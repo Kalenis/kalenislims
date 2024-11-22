@@ -293,6 +293,8 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         domain=[('state', '=', 'done')])
     sample_fast_copy = fields.Boolean('Fast Sample Creation (Experimental)')
     server_url = fields.Char('Kalenis Server URL')
+    results_report_print_not_valid = fields.Boolean(
+        'Allow reprinting any version of Result Reports')
 
     @staticmethod
     def default_brix_digits():
@@ -361,6 +363,10 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         return langs and langs[0].id or None
 
     def default_sample_fast_copy():
+        return False
+
+    @staticmethod
+    def default_results_report_print_not_valid():
         return False
 
     def get_reagents(self):

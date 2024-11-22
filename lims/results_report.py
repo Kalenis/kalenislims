@@ -3743,22 +3743,28 @@ class ResultReport(Report):
 
     @classmethod
     def execute(cls, ids, data):
-        if len(ids) > 1:
-            raise UserError(gettext('lims.msg_multiple_reports'))
-
         pool = Pool()
         ResultsDetail = pool.get('lims.results_report.version.detail')
         CachedReport = pool.get('lims.results_report.cached_report')
+        ActionReport = pool.get('ir.action.report')
+        Configuration = pool.get('lims.configuration')
+
+        if len(ids) > 1:
+            raise UserError(gettext('lims.msg_multiple_reports'))
 
         results_report = ResultsDetail(ids[0])
         if results_report.state == 'annulled':
             raise UserError(gettext('lims.msg_annulled_report'))
 
+        if results_report.state == 'released' and not results_report.valid:
+            config_ = Configuration(1)
+            if not config_.results_report_print_not_valid:
+                raise UserError(gettext('lims.msg_print_not_valid_report'))
+
         if data is None:
             data = {}
         current_data = data.copy()
         current_data['alt_lang'] = results_report.report_language.code
-        result = super().execute(ids, current_data)
 
         cached_reports = CachedReport.search([
             ('version_detail', '=', results_report.id),
@@ -3768,10 +3774,14 @@ class ResultReport(Report):
                 ('report_cache_id', '!=', None)],
             ])
         if cached_reports:
+            action_report = ActionReport(data.get('action_id'))
             result = (cached_reports[0].report_format,
-                cached_reports[0].report_cache) + result[2:]
+                cached_reports[0].report_cache,
+                action_report.direct_print, action_report.name)
 
         else:
+            result = super().execute(ids, current_data)
+
             if current_data.get('save_cache', False):
                 cached_reports = CachedReport.search([
                     ('version_detail', '=', results_report.id),

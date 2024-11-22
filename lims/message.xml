@@ -298,6 +298,9 @@
         <record model="ir.message" id="msg_annulled_report">
             <field name="text">This report is annulled</field>
         </record>
+        <record model="ir.message" id="msg_print_not_valid_report">
+            <field name="text">This report is no longer valid</field>
+        </record>
         <record model="ir.message" id="msg_replace_number">
             <field name="text">Supplants the Results Report N° %(report)s</field>
         </record>

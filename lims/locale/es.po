@@ -535,6 +535,10 @@ msgctxt "field:lims.configuration,results_report_language:"
 msgid "Results Report Language"
 msgstr "Idioma Informe de resultados"
 
+msgctxt "field:lims.configuration,results_report_print_not_valid:"
+msgid "Allow reprinting any version of Result Reports"
+msgstr "Permitir reimprimir cualquier versión de Informes de resultado"
+
 msgctxt "field:lims.configuration,rm_fraction_type:"
 msgid "RM fraction type"
 msgstr "Tipo de fracción RM"
@@ -6215,13 +6219,13 @@ msgctxt "field:lims.sample,report_date:"
 msgid "Date agreed for result"
 msgstr "Fecha pactada de resultado"
 
-msgctxt "field:lims.sample,resampling_origin:"
-msgid "Resampling Origin"
-msgstr "Origen del Remuestreo"
-
 msgctxt "field:lims.sample,resampling:"
 msgid "Resampling"
 msgstr "Remuestreo"
+
+msgctxt "field:lims.sample,resampling_origin:"
+msgid "Resampling Origin"
+msgstr "Origen del Remuestreo"
 
 msgctxt "field:lims.sample,restricted_entry:"
 msgid "Restricted entry"
@@ -9372,6 +9376,10 @@ msgstr "Este Equipo está físicamente en otro Laboratorio"
 msgctxt "model:ir.message,text:msg_planification_professional_unique_id"
 msgid "Professionals cannot be repeated"
 msgstr "Los profesionales no pueden repetirse"
+
+msgctxt "model:ir.message,text:msg_print_not_valid_report"
+msgid "This report is no longer valid"
+msgstr "Este informe ya no es válido"
 
 msgctxt "model:ir.message,text:msg_product_type_unique_id"
 msgid "Product type code must be unique"
