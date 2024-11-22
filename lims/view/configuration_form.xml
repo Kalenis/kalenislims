@@ -40,6 +40,10 @@
             <field name="zone_required"/>
             <label name="results_report_language"/>
             <field name="results_report_language" widget="selection" xexpand="0"/>
+            <group id="results_report_print_not_valid" colspan="2" col="2">
+                <label name="results_report_print_not_valid"/>
+                <field name="results_report_print_not_valid"/>
+            </group>
             <field name="microbiology_laboratories" colspan="4"/>
         </page>
         <page string="Fraction Types" id="fraction_type">
