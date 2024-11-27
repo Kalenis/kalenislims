@@ -1693,7 +1693,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
                             col = schema[k]['col']
                             if (not row[col - 1] or
                                     not str(row[col - 1]).strip()):
-                                line[k] = None
+                                #line[k] = None
                                 continue
                             value = row[col - 1]
 
@@ -1719,7 +1719,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     f_fields = sorted(formula_fields.items(),
                         key=lambda x: x[1]['evaluation_order'])
                     for field in f_fields:
-                        line[field[0]] = self._get_formula_value(field, line)
+                        value = self._get_formula_value(field, line)
+                        if value is not None:
+                            line[field[0]] = value
 
                     line['notebook_line'] = self._get_notebook_line(line)
                     if (line['notebook_line']):
@@ -1800,7 +1802,7 @@ class Compilation(Workflow, ModelSQL, ModelView):
                                     row = schema[k]['row']
                                 value = sheet.cell(row=row, column=col).value
                                 if value is None:
-                                    line[k] = None
+                                    #line[k] = None
                                     continue
 
                             if schema[k]['type'] == 'integer':
@@ -1832,8 +1834,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
                         f_fields = sorted(formula_fields.items(),
                             key=lambda x: x[1]['evaluation_order'])
                         for field in f_fields:
-                            line[field[0]] = self._get_formula_value(
-                                field, line)
+                            value = self._get_formula_value(field, line)
+                            if value is not None:
+                                line[field[0]] = value
 
                         line['notebook_line'] = self._get_notebook_line(line)
                         if (line['notebook_line']):
@@ -1919,6 +1922,9 @@ class Compilation(Workflow, ModelSQL, ModelView):
         parser = formulas.Parser()
         ast = parser.ast(field[1]['formula'])[1].compile()
         inputs = (' '.join([x for x in ast.inputs])).lower().split()
+        for x in inputs:
+            if x not in line:
+                return None
         inputs = [line[x] for x in inputs]
         try:
             value = ast(*inputs)
