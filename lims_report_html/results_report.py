@@ -570,7 +570,13 @@ class ResultReport(LimsReport, metaclass=PoolMeta):
                 ('report_cache_id', '!=', None)],
             ])
         if cached_reports:
-            action_report = ActionReport(data.get('action_id'))
+            action_id = data.get('action_id')
+            if action_id is None:
+                action_reports = ActionReport.search([
+                    ('report_name', '=', cls.__name__)
+                    ])
+                action_id = action_reports[0].id
+            action_report = ActionReport(action_id)
             result = (cached_reports[0].report_format,
                 cached_reports[0].report_cache,
                 action_report.direct_print, action_report.name)
