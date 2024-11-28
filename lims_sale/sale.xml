@@ -115,6 +115,46 @@
             <field name="name">lims_sale_line_tree</field>
         </record>
 
+        <record model="ir.model.field.access"
+            id="access_sale_line_unit_price">
+            <field name="field"
+                search="[('name', '=', 'unit_price'), ('model.model', '=', 'sale.line')]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_sale_line_unit_price_group_sale">
+            <field name="field"
+                search="[('name', '=', 'unit_price'), ('model.model', '=', 'sale.line')]"/>
+            <field name="group" ref="sale.group_sale"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access"
+            id="access_sale_line_amount">
+            <field name="field"
+                search="[('name', '=', 'amount'), ('model.model', '=', 'sale.line')]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_sale_line_amount_group_sale">
+            <field name="field"
+                search="[('name', '=', 'amount'), ('model.model', '=', 'sale.line')]"/>
+            <field name="group" ref="sale.group_sale"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
 <!-- Sale Load Services from Entry Wizard-->
 
         <record model="ir.ui.view" id="sale_load_services_start_view_form">
