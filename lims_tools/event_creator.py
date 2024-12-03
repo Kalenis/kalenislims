@@ -160,10 +160,14 @@ class EventCreator(Model):
     def create_fixed_events(cls, record, create_method,
             start_date=None, include_start_date=True):
         pool = Pool()
+        Company = pool.get('company.company')
         LabWorkYear = pool.get('lims.lab.workyear')
 
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
+
+        company = Company(Transaction().context.get('company'))
+        company_timezone = company.get_timezone()
 
         ruleset = rrule.rruleset()
         byweekday = None
@@ -198,13 +202,14 @@ class EventCreator(Model):
         while len(events) < record.end_repetition:
             event = {}
             if record.specific_event_time:
-                date = date.replace(
+                date = company_timezone.localize(date.replace(
                     hour=record.specific_event_time.hour,
                     minute=record.specific_event_time.minute,
                     second=record.specific_event_time.second
-                    )
+                    ))
             event['scheduled_date'] = date
-            event['week_day'] = date.weekday()
+            event['week_day'] = company.convert_timezone_datetime(
+                date).weekday()
             new_event = create_method(record, event)
             if new_event:
                 events.append(new_event)
@@ -282,7 +287,8 @@ class EventCreator(Model):
                     second=specific_time.second
                     ))
                 event['scheduled_date'] = event_date
-                event['week_day'] = date.weekday()
+                event['week_day'] = company.convert_timezone_datetime(
+                    event_date).weekday()
                 event['shift'] = shift_id
                 new_event = create_method(record, event)
                 if new_event:
@@ -300,10 +306,13 @@ class EventCreator(Model):
     def create_events_until_date(cls, record, create_method,
             start_date=None, include_start_date=True):
         pool = Pool()
+        Company = pool.get('company.company')
         LabWorkYear = pool.get('lims.lab.workyear')
 
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
+
+        company = Company(Transaction().context.get('company'))
 
         ruleset = rrule.rruleset()
         byweekday = None
@@ -341,7 +350,8 @@ class EventCreator(Model):
         while date < end_date:
             event = {}
             event['scheduled_date'] = date
-            event['week_day'] = date.weekday()
+            event['week_day'] = company.convert_timezone_datetime(
+                date).weekday()
             new_event = create_method(record, event)
             if new_event:
                 events.append(new_event)
@@ -422,7 +432,8 @@ class EventCreator(Model):
                     second=specific_time.second
                     ))
                 event['scheduled_date'] = event_date
-                event['week_day'] = date.weekday()
+                event['week_day'] = company.convert_timezone_datetime(
+                    event_date).weekday()
                 event['shift'] = shift_id
                 new_event = create_method(record, event)
                 if new_event:
