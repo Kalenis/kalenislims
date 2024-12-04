@@ -4303,41 +4303,65 @@ class Sample(ModelSQL, ModelView):
 
         # (new) entry
         if new_entry:
-            entry, = Entry.copy([sample.entry], default={
+            default = {
                 'date': date,
                 'samples': [],
-                })
+                }
+            default.update(cls._resample_entry_default(sample, analyses, date))
+            entry, = Entry.copy([sample.entry], default=default)
         else:
             entry = sample.entry
 
         # new sample
-        new_sample, = Sample.copy([sample], default={
+        default = {
             'entry': entry.id,
             'resampling_origin': sample.id,
             'date': date,
             'label': label,
             'fractions': [],
-            })
+            }
+        default.update(cls._resample_sample_default(sample, analyses, date))
+        new_sample, = Sample.copy([sample], default=default)
 
         # new fraction
         fraction = sample.fractions[0]
-        new_fraction, = Fraction.copy([fraction], default={
+        default = {
             'sample': new_sample.id,
             'services': [],
-            })
+            }
+        default.update(cls._resample_fraction_default(sample, analyses, date))
+        new_fraction, = Fraction.copy([fraction], default=default)
 
         # new services
         services = []
         for service in fraction.services:
             if service.analysis in analyses:
                 services.append(service)
-        Service.copy(services, default={
+        default={
             'fraction': new_fraction.id,
-            })
+            }
+        default.update(cls._resample_service_default(sample, analyses, date))
+        Service.copy(services, default=default)
 
         # Confirm sample for ongoing entries
         if new_sample.entry.state in ('ongoing', 'finished'):
             Sample.confirm([new_sample])
+
+    @classmethod
+    def _resample_entry_default(cls, sample, analyses, date):
+        return {}
+
+    @classmethod
+    def _resample_sample_default(cls, sample, analyses, date):
+        return {}
+
+    @classmethod
+    def _resample_fraction_default(cls, sample, analyses, date):
+        return {}
+
+    @classmethod
+    def _resample_service_default(cls, sample, analyses, date):
+        return {}
 
 
 class SamplePackage(ModelSQL, ModelView):
