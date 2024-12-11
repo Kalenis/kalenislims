@@ -102,7 +102,7 @@ class RelateSale(Wizard):
 
     def transition_check(self):
         entry = self.record
-        if entry.state == 'draft':
+        if entry.state in ('draft', 'pending'):
             return 'start'
         return 'end'
 
