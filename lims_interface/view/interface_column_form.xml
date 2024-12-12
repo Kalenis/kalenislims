@@ -57,11 +57,15 @@
         <field name="group_col"/>
     </group>
     <separator id="storage" colspan="4" string="Storage:"/>
-    <group id="storage_field" colspan="4" col="4">
+    <group id="storage_field" colspan="4" col="8">
         <label name="transfer_field"/>
         <field name="transfer_field" xexpand="0"/>
         <label name="related_line_field"/>
         <field name="related_line_field"/>
+        <label name="transfer_to_translation"/>
+        <field name="transfer_to_translation" xexpand="0"/>
+        <label name="translation_language"/>
+        <field name="translation_language" widget="selection"/>
     </group>
     <separator id="import" colspan="4" string="Import:"/>
     <group id="import_spreadsheet" colspan="4" col="6">

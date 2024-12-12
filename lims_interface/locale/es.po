@@ -202,6 +202,14 @@ msgctxt "field:lims.interface.column,transfer_field:"
 msgid "Transfer field"
 msgstr "Trasladar dato"
 
+msgctxt "field:lims.interface.column,transfer_to_translation:"
+msgid "Transfer to Translation"
+msgstr "Trasladar a traducción"
+
+msgctxt "field:lims.interface.column,translation_language:"
+msgid "Translation Language"
+msgstr "Idioma traducción"
+
 msgctxt "field:lims.interface.column,type_:"
 msgid "Field Type"
 msgstr "Tipo de campo"
@@ -553,6 +561,14 @@ msgstr "Tabla"
 msgctxt "field:lims.interface.table.field,transfer_field:"
 msgid "Is a transfer field"
 msgstr "Trasladar dato a registro"
+
+msgctxt "field:lims.interface.table.field,transfer_to_translation:"
+msgid "Transfer to Translation"
+msgstr "Trasladar a traducción"
+
+msgctxt "field:lims.interface.table.field,translation_language:"
+msgid "Translation Language"
+msgstr "Idioma traducción"
 
 msgctxt "field:lims.interface.table.field,type:"
 msgid "Field Type"

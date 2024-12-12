@@ -86,6 +86,8 @@ class TableField(ModelSQL, ModelView):
     help = fields.Text('Help')
     transfer_field = fields.Boolean('Is a transfer field')
     related_line_field = fields.Many2One('ir.model.field', 'Related Field')
+    transfer_to_translation = fields.Boolean('Transfer to Translation')
+    translation_language = fields.Many2One('ir.lang', 'Translation Language')
     related_model = fields.Many2One('ir.model', 'Related Model')
     selection = fields.Text('Selection')
     domain = fields.Char('Domain Value')
