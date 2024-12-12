@@ -436,6 +436,10 @@ class Interface(Workflow, ModelSQL, ModelView):
                                     transfer_field=column.transfer_field,
                                     related_line_field=(
                                         column.related_line_field),
+                                    transfer_to_translation=(
+                                        column.transfer_to_translation),
+                                    translation_language=(
+                                        column.translation_language),
                                     related_model=column.related_model,
                                     selection=column.selection,
                                     formula=get_formula(column.expression),
@@ -496,6 +500,10 @@ class Interface(Workflow, ModelSQL, ModelView):
                                 domain=column.domain,
                                 transfer_field=column.transfer_field,
                                 related_line_field=column.related_line_field,
+                                transfer_to_translation=(
+                                    column.transfer_to_translation),
+                                translation_language=(
+                                    column.translation_language),
                                 related_model=column.related_model,
                                 selection=column.selection,
                                 formula=get_formula(expression),
@@ -530,6 +538,10 @@ class Interface(Workflow, ModelSQL, ModelView):
                             domain=column.domain,
                             transfer_field=column.transfer_field,
                             related_line_field=column.related_line_field,
+                            transfer_to_translation=(
+                                column.transfer_to_translation),
+                            translation_language=(
+                                column.translation_language),
                             related_model=column.related_model,
                             selection=column.selection,
                             formula=get_formula(column.expression),
@@ -968,6 +980,19 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
             'readonly': _states['readonly'],
             },
         depends=['transfer_field', 'interface_state'])
+    transfer_to_translation = fields.Boolean('Transfer to Translation',
+        states={
+            'invisible': Not(Eval('transfer_field')),
+            'readonly': _states['readonly'],
+            },
+        depends=['transfer_field', 'interface_state'])
+    translation_language = fields.Many2One('ir.lang', 'Translation Language',
+        domain=[('translatable', '=', True)],
+        states={
+            'invisible': Not(Eval('transfer_to_translation')),
+            'readonly': _states['readonly'],
+            },
+        depends=['transfer_to_translation', 'interface_state'])
     group = fields.Integer('Group', states=_states, depends=_depends)
     related_group = fields.Integer('Related Group',
         states=_states, depends=_depends)
@@ -1305,6 +1330,9 @@ class CopyInterfaceColumn(Wizard):
             'transfer_field': origin.transfer_field,
             'related_line_field': (origin.related_line_field and
                 origin.related_line_field.id or None),
+            'transfer_to_translation': origin.transfer_to_translation,
+            'translation_language': (origin.translation_language and
+                origin.translation_language.id or None),
             'group': origin.group,
             'digits': origin.digits,
             'related_group': origin.related_group,
@@ -2120,17 +2148,22 @@ class Compilation(Workflow, ModelSQL, ModelView):
         result_modifier_na = ModelData.get_id('lims', 'result_modifier_na')
 
         for c in compilations:
-            fields = {}
+            fields, translation_fields = {}, {}
             decimals_column = None
             columns = Field.search([
                 ('table', '=', c.table.id),
                 ('transfer_field', '=', True),
                 ])
             for column in columns:
+                if column.transfer_to_translation:
+                    translation_fields[column.name] = (
+                        column.related_line_field.name,
+                        column.translation_language.code)
+                    continue
                 fields[column.name] = column.related_line_field.name
                 if fields[column.name] == 'decimals':
                     decimals_column = column.name
-            if not fields:
+            if not fields and not translation_fields:
                 continue
 
             sample_ids = set()
@@ -2144,7 +2177,6 @@ class Compilation(Workflow, ModelSQL, ModelView):
                     data = {
                         'compilation': c.id,
                         }
-                    data_eng = {}
                     for alias, nl_field in fields.items():
                         data[nl_field] = getattr(line, alias, None)
                         if nl_field == 'result' and data[nl_field] is not None:
@@ -2156,8 +2188,11 @@ class Compilation(Workflow, ModelSQL, ModelView):
                                     '.{}f'.format(decimals))
                         if nl_field == 'result_modifier' and data[nl_field]:
                             data[nl_field] = data[nl_field].id
-                        if nl_field == 'literal_result' and data[nl_field]:
-                            data_eng[nl_field] = data[nl_field]
+                    translation_data = defaultdict(dict)
+                    for alias, nl_field in translation_fields.items():
+                        value = getattr(line, alias, None)
+                        if value:
+                            translation_data[nl_field[1]][nl_field[0]] = value
 
                     if line.annulled:
                         data.update({
@@ -2176,12 +2211,13 @@ class Compilation(Workflow, ModelSQL, ModelView):
                                 update_samples_state=False,
                                 update_referrals_state=False):
                             NotebookLine.write([nb_line], data)
-                    if data_eng:
-                        with Transaction().set_context(language='en',
-                                update_samples_state=False,
-                                update_referrals_state=False):
-                            NotebookLine.write([nb_line], data_eng)
-                    if data or data_eng:
+                    if translation_data:
+                        for language, data in translation_data.items():
+                            with Transaction().set_context(language=language,
+                                    update_samples_state=False,
+                                    update_referrals_state=False):
+                                NotebookLine.write([nb_line], data)
+                    if data or translation_data:
                         sample_ids.add(nb_line.sample.id)
                         notebook_lines.append(nb_line)
             Sample.update_samples_state(list(sample_ids))
