@@ -2675,8 +2675,14 @@ class GenerateReportStart(ModelView):
             'complementary', 'corrective'])})
     reports_created = fields.One2Many('lims.results_report.version.detail',
         None, 'Reports created')
-    group_samples = fields.Boolean('Group samples in the same report',
-        states={'readonly': Bool(Eval('report'))})
+    group_samples = fields.Boolean('Group samples in the same report')
+    samples_grouping = fields.Selection([
+        (None, 'None'),
+        ('label', 'Label'),
+        ('party', 'Party'),
+        ], 'Sample grouping', sort=False,
+        states={'readonly': Bool(Eval('report'))},
+        help='Group samples in the same report')
     append_samples = fields.Boolean('Append samples to existing reports',
         states={'readonly': Bool(Eval('report'))})
 
@@ -2740,7 +2746,7 @@ class GenerateReport(Wizard):
             'type': 'final',
             'preliminary': False,
             'corrective': False,
-            'group_samples': False,
+            'samples_grouping': None,
             'append_samples': True,
             }
 
@@ -2954,10 +2960,7 @@ class GenerateReport(Wizard):
 
             parties = {}
             for notebook in self.start.notebooks:
-                key = notebook.id
-                if self.start.group_samples:
-                    key = (notebook.party.id, notebook.invoice_party.id,
-                        notebook.fraction.cie_fraction_type)
+                key = self._get_report_grouper(notebook)
                 if key not in parties:
                     parties[key] = {
                         'party': notebook.party.id,
@@ -3052,6 +3055,15 @@ class GenerateReport(Wizard):
 
         self.start.reports_created = reports_created
         return 'open_'
+
+    def _get_report_grouper(self, notebook):
+        key = notebook.id
+        if self.start.samples_grouping == 'party':
+            key = (notebook.party.id, notebook.invoice_party.id,
+                notebook.fraction.cie_fraction_type)
+        elif self.start.samples_grouping == 'label':
+            key = (notebook.label, notebook.fraction.cie_fraction_type)
+        return key
 
     def _get_results_report(self, laboratory_id, reports, versions, details,
             samples, append=False):
