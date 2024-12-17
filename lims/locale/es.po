@@ -2990,6 +2990,10 @@ msgctxt ""
 msgid "Print review reason in next version"
 msgstr "Imprimir motivo de revisión en próxima versión"
 
+msgctxt "field:lims.notebook.generate_results_report.start,samples_grouping:"
+msgid "Sample grouping"
+msgstr "Agrupamiento de muestras"
+
 msgctxt "field:lims.notebook.generate_results_report.start,type:"
 msgid "Type"
 msgstr "Tipo"
@@ -7456,6 +7460,10 @@ msgstr "Factor de corrección para CV mayor al Máximo"
 msgctxt "help:lims.laboratory.cv_correction,min_cv_corr_fact:"
 msgid "Correction factor for CV between Min and Max"
 msgstr "Factor de corrección para CV entre Mínimo y Máximo"
+
+msgctxt "help:lims.notebook.generate_results_report.start,samples_grouping:"
+msgid "Group samples in the same report"
+msgstr "Agrupar muestras en mismo Informe"
 
 msgctxt "help:lims.result_modifier,expression:"
 msgid ""
@@ -13947,6 +13955,21 @@ msgstr "Formulados"
 msgctxt "selection:lims.laboratory,section:"
 msgid "Microbiology"
 msgstr "Microbiología"
+
+msgctxt ""
+"selection:lims.notebook.generate_results_report.start,samples_grouping:"
+msgid "Label"
+msgstr "Rótulo"
+
+msgctxt ""
+"selection:lims.notebook.generate_results_report.start,samples_grouping:"
+msgid "None"
+msgstr "Ninguno"
+
+msgctxt ""
+"selection:lims.notebook.generate_results_report.start,samples_grouping:"
+msgid "Party"
+msgstr "Entidad"
 
 msgctxt "selection:lims.notebook.generate_results_report.start,type:"
 msgid "Complementary"

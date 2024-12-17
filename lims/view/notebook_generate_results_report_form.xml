@@ -8,9 +8,9 @@
         <label name="corrective"/>
         <field name="corrective" xexpand="0"/>
     </group>
-    <group id="group_samples" colspan="2" col="2">
-        <label name="group_samples"/>
-        <field name="group_samples"/>
+    <group id="samples_grouping" colspan="2" col="2">
+        <label name="samples_grouping"/>
+        <field name="samples_grouping"/>
     </group>
     <group id="append_samples" colspan="2" col="2">
         <label name="append_samples"/>
