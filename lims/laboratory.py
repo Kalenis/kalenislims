@@ -297,13 +297,13 @@ class LabMethod(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('disabled')
     def disable(cls, methods):
-        pass
+        cls.disable_typifications(methods)
 
     @classmethod
     @ModelView.button_action('lims.wiz_method_new_version')
     @Workflow.transition('active')
     def reactivate(cls, methods):
-        pass
+        cls.enable_typifications(methods)
 
     def create_new_version(self):
         pool = Pool()
@@ -314,6 +314,33 @@ class LabMethod(Workflow, ModelSQL, ModelView):
         for field in self._get_new_version_fields():
             setattr(version, field, getattr(self, field))
         version.save()
+
+    @classmethod
+    def disable_typifications(cls, methods):
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+
+        methods_ids = [m.id for m in methods]
+        typifications = Typification.search([
+            ('method', 'in', methods_ids),
+            ('valid', '=', True),
+            ])
+        if typifications:
+            Typification.write(typifications, {'valid': False})
+
+    @classmethod
+    def enable_typifications(cls, methods):
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+
+        methods_ids = [m.id for m in methods]
+        typifications = Typification.search([
+            ('method', 'in', methods_ids),
+            ('valid', '=', False),
+            ('analysis.state', '=', 'active'),
+            ])
+        if typifications:
+            Typification.write(typifications, {'valid': True})
 
     def get_current_version(self):
         if self.versions:
