@@ -1525,6 +1525,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
         if analysis_ids:
             typifications = Typification.search([
                 ('analysis', 'in', analysis_ids),
+                ('valid', '=', True),
                 ])
             if typifications:
                 Typification.write(typifications, {'valid': False})
@@ -1547,6 +1548,8 @@ class Analysis(Workflow, ModelSQL, ModelView):
         if analysis_ids:
             typifications = Typification.search([
                 ('analysis', 'in', analysis_ids),
+                ('valid', '=', False),
+                ('method.state', '=', 'active'),
                 ])
             if typifications:
                 Typification.write(typifications, {'valid': True})
