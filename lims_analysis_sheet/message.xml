@@ -31,5 +31,8 @@
         <record model="ir.message" id="delete_done_sheet">
             <field name="text">You cannot delete an Analysis Sheet in "Done" state</field>
         </record>
+        <record model="ir.message" id="msg_fraction_already_sheet">
+            <field name="text">Fraction "%(fraction)s" has analyses already in progress on Sheet "%(sheet)s"</field>
+        </record>
     </data>
 </tryton>

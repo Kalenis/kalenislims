@@ -63,6 +63,7 @@ def register():
         sheet.OpenAnalysisSheetSample,
         planification.SearchAnalysisSheet,
         planification.RelateTechnicians,
+        planification.ReleaseFraction,
         planification.OpenSheetSample,
         planification.OpenPendingPlanningSample,
         notebook.AddControl,
