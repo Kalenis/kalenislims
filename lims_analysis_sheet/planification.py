@@ -12,6 +12,8 @@ from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Equal, Bool, If, PYSONEncoder
 from trytond.transaction import Transaction
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 
 class Planification(metaclass=PoolMeta):
@@ -740,6 +742,63 @@ class RelateTechnicians(metaclass=PoolMeta):
                 details.append(x[0])
 
         return PlanificationServiceDetail.browse(details)
+
+
+class ReleaseFraction(metaclass=PoolMeta):
+    __name__ = 'lims.planification.release_fraction'
+
+    def transition_release(self):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Data = pool.get('lims.interface.data')
+
+        sheets_to_search = defaultdict(list)
+
+        for detail in self.result.fractions:
+            for service_detail in detail.details:
+                if service_detail.is_control:
+                    continue
+                if not service_detail.notebook_line:
+                    continue
+                nl = service_detail.notebook_line
+                template_id = nl.get_analysis_sheet_template()
+                if not template_id:
+                    continue
+                sheets_to_search[template_id].append(nl.id)
+
+        for template_id, notebook_lines_ids in sheets_to_search.items():
+            sheets = AnalysisSheet.search([
+                ('template', '=', template_id),
+                ('state', 'in', ['active', 'validated']),
+                ], order=[('id', 'DESC')])
+            for s in sheets:
+                with Transaction().set_context(
+                        lims_interface_table=s.compilation.table.id):
+                    lines = Data.search([
+                        ('compilation', '=', s.compilation.id),
+                        ('notebook_line', 'in', notebook_lines_ids),
+                        ], limit=1)
+                    if lines:
+                        raise UserError(gettext('lims_analysis_sheet.'
+                            'msg_fraction_already_sheet',
+                            fraction=lines[0].notebook_line.fraction.rec_name,
+                            sheet=s.rec_name))
+
+            sheets = AnalysisSheet.search([
+                ('template', '=', template_id),
+                ('state', '=', 'draft'),
+                ], order=[('id', 'DESC')])
+            for s in sheets:
+                with Transaction().set_context(
+                        lims_interface_table=s.compilation.table.id):
+                    lines = Data.search([
+                        ('compilation', '=', s.compilation.id),
+                        ('notebook_line', 'in', notebook_lines_ids),
+                        ])
+                    if lines:
+                        Data.delete(lines)
+
+        return super().transition_release()
 
 
 class LaboratoryProfessional(metaclass=PoolMeta):
