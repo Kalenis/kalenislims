@@ -2,10 +2,12 @@
 <form>
     <label name="analysis"/>
     <field name="analysis"/>
-    <label name="repetition_reason"/>
-    <field name="repetition_reason"/>
+    <label name="repetition_reason_coded"/>
+    <field name="repetition_reason_coded" widget="selection"/>
     <label name="method"/>
     <field name="method"/>
+    <label name="repetition_reason"/>
+    <field name="repetition_reason"/>
     <field name="analysis_type" invisible="1"/>
     <field name="method_domain" invisible="1"/>
 </form>

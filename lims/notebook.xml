@@ -233,6 +233,40 @@
             <field name="rule_group" ref="rule_group_notebook_line_all_fields"/>
         </record>
 
+<!-- Analysis Repetition Reason -->
+
+        <record model="ir.ui.view" id="notebook_line_repetition_reason_view_form">
+            <field name="model">lims.notebook.line.repetition_reason</field>
+            <field name="type">form</field>
+            <field name="name">notebook_line_repetition_reason_form</field>
+        </record>
+        <record model="ir.ui.view" id="notebook_line_repetition_reason_view_list">
+            <field name="model">lims.notebook.line.repetition_reason</field>
+            <field name="type">tree</field>
+            <field name="name">notebook_line_repetition_reason_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_notebook_line_repetition_reason">
+            <field name="name">Analysis Repetition Reasons</field>
+            <field name="res_model">lims.notebook.line.repetition_reason</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_notebook_line_repetition_reason_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="notebook_line_repetition_reason_view_list"/>
+            <field name="act_window" ref="act_notebook_line_repetition_reason"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_notebook_line_repetition_reason_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="notebook_line_repetition_reason_view_form"/>
+            <field name="act_window" ref="act_notebook_line_repetition_reason"/>
+        </record>
+
+        <menuitem action="act_notebook_line_repetition_reason"
+            id="notebook_line_repetition_reason_menu"
+            parent="lims_config_laboratory" sequence="57"/>
+
 <!-- Wizard Initial Concentration Calculation (repetition zero) -->
 
         <record model="ir.ui.view" id="lims_notebook_initial_concentration_calc_view_form">
