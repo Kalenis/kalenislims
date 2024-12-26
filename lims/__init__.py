@@ -115,6 +115,7 @@ def register():
         analysis.AnalysisLaboratory,
         analysis.AnalysisLabMethod,
         notebook.NotebookLineLaboratoryProfessional,
+        notebook.NotebookAnalysisRepetitionReason,
         entry.EntryInvoiceContact,
         entry.EntryReportContact,
         entry.EntryAcknowledgmentContact,

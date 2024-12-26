@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <form>
     <field name="analysis" colspan="4"/>
+    <label name="repetition_reason_coded"/>
+    <field name="repetition_reason_coded" widget="selection"/>
     <label name="repetition_reason"/>
     <field name="repetition_reason"/>
 </form>
