@@ -733,7 +733,7 @@ class CalculatedTypificationReadOnly(ModelSQL, ModelView):
         return typification.select(*columns, where=where)
 
 
-class ProductType(ModelSQL, ModelView):
+class ProductType(DeactivableMixin, ModelSQL, ModelView):
     'Product Type'
     __name__ = 'lims.product.type'
     _rec_name = 'description'
@@ -786,8 +786,48 @@ class ProductType(ModelSQL, ModelView):
             new_records.append(new_record)
         return new_records
 
+    @classmethod
+    def write(cls, *args):
+        super().write(*args)
+        actions = iter(args)
+        for product_types, vals in zip(actions, actions):
+            if 'active' in vals:
+                if vals['active']:
+                    cls.enable_typifications(product_types)
+                else:
+                    cls.disable_typifications(product_types)
 
-class Matrix(ModelSQL, ModelView):
+    @classmethod
+    def disable_typifications(cls, product_types):
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+
+        product_types_ids = [p.id for p in product_types]
+        typifications = Typification.search([
+            ('product_type', 'in', product_types_ids),
+            ('valid', '=', True),
+            ])
+        if typifications:
+            Typification.write(typifications, {'valid': False})
+
+    @classmethod
+    def enable_typifications(cls, product_types):
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+
+        product_types_ids = [p.id for p in product_types]
+        typifications = Typification.search([
+            ('product_type', 'in', product_types_ids),
+            ('valid', '=', False),
+            ('matrix.active', '=', True),
+            ('analysis.state', '=', 'active'),
+            ('method.state', '=', 'active'),
+            ])
+        if typifications:
+            Typification.write(typifications, {'valid': True})
+
+
+class Matrix(DeactivableMixin, ModelSQL, ModelView):
     'Matrix'
     __name__ = 'lims.matrix'
     _rec_name = 'description'
@@ -838,6 +878,46 @@ class Matrix(ModelSQL, ModelView):
             new_record, = super().copy([record], default=current_default)
             new_records.append(new_record)
         return new_records
+
+    @classmethod
+    def write(cls, *args):
+        super().write(*args)
+        actions = iter(args)
+        for matrices, vals in zip(actions, actions):
+            if 'active' in vals:
+                if vals['active']:
+                    cls.enable_typifications(matrices)
+                else:
+                    cls.disable_typifications(matrices)
+
+    @classmethod
+    def disable_typifications(cls, matrices):
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+
+        matrices_ids = [m.id for m in matrices]
+        typifications = Typification.search([
+            ('matrix', 'in', matrices_ids),
+            ('valid', '=', True),
+            ])
+        if typifications:
+            Typification.write(typifications, {'valid': False})
+
+    @classmethod
+    def enable_typifications(cls, matrices):
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+
+        matrices_ids = [m.id for m in matrices]
+        typifications = Typification.search([
+            ('matrix', 'in', matrices_ids),
+            ('valid', '=', False),
+            ('product_type.active', '=', True),
+            ('analysis.state', '=', 'active'),
+            ('method.state', '=', 'active'),
+            ])
+        if typifications:
+            Typification.write(typifications, {'valid': True})
 
 
 class ObjectiveDescription(ModelSQL, ModelView):
