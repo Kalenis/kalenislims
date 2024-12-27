@@ -6104,6 +6104,10 @@ msgctxt "field:lims.sample,confirmation_date:"
 msgid "Confirmation date"
 msgstr "Fecha de confirmación"
 
+msgctxt "field:lims.sample,confirmation_datetime:"
+msgid "Confirmation date and time"
+msgstr "Fecha y hora de confirmación"
+
 msgctxt "field:lims.sample,confirmed:"
 msgid "Confirmed"
 msgstr "Confirmado"
@@ -6472,6 +6476,10 @@ msgstr "Observaciones"
 msgctxt "field:lims.service,confirmation_date:"
 msgid "Confirmation date"
 msgstr "Fecha de confirmación"
+
+msgctxt "field:lims.service,confirmation_datetime:"
+msgid "Confirmation date and time"
+msgstr "Fecha y hora de confirmación"
 
 msgctxt "field:lims.service,confirmed:"
 msgid "Confirmed"

@@ -424,6 +424,8 @@ class Service(ModelSQL, ModelView):
     confirmed = fields.Function(fields.Boolean('Confirmed'), 'get_confirmed',
         searcher='search_confirmed')
     confirmation_date = fields.Date('Confirmation date', readonly=True)
+    confirmation_datetime = fields.DateTime('Confirmation date and time',
+        readonly=True)
     divide = fields.Boolean('Divide Report')
     not_divided_message = fields.Char('Message', readonly=True,
         states={'invisible': Not(Bool(Eval('not_divided_message')))})
@@ -1039,6 +1041,7 @@ class Service(ModelSQL, ModelView):
             default = {}
         current_default = default.copy()
         current_default['confirmation_date'] = None
+        current_default['confirmation_datetime'] = None
         if not Transaction().context.get('create_sample', False):
             current_default['report_date'] = None
         current_default['analysis_detail'] = None
@@ -1177,8 +1180,10 @@ class Service(ModelSQL, ModelView):
 
         if not confirmation_date:
             confirmation_date = Date.today()
+        confirmation_datetime = datetime.now()
         Service.write(services, {
             'confirmation_date': confirmation_date,
+            'confirmation_datetime': confirmation_datetime,
             })
         analysis_details = EntryDetailAnalysis.search([
             ('service', 'in', [s.id for s in services]),
@@ -2985,6 +2990,8 @@ class Sample(ModelSQL, ModelView):
     attributes_keys_string = attributes.translated('attributes', 'keys')
     attributes_values_string = attributes.translated('attributes')
     confirmation_date = fields.Date('Confirmation date', readonly=True)
+    confirmation_datetime = fields.DateTime('Confirmation date and time',
+        readonly=True)
     laboratory_date = fields.Date('Laboratory deadline', readonly=True)
     report_date = fields.Date('Date agreed for result', readonly=True)
     laboratory_start_date = fields.Date('Laboratory start date', readonly=True)
@@ -3990,6 +3997,7 @@ class Sample(ModelSQL, ModelView):
         # Set confirmation date to None for draft and pending entries
         if self.entry and self.entry.state not in ('ongoing', 'finished'):
             res['confirmation_date'] = None
+            res['confirmation_datetime'] = None
         return res
 
     def _get_sample_dates(self):
@@ -4018,6 +4026,14 @@ class Sample(ModelSQL, ModelView):
                 'WHERE f.sample = %s',
                 (self.id,))
             res['confirmation_date'] = cursor.fetchone()[0] or None
+
+            cursor.execute('SELECT MIN(s.confirmation_datetime) '
+                'FROM "' + Service._table + '" s '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = s.fraction '
+                'WHERE f.sample = %s',
+                (self.id,))
+            res['confirmation_datetime'] = cursor.fetchone()[0] or None
 
         # Laboratory deadline
         cursor.execute('SELECT MAX(s.laboratory_date) '
