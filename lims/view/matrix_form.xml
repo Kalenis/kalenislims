@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
-<form>
+<form col="6">
     <label name="code"/>
     <field name="code"/>
     <label name="description"/>
-    <field name="description"/>
+    <field name="description" xexpand="1"/>
+    <label name="active"/>
+    <field name="active" xexpand="0" width="25"/>
     <label name="restricted_entry"/>
     <field name="restricted_entry"/>
 </form>
