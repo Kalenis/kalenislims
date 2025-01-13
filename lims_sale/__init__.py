@@ -16,7 +16,8 @@ from . import employee
 
 def register():
     Pool.register(
-        configuration.Configuration,
+        configuration.LimsConfiguration,
+        configuration.SaleConfiguration,
         configuration.Cron,
         html_template.SaleClauseTemplate,
         html_template.SaleReportTemplate,

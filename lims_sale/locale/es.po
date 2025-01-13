@@ -6,6 +6,10 @@ msgctxt "field:account.invoice.line,lims_sale_line_origin:"
 msgid "Quote line"
 msgstr "Línea de Presupuesto"
 
+msgctxt "field:lims.configuration,entry_use_sale_contacts:"
+msgid "Use the sales contacts in entries"
+msgstr "Usar contactos de la venta en ingresos"
+
 msgctxt "field:lims.create_sample.start,sale_lines:"
 msgid "Quotes"
 msgstr "Presupuestos"
