@@ -213,6 +213,69 @@ class CreateSample(metaclass=PoolMeta):
 
         return samples_defaults
 
+    def transition_create_(self):
+        res = super().transition_create_()
+        self._update_entry_contacts()
+        return res
+
+    def _update_entry_contacts(self):
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        Entry = pool.get('lims.entry')
+        ServiceSaleLine = pool.get('lims.service-sale.line')
+        Sale = pool.get('sale.sale')
+        InvoiceContacts = pool.get('lims.entry.invoice_contacts')
+        ReportContacts = pool.get('lims.entry.report_contacts')
+        AcknowledgmentContacts = pool.get('lims.entry.acknowledgment_contacts')
+
+        config_ = Config(1)
+        if not config_.entry_use_sale_contacts:
+            return
+
+        entry = Entry(Transaction().context['active_id'])
+
+        sale_lines = ServiceSaleLine.search([
+            ('service.fraction.sample.entry', '=', entry.id),
+            ])
+        sales_ids = list(set([sl.sale_line.sale.id for sl in sale_lines]))
+        if not sales_ids:
+            return
+
+        shipment_addresses = []
+        invoice_addresses = []
+
+        invoice_contacts = []
+        report_contacts = []
+        acknowledgment_contacts = []
+
+        sales = Sale.browse(sales_ids)
+        for sale in sales:
+            if not sale.shipment_address:
+                continue
+            if sale.shipment_address.id in shipment_addresses:
+                continue
+            report_contacts.append(
+                ReportContacts(contact=sale.shipment_address))
+            acknowledgment_contacts.append(
+                AcknowledgmentContacts(contact=sale.shipment_address))
+            shipment_addresses.append(sale.shipment_address)
+
+            if not sale.invoice_address:
+                continue
+            if sale.invoice_address.id in invoice_addresses:
+                continue
+            invoice_contacts.append(
+                InvoiceContacts(contact=sale.invoice_address))
+            invoice_addresses.append(sale.invoice_address.id)
+
+        if not shipment_addresses:
+            return
+
+        entry.invoice_contacts = invoice_contacts
+        entry.report_contacts = report_contacts
+        entry.acknowledgment_contacts = acknowledgment_contacts
+        entry.save()
+
 
 class AddSampleServiceStart(metaclass=PoolMeta):
     __name__ = 'lims.sample.add_service.start'

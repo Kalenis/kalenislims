@@ -2,12 +2,20 @@
 <tryton>
     <data>
 
-<!-- Configuration -->
+<!-- Lims Configuration -->
+
+        <record model="ir.ui.view" id="lims_configuration_view">
+            <field name="model">lims.configuration</field>
+            <field name="inherit" ref="lims.lims_configuration_view"/>
+            <field name="name">lims_configuration_form</field>
+        </record>
+
+<!-- Sale Configuration -->
 
         <record model="ir.ui.view" id="sale_configuration_view_form">
             <field name="model">sale.configuration</field>
             <field name="inherit" ref="sale.sale_configuration_view_form"/>
-            <field name="name">configuration_form</field>
+            <field name="name">sale_configuration_form</field>
         </record>
 
     </data>

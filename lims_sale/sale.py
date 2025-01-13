@@ -14,7 +14,7 @@ from decimal import Decimal
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.pool import PoolMeta, Pool
-from trytond.pyson import Eval, Bool
+from trytond.pyson import Eval, Bool, If
 from trytond.transaction import Transaction
 from trytond.config import config
 from trytond.tools import get_smtp_server
@@ -90,8 +90,17 @@ class Sale(metaclass=PoolMeta):
             ('id', '=', Eval('invoice_party')),
             ('id', 'in', Eval('invoice_party_domain'))]
         cls.invoice_party.depends.append('invoice_party_domain')
-        cls.invoice_address.domain = [('party', '=', Eval('invoice_party'))]
-        cls.invoice_address.depends.append('invoice_party')
+        cls.invoice_address.domain = [
+            ('party', '=', If(Bool(Eval('invoice_party')),
+                Eval('invoice_party'), Eval('party'))),
+            ('invoice_contact', '=', True),
+            ]
+        cls.shipment_address.domain = [
+            ('party', '=', If(Bool(Eval('shipment_party')),
+                Eval('shipment_party'), Eval('party'))),
+            ('report_contact', '=', True),
+            ('acknowledgment_contact', '=', True),
+            ]
         cls.contact.domain = [('party', '=', Eval('party'))]
         invoice_method = ('service', 'On Entry Confirmed')
         if invoice_method not in cls.invoice_method.selection:

@@ -6,7 +6,18 @@ from trytond.model import fields
 from trytond.pool import PoolMeta
 
 
-class Configuration(metaclass=PoolMeta):
+class LimsConfiguration(metaclass=PoolMeta):
+    __name__ = 'lims.configuration'
+
+    entry_use_sale_contacts = fields.Boolean(
+        'Use the sales contacts in entries')
+
+    @staticmethod
+    def default_entry_use_sale_contacts():
+        return False
+
+
+class SaleConfiguration(metaclass=PoolMeta):
     __name__ = 'sale.configuration'
 
     email_quotation_subject = fields.Char('Subject of the quotation email')
