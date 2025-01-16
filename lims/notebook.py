@@ -5672,8 +5672,10 @@ class NotebookRepeatAnalysisStart(ModelView):
     analysis_domain = fields.One2Many('lims.analysis', None,
         'Analysis domain')
     repetition_reason_coded = fields.Many2One(
-        'lims.notebook.line.repetition_reason', 'Repetition reason')
-    repetition_reason = fields.Char('Other reason')
+        'lims.notebook.line.repetition_reason', 'Repetition reason',
+        states={'required': ~Eval('repetition_reason')})
+    repetition_reason = fields.Char('Other reason',
+        states={'required': ~Eval('repetition_reason_coded')})
 
 
 class NotebookRepeatAnalysis(Wizard):
@@ -5881,8 +5883,10 @@ class NotebookLineRepeatAnalysisStart(ModelView):
     analysis_domain = fields.One2Many('lims.analysis', None,
         'Analysis domain')
     repetition_reason_coded = fields.Many2One(
-        'lims.notebook.line.repetition_reason', 'Repetition reason')
-    repetition_reason = fields.Char('Other reason')
+        'lims.notebook.line.repetition_reason', 'Repetition reason',
+        states={'required': ~Eval('repetition_reason')})
+    repetition_reason = fields.Char('Other reason',
+        states={'required': ~Eval('repetition_reason_coded')})
     analysis_type = fields.Function(fields.Selection(
         [(None, '')] + ANALYSIS_TYPES, 'Type', sort=False),
         'on_change_with_analysis_type')
