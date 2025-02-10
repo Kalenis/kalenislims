@@ -639,7 +639,7 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
             return None
         precedent_sample = cls.search([
             ('notebook', '=', precedent),
-            ])
+            ], order=[('id', 'DESC')])
         if not precedent_sample:
             return None
         return (precedent_sample[0].diagnosis_states if 'states' in name
