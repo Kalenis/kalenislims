@@ -1797,6 +1797,7 @@ class MoveDataStart(ModelView):
     analysis_sheet = fields.Many2One('lims.analysis_sheet',
         'Analysis Sheet', required=True,
         domain=[
+            ('template', '=', Eval('template')),
             ('compilation.table', '=', Eval('table')),
             ('state', 'in', ['draft', 'active']),
             ],
@@ -1804,6 +1805,7 @@ class MoveDataStart(ModelView):
             'invisible': Eval('move_to') != 'exist',
             'required': Eval('move_to') == 'exist',
             })
+    template = fields.Many2One('lims.template.analysis_sheet', 'Template')
     table = fields.Many2One('lims.interface.table', 'Table')
 
 
@@ -1843,6 +1845,7 @@ class MoveData(Wizard):
 
         defaults = {
             'move_to': 'new',
+            'template': sheet.template.id,
             'table': sheet.compilation.table.id,
             }
         return defaults

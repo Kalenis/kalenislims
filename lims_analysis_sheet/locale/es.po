@@ -191,6 +191,10 @@ msgctxt "field:lims.analysis_sheet.move_data.start,table:"
 msgid "Table"
 msgstr "Tabla"
 
+msgctxt "field:lims.analysis_sheet.move_data.start,template:"
+msgid "Template"
+msgstr "Plantilla"
+
 msgctxt "field:lims.analysis_sheet.print_report.ask,print_expression_column:"
 msgid "Print formula column"
 msgstr "Incluir columnas con fórmulas"
