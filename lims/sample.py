@@ -4154,19 +4154,21 @@ class Sample(ModelSQL, ModelView):
             'FROM "' + Service._table + '" s '
                 'INNER JOIN "' + Fraction._table + '" f '
                 'ON f.id = s.fraction '
+            'WHERE f.sample = %s',
+            (self.id,))
+        services_qty = cursor.fetchone()[0]
+        if services_qty == 0 and self.entry.state in ('ongoing', 'finished'):
+            return 'annulled'
+        cursor.execute('SELECT COUNT(*) '
+            'FROM "' + Service._table + '" s '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = s.fraction '
             'WHERE f.sample = %s '
                 'AND s.annulled = TRUE',
             (self.id,))
-        annulled_services = cursor.fetchone()[0]
-        if annulled_services > 0:
-            cursor.execute('SELECT COUNT(*) '
-                'FROM "' + Service._table + '" s '
-                    'INNER JOIN "' + Fraction._table + '" f '
-                    'ON f.id = s.fraction '
-                'WHERE f.sample = %s',
-                (self.id,))
-            if cursor.fetchone()[0] == annulled_services:
-                return 'annulled'
+        annulled_services_qty = cursor.fetchone()[0]
+        if annulled_services_qty > 0 and annulled_services_qty == services_qty:
+            return 'annulled'
         if self.entry.state == 'pending':
             return 'pending_admin'
         if self.entry.state == 'cancelled':
