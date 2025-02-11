@@ -4171,6 +4171,7 @@ class Sample(ModelSQL, ModelView):
         Sample = pool.get('lims.sample')
         Fraction = pool.get('lims.fraction')
         Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
         date = date or sample.date
         label = label or sample.label
@@ -4208,14 +4209,30 @@ class Sample(ModelSQL, ModelView):
 
         # new services
         services = []
+        individual_analyses = set([a.id for a in analyses])
         for service in fraction.services:
             if service.analysis in analyses:
                 services.append(service)
-        default={
+                individual_analyses.remove(service.analysis.id)
+        default = {
             'fraction': new_fraction.id,
             }
         default.update(cls._resample_service_default(sample, analyses, date))
         Service.copy(services, default=default)
+
+        for analysis in individual_analyses:
+            details = EntryDetailAnalysis.search([
+                ('fraction', '=', fraction.id),
+                ('analysis', '=', analysis),
+                ])
+            if details:
+                detail = details[0]
+                default['analysis'] = detail.analysis.id
+                default['laboratory'] = detail.laboratory.id
+                default['method'] = detail.method.id
+                default['device'] = (detail.device and detail.device.id
+                    or None)
+                Service.create([default])
 
         # Confirm sample for ongoing entries
         if new_sample.entry.state in ('ongoing', 'finished'):
@@ -4411,15 +4428,20 @@ class Resample(Wizard):
         pool = Pool()
         Sample = pool.get('lims.sample')
         Service = pool.get('lims.service')
+        Analysis = pool.get('lims.analysis')
 
         sample = Sample(Transaction().context['active_id'])
 
         analyses = set()
         services = Service.search([
             ('sample', '=', sample.id),
+            ('analysis.type', 'in', ('analysis', 'set', 'group')),
             ])
         for s in services:
             analyses.add(s.analysis.id)
+            if s.analysis.type != 'analysis':
+                analyses.update(set(
+                    Analysis.get_included_analysis(s.analysis.id)))
         return {
             'date': datetime.now(),
             'label': sample.label,
