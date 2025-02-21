@@ -372,54 +372,73 @@ class Typification(ModelSQL, ModelView):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         Analysis = pool.get('lims.analysis')
+        Typification = pool.get('lims.typification')
         CalculatedTypification = pool.get('lims.typification.calculated')
 
         for typification in typifications:
 
-            cursor.execute('SELECT DISTINCT(analysis) '
-                'FROM "' + cls._table + '" '
-                'WHERE product_type = %s '
-                    'AND matrix = %s '
-                    'AND valid',
-                (typification.product_type.id, typification.matrix.id))
-            typified_analysis = [a[0] for a in cursor.fetchall()]
-            typified_analysis_ids = ', '.join(str(a) for a in
-                typified_analysis)
+            product_type_id = typification.product_type.id
+            matrix_id = typification.matrix.id
 
             sets_groups_ids = Analysis.get_parents_analysis(
                 typification.analysis.id)
             for set_group_id in sets_groups_ids:
-                t_set_group = CalculatedTypification.search([
-                    ('product_type', '=', typification.product_type.id),
-                    ('matrix', '=', typification.matrix.id),
-                    ('analysis', '=', set_group_id),
-                    ])
-                if not t_set_group:
 
-                    ia = Analysis.get_included_analysis_analysis(
-                        set_group_id)
-                    if not ia:
-                        continue
-                    included_ids = ', '.join(str(a) for a in ia)
+                ia = Analysis.get_included_analysis_analysis_method(
+                    set_group_id)
+                if not ia:
+                    t_set_group = CalculatedTypification.search([
+                        ('analysis', '=', set_group_id),
+                        ])
+                    if t_set_group:
+                        CalculatedTypification.delete(t_set_group)
+                    continue
 
-                    cursor.execute('SELECT id '
-                        'FROM "' + Analysis._table + '" '
-                        'WHERE id IN (' + included_ids + ') '
-                            'AND id NOT IN (' + typified_analysis_ids +
-                            ')')
-                    if cursor.fetchone():
-                        typified = False
+                typified = True
+                for a in ia:
+                    if a[1]:
+                        cursor.execute('SELECT id '
+                            'FROM "' + Typification._table + '" '
+                            'WHERE product_type = %s '
+                                'AND matrix = %s '
+                                'AND analysis = %s '
+                                'AND method = %s '
+                                'AND valid',
+                            (product_type_id, matrix_id, int(a[0]), int(a[1])))
                     else:
-                        typified = True
+                        cursor.execute('SELECT id '
+                            'FROM "' + Typification._table + '" '
+                            'WHERE product_type = %s '
+                                'AND matrix = %s '
+                                'AND analysis = %s '
+                                'AND valid',
+                            (product_type_id, matrix_id, int(a[0])))
+                    if not cursor.fetchone():
+                        typified = False
+                        break
 
-                    if typified:
+                if typified:
+                    t_set_group = CalculatedTypification.search([
+                        ('product_type', '=', product_type_id),
+                        ('matrix', '=', matrix_id),
+                        ('analysis', '=', set_group_id),
+                        ])
+                    if not t_set_group:
                         typification_create = [{
-                            'product_type': typification.product_type.id,
-                            'matrix': typification.matrix.id,
+                            'product_type': product_type_id,
+                            'matrix': matrix_id,
                             'analysis': set_group_id,
                             }]
                         CalculatedTypification.create(
                             typification_create)
+                else:
+                    t_set_group = CalculatedTypification.search([
+                        ('product_type', '=', product_type_id),
+                        ('matrix', '=', matrix_id),
+                        ('analysis', '=', set_group_id),
+                        ])
+                    if t_set_group:
+                        CalculatedTypification.delete(t_set_group)
 
         return typifications
 
@@ -654,48 +673,52 @@ class CalculatedTypification(ModelSQL):
                     'Calculating typification %s of %s' %
                     (typifications_count, typifications_total))
 
-                product_type = int(typification[0].split(',')[0][1:])
-                matrix = int(typification[0].split(',')[1][:-1])
-                cursor.execute('SELECT DISTINCT(analysis) '
-                    'FROM "' + Typification._table + '" '
-                    'WHERE product_type = %s '
-                        'AND matrix = %s '
-                        'AND valid',
-                    (product_type, matrix))
-                typified_analysis = [a[0] for a in cursor.fetchall()]
-                typified_analysis_ids = ', '.join(str(a) for a in
-                    typified_analysis)
+                product_type_id = int(typification[0].split(',')[0][1:])
+                matrix_id = int(typification[0].split(',')[1][:-1])
 
                 cursor.execute('SELECT id '
                     'FROM "' + Analysis._table + '" '
                     'WHERE type IN (\'set\', \'group\') '
                         'AND state = \'active\'')
                 sets_groups_ids = [x[0] for x in cursor.fetchall()]
-                if sets_groups_ids:
-                    for set_group_id in sets_groups_ids:
-                        typified = True
+                for set_group_id in sets_groups_ids:
 
-                        ia = Analysis.get_included_analysis_analysis(
-                            set_group_id)
-                        if not ia:
-                            continue
-                        included_ids = ', '.join(str(a) for a in ia)
+                    ia = Analysis.get_included_analysis_analysis_method(
+                        set_group_id)
+                    if not ia:
+                        continue
 
-                        cursor.execute('SELECT id '
-                            'FROM "' + Analysis._table + '" '
-                            'WHERE id IN (' + included_ids + ') '
-                                'AND id NOT IN (' + typified_analysis_ids +
-                                ')')
-                        if cursor.fetchone():
+                    typified = True
+                    for a in ia:
+                        if a[1]:
+                            cursor.execute('SELECT id '
+                                'FROM "' + Typification._table + '" '
+                                'WHERE product_type = %s '
+                                    'AND matrix = %s '
+                                    'AND analysis = %s '
+                                    'AND method = %s '
+                                    'AND valid',
+                                (product_type_id, matrix_id, int(a[0]),
+                                    int(a[1])))
+                        else:
+                            cursor.execute('SELECT id '
+                                'FROM "' + Typification._table + '" '
+                                'WHERE product_type = %s '
+                                    'AND matrix = %s '
+                                    'AND analysis = %s '
+                                    'AND valid',
+                                (product_type_id, matrix_id, int(a[0])))
+                        if not cursor.fetchone():
                             typified = False
+                            break
 
-                        if typified:
-                            typification_create = [{
-                                'product_type': product_type,
-                                'matrix': matrix,
-                                'analysis': set_group_id,
-                                }]
-                            cls.create(typification_create)
+                    if typified:
+                        typification_create = [{
+                            'product_type': product_type_id,
+                            'matrix': matrix_id,
+                            'analysis': set_group_id,
+                            }]
+                        cls.create(typification_create)
 
 
 class CalculatedTypificationReadOnly(ModelSQL, ModelView):
@@ -1295,6 +1318,27 @@ class Analysis(Workflow, ModelSQL, ModelView):
         return childs
 
     @classmethod
+    def get_included_analysis_analysis_method(cls, analysis_id):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        AnalysisIncluded = pool.get('lims.analysis.included')
+        Analysis = pool.get('lims.analysis')
+
+        childs = []
+        cursor.execute('SELECT ia.included_analysis, ia.method, a.type '
+            'FROM "' + AnalysisIncluded._table + '" ia '
+                'INNER JOIN "' + Analysis._table + '" a '
+                'ON a.id = ia.included_analysis '
+            'WHERE analysis = %s', (analysis_id,))
+        included_analysis = cursor.fetchall()
+        for analysis in included_analysis:
+            if analysis[2] == 'analysis' and analysis[:2] not in childs:
+                childs.append(analysis[:2])
+            childs.extend(cls.get_included_analysis_analysis_method(
+                analysis[0]))
+        return childs
+
+    @classmethod
     def get_parents_analysis(cls, analysis_id):
         cursor = Transaction().connection.cursor()
         pool = Pool()
@@ -1474,12 +1518,13 @@ class Analysis(Workflow, ModelSQL, ModelView):
         for included in analysis:
             if included.type == 'analysis':
                 continue
+
             sets_groups_ids = [included.id]
             sets_groups_ids.extend(Analysis.get_parents_analysis(
                 included.id))
             for set_group_id in sets_groups_ids:
 
-                ia = Analysis.get_included_analysis_analysis(
+                ia = Analysis.get_included_analysis_analysis_method(
                     set_group_id)
                 if not ia:
                     t_set_group = CalculatedTypification.search([
@@ -1488,7 +1533,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
                     if t_set_group:
                         CalculatedTypification.delete(t_set_group)
                     continue
-                included_ids = ', '.join(str(a) for a in ia)
+                included_ids = ', '.join(str(a[0]) for a in ia)
 
                 cursor.execute('SELECT DISTINCT(product_type, matrix) '
                     'FROM "' + Typification._table + '" '
@@ -1505,46 +1550,51 @@ class Analysis(Workflow, ModelSQL, ModelView):
 
                 for typification in typifications:
 
-                    product_type = int(typification[0].split(',')[0][1:])
-                    matrix = int(typification[0].split(',')[1][:-1])
-                    cursor.execute('SELECT DISTINCT(analysis) '
-                        'FROM "' + Typification._table + '" '
-                        'WHERE product_type = %s '
-                            'AND matrix = %s '
-                            'AND valid',
-                        (product_type, matrix))
-                    typified_analysis = [a[0] for a in cursor.fetchall()]
-                    typified_analysis_ids = ', '.join(str(a) for a in
-                        typified_analysis)
+                    product_type_id = int(typification[0].split(',')[0][1:])
+                    matrix_id = int(typification[0].split(',')[1][:-1])
 
-                    cursor.execute('SELECT id '
-                        'FROM "' + Analysis._table + '" '
-                        'WHERE id IN (' + included_ids + ') '
-                            'AND id NOT IN (' + typified_analysis_ids +
-                            ')')
-                    if cursor.fetchone():
-                        typified = False
-                    else:
-                        typified = True
+                    typified = True
+                    for a in ia:
+                        if a[1]:
+                            cursor.execute('SELECT id '
+                                'FROM "' + Typification._table + '" '
+                                'WHERE product_type = %s '
+                                    'AND matrix = %s '
+                                    'AND analysis = %s '
+                                    'AND method = %s '
+                                    'AND valid',
+                                (product_type_id, matrix_id, int(a[0]),
+                                    int(a[1])))
+                        else:
+                            cursor.execute('SELECT id '
+                                'FROM "' + Typification._table + '" '
+                                'WHERE product_type = %s '
+                                    'AND matrix = %s '
+                                    'AND analysis = %s '
+                                    'AND valid',
+                                (product_type_id, matrix_id, int(a[0])))
+                        if not cursor.fetchone():
+                            typified = False
+                            break
 
                     if typified:
                         t_set_group = CalculatedTypification.search([
-                            ('product_type', '=', product_type),
-                            ('matrix', '=', matrix),
+                            ('product_type', '=', product_type_id),
+                            ('matrix', '=', matrix_id),
                             ('analysis', '=', set_group_id),
                             ])
                         if not t_set_group:
                             typification_create = [{
-                                'product_type': product_type,
-                                'matrix': matrix,
+                                'product_type': product_type_id,
+                                'matrix': matrix_id,
                                 'analysis': set_group_id,
                                 }]
                             CalculatedTypification.create(
                                 typification_create)
                     else:
                         t_set_group = CalculatedTypification.search([
-                            ('product_type', '=', product_type),
-                            ('matrix', '=', matrix),
+                            ('product_type', '=', product_type_id),
+                            ('matrix', '=', matrix_id),
                             ('analysis', '=', set_group_id),
                             ])
                         if t_set_group:
@@ -1990,7 +2040,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
             sets_groups_ids.extend(Analysis.get_parents_analysis(set_group))
             for set_group_id in sets_groups_ids:
 
-                ia = Analysis.get_included_analysis_analysis(
+                ia = Analysis.get_included_analysis_analysis_method(
                     set_group_id)
                 if not ia:
                     t_set_group = CalculatedTypification.search([
@@ -1999,7 +2049,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
                     if t_set_group:
                         CalculatedTypification.delete(t_set_group)
                     continue
-                included_ids = ', '.join(str(a) for a in ia)
+                included_ids = ', '.join(str(a[0]) for a in ia)
 
                 cursor.execute('SELECT DISTINCT(product_type, matrix) '
                     'FROM "' + Typification._table + '" '
@@ -2016,46 +2066,51 @@ class AnalysisIncluded(ModelSQL, ModelView):
 
                 for typification in typifications:
 
-                    product_type = int(typification[0].split(',')[0][1:])
-                    matrix = int(typification[0].split(',')[1][:-1])
-                    cursor.execute('SELECT DISTINCT(analysis) '
-                        'FROM "' + Typification._table + '" '
-                        'WHERE product_type = %s '
-                            'AND matrix = %s '
-                            'AND valid',
-                        (product_type, matrix))
-                    typified_analysis = [a[0] for a in cursor.fetchall()]
-                    typified_analysis_ids = ', '.join(str(a) for a in
-                        typified_analysis)
+                    product_type_id = int(typification[0].split(',')[0][1:])
+                    matrix_id = int(typification[0].split(',')[1][:-1])
 
-                    cursor.execute('SELECT id '
-                        'FROM "' + Analysis._table + '" '
-                        'WHERE id IN (' + included_ids + ') '
-                            'AND id NOT IN (' + typified_analysis_ids +
-                            ')')
-                    if cursor.fetchone():
-                        typified = False
-                    else:
-                        typified = True
+                    typified = True
+                    for a in ia:
+                        if a[1]:
+                            cursor.execute('SELECT id '
+                                'FROM "' + Typification._table + '" '
+                                'WHERE product_type = %s '
+                                    'AND matrix = %s '
+                                    'AND analysis = %s '
+                                    'AND method = %s '
+                                    'AND valid',
+                                (product_type_id, matrix_id, int(a[0]),
+                                    int(a[1])))
+                        else:
+                            cursor.execute('SELECT id '
+                                'FROM "' + Typification._table + '" '
+                                'WHERE product_type = %s '
+                                    'AND matrix = %s '
+                                    'AND analysis = %s '
+                                    'AND valid',
+                                (product_type_id, matrix_id, int(a[0])))
+                        if not cursor.fetchone():
+                            typified = False
+                            break
 
                     if typified:
                         t_set_group = CalculatedTypification.search([
-                            ('product_type', '=', product_type),
-                            ('matrix', '=', matrix),
+                            ('product_type', '=', product_type_id),
+                            ('matrix', '=', matrix_id),
                             ('analysis', '=', set_group_id),
                             ])
                         if not t_set_group:
                             typification_create = [{
-                                'product_type': product_type,
-                                'matrix': matrix,
+                                'product_type': product_type_id,
+                                'matrix': matrix_id,
                                 'analysis': set_group_id,
                                 }]
                             CalculatedTypification.create(
                                 typification_create)
                     else:
                         t_set_group = CalculatedTypification.search([
-                            ('product_type', '=', product_type),
-                            ('matrix', '=', matrix),
+                            ('product_type', '=', product_type_id),
+                            ('matrix', '=', matrix_id),
                             ('analysis', '=', set_group_id),
                             ])
                         if t_set_group:
@@ -2090,16 +2145,14 @@ class AnalysisIncluded(ModelSQL, ModelView):
                         included.included_analysis.id))
 
         for set_group in sets_groups:
+
             sets_groups_ids = [set_group]
             sets_groups_ids.extend(Analysis.get_parents_analysis(set_group))
             for set_group_id in sets_groups_ids:
-                typified = True
 
-                ia = Analysis.get_included_analysis_analysis(
+                ia = Analysis.get_included_analysis_analysis_method(
                     set_group_id)
-                for da in deleted_analysis:
-                    if da in ia:
-                        ia.remove(da)
+                ia = [a for a in ia if a[0] not in deleted_analysis]
                 if not ia:
                     t_set_group = CalculatedTypification.search([
                         ('analysis', '=', set_group_id),
@@ -2107,7 +2160,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
                     if t_set_group:
                         CalculatedTypification.delete(t_set_group)
                     continue
-                included_ids = ', '.join(str(a) for a in ia)
+                included_ids = ', '.join(str(a[0]) for a in ia)
 
                 cursor.execute('SELECT DISTINCT(product_type, matrix) '
                     'FROM "' + Typification._table + '" '
@@ -2124,46 +2177,51 @@ class AnalysisIncluded(ModelSQL, ModelView):
 
                 for typification in typifications:
 
-                    product_type = int(typification[0].split(',')[0][1:])
-                    matrix = int(typification[0].split(',')[1][:-1])
-                    cursor.execute('SELECT DISTINCT(analysis) '
-                        'FROM "' + Typification._table + '" '
-                        'WHERE product_type = %s '
-                            'AND matrix = %s '
-                            'AND valid',
-                        (product_type, matrix))
-                    typified_analysis = [a[0] for a in cursor.fetchall()]
-                    typified_analysis_ids = ', '.join(str(a) for a in
-                        typified_analysis)
+                    product_type_id = int(typification[0].split(',')[0][1:])
+                    matrix_id = int(typification[0].split(',')[1][:-1])
 
-                    cursor.execute('SELECT id '
-                        'FROM "' + Analysis._table + '" '
-                        'WHERE id IN (' + included_ids + ') '
-                            'AND id NOT IN (' + typified_analysis_ids +
-                            ')')
-                    if cursor.fetchone():
-                        typified = False
-                    else:
-                        typified = True
+                    typified = True
+                    for a in ia:
+                        if a[1]:
+                            cursor.execute('SELECT id '
+                                'FROM "' + Typification._table + '" '
+                                'WHERE product_type = %s '
+                                    'AND matrix = %s '
+                                    'AND analysis = %s '
+                                    'AND method = %s '
+                                    'AND valid',
+                                (product_type_id, matrix_id, int(a[0]),
+                                    int(a[1])))
+                        else:
+                            cursor.execute('SELECT id '
+                                'FROM "' + Typification._table + '" '
+                                'WHERE product_type = %s '
+                                    'AND matrix = %s '
+                                    'AND analysis = %s '
+                                    'AND valid',
+                                (product_type_id, matrix_id, int(a[0])))
+                        if not cursor.fetchone():
+                            typified = False
+                            break
 
                     if typified:
                         t_set_group = CalculatedTypification.search([
-                            ('product_type', '=', product_type),
-                            ('matrix', '=', matrix),
+                            ('product_type', '=', product_type_id),
+                            ('matrix', '=', matrix_id),
                             ('analysis', '=', set_group_id),
                             ])
                         if not t_set_group:
                             typification_create = [{
-                                'product_type': product_type,
-                                'matrix': matrix,
+                                'product_type': product_type_id,
+                                'matrix': matrix_id,
                                 'analysis': set_group_id,
                                 }]
                             CalculatedTypification.create(
                                 typification_create)
                     else:
                         t_set_group = CalculatedTypification.search([
-                            ('product_type', '=', product_type),
-                            ('matrix', '=', matrix),
+                            ('product_type', '=', product_type_id),
+                            ('matrix', '=', matrix_id),
                             ('analysis', '=', set_group_id),
                             ])
                         if t_set_group:
@@ -3374,15 +3432,20 @@ class OpenAnalysisNotTypified(Wizard):
         method_id = self.start.method and self.start.method.id or None
 
         analysis_ids = []
-        ia = Analysis.get_included_analysis_analysis(set_group_id)
-        method_clause = method_id and 'AND method = %s' % (method_id, ) or ''
-        for a_id in ia:
+        ia = Analysis.get_included_analysis_analysis_method(set_group_id)
+        for a_id, m_id in ia:
+            if method_id:
+                method_clause = 'AND method = %s' % method_id
+            elif m_id:
+                method_clause = 'AND method = %s' % m_id
+            else:
+                method_clause = ''
             cursor.execute('SELECT COUNT(*) '
                 'FROM "' + Typification._table + '" '
                 'WHERE valid '
                     'AND analysis = %s '
                     'AND product_type = %s '
-                    'AND matrix = %s' + method_clause,
+                    'AND matrix = %s ' + method_clause,
                 (a_id, product_type_id, matrix_id))
             typifications = cursor.fetchone()
             if typifications[0] == 0:
