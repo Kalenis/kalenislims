@@ -761,6 +761,10 @@ msgctxt "model:ir.message,text:msg_sheet_compilation_unique"
 msgid "Compilation already in use by another Analysis Sheet"
 msgstr "La Compilación ya está en uso para otra Hoja de análisis"
 
+msgctxt "model:ir.message,text:msg_sheet_missing_controls"
+msgid "Controls are missing for Analysis Sheet \"%(sheet)s\""
+msgstr "Faltan Controles para la Hoja de análisis \"%(sheet)s\""
+
 msgctxt "model:ir.message,text:msg_sheet_not_controls"
 msgid "Controls are required for this Analysis Sheet"
 msgstr "Se requieren Controles para esta Hoja de análisis"
