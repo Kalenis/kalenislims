@@ -12,7 +12,7 @@ from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Equal, Bool, If, PYSONEncoder
 from trytond.transaction import Transaction
-from trytond.exceptions import UserError
+from trytond.exceptions import UserError, UserWarning
 from trytond.i18n import gettext
 
 
@@ -50,6 +50,7 @@ class Planification(metaclass=PoolMeta):
         super().confirm(planifications)
         for planification in planifications:
             planification.load_analysis_sheets()
+            planification.check_analysis_sheet_controls()
 
     def load_analysis_sheets(self):
         pool = Pool()
@@ -98,6 +99,43 @@ class Planification(metaclass=PoolMeta):
                 'professional': key[1],
                 'analysis_sheet': draft_sheet[0].id,
                 }])
+
+    def check_analysis_sheet_controls(self):
+        pool = Pool()
+        PlanificationServiceDetail = pool.get(
+            'lims.planification.service_detail')
+        Template = pool.get('lims.template.analysis_sheet')
+        Warning = pool.get('res.user.warning')
+
+        templates = defaultdict(set)
+        service_details = PlanificationServiceDetail.search([
+            ('detail.planification', '=', self.id),
+            ('notebook_line', '!=', None),
+            ])
+        for service_detail in service_details:
+            nl = service_detail.notebook_line
+            template_id = nl.get_analysis_sheet_template()
+            if template_id:
+                templates[template_id].add(nl.fraction.special_type)
+        if not templates:
+            return
+
+        sheet_templates = Template.browse(list(templates.keys()))
+        for sheet_template in sheet_templates:
+            if not sheet_template.controls_required:
+                continue
+            controls_allowed = sheet_template.controls_allowed
+            ok = False
+            for fraction_type in list(templates[sheet_template.id]):
+                if fraction_type in controls_allowed:
+                    ok = True
+                    break
+            if not ok:
+                key = 'lims_planification_controls@%s' % self.code
+                if Warning.check(key):
+                    raise UserWarning(key, gettext(
+                        'lims_analysis_sheet.msg_sheet_missing_controls',
+                        sheet=sheet_template.name))
 
     @classmethod
     def do_confirm(cls, planifications):
