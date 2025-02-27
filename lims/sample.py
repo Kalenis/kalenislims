@@ -6612,6 +6612,8 @@ class CreateSampleStart(ModelView):
 
     @fields.depends('fraction_type', 'storage_location', 'packages')
     def on_change_fraction_type(self):
+        pool = Pool()
+        CreateSamplePackage = pool.get('lims.create_sample.package')
         if not self.fraction_type:
             return
         if (not self.storage_location and
