@@ -577,6 +577,10 @@ class CreateSampleStart(metaclass=PoolMeta):
             self.matrix = self.comercial_product.matrix.id
             self.dangerous = self.comercial_product.dangerous
 
+    @fields.depends('component', 'comercial_product')
+    def on_change_with_analysis_domain(self, name=None):
+        return super().on_change_with_analysis_domain()
+
     @fields.depends('product_type', 'component',
         '_parent_product_type.attribute_set')
     def on_change_with_attributes_domain(self, name=None):
@@ -600,7 +604,7 @@ class CreateSampleStart(metaclass=PoolMeta):
         if self.packages:
             ind_volume = 0
             for p in self.packages:
-                if p.type and p.type.capacity:
+                if p.quantity and p.type and p.type.capacity:
                     ind_volume += p.quantity * p.type.capacity
             return ind_volume
         return None
