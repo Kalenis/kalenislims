@@ -23,7 +23,7 @@ def register():
         laboratory.Laboratory,
         laboratory.NotebookRule,
         entry.Entry,
-        sample.Sample,
+        sample.Fraction,
         module='lims_planning_automatic', type_='model')
     Pool.register(
         sheet.AnalysisSheet,

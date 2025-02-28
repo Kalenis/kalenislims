@@ -7,19 +7,18 @@ from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 
 
-class Sample(metaclass=PoolMeta):
-    __name__ = 'lims.sample'
+class Fraction(metaclass=PoolMeta):
+    __name__ = 'lims.fraction'
 
     @classmethod
-    @ModelView.button
-    def confirm(cls, samples):
+    def confirm(cls, fractions):
         Planification = Pool().get('lims.planification')
-        super().confirm(samples)
+        super().confirm(fractions)
         entries = set()
-        for sample in samples:
-            if sample.entry and sample.entry.state in (
+        for fraction in fractions:
+            if fraction.entry and fraction.entry.state in (
                     'ongoing', 'finished'):
-                entries.add(sample.entry)
+                entries.add(fraction.entry)
         if entries:
             Planification.automatic_plan(entries=list(entries))
 
