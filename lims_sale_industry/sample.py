@@ -45,36 +45,38 @@ class CreateSampleStart(metaclass=PoolMeta):
                 ]),
             ('product.id', 'in', product_ids),
             ]
+        extra_clause = []
 
         if self.label:
             try:
                 label = int(self.label)
-                clause.extend([
+                extra_clause = [
                     ('sale.label_from', '<=', label),
                     ('sale.label_to', '>=', label),
-                    ])
-                sale_lines = SaleLine.search(clause)
-                res = [sl.id for sl in sale_lines if not sl.services_completed]
-                return res
+                    ]
+                sale_lines = SaleLine.search(clause + extra_clause)
+                if sale_lines:
+                    res = [sl.id for sl in sale_lines if not sl.services_completed]
+                    return res
             except ValueError:
                 pass
 
         if self.component:
-            clause.append(['OR',
+            extra_clause = [['OR',
                 ('components', '=', self.component.id),
                 ('sale.components', '=', self.component.id),
-                ])
-            sale_lines = SaleLine.search(clause)
+                ]]
+            sale_lines = SaleLine.search(clause + extra_clause)
             if sale_lines:
                 res = [sl.id for sl in sale_lines if not sl.services_completed]
                 return res
 
         if self.equipment:
-            clause.append(['OR',
+            extra_clause = [['OR',
                 ('equipments', '=', self.equipment.id),
                 ('sale.equipments', '=', self.equipment.id),
-                ])
-            sale_lines = SaleLine.search(clause)
+                ]]
+            sale_lines = SaleLine.search(clause + extra_clause)
             if sale_lines:
                 res = [sl.id for sl in sale_lines if not sl.services_completed]
                 return res
