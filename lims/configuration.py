@@ -295,6 +295,8 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     server_url = fields.Char('Kalenis Server URL')
     results_report_print_not_valid = fields.Boolean(
         'Allow reprinting any version of Result Reports')
+    results_report_review_reason_print = fields.Boolean(
+        'Print review reason on Result Reports')
 
     @staticmethod
     def default_brix_digits():
@@ -362,11 +364,16 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
             ])
         return langs and langs[0].id or None
 
+    @staticmethod
     def default_sample_fast_copy():
         return False
 
     @staticmethod
     def default_results_report_print_not_valid():
+        return False
+
+    @staticmethod
+    def default_results_report_review_reason_print():
         return False
 
     def get_reagents(self):

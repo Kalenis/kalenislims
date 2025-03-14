@@ -2735,12 +2735,14 @@ class GenerateReport(Wizard):
 
     def default_start(self, fields):
         pool = Pool()
+        Configuration = pool.get('lims.configuration')
         Notebook = pool.get('lims.notebook')
         ResultsReport = pool.get('lims.results_report')
         ResultsDetail = pool.get('lims.results_report.version.detail')
 
         laboratory_id = Transaction().context.get(
             'samples_pending_reporting_laboratory', None)
+        config_ = Configuration(1)
 
         res = {
             'notebooks': [],
@@ -2752,6 +2754,7 @@ class GenerateReport(Wizard):
             'corrective': False,
             'samples_grouping': None,
             'append_samples': True,
+            'review_reason_print': config_.results_report_review_reason_print,
             }
 
         party_key = None
@@ -3618,12 +3621,17 @@ class NewResultsReportVersion(Wizard):
         return 'end'
 
     def default_start(self, fields):
-        ResultsDetail = Pool().get('lims.results_report.version.detail')
+        pool = Pool()
+        Configuration = pool.get('lims.configuration')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+
+        config_ = Configuration(1)
 
         res = {
             'type': 'complementary',
             'preliminary': False,
             'corrective': False,
+            'review_reason_print': config_.results_report_review_reason_print,
             }
         valid_details = ResultsDetail.search([
             ('id', 'in', Transaction().context['active_ids']),
@@ -3637,7 +3645,8 @@ class NewResultsReportVersion(Wizard):
         return res
 
     def transition_generate(self):
-        ResultsDetail = Pool().get('lims.results_report.version.detail')
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
 
         reports_created = []
 

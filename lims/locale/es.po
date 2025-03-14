@@ -539,6 +539,10 @@ msgctxt "field:lims.configuration,results_report_print_not_valid:"
 msgid "Allow reprinting any version of Result Reports"
 msgstr "Permitir reimprimir cualquier versión de Informes de resultado"
 
+msgctxt "field:lims.configuration,results_report_review_reason_print:"
+msgid "Print review reason on Result Reports"
+msgstr "Imprimir motivo de revisión en Informes de resultado"
+
 msgctxt "field:lims.configuration,rm_fraction_type:"
 msgid "RM fraction type"
 msgstr "Tipo de fracción RM"
