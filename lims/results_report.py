@@ -2667,8 +2667,12 @@ class GenerateReportStart(ModelView):
         states={'invisible': ~Eval('type').in_([
             'complementary', 'corrective'])})
     review_reason = fields.Text('Review reason',
-        states={'invisible': ~Eval('type').in_([
-            'complementary', 'corrective'])})
+        states={
+            'invisible': ~Eval('type').in_([
+                'complementary', 'corrective']),
+            'required': Eval('type').in_([
+                'complementary', 'corrective']),
+            })
     review_reason_print = fields.Boolean(
         'Print review reason in next version',
         states={'invisible': ~Eval('type').in_([
