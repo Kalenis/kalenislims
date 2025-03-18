@@ -729,11 +729,12 @@ class SaleLine(metaclass=PoolMeta):
                 return False
         return True
 
-    @fields.depends('analysis')
+    @fields.depends('analysis', '_parent_analysis.product',
+        methods=['on_change_product'])
     def on_change_analysis(self):
         product = None
         if self.analysis and self.analysis.product:
-            product = self.analysis.product.id
+            product = self.analysis.product
         self.product = product
         self.on_change_product()
 
