@@ -4324,6 +4324,7 @@ class Sample(ModelSQL, ModelView):
         if new_entry:
             default = {
                 'date': date,
+                'multi_party': False,
                 'samples': [],
                 }
             default.update(cls._resample_entry_default(sample, analyses, date))
