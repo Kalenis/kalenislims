@@ -24,10 +24,16 @@ class SaleConfiguration(metaclass=PoolMeta):
     email_quotation_body = fields.Text('Body of the quotation email')
     allow_services_without_quotation = fields.Boolean(
         'Allow services without quotation')
+    sale_lines_filter_product_type_matrix = fields.Boolean(
+        'Filter Quotes by Product type and Matrix')
 
     @staticmethod
     def default_allow_services_without_quotation():
         return True
+
+    @staticmethod
+    def default_sale_lines_filter_product_type_matrix():
+        return False
 
 
 class Cron(metaclass=PoolMeta):

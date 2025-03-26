@@ -24,7 +24,8 @@ class CreateSampleStart(metaclass=PoolMeta):
 
     @staticmethod
     def default_sale_lines_filter_product_type_matrix():
-        return False
+        Config = Pool().get('sale.configuration')
+        return Config(1).sale_lines_filter_product_type_matrix
 
     @fields.depends('party', 'product_type', 'matrix',
         'sale_lines_filter_product_type_matrix')
