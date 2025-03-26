@@ -1,8 +1,14 @@
 <?xml version="1.0"?>
 <data>
     <xpath expr="/form/field[@name='sale_process_after']" position="after">
-        <label name="allow_services_without_quotation"/>
-        <field name="allow_services_without_quotation"/>
+        <group id="allow_services_without_quotation" colspan="2" col="2">
+            <label name="allow_services_without_quotation"/>
+            <field name="allow_services_without_quotation"/>
+        </group>
+        <group id="sale_lines_filter_product_type_matrix" colspan="2" col="2">
+            <label name="sale_lines_filter_product_type_matrix"/>
+            <field name="sale_lines_filter_product_type_matrix"/>
+        </group>
         <newline />
         <label name="email_quotation_subject"/>
         <field name="email_quotation_subject" colspan="3"/>
