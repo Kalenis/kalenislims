@@ -14574,6 +14574,10 @@ msgid "Draft"
 msgstr "Borrador"
 
 msgctxt "selection:lims.sample,state:"
+msgid "Finished without Report"
+msgstr "Finalizada sin Informe"
+
+msgctxt "selection:lims.sample,state:"
 msgid "In Laboratory"
 msgstr "En Laboratorio"
 

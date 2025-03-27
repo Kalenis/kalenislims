@@ -41,6 +41,7 @@ SAMPLE_STATES = [
     ('planned', 'Planned'),
     ('in_lab', 'In Laboratory'),
     ('lab_pending_acceptance', 'Pending Laboratory Acceptance'),
+    ('without_report', 'Finished without Report'),
     ('pending_report', 'Pending Reporting'),
     ('in_report', 'In Report'),
     ('report_released', 'Report Released'),
@@ -3699,7 +3700,8 @@ class Sample(ModelSQL, ModelView):
             else_=Case((table.state == 'pending_report', 8),
             else_=Case((table.state == 'in_report', 9),
             else_=Case((table.state == 'report_released', 10),
-            else_=0))))))))))]
+            else_=Case((table.state == 'without_report', 11),
+            else_=0)))))))))))]
         return order
 
     def get_confirmed(self, name=None):
@@ -4077,6 +4079,7 @@ class Sample(ModelSQL, ModelView):
                 'AND nl.annulled = FALSE '
                 'AND nl.end_date IS NULL',
             (self.id,))
+        # also works for finished samples without report
         if cursor.fetchone()[0] == 0:
             cursor.execute('SELECT MAX(nl.end_date) '
                 'FROM "' + NotebookLine._table + '" nl '
@@ -4210,6 +4213,29 @@ class Sample(ModelSQL, ModelView):
             if cursor.fetchone()[0] == annulled_lines:
                 return 'annulled'
         if self.laboratory_end_date:
+            cursor.execute('SELECT COUNT(*) '
+                'FROM "' + NotebookLine._table + '" nl '
+                    'INNER JOIN "' + Service._table + '" s '
+                    'ON s.id = nl.service '
+                    'INNER JOIN "' + Fraction._table + '" f '
+                    'ON f.id = s.fraction '
+                'WHERE f.sample = %s '
+                    'AND nl.report = FALSE '
+                    'AND nl.annulled = FALSE '
+                    'AND nl.end_date IS NOT NULL',
+                (self.id,))
+            finished_without_report = cursor.fetchone()[0]
+            if finished_without_report > 0:
+                cursor.execute('SELECT COUNT(*) '
+                    'FROM "' + NotebookLine._table + '" nl '
+                        'INNER JOIN "' + Service._table + '" s '
+                        'ON s.id = nl.service '
+                        'INNER JOIN "' + Fraction._table + '" f '
+                        'ON f.id = s.fraction '
+                    'WHERE f.sample = %s',
+                    (self.id,))
+                if cursor.fetchone()[0] == finished_without_report:
+                    return 'without_report'
             return 'lab_pending_acceptance'
         if self.laboratory_start_date:
             cursor.execute('SELECT COUNT(*) '
