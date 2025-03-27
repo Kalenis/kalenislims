@@ -1,4 +1,8 @@
 <?xml version="1.0"?>
 <form>
+    <label name="party"/>
+    <field name="party"/>
+    <label name="invoice_party"/>
+    <field name="invoice_party"/>
     <field name="services" colspan="4"/>
 </form>

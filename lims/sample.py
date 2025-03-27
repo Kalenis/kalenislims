@@ -5055,6 +5055,10 @@ class AddSampleServiceStart(ModelView):
     __name__ = 'lims.sample.add_service.start'
 
     sample = fields.Many2One('lims.sample', 'Sample')
+    party = fields.Many2One('party.party', 'Party',
+        states={'invisible': True})
+    invoice_party = fields.Many2One('party.party', 'Invoice party',
+        states={'invisible': True})
     product_type = fields.Many2One('lims.product.type', 'Product type')
     matrix = fields.Many2One('lims.matrix', 'Matrix')
     analysis_domain = fields.Many2Many('lims.analysis', None, None,
@@ -5093,6 +5097,8 @@ class AddSampleService(Wizard, SendAckOfReceiptWizardMixin):
 
         default = {
             'sample': sample.id,
+            'party': sample.party.id,
+            'invoice_party': sample.invoice_party.id,
             'product_type': sample.product_type.id,
             'matrix': sample.matrix.id,
             'analysis_domain': analysis_domain_ids,
@@ -6622,6 +6628,8 @@ class CreateSampleStart(ModelView):
     party_domain = fields.Many2Many('party.party',
         None, None, 'Party domain')
     multi_party = fields.Boolean('Multi Party')
+    invoice_party = fields.Many2One('party.party', 'Invoice party',
+        states={'invisible': True})
     date = fields.DateTime('Date', required=True)
     producer = fields.Many2One('lims.sample.producer', 'Producer company',
         domain=[('party', '=', Eval('party'))])
@@ -7191,6 +7199,7 @@ class CreateSample(Wizard):
         defaults['party'] = party_id
         defaults['party_domain'] = party_domain
         defaults['multi_party'] = entry.multi_party
+        defaults['invoice_party'] = entry.invoice_party.id
         defaults['foreign_language'] = (entry.report_language !=
             config_.results_report_language)
         return defaults

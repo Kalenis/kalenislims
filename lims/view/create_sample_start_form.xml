@@ -4,6 +4,8 @@
         <page id="general" string="General">
             <label name="party"/>
             <field name="party" colspan="3"/>
+            <label name="invoice_party"/>
+            <field name="invoice_party" colspan="3"/>
             <group col="6" colspan="4" id="fraction_type">
                 <label name="date"/>
                 <field name="date"/>

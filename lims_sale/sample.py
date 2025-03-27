@@ -27,7 +27,7 @@ class CreateSampleStart(metaclass=PoolMeta):
         Config = Pool().get('sale.configuration')
         return Config(1).sale_lines_filter_product_type_matrix
 
-    @fields.depends('party', 'product_type', 'matrix',
+    @fields.depends('party', 'invoice_party', 'product_type', 'matrix',
         'sale_lines_filter_product_type_matrix')
     def on_change_with_sale_lines_domain(self, name=None):
         cursor = Transaction().connection.cursor()
@@ -54,7 +54,7 @@ class CreateSampleStart(metaclass=PoolMeta):
 
         today = Date.today()
         clause = [
-            ('sale.party', '=', self.party.id),
+            ('sale.party', 'in', [self.party.id, self.invoice_party.id]),
             ('sale.expiration_date', '>=', today),
             ('sale.state', 'in', [
                 'quotation', 'confirmed', 'processing',
@@ -280,7 +280,6 @@ class CreateSample(metaclass=PoolMeta):
 class AddSampleServiceStart(metaclass=PoolMeta):
     __name__ = 'lims.sample.add_service.start'
 
-    party = fields.Many2One('party.party', 'Party')
     sale_lines_filter_product_type_matrix = fields.Boolean(
         'Filter Quotes by Product type and Matrix')
     sale_lines = fields.Many2Many('sale.line', None, None, 'Quotes',
@@ -292,10 +291,11 @@ class AddSampleServiceStart(metaclass=PoolMeta):
 
     @staticmethod
     def default_sale_lines_filter_product_type_matrix():
-        return False
+        Config = Pool().get('sale.configuration')
+        return Config(1).sale_lines_filter_product_type_matrix
 
-    @fields.depends('sample', 'party', 'product_type', 'matrix',
-        'sale_lines_filter_product_type_matrix', 'analysis_domain')
+    @fields.depends('sample', 'party', 'invoice_party', 'product_type',
+        'matrix', 'sale_lines_filter_product_type_matrix', 'analysis_domain')
     def on_change_with_sale_lines_domain(self, name=None):
         cursor = Transaction().connection.cursor()
         pool = Pool()
@@ -322,7 +322,7 @@ class AddSampleServiceStart(metaclass=PoolMeta):
 
         today = Date.today()
         clause = [
-            ('sale.party', '=', self.party.id),
+            ('sale.party', 'in', [self.party.id, self.invoice_party.id]),
             ('sale.expiration_date', '>=', today),
             ('sale.state', 'in', [
                 'quotation', 'confirmed', 'processing',
@@ -408,16 +408,6 @@ class AddSampleServiceStart(metaclass=PoolMeta):
 
 class AddSampleService(metaclass=PoolMeta):
     __name__ = 'lims.sample.add_service'
-
-    def default_start(self, fields):
-        defaults = super().default_start(fields)
-
-        sample = self.record
-        if not sample:
-            return defaults
-
-        defaults['party'] = sample.party.id
-        return defaults
 
     def _get_new_service(self, service, fraction):
         pool = Pool()
