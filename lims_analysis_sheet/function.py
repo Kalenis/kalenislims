@@ -93,7 +93,8 @@ def get_analysis(analysis_code, alias=None):
 custom_functions['A'] = get_analysis
 
 
-def get_nline_analysis(analysis_code, alias=None, notebook_line=None):
+def get_nline_analysis(analysis_code, alias=None, notebook_line=None,
+        method_code=None):
     pool = Pool()
     NotebookLine = pool.get('lims.notebook.line')
 
@@ -109,29 +110,46 @@ def get_nline_analysis(analysis_code, alias=None, notebook_line=None):
 
     target_line = None
     if analysis_code in variables:
-        selected_line = NotebookLine.search([
+        selected_lines = NotebookLine.search([
             ('notebook', '=', notebook_id),
             ('analysis.code', '=', analysis_code),
             ('repetition', '=', variables[analysis_code]),
             ])
-        if selected_line:
-            target_line = selected_line[0]
+        for selected_line in selected_lines:
+            if not method_code:
+                target_line = selected_line
+                break
+            if method_code == selected_line.method.code.replace(' ', ''):
+                target_line = selected_line
+                break
     else:
-        accepted_line = NotebookLine.search([
+        accepted_lines = NotebookLine.search([
             ('notebook', '=', notebook_id),
             ('analysis.code', '=', analysis_code),
             ('accepted', '=', True),
             ])
-        if accepted_line:
-            target_line = accepted_line[0]
-        else:
-            last_repetition_line = NotebookLine.search([
+        for accepted_line in accepted_lines:
+            if not method_code:
+                target_line = accepted_line
+                break
+            if method_code == accepted_line.method.code.replace(' ', ''):
+                target_line = accepted_line
+                break
+
+        if not target_line:
+            last_repetition_lines = NotebookLine.search([
                 ('notebook', '=', notebook_id),
                 ('analysis.code', '=', analysis_code),
                 ('annulled', '=', False),
-                ], order=[('repetition', 'DESC')], limit=1)
-            if last_repetition_line:
-                target_line = last_repetition_line[0]
+                ], order=[('repetition', 'DESC')])
+            for last_repetition_line in last_repetition_lines:
+                if not method_code:
+                    target_line = last_repetition_line
+                    break
+                if method_code == last_repetition_line.method.code.replace(
+                        ' ', ''):
+                    target_line = last_repetition_line
+                    break
 
     if not target_line:
         return None
@@ -146,7 +164,8 @@ def get_nline_analysis(analysis_code, alias=None, notebook_line=None):
 custom_functions['NL'] = get_nline_analysis
 
 
-def get_sheet_analysis(analysis_code, alias=None, notebook_line=None):
+def get_sheet_analysis(analysis_code, alias=None, notebook_line=None,
+        method_code=None):
     pool = Pool()
     NotebookLine = pool.get('lims.notebook.line')
     AnalysisSheet = pool.get('lims.analysis_sheet')
@@ -161,21 +180,33 @@ def get_sheet_analysis(analysis_code, alias=None, notebook_line=None):
         notebook_id = notebook_line.notebook.id
 
     nline = None
-    accepted_line = NotebookLine.search([
+    accepted_lines = NotebookLine.search([
         ('notebook', '=', notebook_id),
         ('analysis.code', '=', analysis_code),
         ('accepted', '=', True),
         ])
-    if accepted_line:
-        nline = accepted_line[0]
-    else:
-        last_repetition_line = NotebookLine.search([
+    for accepted_line in accepted_lines:
+        if not method_code:
+            nline = accepted_line
+            break
+        if method_code == accepted_line.method.code.replace(' ', ''):
+            nline = accepted_line
+            break
+
+    if not nline:
+        last_repetition_lines = NotebookLine.search([
             ('notebook', '=', notebook_id),
             ('analysis.code', '=', analysis_code),
             ('annulled', '=', False),
-            ], order=[('repetition', 'DESC')], limit=1)
-        if last_repetition_line:
-            nline = last_repetition_line[0]
+            ], order=[('repetition', 'DESC')])
+        for last_repetition_line in last_repetition_lines:
+            if not method_code:
+                nline = last_repetition_line
+                break
+            if method_code == last_repetition_line.method.code.replace(
+                    ' ', ''):
+                nline = last_repetition_line
+                break
 
     if not nline:
         return None
