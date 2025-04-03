@@ -6,6 +6,10 @@ msgctxt "field:lims.analysis,ind_volume:"
 msgid "Required volume"
 msgstr "Volumen requerido"
 
+msgctxt "field:lims.analysis,ind_volume_uom:"
+msgid "Required volume UoM"
+msgstr "UdM Volumen requerido"
+
 msgctxt "field:lims.brand,name:"
 msgid "Name"
 msgstr "Nombre"
