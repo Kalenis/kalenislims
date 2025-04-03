@@ -36,13 +36,13 @@
 
         <record model="lims.interface.function" id="function_xs_a">
             <field name="name">XS_A</field>
-            <field name="parameters">analysis_code, alias=None, notebook_line=None</field>
+            <field name="parameters">analysis_code, alias=None, notebook_line=None, method_code=None</field>
             <field name="help">Obtains the value of a given column (by default the result field) for an indicated analysis, from any analysis sheet.</field>
         </record>
 
         <record model="lims.interface.function" id="function_nl">
             <field name="name">NL</field>
-            <field name="parameters">analysis_code, alias=None, notebook_line=None</field>
+            <field name="parameters">analysis_code, alias=None, notebook_line=None, method_code=None</field>
             <field name="help">Obtains the value of a given field (by default the result field) for an indicated analysis, from the laboratory notebook.</field>
         </record>
 
