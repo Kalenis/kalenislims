@@ -2683,6 +2683,7 @@ class GenerateReportStart(ModelView):
     samples_grouping = fields.Selection([
         (None, 'None'),
         ('label', 'Label'),
+        ('producer', 'Producer company'),
         ('party', 'Party'),
         ], 'Sample grouping', sort=False,
         states={'readonly': Bool(Eval('report'))},
@@ -3067,6 +3068,9 @@ class GenerateReport(Wizard):
         key = notebook.id
         if self.start.samples_grouping == 'party':
             key = (notebook.party.id, notebook.invoice_party.id,
+                notebook.fraction.cie_fraction_type)
+        elif self.start.samples_grouping == 'producer':
+            key = (notebook.fraction.sample.producer,
                 notebook.fraction.cie_fraction_type)
         elif self.start.samples_grouping == 'label':
             key = (notebook.label, notebook.fraction.cie_fraction_type)
