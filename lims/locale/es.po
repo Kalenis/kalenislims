@@ -14016,6 +14016,11 @@ msgctxt ""
 msgid "Party"
 msgstr "Entidad"
 
+msgctxt ""
+"selection:lims.notebook.generate_results_report.start,samples_grouping:"
+msgid "Producer company"
+msgstr "Empresa productora"
+
 msgctxt "selection:lims.notebook.generate_results_report.start,type:"
 msgid "Complementary"
 msgstr "Complementario"
