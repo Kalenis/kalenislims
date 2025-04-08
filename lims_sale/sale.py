@@ -168,10 +168,25 @@ class Sale(metaclass=PoolMeta):
             return []
         return [x[0] for x in res]
 
-    @fields.depends('party', 'invoice_party')
+    @fields.depends('party', 'invoice_party', 'shipment_party')
     def on_change_party(self):
         super().on_change_party()
         self.invoice_party = None
+        self.shipment_party = None
+        self.invoice_address = None
+        self.shipment_address = None
+        if self.party and self.party.addresses:
+            for address in self.party.addresses:
+                if (not self.invoice_address
+                        and address.invoice
+                        and address.invoice_contact):
+                    self.invoice_address = address
+                if (not self.shipment_address
+                        and address.delivery
+                        and address.report_contact
+                        and address.acknowledgment_contact):
+                    self.shipment_address = address
+
         if self.party:
             invoice_party_domain = self.on_change_with_invoice_party_domain()
             if len(invoice_party_domain) == 1:
@@ -191,12 +206,21 @@ class Sale(metaclass=PoolMeta):
                     if r.type == config_.invoice_party_relation_type])
         return parties
 
-    @fields.depends('invoice_party')
+    @fields.depends('party', 'invoice_party')
     def on_change_invoice_party(self):
+        super().on_change_invoice_party()
         self.invoice_address = None
         if self.invoice_party:
-            self.invoice_address = self.invoice_party.address_get(
-                type='invoice')
+            party = self.invoice_party
+        elif self.party:
+            party = self.party
+        else:
+            party = None
+        if party and party.addresses:
+            for address in party.addresses:
+                if address.invoice and address.invoice_contact:
+                    self.invoice_address = address
+                    break
 
     @fields.depends('template', '_parent_template.sections', 'sections',
         '_parent_template.clause_template',
