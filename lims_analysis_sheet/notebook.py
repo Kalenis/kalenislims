@@ -169,6 +169,9 @@ class NotebookLine(metaclass=PoolMeta):
         Data = pool.get('lims.interface.data')
 
         for nb_line in nb_lines:
+            if nb_line.analysis_sheet:
+                continue
+
             template_id = nb_line.get_analysis_sheet_template()
             if not template_id:
                 continue
