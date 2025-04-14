@@ -178,7 +178,9 @@ class NotebookLine(metaclass=PoolMeta):
 
             sheets = AnalysisSheet.search([
                 ('template', '=', template_id),
-                ('state', 'in', ['draft', 'active', 'validated'])
+                ('state', 'in', ['draft', 'active', 'validated']),
+                ('samples', 'ilike',
+                    '%%%s%%' % nb_line.fraction.sample.number),
                 ], order=[('id', 'DESC')])
             for s in sheets:
                 with Transaction().set_context(
