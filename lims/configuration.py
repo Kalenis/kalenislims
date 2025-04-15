@@ -253,7 +253,7 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
     reagents = fields.Many2Many('lims.configuration-product.category',
         'configuration', 'category', 'Reagents')
     invoice_party_relation_type = fields.Many2One('party.relation.type',
-        'Invoice Party Relation Type')
+        'Invoice Party Relationship Type')
     samples_in_progress = fields.Selection([
         ('result', 'With results'),
         ('accepted', 'With accepted results'),
