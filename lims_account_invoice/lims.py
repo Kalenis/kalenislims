@@ -241,8 +241,11 @@ class Service(metaclass=PoolMeta):
             InvoiceLine.create([invoice_line])
 
     def get_invoice_line(self):
-        Company = Pool().get('company.company')
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        Company = pool.get('company.company')
 
+        config_ = Config(1)
         company = Transaction().context.get('company')
         currency = Company(company).currency.id
         product = self.analysis.product if self.analysis else None
@@ -273,6 +276,10 @@ class Service(metaclass=PoolMeta):
         if taxes:
             taxes_to_add = [('add', taxes)]
 
+        ready_to_invoice = False
+        if config_.invoice_condition == 'service_confirmation':
+            ready_to_invoice = True
+
         return {
             'company': company,
             'currency': currency,
@@ -286,6 +293,7 @@ class Service(metaclass=PoolMeta):
             'unit_price': Decimal('1.00'),
             'taxes': taxes_to_add,
             'account': account_revenue,
+            'lims_ready_to_invoice': ready_to_invoice,
             }
 
     @classmethod
@@ -465,3 +473,54 @@ class OpenLinesPendingInvoicing(Wizard):
 class EntriesReadyForInvoicingSpreadsheet(Report):
     'Entries Ready for Invoicing'
     __name__ = 'lims.entries_ready_for_invoicing.spreadsheet'
+
+
+class ResultsReportVersionDetail(metaclass=PoolMeta):
+    __name__ = 'lims.results_report.version.detail'
+
+    @classmethod
+    def do_release(cls, details):
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        super().do_release(details)
+        config_ = Config(1)
+        if config_.invoice_condition == 'report_issuance':
+            for detail in details:
+                detail.set_invoice_lines_ready()
+
+    def set_invoice_lines_ready(self):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        InvoiceLine = pool.get('account.invoice.line')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        cursor.execute('SELECT DISTINCT(ad.service) '
+            'FROM "' + EntryDetailAnalysis._table + '" ad '
+                'INNER JOIN "' + NotebookLine._table + '" nl '
+                'ON ad.id = nl.analysis_detail '
+                'INNER JOIN "' + ResultsLine._table + '" rl '
+                'ON nl.id = rl.notebook_line '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON rl.detail_sample = rs.id '
+            'WHERE rs.version_detail = %s', (self.id,))
+        services_ids = [str(x[0]) for x in cursor.fetchall()]
+        if not services_ids:
+            return
+
+        origins = '\', \''.join(['lims.service,' + str(s)
+            for s in services_ids])
+        cursor.execute('SELECT id '
+            'FROM "' + InvoiceLine._table + '" '
+            'WHERE origin IN (\'' + origins + '\') '
+                'AND invoice IS NULL '
+                'AND lims_ready_to_invoice IS NOT TRUE')
+        lines_ids = [x[0] for x in cursor.fetchall()]
+        if not lines_ids:
+            return
+
+        with Transaction().set_context(_check_access=False):
+            lines = InvoiceLine.browse(lines_ids)
+            InvoiceLine.write(lines, {'lims_ready_to_invoice': True})

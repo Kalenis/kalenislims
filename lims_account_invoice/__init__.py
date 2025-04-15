@@ -7,6 +7,8 @@ from . import configuration
 from . import party
 from . import invoice
 from . import stock
+from . import product
+from . import sale
 from . import lims
 
 
@@ -20,12 +22,20 @@ def register():
         invoice.Invoice,
         invoice.InvoiceLine,
         stock.InventoryLine,
+        product.Product,
         lims.FractionType,
         lims.Entry,
         lims.Fraction,
         lims.Service,
+        lims.ResultsReportVersionDetail,
         invoice.PopulateInvoiceContactsStart,
+        invoice.ForceReadyToInvoiceStart,
+        invoice.CreateInvoiceStart,
         module='lims_account_invoice', type_='model')
+    Pool.register(
+        sale.SaleLine,
+        module='lims_account_invoice', type_='model',
+        depends=['sale'])
     Pool.register(
         lims.ManageServices,
         lims.EditSampleService,
@@ -34,6 +44,8 @@ def register():
         lims.OpenLinesPendingInvoicing,
         invoice.PopulateInvoiceContacts,
         invoice.SendOfInvoice,
+        invoice.ForceReadyToInvoice,
+        invoice.CreateInvoice,
         module='lims_account_invoice', type_='wizard')
     Pool.register(
         lims.EntriesReadyForInvoicingSpreadsheet,

@@ -17,10 +17,20 @@ class Configuration(metaclass=PoolMeta):
     mail_send_invoice_smtp = fields.Many2One('lims.smtp.server', 'SMTP for '
         'Invoice report',
         domain=[('state', '=', 'done')])
+    invoice_condition = fields.Selection([
+        ('service_confirmation', 'Upon confirmation of service'),
+        ('report_issuance', 'Upon issuance of the report'),
+        ], 'Billing Condition')
+    invoice_party_change_relation_type = fields.Many2One('party.relation.type',
+        'Relationship type for Party changes in Invoices')
 
     @staticmethod
     def default_mail_send_invoice_hide_recipients():
         return True
+
+    @staticmethod
+    def default_invoice_condition():
+        return 'service_confirmation'
 
 
 class Cron(metaclass=PoolMeta):
