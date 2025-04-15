@@ -41,6 +41,25 @@
           <field name="name">invoice_line_tree_sequence</field>
       </record>
 
+      <record model="ir.action.act_window.domain"
+          id="act_invoice_line_out_ready_to_invoice">
+          <field name="name">Complete</field>
+          <field name="sequence" eval="10"/>
+          <field name="domain" eval="[('lims_ready_to_invoice', '=', True)]"
+              pyson="1"/>
+          <field name="act_window"
+              ref="account_invoice_line_standalone.act_invoice_line_out_form"/>
+      </record>
+      <record model="ir.action.act_window.domain"
+              id="act_invoice_line_out_not_ready_to_invoice">
+          <field name="name">Ongoing</field>
+          <field name="sequence" eval="20"/>
+          <field name="domain" eval="[('lims_ready_to_invoice', '=', False)]"
+              pyson="1"/>
+          <field name="act_window"
+              ref="account_invoice_line_standalone.act_invoice_line_out_form"/>
+      </record>
+
 <!-- Wizard Populate Invoice Contacts -->
 
       <record model="ir.ui.view" id="account_invoice_populate_invoice_contacts_start_view_form">
@@ -59,6 +78,46 @@
           <field name="keyword">form_action</field>
           <field name="model">account.invoice,-1</field>
           <field name="action" ref="wiz_account_invoice_populate_invoice_contacts"/>
+      </record>
+
+<!-- Wizard Force Ready To Invoice -->
+
+      <record model="ir.ui.view" id="invoice_line_force_ready_to_invoice_start_view_form">
+          <field name="model">account.invoice.line.force_ready_to_invoice.start</field>
+          <field name="type">form</field>
+          <field name="name">invoice_line_force_ready_to_invoice_start_form</field>
+      </record>
+
+      <record model="ir.action.wizard" id="wiz_invoice_line_force_ready_to_invoice">
+          <field name="name">Force Ready To Invoice</field>
+          <field name="wiz_name">account.invoice.line.force_ready_to_invoice</field>
+          <field name="model">account.invoice.line</field>
+      </record>
+
+      <record model="ir.action.keyword" id="wiz_invoice_line_force_ready_to_invoice_keyword">
+          <field name="keyword">form_action</field>
+          <field name="model">account.invoice.line,-1</field>
+          <field name="action" ref="wiz_invoice_line_force_ready_to_invoice"/>
+      </record>
+
+<!-- Wizard Create Invoice -->
+
+      <record model="ir.ui.view" id="invoice_line_create_invoice_start_view_form">
+          <field name="model">account.invoice.line.create_invoice.start</field>
+          <field name="type">form</field>
+          <field name="name">invoice_line_create_invoice_start_form</field>
+      </record>
+
+      <record model="ir.action.wizard" id="wiz_invoice_line_create_invoice">
+          <field name="name">Create Invoice</field>
+          <field name="wiz_name">account.invoice.line.create_invoice</field>
+          <field name="model">account.invoice.line</field>
+      </record>
+
+      <record model="ir.action.keyword" id="wiz_invoice_line_create_invoice_keyword">
+          <field name="keyword">form_action</field>
+          <field name="model">account.invoice.line,-1</field>
+          <field name="action" ref="wiz_invoice_line_create_invoice"/>
       </record>
 
 <!-- Cron Send Of Invoice -->

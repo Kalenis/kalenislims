@@ -13,6 +13,16 @@ class Configuration(metaclass=PoolMeta):
     mail_send_invoice_subject = fields.Char('Email subject of Invoice report',
         help="In the text will be added suffix with the invoice report number")
     mail_send_invoice_body = fields.Text('Email body of Invoice report')
+    invoice_condition = fields.Selection([
+        ('service_confirmation', 'Upon confirmation of service'),
+        ('report_issuance', 'Upon issuance of the report'),
+        ], 'Billing Condition')
+    invoice_party_change_relation_type = fields.Many2One('party.relation.type',
+        'Relationship type for Party changes in Invoices')
+
+    @staticmethod
+    def default_invoice_condition():
+        return 'service_confirmation'
 
 
 class Cron(metaclass=PoolMeta):

@@ -30,6 +30,18 @@ msgctxt "field:account.invoice.invoice_contacts,invoice:"
 msgid "Invoice"
 msgstr "Factura"
 
+msgctxt "field:account.invoice.line,lims_ready_to_invoice:"
+msgid "Ready to invoice"
+msgstr "Listo para facturar"
+
+msgctxt "field:account.invoice.line,lims_ready_to_invoice_reason:"
+msgid "Reason for Ready to invoice"
+msgstr "Motivo de forzar Listo para facturar"
+
+msgctxt "field:account.invoice.line,lims_ready_to_invoice_uid:"
+msgid "User of Ready to invoice"
+msgstr "Usuario de forzar Listo para facturar"
+
 msgctxt "field:account.invoice.line,lims_service_entry:"
 msgid "Entry"
 msgstr "Ingreso"
@@ -49,6 +61,18 @@ msgstr "Muestra"
 msgctxt "field:account.invoice.line,party_domain:"
 msgid "Party domain"
 msgstr "Dominio para Entidad"
+
+msgctxt "field:account.invoice.line.force_ready_to_invoice.start,reason:"
+msgid "Reason for Ready to invoice"
+msgstr "Motivo de forzar Listo para facturar"
+
+msgctxt "field:lims.configuration,invoice_condition:"
+msgid "Billing Condition"
+msgstr "Condición de facturación"
+
+msgctxt "field:lims.configuration,invoice_party_change_relation_type:"
+msgid "Relationship type for Party changes in Invoices"
+msgstr "Tipo de relación para cambio de tercero en facturas"
 
 msgctxt "field:lims.configuration,mail_send_invoice_body:"
 msgid "Email body of Invoice report"
@@ -90,6 +114,14 @@ msgctxt "field:party.party,no_send_invoice:"
 msgid "No send invoice"
 msgstr "No envía factura"
 
+msgctxt "field:product.product,invoice_condition:"
+msgid "Billing Condition"
+msgstr "Condición de facturación"
+
+msgctxt "field:sale.line,invoice_condition:"
+msgid "Billing Condition"
+msgstr "Condición de facturación"
+
 msgctxt "field:stock.inventory.line,account_move:"
 msgid "Account Move"
 msgstr "Asiento contable"
@@ -119,6 +151,14 @@ msgctxt "model:account.invoice.invoice_contacts,name:"
 msgid "Invoice Contact"
 msgstr "Contacto de factura"
 
+msgctxt "model:account.invoice.line.create_invoice.start,name:"
+msgid "Create Invoice"
+msgstr "Crear factura"
+
+msgctxt "model:account.invoice.line.force_ready_to_invoice.start,name:"
+msgid "Force Ready To Invoice"
+msgstr "Forzar Listo para facturar"
+
 msgctxt "model:account.invoice.populate_invoice_contacts.start,name:"
 msgid "Populate Invoice Contacts Start"
 msgstr "Completar contactos de factura - Inicio"
@@ -139,6 +179,14 @@ msgctxt "model:ir.action,name:wiz_account_invoice_populate_invoice_contacts"
 msgid "Populate Invoice Contacts"
 msgstr "Completar contactos de factura"
 
+msgctxt "model:ir.action,name:wiz_invoice_line_create_invoice"
+msgid "Create Invoice"
+msgstr "Crear factura"
+
+msgctxt "model:ir.action,name:wiz_invoice_line_force_ready_to_invoice"
+msgid "Force Ready To Invoice"
+msgstr "Forzar Listo para facturar"
+
 msgctxt "model:ir.action,name:wiz_open_entries_ready_for_invoicing"
 msgid "Entries Ready for Invoicing"
 msgstr "Ingresos listos para facturación"
@@ -150,6 +198,16 @@ msgstr "Líneas pendientes de facturación"
 msgctxt "model:ir.action,name:wiz_send_invoice"
 msgid "Send Invoice"
 msgstr "Enviar factura"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_invoice_line_out_not_ready_to_invoice"
+msgid "Ongoing"
+msgstr "En curso"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_invoice_line_out_ready_to_invoice"
+msgid "Complete"
+msgstr "Completo"
 
 msgctxt "model:ir.message,text:msg_delete_service_invoice"
 msgid "You can not delete an invoice line related to a service (\"%(service)s\")"
@@ -271,6 +329,30 @@ msgctxt "selection:ir.cron,method:"
 msgid "Send Of Invoice"
 msgstr "Envío de factura"
 
+msgctxt "selection:lims.configuration,invoice_condition:"
+msgid "Upon confirmation of service"
+msgstr "Al confirmar el servicio"
+
+msgctxt "selection:lims.configuration,invoice_condition:"
+msgid "Upon issuance of the report"
+msgstr "Al emitir el informe"
+
+msgctxt "selection:product.product,invoice_condition:"
+msgid "Upon confirmation of service"
+msgstr "Al confirmar el servicio"
+
+msgctxt "selection:product.product,invoice_condition:"
+msgid "Upon issuance of the report"
+msgstr "Al emitir el informe"
+
+msgctxt "selection:sale.line,invoice_condition:"
+msgid "Upon confirmation of service"
+msgstr "Al confirmar el servicio"
+
+msgctxt "selection:sale.line,invoice_condition:"
+msgid "Upon issuance of the report"
+msgstr "Al emitir el informe"
+
 msgctxt "view:account.invoice.invoice_contacts:"
 msgid "Invoice Contact"
 msgstr "Contacto de factura"
@@ -278,6 +360,10 @@ msgstr "Contacto de factura"
 msgctxt "view:account.invoice.invoice_contacts:"
 msgid "Invoice Contacts"
 msgstr "Contactos de factura"
+
+msgctxt "view:account.invoice.line.create_invoice.start:"
+msgid "Create Invoice?"
+msgstr "Crear factura?"
 
 msgctxt "view:account.invoice.populate_invoice_contacts.start:"
 msgid "Populate Invoice Contacts?"
@@ -302,6 +388,23 @@ msgstr "Email Informe de Factura"
 msgctxt "view:lims.entry:"
 msgid "Hora"
 msgstr "Hora"
+
+msgctxt "wizard_button:account.invoice.line.create_invoice,start,create_:"
+msgid "Create"
+msgstr "Crear"
+
+msgctxt "wizard_button:account.invoice.line.create_invoice,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:account.invoice.line.force_ready_to_invoice,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt ""
+"wizard_button:account.invoice.line.force_ready_to_invoice,start,force:"
+msgid "Force"
+msgstr "Forzar"
 
 msgctxt "wizard_button:account.invoice.populate_invoice_contacts,start,end:"
 msgid "Cancel"

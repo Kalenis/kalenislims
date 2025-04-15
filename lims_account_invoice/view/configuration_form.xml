@@ -1,5 +1,13 @@
 <?xml version="1.0"?>
 <data>
+    <xpath
+        expr="/form/notebook/page[@id='general']/field[@name='invoice_party_relation_type']"
+        position="after">
+        <label name="invoice_condition"/>
+        <field name="invoice_condition"/>
+        <label name="invoice_party_change_relation_type"/>
+        <field name="invoice_party_change_relation_type"/>
+    </xpath>
     <xpath expr="/form/notebook/page[@id='general']" position="after">
         <page string="Mail Invoice Report" id="mail_send_invoice_report">
             <separator string="Email subject of Invoice report"

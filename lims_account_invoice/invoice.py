@@ -3,6 +3,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from datetime import datetime
+from collections import defaultdict
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
@@ -13,9 +14,10 @@ from sql.functions import Substring, Position
 import logging
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields
-from trytond.wizard import Wizard, StateTransition, StateView, Button
+from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
+    Button
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval, Bool, Or, If
+from trytond.pyson import Eval, Bool, Or, If, PYSONEncoder
 from trytond.transaction import Transaction
 from trytond.tools import get_smtp_server
 from trytond.config import config
@@ -266,6 +268,11 @@ class InvoiceLine(metaclass=PoolMeta):
             }), 'get_results_reports', searcher='search_results_reports')
     party_domain = fields.Function(fields.Many2Many('party.party',
         None, None, 'Party domain'), 'get_party_domain')
+    lims_ready_to_invoice = fields.Boolean('Ready to invoice', readonly=True)
+    lims_ready_to_invoice_reason = fields.Char('Reason for Ready to invoice',
+        readonly=True)
+    lims_ready_to_invoice_uid = fields.Many2One('res.user',
+        'User of Ready to invoice', readonly=True)
 
     @classmethod
     def __setup__(cls):
@@ -280,6 +287,10 @@ class InvoiceLine(metaclass=PoolMeta):
             Eval('invoice_state') != 'draft',
             Bool(Eval('lims_service_sample')))
         cls.product.depends.append('lims_service_sample')
+
+    @staticmethod
+    def default_lims_ready_to_invoice():
+        return False
 
     @classmethod
     def delete(cls, lines):
@@ -526,3 +537,102 @@ class SendOfInvoice(Wizard):
                 invoice.save()
         logger.info('SendOfInvoice:transition_start():END')
         return 'end'
+
+
+class ForceReadyToInvoiceStart(ModelView):
+    'Force Ready To Invoice'
+    __name__ = 'account.invoice.line.force_ready_to_invoice.start'
+
+    reason = fields.Char('Reason for Ready to invoice', required=True)
+
+
+class ForceReadyToInvoice(Wizard):
+    'Force Ready To Invoice'
+    __name__ = 'account.invoice.line.force_ready_to_invoice'
+
+    start = StateView('account.invoice.line.force_ready_to_invoice.start',
+        'lims_account_invoice.invoice_line_force_ready_to_invoice_start'
+        '_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Force', 'force', 'tryton-ok', default=True),
+            ])
+    force = StateTransition()
+
+    def transition_force(self):
+        InvoiceLine = Pool().get('account.invoice.line')
+
+        lines = InvoiceLine.search([
+            ('id', 'in', Transaction().context['active_ids']),
+            ('lims_ready_to_invoice', '!=', True),
+            ])
+        if lines:
+            InvoiceLine.write(lines, {
+                'lims_ready_to_invoice': True,
+                'lims_ready_to_invoice_reason': self.start.reason,
+                'lims_ready_to_invoice_uid': Transaction().user,
+                })
+        return 'end'
+
+    def end(self):
+        return 'reload'
+
+
+class CreateInvoiceStart(ModelView):
+    'Create Invoice'
+    __name__ = 'account.invoice.line.create_invoice.start'
+
+
+class CreateInvoice(Wizard):
+    'Create Invoice'
+    __name__ = 'account.invoice.line.create_invoice'
+
+    start = StateView('account.invoice.line.create_invoice.start',
+        'lims_account_invoice.invoice_line_create_invoice_start'
+        '_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Create', 'create_', 'tryton-ok', default=True),
+            ])
+    create_ = StateAction('account_invoice.act_invoice_form')
+
+    def do_create_(self, action):
+        invoice_ids = self.create_invoice()
+        action['pyson_domain'] = PYSONEncoder().encode([
+            ('id', 'in', invoice_ids),
+            ])
+        return action, {}
+
+    def create_invoice(self):
+        pool = Pool()
+        InvoiceLine = pool.get('account.invoice.line')
+        Invoice = pool.get('account.invoice')
+        Company = pool.get('company.company')
+
+        invoices = defaultdict(list)
+        lines = InvoiceLine.search([
+            ('id', 'in', Transaction().context['active_ids']),
+            ('invoice', '=', None),
+            ('lims_ready_to_invoice', '=', True),
+            ])
+        for line in lines:
+            invoices[line.party].append(line)
+
+        company = Company(Transaction().context.get('company'))
+
+        res = []
+        for party, lines in invoices.items():
+            invoice = Invoice(
+                company=company,
+                type='out',
+                party=party,
+                currency=company.currency,
+                )
+            invoice.on_change_type()
+            invoice.on_change_party()
+            invoice.lines = lines
+            invoice.save()
+            invoice.update_taxes()
+            res.append(invoice.id)
+        return res
+
+    def end(self):
+        return 'reload'
