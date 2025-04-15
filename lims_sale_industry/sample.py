@@ -10,7 +10,7 @@ from trytond.transaction import Transaction
 class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
 
-    @fields.depends('party', 'product_type', 'matrix',
+    @fields.depends('party', 'invoice_party', 'product_type', 'matrix',
         'sale_lines_filter_product_type_matrix',
         'label', 'component', 'equipment')
     def on_change_with_sale_lines_domain(self, name=None):
@@ -38,7 +38,7 @@ class CreateSampleStart(metaclass=PoolMeta):
 
         today = Date.today()
         clause = [
-            ('sale.party', '=', self.party.id),
+            ('sale.party', 'in', [self.party.id, self.invoice_party.id]),
             ('sale.expiration_date', '>=', today),
             ('sale.state', 'in', [
                 'quotation', 'confirmed', 'processing', 'done',
