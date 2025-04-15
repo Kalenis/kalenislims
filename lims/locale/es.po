@@ -456,7 +456,7 @@ msgid "Fraction product"
 msgstr "Producto fracción"
 
 msgctxt "field:lims.configuration,invoice_party_relation_type:"
-msgid "Invoice Party Relation Type"
+msgid "Invoice Party Relationship Type"
 msgstr "Tipo de relación para entidades de facturación"
 
 msgctxt "field:lims.configuration,itc_fraction_type:"
