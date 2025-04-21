@@ -1447,25 +1447,34 @@ class PrintAnalysisSheetReport(Wizard):
             ])
     print_ = StateAction('lims_analysis_sheet.report_analysis_sheet')
 
-    def _get_analysis_sheet_id(self):
-        return Transaction().context.get('lims_analysis_sheet',
-            Transaction().context.get('active_id', None))
+    def _get_analysis_sheet_ids(self):
+        if Transaction().context.get('lims_analysis_sheet'):
+            return [Transaction().context['lims_analysis_sheet']]
+        return Transaction().context.get('active_ids', [])
 
     def transition_start(self):
-        AnalysisSheet = Pool().get('lims.analysis_sheet')
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
 
-        sheet_id = self._get_analysis_sheet_id()
-        if not sheet_id:
+        sheet_ids = self._get_analysis_sheet_ids()
+        if not sheet_ids:
             return 'end'
 
-        sheet = AnalysisSheet(sheet_id)
-        if sheet.state == 'draft':
+        template, sheets_to_print = None, []
+        for sheet in AnalysisSheet.browse(sheet_ids):
+            if sheet.state == 'draft':
+                continue
+            if not sheet.template.report:
+                raise UserError(gettext(
+                    'lims_analysis_sheet.msg_template_not_report',
+                    template=sheet.template.rec_name))
+            if template and template != sheet.template:
+                raise UserError(gettext(
+                    'lims_analysis_sheet.msg_sheets_different_templates'))
+            template = sheet.template
+            sheets_to_print.append(sheet)
+        if not sheets_to_print:
             return 'end'
-
-        if not sheet.template.report:
-            raise UserError(gettext(
-                'lims_analysis_sheet.msg_template_not_report',
-                template=sheet.template.rec_name))
 
         return 'ask'
 
@@ -1473,21 +1482,20 @@ class PrintAnalysisSheetReport(Wizard):
         pool = Pool()
         AnalysisSheet = pool.get('lims.analysis_sheet')
 
-        sheet = AnalysisSheet(self._get_analysis_sheet_id())
-
-        report_name = sheet.template.report.report_name
-        AnalysisSheetReport = pool.get(report_name, type='report')
-        result = AnalysisSheetReport.execute([sheet.id],
-            {'execute': True, 'id': sheet.id,
+        sheet_ids = self._get_analysis_sheet_ids()
+        if len(sheet_ids) == 1:
+            sheet = AnalysisSheet(sheet_ids[0])
+            report_name = sheet.template.report.report_name
+            AnalysisSheetReport = pool.get(report_name, type='report')
+            result = AnalysisSheetReport.execute([sheet.id], {
+                'execute': True, 'ids': sheet_ids,
                 'print_expression_column': self.ask.print_expression_column})
-        AnalysisSheet.write([sheet], {
-            'report_format': result[0],
-            'report_cache': result[1],
-            })
+            AnalysisSheet.write([sheet], {
+                'report_format': result[0],
+                'report_cache': result[1],
+                })
 
-        data = {
-            'id': self._get_analysis_sheet_id(),
-            }
+        data = {'ids': sheet_ids}
         return action, data
 
 
@@ -1497,12 +1505,17 @@ class AnalysisSheetReport(Report):
 
     @classmethod
     def execute(cls, ids, data):
-        AnalysisSheet = Pool().get('lims.analysis_sheet')
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
 
-        sheet = AnalysisSheet(data.get('id'))
-        if data.get('execute') or not sheet.report_cache:
-            return super().execute(ids, data)
-        return (sheet.report_format, sheet.report_cache, False, sheet.number)
+        if not data.get('execute', False):
+            sheet_ids = data.get('ids')
+            if len(sheet_ids) == 1:
+                sheet = AnalysisSheet(sheet_ids[0])
+                if sheet.report_cache:
+                    return (sheet.report_format, sheet.report_cache,
+                        False, sheet.number)
+        return super().execute(ids, data)
 
     @classmethod
     def _get_records(cls, ids, model, data):
@@ -1517,12 +1530,16 @@ class AnalysisSheetReport(Report):
 
         report_context = super().get_context(records, header, data)
 
-        sheet = AnalysisSheet(data.get('id'))
-        print_expression_column = data.get('print_expression_column')
+        sheet_ids = data.get('ids')
+        sheets = AnalysisSheet.browse(sheet_ids)
+        sheet = sheets[0]
+
+        report_context['sheets'] = sheets
         report_context['sheet'] = sheet
 
         limit = 20
         alias = []
+        print_expression_column = data.get('print_expression_column')
 
         # Columns
         columns = {}
@@ -1540,18 +1557,19 @@ class AnalysisSheetReport(Report):
 
         # Rows
         rows = []
-        with Transaction().set_context(
-                lims_interface_table=sheet.compilation.table.id):
-            lines = Data.search([('compilation', '=', sheet.compilation.id)])
-            for line in lines:
-                row = {}
-                i = 0
-                for field_name in alias:
-                    row[i] = getattr(line, field_name)
-                    i += 1
-                for x in range(i, limit):
-                    row[x] = ''
-                rows.append(row)
+        for s in sheets:
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                lines = Data.search([('compilation', '=', s.compilation.id)])
+                for line in lines:
+                    row = {}
+                    i = 0
+                    for field_name in alias:
+                        row[i] = getattr(line, field_name)
+                        i += 1
+                    for x in range(i, limit):
+                        row[x] = ''
+                    rows.append(row)
         report_context['rows'] = rows
 
         return report_context

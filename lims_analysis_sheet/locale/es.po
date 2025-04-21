@@ -777,6 +777,10 @@ msgctxt "model:ir.message,text:msg_sheet_not_results"
 msgid "There are lines without result"
 msgstr "Existen líneas sin resultado"
 
+msgctxt "model:ir.message,text:msg_sheets_different_templates"
+msgid "The selected sheets have different templates"
+msgstr "Las Hojas seleccionadas tienen diferentes Plantillas"
+
 msgctxt "model:ir.message,text:msg_template_analysis_unique"
 msgid "Analysis \"%(analysis)s\" already exists in another Template"
 msgstr "El análisis «%(analysis)s» ya existe en otra plantilla"
@@ -1056,6 +1060,10 @@ msgstr ""
 
 msgctxt "report:lims.analysis_sheet.report:"
 msgid "for each=\"line in rows\""
+msgstr ""
+
+msgctxt "report:lims.analysis_sheet.report:"
+msgid "for each=\"sheet in sheets\""
 msgstr ""
 
 msgctxt "report:lims.analysis_sheet.report:"
