@@ -990,6 +990,10 @@ class NotebookLine(ModelSQL, ModelView):
         states=_states, depends=_depends)
     referral = fields.Function(fields.Many2One('lims.referral', 'Referral'),
         'get_detail_field', searcher='search_detail_field')
+    repetition_reason_coded = fields.Many2One(
+        'lims.notebook.line.repetition_reason', 'Coded Repetition reason',
+        states={'readonly': True, 'invisible': Eval('repetition', 0) == 0},
+        depends=['repetition'])
     repetition_reason = fields.Char('Repetition reason',
         states={'readonly': True, 'invisible': Eval('repetition', 0) == 0},
         depends=['repetition'])
@@ -1781,6 +1785,10 @@ class NotebookLineAllFields(ModelSQL, ModelView):
         readonly=True)
     referral = fields.Function(fields.Many2One('lims.referral', 'Referral'),
         'get_line_field', searcher='search_line_field')
+    repetition_reason_coded = fields.Many2One(
+        'lims.notebook.line.repetition_reason', 'Coded Repetition reason',
+        readonly=True, states={'invisible': Eval('repetition', 0) == 0},
+        depends=['repetition'])
     repetition_reason = fields.Char('Repetition reason', readonly=True,
         states={'invisible': Eval('repetition', 0) == 0},
         depends=['repetition'])
@@ -1885,6 +1893,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
             service.laboratory_date,
             service.report_date,
             line.department,
+            line.repetition_reason_coded,
             line.repetition_reason,
             line.exceptional_load,
             line.exceptional_load_uid,
@@ -1933,6 +1942,13 @@ class NotebookLineProfessional(ModelSQL, ModelView):
         ondelete='CASCADE', select=True, required=True)
     professional = fields.Many2One('lims.laboratory.professional',
         'Laboratory professional', required=True)
+
+
+class NotebookAnalysisRepetitionReason(ModelSQL, ModelView):
+    'Analysis Repetition Reason'
+    __name__ = 'lims.notebook.line.repetition_reason'
+
+    name = fields.Char('Description', required=True)
 
 
 class NotebookInitialConcentrationCalcStart(ModelView):
@@ -4734,7 +4750,13 @@ class NotebookRepeatAnalysisStart(ModelView):
         depends=['analysis_domain'])
     analysis_domain = fields.One2Many('lims.analysis', None,
         'Analysis domain')
-    repetition_reason = fields.Char('Reason')
+    repetition_reason_coded = fields.Many2One(
+        'lims.notebook.line.repetition_reason', 'Repetition reason',
+        states={'required': ~Eval('repetition_reason')},
+        depends=['repetition_reason'])
+    repetition_reason = fields.Char('Other reason',
+        states={'required': ~Eval('repetition_reason_coded')},
+        depends=['repetition_reason_coded'])
 
 
 class NotebookRepeatAnalysis(Wizard):
@@ -4887,6 +4909,9 @@ class NotebookRepeatAnalysis(Wizard):
             'lower_limit': line.lower_limit,
             'upper_limit': line.upper_limit,
             }
+        defaults['repetition_reason_coded'] = (
+            self.start.repetition_reason_coded.id if
+            self.start.repetition_reason_coded else None)
         defaults['repetition_reason'] = self.start.repetition_reason
         if line.accepted and not self._unaccept_original():
             defaults['report'] = False
@@ -4905,7 +4930,13 @@ class NotebookLineRepeatAnalysisStart(ModelView):
         depends=['analysis_domain'])
     analysis_domain = fields.One2Many('lims.analysis', None,
         'Analysis domain')
-    repetition_reason = fields.Char('Reason')
+    repetition_reason_coded = fields.Many2One(
+        'lims.notebook.line.repetition_reason', 'Repetition reason',
+        states={'required': ~Eval('repetition_reason')},
+        depends=['repetition_reason'])
+    repetition_reason = fields.Char('Other reason',
+        states={'required': ~Eval('repetition_reason_coded')},
+        depends=['repetition_reason_coded'])
     analysis_type = fields.Function(fields.Selection([
         (None, ''),
         ('analysis', 'Analysis'),
@@ -5092,6 +5123,9 @@ class NotebookLineRepeatAnalysis(Wizard):
             'lower_limit': line.lower_limit,
             'upper_limit': line.upper_limit,
             }
+        defaults['repetition_reason_coded'] = (
+            self.start.repetition_reason_coded.id if
+            self.start.repetition_reason_coded else None)
         defaults['repetition_reason'] = self.start.repetition_reason
         if line.accepted and not self._unaccept_original():
             defaults['report'] = False
