@@ -829,6 +829,17 @@ class SaleLine(metaclass=PoolMeta):
         self.on_change_product()
 
     @classmethod
+    def validate(cls, sale_lines):
+        super().validate(sale_lines)
+        for sale_line in sale_lines:
+            if (sale_line.analysis and sale_line.product and
+                    sale_line.analysis.product != sale_line.product):
+                raise UserError(gettext(
+                    'lims_sale.msg_sale_line_analysis_product',
+                    product=sale_line.product.rec_name,
+                    analysis=sale_line.analysis.rec_name))
+
+    @classmethod
     def create(cls, vlist):
         sale_lines = super().create(vlist)
         cls.create_additional_services(sale_lines)

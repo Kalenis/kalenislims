@@ -382,6 +382,10 @@ msgid "The quote will change to 'done' with all services completed."
 msgstr ""
 "El presupuesto pasará a 'realizado' con todos los servicios completados."
 
+msgctxt "model:ir.message,text:msg_sale_line_analysis_product"
+msgid "Product \"%(product)s\" does not correspond to analysis \"%(analysis)s\"."
+msgstr "El producto \"%(product)s\" no corresponde al análisis \"%(analysis)s\"."
+
 msgctxt "model:ir.message,text:msg_services_without_quotation"
 msgid "This entry exceeds the amount of quoted services."
 msgstr "Este ingreso excede la cantidad de servicios presupuestados."
