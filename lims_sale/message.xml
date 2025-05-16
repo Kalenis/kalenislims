@@ -13,5 +13,8 @@
         <record model="ir.message" id="msg_sale_completed_manual">
             <field name="text">The quote will change to 'done' with all services completed.</field>
         </record>
+        <record model="ir.message" id="msg_sale_line_analysis_product">
+            <field name="text">Product "%(product)s" does not correspond to analysis "%(analysis)s".</field>
+        </record>
     </data>
 </tryton>
