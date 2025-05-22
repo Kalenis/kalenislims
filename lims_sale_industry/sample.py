@@ -12,7 +12,7 @@ class CreateSampleStart(metaclass=PoolMeta):
 
     @fields.depends('party', 'invoice_party', 'product_type', 'matrix',
         'sale_lines_filter_product_type_matrix',
-        'label', 'component', 'equipment')
+        'label', 'equipment', 'component', 'comercial_product')
     def on_change_with_sale_lines_domain(self, name=None):
         cursor = Transaction().connection.cursor()
         pool = Pool()
