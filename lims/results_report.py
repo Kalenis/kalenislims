@@ -1244,7 +1244,7 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                 'release_uid': int(Transaction().user),
                 'release_date': datetime.now(),
                 })
-        cls.do_release(details)
+        cls.__queue__.do_release(details)
 
     @classmethod
     def do_release(cls, details):
