@@ -609,5 +609,12 @@ Rule 4: 1 value above or below the mean +/- 3 deviations.</field>
         <record model="ir.message" id="msg_entry_cancellation_analysis_planned">
             <field name="text">You cannot cancel the entry because it has planned analyzes or in laboratory</field>
         </record>
+        <record model="ir.message" id="msg_report_release_error_subject">
+            <field name="text">Error generating report for results report: %(report)s</field>
+        </record>
+        <record model="ir.message" id="msg_report_release_error_body">
+            <field name="text">Error message:
+%(message)s</field>
+        </record>
     </data>
 </tryton>
