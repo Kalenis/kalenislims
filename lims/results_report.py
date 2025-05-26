@@ -2,11 +2,14 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import logging
 from io import BytesIO
 from datetime import datetime
 from PyPDF2 import PdfFileMerger
 from sql import Literal, Null, Cast
 from sql.conditionals import Case
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 from trytond.model import (Workflow, ModelView, ModelSQL, Unique, fields,
     sequence_ordered, Index)
@@ -19,9 +22,13 @@ from trytond.report import Report
 from trytond.rpc import RPC
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
+from trytond.config import config as tconfig
+from trytond.tools import get_smtp_server
 from trytond import backend
 from .configuration import get_print_date
 from .notebook import NotebookLineRepeatAnalysis
+
+logger = logging.getLogger(__name__)
 
 
 class ResultsReport(ModelSQL, ModelView):
@@ -1222,7 +1229,12 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('released')
     def release(cls, details):
-        ResultsSample = Pool().get('lims.results_report.version.detail.sample')
+        pool = Pool()
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        Config = pool.get('lims.configuration')
+
+        release_background = Config(1).report_release_background
+
         for detail in details:
             # delete samples from previous valid version
             old_samples = ResultsSample.search([
@@ -1244,14 +1256,21 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                 'release_uid': int(Transaction().user),
                 'release_date': datetime.now(),
                 })
-        cls.__queue__.do_release(details)
+        if release_background:
+            cls.__queue__.do_release(details)
+        else:
+            cls.do_release(details)
 
     @classmethod
     def do_release(cls, details):
         Sample = Pool().get('lims.sample')
         cls.link_notebook_lines(details)
         for detail in details:
-            detail.generate_report()
+            try:
+                detail.generate_report()
+            except Exception as message:
+                cls.notify_report_release_error(detail, message)
+                raise Exception
             to_update = Sample.browse(list(set(s.notebook.fraction.sample.id
                 for s in detail.samples)))
             Sample.__queue__.update_samples_state(to_update)
@@ -1297,6 +1316,56 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
                 EntryDetailAnalysis.write(entry_details, {
                     'state': 'reported',
                     })
+
+    @classmethod
+    def notify_report_release_error(cls, detail, message):
+        pool = Pool()
+        Lang = pool.get('ir.lang')
+
+        smtp_server = None
+        from_addr = (smtp_server and smtp_server.smtp_email or
+            tconfig.get('email', 'from'))
+        if not from_addr:
+            logger.error("Missing configuration to send emails")
+            return
+
+        to_addrs = [detail.release_uid.email]
+        if not to_addrs:
+            logger.error("Missing email for user %s" % detail.release_uid.name)
+            return
+
+        lang = Lang.get()
+        with Transaction().set_context(language=lang.code):
+            subject = gettext('lims.msg_report_release_error_subject',
+                report=detail.rec_name)
+            body = gettext('lims.msg_report_release_error_body',
+                message=message)
+
+        msg = MIMEMultipart('mixed')
+        msg['From'] = from_addr
+        msg['To'] = ', '.join(to_addrs)
+        msg['Subject'] = subject
+
+        msg_body = MIMEText('text', 'plain')
+        msg_body.set_payload(body.encode('UTF-8'), 'UTF-8')
+        msg.attach(msg_body)
+
+        success = False
+        server = None
+        try:
+            if smtp_server:
+                server = smtp_server.get_smtp_server()
+            else:
+                server = get_smtp_server()
+            server.sendmail(from_addr, to_addrs, msg.as_string())
+            server.quit()
+            success = True
+        except Exception:
+            logger.error(
+                "Unable to deliver mail for report '%s'" % detail.rec_name)
+            if server is not None:
+                server.quit()
+        return success
 
     @classmethod
     def update_from_valid_version(cls, details):
