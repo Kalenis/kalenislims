@@ -224,6 +224,8 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         'Analysis Product Category', states={'required': True})
     entry_confirm_background = fields.Boolean(
         'Confirm Entries in Background')
+    report_release_background = fields.Boolean(
+        'Release Results Report in Background')
     planification_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence', 'Planification Sequence', required=True,
         domain=[
@@ -308,6 +310,10 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
 
     @staticmethod
     def default_entry_confirm_background():
+        return False
+
+    @staticmethod
+    def default_report_release_background():
         return False
 
     @staticmethod

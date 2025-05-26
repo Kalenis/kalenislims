@@ -24,6 +24,8 @@
             <field name="entry_confirm_background"/>
             <label name="sample_fast_copy"/>
             <field name="sample_fast_copy"/>
+            <label name="report_release_background"/>
+            <field name="report_release_background"/>
             <label name="entry_default_contacts"/>
             <field name="entry_default_contacts"/>
             <label name="samples_in_progress"/>
