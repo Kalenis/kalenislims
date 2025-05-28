@@ -6928,6 +6928,10 @@ msgctxt "field:lims.typification.update.start,check_result_limits:"
 msgid "Validate limits on the result"
 msgstr "Validar límites en el resultado"
 
+msgctxt "field:lims.typification.update.start,comments:"
+msgid "Comments"
+msgstr "Observaciones"
+
 msgctxt "field:lims.typification.update.start,converted_result_decimals:"
 msgid "Decimals to report converted result"
 msgstr "Decimales para informar resultado convertido"
@@ -6935,6 +6939,10 @@ msgstr "Decimales para informar resultado convertido"
 msgctxt "field:lims.typification.update.start,default_repetitions:"
 msgid "Default repetitions"
 msgstr "Repeticiones por defecto"
+
+msgctxt "field:lims.typification.update.start,department:"
+msgid "Department"
+msgstr "Departamento"
 
 msgctxt "field:lims.typification.update.start,detection_limit:"
 msgid "Detection limit"
@@ -7016,6 +7024,10 @@ msgctxt "field:lims.typification.update.start,update_check_result_limits:"
 msgid "Update Validate limits on the result"
 msgstr "Actualizar Validar límites en el resultado"
 
+msgctxt "field:lims.typification.update.start,update_comments:"
+msgid "Update Comments"
+msgstr "Actualizar Observaciones"
+
 msgctxt ""
 "field:lims.typification.update.start,update_converted_result_decimals:"
 msgid "Update Decimals to report converted result"
@@ -7024,6 +7036,10 @@ msgstr "Actualizar Decimales para informar resultado convertido"
 msgctxt "field:lims.typification.update.start,update_default_repetitions:"
 msgid "Update Default repetitions"
 msgstr "Actualizar Repeticiones por defecto"
+
+msgctxt "field:lims.typification.update.start,update_department:"
+msgid "Update Department"
+msgstr "Actualizar Departamento"
 
 msgctxt "field:lims.typification.update.start,update_detection_limit:"
 msgid "Update Detection limit"
@@ -7098,9 +7114,17 @@ msgctxt "field:lims.typification.update.start,update_upper_limit:"
 msgid " Update Upper limit allowed"
 msgstr "Actualizar Límite superior permitido"
 
+msgctxt "field:lims.typification.update.start,update_valid:"
+msgid "Update Active"
+msgstr "Actualizar Activo"
+
 msgctxt "field:lims.typification.update.start,upper_limit:"
 msgid "Upper limit allowed"
 msgstr "Límite superior permitido"
+
+msgctxt "field:lims.typification.update.start,valid:"
+msgid "Active"
+msgstr "Activo"
 
 msgctxt "field:lims.uom.conversion,conversion_formula:"
 msgid "Conversion formula"
@@ -15684,6 +15708,10 @@ msgstr "Tipificaciones"
 msgctxt "view:lims.typification.update.start:"
 msgid "Additional analysis"
 msgstr "Análisis adicionales"
+
+msgctxt "view:lims.typification.update.start:"
+msgid "Comments"
+msgstr "Observaciones"
 
 msgctxt "view:lims.typification.update.start:"
 msgid "General"
