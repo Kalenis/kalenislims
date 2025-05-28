@@ -2955,6 +2955,9 @@ class UpdateTypificationStart(ModelView):
         'typification', 'analysis', 'Additional analysis',
         domain=[('state', '=', 'active'), ('type', '=', 'analysis'),
             ('behavior', '!=', 'additional')])
+    valid = fields.Boolean('Active')
+    department = fields.Many2One('company.department', 'Department')
+    comments = fields.Text('Comments')
     update_detection_limit = fields.Boolean('Update Detection limit')
     update_quantification_limit = fields.Boolean('Update Quantification limit')
     update_lower_limit = fields.Boolean('Update Lower limit allowed')
@@ -2982,6 +2985,9 @@ class UpdateTypificationStart(ModelView):
     update_report_result_type = fields.Boolean('Update Result type')
     update_laboratory = fields.Boolean('Update Laboratory')
     update_additional = fields.Boolean('Update Additional analysis')
+    update_valid = fields.Boolean('Update Active')
+    update_department = fields.Boolean('Update Department')
+    update_comments = fields.Boolean('Update Comments')
 
     @staticmethod
     def default_limit_digits():
