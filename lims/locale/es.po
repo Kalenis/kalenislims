@@ -517,7 +517,7 @@ msgstr "Secuencia de derivaciones"
 
 msgctxt "field:lims.configuration,report_release_background:"
 msgid "Release Results Report in Background"
-msgstr "Publicar Informes de resultado en segundo plano"
+msgstr "Publicar Informe de resultados en segundo plano"
 
 msgctxt "field:lims.configuration,results_report_language:"
 msgid "Results Report Language"
