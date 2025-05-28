@@ -46,6 +46,10 @@
             <field name="end_uom"/>
             <label name="update_end_uom"/>
             <field name="update_end_uom"/>
+            <label name="literal_final_concentration"/>
+            <field name="literal_final_concentration"/>
+            <label name="update_literal_final_concentration"/>
+            <field name="update_literal_final_concentration"/>
             <label name="calc_decimals"/>
             <field name="calc_decimals"/>
             <label name="update_calc_decimals"/>
@@ -74,10 +78,10 @@
             <field name="referable"/>
             <label name="update_referable"/>
             <field name="update_referable"/>
-            <label name="literal_final_concentration"/>
-            <field name="literal_final_concentration"/>
-            <label name="update_literal_final_concentration"/>
-            <field name="update_literal_final_concentration"/>
+            <label name="valid"/>
+            <field name="valid"/>
+            <label name="update_valid"/>
+            <field name="update_valid"/>
             <label name="report_type"/>
             <field name="report_type"/>
             <label name="update_report_type"/>
@@ -90,6 +94,10 @@
             <field name="laboratory"/>
             <label name="update_laboratory"/>
             <field name="update_laboratory"/>
+            <label name="department"/>
+            <field name="department"/>
+            <label name="update_department"/>
+            <field name="update_department"/>
         </page>
         <page id="additionals" string="Additional analysis">
             <label name="additional"/>
@@ -97,6 +105,11 @@
             <label name="update_additional"/>
             <field name="update_additional"/>
             <field name="additionals" colspan="4"/>
+        </page>
+        <page id="comments" string="Comments">
+            <label name="update_comments"/>
+            <field name="update_comments"/>
+            <field name="comments" colspan="4"/>
         </page>
     </notebook>
 </form>
