@@ -264,6 +264,8 @@ class LabMethod(Workflow, ModelSQL, ModelView):
                 ('method', '=', method.id),
                 ('party', 'not in', waiting_times_parties),
                 ('accepted', '=', False),
+                ('annulled', '=', False),
+                ('results_estimated_waiting', '!=', results_estimated_waiting),
                 ])
             if notebook_lines:
                 NotebookLine.write(notebook_lines, {
@@ -406,6 +408,8 @@ class LabMethodWaitingTime(ModelSQL, ModelView):
                 ('method', '=', waiting_time.method.id),
                 ('party', '=', waiting_time.party.id),
                 ('accepted', '=', False),
+                ('annulled', '=', False),
+                ('results_estimated_waiting', '!=', results_estimated_waiting),
                 ])
             if notebook_lines:
                 results_estimated_waiting = (waiting or
