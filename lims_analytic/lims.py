@@ -12,7 +12,7 @@ class Location(metaclass=PoolMeta):
     __name__ = 'stock.location'
 
     cost_center = fields.Many2One('analytic_account.account', 'Cost center',
-        domain=[('type', '=', 'normal')],
+        domain=[('type', 'in', ['normal', 'distribution'])],
         states={
             'invisible': ~Eval('type').in_(['storage']),
             })
