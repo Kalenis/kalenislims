@@ -2,6 +2,7 @@
 # This file is part of lims_analytic module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+from decimal import Decimal
 
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
@@ -33,9 +34,9 @@ class Move(metaclass=PoolMeta):
         if not analytic_account:
             return [move_line]
 
-        analytic_line = self._get_account_analytic_line(move_line,
-            analytic_account)
-        move_line.analytic_lines = [analytic_line]
+        analytic_lines = list(self._get_account_analytic_lines(move_line,
+            analytic_account))
+        move_line.analytic_lines = analytic_lines
         return [move_line]
 
     def _get_account_stock_move_line(self, amount):
@@ -64,28 +65,30 @@ class Move(metaclass=PoolMeta):
         if not analytic_account:
             return move_line
 
-        analytic_line = self._get_account_analytic_line(move_line,
-            analytic_account)
-        move_line.analytic_lines = [analytic_line]
+        analytic_lines = list(self._get_account_analytic_lines(move_line,
+            analytic_account))
+        move_line.analytic_lines = analytic_lines
         return move_line
 
-    def _get_account_analytic_line(self, move_line, analytic_account):
+    def _get_account_analytic_lines(self, line, analytic_account):
         '''
-        Return analytic line value for account move line
+        Yield analytic lines for the accounting line
         '''
         pool = Pool()
         Date = pool.get('ir.date')
         AnalyticLine = pool.get('analytic_account.line')
+
         date = self.effective_date or Date.today()
+        amount = line.debit or line.credit
 
         with Transaction().set_user(0, set_context=True):
-            analytic_line = AnalyticLine(
-                debit=move_line.debit,
-                credit=move_line.credit,
-                account=analytic_account.id,
-                date=date,
-                )
-        return analytic_line
+            for account, amount in analytic_account.distribute(amount):
+                analytic_line = AnalyticLine()
+                analytic_line.debit = amount if line.debit else Decimal(0)
+                analytic_line.credit = amount if line.credit else Decimal(0)
+                analytic_line.account = account
+                analytic_line.date = date
+                yield analytic_line
 
     def _get_account_stock_move(self):
         if self.fraction:
