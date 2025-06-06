@@ -2190,7 +2190,8 @@ class Compilation(Workflow, ModelSQL, ModelView):
                             'report': False,
                             })
                     elif (not avoid_accept_result and
-                            nb_line.laboratory.automatic_accept_result):
+                            nb_line.laboratory.automatic_accept_result
+                            and nb_line.report):
                         #data['end_date'] = today
                         data['accepted'] = True
                         data['acceptance_date'] = now
