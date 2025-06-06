@@ -1070,7 +1070,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         data['start_date'] = today
                     # if already avoided in compilations then accept here
                     if not line.annulled and (avoid_accept_result and
-                            nb_line.laboratory.automatic_accept_result):
+                            nb_line.laboratory.automatic_accept_result
+                            and nb_line.report):
                         #data['end_date'] = today
                         data['accepted'] = True
                         data['acceptance_date'] = now
