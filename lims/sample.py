@@ -4187,10 +4187,22 @@ class Sample(ModelSQL, ModelView):
 
         if self.results_report_release_date:
             return 'report_released'
+
         if self.results_report_create_date:
             return 'in_report'
-        if self.laboratory_acceptance_date:
-            return 'pending_report'
+
+        cursor.execute('SELECT COUNT(*) '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + Service._table + '" s '
+                'ON s.id = nl.service '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = s.fraction '
+            'WHERE f.sample = %s',
+            (self.id,))
+        all_lines = cursor.fetchone()[0]
+        if all_lines == 0:
+            return 'draft'
+
         cursor.execute('SELECT COUNT(*) '
             'FROM "' + NotebookLine._table + '" nl '
                 'INNER JOIN "' + Service._table + '" s '
@@ -4201,42 +4213,30 @@ class Sample(ModelSQL, ModelView):
                 'AND nl.annulled = TRUE',
             (self.id,))
         annulled_lines = cursor.fetchone()[0]
-        if annulled_lines > 0:
-            cursor.execute('SELECT COUNT(*) '
-                'FROM "' + NotebookLine._table + '" nl '
-                    'INNER JOIN "' + Service._table + '" s '
-                    'ON s.id = nl.service '
-                    'INNER JOIN "' + Fraction._table + '" f '
-                    'ON f.id = s.fraction '
-                'WHERE f.sample = %s',
-                (self.id,))
-            if cursor.fetchone()[0] == annulled_lines:
-                return 'annulled'
+        if annulled_lines == all_lines:
+            return 'annulled'
+
+        cursor.execute('SELECT COUNT(*) '
+            'FROM "' + NotebookLine._table + '" nl '
+                'INNER JOIN "' + Service._table + '" s '
+                'ON s.id = nl.service '
+                'INNER JOIN "' + Fraction._table + '" f '
+                'ON f.id = s.fraction '
+            'WHERE f.sample = %s '
+                'AND nl.report = FALSE '
+                'AND nl.annulled = FALSE '
+                'AND nl.end_date IS NOT NULL',
+            (self.id,))
+        finished_without_report = cursor.fetchone()[0]
+        if finished_without_report == all_lines:
+            return 'without_report'
+
+        if self.laboratory_acceptance_date:
+            return 'pending_report'
+
         if self.laboratory_end_date:
-            cursor.execute('SELECT COUNT(*) '
-                'FROM "' + NotebookLine._table + '" nl '
-                    'INNER JOIN "' + Service._table + '" s '
-                    'ON s.id = nl.service '
-                    'INNER JOIN "' + Fraction._table + '" f '
-                    'ON f.id = s.fraction '
-                'WHERE f.sample = %s '
-                    'AND nl.report = FALSE '
-                    'AND nl.annulled = FALSE '
-                    'AND nl.end_date IS NOT NULL',
-                (self.id,))
-            finished_without_report = cursor.fetchone()[0]
-            if finished_without_report > 0:
-                cursor.execute('SELECT COUNT(*) '
-                    'FROM "' + NotebookLine._table + '" nl '
-                        'INNER JOIN "' + Service._table + '" s '
-                        'ON s.id = nl.service '
-                        'INNER JOIN "' + Fraction._table + '" f '
-                        'ON f.id = s.fraction '
-                    'WHERE f.sample = %s',
-                    (self.id,))
-                if cursor.fetchone()[0] == finished_without_report:
-                    return 'without_report'
             return 'lab_pending_acceptance'
+
         if self.laboratory_start_date:
             cursor.execute('SELECT COUNT(*) '
                 'FROM "' + NotebookLine._table + '" nl '
@@ -4252,8 +4252,10 @@ class Sample(ModelSQL, ModelView):
             if cursor.fetchone()[0] > 0:
                 return 'in_lab'
             return 'planned'
+
         if self.confirmation_date:
             return 'pending_planning'
+
         cursor.execute('SELECT COUNT(*) '
             'FROM "' + Service._table + '" s '
                 'INNER JOIN "' + Fraction._table + '" f '
@@ -4263,6 +4265,7 @@ class Sample(ModelSQL, ModelView):
         services_qty = cursor.fetchone()[0]
         if services_qty == 0 and self.entry.state in ('ongoing', 'finished'):
             return 'annulled'
+
         cursor.execute('SELECT COUNT(*) '
             'FROM "' + Service._table + '" s '
                 'INNER JOIN "' + Fraction._table + '" f '
@@ -4273,10 +4276,13 @@ class Sample(ModelSQL, ModelView):
         annulled_services_qty = cursor.fetchone()[0]
         if annulled_services_qty > 0 and annulled_services_qty == services_qty:
             return 'annulled'
+
         if self.entry.state == 'pending':
             return 'pending_admin'
+
         if self.entry.state == 'cancelled':
             return 'annulled'
+
         return 'draft'
 
     def update_qty_lines(self):
