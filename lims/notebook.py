@@ -5889,6 +5889,8 @@ class NotebookRepeatAnalysis(Wizard):
                     defaults['quantification_limit'] = None
                     defaults['lower_limit'] = None
                     defaults['upper_limit'] = None
+                if config.notebook_lines_repetition_report:
+                    defaults['report'] = True
                 to_create.append(defaults)
                 to_update.append(nline_to_repeat)
                 details_to_update.append(nline_to_repeat.analysis_detail.id)
@@ -6052,6 +6054,8 @@ class NotebookLineRepeatAnalysis(Wizard):
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Config = pool.get('lims.configuration')
 
+        config = Config(1)
+
         analysis = self.start.analysis
         analysis_type = analysis.type
         if analysis_type == 'analysis':
@@ -6066,7 +6070,6 @@ class NotebookLineRepeatAnalysis(Wizard):
 
         rm_type = (notebook.fraction.special_type == 'rm')
         if rm_type:
-            config = Config(1)
             rm_start_uom = (config.rm_start_uom.id if config.rm_start_uom
                 else None)
 
@@ -6099,6 +6102,8 @@ class NotebookLineRepeatAnalysis(Wizard):
                 defaults['quantification_limit'] = None
                 defaults['lower_limit'] = None
                 defaults['upper_limit'] = None
+            if config.notebook_lines_repetition_report:
+                defaults['report'] = True
             to_create.append(defaults)
             to_update.append(nline_to_repeat)
             details_to_update.append(nline_to_repeat.analysis_detail.id)

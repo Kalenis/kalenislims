@@ -36,6 +36,10 @@
                 <label name="notebook_lines_acceptance_method"/>
                 <field name="notebook_lines_acceptance_method"/>
             </group>
+            <group id="notebook_lines_repetition_report" colspan="2" col="2">
+                <label name="notebook_lines_repetition_report"/>
+                <field name="notebook_lines_repetition_report"/>
+            </group>
             <label name="zone_required"/>
             <field name="zone_required"/>
             <label name="results_report_language"/>

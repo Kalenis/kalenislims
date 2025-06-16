@@ -791,6 +791,9 @@ class RepeatAnalysis(Wizard):
         Date = pool.get('ir.date')
         NotebookLine = pool.get('lims.notebook.line')
         Data = pool.get('lims.interface.data')
+        Config = pool.get('lims.configuration')
+
+        config = Config(1)
 
         sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
@@ -808,6 +811,8 @@ class RepeatAnalysis(Wizard):
             defaults['start_date'] = date
             if self.start.urgent:
                 defaults['urgent'] = True
+            if config.notebook_lines_repetition_report:
+                defaults['report'] = True
             to_create.append(defaults)
             to_update.append(nline_to_repeat)
             if self.start.annul:

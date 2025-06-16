@@ -271,6 +271,8 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         ], 'Acceptance of notebook lines')
     notebook_lines_acceptance_method = fields.Boolean(
         'Allow to accept the same analysis with different methods')
+    notebook_lines_repetition_report = fields.Boolean(
+        'Always report repetitions')
     results_report_language = fields.Many2One('ir.lang',
         'Results Report Language', domain=[('translatable', '=', True)])
     mail_referral_subject = fields.Char('Email subject of Referral of Samples',
@@ -338,6 +340,10 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
 
     @staticmethod
     def default_notebook_lines_acceptance_method():
+        return False
+
+    @staticmethod
+    def default_notebook_lines_repetition_report():
         return False
 
     @staticmethod

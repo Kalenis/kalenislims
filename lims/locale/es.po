@@ -515,6 +515,10 @@ msgctxt "field:lims.configuration,notebook_lines_acceptance_method:"
 msgid "Allow to accept the same analysis with different methods"
 msgstr "Permitir aceptar el mismo análisis con diferentes métodos"
 
+msgctxt "field:lims.configuration,notebook_lines_repetition_report:"
+msgid "Always report repetitions"
+msgstr "Informar siempre las repeticiones"
+
 msgctxt "field:lims.configuration,planification_sequence:"
 msgid "Planification Sequence"
 msgstr "Secuencia de planificaciones"
