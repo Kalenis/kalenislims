@@ -797,40 +797,12 @@ class RepeatAnalysis(Wizard):
         date = Date.today()
         for sheet_line in self.start.lines:
             nline_to_repeat = sheet_line.line
-            detail_id = nline_to_repeat.analysis_detail.id
-            defaults = {
-                'notebook': nline_to_repeat.notebook.id,
-                'analysis_detail': detail_id,
-                'service': nline_to_repeat.service.id,
-                'analysis': nline_to_repeat.analysis.id,
-                'analysis_origin': nline_to_repeat.analysis_origin,
-                'urgent': self.start.urgent,
-                'repetition': nline_to_repeat.repetition + 1,
-                'laboratory': nline_to_repeat.laboratory.id,
-                'method': nline_to_repeat.method.id,
-                'device': (nline_to_repeat.device.id if nline_to_repeat.device
-                    else None),
-                'initial_concentration': nline_to_repeat.initial_concentration,
-                'decimals': nline_to_repeat.decimals,
-                'significant_digits': nline_to_repeat.significant_digits,
-                'scientific_notation': nline_to_repeat.scientific_notation,
-                'report': nline_to_repeat.report,
-                'concentration_level': (nline_to_repeat.concentration_level.id
-                    if nline_to_repeat.concentration_level else None),
-                'results_estimated_waiting': (
-                    nline_to_repeat.results_estimated_waiting),
-                'department': nline_to_repeat.department,
-                'final_concentration': nline_to_repeat.final_concentration,
-                'initial_unit': (nline_to_repeat.initial_unit.id if
-                    nline_to_repeat.initial_unit else None),
-                'final_unit': (nline_to_repeat.final_unit.id if
-                    nline_to_repeat.final_unit else None),
-                'detection_limit': nline_to_repeat.detection_limit,
-                'quantification_limit': nline_to_repeat.quantification_limit,
-                'lower_limit': nline_to_repeat.lower_limit,
-                'upper_limit': nline_to_repeat.upper_limit,
-                'start_date': date,
-                }
+
+            defaults = self._get_repetition_defaults(nline_to_repeat)
+            defaults['notebook'] = nline_to_repeat.notebook.id
+            defaults['start_date'] = date
+            if self.start.urgent:
+                defaults['urgent'] = True
             to_create.append(defaults)
             to_update.append(nline_to_repeat)
             if self.start.annul:
@@ -853,6 +825,39 @@ class RepeatAnalysis(Wizard):
                 Data.write(lines, {'annulled': True})
 
         return 'end'
+
+    def _get_repetition_defaults(self, line):
+        defaults = {
+            'analysis_detail': line.analysis_detail.id,
+            'service': line.service.id,
+            'analysis': line.analysis.id,
+            'analysis_origin': line.analysis_origin,
+            'urgent': line.urgent,
+            'repetition': line.repetition + 1,
+            'laboratory': line.laboratory.id,
+            'method': line.method.id,
+            'device': line.device.id if line.device else None,
+            'decimals': line.decimals,
+            'significant_digits': line.significant_digits,
+            'scientific_notation': line.scientific_notation,
+            'report': line.report,
+            'results_estimated_waiting': (
+                line.results_estimated_waiting),
+            'department': line.department,
+            'concentration_level': (line.concentration_level.id
+                if line.concentration_level else None),
+            'initial_concentration': line.initial_concentration,
+            'final_concentration': line.final_concentration,
+            'literal_final_concentration': line.literal_final_concentration,
+            'initial_unit': (line.initial_unit.id
+                if line.initial_unit else None),
+            'final_unit': line.final_unit.id if line.final_unit else None,
+            'detection_limit': line.detection_limit,
+            'quantification_limit': line.quantification_limit,
+            'lower_limit': line.lower_limit,
+            'upper_limit': line.upper_limit,
+            }
+        return defaults
 
     def end(self):
         return 'reload'
