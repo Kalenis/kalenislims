@@ -5778,6 +5778,8 @@ class NotebookRepeatAnalysis(Wizard):
                     defaults['quantification_limit'] = None
                     defaults['lower_limit'] = None
                     defaults['upper_limit'] = None
+                if config.notebook_lines_repetition_report:
+                    defaults['report'] = True
                 lines_to_create.append(defaults)
                 lines_to_update.append(nline_to_repeat)
                 details_to_update.append(nline_to_repeat.analysis_detail.id)
@@ -5973,6 +5975,8 @@ class NotebookLineRepeatAnalysis(Wizard):
         config = Config(1)
         default_language = config.results_report_language
 
+        config = Config(1)
+
         analysis = self.start.analysis
         analysis_type = analysis.type
         if analysis_type == 'analysis':
@@ -6013,6 +6017,8 @@ class NotebookLineRepeatAnalysis(Wizard):
                 defaults['quantification_limit'] = None
                 defaults['lower_limit'] = None
                 defaults['upper_limit'] = None
+            if config.notebook_lines_repetition_report:
+                defaults['report'] = True
             lines_to_create.append(defaults)
             lines_to_update.append(nline_to_repeat)
             details_to_update.append(nline_to_repeat.analysis_detail.id)
