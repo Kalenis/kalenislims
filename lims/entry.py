@@ -594,14 +594,15 @@ class Entry(Workflow, ModelSQL, ModelView):
             ('state', '=', 'ongoing'),
             ('date2', '>=', deadline),
             ])
+        logger.info(
+            'Cron - Acknowledgment Of Receipt (Samples): Found %s entries' %
+            str(len(entries)))
 
         session_id, _, _ = ForwardAcknowledgmentOfReceipt.create()
         acknowledgment_forward = ForwardAcknowledgmentOfReceipt(session_id)
         with Transaction().set_context(active_ids=[entry.id
                 for entry in entries]):
             data = acknowledgment_forward.transition_start()
-            if data:
-                logger.info('data: %s' % data)  # debug
 
         logger.info('Cron - Acknowledgment Of Receipt (Samples): END')
 
@@ -1984,6 +1985,7 @@ class ForwardAcknowledgmentOfReceipt(Wizard):
     start = StateTransition()
 
     def transition_start(self):
+        logger.info('Forward Acknowledgment of Samples Receipt: INIT')
         pool = Pool()
         Entry = pool.get('lims.entry')
 
@@ -1995,6 +1997,8 @@ class ForwardAcknowledgmentOfReceipt(Wizard):
             if entry.no_acknowledgment_of_receipt:
                 continue
 
+            logger.info('Forward Acknowledgment of Samples Receipt: %s',
+                entry.number)
             printable = False
             cie_entry = False
             for sample in entry.samples:
@@ -2014,18 +2018,28 @@ class ForwardAcknowledgmentOfReceipt(Wizard):
                 if not entry.print_report():
                     entry.result_cron = 'failed_print'
                     entry.save()
+                    logger.warning(
+                        'Forward Acknowledgment of Samples Receipt: %s: '
+                        'Failed to print', entry.number)
                     continue
                 if not entry.mail_acknowledgment_of_receipt():
                     entry.result_cron = 'failed_send'
                     entry.save()
+                    logger.warning(
+                        'Forward Acknowledgment of Samples Receipt: %s: '
+                        'Failed to send', entry.number)
                     continue
                 entry.result_cron = 'sent'
                 entry.sent_date = datetime.now()
                 entry.save()
+                logger.info(
+                    'Forward Acknowledgment of Samples Receipt: %s: '
+                    'Sent', entry.number)
             if cie_entry:
                 entry.result_cron = 'sent'
                 entry.sent_date = datetime.now()
                 entry.save()
+        logger.info('Forward Acknowledgment of Samples Receipt: END')
         return 'end'
 
 
