@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<form cursor="product">
+    <label name="sale"/>
+    <field name="sale" colspan="3"/>
+    <label name="type"/>
+    <field name="type"/>
+    <label name="sequence"/>
+    <field name="sequence"/>
+    <notebook colspan="4">
+        <page string="General" id="general">
+            <label name="product_type"/>
+            <field name="product_type"/>
+            <label name="matrix"/>
+            <field name="matrix"/>
+            <label name="analysis"/>
+            <field name="analysis"/>
+            <label name="method"/>
+            <field name="method"/>
+            <label name="product"/>
+            <field name="product"
+                view_ids="sale.product_view_list_sale_line"/>
+            <newline/>
+            <label name="quantity"/>
+            <field name="quantity"/>
+            <label name="unit"/>
+            <field name="unit"/>
+            <label name="shipping_date"/>
+            <field name="shipping_date"/>
+            <label name="expiration_date"/>
+            <field name="expiration_date"/>
+            <label name="purchase_order"/>
+            <field name="purchase_order"/>
+            <label name="unlimited_quantity"/>
+            <field name="unlimited_quantity"/>
+            <separator name="description" colspan="4"/>
+            <field name="description" colspan="4"/>
+        </page>
+        <page string="Notes" id="notes">
+            <separator name="note" colspan="4"/>
+            <field name="note" colspan="4"/>
+        </page>
+    </notebook>
+</form>
