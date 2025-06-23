@@ -4,6 +4,7 @@
         position="replace"/>
     <xpath expr="/form/notebook/page[@id='general']/field[@name='services']"
         position="before">
-        <field name="sale_lines" colspan="2"/>
+        <field name="sale_lines" colspan="2" mode="tree,form"
+                view_ids="lims_sale.lims_sale_line_view_tree,lims_sale.lims_sale_line_view_form"/>
     </xpath>
 </data>

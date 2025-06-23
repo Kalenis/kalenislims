@@ -2,7 +2,8 @@
 <data>
     <xpath expr="/form/notebook" position="inside">
         <page name="sale_lines">
-            <field name="sale_lines" colspan="4" mode="tree"/>
+            <field name="sale_lines" colspan="4" mode="tree,form"
+                    view_ids="lims_sale.lims_sale_line_view_tree,lims_sale.lims_sale_line_view_form"/>
         </page>
     </xpath>
 </data>

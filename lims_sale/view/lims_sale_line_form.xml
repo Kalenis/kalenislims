@@ -1,6 +1,4 @@
 <?xml version="1.0"?>
-<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
-this repository contains the full copyright notices and license terms. -->
 <form cursor="product">
     <label name="sale"/>
     <field name="sale" colspan="3"/>
@@ -22,7 +20,6 @@ this repository contains the full copyright notices and license terms. -->
             <field name="product"
                 view_ids="sale.product_view_list_sale_line"/>
             <newline/>
-            <newline/>
             <label name="quantity"/>
             <field name="quantity"/>
             <label name="unit"/>
@@ -35,15 +32,6 @@ this repository contains the full copyright notices and license terms. -->
             <field name="purchase_order"/>
             <label name="unlimited_quantity"/>
             <field name="unlimited_quantity"/>
-            <group col="2" colspan="2" id="print_price">
-                <label name="print_price"/>
-                <field name="print_price"/>
-            </group>
-            <group col="2" colspan="2" id="print_service_detail">
-                <label name="print_service_detail"/>
-                <field name="print_service_detail"/>
-            </group>
-
             <separator name="description" colspan="4"/>
             <field name="description" colspan="4"/>
         </page>

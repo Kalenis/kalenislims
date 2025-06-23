@@ -5,6 +5,7 @@
         <field name="sale_lines_filter_product_type_matrix"/>
         <field name="party" invisible="1"/>
         <newline/>
-        <field name="sale_lines" colspan="4"/>
+        <field name="sale_lines" colspan="4" mode="tree,form"
+                view_ids="lims_sale.lims_sale_line_view_tree,lims_sale.lims_sale_line_view_form"/>
     </xpath>
 </data>
