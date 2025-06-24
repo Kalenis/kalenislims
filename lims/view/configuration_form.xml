@@ -54,6 +54,10 @@
                 <label name="results_report_review_reason_print"/>
                 <field name="results_report_review_reason_print"/>
             </group>
+            <group id="results_decimal_comma" colspan="2" col="2">
+                <label name="results_decimal_comma"/>
+                <field name="results_decimal_comma"/>
+            </group>
             <field name="microbiology_laboratories" colspan="4"/>
         </page>
         <page string="Fraction Types" id="fraction_type">

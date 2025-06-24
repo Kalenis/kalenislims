@@ -1777,6 +1777,9 @@ class NotebookLine(ModelSQL, ModelView):
 
     def _format_result(self, result, decimals, significant_digits=None,
             scientific_notation=False):
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+
         res = ''
         if not result:
             return res
@@ -1788,9 +1791,15 @@ class NotebookLine(ModelSQL, ModelView):
                     res = str(float(res))
                     if float(res) < 1 and len(res) < (significant_digits + 2):
                         res = res.ljust(significant_digits + 2, '0')
+                    if Config(1).results_decimal_comma:
+                        res = res.replace(
+                            ',', '*').replace('.', ',').replace('*', '.')
             else:
                 res = round(float(result), decimals)
                 res = format(res, '.{}f'.format(decimals))
+                if Config(1).results_decimal_comma:
+                    res = res.replace(
+                        ',', '*').replace('.', ',').replace('*', '.')
         except (TypeError, ValueError):
             pass
         return res

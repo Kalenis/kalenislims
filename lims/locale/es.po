@@ -539,6 +539,10 @@ msgctxt "field:lims.configuration,report_release_background:"
 msgid "Release Results Report in Background"
 msgstr "Publicar Informe de resultados en segundo plano"
 
+msgctxt "field:lims.configuration,results_decimal_comma:"
+msgid "Use a comma as the decimal separator in the results"
+msgstr "Utilizar la coma como separador decimal en resultados"
+
 msgctxt "field:lims.configuration,results_report_language:"
 msgid "Results Report Language"
 msgstr "Idioma Informe de resultados"
@@ -7634,6 +7638,10 @@ msgstr "En el texto se añadirá sufijo con el número de ingreso del informe"
 msgctxt "help:lims.configuration,mail_referral_subject:"
 msgid "A suffix with the referral number will be added to the text"
 msgstr "Se agregará al texto un sufijo con el número de derivación"
+
+msgctxt "help:lims.configuration,results_decimal_comma:"
+msgid "By default, a period is used "
+msgstr "Por defecto, se utiliza el punto"
 
 msgctxt "help:lims.configuration,samples_in_progress:"
 msgid "Samples allowed for preliminary reports"
