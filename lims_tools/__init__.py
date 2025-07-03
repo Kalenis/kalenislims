@@ -10,5 +10,5 @@ def register():
     Pool.register(
         formula_mixin.FormulaTemplate,
         formula_mixin.FormulaCategory,
-        record_log.RecordLog,
+        # record_log.RecordLog,
         module='lims_tools', type_='model')
