@@ -92,11 +92,11 @@ def get_constant(name, parameter1=None, parameter2=None, parameter3=None,
         return None
     if not value:
         value = 'value1'
-    if str(parameter1) == '#VALUE!':
+    if str(parameter1) in ('#VALUE!', '#DIV/0!'):
         parameter1 = None
-    if str(parameter2) == '#VALUE!':
+    if str(parameter2) in ('#VALUE!', '#DIV/0!'):
         parameter2 = None
-    if str(parameter3) == '#VALUE!':
+    if str(parameter3) in ('#VALUE!', '#DIV/0!'):
         parameter3 = None
     return Constant.get_constant(name, parameter1, parameter2, parameter3,
         value)
