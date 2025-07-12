@@ -115,7 +115,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             self.sections = sections.values()
 
     def get_previous_sections(self, name):
-        return [s.id for s in self.sections if s.position == 'previous']
+        return [s for s in self.sections if s.position == 'previous']
 
     @classmethod
     def set_previous_sections(cls, sections, name, value):
@@ -124,7 +124,7 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         cls.write(sections, {'sections': value})
 
     def get_following_sections(self, name):
-        return [s.id for s in self.sections if s.position == 'following']
+        return [s for s in self.sections if s.position == 'following']
 
     @classmethod
     def set_following_sections(cls, sections, name, value):

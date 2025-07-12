@@ -10,6 +10,10 @@ msgctxt "field:lims.analysis,result_template:"
 msgid "Report Template"
 msgstr "Plantilla de Informe"
 
+msgctxt "field:lims.analysis,report_description:"
+msgid "Report Description"
+msgstr "Descripción para Informe"
+
 msgctxt "field:lims.configuration,result_template:"
 msgid "Default Report Template"
 msgstr "Plantilla de Informe por defecto"

@@ -75,7 +75,7 @@ class ReportTemplate(DeactivableMixin, ModelSQL, ModelView):
     translations = fields.One2Many('lims.report.template.translation',
         'template', 'Translations')
     _translation_cache = Cache('lims.report.template.translation',
-        size_limit=10240, context=False)
+        context=False)
     sections = fields.One2Many('lims.report.template.section',
         'template', 'Sections')
     previous_sections = fields.Function(fields.One2Many(
@@ -167,7 +167,7 @@ class ReportTemplate(DeactivableMixin, ModelSQL, ModelView):
         return text if not variables else text % variables
 
     def get_previous_sections(self, name):
-        return [s.id for s in self.sections if s.position == 'previous']
+        return [s for s in self.sections if s.position == 'previous']
 
     @classmethod
     def set_previous_sections(cls, sections, name, value):
@@ -176,7 +176,7 @@ class ReportTemplate(DeactivableMixin, ModelSQL, ModelView):
         cls.write(sections, {'sections': value})
 
     def get_following_sections(self, name):
-        return [s.id for s in self.sections if s.position == 'following']
+        return [s for s in self.sections if s.position == 'following']
 
     @classmethod
     def set_following_sections(cls, sections, name, value):
@@ -619,13 +619,14 @@ class LimsReport:
     @classmethod
     def get_lims_filters(cls):
         Lang = Pool().get('ir.lang')
+        Company = Pool().get('company.company')
 
         def module_path(name):
             module, path = name.split('/', 1)
             with file_open(os.path.join(module, path)) as f:
                 return 'file://%s' % f.name
 
-        def render(value, digits=2, lang=None, filename=None, date_format=None):
+        def render(value, digits=2, lang=None, company=None, filename=None, date_format=None):
             if value is None or value == '':
                 return ''
 
@@ -647,8 +648,9 @@ class LimsReport:
                 return lang.strftime(value, format=date_format)
 
             if isinstance(value, datetime):
-                return '%s %s' % (lang.strftime(value, format=date_format),
-                    value.strftime('%H:%M:%S'))
+                if company:
+                    value = company.convert_timezone_datetime(value)
+                    return lang.strftime(value, format=date_format)
 
             if isinstance(value, str):
                 return value.replace('\n', '<br/>')
@@ -678,10 +680,15 @@ class LimsReport:
 
         locale = Transaction().context.get('locale').split('_')[0]
         lang, = Lang.search([('code', '=', locale or 'en')])
+        company_id = Transaction().context.get('company')
+        company = None
+        if company_id:
+            company = Company(company_id)
+            # now = company.convert_timezone_datetime(now)
 
         return {
             'modulepath': module_path,
-            'render': partial(render, lang=lang),
+            'render': partial(render, lang=lang, company=company),
             'subrender': subrender,
             }
 

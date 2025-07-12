@@ -12,6 +12,8 @@
     <field name="activity"/>
     <label name="date"/>
     <field name="date"/>
+    <label name="party"/>
+    <field name="party"/>
     <label name="responsible"/>
     <field name="responsible"/>
     <separator string="Comments" colspan="4" id="comments"/>

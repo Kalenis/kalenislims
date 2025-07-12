@@ -311,6 +311,7 @@ class Equipment(DeactivableMixin, ModelSQL, ModelView):
     power = fields.Char('Power')
     voltage = fields.Char('Primary Voltage')
     voltage_secondary = fields.Char('Secondary Voltage')
+    voltage_tertiary = fields.Char('Tertiary Voltage')
     amperage = fields.Char('Secondary Amperage')
     serial_number = fields.Char('Serial number')
     internal_id = fields.Char('Internal ID Code')
@@ -392,7 +393,7 @@ class Equipment(DeactivableMixin, ModelSQL, ModelView):
     def get_party(cls, equipments, name):
         result = {}
         for e in equipments:
-            result[e.id] = e.plant and e.plant.party.id or None
+            result[e.id] = e.plant and e.plant.party or None
         return result
 
     @classmethod
@@ -407,7 +408,7 @@ class Equipment(DeactivableMixin, ModelSQL, ModelView):
     def get_type(cls, equipments, name):
         result = {}
         for e in equipments:
-            result[e.id] = e.template and e.template.type.id or None
+            result[e.id] = e.template and e.template.type or None
         return result
 
     @classmethod
@@ -422,7 +423,7 @@ class Equipment(DeactivableMixin, ModelSQL, ModelView):
     def get_brand(cls, equipments, name):
         result = {}
         for e in equipments:
-            result[e.id] = e.template and e.template.brand.id or None
+            result[e.id] = e.template and e.template.brand or None
         return result
 
     @classmethod
@@ -628,7 +629,7 @@ class Component(ModelSQL, ModelView):
     def get_product_type(cls, components, name):
         result = {}
         for c in components:
-            result[c.id] = c.kind and c.kind.product_type.id or None
+            result[c.id] = c.kind and c.kind.product_type or None
         return result
 
 

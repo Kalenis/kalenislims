@@ -6,6 +6,10 @@ msgctxt "field:lims.analysis,ind_volume:"
 msgid "Required volume"
 msgstr "Volumen requerido"
 
+msgctxt "field:lims.analysis,ind_volume_uom:"
+msgid "Required volume UoM"
+msgstr "UdM Volumen requerido"
+
 msgctxt "field:lims.brand,name:"
 msgid "Name"
 msgstr "Nombre"
@@ -310,6 +314,10 @@ msgstr "Tensión primaria"
 msgctxt "field:lims.equipment,voltage_secondary:"
 msgid "Secondary Voltage"
 msgstr "Tensión secundaria"
+
+msgctxt "field:lims.equipment,voltage_tertiary:"
+msgid "Tertiary Voltage"
+msgstr "Tensión terciaria"
 
 msgctxt "field:lims.equipment,year_manufacturing:"
 msgid "Year of manufacturing"

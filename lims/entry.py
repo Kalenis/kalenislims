@@ -1701,16 +1701,10 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
             fraction.product_type.id, fraction.matrix.id,
             detail.analysis.id, detail.method.id, detail.laboratory.id)
 
-    @staticmethod
-    def default_service_view():
-        if (Transaction().context.get('service', 0) > 0):
-            return Transaction().context.get('service')
-        return None
-
     @fields.depends('service', '_parent_service.id')
     def on_change_with_service_view(self, name=None):
         if self.service:
-            return self.service.id
+            return self.service
         return None
 
     @fields.depends('analysis', '_parent_analysis.type')
@@ -2228,7 +2222,7 @@ class PrintAcknowledgmentOfReceipt(Wizard):
             data_id = data_ids.pop()
             with Transaction().set_context(_check_access=False):
                 entry = Entry(data_id)
-            if entry.state == 'ongoing':
+            if entry.state in ['ongoing', 'finished']:
                 printable = False
                 for sample in entry.samples:
                     if not sample.fractions:
@@ -2499,11 +2493,14 @@ class EntryLabels(Report):
     def get_context(cls, records, header, data):
         report_context = super().get_context(records, header, data)
         labels = []
+        package_labels = []
         for entry in records:
             for sample in entry.samples:
                 for package in sample.packages:
                     for i in range(package.quantity):
                         for fraction in sample.fractions:
                             labels.append(fraction)
+                            package_labels.append((fraction, package.type))
         report_context['labels'] = labels
+        report_context['package_labels'] = package_labels
         return report_context

@@ -53,19 +53,19 @@ class Sample(metaclass=PoolMeta):
     def get_default_diagnostician(sample):
         # 1st check party
         if sample.party.diagnostician:
-            return sample.party.diagnostician.id
+            return sample.party.diagnostician
         # 2nd check plant
         if hasattr(sample, 'plant') and getattr(sample, 'plant'):
             if sample.plant.diagnostician:
-                return sample.plant.diagnostician.id
+                return sample.plant.diagnostician
         # 3rd check services
         for fraction in sample.fractions:
             for service in fraction.services:
                 if service.analysis.diagnostician:
-                    return service.analysis.diagnostician.id
+                    return service.analysis.diagnostician
         # 4th check product type
         if sample.product_type.diagnostician:
-            return sample.product_type.diagnostician.id
+            return sample.product_type.diagnostician
         return None
 
     def _get_dict_for_fast_copy(self):

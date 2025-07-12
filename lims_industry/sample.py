@@ -195,7 +195,7 @@ class Sample(metaclass=PoolMeta):
         res = SampleAttributeAttributeSet.search([
             ('attribute_set', '=', attribute_set),
             ])
-        return [x.attribute.id for x in res]
+        return [x.attribute for x in res]
 
     @classmethod
     def get_plant(cls, samples, name):
@@ -593,7 +593,7 @@ class CreateSampleStart(metaclass=PoolMeta):
         res = SampleAttributeAttributeSet.search([
             ('attribute_set', '=', attribute_set),
             ])
-        return [x.attribute.id for x in res]
+        return [x.attribute for x in res]
 
     @fields.depends('label')
     def on_change_label(self):

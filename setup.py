@@ -39,14 +39,13 @@ def get_require_version(name):
     return require
 
 
-version = '6.6.0'
+version = '7.0.0'
 major_version, minor_version, _ = version.split('.', 2)
 major_version = int(major_version)
 minor_version = int(minor_version)
 
-# TODO: check new openpyxl versions, v.3 seems to be buggy in PyPI
 requires = ['appdirs', 'Babel', 'Click', 'formulas', 'Jinja2 < 3.1',
-    get_require_version('kalenis_user_view'), 'openpyxl==2.6.4', 'matplotlib',
+    get_require_version('kalenis_user_view'), 'openpyxl', 'matplotlib',
     'pandas', 'psycopg2', 'PyPDF2 < 2', 'pytz', 'unidecode', 'WeasyPrint',
     'werkzeug', 'xlrd', 'xlutils']
 
@@ -127,10 +126,11 @@ if __name__ == '__main__':
             'Natural Language :: Spanish',
             'Operating System :: OS Independent',
             'Programming Language :: Python :: 3',
-            'Programming Language :: Python :: 3.7',
             'Programming Language :: Python :: 3.8',
             'Programming Language :: Python :: 3.9',
             'Programming Language :: Python :: 3.10',
+            'Programming Language :: Python :: 3.11',
+            'Programming Language :: Python :: 3.12',
             'Programming Language :: Python :: Implementation :: CPython',
             'Topic :: Office/Business',
             'Topic :: Scientific/Engineering',

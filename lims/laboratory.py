@@ -44,6 +44,9 @@ class Laboratory(ModelSQL, ModelView):
         ('sq', 'Chemistry'),
         ], 'Section', sort=False)
     headquarters = fields.Char('Headquarters', translate=True)
+    address = fields.Char('Address')
+    phone = fields.Char('Phone')
+    email = fields.Char('Email')
 
     @classmethod
     def __setup__(cls):

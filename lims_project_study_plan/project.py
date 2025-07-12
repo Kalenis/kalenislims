@@ -302,7 +302,7 @@ class Project(metaclass=PoolMeta):
         if self.stp_laboratory_professionals:
             for pp in self.stp_laboratory_professionals:
                 if pp.role_study_director:
-                    return pp.professional.id
+                    return pp.professional
         return None
 
     @fields.depends('stp_laboratory_professionals')
@@ -310,7 +310,7 @@ class Project(metaclass=PoolMeta):
         if self.stp_laboratory_professionals:
             for pp in self.stp_laboratory_professionals:
                 if pp.role_facility_director:
-                    return pp.professional.id
+                    return pp.professional
         return None
 
     @fields.depends('stp_laboratory_professionals')
@@ -318,14 +318,14 @@ class Project(metaclass=PoolMeta):
         if self.stp_laboratory_professionals:
             for pp in self.stp_laboratory_professionals:
                 if pp.role_quality_unit:
-                    return pp.professional.id
+                    return pp.professional
         return None
 
     @fields.depends('stp_laboratory_professionals')
     def on_change_with_stp_dev_amnd_prof_domain(self, name=None):
         professionals = []
         if self.stp_laboratory_professionals:
-            professionals = [pp.professional.id for pp in
+            professionals = [pp.professional for pp in
                 self.stp_laboratory_professionals if pp.professional]
         return professionals
 
@@ -335,7 +335,7 @@ class Project(metaclass=PoolMeta):
             ('entry.project', '=', self.id),
             ], order=[('number', 'ASC')])
         if samples:
-            return [s.id for s in samples]
+            return samples
         return []
 
     def get_stp_notebook_lines(self, name=None):
@@ -344,7 +344,7 @@ class Project(metaclass=PoolMeta):
             ('notebook.fraction.sample.entry.project', '=', self.id),
             ], order=[('notebook', 'ASC')])
         if notebook_lines:
-            return [nl.id for nl in notebook_lines]
+            return notebook_lines
         return []
 
 
@@ -515,7 +515,7 @@ class ProjectReferenceElement(ModelSQL, ModelView):
     @fields.depends('lot', '_parent_lot.purity_degree')
     def on_change_with_purity_degree(self, name=None):
         if self.lot and self.lot.purity_degree:
-            return self.lot.purity_degree.id
+            return self.lot.purity_degree
 
     @fields.depends('lot', '_parent_lot.stability')
     def on_change_with_stability(self, name=None):

@@ -1731,6 +1731,14 @@ class NotebookLine(ModelSQL, ModelView):
             return self.planification.comments
         return ''
 
+    def get_result_and_uom(self, name=None):
+        if not self.formated_result:
+            return ''
+        if self.result_modifier:
+            return self.formated_result
+        uom = self.initial_unit.symbol if self.initial_unit else ''
+        return '%s %s' % (self.formated_result, uom)
+
     def get_formated_result(self, name=None):
         if self.literal_result:
             return self.literal_result

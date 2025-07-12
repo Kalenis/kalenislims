@@ -71,9 +71,9 @@ class Project(metaclass=PoolMeta):
         config_ = Config(1)
         parties = []
         if self.client:
-            parties.append(self.client.id)
+            parties.append(self.client)
             if config_.invoice_party_relation_type:
-                parties.extend([r.to.id for r in self.client.relations
+                parties.extend([r.to for r in self.client.relations
                     if r.type == config_.invoice_party_relation_type])
         return parties
 

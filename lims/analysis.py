@@ -264,7 +264,7 @@ class Typification(ModelSQL, ModelView):
     def on_change_with_method_domain(self, name=None):
         methods = []
         if self.analysis and self.analysis.methods:
-            methods = [m.id for m in self.analysis.methods]
+            methods = list(self.analysis.methods)
         return methods
 
     def get_technical_scope_versions(self, name=None):
@@ -2042,7 +2042,7 @@ class AnalysisIncluded(ModelSQL, ModelView):
     def on_change_with_method_domain(self, name=None):
         methods = []
         if self.included_analysis and self.included_analysis.methods:
-            methods = [m.id for m in self.included_analysis.methods]
+            methods = list(self.included_analysis.methods)
         return methods
 
     @classmethod

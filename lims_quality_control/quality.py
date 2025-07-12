@@ -273,7 +273,7 @@ class QualityTest(Workflow, ModelSQL, ModelView):
     @fields.depends('sample')
     def get_countersample(self, name):
         if self.sample and self.sample.countersample:
-            return self.sample.countersample.id
+            return self.sample.countersample
 
     @staticmethod
     def default_test_date():
@@ -290,7 +290,7 @@ class QualityTest(Workflow, ModelSQL, ModelView):
     @fields.depends('template')
     def on_change_with_product(self, name=None):
         if self.template:
-            return self.template.product.id
+            return self.template.product
 
     @classmethod
     def search_product(cls, name, clause):
@@ -301,7 +301,7 @@ class QualityTest(Workflow, ModelSQL, ModelView):
     @fields.depends('sample')
     def on_change_with_lot(self, name=None):
         if self.sample:
-            return self.sample.lot.id
+            return self.sample.lot
 
     @classmethod
     def search_lot(cls, name, clause):

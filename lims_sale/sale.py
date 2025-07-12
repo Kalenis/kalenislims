@@ -200,9 +200,9 @@ class Sale(metaclass=PoolMeta):
         config_ = Config(1)
         parties = []
         if self.party:
-            parties.append(self.party.id)
+            parties.append(self.party)
             if config_.invoice_party_relation_type:
-                parties.extend([r.to.id for r in self.party.relations
+                parties.extend([r.to for r in self.party.relations
                     if r.type == config_.invoice_party_relation_type])
         return parties
 
@@ -247,7 +247,7 @@ class Sale(metaclass=PoolMeta):
             self.clauses = self.clause_template.content
 
     def get_previous_sections(self, name):
-        return [s.id for s in self.sections if s.position == 'previous']
+        return [s for s in self.sections if s.position == 'previous']
 
     @classmethod
     def set_previous_sections(cls, sections, name, value):
@@ -256,7 +256,7 @@ class Sale(metaclass=PoolMeta):
         cls.write(sections, {'sections': value})
 
     def get_following_sections(self, name):
-        return [s.id for s in self.sections if s.position == 'following']
+        return [s for s in self.sections if s.position == 'following']
 
     @classmethod
     def set_following_sections(cls, sections, name, value):

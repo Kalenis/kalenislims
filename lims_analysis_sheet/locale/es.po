@@ -56,7 +56,7 @@ msgstr "Número"
 
 msgctxt "field:lims.analysis_sheet,out_of_ranges:"
 msgid "Out of Ranges"
-msgstr ""
+msgstr "Fuera de Rangos"
 
 msgctxt "field:lims.analysis_sheet,partial_analysys:"
 msgid "Partial analysis"

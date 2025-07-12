@@ -18,3 +18,4 @@ class Analysis(metaclass=PoolMeta):
                 ('id', '=', Eval('result_template', -1))],
             ],
         states={'readonly': Eval('type') != 'group'})
+    report_description = fields.Char('Report Description', translate=True)

@@ -14,6 +14,8 @@
     <field name="responsible"/>
     <label name="latest_date"/>
     <field name="latest_date"/>
+    <separator id="comments" string="Comments" colspan="4"/>
+    <field name="comments" colspan="4"/>
     <group id="frequence" colspan="4" string="Frequence">
         <label name="frequence_selection"/>
         <field name="frequence_selection"/>

@@ -43,6 +43,7 @@ def register():
         configuration.Cron,
         configuration.Sequence,
         configuration.SmtpServer,
+        configuration.About,
         laboratory.LaboratoryProfessional,
         laboratory.Laboratory,
         laboratory.LabMethod,

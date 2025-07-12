@@ -94,6 +94,7 @@ class LabDeviceMaintenanceProgram(EventCreator, ModelSQL, ModelView):
     notice_days = fields.Integer('Days to notify')
     latest_date = fields.Function(fields.Date('Latest scheduled date'),
         'get_latest_date')
+    comments = fields.Text('Comments')
 
     @classmethod
     def __register__(cls, module_name):
@@ -259,6 +260,7 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
     device_laboratory = fields.Function(fields.Many2One('lims.laboratory',
         'Laboratory', states={'invisible': Eval('asset') != 'device'}),
         'get_device_laboratory', searcher='search_device_laboratory')
+    party = fields.Many2One('party.party', 'Responsible Party')
 
     del _states
 

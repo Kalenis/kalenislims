@@ -205,7 +205,7 @@ class PackagingType(DeactivableMixin, ModelSQL, ModelView):
         return [(cls._rec_name,) + tuple(clause[1:])]
 
 
-class FractionType(ModelSQL, ModelView):
+class FractionType(DeactivableMixin, ModelSQL, ModelView):
     'Fraction Type'
     __name__ = 'lims.fraction.type'
     _rec_name = 'description'
@@ -7975,6 +7975,8 @@ class Referral(ModelSQL, ModelView):
             ('state', '=', 'unplanned'),
             ('referral', '=', None),
             ])
+    urgent = fields.Function(fields.Boolean('Urgent'), 'get_urgent',
+        searcher='search_urgent')
 
     del _states
 
@@ -8009,6 +8011,30 @@ class Referral(ModelSQL, ModelView):
     @classmethod
     def search_rec_name(cls, name, clause):
         return [('laboratory',) + tuple(clause[1:])]
+
+    @classmethod
+    def get_urgent(cls, referrals, name):
+        pool = Pool()
+        Service = pool.get('lims.service')
+
+        result = {}
+        for r in referrals:
+            result[r.id] = False
+            for d in r.services:
+                if d.service.urgent:
+                    result[r.id] = True
+                    break
+        return result
+
+    @classmethod
+    def search_urgent(cls, name, clause):
+        field, op, operand = clause
+        if (op, operand) in (('=', True), ('!=', False)):
+            return [('services.service.urgent', '=', True)]
+        elif (op, operand) in (('=', False), ('!=', True)):
+            urgents = cls.search([('services.service.urgent', '=', True)])
+            return [('id', 'not in', [u.id for u in urgents])]
+        return []
 
     @fields.depends('laboratory')
     def on_change_laboratory(self):

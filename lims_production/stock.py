@@ -259,7 +259,7 @@ class Lot(metaclass=PoolMeta):
 
     def get_commercial_brand(self, name=None):
         if self.product and self.product.commercial_brand:
-            return self.product.commercial_brand.id
+            return self.product.commercial_brand
         return None
 
     def get_catalog(self, name=None):
@@ -269,12 +269,12 @@ class Lot(metaclass=PoolMeta):
 
     def get_purity_degree(self, name=None):
         if self.product and self.product.purity_degree:
-            return self.product.purity_degree.id
+            return self.product.purity_degree
         return None
 
     def get_account_category(self, name=None):
         if self.product:
-            return self.product.account_category.id
+            return self.product.account_category
         return None
 
     @classmethod

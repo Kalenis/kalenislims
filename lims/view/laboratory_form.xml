@@ -16,6 +16,12 @@
     <field name="section"/>
     <label name="headquarters"/>
     <field name="headquarters"/>
+    <label name="address"/>
+    <field name="address"/>
+    <label name="phone"/>
+    <field name="phone"/>
+    <label name="email"/>
+    <field name="email"/>
     <group col="-1" colspan="2" id="checkboxes">
     </group>
     <notebook>

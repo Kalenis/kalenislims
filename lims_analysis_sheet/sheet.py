@@ -323,7 +323,7 @@ class TemplateAnalysisSheetAnalysis(ModelSQL, ModelView):
     def on_change_with_method_domain(self, name=None):
         methods = []
         if self.analysis and self.analysis.methods:
-            methods = [m.id for m in self.analysis.methods]
+            methods = list(self.analysis.methods)
         return methods
 
     def get_interface(self, name):

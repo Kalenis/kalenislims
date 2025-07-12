@@ -67,7 +67,7 @@ class Production(metaclass=PoolMeta):
         for input_ in self.inputs:
             if (input_.product and input_.product.account_category and
                     (input_.product.account_category.id in solvent_domain)):
-                return input_.product.id
+                return input_.product
         return None
 
     def explode_bom(self):

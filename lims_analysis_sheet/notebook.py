@@ -79,6 +79,21 @@ class NotebookLine(metaclass=PoolMeta):
         if template:
             return template[0]
 
+        # Analysis + Product type + Matrix
+        cursor.execute('SELECT t.id '
+            'FROM "' + Template._table + '" t '
+                'INNER JOIN "' + TemplateAnalysis._table + '" ta '
+                'ON t.id = ta.template '
+            'WHERE t.active IS TRUE '
+                'AND ta.analysis = %s '
+                'AND ta.method IS NULL '
+                'AND ta.product_type = %s '
+                'AND ta.matrix = %s',
+            (self.analysis.id, self.product_type.id, self.matrix.id))
+        template = cursor.fetchone()
+        if template:
+            return template[0]
+
         # Analysis + Product type
         cursor.execute('SELECT t.id '
             'FROM "' + Template._table + '" t '

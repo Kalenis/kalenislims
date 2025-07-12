@@ -61,7 +61,7 @@ class Sample(metaclass=PoolMeta):
     @fields.depends('lot')
     def on_change_with_product(self, name=None):
         if self.lot:
-            return self.lot.product.id
+            return self.lot.product
 
     @classmethod
     def search_product(cls, name, clause):
@@ -70,7 +70,7 @@ class Sample(metaclass=PoolMeta):
     @fields.depends('countersamples')
     def get_countersample(self, name):
         if self.countersamples:
-            return self.countersamples[0].id
+            return self.countersamples[0]
 
 
 class TakeSampleStart(ModelView):

@@ -52,3 +52,4 @@ class Analysis(metaclass=PoolMeta):
     __name__ = 'lims.analysis'
 
     ind_volume = fields.Float('Required volume')
+    ind_volume_uom = fields.Many2One('product.uom', 'Required volume UoM')
