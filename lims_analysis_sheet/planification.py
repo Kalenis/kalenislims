@@ -60,7 +60,8 @@ class Planification(metaclass=PoolMeta):
         PlanificationAnalysisSheet = pool.get(
             'lims.planification.analysis_sheet')
 
-        if not self.planification_update_draft_sheet:
+        if (not self.planification_update_draft_sheet and
+                not Transaction().context.get('within_an_entry', False)):
             return
 
         analysis_sheets = {}

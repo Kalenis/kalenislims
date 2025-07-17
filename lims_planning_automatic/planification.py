@@ -24,6 +24,12 @@ class Planification(metaclass=PoolMeta):
             'lims.planification.search_fractions.detail')
         TechniciansQualification = pool.get(
             'lims.planification.technicians_qualification', type='wizard')
+        try:
+            AnalysisSheet = pool.get('lims.analysis_sheet')
+        except KeyError:
+            analysis_sheet_activated = False
+        else:
+            analysis_sheet_activated = True
 
         for planification in cls._get_automatic_planifications(
                 entries=entries, tests=tests):
@@ -47,7 +53,8 @@ class Planification(metaclass=PoolMeta):
                     s.save()
             planification.save()
 
-            planification.load_analysis_sheets()
+            if analysis_sheet_activated:
+                planification.load_analysis_sheets()
 
             session_id, _, _ = TechniciansQualification.create()
             technicians_qualification = TechniciansQualification(session_id)
