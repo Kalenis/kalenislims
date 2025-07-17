@@ -12,7 +12,9 @@ class Fraction(metaclass=PoolMeta):
 
     @classmethod
     def confirm(cls, fractions):
-        Planification = Pool().get('lims.planification')
+        pool = Pool()
+        Planification = pool.get('lims.planification')
+
         super().confirm(fractions)
         entries = set()
         for fraction in fractions:
@@ -20,7 +22,8 @@ class Fraction(metaclass=PoolMeta):
                     'ongoing', 'finished'):
                 entries.add(fraction.entry)
         if entries:
-            Planification.automatic_plan(entries=list(entries))
+            with Transaction().set_context(within_an_entry=True):
+                Planification.automatic_plan(entries=list(entries))
 
 
 class CompleteServices(metaclass=PoolMeta):
@@ -39,5 +42,6 @@ class CompleteServices(metaclass=PoolMeta):
                 'ongoing', 'finished'):
             entries.add(fraction.entry)
         if entries:
-            Planification.automatic_plan(entries=list(entries))
+            with Transaction().set_context(within_an_entry=True):
+                Planification.automatic_plan(entries=list(entries))
         return 'end'
