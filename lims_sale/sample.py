@@ -1,6 +1,7 @@
 # This file is part of lims_sale module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+from decimal import Decimal
 
 from trytond.model import ModelSQL, fields
 from trytond.pool import Pool, PoolMeta
@@ -591,14 +592,20 @@ class Service2(metaclass=PoolMeta):
     __name__ = 'lims.service'
 
     def get_invoice_line(self):
+        pool = Pool()
+        InvoiceLine = pool.get('account.invoice.line')
+
         invoice_line = super().get_invoice_line()
         if not invoice_line:
             return
+
+        digits = InvoiceLine.unit_price.digits[1]
         if self.sale_lines:
             for sale_line in self.sale_lines:
                 if sale_line.product.id == self.analysis.product.id:
                     invoice_line['lims_sale_line_origin'] = sale_line.id
-                    invoice_line['unit_price'] = sale_line.unit_price
+                    invoice_line['unit_price'] = sale_line.unit_price.quantize(
+                        Decimal(str(10 ** -digits)))
         return invoice_line
 
 
