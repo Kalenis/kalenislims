@@ -776,6 +776,25 @@
             <field name="action" ref="act_lims_entry_detail_analysis_related4"/>
         </record>
 
+<!-- Wizard Copy Fraction -->
+
+        <record model="ir.ui.view" id="lims_duplicate_fraction_start_view_form">
+            <field name="model">lims.fraction.duplicate.start</field>
+            <field name="type">form</field>
+            <field name="name">fraction_duplicate_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_lims_duplicate_fraction">
+            <field name="name">Copy Fraction</field>
+            <field name="wiz_name">lims.fraction.duplicate</field>
+        </record>
+
+        <record model="ir.action.keyword" id="lims_duplicate_fraction_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.fraction,-1</field>
+            <field name="action" ref="wiz_lims_duplicate_fraction"/>
+        </record>
+
 <!-- Wizard Copy Sample -->
 
         <record model="ir.ui.view" id="lims_duplicate_sample_start_view_form">

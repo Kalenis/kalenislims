@@ -4512,6 +4512,47 @@ class SamplePackage(ModelSQL, ModelView):
         return res
 
 
+class DuplicateFractionStart(ModelView):
+    'Copy Fraction'
+    __name__ = 'lims.fraction.duplicate.start'
+
+    fraction = fields.Many2One('lims.fraction', 'Fraction', readonly=True)
+    quantity = fields.Integer('Number of copies', required=True)
+
+
+class DuplicateFraction(Wizard):
+    'Copy Fraction'
+    __name__ = 'lims.fraction.duplicate'
+
+    start = StateView('lims.fraction.duplicate.start',
+        'lims.lims_duplicate_fraction_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Copy', 'duplicate', 'tryton-ok', default=True),
+            ])
+    duplicate = StateTransition()
+
+    def default_start(self, fields):
+        Fraction = Pool().get('lims.fraction')
+        fraction = Fraction(Transaction().context['active_id'])
+        return {
+            'fraction': fraction.id,
+            'quantity': 1,
+            }
+
+    def transition_duplicate(self):
+        Fraction = Pool().get('lims.fraction')
+
+        fraction = self.start.fraction
+        quantity = self.start.quantity
+
+        for i in range(0, quantity):
+            Fraction.copy([fraction], default={})
+        return 'end'
+
+    def end(self):
+        return 'reload'
+
+
 class DuplicateSampleStart(ModelView):
     'Copy Sample'
     __name__ = 'lims.sample.duplicate.start'

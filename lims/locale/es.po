@@ -1359,6 +1359,10 @@ msgctxt "field:lims.create_sample.start,fraction_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
 
+msgctxt "field:lims.create_sample.start,invoice_party:"
+msgid "Invoice party"
+msgstr "Entidad facturación"
+
 msgctxt "field:lims.create_sample.start,labels:"
 msgid "Labels"
 msgstr "Etiquetas"
@@ -2180,6 +2184,14 @@ msgstr "Fecha hasta"
 msgctxt "field:lims.fraction.discharge_revert.start,location_origin:"
 msgid "Origin Location"
 msgstr "Ubicación origen"
+
+msgctxt "field:lims.fraction.duplicate.start,fraction:"
+msgid "Fraction"
+msgstr "Fracción"
+
+msgctxt "field:lims.fraction.duplicate.start,quantity:"
+msgid "Number of copies"
+msgstr "Cantidad de copias"
 
 msgctxt "field:lims.fraction.package,fraction:"
 msgid "Fraction"
@@ -6352,9 +6364,17 @@ msgctxt "field:lims.sample.add_service.start,analysis_domain:"
 msgid "Analysis domain"
 msgstr "Dominio para Análisis"
 
+msgctxt "field:lims.sample.add_service.start,invoice_party:"
+msgid "Invoice party"
+msgstr "Entidad facturación"
+
 msgctxt "field:lims.sample.add_service.start,matrix:"
 msgid "Matrix"
 msgstr "Matriz"
+
+msgctxt "field:lims.sample.add_service.start,party:"
+msgid "Party"
+msgstr "Entidad"
 
 msgctxt "field:lims.sample.add_service.start,product_type:"
 msgid "Product type"
@@ -8336,6 +8356,10 @@ msgstr "Dividir informes"
 msgctxt "model:ir.action,name:wiz_lims_duplicate_analysis_family"
 msgid "Duplicate Analysis Family"
 msgstr "Duplicar Familia de análisis"
+
+msgctxt "model:ir.action,name:wiz_lims_duplicate_fraction"
+msgid "Copy Fraction"
+msgstr "Copiar fracción"
 
 msgctxt "model:ir.action,name:wiz_lims_duplicate_sample"
 msgid "Copy Sample"
@@ -10515,6 +10539,10 @@ msgstr "Revertir descarte de fracciones"
 msgctxt "model:lims.fraction.discharge_revert.start,name:"
 msgid "Revert Fractions Discharge"
 msgstr "Revertir descarte de fracciones"
+
+msgctxt "model:lims.fraction.duplicate.start,name:"
+msgid "Copy Fraction"
+msgstr "Copiar fracción"
 
 msgctxt "model:lims.fraction.package,name:"
 msgid "Fraction Package"
@@ -16490,6 +16518,14 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.fraction.discharge_revert,start,search:"
 msgid "Search"
 msgstr "Buscar"
+
+msgctxt "wizard_button:lims.fraction.duplicate,start,duplicate:"
+msgid "Copy"
+msgstr "Copiar"
+
+msgctxt "wizard_button:lims.fraction.duplicate,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:lims.fractions_by_locations,start,end:"
 msgid "Cancel"
