@@ -1296,16 +1296,15 @@ class Analysis(Workflow, ModelSQL, ModelView):
         pool = Pool()
         AnalysisIncluded = pool.get('lims.analysis.included')
 
-        childs = []
+        childs = set()
         cursor.execute('SELECT included_analysis '
             'FROM "' + AnalysisIncluded._table + '" '
             'WHERE analysis = %s', (analysis_id,))
         included_analysis_ids = [x[0] for x in cursor.fetchall()]
         for analysis_id in included_analysis_ids:
-            if analysis_id not in childs:
-                childs.append(analysis_id)
-                childs.extend(cls.get_included_analysis(analysis_id))
-        return childs
+            childs.add(analysis_id)
+            childs.update(cls.get_included_analysis(analysis_id))
+        return list(childs)
 
     @classmethod
     def get_included_analysis_analysis(cls, analysis_id):
@@ -1314,7 +1313,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
         AnalysisIncluded = pool.get('lims.analysis.included')
         Analysis = pool.get('lims.analysis')
 
-        childs = []
+        childs = set()
         cursor.execute('SELECT ia.included_analysis, a.type '
             'FROM "' + AnalysisIncluded._table + '" ia '
                 'INNER JOIN "' + Analysis._table + '" a '
@@ -1322,10 +1321,10 @@ class Analysis(Workflow, ModelSQL, ModelView):
             'WHERE analysis = %s', (analysis_id,))
         included_analysis = cursor.fetchall()
         for analysis in included_analysis:
-            if analysis[1] == 'analysis' and analysis[0] not in childs:
-                childs.append(analysis[0])
-            childs.extend(cls.get_included_analysis_analysis(analysis[0]))
-        return childs
+            if analysis[1] == 'analysis':
+                childs.add(analysis[0])
+            childs.update(cls.get_included_analysis_analysis(analysis[0]))
+        return list(childs)
 
     @classmethod
     def get_included_analysis_method(cls, analysis_id):
@@ -1333,16 +1332,15 @@ class Analysis(Workflow, ModelSQL, ModelView):
         pool = Pool()
         AnalysisIncluded = pool.get('lims.analysis.included')
 
-        childs = []
+        childs = set()
         cursor.execute('SELECT included_analysis, method '
             'FROM "' + AnalysisIncluded._table + '" '
             'WHERE analysis = %s', (analysis_id,))
         included_analysis = cursor.fetchall()
         for analysis in included_analysis:
-            if analysis not in childs:
-                childs.append(analysis)
-            childs.extend(cls.get_included_analysis_method(analysis[0]))
-        return childs
+            childs.add(analysis)
+            childs.update(cls.get_included_analysis_method(analysis[0]))
+        return list(childs)
 
     @classmethod
     def get_included_analysis_analysis_method(cls, analysis_id):
@@ -1372,7 +1370,7 @@ class Analysis(Workflow, ModelSQL, ModelView):
         AnalysisIncluded = pool.get('lims.analysis.included')
         Analysis = pool.get('lims.analysis')
 
-        parents = []
+        parents = set()
         cursor.execute('SELECT ia.analysis '
             'FROM "' + AnalysisIncluded._table + '" ia '
                 'INNER JOIN "' + Analysis._table + '" a '
@@ -1381,10 +1379,9 @@ class Analysis(Workflow, ModelSQL, ModelView):
                 'AND a.state = \'active\'', (analysis_id,))
         parents_analysis_ids = [x[0] for x in cursor.fetchall()]
         for analysis_id in parents_analysis_ids:
-            if analysis_id not in parents:
-                parents.append(analysis_id)
-                parents.extend(cls.get_parents_analysis(analysis_id))
-        return parents
+            parents.add(analysis_id)
+            parents.update(cls.get_parents_analysis(analysis_id))
+        return list(parents)
 
     def get_rec_name(self, name):
         if self.code:
