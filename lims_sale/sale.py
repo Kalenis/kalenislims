@@ -21,7 +21,8 @@ from trytond.tools import get_smtp_server
 from trytond.exceptions import UserError, UserWarning
 from trytond.i18n import gettext
 from trytond.modules.lims_report_html.html_template import LimsReport
-from trytond.modules.sale.exceptions import SaleValidationError
+from trytond.modules.sale.exceptions import (
+    SaleValidationError, SaleQuotationError)
 
 logger = logging.getLogger(__name__)
 
@@ -394,6 +395,33 @@ class Sale(metaclass=PoolMeta):
     def quote(cls, sales):
         super().quote(sales)
         cls.send_email_party(s for s in sales if s.send_email)
+
+    def check_for_quotation(self):
+        super().check_for_quotation()
+        if not self.invoice_address.active:
+            raise SaleQuotationError(
+                gettext('lims_sale.msg_sale_invoice_address_not_active',
+                    sale=self.rec_name))
+        if self.shipment_address and not self.shipment_address.active:
+            raise SaleQuotationError(
+                gettext('lims_sale.msg_sale_shipment_address_not_active',
+                    sale=self.rec_name))
+        for line in self.lines:
+            if line.product and not line.product.active:
+                raise SaleQuotationError(
+                    gettext('lims_sale.msg_sale_product_not_active',
+                        product=line.product.rec_name,
+                        sale=self.rec_name))
+            if line.analysis and line.analysis.state != 'active':
+                raise SaleQuotationError(
+                    gettext('lims_sale.msg_sale_analysis_not_active',
+                        analysis=line.analysis.rec_name,
+                        sale=self.rec_name))
+            if line.analysis and line.analysis not in line.analysis_domain:
+                raise SaleQuotationError(
+                    gettext('lims_sale.msg_sale_analysis_not_valid',
+                        analysis=line.analysis.rec_name,
+                        sale=self.rec_name))
 
     @classmethod
     def send_email_party(cls, sales):

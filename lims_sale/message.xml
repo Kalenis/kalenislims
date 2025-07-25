@@ -13,5 +13,20 @@
         <record model="ir.message" id="msg_sale_line_analysis_product">
             <field name="text">Product "%(product)s" does not correspond to analysis "%(analysis)s".</field>
         </record>
+        <record model="ir.message" id="msg_sale_invoice_address_not_active">
+            <field name="text">The invoice address for sale "%(sale)s" is not active.</field>
+        </record>
+        <record model="ir.message" id="msg_sale_shipment_address_not_active">
+            <field name="text">The shipment address for sale "%(sale)s" is not active.</field>
+        </record>
+        <record model="ir.message" id="msg_sale_product_not_active">
+            <field name="text">The product "%(product)s" for sale "%(sale)s" is not active.</field>
+        </record>
+        <record model="ir.message" id="msg_sale_analysis_not_active">
+            <field name="text">The service "%(analysis)s" for sale "%(sale)s" is not active.</field>
+        </record>
+        <record model="ir.message" id="msg_sale_analysis_not_valid">
+            <field name="text">The service "%(analysis)s" for sale "%(sale)s" is not valid. Please check its typification.</field>
+        </record>
     </data>
 </tryton>
