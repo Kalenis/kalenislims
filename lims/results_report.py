@@ -3791,6 +3791,9 @@ class ResultReport(Report):
                         'report_format': result[0],
                         }])
 
+        report_number = results_report.rec_name.replace('/', '')
+        report_name = '%s %s' % (result[3], report_number)
+        result = result[:3] + (report_name,)
         return result
 
     @classmethod
@@ -4788,7 +4791,8 @@ class GlobalResultReport(Report):
         result = (results_report.report_format,
             results_report.report_cache) + result[2:]
 
-        report_name = '%s %s' % (result[3], results_report.number)
+        report_number = results_report.rec_name.replace('/', '')
+        report_name = '%s %s' % (result[3], report_number)
         result = result[:3] + (report_name,)
         return result
 
