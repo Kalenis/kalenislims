@@ -610,6 +610,9 @@ class ResultReport(LimsReport, metaclass=PoolMeta):
                         'report_format': result[0],
                         }])
 
+        report_number = results_report.rec_name.replace('/', '')
+        report_name = '%s %s' % (result[3], report_number)
+        result = result[:3] + (report_name,)
         return result
 
 
