@@ -207,7 +207,7 @@ class PlanificationAnalysisSheet(ModelSQL, ModelView):
     professional = fields.Many2One('lims.laboratory.professional',
         'Laboratory professional', required=True)
     analysis_sheet = fields.Many2One('lims.analysis_sheet',
-        'Analysis Sheet', required=True,
+        'Analysis Sheet', required=True, ondelete='CASCADE',
         domain=['OR', ('id', '=', Eval('analysis_sheet', -1)),
             [('state', 'in', ['draft', 'active']),
                 ('professional', '=', Eval('professional'))]])
