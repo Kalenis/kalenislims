@@ -359,28 +359,23 @@ class Sale(metaclass=PoolMeta):
         super().check_for_quotation()
         if not self.invoice_address.active:
             raise SaleQuotationError(
-                gettext('lims_sale.msg_sale_invoice_address_not_active',
-                    sale=self.rec_name))
+                gettext('lims_sale.msg_sale_invoice_address_not_active'))
         if self.shipment_address and not self.shipment_address.active:
             raise SaleQuotationError(
-                gettext('lims_sale.msg_sale_shipment_address_not_active',
-                    sale=self.rec_name))
+                gettext('lims_sale.msg_sale_shipment_address_not_active'))
         for line in self.lines:
             if line.product and not line.product.active:
                 raise SaleQuotationError(
                     gettext('lims_sale.msg_sale_product_not_active',
-                        product=line.product.rec_name,
-                        sale=self.rec_name))
+                        product=line.product.rec_name))
             if line.analysis and line.analysis.state != 'active':
                 raise SaleQuotationError(
                     gettext('lims_sale.msg_sale_analysis_not_active',
-                        analysis=line.analysis.rec_name,
-                        sale=self.rec_name))
+                        analysis=line.analysis.rec_name))
             if line.analysis and line.analysis not in line.analysis_domain:
                 raise SaleQuotationError(
                     gettext('lims_sale.msg_sale_analysis_not_valid',
-                        analysis=line.analysis.rec_name,
-                        sale=self.rec_name))
+                        analysis=line.analysis.rec_name))
 
     @classmethod
     def send_email_party(cls, sales):
