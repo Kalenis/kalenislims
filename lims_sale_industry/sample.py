@@ -23,7 +23,8 @@ class CreateSampleStart(metaclass=PoolMeta):
         if not self.party or not self.product_type or not self.matrix:
             return []
 
-        analysis_domain = super().on_change_with_analysis_domain()
+        with Transaction().set_context(_check_sale_line=False):
+            analysis_domain = self.on_change_with_analysis_domain()
         if not analysis_domain:
             return []
         analysis_ids = ', '.join(str(a) for a in analysis_domain)
