@@ -41,7 +41,8 @@ class CreateSampleStart(metaclass=PoolMeta):
         if not self.party or not self.product_type or not self.matrix:
             return []
 
-        analysis_domain = super().on_change_with_analysis_domain()
+        with Transaction().set_context(_check_sale_line=False):
+            analysis_domain = self.on_change_with_analysis_domain()
         if not analysis_domain:
             return []
         analysis_ids = ', '.join(str(a) for a in analysis_domain)
@@ -80,16 +81,18 @@ class CreateSampleStart(metaclass=PoolMeta):
         entry_id = Transaction().context.get('active_id', None)
         if not entry_id:
             return []
-
         entry = Entry(entry_id)
-        if (not self.sale_lines and
-                not entry.allow_services_without_quotation):
-            return []
 
         analysis_domain = super().on_change_with_analysis_domain(name)
 
-        if not self.sale_lines or entry.allow_services_without_quotation:
+        if not Transaction().context.get('_check_sale_line', True):
             return analysis_domain
+
+        if not self.sale_lines:
+            if not entry.allow_services_without_quotation:
+                return []
+            else:
+                return analysis_domain
 
         quoted_products = [sl.product.id
             for sl in self.sale_lines if sl.product]
