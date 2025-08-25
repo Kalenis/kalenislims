@@ -808,6 +808,10 @@ class Sequence(metaclass=PoolMeta):
         return res
 
 
+class SequenceStrict(Sequence, metaclass=PoolMeta):
+    __name__ = 'ir.sequence.strict'
+
+
 class About(ModelSingleton, ModelSQL, ModelView):
     'About'
     __name__ = 'lims.about'
