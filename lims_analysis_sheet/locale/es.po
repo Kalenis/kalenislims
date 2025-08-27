@@ -70,6 +70,10 @@ msgctxt "field:lims.analysis_sheet,professional:"
 msgid "Professional"
 msgstr "Profesional"
 
+msgctxt "field:lims.analysis_sheet,related_samples:"
+msgid "Samples"
+msgstr "Muestras"
+
 msgctxt "field:lims.analysis_sheet,report_cache:"
 msgid "Report"
 msgstr "Informe"
@@ -113,6 +117,14 @@ msgstr "Fecha Validación"
 msgctxt "field:lims.analysis_sheet,view:"
 msgid "View"
 msgstr "Vista"
+
+msgctxt "field:lims.analysis_sheet-lims.sample,sample:"
+msgid "Sample"
+msgstr "Muestra"
+
+msgctxt "field:lims.analysis_sheet-lims.sample,sheet:"
+msgid "Analysis sheet"
+msgstr "Hoja de análisis"
 
 msgctxt "field:lims.analysis_sheet.add_control.start,analysis_sheet:"
 msgid "Analysis Sheet"
@@ -604,6 +616,10 @@ msgctxt "model:ir.action,name:act_analysis_sheet_list"
 msgid "Analysis Sheets"
 msgstr "Hojas de análisis"
 
+msgctxt "model:ir.action,name:act_analysis_sheet_related1"
+msgid "Analysis Sheets"
+msgstr "Hojas de análisis"
+
 msgctxt "model:ir.action,name:act_open_pending_sample"
 msgid "Open Pending Sample"
 msgstr "Abrir Muestras Pendientes"
@@ -817,6 +833,10 @@ msgstr "Plantillas de Hoja de análisis"
 msgctxt "model:lims.analysis_sheet,name:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
+
+msgctxt "model:lims.analysis_sheet-lims.sample,name:"
+msgid "Analysis Sheet - Sample"
+msgstr "Hoja de análisis - Muestra"
 
 msgctxt "model:lims.analysis_sheet.add_control.start,name:"
 msgid "Add Controls"
@@ -1325,6 +1345,10 @@ msgstr "General"
 msgctxt "view:lims.analysis_sheet:"
 msgid "Other Info"
 msgstr "Información adicional"
+
+msgctxt "view:lims.analysis_sheet:"
+msgid "Samples"
+msgstr "Muestras"
 
 msgctxt "view:lims.analysis_sheet:"
 msgid "Validate"

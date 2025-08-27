@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+        <record model="ir.action.act_window" id="act_analysis_sheet_related1">
+            <field name="name">Analysis Sheets</field>
+            <field name="res_model">lims.analysis_sheet</field>
+            <field name="domain"
+                eval="[('related_samples', 'in', Eval('active_ids', []))]"
+                pyson="1"/>
+        </record>
+        <record model="ir.action.keyword" id="act_open_analysis_sheet_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">lims.sample,-1</field>
+            <field name="action" ref="act_analysis_sheet_related1"/>
+        </record>
+
+    </data>
+</tryton>

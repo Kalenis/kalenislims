@@ -457,6 +457,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         depends=['state', 'interface'])
     interface = fields.Function(fields.Many2One('lims.interface', 'Interface'),
         'get_interface')
+    related_samples = fields.Many2Many('lims.analysis_sheet-lims.sample',
+        'sheet', 'sample', 'Samples', readonly=True)
     samples = fields.Char('Samples', readonly=True)
     out_of_ranges = fields.Function(fields.Boolean('Out of Ranges'), 'get_out_of_ranges')
 
@@ -1184,23 +1186,38 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             if data:
                 Data.create(data)
 
-            if update_samples_list:
-                self._update_samples_list()
+        if update_samples_list:
+            self._update_samples_list()
 
     def _update_samples_list(self):
-        Data = Pool().get('lims.interface.data')
+        pool = Pool()
+        Notebook = pool.get('lims.notebook')
 
-        samples = set()
-        with Transaction().set_context(
-                lims_interface_table=self.compilation.table.id):
-            data_lines = Data.search([
-                ('compilation', '=', self.compilation.id),
-                ('notebook_line', '!=', None),
-                ])
-            for data_line in data_lines:
-                samples.add(data_line.notebook_line.fraction.sample.number)
-        self.samples = ' - '.join(list(samples))
+        notebooks = self.get_notebooks([self])
+        samples = list(set([Notebook(id).fraction.sample
+            for id in notebooks]))
+        self.related_samples = samples
+        self.samples = ' - '.join([
+            sample.number for sample in samples])
         self.save()
+        return samples
+
+    @classmethod
+    def get_notebooks(cls, records):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+
+        notebook_line = pool.get('lims.notebook.line').__table__()
+        notebooks = set()
+        for sheet in records:
+            sql_table = Table(sheet.compilation.table.name)
+            sql_join = sql_table.join(notebook_line,
+                condition=sql_table.notebook_line == notebook_line.id)
+            cursor.execute(*sql_join.select(notebook_line.notebook,
+                where=sql_table.compilation == sheet.compilation.id))
+            for x in cursor.fetchall():
+                notebooks.add(x[0])
+        return list(notebooks)
 
     def get_data_defaults(self):
         defaults = {}
@@ -1263,6 +1280,16 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     defaults['%s_%s' % (k, rep)] = default_value
 
         return defaults
+
+
+class AnalysisSheetSample(ModelSQL):
+    'Analysis Sheet - Sample'
+    __name__ = 'lims.analysis_sheet-lims.sample'
+
+    sheet = fields.Many2One('lims.analysis_sheet', 'Analysis sheet',
+        ondelete='CASCADE', select=True, required=True)
+    sample = fields.Many2One('lims.sample', 'Sample',
+        ondelete='CASCADE', select=True, required=True)
 
 
 class OpenAnalysisSheetData(Wizard):

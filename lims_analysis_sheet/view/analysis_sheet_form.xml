@@ -49,6 +49,9 @@
             <button name="view_grouped_data" string="View grouped data" colspan="2"/>
             <field name="interface" invisible="1"/>
         </page>
+        <page string="Samples" id="related_samples_page">
+            <field name="related_samples" colspan="4"/>
+        </page>
     </notebook>
     <group id="state_holder" colspan="4">
         <label name="state"/>

@@ -1971,6 +1971,8 @@ class MoveData(Wizard):
             Data.write(lines, {
                 'compilation': target.compilation.id,
                 })
+        origin._update_samples_list()
+        target._update_samples_list()
 
     def end(self):
         return 'reload'
