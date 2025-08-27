@@ -60,8 +60,9 @@ class Planification(metaclass=PoolMeta):
         PlanificationAnalysisSheet = pool.get(
             'lims.planification.analysis_sheet')
 
-        if (not self.planification_update_draft_sheet and
-                not Transaction().context.get('within_an_entry', False)):
+        update_draft_sheet = self.planification_update_draft_sheet
+        within_an_entry = Transaction().context.get('within_an_entry', False)
+        if not update_draft_sheet and not within_an_entry:
             return
 
         analysis_sheets = {}
@@ -76,8 +77,8 @@ class Planification(metaclass=PoolMeta):
                 continue
             key = (template_id, service_detail.staff_responsible[0])
             if key not in analysis_sheets:
-                analysis_sheets[key] = []
-            analysis_sheets[key].append(nl)
+                analysis_sheets[key] = set()
+            analysis_sheets[key].add(nl.fraction.entry.id)
 
         for key, values in analysis_sheets.items():
             if PlanificationAnalysisSheet.search([
@@ -87,12 +88,15 @@ class Planification(metaclass=PoolMeta):
                     ('analysis_sheet.date2', '=', self.start_date),
                     ]):
                 continue
-            draft_sheet = AnalysisSheet.search([
+            clause = [
                 ('template', '=', key[0]),
                 ('professional', '=', key[1]),
                 ('date2', '=', self.start_date),
                 ('state', '=', 'draft'),
-                ])
+                ]
+            if not update_draft_sheet and within_an_entry:
+                clause.append(('related_samples.entry', 'in', list(values)))
+            draft_sheet = AnalysisSheet.search(clause)
             if not draft_sheet:
                 continue
             PlanificationAnalysisSheet.create([{
