@@ -328,6 +328,10 @@ class Equipment(DeactivableMixin, ModelSQL, ModelView):
     year_manufacturing = fields.Integer('Year of manufacturing')
     year_service_start = fields.Integer('Year of service start')
     internal_location = fields.Char('Internal location')
+    conservation = fields.Char('Conservation')
+    refrigeration = fields.Char('Refrigeration')
+    volume = fields.Char('Volume')
+    location = fields.Char('Location')
     contacts = fields.One2Many('party.address', 'equipment',
         'Contacts', domain=[('party', '=', Eval('party'))],
         context={'plant': Eval('plant')},

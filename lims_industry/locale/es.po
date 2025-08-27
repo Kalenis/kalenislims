@@ -263,6 +263,22 @@ msgctxt "field:lims.equipment,internal_location:"
 msgid "Internal location"
 msgstr "Ubicación interna"
 
+msgctxt "field:lims.equipment,conservation:"
+msgid "Conservation"
+msgstr "Conservación"
+
+msgctxt "field:lims.equipment,refrigeration:"
+msgid "Refrigeration"
+msgstr "Refrigeración"
+
+msgctxt "field:lims.equipment,volume:"
+msgid "Volume"
+msgstr "Volumen"
+
+msgctxt "field:lims.equipment,location:"
+msgid "Location"
+msgstr "Localización"
+
 msgctxt "field:lims.equipment,latitude:"
 msgid "Latitude"
 msgstr "Latitud"

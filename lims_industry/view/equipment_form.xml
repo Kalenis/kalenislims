@@ -46,6 +46,14 @@
             </group>
             <label name="internal_location"/>
             <field name="internal_location"/>
+            <label name="conservation"/>
+            <field name="conservation"/>
+            <label name="refrigeration"/>
+            <field name="refrigeration"/>
+            <label name="volume"/>
+            <field name="volume"/>
+            <label name="location"/>
+            <field name="location"/>
             <group colspan="4" id="coordinates" string="GPS Coordinates">
                 <label name="latitude"/>
                 <field name="latitude"/>
