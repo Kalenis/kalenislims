@@ -4,4 +4,6 @@
     <field name="fraction"/>
     <label name="quantity"/>
     <field name="quantity"/>
+    <label name="confirm"/>
+    <field name="confirm"/>
 </form>

@@ -4518,6 +4518,10 @@ class DuplicateFractionStart(ModelView):
 
     fraction = fields.Many2One('lims.fraction', 'Fraction', readonly=True)
     quantity = fields.Integer('Number of copies', required=True)
+    confirm = fields.Boolean('Confirm',
+        states={'invisible': Bool(Eval('confirm_invisible'))},
+        help='Check to automatically confirm new fractions')
+    confirm_invisible = fields.Boolean('Confirm invisible')
 
 
 class DuplicateFraction(Wizard):
@@ -4534,19 +4538,26 @@ class DuplicateFraction(Wizard):
     def default_start(self, fields):
         Fraction = Pool().get('lims.fraction')
         fraction = Fraction(Transaction().context['active_id'])
+        confirmed = fraction.confirmed
         return {
             'fraction': fraction.id,
             'quantity': 1,
+            'confirm': confirmed,
+            'confirm_invisible': (not confirmed),
             }
 
     def transition_duplicate(self):
-        Fraction = Pool().get('lims.fraction')
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
 
         fraction = self.start.fraction
         quantity = self.start.quantity
+        new_fractions = []
 
         for i in range(0, quantity):
-            Fraction.copy([fraction], default={})
+            new_fractions.extend(Fraction.copy([fraction], default={}))
+        if self.start.confirm:
+            Fraction.confirm(new_fractions)
         return 'end'
 
     def end(self):
@@ -4663,8 +4674,7 @@ class ResampleStart(ModelView):
     label = fields.Char('Label')
     analysis = fields.Many2Many('lims.analysis', None, None,
         'Services', required=True,
-        domain=[('id', 'in', Eval('analysis_domain'))],
-        depends=['analysis_domain'])
+        domain=[('id', 'in', Eval('analysis_domain'))])
     analysis_domain = fields.Many2Many('lims.analysis', None, None,
         'Services domain')
     new_entry = fields.Boolean('Create new Entry')

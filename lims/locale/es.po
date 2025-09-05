@@ -2185,6 +2185,14 @@ msgctxt "field:lims.fraction.discharge_revert.start,location_origin:"
 msgid "Origin Location"
 msgstr "Ubicación origen"
 
+msgctxt "field:lims.fraction.duplicate.start,confirm_invisible:"
+msgid "Confirm invisible"
+msgstr "Confirmar invisible"
+
+msgctxt "field:lims.fraction.duplicate.start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
 msgctxt "field:lims.fraction.duplicate.start,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
@@ -7694,6 +7702,10 @@ msgstr "Por defecto, se utiliza el punto"
 msgctxt "help:lims.configuration,samples_in_progress:"
 msgid "Samples allowed for preliminary reports"
 msgstr "Muestras permitidas para informes preliminares"
+
+msgctxt "help:lims.fraction.duplicate.start,confirm:"
+msgid "Check to automatically confirm new fractions"
+msgstr "Marque para confirmar automáticamente las fracciones nuevas"
 
 msgctxt "help:lims.lab.device.correction,formula:"
 msgid "Correction formula based on the given value (X)"
