@@ -81,7 +81,7 @@ class CreateSampleStart(metaclass=PoolMeta):
         if not Transaction().context.get('_check_sale_line', True):
             return analysis_domain
 
-        if not self.sale_lines
+        if not self.sale_lines:
             if (not self.party or
                     not self.party.allow_services_without_quotation):
                 return []
