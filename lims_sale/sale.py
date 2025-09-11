@@ -281,9 +281,7 @@ class Sale(metaclass=PoolMeta):
         for line in sale_lines:
             if line.unlimited_quantity:
                 return False
-            if not line.quantity:
-                return False
-            if line.quantity > len(line.services):
+            if line.quantity and line.quantity > len(line.services):
                 return False
         return True
 
@@ -1007,9 +1005,9 @@ class SaleLine(metaclass=PoolMeta):
 
     @fields.depends('unlimited_quantity', 'quantity', 'services')
     def on_change_with_services_available(self, name=None):
-        if self.quantity is None:
-            return None
         if self.unlimited_quantity:
+            return None
+        if self.quantity is None:
             return None
         res = self.quantity - len(self.services)
         if res < 0:
@@ -1020,9 +1018,7 @@ class SaleLine(metaclass=PoolMeta):
     def on_change_with_services_completed(self, name=None):
         if self.unlimited_quantity:
             return False
-        if not self.quantity:
-            return True
-        if self.quantity > len(self.services):
+        if self.quantity and self.quantity > len(self.services):
             return False
         return True
 
