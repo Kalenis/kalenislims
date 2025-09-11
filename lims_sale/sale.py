@@ -925,7 +925,7 @@ class SaleLine(metaclass=PoolMeta):
         if self.unlimited_quantity:
             return False
         if not self.quantity:
-            return False
+            return True
         if self.quantity > len(self.services):
             return False
         return True
