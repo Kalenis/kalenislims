@@ -219,7 +219,19 @@ class CreateSample(metaclass=PoolMeta):
         return samples_defaults
 
     def transition_create_(self):
-        res = super().transition_create_()
+        pool = Pool()
+        Sale = pool.get('sale.sale')
+
+        with Transaction().set_context(process_service_sale=False):
+            res = super().transition_create_()
+
+        if (hasattr(self.start, 'sale_lines') and
+                getattr(self.start, 'sale_lines')):
+            with Transaction().set_context(_check_access=False):
+                sales = set(sl.sale for sl in self.start.sale_lines)
+                if sales:
+                    Sale.__queue__.process(sales)
+
         self._update_entry_contacts()
         return res
 
@@ -652,8 +664,7 @@ class ServiceSaleLine(ModelSQL):
         sale_lines = super().create(vlist)
         with Transaction().set_context(_check_access=False):
             sales = set(sl.sale_line.sale for sl in sale_lines)
-        if sales:
-            cls.process_sale(sales)
+        cls.process_sale(sales)
         return sale_lines
 
     @classmethod
@@ -661,12 +672,15 @@ class ServiceSaleLine(ModelSQL):
         with Transaction().set_context(_check_access=False):
             sales = set(sl.sale_line.sale for sl in sale_lines)
         super().delete(sale_lines)
-        if sales:
-            cls.process_sale(sales)
+        cls.process_sale(sales)
 
     @classmethod
     def process_sale(cls, sales):
         pool = Pool()
         Sale = pool.get('sale.sale')
-        with Transaction().set_context(_check_access=False):
-            Sale.__queue__.process(sales)
+
+        process_service_sale = Transaction().context.get(
+            'process_service_sale', True)
+        if sales and process_service_sale:
+            with Transaction().set_context(_check_access=False):
+                Sale.__queue__.process(sales)
