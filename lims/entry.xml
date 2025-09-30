@@ -401,6 +401,19 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
+<!-- Wizard Cancel Entry -->
+
+        <record model="ir.ui.view" id="entry_cancel_start_view_form">
+            <field name="model">lims.entry.cancel.start</field>
+            <field name="type">form</field>
+            <field name="name">entry_cancel_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_cancel_entry">
+            <field name="name">Cancel Entry</field>
+            <field name="wiz_name">lims.entry.cancel</field>
+        </record>
+
 <!-- Entry Cancellation Reason -->
 
         <record model="ir.ui.view" id="lims_entry_cancellation_reason_view_form">

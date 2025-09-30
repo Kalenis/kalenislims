@@ -1617,6 +1617,10 @@ msgctxt "field:lims.entry.acknowledgment_contacts,entry:"
 msgid "Entry"
 msgstr "Ingreso"
 
+msgctxt "field:lims.entry.cancel.start,cancellation_reason:"
+msgid "Cancellation reason"
+msgstr "Razón de la cancelación"
+
 msgctxt "field:lims.entry.cancellation.reason,by_default:"
 msgid "By default"
 msgstr "Por defecto"
@@ -7911,6 +7915,10 @@ msgctxt "model:ir.action,name:wiz_analysis_open_not_typified"
 msgid "Open Analysis Not Typified"
 msgstr "Abrir análisis sin tipificar"
 
+msgctxt "model:ir.action,name:wiz_cancel_entry"
+msgid "Cancel Entry"
+msgstr "Cancelar ingreso"
+
 msgctxt "model:ir.action,name:wiz_change_current_location"
 msgid "Change Current Location"
 msgstr "Cambiar Ubicación"
@@ -10089,6 +10097,10 @@ msgstr "Preguntar por envío de Acuse de recibo de muestras"
 msgctxt "model:lims.entry.acknowledgment_contacts,name:"
 msgid "Entry Acknowledgment Contact"
 msgstr "Contacto acuse de recibo de Ingreso"
+
+msgctxt "model:lims.entry.cancel.start,name:"
+msgid "Cancel Entry"
+msgstr "Cancelar ingreso"
 
 msgctxt "model:lims.entry.cancellation.reason,name:"
 msgid "Entry Cancellation Reason"
@@ -15964,6 +15976,14 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.divide_reports,start,ok:"
 msgid "Ok"
 msgstr "Aceptar"
+
+msgctxt "wizard_button:lims.entry.cancel,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.entry.cancel,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:lims.entry.change_invoice_party,error,end:"
 msgid "Cancel"
