@@ -10,19 +10,6 @@
           <field name="name">invoice_form</field>
       </record>
 
-<!-- Invoice Contacts -->
-
-      <record model="ir.ui.view" id="invoice_contacts_view_form">
-          <field name="model">account.invoice.invoice_contacts</field>
-          <field name="type">form</field>
-          <field name="name">invoice_contacts_form</field>
-      </record>
-      <record model="ir.ui.view" id="invoice_contacts_view_list">
-          <field name="model">account.invoice.invoice_contacts</field>
-          <field name="type">tree</field>
-          <field name="name">invoice_contacts_list</field>
-      </record>
-
 <!-- Invoice Line -->
 
       <record model="ir.ui.view" id="lims_invoice_line_view_form">
