@@ -31,8 +31,12 @@ class Invoice(metaclass=PoolMeta):
     no_send_invoice = fields.Boolean('No send invoice',
         states={'invisible': Eval('type') == 'in'},
         help='If checked, then the invoice will not be mailed to contacts.')
-    invoice_contacts = fields.One2Many('account.invoice.invoice_contacts',
-        'invoice', 'Invoice contacts',
+    invoice_contacts = fields.Many2Many('account.invoice.invoice_contacts',
+        'invoice', 'contact', 'Invoice contacts',
+        domain=[
+            ('party', '=', Eval('party')),
+            ('invoice_contact', '=', True),
+            ],
         states={'invisible': Eval('type') == 'in'})
     sent = fields.Boolean('Sent', readonly=True,
         help='If checked, then the invoice was mailed to contacts.')
@@ -65,7 +69,7 @@ class Invoice(metaclass=PoolMeta):
     def _credit(self, **values):
         credit = super()._credit(**values)
         if self.invoice_contacts:
-            credit.invoice_contacts = [contact._credit()
+            credit.invoice_contacts = [contact
                 for contact in self.invoice_contacts]
         credit.no_send_invoice = self.no_send_invoice
         return credit
@@ -124,7 +128,7 @@ class Invoice(metaclass=PoolMeta):
         smtp_server = config_.mail_send_invoice_smtp
         from_addr = (smtp_server and smtp_server.smtp_email or
             tconfig.get('email', 'from'))
-        to_addrs = [c.contact.email for c in self.invoice_contacts]
+        to_addrs = [c.email for c in self.invoice_contacts]
         if not (from_addr and to_addrs):
             logger.warn('mail_send_invoice():Factura %s:Envio omitido '
                     'por no contener contactos.', self.number)  # DEBUG
@@ -236,20 +240,14 @@ class Invoice(metaclass=PoolMeta):
         return success
 
 
-class InvoiceContact(ModelSQL, ModelView):
+class InvoiceContact(ModelSQL):
     'Invoice Contact'
     __name__ = 'account.invoice.invoice_contacts'
 
     invoice = fields.Many2One('account.invoice', 'Invoice',
         ondelete='CASCADE', required=True)
-    contact = fields.Many2One('party.address', 'Contact', required=True,
-        domain=[('invoice_contact', '=', True)])
-
-    def _credit(self):
-        credit = self.__class__()
-        for field in ('invoice', 'contact'):
-            setattr(credit, field, getattr(self, field))
-        return credit
+    contact = fields.Many2One('party.address', 'Contact',
+        required=True)
 
 
 class InvoiceLine(metaclass=PoolMeta):
