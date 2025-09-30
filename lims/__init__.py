@@ -80,6 +80,7 @@ def register():
         entry.Entry,
         entry.EntryPreAssignedSample,
         entry.PreAssignSampleStart,
+        entry.EntryCancelStart,
         sample.Zone,
         sample.Variety,
         sample.SampleProducerType,
@@ -312,6 +313,7 @@ def register():
         module='lims', type_='model')
     Pool.register(
         entry.PreAssignSample,
+        entry.EntryCancel,
         entry.PrintAcknowledgmentOfReceipt,
         control_tendency.PrintControlChart,
         sample.CountersampleStoragePrint,
