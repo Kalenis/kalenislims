@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<form>
+    <label name="cancellation_reason"/>
+    <field name="cancellation_reason"/>
+</form>

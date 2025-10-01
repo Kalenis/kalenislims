@@ -641,26 +641,9 @@ class Entry(Workflow, ModelSQL, ModelView):
             Bool(Equal(Eval('state'), 'pending')))
 
     @classmethod
-    @ModelView.button
+    @ModelView.button_action('lims.wiz_cancel_entry')
     def cancel(cls, entries):
-        pool = Pool()
-        EntryCancellationReason = pool.get('lims.entry.cancellation.reason')
-
-        for entry in entries:
-            entry.check_entry_cancellation()
-            entry.cancel_entry()
-
-        default_cancellation_reason = None
-        reasons = EntryCancellationReason.search([('by_default', '=', True)])
-        if reasons:
-            default_cancellation_reason = reasons[0].id
-        cls.cancellation_reason.states['required'] = False
-        cls.write(entries, {
-            'state': 'cancelled',
-            'cancellation_reason': default_cancellation_reason,
-            })
-        cls.cancellation_reason.states['required'] = (
-            Bool(Equal(Eval('state'), 'pending')))
+        pass
 
     @classmethod
     @Workflow.transition('finished')
@@ -685,58 +668,6 @@ class Entry(Workflow, ModelSQL, ModelView):
             if Warning.check(key):
                 raise UserWarning(key, gettext('lims.msg_foreign_report',
                     lang=self.report_language.name))
-
-    def check_entry_cancellation(self):
-        pool = Pool()
-        NotebookLine = pool.get('lims.notebook.line')
-
-        if NotebookLine.search_count([
-                ('service.fraction.sample.entry', '=', self.id),
-                ('accepted', '=', True),
-                ]) > 0:
-            raise UserError(gettext(
-                'lims.msg_entry_cancellation_analysis_accepted'))
-        if NotebookLine.search_count([
-                ('service.fraction.sample.entry', '=', self.id),
-                ('start_date', '!=', None),
-                ]) > 0:
-            raise UserError(gettext(
-                'lims.msg_entry_cancellation_analysis_planned'))
-
-    def cancel_entry(self):
-        pool = Pool()
-        Sample = pool.get('lims.sample')
-        Service = pool.get('lims.service')
-        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
-        NotebookLine = pool.get('lims.notebook.line')
-
-        with Transaction().set_user(0, set_context=True):
-            services = Service.search([
-                ('fraction.sample.entry', '=', self),
-                ])
-            if services:
-                Service.write(services, {'annulled': True})
-
-            details = EntryDetailAnalysis.search([
-                ('service.fraction.sample.entry', '=', self),
-                ])
-            if details:
-                EntryDetailAnalysis.write(details, {'state': 'annulled'})
-
-            notebook_lines = NotebookLine.search([
-                ('service.fraction.sample.entry', '=', self),
-                ])
-            if notebook_lines:
-                NotebookLine.write(notebook_lines, {
-                    'annulled': True,
-                    'annulment_date': datetime.now(),
-                    'accepted': False,
-                    'acceptance_date': None,
-                    'report': False,
-                    })
-
-            to_update = self.samples
-            Sample.__queue__.update_samples_state(to_update)
 
     @classmethod
     def update_entries_state(cls, entry_ids):
@@ -1229,6 +1160,109 @@ class EntrySuspensionReason(ModelSQL, ModelView):
                 ])
             if reasons:
                 raise UserError(gettext('lims.msg_default_suspension_reason'))
+
+
+class EntryCancelStart(ModelView):
+    'Cancel Entry'
+    __name__ = 'lims.entry.cancel.start'
+
+    cancellation_reason = fields.Many2One('lims.entry.cancellation.reason',
+        'Cancellation reason', required=True)
+
+
+class EntryCancel(Wizard):
+    'Cancel Entry'
+    __name__ = 'lims.entry.cancel'
+
+    start_state = 'check'
+    check = StateTransition()
+    start = StateView('lims.entry.cancel.start',
+        'lims.entry_cancel_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Confirm', 'confirm', 'tryton-ok', default=True),
+            ])
+    confirm = StateTransition()
+
+    def transition_check(self):
+        pool = Pool()
+        Entry = pool.get('lims.entry')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        entry = Entry(Transaction().context['active_id'])
+
+        if NotebookLine.search_count([
+                ('service.fraction.sample.entry', '=', entry),
+                ('accepted', '=', True),
+                ]) > 0:
+            raise UserError(gettext(
+                'lims.msg_entry_cancellation_analysis_accepted'))
+        if NotebookLine.search_count([
+                ('service.fraction.sample.entry', '=', entry),
+                ('start_date', '!=', None),
+                ]) > 0:
+            raise UserError(gettext(
+                'lims.msg_entry_cancellation_analysis_planned'))
+
+        return 'start'
+
+    def default_start(self, fields):
+        pool = Pool()
+        EntryCancellationReason = pool.get('lims.entry.cancellation.reason')
+
+        defaults = {}
+        reasons = EntryCancellationReason.search([('by_default', '=', True)])
+        if reasons:
+            defaults['cancellation_reason'] = reasons[0].id
+        return defaults
+
+    def transition_confirm(self):
+        pool = Pool()
+        Entry = pool.get('lims.entry')
+        Sample = pool.get('lims.sample')
+
+        entry = Entry(Transaction().context['active_id'])
+
+        self.cancel_entry(entry)
+
+        Entry.write([entry], {
+            'state': 'cancelled',
+            'cancellation_reason': self.start.cancellation_reason.id,
+            })
+
+        to_update = [s for s in entry.samples]
+        Sample.__queue__.update_samples_state(to_update)
+        return 'end'
+
+    def cancel_entry(self, entry):
+        pool = Pool()
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        with Transaction().set_user(0, set_context=True):
+            services = Service.search([
+                ('fraction.sample.entry', '=', entry),
+                ])
+            if services:
+                Service.write(services, {'annulled': True})
+
+            details = EntryDetailAnalysis.search([
+                ('service.fraction.sample.entry', '=', entry),
+                ])
+            if details:
+                EntryDetailAnalysis.write(details, {'state': 'annulled'})
+
+            notebook_lines = NotebookLine.search([
+                ('service.fraction.sample.entry', '=', entry),
+                ])
+            if notebook_lines:
+                NotebookLine.write(notebook_lines, {
+                    'annulled': True,
+                    'annulment_date': datetime.now(),
+                    'accepted': False,
+                    'acceptance_date': None,
+                    'report': False,
+                    })
 
 
 class EntryCancellationReason(ModelSQL, ModelView):
