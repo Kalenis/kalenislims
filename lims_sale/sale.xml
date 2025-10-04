@@ -73,6 +73,66 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
+        <record model="ir.model.field.access"
+            id="access_sale_untaxed_amount">
+            <field name="field"
+                search="[('name', '=', 'untaxed_amount'), ('model.model', '=', 'sale.sale')]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_sale_untaxed_amount_group_sale">
+            <field name="field"
+                search="[('name', '=', 'untaxed_amount'), ('model.model', '=', 'sale.sale')]"/>
+            <field name="group" ref="sale.group_sale"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access"
+            id="access_sale_tax_amount">
+            <field name="field"
+                search="[('name', '=', 'tax_amount'), ('model.model', '=', 'sale.sale')]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_sale_tax_amount_group_sale">
+            <field name="field"
+                search="[('name', '=', 'tax_amount'), ('model.model', '=', 'sale.sale')]"/>
+            <field name="group" ref="sale.group_sale"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.field.access"
+            id="access_sale_total_amount">
+            <field name="field"
+                search="[('name', '=', 'total_amount'), ('model.model', '=', 'sale.sale')]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_sale_total_amount_group_sale">
+            <field name="field"
+                search="[('name', '=', 'total_amount'), ('model.model', '=', 'sale.sale')]"/>
+            <field name="group" ref="sale.group_sale"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
 <!-- Sale Section -->
 
         <record model="ir.ui.view" id="sale_section_view_form">
