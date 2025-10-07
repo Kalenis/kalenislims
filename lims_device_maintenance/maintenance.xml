@@ -200,6 +200,24 @@
             <field name="wiz_name">lims.lab.device.maintenance.discard</field>
         </record>
 
+<!-- Wizard Edit Pending Device Maintenance -->
+
+        <record model="ir.ui.view" id="device_edit_maintenance_start_view_form">
+            <field name="model">lims.lab.device.maintenance</field>
+            <field name="type">form</field>
+            <field name="name">lab_device_edit_maintenance_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wizard_device_edit_maintenance">
+            <field name="name">Edit Pending Maintenance</field>
+            <field name="wiz_name">lims.lab.device.maintenance.edit</field>
+        </record>
+        <record model="ir.action.keyword" id="wizard_device_edit_maintenance_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.lab.device.maintenance,-1</field>
+            <field name="action" ref="wizard_device_edit_maintenance"/>
+        </record>
+
 <!-- Device Maintenance Calendar -->
 
         <record model="ir.ui.view" id="lab_device_maintenance_calendar_view_form">
