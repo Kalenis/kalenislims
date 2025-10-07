@@ -4,7 +4,8 @@
 from dateutil import relativedelta
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields
-from trytond.wizard import Wizard, StateAction
+from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
+    Button
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.pyson import PYSONEncoder, Eval
@@ -365,6 +366,61 @@ class LabDeviceGenerateMaintenance(Wizard):
         return action, {}
 
     def transition_open(self):
+        return 'end'
+
+
+class LabDeviceEditMaintenance(Wizard):
+    'Edit Pending Device Maintenance'
+    __name__ = 'lims.lab.device.maintenance.edit'
+
+    start = StateView('lims.lab.device.maintenance',
+        'lims_device_maintenance.device_edit_maintenance_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Confirm', 'confirm', 'tryton-ok', default=True),
+            ])
+    confirm = StateTransition()
+
+    def _fields_to_edit(self):
+        return ['responsible']
+
+    def default_start(self, fields):
+        pool = Pool()
+        Maintenance = pool.get('lims.lab.device.maintenance')
+
+        default = {}
+        active_ids = Transaction().context['active_ids']
+        if not active_ids:
+            return default
+        maintenance = Maintenance(active_ids[0])
+
+        for field_name in self._fields_to_edit():
+            field_type = Maintenance._fields[field_name]._type
+            if field_type == 'many2one':
+                field = getattr(maintenance, field_name, None)
+                default[field_name] = field.id if field else None
+            elif field_type == 'boolean':
+                default[field_name] = getattr(maintenance, field_name, False)
+            else:
+                default[field_name] = getattr(maintenance, field_name, None)
+        return default
+
+    def transition_confirm(self):
+        pool = Pool()
+        Maintenance = pool.get('lims.lab.device.maintenance')
+
+        active_ids = Transaction().context['active_ids']
+        maintenances = Maintenance.search([
+            ('id', 'in', active_ids),
+            ('state', '=', 'pending'),
+            ])
+        if maintenances:
+            values = {}
+            for field_name in self._fields_to_edit():
+                values[field_name] = getattr(self.start, field_name)
+            for maintenance in maintenances:
+                for field_name in self._fields_to_edit():
+                    setattr(maintenance, field_name, values[field_name])
+            Maintenance.save(maintenances)
         return 'end'
 
 

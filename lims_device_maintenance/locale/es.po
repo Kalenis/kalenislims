@@ -46,6 +46,10 @@ msgctxt "field:lims.lab.device.maintenance,notice_date:"
 msgid "Notice Date"
 msgstr "Fecha de aviso"
 
+msgctxt "field:lims.lab.device.maintenance,party:"
+msgid "Responsible Party"
+msgstr "Tercero Responsable"
+
 msgctxt "field:lims.lab.device.maintenance,product:"
 msgid "Product"
 msgstr "Producto"
@@ -57,10 +61,6 @@ msgstr "Usuario responsable"
 msgctxt "field:lims.lab.device.maintenance,state:"
 msgid "State"
 msgstr "Estado"
-
-msgctxt "field:lims.lab.device.maintenance,party:"
-msgid "Responsible Party"
-msgstr "Tercero Responsable"
 
 msgctxt "field:lims.lab.device.maintenance.activity,name:"
 msgid "Name"
@@ -77,6 +77,10 @@ msgstr "Actividad"
 msgctxt "field:lims.lab.device.maintenance.program,asset:"
 msgid "Asset"
 msgstr "Activo"
+
+msgctxt "field:lims.lab.device.maintenance.program,comments:"
+msgid "Comments"
+msgstr "Observaciones"
 
 msgctxt "field:lims.lab.device.maintenance.program,detail_frequence:"
 msgid "Frequence"
@@ -151,10 +155,6 @@ msgctxt "field:lims.lab.device.maintenance.program,start_date:"
 msgid "Start Date"
 msgstr "Fecha de inicio"
 
-msgctxt "field:lims.lab.device.maintenance.program,comments:"
-msgid "Comments"
-msgstr "Observaciones"
-
 msgctxt "field:lims.lab.device.maintenance.type,name:"
 msgid "Name"
 msgstr "Nombre"
@@ -178,6 +178,10 @@ msgstr "Programas de mantenimiento de Equipo"
 msgctxt "model:ir.action,name:act_lab_device_maintenance_type_list"
 msgid "Device Maintenance Types"
 msgstr "Tipos de mantenimiento de Equipo"
+
+msgctxt "model:ir.action,name:wizard_device_edit_maintenance"
+msgid "Edit Pending Maintenance"
+msgstr "Editar mantenimientos pendientes"
 
 msgctxt "model:ir.action,name:wizard_device_generate_maintenance_calendar"
 msgid "Generate Maintenance Calendar"
@@ -405,16 +409,16 @@ msgid "Wednesday"
 msgstr "Miércoles"
 
 msgctxt "view:lims.lab.device.maintenance.program:"
+msgid "Comments"
+msgstr "Observaciones"
+
+msgctxt "view:lims.lab.device.maintenance.program:"
 msgid "Frequence"
 msgstr "Frecuencia"
 
 msgctxt "view:lims.lab.device.maintenance.program:"
 msgid "Generate Maintenance Programs"
 msgstr "Generar programas de mantenimiento"
-
-msgctxt "view:lims.lab.device.maintenance.program:"
-msgid "Comments"
-msgstr "Observaciones"
 
 msgctxt "view:lims.lab.device.maintenance:"
 msgid "Comments"
@@ -435,3 +439,11 @@ msgstr "Pendiente"
 msgctxt "view:lims.lab.device:"
 msgid "Maintenance Program"
 msgstr "Programa de mantenimiento"
+
+msgctxt "wizard_button:lims.lab.device.maintenance.edit,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.lab.device.maintenance.edit,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
