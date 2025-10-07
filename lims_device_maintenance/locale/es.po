@@ -409,6 +409,16 @@ msgid "Wednesday"
 msgstr "Miércoles"
 
 msgctxt "view:lims.lab.device.maintenance.program:"
+msgid ""
+"Changes made to the program have no effect on maintenance already generated."
+" To this end, you can modify pending maintenance or discard it and "
+"regenerate it from the program."
+msgstr ""
+"Los cambios realizados en el programa no tienen efecto sobre los "
+"mantenimientos ya generados. Para ese objetivo, puede modificar los "
+"mantenimientos pendientes o descartarlos y regenerarlos desde el programa."
+
+msgctxt "view:lims.lab.device.maintenance.program:"
 msgid "Comments"
 msgstr "Observaciones"
 

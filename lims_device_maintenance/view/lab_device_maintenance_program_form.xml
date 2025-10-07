@@ -51,4 +51,7 @@
         </group>
         <button name="create_maintenances" colspan="2"/>
     </group>
+    <image name="tryton-info" xexpand="0" xfill="0"/>
+    <separator id="update_warning" colspan="3"
+        string="Changes made to the program have no effect on maintenance already generated. To this end, you can modify pending maintenance or discard it and regenerate it from the program."/>
 </form>
