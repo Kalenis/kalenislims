@@ -215,8 +215,9 @@ class Service(metaclass=PoolMeta):
         if (not self.fraction.type.invoiceable or
                 self.fraction.cie_fraction_type):
             return
-        if InvoiceLine.search_count([('origin', '=', str(self))]) != 0:
-            return
+        with Transaction().set_context(_check_access=False):
+            if InvoiceLine.search_count([('origin', '=', str(self))]) != 0:
+                return
         invoice_line = self.get_invoice_line()
         if not invoice_line:
             return
