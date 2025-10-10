@@ -245,22 +245,6 @@
             <field name="group" ref="group_attachments_global"/>
         </record>
 
-<!-- Sequence -->
-
-        <record model="ir.ui.view" id="sequence_view_form">
-            <field name="model">ir.sequence</field>
-            <field name="inherit" ref="ir.sequence_view_form"/>
-            <field name="name">sequence_form</field>
-        </record>
-
-<!-- Sequence Strict -->
-
-        <record model="ir.ui.view" id="sequence_strict_view_form">
-            <field name="model">ir.sequence</field>
-            <field name="inherit" ref="ir.sequence_strict_view_form"/>
-            <field name="name">sequence_form</field>
-        </record>
-
 <!-- SMTP Servers -->
 
         <record model="ir.ui.view" id="smtp_server_view_form">

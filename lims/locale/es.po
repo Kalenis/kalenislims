@@ -14866,14 +14866,6 @@ msgctxt "view:ir.attachment:"
 msgid "Last Modification Time"
 msgstr "Hora última modificación"
 
-msgctxt "view:ir.sequence:"
-msgid "${year2}"
-msgstr "${year2}"
-
-msgctxt "view:ir.sequence:"
-msgid "Year (two digits):"
-msgstr "Año (dos dígitos):"
-
 msgctxt "view:lims.analysis-laboratory:"
 msgid "Analysis Laboratories"
 msgstr "Laboratorios de análisis"
