@@ -447,13 +447,13 @@ class LimsReport:
                 os.path.dirname(__file__), 'report', 'translations')
         with Transaction().set_context(**context):
             content = cls.render_lims_template(action,
-                tcontent, record=record, records=[record],
+                tcontent, record=record, records=records,
                 data=data)
             header = theader and cls.render_lims_template(action,
-                theader, record=record, records=[record],
+                theader, record=record, records=records,
                 data=data)
             footer = tfooter and cls.render_lims_template(action,
-                tfooter, record=record, records=[record],
+                tfooter, record=record, records=records,
                 data=data)
 
         stylesheets = cls.parse_stylesheets(tcontent)
