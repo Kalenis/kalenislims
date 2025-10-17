@@ -1139,9 +1139,11 @@ class NotebookRule(ModelSQL, ModelView):
 
     def _exec_annul(self, line):
         pool = Pool()
+        ModelData = pool.get('ir.model.data')
         NotebookLine = pool.get('lims.notebook.line')
 
         now = datetime.now()
+        result_modifier_na = ModelData.get_id('lims', 'result_modifier_na')
 
         if line.analysis == self.target_analysis:
             notebook_line = NotebookLine(line.id)
@@ -1164,7 +1166,7 @@ class NotebookRule(ModelSQL, ModelView):
             return
 
         try:
-            notebook_line.result_modifier = 'na'
+            notebook_line.result_modifier = result_modifier_na
             notebook_line.annulled = True
             notebook_line.annulment_date = now
             notebook_line.annulment_reason = self.name
