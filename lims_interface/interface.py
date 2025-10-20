@@ -1068,6 +1068,8 @@ class Column(sequence_ordered(), ModelSQL, ModelView):
     def check_default_value(self):
         if not self.default_value:
             return
+        if self.default_value.startswith('='):
+            return
         if self.type_ in [
                 'datetime', 'time', 'timestamp', 'timedelta',
                 'icon', 'image', 'binary', 'reference',
