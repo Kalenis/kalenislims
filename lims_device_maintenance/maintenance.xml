@@ -246,7 +246,7 @@
         <menuitem name="Calendar"
             action="act_lab_device_maintenance_calendar_list"
             id="menu_device_maintenance_calendar"
-            parent="menu_device_maintenance" sequence="40"/>
+            parent="menu_device_maintenance" sequence="50"/>
 
         <record model="ir.model.button" id="device_maintenance_pending_button">
             <field name="name">pending</field>
@@ -260,6 +260,37 @@
             <field name="name">discard</field>
             <field name="model" search="[('model', '=', 'lims.lab.device.maintenance')]"/>
         </record>
+
+<!-- My Device Maintenances -->
+
+        <record model="ir.action.act_window" id="act_device_maintenance_calendar_mine">
+            <field name="name">My Device Maintenances</field>
+            <field name="res_model">lims.lab.device.maintenance</field>
+            <field name="domain" pyson="1"
+                eval="[('responsible.employee.id', '=', Eval('context', {}).get('employee', -1))]"/>
+        </record>
+        <record model="ir.action.act_window.view"
+                id="act_device_maintenance_calendar_mine_view_calendar">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lab_device_maintenance_calendar_view_calendar"/>
+            <field name="act_window" ref="act_device_maintenance_calendar_mine"/>
+        </record>
+        <record model="ir.action.act_window.view"
+                id="act_device_maintenance_calendar_mine_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lab_device_maintenance_calendar_view_form"/>
+            <field name="act_window" ref="act_device_maintenance_calendar_mine"/>
+        </record>
+        <record model="ir.action.act_window.view"
+                id="act_device_maintenance_calendar_mine_view_list">
+            <field name="sequence" eval="30"/>
+            <field name="view" ref="lab_device_maintenance_calendar_view_list"/>
+            <field name="act_window" ref="act_device_maintenance_calendar_mine"/>
+        </record>
+
+        <menuitem action="act_device_maintenance_calendar_mine"
+            id="menu_device_maintenance_calendar_mine"
+            parent="menu_device_maintenance" sequence="40"/>
 
 <!-- Cron -->
 

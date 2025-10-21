@@ -159,6 +159,10 @@ msgctxt "field:lims.lab.device.maintenance.type,name:"
 msgid "Name"
 msgstr "Nombre"
 
+msgctxt "model:ir.action,name:act_device_maintenance_calendar_mine"
+msgid "My Device Maintenances"
+msgstr "Mis Mantenimientos de Equipos"
+
 msgctxt "model:ir.action,name:act_lab_device_maintenance_activity_list"
 msgid "Device Maintenance Activities"
 msgstr "Actividades de mantenimiento de Equipo"
@@ -221,6 +225,10 @@ msgstr "Actividades"
 msgctxt "model:ir.ui.menu,name:menu_device_maintenance_calendar"
 msgid "Calendar"
 msgstr "Calendario"
+
+msgctxt "model:ir.ui.menu,name:menu_device_maintenance_calendar_mine"
+msgid "My Device Maintenances"
+msgstr "Mis Mantenimientos de Equipos"
 
 msgctxt "model:ir.ui.menu,name:menu_device_maintenance_config"
 msgid "Configuration"
