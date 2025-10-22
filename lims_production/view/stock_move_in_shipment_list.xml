@@ -4,7 +4,7 @@
     <field name="from_location"/>
     <field name="to_location"/>
     <field name="quantity"/>
-    <field name="uom"/>
+    <field name="unit"/>
     <field name="label_quantity"/>
     <field name="planned_date"/>
     <field name="effective_date"/>
