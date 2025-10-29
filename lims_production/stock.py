@@ -312,8 +312,7 @@ class Lot(metaclass=PoolMeta):
 class Move(metaclass=PoolMeta):
     __name__ = 'stock.move'
 
-    label_quantity = fields.Float("Label Quantity",
-        digits='uom')
+    label_quantity = fields.Float("Label Quantity")
     origin_purchase_unit_price = fields.Numeric('Unit Price',
         digits=price_digits)
     origin_purchase_currency = fields.Many2One('currency.currency',
