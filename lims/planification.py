@@ -6877,8 +6877,11 @@ class BlindSampleReport(Report):
                         if unit == original_unit:
                             average = (result + original_result) / 2
                             difference = result - original_result
-                            record['error'] = round(difference * 100 / average,
-                                2)
+                            if average != 0:
+                                record['error'] = round(
+                                    difference * 100 / average, 2)
+                            else:
+                                record['error'] = 0 if difference == 0 else ''
                             try:
                                 maximum_concentration = float(
                                     unit.maximum_concentration)
