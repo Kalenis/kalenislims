@@ -74,6 +74,8 @@ class ResultsReport(ModelSQL, ModelView):
         'get_samples_list', searcher='search_samples_list')
     entry_summary = fields.Function(fields.Char('Entry / Qty. Samples'),
         'get_entry_summary', searcher='search_entry_summary')
+    release_date = fields.Function(fields.DateTime(
+        'Release date'), 'get_release_date')
 
     # PDF Report Cache
     report_cache = fields.Binary('Report cache', readonly=True,
@@ -605,6 +607,15 @@ class ResultsReport(ModelSQL, ModelView):
         if not reports_ids:
             return [('id', '=', -1)]
         return [('id', 'in', reports_ids)]
+
+    def get_release_date(self, name):
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+
+        valid_detail = ResultsDetail.search([
+            ('report_version.id', '=', self.id),
+            ], order=[('id', 'DESC')], limit=1)
+        return valid_detail and valid_detail[0].release_date or None
 
 
 class ResultsReportVersion(ModelSQL, ModelView):

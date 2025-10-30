@@ -5600,6 +5600,10 @@ msgctxt "field:lims.results_report,ready_to_send:"
 msgid "Ready to Send"
 msgstr "Listo para enviar"
 
+msgctxt "field:lims.results_report,release_date:"
+msgid "Release date"
+msgstr "Fecha de publicación"
+
 msgctxt "field:lims.results_report,report_cache:"
 msgid "Report cache"
 msgstr "Cache informe"
