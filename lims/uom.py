@@ -63,16 +63,8 @@ class UomConversion(ModelSQL, ModelView):
         fu = final_uom
         if not fu:
             return None
-
-        try:
-            ic = float(initial_concentration)
-        except (TypeError, ValueError):
-            return None
-        try:
-            fc = float(final_concentration)
-        except (TypeError, ValueError):
-            return None
-
+        ic = initial_concentration or None
+        fc = final_concentration or None
         try:
             result = float(value)
         except (TypeError, ValueError):
@@ -92,9 +84,27 @@ class UomConversion(ModelSQL, ModelView):
             converted_result = result * formula_result
 
         elif (iu == fu and ic != fc):
+            try:
+                ic = float(initial_concentration)
+            except (TypeError, ValueError):
+                return None
+            try:
+                fc = float(final_concentration)
+            except (TypeError, ValueError):
+                return None
+
             converted_result = result * (fc / ic)
 
         else:
+            try:
+                ic = float(initial_concentration)
+            except (TypeError, ValueError):
+                return None
+            try:
+                fc = float(final_concentration)
+            except (TypeError, ValueError):
+                return None
+
             formula = None
             conversions = cls.search([
                 ('initial_uom', '=', iu),
