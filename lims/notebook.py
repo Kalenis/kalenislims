@@ -5939,18 +5939,12 @@ class NotebookResultsVerification(Wizard):
                 iu = notebook_line.initial_unit
                 if not iu:
                     continue
-                try:
-                    ic = float(notebook_line.initial_concentration)
-                except (TypeError, ValueError):
-                    continue
+                ic = notebook_line.initial_concentration or None
             else:
                 iu = notebook_line.final_unit
                 if not iu:
                     continue
-                try:
-                    ic = float(notebook_line.final_concentration)
-                except (TypeError, ValueError):
-                    continue
+                ic = notebook_line.final_concentration or None
 
             try:
                 result = float(result)
@@ -5966,10 +5960,7 @@ class NotebookResultsVerification(Wizard):
             if not ranges:
                 continue
             fu = ranges[0].uom
-            try:
-                fc = float(ranges[0].concentration)
-            except (TypeError, ValueError):
-                continue
+            fc = ranges[0].concentration or None
 
             if fu and fu.rec_name != '-':
                 converted_result = None
@@ -5986,8 +5977,24 @@ class NotebookResultsVerification(Wizard):
 
                     converted_result = result * formula_result
                 elif (iu == fu and ic != fc):
+                    try:
+                        ic = float(notebook_line.initial_concentration)
+                    except (TypeError, ValueError):
+                        continue
+                    try:
+                        fc = float(notebook_line.final_concentration)
+                    except (TypeError, ValueError):
+                        continue
                     converted_result = result * (fc / ic)
                 else:
+                    try:
+                        ic = float(notebook_line.initial_concentration)
+                    except (TypeError, ValueError):
+                        continue
+                    try:
+                        fc = float(notebook_line.final_concentration)
+                    except (TypeError, ValueError):
+                        continue
                     formula = None
                     conversions = UomConversion.search([
                         ('initial_uom', '=', iu),
