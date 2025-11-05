@@ -76,7 +76,7 @@ class Production(metaclass=PoolMeta):
         Product = pool.get('product.product')
 
         super().explode_bom()
-        if not (self.bom and self.product and self.uom):
+        if not (self.bom and self.product and self.unit):
             return
 
         if not self.bom.divide_lots:
@@ -95,7 +95,7 @@ class Production(metaclass=PoolMeta):
         else:
             storage_location = None
         factor = self.bom.compute_factor(self.product, self.quantity or 0,
-            self.uom)
+            self.unit)
         if hasattr(Product, 'cost_price'):
             digits = Product.cost_price.digits
         else:
@@ -107,8 +107,7 @@ class Production(metaclass=PoolMeta):
             line_qty = output.quantity
             lines = int(quantity / line_qty)
             for q in range(lines):
-                move = self._explode_move_values(self.location,
-                    storage_location, self.company, output, line_qty)
+                move = self._explode_move_values('output', output, line_qty)
                 if move:
                     move.unit_price = Decimal(0)
                     if output.product == move.product and quantity:
@@ -157,15 +156,15 @@ class Production(metaclass=PoolMeta):
             if production.bom:
                 divide_lots = production.bom.divide_lots
                 factor = production.bom.compute_factor(production.product,
-                    production.quantity or 0, production.uom)
+                    production.quantity or 0, production.unit)
             else:
                 divide_lots = False
             cost_price = production.cost
             for output in production.outputs:
                 if divide_lots:
-                    quantity = output.uom.round(output.quantity * factor)
+                    quantity = output.unit.round(output.quantity * factor)
                 else:
-                    quantity = output.uom.round(output.quantity)
+                    quantity = output.unit.round(output.quantity)
                 if quantity:
                     output.unit_price = Decimal(0)
                     output.unit_price = Decimal(
@@ -199,23 +198,3 @@ class Production(metaclass=PoolMeta):
                 if lot:
                     lot.save()
                     Move.write([move], {'lot': lot})
-
-    def _explode_move_values(self, from_location, to_location, company,
-            bom_io, quantity):
-        User = Pool().get('res.user')
-        product_location = None
-        for d in User(Transaction().user).departments:
-            if d.default:
-                for l in bom_io.product.locations:
-                    if l.department == d.department:
-                        product_location = l.location
-                        break
-                break
-
-        if product_location:
-            if from_location == self.location:
-                to_location = product_location
-            else:
-                from_location = product_location
-        return super()._explode_move_values(from_location, to_location,
-            company, bom_io, quantity)
