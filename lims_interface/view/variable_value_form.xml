@@ -13,4 +13,6 @@
     <field name="matrix"/>
     <label name="method"/>
     <field name="method"/>
+    <label name="laboratory"/>
+    <field name="laboratory"/>
 </form>

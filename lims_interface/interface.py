@@ -2528,6 +2528,7 @@ class VariableValue(ModelSQL, ModelView):
     product_type = fields.Many2One('lims.product.type', 'Product type')
     matrix = fields.Many2One('lims.matrix', 'Matrix')
     method = fields.Many2One('lims.lab.method', 'Method')
+    laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
 
     @classmethod
     def get_name(cls, values, name):
@@ -2542,7 +2543,7 @@ class VariableValue(ModelSQL, ModelView):
 
     @classmethod
     def get_value(cls, name, analysis, product_type=None, matrix=None,
-            method=None):
+            method=None, laboratory=None):
         if not name or not analysis:
             return None
         clause = [
@@ -2551,6 +2552,7 @@ class VariableValue(ModelSQL, ModelView):
             ('product_type', '=', product_type),
             ('matrix', '=', matrix),
             ('method', '=', method),
+            ('laboratory', '=', laboratory),
             ]
         res = cls.search(clause, limit=1)
         if not res:

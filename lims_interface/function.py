@@ -61,18 +61,38 @@ def get_variable(notebook_line, variable):
     product_type = notebook_line.product_type
     matrix = notebook_line.matrix
     method = notebook_line.method
+    laboratory = notebook_line.laboratory
 
     res = VariableValue.get_value(variable, analysis, product_type, matrix,
+        method, laboratory)
+    if res:
+        return res
+    res = VariableValue.get_value(variable, analysis, product_type, matrix,
         method)
+    if res:
+        return res
+    res = VariableValue.get_value(variable, analysis, product_type, matrix,
+        laboratory=laboratory)
     if res:
         return res
     res = VariableValue.get_value(variable, analysis, product_type, matrix)
     if res:
         return res
+    res = VariableValue.get_value(variable, analysis, product_type,
+        laboratory=laboratory)
+    if res:
+        return res
     res = VariableValue.get_value(variable, analysis, product_type)
     if res:
         return res
-    res = VariableValue.get_value(variable, analysis, method)
+    res = VariableValue.get_value(variable, analysis, method=method,
+        laboratory=laboratory)
+    if res:
+        return res
+    res = VariableValue.get_value(variable, analysis, method=method)
+    if res:
+        return res
+    res = VariableValue.get_value(variable, analysis, laboratory=laboratory)
     if res:
         return res
     res = VariableValue.get_value(variable, analysis)

@@ -702,6 +702,10 @@ msgctxt "field:lims.interface.variable.value,method:"
 msgid "Method"
 msgstr "Método"
 
+msgctxt "field:lims.interface.variable.value,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
 msgctxt "field:lims.interface.variable.value,name:"
 msgid "Name"
 msgstr "Nombre"
