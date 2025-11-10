@@ -6,4 +6,5 @@
     <field name="product_type"/>
     <field name="matrix"/>
     <field name="method"/>
+    <field name="laboratory"/>
 </tree>
