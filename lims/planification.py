@@ -4838,10 +4838,8 @@ class CreateFractionControl(Wizard):
         if not entry.party.entry_zone and config.zone_required:
             raise UserError(gettext('lims.msg_no_party_zone',
                 party=entry.party.rec_name))
-        zone_id = entry.party.entry_zone and entry.party.entry_zone.id or None
 
         laboratory = self.start.laboratory
-        obj_description = self._get_obj_description(self.start)
         packages = [{
             'quantity': 1,
             'type': fraction_type.default_package_type.id,
@@ -4849,29 +4847,15 @@ class CreateFractionControl(Wizard):
             }]
 
         # new sample
-        new_sample, = Sample.create([{
-            'entry': entry.id,
-            'party': entry.party.id,
-            'date': datetime.now(),
-            'product_type': self.start.product_type.id,
-            'matrix': self.start.matrix.id,
-            'zone': zone_id,
-            'label': self.start.label,
-            'obj_description': obj_description,
-            'packages': [('create', packages)],
-            'sample_client_description': '-',
-            'fractions': [],
-            }])
+        sample_default = self._get_sample(entry)
+        sample_default['packages'] = [('create', packages)]
+        new_sample, = Sample.create([sample_default])
 
         # new fraction
-        fraction_default = {
-            'sample': new_sample.id,
-            'type': fraction_type.id,
-            'storage_location': laboratory.related_location.id,
-            'packages': [('create', packages)],
-            'services': [],
-            'con_type': self.start.type,
-            }
+        fraction_default = self._get_fraction(new_sample)
+        fraction_default['packages'] = [('create', packages)]
+        fraction_default['type'] = fraction_type.id
+        fraction_default['storage_location'] = laboratory.related_location.id
         if fraction_type.max_storage_time:
             fraction_default['storage_time'] = fraction_type.max_storage_time
         elif laboratory.related_location.storage_time:
@@ -4940,6 +4924,29 @@ class CreateFractionControl(Wizard):
             (sample.product_type.id, sample.matrix.id))
         res = cursor.fetchone()
         return res and res[0] or None
+
+    def _get_sample(self, entry):
+        zone_id = entry.party.entry_zone and entry.party.entry_zone.id or None
+        obj_description = self._get_obj_description(self.start)
+        return {
+            'entry': entry.id,
+            'party': entry.party.id,
+            'date': datetime.now(),
+            'product_type': self.start.product_type.id,
+            'matrix': self.start.matrix.id,
+            'zone': zone_id,
+            'label': self.start.label,
+            'obj_description': obj_description,
+            'sample_client_description': '-',
+            'fractions': [],
+            }
+
+    def _get_fraction(self, sample):
+        return {
+            'sample': sample.id,
+            'con_type': self.start.type,
+            'services': [],
+            }
 
     def do_open_(self, action):
         action['pyson_domain'] = PYSONEncoder().encode([
