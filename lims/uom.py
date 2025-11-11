@@ -6,6 +6,7 @@
 from trytond.model import ModelView, ModelSQL, fields, Unique
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
+from .formula_parser import FormulaParser
 
 
 class Uom(metaclass=PoolMeta):
@@ -51,6 +52,86 @@ class UomConversion(ModelSQL, ModelView):
     conversion_formula = fields.Char('Conversion formula')
 
     @classmethod
+    def convert(cls, value, initial_uom, initial_concentration,
+            final_uom, final_concentration, notebook_line):
+        pool = Pool()
+        VolumeConversion = pool.get('lims.volume.conversion')
+
+        iu = initial_uom
+        if not iu:
+            return None
+        fu = final_uom
+        if not fu:
+            return None
+        ic = initial_concentration or None
+        fc = final_concentration or None
+        try:
+            result = float(value)
+        except (TypeError, ValueError):
+            return None
+
+        if (iu == fu and ic == fc):
+            converted_result = result
+
+        elif (iu != fu and ic == fc):
+            formula = cls.get_conversion_formula(iu, fu)
+            if not formula:
+                return None
+
+            variables = cls.get_variables(formula, notebook_line)
+            parser = FormulaParser(formula, variables)
+            formula_result = parser.getValue()
+            converted_result = result * formula_result
+
+        elif (iu == fu and ic != fc):
+            try:
+                ic = float(initial_concentration)
+            except (TypeError, ValueError):
+                return None
+            try:
+                fc = float(final_concentration)
+            except (TypeError, ValueError):
+                return None
+
+            converted_result = result * (fc / ic)
+
+        else:
+            try:
+                ic = float(initial_concentration)
+            except (TypeError, ValueError):
+                return None
+            try:
+                fc = float(final_concentration)
+            except (TypeError, ValueError):
+                return None
+
+            formula = None
+            conversions = cls.search([
+                ('initial_uom', '=', iu),
+                ('final_uom', '=', fu),
+                ])
+            if conversions:
+                formula = conversions[0].conversion_formula
+            if not formula:
+                return None
+
+            initial_uom_volume = conversions[0].initial_uom_volume
+            final_uom_volume = conversions[0].final_uom_volume
+            variables = cls.get_variables(formula, notebook_line,
+                initial_uom_volume, final_uom_volume)
+            parser = FormulaParser(formula, variables)
+            formula_result = parser.getValue()
+
+            if initial_uom_volume and final_uom_volume:
+                d_ic = VolumeConversion.brixToDensity(ic)
+                d_fc = VolumeConversion.brixToDensity(fc)
+                converted_result = (result * (fc / ic) * (d_fc / d_ic) *
+                    formula_result)
+            else:
+                converted_result = result * (fc / ic) * formula_result
+        return converted_result
+
+    @classmethod
     def get_conversion_formula(cls, initial_uom, final_uom):
         if not initial_uom or not final_uom:
             return None
@@ -61,6 +142,35 @@ class UomConversion(ModelSQL, ModelView):
         if values:
             return values[0].conversion_formula
         return None
+
+    @classmethod
+    def get_variables(cls, formula, notebook_line,
+            initial_uom_volume=False, final_uom_volume=False):
+        pool = Pool()
+        VolumeConversion = pool.get('lims.volume.conversion')
+
+        variables = {}
+        for var in ('DI',):
+            while True:
+                idx = formula.find(var)
+                if idx >= 0:
+                    variables[var] = 0
+                    formula = formula.replace(var, '_')
+                else:
+                    break
+        for var in variables.keys():
+            if var == 'DI':
+                if initial_uom_volume:
+                    c = float(notebook_line.initial_concentration)
+                    result = VolumeConversion.brixToDensity(c)
+                    if result:
+                        variables[var] = result
+                elif final_uom_volume:
+                    c = float(notebook_line.final_concentration)
+                    result = VolumeConversion.brixToDensity(c)
+                    if result:
+                        variables[var] = result
+        return variables
 
 
 class Template(metaclass=PoolMeta):

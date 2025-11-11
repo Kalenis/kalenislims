@@ -531,7 +531,6 @@ class LabDevice(DeactivableMixin, ModelSQL, ModelView):
         'Current Laboratory'), 'get_current_laboratory',
         searcher='search_current_laboratory')
 
-
     @classmethod
     def __setup__(cls):
         super().__setup__()

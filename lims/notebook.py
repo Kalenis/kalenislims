@@ -2550,7 +2550,6 @@ class NotebookResultsConversion(Wizard):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
         UomConversion = pool.get('lims.uom.conversion')
-        VolumeConversion = pool.get('lims.volume.conversion')
 
         lines_to_save = []
         for notebook_line in notebook_lines:
@@ -2559,108 +2558,20 @@ class NotebookResultsConversion(Wizard):
             if (notebook_line.converted_result or not notebook_line.result or
                     notebook_line.result_modifier):
                 continue
-            iu = notebook_line.initial_unit
-            if not iu:
-                continue
-            fu = notebook_line.final_unit
-            if not fu:
-                continue
-            try:
-                ic = float(notebook_line.initial_concentration)
-            except (TypeError, ValueError):
-                continue
-            try:
-                fc = float(notebook_line.final_concentration)
-            except (TypeError, ValueError):
-                continue
-            try:
-                result = float(notebook_line.result)
-            except (TypeError, ValueError):
-                continue
 
-            if (iu == fu and ic == fc):
-                converted_result = result
-                notebook_line.converted_result = str(converted_result)
-                notebook_line.converted_result_modifier = None
-                lines_to_save.append(notebook_line)
-            elif (iu != fu and ic == fc):
-                formula = UomConversion.get_conversion_formula(iu, fu)
-                if not formula:
-                    continue
-                variables = self._get_variables(formula, notebook_line)
-                parser = FormulaParser(formula, variables)
-                formula_result = parser.getValue()
-
-                converted_result = result * formula_result
-                notebook_line.converted_result = str(converted_result)
-                notebook_line.converted_result_modifier = None
-                lines_to_save.append(notebook_line)
-            elif (iu == fu and ic != fc):
-                converted_result = result * (fc / ic)
-                notebook_line.converted_result = str(converted_result)
-                notebook_line.converted_result_modifier = None
-                lines_to_save.append(notebook_line)
-            else:
-                formula = None
-                conversions = UomConversion.search([
-                    ('initial_uom', '=', iu),
-                    ('final_uom', '=', fu),
-                    ])
-                if conversions:
-                    formula = conversions[0].conversion_formula
-                if not formula:
-                    continue
-
-                initial_uom_volume = conversions[0].initial_uom_volume
-                final_uom_volume = conversions[0].final_uom_volume
-                variables = self._get_variables(formula, notebook_line,
-                    initial_uom_volume, final_uom_volume)
-                parser = FormulaParser(formula, variables)
-                formula_result = parser.getValue()
-
-                if initial_uom_volume and final_uom_volume:
-                    d_ic = VolumeConversion.brixToDensity(ic)
-                    d_fc = VolumeConversion.brixToDensity(fc)
-                    converted_result = (result * (fc / ic) * (d_fc / d_ic) *
-                        formula_result)
-                    notebook_line.converted_result = str(converted_result)
-                    notebook_line.converted_result_modifier = None
-                    lines_to_save.append(notebook_line)
-                else:
-                    converted_result = result * (fc / ic) * formula_result
-                    notebook_line.converted_result = str(converted_result)
-                    notebook_line.converted_result_modifier = None
-                    lines_to_save.append(notebook_line)
+            converted_result = UomConversion.convert(notebook_line.result,
+                notebook_line.initial_unit,
+                notebook_line.initial_concentration,
+                notebook_line.final_unit,
+                notebook_line.final_concentration,
+                notebook_line)
+            if converted_result is None:
+                continue
+            notebook_line.converted_result = str(converted_result)
+            notebook_line.converted_result_modifier = None
+            lines_to_save.append(notebook_line)
         if lines_to_save:
             NotebookLine.save(lines_to_save)
-
-    def _get_variables(self, formula, notebook_line,
-            initial_uom_volume=False, final_uom_volume=False):
-        pool = Pool()
-        VolumeConversion = pool.get('lims.volume.conversion')
-
-        variables = {}
-        for var in ('DI',):
-            while True:
-                idx = formula.find(var)
-                if idx >= 0:
-                    variables[var] = 0
-                    formula = formula.replace(var, '_')
-                else:
-                    break
-        for var in variables.keys():
-            if var == 'DI':
-                if initial_uom_volume:
-                    c = float(notebook_line.initial_concentration)
-                    result = VolumeConversion.brixToDensity(c)
-                    if result:
-                        variables[var] = result
-                elif final_uom_volume:
-                    c = float(notebook_line.final_concentration)
-                    result = VolumeConversion.brixToDensity(c)
-                    if result:
-                        variables[var] = result
-        return variables
 
     def end(self):
         return 'reload'
@@ -5924,7 +5835,6 @@ class NotebookResultsVerification(Wizard):
         NotebookLine = pool.get('lims.notebook.line')
         Range = pool.get('lims.range')
         UomConversion = pool.get('lims.uom.conversion')
-        VolumeConversion = pool.get('lims.volume.conversion')
 
         verifications = self._get_verifications()
 
@@ -5963,60 +5873,10 @@ class NotebookResultsVerification(Wizard):
             fc = ranges[0].concentration or None
 
             if fu and fu.rec_name != '-':
-                converted_result = None
-                if (iu == fu and ic == fc):
-                    converted_result = result
-                elif (iu != fu and ic == fc):
-                    formula = UomConversion.get_conversion_formula(iu,
-                        fu)
-                    if not formula:
-                        continue
-                    variables = self._get_variables(formula, notebook_line)
-                    parser = FormulaParser(formula, variables)
-                    formula_result = parser.getValue()
-
-                    converted_result = result * formula_result
-                elif (iu == fu and ic != fc):
-                    try:
-                        ic = float(notebook_line.initial_concentration)
-                    except (TypeError, ValueError):
-                        continue
-                    try:
-                        fc = float(notebook_line.final_concentration)
-                    except (TypeError, ValueError):
-                        continue
-                    converted_result = result * (fc / ic)
-                else:
-                    try:
-                        ic = float(notebook_line.initial_concentration)
-                    except (TypeError, ValueError):
-                        continue
-                    try:
-                        fc = float(notebook_line.final_concentration)
-                    except (TypeError, ValueError):
-                        continue
-                    formula = None
-                    conversions = UomConversion.search([
-                        ('initial_uom', '=', iu),
-                        ('final_uom', '=', fu),
-                        ])
-                    if conversions:
-                        formula = conversions[0].conversion_formula
-                    if not formula:
-                        continue
-                    variables = self._get_variables(formula, notebook_line)
-                    parser = FormulaParser(formula, variables)
-                    formula_result = parser.getValue()
-
-                    if (conversions[0].initial_uom_volume and
-                            conversions[0].final_uom_volume):
-                        d_ic = VolumeConversion.brixToDensity(ic)
-                        d_fc = VolumeConversion.brixToDensity(fc)
-                        converted_result = (result * (fc / ic) *
-                            (d_fc / d_ic) * formula_result)
-                    else:
-                        converted_result = (result * (fc / ic) *
-                            formula_result)
+                converted_result = UomConversion.convert(result,
+                    iu, ic, fu, fc, notebook_line)
+                if converted_result is None:
+                    continue
                 result = float(converted_result)
 
             verification = self._verificate_result(result, ranges[0])
@@ -6024,27 +5884,6 @@ class NotebookResultsVerification(Wizard):
             lines_to_save.append(notebook_line)
         if lines_to_save:
             NotebookLine.save(lines_to_save)
-
-    def _get_variables(self, formula, notebook_line):
-        pool = Pool()
-        VolumeConversion = pool.get('lims.volume.conversion')
-
-        variables = {}
-        for var in ('DI',):
-            while True:
-                idx = formula.find(var)
-                if idx >= 0:
-                    variables[var] = 0
-                    formula = formula.replace(var, '_')
-                else:
-                    break
-        for var in variables.keys():
-            if var == 'DI':
-                ic = float(notebook_line.final_concentration)
-                result = VolumeConversion.brixToDensity(ic)
-                if result:
-                    variables[var] = result
-        return variables
 
     def _verificate_result(self, result, range_):
         if range_.min95 and range_.max95:
