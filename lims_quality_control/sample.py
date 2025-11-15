@@ -372,7 +372,7 @@ class CountersampleCreate(Wizard):
             move.lot = fraction.sample.lot.id
             move.fraction = fraction.id
             move.quantity = quantity or 1
-            move.uom = unit
+            move.unit = unit
             move.from_location = \
                 fraction.sample.countersample_original_sample.fractions[
                     0].storage_location.id

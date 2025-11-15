@@ -2467,7 +2467,7 @@ class Fraction(ModelSQL, ModelView):
         move.product = product.id
         move.fraction = self.id
         move.quantity = 1
-        move.uom = product.default_uom
+        move.unit = product.default_uom
         move.from_location = from_location
         move.to_location = self.storage_location
         move.company = company
@@ -5827,7 +5827,7 @@ class CountersampleStorage(Wizard):
             move.product = product.id
             move.fraction = fraction.id
             move.quantity = 1
-            move.uom = product.default_uom
+            move.unit = product.default_uom
             move.from_location = from_location
             move.to_location = to_location
             move.company = company
@@ -6029,7 +6029,7 @@ class CountersampleStorageRevert(Wizard):
             move.product = product.id
             move.fraction = fraction.id
             move.quantity = 1
-            move.uom = product.default_uom
+            move.unit = product.default_uom
             move.from_location = from_location
             move.to_location = to_location
             move.company = company
@@ -6259,7 +6259,7 @@ class CountersampleDischarge(Wizard):
             move.product = product.id
             move.fraction = fraction.id
             move.quantity = 1
-            move.uom = product.default_uom
+            move.unit = product.default_uom
             move.from_location = from_location
             move.to_location = to_location
             move.company = company
@@ -6469,7 +6469,7 @@ class FractionDischarge(Wizard):
             move.product = product.id
             move.fraction = fraction.id
             move.quantity = 1
-            move.uom = product.default_uom
+            move.unit = product.default_uom
             move.from_location = from_location
             move.to_location = to_location
             move.company = company
@@ -6652,7 +6652,7 @@ class FractionDischargeRevert(Wizard):
             move.product = product.id
             move.fraction = fraction.id
             move.quantity = 1
-            move.uom = product.default_uom
+            move.unit = product.default_uom
             move.from_location = from_location
             move.to_location = to_location
             move.company = company
