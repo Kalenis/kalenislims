@@ -247,6 +247,10 @@ msgctxt "field:lims.analysis_sheet.results_verification.start,range_type:"
 msgid "Origin"
 msgstr "Origen"
 
+msgctxt "field:lims.configuration,analysis_sheet_annul_notebook_lines:"
+msgid "Annul lines in the Notebook when annulling Analysis Sheets"
+msgstr "Anular líneas en el Cuaderno cuando se anula una Hoja de análisis"
+
 msgctxt "field:lims.configuration,analysis_sheet_sequence:"
 msgid "Analysis Sheet Sequence"
 msgstr "Secuencia de Hoja de análisis"

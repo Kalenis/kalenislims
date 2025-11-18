@@ -20,9 +20,15 @@ class Configuration(metaclass=PoolMeta):
             ]))
     planification_update_draft_sheet = fields.Boolean(
         'Update draft sheets when planning analyzes')
+    analysis_sheet_annul_notebook_lines = fields.Boolean(
+        'Annul lines in the Notebook when annulling Analysis Sheets')
 
     @staticmethod
     def default_planification_update_draft_sheet():
+        return False
+
+    @staticmethod
+    def default_analysis_sheet_annul_notebook_lines():
         return False
 
     @classmethod
