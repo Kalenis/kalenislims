@@ -9,5 +9,9 @@
             <label name="planification_update_draft_sheet"/>
             <field name="planification_update_draft_sheet"/>
         </group>
+        <group id="analysis_sheet_annul_notebook_lines" colspan="2" col="2">
+            <label name="analysis_sheet_annul_notebook_lines"/>
+            <field name="analysis_sheet_annul_notebook_lines"/>
+        </group>
     </xpath>
 </data>

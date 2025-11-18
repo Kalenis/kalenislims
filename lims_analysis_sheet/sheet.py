@@ -1105,8 +1105,43 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
     @Workflow.transition('annulled')
     @set_state_info('annulled')
     def annul(cls, sheets):
-        Compilation = Pool().get('lims.interface.compilation')
-        Compilation.annul([s.compilation for s in sheets])
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        Data = pool.get('lims.interface.data')
+        NotebookLine = pool.get('lims.notebook.line')
+        ModelData = pool.get('ir.model.data')
+
+        config_ = Config(1)
+        annul_notebook_lines = config_.analysis_sheet_annul_notebook_lines
+        to_write = list()
+        for s in sheets:
+            with Transaction().set_context(
+                    lims_interface_table=s.compilation.table.id):
+                lines = Data.search([
+                    ('compilation', '=', s.compilation.id)])
+                if not lines:
+                    continue
+                for line in lines:
+                    nb_line = line.notebook_line
+                    if not nb_line:
+                        continue
+                    if nb_line.annulled:
+                        continue
+                    if annul_notebook_lines:
+                        to_write.append(nb_line)
+                    else:
+                        raise UserError(gettext(
+                            'lims_interface.msg_line_not_annulled',
+                            notebook_line=nb_line.rec_name))
+        if to_write:
+            now = datetime.now()
+            result_modifier_na = ModelData.get_id('lims', 'result_modifier_na')
+            NotebookLine.write(to_write, {
+                'result_modifier': result_modifier_na,
+                'annulled': True,
+                'annulment_date': now,
+                'report': False,
+                })
 
     def get_new_compilation(self, defaults={}):
         Compilation = Pool().get('lims.interface.compilation')

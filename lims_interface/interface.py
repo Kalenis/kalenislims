@@ -2225,27 +2225,6 @@ class Compilation(Workflow, ModelSQL, ModelView):
         return True
 
     @classmethod
-    @ModelView.button
-    @Workflow.transition('annulled')
-    def annul(cls, compilations):
-        pool = Pool()
-        Data = pool.get('lims.interface.data')
-
-        for c in compilations:
-            with Transaction().set_context(lims_interface_table=c.table.id):
-                lines = Data.search([('compilation', '=', c.id)])
-                if not lines:
-                    continue
-                for line in lines:
-                    nb_line = line.notebook_line
-                    if not nb_line:
-                        continue
-                    if not nb_line.annulled:
-                        raise UserError(gettext(
-                            'lims_interface.msg_line_not_annulled',
-                            notebook_line=nb_line.rec_name))
-
-    @classmethod
     def delete(cls, compilations):
         Data = Pool().get('lims.interface.data')
         for c in compilations:
