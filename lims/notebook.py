@@ -888,6 +888,8 @@ class NotebookLine(ModelSQL, ModelView):
         states=_states, depends=_depends)
     result = fields.Char('Result',
         states=_states, depends=_depends)
+    result_number = fields.Float('Result number',
+        states=_states, depends=_depends)
     converted_result = fields.Char('Converted result',
         states=_states, depends=_depends)
     result_and_uom = fields.Function(fields.Char('Result && Uom'),
@@ -1118,6 +1120,21 @@ class NotebookLine(ModelSQL, ModelView):
 
         vlist = [x.copy() for x in vlist]
         for values in vlist:
+            value_to_convert = None
+            if 'backup' in values:
+                value_to_convert = values.get('backup')
+            elif 'result' in values:
+                value_to_convert = values.get('result')
+            if value_to_convert is not None:
+                if value_to_convert:
+                    try:
+                        values['result_number'] = float(
+                            value_to_convert.replace(',', '.'))
+                    except (ValueError, AttributeError):
+                        values['result_number'] = None
+                else:
+                    values['result_number'] = None
+
             # set method version
             if 'method' in values and values['method'] is not None:
                 values['method_version'] = LabMethod(
@@ -1139,6 +1156,21 @@ class NotebookLine(ModelSQL, ModelView):
         actions = iter(args)
         args = []
         for lines, values in zip(actions, actions):
+            value_to_convert = None
+            if 'backup' in values:
+                value_to_convert = values.get('backup')
+            elif 'result' in values:
+                value_to_convert = values.get('result')
+            if value_to_convert is not None:
+                if value_to_convert:
+                    try:
+                        values['result_number'] = float(
+                            value_to_convert.replace(',', '.'))
+                    except (ValueError, AttributeError):
+                        values['result_number'] = None
+                else:
+                    values['result_number'] = None
+
             # set method version
             if 'method' in values and values['method'] is not None:
                 values['method_version'] = LabMethod(
@@ -1504,9 +1536,9 @@ class NotebookLine(ModelSQL, ModelView):
             result['fields'] = cls.fields_get(fields_names=list(fields))
         return result
 
-    @fields.depends('result', 'converted_result', 'converted_result_modifier',
-        'backup', 'verification', 'uncertainty', 'end_date', 'start_date',
-        'analysis')
+    @fields.depends('result', 'result_number', 'converted_result',
+        'converted_result_modifier', 'backup', 'verification', 'uncertainty',
+        'end_date', 'start_date', 'analysis')
     def on_change_result(self):
         self.converted_result = None
         self.converted_result_modifier = None
@@ -1516,6 +1548,13 @@ class NotebookLine(ModelSQL, ModelView):
         self.end_date = None
         if self.analysis and self.analysis.behavior == 'internal_relation':
             self.start_date = None
+        if self.result:
+            try:
+                self.result_number = float(self.result.replace(',', '.'))
+            except (ValueError, AttributeError):
+                self.result_number = None
+        else:
+            self.result_number = None
 
     @fields.depends('accepted', 'report', 'annulled', 'result',
         'converted_result', 'literal_result', 'result_modifier',
@@ -1864,6 +1903,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     converted_result_modifier = fields.Many2One('lims.result_modifier',
         'Converted result modifier', readonly=True)
     result = fields.Char('Result', readonly=True)
+    result_number = fields.Float('Result number', readonly=True)
     converted_result = fields.Char('Converted result', readonly=True)
     formated_result = fields.Function(fields.Char('Result to report'),
         'get_line_field')
@@ -1997,6 +2037,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
             line.result_modifier,
             line.converted_result_modifier,
             line.result,
+            line.result_number,
             line.converted_result,
             line.detection_limit,
             line.quantification_limit,
