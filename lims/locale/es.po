@@ -3553,6 +3553,10 @@ msgctxt "field:lims.notebook.line,result:"
 msgid "Result"
 msgstr "Resultado"
 
+msgctxt "field:lims.notebook.line,result_number:"
+msgid "Result number"
+msgstr "Resultado numérico"
+
 msgctxt "field:lims.notebook.line,result_and_uom:"
 msgid "Result && Uom"
 msgstr "Resultado y UdM"
@@ -3876,6 +3880,10 @@ msgstr "Fecha pactada de resultado"
 msgctxt "field:lims.notebook.line.all_fields,result:"
 msgid "Result"
 msgstr "Resultado"
+
+msgctxt "field:lims.notebook.line.all_fields,result_number:"
+msgid "Result number"
+msgstr "Resultado numérico"
 
 msgctxt "field:lims.notebook.line.all_fields,result_decimals:"
 msgid "Decimals to report result"
