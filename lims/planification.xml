@@ -243,7 +243,7 @@
         </record>
         <record model="ir.rule" id="rule_planification">
             <field name="domain"
-                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
+                eval="[If(Bool(Eval('laboratories', False)), ('laboratory', 'in', Eval('laboratories', [])), ('id', '!=', 0))]"
                 pyson="1"/>
             <field name="rule_group" ref="rule_group_planification"/>
         </record>

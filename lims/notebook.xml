@@ -52,7 +52,7 @@
         </record>
         <record model="ir.rule" id="rule_notebook">
             <field name="domain"
-                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('lines.laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('lines.laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
+                eval="[If(Bool(Eval('laboratories', False)), ('lines.laboratory', 'in', Eval('laboratories', [])), ('id', '!=', 0))]"
                 pyson="1"/>
             <field name="rule_group" ref="rule_group_notebook"/>
         </record>
@@ -138,7 +138,7 @@
         </record>
         <record model="ir.rule" id="rule_notebook_line">
             <field name="domain"
-                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
+                eval="[If(Bool(Eval('laboratories', False)), ('laboratory', 'in', Eval('laboratories', [])), ('id', '!=', 0))]"
                 pyson="1"/>
             <field name="rule_group" ref="rule_group_notebook_line"/>
         </record>
@@ -228,7 +228,7 @@
         </record>
         <record model="ir.rule" id="rule_notebook_line_all_fields">
             <field name="domain"
-                eval="[If(Bool(Eval('user', {}).get('laboratory', False)), ('laboratory', '=', Eval('user', {}).get('laboratory', None)), If(Bool(Eval('user', {}).get('laboratories', False)), ('laboratory', 'in', Eval('user', {}).get('laboratories', [])), ('id', '!=', 0)))]"
+                eval="[If(Bool(Eval('laboratories', False)), ('laboratory', 'in', Eval('laboratories', [])), ('id', '!=', 0))]"
                 pyson="1"/>
             <field name="rule_group" ref="rule_group_notebook_line_all_fields"/>
         </record>

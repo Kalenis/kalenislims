@@ -40,6 +40,7 @@ def register():
         configuration.LabWorkYearHoliday,
         configuration.LabWorkShift,
         configuration.LabWorkYearShift,
+        configuration.Rule,
         configuration.Cron,
         configuration.Sequence,
         configuration.SequenceStrict,

@@ -220,7 +220,7 @@
         </record>
         <record model="ir.rule" id="rule_quality_template">
             <field name="domain"
-                eval="[('company', '=', Eval('user', {}).get('company', -1))]"
+                eval="[('company', '=', Eval('company', -1))]"
                 pyson="1"/>
             <field name="rule_group" ref="rule_group_quality_template"/>
         </record>
@@ -388,7 +388,7 @@
         </record>
         <record model="ir.rule" id="rule_quality_test">
             <field name="domain"
-                eval="[('company', '=', Eval('user', {}).get('company', -1))]"
+                eval="[('company', '=', Eval('company', -1))]"
                 pyson="1"/>
             <field name="rule_group" ref="rule_group_quality_test"/>
         </record>

@@ -140,6 +140,20 @@ class User(metaclass=PoolMeta):
         return status
 
     @classmethod
+    def get_laboratories(cls):
+        transaction = Transaction()
+        user_id = transaction.user
+        if user_id:
+            with transaction.set_user(0):
+                user = cls(user_id)
+                if user.laboratory:
+                    return tuple([user.laboratory.id])
+                laboratories = [l.id for l in user.laboratories]
+                laboratories = tuple(laboratories)
+                return laboratories
+        return tuple()
+
+    @classmethod
     def write(cls, *args):
         super().write(*args)
         actions = iter(args)
@@ -796,6 +810,25 @@ class LabWorkShift(ModelSQL, ModelView):
         duration_seconds -= (start_time.minute * 60)
         duration_seconds -= start_time.second
         return timedelta(seconds=duration_seconds)
+
+
+class Rule(metaclass=PoolMeta):
+    __name__ = 'ir.rule'
+
+    @classmethod
+    def _get_cache_key(cls, model_name):
+        pool = Pool()
+        User = pool.get('res.user')
+        key = super()._get_cache_key(model_name)
+        return (*key, User.get_laboratories())
+
+    @classmethod
+    def _get_context(cls, model_name):
+        pool = Pool()
+        User = pool.get('res.user')
+        context = super()._get_context(model_name)
+        context['laboratories'] = User.get_laboratories()
+        return context
 
 
 class Cron(metaclass=PoolMeta):
