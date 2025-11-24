@@ -11,6 +11,7 @@
     <field name="urgent"/>
     <field name="state"/>
     <button name="activate" string="Activate"/>
+    <button name="annul" string="Annul"/>
     <field name="number"/>
     <field name="partial_analysys"/>
 </tree>
