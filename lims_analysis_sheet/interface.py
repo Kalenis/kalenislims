@@ -8,6 +8,7 @@ from trytond.pyson import Eval, Bool, Or, And
 from trytond.transaction import Transaction
 from trytond.modules.lims.analysis import FUNCTIONS
 from .function import custom_functions
+from trytond.model.modelstorage import AccessError
 
 FUNCTIONS.update(custom_functions)
 
@@ -143,9 +144,16 @@ class Data(metaclass=PoolMeta):
 
     @classmethod
     def delete(cls, records):
-        NotebookLine = Pool().get('lims.notebook.line')
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+
         if Transaction().context.get('clean_start_date', True):
-            notebook_lines = [x.notebook_line for x in records
-                if x.notebook_line]
+            notebook_lines = []
+            for x in records:
+                try:
+                    if x.notebook_line:
+                        notebook_lines.append(x.notebook_line)
+                except AccessError:
+                    pass
             NotebookLine.write(notebook_lines, {'start_date': None})
         super().delete(records)
