@@ -225,6 +225,10 @@ msgctxt "field:sale.load_services.start,entry:"
 msgid "Entry"
 msgstr "Ingreso"
 
+msgctxt "field:sale.load_services.start,load_all:"
+msgid "Load Product Type, Matrix and Analysis"
+msgstr "Cargar Tipo de producto, Matriz y Análisis"
+
 msgctxt "field:sale.load_services.start,party:"
 msgid "Party"
 msgstr "Entidad"
