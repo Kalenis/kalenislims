@@ -2,4 +2,6 @@
 <form>
     <label name="entry"/>
     <field name="entry"/>
+    <label name="load_all"/>
+    <field name="load_all" xexpand="0" width="25"/>
 </form>

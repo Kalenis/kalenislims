@@ -1011,6 +1011,7 @@ class SaleLoadServicesStart(ModelView):
     entry = fields.Many2One('lims.entry', 'Entry', required=True,
         domain=[('invoice_party', '=', Eval('party'))], depends=['party'])
     party = fields.Many2One('party.party', 'Party')
+    load_all = fields.Boolean('Load Product Type, Matrix and Analysis')
 
 
 class SaleLoadServices(Wizard):
@@ -1030,6 +1031,7 @@ class SaleLoadServices(Wizard):
         sale = Sale(Transaction().context['active_id'])
         return {
             'party': sale.party.id,
+            'load_all': False,
             }
 
     def transition_load(self):
@@ -1058,6 +1060,10 @@ class SaleLoadServices(Wizard):
                     'unit': service.analysis.product.default_uom.id,
                     'product': service.analysis.product.id,
                     'description': service.analysis.rec_name,
+                    'product_type': service.sample.product_type.id,
+                    'matrix': service.sample.matrix.id,
+                    'analysis': service.analysis.id,
+                    'method': service.method and service.method.id or None,
                     }
             sale_services[service.analysis.id]['quantity'] += 1
 
@@ -1070,6 +1076,11 @@ class SaleLoadServices(Wizard):
                 description=service['description'],
                 sale=sale_id,
                 )
+            if self.start.load_all:
+                sale_line.product_type = service['product_type']
+                sale_line.matrix = service['matrix']
+                sale_line.analysis = service['analysis']
+                sale_line.method = service['method']
             sale_line.on_change_product()
             sale_lines.append(sale_line)
         SaleLine.save(sale_lines)
