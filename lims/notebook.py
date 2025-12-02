@@ -1780,8 +1780,10 @@ class NotebookLine(ModelSQL, ModelView):
     def get_formated_result(self, name=None):
         if self.literal_result:
             return self.literal_result
+        decimals = (self.result_decimals
+            if self.result_decimals is not None else self.decimals)
         result = self._format_result(self.result,
-            self.decimals, self.significant_digits,
+            decimals, self.significant_digits,
             self.scientific_notation)
         if self.result_modifier:
             res = self.result_modifier.expression or ''
@@ -1802,8 +1804,10 @@ class NotebookLine(ModelSQL, ModelView):
     def get_formated_converted_result(self, name=None):
         if self.literal_result:
             return ''
+        decimals = (self.converted_result_decimals
+            if self.converted_result_decimals is not None else self.decimals)
         result = self._format_result(self.converted_result,
-            self.decimals, self.significant_digits,
+            decimals, self.significant_digits,
             self.scientific_notation)
         if self.converted_result_modifier:
             res = self.converted_result_modifier.expression or ''
