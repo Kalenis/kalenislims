@@ -4153,6 +4153,11 @@ class ResultReport(Report):
                 report_context['report_result_type'],
                 report_context['report_type'], t_line,
                 language=lang_code)
+            record['quantification_limit'] = cls.get_quantification_limit(
+                report_context['report_section'],
+                report_context['report_result_type'],
+                report_context['report_type'], t_line,
+                language=lang_code)
             record['reference'] = ''
             if obs_result_range:
                 record['reference'] = str(cls.get_reference(range_type,
@@ -4670,6 +4675,18 @@ class ResultReport(Report):
                 res = '-'
             else:
                 res = detection_limit
+        return res
+
+    @classmethod
+    def get_quantification_limit(cls, report_section, report_result_type,
+            report_type, notebook_line, language):
+        quantification_limit = notebook_line.quantification_limit
+        literal_result = notebook_line.literal_result
+        if (not quantification_limit or quantification_limit in (
+                '0', '0.0', '0.00') or literal_result):
+            res = '-'
+        else:
+            res = quantification_limit
         return res
 
     @classmethod
