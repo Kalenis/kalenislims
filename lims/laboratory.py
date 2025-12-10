@@ -435,6 +435,8 @@ class LabMethodWaitingTime(ModelSQL, ModelView):
         NotebookLine = Pool().get('lims.notebook.line')
 
         for waiting_time in waiting_times:
+            results_estimated_waiting = (waiting or
+                waiting_time.results_estimated_waiting)
             notebook_lines = NotebookLine.search([
                 ('method', '=', waiting_time.method.id),
                 ('party', '=', waiting_time.party.id),
@@ -443,8 +445,6 @@ class LabMethodWaitingTime(ModelSQL, ModelView):
                 ('results_estimated_waiting', '!=', results_estimated_waiting),
                 ])
             if notebook_lines:
-                results_estimated_waiting = (waiting or
-                    waiting_time.results_estimated_waiting)
                 NotebookLine.write(notebook_lines, {
                     'results_estimated_waiting': results_estimated_waiting,
                     })
