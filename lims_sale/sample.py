@@ -643,9 +643,10 @@ class Service2(metaclass=PoolMeta):
         if self.sale_lines:
             for sale_line in self.sale_lines:
                 if sale_line.product.id == self.analysis.product.id:
-                    invoice_line['lims_sale_line_origin'] = sale_line.id
+                    invoice_line['currency'] = sale_line.sale.currency.id
                     invoice_line['unit_price'] = sale_line.unit_price.quantize(
                         Decimal(str(10 ** -digits)))
+                    invoice_line['lims_sale_line_origin'] = sale_line.id
         return invoice_line
 
 
