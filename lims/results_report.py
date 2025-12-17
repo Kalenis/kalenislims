@@ -68,6 +68,8 @@ class ResultsReport(ModelSQL, ModelView):
         'get_entry_summary', searcher='search_entry_summary')
     release_date = fields.Function(fields.DateTime(
         'Release date'), 'get_release_date')
+    contract_number = fields.Function(fields.Char('Contract Number'),
+        'get_entry_field', searcher='search_entry_field')
 
     # PDF Report Cache
     report_cache = fields.Binary('Report cache', readonly=True,

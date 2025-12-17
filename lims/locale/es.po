@@ -5488,6 +5488,10 @@ msgctxt "field:lims.results_report,cie_fraction_type:"
 msgid "QA"
 msgstr "QA"
 
+msgctxt "field:lims.results_report,contract_number:"
+msgid "Contract Number"
+msgstr "Número de contrato"
+
 msgctxt "field:lims.results_report,create_date2:"
 msgid "Create Date"
 msgstr "Fecha de creación"
