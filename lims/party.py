@@ -8,7 +8,7 @@ from datetime import datetime
 
 from trytond.model import fields, Unique
 from trytond.pool import PoolMeta
-from trytond.pyson import Bool, Eval, Or
+from trytond.pyson import Bool, Eval, Or, And
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 
@@ -62,10 +62,10 @@ class Address(metaclass=PoolMeta):
     report = fields.Boolean('Report')
     email = fields.Char('Email',
         states={
-            'required': Or(
+            'required': And(Bool(Eval('active')), Or(
                 Bool(Eval('invoice_contact')),
                 Bool(Eval('report_contact')),
-                Bool(Eval('acknowledgment_contact'))),
+                Bool(Eval('acknowledgment_contact')))),
             },
         depends=['report_contact', 'acknowledgment_contact',
             'invoice_contact'])
@@ -105,10 +105,11 @@ class Address(metaclass=PoolMeta):
             address.check_email()
 
     def check_email(self):
-        if self.email and not re.match(
+        if self.active and self.email and not re.match(
                 r"^[a-zA-Z0-9._'%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
                 self.email):
-            raise UserError(gettext('lims.msg_invalid_email'))
+            raise UserError(gettext('lims.msg_invalid_email',
+                email=self.email))
 
 
 class Company(metaclass=PoolMeta):

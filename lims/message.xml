@@ -566,7 +566,7 @@
             <field name="text">The email is missing in the delivery address for "%(laboratory)s"</field>
         </record>
         <record model="ir.message" id="msg_invalid_email">
-            <field name="text">Invalid email address</field>
+            <field name="text">Invalid email address: %(email)s</field>
         </record>
     </data>
 </tryton>
