@@ -9219,8 +9219,8 @@ msgstr ""
 "\"%(analysis)s\"."
 
 msgctxt "model:ir.message,text:msg_invalid_email"
-msgid "Invalid email address"
-msgstr "Dirección de correo electrónico inválida"
+msgid "Invalid email address: %(email)s"
+msgstr "Dirección de correo electrónico inválida: %(email)s"
 
 msgctxt "model:ir.message,text:msg_invalid_limits"
 msgid "Quantification limit must be greater than Detection limit"

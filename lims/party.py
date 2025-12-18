@@ -9,7 +9,7 @@ from sql import Literal
 
 from trytond.model import DeactivableMixin, fields, Unique
 from trytond.pool import PoolMeta, Pool
-from trytond.pyson import Bool, Eval, Or
+from trytond.pyson import Bool, Eval, Or, And
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
@@ -141,10 +141,10 @@ class Address(metaclass=PoolMeta):
     report = fields.Boolean('Results Report')
     email = fields.Char('Email',
         states={
-            'required': Or(
+            'required': And(Bool(Eval('active')), Or(
                 Bool(Eval('invoice_contact')),
                 Bool(Eval('report_contact')),
-                Bool(Eval('acknowledgment_contact'))),
+                Bool(Eval('acknowledgment_contact')))),
             })
     report_contact = fields.Boolean('Report contact')
     report_contact_default = fields.Boolean('Report contact by default',
@@ -179,10 +179,11 @@ class Address(metaclass=PoolMeta):
             address.check_email()
 
     def check_email(self):
-        if self.email and not re.match(
+        if self.active and self.email and not re.match(
                 r"^[a-zA-Z0-9._'%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
                 self.email):
-            raise UserError(gettext('lims.msg_invalid_email'))
+            raise UserError(gettext('lims.msg_invalid_email',
+                email=self.email))
 
 
 class Company(metaclass=PoolMeta):

@@ -587,7 +587,7 @@ Rule 4: 1 value above or below the mean +/- 3 deviations.</field>
             <field name="text">The email is missing in the delivery address for "%(laboratory)s"</field>
         </record>
         <record model="ir.message" id="msg_invalid_email">
-            <field name="text">Invalid email address</field>
+            <field name="text">Invalid email address: %(email)s</field>
         </record>
       <record model="ir.message" id="smtp_test_successful">
           <field name="text">SMTP test connection was successful</field>
