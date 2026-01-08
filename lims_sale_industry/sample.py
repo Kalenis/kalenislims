@@ -40,6 +40,7 @@ class CreateSampleStart(metaclass=PoolMeta):
         today = Date.today()
         clause = [
             ('sale.party', 'in', [self.party.id, self.invoice_party.id]),
+            ('sale.invoice_method', '=', 'service'),
             ('sale.expiration_date', '>=', today),
             ('sale.state', 'in', [
                 'quotation', 'confirmed', 'processing',
