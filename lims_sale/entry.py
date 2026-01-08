@@ -72,6 +72,7 @@ class RelateSaleStart(ModelView):
         today = Date.today()
         clause = [
             ('sale.party', '=', self.party.id),
+            ('sale.invoice_method', '=', 'service'),
             ('sale.expiration_date', '>=', today),
             ('sale.state', 'in', [
                 'quotation', 'confirmed', 'processing',
