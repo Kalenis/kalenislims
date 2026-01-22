@@ -4948,6 +4948,392 @@ class LoadServices(Wizard):
         return 'end'
 
 
+class AddFractionServiceStart(ModelView):
+    'Add Fraction Services'
+    __name__ = 'lims.fraction.add_service.start'
+
+    party = fields.Many2One('party.party', 'Party',
+        states={'invisible': True})
+    invoice_party = fields.Many2One('party.party', 'Invoice party',
+        states={'invisible': True})
+    product_type = fields.Many2One('lims.product.type', 'Product type')
+    matrix = fields.Many2One('lims.matrix', 'Matrix')
+    analysis_domain = fields.Many2Many('lims.analysis', None, None,
+        'Analysis domain')
+    services = fields.One2Many('lims.create_sample.service', None, 'Services',
+        depends=['analysis_domain', 'product_type', 'matrix'],
+        context={
+            'analysis_domain': Eval('analysis_domain'),
+            'product_type': Eval('product_type'), 'matrix': Eval('matrix'),
+            })
+
+
+class AddFractionService(Wizard):
+    'Add Fraction Services'
+    __name__ = 'lims.fraction.add_service'
+
+    start = StateView('lims.fraction.add_service.start',
+        'lims.add_fraction_service_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Confirm', 'confirm', 'tryton-ok', default=True),
+            ])
+    confirm = StateTransition()
+
+    def default_start(self, fields):
+        Fraction = Pool().get('lims.fraction')
+
+        active_id = Transaction().context['active_ids'][0]
+        if not active_id:
+            return {}
+
+        fraction = Fraction(active_id)
+        sample = fraction.sample
+        analysis_domain_ids = sample.on_change_with_analysis_domain()
+
+        default = {
+            'party': sample.party.id,
+            'invoice_party': sample.invoice_party.id,
+            'product_type': sample.product_type.id,
+            'matrix': sample.matrix.id,
+            'analysis_domain': analysis_domain_ids,
+            'services': [],
+            }
+        return default
+
+    def transition_confirm(self):
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
+        Entry = pool.get('lims.entry')
+
+        new_services = []
+        for fraction in Fraction.browse(Transaction().context['active_ids']):
+            delete_ack_report_cache = False
+
+            original_analysis = []
+            for service in fraction.services:
+                if service.annulled:
+                    continue
+                key = (service.analysis.id,
+                    service.method and service.method.id or None)
+                original_analysis.append(key)
+            for service in self.start.services:
+                key = (service.analysis.id,
+                    service.method and service.method.id or None)
+                if key not in original_analysis:
+                    new_services.append(self.create_service(
+                        service, fraction))
+                    delete_ack_report_cache = True
+
+            if delete_ack_report_cache:
+                entry = Entry(fraction.entry.id)
+                entry.ack_report_format = None
+                entry.ack_report_cache = None
+                entry.save()
+
+        if new_services:
+            self.process_new_services(new_services)
+
+        return 'end'
+
+    def create_service(self, service, fraction):
+        pool = Pool()
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        service_create = [self._get_new_service(service, fraction)]
+        with Transaction().set_context(manage_service=True):
+            new_service, = Service.create(service_create)
+
+            Service.copy_analysis_comments([new_service])
+            Service.set_confirmation_date([new_service])
+            analysis_detail = EntryDetailAnalysis.search([
+                ('service', '=', new_service.id)])
+            if analysis_detail:
+                EntryDetailAnalysis.create_notebook_lines(analysis_detail,
+                    fraction)
+                if new_service.entry and new_service.entry.state in (
+                        'ongoing', 'finished'):
+                    EntryDetailAnalysis.write(analysis_detail, {
+                        'state': 'unplanned',
+                    })
+
+        return new_service
+
+    def _get_new_service(self, service, fraction):
+        service_create = {
+            'fraction': fraction.id,
+            'sample': fraction.sample.id,
+            'analysis': service.analysis.id,
+            'laboratory': (service.laboratory.id if service.laboratory
+                else None),
+            'method': service.method.id if service.method else None,
+            'device': service.device.id if service.device else None,
+            'urgent': service.urgent,
+            'priority': service.priority,
+            'estimated_waiting_laboratory': (
+                service.estimated_waiting_laboratory),
+            'estimated_waiting_report': (
+                service.estimated_waiting_report),
+            'laboratory_date': service.laboratory_date,
+            'report_date': service.report_date,
+            'divide': service.divide,
+            }
+        return service_create
+
+    def process_new_services(self, services):
+        pass
+
+
+class EditFractionServiceStart(ModelView):
+    'Edit Fraction Services'
+    __name__ = 'lims.fraction.edit_service.start'
+
+    product_type = fields.Many2One('lims.product.type', 'Product type')
+    matrix = fields.Many2One('lims.matrix', 'Matrix')
+    analysis_domain = fields.Many2Many('lims.analysis', None, None,
+        'Analysis domain')
+    services = fields.One2Many('lims.create_sample.service', None, 'Services',
+        depends=['analysis_domain', 'product_type', 'matrix'],
+        context={
+            'analysis_domain': Eval('analysis_domain'),
+            'product_type': Eval('product_type'), 'matrix': Eval('matrix'),
+            })
+
+
+class EditFractionService(Wizard):
+    'Edit Fraction Services'
+    __name__ = 'lims.fraction.edit_service'
+
+    start = StateView('lims.fraction.edit_service.start',
+        'lims.edit_fraction_service_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Confirm', 'confirm', 'tryton-ok', default=True),
+            ])
+    confirm = StateTransition()
+
+    def default_start(self, fields):
+        Fraction = Pool().get('lims.fraction')
+
+        active_id = Transaction().context['active_ids'][0]
+        if not active_id:
+            return {}
+
+        fraction = Fraction(active_id)
+        sample = fraction.sample
+        analysis_domain_ids = sample.on_change_with_analysis_domain()
+
+        services = []
+        for s in fraction.services:
+            if s.annulled:
+                continue
+            services.append({
+                'analysis_locked': True,
+                'laboratory_locked': True,
+                'analysis': s.analysis.id,
+                'laboratory': s.laboratory and s.laboratory.id or None,
+                'method': s.method and s.method.id or None,
+                'device': s.device and s.device.id or None,
+                'urgent': s.urgent,
+                'priority': s.priority,
+                'estimated_waiting_laboratory': (
+                    s.estimated_waiting_laboratory),
+                'estimated_waiting_report': (
+                    s.estimated_waiting_report),
+                'laboratory_date': s.laboratory_date,
+                'report_date': s.report_date,
+                'divide': s.divide,
+                })
+
+        default = {
+            'product_type': sample.product_type.id,
+            'matrix': sample.matrix.id,
+            'analysis_domain': analysis_domain_ids,
+            'services': services,
+            }
+        return default
+
+    def transition_confirm(self):
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
+        Entry = pool.get('lims.entry')
+
+        new_services = []
+
+        actual_analysis = [(s.analysis.id, s.method and s.method.id or None)
+            for s in self.start.services]
+
+        for fraction in Fraction.browse(Transaction().context['active_ids']):
+            delete_ack_report_cache = False
+
+            original_analysis = []
+            for service in fraction.services:
+                if service.annulled:
+                    continue
+                key = (service.analysis.id,
+                    service.method and service.method.id or None)
+                original_analysis.append(key)
+                if key not in actual_analysis:
+                    self.annul_service(service)
+                    delete_ack_report_cache = True
+            for service in self.start.services:
+                key = (service.analysis.id,
+                    service.method and service.method.id or None)
+                if key not in original_analysis:
+                    new_services.append(self.create_service(
+                        service, fraction))
+                    delete_ack_report_cache = True
+            self.update_fraction_services(fraction)
+
+            if delete_ack_report_cache:
+                entry = Entry(fraction.entry.id)
+                entry.ack_report_format = None
+                entry.ack_report_cache = None
+                entry.save()
+
+        if new_services:
+            self.process_new_services(new_services)
+
+        return 'end'
+
+    def annul_service(self, service):
+        service.annulled = True
+        service.save()
+
+    def create_service(self, service, fraction):
+        pool = Pool()
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        service_create = [self._get_new_service(service, fraction)]
+        with Transaction().set_context(manage_service=True):
+            new_service, = Service.create(service_create)
+
+            Service.copy_analysis_comments([new_service])
+            Service.set_confirmation_date([new_service])
+            analysis_detail = EntryDetailAnalysis.search([
+                ('service', '=', new_service.id)])
+            if analysis_detail:
+                if new_service.entry and new_service.entry.state in (
+                        'ongoing', 'finished'):
+                    EntryDetailAnalysis.create_notebook_lines(analysis_detail,
+                        fraction)
+                    EntryDetailAnalysis.write(analysis_detail, {
+                        'state': 'unplanned',
+                        })
+
+        return new_service
+
+    def _get_new_service(self, service, fraction):
+        service_create = {
+            'fraction': fraction.id,
+            'sample': fraction.sample.id,
+            'analysis': service.analysis.id,
+            'laboratory': (service.laboratory.id if service.laboratory
+                else None),
+            'method': service.method.id if service.method else None,
+            'device': service.device.id if service.device else None,
+            'urgent': service.urgent,
+            'priority': service.priority,
+            'estimated_waiting_laboratory': (
+                service.estimated_waiting_laboratory),
+            'estimated_waiting_report': (
+                service.estimated_waiting_report),
+            'laboratory_date': service.laboratory_date,
+            'report_date': service.report_date,
+            'divide': service.divide,
+            }
+        return service_create
+
+    def update_fraction_services(self, fraction):
+        pool = Pool()
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        annulled_services = Service.search([
+            ('fraction', '=', fraction),
+            ('annulled', '=', True),
+            ])
+        for annulled_service in annulled_services:
+            original_details = EntryDetailAnalysis.search([
+                ('service', '=', annulled_service),
+                ('state', '!=', 'annulled'),
+                ])
+            for original_detail in original_details:
+                duplicated_details = self._get_duplicated_details(
+                    original_detail)
+                if duplicated_details:
+                    self._migrate_detail(original_detail,
+                        duplicated_details[0])
+                    with Transaction().set_user(0, set_context=True):
+                        duplicated_nlines = NotebookLine.search([
+                            ('analysis_detail', 'in', duplicated_details),
+                            ])
+                        NotebookLine.delete(duplicated_nlines)
+                        EntryDetailAnalysis.delete(duplicated_details)
+                else:
+                    self._annul_detail(original_detail)
+
+    def _get_duplicated_details(self, original):
+        pool = Pool()
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        duplicated_details = EntryDetailAnalysis.search([
+            ('fraction', '=', original.fraction),
+            ('analysis', '=', original.analysis),
+            ('method', '=', original.method),
+            ('service', '!=', original.service),
+            ])
+        return duplicated_details
+
+    def _migrate_detail(self, original, duplicated):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+
+        original.service = duplicated.service
+        original.analysis_origin = duplicated.analysis_origin
+        #original.device = duplicated.device
+        original.save()
+
+        with Transaction().set_user(0, set_context=True):
+            notebook_lines = NotebookLine.search([
+                ('analysis_detail', '=', original),
+                ])
+            NotebookLine.write(notebook_lines, {
+                'service': original.service.id,
+                'analysis_origin': original.analysis_origin,
+                #'device': original.device and original.device.id or None,
+                })
+
+    def _annul_detail(self, original):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+
+        if NotebookLine.search_count([
+                ('analysis_detail', '=', original),
+                ('results_report', '!=', None),
+                ]) > 0:
+            raise UserError(gettext('lims.msg_annul_analysis',
+                analysis=original.analysis.rec_name))
+
+        with Transaction().set_user(0, set_context=True):
+            notebook_lines = NotebookLine.search([
+                ('analysis_detail', '=', original),
+                ])
+            NotebookLine.write(notebook_lines, {
+                'annulled': True,
+                'annulment_date': datetime.now(),
+                'accepted': False,
+                'acceptance_date': None,
+                'report': False,
+                })
+
+        original.state = 'annulled'
+        original.save()
+
+    def process_new_services(self, services):
+        pass
+
+
 class AddSampleServiceStart(ModelView):
     'Add Sample Services'
     __name__ = 'lims.sample.add_service.start'
@@ -5349,7 +5735,8 @@ class EditSampleService(Wizard):
         return duplicated_details
 
     def _migrate_detail(self, original, duplicated):
-        NotebookLine = Pool().get('lims.notebook.line')
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
 
         original.service = duplicated.service
         original.analysis_origin = duplicated.analysis_origin
@@ -5367,7 +5754,8 @@ class EditSampleService(Wizard):
                 })
 
     def _annul_detail(self, original):
-        NotebookLine = Pool().get('lims.notebook.line')
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
 
         if NotebookLine.search_count([
                 ('analysis_detail', '=', original),

@@ -38,6 +38,8 @@ def register():
         entry.ManageServices,
         entry.AddSampleService,
         entry.EditSampleService,
+        entry.AddFractionService,
+        entry.EditFractionService,
         sample.CompleteServices,
         notebook.NotebookRepeatAnalysis,
         notebook.NotebookLineRepeatAnalysis,

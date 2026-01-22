@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<form>
+    <image name="tryton-info" xexpand="0" xfill="0"/>
+    <label
+        string="All selected fractions will be left only with the following services:"
+        id="info" yalign="0.5" xalign="0.0" colspan="3"/>
+    <field name="services" colspan="4"/>
+</form>

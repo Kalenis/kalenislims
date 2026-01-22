@@ -871,6 +871,44 @@
             <field name="wiz_name">lims.load_services</field>
         </record>
 
+<!-- Wizard Add Fraction Services -->
+
+        <record model="ir.ui.view" id="add_fraction_service_start_view_form">
+            <field name="model">lims.fraction.add_service.start</field>
+            <field name="type">form</field>
+            <field name="name">fraction_add_services_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_add_fraction_service">
+            <field name="name">Add Fraction Services</field>
+            <field name="wiz_name">lims.fraction.add_service</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_add_fraction_service_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.fraction,-1</field>
+            <field name="action" ref="wiz_add_fraction_service"/>
+        </record>
+
+<!-- Wizard Edit Fraction Services -->
+
+        <record model="ir.ui.view" id="edit_fraction_service_start_view_form">
+            <field name="model">lims.fraction.edit_service.start</field>
+            <field name="type">form</field>
+            <field name="name">fraction_edit_services_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_edit_fraction_service">
+            <field name="name">Edit Fraction Services</field>
+            <field name="wiz_name">lims.fraction.edit_service</field>
+        </record>
+
+        <record model="ir.action.keyword" id="wiz_edit_fraction_service_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.fraction,-1</field>
+            <field name="action" ref="wiz_edit_fraction_service"/>
+        </record>
+
 <!-- Fractions by Locations -->
 
         <record model="ir.action.act_window" id="act_lims_fractions_by_locations">

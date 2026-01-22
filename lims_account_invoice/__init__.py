@@ -40,6 +40,8 @@ def register():
         lims.ManageServices,
         lims.EditSampleService,
         lims.AddSampleService,
+        lims.EditFractionService,
+        lims.AddFractionService,
         lims.OpenEntriesReadyForInvoicing,
         lims.OpenLinesPendingInvoicing,
         invoice.PopulateInvoiceContacts,

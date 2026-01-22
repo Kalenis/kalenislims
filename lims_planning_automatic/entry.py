@@ -65,3 +65,37 @@ class EditSampleService(metaclass=PoolMeta):
         if entries:
             with Transaction().set_context(within_an_entry=True):
                 Planification.automatic_plan(entries=list(entries))
+
+
+class AddFractionService(metaclass=PoolMeta):
+    __name__ = 'lims.fraction.add_service'
+
+    def process_new_services(self, services):
+        pool = Pool()
+        Planification = pool.get('lims.planification')
+
+        entries = set()
+        for service in services:
+            if service.entry and service.entry.state in (
+                    'ongoing', 'finished'):
+                entries.add(service.entry)
+        if entries:
+            with Transaction().set_context(within_an_entry=True):
+                Planification.automatic_plan(entries=list(entries))
+
+
+class EditFractionService(metaclass=PoolMeta):
+    __name__ = 'lims.fraction.edit_service'
+
+    def process_new_services(self, services):
+        pool = Pool()
+        Planification = pool.get('lims.planification')
+
+        entries = set()
+        for service in services:
+            if service.entry and service.entry.state in (
+                    'ongoing', 'finished'):
+                entries.add(service.entry)
+        if entries:
+            with Transaction().set_context(within_an_entry=True):
+                Planification.automatic_plan(entries=list(entries))

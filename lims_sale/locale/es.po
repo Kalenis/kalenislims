@@ -27,6 +27,19 @@ msgctxt "field:lims.entry,allow_services_without_quotation:"
 msgid "Allow services without quotation"
 msgstr "Permitir servicios sin presupuesto"
 
+msgctxt "field:lims.fraction.add_service.start,sale_lines:"
+msgid "Quotes"
+msgstr "Presupuestos"
+
+msgctxt "field:lims.fraction.add_service.start,sale_lines_domain:"
+msgid "Quotes domain"
+msgstr "Dominio para Presupuestos"
+
+msgctxt ""
+"field:lims.fraction.add_service.start,sale_lines_filter_product_type_matrix:"
+msgid "Filter Quotes by Product type and Matrix"
+msgstr "Filtrar Presupuestos por Tipo de producto y Matriz"
+
 msgctxt "field:lims.report.template,clause_template:"
 msgid "Clauses Template"
 msgstr "Plantilla de Cláusulas"
