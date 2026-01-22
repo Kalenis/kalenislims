@@ -26,5 +26,13 @@
             <field name="name">sample_add_services_start_form</field>
         </record>
 
+<!-- Wizard Add Fraction Services -->
+
+        <record model="ir.ui.view" id="add_fraction_service_start_view_form">
+            <field name="model">lims.fraction.add_service.start</field>
+            <field name="inherit" ref="lims.add_fraction_service_start_view_form"/>
+            <field name="name">fraction_add_services_start_form</field>
+        </record>
+
     </data>
 </tryton>

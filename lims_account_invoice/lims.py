@@ -341,6 +341,24 @@ class AddSampleService(metaclass=PoolMeta):
         return new_service
 
 
+class EditFractionService(metaclass=PoolMeta):
+    __name__ = 'lims.fraction.edit_service'
+
+    def create_service(self, service, fraction):
+        new_service = super().create_service(service, fraction)
+        new_service.create_invoice_line()
+        return new_service
+
+
+class AddFractionService(metaclass=PoolMeta):
+    __name__ = 'lims.fraction.add_service'
+
+    def create_service(self, service, fraction):
+        new_service = super().create_service(service, fraction)
+        new_service.create_invoice_line()
+        return new_service
+
+
 class EntryCancel(metaclass=PoolMeta):
     __name__ = 'lims.entry.cancel'
 

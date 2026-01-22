@@ -2125,6 +2125,30 @@ msgctxt "field:lims.fraction,waiting_confirmation:"
 msgid "Waiting confirmation"
 msgstr "Esperando confirmación"
 
+msgctxt "field:lims.fraction.add_service.start,analysis_domain:"
+msgid "Analysis domain"
+msgstr "Dominio para Análisis"
+
+msgctxt "field:lims.fraction.add_service.start,invoice_party:"
+msgid "Invoice party"
+msgstr "Entidad facturación"
+
+msgctxt "field:lims.fraction.add_service.start,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.fraction.add_service.start,party:"
+msgid "Party"
+msgstr "Entidad"
+
+msgctxt "field:lims.fraction.add_service.start,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.fraction.add_service.start,services:"
+msgid "Services"
+msgstr "Servicios"
+
 msgctxt "field:lims.fraction.discharge.result,discharge_date:"
 msgid "Discharge date"
 msgstr "Fecha de descarte"
@@ -2204,6 +2228,22 @@ msgstr "Fracción"
 msgctxt "field:lims.fraction.duplicate.start,quantity:"
 msgid "Number of copies"
 msgstr "Cantidad de copias"
+
+msgctxt "field:lims.fraction.edit_service.start,analysis_domain:"
+msgid "Analysis domain"
+msgstr "Dominio para Análisis"
+
+msgctxt "field:lims.fraction.edit_service.start,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.fraction.edit_service.start,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.fraction.edit_service.start,services:"
+msgid "Services"
+msgstr "Servicios"
 
 msgctxt "field:lims.fraction.package,fraction:"
 msgid "Fraction"
@@ -8253,6 +8293,10 @@ msgctxt "model:ir.action,name:report_typification_copy_spreadsheet"
 msgid "Typifications Copied/Moved"
 msgstr "Tipificaciones copiadas/movidas"
 
+msgctxt "model:ir.action,name:wiz_add_fraction_service"
+msgid "Add Fraction Services"
+msgstr "Añadir servicios a fracciones"
+
 msgctxt "model:ir.action,name:wiz_add_sample_service"
 msgid "Add Sample Services"
 msgstr "Añadir servicios a muestras"
@@ -8296,6 +8340,10 @@ msgstr "Carta de Control"
 msgctxt "model:ir.action,name:wiz_copy_range"
 msgid "Copy Ranges"
 msgstr "Copiar rangos"
+
+msgctxt "model:ir.action,name:wiz_edit_fraction_service"
+msgid "Edit Fraction Services"
+msgstr "Modificar servicios de fracciones"
 
 msgctxt "model:ir.action,name:wiz_edit_sample"
 msgid "Edit Samples"
@@ -10552,6 +10600,10 @@ msgctxt "model:lims.fraction,name:"
 msgid "Fraction"
 msgstr "Fracción"
 
+msgctxt "model:lims.fraction.add_service.start,name:"
+msgid "Add Fraction Services"
+msgstr "Añadir servicios a fracciones"
+
 msgctxt "model:lims.fraction.discharge.empty,name:"
 msgid "Fractions Discharge"
 msgstr "Descarte de fracciones"
@@ -10579,6 +10631,10 @@ msgstr "Revertir descarte de fracciones"
 msgctxt "model:lims.fraction.duplicate.start,name:"
 msgid "Copy Fraction"
 msgstr "Copiar fracción"
+
+msgctxt "model:lims.fraction.edit_service.start,name:"
+msgid "Edit Fraction Services"
+msgstr "Modificar servicios de fracciones"
 
 msgctxt "model:lims.fraction.package,name:"
 msgid "Fraction Package"
@@ -15294,6 +15350,11 @@ msgctxt "view:lims.fraction.discharge_revert.start:"
 msgid "Revert Fractions Discharge"
 msgstr "Revertir descarte de fracciones"
 
+msgctxt "view:lims.fraction.edit_service.start:"
+msgid "All selected fractions will be left only with the following services:"
+msgstr ""
+"Todas las fracciones seleccionadas quedarán sólo con los siguientes servicios:"
+
 msgctxt "view:lims.fraction.reagent:"
 msgid "Fraction Reagent"
 msgstr "Reactivo de fracción"
@@ -16507,6 +16568,14 @@ msgctxt "wizard_button:lims.entry.pre_assign_sample,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
+msgctxt "wizard_button:lims.fraction.add_service,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.fraction.add_service,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
 msgctxt "wizard_button:lims.fraction.discharge,empty,end:"
 msgid "Cancel"
 msgstr "Cancelar"
@@ -16560,6 +16629,14 @@ msgid "Copy"
 msgstr "Copiar"
 
 msgctxt "wizard_button:lims.fraction.duplicate,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.fraction.edit_service,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.fraction.edit_service,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 

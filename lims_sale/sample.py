@@ -520,6 +520,230 @@ class EditSample(metaclass=PoolMeta):
         return super().transition_confirm()
 
 
+class AddFractionServiceStart(metaclass=PoolMeta):
+    __name__ = 'lims.fraction.add_service.start'
+
+    sale_lines_filter_product_type_matrix = fields.Boolean(
+        'Filter Quotes by Product type and Matrix')
+    sale_lines = fields.Many2Many('sale.line', None, None, 'Quotes',
+        domain=[('id', 'in', Eval('sale_lines_domain'))],
+        states={'readonly': Or(~Eval('product_type'), ~Eval('matrix'))},
+        depends=['sale_lines_domain', 'product_type', 'matrix'])
+    sale_lines_domain = fields.Function(fields.Many2Many('sale.line',
+        None, None, 'Quotes domain'),
+        'on_change_with_sale_lines_domain')
+
+    @staticmethod
+    def default_sale_lines_filter_product_type_matrix():
+        Config = Pool().get('sale.configuration')
+        return Config(1).sale_lines_filter_product_type_matrix
+
+    @fields.depends('party', 'invoice_party', 'product_type', 'matrix',
+        'sale_lines_filter_product_type_matrix', 'analysis_domain')
+    def on_change_with_sale_lines_domain(self, name=None):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Date = pool.get('ir.date')
+        SaleLine = pool.get('sale.line')
+        Analysis = pool.get('lims.analysis')
+        Fraction = pool.get('lims.fraction')
+
+        if not self.party or not self.product_type or not self.matrix:
+            return []
+
+        active_id = Transaction().context['active_ids'][0]
+        if not active_id:
+            return []
+
+        fraction = Fraction(active_id)
+        analysis_domain = fraction.sample.on_change_with_analysis_domain()
+        if not analysis_domain:
+            return []
+        analysis_ids = ', '.join(str(a) for a in analysis_domain)
+
+        cursor.execute('SELECT DISTINCT(product) '
+            'FROM "' + Analysis._table + '" '
+            'WHERE id IN (' + analysis_ids + ')')
+        res = cursor.fetchall()
+        if not res:
+            return []
+        product_ids = [x[0] for x in res]
+
+        today = Date.today()
+        clause = [
+            ('sale.party', 'in', [self.party.id, self.invoice_party.id]),
+            ('sale.expiration_date', '>=', today),
+            ('sale.state', 'in', [
+                'quotation', 'confirmed', 'processing',
+                ]),
+            ('product.id', 'in', product_ids),
+            ]
+        if self.sale_lines_filter_product_type_matrix:
+            clause.append(('product_type', '=', self.product_type.id))
+            clause.append(('matrix', '=', self.matrix.id))
+
+        sale_lines = SaleLine.search(clause)
+        res = [sl.id for sl in sale_lines if not sl.services_completed]
+        return res
+
+    @fields.depends('party', 'product_type', 'matrix', 'sale_lines')
+    def on_change_with_analysis_domain(self, name=None):
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        Fraction = pool.get('lims.fraction')
+
+        active_id = Transaction().context['active_ids'][0]
+        if not active_id:
+            return []
+
+        fraction = Fraction(active_id)
+        if (not self.sale_lines and
+                not fraction.entry.allow_services_without_quotation):
+            return []
+
+        analysis_domain = fraction.sample.on_change_with_analysis_domain()
+
+        if not self.sale_lines:
+            return analysis_domain
+
+        quoted_products = [sl.product.id
+            for sl in self.sale_lines if sl.product]
+        quoted_analysis = Analysis.search([('product', 'in', quoted_products)])
+        quoted_analysis_ids = [a.id for a in quoted_analysis]
+        return [a for a in analysis_domain if a in quoted_analysis_ids]
+
+    @fields.depends('sale_lines', 'product_type', 'matrix', 'services',
+        methods=['on_change_with_analysis_domain'])
+    def on_change_sale_lines(self, name=None):
+        if not self.sale_lines:
+            return
+        self.load_sale_lines_analyzes()
+
+    def load_sale_lines_analyzes(self):
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        CreateSampleService = pool.get('lims.create_sample.service')
+
+        analysis_domain = self.on_change_with_analysis_domain()
+        if not analysis_domain:
+            return
+
+        quoted_products_methods = {}
+        for sl in self.sale_lines:
+            if sl.product:
+                quoted_products_methods[sl.product.id] = sl.method
+        quoted_analysis = Analysis.search([
+            ('product', 'in', list(quoted_products_methods.keys()))])
+        quoted_analysis = [a for a in quoted_analysis
+            if a.id in analysis_domain]
+        if not quoted_analysis:
+            return
+
+        quoted_services = []
+        for a in quoted_analysis:
+            with Transaction().set_context(
+                    product_type=self.product_type.id,
+                    matrix=self.matrix.id):
+                s = CreateSampleService()
+                s.analysis_locked = False
+                s.urgent = s.default_urgent()
+                s.priority = s.default_priority()
+                s.analysis = a
+                s.on_change_analysis()
+                if quoted_products_methods[a.product.id]:
+                    s.method = quoted_products_methods[a.product.id]
+                s.laboratory_date = s.on_change_with_laboratory_date()
+                s.report_date = s.on_change_with_report_date()
+
+            quoted_services.append(s)
+
+        self.services = quoted_services
+
+
+class AddFractionService(metaclass=PoolMeta):
+    __name__ = 'lims.fraction.add_service'
+
+    def _get_new_service(self, service, fraction):
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        Fraction = pool.get('lims.fraction')
+        Warning = pool.get('res.user.warning')
+
+        service_create = super()._get_new_service(service, fraction)
+
+        if not hasattr(self.start, 'sale_lines'):
+            return service_create
+
+        sale_lines = {}
+        for sl in self.start.sale_lines:
+            analysis_id = sl.analysis and sl.analysis.id
+            if not analysis_id:
+                product_id = sl.product and sl.product.id
+                if not product_id:
+                    continue
+                analysis = Analysis.search([('product', '=', product_id)])
+                if not analysis:
+                    continue
+                analysis_id = analysis[0].id
+            sale_lines[analysis_id] = {
+                'line': sl.id,
+                'available': sl.services_available,
+                }
+        if not sale_lines:
+            return service_create
+
+        analysis_id = service_create['analysis']
+        if analysis_id not in sale_lines:
+            return service_create
+        service_create['sale_lines'] = [('add',
+            [sale_lines[analysis_id]['line']])]
+        if (sale_lines[analysis_id]['available'] is None or
+                sale_lines[analysis_id]['available'] >= 1):
+            return service_create
+
+        active_id = Transaction().context['active_ids'][0]
+        if not active_id:
+            return service_create
+
+        fraction = Fraction(active_id)
+        error_key = 'lims_services_without_quotation@%s' % fraction.entry.number
+        error_msg = 'lims_sale.msg_party_services_without_quotation'
+        warning_msg = 'lims_sale.msg_adding_services_without_quotation'
+        if not fraction.entry.allow_services_without_quotation:
+            raise UserError(gettext(error_msg))
+        if Warning.check(error_key):
+            raise UserWarning(error_key, gettext(warning_msg))
+
+        return service_create
+
+
+class EditFractionService(metaclass=PoolMeta):
+    __name__ = 'lims.fraction.edit_service'
+
+    def _get_new_service(self, service, fraction):
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
+        Warning = pool.get('res.user.warning')
+
+        service_create = super()._get_new_service(service, fraction)
+
+        active_id = Transaction().context['active_ids'][0]
+        if not active_id:
+            return service_create
+
+        fraction = Fraction(active_id)
+        error_key = 'lims_services_without_quotation@%s' % fraction.entry.number
+        error_msg = 'lims_sale.msg_party_services_without_quotation'
+        warning_msg = 'lims_sale.msg_adding_services_without_quotation'
+        if not fraction.entry.allow_services_without_quotation:
+            raise UserError(gettext(error_msg))
+
+        if Warning.check(error_key):
+            raise UserWarning(error_key, gettext(warning_msg))
+
+        return service_create
+
+
 class Sample(metaclass=PoolMeta):
     __name__ = 'lims.sample'
 
