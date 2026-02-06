@@ -3715,6 +3715,7 @@ class NotebookInternalRelationsCalc1(Wizard):
 
         if lines_to_validate_limits:
             self.validate_limits(lines_to_validate_limits)
+        NotebookInternalRelationsCalc1Relation.delete(relations)
         return 'end'
 
     def validate_limits(self, notebook_lines):
