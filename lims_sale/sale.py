@@ -365,6 +365,14 @@ class Sale(metaclass=PoolMeta):
         return [x[0] for x in res]
 
     @classmethod
+    def copy(cls, sales, default=None):
+        if default is None:
+            default = {}
+        current_default = default.copy()
+        current_default['services_completed_manual'] = False
+        return super().copy(sales, default=current_default)
+
+    @classmethod
     def check_method(cls, sales, field_names=None):
         super().check_method(sales, field_names)
         if field_names and not (field_names &
