@@ -306,6 +306,14 @@ class Sale(metaclass=PoolMeta):
             return True
         return False
 
+    @classmethod
+    def copy(cls, sales, default=None):
+        if default is None:
+            default = {}
+        current_default = default.copy()
+        current_default['services_completed_manual'] = False
+        return super().copy(sales, default=current_default)
+
     def check_method(self):
         super().check_method()
         if (self.shipment_method == 'invoice'
