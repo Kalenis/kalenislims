@@ -687,7 +687,7 @@ class Entry(Workflow, ModelSQL, ModelView):
         for entry in entries:
             state = 'finished'
             for sample in entry.samples:
-                if sample.state != 'report_released':
+                if sample.state not in ('report_released', 'annulled'):
                     state = 'ongoing'
                     break
                 # All services reported
