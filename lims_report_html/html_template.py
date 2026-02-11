@@ -27,6 +27,7 @@ from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.tools import file_open
 from trytond import backend
+from trytond.modules.lims.configuration import get_print_date
 from .generator import PdfGenerator
 
 
@@ -543,6 +544,7 @@ class LimsReport:
             'report': action,
             'get_image': cls.get_image,
             'operation': cls.operation,
+            'print_date': get_print_date(),
             })
         res = report_template.render(**context)
         res = cls.parse_images(res)
