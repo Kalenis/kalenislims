@@ -19,12 +19,22 @@ from trytond.i18n import gettext
 from trytond.modules.lims.formula_parser import FormulaParser
 from trytond.modules.lims_interface.data import ALLOWED_RESULT_TYPES
 
+class NotebookLineSheetAttachment(ModelSQL):
+    'NotebookLine - Sheet Attachments'
+    __name__ = 'lims.notebook.line-ir.attachment'
+
+    notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line', ondelete='CASCADE', required=True)
+    attachment = fields.Many2One('ir.attachment', 'Attachment', ondelete='CASCADE', required=True)
 
 class NotebookLine(metaclass=PoolMeta):
     __name__ = 'lims.notebook.line'
 
     analysis_sheet = fields.Many2One('lims.analysis_sheet', 'Analysis Sheet',
         readonly=True)
+    sheet_attachments = fields.Many2Many('lims.notebook.line-ir.attachment', 
+        'notebook_line', 'attachment', 
+        'Sheet Attachments', readonly=True)
+    
 
     def get_analysis_sheet_template(self):
         cursor = Transaction().connection.cursor()

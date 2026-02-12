@@ -363,6 +363,10 @@ msgctxt "field:lims.notebook.line,analysis_sheet:"
 msgid "Analysis Sheet"
 msgstr "Hoja de análisis"
 
+msgctxt "field:lims.notebook.line,sheet_attachments:"
+msgid "Sheet Attachments"
+msgstr "Adjuntos de Hoja de análisis"
+
 msgctxt "field:lims.planification,analysis_sheets:"
 msgid "Analysis sheets to update"
 msgstr "Hojas de análisis para actualizar"

@@ -40,6 +40,7 @@ def register():
         planification.PlanificationProfessionalLine,
         planification.SamplesPendingPlanning,
         planification.SamplesPendingPlanningContext,
+        notebook.NotebookLineSheetAttachment,
         notebook.NotebookLine,
         notebook.AddControlStart,
         notebook.RepeatAnalysisStart,

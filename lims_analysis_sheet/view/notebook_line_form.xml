@@ -3,5 +3,6 @@
     <xpath expr="/form/field[@name='planification']" position="after">
         <label name="analysis_sheet"/>
         <field name="analysis_sheet"/>
+        <field name="sheet_attachments" colspan="4"/>
     </xpath>
 </data>

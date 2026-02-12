@@ -1047,6 +1047,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         Compilation = pool.get('lims.interface.compilation')
         Date = pool.get('ir.date')
         Sample = pool.get('lims.sample')
+        Attachment = pool.get('ir.attachment')
 
         avoid_accept_result = Transaction().context.get('avoid_accept_result',
             False)
@@ -1067,6 +1068,13 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         'end_date': today,
                         'analysis_sheet': s.id,
                         }
+                    # Relate compilation line attachments to notebook line
+                    attachments = Attachment.search([
+                        ('resource', '=', 'lims.interface.data,%s' % line.id)
+                    ])
+                    if attachments:
+                        data['sheet_attachments'] = [('add',
+                        [a.id for a in attachments])]
                     # if the analysis was scheduled for a future date
                     if not nb_line.start_date or nb_line.start_date > today:
                         data['start_date'] = today
