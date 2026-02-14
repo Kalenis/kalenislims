@@ -1003,13 +1003,14 @@ class SaleLine(metaclass=PoolMeta):
             cls.delete(additionals_to_delete)
 
     @classmethod
-    def copy(cls, sale_lines, default=None):
+    def copy(cls, lines, default=None):
         if default is None:
             default = {}
-        current_default = default.copy()
-        current_default['services'] = None
-        current_default['additional_origin'] = None
-        return super().copy(sale_lines, default=current_default)
+        else:
+            default = default.copy()
+        default.setdefault('services', None)
+        default.setdefault('additional_origin', None)
+        return super(SaleLine, cls).copy(lines, default=default)
 
     @fields.depends('unlimited_quantity', 'quantity', 'services')
     def on_change_with_services_available(self, name=None):
@@ -1095,6 +1096,17 @@ class SaleLine2(metaclass=PoolMeta):
 
     lims_invoice_lines = fields.One2Many('account.invoice.line',
         'lims_sale_line_origin', 'Invoice Lines', readonly=True)
+
+    @classmethod
+    def copy(cls, lines, default=None):
+        if default is None:
+            default = {}
+        else:
+            default = default.copy()
+        default.setdefault('services', None)
+        default.setdefault('additional_origin', None)
+        default.setdefault('lims_invoice_lines', None)
+        return super(SaleLine, cls).copy(lines, default=default)
 
 
 class ModifyHeader(metaclass=PoolMeta):
