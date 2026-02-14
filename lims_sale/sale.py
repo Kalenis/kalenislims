@@ -1234,6 +1234,17 @@ class SaleLine2(metaclass=PoolMeta):
     lims_invoice_lines = fields.One2Many('account.invoice.line',
         'lims_sale_line_origin', 'Invoice Lines', readonly=True)
 
+    @classmethod
+    def copy(cls, lines, default=None):
+        if default is None:
+            default = {}
+        else:
+            default = default.copy()
+        default.setdefault('services', None)
+        default.setdefault('additional_origin', None)
+        default.setdefault('lims_invoice_lines', None)
+        return super(SaleLine, cls).copy(lines, default=default)
+
 
 class ModifyHeader(metaclass=PoolMeta):
     __name__ = 'sale.modify_header'
