@@ -525,7 +525,6 @@ class SendOfInvoice(Wizard):
                 logger.info('SendOfInvoice:transition_start():'
                         'Factura %s (id: %s)', invoice.number, invoice.id)
                 invoice.print_invoice()
-                invoice.print_invoice_service()
                 if not invoice.mail_send_invoice():
                     logger.error('SendOfInvoice:transition_start():'
                             'Factura %s:Envio fallido!', invoice.number)
