@@ -2772,19 +2772,21 @@ class CopyCalculatedTypification(Wizard):
                     if typify_additionals:
                         if additional_origin not in to_copy:
                             to_copy[additional_origin] = {
-                                'typification': [],
+                                'typification': {},
                                 'scope_version': [],
                                 }
-                        default = {
+                        key = (product_type_id, matrix_id,
+                            a.id, additional_origin.method.id)
+                        default = {key: {
                             'valid': True,
                             'product_type': product_type_id,
                             'matrix': matrix_id,
                             'analysis': a.id,
                             'method': additional_origin.method.id,
                             'by_default': True,
-                            }
+                            }}
                         to_copy[additional_origin][
-                            'typification'].append(default)
+                            'typification'].update(default)
 
                         if include_accreditation_scope:
                             to_copy[additional_origin][
@@ -2811,16 +2813,19 @@ class CopyCalculatedTypification(Wizard):
 
             if origin not in to_copy:
                 to_copy[origin] = {
-                    'typification': [],
+                    'typification': {},
                     'scope_version': [],
                     }
 
-            default = {
+            key = (product_type_id, matrix_id,
+                origin.analysis.id, origin.method.id)
+            default = {key: {
                 'valid': True,
                 'product_type': product_type_id,
                 'matrix': matrix_id,
+                'analysis': origin.analysis.id,
                 'method': origin.method.id,
-                }
+                }}
 
             ids_key = (product_type_id, matrix_id, origin.analysis.id)
             cursor.execute('SELECT COUNT(*) '
@@ -2831,14 +2836,14 @@ class CopyCalculatedTypification(Wizard):
                     'AND analysis = %s '
                     'AND by_default', ids_key)
             if cursor.fetchone()[0] != 0:
-                default['by_default'] = False
+                default[key]['by_default'] = False
             elif ids_key in new_by_defaults:
-                default['by_default'] = False
+                default[key]['by_default'] = False
             else:
-                default['by_default'] = True
+                default[key]['by_default'] = True
                 new_by_defaults.append(ids_key)
 
-            to_copy[origin]['typification'].append(default)
+            to_copy[origin]['typification'].update(default)
 
             if include_accreditation_scope:
                 to_copy[origin]['scope_version'].extend(
@@ -2852,7 +2857,7 @@ class CopyCalculatedTypification(Wizard):
 
         new_typifications = []
         for typification, defaults in to_copy.items():
-            for default in defaults['typification']:
+            for default in defaults['typification'].values():
                 t = Typification.copy([typification], default=default)
                 t_id = t[0].id
 
