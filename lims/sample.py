@@ -1162,11 +1162,14 @@ class Service(ModelSQL, ModelView):
         if comments:
             fractions_to_save = []
             for fraction_id, comment in comments.items():
-                analysis_comments = '\n'.join(list(comment))
                 fraction = Fraction(fraction_id)
                 if fraction.comments:
+                    fraction_comments = fraction.comments.split('\n')
+                    analysis_comments = '\n'.join(list(c for c in comment
+                        if c not in fraction_comments))
                     fraction.comments += '\n' + analysis_comments
                 else:
+                    analysis_comments = '\n'.join(list(comment))
                     fraction.comments = analysis_comments
                 fractions_to_save.append(fraction)
             if fractions_to_save:
