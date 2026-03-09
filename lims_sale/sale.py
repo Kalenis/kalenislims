@@ -1010,6 +1010,21 @@ class SaleLine(metaclass=PoolMeta):
             default = default.copy()
         default.setdefault('services', None)
         default.setdefault('additional_origin', None)
+        if Transaction().context.get('return_sale', False):
+            new_sale_lines = []
+            for sale_line in sale_lines:
+                if sale_line.type == 'line':
+                    if sale_line.services_available is not None:
+                        quantity = sale_line.services_available * -1
+                    else:
+                        quantity = sale_line.quantity * -1
+                else:
+                    quantity = sale_line.quantity
+                default['quantity'] = quantity
+                new_sale_line, = super().copy([sale_line],
+                    default=default)
+                new_sale_lines.append(new_sale_line)
+            return new_sale_lines
         return super(SaleLine, cls).copy(lines, default=default)
 
     @fields.depends('unlimited_quantity', 'quantity', 'services')
@@ -1107,6 +1122,14 @@ class SaleLine2(metaclass=PoolMeta):
         default.setdefault('additional_origin', None)
         default.setdefault('lims_invoice_lines', None)
         return super(SaleLine, cls).copy(lines, default=default)
+
+
+class ReturnSale(metaclass=PoolMeta):
+    __name__ = 'sale.return_sale'
+
+    def do_return_(self, action):
+        with Transaction().set_context(return_sale=True):
+            return super().do_return_(action)
 
 
 class ModifyHeader(metaclass=PoolMeta):
