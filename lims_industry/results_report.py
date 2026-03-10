@@ -485,6 +485,45 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             return [('id', '=', -1)]
         return [('id', 'in', details_ids)]
 
+    @classmethod
+    def link_notebook_lines(cls, details):
+        super().link_notebook_lines(details)
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        for detail in details:
+            if detail.type == 'preliminary':
+                continue
+            for sample in detail.samples:
+                for nline in sample.notebook_lines:
+                    if not nline.notebook_line:
+                        continue
+                    nb_sample = nline.notebook_line.notebook.fraction.sample
+                    vals = {}
+                    if nb_sample.equipment:
+                        vals['equipment'] = nb_sample.equipment.id
+                    if nb_sample.component:
+                        vals['component'] = nb_sample.component.id
+                    if vals:
+                        NotebookLine.write([nline.notebook_line], vals)
+
+    @classmethod
+    def unlink_notebook_lines(cls, details):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        for detail in details:
+            for sample in detail.samples:
+                for nline in sample.notebook_lines:
+                    if not nline.notebook_line:
+                        continue
+                    if (nline.notebook_line.results_report and
+                            nline.notebook_line.results_report.id ==
+                            detail.report_version.results_report.id):
+                        NotebookLine.write([nline.notebook_line], {
+                            'equipment': None,
+                            'component': None,
+                            })
+        super().unlink_notebook_lines(details)
+
 
 class ResultsReportVersionDetailSample(metaclass=PoolMeta):
     __name__ = 'lims.results_report.version.detail.sample'

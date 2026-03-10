@@ -53,3 +53,10 @@ class Notebook(metaclass=PoolMeta):
     order_comercial_product = _order_sample_field('comercial_product')
     order_ind_equipment = _order_sample_field('ind_equipment')
     order_ind_component = _order_sample_field('ind_component')
+
+
+class NotebookLine(metaclass=PoolMeta):
+    __name__ = 'lims.notebook.line'
+
+    equipment = fields.Many2One('lims.equipment', 'Equipment', readonly=True)
+    component = fields.Many2One('lims.component', 'Component', readonly=True)

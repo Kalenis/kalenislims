@@ -45,6 +45,7 @@ def register():
         sample.EditSampleStart,
         sample.WarnDangerousProductStart,
         notebook.Notebook,
+        notebook.NotebookLine,
         results_report.ResultsReport,
         results_report.ResultsReportVersionDetail,
         results_report.ResultsReportVersionDetailSample,
