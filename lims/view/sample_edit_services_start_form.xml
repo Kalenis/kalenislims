@@ -4,5 +4,9 @@
     <label
         string="All selected samples will be left only with the following services:"
         id="info" yalign="0.5" xalign="0.0" colspan="3"/>
+    <label name="party"/>
+    <field name="party"/>
+    <label name="invoice_party"/>
+    <field name="invoice_party"/>
     <field name="services" colspan="4"/>
 </form>
