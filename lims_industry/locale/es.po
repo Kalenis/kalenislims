@@ -499,6 +499,10 @@ msgctxt "field:lims.results_report,equipments_list:"
 msgid "Equipments"
 msgstr "Equipos"
 
+msgctxt "field:lims.results_report,last_report:"
+msgid "Last report"
+msgstr "Último informe"
+
 msgctxt "field:lims.results_report,plants_list:"
 msgid "Plants"
 msgstr "Plantas"

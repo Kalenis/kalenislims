@@ -13,6 +13,7 @@ from trytond.i18n import gettext
 class ResultsReport(metaclass=PoolMeta):
     __name__ = 'lims.results_report'
 
+    last_report = fields.Boolean('Last Report')
     plants_list = fields.Function(fields.Char('Plants'),
         'get_plants_list', searcher='search_plants_list')
     equipments_list = fields.Function(fields.Char('Equipments'),
@@ -484,6 +485,41 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
         if not details_ids:
             return [('id', '=', -1)]
         return [('id', 'in', details_ids)]
+
+    @classmethod
+    def do_release(cls, details):
+        pool = Pool()
+        ResultsReport = pool.get('lims.results_report')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+
+        super().do_release(details)
+
+        for detail in details:
+            report = detail.report_version.results_report
+            pairs = set()
+            for s in detail.samples:
+                nb_sample = s.notebook.fraction.sample
+                if nb_sample.equipment and nb_sample.component:
+                    pairs.add((nb_sample.equipment.id, nb_sample.component.id))
+
+            for equipment_id, component_id in pairs:
+                matching_samples = ResultsSample.search([
+                    ('version_detail.report_version.results_report',
+                        '!=', report.id),
+                    ('version_detail.report_version.results_report.last_report',
+                        '=', True),
+                    ('notebook.fraction.sample.equipment', '=', equipment_id),
+                    ('notebook.fraction.sample.component', '=', component_id),
+                    ])
+                prev_report_ids = list(set(
+                    s.version_detail.report_version.results_report.id
+                    for s in matching_samples))
+                if prev_report_ids:
+                    prev_reports = ResultsReport.browse(prev_report_ids)
+                    ResultsReport.write(list(prev_reports),
+                        {'last_report': False})
+
+            ResultsReport.write([report], {'last_report': True})
 
     @classmethod
     def link_notebook_lines(cls, details):
@@ -1018,6 +1054,28 @@ class OpenResultsDetailAttachment(metaclass=PoolMeta):
                     res.append(self._get_resource(
                         s.notebook.fraction.sample.component))
         return res
+
+
+class ResultsReportAnnulation(metaclass=PoolMeta):
+    __name__ = 'lims.results_report_annulation'
+
+    def transition_annul(self):
+        pool = Pool()
+        ResultsReport = pool.get('lims.results_report')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+
+        details = ResultsDetail.search([
+            ('id', 'in', Transaction().context['active_ids']),
+            ])
+        reports = list(set(
+            d.report_version.results_report for d in details))
+
+        result = super().transition_annul()
+
+        reports_to_update = [r for r in reports if r.last_report]
+        if reports_to_update:
+            ResultsReport.write(reports_to_update, {'last_report': False})
+        return result
 
 
 class ReportNameFormat(metaclass=PoolMeta):

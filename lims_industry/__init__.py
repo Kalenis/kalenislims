@@ -72,6 +72,7 @@ def register():
         sample.WarnDangerousProduct,
         results_report.OpenResultsDetailPrecedent,
         results_report.OpenResultsDetailAttachment,
+        results_report.ResultsReportAnnulation,
         control_tendency.OpenTrendChart,
         planification.TechniciansQualification,
         module='lims_industry', type_='wizard')
