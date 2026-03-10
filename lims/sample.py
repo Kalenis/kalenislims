@@ -5246,6 +5246,10 @@ class EditFractionServiceStart(ModelView):
     'Edit Fraction Services'
     __name__ = 'lims.fraction.edit_service.start'
 
+    party = fields.Many2One('party.party', 'Party',
+        states={'invisible': True})
+    invoice_party = fields.Many2One('party.party', 'Invoice party',
+        states={'invisible': True})
     product_type = fields.Many2One('lims.product.type', 'Product type')
     matrix = fields.Many2One('lims.matrix', 'Matrix')
     analysis_domain = fields.Many2Many('lims.analysis', None, None,
@@ -5300,6 +5304,8 @@ class EditFractionService(Wizard):
                 })
 
         default = {
+            'party': sample.party.id,
+            'invoice_party': sample.invoice_party.id,
             'product_type': sample.product_type.id,
             'matrix': sample.matrix.id,
             'analysis_domain': analysis_domain_ids,
@@ -5640,6 +5646,10 @@ class EditSampleServiceStart(ModelView):
     __name__ = 'lims.sample.edit_service.start'
 
     sample = fields.Many2One('lims.sample', 'Sample')
+    party = fields.Many2One('party.party', 'Party',
+        states={'invisible': True})
+    invoice_party = fields.Many2One('party.party', 'Invoice party',
+        states={'invisible': True})
     product_type = fields.Many2One('lims.product.type', 'Product type')
     matrix = fields.Many2One('lims.matrix', 'Matrix')
     analysis_domain = fields.Many2Many('lims.analysis', None, None,
@@ -5700,6 +5710,8 @@ class EditSampleService(Wizard, SendAckOfReceiptWizardMixin):
 
         default = {
             'sample': sample.id,
+            'party': sample.party.id,
+            'invoice_party': sample.invoice_party.id,
             'product_type': sample.product_type.id,
             'matrix': sample.matrix.id,
             'analysis_domain': analysis_domain_ids,
