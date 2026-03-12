@@ -497,6 +497,8 @@ class Typification(ModelSQL, ModelView):
                 else:
                     cls.delete_typification_calculated(typifications)
 
+            if 'typification_copy' in Transaction().context:
+                continue
             fields_check = ('detection_limit', 'quantification_limit',
                 'lower_limit', 'upper_limit', 'initial_concentration',
                 'final_concentration', 'literal_final_concentration',
@@ -510,7 +512,8 @@ class Typification(ModelSQL, ModelView):
 
     @classmethod
     def update_laboratory_notebook(cls, typifications):
-        NotebookLine = Pool().get('lims.notebook.line')
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
 
         def _str_value(val=None):
             return str(val) if val is not None else None
@@ -2736,7 +2739,8 @@ class CopyTypification(Wizard):
         new_typifications = []
         for typification, defaults in to_copy.items():
             for default in defaults['typification']:
-                t = Typification.copy([typification], default=default)
+                with Transaction().set_context(typification_copy=True):
+                    t = Typification.copy([typification], default=default)
                 t_id = t[0].id
 
                 new_typifications.append(t_id)
@@ -3100,7 +3104,8 @@ class CopyCalculatedTypification(Wizard):
         new_typifications = []
         for typification, defaults in to_copy.items():
             for default in defaults['typification'].values():
-                t = Typification.copy([typification], default=default)
+                with Transaction().set_context(typification_copy=True):
+                    t = Typification.copy([typification], default=default)
                 t_id = t[0].id
 
                 new_typifications.append(t_id)
