@@ -43,7 +43,7 @@ class CreateSampleStart(metaclass=PoolMeta):
             ('sale.invoice_method', '=', 'service'),
             ('sale.expiration_date', '>=', today),
             ('sale.state', 'in', [
-                'quotation', 'confirmed', 'processing',
+                'confirmed', 'processing',
                 ]),
             ('product.id', 'in', product_ids),
             ]

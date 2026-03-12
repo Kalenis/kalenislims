@@ -60,7 +60,7 @@ class CreateSampleStart(metaclass=PoolMeta):
             ('sale.invoice_method', '=', 'service'),
             ('sale.expiration_date', '>=', today),
             ('sale.state', 'in', [
-                'quotation', 'confirmed', 'processing',
+                'confirmed', 'processing',
                 ]),
             ('product.id', 'in', product_ids),
             ]
@@ -344,7 +344,7 @@ class AddSampleServiceStart(metaclass=PoolMeta):
             ('sale.invoice_method', '=', 'service'),
             ('sale.expiration_date', '>=', today),
             ('sale.state', 'in', [
-                'quotation', 'confirmed', 'processing',
+                'confirmed', 'processing',
                 ]),
             ('product.id', 'in', product_ids),
             ]
@@ -574,7 +574,7 @@ class AddFractionServiceStart(metaclass=PoolMeta):
             ('sale.party', 'in', [self.party.id, self.invoice_party.id]),
             ('sale.expiration_date', '>=', today),
             ('sale.state', 'in', [
-                'quotation', 'confirmed', 'processing',
+                'confirmed', 'processing',
                 ]),
             ('product.id', 'in', product_ids),
             ]
