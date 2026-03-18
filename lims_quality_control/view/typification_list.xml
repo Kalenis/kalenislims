@@ -3,4 +3,9 @@
     <xpath expr="/tree/field[@name='product_type']" position="before">
         <field name="quality"/>
     </xpath>
+    <xpath expr="/tree/field[@name='detection_limit']" position="before">
+        <field name="quality_min"/>
+        <field name="quality_max"/>
+        <field name="specification"/>
+    </xpath>
 </data>
