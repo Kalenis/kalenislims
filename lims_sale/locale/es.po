@@ -217,6 +217,10 @@ msgctxt "field:sale.line,services_completed_icon:"
 msgid "Services completed Icon"
 msgstr "Icono Servicios completados"
 
+msgctxt "field:sale.line,services_returned:"
+msgid "Services returned"
+msgstr "Servicios devueltos"
+
 msgctxt "field:sale.line,unlimited_quantity:"
 msgid "Unlimited quantity"
 msgstr "Cantidad ilimitada"

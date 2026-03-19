@@ -281,7 +281,8 @@ class Sale(metaclass=PoolMeta):
         for line in sale_lines:
             if line.unlimited_quantity:
                 return False
-            if line.quantity and line.quantity > len(line.services):
+            if line.quantity and line.quantity > (len(line.services)
+                    + line.services_returned):
                 return False
         return True
 
@@ -663,6 +664,8 @@ class SaleLine(metaclass=PoolMeta):
         states={'readonly': Eval('sale_state') != 'draft'})
     services = fields.Many2Many('lims.service-sale.line',
         'sale_line', 'service', 'Services', readonly=True)
+    services_returned = fields.Function(fields.Float('Services returned',
+        digits='unit'), 'get_services_returned')
     services_available = fields.Function(fields.Float('Services available',
         digits='unit'), 'on_change_with_services_available')
     services_completed = fields.Function(fields.Boolean('Services completed'),
@@ -1018,7 +1021,27 @@ class SaleLine(metaclass=PoolMeta):
             return new_sale_lines
         return super().copy(sale_lines, default=current_default)
 
-    @fields.depends('unlimited_quantity', 'quantity', 'services')
+    def get_services_returned(self, name):
+        pool = Pool()
+        SaleLine = pool.get('sale.line')
+
+        if not self.product:
+            return 0
+
+        res = 0
+        return_lines = SaleLine.search([
+            ('sale.origin', '=', '%s,%s' % (self.sale.__name__, self.sale.id)),
+            ('sale.state', 'in', [
+                'confirmed', 'processing', 'done',
+                ]),
+            ('product', '=', self.product),
+            ])
+        for line in return_lines:
+            res += abs(line.quantity)
+        return res
+
+    @fields.depends('unlimited_quantity', 'quantity', 'services',
+        'services_returned')
     def on_change_with_services_available(self, name=None):
         if self.unlimited_quantity:
             return None
@@ -1027,13 +1050,18 @@ class SaleLine(metaclass=PoolMeta):
         res = self.quantity - len(self.services)
         if res < 0:
             return 0
+        res -= (self.services_returned or 0)
+        if res < 0:
+            return 0
         return res
 
-    @fields.depends('unlimited_quantity', 'quantity', 'services')
+    @fields.depends('unlimited_quantity', 'quantity', 'services',
+        'services_returned')
     def on_change_with_services_completed(self, name=None):
         if self.unlimited_quantity:
             return False
-        if self.quantity and self.quantity > len(self.services):
+        if self.quantity and self.quantity > (len(self.services)
+                + (self.services_returned or 0)):
             return False
         return True
 
