@@ -5,7 +5,7 @@ import os
 import operator
 from io import BytesIO
 from decimal import Decimal
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from binascii import b2a_base64
 from functools import partial
 from PyPDF2 import PdfFileMerger
@@ -17,6 +17,7 @@ from base64 import b64encode
 from babel.support import Translations as BabelTranslations
 from mimetypes import guess_type as mime_guess_type
 from sql import Literal
+from dateutil.relativedelta import relativedelta
 
 from trytond.model import ModelSQL, ModelView, DeactivableMixin, fields
 from trytond.pool import Pool
@@ -634,10 +635,46 @@ class LimsReport:
             company = Company(company_id)
             # now = company.convert_timezone_datetime(now)
 
+        def add_days(value, days):
+            if value is None or days is None:
+                return None
+            try:
+                ndays = int(days)
+            except (TypeError, ValueError):
+                return None
+            if isinstance(value, datetime):
+                if company:
+                    value = company.convert_timezone_datetime(value)
+                base_date = value.date()
+            elif isinstance(value, date):
+                base_date = value
+            else:
+                return None
+            return base_date + timedelta(days=ndays)
+
+        def add_months(value, months):
+            if value is None or months is None:
+                return None
+            try:
+                nmonths = int(months)
+            except (TypeError, ValueError):
+                return None
+            if isinstance(value, datetime):
+                if company:
+                    value = company.convert_timezone_datetime(value)
+                base_date = value.date()
+            elif isinstance(value, date):
+                base_date = value
+            else:
+                return None
+            return base_date + relativedelta(months=nmonths)
+
         return {
             'modulepath': module_path,
             'render': partial(render, lang=lang, company=company),
             'subrender': subrender,
+            'add_days': add_days,
+            'add_months': add_months,
             }
 
     @classmethod
