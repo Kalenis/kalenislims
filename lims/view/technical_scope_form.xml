@@ -4,5 +4,7 @@
     <field name="party"/>
     <label name="certification_type"/>
     <field name="certification_type"/>
+    <label name="laboratory"/>
+    <field name="laboratory"/>
     <field name="versions" colspan="4"/>
 </form>

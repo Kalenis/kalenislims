@@ -3168,6 +3168,7 @@ class GenerateReport(Wizard):
         certifications = set()
 
         for line in lines:
+            laboratory_id = line.laboratory.id if line.laboratory else None
             cursor.execute('SELECT s.certification_type '
                 'FROM "' + Typification._table + '" t '
                     'INNER JOIN "' + ScopeVersionLine._table + '" svl '
@@ -3181,9 +3182,10 @@ class GenerateReport(Wizard):
                     'AND t.matrix = %s '
                     'AND t.analysis = %s '
                     'AND t.method = %s '
-                    'AND t.valid IS TRUE',
+                    'AND t.valid IS TRUE '
+                    'AND (s.laboratory IS NULL OR s.laboratory = %s)',
                 (line.product_type.id, line.matrix.id, line.analysis.id,
-                    line.method.id))
+                    line.method.id, laboratory_id))
             for x in cursor.fetchall():
                 certifications.add(x[0])
         return list(certifications)
@@ -4009,7 +4011,8 @@ class ResultReport(Report):
                     t_line.notebook.product_type,
                     t_line.notebook.matrix,
                     t_line.analysis,
-                    t_line.method),
+                    t_line.method,
+                    t_line.laboratory),
                 'pnt': t_line.method.pnt,
                 }
             record['analysis'] = cls.get_analysis(
@@ -4402,7 +4405,8 @@ class ResultReport(Report):
         return report_context
 
     @classmethod
-    def get_accreditation(cls, product_type, matrix, analysis, method):
+    def get_accreditation(cls, product_type, matrix, analysis, method,
+            laboratory=None):
         cursor = Transaction().connection.cursor()
         pool = Pool()
         Typification = pool.get('lims.typification')
@@ -4411,6 +4415,7 @@ class ResultReport(Report):
         Scope = pool.get('lims.technical.scope')
         CertificationType = pool.get('lims.certification.type')
 
+        laboratory_id = laboratory.id if laboratory else None
         cursor.execute('SELECT ct.report '
             'FROM "' + Typification._table + '" t '
                 'INNER JOIN "' + ScopeVersionLine._table + '" svl '
@@ -4426,8 +4431,10 @@ class ResultReport(Report):
                 'AND t.matrix = %s '
                 'AND t.analysis = %s '
                 'AND t.method = %s '
-                'AND t.valid IS TRUE',
-            (product_type.id, matrix.id, analysis.id, method.id))
+                'AND t.valid IS TRUE '
+                'AND (s.laboratory IS NULL OR s.laboratory = %s)',
+            (product_type.id, matrix.id, analysis.id, method.id,
+                laboratory_id))
         for x in cursor.fetchall():
             if x[0]:
                 return 'True'

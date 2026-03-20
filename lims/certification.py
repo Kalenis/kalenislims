@@ -48,6 +48,7 @@ class TechnicalScope(ModelSQL, ModelView):
     party = fields.Many2One('party.party', 'Party', required=True)
     certification_type = fields.Many2One('lims.certification.type',
         'Certification type')
+    laboratory = fields.Many2One('lims.laboratory', 'Laboratory')
     versions = fields.One2Many('lims.technical.scope.version',
         'technical_scope', 'Versions')
 

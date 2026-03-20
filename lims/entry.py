@@ -2239,7 +2239,8 @@ class AcknowledgmentOfReceipt(Report):
                             sample.product_type,
                             sample.matrix,
                             service.analysis,
-                            service.method)
+                            service.method,
+                            service.laboratory)
                         if acredited:
                             s_methods[service.method.id]['enac'] = True
 
@@ -2305,14 +2306,16 @@ class AcknowledgmentOfReceipt(Report):
                                 analysis_detail.sample.product_type,
                                 analysis_detail.sample.matrix,
                                 analysis_detail.analysis,
-                                analysis_detail.method),
+                                analysis_detail.method,
+                                analysis_detail.laboratory),
                             })
             childs.extend(cls.get_included_analysis(
                 analysis.included_analysis.id, fraction_id))
         return childs
 
     @classmethod
-    def get_accreditation(cls, product_type, matrix, analysis, method):
+    def get_accreditation(cls, product_type, matrix, analysis, method,
+            laboratory=None):
         pool = Pool()
         Typification = pool.get('lims.typification')
 
@@ -2326,8 +2329,11 @@ class AcknowledgmentOfReceipt(Report):
         if typifications:
             if typifications[0].technical_scope_versions:
                 for version in typifications[0].technical_scope_versions:
-                    certification_type = (
-                        version.technical_scope.certification_type)
+                    scope = version.technical_scope
+                    if (scope.laboratory and laboratory and
+                            scope.laboratory != laboratory):
+                        continue
+                    certification_type = scope.certification_type
                     if certification_type and certification_type.report:
                         return True
         return False

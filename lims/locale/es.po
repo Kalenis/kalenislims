@@ -6677,6 +6677,10 @@ msgctxt "field:lims.technical.scope,certification_type:"
 msgid "Certification type"
 msgstr "Tipo de certificación"
 
+msgctxt "field:lims.technical.scope,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
 msgctxt "field:lims.technical.scope,party:"
 msgid "Party"
 msgstr "Entidad"

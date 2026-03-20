@@ -1466,6 +1466,7 @@ class NotebookLine(ModelSQL, ModelView):
         if self.certifications_annulled or not self.end_date:
             return []
 
+        laboratory_id = self.laboratory.id if self.laboratory else None
         cursor.execute('SELECT s.certification_type '
             'FROM "' + Typification._table + '" t '
                 'INNER JOIN "' + ScopeVersionLine._table + '" svl '
@@ -1482,9 +1483,11 @@ class NotebookLine(ModelSQL, ModelView):
                 'AND t.analysis = %s '
                 'AND t.method = %s '
                 'AND t.valid IS TRUE '
+                'AND (s.laboratory IS NULL OR s.laboratory = %s) '
             'ORDER BY sv.date ASC LIMIT 1',
             (self.end_date, self.end_date, self.product_type.id,
-                self.matrix.id, self.analysis.id, self.method.id))
+                self.matrix.id, self.analysis.id, self.method.id,
+                laboratory_id))
         return list(set(x[0] for x in cursor.fetchall()))
 
     @classmethod
