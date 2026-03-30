@@ -2390,6 +2390,8 @@ class Fraction(ModelSQL, ModelView):
         fractions_to_save = []
         stock_moves_to_create = []
         for fraction in fractions:
+            if fraction.confirmed or fraction.waiting_confirmation:
+                continue
             services = Service.search([
                 ('fraction', '=', fraction.id),
                 ('annulled', '=', False),
@@ -2416,12 +2418,13 @@ class Fraction(ModelSQL, ModelView):
             else:
                 stock_moves_to_create.append(fraction.create_stock_move())
             fractions_to_save.append(fraction)
+        cls.save(fractions_to_save)
+
         if stock_moves_to_create:
             with Transaction().set_context(check_current_location=False):
                 Move.save(stock_moves_to_create)
                 Move.assign(stock_moves_to_create)
                 Move.do(stock_moves_to_create)
-        cls.save(fractions_to_save)
 
         with Transaction().set_context(_check_access=False):
             fracts = cls.search([
