@@ -302,7 +302,7 @@ class SampleProducerType(ModelSQL, ModelView):
     name = fields.Char('Name', required=True)
 
 
-class SampleProducer(ModelSQL, ModelView):
+class SampleProducer(DeactivableMixin, ModelSQL, ModelView):
     'Sample Producer'
     __name__ = 'lims.sample.producer'
 
@@ -2913,7 +2913,8 @@ class Sample(ModelSQL, ModelView):
         'Invoice Party'), 'get_entry_field', searcher='search_entry_field')
     producer = fields.Many2One('lims.sample.producer', 'Producer company',
         domain=['OR', ('id', '=', Eval('producer', -1)),
-            ('party', '=', Eval('party'))])
+            ('party', '=', Eval('party'))],
+        ondelete='RESTRICT')
     label = fields.Char('Label')
     sample_client_description = fields.Char('Product described by the client',
         translate=True, required=True)

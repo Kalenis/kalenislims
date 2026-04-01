@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="party" expand="1"/>
+    <field name="name" expand="1"/>
+    <field name="code"/>
+    <field name="type"/>
+</tree>
