@@ -8185,6 +8185,10 @@ msgctxt "model:ir.action,name:act_sample_attribute"
 msgid "Sample Attributes"
 msgstr "Atributos de Muestra"
 
+msgctxt "model:ir.action,name:act_sample_producer"
+msgid "Sample Producers"
+msgstr "Productores de muestra"
+
 msgctxt "model:ir.action,name:act_service_pending_referral_list"
 msgid "Services Pending Referral"
 msgstr "Servicios pendientes de derivar"
@@ -10327,6 +10331,10 @@ msgstr "Modificadores de resultado"
 msgctxt "model:ir.ui.menu,name:menu_sample_attribute"
 msgid "Sample Attributes"
 msgstr "Atributos de Muestra"
+
+msgctxt "model:ir.ui.menu,name:menu_sample_producer"
+msgid "Sample Producers"
+msgstr "Productores de muestra"
 
 msgctxt "model:ir.ui.menu,name:menu_service_pending_referral_list"
 msgid "Services Pending Referral"

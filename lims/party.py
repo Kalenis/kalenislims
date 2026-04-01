@@ -28,7 +28,7 @@ class Party(metaclass=PoolMeta):
     no_acknowledgment_of_receipt = fields.Boolean(
         'No acknowledgment of receipt')
     sample_producers = fields.One2Many('lims.sample.producer', 'party',
-        'Sample Producers')
+        'Sample Producers', filter=[('active', '=', True)])
     is_lab_professional = fields.Boolean('Laboratory Professional')
     lims_user = fields.Many2One('res.user', 'Lims User',
         states={'required': Bool(Eval('is_lab_professional'))})

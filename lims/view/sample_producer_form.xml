@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<form>
+    <label name="name"/>
+    <field name="name"/>
+    <label name="party"/>
+    <field name="party"/>
+    <label name="code"/>
+    <field name="code"/>
+    <label name="type"/>
+    <field name="type"/>
+    <label name="active"/>
+    <field name="active"/>
+</form>
