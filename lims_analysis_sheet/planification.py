@@ -917,7 +917,8 @@ class PlanificationProfessional(ModelSQL, ModelView):
                 column = Column(professional, fname).as_(fname)
             columns.append(column)
         return professional.join(
-            party, condition=professional.party == party.id).select(*columns)
+            party, condition=professional.party == party.id).select(*columns,
+            where=professional.active == Literal(True))
 
     @classmethod
     def get_professional(cls, records, name):
@@ -932,7 +933,9 @@ class PlanificationProfessional(ModelSQL, ModelView):
         pool = Pool()
         Professional = pool.get('lims.laboratory.professional')
 
-        professionals = Professional.search([], order=[])
+        professionals = Professional.search([
+            ('active', '=', True),
+            ], order=[])
 
         _, operator_, operand = domain
         operator_ = {
