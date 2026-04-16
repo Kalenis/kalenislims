@@ -242,9 +242,6 @@ class CreateSample(metaclass=PoolMeta):
         Entry = pool.get('lims.entry')
         ServiceSaleLine = pool.get('lims.service-sale.line')
         Sale = pool.get('sale.sale')
-        InvoiceContacts = pool.get('lims.entry.invoice_contacts')
-        ReportContacts = pool.get('lims.entry.report_contacts')
-        AcknowledgmentContacts = pool.get('lims.entry.acknowledgment_contacts')
 
         config_ = Config(1)
         if not config_.entry_use_sale_contacts:
@@ -272,18 +269,15 @@ class CreateSample(metaclass=PoolMeta):
                 continue
             if sale.shipment_address.id in shipment_addresses:
                 continue
-            report_contacts.append(
-                ReportContacts(contact=sale.shipment_address))
-            acknowledgment_contacts.append(
-                AcknowledgmentContacts(contact=sale.shipment_address))
+            report_contacts.append(sale.shipment_address.id)
+            acknowledgment_contacts.append(sale.shipment_address.id)
             shipment_addresses.append(sale.shipment_address)
 
             if not sale.invoice_address:
                 continue
             if sale.invoice_address.id in invoice_addresses:
                 continue
-            invoice_contacts.append(
-                InvoiceContacts(contact=sale.invoice_address))
+            invoice_contacts.append(sale.invoice_address.id)
             invoice_addresses.append(sale.invoice_address.id)
 
         if not shipment_addresses:

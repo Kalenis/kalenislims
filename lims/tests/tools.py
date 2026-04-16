@@ -168,10 +168,6 @@ def create_workyear(company=None, today=None, config=None):
 def _create_default_entry_control(company=None, today=None, config=None):
     "Create default entry control"
     Entry = Model.get('lims.entry', config=config)
-    InvoiceContact = Model.get('lims.entry.invoice_contacts', config=config)
-    ReportContact = Model.get('lims.entry.report_contacts', config=config)
-    AcknowledgmentContact = Model.get('lims.entry.acknowledgment_contacts',
-        config=config)
 
     default_entry_control = Entry()
     default_entry_control.date = datetime.datetime.combine(today,
@@ -181,16 +177,9 @@ def _create_default_entry_control(company=None, today=None, config=None):
 
     # Set party contacts
     contact = _create_company_contacts(company, config)
-    invoice_contact = InvoiceContact()
-    default_entry_control.invoice_contacts.append(invoice_contact)
-    invoice_contact.contact = contact
-    report_contact = ReportContact()
-    default_entry_control.report_contacts.append(report_contact)
-    report_contact.contact = contact
-    acknowledgment_contact = AcknowledgmentContact()
-    default_entry_control.acknowledgment_contacts.append(
-        acknowledgment_contact)
-    acknowledgment_contact.contact = contact
+    default_entry_control.invoice_contacts.append(contact)
+    default_entry_control.report_contacts.append(contact)
+    default_entry_control.acknowledgment_contacts.append(contact)
 
     default_entry_control.no_acknowledgment_of_receipt = True
     default_entry_control.state = 'draft'
