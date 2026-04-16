@@ -87,13 +87,25 @@ class Entry(Workflow, ModelSQL, ModelView):
     invoice_party_domain = fields.Function(fields.Many2Many('party.party',
         None, None, 'Invoice party domain'),
         'on_change_with_invoice_party_domain')
-    invoice_contacts = fields.One2Many('lims.entry.invoice_contacts',
-        'entry', 'Invoice contacts')
-    report_contacts = fields.One2Many('lims.entry.report_contacts',
-        'entry', 'Report contacts')
-    acknowledgment_contacts = fields.One2Many(
-        'lims.entry.acknowledgment_contacts', 'entry',
-        'Acknowledgment contacts')
+    invoice_contacts = fields.Many2Many('lims.entry.invoice_contacts',
+        'entry', 'contact', 'Invoice contacts',
+        domain=[
+            ('party', 'in', [Eval('party'), Eval('invoice_party')]),
+            ('invoice_contact', '=', True),
+            ])
+    report_contacts = fields.Many2Many('lims.entry.report_contacts',
+        'entry', 'contact', 'Report contacts',
+        domain=[
+            ('party', 'in', [Eval('party'), Eval('invoice_party')]),
+            ('report_contact', '=', True),
+            ])
+    acknowledgment_contacts = fields.Many2Many(
+        'lims.entry.acknowledgment_contacts', 'entry', 'contact',
+        'Acknowledgment contacts',
+        domain=[
+            ('party', 'in', [Eval('party'), Eval('invoice_party')]),
+            ('acknowledgment_contact', '=', True),
+            ])
     carrier = fields.Many2One('carrier', 'Carrier')
     package_type = fields.Many2One('lims.packaging.type', 'Package type')
     package_state = fields.Many2One('lims.packaging.integrity',
@@ -328,8 +340,6 @@ class Entry(Workflow, ModelSQL, ModelView):
     def on_change_party(self):
         pool = Pool()
         Config = pool.get('lims.configuration')
-        ReportContacts = pool.get('lims.entry.report_contacts')
-        AcknowledgmentContacts = pool.get('lims.entry.acknowledgment_contacts')
 
         config_ = Config(1)
 
@@ -352,18 +362,18 @@ class Entry(Workflow, ModelSQL, ModelView):
 
         if self.invoice_contacts:
             for c in self.invoice_contacts:
-                if c.contact.party.id in parties:
-                    invoice_contacts.append(c)
+                if c.party.id in parties:
+                    invoice_contacts.append(c.id)
         if self.report_contacts:
             for c in self.report_contacts:
-                if c.contact.party.id in parties:
-                    report_contacts.append(c)
-                    a_report_contacts.append(c.contact)
+                if c.party.id in parties:
+                    report_contacts.append(c.id)
+                    a_report_contacts.append(c.id)
         if self.acknowledgment_contacts:
             for c in self.acknowledgment_contacts:
-                if c.contact.party.id in parties:
-                    acknowledgment_contacts.append(c)
-                    a_acknowledgment_contacts.append(c.contact)
+                if c.party.id in parties:
+                    acknowledgment_contacts.append(c.id)
+                    a_acknowledgment_contacts.append(c.id)
 
         if self.party:
             report_language = self.party.report_language
@@ -374,14 +384,12 @@ class Entry(Workflow, ModelSQL, ModelView):
             if self.party.addresses:
                 if config_.entry_default_contacts == 'party':
                     for c in self.party.addresses:
-                        if (c.report_contact_default and c not
+                        if (c.report_contact_default and c.id not
                                 in a_report_contacts):
-                            report_contacts.append(
-                                ReportContacts(contact=c))
-                        if (c.acknowledgment_contact_default and c not
+                            report_contacts.append(c.id)
+                        if (c.acknowledgment_contact_default and c.id not
                                 in a_acknowledgment_contacts):
-                            acknowledgment_contacts.append(
-                                AcknowledgmentContacts(contact=c))
+                            acknowledgment_contacts.append(c.id)
 
         if report_language:
             self.report_language = report_language
@@ -407,9 +415,6 @@ class Entry(Workflow, ModelSQL, ModelView):
     def on_change_invoice_party(self):
         pool = Pool()
         Config = pool.get('lims.configuration')
-        InvoiceContacts = pool.get('lims.entry.invoice_contacts')
-        ReportContacts = pool.get('lims.entry.report_contacts')
-        AcknowledgmentContacts = pool.get('lims.entry.acknowledgment_contacts')
 
         config_ = Config(1)
 
@@ -428,42 +433,38 @@ class Entry(Workflow, ModelSQL, ModelView):
 
         if self.invoice_contacts:
             for c in self.invoice_contacts:
-                if c.contact.party.id in parties:
-                    invoice_contacts.append(c)
-                    a_invoice_contacts.append(c.contact)
+                if c.party.id in parties:
+                    invoice_contacts.append(c.id)
+                    a_invoice_contacts.append(c.id)
         if self.report_contacts:
             for c in self.report_contacts:
-                if c.contact.party.id in parties:
-                    report_contacts.append(c)
-                    a_report_contacts.append(c.contact)
+                if c.party.id in parties:
+                    report_contacts.append(c.id)
+                    a_report_contacts.append(c.id)
         if self.acknowledgment_contacts:
             for c in self.acknowledgment_contacts:
-                if c.contact.party.id in parties:
-                    acknowledgment_contacts.append(c)
-                    a_acknowledgment_contacts.append(c.contact)
+                if c.party.id in parties:
+                    acknowledgment_contacts.append(c.id)
+                    a_acknowledgment_contacts.append(c.id)
 
         if self.invoice_party:
             if self.invoice_party.addresses:
                 if config_.entry_default_contacts == 'invoice_party':
                     for c in self.invoice_party.addresses:
-                        if (c.invoice_contact_default and c not
+                        if (c.invoice_contact_default and c.id not
                                 in a_invoice_contacts):
-                            invoice_contacts.append(
-                                InvoiceContacts(contact=c))
-                        if (c.report_contact_default and c not
+                            invoice_contacts.append(c.id)
+                        if (c.report_contact_default and c.id not
                                 in a_report_contacts):
-                            report_contacts.append(
-                                ReportContacts(contact=c))
-                        if (c.acknowledgment_contact_default and c not
+                            report_contacts.append(c.id)
+                        if (c.acknowledgment_contact_default and c.id not
                                 in a_acknowledgment_contacts):
-                            acknowledgment_contacts.append(
-                                AcknowledgmentContacts(contact=c))
+                            acknowledgment_contacts.append(c.id)
                 else:
                     for c in self.invoice_party.addresses:
-                        if (c.invoice_contact_default and c not
+                        if (c.invoice_contact_default and c.id not
                                 in a_invoice_contacts):
-                            invoice_contacts.append(
-                                InvoiceContacts(contact=c))
+                            invoice_contacts.append(c.id)
         else:
             invoice_contacts = []
             if config_.entry_default_contacts == 'invoice_party':
@@ -750,7 +751,7 @@ class Entry(Workflow, ModelSQL, ModelView):
         smtp_server = config_.mail_ack_smtp
         from_addr = (smtp_server and smtp_server.smtp_email or
             tconfig.get('email', 'from'))
-        to_addrs = [c.contact.email for c in self.acknowledgment_contacts]
+        to_addrs = [c.email for c in self.acknowledgment_contacts]
         if not (from_addr and to_addrs):
             return
 
@@ -902,129 +903,34 @@ class Entry(Workflow, ModelSQL, ModelView):
         return EntryPreAssignedSample.search_count([('entry', '=', self.id)])
 
 
-class EntryContactMixin(Model):
-    __slots__ = ()
-
-    @classmethod
-    def get_contact_field(cls, contacts, names):
-        result = {}
-        for name in names:
-            field_name = name[8:]
-            result[name] = {}
-            if cls._fields[name]._type == 'many2one':
-                for c in contacts:
-                    field = getattr(c.contact, field_name, None)
-                    result[name][c.id] = field.id if field else None
-            elif cls._fields[name]._type == 'boolean':
-                for c in contacts:
-                    result[name][c.id] = getattr(c.contact, field_name, False)
-            else:
-                for c in contacts:
-                    result[name][c.id] = getattr(c.contact, field_name, None)
-        return result
-
-
-def _order_entry_contact_field(name):
-    def order_field(tables):
-        Contact = Pool().get('party.address')
-        field = Contact._fields[name]
-        table, _ = tables[None]
-        contact_tables = tables.get('contact')
-        if contact_tables is None:
-            contact = Contact.__table__()
-            contact_tables = {
-                None: (contact, contact.id == table.contact),
-                }
-            tables['contact'] = contact_tables
-        return field.convert_order(name, contact_tables, Contact)
-    return staticmethod(order_field)
-
-
-class EntryInvoiceContact(EntryContactMixin, ModelSQL, ModelView):
+class EntryInvoiceContact(ModelSQL):
     'Entry Invoice Contact'
     __name__ = 'lims.entry.invoice_contacts'
 
     entry = fields.Many2One('lims.entry', 'Entry',
         ondelete='CASCADE', required=True)
-    contact = fields.Many2One('party.address', 'Contact', required=True,
-        domain=[
-            ('party', 'in', [Eval('_parent_entry', {}).get('party', -1),
-                Eval('_parent_entry', {}).get('invoice_party', -1)]),
-            ('invoice_contact', '=', True),
-        ])
-    contact_email = fields.Function(fields.Char('Email'),
-        'get_contact_field')
-    contact_invoice_contact = fields.Function(fields.Boolean(
-        'Invoice contact'), 'get_contact_field')
-    contact_invoice_contact_default = fields.Function(fields.Boolean(
-        'Invoice contact by default'), 'get_contact_field')
-    contact_active = fields.Function(fields.Boolean(
-        lazy_gettext('ir.msg_active')), 'get_contact_field')
-
-    order_contact_email = _order_entry_contact_field('email')
-    order_contact_invoice_contact = _order_entry_contact_field(
-        'invoice_contact')
-    order_contact_invoice_contact_default = _order_entry_contact_field(
-        'invoice_contact_default')
-    order_contact_active = _order_entry_contact_field('active')
+    contact = fields.Many2One('party.address', 'Contact',
+        ondelete='RESTRICT', required=True)
 
 
-class EntryReportContact(EntryContactMixin, ModelSQL, ModelView):
+class EntryReportContact(ModelSQL):
     'Entry Report Contact'
     __name__ = 'lims.entry.report_contacts'
 
     entry = fields.Many2One('lims.entry', 'Entry',
         ondelete='CASCADE', required=True)
-    contact = fields.Many2One('party.address', 'Contact', required=True,
-        domain=[
-            ('party', 'in', [Eval('_parent_entry', {}).get('party', -1),
-                Eval('_parent_entry', {}).get('invoice_party', -1)]),
-            ('report_contact', '=', True),
-        ])
-    contact_email = fields.Function(fields.Char('Email'),
-        'get_contact_field')
-    contact_report_contact = fields.Function(fields.Boolean(
-        'Report contact'), 'get_contact_field')
-    contact_report_contact_default = fields.Function(fields.Boolean(
-        'Report contact by default'), 'get_contact_field')
-    contact_active = fields.Function(fields.Boolean(
-        lazy_gettext('ir.msg_active')), 'get_contact_field')
-
-    order_contact_email = _order_entry_contact_field('email')
-    order_contact_report_contact = _order_entry_contact_field(
-        'report_contact')
-    order_contact_report_contact_default = _order_entry_contact_field(
-        'report_contact_default')
-    order_contact_active = _order_entry_contact_field('active')
+    contact = fields.Many2One('party.address', 'Contact',
+        ondelete='RESTRICT', required=True)
 
 
-class EntryAcknowledgmentContact(EntryContactMixin, ModelSQL, ModelView):
+class EntryAcknowledgmentContact(ModelSQL):
     'Entry Acknowledgment Contact'
     __name__ = 'lims.entry.acknowledgment_contacts'
 
     entry = fields.Many2One('lims.entry', 'Entry',
         ondelete='CASCADE', required=True)
-    contact = fields.Many2One('party.address', 'Contact', required=True,
-        domain=[
-            ('party', 'in', [Eval('_parent_entry', {}).get('party', -1),
-                Eval('_parent_entry', {}).get('invoice_party', -1)]),
-            ('acknowledgment_contact', '=', True),
-        ])
-    contact_email = fields.Function(fields.Char('Email'),
-        'get_contact_field')
-    contact_acknowledgment_contact = fields.Function(fields.Boolean(
-        'Acknowledgment contact'), 'get_contact_field')
-    contact_acknowledgment_contact_default = fields.Function(fields.Boolean(
-        'Acknowledgment contact by default'), 'get_contact_field')
-    contact_active = fields.Function(fields.Boolean(
-        lazy_gettext('ir.msg_active')), 'get_contact_field')
-
-    order_contact_email = _order_entry_contact_field('email')
-    order_contact_acknowledgment_contact = _order_entry_contact_field(
-        'acknowledgment_contact')
-    order_contact_acknowledgment_contact_default = _order_entry_contact_field(
-        'acknowledgment_contact_default')
-    order_contact_active = _order_entry_contact_field('active')
+    contact = fields.Many2One('party.address', 'Contact',
+        ondelete='RESTRICT', required=True)
 
 
 class EntryPreAssignedSample(ModelSQL):

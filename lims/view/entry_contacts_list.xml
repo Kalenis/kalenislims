@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="party" expand="1"/>
+    <field name="name" expand="1"/>
+    <field name="email"/>
+    <field name="invoice_contact"/>
+    <field name="invoice_contact_default"/>
+    <field name="report_contact"/>
+    <field name="report_contact_default"/>
+    <field name="acknowledgment_contact"/>
+    <field name="acknowledgment_contact_default"/>
+</tree>
