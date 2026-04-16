@@ -702,9 +702,8 @@ class SendResultsReport(Wizard):
                         'block_reports_automatic_sending')):
                 continue
             for c in entry.report_contacts:
-                if c.contact.report_contact:
-                    to_addrs[c.contact.email] = (
-                        c.contact.party_full_name)
+                if c.report_contact:
+                    to_addrs[c.email] = c.party_full_name
         return to_addrs
 
     def _get_subject_body(self, reports):

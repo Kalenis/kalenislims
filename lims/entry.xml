@@ -301,44 +301,14 @@
             <field name="group" ref="group_lims_entry"/>
         </record>
 
-<!-- Entry Invoice Contact -->
+<!-- Entry Contact -->
 
-        <record model="ir.ui.view" id="lims_entry_invoice_contacts_view_form">
-            <field name="model">lims.entry.invoice_contacts</field>
-            <field name="type">form</field>
-            <field name="name">entry_invoice_contacts_form</field>
-        </record>
-        <record model="ir.ui.view" id="lims_entry_invoice_contacts_view_list">
-            <field name="model">lims.entry.invoice_contacts</field>
+        <record model="ir.ui.view" id="entry_contacts_view_list">
+            <field name="model">party.address</field>
             <field name="type">tree</field>
-            <field name="name">entry_invoice_contacts_list</field>
+            <field name="name">entry_contacts_list</field>
         </record>
 
-<!-- Entry Report Contact -->
-
-        <record model="ir.ui.view" id="lims_entry_report_contacts_view_form">
-            <field name="model">lims.entry.report_contacts</field>
-            <field name="type">form</field>
-            <field name="name">entry_report_contacts_form</field>
-        </record>
-        <record model="ir.ui.view" id="lims_entry_report_contacts_view_list">
-            <field name="model">lims.entry.report_contacts</field>
-            <field name="type">tree</field>
-            <field name="name">entry_report_contacts_list</field>
-        </record>
-
-<!-- Entry Acknowledgment Contact -->
-
-        <record model="ir.ui.view" id="lims_entry_acknowledgment_contacts_view_form">
-            <field name="model">lims.entry.acknowledgment_contacts</field>
-            <field name="type">form</field>
-            <field name="name">entry_acknowledgment_contacts_form</field>
-        </record>
-        <record model="ir.ui.view" id="lims_entry_acknowledgment_contacts_view_list">
-            <field name="model">lims.entry.acknowledgment_contacts</field>
-            <field name="type">tree</field>
-            <field name="name">entry_acknowledgment_contacts_list</field>
-        </record>
 
 <!-- Wizard Pre-Assign Samples -->
 

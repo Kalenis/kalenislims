@@ -44,9 +44,12 @@
             <field name="pre_assigned_samples"/>
         </page>
         <page string="Contacts" id="contacts">
-            <field name="invoice_contacts" colspan="4"/>
-            <field name="report_contacts" colspan="4"/>
-            <field name="acknowledgment_contacts" colspan="4"/>
+            <field name="invoice_contacts" colspan="4"
+                view_ids="lims.entry_contacts_view_list"/>
+            <field name="report_contacts" colspan="4"
+                view_ids="lims.entry_contacts_view_list"/>
+            <field name="acknowledgment_contacts" colspan="4"
+                view_ids="lims.entry_contacts_view_list"/>
         </page>
         <page string="Comments" id="comments">
             <separator string="Invoice comments" colspan="2" id="invoice_comments"/>
