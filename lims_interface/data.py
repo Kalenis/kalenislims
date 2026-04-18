@@ -788,7 +788,28 @@ class Data(ModelSQL, ModelView):
                 continue
             query = sql_table.update(fields, values,
                 where=(sql_table.id == record.id))
-            cursor.execute(*query)
+            savepoint = 'update_formulas_%d' % record.id
+            cursor.execute('SAVEPOINT "%s"' % savepoint)
+            try:
+                cursor.execute(*query)
+                cursor.execute('RELEASE SAVEPOINT "%s"' % savepoint)
+            except Exception:
+                cursor.execute('ROLLBACK TO SAVEPOINT "%s"' % savepoint)
+                import logging
+                _logger = logging.getLogger('lims_interface')
+                for f, v in zip(fields, values):
+                    sp = 'update_formula_field_%d_%s' % (record.id, f.name)
+                    cursor.execute('SAVEPOINT "%s"' % sp)
+                    try:
+                        q = sql_table.update([f], [v],
+                            where=(sql_table.id == record.id))
+                        cursor.execute(*q)
+                        cursor.execute('RELEASE SAVEPOINT "%s"' % sp)
+                    except Exception as field_err:
+                        cursor.execute('ROLLBACK TO SAVEPOINT "%s"' % sp)
+                        _logger.warning(
+                            'Formula field "%s" skipped for record %s: %s',
+                            f.name, record.id, field_err)
 
     def get_formula_value(self, field, vals={}):
         ast = field.get_ast()
