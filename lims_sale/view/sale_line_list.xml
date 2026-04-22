@@ -3,5 +3,6 @@
     <xpath expr="/tree/field[@name='amount']" position="after">
         <field name="print_service_detail"/>
         <field name="services_available" icon="services_completed_icon"/>
+        <field name="entry_origin"/>
     </xpath>
 </data>

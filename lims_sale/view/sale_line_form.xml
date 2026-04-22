@@ -10,6 +10,8 @@
         <field name="analysis"/>
         <label name="method"/>
         <field name="method"/>
+        <label name="entry_origin"/>
+        <field name="entry_origin"/>
         <newline/>
     </xpath>
     <xpath

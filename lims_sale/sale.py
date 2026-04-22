@@ -592,6 +592,12 @@ class SaleLine(metaclass=PoolMeta):
         'on_change_with_services_completed')
     services_completed_icon = fields.Function(fields.Char(
         'Services completed Icon'), 'get_services_completed_icon')
+    entry_origin = fields.Many2One('lims.entry', 'Origin Entry',
+        states={
+            'readonly': Eval('sale_state') != 'draft',
+            'invisible': ~Bool(Eval('entry_origin')),
+            },
+        depends=['sale_state', 'entry_origin'])
     additional_origin = fields.Many2One('sale.line', 'Origin of additional')
     certifications = fields.Function(fields.Many2Many(
         'lims.certification.type', None, None,
@@ -1095,6 +1101,7 @@ class SaleLoadServices(Wizard):
                 product=service['product'],
                 description=service['description'],
                 sale=sale_id,
+                entry_origin=self.start.entry.id,
                 )
             if self.start.load_all:
                 sale_line.product_type = service['product_type']
