@@ -32,6 +32,8 @@ class Sale(metaclass=PoolMeta):
     invoice_party_domain = fields.Function(fields.Many2Many('party.party',
         None, None, 'Invoice party domain'),
         'on_change_with_invoice_party_domain')
+    use_sale_contacts = fields.Function(fields.Boolean('Use Sale Contacts'),
+        'get_use_sale_contacts')
     purchase_order = fields.Char('Purchase order')
     expiration_date = fields.Date('Expiration date', required=True,
         states={'readonly': ~Eval('state').in_(['draft', 'quotation'])},
@@ -93,14 +95,22 @@ class Sale(metaclass=PoolMeta):
         cls.invoice_address.domain = [
             ('party', '=', If(Bool(Eval('invoice_party')),
                 Eval('invoice_party'), Eval('party'))),
-            ('invoice_contact', '=', True),
+            If(Bool(Eval('use_sale_contacts')),
+                ('invoice_contact', '=', True),
+                ()),
             ]
+        cls.invoice_address.depends.append('use_sale_contacts')
         cls.shipment_address.domain = [
             ('party', '=', If(Bool(Eval('shipment_party')),
                 Eval('shipment_party'), Eval('party'))),
-            ('report_contact', '=', True),
-            ('acknowledgment_contact', '=', True),
+            If(Bool(Eval('use_sale_contacts')),
+                ('report_contact', '=', True),
+                ()),
+            If(Bool(Eval('use_sale_contacts')),
+                ('acknowledgment_contact', '=', True),
+                ()),
             ]
+        cls.shipment_address.depends.append('use_sale_contacts')
         cls.contact.domain = [('party', '=', Eval('party'))]
         invoice_method = ('service', 'On Entry Confirmed')
         if invoice_method not in cls.invoice_method.selection:
@@ -144,24 +154,37 @@ class Sale(metaclass=PoolMeta):
                 ])
         return attributes
 
+    def get_use_sale_contacts(self, name):
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        return Config(1).entry_use_sale_contacts
+
     @fields.depends('party', 'invoice_party', 'shipment_party')
     def on_change_party(self):
         super().on_change_party()
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        use_sale = Config(1).entry_use_sale_contacts
+
         self.invoice_party = None
         self.shipment_party = None
         self.invoice_address = None
         self.shipment_address = None
         if self.party and self.party.addresses:
             for address in self.party.addresses:
-                if (not self.invoice_address
-                        and address.invoice
-                        and address.invoice_contact):
-                    self.invoice_address = address
-                if (not self.shipment_address
-                        and address.delivery
-                        and address.report_contact
-                        and address.acknowledgment_contact):
-                    self.shipment_address = address
+                if not self.invoice_address and address.invoice:
+                    if use_sale:
+                        if address.invoice_contact:
+                            self.invoice_address = address
+                    else:
+                        self.invoice_address = address
+                if not self.shipment_address and address.delivery:
+                    if use_sale:
+                        if (address.report_contact
+                                and address.acknowledgment_contact):
+                            self.shipment_address = address
+                    else:
+                        self.shipment_address = address
 
         if self.party:
             invoice_party_domain = self.on_change_with_invoice_party_domain()
@@ -185,6 +208,10 @@ class Sale(metaclass=PoolMeta):
     @fields.depends('party', 'invoice_party')
     def on_change_invoice_party(self):
         super().on_change_invoice_party()
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        use_sale = Config(1).entry_use_sale_contacts
+
         self.invoice_address = None
         if self.invoice_party:
             party = self.invoice_party
@@ -194,7 +221,13 @@ class Sale(metaclass=PoolMeta):
             party = None
         if party and party.addresses:
             for address in party.addresses:
-                if address.invoice and address.invoice_contact:
+                if not address.invoice:
+                    continue
+                if use_sale:
+                    if address.invoice_contact:
+                        self.invoice_address = address
+                        break
+                else:
                     self.invoice_address = address
                     break
 
