@@ -616,5 +616,12 @@ Rule 4: 1 value above or below the mean +/- 3 deviations.</field>
             <field name="text">Error message:
 %(message)s</field>
         </record>
+        <record model="ir.message" id="msg_change_pt_matrix_planned">
+            <field name="text">Sample "%(sample)s" has analyses already planned. Cannot change product type or matrix.</field>
+        </record>
+        <record model="ir.message" id="msg_change_pt_matrix_not_typified">
+            <field name="text">The new Product type / Matrix has no valid typification for the following Analysis/Method pairs:
+%(differences)s</field>
+        </record>
     </data>
 </tryton>
