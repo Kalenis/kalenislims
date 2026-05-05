@@ -6400,6 +6400,22 @@ msgctxt "field:lims.sample.duplicate.start,sample:"
 msgid "Sample"
 msgstr "Muestra"
 
+msgctxt "field:lims.sample.change_product_matrix.start,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.sample.change_product_matrix.start,matrix_domain:"
+msgid "Matrix domain"
+msgstr "Dominio de matrices"
+
+msgctxt "field:lims.sample.change_product_matrix.start,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.sample.change_product_matrix.start,product_type_domain:"
+msgid "Product type domain"
+msgstr "Dominio de tipos de producto"
+
 msgctxt "field:lims.sample.edit.start,party:"
 msgid "Party"
 msgstr "Entidad"
@@ -8277,6 +8293,14 @@ msgctxt "model:ir.action,name:wiz_copy_range"
 msgid "Copy Ranges"
 msgstr "Copiar rangos"
 
+msgctxt "model:ir.action,name:wiz_change_product_matrix"
+msgid "Change Product Type and Matrix"
+msgstr "Modificar tipo de producto y matriz"
+
+msgctxt "model:ir.action,name:wiz_edit_fraction_service"
+msgid "Edit Fraction Services"
+msgstr "Modificar servicios de fracciones"
+
 msgctxt "model:ir.action,name:wiz_edit_sample"
 msgid "Edit Samples"
 msgstr "Modificar muestras"
@@ -9109,6 +9133,20 @@ msgstr "La etiqueta «%(label)s» ya está presente en otra muestra"
 msgctxt "model:ir.message,text:msg_edit_results_report_party"
 msgid "Sample \"%(sample)s\" has a Results report already released"
 msgstr "La muestra «%(sample)s» tiene un Informe de resultados ya publicado"
+
+msgctxt "model:ir.message,text:msg_change_pt_matrix_planned"
+msgid "Sample \"%(sample)s\" has analyses already planned. Cannot change product type or matrix."
+msgstr "La muestra «%(sample)s» tiene análisis ya planificados. No se puede cambiar el tipo de producto o la matriz."
+
+msgctxt "model:ir.message,text:msg_change_pt_matrix_not_typified"
+msgid ""
+"The new Product type / Matrix has no valid typification for the following "
+"Analysis/Method pairs:\n"
+"%(differences)s"
+msgstr ""
+"El nuevo Tipo de producto / Matriz no tiene tipificación válida para los "
+"siguientes pares Análisis/Método:\n"
+"%(differences)s"
 
 msgctxt "model:ir.message,text:msg_edit_sample_party"
 msgid "You must select a Party related to the invoice Party"
@@ -11364,6 +11402,14 @@ msgstr "Atributo de Muestra"
 msgctxt "model:lims.sample.duplicate.start,name:"
 msgid "Copy Sample"
 msgstr "Copiar muestra"
+
+msgctxt "model:lims.sample.change_product_matrix.start,name:"
+msgid "Change Product Type and Matrix"
+msgstr "Modificar tipo de producto y matriz"
+
+msgctxt "model:lims.sample.change_product_matrix,name:"
+msgid "Change Product Type and Matrix"
+msgstr "Modificar tipo de producto y matriz"
 
 msgctxt "model:lims.sample.edit.start,name:"
 msgid "Edit Samples"
@@ -17258,6 +17304,14 @@ msgid "Copy"
 msgstr "Copiar"
 
 msgctxt "wizard_button:lims.sample.duplicate,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.sample.change_product_matrix,start,confirm:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "wizard_button:lims.sample.change_product_matrix,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
 
