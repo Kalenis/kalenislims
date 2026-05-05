@@ -8864,3 +8864,178 @@ class ConfirmFractions(Wizard, SendAckOfReceiptWizardMixin):
         for fraction in self.records:
             entry_ids.add(fraction.sample.entry.id)
         return list(entry_ids)
+
+
+class ChangeProductMatrixStart(ModelView):
+    'Change Product Type and Matrix'
+    __name__ = 'lims.sample.change_product_matrix.start'
+
+    product_type = fields.Many2One('lims.product.type', 'Product type',
+        required=True,
+        domain=[('id', 'in', Eval('product_type_domain'))],
+        depends=['product_type_domain'])
+    product_type_domain = fields.Function(fields.Many2Many(
+        'lims.product.type', None, None, 'Product type domain'),
+        'on_change_with_product_type_domain')
+    matrix = fields.Many2One('lims.matrix', 'Matrix', required=True,
+        domain=[('id', 'in', Eval('matrix_domain'))],
+        depends=['matrix_domain'])
+    matrix_domain = fields.Function(fields.Many2Many(
+        'lims.matrix', None, None, 'Matrix domain'),
+        'on_change_with_matrix_domain')
+
+    @fields.depends('matrix')
+    def on_change_with_product_type_domain(self, name=None):
+        cursor = Transaction().connection.cursor()
+        Typification = Pool().get('lims.typification')
+
+        if self.matrix:
+            cursor.execute('SELECT DISTINCT(product_type) '
+                'FROM "' + Typification._table + '" '
+                'WHERE matrix = %s '
+                'AND valid',
+                (self.matrix.id,))
+        else:
+            cursor.execute('SELECT DISTINCT(product_type) '
+                'FROM "' + Typification._table + '" '
+                'WHERE valid')
+        res = cursor.fetchall()
+        if not res:
+            return []
+        return [x[0] for x in res]
+
+    @fields.depends('product_type')
+    def on_change_with_matrix_domain(self, name=None):
+        cursor = Transaction().connection.cursor()
+        Typification = Pool().get('lims.typification')
+
+        if self.product_type:
+            cursor.execute('SELECT DISTINCT(matrix) '
+                'FROM "' + Typification._table + '" '
+                'WHERE product_type = %s '
+                'AND valid',
+                (self.product_type.id,))
+        else:
+            cursor.execute('SELECT DISTINCT(matrix) '
+                'FROM "' + Typification._table + '" '
+                'WHERE valid')
+        res = cursor.fetchall()
+        if not res:
+            return []
+        return [x[0] for x in res]
+
+
+class ChangeProductMatrix(Wizard):
+    'Change Product Type and Matrix'
+    __name__ = 'lims.sample.change_product_matrix'
+
+    start = StateView('lims.sample.change_product_matrix.start',
+        'lims.change_product_matrix_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Confirm', 'confirm', 'tryton-ok', default=True),
+            ])
+    confirm = StateTransition()
+
+    def _get_samples(self):
+        Sample = Pool().get('lims.sample')
+        return Sample.browse(Transaction().context.get('active_ids', []))
+
+    def default_start(self, fields):
+        samples = self._get_samples()
+        product_type_id = None
+        matrix_id = None
+        for sample in samples:
+            if product_type_id is None:
+                product_type_id = sample.product_type.id
+            elif product_type_id != sample.product_type.id:
+                product_type_id = None
+                break
+        for sample in samples:
+            if matrix_id is None:
+                matrix_id = sample.matrix.id
+            elif matrix_id != sample.matrix.id:
+                matrix_id = None
+                break
+        return {
+            'product_type': product_type_id,
+            'matrix': matrix_id,
+            }
+
+    def transition_confirm(self):
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+        Typification = pool.get('lims.typification')
+
+        samples = self._get_samples()
+        new_pt = self.start.product_type
+        new_mx = self.start.matrix
+
+        for sample in samples:
+            for fraction in sample.fractions:
+                for service in fraction.services:
+                    if service.annulled:
+                        continue
+                    for detail in service.analysis_detail:
+                        if (detail.state not in ('draft', 'unplanned') and
+                                detail.analysis.behavior !=
+                                'internal_relation'):
+                            raise UserError(gettext(
+                                'lims.msg_change_pt_matrix_planned',
+                                sample=sample.rec_name))
+
+        differences = []
+        for sample in samples:
+            details = EntryDetailAnalysis.search([
+                ('fraction.sample', '=', sample.id),
+                ('state', '!=', 'annulled'),
+                ('analysis.behavior', '!=', 'internal_relation'),
+                ])
+            seen = set()
+            for detail in details:
+                if not detail.method:
+                    continue
+                key = (detail.analysis.id, detail.method.id)
+                if key in seen:
+                    continue
+                seen.add(key)
+                t = Typification.get_valid_typification(
+                    new_pt.id, new_mx.id,
+                    detail.analysis.id,
+                    detail.method.id)
+                if not t:
+                    differences.append(
+                        '%s: %s / %s' % (
+                            sample.rec_name,
+                            detail.analysis.rec_name,
+                            detail.method.rec_name))
+
+        if differences:
+            raise UserError(gettext(
+                'lims.msg_change_pt_matrix_not_typified',
+                differences='\n'.join(differences)))
+
+        cursor = Transaction().connection.cursor()
+        ObjectiveDescription = pool.get('lims.objective_description')
+
+        cursor.execute('SELECT id '
+            'FROM "' + ObjectiveDescription._table + '" '
+            'WHERE product_type = %s '
+                'AND matrix = %s',
+            (new_pt.id, new_mx.id))
+        res = cursor.fetchone()
+        new_obj_description_id = res[0] if res else None
+
+        for sample in samples:
+            values = {
+                'product_type': new_pt.id,
+                'matrix': new_mx.id,
+                'obj_description': new_obj_description_id,
+                }
+            if not new_obj_description_id:
+                values['obj_description_manual'] = None
+            Sample.write([sample], values)
+        return 'end'
+
+    def end(self):
+        return 'reload'
