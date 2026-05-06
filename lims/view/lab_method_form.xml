@@ -20,6 +20,8 @@
     <field name="pnt"/>
     <label name="equivalence_code"/>
     <field name="equivalence_code"/>
+    <label name="non_standardized_method"/>
+    <field name="non_standardized_method"/>
     <notebook>
         <page id="times" string="Times">
             <label name="results_estimated_waiting"/>
@@ -29,6 +31,9 @@
         </page>
         <page name="versions">
             <field name="versions" colspan="4"/>
+        </page>
+        <page name="report_legend">
+            <field name="report_legend" colspan="4"/>
         </page>
     </notebook>
     <group id="buttons" colspan="4" col="-1">

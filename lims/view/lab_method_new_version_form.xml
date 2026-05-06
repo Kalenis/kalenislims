@@ -20,6 +20,11 @@
     <field name="pnt"/>
     <label name="equivalence_code"/>
     <field name="equivalence_code"/>
+    <label name="non_standardized_method"/>
+    <field name="non_standardized_method"/>
+    <newline/>
+    <label name="report_legend"/>
+    <field name="report_legend" colspan="3"/>
     <label name="results_estimated_waiting"/>
     <field name="results_estimated_waiting"/>
 </form>

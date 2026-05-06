@@ -2409,6 +2409,14 @@ msgctxt "field:lims.lab.method,equivalence_code:"
 msgid "Equivalence Code"
 msgstr "Código de equivalencia"
 
+msgctxt "field:lims.lab.method,non_standardized_method:"
+msgid "Non-standardized method"
+msgstr "Método no estandarizado"
+
+msgctxt "field:lims.lab.method,report_legend:"
+msgid "Legend for report"
+msgstr "Leyenda para informe"
+
 msgctxt "field:lims.lab.method,name:"
 msgid "Name"
 msgstr "Nombre"
@@ -2476,6 +2484,14 @@ msgstr "Determinación"
 msgctxt "field:lims.lab.method.version,equivalence_code:"
 msgid "Equivalence Code"
 msgstr "Código de equivalencia"
+
+msgctxt "field:lims.lab.method.version,non_standardized_method:"
+msgid "Non-standardized method"
+msgstr "Método no estandarizado"
+
+msgctxt "field:lims.lab.method.version,report_legend:"
+msgid "Legend for report"
+msgstr "Leyenda para informe"
 
 msgctxt "field:lims.lab.method.version,method:"
 msgid "Method"

@@ -11,4 +11,6 @@
     <field name="pnt"/>
     <field name="results_estimated_waiting"/>
     <field name="equivalence_code"/>
+    <field name="non_standardized_method"/>
+    <field name="report_legend"/>
 </tree>

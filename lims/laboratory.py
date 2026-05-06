@@ -173,6 +173,10 @@ class LabMethod(Workflow, ModelSQL, ModelView):
         'method', 'Waiting times per client')
     equivalence_code = fields.Char('Equivalence Code',
         states=_states, depends=_depends)
+    non_standardized_method = fields.Boolean('Non-standardized method',
+        states=_states, depends=_depends)
+    report_legend = fields.Text('Legend for report',
+        states=_states, depends=_depends)
     versions = fields.One2Many('lims.lab.method.version',
         'method', 'Versions', readonly=True)
     state = fields.Selection([
@@ -217,6 +221,10 @@ class LabMethod(Workflow, ModelSQL, ModelView):
     @staticmethod
     def default_state():
         return 'draft'
+
+    @staticmethod
+    def default_non_standardized_method():
+        return False
 
     def get_rec_name(self, name):
         if self.code:
@@ -279,7 +287,7 @@ class LabMethod(Workflow, ModelSQL, ModelView):
         return ['code', 'name', 'version', 'reference', 'determination',
             'requalification_months', 'supervised_requalification',
             'deprecated_since', 'pnt', 'results_estimated_waiting',
-            'equivalence_code']
+            'equivalence_code', 'non_standardized_method', 'report_legend']
 
     @classmethod
     @ModelView.button_action('lims.wiz_method_new_version')
@@ -427,6 +435,9 @@ class LabMethodVersion(ModelSQL, ModelView):
     results_estimated_waiting = fields.Integer(
         'Estimated number of days for results', readonly=True)
     equivalence_code = fields.Char('Equivalence Code', readonly=True)
+    non_standardized_method = fields.Boolean('Non-standardized method',
+        readonly=True)
+    report_legend = fields.Text('Legend for report', readonly=True)
 
     @classmethod
     def __register__(cls, module_name):
