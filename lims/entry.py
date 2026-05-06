@@ -1667,7 +1667,7 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
 
     @classmethod
     def search_service_field(cls, name, clause):
-        return [('service.' + name,) + tuple(clause[1:])]
+        return [('service.' + clause[0],) + tuple(clause[1:])]
 
     def _order_service_field(name):
         def order_field(tables):

@@ -8597,6 +8597,7 @@ class ChangeProductMatrix(Wizard):
             details = EntryDetailAnalysis.search([
                 ('fraction.sample', '=', sample.id),
                 ('state', '!=', 'annulled'),
+                ('service.annulled', '=', False),
                 ('analysis.behavior', '!=', 'internal_relation'),
                 ])
             seen = set()
