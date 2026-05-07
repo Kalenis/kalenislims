@@ -22,7 +22,7 @@ from trytond.rpc import RPC
 from trytond.exceptions import UserError
 from trytond.cache import LRUDictTransaction
 from trytond.model.model import record as model_record
-from trytond.model.modelstorage import cache_size as model_cache_size
+from trytond.model.modelstorage import cache_size as model_cache_size, AccessError
 from trytond.model.modelsql import convert_from
 from .interface import FIELD_TYPE_TRYTON, FIELD_TYPE_CAST
 
@@ -606,7 +606,10 @@ class Data(ModelSQL, ModelView):
                 value = row[field_name]
                 if value is not None:
                     target_ids.append(value)
-            return Target.read(target_ids, fields)
+            try:
+                return Target.read(target_ids, fields)
+            except AccessError:
+                return []
 
         def add_related(field_name, rows, targets):
             '''
@@ -619,9 +622,13 @@ class Data(ModelSQL, ModelView):
                 if isinstance(value, str):
                     value = int(value.split(',', 1)[1])
                 if value is not None and value >= 0:
-                    row[key] = targets[value]
-                    if 'rec_name' in targets[value]:
-                        row['rec_name'] = targets[value]['rec_name']
+                    target = targets.get(value)
+                    if target:
+                        row[key] = target
+                        if 'rec_name' in target:
+                            row['rec_name'] = target['rec_name']
+                    else:
+                        row[key] = None
                 else:
                     row[key] = None
                 if 'rec_name' not in row:
