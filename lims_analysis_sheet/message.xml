@@ -40,5 +40,11 @@
         <record model="ir.message" id="msg_fraction_already_sheet">
             <field name="text">Fraction "%(fraction)s" has analyses already in progress on Sheet "%(sheet)s"</field>
         </record>
+        <record model="ir.message" id="msg_expression_column_interface">
+            <field name="text">Column "%(column)s" does not belong to the interface of template "%(template)s".</field>
+        </record>
+        <record model="ir.message" id="msg_expression_duplicate_default">
+            <field name="text">Only one special formula per analysis can set a default value for column "%(column)s".</field>
+        </record>
     </data>
 </tryton>

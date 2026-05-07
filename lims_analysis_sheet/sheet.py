@@ -23,7 +23,7 @@ from trytond.report import Report
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.modules.lims_interface.interface import str2date, \
-    get_model_resource
+    get_model_resource, FIELD_TYPE_PYTHON
 from trytond.modules.lims_interface.data import ALLOWED_RESULT_TYPES
 
 
@@ -369,11 +369,92 @@ class TemplateAnalysisSheetAnalysisExpression(ModelSQL, ModelView):
             ('interface', '=', Eval('context', {}).get('interface_id'))],
         required=True)
     expression = fields.Char('Formula')
+    default_value = fields.Char('Default value')
 
     @fields.depends('column')
     def on_change_with_expression(self, name=None):
         if self.column:
             return self.column.expression
+
+    @classmethod
+    def validate(cls, expressions):
+        super().validate(expressions)
+        seen_default = {}
+        for expr in expressions:
+            expr.check_column_matches_template_interface()
+            expr.check_template_literal_default_value()
+            if expr.default_value and str(expr.default_value).strip():
+                key = (expr.analysis.id, expr.column.id)
+                if key in seen_default:
+                    raise UserError(gettext(
+                        'lims_analysis_sheet.msg_expression_duplicate_default',
+                        column=expr.column.rec_name))
+                seen_default[key] = expr
+        for expr in expressions:
+            expr.check_duplicate_default_for_column()
+
+    def check_column_matches_template_interface(self):
+        if not self.column or not self.analysis:
+            return
+        if self.column.interface != self.analysis.template.interface:
+            raise UserError(gettext(
+                'lims_analysis_sheet.msg_expression_column_interface',
+                column=self.column.rec_name,
+                template=self.analysis.template.rec_name))
+
+    def check_template_literal_default_value(self):
+        if not self.default_value or self.default_value.startswith('='):
+            return
+        col = self.column
+        name = col.name
+        if col.type_ in [
+                'datetime', 'time', 'timestamp', 'timedelta',
+                'icon', 'image', 'binary', 'reference',
+                ]:
+            raise UserError(gettext(
+                'lims_interface.invalid_default_value_type',
+                name=name))
+        if col.type_ == 'boolean':
+            try:
+                int(self.default_value)
+            except Exception:
+                raise UserError(gettext(
+                    'lims_interface.invalid_default_value_boolean',
+                    name=name))
+        elif col.type_ == 'date':
+            try:
+                str2date(self.default_value, col.interface.language)
+            except Exception:
+                raise UserError(gettext(
+                    'lims_interface.invalid_default_value_date',
+                    name=name))
+        elif col.type_ == 'many2one':
+            get_model_resource(
+                col.related_model.model, self.default_value, name)
+        else:
+            ftype = FIELD_TYPE_PYTHON[col.type_]
+            try:
+                ftype(self.default_value)
+            except Exception:
+                raise UserError(gettext(
+                    'lims_interface.invalid_default_value',
+                    value=self.default_value, name=name))
+
+    def check_duplicate_default_for_column(self):
+        if not self.default_value or not str(self.default_value).strip():
+            return
+        domain = [
+            ('analysis', '=', self.analysis.id),
+            ('column', '=', self.column.id),
+            ]
+        if self.id:
+            domain.append(('id', '!=', self.id))
+        others = self.search(domain)
+        for other in others:
+            if other.default_value and str(other.default_value).strip():
+                raise UserError(gettext(
+                    'lims_analysis_sheet.msg_expression_duplicate_default',
+                    column=self.column.rec_name))
 
 
 def set_state_info(kind):
@@ -1149,6 +1230,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         interface = self.template.interface
         schema, _ = self.compilation._get_schema()
         defaults = self.get_data_defaults()
+        overrides = self._get_template_default_value_overrides()
+        language = self.compilation.interface.language
 
         with Transaction().set_context(
                 lims_interface_table=self.compilation.table.id):
@@ -1158,9 +1241,33 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                     'compilation': self.compilation.id,
                     'notebook_line': nl.id,
                     }
-                line.update(defaults)
+                d = defaults.copy()
+                override_for_line = overrides.get(nl.analysis.id, {})
+                for alias in override_for_line:
+                    if alias not in schema:
+                        continue
+                    for key in self._schema_keys_to_clear(
+                            schema[alias], alias):
+                        d.pop(key, None)
+                line.update(d)
+
+                for alias, raw in override_for_line.items():
+                    if alias not in schema:
+                        continue
+                    if not raw or not str(raw).strip():
+                        continue
+                    raw = str(raw).strip()
+                    if raw.startswith('='):
+                        value = self._resolve_default_formula_with_nl(raw, nl)
+                    else:
+                        value = self._resolve_literal_schema_default(
+                            schema[alias], raw, language)
+                    self._apply_default_to_mapping(
+                        line, alias, schema[alias], value)
 
                 for k in list(schema.keys()):
+                    if k in override_for_line:
+                        continue
                     default_value = schema[k]['default_value']
                     if (default_value is None or
                             not default_value.startswith('=')):
@@ -1173,19 +1280,9 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         inputs = [nl]
                         try:
                             value = ast(*inputs)
-                        except schedula.utils.exc.DispatcherError as e:
+                        except schedula.utils.exc.DispatcherError:
                             value = None
-                        if isinstance(value, list):
-                            value = str(value)
-                        elif not isinstance(value, ALLOWED_RESULT_TYPES):
-                            value = value.tolist()
-                        if isinstance(value, formulas.tokens.operand.XlError):
-                            value = None
-                        elif isinstance(value, list):
-                            for x in chain(*value):
-                                if isinstance(x,
-                                        formulas.tokens.operand.XlError):
-                                    value = None
+                        value = self._normalize_formula_value(value)
                     else:
                         path = default_value[1:].split('.')
                         field = path.pop(0)
@@ -1197,12 +1294,8 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         except AttributeError:
                             value = None
 
-                    if schema[k]['grouped_repetitions'] is None:
-                        line[k] = value
-                    else:
-                        reps = (schema[k]['grouped_repetitions'] or 1) + 1
-                        for rep in range(1, reps):
-                            line['%s_%s' % (k, rep)] = value
+                    self._apply_default_to_mapping(
+                        line, k, schema[k], value)
 
                 if interface.fraction_field:
                     if interface.fraction_field.type_ == 'many2one':
@@ -1262,9 +1355,103 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 notebooks.add(x[0])
         return list(notebooks)
 
+    def _get_template_default_value_overrides(self):
+        overrides = {}
+        for ta in self.template.analysis:
+            aid = ta.analysis.id
+            for expr in ta.expressions:
+                if expr.default_value is None:
+                    continue
+                raw = str(expr.default_value).strip()
+                if not raw:
+                    continue
+                if aid not in overrides:
+                    overrides[aid] = {}
+                overrides[aid][expr.column.alias] = raw
+        return overrides
+
+    @staticmethod
+    def _schema_keys_to_clear(schema_entry, alias):
+        if schema_entry['grouped_repetitions'] is None:
+            return [alias]
+        reps = (schema_entry['grouped_repetitions'] or 1) + 1
+        return ['%s_%s' % (alias, rep) for rep in range(1, reps)]
+
+    @staticmethod
+    def _apply_default_to_mapping(mapping, alias, schema_entry, value):
+        if schema_entry['grouped_repetitions'] is None:
+            mapping[alias] = value
+        else:
+            reps = (schema_entry['grouped_repetitions'] or 1) + 1
+            for rep in range(1, reps):
+                mapping['%s_%s' % (alias, rep)] = value
+
+    @staticmethod
+    def _normalize_formula_value(value):
+        if isinstance(value, list):
+            value = str(value)
+        elif not isinstance(value, ALLOWED_RESULT_TYPES):
+            value = value.tolist()
+        if isinstance(value, formulas.tokens.operand.XlError):
+            value = None
+        elif isinstance(value, list):
+            for x in chain(*value):
+                if isinstance(x, formulas.tokens.operand.XlError):
+                    value = None
+        return value
+
+    def _resolve_literal_schema_default(self, schema_entry, raw, language):
+        typ = schema_entry['type']
+        if typ == 'integer':
+            return int(raw)
+        if typ == 'float':
+            return float(raw)
+        if typ == 'numeric':
+            return Decimal(str(raw))
+        if typ == 'boolean':
+            return bool(raw)
+        if typ == 'date':
+            return str2date(raw, language)
+        if typ == 'many2one':
+            resource = get_model_resource(
+                schema_entry['model_name'], raw,
+                schema_entry['field_name'])
+            return resource and resource[0].id
+        return str(raw)
+
+    def _resolve_default_formula_with_nl(self, raw, nl):
+        if raw.startswith('=REFERENCE_VALUE('):
+            parser = formulas.Parser()
+            ast = parser.ast(raw)[1].compile()
+            try:
+                value = ast()
+            except schedula.utils.exc.DispatcherError as e:
+                raise UserError(e.args[0] % e.args[1:])
+            return self._normalize_formula_value(value)
+        if raw.startswith('=VAR('):
+            parser = formulas.Parser()
+            ast = parser.ast(raw)[1].compile()
+            inputs = [nl]
+            try:
+                value = ast(*inputs)
+            except schedula.utils.exc.DispatcherError:
+                value = None
+            return self._normalize_formula_value(value)
+        path = raw[1:].split('.')
+        field = path.pop(0)
+        try:
+            value = getattr(nl, field)
+            while path:
+                field = path.pop(0)
+                value = getattr(value, field)
+        except AttributeError:
+            value = None
+        return value
+
     def get_data_defaults(self):
         defaults = {}
         schema, _ = self.compilation._get_schema()
+        language = self.compilation.interface.language
         for k in list(schema.keys()):
             value = schema[k]['default_value']
             if value in (None, ''):
@@ -1273,55 +1460,18 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 parser = formulas.Parser()
                 ast = parser.ast(value)[1].compile()
                 try:
-                    value = ast()
+                    resolved = ast()
                 except schedula.utils.exc.DispatcherError as e:
                     raise UserError(e.args[0] % e.args[1:])
-                if isinstance(value, list):
-                    value = str(value)
-                elif not isinstance(value, ALLOWED_RESULT_TYPES):
-                    value = value.tolist()
-                if isinstance(value, formulas.tokens.operand.XlError):
-                    value = None
-                elif isinstance(value, list):
-                    for x in chain(*value):
-                        if isinstance(x, formulas.tokens.operand.XlError):
-                            value = None
-                if schema[k]['grouped_repetitions'] is None:
-                    defaults[k] = value
-                else:
-                    reps = (schema[k]['grouped_repetitions'] or 1) + 1
-                    for rep in range(1, reps):
-                        defaults['%s_%s' % (k, rep)] = value
+                resolved = self._normalize_formula_value(resolved)
+                self._apply_default_to_mapping(
+                    defaults, k, schema[k], resolved)
                 continue
             if value.startswith('='):
                 continue
-
-            if schema[k]['type'] == 'integer':
-                default_value = int(value)
-            elif schema[k]['type'] == 'float':
-                default_value = float(value)
-            elif schema[k]['type'] == 'numeric':
-                default_value = Decimal(str(value))
-            elif schema[k]['type'] == 'boolean':
-                default_value = bool(value)
-            elif schema[k]['type'] == 'date':
-                default_value = str2date(value,
-                    self.compilation.interface.language)
-            elif schema[k]['type'] == 'many2one':
-                resource = get_model_resource(
-                    schema[k]['model_name'], value,
-                    schema[k]['field_name'])
-                default_value = resource and resource[0].id
-            else:
-                default_value = str(value)
-
-            if schema[k]['grouped_repetitions'] is None:
-                defaults[k] = default_value
-            else:
-                reps = (schema[k]['grouped_repetitions'] or 1) + 1
-                for rep in range(1, reps):
-                    defaults['%s_%s' % (k, rep)] = default_value
-
+            resolved = self._resolve_literal_schema_default(
+                schema[k], value, language)
+            self._apply_default_to_mapping(defaults, k, schema[k], resolved)
         return defaults
 
 

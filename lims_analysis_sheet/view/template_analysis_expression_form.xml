@@ -2,6 +2,8 @@
 <form>
     <label name="column"/>
     <field name="column"/>
+    <label name="default_value"/>
+    <field name="default_value"/>
     <label name="expression"/>
     <field name="expression"/>
 </form>
