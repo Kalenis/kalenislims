@@ -121,23 +121,30 @@ def get_model_resource(model_name, value, field_name):
         return None
     Model = Pool().get(model_name)
     rec_name = Model._rec_name
-    if rec_name not in Model._fields:
-        rec_name = 'id'
-        try:
-            value = int(value)
-        except Exception:
-            raise UserError(gettext(
-                'lims_interface.invalid_default_value_many2one_id',
-                name=field_name))
-    resource = Model.search([rec_name, '=', value])
-    if not resource or len(resource) > 1:
-        if 'code' in Model._fields:
-            resource = Model.search(['code', '=', value])
-        if not resource or len(resource) > 1:
-            raise UserError(gettext(
-                'lims_interface.invalid_default_value_many2one',
-                name=field_name))
-    return resource
+
+    try:
+        id_value = int(value)
+    except (TypeError, ValueError):
+        id_value = None
+
+    if id_value is not None:
+        resource = Model.search([('id', '=', id_value)])
+        if resource and len(resource) == 1:
+            return resource
+
+    if rec_name in Model._fields:
+        resource = Model.search([(rec_name, '=', value)])
+        if resource and len(resource) == 1:
+            return resource
+
+    if 'code' in Model._fields:
+        resource = Model.search([('code', '=', value)])
+        if resource and len(resource) == 1:
+            return resource
+
+    raise UserError(gettext(
+        'lims_interface.invalid_default_value_many2one',
+        name=field_name))
 
 
 class Interface(Workflow, ModelSQL, ModelView):
