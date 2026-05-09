@@ -1405,50 +1405,68 @@ class EditGroupedData(Wizard):
         line_id = Transaction().context.get('active_id', None)
         sheet_id = self._get_analysis_sheet_id()
         sheet = AnalysisSheet(sheet_id)
-        fields = sheet.compilation.table.fields_
+        table_fields = sheet.compilation.table.fields_
+
+        grouped_fields = defaultdict(list)
+        for field in sheet.compilation.table.grouped_fields_:
+            grouped_fields[field.group].append(field)
+
+        read_fields = ['notebook_line', 'compilation', 'annulled']
+        for field in table_fields:
+            if field.group:
+                continue
+            read_fields.append(field.name)
+        for group, repetition_fields in grouped_fields.items():
+            reps = None
+            for rep in sheet.template.interface.grouped_repetitions:
+                if rep.group == group:
+                    reps = (rep.repetitions or 1) + 1
+                    break
+            if reps is None:
+                continue
+            for rep in range(1, reps):
+                for field in repetition_fields:
+                    read_fields.append('%s_%s' % (field.name, str(rep)))
 
         data = []
         with Transaction().set_context(
                 lims_interface_table=sheet.compilation.table.id):
-            line = Data.search([
-                ('compilation', '=', sheet.compilation.id),
-                ('id', '=', line_id)])[0]
+            # Use Data.read instead of browse + getattr: resolving many2one on
+            # the browse record calls Target.read and triggers AccessError for
+            # lab devices from other laboratories.
+            row, = Data.read([line_id], read_fields)
             record = {
-                'notebook_line': line.notebook_line and line.notebook_line.id,
+                'notebook_line': row.get('notebook_line'),
                 }
-            for field in fields:
+            for field in table_fields:
                 if field.group:
                     continue
-                val = getattr(line, field.name, None)
+                val = row.get(field.name)
                 if val is None:
                     continue
-                if field.type == 'many2one':
-                    record[field.name] = val and val.id or None
-                else:
-                    record[field.name] = val
-
-            grouped_fields = defaultdict(list)
-            for field in sheet.compilation.table.grouped_fields_:
-                grouped_fields[field.group].append(field)
+                record[field.name] = val
 
             for group, repetition_fields in grouped_fields.items():
+                reps = None
                 for rep in sheet.template.interface.grouped_repetitions:
                     if rep.group == group:
                         reps = (rep.repetitions or 1) + 1
                         break
+                if reps is None:
+                    continue
 
                 group_fields = []
                 for rep in range(1, reps):
                     grouped_record = {
-                        'notebook_line': (line.notebook_line and
-                            line.notebook_line.id),
-                        'data': line.id,
+                        'notebook_line': row.get('notebook_line'),
+                        'data': line_id,
                         'iteration': rep,
                         }
                     for field in repetition_fields:
-                        val = getattr(line, '%s_%s' % (field.name, str(rep)))
+                        col = '%s_%s' % (field.name, str(rep))
+                        val = row.get(col)
                         if field.type == 'many2one':
-                            grouped_record[field.name] = val and val.id or None
+                            grouped_record[field.name] = val
                         else:
                             grouped_record[field.name] = val
                     group_fields.append(grouped_record)

@@ -609,15 +609,17 @@ class Data(ModelSQL, ModelView):
             target_ids = list({x for x in target_ids})
             if not target_ids:
                 return []
-            # Respect record rules: batch read() fails if any id is forbidden
-            # (e.g. lab device from another laboratory).
-            records = Target.search([('id', 'in', target_ids)])
-            if not records:
-                return []
-            try:
-                return Target.read([r.id for r in records], fields)
-            except AccessError:
-                return []
+            # Function field getters use _check_access=False; if that context
+            # leaks into read(), Target.search would return forbidden ids and
+            # Target.read would then raise for the real user. Force rules here.
+            with Transaction().set_context(_check_access=True):
+                records = Target.search([('id', 'in', target_ids)])
+                if not records:
+                    return []
+                try:
+                    return Target.read([r.id for r in records], fields)
+                except AccessError:
+                    return []
 
         def add_related(field_name, rows, targets):
             '''
@@ -678,8 +680,8 @@ class Data(ModelSQL, ModelView):
             for record in fetchall:
                 for field, cast in to_cast.items():
                     record[field] = cast(record[field])
-        function_fields = [field for field in cls.get_function_fields() 
-                           if field.name in fields_names]
+        function_fields = [field for field in cls.get_function_fields()
+                           if not fields_names or field.name in fields_names]
                            
         func_fields = {}
         for field in function_fields:
@@ -700,8 +702,7 @@ class Data(ModelSQL, ModelView):
                     getter_result = getter_results[fname]
                     for row in sub_results:
                         row[fname] = getter_result[row['id']]
-           
-        
+
         return fetchall
 
     @classmethod
