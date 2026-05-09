@@ -606,8 +606,16 @@ class Data(ModelSQL, ModelView):
                 value = row[field_name]
                 if value is not None:
                     target_ids.append(value)
+            target_ids = list({x for x in target_ids})
+            if not target_ids:
+                return []
+            # Respect record rules: batch read() fails if any id is forbidden
+            # (e.g. lab device from another laboratory).
+            records = Target.search([('id', 'in', target_ids)])
+            if not records:
+                return []
             try:
-                return Target.read(target_ids, fields)
+                return Target.read([r.id for r in records], fields)
             except AccessError:
                 return []
 
@@ -629,6 +637,9 @@ class Data(ModelSQL, ModelView):
                             row['rec_name'] = target['rec_name']
                     else:
                         row[key] = None
+                        # Hide FK the user cannot read so the client does not
+                        # call Target.read([id]) and trigger AccessError.
+                        row[field_name] = None
                 else:
                     row[key] = None
                 if 'rec_name' not in row:
