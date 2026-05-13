@@ -2784,28 +2784,18 @@ class GenerateReport(Wizard):
                 res['type'] = 'preliminary'
 
         if not res['report_readonly']:
-            if res['preliminary']:
-                last_detail = ResultsDetail.search([
+            if current_reports:
+                clause = [('id', 'in', current_reports)]
+            else:
+                clause = [
                     ('party', '=', party_key[0]),
                     ('invoice_party', '=', party_key[1]),
-                    ('laboratory', '=', laboratory_id),
-                    ], order=[('id', 'DESC')], limit=1)
-                if last_detail and last_detail[0].state == 'preliminary':
-                    res['report_domain'] = [
-                        last_detail[0].report_version.results_report.id]
-            else:
-                if current_reports:
-                    clause = [('id', 'in', current_reports)]
-                else:
-                    clause = [
-                        ('party', '=', party_key[0]),
-                        ('invoice_party', '=', party_key[1]),
-                        ('report_grouper', '=', report_grouper),
-                        ('cie_fraction_type', '=', cie_fraction_type),
-                        ]
-                reports = ResultsReport.search(clause)
-                if reports:
-                    res['report_domain'] = [r.id for r in reports]
+                    ('report_grouper', '=', report_grouper),
+                    ('cie_fraction_type', '=', cie_fraction_type),
+                    ]
+            reports = ResultsReport.search(clause)
+            if reports:
+                res['report_domain'] = [r.id for r in reports]
 
         if res['report_domain'] and entry != -1:
             if current_reports:
