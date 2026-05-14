@@ -6,27 +6,27 @@
         <group id="oil_fields" colspan="4" col="8">
             <group id="ind_equipment" colspan="2" col="3">
                 <label name="ind_equipment"/>
-                <field name="ind_equipment_uom" xexpand="0"/>
-                <field name="ind_equipment"/>
+                <field name="ind_equipment_uom" xexpand="0" width="60"/>
+                <field name="ind_equipment" width="80"/>
             </group>
             <group id="ind_component" colspan="2" col="3">
                 <label name="ind_component"/>
-                <field name="ind_component_uom" xexpand="0"/>
-                <field name="ind_component"/>
+                <field name="ind_component_uom" xexpand="0" width="60"/>
+                <field name="ind_component" width="80"/>
             </group>
             <group id="ind_oil" colspan="2" col="3">
                 <label name="ind_oil"/>
-                <field name="ind_oil_uom" xexpand="0"/>
-                <field name="ind_oil"/>
+                <field name="ind_oil_uom" xexpand="0" width="60"/>
+                <field name="ind_oil" width="80"/>
             </group>
             <label name="oil_added"/>
-            <field name="oil_added"/>
+            <field name="oil_added" width="80"/>
             <label name="oil_changed"/>
-            <field name="oil_changed"/>
+            <field name="oil_changed" xexpand="0" width="80"/>
             <label name="oil_filter_changed"/>
-            <field name="oil_filter_changed"/>
+            <field name="oil_filter_changed" xexpand="0" width="80"/>
             <label name="air_filter_changed"/>
-            <field name="air_filter_changed"/>
+            <field name="air_filter_changed" xexpand="0" width="80"/>
         </group>
     </xpath>
     <xpath expr="/form/notebook/page[@id='general']" position="after">
