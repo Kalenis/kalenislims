@@ -2,6 +2,14 @@
 <tryton>
     <data>
 
+<!-- Laboratory -->
+
+        <record model="ir.ui.view" id="lims_laboratory_view_form">
+            <field name="model">lims.laboratory</field>
+            <field name="inherit" ref="lims.lims_laboratory_view_form"/>
+            <field name="name">laboratory_form</field>
+        </record>
+
 <!-- Laboratory Device -->
 
         <record model="ir.ui.view" id="lab_device_view_form">

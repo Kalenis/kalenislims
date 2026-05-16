@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/form/group[@id='checkboxes']" position="replace_attributes">
+        <group col="-1" colspan="4" id="checkboxes"/>
+    </xpath>
+
+    <xpath expr="/form/group[@id='checkboxes']" position="inside">
+        <label name="planification_update_draft_sheet"/>
+        <field name="planification_update_draft_sheet"/>
+    </xpath>
+</data>

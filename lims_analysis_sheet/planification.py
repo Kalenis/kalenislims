@@ -25,10 +25,21 @@ class Planification(metaclass=PoolMeta):
         'planification', 'Analysis sheets to update', depends=['state'],
         states={'readonly': Eval('state') != 'preplanned'})
 
-    @staticmethod
-    def default_planification_update_draft_sheet():
-        Config = Pool().get('lims.configuration')
+    @classmethod
+    def default_planification_update_draft_sheet(cls):
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        Laboratory = pool.get('lims.laboratory')
+        laboratory_id = Transaction().context.get('laboratory')
+        if laboratory_id:
+            return Laboratory(laboratory_id).planification_update_draft_sheet
         return Config(1).planification_update_draft_sheet
+
+    @fields.depends('laboratory')
+    def on_change_laboratory(self):
+        if self.laboratory:
+            self.planification_update_draft_sheet = (
+                self.laboratory.planification_update_draft_sheet)
 
     @classmethod
     def __setup__(cls):

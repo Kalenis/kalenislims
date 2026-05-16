@@ -10,6 +10,33 @@ from trytond.transaction import Transaction
 from trytond.pyson import Eval, Bool, And
 
 
+class Laboratory(metaclass=PoolMeta):
+    __name__ = 'lims.laboratory'
+
+    planification_update_draft_sheet = fields.Boolean(
+        'Update draft sheets when planning analyzes')
+
+    @staticmethod
+    def default_planification_update_draft_sheet():
+        Config = Pool().get('lims.configuration')
+        return Config(1).planification_update_draft_sheet
+
+    @classmethod
+    def __register__(cls, module_name):
+        super().__register__(module_name)
+        cursor = Transaction().connection.cursor()
+        cursor.execute(
+            'SELECT COUNT(*) FROM "' + cls._table + '" '
+            'WHERE planification_update_draft_sheet IS NOT NULL')
+        if cursor.fetchone()[0] == 0:
+            Config = Pool().get('lims.configuration')
+            value = Config(1).planification_update_draft_sheet
+            cursor.execute(
+                'UPDATE "' + cls._table + '" '
+                'SET planification_update_draft_sheet = %s',
+                (value,))
+
+
 class LabDevice(metaclass=PoolMeta):
     __name__ = 'lims.lab.device'
 

@@ -259,6 +259,10 @@ msgctxt "field:lims.configuration,planification_update_draft_sheet:"
 msgid "Update draft sheets when planning analyzes"
 msgstr "Actualizar Hojas de análisis en borrador al planificar"
 
+msgctxt "field:lims.laboratory,planification_update_draft_sheet:"
+msgid "Update draft sheets when planning analyzes"
+msgstr "Actualizar Hojas de análisis en borrador al planificar"
+
 msgctxt "field:lims.configuration.sequence,analysis_sheet_sequence:"
 msgid "Analysis Sheet Sequence"
 msgstr "Secuencia de Hoja de análisis"

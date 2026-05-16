@@ -50,6 +50,7 @@ def register():
         notebook.EditMultiSampleDataStart,
         notebook.MultiSampleData,
         notebook.MoveDataStart,
+        laboratory.Laboratory,
         laboratory.LabDevice,
         laboratory.LabDeviceConstant,
         laboratory.NotebookRule,
