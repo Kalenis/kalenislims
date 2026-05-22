@@ -259,6 +259,12 @@
             <field name="view" ref="lab_device_maintenance_calendar_view_list"/>
             <field name="act_window" ref="act_lab_device_maintenance_calendar_list"/>
         </record>
+        <record model="ir.action.act_window.view"
+            id="act_lab_device_maintenance_calendar_view_form2">
+            <field name="sequence" eval="40"/>
+            <field name="view" ref="lab_device_maintenance_calendar_view_form"/>
+            <field name="act_window" ref="act_lab_device_maintenance_calendar_list"/>
+        </record>
 
         <menuitem name="Calendar"
             action="act_lab_device_maintenance_calendar_list"
@@ -302,6 +308,12 @@
                 id="act_device_maintenance_calendar_mine_view_list">
             <field name="sequence" eval="30"/>
             <field name="view" ref="lab_device_maintenance_calendar_view_list"/>
+            <field name="act_window" ref="act_device_maintenance_calendar_mine"/>
+        </record>
+        <record model="ir.action.act_window.view"
+                id="act_device_maintenance_calendar_mine_view_form2">
+            <field name="sequence" eval="40"/>
+            <field name="view" ref="lab_device_maintenance_calendar_view_form"/>
             <field name="act_window" ref="act_device_maintenance_calendar_mine"/>
         </record>
 
