@@ -857,10 +857,11 @@ class Service(ModelSQL, ModelView):
                 if not typifications:
                     continue
                 typification = typifications[0]
+                skip_typification_additional = \
+                    Transaction().context.get(
+                        'lims_skip_auto_typification_additional', False)
 
-                if (typification.additional
-                        and not Transaction().context.get(
-                            'lims_skip_auto_typification_additional', False)):
+                if typification.additional and not skip_typification_additional:
                     if service.fraction.id not in aditional_services:
                         aditional_services[service.fraction.id] = {}
                     if (typification.additional.id not in
@@ -877,7 +878,7 @@ class Service(ModelSQL, ModelView):
                         typification.additional.id]['additional_origins'].add(
                             service.id)
 
-                if typification.additionals:
+                if typification.additionals and not skip_typification_additional:
                     if service.fraction.id not in aditional_services:
                         aditional_services[service.fraction.id] = {}
                     for additional in typification.additionals:
