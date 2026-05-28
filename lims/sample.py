@@ -31,6 +31,19 @@ from trytond import backend
 
 logger = logging.getLogger(__name__)
 
+SAMPLE_STATES = [
+    ('draft', 'Draft'),
+    ('annulled', 'Annulled'),
+    ('pending_planning', 'Pending Planification'),
+    ('planned', 'Planned'),
+    ('in_lab', 'In Laboratory'),
+    ('lab_pending_acceptance', 'Pending Laboratory Acceptance'),
+    ('without_report', 'Finished without Report'),
+    ('pending_report', 'Pending Reporting'),
+    ('in_report', 'In Report'),
+    ('report_released', 'Report Released'),
+    ]
+
 
 class Zone(ModelSQL, ModelView):
     'Zone/Region'
@@ -2901,18 +2914,7 @@ class Sample(ModelSQL, ModelView):
         readonly=True)
     results_reports_list = fields.Function(fields.Char('Results Reports'),
         'get_results_reports_list', searcher='search_results_reports_list')
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('annulled', 'Annulled'),
-        ('pending_planning', 'Pending Planification'),
-        ('planned', 'Planned'),
-        ('in_lab', 'In Laboratory'),
-        ('lab_pending_acceptance', 'Pending Laboratory Acceptance'),
-        ('without_report', 'Finished without Report'),
-        ('pending_report', 'Pending Reporting'),
-        ('in_report', 'In Report'),
-        ('report_released', 'Report Released'),
-        ], 'State')
+    state = fields.Selection(SAMPLE_STATES, 'State')
     qty_lines_pending = fields.Integer('Pending lines')
     qty_lines_pending_acceptance = fields.Integer('Lines pending acceptance')
     resampling_origin = fields.Many2One('lims.sample',
