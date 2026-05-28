@@ -25,6 +25,7 @@ from trytond.i18n import gettext
 from .configuration import get_print_date
 from .analysis import ANALYSIS_TYPES
 from .formula_parser import FormulaParser
+from .sample import SAMPLE_STATES
 
 ALLOWED_RESULT_TYPES = (str, int, float, Decimal, time, date, timedelta,
     type(None))
@@ -86,6 +87,8 @@ class Notebook(ModelSQL, ModelView):
         searcher='search_urgent')
     entry_summary = fields.Function(fields.Char('Entry / Qty. Samples'),
         'get_entry_summary', searcher='search_entry_summary')
+    sample_state = fields.Function(fields.Selection(SAMPLE_STATES,
+        'Sample State'), 'get_sample_field', searcher='search_sample_field')
 
     @classmethod
     def __setup__(cls):
@@ -105,14 +108,15 @@ class Notebook(ModelSQL, ModelView):
         result = {}
         for name in names:
             result[name] = {}
-            if cls._fields[name]._type == 'many2one':
+            if name in ('sample_comments', 'sample_state'):
+                field_name = name[7:]
+                for n in notebooks:
+                    result[name][n.id] = getattr(
+                        n.fraction.sample, field_name, None)
+            elif cls._fields[name]._type == 'many2one':
                 for n in notebooks:
                     field = getattr(n.fraction.sample, name, None)
                     result[name][n.id] = field.id if field else None
-            elif name == 'sample_comments':
-                for n in notebooks:
-                    result[name][n.id] = getattr(
-                        n.fraction.sample, 'comments', None)
             else:
                 for n in notebooks:
                     result[name][n.id] = getattr(n.fraction.sample, name, None)
@@ -120,7 +124,10 @@ class Notebook(ModelSQL, ModelView):
 
     @classmethod
     def search_sample_field(cls, name, clause):
-        return [('fraction.sample.' + name,) + tuple(clause[1:])]
+        field_name = name
+        if name in ('sample_comments', 'sample_state'):
+            field_name = name[7:]
+        return [('fraction.sample.' + field_name,) + tuple(clause[1:])]
 
     def _order_sample_field(name):
         def order_field(tables):
