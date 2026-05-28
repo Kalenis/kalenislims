@@ -1863,6 +1863,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
     fraction = fields.Many2One('lims.fraction', 'Fraction', readonly=True)
     fraction_type = fields.Many2One('lims.fraction.type', 'Fraction type',
         readonly=True)
+    entry = fields.Many2One('lims.entry', 'Entry', readonly=True)
     party = fields.Many2One('party.party', 'Party', readonly=True)
     party_code = fields.Char('Party', readonly=True)
     product_type = fields.Many2One('lims.product.type', 'Product type',
@@ -2007,6 +2008,7 @@ class NotebookLineAllFields(ModelSQL, ModelView):
             line.write_date,
             line.id.as_('line'),
             service.fraction,
+            sample.entry,
             sample.party,
             party.code.as_('party_code'),
             sample.product_type,
