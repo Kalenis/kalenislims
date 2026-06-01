@@ -9141,11 +9141,11 @@ msgstr "La muestra «%(sample)s» tiene análisis ya planificados. No se puede c
 msgctxt "model:ir.message,text:msg_change_pt_matrix_not_typified"
 msgid ""
 "The new Product type / Matrix has no valid typification for the following "
-"Analysis/Method pairs:\n"
+"Analyses:\n"
 "%(differences)s"
 msgstr ""
 "El nuevo Tipo de producto / Matriz no tiene tipificación válida para los "
-"siguientes pares Análisis/Método:\n"
+"siguientes Análisis:\n"
 "%(differences)s"
 
 msgctxt "model:ir.message,text:msg_edit_sample_party"

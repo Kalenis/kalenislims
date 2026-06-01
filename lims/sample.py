@@ -8602,22 +8602,17 @@ class ChangeProductMatrix(Wizard):
                 ])
             seen = set()
             for detail in details:
-                if not detail.method:
+                if detail.analysis.id in seen:
                     continue
-                key = (detail.analysis.id, detail.method.id)
-                if key in seen:
-                    continue
-                seen.add(key)
-                t = Typification.get_valid_typification(
-                    new_pt.id, new_mx.id,
-                    detail.analysis.id,
-                    detail.method.id)
-                if not t:
-                    differences.append(
-                        '%s: %s / %s' % (
-                            sample.rec_name,
-                            detail.analysis.rec_name,
-                            detail.method.rec_name))
+                seen.add(detail.analysis.id)
+                if Typification.search_count([
+                        ('product_type', '=', new_pt.id),
+                        ('matrix', '=', new_mx.id),
+                        ('analysis', '=', detail.analysis.id),
+                        ('valid', '=', True),
+                        ]) == 0:
+                    differences.append('%s: %s' % (
+                        sample.rec_name, detail.analysis.rec_name))
 
         if differences:
             raise UserError(gettext(
@@ -8644,7 +8639,83 @@ class ChangeProductMatrix(Wizard):
             if not new_obj_description_id:
                 values['obj_description_manual'] = None
             Sample.write([sample], values)
+            self.update_notebook_lines(sample, new_pt, new_mx)
         return 'end'
+
+    def _get_default_typification(self, new_pt, new_mx, analysis):
+        Typification = Pool().get('lims.typification')
+        domain = [
+            ('product_type', '=', new_pt.id),
+            ('matrix', '=', new_mx.id),
+            ('analysis', '=', analysis.id),
+            ('valid', '=', True),
+            ]
+        res = Typification.search(domain + [('by_default', '=', True)], limit=1)
+        if not res:
+            res = Typification.search(domain, limit=1)
+        return res[0] if res else None
+
+    def update_notebook_lines(self, sample, new_pt, new_mx):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        Typification = pool.get('lims.typification')
+        LabMethod = pool.get('lims.lab.method')
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        notebook_lines = NotebookLine.search([
+            ('notebook.fraction.sample', '=', sample.id),
+            ('annulled', '=', False),
+            ('start_date', '=', None),
+            ])
+
+        lines_to_save, details_to_save, services_to_save = [], [], []
+        for nl in notebook_lines:
+            t = Typification.get_valid_typification(
+                new_pt.id, new_mx.id, nl.analysis.id, nl.method.id)
+            if not t:
+                t = self._get_default_typification(new_pt, new_mx, nl.analysis)
+            if not t:
+                continue
+
+            if t.method and t.method.id != nl.method.id:
+                method_version = LabMethod(t.method.id).get_current_version()
+                nl.method = t.method.id
+                nl.method_version = method_version
+                if nl.analysis_detail:
+                    detail = nl.analysis_detail
+                    detail.method = t.method.id
+                    detail.method_version = method_version
+                    details_to_save.append(detail)
+                if (nl.service and nl.service.analysis.id == nl.analysis.id):
+                    service = nl.service
+                    service.method = t.method.id
+                    services_to_save.append(service)
+
+            nl.initial_concentration = t.initial_concentration
+            nl.final_concentration = t.final_concentration
+            nl.initial_unit = t.start_uom and t.start_uom.id or None
+            nl.final_unit = t.end_uom and t.end_uom.id or None
+            nl.detection_limit = (format(t.detection_limit,
+                '.{}f'.format(t.limit_digits))
+                if t.detection_limit is not None else None)
+            nl.quantification_limit = (format(t.quantification_limit,
+                '.{}f'.format(t.limit_digits))
+                if t.quantification_limit is not None else None)
+            nl.lower_limit = t.lower_limit
+            nl.upper_limit = t.upper_limit
+            nl.decimals = t.calc_decimals
+            nl.significant_digits = t.significant_digits
+            nl.scientific_notation = t.scientific_notation
+            nl.report = t.report
+            lines_to_save.append(nl)
+
+        if details_to_save:
+            EntryDetailAnalysis.save(details_to_save)
+        if services_to_save:
+            Service.save(services_to_save)
+        if lines_to_save:
+            NotebookLine.save(lines_to_save)
 
     def end(self):
         return 'reload'
