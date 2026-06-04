@@ -635,7 +635,7 @@ class Service(ModelSQL, ModelView):
                 cls.check_duplicated_analysis([{
                     'fraction': s.fraction.id,
                     'analysis': s.analysis.id,
-                    'method': s.method.id,
+                    'method': s.method and s.method.id or None,
                     } for s in services])
             change_detail = False
             for field in cls._get_update_details():
