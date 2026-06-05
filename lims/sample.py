@@ -9031,6 +9031,7 @@ class ChangeProductMatrix(Wizard):
             if not new_obj_description_id:
                 values['obj_description_manual'] = None
             Sample.write([sample], values)
+            self.reconcile_additional_services(sample, new_pt, new_mx)
             self.update_notebook_lines(sample, new_pt, new_mx)
         return 'end'
 
@@ -9046,6 +9047,62 @@ class ChangeProductMatrix(Wizard):
         if not res:
             res = Typification.search(domain, limit=1)
         return res[0] if res else None
+
+    def reconcile_additional_services(self, sample, new_pt, new_mx):
+        pool = Pool()
+        Service = pool.get('lims.service')
+        Typification = pool.get('lims.typification')
+
+        expected = {}
+        parent_services = []
+        for fraction in sample.fractions:
+            for service in fraction.services:
+                if service.annulled or service.is_additional:
+                    continue
+                parent_services.append(service)
+                for detail in service.analysis_detail:
+                    if detail.state == 'annulled':
+                        continue
+                    typifications = Typification.search([
+                        ('product_type', '=', new_pt.id),
+                        ('matrix', '=', new_mx.id),
+                        ('analysis', '=', detail.analysis.id),
+                        ('method', '=', detail.method),
+                        ('valid', '=', True),
+                        ])
+                    if not typifications:
+                        continue
+                    typification = typifications[0]
+                    if typification.additional:
+                        key = (fraction.id, typification.additional.id)
+                        expected.setdefault(key, set()).add(service.id)
+                    if typification.additionals:
+                        for additional in typification.additionals:
+                            key = (fraction.id, additional.id)
+                            expected.setdefault(key, set()).add(service.id)
+
+        for fraction in sample.fractions:
+            additional_services = Service.search([
+                ('fraction', '=', fraction.id),
+                ('is_additional', '=', True),
+                ('annulled', '=', False),
+                ])
+            for service in additional_services:
+                valid = expected.get(
+                    (fraction.id, service.analysis.id), set())
+                current = {o.id for o in service.additional_origins}
+                to_remove = current - valid
+                if to_remove:
+                    Service.write([service], {
+                        'additional_origins': [('remove', list(to_remove))],
+                        })
+
+        with Transaction().set_user(0, set_context=True):
+            Service.delete_additional_services()
+
+        if parent_services:
+            with Transaction().set_context(manage_service=True):
+                Service.create_aditional_services(parent_services)
 
     def update_notebook_lines(self, sample, new_pt, new_mx):
         pool = Pool()
