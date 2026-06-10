@@ -1224,6 +1224,63 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             setattr(compilation, field, value)
         return compilation
 
+    def _find_annulled_interface_line(self, nl):
+        pool = Pool()
+        NbLine = pool.get('lims.notebook.line')
+        Data = pool.get('lims.interface.data')
+
+        annulled_nls = NbLine.search([
+            ('notebook', '=', nl.notebook.id),
+            ('analysis', '=', nl.analysis.id),
+            ('annulled', '=', True),
+            ])
+        if not annulled_nls:
+            return None
+
+        rows = Data.search([
+            ('compilation', '=', self.compilation.id),
+            ('notebook_line', 'in', [x.id for x in annulled_nls]),
+            ('annulled', '=', True),
+            ], limit=1)
+        return rows[0] if rows else None
+
+    def _relink_annulled_interface_line(self, row, nl):
+        pool = Pool()
+        Field = pool.get('lims.interface.table.field')
+        Data = pool.get('lims.interface.data')
+        interface = self.template.interface
+        table_id = self.compilation.table.id
+
+        vals = {
+            'notebook_line': nl.id,
+            'annulled': False,
+            }
+        for col in Field.search([
+                ('table', '=', table_id),
+                ('transfer_field', '=', True),
+                ]):
+            vals[col.name] = None
+
+        if interface.fraction_field:
+            if interface.fraction_field.type_ == 'many2one':
+                vals[interface.fraction_field.alias] = nl.fraction.id
+            else:
+                vals[interface.fraction_field.alias] = nl.fraction.number
+        if interface.analysis_field:
+            if interface.analysis_field.type_ == 'many2one':
+                vals[interface.analysis_field.alias] = nl.analysis.id
+            else:
+                vals[interface.analysis_field.alias] = nl.analysis.rec_name
+        if interface.method_field:
+            if interface.method_field.type_ == 'many2one':
+                vals[interface.method_field.alias] = nl.method.id
+            else:
+                vals[interface.method_field.alias] = nl.method.rec_name
+        if interface.repetition_field:
+            vals[interface.repetition_field.alias] = nl.repetition
+
+        Data.write([row], vals)
+
     def create_lines(self, lines, update_samples_list=True):
         Data = Pool().get('lims.interface.data')
 
@@ -1237,6 +1294,17 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                 lims_interface_table=self.compilation.table.id):
             data = []
             for nl in lines:
+                if Data.search([
+                        ('compilation', '=', self.compilation.id),
+                        ('notebook_line', '=', nl.id),
+                        ], limit=1):
+                    continue
+
+                annulled_row = self._find_annulled_interface_line(nl)
+                if annulled_row:
+                    self._relink_annulled_interface_line(annulled_row, nl)
+                    continue
+
                 line = {
                     'compilation': self.compilation.id,
                     'notebook_line': nl.id,
@@ -1337,6 +1405,52 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
             sample.number for sample in samples])
         self.save()
         return samples
+
+    @classmethod
+    def cleanup_orphan_interface_rows(cls, sheets):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+        for sheet in sheets:
+            with Transaction().set_context(
+                    lims_interface_table=sheet.compilation.table.id):
+                lines = Data.search([
+                    ('compilation', '=', sheet.compilation.id),
+                    ('notebook_line', '!=', None),
+                    ])
+                orphans = [l for l in lines if not l.notebook_line]
+                if orphans:
+                    with Transaction().set_context(clean_start_date=False):
+                        Data.delete(orphans)
+
+    @classmethod
+    def sync_fraction_after_service_change(cls, fraction):
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        sample = fraction.sample
+
+        sheets = cls.search([
+            ('state', 'in', ['draft', 'active', 'validated']),
+            ('samples', 'ilike', '%%%s%%' % sample.number),
+            ])
+        if not sheets:
+            return
+
+        cls.cleanup_orphan_interface_rows(sheets)
+
+        notebook_lines = NotebookLine.search([
+            ('fraction', '=', fraction.id),
+            ('annulled', '=', False),
+            ('end_date', '=', None),
+            ])
+        nls_with_template = [nl for nl in notebook_lines
+            if nl.get_analysis_sheet_template()]
+
+        for sheet in sheets:
+            nls_for_sheet = [nl for nl in nls_with_template
+                if nl.get_analysis_sheet_template() == sheet.template.id]
+            if nls_for_sheet:
+                sheet.create_lines(nls_for_sheet, update_samples_list=False)
+            sheet._update_samples_list()
 
     @classmethod
     def get_notebooks(cls, records):

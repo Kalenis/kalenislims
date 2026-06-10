@@ -120,6 +120,8 @@ class NotebookRule(metaclass=PoolMeta):
         return True
 
     def exec_sheet_action(self, line):
+        if not line.notebook_line:
+            return
         if self.action == 'add':
             self._exec_sheet_add(line)
         elif self.action == 'edit':

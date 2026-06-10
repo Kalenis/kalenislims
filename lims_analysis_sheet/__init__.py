@@ -9,6 +9,7 @@ from . import interface
 from . import planification
 from . import notebook
 from . import laboratory
+from . import sample
 
 
 def register():
@@ -76,6 +77,8 @@ def register():
         notebook.EditGroupedData,
         notebook.EditMultiSampleData,
         notebook.MoveData,
+        sample.EditFractionService,
+        sample.EditSampleService,
         module='lims_analysis_sheet', type_='wizard')
     Pool.register(
         sheet.AnalysisSheetReport,

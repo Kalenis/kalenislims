@@ -166,6 +166,36 @@ class NotebookLine(metaclass=PoolMeta):
         return None
 
     @classmethod
+    def delete(cls, lines):
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+
+        for nb_line in lines:
+            template_id = nb_line.get_analysis_sheet_template()
+            if not template_id:
+                continue
+            sheets = AnalysisSheet.search([
+                ('template', '=', template_id),
+                ('state', 'in', ['draft', 'active', 'validated']),
+                ('samples', 'ilike',
+                    '%%%s%%' % nb_line.fraction.sample.number),
+                ], order=[('id', 'DESC')])
+            for sheet in sheets:
+                with Transaction().set_context(
+                        lims_interface_table=sheet.compilation.table.id):
+                    data_lines = Data.search([
+                        ('compilation', '=', sheet.compilation.id),
+                        ('notebook_line', '=', nb_line.id),
+                        ])
+                    if data_lines:
+                        with Transaction().set_context(
+                                clean_start_date=False):
+                            Data.delete(data_lines)
+
+        super().delete(lines)
+
+    @classmethod
     def write(cls, *args):
         super().write(*args)
         actions = iter(args)
@@ -1350,6 +1380,8 @@ class EvaluateRules(Wizard):
                 ('notebook_line', '!=', None),
                 ])
             for line in lines:
+                if not line.notebook_line:
+                    continue
                 rules = NotebookRule.search([
                     ('analysis', '=', line.notebook_line.analysis),
                     ])
@@ -1632,6 +1664,8 @@ class MultiSampleData(ModelView):
                     ('compilation', '=', sheet.compilation.id),
                     ])
                 for line in lines:
+                    if not line.notebook_line:
+                        continue
                     analysis_codes.add((line.notebook_line.analysis.code,
                         line.notebook_line.analysis.order))
             for analysis, order in list(analysis_codes):
@@ -1708,6 +1742,8 @@ class MultiSampleData(ModelView):
                     ('compilation', '=', sheet.compilation.id),
                     ])
                 for line in lines:
+                    if not line.notebook_line:
+                        continue
                     code = line.notebook_line.analysis.code
                     analysis_codes.add(code)
                     analysis_strings[code] = getattr(
@@ -1807,6 +1843,8 @@ class EditMultiSampleData(Wizard):
                 lims_interface_table=sheet.compilation.table.id):
             lines = Data.search([('compilation', '=', sheet.compilation.id)])
             for line in lines:
+                if not line.notebook_line or line.annulled:
+                    continue
                 fraction = line.notebook_line.fraction.number
                 if fraction not in records.keys():
                     records[fraction] = {'fraction': fraction}
@@ -1847,6 +1885,8 @@ class EditMultiSampleData(Wizard):
                         ('compilation', '=', sheet.compilation.id),
                         ])
                     for line in lines:
+                        if not line.notebook_line:
+                            continue
                         analysis_codes.add(line.notebook_line.analysis.code)
                 for alias in list(analysis_codes):
                     columns[alias] = {
