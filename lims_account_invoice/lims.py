@@ -312,6 +312,21 @@ class Service(metaclass=PoolMeta):
                     delete_service=True):
                 InvoiceLine.delete(lines_to_delete)
 
+    @classmethod
+    def sync_invoice_lines_party(cls, services, party):
+        InvoiceLine = Pool().get('account.invoice.line')
+        lines_to_update = []
+        for service in services:
+            for line in InvoiceLine.search([
+                    ('origin', '=', str(service)),
+                    ('invoice', '=', None),
+                    ]):
+                if line.party != party:
+                    line.party = party
+                    lines_to_update.append(line)
+        if lines_to_update:
+            InvoiceLine.save(lines_to_update)
+
 
 class ManageServices(metaclass=PoolMeta):
     __name__ = 'lims.manage_services'
@@ -329,6 +344,47 @@ class EditSampleService(metaclass=PoolMeta):
         new_service = super().create_service(service, fraction)
         new_service.create_invoice_line()
         return new_service
+
+
+class EditSample(metaclass=PoolMeta):
+    __name__ = 'lims.sample.edit'
+
+    def _get_services_for_samples(self, samples):
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
+        Service = pool.get('lims.service')
+        fractions = Fraction.search([
+            ('sample', 'in', [s.id for s in samples]),
+            ])
+        if not fractions:
+            return []
+        return Service.search([
+            ('fraction', 'in', [f.id for f in fractions]),
+            ('annulled', '=', False),
+            ])
+
+    def _check_invoiced_lines_for_samples(self, samples):
+        pool = Pool()
+        InvoiceLine = pool.get('account.invoice.line')
+        for service in self._get_services_for_samples(samples):
+            if InvoiceLine.search_count([
+                    ('origin', '=', str(service)),
+                    ('invoice', '!=', None),
+                    ]):
+                raise UserError(gettext(
+                    'lims_account_invoice.msg_edit_sample_invoiced_lines'))
+
+    def _edit_entry_party(self, entry_id, samples):
+        pool = Pool()
+        Entry = pool.get('lims.entry')
+        Service = pool.get('lims.service')
+
+        self._check_invoiced_lines_for_samples(samples)
+        new_entry_id = super()._edit_entry_party(entry_id, samples)
+        entry = Entry(new_entry_id)
+        services = self._get_services_for_samples(samples)
+        Service.sync_invoice_lines_party(services, entry.invoice_party.id)
+        return new_entry_id
 
 
 class AddSampleService(metaclass=PoolMeta):

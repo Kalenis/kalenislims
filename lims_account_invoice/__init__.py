@@ -38,6 +38,7 @@ def register():
         depends=['sale'])
     Pool.register(
         lims.ManageServices,
+        lims.EditSample,
         lims.EditSampleService,
         lims.AddSampleService,
         lims.EditFractionService,
