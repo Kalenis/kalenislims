@@ -172,7 +172,8 @@ class Invoice(metaclass=PoolMeta):
                 str(self.invoice_report_format),
             'name': str(self.number),
             })
-        if self.invoice_service_report_cache:
+        if ('invoice_service_report_cache' in self._fields
+                and self.invoice_service_report_cache):
             data.append({
                 'content': self.invoice_service_report_cache,
                 'format': self.invoice_service_report_format,
