@@ -511,12 +511,15 @@ class Service(ModelSQL, ModelView):
         for new_service in new_services:
 
             fraction = Fraction(new_service['fraction'])
+            exclude_service = new_service.get('service')
             details = EntryDetailAnalysis.search([
                 ('fraction', '=', fraction.id),
                 ('state', '!=', 'annulled'),
                 ('service.annulled', '=', False),
                 ])
             for d in details:
+                if exclude_service and d.service.id == exclude_service:
+                    continue
                 existing_analysis.append([
                     fraction.id, d.analysis.id, d.method.id])
 
@@ -639,6 +642,7 @@ class Service(ModelSQL, ModelView):
                     'fraction': s.fraction.id,
                     'analysis': s.analysis.id,
                     'method': s.method.id,
+                    'service': s.id,
                     } for s in services])
             change_detail = False
             for field in cls._get_update_details():
@@ -9031,8 +9035,8 @@ class ChangeProductMatrix(Wizard):
             if not new_obj_description_id:
                 values['obj_description_manual'] = None
             Sample.write([sample], values)
-            self.reconcile_additional_services(sample, new_pt, new_mx)
             self.update_notebook_lines(sample, new_pt, new_mx)
+            self.reconcile_additional_services(sample, new_pt, new_mx)
         return 'end'
 
     def _get_default_typification(self, new_pt, new_mx, analysis):
@@ -9070,9 +9074,13 @@ class ChangeProductMatrix(Wizard):
                         ('method', '=', detail.method),
                         ('valid', '=', True),
                         ])
-                    if not typifications:
+                    if typifications:
+                        typification = typifications[0]
+                    else:
+                        typification = self._get_default_typification(
+                            new_pt, new_mx, detail.analysis)
+                    if not typification:
                         continue
-                    typification = typifications[0]
                     if typification.additional:
                         key = (fraction.id, typification.additional.id)
                         expected.setdefault(key, set()).add(service.id)
