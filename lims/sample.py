@@ -4746,6 +4746,50 @@ class ManageServicesAckOfReceipt(ModelView):
     __name__ = 'lims.manage_services.ack_of_receipt'
 
 
+def _create_blind_samples_for_details(analysis_detail, fraction):
+    pool = Pool()
+    NotebookLine = pool.get('lims.notebook.line')
+    BlindSample = pool.get('lims.blind_sample')
+    Date = pool.get('ir.date')
+
+    confirmation_date = Date.today()
+
+    to_create = []
+    for detail in analysis_detail:
+        nlines = NotebookLine.search([
+            ('analysis_detail', '=', detail.id),
+            ])
+        for nline in nlines:
+            record = {
+                'line': nline.id,
+                'entry': nline.fraction.entry.id,
+                'sample': nline.fraction.sample.id,
+                'fraction': nline.fraction.id,
+                'service': nline.service.id,
+                'analysis': nline.analysis.id,
+                'repetition': nline.repetition,
+                'date': confirmation_date,
+                'min_value': detail.cie_min_value,
+                'max_value': detail.cie_max_value,
+                }
+            original_fraction = fraction.cie_original_fraction
+            if original_fraction:
+                record['original_sample'] = original_fraction.sample.id
+                record['original_fraction'] = original_fraction.id
+                original_line = NotebookLine.search([
+                    ('notebook.fraction', '=', original_fraction.id),
+                    ('analysis', '=', nline.analysis.id),
+                    ('repetition', '=', nline.repetition),
+                    ])
+                if original_line:
+                    record['original_line'] = original_line[0].id
+                    record['original_repetition'] = (
+                        original_line[0].repetition)
+            to_create.append(record)
+    if to_create:
+        BlindSample.create(to_create)
+
+
 class ManageServices(Wizard, SendAckOfReceiptWizardMixin):
     'Manage Services'
     __name__ = 'lims.manage_services'
@@ -4894,7 +4938,7 @@ class ManageServices(Wizard, SendAckOfReceiptWizardMixin):
                 'state': 'unplanned',
                 })
         if fraction.cie_fraction_type:
-            self._create_blind_samples(analysis_detail, fraction)
+            _create_blind_samples_for_details(analysis_detail, fraction)
 
         return new_service
 
@@ -4956,53 +5000,10 @@ class ManageServices(Wizard, SendAckOfReceiptWizardMixin):
                     'confirmation_date': original_service.confirmation_date,
                     })
             if fraction.cie_fraction_type:
-                self._create_blind_samples(analysis_detail, fraction)
+                _create_blind_samples_for_details(analysis_detail, fraction)
 
     def _get_update_details(self):
         return ('analysis', 'laboratory', 'method', 'device')
-
-    def _create_blind_samples(self, analysis_detail, fraction):
-        pool = Pool()
-        NotebookLine = pool.get('lims.notebook.line')
-        BlindSample = pool.get('lims.blind_sample')
-        Date = pool.get('ir.date')
-
-        confirmation_date = Date.today()
-
-        to_create = []
-        for detail in analysis_detail:
-            nlines = NotebookLine.search([
-                ('analysis_detail', '=', detail.id),
-                ])
-            for nline in nlines:
-                record = {
-                    'line': nline.id,
-                    'entry': nline.fraction.entry.id,
-                    'sample': nline.fraction.sample.id,
-                    'fraction': nline.fraction.id,
-                    'service': nline.service.id,
-                    'analysis': nline.analysis.id,
-                    'repetition': nline.repetition,
-                    'date': confirmation_date,
-                    'min_value': detail.cie_min_value,
-                    'max_value': detail.cie_max_value,
-                    }
-                original_fraction = fraction.cie_original_fraction
-                if original_fraction:
-                    record['original_sample'] = original_fraction.sample.id
-                    record['original_fraction'] = original_fraction.id
-                    original_line = NotebookLine.search([
-                        ('notebook.fraction', '=', original_fraction.id),
-                        ('analysis', '=', nline.analysis.id),
-                        ('repetition', '=', nline.repetition),
-                        ])
-                    if original_line:
-                        record['original_line'] = original_line[0].id
-                        record['original_repetition'] = (
-                            original_line[0].repetition)
-                to_create.append(record)
-        if to_create:
-            BlindSample.create(to_create)
 
     def _get_comparison_fields(self):
         return ('analysis', 'laboratory', 'method', 'device', 'urgent',
@@ -8664,6 +8665,8 @@ class ChangeProductMatrix(Wizard):
         pool = Pool()
         Service = pool.get('lims.service')
         Typification = pool.get('lims.typification')
+        Sample = pool.get('lims.sample')
+        sample = Sample(sample.id)
 
         expected = {}
         parent_services = []
@@ -8720,13 +8723,43 @@ class ChangeProductMatrix(Wizard):
             with Transaction().set_context(manage_service=True):
                 Service.create_aditional_services(parent_services)
 
+    def _change_service_method(self, service_id, method_id):
+        pool = Pool()
+        Service = pool.get('lims.service')
+        NotebookLine = pool.get('lims.notebook.line')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        service = Service(service_id)
+        fraction = service.fraction
+        confirmation_date = service.confirmation_date
+
+        Service.write([service], {'method': method_id})
+
+        notebook_lines = NotebookLine.search([
+            ('service', '=', service_id),
+            ])
+        if notebook_lines:
+            with Transaction().set_user(0, set_context=True):
+                NotebookLine.delete(notebook_lines)
+
+        analysis_detail = EntryDetailAnalysis.search([
+            ('service', '=', service_id),
+            ])
+        if analysis_detail:
+            EntryDetailAnalysis.create_notebook_lines(
+                analysis_detail, fraction)
+            EntryDetailAnalysis.write(analysis_detail, {
+                'state': 'unplanned',
+                'confirmation_date': confirmation_date,
+                })
+            if fraction.cie_fraction_type:
+                _create_blind_samples_for_details(
+                    analysis_detail, fraction)
+
     def update_notebook_lines(self, sample, new_pt, new_mx):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
         Typification = pool.get('lims.typification')
-        LabMethod = pool.get('lims.lab.method')
-        Service = pool.get('lims.service')
-        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
 
         notebook_lines = NotebookLine.search([
             ('notebook.fraction.sample', '=', sample.id),
@@ -8734,7 +8767,8 @@ class ChangeProductMatrix(Wizard):
             ('start_date', '=', None),
             ])
 
-        lines_to_save, details_to_save, services_to_save = [], [], []
+        lines_to_save = []
+        services_to_change = {}
         for nl in notebook_lines:
             t = Typification.get_valid_typification(
                 new_pt.id, new_mx.id, nl.analysis.id, nl.method.id)
@@ -8743,19 +8777,11 @@ class ChangeProductMatrix(Wizard):
             if not t:
                 continue
 
-            if t.method and t.method.id != nl.method.id:
-                method_version = LabMethod(t.method.id).get_current_version()
-                nl.method = t.method.id
-                nl.method_version = method_version
-                if nl.analysis_detail:
-                    detail = nl.analysis_detail
-                    detail.method = t.method.id
-                    detail.method_version = method_version
-                    details_to_save.append(detail)
-                if (nl.service and nl.service.analysis.id == nl.analysis.id):
-                    service = nl.service
-                    service.method = t.method.id
-                    services_to_save.append(service)
+            if (t.method and t.method.id != nl.method.id and
+                    nl.service and
+                    nl.service.analysis.id == nl.analysis.id):
+                services_to_change[nl.service.id] = t.method.id
+                continue
 
             nl.initial_concentration = t.initial_concentration
             nl.final_concentration = t.final_concentration
@@ -8775,12 +8801,11 @@ class ChangeProductMatrix(Wizard):
             nl.report = t.report
             lines_to_save.append(nl)
 
-        if details_to_save:
-            EntryDetailAnalysis.save(details_to_save)
-        if services_to_save:
-            Service.save(services_to_save)
         if lines_to_save:
             NotebookLine.save(lines_to_save)
+
+        for service_id, method_id in services_to_change.items():
+            self._change_service_method(service_id, method_id)
 
     def end(self):
         return 'reload'
