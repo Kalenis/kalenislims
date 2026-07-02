@@ -8723,7 +8723,8 @@ class ChangeProductMatrix(Wizard):
             with Transaction().set_context(manage_service=True):
                 Service.create_aditional_services(parent_services)
 
-    def _change_service_method(self, service_id, method_id):
+    def _change_service_method(self, service_id, method_id,
+            product_type, matrix):
         pool = Pool()
         Service = pool.get('lims.service')
         NotebookLine = pool.get('lims.notebook.line')
@@ -8733,28 +8734,30 @@ class ChangeProductMatrix(Wizard):
         fraction = service.fraction
         confirmation_date = service.confirmation_date
 
-        Service.write([service], {'method': method_id})
+        with Transaction().set_context(
+                product_type=product_type, matrix=matrix):
+            Service.write([service], {'method': method_id})
 
-        notebook_lines = NotebookLine.search([
-            ('service', '=', service_id),
-            ])
-        if notebook_lines:
-            with Transaction().set_user(0, set_context=True):
-                NotebookLine.delete(notebook_lines)
+            notebook_lines = NotebookLine.search([
+                ('service', '=', service_id),
+                ])
+            if notebook_lines:
+                with Transaction().set_user(0, set_context=True):
+                    NotebookLine.delete(notebook_lines)
 
-        analysis_detail = EntryDetailAnalysis.search([
-            ('service', '=', service_id),
-            ])
-        if analysis_detail:
-            EntryDetailAnalysis.create_notebook_lines(
-                analysis_detail, fraction)
-            EntryDetailAnalysis.write(analysis_detail, {
-                'state': 'unplanned',
-                'confirmation_date': confirmation_date,
-                })
-            if fraction.cie_fraction_type:
-                _create_blind_samples_for_details(
+            analysis_detail = EntryDetailAnalysis.search([
+                ('service', '=', service_id),
+                ])
+            if analysis_detail:
+                EntryDetailAnalysis.create_notebook_lines(
                     analysis_detail, fraction)
+                EntryDetailAnalysis.write(analysis_detail, {
+                    'state': 'unplanned',
+                    'confirmation_date': confirmation_date,
+                    })
+                if fraction.cie_fraction_type:
+                    _create_blind_samples_for_details(
+                        analysis_detail, fraction)
 
     def update_notebook_lines(self, sample, new_pt, new_mx):
         pool = Pool()
@@ -8805,7 +8808,8 @@ class ChangeProductMatrix(Wizard):
             NotebookLine.save(lines_to_save)
 
         for service_id, method_id in services_to_change.items():
-            self._change_service_method(service_id, method_id)
+            self._change_service_method(
+                service_id, method_id, new_pt.id, new_mx.id)
 
     def end(self):
         return 'reload'
