@@ -1637,8 +1637,11 @@ class EntryDetailAnalysis(ModelSQL, ModelView):
     def _get_notebook_line_valid_typification(cls, detail, fraction):
         pool = Pool()
         Typification = pool.get('lims.typification')
+        context = Transaction().context
+        pt_id = context.get('product_type') or fraction.product_type.id
+        mx_id = context.get('matrix') or fraction.matrix.id
         return Typification.get_valid_typification(
-            fraction.product_type.id, fraction.matrix.id,
+            pt_id, mx_id,
             detail.analysis.id, detail.method.id, detail.laboratory.id)
 
     @fields.depends('service', '_parent_service.id')
