@@ -863,15 +863,23 @@ class Service(ModelSQL, ModelView):
         AnalysisDevice = pool.get('lims.analysis.device')
         Service = pool.get('lims.service')
 
+        context = Transaction().context
         aditional_services = {}
         for service in services:
+            # Prefer context (set by change_product_matrix), then sample
+            # stored fields. Avoid fraction.product_type/matrix Function
+            # fields: they can serve a stale cache after Sample.write.
+            pt_id = (context.get('product_type')
+                or service.fraction.sample.product_type.id)
+            mx_id = (context.get('matrix')
+                or service.fraction.sample.matrix.id)
             entry_details = EntryDetailAnalysis.search([
                 ('service', '=', service.id),
                 ])
             for detail in entry_details:
                 typifications = Typification.search([
-                    ('product_type', '=', service.fraction.product_type.id),
-                    ('matrix', '=', service.fraction.matrix.id),
+                    ('product_type', '=', pt_id),
+                    ('matrix', '=', mx_id),
                     ('analysis', '=', detail.analysis.id),
                     ('method', '=', detail.method),
                     ('valid', '=', True),
@@ -915,8 +923,7 @@ class Service(ModelSQL, ModelView):
                                     'AND analysis = %s '
                                     'AND valid IS TRUE '
                                     'AND by_default IS TRUE',
-                                (service.fraction.product_type.id,
-                                    service.fraction.matrix.id, additional.id))
+                                (pt_id, mx_id, additional.id))
                             res = cursor.fetchone()
                             if res:
                                 laboratory_id = res[0]
@@ -8720,7 +8727,10 @@ class ChangeProductMatrix(Wizard):
             Service.delete_additional_services()
 
         if parent_services:
-            with Transaction().set_context(manage_service=True):
+            with Transaction().set_context(
+                    manage_service=True,
+                    product_type=new_pt.id,
+                    matrix=new_mx.id):
                 Service.create_aditional_services(parent_services)
 
     def _change_service_method(self, service_id, method_id,
