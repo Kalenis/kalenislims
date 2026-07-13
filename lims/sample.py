@@ -9123,7 +9123,15 @@ class ChangeProductMatrix(Wizard):
                     manage_service=True,
                     product_type=new_pt.id,
                     matrix=new_mx.id):
-                Service.create_aditional_services(parent_services)
+                aditional_services = Service.create_aditional_services(
+                    parent_services)
+            # Service.create (lims_account_invoice) only auto-invoices when
+            # entry.state == 'pending'. For ongoing entries, create invoice
+            # lines explicitly (same pattern as Manage Services).
+            if (aditional_services and hasattr(
+                    aditional_services[0].fraction.type, 'invoiceable')):
+                for aditional_service in aditional_services:
+                    aditional_service.create_invoice_line()
 
     def _change_service_method(self, service_id, method_id,
             product_type, matrix):
