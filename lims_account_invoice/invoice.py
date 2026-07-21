@@ -346,6 +346,7 @@ class InvoiceLine(metaclass=PoolMeta):
             return field.convert_order(name, service_tables, Service)
         return staticmethod(order_field)
     order_lims_service_entry = _order_service_field('entry')
+    order_lims_service_sample = _order_service_field('sample')
 
     @classmethod
     def get_results_reports(cls, lines, name):
