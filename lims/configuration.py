@@ -643,11 +643,20 @@ class LabWorkYear(ModelSQL, ModelView, CompanyMultiValueMixin):
             return sequence
 
     def get_target_date(self, start_date, days):
+        pool = Pool()
+        Holiday = pool.get('lims.lab.workyear.holiday')
+
         total_days = days + 1  # plus 1 because start_date is included
         ruleset = rrule.rruleset()
-
         min_time = datetime.min.time()
-        for h in self.holidays:
+
+        # Include holidays from all workyears in the calculation window
+        # (monthly workyears miss destination-month holidays otherwise)
+        end_estimate = start_date + timedelta(days=max(days * 4, 120))
+        for h in Holiday.search([
+                ('date', '>=', start_date),
+                ('date', '<=', end_estimate),
+                ]):
             ruleset.exdate(datetime.combine(h.date, min_time))
 
         count = total_days
