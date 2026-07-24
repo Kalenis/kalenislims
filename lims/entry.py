@@ -642,7 +642,7 @@ class Entry(Workflow, ModelSQL, ModelView):
             'cancellation_reason': default_cancellation_reason,
             })
         cls.cancellation_reason.states['required'] = (
-            Bool(Equal(Eval('state'), 'pending')))
+            Bool(Equal(Eval('state'), 'cancelled')))
 
     @classmethod
     @Workflow.transition('finished')
