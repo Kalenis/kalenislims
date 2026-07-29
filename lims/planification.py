@@ -18,6 +18,8 @@ from trytond.i18n import gettext
 from .configuration import get_print_date
 from .sample import SAMPLE_STATES
 
+logger = logging.getLogger(__name__)
+
 
 class Planification(Workflow, ModelSQL, ModelView):
     'Planification'
@@ -318,7 +320,6 @@ class Planification(Workflow, ModelSQL, ModelView):
         '''
         Cron - Process Waiting Planifications
         '''
-        logger = logging.getLogger('lims_planification')
 
         planifications = cls.search([
             ('waiting_process', '=', True),
@@ -707,7 +708,12 @@ class PlanificationDetail(ModelSQL, ModelView):
         'get_service_field')
     report_date = fields.Function(fields.Date('Date agreed for result'),
         'get_service_field')
-    comments = fields.Function(fields.Text('Comments'), 'get_fraction_field')
+    fraction_comments = fields.Function(fields.Text('Fraction comments',
+        states={
+            'invisible': Eval('fraction_comments') == Eval('comments'),
+            }),
+        'get_fraction_field')
+    comments = fields.Text('Comments')
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
     laboratory = fields.Function(fields.Many2One('lims.laboratory',
         'Laboratory'), 'get_planification_field',
@@ -725,28 +731,56 @@ class PlanificationDetail(ModelSQL, ModelView):
             #})
 
     @classmethod
+    def __register__(cls, module_name):
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
+        table_h = cls.__table_handler__(module_name)
+
+        comments_exist = table_h.column_exist('comments')
+        super().__register__(module_name)
+        if not comments_exist:
+            logger.info('Updating Comments in Fractions to Plan...')
+            cursor.execute('UPDATE "' + cls._table + '" pd '
+                'SET comments = f.comments FROM '
+                '"' + Fraction._table + '" f '
+                'WHERE f.id = pd.fraction')
+
+    @classmethod
+    def create(cls, vlist):
+        pool = Pool()
+        Fraction = pool.get('lims.fraction')
+
+        vlist = [x.copy() for x in vlist]
+        for values in vlist:
+            fraction_id = values.get('fraction', None)
+            if fraction_id:
+                values['comments'] = Fraction(fraction_id).comments
+        return super().create(vlist)
+
+    @classmethod
     def get_fraction_field(cls, details, names):
         result = {}
         for name in names:
+            field_name = name
+            if name[:9] == 'fraction_':
+                field_name = name[9:]
             result[name] = {}
-            if name == 'fraction_type':
+            if cls._fields[name]._type == 'many2one':
                 for d in details:
-                    field = getattr(d.fraction, 'type', None)
-                    result[name][d.id] = field.id if field else None
-            elif cls._fields[name]._type == 'many2one':
-                for d in details:
-                    field = getattr(d.fraction, name, None)
+                    field = getattr(d.fraction, field_name, None)
                     result[name][d.id] = field.id if field else None
             else:
                 for d in details:
-                    result[name][d.id] = getattr(d.fraction, name, None)
+                    result[name][d.id] = getattr(d.fraction, field_name, None)
         return result
 
     @classmethod
     def search_fraction_field(cls, name, clause):
-        if name == 'fraction_type':
-            name = 'type'
-        return [('fraction.' + name,) + tuple(clause[1:])]
+        field_name = name
+        if name[:9] == 'fraction_':
+            field_name = name[9:]
+        return [('fraction.' + field_name,) + tuple(clause[1:])]
 
     def _order_sample_field(name):
         def order_field(tables):
@@ -5906,7 +5940,7 @@ class PlanificationSequenceReport(Report):
                             'report_date': (notebook_line.report_date or
                                 notebook_line.results_estimated_date),
                             'trace_report': trace_report,
-                            'comments': fraction.comments,
+                            'comments': detail.comments,
                             'sample_client_description': (
                                 fraction.sample.sample_client_description),
                             'party': fraction.party.code,
@@ -5993,7 +6027,7 @@ class PlanificationWorksheetAnalysisReport(Report):
                         number_parts[4] + '-' + number_parts[5])
                     comments = '%s - %s - %s' % (planification.comments or '',
                         notebook_line.service.comments or '',
-                        notebook_line.service.fraction.comments or '')
+                        detail.comments or '')
                     record = {
                         'order': order,
                         'number': number,
@@ -6102,13 +6136,13 @@ class PlanificationWorksheetMethodReport(Report):
                             comments = '%s - %s - %s - %s' % (
                                 planification.comments or '',
                                 notebook_line.service.comments or '',
-                                notebook_line.service.fraction.comments or '',
+                                detail.comments or '',
                                 comments_planif or '')
                         else:
                             comments = '%s - %s - %s' % (
                                 planification.comments or
                                 '', notebook_line.service.comments or '',
-                                notebook_line.service.fraction.comments or '')
+                                detail.comments or '')
 
                         record = {
                             'order': order,
@@ -6279,13 +6313,13 @@ class PlanificationWorksheetReport(Report):
                             comments = '%s - %s - %s - %s' % (
                                 planification.comments or '',
                                 notebook_line.service.comments or '',
-                                notebook_line.service.fraction.comments or '',
+                                detail.comments or '',
                                 comments_planif or '')
                         else:
                             comments = '%s - %s - %s' % (
                                 planification.comments or
                                 '', notebook_line.service.comments or '',
-                                notebook_line.service.fraction.comments or '')
+                                detail.comments or '')
 
                         record = {
                             'order': order,

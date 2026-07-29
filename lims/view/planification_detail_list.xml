@@ -10,5 +10,5 @@
     <field name="priority"/>
     <field name="laboratory_date"/>
     <field name="report_date"/>
-    <field name="comments" tree_invisible="1"/>
+    <field name="comments"/>
 </tree>

@@ -4786,6 +4786,10 @@ msgctxt "field:lims.planification.detail,fraction:"
 msgid "Fraction"
 msgstr "Fracción"
 
+msgctxt "field:lims.planification.detail,fraction_comments:"
+msgid "Fraction comments"
+msgstr "Observaciones de la fracción"
+
 msgctxt "field:lims.planification.detail,fraction_type:"
 msgid "Fraction type"
 msgstr "Tipo de fracción"
