@@ -887,6 +887,7 @@ class SaleLine(metaclass=PoolMeta):
             analysis.extend(Analysis.get_included_analysis_method(
                 sale_line.analysis.id))
             included_analysis_id = [a[0] for a in analysis]
+            origin_is_additional = bool(sale_line.additional_origin)
 
             for a in analysis:
                 clause = [
@@ -903,7 +904,7 @@ class SaleLine(metaclass=PoolMeta):
                 if not typifications:
                     continue
                 typification = typifications[0]
-                key = sale_line.sale.id
+                key = (sale_line.sale.id, sale_line.id)
 
                 if typification.additional and typification.additional.product:
                     additional = typification.additional
@@ -922,6 +923,7 @@ class SaleLine(metaclass=PoolMeta):
                         'matrix': sale_line.matrix.id,
                         'method': None,
                         'additional_origin': sale_line.id,
+                        'origin_is_additional': origin_is_additional,
                         }
 
                 if typification.additionals:
@@ -955,16 +957,25 @@ class SaleLine(metaclass=PoolMeta):
                             'matrix': sale_line.matrix.id,
                             'method': method_id,
                             'additional_origin': sale_line.id,
+                            'origin_is_additional': origin_is_additional,
                             }
 
         if additional_services:
             sale_lines = []
-            for sale_id, analysis in additional_services.items():
+            for (sale_id, _origin_id), analysis in additional_services.items():
                 for analysis_id, service_data in analysis.items():
-                    if cls.search([
-                            ('sale', '=', sale_id),
-                            ('analysis', '=', analysis_id),
-                            ]):
+                    clause = [
+                        ('sale', '=', sale_id),
+                        ('analysis', '=', analysis_id),
+                        ('product_type', '=',
+                            service_data['product_type']),
+                        ('matrix', '=', service_data['matrix']),
+                        ]
+                    if not service_data['origin_is_additional']:
+                        clause.append(
+                            ('additional_origin', '=',
+                                service_data['additional_origin']))
+                    if cls.search(clause):
                         continue
                     sale_line = cls(
                         quantity=service_data['quantity'],
@@ -1001,6 +1012,7 @@ class SaleLine(metaclass=PoolMeta):
     def copy(cls, sale_lines, default=None):
         if default is None:
             default = {}
+        sale_lines = [l for l in sale_lines if not l.additional_origin]
         current_default = default.copy()
         current_default['services'] = None
         current_default['additional_origin'] = None
